@@ -23,6 +23,8 @@ struct is_combinable<Type, typename Type::value_type>       { enum{ value = true
 template<class Type>
 struct is_combinable<Type, typename Type::mapping_pair_type>{ enum{ value = true }; };
 template<class Type>
+struct is_combinable<Type, typename Type::base_type>        { enum{ value = true }; };
+template<class Type>
 struct is_combinable<Type, typename Type::joint_type>       { enum{ value = true }; };
 
 template<class Type>

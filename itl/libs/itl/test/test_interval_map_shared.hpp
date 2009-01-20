@@ -825,33 +825,6 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 }
 
 
-template<class Type>
-void check_neutrality_plus(const Type& a)
-{
-	Type left  = a + neutron<Type>::value();
-	Type right = neutron<Type>::value() + a;
-	BOOST_CHECK_EQUAL(left,right);
-	left  = a + Type();
-	right = Type() + a;
-	BOOST_CHECK_EQUAL(left,right);
-}
-
-template<class Type, class TypeB>
-void check_commutativity_plus(const Type& a, const TypeB& b)
-{
-	Type left  = a + b;
-	Type right = b + a;
-	BOOST_CHECK_EQUAL(left,right);
-}
-
-template<class Type, class TypeB, class TypeC>
-void check_associativity_plus(const Type& a, const TypeB& b, const TypeC& c)
-{
-	Type left  = (a + b) + c;
-	Type right = a + (b + c);
-	BOOST_CHECK_EQUAL(left,right);
-}
-
 template <class T, class U,
           template<class T, class U,
                    class Traits = neutron_absorber,
@@ -913,16 +886,18 @@ void interval_map_base_laws_plus_4_bicremental_types()
 	IntervalMap2T join_map = map_a + map2_a;
 	//IntervalMap2T splt_map = map_a + map2_a;
 
-	check_commutativity_plus(map_a, map_b);
+	check_commutativity_wrt_plus(map_a, map_b);
 	//check_commutativity_plus(map2_a, map_b);
-	check_commutativity_plus(map_a, val_pair);
+	check_commutativity_wrt_plus(map_a, val_pair);
 	typename IntervalMap1T::mapping_pair_type v5_u2(v5,u2);
-	check_commutativity_plus(map_b, v5_u2);
+	check_commutativity_wrt_plus(map_b, v5_u2);
 
-	check_associativity_plus(map_a, map_b, map_a);
-	check_associativity_plus(map_a, map_b, map_a);
+	CHECK_ASSOCIATIVITY_WRT(plus)(map_a, map_b, map_a);
+	check_associativity_wrt_plus(map_a, map_b, map_a);
 
-	check_neutrality_plus(map_a);
+	check_neutrality_wrt_plus(map_a, neutron<IntervalMap1T>::value());
+
+	CHECK_MONOID_WRT(plus)(neutron<IntervalMap1T>::value(), map_a, map_b, map_a);
 }
 
 

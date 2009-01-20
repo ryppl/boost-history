@@ -44,6 +44,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/call_traits.hpp> 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
+#include <boost/mpl/assert.hpp> 
 #include <boost/itl/notate.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
@@ -58,7 +59,7 @@ DEALINGS IN THE SOFTWARE.
 #define BOUND_VAL first
 #define BOUND_TYPES second
 
-typedef unsigned char ITV_BOUNDTYPES;
+typedef unsigned char ITV_BOUNDTYPES; //JODO refa
 
 namespace boost{namespace itl
 {
@@ -288,6 +289,23 @@ namespace boost{namespace itl
     
 */
 
+
+
+
+/// Constants for intervalbounds
+enum BoundTypes {
+    /// Both open: <tt>(x,y)</tt>
+    open                     = 0, 
+    /// Left open right closed: <tt>(x,y]</tt>
+    left_open                = 1, 
+    /// Left closed right open: <tt>[x,y)</tt>
+    right_open               = 2,
+    /// Both closed: <tt>[x,y]</tt>
+    closed                   = 3,
+} ;
+
+typedef unsigned char bount_types;
+
 /// A class template for intervals
 /**    Bounds of the interval may be closed or open.
     Discrete or continuous datatypes may be used as domain datatypes DomainT.
@@ -512,10 +530,10 @@ left_over = x1 - x2; //on the right side.
     void transform_bounds(bound_types bt);
 
     /** Sets left border closed. Requires Integral<domain_type>.*/
-    void close_left_bound();
+    //CL void close_left_bound();
 
     /** Sets right border open. Requires Integral<domain_type>. */
-    void open_right_bound();
+    //CL void open_right_bound();
     
 
 	/** An interval that covers the complete range of it's domain_type */
@@ -1031,17 +1049,15 @@ const std::string interval<DomainT,Compare>::as_string()const
 template <class DomainT, ITL_COMPARE Compare>
 DomainT interval<DomainT,Compare>::first()const
 {
-    //JODO: BOOST_STATIC_ASSERT generates compiletime error even if 
-    // code is correctly not used
-    //BOOST_STATIC_ASSERT(!itl::is_continuous<DomainT>::value);
-    BOOST_ASSERT(!itl::is_continuous<DomainT>::value);
+    //JODO BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value)); //complains incorrectly sometimes
+    BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
     return leftbound_closed() ? _lwb : succ(_lwb); 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
 DomainT interval<DomainT,Compare>::last()const
 { 
-    BOOST_ASSERT(!itl::is_continuous<DomainT>::value);
+    BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
     return rightbound_closed() ? _upb : pred(_upb); 
 }
 
@@ -1094,6 +1110,7 @@ void interval<DomainT,Compare>::transform_bounds(bound_types bt)
     }
 }
 
+/*CL
 template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::close_left_bound()
 {
@@ -1113,7 +1130,7 @@ void interval<DomainT,Compare>::open_right_bound()
         _upb++;
     }
 }
-
+*/
 
 /** Equality on intervals */
 template <class DomainT, ITL_COMPARE Compare>

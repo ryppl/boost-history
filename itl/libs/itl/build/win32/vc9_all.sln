@@ -55,6 +55,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_single", "..\..\.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itv_set", "..\..\..\validate\example\labat_itv_set\vc9_labat_itv_set.vcproj", "{BF42574F-66E2-42DD-90D9-3A8FCE6F471D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_quantifier_map", "..\..\test\test_quantifier_map\vc9_test_quantifier_map.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B7D2A9F9F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -169,6 +171,10 @@ Global
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F471D}.Debug|Win32.Build.0 = Debug|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F471D}.Release|Win32.ActiveCfg = Release|Win32
 		{BF42574F-66E2-42DD-90D9-3A8FCE6F471D}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A9F9F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A9F9F}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A9F9F}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B7D2A9F9F}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

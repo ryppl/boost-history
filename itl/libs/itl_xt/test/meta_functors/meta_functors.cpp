@@ -250,6 +250,14 @@ void quantifier_subtract_test()
 	cout << "sec_map: " << sec_map << endl;
 }
 
+void assert_test()
+{
+	//interval<double> doubItv = interval<double>::closed(0.0, 1.5);
+	//double fst = doubItv.first();
+	interval<int> intItv = interval<int>::closed(0, 2);
+	int fst = intItv.first();
+	cout << intItv << endl;
+}
 
 int main()
 {
@@ -268,7 +276,8 @@ int main()
 	*/
 	//codomain_test();
 	//string_codomain_test();
-	quantifier_subtract_test();
+	//quantifier_subtract_test();
+	assert_test();
     return 0;
 }
 

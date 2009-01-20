@@ -27,11 +27,11 @@ using namespace boost::itl;
 // -----------------------------------------------------------------------------
 // test_interval_set_shared are tests that should give identical results for all
 // interval_sets: interval_set, separate_interval_set and split_interval_set.
-#include "../test_interval_map_shared.hpp"
+#include "../test_quantifier_map_shared.hpp"
 
 // Due to limited expressiveness of the testing framework, the testcode in files
 // test_interval_map{,_split}_shared.cpp is generated through code
 // replication. 
-#include "test_interval_map_shared.cpp"
+#include "test_quantifier_map_shared.cpp"
 
 
