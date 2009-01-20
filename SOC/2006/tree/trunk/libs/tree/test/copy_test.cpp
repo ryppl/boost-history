@@ -12,6 +12,7 @@
 
 #include "helpers.hpp"
 #include "test_tree_traversal_data.hpp"
+#include "mock_binary_cursor.hpp"
 
 #include "fake_binary_tree.hpp"
 
@@ -41,7 +42,7 @@ BOOST_AUTO_TEST_CASE( alternate_test_copy_descending )
     po[9] = 11;
     po[10] = 12;
     std::vector<int>::const_iterator ci = po.begin();
-    mock_cursor< std::vector<int>::const_iterator > mc(ci);
+    mock_binary_cursor< std::vector<int>::const_iterator > mc(ci);
     
     boost::tree::copy(preorder(), fbt1.descending_root(), mc);
 }
