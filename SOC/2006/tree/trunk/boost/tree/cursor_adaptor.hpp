@@ -28,11 +28,6 @@ namespace tree {
 
 using boost::iterator_core_access;
 
-class dummy {
-private:
-dummy() {}
-};
-
 // We'll abuse iterator_adaptor to determine our types.
 template <
     class Derived
@@ -144,7 +139,7 @@ public:
     typedef typename cursor_facade_::difference_type difference_type;
     typedef typename cursor_facade_::size_type size_type;
  
-    cursor_adaptor() {}
+//    cursor_adaptor() {}
     
     explicit cursor_adaptor(Base const& cur) : m_cursor(cur)
     { }

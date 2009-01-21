@@ -12,126 +12,76 @@
 #ifndef BOOST_TREE_OUTPUT_ITERATOR_CURSOR_HPP
 #define BOOST_TREE_OUTPUT_ITERATOR_CURSOR_HPP
 
+#include <boost/tree/cursor_facade.hpp>
 #include <boost/tree/cursor.hpp>
 
 namespace boost {
 namespace tree {
 
-template <
-    class OutputIterator
-//  , class Value                         
-//  , class HorizontalTraversalOrCategory 
-//  , class VerticalTraversal
-//  , class Reference                     
-//  , class Difference                
-//  , class Size                          
->
+template <class OutputIterator>
 class output_iterator_cursor;
 
-/**
- * @brief Output cursor wrapper around an output iterator.
- * 
- * This can be very useful e.g. to have cursor algorithms actually work on
- * iterators, thus permitting some kind of linearization of a given subtree.
- * (Modelled after std::insert_iterator and the like.)
- * 
- * For construction, the outputter_cursor_iterator_wrapper might come in useful
- * in saving keystrokes.
- */
-// TODO: Complete this.
-// Shouldn't we be using cursor_facade?
-template <
-    class OutputIterator
-//  , class Value                         = use_default
-//  , class HorizontalTraversalOrCategory = use_default
-//  , class VerticalTraversal   = bidirectional_traversal_tag
-//  , class Reference                     = use_default
-//  , class Difference                    = use_default
-//  , class Size                          = use_default
+template <class OutputIterator>
+class output_iterator_cursor
+: public boost::tree::cursor_facade<
+        output_iterator_cursor<OutputIterator>
+      , output_iterator_cursor<OutputIterator>
+      , boost::bidirectional_traversal_tag
+      , boost::tree::ascending_vertical_traversal_tag
 >
-class output_iterator_cursor {
-protected:
-    OutputIterator* iter;
-//private:
-//    typedef iterator_adaptor<output_iterator_cursor<OutputIterator> 
-//                         , OutputIterator
-//                         , Value
-//                         , HorizontalTraversalOrCategory
-//                         , Reference
-//                         , Difference> ia_type;
+{
+private:
+    OutputIterator& m_iter;
 public:
-    /// Make the iterator type publicly accessible.
-    typedef OutputIterator iterator;
+    typedef output_iterator_cursor<OutputIterator> cursor;
+    typedef output_iterator_cursor<OutputIterator/* const*/> const_cursor;
 
-    // FIXME: Very adhoc.
-    typedef output_iterator_cursor<OutputIterator> value_type;
-    typedef std::size_t size_type;
-    typedef output_iterator_cursor<OutputIterator> const_cursor;
-    typedef boost::forward_traversal_tag horizontal_traversal;
-    typedef boost::tree::ascending_vertical_traversal_tag vertical_traversal;
-    typedef boost::forward_traversal_tag iterator_category;
-    typedef std::ptrdiff_t difference_type;
-    typedef value_type* pointer;
-    typedef value_type& reference;
-        
-    /**
-     * For construction, we obviously need an Output Iterator to work on (i.e., write to).
-     */
-    explicit output_iterator_cursor(OutputIterator& i) : iter(&i) {}
+    typedef typename output_iterator_cursor<OutputIterator>::cursor_facade_::size_type size_type;
+    
+    output_iterator_cursor(OutputIterator& iter)
+    : m_iter(iter) {}
 
-    /** 
-     * @param value A const& value of the value_type of container that iter is
-     *              associated with.
-     * @return      This cursor, for chained operations.
-     * Assigning a value to this cursor will insert it before iter, the iterator it is
-     * wrapped around.
-     * 
-     * Unfortunately, Output Iterators do not necessarily expose their
-     * value_type (they might just give back void), so the following assignment operator
-     * has to be a template.
-     */
-    // TODO: Consult C++0x if this has been changed
+    output_iterator_cursor(output_iterator_cursor<OutputIterator> const& other)
+    : m_iter(other.m_iter) {}
+
     template <class ValueType>
-    output_iterator_cursor& operator=(ValueType const& value)
-    { 
-        *((*iter)++) = value;
+    output_iterator_cursor&
+    operator=(ValueType const& val)
+    {
+        *m_iter++ = val;
         return *this; 
     }
-
-    /// Returns *this.
-    output_iterator_cursor& operator*() { return *this; }
-
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor& operator++() { return *this; }
-
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor operator++(int) { return *this; }
-
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor& operator--() { return *this; }
-
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor operator--(int) { return *this; }
     
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor& to_begin() { return *this; }
-    output_iterator_cursor& begin() { return *this; }
+private:
+    friend class boost::iterator_core_access;
+    friend class boost::tree::cursor_core_access;
+    
+    typename output_iterator_cursor<OutputIterator>::cursor_facade_::reference
+    dereference() const
+    {
+        return const_cast< output_iterator_cursor<OutputIterator>& >(*this);
+    }
 
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor& to_end() { return *this; }
-    output_iterator_cursor& end() { return *this; }
+    bool equal(output_iterator_cursor<OutputIterator> const& other) const
+    {
+        return m_iter == other.m_iter;
+    }
+    
+    bool const empty_() const
+    {
+        return true;
+    }
 
-    /// Returns *this, as this %cursor doesn't "move".
-    output_iterator_cursor& to_parent() { return *this; }
-    output_iterator_cursor& parent() { return *this; }
+    size_type const idx() const
+    {
+        return 0;
+    }
     
-    /// Returns true, in case an algorithm has a loop only terminating at root.
-    bool is_root() const { return true; }
-    
-    /// Returns true, in case an algorithm has a loop only terminating at a leaf.
-    bool empty() const { return true; }
-    
-    std::size_t const index() const { return 0; }
+    void increment() {}
+    void decrement() {}
+    void left() {}
+    void right() {}
+    void up() {}
 };
 
 template <class OutputIterator>

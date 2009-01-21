@@ -226,7 +226,7 @@ private:
     void up()
     {
         --this->base_reference().m_pos;
-        this->base_reference().m_pos >>= 1;
+        this->base_reference().m_pos /= 2;
     }
 
 public:

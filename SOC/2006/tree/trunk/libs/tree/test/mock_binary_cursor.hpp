@@ -86,6 +86,12 @@ private:
         ++m_pos;
         m_pos *= 2;
     }
+
+    void up()
+    {
+        --m_pos;
+        m_pos /= 2;
+    }
     
     bool const empty_() const
     {

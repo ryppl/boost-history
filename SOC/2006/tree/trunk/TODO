@@ -14,7 +14,6 @@
 [section TODO]
 
 General:
-* Build output_iterator_cursor around cursor_facade (like mock_cursor)
 * Get rid of lists used for order checking. Use mock cursor instead.
 * Clean up binary_tree_test
 * binary_tree_search_test -> lower_bound_test
