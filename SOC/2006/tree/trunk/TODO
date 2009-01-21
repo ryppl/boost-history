@@ -14,6 +14,10 @@
 [section TODO]
 
 General:
+* Use Boost.MultiIndex for organising mock objects to avoid redundancy? 
+  (The data pairs position--value
+  are always the same, but the order in which they are accessed depends on the order of the
+  algorithm acting on them).
 * Get rid of lists used for order checking. Use mock cursor instead.
 * Clean up binary_tree_test
 * binary_tree_search_test -> lower_bound_test

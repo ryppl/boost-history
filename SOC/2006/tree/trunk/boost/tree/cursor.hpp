@@ -63,11 +63,6 @@ struct cursor_size<T*> {
 };
 
 template <class Cursor>
-struct cursor_category {
-    typedef typename Cursor::cursor_category type;
-};
-
-template <class Cursor>
 struct cursor_horizontal_traversal {
     typedef typename Cursor::horizontal_traversal type;
 };
@@ -87,40 +82,6 @@ struct cursor {
     typedef Ptr     pointer;
     typedef Ref     reference;    
 };
-
-// Deprecate?
-//struct cursor_tag {};
-//
-//struct descending_tag {}; 
-//struct descending_cursor_tag
-//    : public cursor_tag, public descending_tag, 
-//      public input_iterator_tag, public output_iterator_tag {};
-//struct descending_forward_cursor_tag
-//    : public cursor_tag, public descending_tag, public forward_iterator_tag {};
-//struct descending_bidirectional_cursor_tag
-//    : public cursor_tag, public descending_tag, public bidirectional_iterator_tag {};
-//struct descending_random_access_cursor_tag
-//    : public cursor_tag, public descending_tag, public random_access_iterator_tag {};
-//
-//struct ascending_tag {};
-//struct ascending_cursor_tag
-//    : public descending_cursor_tag, public ascending_tag {};
-//struct ascending_forward_cursor_tag
-//    : public descending_forward_cursor_tag, public ascending_tag {};
-//struct ascending_bidirectional_cursor_tag
-//    : public descending_bidirectional_cursor_tag, public ascending_tag {};
-//struct ascending_random_access_cursor_tag
-//    : public descending_random_access_cursor_tag, public ascending_tag {};
-
-/*
-template <class Hor, class Vert>
-struct produce_cursor_category;
-
-template <>
-struct produce_cursor_category<> {
-    typedef descending_cursor_tag type;
-};
-*/
 
 //define freestanding begin, end, size, empty using cursor's member fns?
 

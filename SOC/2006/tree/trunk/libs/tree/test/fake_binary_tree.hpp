@@ -319,13 +319,13 @@ struct fake_binary_tree_fixture {
     fake_binary_tree<T> fbt1, fbt2;
 };
 
-template <class T = int>
-struct fake_binary_tree_with_list_fixture
-: public fake_binary_tree_fixture<T>
-, public test_with_list_fixture {
-     fake_binary_tree_with_list_fixture()
-     : fake_binary_tree_fixture<T>()
-     , test_with_list_fixture() {}
-};
+//template <class T = int>
+//struct fake_binary_tree_with_list_fixture
+//: public fake_binary_tree_fixture<T>
+//, public test_with_list_fixture {
+//     fake_binary_tree_with_list_fixture()
+//     : fake_binary_tree_fixture<T>()
+//     , test_with_list_fixture() {}
+//};
 
 #endif // LIBS_TREE_TEST_FAKE_BINARY_TREE_HPP

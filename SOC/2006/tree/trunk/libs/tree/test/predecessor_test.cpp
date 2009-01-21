@@ -17,7 +17,7 @@
 
 using namespace boost::tree;
 
-BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_with_list_fixture<int>)
+BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
 BOOST_AUTO_TEST_CASE( test_predecessor_preorder )
 {
