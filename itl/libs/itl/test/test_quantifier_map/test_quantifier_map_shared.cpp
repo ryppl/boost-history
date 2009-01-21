@@ -12,5 +12,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_monoid_4_bicremental_types, T, bicremental_types)
-{         quantifier_map_check_monoid_4_bicremental_types<T, std::string, neutron_emitter>();}
+{         quantifier_map_check_monoid_4_bicremental_types<T, int, neutron_emitter>();}
 

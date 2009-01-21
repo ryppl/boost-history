@@ -119,6 +119,8 @@ public:
     /// The designated \e derived or \e sub_type of this base class
     typedef SubType sub_type;
 
+	typedef type overloadable_type;
+
     /// The domain type of the set
     typedef DomainT   domain_type;
     /// The codomaintype is the same as domain_type

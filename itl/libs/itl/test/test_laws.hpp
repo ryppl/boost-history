@@ -154,6 +154,7 @@ DEFINE_MONOID_CHECK_WRT(et);
 DEFINE_MONOID_CHECK_WRT_EQUAL(et);
 
 #define CHECK_MONOID_WRT(op_tag) check_monoid_wrt_##op_tag
+#define CHECK_MONOID_WRT_EQUAL(op_tag) check_monoid_wrt_equal_##op_tag
 
 
 #endif // __test_itl_laws_h_JOFA_080920__

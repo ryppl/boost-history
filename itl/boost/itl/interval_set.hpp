@@ -118,6 +118,8 @@ public:
                               DomainT,Compare,Interval,Alloc> base_type;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> type;
+	typedef type overloadable_type;
+
     typedef type joint_type;
 
     /// The domain type of the set

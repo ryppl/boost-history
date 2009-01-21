@@ -127,6 +127,7 @@ public:
     typedef Traits traits;
     typedef       interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> type;
     typedef split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> split_type;
+	typedef type overloadable_type;
     typedef type joint_type;
     typedef interval_base_map <interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;

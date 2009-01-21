@@ -52,31 +52,7 @@ ObjectT& operator +=
     return object; 
 }
 
-/*CL?
-template 
-<
-    class SubType, class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
-operator +
-(
-    const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
-)
-{
-	typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
-}
-*/
 //-----------------------------------------------------------------------------
-
 template 
 <
     class DomainT, class CodomainT, class Traits,
@@ -103,31 +79,6 @@ operator +=
     return object; 
 }
 
-/*CL?
-template 
-<
-    class DomainT, class CodomainT, class Traits, 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-operator +
-(
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
-)
-{
-	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
-}
-*/
-//-----------------------------------------------------------------------------
-
 //--- value_type --------------------------------------------------------------
 template 
 <
@@ -150,63 +101,6 @@ operator +=
 {
     return object.add(operand); 
 }
-
-/*CL
-template 
-<
-    class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
-operator +
-(
-             const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::value_type& operand
-)
-{
-	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
-}
-
-template 
-<
-    class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> 
-operator +
-(
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::value_type& operand,
-             const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object
-)
-{
-	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
-}
-*/
-/*CL
-template<class ObjectT>
-ObjectT operator + (const ObjectT& object, const typename ObjectT::value_type& operand)
-{ return ObjectT(object) += operand; }
-
-template<class ObjectT>
-ObjectT operator + (const typename ObjectT::value_type& operand, const ObjectT& object)
-{ return ObjectT(object) += operand; }
-*/
-
-//-----------------------------------------------------------------------------
 
 //--- mapping_type ------------------------------------------------------------
 // Addition (+=) of a base value pair.
@@ -244,31 +138,6 @@ operator +=
 {
     return object.add(operand); 
 }
-
-/*
-template 
-<
-    class DomainT, class CodomainT, class Traits,
- 
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-operator +
-(
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
-)
-{
-	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
-}
-*/
 //-----------------------------------------------------------------------------
 
 
@@ -808,8 +677,209 @@ erase
 }
 
 //-----------------------------------------------------------------------------
+// intersection &=  
+//-----------------------------------------------------------------------------
+template 
+<
+	class ObjectT,
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+ObjectT& operator &=
+(
+          ObjectT& object,
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
+)
+{
+    typedef ObjectT object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//-----------------------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//--- value_type --------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const typename 
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::value_type& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//--- mapping_type ------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//--- interval_type ------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::interval_type& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//--- element_type ------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_type& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+//--- set_types ------------------------------------------------------------
+template 
+<
+    class DomainT, class CodomainT, class Traits, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap,
+    template
+    <    
+        class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalSet
+>
+IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+operator &=
+(
+          IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
+)
+{
+    typedef IntervalMap<DomainT,CodomainT,
+                        Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+
+
+
+
+//-----------------------------------------------------------------------------
 // intersection *=  
 //-----------------------------------------------------------------------------
+/*CL?
 template 
 <
     class SubType, class DomainT, class CodomainT, class Traits,
@@ -875,6 +945,7 @@ operator &=
     object.swap(intersection);
     return object;
 }
+*/
 
 template 
 <

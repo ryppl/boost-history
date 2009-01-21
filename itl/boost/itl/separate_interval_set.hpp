@@ -82,6 +82,7 @@ public:
                               DomainT,Compare,Interval,Alloc> base_type;
 
     typedef separate_interval_set<DomainT,Compare,Interval,Alloc> type;
+	typedef type overloadable_type;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
 

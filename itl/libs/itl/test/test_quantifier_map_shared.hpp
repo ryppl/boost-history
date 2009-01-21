@@ -93,9 +93,6 @@ const SplitMapT& split_map_a, const SplitMapT& split_map_b, const SplitMapT& spl
 const typename JointMapT::value_type& val_pair, const mapping_pair<T,U>& map_pair
 )
 {
-    typedef interval_map<T,U> IntervalMapT;
-    typedef split_interval_map<T,U> SplitIntervalMapT;
-
 	//-----------------------------------------------------------------------------
 	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), join_map_a, join_map_b, val_pair);
 	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), join_map_a, val_pair, join_map_b);
@@ -104,24 +101,25 @@ const typename JointMapT::value_type& val_pair, const mapping_pair<T,U>& map_pai
 	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), join_map_c, map_pair, join_map_b);
 
 	//-----------------------------------------------------------------------------
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, split_map_b, val_pair);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, val_pair, split_map_b);
+	CHECK_MONOID_WRT(plus)(neutron<SplitMapT>::value(), split_map_a, split_map_b, val_pair);
+	CHECK_MONOID_WRT(plus)(neutron<SplitMapT>::value(), split_map_a, val_pair, split_map_b);
 
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, split_map_b, map_pair);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, map_pair, split_map_b);
+	CHECK_MONOID_WRT(plus)(neutron<SplitMapT>::value(), split_map_c, split_map_b, map_pair);
+	CHECK_MONOID_WRT(plus)(neutron<SplitMapT>::value(), split_map_c, map_pair, split_map_b);
 
 	//-----------------------------------------------------------------------------
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, join_map_b, split_map_c);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, split_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, split_map_c);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, split_map_b, join_map_c);
 
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, join_map_b, join_map_c);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_a, join_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, join_map_c);
 
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, join_map_b, map_pair);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, map_pair, join_map_b);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, join_map_b, map_pair);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, map_pair, join_map_b);
 
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, join_map_b, val_pair);
-	CHECK_MONOID_WRT(plus)(neutron<JointMapT>::value(), split_map_c, val_pair, join_map_b);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, join_map_b, val_pair);
+	CHECK_MONOID_WRT_EQUAL(plus)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, val_pair, join_map_b);
+
 }
 
 
@@ -133,9 +131,6 @@ const SplitMapT& split_map_a, const SplitMapT& split_map_b, const SplitMapT& spl
 const typename JointMapT::value_type& val_pair, const mapping_pair<T,U>& map_pair
 )
 {
-    typedef interval_map<T,U> IntervalMapT;
-    typedef split_interval_map<T,U> SplitIntervalMapT;
-
 	//-----------------------------------------------------------------------------
 	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), join_map_a, join_map_b, val_pair);
 	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), join_map_a, val_pair, join_map_b);
@@ -144,24 +139,25 @@ const typename JointMapT::value_type& val_pair, const mapping_pair<T,U>& map_pai
 	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), join_map_c, map_pair, join_map_b);
 
 	//-----------------------------------------------------------------------------
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, split_map_b, val_pair);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, val_pair, split_map_b);
+	CHECK_MONOID_WRT(et)(neutron<SplitMapT>::value(), split_map_a, split_map_b, val_pair);
+	CHECK_MONOID_WRT(et)(neutron<SplitMapT>::value(), split_map_a, val_pair, split_map_b);
 
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, split_map_b, map_pair);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, map_pair, split_map_b);
+	CHECK_MONOID_WRT(et)(neutron<SplitMapT>::value(), split_map_c, split_map_b, map_pair);
+	CHECK_MONOID_WRT(et)(neutron<SplitMapT>::value(), split_map_c, map_pair, split_map_b);
 
 	//-----------------------------------------------------------------------------
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, join_map_b, split_map_c);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, split_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, split_map_c);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, split_map_b, join_map_c);
 
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, join_map_b, join_map_c);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_a, join_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, join_map_c);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_a, join_map_b, join_map_c);
 
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, join_map_b, map_pair);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, map_pair, join_map_b);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, join_map_b, map_pair);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, map_pair, join_map_b);
 
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, join_map_b, val_pair);
-	CHECK_MONOID_WRT(et)(neutron<JointMapT>::value(), split_map_c, val_pair, join_map_b);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, join_map_b, val_pair);
+	CHECK_MONOID_WRT_EQUAL(et)(is_element_equal, neutron<SplitMapT>::value(), split_map_c, val_pair, join_map_b);
+
 }
 
 template <class T, class U, class Trait>
@@ -175,7 +171,7 @@ void quantifier_map_check_monoid_4_bicremental_types()
 	join_map_b.add(CDv(1,3,1)).add(IDv(8,9,1));
 	join_map_c.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	IntervalMapT split_map_a, split_map_b, split_map_c;
+	SplitIntervalMapT split_map_a, split_map_b, split_map_c;
 	split_map_a.add(IDv(0,6,2)).add(IDv(5,7,1)).add(IDv(9,10,2));
 	split_map_b.add(IDv(2,3,3)).add(IIv(9,9,3)).add(CDv(9,11,2));
 	split_map_c.add(CIv(0,9,2)).add(IIv(3,6,1)).add(CDv(5,7,1));
@@ -189,11 +185,14 @@ void quantifier_map_check_monoid_4_bicremental_types()
 		split_map_a, split_map_b, split_map_c, 
 		val_pair, map_pair);
 
-	//quantifier_map_check_monoid_instance_et(
-	//	join_map_a, join_map_b, join_map_c, 
-	//	split_map_a, split_map_b, split_map_c, 
-	//	val_pair, map_pair);
+	quantifier_map_check_monoid_instance_et(
+		join_map_a, join_map_b, join_map_c, 
+		split_map_a, split_map_b, split_map_c, 
+		val_pair, map_pair);
+
+	
 }
+
 
 
 #endif // __test_itl_quantifier_map_shared_h_JOFA_090119__

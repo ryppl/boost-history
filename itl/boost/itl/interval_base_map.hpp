@@ -167,6 +167,8 @@ public:
                               itl::neutron_absorber,Compare,Combine,Section,Interval,Alloc>
                               neutron_absorber_type;
 
+	typedef type overloadable_type;
+
     /// Domain type (type of the keys) of the map
     typedef DomainT   domain_type;
     /// Domain type (type of the keys) of the map

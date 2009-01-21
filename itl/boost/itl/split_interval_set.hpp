@@ -102,6 +102,7 @@ namespace boost{namespace itl
 
         typedef split_interval_set<DomainT,Compare,Interval,Alloc> type;
         typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
+		typedef type overloadable_type;
 
         /// The domain type of the set
         typedef DomainT   domain_type;
