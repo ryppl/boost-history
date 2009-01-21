@@ -176,7 +176,7 @@ public:
     /// basic value type
     typedef std::pair<domain_type,codomain_type> mapping_type;
     /// Auxiliary type to help the compiler resolve ambiguities when using std::make_pair
-    typedef mapping_pair<domain_type,codomain_type> mapping_pair_type;
+    typedef mapping_pair<domain_type,codomain_type> domain_mapping_type;
     /// The interval type of the map
     typedef Interval<DomainT,Compare> interval_type;
 
@@ -213,6 +213,8 @@ public:
     typedef typename ImplMapT::key_type   key_type;
     /// value type of the implementing container
     typedef typename ImplMapT::value_type value_type;
+    /// the \c value_type is a \c interval_mapping_type that maps intervals to \c codomain-values 
+    typedef typename ImplMapT::value_type interval_mapping_type;
     /// data type of the implementing container
     typedef typename ImplMapT::value_type::second_type data_type;
 
@@ -287,7 +289,7 @@ public:
 
     //--- contains: map view ------------------------------------------------------
     /// Does the map contain the element pair <tt>x = (key_element,value)</tt>?
-    bool contains(const mapping_pair_type& x)const
+    bool contains(const domain_mapping_type& x)const
 	{ return that()->contains_(value_type(interval_type(x.key), x.data));    }
 
     /// Does the map contain all element value pairs represented by the interval-value pair sub?
@@ -383,7 +385,7 @@ public:
         Addition and subtraction are reversible as follows:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
-    SubType& add(const mapping_pair_type& x) 
+    SubType& add(const domain_mapping_type& x) 
     { return add( value_type(interval_type(x.key), x.data) ); }
 
     /// Addition of a base value pair.
@@ -453,7 +455,7 @@ public:
         Insertion and subtraction are reversible as follows:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
     */
-    SubType& subtract(const mapping_pair_type& x)
+    SubType& subtract(const domain_mapping_type& x)
     { 
 		return subtract( value_type(interval_type(x.key), x.data) ); 
     }
@@ -496,7 +498,7 @@ public:
 
         This is the insertion semantics known from std::map::insert.
     */
-    SubType& insert(const mapping_pair_type& x) 
+    SubType& insert(const domain_mapping_type& x) 
     { 
 		that()->insert(value_type(interval_type(x.key), x.data)); 
         return *that();
@@ -517,7 +519,7 @@ public:
 	{ that()->insert_(x); return *that(); }
 
 
-    SubType& set(const mapping_pair_type& x) 
+    SubType& set(const domain_mapping_type& x) 
     { 
 		that()->set(value_type(interval_type(x.key), x.data)); 
         return *that();
@@ -536,7 +538,7 @@ public:
         This does erase a base value pair <tt>x=(k,y)</tt> form the map, if
         a value \c y is stored for key \c k.
     */
-    SubType& erase(const mapping_pair_type& x) 
+    SubType& erase(const domain_mapping_type& x) 
     { 
 		that()->erase_(value_type(interval_type(x.key), x.data));
         return *that();
@@ -634,7 +636,7 @@ public:
     void add_intersection(interval_base_map& section, const domain_type& x)const
     { add_intersection(section, interval_type(x)); }
 
-    void add_intersection(interval_base_map& section, const mapping_pair_type& x)const
+    void add_intersection(interval_base_map& section, const domain_mapping_type& x)const
     { add_intersection(section, value_type(interval_type(x.key), x.data)); }
 
     /// Intersection with an interval value pair

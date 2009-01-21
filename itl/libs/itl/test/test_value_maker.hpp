@@ -80,7 +80,7 @@ struct map_val
 	typedef typename ItvMapT::codomain_type     codomain_type;
 	typedef typename ItvMapT::interval_type     interval_type;
 	typedef typename ItvMapT::value_type        value_type;
-	typedef typename ItvMapT::mapping_pair_type mapping_pair_type;
+	typedef typename ItvMapT::domain_mapping_type domain_mapping_type;
 
 	static interval<domain_type> interval(int lower, int upper, int bounds = 2)
 	{
@@ -94,9 +94,9 @@ struct map_val
 			               test_value<codomain_type>::make(val) );
 	}
 
-	static mapping_pair_type map_pair(int key, int val)
+	static domain_mapping_type map_pair(int key, int val)
 	{
-		return mapping_pair_type(test_value<domain_type>::make(key), 
+		return domain_mapping_type(test_value<domain_type>::make(key), 
 			                     test_value<codomain_type>::make(val));
 	}
 };

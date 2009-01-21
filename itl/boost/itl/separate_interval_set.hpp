@@ -130,6 +130,7 @@ public:
     typedef typename ImplSetT::const_iterator const_iterator;
 
 
+	enum { fineness = 1 };
 
 
     // B: Constructors, destructors, assignment

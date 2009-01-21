@@ -133,7 +133,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>&
 operator +=
 (
           IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
     return object.add(operand); 
@@ -308,7 +308,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>&
 operator |=
 (
           IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
     return object.add(operand); 
@@ -330,7 +330,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
 operator |
 (
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
@@ -516,7 +516,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>&
 operator -=
 (
           IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
     return object.subtract(operand); 
@@ -537,7 +537,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
 operator -
 (
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
 	typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> ObjectT;
@@ -775,7 +775,7 @@ IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>&
 operator &=
 (
           IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::mapping_pair_type& operand
+    const typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::domain_mapping_type& operand
 )
 {
     typedef IntervalMap<DomainT,CodomainT,

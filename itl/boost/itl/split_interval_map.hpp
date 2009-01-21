@@ -155,7 +155,8 @@ namespace boost{namespace itl
         typedef typename base_type::iterator iterator;
         typedef typename base_type::value_type value_type;
         typedef typename base_type::mapping_type mapping_type;
-        typedef typename base_type::mapping_pair_type  mapping_pair_type;
+        typedef typename base_type::domain_mapping_type    domain_mapping_type;
+        typedef typename base_type::interval_mapping_type  interval_mapping_type;
         typedef typename base_type::ImplMapT ImplMapT;
 
         typedef typename base_type::codomain_combine codomain_combine;
@@ -163,12 +164,14 @@ namespace boost{namespace itl
         typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;
         typedef interval_set_type set_type;
 
+		enum { fineness = 2 };
+
         /// Default constructor for the empty map 
         split_interval_map(): base_type() {}
         /// Copy constructor
         split_interval_map(const split_interval_map& src): base_type(src) {}
 
-        explicit split_interval_map(mapping_pair_type& base_pair): base_type()
+        explicit split_interval_map(domain_mapping_type& base_pair): base_type()
         { add(base_pair); }
 
         explicit split_interval_map(const value_type& value_pair): base_type()

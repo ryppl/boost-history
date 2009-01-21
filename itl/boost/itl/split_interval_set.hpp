@@ -148,6 +148,7 @@ namespace boost{namespace itl
         typedef typename ImplSetT::const_iterator const_iterator;
 
 
+		enum { fineness = 2 };
 
         // B: Constructors, destructors, assignment
         /// Default constructor for the empty set 

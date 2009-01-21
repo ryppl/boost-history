@@ -165,6 +165,7 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_iterator const_iterator;
 
+	enum { fineness = 0 };
 
 
     // B: Constructors, destructors, assignment

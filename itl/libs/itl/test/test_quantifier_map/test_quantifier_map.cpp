@@ -14,7 +14,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 // interval instance types
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
-#include "../test_laws.hpp"
+//#include "../test_laws.hpp"
 
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>

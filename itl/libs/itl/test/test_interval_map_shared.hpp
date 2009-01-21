@@ -74,8 +74,8 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
 
     //subtracting elements form emptieness
-    typename IntervalMapT::mapping_pair_type v0_u1 = make_pair(v0,u1);
-    typename IntervalMapT::mapping_pair_type v1_u1 = make_pair(v1,u1);
+    typename IntervalMapT::domain_mapping_type v0_u1 = make_pair(v0,u1);
+    typename IntervalMapT::domain_mapping_type v1_u1 = make_pair(v1,u1);
     //mt_map.subtract(make_pair(v0,u1)).subtract(make_pair(v1,u1));
     mt_map.subtract(v0_u1).subtract(v1_u1);
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
@@ -175,7 +175,7 @@ void interval_map_ctor_4_bicremental_types()
     T v4 = make<T>(4);
     U u2 = make<U>(2);
     interval<T> I4_4I(v4);
-    typename IntervalMapT::mapping_pair_type v4_u2(v4,u2);
+    typename IntervalMapT::domain_mapping_type v4_u2(v4,u2);
     typename IntervalMapT::value_type I4_4I_u2(I4_4I,u2);
 
     IntervalMapT _I4_4I_u2;
@@ -243,8 +243,8 @@ void interval_map_add_sub_4_bicremental_types()
     interval<T> I5_6I(v5,v6);
     interval<T> I5_9I(v5,v9);
     interval<T> I0_9I = interval<T>::closed(v0, v9);
-    typename IntervalMapT::mapping_pair_type v0_u1 = make_pair(v0, u1);
-    typename IntervalMapT::mapping_pair_type v9_u1 = make_pair(v9, u1);
+    typename IntervalMapT::domain_mapping_type v0_u1 = make_pair(v0, u1);
+    typename IntervalMapT::domain_mapping_type v9_u1 = make_pair(v9, u1);
     typename IntervalMapT::value_type I5_6I_u1 = make_pair(I5_6I, u1);
     typename IntervalMapT::value_type I5_9I_u1 = make_pair(I5_9I, u1);
     typename IntervalMapT::value_type I0_9I_u1 = make_pair(interval<T>::closed(v0, v9), u1);
@@ -295,9 +295,9 @@ void interval_map_distinct_4_bicremental_types()
     T v3 = make<T>(3);
     T v5 = make<T>(5);
     U u1 = make<U>(1);
-    typename IntervalMapT::mapping_pair_type v1_u1(v1,u1);
-    typename IntervalMapT::mapping_pair_type v3_u1(v3,u1);
-    typename IntervalMapT::mapping_pair_type v5_u1(v5,u1);
+    typename IntervalMapT::domain_mapping_type v1_u1(v1,u1);
+    typename IntervalMapT::domain_mapping_type v3_u1(v3,u1);
+    typename IntervalMapT::domain_mapping_type v5_u1(v5,u1);
 
     size_T s3 = make<size_T>(3);
 
@@ -328,9 +328,9 @@ void interval_map_distinct_4_bicremental_continuous_types()
     T v3 = make<T>(3);
     T v5 = make<T>(5);
     U u1 = make<U>(1);
-    typename IntervalMapT::mapping_pair_type v1_u1(v1,u1);
-    typename IntervalMapT::mapping_pair_type v3_u1(v3,u1);
-    typename IntervalMapT::mapping_pair_type v5_u1(v5,u1);
+    typename IntervalMapT::domain_mapping_type v1_u1(v1,u1);
+    typename IntervalMapT::domain_mapping_type v3_u1(v3,u1);
+    typename IntervalMapT::domain_mapping_type v5_u1(v5,u1);
 
     size_T s3 = make<size_T>(3);
     diff_T d0 = make<diff_T>(0);
@@ -436,9 +436,9 @@ void interval_map_contains_4_bicremental_types()
     T v11 = make<T>(11);
     U u1 = make<U>(1);
     
-    typename IntervalMapT::mapping_pair_type v3_u1(v3,u1);
-    typename IntervalMapT::mapping_pair_type v9_u1(v9,u1);
-    typename IntervalMapT::mapping_pair_type v11_u1(v11,u1);
+    typename IntervalMapT::domain_mapping_type v3_u1(v3,u1);
+    typename IntervalMapT::domain_mapping_type v9_u1(v9,u1);
+    typename IntervalMapT::domain_mapping_type v11_u1(v11,u1);
 
     typename IntervalMapT::value_type I3_7I_u1(interval<T>(v3,v7),u1);
     IntervalMapT im(v3_u1);    
@@ -495,29 +495,6 @@ void interval_map_operators_4_bicremental_types()
     //complement.erase(I3_5I);
     complement.erase(section);
     BOOST_CHECK_EQUAL( is_disjoint(section, complement), true );
-
-    //JODO: There seems to be no intersection on maps of non set codomain type
-    // that can be implemented via &= propagation. Intersectin on those types
-    // could be dome elementic defining it via intersection on the set of pairs.
-    //if(boost::is_same<T,int>::value)
-    //{
-    //    cout << "left:    " << left << endl;
-    //    cout << "right:   " << right << endl;
-    //    cout << "section: " << section << endl;
-    //    cout << "complem: " << complement << endl;
-    //    cout << "all:     " << all << endl;
-    //    cout << "all2:    " << all2 << endl;
-    //}
-
-    //BOOST_CHECK_EQUAL( all.contains(left), true );
-    //BOOST_CHECK_EQUAL( all.contains(right), true );
-    //BOOST_CHECK_EQUAL( all.contains(complement), true );
-
-    //BOOST_CHECK_EQUAL( left.contained_in(all), true );
-    //BOOST_CHECK_EQUAL( right.contained_in(all), true );
-    //BOOST_CHECK_EQUAL( complement.contained_in(all), true );
-    //BOOST_CHECK_EQUAL( section.contained_in(left), true );
-    //BOOST_CHECK_EQUAL( section.contained_in(right), true );
 }
 
 
@@ -617,20 +594,14 @@ void interval_map_base_intersect_4_bicremental_types()
     //                1
 
     //JODO intersection with key-element not yet working
-    //map_A.clear();
-    //map_A.add(I0_3D_1).add(I6_9D_1);
-    //map_AB = map_A;
-    //map_AB &= v1;
-    //map_ab.clear();
-    //map_ab.add(v1);
+    map_A.clear();
+    map_A.add(I0_3D_1).add(I6_9D_1);
+    map_AB = map_A;
+    map_AB &= v1;
+    map_ab.clear();
+	map_ab.add(mapping_pair<T,U>(v1,u1));
 
-    //BOOST_CHECK_EQUAL( map_AB, map_ab );
-
-    //if(boost::is_same<T,int>::value)
-    //{
-    //    cout << "map_A : " << map_A << endl;
-    //    cout << "map_AB: " << map_AB << endl;
-    //}
+    BOOST_CHECK_EQUAL( map_AB, map_ab );
 }
 
 
@@ -825,81 +796,32 @@ void interval_map_base_is_disjoint_4_bicremental_types()
 }
 
 
-template <class T, class U,
-          template<class T, class U,
+template <template<class T, class U,
                    class Traits = neutron_absorber,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
                    ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap1, 
-          template<class T, class U,
-                   class Traits = neutron_absorber,
-                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
-                   template<class,ITL_COMPARE>class Interval = interval,
-                   ITL_ALLOC   Alloc   = std::allocator
-                  >class IntervalMap2 
-          >
-void interval_map_base_laws_plus_4_bicremental_types()
+                  >class IntervalMap, 
+          class T, class U>
+void interval_map_infix_plus_overload_4_bicremental_types()
 {
-    typedef IntervalMap1<T,U> IntervalMap1T;
-    typedef IntervalMap2<T,U> IntervalMap2T;
+	typedef IntervalMap<T,U> IntervalMapT;
+	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+	mapping_pair<T,U> map_pair = K_v(4,3);
 
-    T v0 = make<T>(0);
-    T v1 = make<T>(1);
-    T v3 = make<T>(3);
-    T v5 = make<T>(5);
-    T v6 = make<T>(6);
-    T v7 = make<T>(7);
-    T v8 = make<T>(8);
-    T v9 = make<T>(9);
+	IntervalMapT map_a, map_b;
+	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-    U u1 = make<U>(1);
-    U u2 = make<U>(2);
-
-	interval<T> I0_1D = interval<T>::rightopen(v0,v1);
-    interval<T> I1_3D = interval<T>::rightopen(v1,v3);
-    interval<T> I3_6D = interval<T>::rightopen(v3,v6);
-    interval<T> I5_7D = interval<T>::rightopen(v5,v7);
-    interval<T> I6_8D = interval<T>::rightopen(v6,v8);
-    interval<T> I8_9D = interval<T>::rightopen(v8,v9);
-
-    typename IntervalMap1T::value_type I0_1D_1(I0_1D, u1);
-    typename IntervalMap1T::value_type I1_3D_1(I1_3D, u1);
-    typename IntervalMap1T::value_type I3_6D_1(I3_6D, u1);
-    typename IntervalMap1T::value_type I5_7D_1(I5_7D, u1);
-    typename IntervalMap1T::value_type I6_8D_1(I6_8D, u1);
-    typename IntervalMap1T::value_type I8_9D_1(I8_9D, u1);
-
-	IntervalMap1T map_a, map_b;
-	map_a.add(I3_6D_1).add(I5_7D_1);
-	map_b.add(I1_3D_1).add(I8_9D_1);
-	map_a = map_a;
-	typename IntervalMap1T::value_type val_pair = I8_9D_1;
-
-	IntervalMap2T map2_a, map2_b;
-	map2_a = map_a;
-	map2_a += map_a;
-	IntervalMap2T join_map = map_a + map2_a;
-	//IntervalMap2T splt_map = map_a + map2_a;
-
-	check_commutativity_wrt_plus(map_a, map_b);
-	//check_commutativity_plus(map2_a, map_b);
-	check_commutativity_wrt_plus(map_a, val_pair);
-	typename IntervalMap1T::mapping_pair_type v5_u2(v5,u2);
-	check_commutativity_wrt_plus(map_b, v5_u2);
-
-	CHECK_ASSOCIATIVITY_WRT(plus)(map_a, map_b, map_a);
-	check_associativity_wrt_plus(map_a, map_b, map_a);
-
-	check_neutrality_wrt_plus(map_a, neutron<IntervalMap1T>::value());
-
-	CHECK_MONOID_WRT(plus)(neutron<IntervalMap1T>::value(), map_a, map_b, map_a);
+	BOOST_CHECK_EQUAL(map_a + map_b, map_b + map_a);
+	//This checks all cases of is_interval_map_derivative<T>
+	BOOST_CHECK_EQUAL(map_a + val_pair1, val_pair1 + map_a);
+	BOOST_CHECK_EQUAL(map_b + val_pair2, val_pair2 + map_b);
+	BOOST_CHECK_EQUAL(map_b + map_pair, map_pair + map_b);
 }
-
 
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__
 
