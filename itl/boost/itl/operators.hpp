@@ -75,12 +75,12 @@ ObjectT operator + (const typename ObjectT::overloadable_type& object, const Obj
 // Intersection
 //------------------------------------------------------------------------------
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_interval_set_companion<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const ObjectT& object, const OperandT& operand)
 { return ObjectT(object) &= operand; }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_interval_set_companion<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const OperandT& operand, const ObjectT& object)
 { return ObjectT(object) &= operand; }
 

@@ -10,6 +10,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/interval_set_algo.hpp>
+#include <boost/itl/operators.hpp>
 
 namespace boost{namespace itl
 {
@@ -22,19 +23,18 @@ class interval_set;
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+	class ObjectT,
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-operator +=
+ObjectT& operator +=
 (
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
+          ObjectT& object,
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> set_type;
-    const_FORALL(typename set_type, elem_, operand) 
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+    const_FORALL(typename operand_type, elem_, operand) 
         object.add(*elem_); 
 
     return object; 
@@ -42,21 +42,22 @@ operator +=
 
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc> 
-operator +
+IntervalSet<DomainT,Compare,Interval,Alloc>& 
+operator +=
 (
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
+	      IntervalSet<DomainT,Compare,Interval,Alloc>& object,
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
 )
 {
-	typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> ObjectT;
-	return ObjectT(object) += operand; 
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+    const_FORALL(typename operand_type, elem_, operand) 
+        object.add(*elem_); 
+
+    return object; 
 }
-//-----------------------------------------------------------------------------
 
 //--- interval_type -----------------------------------------------------------
 template 

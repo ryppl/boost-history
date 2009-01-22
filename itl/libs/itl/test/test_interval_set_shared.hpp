@@ -8,7 +8,6 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #ifndef __test_itl_interval_set_shared_h_JOFA_080920__
 #define __test_itl_interval_set_shared_h_JOFA_080920__
 
-
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
 					template<class,ITL_COMPARE>class Interval = interval,
@@ -508,6 +507,27 @@ void interval_set_base_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
 
+
+template <template< class T, 
+                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
+					template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet, 
+          class T>
+void interval_set_infix_plus_overload_4_bicremental_types()
+{
+	typedef IntervalSet<T> IntervalSetT;
+	itl::interval<T> itv = I_D(3,5);
+
+	IntervalSetT set_a, set_b;
+	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+
+	BOOST_CHECK_EQUAL(set_a + set_b, set_b + set_a);
+	//This checks all cases of is_interval_set_derivative<T>
+	BOOST_CHECK_EQUAL(set_a + itv, itv + set_a);
+	BOOST_CHECK_EQUAL(set_b + MK_v(4), MK_v(4) + set_b);
+}
 
 #endif // __test_itl_interval_set_shared_h_JOFA_080920__
 

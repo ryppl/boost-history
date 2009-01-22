@@ -101,11 +101,29 @@ struct map_val
 	}
 };
 
+// Very short value denotation for intervals
+// Assumption typename T existes in scope
+//I_I : [a,b]
+#define I_I(low,up) itl::interval<T>::closed   (make<T>(low), make<T>(up))
+//I_D : [a,b)
+#define I_D(low,up) itl::interval<T>::rightopen(make<T>(low), make<T>(up))
+//C_I : (a,b]
+#define C_I(low,up) itl::interval<T>::leftopen (make<T>(low), make<T>(up))
+//C_D : (a,b)
+#define C_D(low,up) itl::interval<T>::open     (make<T>(low), make<T>(up))
+
+#define MK_v(key)  make<T>(key)
+
+
+
+// Very short value denotation for interval value pairs
+// Assumption typename IntervalMapT existes in scope
 #define IIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, closed_bounded)
 #define IDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, right_open)
 #define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, left_open)
 #define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, open_bounded)
 #define K_v(key,val)    map_val<IntervalMapT>::map_pair(key,val)
+
 
 }} // namespace boost itl
 

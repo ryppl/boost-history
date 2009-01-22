@@ -16,6 +16,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #include "../test_value_maker.hpp"
 #include "../test_laws.hpp"
 
+#include <boost/itl/separate_interval_set.hpp>
+#include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
 

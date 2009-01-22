@@ -8,8 +8,6 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #ifndef __test_itl_interval_map_shared_h_JOFA_081005__
 #define __test_itl_interval_map_shared_h_JOFA_081005__
 
-#include <boost/type_traits/is_same.hpp>
-
 template <template<class T, class U,
                    class Traits = neutron_absorber,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
@@ -821,6 +819,54 @@ void interval_map_infix_plus_overload_4_bicremental_types()
 	BOOST_CHECK_EQUAL(map_a + val_pair1, val_pair1 + map_a);
 	BOOST_CHECK_EQUAL(map_b + val_pair2, val_pair2 + map_b);
 	BOOST_CHECK_EQUAL(map_b + map_pair, map_pair + map_b);
+}
+
+template <template<class T, class U,
+                   class Traits = neutron_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap, 
+          class T, class U>
+void interval_map_infix_et_overload_4_bicremental_types()
+{
+	typedef IntervalMap<T,U> IntervalMapT;
+
+	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+	mapping_pair<T,U> map_pair = K_v(4,3);
+
+	itl::interval<T> itv = C_D(4,11);
+
+	IntervalMapT map_a, map_b;
+	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+
+	interval_set<T>          join_set_a;
+	separate_interval_set<T> sep_set_a;
+	split_interval_set<T>    split_set_a;
+	join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
+	sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
+	split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+	
+	//Happy day overloading
+	BOOST_CHECK_EQUAL(map_a & map_b, map_b & map_a);
+
+	//This checks all cases of is_interval_map_derivative<T>
+	BOOST_CHECK_EQUAL(map_a & val_pair1, val_pair1 & map_a);
+	BOOST_CHECK_EQUAL(map_b & val_pair2, val_pair2 & map_b);
+	BOOST_CHECK_EQUAL(map_b & map_pair, map_pair & map_b);
+
+	//This checks all cases of is_interval_set_derivative<T>
+	BOOST_CHECK_EQUAL(map_a & itv, itv & map_a);
+	BOOST_CHECK_EQUAL(map_b & MK_v(8), MK_v(8) & map_b);
+
+	//This checks all cases of is_interval_set_companion<T>
+	BOOST_CHECK_EQUAL(map_a & split_set_a, split_set_a & map_a);
+	BOOST_CHECK_EQUAL(map_a & sep_set_a,   sep_set_a   & map_a);
+	BOOST_CHECK_EQUAL(map_a & join_set_a,  join_set_a  & map_a);
 }
 
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__

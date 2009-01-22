@@ -751,3 +751,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_disjoint_4_bicremental
     BOOST_CHECK_EQUAL( is_disjoint(join_A,  join_B),  true );
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_plus_overload_4_bicremental_types, T, bicremental_types)
+{
+	interval_set<T>          join_a;
+	separate_interval_set<T> sep_a;
+	split_interval_set<T>    split_a;
+
+	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+
+	BOOST_CHECK_EQUAL(split_a + sep_a,  sep_a  + split_a );
+	BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
+	BOOST_CHECK_EQUAL(sep_a   + join_a, join_a + sep_a  );
+}

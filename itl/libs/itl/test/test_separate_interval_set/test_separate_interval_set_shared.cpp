@@ -40,4 +40,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_interval_set_base_intersect_4_bicremental_types, T, bicremental_types)
-{         interval_set_base_intersect_4_bicremental_types<interval_set, T>();}
+{         interval_set_base_intersect_4_bicremental_types<separate_interval_set, T>();}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(test_itl_interval_set_infix_plus_overload_4_bicremental_types, T, bicremental_types)
+{         interval_set_infix_plus_overload_4_bicremental_types<separate_interval_set, T>();}
+
