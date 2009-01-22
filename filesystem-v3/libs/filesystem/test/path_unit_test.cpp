@@ -111,9 +111,7 @@ namespace
   path x;
   path y;
   string s("string iterators");
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
   wstring ws(L"wstring iterators");
-# endif  // narrow only
 
   //  test_constructors  ---------------------------------------------------------------//
 
@@ -154,57 +152,6 @@ namespace
 
     path x11(wstring(L"std::wstring"));                // #5
     PATH_IS(x11, L"std::wstring");
-  }
-
-  //  test_use_cases  ------------------------------------------------------------------//
-
-  string use( const path & p ) { return p; }
-
-  void test_use_cases()
-  {
-    std::cout << "testing use cases..." << std::endl;
-
-    CHECK( use("foo") == "foo" );
-    CHECK( use(string("foo")) == "foo" );
-    CHECK( "foo" == use("foo") );
-    CHECK( "foo" == use(string("foo")) );
-
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    CHECK( use(L"foo") == "foo" );
-    CHECK( use(wstring(L"foo")) == "foo" );
-    CHECK( "foo" == use(L"foo") );
-    CHECK( "foo" == use(wstring(L"foo")) );
-# endif
-  }
-
-  //  test_conversion_operators  -------------------------------------------------------//
-
-  void test_conversion_operators()
-  {
-    std::cout << "testing test_conversion_operators..." << std::endl;
-
-    path p( "foo" );
-
-    string s1( p );
-    CHECK( s1 == "foo" );
-
-    string s2 = p;
-    CHECK( s2 == "foo" );
-
-    s2.clear();
-    s2 = p;
-    CHECK( s2 == "foo" );
-
-    wstring ws1( p );
-    CHECK( ws1 == L"foo" );
-
-    wstring ws2 = p;
-    CHECK( ws2 == L"foo" );
-
-    ws2.clear();
-    ws2 = p;
-    CHECK( ws2 == L"foo" );
-
   }
 
   //  test_assignments  ----------------------------------------------------------------//
@@ -309,6 +256,11 @@ namespace
   void test_relationals()
   {
     std::cout << "testing relationals..." << std::endl;
+
+# ifdef BOOST_WINDOWS_API
+    // this is a critical use case to meet user expectations
+    CHECK( path( "c:\\abc" ) == path( "c:/abc" ) );
+# endif
 
     const path p( "bar" );
     const path p2( "baz" );
@@ -640,8 +592,6 @@ namespace
 int main( int, char*[] )
 {
   test_constructors();
-  test_use_cases();
-  test_conversion_operators();
   test_assignments();
   test_observers();
   ////test_appends();

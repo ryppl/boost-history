@@ -502,21 +502,6 @@ namespace path_traits
 
     path & remove_filename();
 
-    //  -----  conversion operators  -----
-
-    //  return formatted "as input"
-
-    operator const string_type&() const  { return m_path; }
-    operator const detail::interface_string_type() const
-    { 
-      return detail::convert_to_string( m_path, boost::throws() );
-    }
-
-# ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
-    operator const std::u16string() const { return detail::convert_to_u16string( m_path, boost::throws() ); }
-    operator const std::u32string() const { return detail::convert_to_u32string( m_path, boost::throws() ); }
-# endif
-
     //  -----  observers  -----
   
     //  For operating systems that format file paths differently than directory
@@ -553,7 +538,8 @@ namespace path_traits
 #   ifdef BOOST_WINDOWS_PATH
 
     //  return value is formatted as indicated by function name
-    const path  native() const;
+    const path  native() const;    // all separators converted to preferred separator;
+                                   // thus on Windows slashes are converted to backslashes
     const path  generic() const;
 
 #   else // BOOST_POSIX_PATH
@@ -564,7 +550,9 @@ namespace path_traits
 
 #   endif
 
-    const value_type *  c_str() const { return m_path.c_str(); }  // native format
+    //  native format c_str(), suitable for passing to native OS API calls;
+    //  on Windows, slashes and backslashes are exactly as input
+    const value_type *   c_str() const         { return m_path.c_str(); }
 
     //  -----  decomposition  -----
 
@@ -622,7 +610,8 @@ namespace path_traits
     //  characters; POSIX just treats paths as a sequence of bytes. Windows
     //  encoding is UCS-2 or UTF-16 depending on the version.
 
-    string_type  m_path;  // Windows: backslashes NOT converted to slashes
+    string_type  m_path;  // Windows: as input; backslashes NOT converted to slashes,
+                          // slashes NOT converted to backslashes
 
     //  These helpers factor out common code and convert iterators to pointers.
     template< class InputIterator >
@@ -735,11 +724,35 @@ namespace path_traits
       lhs.begin(), lhs.end(), rhs.begin(), rhs.end() );
   }
 
-  inline bool operator==( const path & lhs, const path & rhs ) { return !(lhs < rhs) && !(rhs < lhs); }
-  inline bool operator!=( const path & lhs, const path & rhs ) { return !(lhs == rhs); }
   inline bool operator<=( const path & lhs, const path & rhs ) { return !(rhs < lhs); }
   inline bool operator> ( const path & lhs, const path & rhs ) { return rhs < lhs; }
   inline bool operator>=( const path & lhs, const path & rhs ) { return !(lhs < rhs);  }
+
+  // operator==() efficiency is a concern; a user reported the original version 2
+  // !(lhs < rhs) && !(rhs < lhs) implementation caused a serious performance problem
+  // for a map of 10,000 paths.
+# ifdef BOOST_WINDOWS_API
+  inline bool operator==( const path & lhs, const path::value_type * rhs )
+  {
+    const path::value_type * l(lhs.c_str());
+    while ( (*l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\'))
+      && *l ) { ++l; ++rhs; }
+    return *l == *rhs || (*l == L'\\' && *rhs == L'/') || (*l == L'/' && *rhs == L'\\');  
+  }
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs == rhs.c_str(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs == rhs.c_str(); }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
+# else   // BOOST_POSIX_API
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.native_string() == rhs.native_string(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.native_string() == rhs; }
+  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.native_string() == rhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.native_string(); }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.native_string(); }
+# endif
+
+
+  inline bool operator!=( const path & lhs, const path & rhs ) { return !(lhs == rhs); }
 
   inline void swap( path & lhs, path & rhs )                   { lhs.swap( rhs ); }
 

@@ -1298,14 +1298,14 @@ namespace
 {
 # ifdef BOOST_WINDOWS_API
 
-  error_code dir_itr_first( void *& handle, const wstring & dir,
+  error_code dir_itr_first( void *& handle, const path & dir,
     wstring & target, fs::file_status & sf, fs::file_status & symlink_sf )
   // Note: an empty root directory has no "." or ".." entries, so this
   // causes a ERROR_FILE_NOT_FOUND error which we do not considered an
   // error. It is treated as eof instead.
   {
     // use a form of search Sebastian Martel reports will work with Win98
-    wstring dirpath( dir );
+    wstring dirpath( dir.wstring() );
     dirpath += (dirpath.empty()
       || (dirpath[dirpath.size()-1] != L'\\'
         && dirpath[dirpath.size()-1] != L'/'

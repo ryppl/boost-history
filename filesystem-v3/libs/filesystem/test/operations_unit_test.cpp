@@ -78,7 +78,7 @@ namespace
 
     directory_iterator it( "." );
 
-//    CHECK( !it->path().empty() );
+    CHECK( !it->path().empty() );
 
     if ( is_regular_file( it->status() ) )
     {

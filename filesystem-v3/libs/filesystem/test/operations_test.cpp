@@ -757,7 +757,9 @@ int test_main( int argc, char * argv[] )
     == fs::current_path().string() );
 
   BOOST_CHECK( fs::complete( "" ).empty() );
-  BOOST_CHECK( fs::complete( "/" ) == fs::initial_path().root_path() );
+  fs::path px1 = fs::complete( "/" );
+  fs::path px2 = fs::initial_path().root_path();
+  BOOST_CHECK( px1 == px2 );
   BOOST_CHECK( fs::complete( "foo" ) == fs::initial_path().string()+"/foo" );
   BOOST_CHECK( fs::complete( "/foo" ) == fs::initial_path().root_path().string()+"foo" );
   BOOST_CHECK( fs::complete( "foo", fs::path( "//net/bar" ) )
