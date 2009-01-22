@@ -457,7 +457,10 @@ namespace boost{namespace itl
 
     template <class Type>
     struct is_interval_container<itl::set<Type> >
-    { enum{value = true}; };
+    { 
+		typedef is_interval_container<itl::set<Type> > type;
+		enum{value = true}; 
+	};
 
     template <class Type>
     struct is_interval_splitter<itl::set<Type> >

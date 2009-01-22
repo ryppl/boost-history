@@ -1011,11 +1011,17 @@ struct is_set<itl::interval_map<KeyT,DataT,Traits> >
 
 template <class KeyT, class DataT, class Traits>
 struct is_map<itl::interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+{ 
+	typedef is_map<itl::interval_map<KeyT,DataT,Traits> > type;
+	enum{value = true}; 
+};
 
 template <class KeyT, class DataT, class Traits>
 struct is_interval_container<itl::interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+{
+	typedef is_interval_container<itl::interval_map<KeyT,DataT,Traits> > type;
+	enum{value = true}; 
+};
 
 template <class KeyT, class DataT, class Traits>
 struct is_interval_splitter<itl::interval_map<KeyT,DataT,Traits> >

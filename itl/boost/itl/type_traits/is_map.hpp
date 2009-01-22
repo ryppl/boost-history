@@ -12,7 +12,11 @@ namespace boost{ namespace itl
 {
     template <class Type> struct is_map;
 
-    template <class Type> struct is_map{ enum {value = false}; };
+    template <class Type> struct is_map
+	{
+		typedef is_map<Type> type;
+		enum {value = false}; 
+	};
 
 }} // namespace boost itl
 

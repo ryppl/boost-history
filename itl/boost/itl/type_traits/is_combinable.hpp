@@ -11,6 +11,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
 #include <boost/mpl/and.hpp> 
+#include <boost/mpl/or.hpp> 
+#include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/itl/type_traits/is_interval_splitter.hpp> 
 
@@ -52,7 +54,24 @@ struct is_combinable
 	enum{ value = false };
 };
 
+//==============================================================================
+//==============================================================================
+template<class Type>
+struct is_interval_map
+{
+	typedef is_interval_map<Type> type; 
+	enum{value = mpl::and_<is_interval_container<Type>, is_map<Type> >::value}; 
+};
 
+template<class Type>
+struct is_interval_set
+{ 
+	typedef is_interval_set<Type> type; 
+	enum{ value = mpl::and_<  is_interval_container<Type>
+		                    , mpl::not_<is_interval_map<Type> > 
+	                       >::value
+	    }; 
+};
 
 
 //------------------------------------------------------------------------------
@@ -100,7 +119,7 @@ struct is_interval_map_derivative
 //------------------------------------------------------------------------------
 // is_interval_set_companion
 //------------------------------------------------------------------------------
-template<class Type, class CompanionT> struct is_interval_set_companion;
+template<class GuideT, class CompanionT> struct is_interval_set_companion;
 
 template
 <
@@ -111,8 +130,11 @@ template
 struct is_interval_set_companion<IntervalSet1<Dom,Cmp,Itv,Alc>, 
 	                             IntervalSet2<Dom,Cmp,Itv,Alc> >
 {
-	enum{ value =   IntervalSet2<Dom,Cmp,Itv,Alc>::fineness 
-		          < IntervalSet1<Dom,Cmp,Itv,Alc>::fineness };
+	typedef IntervalSet1<Dom,Cmp,Itv,Alc> GuideT;
+	typedef IntervalSet2<Dom,Cmp,Itv,Alc> CompanionT;
+	typedef is_interval_set_companion<GuideT,CompanionT> type;
+
+	enum{ value = CompanionT::fineness < GuideT::fineness };
 };
 
 // Every IntervalSet can be a companion of every IntervalMap for 
@@ -127,16 +149,25 @@ template
 >
 struct is_interval_set_companion<IntervalMap<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>, 
 	                             IntervalSet<Dom,        Cmp,        Itv,Alc> >
-{ enum{ value = true }; };
+{ 
+	typedef IntervalMap<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc> GuideT;
+	typedef IntervalSet<Dom,        Cmp,        Itv,Alc> CompanionT;
+	typedef is_interval_set_companion<GuideT,CompanionT> type;
 
-template<class Type, class CompanionT> struct is_interval_set_companion
-{ enum{ value = is_interval_set_derivative<Type,CompanionT>::value }; };
+	enum{ value = true }; 
+};
+
+template<class GuideT, class CompanionT> struct is_interval_set_companion
+{ 
+	typedef is_interval_set_companion<GuideT,CompanionT> type;
+	enum{ value = is_interval_set_derivative<GuideT,CompanionT>::value }; 
+};
 
 
 //------------------------------------------------------------------------------
 // is_interval_map_companion
 //------------------------------------------------------------------------------
-template<class Type, class CompanionT> struct is_interval_map_companion;
+template<class GuideT, class CompanionT> struct is_interval_map_companion;
 
 template
 <
@@ -150,13 +181,71 @@ template
 struct is_interval_map_companion<IntervalMap1<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>, 
 	                             IntervalMap2<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc> >
 {
-	enum{ value =   IntervalMap2<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>::fineness 
-		          < IntervalMap1<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>::fineness };
+	typedef IntervalMap1<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc> GuideT;
+	typedef IntervalMap2<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc> CompanionT;
+	typedef is_interval_map_companion<GuideT,CompanionT> type;
+
+	enum{ value = CompanionT::fineness < GuideT::fineness };
 };
 
-template<class Type, class CompanionT> struct is_interval_map_companion
-{ enum{ value = is_interval_map_derivative<Type,CompanionT>::value }; };
+template<class GuideT, class CompanionT> struct is_interval_map_companion
+{ 
+	typedef is_interval_map_companion<GuideT,CompanionT> type;
+	enum{ value = is_interval_map_derivative<GuideT,CompanionT>::value }; 
+};
 
+
+//------------------------------------------------------------------------------
+// is_interval_{set,map}_combinable
+//------------------------------------------------------------------------------
+template<class GuideT, class CompanionT>
+struct is_interval_set_combinable
+{ 
+	typedef is_interval_set_combinable<GuideT,CompanionT> type;
+	enum{ value = mpl::and_<  is_interval_set<GuideT>
+		                    , is_interval_set_companion<GuideT, CompanionT> 
+	                       >::value
+	    }; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_interval_map_combinable
+{ 
+	typedef is_interval_map_combinable<GuideT,CompanionT> type;
+	enum{ value = mpl::and_<  is_interval_map<GuideT>
+		                    , is_interval_map_companion<GuideT, CompanionT> 
+	                       >::value
+	    }; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_intra_combinable
+{ 
+	typedef is_intra_combinable<GuideT,CompanionT> type;
+	enum
+	{ value = mpl::or_
+	          <
+			        mpl::and_<  is_interval_map<GuideT>
+			                  , is_interval_map_companion<GuideT, CompanionT> > 
+			      , mpl::and_<  is_interval_set<GuideT>
+			                  , is_interval_set_companion<GuideT, CompanionT> > 
+	          >::value
+	}; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_inter_combinable
+{ 
+	typedef is_inter_combinable<GuideT,CompanionT> type;
+	enum
+	{ value = mpl::and_
+	          <     is_interval_map<GuideT>
+			      , mpl::or_<  is_interval_map_companion<GuideT, CompanionT>
+			                 , is_interval_set_companion<GuideT, CompanionT>  
+			                > 
+	          >::value
+	}; 
+};
 
 
 }} // namespace itl boost

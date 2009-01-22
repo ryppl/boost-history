@@ -12,7 +12,11 @@ namespace boost{ namespace itl
 {
     template <class Type> struct is_interval_container;
 
-    template <class Type> struct is_interval_container{ enum {value = false}; };
+    template <class Type> struct is_interval_container
+	{ 
+		typedef is_interval_container<Type> type;
+		enum {value = false}; 
+	};
 
 }} // namespace boost itl
 

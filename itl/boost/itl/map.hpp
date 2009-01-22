@@ -676,7 +676,10 @@ namespace boost{namespace itl
 
     template <class DomainT, class CodomainT, class Traits>
     struct is_interval_container<itl::map<DomainT,CodomainT,Traits> >
-    { enum{value = true}; };
+    { 
+		typedef is_interval_container<itl::map<DomainT,CodomainT,Traits> > type;
+		enum{value = true}; 
+	};
 
     template <class DomainT, class CodomainT, class Traits>
     struct is_interval_splitter<itl::map<DomainT,CodomainT,Traits> >

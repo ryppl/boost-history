@@ -386,7 +386,10 @@ struct is_set<itl::interval_set<Type> >
 
 template <class Type>
 struct is_interval_container<itl::interval_set<Type> >
-{ enum{value = true}; };
+{ 
+	typedef is_interval_container<itl::interval_set<Type> > type;
+	enum{value = true}; 
+};
 
 template <class Type>
 struct is_interval_splitter<itl::interval_set<Type> >
