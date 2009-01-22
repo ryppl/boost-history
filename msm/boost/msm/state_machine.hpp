@@ -110,6 +110,13 @@ struct state :  public state_base, SMPtrPolicy
     typedef mpl::vector<>       flag_list;
     //default: no deferred events
     typedef mpl::vector<>       deferred_events;
+    // by default are states not polymorphic. Define this symbol to make them polymorphic
+    // for example if you need to use a pointer to a state_base in typeid
+#ifdef POLYMORPHIC_STATES
+    virtual ~state() {}
+#else
+    ~state() {}
+#endif
 };
 
 // flags used internally to handle terminate / interrupt states
@@ -128,6 +135,13 @@ struct terminate_state : public state_base, SMPtrPolicy
     typedef mpl::vector<boost::msm::TerminateFlag>      flag_list;
     //default: no deferred events
     typedef mpl::vector<>                               deferred_events;
+    // by default are states not polymorphic. Define this symbol to make them polymorphic
+    // for example if you need to use a pointer to a state_base in typeid
+#ifdef POLYMORPHIC_STATES
+    virtual ~terminate_state() {}
+#else
+    ~terminate_state() {}
+#endif
 };
 
 // terminate state simply defines the InterruptedFlag and EndInterruptFlag<EndInterruptEvent> flags
@@ -143,6 +157,13 @@ struct interrupt_state : public state_base, SMPtrPolicy
                                                     flag_list;
     //default: no deferred events
     typedef mpl::vector<>                           deferred_events;
+    // by default are states not polymorphic. Define this symbol to make them polymorphic
+    // for example if you need to use a pointer to a state_base in typeid
+#ifdef POLYMORPHIC_STATES
+    virtual ~interrupt_state() {}
+#else
+    ~interrupt_state() {}
+#endif
 };
 
 // not a state but a bunch of extra typedefs to handle direct entry into a composite state. To be derived from
@@ -178,6 +199,13 @@ struct entry_pseudo_state
     typedef mpl::vector<>       flag_list;
     //default: no deferred events
     typedef mpl::vector<>       deferred_events;
+    // by default are states not polymorphic. Define this symbol to make them polymorphic
+    // for example if you need to use a pointer to a state_base in typeid
+#ifdef POLYMORPHIC_STATES
+    virtual ~entry_pseudo_state() {}
+#else
+    ~entry_pseudo_state() {}
+#endif
 };
 
 // to be derived from. Makes a state an exit (pseudo) state. Actually an almost full-fledged state
@@ -205,6 +233,13 @@ struct exit_pseudo_state : public state_base , SMPtrPolicy
     //default: no deferred events
     typedef mpl::vector<>  deferred_events;
 
+    // by default are states not polymorphic. Define this symbol to make them polymorphic
+    // for example if you need to use a pointer to a state_base in typeid
+#ifdef POLYMORPHIC_STATES
+    virtual ~exit_pseudo_state() {}
+#else
+    ~exit_pseudo_state() {}
+#endif
     // forward event to the higher-level FSM
     template <class ForwardEvent>
     void forward_event(ForwardEvent const& incomingEvent)
