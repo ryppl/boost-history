@@ -44,7 +44,7 @@
      notational convenience.
    * Are generic versions of string(), native_string() needed? IE:
         template< class T >
-        T string( const error_code ec = throws );
+        T string( const error_code ec = throws() );
      TODO: Yes; all member functions need to be usable in generic code.
      Can string() and native_string() make use of detail::convert()?
    * Assuming generic versions of string(), native_string(), are the w flavors needed?
@@ -219,22 +219,22 @@ namespace path_traits
   inline void append<string_type::value_type>( const string_type::value_type * begin,
     const string_type::value_type * end, string_type & target, system::error_code & ec )
   {
-    ec.clear(); 
-    target.assign( begin, end ); // TODO: what if throws bad_alloc?
+    target.assign( begin, end ); // TODO: what if throws() bad_alloc?
+    if ( &ec != &throws() ) ec.clear(); 
   }
 
   template<>
   inline void append<string_type::value_type>( const string_type::value_type * begin,
     string_type & target, system::error_code & ec )
   {
-    ec.clear(); 
-    target += begin; // TODO:  what if throws bad_alloc?
+    target += begin; // TODO:  what if throws() bad_alloc?
+    if ( &ec != &throws() ) ec.clear(); 
   }
 
   template<>
   inline string_type convert<string_type>( const string_type & s, system::error_code & ec )
   { 
-    if ( &ec != &system::throws ) ec.clear();
+    if ( &ec != &throws() ) ec.clear();
     return s;
   }
 
@@ -318,7 +318,7 @@ namespace path_traits
     //      template< class ForwardIterator, class WStringConvert >
     //      path( ForwardIterator begin, ForwardIterator end,
     //            const std::locale & loc,
-    //            system::error_code & ec = system::throws );
+    //            system::error_code & ec = boost::throws() );
     // 
     //  This alternative was rejected as too complex for the limited benefits;
     //  it nearly doubles the size of the interface, and adds a lot of
@@ -353,7 +353,7 @@ namespace path_traits
 
     template< class InputIterator >
       path( InputIterator begin,
-        system::error_code & ec = system::throws,
+        system::error_code & ec = boost::throws(),
         typename boost::enable_if<path_traits::is_iterator<InputIterator> >::type* dummy=0 )  // #3
           { m_append( begin, m_path, ec ); }
 
@@ -363,7 +363,7 @@ namespace path_traits
 
     template< class ForwardIterator >
       path( ForwardIterator begin, ForwardIterator end,
-        system::error_code & ec = system::throws )                                 // #4
+        system::error_code & ec = boost::throws() )                                 // #4
           { m_append( begin, end, m_path, ec ); }
 
     //  construct from container of (potentially) multi-byte character string,
@@ -372,7 +372,7 @@ namespace path_traits
 
     template< class Container >
       path( const Container & ctr,
-        system::error_code & ec = system::throws,
+        system::error_code & ec = boost::throws(),
         typename boost::enable_if<path_traits::is_container<Container> >::type* dummy=0 )  // #5
           { m_append( ctr.begin(), ctr.end(), m_path, ec ); }
 
@@ -390,14 +390,14 @@ namespace path_traits
         operator=( InputIterator begin )                                   // #2
     {
       m_path.clear();
-      m_append( begin, m_path, system::throws );
+      m_append( begin, m_path, boost::throws() );
       return *this;
     }
 
     template< class InputIterator >
       typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         assign( InputIterator begin,
-          system::error_code & ec = system::throws )                       // #3
+          system::error_code & ec = boost::throws() )                       // #3
     {
       m_path.clear();
       m_append( begin, m_path, ec );
@@ -406,7 +406,7 @@ namespace path_traits
 
     template< class FowardIterator >
       path & assign( FowardIterator begin, FowardIterator end,
-        system::error_code & ec = system::throws )                         // #4
+        system::error_code & ec = boost::throws() )                         // #4
     { 
       m_path.clear();
       m_append( begin, end, m_path, ec );
@@ -418,14 +418,14 @@ namespace path_traits
         operator=( const Container & ctr )                                 // #5
     { 
       m_path.clear();
-      m_append( ctr.begin(), ctr.end(), m_path, system::throws );
+      m_append( ctr.begin(), ctr.end(), m_path, boost::throws() );
       return *this;
     }
  
     template< class Container >
       typename boost::enable_if<path_traits::is_container<Container>, path &>::type
         assign( const Container & ctr,
-        system::error_code & ec = system::throws )                         // #6
+        system::error_code & ec = boost::throws() )                         // #6
     { 
       m_path.clear();
       m_append( ctr.begin(), ctr.end(), m_path, ec );
@@ -446,14 +446,14 @@ namespace path_traits
         operator/=( InputIterator begin )                                  // #2
     {
       append_separator_if_needed_();
-      m_append( begin, m_path, system::throws );
+      m_append( begin, m_path, boost::throws() );
       return *this;
     }
 
     template< class InputIterator >
       typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
         append( InputIterator begin,
-          system::error_code & ec = system::throws )                       // #3
+          system::error_code & ec = boost::throws() )                       // #3
     {
       append_separator_if_needed_();
       m_append( begin, m_path, ec );
@@ -462,7 +462,7 @@ namespace path_traits
 
     template< class FowardIterator >
       path & append( FowardIterator begin, FowardIterator end,
-        system::error_code & ec = system::throws )                         // #4
+        system::error_code & ec = boost::throws() )                         // #4
     { 
       append_separator_if_needed_();
       m_append( begin, end, m_path, ec );
@@ -474,14 +474,14 @@ namespace path_traits
         operator/=( const Container & ctr )                                // #5
     { 
       append_separator_if_needed_();
-      m_append( ctr.begin(), ctr.end(), m_path, system::throws );
+      m_append( ctr.begin(), ctr.end(), m_path, boost::throws() );
       return *this;
     }
  
     template< class Container >
       typename boost::enable_if<path_traits::is_container<Container>, path &>::type
         append( const Container & ctr,
-        system::error_code & ec = system::throws )                         // #6
+        system::error_code & ec = boost::throws() )                         // #6
     { 
       append_separator_if_needed_();
       m_append( ctr.begin(), ctr.end(), m_path, ec );
@@ -509,12 +509,12 @@ namespace path_traits
     operator const string_type&() const  { return m_path; }
     operator const detail::interface_string_type() const
     { 
-      return detail::convert_to_string( m_path, system::throws );
+      return detail::convert_to_string( m_path, boost::throws() );
     }
 
 # ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
-    operator const std::u16string() const { return detail::convert_to_u16string( m_path, system::throws ); }
-    operator const std::u32string() const { return detail::convert_to_u32string( m_path, system::throws ); }
+    operator const std::u16string() const { return detail::convert_to_u16string( m_path, boost::throws() ); }
+    operator const std::u32string() const { return detail::convert_to_u32string( m_path, boost::throws() ); }
 # endif
 
     //  -----  observers  -----
@@ -527,7 +527,7 @@ namespace path_traits
     //  Implementations are permitted to return const values or const references.
 
     template< class T >
-    T string( system::error_code & ec = system::throws ) const
+    T string( system::error_code & ec = boost::throws() ) const
     {
       return path_traits::convert<T>( m_path, ec );
     }
@@ -535,7 +535,7 @@ namespace path_traits
 #   ifdef BOOST_WINDOWS_API
 
     //  return value is formatted "as input"
-    const std::string     string( system::error_code & ec = system::throws ) const { return detail::convert_to_string( m_path, ec ); }
+    const std::string     string( system::error_code & ec = boost::throws() ) const { return detail::convert_to_string( m_path, ec ); }
     const std::wstring &  wstring() const                                          { return m_path; }
     const std::wstring &  wstring( system::error_code & ec ) const                 { ec.clear(); return m_path; }
 
@@ -545,7 +545,7 @@ namespace path_traits
     const std::string &  string() const                                            { return m_path; }
     const std::string &  string( system::error_code & ec ) const                   { ec.clear(); return m_path; }
 #     ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    const std::wstring   wstring( system::error_code & ec = system::throws ) const { return detail::convert_to_string( m_path, ec ); }
+    const std::wstring   wstring( system::error_code & ec = boost::throws() ) const { return detail::convert_to_string( m_path, ec ); }
 #     endif    
 #   endif
 
@@ -705,13 +705,13 @@ namespace path_traits
   {
   public:
     scoped_path_locale( const std::locale & loc,
-                        system::error_code & ec = system::throws )
+                        system::error_code & ec = boost::throws() )
                       : m_saved_locale(loc)
     {
       path::imbue( loc, ec );
     }
 
-    ~scoped_path_locale()   // never throws
+    ~scoped_path_locale()   // never throws()
     {
       system::error_code ec;
       path::imbue( m_saved_locale, ec );

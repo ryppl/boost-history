@@ -41,6 +41,7 @@
     <a href="#Problem">Problem</a><br>
     <a href="#Solution">Solution</a><br>
     <a href="#Details">Details</a><br>
+    <a href="#Other-changes">Other changes</a><br>
     <a href="#Prototype">Prototype</a></td>
   </tr>
   <tr>
@@ -95,8 +96,8 @@ char32_t</code> types are to be supported.</p>
 <p>Overview:</p>
 
 <ul>
-  <li>Provide a single, non-template, <code>class path</code>.</li>
-  <li>Provide each member function as a template accommodating the various 
+  <li>A single, non-template, <code>class path</code>.</li>
+  <li>Each member function is a template accommodating the various 
   applicable character types, including user-defined character types.</li>
   <li>Hold the path internally in a string of the type used by the operating 
   system API; <code>std::string</code> for POSIX, <code>std::wstring</code> for Windows.</li>
@@ -163,6 +164,19 @@ API argument type for paths, no conversion is performed rather than conversion
 to a specified encoding such as one of the Unicode encodings. This avoids 
 unintended consequences, etc.</p>
 
+<h2><a name="Other-changes">Other changes</a></h2>
+
+<p><b>Uniform hybrid error handling: </b>The hybrid error handling idiom has 
+been consistently applied to all applicable functions.</p>
+
+<p><b>Additional filesystem operations:</b></p>
+
+<ul>
+  <li>create_symlink() now available on Windows if supported (i.e. Vista and 
+  later).</li>
+  <li>create_directory_symlink() added.</li>
+</ul>
+
 <h2><a name="Prototype">Prototype</a></h2>
 
 <p>Currently incomplete. Not thoroughly tested. Should not be used for 
@@ -170,7 +184,7 @@ production work.</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->17 January, 2009<!--webbot bot="Timestamp" endspan i-checksum="39347" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->21 January, 2009<!--webbot bot="Timestamp" endspan i-checksum="39336" --></p>
 
 <p>© Copyright Beman Dawes, 2008</p>
 <p> Use, modification, and distribution are subject to the Boost Software 

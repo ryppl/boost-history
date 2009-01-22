@@ -24,7 +24,7 @@
 *  Review any commented out code, both in operations.hpp and operations.cpp
 *  Finish refactoring operations_test.
 *  Fold convenience.hpp into operations.hpp
-*  Two argument recursive_directory_iterator ctor isn't recognizing system::throws.
+*  Two argument recursive_directory_iterator ctor isn't recognizing throws().
    would it be better to fold into a single two argument ctor with default?
 *  Add the push_directory class from tools/release/required_files.cpp
 
@@ -137,20 +137,20 @@ namespace boost
 
   BOOST_FILESYSTEM_DECL
   file_status status( const path & p,
-                      system::error_code & ec = system::throws );
+                      system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   file_status symlink_status( const path & p,
-                      system::error_code & ec = system::throws );
+                      system::error_code & ec = throws() );
     
-  inline bool exists( const path & p, system::error_code & ec = system::throws ) { return exists( status( p, ec ) ); }
-  inline bool is_directory( const path & p, system::error_code & ec = system::throws )  { return is_directory( status( p, ec ) ); }
-  inline bool is_regular_file( const path & p, system::error_code & ec = system::throws )  { return is_regular_file( status( p, ec ) ); }
-  inline bool is_other( const path & p, system::error_code & ec = system::throws ) { return is_other( status( p, ec ) ); }
-  inline bool is_symlink( const path & p, system::error_code & ec = system::throws ) { return is_symlink( symlink_status( p, ec ) ); }
+  inline bool exists( const path & p, system::error_code & ec = throws() ) { return exists( status( p, ec ) ); }
+  inline bool is_directory( const path & p, system::error_code & ec = throws() )  { return is_directory( status( p, ec ) ); }
+  inline bool is_regular_file( const path & p, system::error_code & ec = throws() )  { return is_regular_file( status( p, ec ) ); }
+  inline bool is_other( const path & p, system::error_code & ec = throws() ) { return is_other( status( p, ec ) ); }
+  inline bool is_symlink( const path & p, system::error_code & ec = throws() ) { return is_symlink( symlink_status( p, ec ) ); }
 
 #   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-  inline bool is_regular( const path & p, system::error_code & ec = system::throws ) { return is_regular( status( p, ec ) ); }
+  inline bool is_regular( const path & p, system::error_code & ec = throws() ) { return is_regular( status( p, ec ) ); }
 #   endif
 
 
@@ -173,7 +173,7 @@ namespace boost
 //    }
 
   BOOST_FILESYSTEM_DECL
-  bool is_empty( const path & p, system::error_code & ec = system::throws );
+  bool is_empty( const path & p, system::error_code & ec = throws() );
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -183,74 +183,74 @@ namespace boost
 //--------------------------------------------------------------------------------------//
 
   BOOST_FILESYSTEM_DECL // declaration must precede complete()
-  path initial_path( system::error_code & ec = system::throws );
+  path initial_path( system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   path complete( const path & p, const path & base = initial_path() );
 
   BOOST_FILESYSTEM_DECL
   void copy_file( const path & from, const path & to,
-                  system::error_code & ec = system::throws );
+                  system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   bool create_directories( const path & p/*,
-                  system::error_code & ec = system::throws*/ );
+                  system::error_code & ec = throws()*/ );
 
   BOOST_FILESYSTEM_DECL
-  bool create_directory( const path & p, system::error_code & ec = system::throws );
+  bool create_directory( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void create_directory_symlink( const path & to, const path & from,
-                                 system::error_code & ec = system::throws );
+                                 system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void create_hard_link( const path & to, const path & from,
-                         system::error_code & ec = system::throws );
+                         system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void create_symlink( const path & to, const path & from,
-                       system::error_code & ec = system::throws );
+                       system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  path current_path( system::error_code & ec = system::throws );
+  path current_path( system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  void current_path( const path & p, system::error_code & ec = system::throws );
+  void current_path( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   bool equivalent( const path & p1, const path & p2,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t file_size( const path & p,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   //  initial_path() declaration precedes complete()
 
   BOOST_FILESYSTEM_DECL
   std::time_t last_write_time( const path & p,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void last_write_time( const path & p, const std::time_t new_time,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  bool remove( const path & p, system::error_code & ec = system::throws );
+  bool remove( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t remove_all( const path & p,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void rename( const path & from, const path & to,
-                   system::error_code & ec = system::throws );
+                   system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
-  space_info space( const path & p, system::error_code & ec = system::throws ); 
+  space_info space( const path & p, system::error_code & ec = throws() ); 
 
   BOOST_FILESYSTEM_DECL
-  path system_complete( const path & p, system::error_code & ec = system::throws ); 
+  path system_complete( const path & p, system::error_code & ec = throws() ); 
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -294,8 +294,8 @@ public:
 # endif
 
   const boost::filesystem::path &  path() const { return m_path; }
-  file_status   status( system::error_code & ec = system::throws ) const;
-  file_status   symlink_status( system::error_code & ec = system::throws ) const;
+  file_status   status( system::error_code & ec = throws() ) const;
+  file_status   symlink_status( system::error_code & ec = throws() ) const;
 
   // conversion simplifies the most common use of directory_entry
   operator const boost::filesystem::path &() const { return m_path; }
@@ -334,7 +334,7 @@ class directory_iterator;
 namespace detail
 {
   BOOST_FILESYSTEM_DECL
-    system::error_code dir_itr_close(  // never throws
+    system::error_code dir_itr_close(  // never throws()
     void *& handle
 #     if     defined(BOOST_POSIX_API)
         , void *& buffer
@@ -392,7 +392,7 @@ namespace detail
     // iterator_facade derived classes don't seem to like implementations in
     // separate translation unit dll's, so forward to detail functions
     directory_iterator( const path & p,
-      system::error_code & ec = system::throws )
+      system::error_code & ec = throws() )
         : m_imp( new detail::dir_itr_imp )
           { detail::directory_iterator_construct( *this, p, ec ); }
 

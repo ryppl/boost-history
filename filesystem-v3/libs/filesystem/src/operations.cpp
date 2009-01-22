@@ -56,8 +56,8 @@ using boost::filesystem::filesystem_error;
 using boost::system::error_code;
 using boost::system::error_category;
 using boost::system::system_category;
-using boost::system::throws;
 using boost::throw_exception;
+using boost::throws;
 using std::string;
 
 # ifndef BOOST_FILESYSTEM_NARROW_ONLY
@@ -181,11 +181,11 @@ namespace
   {
     if ( !was_error )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
     }
     else  
     { //  error
-      if ( &ec == &throws )
+      if ( &ec == &throws() )
         throw_exception( filesystem_error( message,
           BOOST_ERRNO, system_category ) );
       else
@@ -198,11 +198,11 @@ namespace
   {
     if ( !was_error )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
     }
     else  
     { //  error
-      if ( &ec == &throws )
+      if ( &ec == &throws() )
         throw_exception( filesystem_error( message,
           p, BOOST_ERRNO, system_category ) );
       else
@@ -216,11 +216,11 @@ namespace
   {
     if ( !was_error )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
     }
     else  
     { //  error
-      if ( &ec == &throws )
+      if ( &ec == &throws() )
         throw_exception( filesystem_error( message,
           p1, p2, BOOST_ERRNO, system_category ) );
       else
@@ -231,15 +231,15 @@ namespace
 
   bool error( bool was_error, const error_code & result,
     const path & p, error_code & ec, const string & message )
-    //  Overwrites ec if there ahs already been an error
+    //  Overwrites ec if there has already been an error
   {
     if ( !was_error )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
     }
     else  
     { //  error
-      if ( &ec == &throws )
+      if ( &ec == &throws() )
         throw_exception( filesystem_error( message, p, result ) );
       else
         ec = result;
@@ -249,15 +249,15 @@ namespace
 
   bool error( bool was_error, const error_code & result,
     const path & p1, const path & p2, error_code & ec, const string & message )
-    //  Overwrites ec if there ahs already been an error
+    //  Overwrites ec if there has already been an error
   {
     if ( !was_error )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
     }
     else  
     { //  error
-      if ( &ec == &throws )
+      if ( &ec == &throws() )
         throw_exception( filesystem_error( message, p1, p2, result ) );
       else
         ec = result;
@@ -283,7 +283,7 @@ namespace
   {
     if ( sym_stat.type() == fs::file_not_found )
     {
-      if ( &ec != &throws ) ec.clear();
+      if ( &ec != &throws() ) ec.clear();
       return false;
     }
 
@@ -300,7 +300,8 @@ namespace
     return true;
   }
 
-  boost::uintmax_t remove_all_aux( const path & p, fs::file_status sym_stat, error_code & ec )
+  boost::uintmax_t remove_all_aux( const path & p, fs::file_status sym_stat,
+    error_code & ec )
   {
     static const fs::directory_iterator end_itr;
     boost::uintmax_t count = 1;
@@ -312,7 +313,7 @@ namespace
             itr != end_itr; ++itr )
       {
         fs::file_status tmp_sym_stat = fs::symlink_status( itr->path(), ec );
-        if ( ec && &ec != &throws )
+        if ( &ec != &throws() && ec )
           return count;
         count += remove_all_aux( itr->path(), tmp_sym_stat, ec );
       }
@@ -570,17 +571,21 @@ namespace boost
   {
     if ( BOOST_CREATE_DIRECTORY( p.c_str() ) )
     {
-      if ( &ec == &system::throws ) ec.clear();
+      if ( &ec != &boost::throws() ) ec.clear();
       return true;
     }
-    int errval( BOOST_ERRNO );
+
+    //  attempt to create directory failed
+    int errval( BOOST_ERRNO );  // save reason for failure
     error_code dummy;
     if ( errval == BOOST_ERROR_ALREADY_EXISTS && is_directory( p, dummy ) )
     {
-      if ( &ec == &system::throws ) ec.clear();
+      if ( &ec != &boost::throws() ) ec.clear();
       return false;
     }
-    if ( &ec == &system::throws )
+
+    //  attempt to create directory failed && it doesn't already exist
+    if ( &ec == &boost::throws() )
       throw_exception( filesystem_error( "boost::filesystem::create_directory",
         p, errval, system_category ) );
     else
@@ -838,7 +843,7 @@ namespace boost
       static path init_path;
       if ( init_path.empty() )
         init_path = current_path( ec );
-      else if ( &ec != &throws ) ec.clear();
+      else if ( &ec != &throws() ) ec.clear();
       return init_path;
   }
 
@@ -852,7 +857,7 @@ namespace boost
       p, ec, "boost::filesystem::is_empty" ) )
         return false;
 
-    if ( &ec != &system::throws ) ec.clear();
+    if ( &ec != &boost::throws() ) ec.clear();
     return 
       ( fad.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY )
         ? is_empty_directory( p )
@@ -1036,15 +1041,15 @@ namespace boost
         || (errval == ERROR_BAD_NETPATH)) // "//nosuch" on Win32
       {
         
-        if ( &ec != &system::throws ) ec.clear(); // these are not errors
+        if ( &ec != &boost::throws() ) ec.clear(); // these are not errors
         return file_status( file_not_found );
       }
       else if ((errval == ERROR_SHARING_VIOLATION))
       {
-        if ( &ec != &system::throws ) ec.clear(); // these are not errors
+        if ( &ec != &boost::throws() ) ec.clear(); // these are not errors
         return file_status( type_unknown );
       }
-      if ( &ec == &system::throws )
+      if ( &ec == &boost::throws() )
         throw_exception( filesystem_error( "boost::filesystem::status",
           p, errval, system_category ) );
       else
@@ -1084,7 +1089,7 @@ namespace boost
       }
     }
 
-    if ( &ec != &system::throws ) ec.clear(); // these are not errors
+    if ( &ec != &boost::throws() ) ec.clear(); // these are not errors
     return (attr & FILE_ATTRIBUTE_DIRECTORY)
       ? file_status( directory_file )
       : file_status( regular_file );
@@ -1096,10 +1101,10 @@ namespace boost
     {
       if ( errno == ENOENT || errno == ENOTDIR )
       {
-        if ( &ec != &throws ) ec.clear();;
+        if ( &ec != &throws() ) ec.clear();;
         return fs::file_status( fs::file_not_found );
       }
-      if ( &ec != &throws )
+      if ( &ec != &throws() )
         ec.assign( errno, system_category );
       else
         throw_exception( filesystem_error( "boost::filesystem::status",
@@ -1107,7 +1112,7 @@ namespace boost
 
       return fs::file_status( fs::status_unknown );
     }
-    if ( &ec != &throws ) ec.clear();;
+    if ( &ec != &throws() ) ec.clear();;
     if ( S_ISDIR( path_stat.st_mode ) )
       return fs::file_status( fs::directory_file );
     if ( S_ISREG( path_stat.st_mode ) )
@@ -1139,7 +1144,7 @@ namespace boost
     if ( attr & FILE_ATTRIBUTE_REPARSE_POINT ) // aka symlink
       return file_status( symlink_file );
 
-    if ( &ec != &system::throws ) ec.clear(); // these are not errors
+    if ( &ec != &boost::throws() ) ec.clear(); // these are not errors
     return (attr & FILE_ATTRIBUTE_DIRECTORY)
       ? file_status( directory_file )
       : file_status( regular_file );
@@ -1151,14 +1156,14 @@ namespace boost
     {
       if ( errno == ENOENT || errno == ENOTDIR )  // these are not errors
       {
-        if ( &ec != &system::throws ) ec.clear();
+        if ( &ec != &boost::throws() ) ec.clear();
         return fs::file_status( fs::file_not_found );
       }
-      if ( &ec != &system::throws ) ec.assign( errno, system_category );
+      if ( &ec != &boost::throws() ) ec.assign( errno, system_category );
       else
       return fs::file_status( fs::status_unknown );
     }
-    if ( &ec != &system::throws ) ec.clear();
+    if ( &ec != &boost::throws() ) ec.clear();
     if ( S_ISREG( path_stat.st_mode ) )
       return fs::file_status( fs::regular_file );
     if ( S_ISDIR( path_stat.st_mode ) )
@@ -1263,11 +1268,11 @@ namespace boost
         && !is_symlink( m_symlink_status ) )
       { 
         m_status = m_symlink_status;
-        if ( &ec != &system::throws ) ec.clear();
+        if ( &ec != &boost::throws() ) ec.clear();
       }
       else m_status = fs::status( m_path, ec );
     }
-    else if ( &ec != &system::throws ) ec.clear();
+    else if ( &ec != &boost::throws() ) ec.clear();
     return m_status;
   }
 
@@ -1276,7 +1281,7 @@ namespace boost
   {
     if ( !status_known( m_symlink_status ) )
       m_symlink_status = fs::symlink_status( m_path, ec );
-    else if ( &ec != &system::throws ) ec.clear();
+    else if ( &ec != &boost::throws() ) ec.clear();
     return m_symlink_status;
   }
 
@@ -1473,7 +1478,7 @@ namespace detail
   //  dir_itr_close is called both from the ~dir_itr_imp() destructor 
   //  and dir_itr_increment() 
   BOOST_FILESYSTEM_DECL
-  system::error_code dir_itr_close(  // never throws
+  system::error_code dir_itr_close(  // never throws()
     void *& handle
 #   if defined(BOOST_POSIX_API)
     , void *& buffer

@@ -735,12 +735,13 @@ namespace filesystem
       path_locale() = loc;
       wchar_t_codecvt_facet() = &std::use_facet
           <std::codecvt<wchar_t, char, std::mbstate_t> >( path_locale() );
-      ec.clear();
+      if ( &ec != &boost::throws() ) ec.clear();
       return temp;
     }
     catch (...)
     {
       assert( 0 && "not implemented yet" );  // TODO
+      return path_locale();
     }
   }
 
@@ -789,7 +790,7 @@ namespace detail
       assert( 0 && "append error handling not implemented yet" );
       throw "append error handling not implemented yet";
     }
-    if ( &ec != &system::throws ) ec.clear();
+    if ( &ec != &boost::throws() ) ec.clear();
     target.append( to, to_next ); 
   }
 
@@ -806,7 +807,7 @@ namespace detail
 
     if ( begin == end )
     {
-      if ( &ec != &system::throws ) ec.clear();
+      if ( &ec != &boost::throws() ) ec.clear();
       return;
     }
 
@@ -846,7 +847,7 @@ namespace detail
       assert( 0 && "convert error handling not implemented yet" );
       throw "convert error handling not implemented yet";
     }
-    if ( &ec != &system::throws ) ec.clear();
+    if ( &ec != &boost::throws() ) ec.clear();
     return interface_string_type( to, to_next ); 
   }
 
@@ -855,7 +856,7 @@ namespace detail
   {
     if ( src.empty() )
     {
-      if ( &ec != &system::throws ) ec.clear();
+      if ( &ec != &boost::throws() ) ec.clear();
       return interface_string_type();
     }
 

@@ -89,6 +89,7 @@ int test_main( int, char*[] )
   sys::error_code ec;
   fs::recursive_directory_iterator it( "/no-such-path", ec );
   BOOST_CHECK( ec );
+
   BOOST_CHECK( throws_fs_error(
     boost::bind( create_recursive_iterator, "/no-such-path" ) ) );
 

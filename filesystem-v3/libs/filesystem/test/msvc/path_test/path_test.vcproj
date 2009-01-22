@@ -188,6 +188,10 @@
 				RelativePath="..\..\path_test.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\portability.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
