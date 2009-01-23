@@ -59,7 +59,7 @@ namespace
   void check_dir( const fs::path & source,
               const std::string & expected, const char* file, int line )
   {
-    if ( source.string()== expected ) return;
+    if ( source.string() == expected ) return;
 
     ++errors;
 
@@ -69,14 +69,14 @@ namespace
               << "\"" << std::endl;
   }
 
-  void check_equal( const std::string & value,
+  void check_equal( const fs::path & source,
               const std::string & expected, const char* file, int line )
   {
-    if ( value == expected ) return;
+    if ( source == expected ) return;
 
     ++errors;
 
-    std::cout << file << '(' << line << "): value: \"" << value
+    std::cout << file << '(' << line << "): source: \"" << source.string()
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
   }

@@ -434,6 +434,9 @@ namespace path_traits
 
     //  -----  appends  -----
 
+    //  if a separator is added, it is the preferred separator for the platform;
+    //  slash for POSIX, backslash for Windows
+
     path & operator/=( const path & p )                                    // #1
     {
       append_separator_if_needed_();
@@ -511,22 +514,31 @@ namespace path_traits
 
     //  Implementations are permitted to return const values or const references.
 
-    template< class T >
-    T string( system::error_code & ec = boost::throws() ) const
+    //  The string or path returned by an observer will be described as being formatted
+    //  as "native", "generic", or "source".
+    //
+    //  For POSIX, these are all the same format; slashes and backslashes are not modified.
+    //
+    //  For Windows,   native:  slashes are converted to backslashes
+    //                 generic: backslashes are converted to backslashes
+    //                 source:  slashes and backslashes are not modified
+
+    template< class T >  
+    T string( system::error_code & ec = boost::throws() ) const  // source format
     {
       return path_traits::convert<T>( m_path, ec );
     }
 
 #   ifdef BOOST_WINDOWS_API
 
-    //  return value is formatted "as input"
+    // source format
     const std::string     string( system::error_code & ec = boost::throws() ) const { return detail::convert_to_string( m_path, ec ); }
     const std::wstring &  wstring() const                                          { return m_path; }
     const std::wstring &  wstring( system::error_code & ec ) const                 { ec.clear(); return m_path; }
 
 #   else   // BOOST_POSIX_API
 
-    //  return value is formatted "as input"
+    // source format
     const std::string &  string() const                                            { return m_path; }
     const std::string &  string( system::error_code & ec ) const                   { ec.clear(); return m_path; }
 #     ifndef BOOST_FILESYSTEM_NARROW_ONLY
@@ -537,22 +549,22 @@ namespace path_traits
     
 #   ifdef BOOST_WINDOWS_PATH
 
-    //  return value is formatted as indicated by function name
-    const path  native() const;    // all separators converted to preferred separator;
-                                   // thus on Windows slashes are converted to backslashes
-    const path  generic() const;
+    
+    const path  native() const;   // native format
+    const path  generic() const;  // generic format
 
 #   else // BOOST_POSIX_PATH
 
-    //  return value is formatted as indicated by function name
     const path  native() const   { return m_path; }
     const path  generic() const  { return m_path; }
 
 #   endif
 
-    //  native format c_str(), suitable for passing to native OS API calls;
-    //  on Windows, slashes and backslashes are exactly as input
-    const value_type *   c_str() const         { return m_path.c_str(); }
+    const string_type &  source() const { return m_path; }  // source format
+
+    //  c_str() returns a C string suitable for calls to the operating system API.
+    //  On POSIX and Windows that's source format, on some OS's it may be native format.
+    const value_type *   c_str() const  { return m_path.c_str(); }  // 
 
     //  -----  decomposition  -----
 
@@ -716,6 +728,8 @@ namespace path_traits
   //                                                                                    //
   //------------------------------------------------------------------------------------//
 
+  //  relational operators act as if comparing native format strings
+
   inline bool operator<( const path & lhs, const path & rhs )
   {
     // because path iterators yield paths, std::lexicographical_compare 
@@ -731,6 +745,7 @@ namespace path_traits
   // operator==() efficiency is a concern; a user reported the original version 2
   // !(lhs < rhs) && !(rhs < lhs) implementation caused a serious performance problem
   // for a map of 10,000 paths.
+
 # ifdef BOOST_WINDOWS_API
   inline bool operator==( const path & lhs, const path::value_type * rhs )
   {
@@ -744,11 +759,11 @@ namespace path_traits
   inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.native_string() == rhs.native_string(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.native_string() == rhs; }
-  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.native_string() == rhs; }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.native_string(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.native_string(); }
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.source_string() == rhs.source_string(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.source_string() == rhs; }
+  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.source_string() == rhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.source_string(); }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.source_string(); }
 # endif
 
 
