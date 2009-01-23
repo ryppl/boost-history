@@ -234,15 +234,30 @@ struct is_intra_combinable
 };
 
 template<class GuideT, class CompanionT>
-struct is_inter_combinable
+struct is_cross_combinable
 { 
-	typedef is_inter_combinable<GuideT,CompanionT> type;
+	typedef is_cross_combinable<GuideT,CompanionT> type;
 	enum
 	{ value = mpl::and_
 	          <     is_interval_map<GuideT>
 			      , mpl::or_<  is_interval_map_companion<GuideT, CompanionT>
 			                 , is_interval_set_companion<GuideT, CompanionT>  
 			                > 
+	          >::value
+	}; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_inter_combinable
+{ 
+	typedef is_inter_combinable<GuideT,CompanionT> type;
+	enum
+	{ value = mpl::or_
+	          <     
+			      mpl::and_<is_interval_map<GuideT>, 
+				            is_cross_combinable<GuideT, CompanionT> >
+                , mpl::and_<is_interval_set<GuideT>, 
+				            is_intra_combinable<GuideT, CompanionT> >
 	          >::value
 	}; 
 };

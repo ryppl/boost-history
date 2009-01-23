@@ -1227,3 +1227,16 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_plus_overload_4_
 
 	BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
 }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_et_overload_4_bicremental_types, T, bicremental_types)
+{
+    typedef int U;
+	typedef interval_map<T,U>  IntervalMapT;
+	interval_map<T,U>          join_a;
+	split_interval_map<T,U>    split_a;
+
+	join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+	split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+
+	BOOST_CHECK_EQUAL(split_a & join_a, join_a & split_a);
+}
