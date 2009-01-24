@@ -70,9 +70,9 @@ struct state_base
     // empty implementation for the states not wishing to define an entry condition
     // will not be called polymorphic way
 	template <class Event>
-    void on_entry(Event const& incomingEvent){}
+    void on_entry(Event const& ){}
 	template <class Event>
-    void on_exit(Event const& incomingEvent){}
+    void on_exit(Event const& ){}
 };
 typedef boost::shared_ptr<state_base>   pstate_base;
 
@@ -254,7 +254,7 @@ struct exit_pseudo_state : public state_base , SMPtrPolicy
     exit_pseudo_state():m_forward(){}
     // by assignments, we keep our forwarding functor unchanged as our containing SM did not change
     exit_pseudo_state(exit_pseudo_state<Composite,Event>& rhs){}
-    exit_pseudo_state<Composite,Event>& operator= (const exit_pseudo_state<Composite,Event>& rhs) 
+    exit_pseudo_state<Composite,Event>& operator= (const exit_pseudo_state<Composite,Event>& ) 
     { 
         return *this; 
     } 
@@ -617,7 +617,7 @@ private:
 
     // return the state whose id is passed or 0 if not found
     // caution if you need this, you probably need to define POLYMORPHIC_STATES
-    const state_base* get_state_by_id(int id)
+    const state_base* get_state_by_id(int id) const
     {
         typedef typename create_stt<Derived>::type stt;
         typedef typename generate_state_set<stt>::type state_list;
@@ -629,7 +629,7 @@ private:
         return 0;
     }
     // true if the sm is used in another sm
-    bool is_contained()
+    bool is_contained() const
     {
         return m_is_included;
     }
@@ -1470,7 +1470,7 @@ private:
 
     // Default no-transition handler. Can be replaced in the Derived SM class.
     template <class Event>
-    int no_transition(int state, Event const& e)
+    int no_transition(int state, Event const& )
     {
         BOOST_ASSERT(false);
         return state;
