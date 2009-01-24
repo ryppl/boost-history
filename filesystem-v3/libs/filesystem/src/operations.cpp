@@ -136,6 +136,8 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_CREATE_SYMBOLIC_LINK(F,T,Flag) (::symlink( T, F ) == 0)
 #   define BOOST_REMOVE_DIRECTORY(P) (::rmdir( P ) == 0)
 #   define BOOST_DELETE_FILE(P) (::unlink( P ) == 0)
+#   define BOOST_COPY_DIRECTORY(F,T) (!(::stat( from.c_str(), &from_stat ) != 0\
+         || ::mkdir( to.c_str(),from_stat.st_mode ) != 0))
 #   define BOOST_COPY_FILE(F,T) copy_file_api(F, T)
 #   define BOOST_MOVE_FILE(F,T) (::rename(F, T) == 0)
 
@@ -151,8 +153,10 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_CREATE_SYMBOLIC_LINK(F,T,Flag) (create_symbolic_link_api( F, T, Flag ) != 0)
 #   define BOOST_REMOVE_DIRECTORY(P) (::RemoveDirectoryW(P) != 0)
 #   define BOOST_DELETE_FILE(P) (::DeleteFileW(P) != 0)
+#   define BOOST_COPY_DIRECTORY(F,T) (::CreateDirectoryExW( F, T, 0 ) != 0)
 #   define BOOST_COPY_FILE(F,T) (::CopyFileW( F, T, /*fail_if_exists=*/true ) != 0)
 #   define BOOST_MOVE_FILE(F,T) (::MoveFileW( F, T ) != 0)
+#   define BOOST_READ_SYMLINK(P,T)
 
 #   define BOOST_ERROR_ALREADY_EXISTS ERROR_ALREADY_EXISTS
 #   define BOOST_ERROR_NOT_SUPPORTED ERROR_NOT_SUPPORTED
@@ -541,10 +545,55 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
+  void copy_any( const path & from, const path & to, system::error_code & ec )
+  {
+    file_status s( symlink_status( from, ec ) );
+    if ( &ec != &throws() && ec ) return;
+
+    if( is_symlink( s ) )
+    {
+      copy_symlink( from, to, ec );
+    }
+    else if( is_directory( s ) )
+    {
+      copy_directory( from, to, ec );
+    }
+    else if( is_regular_file( s ) )
+    {
+      copy_file( from, to, ec );
+    }
+    else
+    {
+      if ( &ec == &throws() )
+        throw_exception( filesystem_error( "boost::filesystem::copy",
+          from, to, BOOST_ERROR_NOT_SUPPORTED, system_category ) );
+      ec.assign( BOOST_ERROR_NOT_SUPPORTED, system_category );
+    }
+  }
+
+  BOOST_FILESYSTEM_DECL
+  void copy_directory( const path & from, const path & to, system::error_code & ec)
+  {
+#   ifdef BOOST_POSIX_API
+    struct stat from_stat;
+#   endif
+    error( !BOOST_COPY_DIRECTORY( from.c_str(), to.c_str() ),
+      from, to, ec, "boost::filesystem::copy_directory" );
+  }
+
+  BOOST_FILESYSTEM_DECL
   void copy_file( const path & from, const path & to, error_code & ec )
   {
     error( !BOOST_COPY_FILE( from.c_str(), to.c_str() ),
       from, to, ec, "boost::filesystem::copy_file" );
+  }
+
+  BOOST_FILESYSTEM_DECL
+  void copy_symlink( const path & from, const path & to, system::error_code & ec )
+  {
+    path p( read_symlink( from, ec ) );
+    if ( &ec != &throws() && ec ) return;
+    create_symlink( p, to, ec );
   }
 
   BOOST_FILESYSTEM_DECL
@@ -838,6 +887,34 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
+  boost::uintmax_t hard_link_count( const path & p, system::error_code & ec )
+  {
+#   ifdef BOOST_WINDOWS_API
+
+    // Link count info is only available through GetFileInformationByHandle
+    BY_HANDLE_FILE_INFORMATION info;
+    handle_wrapper h(
+      create_file_handle( p.c_str(), 0,
+          FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 0,
+          OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, 0 ) );
+    return
+      !error( h.handle == INVALID_HANDLE_VALUE,
+              p, ec, "boost::filesystem::hard_link_count" )
+      && !error( ::GetFileInformationByHandle( h.handle, &info ) == 0,
+                 p, ec, "boost::filesystem::hard_link_count" )
+           ? info.nNumberOfLinks
+           : 0;
+#   else 
+
+    struct stat path_stat;
+    return error( ::stat( p.c_str(), &path_stat ) != 0,
+                  p, ec, "boost::filesystem::hard_link_count" )
+           ? 0
+           : static_cast<boost::uintmax_t>( path_stat.st_nlink );
+#   endif
+  }
+
+  BOOST_FILESYSTEM_DECL
   path initial_path( error_code & ec )
   {
       static path init_path;
@@ -937,6 +1014,47 @@ namespace boost
     buf.modtime = new_time;
     error( ::utime( p.c_str(), &buf ) != 0,
       p, ec, "boost::filesystem::last_write_time" );
+#   endif
+  }
+
+  BOOST_FILESYSTEM_DECL
+  path read_symlink( const path & p, system::error_code & ec )
+  {
+#   ifdef BOOST_WINDOWS_API
+
+    if ( &ec == &throws() )
+      throw_exception( filesystem_error( "boost::filesystem::read_symlink",
+        p, BOOST_ERROR_NOT_SUPPORTED, system_category ) );
+    else ec.assign( BOOST_ERROR_NOT_SUPPORTED, system_category );
+    return path();
+
+#   else
+
+    path symlink_path;
+    for ( std::size_t path_max = 64;; path_max *= 2 ) // loop 'til buffer large enough
+    {
+      boost::scoped_array<char> buf( new char[path_max] );
+      ssize_t result;
+      if ( (result=::readlink( p.c_str(), buf.get(), path_max) ) == -1 )
+      {
+        if ( &ec == &throws() )
+          throw_exception( filesystem_error( "boost::filesystem::read_symlink",
+            p, errno, system_category ) );
+        else ec.assign( errno, system_category );
+        break;
+      }
+      else
+      {
+        if( result != static_cast<ssize_t>(path_max))
+        {
+          symlink_path = buf.get();
+          if ( &ec != &throws() ) ec.clear();
+          break;
+        }
+      }
+    }
+    return symlink_path;
+
 #   endif
   }
   

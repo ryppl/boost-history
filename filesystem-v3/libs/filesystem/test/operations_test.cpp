@@ -432,6 +432,8 @@ namespace
       BOOST_CHECK( fs::exists( from_ph ) );
       BOOST_CHECK( fs::exists( file_ph ) );
       BOOST_CHECK( fs::equivalent( from_ph, file_ph ) );
+      BOOST_CHECK( fs::hard_link_count( from_ph ) == 2 );
+      BOOST_CHECK( fs::hard_link_count( file_ph ) == 2 );
     }
 
     //  Although tests may be running on a FAT or other file system that does
@@ -884,6 +886,8 @@ int test_main( int argc, char * argv[] )
   BOOST_CHECK( fs::is_regular_file( file_ph ) );
   BOOST_CHECK( BOOST_FS_IS_EMPTY( file_ph ) );
   BOOST_CHECK( fs::file_size( file_ph ) == 0 );
+  BOOST_CHECK( fs::hard_link_count( file_ph ) == 1 );
+
   bad_create_directory_path = file_ph;
   BOOST_CHECK( CHECK_EXCEPTION( bad_create_directory, EEXIST ) );
   fs::file_status stat = fs::status( file_ph );

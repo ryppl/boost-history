@@ -105,7 +105,7 @@ namespace boost
   private:
     // the internal representation is unspecified so that additional state
     // information such as permissions can be added in the future; this
-    // implementation just uses status_type as the internal representation
+    // implementation just uses file_type as the internal representation
 
     file_type m_value;
   };
@@ -131,7 +131,7 @@ namespace boost
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                                 query functions                                      //
+//                             status query functions                                   //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
@@ -189,8 +189,20 @@ namespace boost
   path complete( const path & p, const path & base = initial_path() );
 
   BOOST_FILESYSTEM_DECL
+  void copy_any( const path & from, const path & to,
+                 system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL
+  void copy_directory( const path & from, const path & to,
+                       system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL
   void copy_file( const path & from, const path & to,
                   system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL
+  void copy_symlink( const path & from, const path & to,
+                     system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   bool create_directories( const path & p/*,
@@ -225,6 +237,9 @@ namespace boost
   boost::uintmax_t file_size( const path & p,
                    system::error_code & ec = throws() );
 
+  BOOST_FILESYSTEM_DECL
+  boost::uintmax_t hard_link_count( const path & p, system::error_code & ec = throws() );
+
   //  initial_path() declaration precedes complete()
 
   BOOST_FILESYSTEM_DECL
@@ -234,6 +249,9 @@ namespace boost
   BOOST_FILESYSTEM_DECL
   void last_write_time( const path & p, const std::time_t new_time,
                    system::error_code & ec = throws() );
+
+  BOOST_FILESYSTEM_DECL
+  path read_symlink( const path & p, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   bool remove( const path & p, system::error_code & ec = throws() );

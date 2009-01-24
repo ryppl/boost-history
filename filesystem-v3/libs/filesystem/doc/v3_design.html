@@ -42,7 +42,8 @@
     <a href="#Solution">Solution</a><br>
     <a href="#Details">Details</a><br>
     <a href="#Other-changes">Other changes</a><br>
-    <a href="#Prototype">Prototype</a></td>
+    <a href="#Prototype">Prototype</a><br>
+    <a href="#Acknowledgements">Acknowledgements</a></td>
   </tr>
   <tr>
     <td width="100%" bgcolor="#D7EEFF" align="center">
@@ -172,9 +173,13 @@ been consistently applied to all applicable functions.</p>
 <p><b>Additional filesystem operations:</b></p>
 
 <ul>
+  <li>copy_any() added.</li>
+  <li>copy_directory() added.</li>
+  <li>copy_symlink() added.</li>
   <li>create_symlink() now available on Windows if supported (i.e. Vista and 
   later).</li>
   <li>create_directory_symlink() added.</li>
+  <li>read_symlink() added.</li>
 </ul>
 
 <h2><a name="Prototype">Prototype</a></h2>
@@ -182,9 +187,14 @@ been consistently applied to all applicable functions.</p>
 <p>Currently incomplete. Not thoroughly tested. Should not be used for 
 production work.</p>
 
+<h2><a name="Acknowledgements">Acknowledgements</a></h2>
+
+<p>Walter Landry contributed both the design and implementation of the copy_any, 
+copy_directory, copy_symlink, and read_symlink functions.</p>
+
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->21 January, 2009<!--webbot bot="Timestamp" endspan i-checksum="39336" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->24 January, 2009<!--webbot bot="Timestamp" endspan i-checksum="39342" --></p>
 
 <p>© Copyright Beman Dawes, 2008</p>
 <p> Use, modification, and distribution are subject to the Boost Software 
