@@ -15,7 +15,7 @@ namespace boost{ namespace itl
     template <class Type> struct is_map
 	{
 		typedef is_map<Type> type;
-		enum {value = false}; 
+		static const bool value = false; 
 	};
 
 }} // namespace boost itl

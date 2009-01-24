@@ -679,6 +679,20 @@ erase
 //-----------------------------------------------------------------------------
 // intersection &=  
 //-----------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_inter_combinable<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator &= (ObjectT& object, const OperandT& operand
+)
+{
+    typedef ObjectT object_type;
+    object_type intersection;
+    object.add_intersection(intersection,operand);
+    object.swap(intersection);
+    return object;
+}
+
+/*CL
 template 
 <
 	class ObjectT,
@@ -699,11 +713,40 @@ ObjectT& operator &=
 {
     typedef ObjectT object_type;
     object_type intersection;
-    object.add_intersection(intersection,operand);
+    object.add_intersection(intersection, operand);
     object.swap(intersection);
-    return object;
+	return object;
 }
 
+
+template 
+<
+	class SubType,
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+SubType& operator &=
+(
+          interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
+)
+{
+    typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> object_type;
+    object_type intersection;
+    object.add_intersection(intersection, operand);
+    object.swap(intersection);
+	return object.self();
+    //return *(static_cast<SubType*>(&object));
+}
+*/
+
+/*
 //-----------------------------------------------------------------------------
 template 
 <
@@ -871,7 +914,7 @@ operator &=
     object.swap(intersection);
     return object;
 }
-
+*/
 
 //-----------------------------------------------------------------------------
 // is_element_equal

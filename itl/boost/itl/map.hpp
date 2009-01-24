@@ -668,11 +668,17 @@ namespace boost{namespace itl
 	//-----------------------------------------------------------------------------
 	template <class KeyT, class DataT, class Traits>
 	struct is_set<itl::map<KeyT,DataT,Traits> >
-	{ enum{value = true}; };
+	{ 
+		typedef is_set<itl::map<KeyT,DataT,Traits> > type;
+		static const bool value = true; 
+	};
 
 	template <class KeyT, class DataT, class Traits>
 	struct is_map<itl::map<KeyT,DataT,Traits> >
-	{ enum{value = true}; };
+	{ 
+		typedef is_map<itl::map<KeyT,DataT,Traits> > type;
+		static const bool value = true; 
+	};
 
     template <class DomainT, class CodomainT, class Traits>
     struct is_interval_container<itl::map<DomainT,CodomainT,Traits> >

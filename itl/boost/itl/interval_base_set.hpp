@@ -436,6 +436,9 @@ protected:
     sub_type* that() { return static_cast<sub_type*>(this); }
     const sub_type* that()const { return static_cast<const sub_type*>(this); }
 
+public:
+	sub_type& self() { return *that(); }
+
 protected:
     ImplSetT _set;
 } ;

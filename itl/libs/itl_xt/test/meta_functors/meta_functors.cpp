@@ -250,18 +250,15 @@ void quantifier_subtract_test()
 	cout << "sec_map: " << sec_map << endl;
 }
 
-void assert_test()
+void misc_test()
 {
-	//interval<double> doubItv = interval<double>::closed(0.0, 1.5);
-	//double fst = doubItv.first();
-	interval<int> intItv = interval<int>::closed(0, 2);
-	int fst = intItv.first();
-	cout << "  c: "<< itl::closed_bounded << endl;
-	cout << "c&o: "<< (itl::closed_bounded & itl::open_bounded)<< endl;
-	cout << " !c: "<< !(itl::closed_bounded)<< endl;
-	cout << " !o: "<< !(itl::open_bounded)<< endl;
-	cout << "2>>1: "<< (2 >> 1) << endl;
-	cout << "0>>1: "<< (0 >> 1) << endl;
+	typedef interval_map<int,int> IMT;
+
+	cout << "f=" << segmentational_fineness<IMT>::value << endl;
+	cout << "IMT > IMT::valueT =" << is_coarser_interval_map_companion<IMT, IMT::value_type>::value << endl;
+	cout << "IMT > IMT::valueT =" << is_interval_map_companion<IMT, IMT::value_type>::value << endl;
+	cout << "IMT > IMT::eleT =" << is_coarser_interval_map_companion<IMT, IMT::domain_mapping_type>::value << endl;
+	cout << "IMT > IMT::eleT =" << is_interval_map_companion<IMT, IMT::domain_mapping_type>::value << endl;
 }
 
 int main()
@@ -282,7 +279,7 @@ int main()
 	//codomain_test();
 	//string_codomain_test();
 	//quantifier_subtract_test();
-	assert_test();
+	misc_test();
     return 0;
 }
 

@@ -13,55 +13,17 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 namespace boost{namespace itl
 {
-/*
-//------------------------------------------------------------------------------
-// Addability
-//------------------------------------------------------------------------------
-template<class ObjectT, class OperandT>
-typename boost::enable_if<is_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) += operand; }
-
-template<class ObjectT, class OperandT>
-typename boost::enable_if<is_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) += operand; }
-
-
-template<class ObjectT>
-ObjectT operator + (const ObjectT& object, const ObjectT& operand)
-{ return ObjectT(object) += operand; }
-
-
-//------------------------------------------------------------------------------
-// Intersection
-//------------------------------------------------------------------------------
-template<class ObjectT, class OperandT>
-typename boost::enable_if<is_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) &= operand; }
-
-template<class ObjectT, class OperandT>
-typename boost::enable_if<is_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) &= operand; }
-
-template<class ObjectT>
-ObjectT operator & (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) &= operand; }
-*/
-
 
 //------------------------------------------------------------------------------
 // Addability
 //------------------------------------------------------------------------------
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const ObjectT& object, const OperandT& operand)
 { return ObjectT(object) += operand; }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const OperandT& operand, const ObjectT& object)
 { return ObjectT(object) += operand; }
 
@@ -75,20 +37,18 @@ ObjectT operator + (const typename ObjectT::overloadable_type& object, const Obj
 // Intersection
 //------------------------------------------------------------------------------
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const ObjectT& object, const OperandT& operand)
 { return ObjectT(object) &= operand; }
 
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const OperandT& operand, const ObjectT& object)
 { return ObjectT(object) &= operand; }
 
 template<class ObjectT>
 ObjectT operator & (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
 { return ObjectT(object) &= operand; }
-
-
 
 }} // namespace itl boost
 

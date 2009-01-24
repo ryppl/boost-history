@@ -130,7 +130,7 @@ public:
     typedef typename ImplSetT::const_iterator const_iterator;
 
 
-	enum { fineness = 1 };
+	enum { fineness = 2 };
 
 
     // B: Constructors, destructors, assignment
@@ -261,7 +261,10 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
 
 template <class Type>
 struct is_set<itl::separate_interval_set<Type> >
-{ enum{value = true}; };
+{ 
+	typedef is_set<itl::separate_interval_set<Type> > type;
+	static const bool value = true; 
+};
 
 template <class Type>
 struct is_interval_container<itl::separate_interval_set<Type> >

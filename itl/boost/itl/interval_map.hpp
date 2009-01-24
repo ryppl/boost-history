@@ -140,7 +140,7 @@ public:
     typedef typename base_type::value_type value_type;
     typedef typename base_type::mapping_type mapping_type;
     typedef typename base_type::domain_mapping_type domain_mapping_type;
-    typedef typename base_type::interval_mapping_type interval_mapping_type;
+	typedef typename base_type::interval_mapping_type interval_mapping_type;
     typedef typename base_type::ImplMapT ImplMapT;
 
 	typedef typename base_type::codomain_combine codomain_combine;
@@ -148,7 +148,7 @@ public:
     typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;
     typedef interval_set_type set_type;
 
-	enum { fineness = 0 };
+	enum { fineness = 1 };
 
     /// Default constructor for the empty map 
     interval_map(): base_type() {}
@@ -1007,13 +1007,16 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
 template <class KeyT, class DataT, class Traits>
 struct is_set<itl::interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+{ 
+	typedef is_set<itl::interval_map<KeyT,DataT,Traits> > type;
+	static const bool value = true; 
+};
 
 template <class KeyT, class DataT, class Traits>
 struct is_map<itl::interval_map<KeyT,DataT,Traits> >
 { 
 	typedef is_map<itl::interval_map<KeyT,DataT,Traits> > type;
-	enum{value = true}; 
+	static const bool value = true; 
 };
 
 template <class KeyT, class DataT, class Traits>

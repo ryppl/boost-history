@@ -164,7 +164,7 @@ namespace boost{namespace itl
         typedef interval_set<DomainT,Compare,Interval,Alloc> interval_set_type;
         typedef interval_set_type set_type;
 
-		enum { fineness = 2 };
+		enum { fineness = 3 };
 
         /// Default constructor for the empty map 
         split_interval_map(): base_type() {}
@@ -777,7 +777,10 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 
 template <class KeyT, class DataT, class Traits>
 struct is_set<itl::split_interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+{ 
+	typedef is_set<itl::split_interval_map<KeyT,DataT,Traits> > type;
+	static const bool value = true; 
+};
 
 template <class KeyT, class DataT, class Traits>
 struct is_map<itl::split_interval_map<KeyT,DataT,Traits> >

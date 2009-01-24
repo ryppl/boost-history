@@ -453,7 +453,10 @@ namespace boost{namespace itl
     //-------------------------------------------------------------------------
     template <class Type>
     struct is_set<itl::set<Type> >
-    { enum{value = true}; };
+    { 
+		typedef is_set<itl::set<Type> > type;
+		static const bool value = true; 
+	};
 
     template <class Type>
     struct is_interval_container<itl::set<Type> >

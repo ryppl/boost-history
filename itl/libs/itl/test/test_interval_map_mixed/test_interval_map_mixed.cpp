@@ -783,8 +783,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     std::pair<interval<T>,U> I1_3D_1(I1_3D, u1);
     std::pair<interval<T>,U> I1_3D_2(I1_3D, u2);
     std::pair<interval<T>,U> I1_8D_1(I1_8D, u1);
-	//typename SplitIntervalMapT::value_type I1_8D_1(I1_8D, u1);
-    std::pair<interval<T>,U> I2_7D_1(I2_7D, u1);
+    std::pair<const interval<T>,U> I2_7D_1(I2_7D, u1);
     std::pair<interval<T>,U> I2_3D_1(I2_3D, u1);
     std::pair<interval<T>,U> I2_3D_3(I2_3D, u3);
     std::pair<interval<T>,U> I6_7D_1(I6_7D, u1);

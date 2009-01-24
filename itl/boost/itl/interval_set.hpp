@@ -165,7 +165,7 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_iterator const_iterator;
 
-	enum { fineness = 0 };
+	enum { fineness = 1 };
 
 
     // B: Constructors, destructors, assignment
@@ -382,7 +382,10 @@ inline bool is_element_equal(const interval_set<DomainT,Compare,Interval,Alloc>&
 
 template <class Type>
 struct is_set<itl::interval_set<Type> >
-{ enum{value = true}; };
+{ 
+	typedef is_set<itl::interval_set<Type> > type;
+	static const bool value = true; 
+};
 
 template <class Type>
 struct is_interval_container<itl::interval_set<Type> >

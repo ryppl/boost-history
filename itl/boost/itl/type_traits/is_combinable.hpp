@@ -26,36 +26,6 @@ struct is_overloadable
 };
 
 
-
-template<class Type, class AssociateT>
-struct is_combinable;
-
-template<class Type>
-struct is_combinable<Type, typename Type::value_type>       
-{ enum{ value = is_overloadable<Type>::value }; };
-
-template<class Type>
-struct is_combinable<Type, typename Type::domain_mapping_type>
-{ enum{ value = is_overloadable<Type>::value }; };
-
-template<class Type>
-struct is_combinable<Type, typename Type::joint_type>       
-{ enum{ value = is_overloadable<Type>::value }; };
-
-template<class Type>
-struct is_combinable<Type, typename Type::separate_type>    
-{ 
-	enum{ value = mpl::and_<is_interval_splitter<Type>, is_overloadable<Type> >::value }; 
-};
-
-template<class Type, class AssociateT>
-struct is_combinable
-{
-	enum{ value = false };
-};
-
-//==============================================================================
-//==============================================================================
 template<class Type>
 struct is_interval_map
 {
@@ -102,16 +72,58 @@ struct is_interval_map_derivative;
 
 template<class Type>
 struct is_interval_map_derivative<Type, typename Type::domain_mapping_type>
-{ enum{ value = is_interval_container<Type>::value }; };
+{
+	typedef is_interval_map_derivative<Type, typename Type::domain_mapping_type> type;
+	static const bool value = is_interval_container<Type>::value;
+};
 
 template<class Type>
 struct is_interval_map_derivative<Type, typename Type::interval_mapping_type>
-{ enum{ value = is_interval_container<Type>::value }; };
+{
+	typedef is_interval_map_derivative<Type, typename Type::interval_mapping_type> type;
+	static const bool value = is_interval_container<Type>::value;
+};
+
+template<class Type>
+struct is_interval_map_derivative<Type, typename Type::value_type>
+{
+	typedef is_interval_map_derivative<Type, typename Type::value_type> type;
+	static const bool value = is_interval_container<Type>::value;
+};
 
 template<class Type, class AssociateT>
 struct is_interval_map_derivative
 {
-	enum{ value = false };
+	typedef is_interval_map_derivative<Type, AssociateT> type;
+	static const bool value = is_interval_container<Type>::value;
+};
+
+
+
+
+//------------------------------------------------------------------------------
+//- segmentational_fineness
+//------------------------------------------------------------------------------
+template<class Type> struct unknown_fineness
+{
+	typedef unknown_fineness<Type> type;
+	static const int value = 0;
+};
+
+template<class Type> struct known_fineness
+{
+	typedef known_fineness<Type> type;
+	static const int value = Type::fineness;
+};
+
+template<class Type>struct segmentational_fineness
+{
+	typedef segmentational_fineness<Type> type;
+	static const int value = 
+		mpl::if_<is_interval_container<Type>, 
+				  known_fineness<Type>,
+				unknown_fineness<Type>
+			>::type::value;
 };
 
 
@@ -134,7 +146,7 @@ struct is_interval_set_companion<IntervalSet1<Dom,Cmp,Itv,Alc>,
 	typedef IntervalSet2<Dom,Cmp,Itv,Alc> CompanionT;
 	typedef is_interval_set_companion<GuideT,CompanionT> type;
 
-	enum{ value = CompanionT::fineness < GuideT::fineness };
+	static const bool value = true;
 };
 
 // Every IntervalSet can be a companion of every IntervalMap for 
@@ -154,7 +166,7 @@ struct is_interval_set_companion<IntervalMap<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>,
 	typedef IntervalSet<Dom,        Cmp,        Itv,Alc> CompanionT;
 	typedef is_interval_set_companion<GuideT,CompanionT> type;
 
-	enum{ value = true }; 
+	static const bool value = true;
 };
 
 template<class GuideT, class CompanionT> struct is_interval_set_companion
@@ -185,7 +197,7 @@ struct is_interval_map_companion<IntervalMap1<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc>,
 	typedef IntervalMap2<Dom,Cod,Trt,Cmp,Cmb,Sec,Itv,Alc> CompanionT;
 	typedef is_interval_map_companion<GuideT,CompanionT> type;
 
-	enum{ value = CompanionT::fineness < GuideT::fineness };
+	static const bool value = true;
 };
 
 template<class GuideT, class CompanionT> struct is_interval_map_companion
@@ -193,6 +205,33 @@ template<class GuideT, class CompanionT> struct is_interval_map_companion
 	typedef is_interval_map_companion<GuideT,CompanionT> type;
 	enum{ value = is_interval_map_derivative<GuideT,CompanionT>::value }; 
 };
+
+
+
+
+//------------------------------------------------------------------------------
+//- is_coarser_interval_{set,map}_companion
+//------------------------------------------------------------------------------
+template<class GuideT, class CompanionT> 
+struct is_coarser_interval_set_companion
+{
+	typedef is_coarser_interval_set_companion<GuideT, CompanionT> type;
+	static const bool value =
+		   is_interval_set_companion<GuideT, CompanionT>::value
+		&& (  segmentational_fineness<GuideT>::value 
+	        > segmentational_fineness<CompanionT>::value);
+};
+
+template<class GuideT, class CompanionT> 
+struct is_coarser_interval_map_companion
+{
+	typedef is_coarser_interval_map_companion<GuideT, CompanionT> type;
+	static const bool value =
+		   is_interval_map_companion<GuideT, CompanionT>::value
+		&& (  segmentational_fineness<GuideT>::value 
+	        > segmentational_fineness<CompanionT>::value);
+};
+
 
 
 //------------------------------------------------------------------------------
@@ -222,44 +261,95 @@ template<class GuideT, class CompanionT>
 struct is_intra_combinable
 { 
 	typedef is_intra_combinable<GuideT,CompanionT> type;
-	enum
-	{ value = mpl::or_
-	          <
-			        mpl::and_<  is_interval_map<GuideT>
-			                  , is_interval_map_companion<GuideT, CompanionT> > 
-			      , mpl::and_<  is_interval_set<GuideT>
-			                  , is_interval_set_companion<GuideT, CompanionT> > 
-	          >::value
-	}; 
+	static const bool value =
+	    mpl::or_<is_interval_set_combinable<GuideT, CompanionT>,
+			     is_interval_map_combinable<GuideT, CompanionT> 
+	            >::value;
 };
 
 template<class GuideT, class CompanionT>
 struct is_cross_combinable
 { 
 	typedef is_cross_combinable<GuideT,CompanionT> type;
-	enum
-	{ value = mpl::and_
-	          <     is_interval_map<GuideT>
-			      , mpl::or_<  is_interval_map_companion<GuideT, CompanionT>
-			                 , is_interval_set_companion<GuideT, CompanionT>  
-			                > 
-	          >::value
-	}; 
+	static const bool value =
+	    mpl::and_
+	    <     is_interval_map<GuideT>
+		    , mpl::or_<  is_interval_map_companion<GuideT, CompanionT>
+		               , is_interval_set_companion<GuideT, CompanionT> > 
+	    >::value;
 };
 
 template<class GuideT, class CompanionT>
 struct is_inter_combinable
 { 
 	typedef is_inter_combinable<GuideT,CompanionT> type;
-	enum
-	{ value = mpl::or_
-	          <     
-			      mpl::and_<is_interval_map<GuideT>, 
-				            is_cross_combinable<GuideT, CompanionT> >
-                , mpl::and_<is_interval_set<GuideT>, 
-				            is_intra_combinable<GuideT, CompanionT> >
-	          >::value
-	}; 
+	static const bool value =
+	    mpl::or_
+	    <     
+			mpl::and_<is_interval_map<GuideT>, 
+			          is_cross_combinable<GuideT, CompanionT> >
+          , mpl::and_<is_interval_set<GuideT>, 
+		              is_intra_combinable<GuideT, CompanionT> >
+	    >::value;
+};
+
+//------------------------------------------------------------------------------
+// is_binary_interval_{set,map}_combinable
+//------------------------------------------------------------------------------
+template<class GuideT, class CompanionT>
+struct is_binary_interval_set_combinable
+{ 
+	typedef is_binary_interval_set_combinable<GuideT,CompanionT> type;
+	enum{ value = mpl::and_<  is_interval_set<GuideT>
+		                    , is_coarser_interval_set_companion<GuideT, CompanionT> 
+	                       >::value
+	    }; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_binary_interval_map_combinable
+{ 
+	typedef is_binary_interval_map_combinable<GuideT,CompanionT> type;
+	enum{ value = mpl::and_<  is_interval_map<GuideT>
+		                    , is_coarser_interval_map_companion<GuideT, CompanionT> 
+	                       >::value
+	    }; 
+};
+
+template<class GuideT, class CompanionT>
+struct is_binary_intra_combinable
+{ 
+	typedef is_binary_intra_combinable<GuideT,CompanionT> type;
+	static const bool value =
+	    mpl::or_<is_binary_interval_set_combinable<GuideT, CompanionT>,
+			     is_binary_interval_map_combinable<GuideT, CompanionT> 
+	            >::value;
+};
+
+template<class GuideT, class CompanionT>
+struct is_binary_cross_combinable
+{ 
+	typedef is_binary_cross_combinable<GuideT,CompanionT> type;
+	static const bool value =
+	    mpl::and_
+	    <     is_interval_map<GuideT>
+		    , mpl::or_<  is_coarser_interval_map_companion<GuideT, CompanionT>
+		               ,         is_interval_set_companion<GuideT, CompanionT> > 
+	    >::value;
+};
+
+template<class GuideT, class CompanionT>
+struct is_binary_inter_combinable
+{ 
+	typedef is_binary_inter_combinable<GuideT,CompanionT> type;
+	static const bool value =
+	    mpl::or_
+	    <     
+			mpl::and_<is_interval_map<GuideT>, 
+			          is_binary_cross_combinable<GuideT, CompanionT> >
+          , mpl::and_<is_interval_set<GuideT>, 
+		              is_binary_intra_combinable<GuideT, CompanionT> >
+	    >::value;
 };
 
 

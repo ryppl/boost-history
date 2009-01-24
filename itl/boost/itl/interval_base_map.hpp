@@ -180,6 +180,8 @@ public:
     /// The interval type of the map
     typedef Interval<DomainT,Compare> interval_type;
 
+	typedef std::pair<interval_type,CodomainT> interval_mapping_type;
+
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename interval_type::difference_type difference_type;
 
@@ -213,8 +215,6 @@ public:
     typedef typename ImplMapT::key_type   key_type;
     /// value type of the implementing container
     typedef typename ImplMapT::value_type value_type;
-    /// the \c value_type is a \c interval_mapping_type that maps intervals to \c codomain-values 
-    typedef typename ImplMapT::value_type interval_mapping_type;
     /// data type of the implementing container
     typedef typename ImplMapT::value_type::second_type data_type;
 
@@ -858,6 +858,9 @@ public:
 protected:
     sub_type* that() { return static_cast<sub_type*>(this); }
     const sub_type* that()const { return static_cast<const sub_type*>(this); }
+
+public:
+	sub_type& self() { return *that(); }
 
 protected:
     ImplMapT _map;

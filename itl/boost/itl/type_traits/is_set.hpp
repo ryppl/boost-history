@@ -12,7 +12,11 @@ namespace boost{ namespace itl
 {
     template <class Type> struct is_set;
 
-    template <class Type> struct is_set{ enum {value = false}; };
+    template <class Type> struct is_set
+	{ 
+		typedef is_set<Type> type;
+		static const bool value = false; 
+	};
 
 }} // namespace boost itl
 

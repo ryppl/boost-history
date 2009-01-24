@@ -148,7 +148,7 @@ namespace boost{namespace itl
         typedef typename ImplSetT::const_iterator const_iterator;
 
 
-		enum { fineness = 2 };
+		enum { fineness = 3 };
 
         // B: Constructors, destructors, assignment
         /// Default constructor for the empty set 
@@ -421,7 +421,10 @@ namespace boost{namespace itl
 
     template <class Type>
     struct is_set<itl::split_interval_set<Type> >
-    { enum{value = true}; };
+	{ 
+		typedef is_set<itl::split_interval_set<Type> > type;
+		static const bool value = true; 
+	};
 
     template <class Type>
     struct is_interval_container<itl::split_interval_set<Type> >
