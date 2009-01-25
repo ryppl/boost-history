@@ -125,6 +125,301 @@ h.set_exception( current_exception() ).]]
 [endsect]
 
 [/==========================================================================================]
+[section Header `<boost/interthreads/act_traits.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <typename ACT>
+        struct act_value;
+
+        template <typename ACT>
+        struct is_movable;
+
+        template <typename ACT>
+        struct has_future_if;
+
+        template <typename ACT>
+        struct has_thread_if;
+
+        template <typename AE, typename T>
+        struct asynchronous_completion_token;    
+
+        template <typename AE>
+        struct get_future;
+
+}
+}
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/asynchronous_executor.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+    
+        template <typename AE, template <class> class Decorator>
+        struct asynchronous_executor_decorator : AE {
+            template <typename T>
+            struct handle {
+                typedef typename AE::template handle<T>::type type;
+            };
+        
+            template <typename F>
+            typename AE::template handle< typename boost::result_of<F()>::type >::type 
+            fork( F fn );
+
+            asynchronous_executor_decorator();
+
+            template <typename Nullary> 
+            asynchronous_executor_decorator(thread::native_handle_attr_type& attr, Nullary f);
+
+            asynchronous_executor_decorator(Nullary f);
+
+            asynchronous_executor_decorator(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+            
+            asynchronous_executor_decorator& operator=(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+
+            operator boost::detail::thread_move_t<asynchronous_executor_decorator>();
+
+            boost::detail::thread_move_t<asynchronous_executor_decorator> move();
+        };
+
+        template <typename AE, template <class> class Decorator>
+        struct get_future<asynchronous_executor_decorator<AE, Decorator> > {
+            template <typename T>
+            struct future_type {
+                typedef typename AE::template get_future<AE>::type type;
+            };
+            template <typename T>
+            typename future_type<T>::type& operator()(typename AE::template handle<T>::type & j);
+        };
+    }
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/asynchronous_adapter.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+    
+        template <typename AE, template <class> class Decorator>
+        struct asynchronous_executor_decorator : AE {
+            template <typename T>
+            struct handle {
+                typedef typename AE::template handle<T>::type type;
+            };
+        
+            template <typename F>
+            typename AE::template handle< typename boost::result_of<F()>::type >::type 
+            fork( F fn );
+
+            asynchronous_executor_decorator();
+
+            template <typename Nullary> 
+            asynchronous_executor_decorator(thread::native_handle_attr_type& attr, Nullary f);
+            asynchronous_executor_decorator(Nullary f);
+
+            asynchronous_executor_decorator(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+            
+            asynchronous_executor_decorator& operator=(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+
+            operator boost::detail::thread_move_t<asynchronous_executor_decorator>();
+
+            boost::detail::thread_move_t<asynchronous_executor_decorator> move();            
+        };
+
+        template <typename AE, template <class> class Decorator>
+        struct get_future<asynchronous_executor_decorator<AE, Decorator> > {
+            template <typename T>
+            struct future_type {
+                typedef typename AE::template get_future<AE>::type type;
+            };
+            template <typename T>
+            typename future_type<T>::type& operator()(typename AE::template handle<T>::type & j);
+        };
+    }
+    }
+
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/basic_threader.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        class basic_threader {
+        public:
+            thread::native_handle_attr_type& attr();
+
+            template <typename T>
+            struct handle {
+                typedef thread type;
+            };
+
+            template <typename F> thread fork(F f);
+        };
+
+        template <>
+        struct act_value<thread> {
+            typedef void type;
+        };
+    }
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/basic_threader_decorator.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {   
+
+        typedef asynchronous_executor_decorator<basic_threader,thread_decorator> basic_threader_decorator;
+        
+    }
+    }
+    
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/fork_after.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <typename ACT>
+        struct act_wrapper {
+            act_wrapper();
+            void wait_initialized();
+            void set(ACT& other);
+            void set(boost::detail::thread_move_t<ACT> other);
+            void wait();
+            typename act_value<ACT>::type get();
+            void join();
+        };
+
+        template <typename ACT>
+        struct act_value<act_wrapper<ACT> > {
+            typedef typename act_value<ACT>::type type;
+        };
+
+        template <typename ACT>
+        struct is_movable<act_wrapper<ACT> > : is_movable<ACT>{};
+
+        template <typename ACT>
+        struct has_future_if<act_wrapper<ACT> > : has_future_if<ACT> {};
+
+        template <typename ACT>
+        struct has_thread_if<act_wrapper<ACT> > : has_thread_if<ACT>{};
+
+
+        namespace result_of { 
+            template <typename AE,typename F>
+            struct fork_after {
+                typedef typename boost::result_of<F()>::type result_type;
+                typedef typename asynchronous_completion_token<AE, result_type>::type act_type;
+                typedef act_wrapper<act_type> type;
+            };
+        }
+
+        namespace partial_specialization_workaround {
+            template< typename AE, typename F, typename D > 
+            struct fork_after {
+                static typename result_of::fork_after<AE,F>::type
+                apply(AE& ae, F fn, D& d);
+            };
+        }
+        template< typename AE, typename F, typename D> 
+        typename result_of::fork_after<AE,F>::type 
+        fork_after( AE& ae, F fn, D& d);
+
+
+    }
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/scheduler.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+   
+        template <typename C>
+        class scheduler {
+            explicit scheduler(
+                tp::poolsize const& psize
+            );
+            template <typename T>
+            struct handle {
+                typedef tp::task<T> type;
+            };
+            template <typename F>
+            tp::task<typename boost::result_of<F()>::type> 
+            fork(F f);
+        };
+
+        template <typename Channel>
+        struct get_future<scheduler<Channel> > {
+            template <typename T>
+            struct future_type {
+                typedef shared_future<T> type;
+            };
+            template <typename T>
+            shared_future<T>& operator()(tp::task<T>& act);
+        };
+
+        template <typename Channel, typename T>
+        struct asynchronous_completion_token<boost::tp::pool<Channel>,T> {
+            typedef boost::tp::task<T> type;
+        };    
+
+        namespace partial_specialization_workaround {
+            template< typename Channel, typename F > 
+            struct fork<boost::tp::pool<Channel>,F> {
+                static typename result_of::fork<boost::tp::pool<Channel>, F>::type  
+                apply( boost::tp::pool<Channel>& ae, F fn );
+            };
+        }
+        template <typename C>
+        struct get_future<tp::pool<C> > {
+            template <typename T>
+            shared_future<T>& operator()(tp::task<T>& act);
+        };
+
+        template <typename ResultType>
+        struct act_value<tp::task<ResultType> > {
+            typedef ResultType type;
+        };
+
+        template <typename R>
+        struct is_movable<tp::task<R> > : mpl::false_{};
+
+        template <typename R>
+        struct has_future_if<tp::task<R> > : mpl::true_{};
+
+        template <typename R>
+        struct has_thread_if<tp::task<R> > : mpl::false_{};
+
+    }
+    }
+
+
+[endsect]
+
+[/==========================================================================================]
 [section Header `<boost/interthreads/fork_all.hpp>`]
 [/==========================================================================================]
 
@@ -346,6 +641,251 @@ A metafunction returning the result type of applying get_all to a Sequence of as
 ]
 
 [endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/detach_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct detach {
+                typedef void result_type;
+                template<typename ACT>
+                void operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct detach_all {
+                typedef typename fusion::result_of::for_each<Sequence, fct::detach>::type type;
+            };
+        }
+        
+        template <typename Sequence>
+        void detach_all(Sequence& t);
+        
+
+    }    
+    }   // namespace boost
+    
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/join_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct join {
+                typedef void result_type;
+                template<typename ACT>
+                void operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct join_all {
+                typedef typename fusion::result_of::for_each<Sequence, fct::join>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        typename result_of::join_all<Sequence>::type
+        join_all(Sequence& t);
+
+    }    
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/join_all_until.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct join_until {
+                join_until(const system_time& abs_time);
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+            };
+            
+            struct join_for {
+                template <typename Duration>
+                join_for(const Duration& rel_time);
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct join_all_until {
+                typedef bool type;
+            };
+
+            template <typename Sequence>
+            struct join_all_for {
+                typedef bool type;
+            };
+        }
+
+        template <typename Sequence>
+        typename result_of::join_all_until<Sequence> 
+        join_all_until(Sequence& t, const system_time& abs_time);
+
+        template <typename Sequence, typename Duration>
+        typename result_of::join_all_for<Sequence> 
+        join_all_for(Sequence& t, const Duration& rel_time);
+
+    }    
+    }   // namespace boost
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/interrupt_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+      
+        namespace fct {
+            struct interrupt {
+                template<typename ACT>
+                void operator()(ACT& act) const;
+            };
+        }
+        
+        namespace result_of {
+            template <typename Sequence>
+            struct interrupt_all {
+                typedef typename fusion::result_of::for_each<Sequence, fct::interrupt>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        void interrupt_all(Sequence& t);
+
+    }    
+    }
+
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/interruption_requested_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+      
+        namespace fct {
+            struct interruption_requested {
+                typedef bool result_type;
+
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct interruption_requested_on_all {
+                typedef typename fusion::result_of::all<Sequence, fct::interruption_requested>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        bool interruption_requested_on_all(Sequence& t);
+
+    }    
+    }
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/wait_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct wait {
+                typedef void result_type;
+                template<typename ACT>
+                void operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct wait_all {
+                typedef typename fusion::result_of::for_each<Sequence, fct::wait>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        typename result_of::wait_all<Sequence>::type
+        wait_all(Sequence& t);
+
+    }    
+    }   // namespace boost
+
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/interthreads/algorithm/wait_all_until.hpp>`]
+[/==========================================================================================]
+
+namespace boost {
+namespace interthreads {
+
+    namespace fct {
+        struct wait_until {
+            wait_until(const system_time& abs_time);
+            template<typename ACT>
+            bool operator()(ACT& act) const;
+
+        struct wait_for {
+            template <typename Duration>
+            wait_for(const Duration& rel_time);
+            template<typename ACT>
+            bool operator()(ACT& act) const;
+    }
+
+    namespace result_of {
+        template <typename Sequence>
+        struct wait_all_until {
+            typedef bool type;
+        };
+
+        template <typename Sequence>
+        struct wait_all_for {
+            typedef bool type;
+        };
+    }
+    
+    template <typename Sequence>
+    typename result_of::wait_all_until<Sequence const> 
+    wait_all_until(Sequence const& t, const system_time& abs_time);
+
+    template <typename Sequence, typename Duration>
+    typename result_of::wait_all_for<Sequence> 
+    wait_all_for(Sequence& t, const Duration& rel_time);
+
+}    
+}   // namespace boost
 
 [endsect]
 
@@ -1130,7 +1670,7 @@ public:
 
 [endsect]
 
-[section:swap Member function `swap()`]
+[section:swap2 Member function `swap()`]
 
     void swap(shared_joiner& other);
 
@@ -1232,7 +1772,7 @@ Otherwise, returns an rvalue-reference to the value stored in the asynchronous r
 
 
 
-[section:joinable Member function `joinable()`]
+[section:joinable2 Member function `joinable()`]
 [/==========================================================================================]
 
     bool joinable() const;
@@ -1244,7 +1784,7 @@ Otherwise, returns an rvalue-reference to the value stored in the asynchronous r
 
 [endsect]
 
-[section:join Member function `join()`]
+[section:join2 Member function `join()`]
 [/==========================================================================================]
 
     void join();
@@ -1282,7 +1822,7 @@ unchanged.]]
 
 [endsect]
 
-[section:detach Member function `detach()`]
+[section:detach3 Member function `detach()`]
 [/==========================================================================================]
 
     void detach();
@@ -1296,7 +1836,7 @@ unchanged.]]
 [endsect]
 
 
-[section:get_id Member function `get_id()`]
+[section:get_id2 Member function `get_id()`]
 [/==========================================================================================]
 
     thread::id get_id() const;
@@ -1309,7 +1849,7 @@ a default-constructed __thread_id__.]]
 
 [endsect]
 
-[section:interrupt Member function `interrupt()`]
+[section:interrupt2 Member function `interrupt()`]
 [/==========================================================================================]
 
     void interrupt();
@@ -1325,7 +1865,7 @@ predefined __interruption_points__ with interruption enabled .]]
 [endsect]
 
 
-[section:nativehandle Member function `native_handle()`]
+[section:nativehandle2 Member function `native_handle()`]
 [/==========================================================================================]
 
     typedef platform-specific-type native_handle_type;
@@ -1342,7 +1882,7 @@ implementation. If no such instance exists, `native_handle()` and `native_handle
 
 
 [endsect]
-[section:non_member_swap Non-member function `swap()`]
+[section:non_member_swap2 Non-member function `swap()`]
 
     void swap(shared_joiner& lhs,shared_joiner& rhs);
 
@@ -1430,14 +1970,60 @@ Metafunction that returns the result type of the fork function applied to a shar
 
 
 [/==========================================================================================]
-[section:decorator_thread_decoration_file Header `<boost/interthreads/thread_decorator.hpp>`]
+[section Header `<boost/interthreads/typeof/future.hpp>`]
+[/==========================================================================================]
+
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::unique_future, 1)
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::shared_future, 1)
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::promise, 1)
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::packaged_task, 1)
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/typeof/launcher.hpp>`]
+[/==========================================================================================]
+
+    BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::launcher)
+    BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::shared_launcher)
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/typeof/threader.hpp>`]
+[/==========================================================================================]
+
+    BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::unique_threader)
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::unique_joiner, 1)
+
+    BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::shared_threader)
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::interthreads::shared_joiner, 1)
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/typeof/basic_threader.hpp>`]
+[/==========================================================================================]
+
+    BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::basic_threader)
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/interthreads/typeof/scheduler.hpp>`]
+[/==========================================================================================]
+[endsect]
+
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::tp::task, 1)
+
+
+[/==========================================================================================]
+[section:decorator_thread_decoration_file Header `<boost/interthreads/thread_decoration.hpp>`]
 [/==========================================================================================]
 
     namespace boost {
     namespace interthreads {
         class thread_decoration;
-        class thread_decorator;
-        void decorate();
     }
     }
 
@@ -1511,6 +2097,22 @@ __thread_decorator_decorate__ function. If successful the cleanup function is re
 
 [endsect]
 [endsect]
+
+[endsect]
+
+
+
+[/==========================================================================================]
+[section:decorator_thread_decorator_file Header `<boost/interthreads/thread_decorator.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        class thread_decorator;
+        void decorate();
+    }
+    }
+
 
 [section:thread_decorator Class `thread_decorator`]
 [/==========================================================================================]

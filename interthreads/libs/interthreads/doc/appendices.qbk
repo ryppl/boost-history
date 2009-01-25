@@ -22,14 +22,14 @@
 [section:todo  Appendix E: Future plans]
 [/=====================================]
 
-[heading Tasks to do before review]
+[section Tasks to do before review]
 [variablelist
 
-[[Solve the bugs] [v0.3#1 v0.3#2 v0.3#3 v0.2#1 v0.2#2]]
+[[Solve the bugs] [v0.2#1]]
 
-[[Add polymorph act and adapters] []]
+[[Add polymorphic act and adapters] []]
 
-[[Add examples] [ae/act framework.]]
+[[Add more examples] [ae/act framework.]]
 
 [[Complete the reference] [ae/act framework, typeof.]]
 
@@ -39,19 +39,20 @@
 wait_for_any to implement this feauture, which add an superflous constraint be able to get a future to all the AE/ACT. 
 In adition the wait_for_any has now 0(N) complexity.]]
 
-[[Complete the tests] [Even if the current release incluse more test here is yet a long way before been able to review the library.]]
-
-[[Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise] [.]]
-
-[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
+[[Complete the tests] [Even if the current release include some test there is yet a long way before been able to review the library.]]
 
 [[Complete the STM example] [.]]
 
 [[Optimize the TSSS maps using intrusive containers] [.]]
 
-]
+[[Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise] [.]]
 
-[heading For later releases]
+[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
+
+]
+[endsect]
+
+[section For later releases]
 
 [variablelist
 [
@@ -138,11 +139,12 @@ by a mix of fixed/variable mapping which will provide efficient access to the fi
 others keys.
 
 Configuration the fixed/variable/mixed key range, ordered/unordered map, intrusive/extrusive map, shared/exclusive locking.
+[endsect]
 
 
+[endsect]
 [endsect]
 [endsect]
 
-[endsect]
 
 

@@ -9,26 +9,7 @@
 [section Examples]
 [/============================]
 
-This section do includes complete examples using the library, but some case studies that use in some way the library.  
-I'm now working on the STM project. The deferred log, though tricky, are not huge and would be suitable for someone 
-who has a limited time to spend on them.
-
-[/==================================]
-[section thread_tuple_once]
-[/==================================]
-
-thread_tuple_once.hpp is a good example of the use of set_once.
-
-[endsect]
-
-[/==================================]
-[section thread_keep_alive]
-[/==================================]
-
-thread_keep_alive.hpp and thread_keep_alive.cpp is a good example of the use of thread_decoration, thread_specific_shared_pointer.
-
-[endsect]
-
+This section do includes complete examples using the library.
 
 [/==================================]
 [section Thread safe deferred traces]
