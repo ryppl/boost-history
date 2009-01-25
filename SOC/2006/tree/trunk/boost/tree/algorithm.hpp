@@ -89,8 +89,8 @@ Cursor last(Cursor c)
 template <class Cursor>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
-    ((AscendingCursor<Cursor>)),
-    (typename Cursor::size_type)) // return type
+//    ((AscendingCursor<Cursor>))
+    ,(typename Cursor::size_type)) // return type
 index(Cursor const& cur)
 {
     return std::distance(cur.parent().begin(), cur);

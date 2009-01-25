@@ -125,19 +125,23 @@ public:
 
     typedef typename fake_descending_binary_cursor<T>::cursor_facade_::size_type size_type;
 
+    fake_descending_binary_cursor()
+    : m_tree(0), m_pos(0) {}
+
     explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
-    : m_tree(t), m_pos(p) {}
+    : m_tree(&t), m_pos(p) {}
     
     fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
     : m_tree(other.m_tree), m_pos(other.m_pos) {}
 
     fake_descending_binary_cursor<T>& operator=(fake_descending_binary_cursor<T> const& other)
     {
+        m_tree = other.m_tree;
         m_pos = other.m_pos;
         return *this;
     }
 
-    fake_binary_tree<T>& m_tree;
+    fake_binary_tree<T>* m_tree;
     typename fake_binary_tree<T>::size_type m_pos;
 
 private:
@@ -151,7 +155,7 @@ private:
     typename fake_descending_binary_cursor<T>::cursor_facade_::reference
     dereference() const
     {
-        return m_tree.m_data[(m_pos-1)/2];
+        return m_tree->m_data[(m_pos-1)/2];
     }
 
     bool equal(fake_descending_binary_cursor<T> const& other) const
@@ -184,11 +188,11 @@ private:
     
     bool const empty_() const
     {
-        if (m_pos >= m_tree.m_data.size())
+        if (m_pos >= m_tree->m_data.size())
             return true;
         if (m_pos == 0)
             return false;
-        return (m_tree.m_data[m_pos] == def_val);
+        return (m_tree->m_data[m_pos] == def_val);
     }
 
     size_type const idx() const

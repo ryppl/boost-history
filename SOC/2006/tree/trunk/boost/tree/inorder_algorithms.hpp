@@ -130,7 +130,7 @@ lower_bound(MultiwayCursor x, T const& val)
     MultiwayCursor y = x;
     while (!x.empty()) {
         x = std::lower_bound(x.begin(), x.end(), val);
-        if (index(x) == 0)
+        if (x.index() == 0)
             y = x;
     }
     return y;
