@@ -75,11 +75,12 @@ struct asynchronous_completion_token<boost::tp::pool<Channel>,T> {
 namespace partial_specialization_workaround {
 template< typename Channel, typename F > 
 struct fork<boost::tp::pool<Channel>,F> {
-    typename result_of::fork<boost::tp::pool<Channel>, F>::type  
+    static typename result_of::fork<boost::tp::pool<Channel>, F>::type  
     apply( boost::tp::pool<Channel>& ae, F fn ) {
         return ae.submit(fn);
     }
 };
+
 }
 template <typename C>
 struct get_future<tp::pool<C> > {
@@ -87,9 +88,10 @@ struct get_future<tp::pool<C> > {
     shared_future<T>& operator()(tp::task<T>& act) { return act.get_future(); }
 };
 
+
 template <typename ResultType>
-struct act_value<tp::task<ResultType> > {
-    typedef ResultType type;
+struct act_traits< tp::task<ResultType> > {
+    typedef ResultType move_dest_type;
 };
 
 template <typename R>
@@ -104,7 +106,17 @@ struct has_thread_if<tp::task<R> > : mpl::false_{};
 }
 }
 
+#if 1
+namespace boost
+{
+    template<typename T>
+    boost::tp::task<T>& move(boost::tp::task<T>& t)
+    {
+        return t;
+    }
+}
 
+#endif
 #include <boost/config/abi_suffix.hpp>
 
 #endif

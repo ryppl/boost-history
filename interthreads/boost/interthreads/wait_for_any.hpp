@@ -42,13 +42,8 @@ namespace detail {
     struct partial;
     template <typename P> 
     struct partial<2,P> {
-#if 1        
         typedef typename pair_void<P>::value_type T;
         typedef typename pair_void<P>::type type;
-#else        
-        typedef P T;
-        typedef std::pair<unsigned, P> type;
-#endif        
         template <typename H>
         static type make(unsigned r, H &handles) {
             return std::make_pair(r,get(r,handles));
@@ -67,13 +62,8 @@ namespace detail {
     };
     template <typename P> 
     struct partial<3,P> {
-#if 1        
         typedef typename pair_void<P>::value_type T;
         typedef typename pair_void<P>::type type;
-#else        
-        typedef P T;
-        typedef std::pair<unsigned, P> type;
-#endif
         template <typename H>
         static type make(unsigned r, H &handles) {
             return std::make_pair(r,get(r,handles));
@@ -96,9 +86,6 @@ namespace detail {
     struct partial_aux {
         typedef pair_void<void>::value_type T;
         typedef pair_void<void>::type type;
-        //typedef void T;
-        //typedef std::pair<unsigned,unsigned> type;
-        //typedef std::make_pair<unsigned, P> type;
 
         template <typename H>
         static type make(unsigned i,H &h) {

@@ -15,12 +15,12 @@
 #define BOOST_INTERTHREADS_TYPEOF_LAUNCHER__HPP
 
 #include <boost/interthreads/launcher.hpp>
+#include <boost/interthreads/typeof/future.hpp>
 #include <boost/typeof/typeof.hpp>
 
 #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
 
 BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::launcher)
-
 
 BOOST_TYPEOF_REGISTER_TYPE(boost::interthreads::shared_launcher)
 

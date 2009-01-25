@@ -18,6 +18,10 @@
 #include <boost/utility/result_of.hpp>
 #include <boost/futures/future.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/type_traits/is_fundamental.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/thread/detail/move.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -25,30 +29,30 @@
 namespace boost {
 namespace interthreads {
 
-template <typename ACT>
-struct act_value;
-
-template <typename ACT>
-struct is_movable : mpl::false_{};
-
-template <typename ACT>
-struct has_future_if : mpl::false_{};
-
-template <typename ACT>
-struct has_thread_if : mpl::false_{};
-
-template <typename AE, typename T>
-struct asynchronous_completion_token {
-    typedef typename AE::template handle<T>::type type;
-};    
-
+    template<typename ACT>
+    struct act_traits;
     
-template <typename AE>
-struct get_future {
-    template <typename T>
-    shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) { return act.get_future(); }
-};
-    
+    template <typename ACT>
+    struct is_movable : mpl::false_{};
+
+    template <typename ACT>
+    struct has_future_if : mpl::false_{};
+
+    template <typename ACT>
+    struct has_thread_if : mpl::false_{};
+
+    template <typename AE, typename T>
+    struct asynchronous_completion_token {
+        typedef typename AE::template handle<T>::type type;
+    };    
+
+    template <typename AE>
+    struct get_future {
+        template <typename T>
+        shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) { 
+            return act.get_future(); 
+        }
+    };
 
 }
 }

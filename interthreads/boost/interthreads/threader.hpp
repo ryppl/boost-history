@@ -25,6 +25,7 @@
 #include <boost/utility/result_of.hpp>
 
 #include <boost/interthreads/fork.hpp>
+#include <boost/interthreads/launcher.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -34,12 +35,15 @@ namespace interthreads {
 
 template <typename ResultType>
 class unique_joiner;
-    
 
+template<typename T>
+struct act_traits<unique_joiner<T> > : act_traits<unique_future<T> > {};
+        
 template <typename ResultType>
 class unique_joiner {
 public:
     typedef ResultType result_type;
+    typedef typename act_traits<unique_joiner<ResultType> >::move_dest_type move_dest_type;
 private:
     struct unique_joiner_data {
         unique_future< result_type > fut_;
@@ -147,17 +151,10 @@ public:
     {
         return join_until(get_system_time()+rel_time);
     }
-#if 0
-    result_type get() const { 
-        return const_cast<unique_future< result_type >*>(&(data_->fut_))->get(); 
-    }
-   
-    result_type operator()() const { return get(); }
-#endif    
-    result_type get()  { 
+    move_dest_type get()  { 
         return data_->fut_.get(); 
     }
-    result_type operator()() { return get(); }
+    move_dest_type operator()() { return get(); }
 
     bool is_ready() const {
         return data_->fut_.is_ready(); 
@@ -201,10 +198,6 @@ public:
     unique_future<result_type>& get_future() {
         return data_->fut_; 
     }
-};
-template <typename ResultType>
-struct act_value<unique_joiner<ResultType> > {
-    typedef ResultType type;
 };
 
 template <typename R>
@@ -257,15 +250,19 @@ struct get_future<unique_threader> {
     template <typename T>
     unique_future<T>& operator()(unique_joiner<T>& j) { return j.get_future(); }
 };
-
-
+    
 template <typename ResultType>
 class shared_joiner;
-    
+
+template<typename T>
+struct act_traits<shared_joiner<T> > : act_traits<shared_future<T> > {};
+
 template <typename ResultType>
 class shared_joiner {
 public:
     typedef ResultType result_type;
+    typedef typename act_traits<shared_joiner<ResultType> >::move_dest_type move_dest_type;
+
 private:
     struct shared_joiner_data {
         shared_future< result_type > fut_;
@@ -380,15 +377,11 @@ public:
     {
         return join_until(get_system_time()+rel_time);
     }
-    result_type get() { 
+    move_dest_type get() const { 
         return data_->fut_.get(); 
     }
-    result_type operator()() { return get(); }
-    result_type get() const { 
-        return const_cast<shared_future< result_type >*>(&(data_->fut_))->get(); 
-    }
    
-    result_type operator()() const { return get(); }
+    move_dest_type operator()() const { return get(); }
 
     bool is_ready() const {
         return data_->fut_.is_ready(); 
@@ -432,11 +425,6 @@ public:
     shared_future<result_type>& get_future() {
         return data_->fut_; 
     }
-};
-
-template <typename R>
-struct act_value<shared_joiner<R> > {
-    typedef R type;
 };
 
 template <typename R>

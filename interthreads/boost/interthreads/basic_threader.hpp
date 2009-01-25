@@ -16,7 +16,6 @@
 
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread.hpp>
-//#include <boost/thread/tss.hpp>
 
 #include <boost/interthreads/fork.hpp>
 
@@ -55,10 +54,12 @@ public:
     }   
 };
 
-template <>
-struct act_value<thread> {
-    typedef void type;
-};
+    template<>
+    struct act_traits<thread >  {
+            typedef void move_dest_type;
+    };
+        
+
 }
 }
 

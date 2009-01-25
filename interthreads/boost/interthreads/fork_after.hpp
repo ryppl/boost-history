@@ -34,9 +34,16 @@ namespace interthreads {
 
 #define ACT_WRAPPER
 #ifdef ACT_WRAPPER
+template <typename ACT>
+struct act_wrapper;
+
+template <typename ACT>
+struct act_traits<act_wrapper<ACT> > : act_traits<ACT>{};
 
 template <typename ACT>
 struct act_wrapper {
+    typedef typename act_traits<act_wrapper<ACT> >::move_dest_type move_dest_type;
+    
     act_wrapper() :ptr_(new data()) {}
     void wait_initialized() {
         while (!ptr_->inittialized_) {
@@ -44,12 +51,27 @@ struct act_wrapper {
             ptr_->cv_.wait(lk);
         }
     }
+    void set_initialized() {
+        unique_lock<mutex> lk(ptr_->mtx_);
+        ptr_->inittialized_=true;
+    }
+    void set(ACT& other) {
+        ptr_->act_=boost::move(other);
+        set_initialized();
+        ptr_->cv_.notify_all();
+    }
+    void set(boost::detail::thread_move_t<ACT> other) {
+        ptr_->act_=other;
+        set_initialized();
+        ptr_->cv_.notify_all();
+    }
+
     void wait() {
         wait_initialized();
         ptr_->act_.wait();
     }
 
-    typename act_value<ACT>::type get() {
+    move_dest_type get() {
         wait_initialized();
         return ptr_->act_.get();
     }
@@ -57,11 +79,6 @@ struct act_wrapper {
     void join() {
         wait_initialized();
         ptr_->act_.join();
-    }
-    void set_initialized(ACT& other) {
-        ptr_->act_=boost::move(other);
-        ptr_->inittialized_=true;
-        ptr_->cv_.notify_all();
     }
 private:   
     struct data {
@@ -76,10 +93,6 @@ private:
     shared_ptr<data> ptr_;
 };
 
-template <typename ACT>
-struct act_value<act_wrapper<ACT> > {
-    typedef typename act_value<ACT>::type type;
-};
 
 template <typename ACT>
 struct is_movable<act_wrapper<ACT> > : is_movable<ACT>{};
@@ -112,21 +125,22 @@ template <typename AE, typename F, typename D>
 struct call_f_after {
     typedef void result_type;
 #ifndef ACT_WRAPPER
-    void operator()(AE& ae, F fn, D& d, typename AE:: template handle<typename boost::result_of<F()>::type>::type& h) {
+    void operator()(AE& ae, F fn, D& d, 
+        typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type& h
+    ) {
         //d.wait();
         boost::interthreads::wait_all(d);
-        typename AE:: template handle<typename boost::result_of<F()>::type>::type tmp = fork(ae, fn);
-        //h = boost::move(tmp);
-        h = tmp;
-        
+        typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type tmp = fork(ae, fn);
+        h = boost::move(tmp);
     }
 #else
-    void operator()(AE& ae, F fn, D& d, act_wrapper<typename AE:: template handle<typename boost::result_of<F()>::type>::type>& h) {
+    void operator()(AE& ae, F fn, D& d, act_wrapper<
+        typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type>& h
+    ) {
         //d.wait();
         boost::interthreads::wait_all(d);
-        typename AE:: template handle<typename boost::result_of<F()>::type>::type tmp = fork(ae, fn);
-        //h = boost::move(tmp);
-        h.set_initialized(tmp);        
+        typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type tmp = fork(ae, fn);
+        h.set(boost::move(tmp));
     }
 #endif
 };
@@ -136,14 +150,18 @@ template< typename AE, typename F, typename D >
 struct fork_after {
 #ifndef ACT_WRAPPER
     static void 
-    apply(AE& ae, F fn, D& d, typename AE:: template handle<typename boost::result_of<F()>::type>::type& h ) {
+    apply(AE& ae, F fn, D& d, 
+        typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type& h
+    ) {
         call_f_after<AE,F,D> f;
         boost::interthreads::fork(ae, boost::bind(f, boost::ref(ae), fn, boost::ref(d), boost::ref(h)));
     }
 #else        
     static typename result_of::fork_after<AE,F>::type
     apply(AE& ae, F fn, D& d) {
-        act_wrapper<typename AE:: template handle<typename boost::result_of<F()>::type>::type> h;
+        act_wrapper<
+            typename asynchronous_completion_token<AE,
+            typename boost::result_of<F()>::type>::type> h;
         call_f_after<AE,F,D> f;
         boost::interthreads::fork(ae, boost::bind(f, boost::ref(ae), fn, boost::ref(d), boost::ref(h)));
         return h;
@@ -154,7 +172,8 @@ struct fork_after {
 template< typename AE, typename F, typename D> 
 #ifndef ACT_WRAPPER
 void 
-fork_after( AE& ae, F fn, D& d, typename AE:: template handle<typename boost::result_of<F()>::type>::type& h) {
+fork_after( AE& ae, F fn, D& d, 
+    typename asynchronous_completion_token<AE,typename boost::result_of<F()>::type>::type& h) {
     return partial_specialization_workaround::fork_after<AE,F,D>::apply(ae,fn, d, h);
 }
 #else    
@@ -164,25 +183,30 @@ fork_after( AE& ae, F fn, D& d) {
 }
 #endif    
 
-#if 0
-template< typename AE, typename F, typename A1 > 
-typename asynchronous_completion_token<AE, typename boost::result_of<F(A1)>::type >::type
-fork( AE& ae, F fn, A1 a1 ) {
-    return ae.fork( bind( fn, a1 ) );
+template< typename AE, typename D, typename F> 
+act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F()>::type >::type >
+after_completion_fork( AE& ae, D& d, F fn) {
+    return fork_after(ae, fn, d );
 }
 
-template< typename AE, typename F, typename A1, typename A2 >
-typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2)>::type >::type
-fork( AE& ae, F fn, A1 a1, A2 a2 ) {
-    return ae.fork( bind( fn, a1, a2 ) );
+template< typename AE, typename D, typename F, typename A1 > 
+act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F(A1)>::type >::type >
+after_completion_fork( AE& ae, D& d, F fn, A1 a1 ) {
+    return fork_after(ae, bind( fn, a1 ), d );
 }
 
-template< typename AE, typename F, typename A1, typename A2, typename A3 >
-typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3)>::type >::type
-fork( AE& ae, F fn, A1 a1, A2 a2, A3 a3 ) {
-    return ae.fork( bind( fn, a1, a2, a3 ) );
+template< typename AE, typename D, typename F, typename A1, typename A2  > 
+act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2)>::type >::type >
+after_completion_fork( AE& ae, D& d, F fn, A1 a1, A2 a2 ) {
+    return fork_after(ae, bind( fn, a1, a2 ), d );
 }
-#endif
+
+template< typename AE, typename D, typename F, typename A1, typename A2, typename A3  > 
+act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3)>::type >::type >
+after_completion_fork( AE& ae, D& d, F fn, A1 a1, A2 a2, A3 a3 ) {
+    return fork_after(ae, bind( fn, a1, a2, a3 ), d );
+}
+
 }
 }
 
