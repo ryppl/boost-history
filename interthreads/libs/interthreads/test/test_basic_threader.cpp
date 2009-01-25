@@ -71,7 +71,7 @@ void do_test_fork_1() {
 }    
 
 #if 0
-// this do not works because boost::thread is not movable-only and boost::fusion::tuple works only with CopyContructible types
+// this do not works because boost::thread is movable-only and boost::fusion::tuple works only with CopyContructible types
 void do_test_join_all() {
     bith::basic_threader ae;
     typedef bith::result_of::fork_all<bith::basic_threader,bfus::tuple<void(*)(),void(*)()> >::type type;
@@ -89,7 +89,9 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
     test->add(BOOST_TEST_CASE(&do_test_fork));
     test->add(BOOST_TEST_CASE(&do_test_fork_1));
-    //test->add(BOOST_TEST_CASE(&do_test_join_all));
+#if 0
+    test->add(BOOST_TEST_CASE(&do_test_join_all));
+#endif    
   return test;
 }
 

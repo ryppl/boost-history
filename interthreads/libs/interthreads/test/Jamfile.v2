@@ -26,9 +26,9 @@ project
       <include>.
       <include>../../..
       <threading>multi
-      <target-os>cygwin
-      <threadapi>pthread
-      <variant>debug
+#      <target-os>cygwin
+#      <threadapi>pthread
+#      <variant>debug
 #      <define>BOOST_THREAD_HAS_THREAD_ATTR
 
     ;
@@ -46,7 +46,7 @@ rule interthreads-run ( sources * )
 {
     test-suite "tests"
         : 
-          [ interthreads-run move_test.cpp ]
+#          [ interthreads-run move_test.cpp ]
           [ interthreads-run test_basic_threader.cpp ]
           [ interthreads-run test_launcher.cpp ]
           [ interthreads-run test_threader.cpp ]

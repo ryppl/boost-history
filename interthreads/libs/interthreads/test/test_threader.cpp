@@ -7,35 +7,23 @@
 // See http://www.boost.org/libs/sync for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-
-    
-#include "boost/fusion/include/vector_tie.hpp"
-#include "boost/thread/thread_time.hpp"
+  
 #include "boost/thread/mutex.hpp"
 #include "boost/thread/locks.hpp"
-#include <boost/thread/xtime.hpp>
+
 #include "boost/interthreads/typeof/launcher.hpp"
 #include "boost/interthreads/typeof/threader.hpp"
 #include "boost/interthreads/typeof/future.hpp"
 #include "boost/interthreads/algorithm.hpp"
-#ifdef FORK_AFTER
-#endif
 #include "boost/interthreads/fork_after.hpp"
 #include <boost/typeof/typeof.hpp>
+
 #include <libs/interthreads/test/data_types.hpp>
 #include <libs/interthreads/test/test_ae.hpp>
 
 #include <iostream>
 #include <string>
 #include <boost/test/unit_test.hpp>
-
-#include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
-
-
-//#include "boost/fusion/include/begin.hpp"
-//#include "boost/fusion/include/end.hpp"
-//#include "boost/fusion/include/next.hpp"
 
 using namespace boost::unit_test;
 namespace bith = boost::interthreads;
@@ -171,6 +159,25 @@ void do_test_fork_after_get() {
     aetst::do_test_fork_after_get(ae);
 }    
 
+void do_test_other() {  
+    boost::mutex mtx_;
+    int i=0;
+    for (boost::mutex::scoped_lock lock_(mtx_), *continue_hlp_,**continue_=&continue_hlp_; continue_; continue_=0) {
+        i++;
+    }
+    BOOST_CHECK_EQUAL(i, 1);
+
+    for (boost::mutex::scoped_lock lock_(mtx_), *continue_=&lock_; continue_; continue_=0) {
+        i++;
+    }
+    BOOST_CHECK_EQUAL(i, 2);
+    if (bool __stop = false) {} else
+    for (boost::mutex::scoped_lock lock_(mtx_) ;  !__stop; __stop= true) {
+        i++;
+    }
+    BOOST_CHECK_EQUAL(i, 3);
+}    
+
 test_suite* init_unit_test_suite(int, char*[])
 {
     test_suite* test = BOOST_TEST_SUITE("shared_threader");
@@ -183,6 +190,7 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_thread_interrupts_at_interruption_point));
     test->add(BOOST_TEST_CASE(&do_test_creation_through_functor));
     test->add(BOOST_TEST_CASE(&do_test_creation_through_reference_wrapper));
+    
     test->add(BOOST_TEST_CASE(&do_test_wait_all));
     test->add(BOOST_TEST_CASE(&do_test_join_all));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
@@ -192,7 +200,9 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_fork_after_wait));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_get));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_any_fusion_sequence));
+
     #if 0
+    test->add(BOOST_TEST_CASE(&do_test_other));
     test->add(BOOST_TEST_CASE(&do_test_get_all));
     #endif
   return test;

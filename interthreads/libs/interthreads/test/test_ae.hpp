@@ -171,11 +171,11 @@ void do_test_wait_all(AE& ae) {
 
 template <typename AE>
 void do_test_wait_for_any(AE& ae) {
-    BOOST_AUTO(res, bith::wait_for_any(ae, simple_thread, simple_thread2));
-    BOOST_CHECK_EQUAL(res.first, 0u);
-    BOOST_CHECK_EQUAL(res.second, 999);  
-    res = bith::wait_for_any(ae, simple_thread2, simple_thread);
+    BOOST_AUTO(res, bith::wait_for_any(ae, simple_thread2, simple_thread));
     BOOST_CHECK_EQUAL(res.first, 1u);
+    BOOST_CHECK_EQUAL(res.second, 999);  
+    res = bith::wait_for_any(ae, simple_thread, simple_thread2);
+    BOOST_CHECK_EQUAL(res.first, 0u);
     BOOST_CHECK_EQUAL(res.second, 999);  
 }
 
@@ -244,13 +244,12 @@ void do_test_thread_interrupts_at_interruption_point(AE& ae) {
     BOOST_CHECK(!failed);
 }    
 
-
 template <typename AE>
 void do_test_fork_after_get(AE& ae) {  
     test_value=0;
     test_value2=0;
     test_value3=0;
-	BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+	BOOST_AUTO(actT, bith::fork_all(ae, my_simple_thread, my_simple_thread2));
     
     #ifndef ACT_WRAPPER
     typename AE:: template handle<int>::type res;
@@ -264,12 +263,13 @@ void do_test_fork_after_get(AE& ae) {
     BOOST_CHECK_EQUAL(test_value3, 333);
     BOOST_CHECK_EQUAL(res, 333);
 }    
+
 template <typename AE>
 void do_test_fork_after_wait(AE& ae) {  
     test_value=0;
     test_value2=0;
     test_value3=0;
-    BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+    BOOST_AUTO(actT, bith::fork_all(ae, my_simple_thread, my_simple_thread2));
     
     #ifndef ACT_WRAPPER
     typename AE:: template handle<int>::type res;
@@ -283,12 +283,13 @@ void do_test_fork_after_wait(AE& ae) {
     BOOST_CHECK_EQUAL(test_value3, 333);
 
 }    
+
 template <typename AE>
 void do_test_fork_after_join(AE& ae) {  
     test_value=0;
     test_value2=0;
     test_value3=0;
-    BOOST_AUTO(actT, fork_all(ae, my_simple_thread, my_simple_thread2));
+    BOOST_AUTO(actT, bith::fork_all(ae, my_simple_thread, my_simple_thread2));
     
     #ifndef ACT_WRAPPER
     typename AE:: template handle<int>::type res;
@@ -302,6 +303,5 @@ void do_test_fork_after_join(AE& ae) {
     BOOST_CHECK_EQUAL(test_value3, 333);
 
 }    
-
 }
 #endif

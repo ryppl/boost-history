@@ -9,25 +9,14 @@
 //////////////////////////////////////////////////////////////////////////////
 
     
-#include "boost/fusion/include/vector_tie.hpp"
-#include "boost/thread/thread_time.hpp"
-#include "boost/thread/mutex.hpp"
-#include "boost/thread/locks.hpp"
-#include <boost/thread/xtime.hpp>
-#include "boost/interthreads/typeof/launcher.hpp"
-#include "boost/interthreads/typeof/threader.hpp"
 #include "boost/interthreads/typeof/scheduler.hpp"
-#include "boost/interthreads/typeof/future.hpp"
 #include "boost/interthreads/algorithm.hpp"
-#include <boost/typeof/typeof.hpp>
 #include <libs/interthreads/test/data_types.hpp>
 #include <libs/interthreads/test/test_ae.hpp>
 
 #include <iostream>
 #include <boost/test/unit_test.hpp>
 
-#include <boost/static_assert.hpp>
-#include <boost/type_traits.hpp>
 #include <boost/tp/unbounded_channel.hpp>
 #include <boost/tp/fifo.hpp>
 
@@ -36,7 +25,7 @@ using namespace boost::unit_test;
 namespace bith = boost::interthreads;
 namespace bfus = boost::fusion;
 
-#define SCHEDULER
+//#define SCHEDULER
 
 #ifdef SCHEDULER
 typedef bith::scheduler<
@@ -53,7 +42,6 @@ void do_test_member_fork() {
     pool_type ae(s);
     aetst::do_test_member_fork(ae);
 }    
-
 
 void do_test_member_fork_bind() {
     pool_type ae(boost::tp::poolsize(2));
@@ -107,7 +95,6 @@ void do_test_wait_for_all() {
     aetst::do_test_wait_for_all(ae);
 }
 
-#if 0 // DO NOT COMPILE
 void do_test_fork_after_wait() {  
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_fork_after_wait(ae);
@@ -116,7 +103,6 @@ void do_test_fork_after_get() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_fork_after_get(ae);
 }    
-#endif
 
 test_suite* init_unit_test_suite(int, char*[])
 {
@@ -132,10 +118,9 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_wait_all));
     test->add(BOOST_TEST_CASE(&do_test_set_all));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
-#if 0    
-    test->add(BOOST_TEST_CASE(&do_test_fork_after_wait)); // DO NOT COMPILE
-    test->add(BOOST_TEST_CASE(&do_test_fork_after_get)); // DO NOT COMPILE
-    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));  // FAILS
-#endif    
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_wait));
+    test->add(BOOST_TEST_CASE(&do_test_fork_after_get));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
+
   return test;
 }
