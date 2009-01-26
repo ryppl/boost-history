@@ -13,22 +13,22 @@
 //
 //#include <boost/multi_index/identity.hpp>
 
-#include <boost/tree/output_iterator_cursor.hpp>
-
-#include <list>
-
-struct test_with_list_fixture
-{
-    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
-    typedef boost::tree::output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
-
-    test_with_list_fixture()
-    : l(), i(l), o(i) {}
-
-    std::list<int> l;
-    back_insert_iter_list_int i;
-    oc_bi_lst_type o;
-};
+//#include <boost/tree/output_iterator_cursor.hpp>
+//
+//#include <list>
+//
+//struct test_with_list_fixture
+//{
+//    typedef std::back_insert_iterator< std::list<int> > back_insert_iter_list_int;
+//    typedef boost::tree::output_iterator_cursor<back_insert_iter_list_int> oc_bi_lst_type;
+//
+//    test_with_list_fixture()
+//    : l(), i(l), o(i) {}
+//
+//    std::list<int> l;
+//    back_insert_iter_list_int i;
+//    oc_bi_lst_type o;
+//};
 
 //using namespace boost::tree;
 //

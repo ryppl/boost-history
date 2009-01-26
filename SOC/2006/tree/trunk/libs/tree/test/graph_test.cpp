@@ -18,7 +18,7 @@
 
 #include <boost/tree/balance.hpp>
 
-#include "helpers.hpp"
+
 #include "test_tree_traversal_data.hpp"
 
 typedef boost::tree::augmented_type< int, boost::default_color_type > data_type;

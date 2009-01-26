@@ -14,7 +14,7 @@
 
 #include <boost/mpl/list.hpp>
 
-#include "helpers.hpp"
+
 
 typedef boost::mpl::list<boost::tree::preorder
                         ,boost::tree::inorder
@@ -108,10 +108,12 @@ struct test_binary_tree_fixture {
 template <class T = int>
 struct test_binary_tree_with_list_fixture
 : public test_binary_tree_fixture<T>
-, public test_with_list_fixture {
+//, public test_with_list_fixture 
+{
     test_binary_tree_with_list_fixture()
     : test_binary_tree_fixture<T>()
-    , test_with_list_fixture() {}
+    //, test_with_list_fixture()
+    {}
 };
 
 template <class Tree>

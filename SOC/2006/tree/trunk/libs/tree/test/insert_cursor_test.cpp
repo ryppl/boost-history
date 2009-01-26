@@ -14,7 +14,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 
-#include "helpers.hpp"
+
 #include "test_tree_traversal_data.hpp"
 
 #include "fake_binary_tree.hpp"

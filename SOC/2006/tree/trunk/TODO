@@ -14,6 +14,9 @@
 [section TODO]
 
 General:
+* Re-merge algorithm tests into algorithm_test.cpp after they're all tidied up?
+* Add algorithms for construction of a tree based on two ranges specifying its
+  pre-/in-/postorder linearization (see Knuth).
 * Use Boost.MultiIndex for organising mock objects to avoid redundancy? 
   (The data pairs position--value
   are always the same, but the order in which they are accessed depends on the order of the
