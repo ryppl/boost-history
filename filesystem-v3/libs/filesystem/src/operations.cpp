@@ -36,11 +36,6 @@
       // That is required at least on Solaris, and possibly on other
       // systems as well.
 
-//  If not already defined, _WIN32_WINNT used to be defined as 0x0500
-//  (Windows 2K or later) at this point. But with Vista it becomes more
-//  important to know the exact version present, so sdkddkver.h is
-//  now required; it will supply specific version infomation.
-
 #include <boost/filesystem/operations.hpp>
 #include <boost/scoped_array.hpp>
 #include <boost/throw_exception.hpp>
@@ -65,7 +60,11 @@ using std::string;
 # endif
 
 # if defined(BOOST_WINDOWS_API)
+
 #   include <windows.h>
+#   if !defined(_WIN32_WINNT)
+#     define  _WIN32_WINNT   0x0500
+#   endif
 #   if defined(__BORLANDC__) || defined(__MWERKS__)
 #     if defined(__BORLANDC__)
         using std::time_t;
@@ -591,9 +590,32 @@ namespace boost
   BOOST_FILESYSTEM_DECL
   void copy_symlink( const path & from, const path & to, system::error_code & ec )
   {
+#   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
+    error( true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
+      "boost::filesystem::copy_symlink" );
+
+#   elif defined(BOOST_WINDOWS_API)
+
+    // see if actually supported by Windows runtime dll
+    if ( error( !create_symbolic_link_api,
+        error_code(BOOST_ERROR_NOT_SUPPORTED, system_category),
+        to, from, ec,
+        "boost::filesystem::copy_symlink" ) )
+      return;
+
+	// preconditions met, so attempt the copy
+	error( !::CopyFileEx( from.c_str(), to.c_str(), 0, 0, 0,
+		COPY_FILE_COPY_SYMLINK | COPY_FILE_FAIL_IF_EXISTS ), to, from, ec,
+		"boost::filesystem::copy_symlink" );
+
+#   else  // BOOST_POSIX_API
+
     path p( read_symlink( from, ec ) );
     if ( &ec != &throws() && ec ) return;
     create_symlink( p, to, ec );
+
+#   endif
+
   }
 
   BOOST_FILESYSTEM_DECL
@@ -694,7 +716,7 @@ namespace boost
   void create_symlink( const path & to, const path & from, error_code & ec )
   {
 #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
-
+	  std::cout << "*********************************" << _WIN32_WINNT << std::endl;
     error( true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
       "boost::filesystem::create_directory_symlink" );
 #   else
@@ -1047,7 +1069,7 @@ namespace boost
       {
         if( result != static_cast<ssize_t>(path_max))
         {
-          symlink_path = buf.get();
+          symlink_path.assign( buf.get(), buf.get() + result );
           if ( &ec != &throws() ) ec.clear();
           break;
         }
@@ -1488,10 +1510,10 @@ namespace
   }
 
   error_code dir_itr_first( void *& handle, void *& buffer,
-    const string & dir, string & target,
+    const char * dir, string & target,
     fs::file_status &, fs::file_status & )
   {
-    if ( (handle = ::opendir( dir.c_str() )) == 0 )
+    if ( (handle = ::opendir( dir )) == 0 )
       return error_code( errno, system_category );
     target = string( "." ); // string was static but caused trouble
                                  // when iteration called from dtor, after
@@ -1633,7 +1655,7 @@ namespace detail
   #if   defined(BOOST_POSIX_API)
       it.m_imp->buffer,
   #endif
-      p, filename, file_stat, symlink_file_stat );
+      p.c_str(), filename, file_stat, symlink_file_stat );
 
     if ( result )
     {

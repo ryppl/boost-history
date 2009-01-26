@@ -759,11 +759,11 @@ namespace path_traits
   inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.source_string() == rhs.source_string(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.source_string() == rhs; }
-  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.source_string() == rhs; }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.source_string(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.source_string(); }
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.source() == rhs.source(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.source() == rhs; }
+  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.source() == rhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.source(); }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.source(); }
 # endif
 
 

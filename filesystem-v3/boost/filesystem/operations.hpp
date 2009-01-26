@@ -51,9 +51,6 @@
 
 #ifdef BOOST_WINDOWS_API
 #  include <fstream>
-#  if !defined(_WIN32_WINNT)
-#    define _WIN32_WINNT 0x0500	// assume Windows 2000 or later SDK
-#  endif
 #endif
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
@@ -460,7 +457,7 @@ namespace detail
 
     // constructors without path arguments
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const std::string & what_arg, system::error_code ec )
       : system::system_error(ec, what_arg)
     {
@@ -471,7 +468,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, system::error_code ec )
       : system::system_error(ec, what_arg)
     {
@@ -482,7 +479,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const std::string & what_arg, int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
     {
@@ -493,7 +490,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
     {
@@ -506,7 +503,7 @@ namespace detail
 
     // constructors with one path argument
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const std::string & what_arg, const path & path1_arg,
       system::error_code ec )
       : system::system_error(ec, what_arg)
@@ -519,7 +516,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, const path & path1_arg,
       system::error_code ec )
       : system::system_error(ec, what_arg)
@@ -532,7 +529,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const std::string & what_arg, const path & path1_arg,
       int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
@@ -545,7 +542,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, const path & path1_arg,
       int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
@@ -560,7 +557,7 @@ namespace detail
 
     // constructors with two path arguments
     
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const std::string & what_arg, const path & path1_arg,
       const path & path2_arg, system::error_code ec )
       : system::system_error(ec, what_arg)
@@ -574,7 +571,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, const path & path1_arg,
       const path & path2_arg, system::error_code ec )
       : system::system_error(ec, what_arg)
@@ -588,7 +585,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+   filesystem_error(
       const std::string & what_arg, const path & path1_arg,
       const path & path2_arg, int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
@@ -602,7 +599,7 @@ namespace detail
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    filesystem_error::filesystem_error(
+    filesystem_error(
       const char * what_arg, const path & path1_arg,
       const path & path2_arg, int ev, const system::error_category & ecat )
       : system::system_error(ev, ecat, what_arg)
@@ -629,7 +626,7 @@ namespace detail
       return m_imp_ptr.get() ? m_imp_ptr->m_path2 : empty_path ;
     }
 
-    const char * filesystem_error::what() const throw()
+    const char * what() const throw()
     {
       if ( !m_imp_ptr.get() )
         return system::system_error::what();

@@ -478,6 +478,12 @@ namespace
       BOOST_CHECK( fs::exists( file_ph ) );
       BOOST_CHECK( fs::equivalent( from_ph, file_ph ) );
 
+      if ( platform == "POSIX" )
+	  {
+		  //std::cout << fs::read_symlink( from_ph ).string() << ", " << file_ph.string() << "\n";
+		  BOOST_CHECK( fs::read_symlink( from_ph ) == file_ph );
+	  }
+
       fs::file_status stat = fs::symlink_status( from_ph );
       BOOST_CHECK( fs::exists( stat ) );
       BOOST_CHECK( !fs::is_directory( stat ) );
@@ -491,6 +497,16 @@ namespace
       BOOST_CHECK( fs::is_regular_file( stat ) );
       BOOST_CHECK( !fs::is_other( stat ) );
       BOOST_CHECK( !fs::is_symlink( stat ) );
+       
+	  // since create_symlink worked, copy_symlink should also work
+      fs::path symlink2_ph( dir / "symlink2" );
+	  fs::copy_symlink( from_ph, symlink2_ph );
+      stat = fs::symlink_status( symlink2_ph );
+      BOOST_CHECK( fs::is_symlink( stat ) );
+      BOOST_CHECK( fs::exists( stat ) );
+      BOOST_CHECK( !fs::is_directory( stat ) );
+      BOOST_CHECK( !fs::is_regular_file( stat ) );
+      BOOST_CHECK( !fs::is_other( stat ) );
     }
 
     error_code ec = error_code();
