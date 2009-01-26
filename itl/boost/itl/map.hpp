@@ -106,7 +106,7 @@ namespace boost{namespace itl
         class Traits = itl::neutron_absorber,
         ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
         ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
-		ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, CodomainT), 
+		ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
         ITL_ALLOC   Alloc   = std::allocator 
     >
     class map: private std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT), 
@@ -135,7 +135,8 @@ namespace boost{namespace itl
         typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     codomain_combine;
         typedef domain_compare                              key_compare;
 		typedef typename inverse<codomain_combine >::type   inverse_codomain_combine;
-		typedef inplace_star<CodomainT>                     codomain_intersect;
+		typedef ITL_SECTION_CODOMAIN(Section,CodomainT)     codomain_intersect;
+		typedef typename inverse<codomain_intersect>::type  inverse_codomain_intersect;
 		typedef typename base_type::value_compare           value_compare;
 
     public:
@@ -290,11 +291,11 @@ namespace boost{namespace itl
         /** Represent this map as string */
         std::string as_string()const;
 
+	//private:
 	public: //JODO private: Problem add<F>(x) is used in set_algo 
         template<class Combiner>
         map& add(const value_type& value_pair);
 
-	private:
         template<class Combiner>
         map& subtract(const value_type& value_pair);
     };
@@ -660,6 +661,27 @@ namespace boost{namespace itl
     { 
 		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
 		return ObjectT(object) &= operand; 
+    }
+
+
+    /** Symmetric subtract map \c x2 and \c *this.
+        So \c *this becomes the symmetric difference of \c *this and \c x2 */
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    operator ^= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    {
+		Map::flip(object, operand); 
+		return object; 
+	}
+
+    template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    operator ^  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
+    { 
+		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+		return ObjectT(object) ^= operand; 
     }
 
 

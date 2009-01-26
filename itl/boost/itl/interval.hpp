@@ -457,7 +457,7 @@ right_over = x1 - x2; //on the left.
      [c  d) : right_over
 \endcode
 	*/
-    void left_subtract(interval& rsur, const interval& x2)const;
+    void left_subtract(interval& right_over, const interval& x2)const;
 
     /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
 		to \c left_over. The result \c left_over is the part of \c *this left of \c x2.

@@ -91,7 +91,7 @@ public:
     NumTV operator() (NumTV lwb, NumTV upb)  { return rnd_within_exUpb<NumTV>(lwb,upb); }
     NumTV operator() (interval<NumTV> rng) 
     { 
-        BOOST_ASSERT(rng.is_rightopen() || rng.is_closed());
+        BOOST_ASSERT(rng.is(right_open) || rng.is(closed_bounded));
         if(rng.is(right_open))
             return rnd_within_exUpb<NumTV>(rng.lower(), rng.upper());
         else

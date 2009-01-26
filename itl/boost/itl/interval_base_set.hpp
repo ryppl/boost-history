@@ -327,7 +327,37 @@ public:
     //CL void intersect(interval_base_set& section, const value_type& x)const;
 
     //JODO DOC; welche intersect-varianten kann ich ganz los werden.
+    void add_intersection(interval_base_set& section, const domain_type& x)const
+	{ add_intersection(section, interval_type(x)); }
+
     void add_intersection(interval_base_set& section, const value_type& x)const;
+
+
+	template
+    <
+        template<class DomT, ITL_COMPARE Comp, 
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
+    void add_intersection
+    (
+        interval_base_set& intersection,
+        const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
+    )const;
+
+
+    SubType& flip(const domain_type& x){ flip(interval_type(x)); }
+
+    SubType& flip(const value_type& x);
+
+	template
+    <
+        template<class DomT, ITL_COMPARE Comp, 
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
+    SubType& flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand);
+
 
     //JODO doku
     /** Perform intersection of <tt>*this</tt> and <tt>x</tt>; assign result
@@ -538,9 +568,116 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
 }
 
 
+template<class SubType, 
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    template
+    <
+        template<class DomT, ITL_COMPARE Comp,
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
+void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
+    ::add_intersection
+(
+    interval_base_set& intersection,
+    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
+)const
+{
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+
+    if(operand.empty())
+		return;
+
+    typename operand_type::const_iterator common_lwb;
+    typename operand_type::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, *this))
+        return;
+
+    typename operand_type::const_iterator it = common_lwb;
+    while(it != common_upb)
+        add_intersection(intersection, *it++);
+}
+
+
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
+SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
+	::flip(const value_type& x)
+{
+    // That which is common shall be subtracted
+	// That which is not shall be added
+	// So x has to be 'complementary added' or flipped
+	interval_type span = x;
+    typename ImplSetT::const_iterator fst_ = _set.lower_bound(span);
+    typename ImplSetT::const_iterator end_ = _set.upper_bound(span);
+
+	interval_type covered, left_over;
+	typename ImplSetT::const_iterator it_ = fst_;
+    while(it_ != end_) 
+    {
+		covered = *it_++; 
+		//[a      ...  : span
+		//     [b ...  : covered
+		//[a  b)       : left_over
+		span.right_subtract(left_over, covered);
+		subtract(span & covered); //That which is common shall be subtracted
+		add(left_over);                //That which is not shall be added
+
+		//...      d) : span
+		//... c)      : (*it); span.left_subtract(*it);
+		//     [c  d) : span'
+		span.left_subtract(covered);
+    }
+
+	//If span is not empty here, it is not in the set so it shall be added
+	add(span);
+	return *that();
+}
+
+
+template
+<
+	class SubType, 
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    template
+    <template<class DomT, ITL_COMPARE Comp, template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+    class IntervalSet
+>
+SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
+    ::flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
+{
+    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+
+    if(operand.empty())
+		return *that();
+
+    typename operand_type::const_iterator common_lwb;
+    typename operand_type::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, *this))
+		return *that() += operand;
+
+    typename operand_type::const_iterator it = operand.begin();
+
+	// All elements of operand left of the common range are added
+    while(it != common_lwb)
+        add(*it++);
+	// All elements of operand in the common range are symmertrically subtracted
+    while(it != common_upb)
+        flip(*it++);
+	// All elements of operand right of the common range are added
+    while(it != operand.end())
+        add(*it++);
+
+	return *that();
+}
+
+
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
+interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
 {
     iterator it=_set.begin();
     if(it==_set.end()) 

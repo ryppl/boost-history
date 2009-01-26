@@ -434,6 +434,43 @@ namespace boost{namespace itl
 	             const itl::set<DomainT,Compare,Alloc>& operand)
     { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
 
+	//--------------------------------------------------------------------------
+	// itl::set::symmetric_difference operators ^=, ^
+	//--------------------------------------------------------------------------
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    {
+		typedef itl::set<DomainT,Compare,Alloc> ObjectT;
+		if(object.contains(operand))
+			return erase(operand);
+		else
+			return add(operand);
+	} 
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
+	    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+
+
+
+    /** Intersect set \c object with \c operand. 
+	    So \c object becomes the intersection of \c object and \c operand */
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    inline itl::set<DomainT,Compare,Alloc>& 
+	operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { Set::flip(object, operand); return object; }
+
+    template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+    itl::set<DomainT,Compare,Alloc> 
+	operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
+	             const itl::set<DomainT,Compare,Alloc>& operand)
+    { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+
 
 
     template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>

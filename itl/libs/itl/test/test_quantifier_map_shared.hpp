@@ -14,7 +14,7 @@ template <class T, class U,
                    class Traits = neutron_absorber,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap1, 
@@ -22,7 +22,7 @@ template <class T, class U,
                    class Traits = neutron_absorber,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
                    ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_star, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalMap2 

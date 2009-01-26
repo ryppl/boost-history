@@ -142,7 +142,7 @@ template
     class Traits = itl::neutron_absorber,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
 	ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
-	ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inplace_star, CodomainT), 
+	ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
     template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_ALLOC   Alloc    = std::allocator
 >
@@ -196,6 +196,8 @@ public:
 	typedef typename inverse<codomain_combine>::type inverse_codomain_combine;
     /// Intersection functor for codomain values
     typedef ITL_SECTION_CODOMAIN(Section,CodomainT) codomain_intersect;
+	/// Inverse Combine functor for codomain value intersection
+	typedef typename inverse<codomain_intersect>::type inverse_codomain_intersect;
 
     /// Comparison functor for intervals which are keys as well
     typedef exclusive_less<interval_type> interval_compare;
@@ -690,8 +692,26 @@ public:
         const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& sectant
     )const;
 
-//@}
-        
+
+
+    SubType& flip(const domain_mapping_type& x){ flip(value_type(x)); }
+
+    SubType& flip(const value_type& x);
+
+    template
+    <
+        template
+        <    
+            class DomT, class CodomT, class Trts, 
+            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
+            template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc
+        >
+        class IntervalMap
+    >
+    SubType& flip(const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand);
+
+
+
     iterator lower_bound(const key_type& interval)
     { return _map.lower_bound(interval); }
 
@@ -995,7 +1015,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 		for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
 		{
 			interval_type common_interval; 
-			(*it).KEY_VALUE.intersect(common_interval, sectant_interval);
+			(*it).KEY_VALUE.intersect(common_interval, sectant_interval); //JODO refa: reduce intersect variants
 
 			if(!common_interval.empty())
 			{
@@ -1033,6 +1053,161 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         if(!common_interval.empty())
             section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
     }
+}
+
+
+
+
+
+
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+	::flip(const value_type& x)
+{
+    // That which is common shall be subtracted
+	// That which is not shall be added
+	// So x has to be 'complementary added' or flipped
+
+	if(Traits::emits_neutrons && Traits::absorbs_neutrons)
+	{
+		clear();
+		return *that();
+	}
+	if(Traits::emits_neutrons && !Traits::absorbs_neutrons)//JODO
+	{
+		(*that()) += x;
+		FORALL(typename ImplMapT, it_, _map)
+			it_->CONT_VALUE = neutron<codomain_type>::value();
+
+		if(!is_interval_splitter<SubType>::value)
+			join();
+
+		return *that();
+	}
+
+	interval_type span = x.KEY_VALUE;
+
+    typename ImplMapT::const_iterator fst_it = _map.lower_bound(span);
+    typename ImplMapT::const_iterator end_it = _map.upper_bound(span);
+
+	interval_type covered, left_over, common_interval;
+	const codomain_type& x_value = x.CONT_VALUE;
+	typename ImplMapT::const_iterator it = fst_it;
+    while(it != end_it) 
+    {
+		const codomain_type& co_value = it->CONT_VALUE;
+		covered = (*it++).KEY_VALUE; 
+		//[a      ...  : span
+		//     [b ...  : covered
+		//[a  b)       : left_over
+		span.right_subtract(left_over, covered);
+
+		//That which is common ...
+		common_interval = span & covered;
+		if(!common_interval.empty())
+		{
+			// ... shall be subtracted
+			if(is_set<codomain_type>::value)
+			{
+				codomain_type common_value = x_value;
+				inverse_codomain_intersect()(common_value, co_value);
+				erase(common_interval);
+				add(value_type(common_interval, common_value));
+
+				//JODO flip<inverse_codomain_intersect>(value_type(common_interval, co_value));
+			}
+			else
+				subtract(value_type(common_interval, co_value));
+		}
+
+		add(value_type(left_over, x_value)); //That which is not shall be added
+		// Because this is a collision free addition I don't have to distinguish codomain_types.
+
+		//...      d) : span
+		//... c)      : (*it); span.left_subtract(*it);
+		//     [c  d) : span'
+		span.left_subtract(covered);
+    }
+
+	//If span is not empty here, it is not in the set so it shall be added
+	add(value_type(span, x_value));
+
+	if(Traits::emits_neutrons && !Traits::absorbs_neutrons) //JODO
+		FORALL(typename ImplMapT, it_, _map)
+			it_->CONT_VALUE = neutron<codomain_type>::value();
+
+	return *that();
+}
+
+
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, 
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
+    template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+    template
+    <
+        template
+        <    
+            class DomT, class CodomT, class Trts, 
+            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
+            template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc
+        >
+        class IntervalMap
+    >
+SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::flip(const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand)
+{
+    typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
+
+	if(Traits::emits_neutrons && Traits::absorbs_neutrons)
+	{
+		clear();
+		return *that();
+	}
+	if(Traits::emits_neutrons && !Traits::absorbs_neutrons)//JODO
+	{
+		(*that()) += operand;
+		FORALL(typename ImplMapT, it_, _map)
+			it_->CONT_VALUE = neutron<codomain_type>::value();
+
+		if(!is_interval_splitter<SubType>::value)
+			join();
+
+		return *that();
+	}
+
+    typename operand_type::const_iterator common_lwb;
+    typename operand_type::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, *this))
+		return *that() += operand;
+
+    typename operand_type::const_iterator it = operand.begin();
+
+	// All elements of operand left of the common range are added
+    while(it != common_lwb)
+        add(*it++);
+	// All elements of operand in the common range are symmertrically subtracted
+    while(it != common_upb)
+        flip(*it++);
+	// All elements of operand right of the common range are added
+    while(it != operand.end())
+        add(*it++);
+
+	if(Traits::emits_neutrons && !Traits::absorbs_neutrons) //JODO
+		FORALL(typename ImplMapT, it_, _map)
+			it_->CONT_VALUE = neutron<codomain_type>::value();
+
+	return *that();
 }
 
 

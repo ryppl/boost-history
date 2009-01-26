@@ -154,8 +154,32 @@ namespace boost{namespace itl
 		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_et
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+
+        void operator()(Type& object, const Type& operand)const
+        { object &= operand; }
+    };
+
     template<>
-    inline std::string unary_template_to_string<inplace_bit_xor>::apply() { return "b^="; }
+    inline std::string unary_template_to_string<inplace_et>::apply() { return "&="; }
+
+    // ------------------------------------------------------------------------
+    template <typename Type> struct inplace_hat
+        : public neutron_based_inplace_combine<Type>
+    {
+        typedef Type type;
+        void operator()(Type& object, const Type& operand)const
+        { object ^= operand; }
+
+		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+    };
+
+    template<>
+    inline std::string unary_template_to_string<inplace_hat>::apply() { return "^="; }
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inserter
@@ -188,13 +212,13 @@ namespace boost{namespace itl
         : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const
-        { object &= operand; }
+        { object *= operand; }
 
 		static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
-    inline std::string unary_template_to_string<inplace_star>::apply() { return "&="; }
+    inline std::string unary_template_to_string<inplace_star>::apply() { return "*="; }
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inplace_slash
@@ -260,6 +284,14 @@ namespace boost{namespace itl
 	template<class Type> 
 	struct inverse<itl::inplace_bit_subtract<Type> >
 	{ typedef itl::inplace_bit_add<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_et<Type> >
+	{ typedef itl::inplace_hat<Type> type; };
+
+	template<class Type> 
+	struct inverse<itl::inplace_hat<Type> >
+	{ typedef itl::inplace_et<Type> type; };
 
 	template<class Type> 
 	struct inverse<itl::inplace_bit_and<Type> >

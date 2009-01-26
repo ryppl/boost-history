@@ -15,8 +15,15 @@ namespace boost{namespace itl
 {
 
 //------------------------------------------------------------------------------
-// Addability
+// Addability +=, +
 //------------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator += (ObjectT& object, const OperandT& operand)
+{ return object.add(operand); }
+
+
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const ObjectT& object, const OperandT& operand)
@@ -34,8 +41,75 @@ ObjectT operator + (const typename ObjectT::overloadable_type& object, const Obj
 
 
 //------------------------------------------------------------------------------
-// Intersection
+// Addability |=, | 
 //------------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_right_intra_combinable<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator |= (ObjectT& object, const OperandT& operand)
+{ return object += operand; }
+
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+operator | (const ObjectT& object, const OperandT& operand)
+{ return ObjectT(object) += operand; }
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+operator | (const OperandT& operand, const ObjectT& object)
+{ return ObjectT(object) += operand; }
+
+
+template<class ObjectT>
+ObjectT operator | (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+{ return ObjectT(object) += operand; }
+
+
+//------------------------------------------------------------------------------
+// Subtraction -=, -
+//------------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator -= (ObjectT& object, const OperandT& operand)
+{ return object.subtract(operand); }
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_cross_derivative<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator -= (ObjectT& object, const OperandT& operand)
+{ return object.erase(operand); }
+
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+operator - (const ObjectT& object, const OperandT& operand)
+{ return ObjectT(object) -= operand; }
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+operator - (const OperandT& operand, const ObjectT& object)
+{ return ObjectT(object) -= operand; }
+
+template<class ObjectT>
+ObjectT operator - (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+{ return ObjectT(object) -= operand; }
+
+
+//------------------------------------------------------------------------------
+// Intersection &=, &
+//------------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type&
+operator &= (ObjectT& object, const OperandT& operand)
+{
+    ObjectT intersection;
+    object.add_intersection(intersection, operand);
+	object.swap(intersection);
+    return object;
+}
+
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const ObjectT& object, const OperandT& operand)
@@ -49,6 +123,16 @@ operator & (const OperandT& operand, const ObjectT& object)
 template<class ObjectT>
 ObjectT operator & (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
 { return ObjectT(object) &= operand; }
+
+//------------------------------------------------------------------------------
+// Symmetric difference ^=, ^
+//------------------------------------------------------------------------------
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator ^= (ObjectT& object, const OperandT& operand)
+{ return object.flip(operand); }
+
 
 }} // namespace itl boost
 

@@ -63,6 +63,7 @@ namespace boost{namespace itl
             return true;
         }
 
+		/*CL
         template<class MapType>
         void intersection(MapType& y, const MapType& x1, const MapType& x2)
         {
@@ -84,6 +85,7 @@ namespace boost{namespace itl
             }
             tmp.swap(y);
         }
+		*/
 
         // optimized version
         template<class MapType>
@@ -104,10 +106,10 @@ namespace boost{namespace itl
                 if(x2_ != x2.end())
                 {
                     result.insert(*x1_);
-                    if(is_set<typename MapType::data_type>::value)
+                    if(is_set<typename MapType::codomain_type>::value)
 						result.template add<MapType::codomain_intersect>(*x2_); //MEMO template cast for gcc
                     else
-                        result.template add<MapType::codomain_combine>(*x2_);//JODO URG
+                        result.template add<MapType::codomain_combine>(*x2_);
                 }
                 x1_++;
             }
@@ -154,6 +156,48 @@ namespace boost{namespace itl
             intersect(tmp, result, x2);
             tmp.swap(result);
         }
+
+        //----------------------------------------------------------------------
+		// flip
+        //----------------------------------------------------------------------
+        template<class MapType>
+        void flip(MapType& result, const MapType& x2)
+        {
+			if(emits_neutrons<MapType>::value && absorbs_neutrons<MapType>::value)
+			{
+				result.clear();
+				return;
+			}
+
+            typename MapType::const_iterator x2_ = x2.begin(), cur_x2_, x1_;
+            while(x2_ != x2.end()) 
+			{
+				cur_x2_ = x2_;
+				std::pair<typename MapType::iterator,bool> insertion 
+					= result.insert(*x2_++);
+				if(!insertion.WAS_SUCCESSFUL)
+				{
+					//result.erase(insertion.ITERATOR);
+					if(is_set<typename MapType::codomain_type>::value)
+					{
+						typename MapType::iterator res_ = insertion.ITERATOR;
+						typename MapType::codomain_type common_value = res_->CONT_VALUE;
+						MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
+						result.subtract(*res_);
+						result.add(MapType::value_type(res_->KEY_VALUE, common_value));
+						//JODO result.template flip<MapType::inverse_codomain_intersect>(*insertion.ITERATOR);
+					}
+                    else
+                        result.subtract(*insertion.ITERATOR);
+				}
+			}
+
+			if(emits_neutrons<MapType>::value && !absorbs_neutrons<MapType>::value)//JODO
+				FORALL(typename MapType, it_, result)
+					it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
+        }
+
+
 
 		template<class MapType>
 		typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)

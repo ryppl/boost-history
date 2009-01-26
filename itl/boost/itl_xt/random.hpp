@@ -59,7 +59,7 @@ public:
     }
 
     unsigned rnd(const itl::interval<unsigned>& rng)
-    { BOOST_ASSERT( rng.is_rightopen() ); return rnd(rng.lower(),rng.upper()); }
+    { BOOST_ASSERT( rng.is(right_open) ); return rnd(rng.lower(),rng.upper()); }
 
 private:
     //JODO subtractive_rng m_random;

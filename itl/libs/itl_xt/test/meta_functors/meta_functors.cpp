@@ -236,9 +236,9 @@ void quantifier_subtract_test()
 {
 	typedef interval_map<int,nat> QuantifierT;
 	QuantifierT sec_map;
-	sec_map += make_pair(interval<int>::rightopen(1,5), 1);
-	sec_map -= make_pair(interval<int>::rightopen(3,7), 2);
-	sec_map += make_pair(interval<int>::rightopen(3,7), 3);
+	sec_map += QuantifierT::value_type(interval<int>::rightopen(1,5), 1);
+	sec_map -= make_pair(interval<int>::rightopen(3,7), static_cast<nat>(2));
+	sec_map += make_pair(interval<int>::rightopen(3,7), static_cast<nat>(3));
 	//sec_map *= QuantifierT(make_pair(interval<int>::rightopen(3,7), 1));
 	
 	QuantifierT sec_map2;
@@ -252,13 +252,10 @@ void quantifier_subtract_test()
 
 void misc_test()
 {
-	typedef interval_map<int,int> IMT;
-
-	cout << "f=" << segmentational_fineness<IMT>::value << endl;
-	cout << "IMT > IMT::valueT =" << is_coarser_interval_map_companion<IMT, IMT::value_type>::value << endl;
-	cout << "IMT > IMT::valueT =" << is_interval_map_companion<IMT, IMT::value_type>::value << endl;
-	cout << "IMT > IMT::eleT =" << is_coarser_interval_map_companion<IMT, IMT::domain_mapping_type>::value << endl;
-	cout << "IMT > IMT::eleT =" << is_interval_map_companion<IMT, IMT::domain_mapping_type>::value << endl;
+	typedef interval_set<int> SeT;
+	SeT a(interval<int>::rightopen(0,2));
+	a.flip(interval<int>::rightopen(1,3));
+	cout << a << endl;
 }
 
 int main()

@@ -51,7 +51,7 @@ void test_Validater()
     //map_atomize_plus_pushout.setTrialsCount(1000);
     //map_atomize_plus_pushout.run();
 
-    //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_star>
+    //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_et>
     //    Map_Cluster_Intersect_DiagramT;
     //LawValidater<Map_Cluster_Intersect_DiagramT, RandomGentor> map_cluster_star_pushout;
     //map_cluster_star_pushout.setTrialsCount(1000);
@@ -64,7 +64,7 @@ void test_Validater()
 
 	//typedef InplaceDistributivity
 	//	<split_interval_map<int, itl::set<int>, neutron_absorber >, 
-	//	inplace_star, inplace_plus, itl::std_equal>  TestLawT;
+	//	inplace_et, inplace_plus, itl::std_equal>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 

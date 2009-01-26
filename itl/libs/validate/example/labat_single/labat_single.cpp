@@ -41,7 +41,7 @@ void test_LawValidater()
     //map_atomize_plus_pushout.setTrialsCount(1000);
     //map_atomize_plus_pushout.run();
 
-    //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_star>
+    //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_et>
     //    Map_Cluster_Intersect_DiagramT;
     //LawValidater<Map_Cluster_Intersect_DiagramT, RandomGentor> map_cluster_star_pushout;
     //map_cluster_star_pushout.setTrialsCount(1000);
@@ -54,7 +54,7 @@ void test_LawValidater()
 
 	//typedef InplaceDistributivity
 	//	<split_interval_map<int, itl::set<int>, neutron_absorber >, 
-	//	inplace_star, inplace_plus, itl::std_equal>  TestLawT;
+	//	inplace_et, inplace_plus, itl::std_equal>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
@@ -65,7 +65,7 @@ void test_LawValidater()
 	//test_law.setTrialsCount(1000);
 
 	//typedef InplaceAssociativity
-	//   <split_interval_map<int, int, neutron_emitter >, inplace_star>  TestLawT;
+	//   <split_interval_map<int, int, neutron_emitter >, inplace_et>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
@@ -79,10 +79,15 @@ void test_LawValidater()
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
-	typedef InplaceInverseRemovability
-	   <split_interval_map<int, int, neutron_emitter>, inplace_plus>  TestLawT;
+	//typedef InplaceInverseRemovability
+	//   <split_interval_map<int, int, neutron_emitter>, inplace_plus>  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+	//test_law.setTrialsCount(1000);
+
+	typedef InplaceFlip
+		<split_interval_map<int, int, neutron_polluter > >  TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
-	test_law.setTrialsCount(1000);
+	test_law.setTrialsCount(10000);
 
 	std::cout << "Start\n";
 	ptime start(microsec_clock::local_time());
