@@ -1,19 +1,18 @@
 [section:howtouse How To Use This Documentation]
 
 * Tutorial pages are intended for those who do not know how to use the program.
-  * The pages that begin with the tag "Tutorial: Simple" are for absolute 
-    beginners. 
-  * "Tutorial: Full" should give the intermediate user a good 
+  * The pages that begin with the tag "Tutorial: Simple" are for absolute beginners.
+  * "Tutorial: Full" should give the intermediate user a good
     reference, as well as show how the program can be used
   * "Tutorial: Special" shows other features/options that the headers
     provide to the user.
-* The pages labelled "*Public Interface*" give reference information for 
-their respective subjects. You can find all public methods (and data members, 
+* The pages labelled "*Public Interface*" give reference information for
+their respective subjects. You can find all public methods (and data members,
 when structs are concerned) in these sections.
 * If you have a feature request, or if it appears that my implementation
 is in error, please check the [@svg_plot/todo.html To Do] page first, as well
-as the respective rationale section, if it exists. If I 
-you do not find your idea/complaint, please reach me either through the Boost 
+as the respective rationale section, if it exists. If I
+you do not find your idea/complaint, please reach me either through the Boost
 development list, or email me at jakevoytko (at) gmail (dot) com
 
 [heading Admonishments]
@@ -21,11 +20,11 @@ development list, or email me at jakevoytko (at) gmail (dot) com
 [note These blocks typically go into more detail about an explanation given
 above.]
 [tip These blocks contain information that you may find helpful while coding.]
-[important These contain information that is imperative to understanding a 
+[important These contain information that is imperative to understanding a
 concept.
-Failure to follow suggestions in these blocks will probably result in undesired behavior. 
+Failure to follow suggestions in these blocks will probably result in undesired behavior.
 Read all of these you find.]
-[warning It is imperative that you follow these. Failure to do so will lead to 
+[warning It is imperative that you follow these. Failure to do so will lead to
 incorrect, and likely undesired, results in the plot.]
 
 And the first admonishment I will use is as follows:
@@ -35,17 +34,17 @@ And the first admonishment I will use is as follows:
 whose mentor organization is Boost.]
 
 [heading Preface]
-Humans have a fantastic capacity for visual understanding, and merely looking 
-at data organized in one, two, or three dimensions allows us to see relations 
-not otherwise visible in a list of numbers. Computers, however, deal with 
+Humans have a fantastic capacity for visual understanding, and merely looking
+at data organized in one, two, or three dimensions allows us to see relations
+not otherwise visible in a list of numbers. Computers, however, deal with
 information numerically, and C++ and the
 [@http://en.wikipedia.org/wiki/Standard_Template_Library Standard Template Library (STL)]
 do not currently offer a way to bridge the gap.
 This library helps the user to easily plot data stored in STL containers.
 
-This project is focused on using STL containers in order to graph data on a 
-one-dimensional and two-dimensional (and in future, perhaps, 3D) plot. The plot 
-will currently be written to a 
+This project is focused on using STL containers in order to graph data on a
+one-dimensional and two-dimensional (and in future, perhaps, 3D) plot. The plot
+will currently be written to a
 [@http://en.wikipedia.org/wiki/Scalable_Vector_Graphics Scalable Vector Graphic image].
 
 [@http://www.w3.org/TR/SVG11/ Scalable Vector Graphics (SVG)] is an
@@ -58,25 +57,35 @@ SVG files (.svg) can be viewed with a internet browser:
 [@http://www.adobe.com/products/acrobat/readstep2.htmlAdobe Acrobat Reader],
 * [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
 but the quality if redering is often not as good as other browsers.
+
 * Microsoft Internet Explorer, provided a suitable
 [@http://www.adobe.com/svg/ Adobe SVG Viewer plug-in for SVG files] is installed,
+(note that Adobe have stopped offering this (as they warned years ago)
+but the download software can still be obtained elsewhere, for example from
+[@http://adobe-svg-viewer.software.informer.com/download/ software.informer].
+Shamefully, even IE8 does not yet offer SVG rendering.
+Information about limitations of IE with Vista are given on the
+[@http://www.adobe.com/svg/viewer/install/main.html Adobe End of Line FAQ]
+
 * [@http://www.inkscape.org/ Inkscape, a fine Open Source SVG viewer
 with excellent rendering, full scaling and other editing features.
-* and by many other graphics programs.
+
+* and by many other graphics programs, for example see
+[@http://svg.software.informer.com/software/ Most popular SVG software].
 
 The goals of the project are:
 
-* To let users produce simple plots with minimal intervention by using sane 
+* To let users produce simple plots with minimal intervention by using sane
 defaults.
 * To allow users to easily customize plots.
-* To allow the user to talk to the plot classes using coordinate units 
+* To allow the user to talk to the plot classes using coordinate units
 rather than pixels or other arbitrary measures.
-* To create the backbone of a `svg` class that can be extended to fully support 
+* To create the backbone of a `svg` class that can be extended to fully support
 the standard.
-* compliance with the 
+* compliance with the
 [@http://www.w3.org/TR/SVG11/ W3C Scalable vector Graph standard].
 
-[note Comments and suggestions to Jake Voytko 
-at jakevoytko (at) gmail (dot) com]
+[note Comments and suggestions to Jake Voytko at jakevoytko (at) gmail (dot) com
+or Paul.A.Bristow (at) gmail (dot) com]
 
 [endsect] [/section:howtouse How To Use This Documentation]

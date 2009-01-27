@@ -1,5 +1,7 @@
 [section:tutorial_stylesheet Stylesheet Tutorial]
 
+The is no longer implemented so removed from the docs, pro tem.
+
 To include a stylesheet into a program with any plot, simply use the `load_stylesheet(const std::string& filename)` method to load an external stylesheet. To load the file ./style.css, for instance, we would call:
 
   my_plot.load_stylesheet("./style.css");

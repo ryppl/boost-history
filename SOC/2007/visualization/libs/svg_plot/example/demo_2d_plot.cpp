@@ -13,6 +13,7 @@
 #  pragma warning (disable : 4180) // qualifier applied to function type has no meaning; ignored
 #  pragma warning (disable : 4503) // decorated name length exceeded, name was truncated
 #  pragma warning (disable : 4512) // assignment operator could not be generated
+#  pragma warning (disable : 4100) // unreferenced formal parameter
 #endif
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
@@ -93,7 +94,7 @@ void plot(const std::string& title, const std::string& file,
     int x_major_label = -1, int y_major_label = -1, // None
     int x_rotation = horizontal, int y_rotation = upward) // 
 {
-    using namespace boost::svg;
+  using namespace boost::svg;
 
   svg_2d_plot my_plot;
   // Size/scale settings.

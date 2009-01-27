@@ -1,23 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>
-      Simple Code Example</title>
+<title>Simple Code Example</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../tutorial_2d_code_simple.html" title=" Tutorial: 2D">
-<link rel="prev" href="../tutorial_2d_code_simple.html" title=" Tutorial: 2D">
-<link rel="next" href="full_2d_layout.html" title=" Tutorial:
-      Fuller Layout Example">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../tutorial_2d_code_simple.html" title="Tutorial: 2D">
+<link rel="prev" href="../tutorial_2d_code_simple.html" title="Tutorial: 2D">
+<link rel="next" href="full_2d_layout.html" title="Tutorial: Fuller Layout Example">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -26,12 +24,10 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example"></a><a href="2d_simple_code_example.html" title="
-      Simple Code Example">
+<a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example"></a><a class="link" href="2d_simple_code_example.html" title="Simple Code Example">
       Simple Code Example</a>
 </h3></div></div></div>
-<pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_2d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_2d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
 
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">map</span><span class="special">&gt;</span>
@@ -65,23 +61,22 @@
 <span class="special">}</span>
 </pre>
 <a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example.resulting_simple_2d_example_image"></a><h5>
-<a name="id540272"></a>
-        <a href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.resulting_simple_2d_example_image">Resulting
+<a name="id739750"></a>
+        <a class="link" href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.resulting_simple_2d_example_image">Resulting
         Simple_2D Example Image</a>
       </h5>
 <p>
         <span class="inlinemediaobject"><img src="../../images/2d_simple.png" alt="2d_simple"></span>
       </p>
 <a name="svg_plot.tutorial_2d_code_simple.2d_simple_code_example.simple_2d_example_breakdown"></a><h5>
-<a name="id540320"></a>
-        <a href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.simple_2d_example_breakdown">Simple_2D
+<a name="id739781"></a>
+        <a class="link" href="2d_simple_code_example.html#svg_plot.tutorial_2d_code_simple.2d_simple_code_example.simple_2d_example_breakdown">Simple_2D
         Example Breakdown</a>
       </h5>
 <p>
         Let's examine what this does.
       </p>
-<pre class="programlisting">
-<span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 </pre>
 <p>
         This constructor initializes a new 2D plot. This also sets the very many
@@ -90,14 +85,12 @@
 <p>
         We could accept all of these and just plot one series of data with
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map1</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">);</span> <span class="comment">// Data point marker color is default black.
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map1</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">);</span> <span class="comment">// Data point marker color is default black.
 </span></pre>
 <p>
         but we can also add a few optional details:
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">background_border_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
@@ -125,8 +118,7 @@
           will be visible).
         </li>
 </ul></div>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map1</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map1</span><span class="special">,</span> <span class="string">"Series 1"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">map2</span><span class="special">,</span> <span class="string">"Series 2"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">);</span>
 </pre>
 <p>
@@ -145,8 +137,7 @@
 <p>
         Finally
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple_2d.svg"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple_2d.svg"</span><span class="special">);</span>
 </pre>
 <p>
         writes plot <code class="computeroutput"><span class="identifier">my_plot</span></code> to the
@@ -158,7 +149,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

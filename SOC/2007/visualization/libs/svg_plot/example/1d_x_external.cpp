@@ -12,22 +12,22 @@ using namespace boost::svg;
 
 int main()
 {
-	vector<double> dan_times;
-	vector<double> elaine_times;
+  vector<double> dan_times;
+  vector<double> elaine_times;
 
-	dan_times.push_back(3.1);
-	dan_times.push_back(4.2);
-	elaine_times.push_back(2.1);
-	elaine_times.push_back(7.8);
+  dan_times.push_back(3.1);
+  dan_times.push_back(4.2);
+  elaine_times.push_back(2.1);
+  elaine_times.push_back(7.8);
 
-	svg_1d_plot my_plot;
+  svg_1d_plot my_plot;
 
     // Adding generic settings.
-	my_plot.background_border_color(black)
-           .legend_on(true)
-           .plot_window_on(true)
-	       .title("Race Times")
-	       .x_range(-1, 11);
+  my_plot.background_border_color(black)
+         .legend_on(true)
+         .plot_window_on(true)
+         .title("Race Times")
+         .x_range(-1, 11);
 
     // Adding grid information.
     my_plot.x_major_grid_on(true)
@@ -42,10 +42,10 @@ int main()
     my_plot.y_ticks_left(true); // external.
 
     // Write to plot.
-	my_plot.plot(dan_times, "Dan", blue);
-	my_plot.plot(elaine_times, "Elaine", orange);
+  my_plot.plot(dan_times, "Dan", blue);
+  my_plot.plot(elaine_times, "Elaine", orange);
 
     // Write to file.
     my_plot.write("./1d_x_external.svg");
-	return 0;
+  return 0;
 }

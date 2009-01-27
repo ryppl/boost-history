@@ -1,14 +1,16 @@
-// svg_style.hpp
+/*! \file svg_style.hpp
+    \brief Plot document structure whose order controls the painting order, later ones overwriting earlier layers.
+
+    \author Jacob Voytko and Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright  Paul A. Bristow 2008
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// ----------------------------------------------------------------- 
 
 #ifndef BOOST_SVG_SVG_STYLE_DETAIL_HPP
 #define BOOST_SVG_SVG_STYLE_DETAIL_HPP
@@ -26,46 +28,59 @@ namespace svg
 {
 namespace detail
 {
-
 // Caution: these two enum and ids must match because
 // the enum value is used to index the array of id strings.
 // void set_ids() copies all strings to matching image.get_g_element(i).id()
 // Add any new id items to both!
+
 enum plot_doc_structure
-{ // Order control the painting order, later ones overwriting earlier layers.
-  PLOT_BACKGROUND = 0, // Must be zero to index array document_ids[]
-    PLOT_WINDOW_BACKGROUND, // the smaller plot window (if used).
-    PLOT_Y_MINOR_GRID, PLOT_Y_MAJOR_GRID, // 2, 3
-    PLOT_X_MINOR_GRID, PLOT_X_MAJOR_GRID,
-    PLOT_Y_AXIS, PLOT_X_AXIS, // the X and Y axis lines.
-    PLOT_Y_MINOR_TICKS, PLOT_X_MINOR_TICKS,
-    PLOT_Y_MAJOR_TICKS, PLOT_X_MAJOR_TICKS,
-    PLOT_VALUE_LABELS, // tick values 10, 20, 30 ...
-    PLOT_Y_LABEL, PLOT_X_LABEL, // axis text labels "length (cm)"
-    PLOT_DATA_LINES, // lines joing data points.
-    PLOT_DATA_POINTS, // normal data point markers.
-    PLOT_LIMIT_POINTS, // at limit or NaN data point markers.
-    PLOT_LEGEND_BACKGROUND, // legend box.
-    PLOT_LEGEND_POINTS, // data series point markers, circle, cross...
-    PLOT_LEGEND_TEXT, // text describing each data series.
-    PLOT_TITLE, // of the whole plot.
-    PLOT_X_POINT_VALUES,  PLOT_Y_POINT_VALUES, // Data point value labels.
-    PLOT_FUNCTIONS, // Lines and curves, often to show a fit to the data.
-    PLOT_NOTES, // Free text and shapes to annotate diagram.
-    SVG_PLOT_DOC_CHILDREN // Last enum value used as count of children (22).
+{ //! \enum plot_doc_structure Plot document structure whose order controls the painting order, later ones overwriting earlier layers.
+  PLOT_BACKGROUND = 0, //! Must be zero to index array document_ids[]
+    PLOT_WINDOW_BACKGROUND, //! the smaller plot window (if used).
+    PLOT_Y_MINOR_GRID, //! Y minor grid.
+    PLOT_Y_MAJOR_GRID, //! Y major grid.
+    PLOT_X_MINOR_GRID, //! X minor grid.
+    PLOT_X_MAJOR_GRID, //! X major grid.
+    PLOT_Y_AXIS, //! X axis line.
+    PLOT_X_AXIS, //! Y axis line.
+    PLOT_Y_MINOR_TICKS, //! Y minor ticks.
+    PLOT_X_MINOR_TICKS, //! X minor ticks
+    PLOT_Y_MAJOR_TICKS, //! Y major ticks.
+    PLOT_X_MAJOR_TICKS, //! X major ticks.
+    PLOT_VALUE_LABELS, //! tick values labels, for example 10, 20, 30 ...
+    PLOT_Y_LABEL, //! Y axis text labels "length (cm)".
+    PLOT_X_LABEL, //! X axis text labels "height (m)".
+    PLOT_DATA_LINES, //! Lines joining data points.
+    PLOT_DATA_POINTS, //! Normal data point markers.
+    PLOT_LIMIT_POINTS, //! 'At limit or NaN' data point markers.
+    PLOT_LEGEND_BACKGROUND, //! Legend box.
+    PLOT_LEGEND_POINTS, //! Legend data series point markers, circle, cross...
+    PLOT_LEGEND_TEXT, //! Legend text describing each data series.
+    PLOT_TITLE, //! Title of the whole plot.
+    PLOT_X_POINT_VALUES, //! X Data point value labels.
+    PLOT_Y_POINT_VALUES, //! Y Data point value labels.
+    PLOT_FUNCTIONS, //! Lines and curves, often to show a fit to the data.
+    PLOT_NOTES, //! Free text and shapes to annotate a plot.
+    SVG_PLOT_DOC_CHILDREN //! Last enum value used as count of children (22).
 };
 
 std::string document_ids[]= // TODO change to document_ids_ because private member data.
-{ // 
+{ // Care: must match enum plot_doc_structure.
     "imageBackground", // the whole svg image.
-    "plotBackground", // // the smaller plot window (if used).
-    "yMinorGrid", "yMajorGrid", 
-    "xMinorGrid", "xMajorGrid",
-    "yAxis", "xAxis", // the X and Y axis lines.
-    "yMinorTicks", "xMinorTicks",
-    "yMajorTicks", "xMajorTicks",
+    "plotBackground", // the smaller plot window (if used).
+    "yMinorGrid",
+    "yMajorGrid",
+    "xMinorGrid",
+    "xMajorGrid",
+    "yAxis",
+    "xAxis", // the X and Y axis lines.
+    "yMinorTicks",
+    "xMinorTicks",
+    "yMajorTicks",
+    "xMajorTicks",
     "plotLabels", // TODO tickValueLabels better name???
-    "yLabel", "xLabel",   // axis text labels "length (cm)"
+    "yLabel",
+    "xLabel",   // axis text labels "length (cm)"
     "plotLines", // normal data point markers.
     "plotPoints", // normal data point markers.
     "limitPoints",  // at limit or NaN data point markers
@@ -78,7 +93,7 @@ std::string document_ids[]= // TODO change to document_ids_ because private memb
     "plotNotes", // Free text and shapes to annotate diagram.
     "plotDocChildren" // This last string is not used.
 }; //  std::string document_ids
-    
+
 } // namespace detail
 } // namespace svg
 } // namespace boost

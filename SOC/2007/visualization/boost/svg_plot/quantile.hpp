@@ -1,4 +1,35 @@
-// quantile.hpp
+/*!  \file quantile.hpp
+  \author Paul A. Bristow
+
+  \brief Estimate p th quantile of data.
+
+  \details Estimate p th quantile of data using one of 5 definitions.
+  Default is the recommendation of Hyndman and Fan = definition #8.
+
+  Hyndman and Fan recommend their definition 8 (Maple's default definition),
+  which gives quartiles between those reported by Minitab and Excel. This
+  approach is approximately median unbiased for continuous distributions.
+
+  Hyndman and Fan, 1996, "Sample Quantiles in Statistical Packages", The American Statistician 50(4):361-365,1996
+  http://www.pcreview.co.uk/forums/thread-3494699.php // Excel - Interquartile Range Miscalculation
+
+  The interquartile range is calculated using the 1st & 3rd sample quartiles,
+  but there are various ways to calculate those quartiles.
+  Excel, S-Plus, etc use H&F definition 7, which returns SMALL(data,i) as
+  quantile(data,(i-1)/(n-1)) and interpolates in between. For a continuous
+  distribution, this will tend to give too narrow an interquartile range, since
+  there will tend to be a small fraction of the population beyond the extreme
+  sample observations. In particular, for odd n (=2*k+1), Excel calculates the
+  1st (3rd) quartile as the median of the lower (upper) "half" of the sample
+  including the sample median (k+1 observations).
+
+  Minitab, etc use H&F definition 6, which calculates the 1st (3rd) quartile
+  as the median of the lower (upper) "half" of the sample. This "half" sample
+  excludes the sample median (k observations) for odd n (=2*k+1). This will
+  tend to be a better estimate for the population quartiles, but will tend to
+  give quartile estimates that are a bit too far from the center of the whole
+  sample (too wide an interquartile range).
+*/
 
 // Copyright Paul A. Bristow 2008
 
@@ -7,16 +38,11 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-
 #ifndef BOOST_SVG_QUANTILE_HPP
 #define BOOST_SVG_QUANTILE_HPP
 
 #include <vector>
-using std::vector;
-
-// Estimate p th quantile of data using one of 5 definitions.
-// Default is the recommendation of Hyndman and Fan = definition #8.
-// Use p = 0.25 and p = 0.75 to get quartiles for boxplots.
+  using std::vector;
 
 namespace boost
 {
@@ -79,9 +105,17 @@ namespace svg
 
 
 double quantile(vector<double>& data, double p, int HF_definition = 8)
-{ // p=fraction of population, percentile, e.g. p=0.25 for 1st quartile.
-  // Usually double p = 0.25, or p = 0.75 for boxplots
-  // Data must be ordered minimum to maximum.
+{ //! Estimate quantile from data.
+  /*!
+  \param[in] data population for which to estimate quantile (percentile). Data must be ordered minimum to maximum.
+
+  \param[in] p fraction of population, for example, p = 0.25 for 1st quartile. (Usually p = 0.25, or p = 0.75 for boxplots).
+
+  \param[in] HF_definition algorithm to use for the estimation.
+  \return quantile estimated quantile from the population.
+
+  */
+
   size_t n = data.size();
   // The interquartile range is calculated using the 1st & 3rd sample quartiles,
   // but there are various ways to calculate those quartiles.
@@ -90,7 +124,7 @@ double quantile(vector<double>& data, double p, int HF_definition = 8)
   // The American Statistician 50(4):361-365, (1996).
   // have a particularly simple common form given by the VBA code given.
   // You select among the methods according to which definition of m is chosen.
-  // from Function quantile(data, p) in Visual Basic from 
+  // from Function quantile(data, p) in Visual Basic from
   // http://www.pcreview.co.uk/forums/thread-3494699.php
   // Jerry W. Lewis
   double m;
@@ -98,11 +132,11 @@ double quantile(vector<double>& data, double p, int HF_definition = 8)
   {  // Hyndman and Fan definitions:
   case 4: // H&F 4 SAS (PCTLDEF=1), R (type=4), Maple (method=3)
     m = 0; // Largest IQR
-    break; 
-    case 5: // H&F 5: R (type=5), Maple (method=4), Wolfram Mathematica quartiles 
-      // http://support.wolfram.com/archive/mathematica/quartilesnotes.html 
+    break;
+    case 5: // H&F 5: R (type=5), Maple (method=4), Wolfram Mathematica quartiles
+      // http://support.wolfram.com/archive/mathematica/quartilesnotes.html
       // "Symmetric linear interpolation a common choice when the data represent a sample
-      // from a continuous distribution and 
+      // from a continuous distribution and
       // you want an unbiased estimate of the quartiles of that distribution."
     m = 0.5; // moderate IRQ
     break;
@@ -167,17 +201,16 @@ double quantile(vector<double>& data, double p, int HF_definition = 8)
 } // double quantile(vector<double>& data, double p)
 
 double median(vector<double>& data)
-{ // Median of data - assumed pre-sorted from min to max.
+{ //! Median of data - assumed pre-sorted from min to max.
   size_t data_size = data.size();
   double median_;
-  if ((data_size % 2) == 0) 
+  if ((data_size % 2) == 0)
   { // Even, so take the mean of middle two values.
     median_ = (data[data_size / 2 - 1] // is even so divides exactly without rounding!
     + data[data_size / 2]) // plus next above the middle.
     / 2;
     //median_ = (series[(unsigned int)((data_size) / 2) -1]
     //+ series[(unsigned int)((data_size) / 2)])
-    /// 2;
   }
   else
   { // Odd, so just take the middle value.

@@ -1,95 +1,102 @@
-// show_2d_settings.cpp
+/*! \file show_2d_settings.hpp
+  \author Jacob Voytko & Paul A. Bristow
+
+  \brief Shows settings and options for 2D Plot.
+  \details Outputs a full list of all settings and options for 2D Plot to std::cout.
+  This is useful for diagnosing why your plot doesn't look as you hoped!
+  (See also show_1d_settings.cpp for 1D plot).
+  \warning This creates about 100 lines of output, so should be used sparingly!
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007
+
+
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// -----------------------------------------------------------------
-
-// This shows settings and options for 2-D Plot.
-
 #ifndef BOOST_SVG_SHOW_2D_SETTINGS_HPP
 #define BOOST_SVG_SHOW_2D_SETTINGS_HPP
 
-#include <iostream> // for testing only.
-// using std::cerr and std::endl
+#include <iostream>
 
 namespace boost
 {
 namespace svg
 {
 
-  // Declaration, defined below.
-  void show_plot_settings(svg_2d_plot& plot);
+// Declaration (defined below).
+void show_2d_plot_settings(svg_2d_plot& plot);
 
 const char* fmtFlagWords[16] =
-{ // Descriptions of each bit.
-	"skipws", "unitbuf", "uppercase","showbase","showpoint","showpos","left","right",
-		"internal","dec","oct","hex","scientific","fixed","boolalpha", "?"
-		/*
-		enum _Fmtflags
-		{ // Show action when bit set == 1
-		skipws = 0x0001,  //   Skip white space on input.
-		unitbuf = 0x0002, // Output each char - unbuffered.
-		uppercase = 0x0004,// Display uppercase A through F for hexadecimal values and E for scientific values
-		showbase = 0x0008, // Display numeric constants in a format that can be read by the C++ compiler.
-		showpoint = 0x0010, // Show decimal point and trailing zeros for floating-point values.
-		showpos = 0x0020, // Show plus signs (+) for positive values.
-		left = 0x0040, // Left-align values; pad on the right with the fill character.
-		right = 0x0080,// Right-align values; pad on the left with the fill character (default alignment).
-		internal = 0x0100, // Add fill characters after any leading sign or base indication, but before the value.
-		dec = 0x0200, // Format numeric values as base 10 (decimal) (default radix).
-		oct = 0x0400, // Format numeric values as base 8 (octal).
-		hex = 0x0800, // Format numeric values as base 16 (hexadecimal).
-		scientific = 0x1000,// Display floating-point numbers in scientific format.
-		fixed = 0x2000, // Display floating-point numbers in fixed format.
-		boolalpha = 0x4000, // Show bool as word true or false.
-		// 0x8000 un-used. // show as ?
-		adjustfield = 0x01c0,
-		basefield = 0x0e00,
-		floatfield = 0x3000,
-		_Fmtmask = 0x7fff,
-		_Fmtzero = 0
-		};
-		*/
+{ //! \brief Strings describing format flags of each bit in std::ios_base::fmtflags.
+  "skipws", "unitbuf", "uppercase","showbase","showpoint","showpos","left","right",
+    "internal","dec","oct","hex","scientific","fixed","boolalpha", "?"
+    /*
+    enum _Fmtflags
+    { // Show action when bit set == 1
+    skipws = 0x0001,  //   Skip white space on input.
+    unitbuf = 0x0002, // Output each char - unbuffered.
+    uppercase = 0x0004,// Display uppercase A through F for hexadecimal values and E for scientific values
+    showbase = 0x0008, // Display numeric constants in a format that can be read by the C++ compiler.
+    showpoint = 0x0010, // Show decimal point and trailing zeros for floating-point values.
+    showpos = 0x0020, // Show plus signs (+) for positive values.
+    left = 0x0040, // Left-align values; pad on the right with the fill character.
+    right = 0x0080,// Right-align values; pad on the left with the fill character (default alignment).
+    internal = 0x0100, // Add fill characters after any leading sign or base indication, but before the value.
+    dec = 0x0200, // Format numeric values as base 10 (decimal) (default radix).
+    oct = 0x0400, // Format numeric values as base 8 (octal).
+    hex = 0x0800, // Format numeric values as base 16 (hexadecimal).
+    scientific = 0x1000,// Display floating-point numbers in scientific format.
+    fixed = 0x2000, // Display floating-point numbers in fixed format.
+    boolalpha = 0x4000, // Show bool as word true or false.
+    // 0x8000 un-used. // show as ?
+    adjustfield = 0x01c0,
+    basefield = 0x0e00,
+    floatfield = 0x3000,
+    _Fmtmask = 0x7fff,
+    _Fmtzero = 0
+    };
+    */
 }; // const char* fmtFlagWords
 
 void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char* term)
-{// Usage: 	outFmtFlags(flags, cerr);
-	// For example, logs to cerr "FormatFlags: skipws showbase right dec"
-	// Defaults in xiostream.hpp:
-	// void outFmtFlags(fmtflags fmtFlags = cout.flags(), ostream& os = cerr, const char* term = ".\n");
-	const int up = 16; // Words across page.
-	const int count = 16;  // cos using unsigned short int.
-	int const flags = os.flags(); // save to restore.
-	fmtFlags &= 0x7FFF;  // _Fmtmask // clear un-used bits.
+{ //! Output strings describing format flags of each bit in std::ios_base::fmtflags.
+
+  /*! Usage:  outFmtFlags(flags, cerr);
+    For example, logs to cerr "FormatFlags: skipws showbase right dec"
+  */
+  //void outFmtFlags(std::ios_base::fmtflags fmtFlags = cout.flags(), ostream& os = cerr, const char* term = ".\n");
+  const int up = 16; // Words across page.
+  const int count = 16;  // cos using unsigned short int.
+  int const flags = os.flags(); // save to restore.
+  fmtFlags &= 0x7FFF;  // _Fmtmask // clear un-used bits.
   os << "IOS format flags (" << std::showbase << std::hex << fmtFlags << std::dec << ")" ; // hex value.
-	if (fmtFlags != 0)
-	{
-		for(int i = 0, j = 1, hit = 0; i < count; ++i)
-		{
-			if ((fmtFlags & j) != 0)
-			{
-				if (hit == 0)
-				{ // First word no separator.
-					os << ' ';
-				}
-				else
-				{
-					os << (( (hit % up) == 0) ? ",\n" : ", ");
-				}
-				os	<< fmtFlagWords[i];
-				++hit; // Count to add space or newline as appropriate.
-			}
-			j <<= 1;
-		}
-	}
-	os << term; // eg "\n" or ". "
-	os.flags(flags);  // Restore.
+  if (fmtFlags != 0)
+  {
+    for(int i = 0, j = 1, hit = 0; i < count; ++i)
+    {
+      if ((fmtFlags & j) != 0)
+      {
+        if (hit == 0)
+        { // First word no separator.
+          os << ' ';
+        }
+        else
+        {
+          os << (( (hit % up) == 0) ? ",\n" : ", ");
+        }
+        os  << fmtFlagWords[i];
+        ++hit; // Count to add space or newline as appropriate.
+      }
+      j <<= 1;
+    }
+  }
+  os << term; // eg "\n" or ". "
+  os.flags(flags);  // Restore.
 }  // outFmtFlags
 
   namespace detail
@@ -104,7 +111,7 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
            os << p.first << ", " << p.second;
         // Outputs:  1.2, 3.4
         return os;
-    } // std::ostream& operator<< 
+    } // std::ostream& operator<<
 
     std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p)
     { // Output a pair of values.
@@ -113,7 +120,7 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
         // Outputs:  1.2, 3.4
         os.precision(precision); // Restore.
         return os;
-    } // std::ostream& operator<< 
+    } // std::ostream& operator<<
 
     // Maybe better as:
     //template<typename charT, typename traits, typename T1, typename T2>
@@ -141,8 +148,13 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
    return ((i < 0) ? "bottom" : ((i == 0) ? "none" : "top"));
   }
 
-void show_plot_settings(svg_2d_plot& plot)
-{
+void show_2d_plot_settings(svg_2d_plot& plot)
+{ //! Diagnostic display of all of a 2D plot's settings.
+  /*! Outputs to cout, a long list of about hundred of plot parameter settings,
+    invaluable if the plot does not look as expected.
+   \warning This creates about 100 lines of output, so should be used sparingly!
+  */
+
   using std::cout;
   using std::endl;
   using std::hex;
@@ -157,9 +169,9 @@ void show_plot_settings(svg_2d_plot& plot)
   int iostate = cout.flags(); // Save to restore one exit.
   cout << dec << std::boolalpha << endl;
   cout  << endl;
-  //cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << "image_filename() " << plot.image.image_filename() << endl; 
+  //cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << "image_filename() " << plot.image.image_filename() << endl;
   // doesn't work - no filename is shown.
-  
+
   cout << "axes_on " << plot.axes_on() << endl;
   cout << "background_border_width " << plot.background_border_width() << endl;
   cout << "background_border_color " << plot.background_border_color() << endl;

@@ -1,5 +1,5 @@
 [section:svg_interface `svg` Public Interface]
-[table class `svg` Standard C++ Methods 
+[table class `svg` Standard C++ Methods
   [[Signature] [Description] [Notes & Examples]]
 
   [[`svg()`] [Constructor] [Default image size (pixels) is (400, 400).]]
@@ -35,13 +35,13 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`polygon_element& polygon(std::vector<poly_path_point>& v, bool f)`] [Generates a polygon from the vector input using Cartesian coordinates.][ Fill is determined by `f`.] ]
 
-  [[`polyline_element& polyline(double x, double y)`][Places a polyline at coordinate (x, y)][]]
+  [[`polyline_element& polyline(double x, double y)`][Starts a polyline at coordinate (x, y) (Add more path points using .P(x, y)][]]
 
   [[`polyline_element& polyline(double x1, double y1, double x2, double y2)`] [Adds a polyline to the root of the SVG document from (x1, y1) to (x2, y2)][]]
 
   [[`polyline_element& polyline(std::vector<poly_path_point>& v, bool f=true)`] [Adds a polyline to the root of the SVG document with][`f` denotes the option to provide a fill for the polyline.]]
 
-  [[`rect_element& rect(double x1, double y1, 
+  [[`rect_element& rect(double x1, double y1,
                double width, double height)`] [Adds a rectangle at point (x1, y1) that has  `width` wide and `height` high.][]]
 
   [[`polygon_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true`][Generates a rhombus at the four coordinates provided] [Fill is determined by `f`.]]
@@ -74,12 +74,12 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`const std::string& copyright_date()`] [Returns the copyright date for the SVG XML document] [Returns the date string, not the associated XML.]]
 
-  [[`void copyright_date(const std::string)`] [Set copyright date for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+  [[`void copyright_date(const std::string)`] [Set copyright date for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 -->
 <meta name="date" content="2007" />]]
 
   [[`const std::string& copyright_holder`] [Returns the copyright holder for the SVG XML document] [Returns the input value for copyright holder. Does not return any XML]]
 
-  [[`void copyright_holder(const std::string)`] [Set copyright holder for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
+  [[`void copyright_holder(const std::string)`] [Set copyright holder for the SVG XML document, as comment and XML.][<!-- SVG Plot Copyright Paul A. Bristow 2007 -->
 <meta name="copyright" content="Paul A. Bristow" />]]
 
   [[`const std::string& description()`] [Returns the description of the document.] [Returns the description string, not the associated XML]]
@@ -126,7 +126,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`void write(const std::string&)`] [Writes the document to the file represented by the argument. (If not file type sufix is provided, the default file suffix `".svg"` is appended.][Opens the file stream itself and tries to call `write(std::ostream&)`. Throws `std::runtime_exception` if it can not open the file.]]
 
-  [[`void write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]] 
+  [[`void write(std::ostream&)`] [Writes the document to the stream represented by the argument.][]]
 ] [/table `svg` document settings and writing]
 
 [endsect] [/section:svg_interface]

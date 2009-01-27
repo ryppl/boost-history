@@ -1,3 +1,8 @@
+/*! \file FP_compare.hpp
+    \brief Two types of floating-point comparison "Very close" and "Close enough" to a chosen tolerance.
+    \author Paul A. Bristow
+*/
+
 //  Copyright Paul A. Bristow 2008
 
 //  Distributed under the Boost Software License, Version 1.0.
@@ -21,8 +26,8 @@ template<typename FPT> class close_to;
 template<typename FPT> class smallest;
 
 enum floating_point_comparison_type
-{ // Two types of comparison.
-  FPC_STRONG, // "Very close"   - Knuth equation 1'  the default.
+{ //! enum floating_point_comparison_type Two types of floating-point comparison "Very close" and "Close enough".
+  FPC_STRONG, // "Very close"   - Knuth equation 1' the default.
   FPC_WEAK    // "Close enough" - equation 2'.
   // equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
   // pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
@@ -53,20 +58,17 @@ template <class T> T epsilon(T);
 
 template<typename FPT> FPT
 fpt_abs(FPT arg)
-{ // abs function (just in case abs is not defined for FPT).
+{ //! abs function (just in case abs is not defined for User-defined FPT).
   return arg <static_cast<FPT>(0) ? -arg : arg;
 }
 
 template<typename FPT> FPT
 safe_fpt_division(FPT f1, FPT f2)
-{ // Safe from under and overflow.
-  // Both f1 and f2 must be unsigned here.
-
+{ //! Division safe from underflow and overflow. (Both f1 and f2 must be unsigned here).
   if( (f2 < static_cast<FPT>(1))  && (f1 > f2 * boost::math::tools::max_value<FPT>()) )
   { // Avoid overflow.
     return boost::math::tools::max_value<FPT>();
   }
-
   if( (f1 == static_cast<FPT>(0))
     || ((f2 > static_cast<FPT>(1)) && (f1 < f2 * boost::math::tools::min_value<FPT>()) )
     )
@@ -76,14 +78,12 @@ safe_fpt_division(FPT f1, FPT f2)
   return f1 / f2;
 } // safe_fpt_division(FPT f1, FPT f2)
 
-// Check two floating-point values are close within a chosen tolerance.
 
 template<typename FPT = double>
 class close_to
-{
+{ //! Test if two floating-point values are close within a chosen tolerance.
 public:
-
-  // One constructor for fraction tolerance only.
+  // One constructor for fraction tolerance only. (Percent is NOT implemented).
   template<typename FPT>
   explicit close_to(FPT tolerance,
     floating_point_comparison_type fpc_type = FPC_STRONG)
@@ -101,11 +101,12 @@ public:
   :
   fraction_tolerance_(2 * boost::math::tools::epsilon<FPT>()),
     strong_or_weak_(FPC_STRONG)
-  { // Default is two epsilon.
+  { //! Default is two epsilon.
   }
 
   bool operator()(FPT left, FPT right) const
-  {
+  { //! \brief Test if two floating-point values are close within a chosen tolerance.
+    //! \details Tolerance can be interpreted as Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
     FPT diff = fpt_abs(left - right);
     FPT d1   = safe_fpt_division(diff, fpt_abs(right));
     FPT d2   = safe_fpt_division(diff, fpt_abs(left));
@@ -116,33 +117,34 @@ public:
   }
 
   FPT size()
-  { // Get function.
+  { //! Get fraction_tolerance_.
     return fraction_tolerance_;
   }
 
   floating_point_comparison_type strength()
-  { // Get function.
+  { // Get strength of comparison, Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
     return strong_or_weak_;
   }
 
 private:
-    FPT fraction_tolerance_;
-    floating_point_comparison_type strong_or_weak_;
+    FPT fraction_tolerance_; //! tolerance as a fraction.
+    floating_point_comparison_type strong_or_weak_;  //! Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
 
 }; // class close_to
 
-// Check floating-point value is smaller than a chosen small value.
-
-// David Monniaux, http://arxiv.org/abs/cs/0701192v4,
-// It is somewhat common for beginners to add a comparison check to 0 before
-// computing a division, in order to avoid possible division-by-zero exceptions or
-// the generation of infinite results. A first objection to this practise is that, anyway,
-// computing 1/x for x very close to zero will generate very large numbers
-// that will most probably result in overflows later.
-// Another objection, which few programmers know about and that we wish to draw attention
-// to, is that it may actually fail to work, depending on what the compiler
-// does — that is, the program may actually test that x 6= 0, then, further down,
-// find that x = 0 without any apparent change to x!
+/* \details
+   Check floating-point value is smaller than a chosen small value.
+   David Monniaux, http://arxiv.org/abs/cs/0701192v4,
+   It is somewhat common for beginners to add a comparison check to 0 before
+   computing a division, in order to avoid possible division-by-zero exceptions or
+   the generation of infinite results. A first objection to this practise is that, anyway,
+   computing 1/x for x very close to zero will generate very large numbers
+   that will most probably result in overflows later.
+   Another objection, which few programmers know about and that we wish to draw attention
+   to, is that it may actually fail to work, depending on what the compiler
+   does — that is, the program may actually test that x == 0, then, further down,
+   find that x = 0 without any apparent change to x!
+ */
 
 template<typename FPT = double>
 class smallest
@@ -152,7 +154,7 @@ public:
   explicit smallest(FPT s)
   :
   smallest_(s)
-  { // Constructor.
+  { //! Default constructor.
   }
 
   smallest()
@@ -169,7 +171,7 @@ public:
 
   template<typename FPT>
   bool operator()(FPT fp_value, FPT s)
-  {
+  { //! True if value is smaller than a smallest value s.
     if (fpt_abs(fp_value) == static_cast<FPT>(0))
     { // Test for zero first in case FPT is actually an integer type zero,
       // when the comparison < below would fail because
@@ -181,36 +183,32 @@ public:
 
   template<typename FPT>
   bool operator()(FPT fp_value)
-  {
-
+  { //! True if value is smaller than chosen smallest value.
     if (fpt_abs(fp_value) == static_cast<FPT>(0))
     { // Test for zero first in case FPT is actually an integer type,
-      // when the comparison < below would fail because
-      // smallest could become zero.
+      // when the comparison < below would fail because smallest could become zero.
       return true;
     }
     return fpt_abs(fp_value) < fpt_abs(smallest_);
   } // bool operator()
 
   FPT size()
-  { // Get function.
+  { //! Get chosen smallest value.
     return smallest_;
   }
 
 private:
-  // Smallest value that will be counted as effectively zero.
-  FPT smallest_;
-
+  FPT smallest_; //!< Chosen smallest value that will be counted as effectively zero.
 }; // class smallest
 
-// Define two convenient typedefs.
+// Define two convenience typedefs.
 
 // Since double and the default smallest value 2 * min_value = 4.45015e-308
 // is a very common requirement, provide an convenience alias for this:
-typedef smallest<double> tiny; // Allow tiny as a shorthand for 1e-308
+typedef smallest<double> tiny; //! Allow tiny as a shorthand for 1e-308.
 
 // Since double and the default smallest value 2 * min_value = 4.45015e-308
 // is a very common requirement, provide an convenience alias for this:
-typedef close_to<double> neareq; // Allow tiny as a shorthand for epsilon
+typedef close_to<double> neareq; //! Allow tiny as a shorthand for epsilon.
 
 #endif // BOOST_FLOATING_POINT_COMPARISON_HPP

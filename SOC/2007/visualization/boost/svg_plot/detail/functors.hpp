@@ -1,4 +1,11 @@
-// functors.hpp
+/*! \file functors.hpp
+
+  \author Jacob Voytko
+
+  \brief Functors to convert data to doubles.
+  \details SVG plot assumes all data are convertible to double before being plotted.
+  The functors are used to convert both 1D and 2D (pairs of data values) to be converted.
+*/
 
 // Copyright Jacob Voytko 2007
 
@@ -6,7 +13,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-// -----------------------------------------------------------------
 
 #ifndef BOOST_SVG_DETAIL_FUNCTORS_HPP
 #define BOOST_SVG_DETAIL_FUNCTORS_HPP
@@ -15,11 +21,8 @@ namespace boost {
 namespace svg {
 namespace detail {
 
-// -----------------------------------------------------------------
-// This functor allows any data convertible to doubles to be plotted.
-// -----------------------------------------------------------------
 class boost_default_convert
-{
+{ //! This functor allows any data convertible to doubles to be plotted.
 public:
     typedef double result_type;
 
@@ -31,11 +34,9 @@ public:
 }; // class boost_default_convert
 
 // -----------------------------------------------------------------
-// This functor allows any data convertible to type
-// std::pair<double, double> to be plot
 // -----------------------------------------------------------------
 class boost_default_2d_convert
-{
+{ //! This functor allows any data convertible to type std::pair<double, double> to be plotted.
 public:
     typedef std::pair<double, double> result_type;
     double i;

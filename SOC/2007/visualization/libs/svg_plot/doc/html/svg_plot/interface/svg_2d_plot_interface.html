@@ -1,21 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> svg_2d_plot Public Interface</title>
+<title>svg_2d_plot Public Interface</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../interface.html" title=" Public Interfaces">
-<link rel="prev" href="svg_1d_plot_interface.html" title=" svg_1d_plot Public Interface">
-<link rel="next" href="svg_boxplot_interface.html" title=" svg_boxplot Public Interface">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../interface.html" title="Public Interfaces">
+<link rel="prev" href="svg_1d_plot_interface.html" title="svg_1d_plot Public Interface">
+<link rel="next" href="svg_boxplot_interface.html" title="svg_boxplot Public Interface">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,10 +24,10 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.interface.svg_2d_plot_interface"></a><a href="svg_2d_plot_interface.html" title=" svg_2d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a>
+<a name="svg_plot.interface.svg_2d_plot_interface"></a><a class="link" href="svg_2d_plot_interface.html" title="svg_2d_plot Public Interface"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a>
 </h3></div></div></div>
 <div class="table">
-<a name="id563329"></a><p class="title"><b>Table 15. 2D_plot Miscellaneous</b></p>
+<a name="id760998"></a><p class="title"><b>Table 15. 2D_plot Miscellaneous</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Miscellaneous">
 <colgroup>
 <col>
@@ -142,7 +142,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id563720"></a><p class="title"><b>Table 16. 2D_plot On/Off Switches</b></p>
+<a name="id761306"></a><p class="title"><b>Table 16. 2D_plot On/Off Switches</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot On/Off Switches">
 <colgroup>
 <col>
@@ -663,8 +663,7 @@
               <code class="computeroutput"><span class="keyword">enum</span> <span class="identifier">rotate_style</span></code>
               provides control is 45 degree steps. Default is horizontal. 
 </p>
-<pre class="programlisting">
-<span class="keyword">enum</span> <span class="identifier">rotate_style</span>
+<pre class="programlisting"><span class="keyword">enum</span> <span class="identifier">rotate_style</span>
     <span class="special">{</span> <span class="comment">// Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
 </span>      <span class="identifier">uphill</span> <span class="special">=</span> <span class="special">-</span><span class="number">45</span><span class="special">,</span> <span class="comment">// slope up.
 </span>      <span class="identifier">upward</span> <span class="special">=</span> <span class="special">-</span><span class="number">90</span><span class="special">,</span> <span class="comment">// vertical writing up.
@@ -860,7 +859,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id567058"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
+<a name="id764872"></a><p class="title"><b>Table 17. 2D_plot Colors</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Colors">
 <colgroup>
 <col>
@@ -1217,7 +1216,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id568571"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
+<a name="id766288"></a><p class="title"><b>Table 18. 2D_plot Axis Information</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Axis Information">
 <colgroup>
 <col>
@@ -1724,8 +1723,7 @@
 <p>
         For example, after a call of
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_num_minor_ticks</span><span class="special">(</span><span class="number">9</span><span class="special">);</span>  <span class="comment">// Chose 9 minor ticks between y major ticks.
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_num_minor_ticks</span><span class="special">(</span><span class="number">9</span><span class="special">);</span>  <span class="comment">// Chose 9 minor ticks between y major ticks.
 </span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_num_minor_ticks</span><span class="special">()</span> <span class="special">==</span> <span class="number">9</span>
 </pre>
@@ -1734,7 +1732,7 @@
         the settings from accessors below.
       </p>
 <div class="table">
-<a name="id570954"></a><p class="title"><b>Table 19. 2D_plot Accessor functions</b></p>
+<a name="id768058"></a><p class="title"><b>Table 19. 2D_plot Accessor functions</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Accessor functions">
 <colgroup>
 <col>
@@ -1843,8 +1841,8 @@
 </table></div>
 </div>
 <br class="table-break"><a name="svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method"></a><h5>
-<a name="id571386"></a>
-        <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
+<a name="id768931"></a>
+        <a class="link" href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.the__code__phrase_role__identifier__plot__phrase__phrase_role__special______phrase___code__method">The
         <code class="computeroutput"><span class="identifier">plot</span><span class="special">()</span></code>
         Method</a>
       </h5>
@@ -1853,7 +1851,7 @@
         method supports two parameters &amp; some chained functions.
       </p>
 <div class="table">
-<a name="id571445"></a><p class="title"><b>Table 20. 2D_plot Required Parameter</b></p>
+<a name="id768966"></a><p class="title"><b>Table 20. 2D_plot Required Parameter</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Required Parameter">
 <colgroup>
 <col>
@@ -1916,7 +1914,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id571566"></a><p class="title"><b>Table 21. 2D_plotChained Functions</b></p>
+<a name="id769069"></a><p class="title"><b>Table 21. 2D_plotChained Functions</b></p>
 <div class="table-contents"><table class="table" summary="2D_plotChained Functions">
 <colgroup>
 <col>
@@ -1971,7 +1969,7 @@
 </table></div>
 </div>
 <br class="table-break"><div class="table">
-<a name="id571666"></a><p class="title"><b>Table 22. 2D_plot Optional Parameters</b></p>
+<a name="id769155"></a><p class="title"><b>Table 22. 2D_plot Optional Parameters</b></p>
 <div class="table-contents"><table class="table" summary="2D_plot Optional Parameters">
 <colgroup>
 <col>
@@ -2180,8 +2178,7 @@
               not convert to double, for example, like plotting a vector of humans:
               
 </p>
-<pre class="programlisting">
-<span class="keyword">class</span> <span class="identifier">my_functor</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">my_functor</span>
 <span class="special">{</span>
   <span class="identifier">typdef</span> <span class="identifier">pair</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">,</span> <span class="keyword">double</span><span class="special">&gt;</span> <span class="identifier">result_type</span><span class="special">;</span>
 
@@ -2213,19 +2210,18 @@
         Here are some examples of correct uses:
       </p>
 <a name="svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors"></a><h4>
-<a name="id572494"></a>
-        <a href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors">Using
+<a name="id769779"></a>
+        <a class="link" href="svg_2d_plot_interface.html#svg_plot.interface.svg_2d_plot_interface.using_fill_and_stroke_colors">Using
         fill and stroke colors</a>
       </h4>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">)</span> 
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Lions"</span><span class="special">)</span> 
 <span class="special">.</span><span class="identifier">fill_color</span><span class="special">(</span><span class="identifier">red</span><span class="special">)</span> 
 <span class="special">.</span><span class="identifier">stroke_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
 </pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

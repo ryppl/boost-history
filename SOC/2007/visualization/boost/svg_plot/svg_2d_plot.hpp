@@ -1,7 +1,14 @@
-// svg_2d_plot.hpp
+/*!
+  \file svg_2d_plot.hpp
+  \brief Create 2D plots in Scalable Vector Graphic (SVG) format.
+  \details Provides svg_2d_plot data and function to create plots, and svg_2d_plot_series to allow data values to be added.
+  Very many functions allow fine control of the appearance and layout of plots, data markers and lines.
+  Items common to 1D and 2D use axis_plot_frame.
+  \author Jacob Voytko & Paul A. Bristow
+ */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007, 2008
+// Copyright Paul A. Bristow 2007, 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -554,7 +561,7 @@ namespace boost
       void set_ids()  // This only used once in constructor and should be inlined.
       { // document ids for use in <g id = "PLOT_TITLE".../>
         for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
-        {	// Order determines the painting order.
+        { // Order determines the painting order.
           image.g(i).id(detail::document_ids[i]);
         }
       } //  void set_ids()
@@ -1077,11 +1084,11 @@ namespace boost
           label.precision(y_ticks_.value_precision_);
           label.flags(y_ticks_.value_ioflags_); // set ALL IOflags.
           label << value; // Example: label.str() == "20" or "0.25" or "1.2e+015"
-					if (y_ticks_.strip_e0s_)
-					{ // Remove unecessary e, +, leadings 0s.
-						std::string v = strip_e0s(label.str());
-						label.str(v);
-					}
+          if (y_ticks_.strip_e0s_)
+          { // Remove unecessary e, +, leadings 0s.
+            std::string v = strip_e0s(label.str());
+            label.str(v);
+          }
 
           double x = 0; // Where to start writing from, at end of left or right tick, if any.
           // = 0 is only to avoid unitialised warning.
@@ -1163,9 +1170,9 @@ namespace boost
               x = x_right + y_value_label_style_.font_size() * 1.5;
               alignment = center_align;
             }
-					}
-					else if (y_ticks_.label_rotation_ == downward)
-					{ // Tick value label straight down vertically on Y-axis.
+          }
+          else if (y_ticks_.label_rotation_ == downward)
+          { // Tick value label straight down vertically on Y-axis.
             y -= y_value_label_style_.font_size() * 0.1;
             if (y_ticks_.major_value_labels_side_ < 0)
             { // labels to left, so start a little to left of x_left.
@@ -1178,9 +1185,9 @@ namespace boost
               x = x_right + y_value_label_style_.font_size() * 0.7;
               alignment = center_align;
             }
-					}
-					else
-					{ // Others not yet implemented.
+          }
+          else
+          { // Others not yet implemented.
             return; // Without any value label.
          } // All rotations.
 
@@ -1747,7 +1754,7 @@ namespace boost
       int y_value_ioflags();
       svg_2d_plot& y_labels_strip_e0s(bool cmd);
       bool y_labels_strip_e0s();
-      svg_2d_plot& y_axis_color(const svg_color& col); 
+      svg_2d_plot& y_axis_color(const svg_color& col);
       svg_color y_axis_color();
       svg_2d_plot& y_axis_label_color(const svg_color& col);
       svg_color y_axis_label_color();
@@ -2179,7 +2186,7 @@ namespace boost
         y_values_style_.df_on_ = b;
         return *this;
       }
-  
+
       svg_2d_plot& svg_2d_plot::y_autoscale(double first, double second)
       { // Use Y min & max values to autoscale.
         scale_axis(first, second, // double min and max from two doubles.
@@ -2286,7 +2293,7 @@ namespace boost
       {
         return y_ticks_.num_minor_ticks_;
       }
-      
+
       svg_2d_plot& svg_2d_plot::y_label_axis(const std::string& str)
       { // Set label for Y-axis.
         y_label_info_.text(str);
@@ -2354,7 +2361,7 @@ namespace boost
       {
         return y_ticks_.ticks_on_window_or_axis_;
       }
- 
+
       svg_2d_plot& svg_2d_plot::y_major_value_labels_side(int is)
       {  // Label values side for major ticks left -1, (right +1 or none 0).
         y_ticks_.major_value_labels_side_ = is;
@@ -2562,7 +2569,7 @@ namespace boost
     write(fout); // Using the ostream version.
     return *this;
   }
-  
+
   template <class T>
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
   { // Version converting to double.

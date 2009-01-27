@@ -1,21 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Colors</title>
+<title>Colors</title>
 <link rel="stylesheet" href="../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../index.html" title="SVG_Plot">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="SVG_Plot">
 <link rel="up" href="../index.html" title="SVG_Plot">
-<link rel="prev" href="todo.html" title=" To Do List">
-<link rel="next" href="svg_tutorial.html" title=" SVG tutorial">
+<link rel="prev" href="todo.html" title="To Do List">
+<link rel="next" href="svg_tutorial.html" title="SVG tutorial">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="svg_plot.color"></a><a href="color.html" title=" Colors"> Colors</a>
+<a name="svg_plot.color"></a><a class="link" href="color.html" title="Colors"> Colors</a>
 </h2></div></div></div>
 <p>
       The project supports any <a href="http://en.wikipedia.org/wiki/RGB_color_model" target="_top">RGB
@@ -32,8 +32,8 @@
       by the SVG standard</a>.
     </p>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h4>
-<a name="id450711"></a>
-      <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
+<a name="id698153"></a>
+      <a class="link" href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h4>
 <p>
       <code class="computeroutput"><span class="identifier">svg_color_constant</span></code> is simply
@@ -62,12 +62,11 @@
       for defining defaults for functions, for example.
     </p>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h5>
-<a name="id450844"></a>
-      <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
+<a name="id698228"></a>
+      <a class="link" href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h5>
-<pre class="programlisting">
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
 
 <span class="identifier">svg_2d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 
@@ -91,8 +90,7 @@
         currently an <code class="computeroutput"><span class="identifier">svg_color</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">svg_color_constant</span><span class="special">)</span></code>
         overload, so 
 </p>
-<pre class="programlisting">
-<span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">svg_color</span> <span class="identifier">my_color</span> <span class="special">=</span> <span class="identifier">red</span><span class="special">;</span>
 </pre>
 <p>
         does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span>
@@ -103,15 +101,14 @@
 </td></tr>
 </table></div>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"></a><h5>
-<a name="id506933"></a>
-      <a href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
+<a name="id698482"></a>
+      <a class="link" href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
     </h5>
 <p>
       You can define a <code class="computeroutput"><span class="identifier">svg_color</span></code>
       using two different constructors:
     </p>
-<pre class="programlisting">
-<span class="comment">// The parameters are red, green, and blue respectively.
+<pre class="programlisting"><span class="comment">// The parameters are red, green, and blue respectively.
 </span><span class="identifier">svg_color</span><span class="special">(</span><span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">,</span> <span class="keyword">int</span><span class="special">);</span>
 
 <span class="comment">// Use a pre-existing color constant.
@@ -128,12 +125,11 @@
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_"></a><h5>
-<a name="id507085"></a>
-      <a href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
+<a name="id698579"></a>
+      <a class="link" href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
     </h5>
-<pre class="programlisting">
-<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
 
 <span class="identifier">svg_color</span> <span class="identifier">my_white</span><span class="special">(</span><span class="number">255</span><span class="special">,</span> <span class="number">255</span><span class="special">,</span> <span class="number">255</span><span class="special">);</span> <span class="comment">// RGB constructor.
 </span><span class="identifier">svg_color</span> <span class="identifier">const_white</span><span class="special">(</span><span class="identifier">white</span><span class="special">);</span> <span class="comment">// SVG defined named constructor.
@@ -166,8 +162,8 @@
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.colors_internals_and_rationale"></a><h4>
-<a name="id507382"></a>
-      <a href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
+<a name="id698780"></a>
+      <a class="link" href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
       and Rationale</a>
     </h4>
 <p>
@@ -188,7 +184,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

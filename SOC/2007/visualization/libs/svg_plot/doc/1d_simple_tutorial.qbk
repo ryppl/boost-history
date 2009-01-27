@@ -1,9 +1,10 @@
 [section:tutorial_code_1d_example Simple 1D Example]
+
   #include <boost/svg_plot/svg_1d_plot.hpp>
   using namespace boost::svg;
   #include <vector>
   using std::vector;
-  
+
   int main()
   {
     // STL containers for the data to plot.
@@ -14,17 +15,17 @@
     dan_times.push_back(4.2);
     elaine_times.push_back(2.1);
     elaine_times.push_back(7.8);
-  
+
     svg_1d_plot my_plot; // Construct a plot.
-  
+
     my_plot.title("Race Times") // Set title and legend.
            .legend_on(true)
            .x_range(-1, 11);
-           
+
     // Add the containers of data to the plot.
     my_plot.plot(dan_times, "Dan", blue);
     my_plot.plot(elaine_times, "Elaine", orange);
-    
+
     // And finally write the plot to a file.
     my_plot.write("simple.svg");
     return 0;
@@ -33,53 +34,58 @@
 [$images/1d_simple.png] [/ TODO All .png should be .svg?]
 
 [h4 A Note On Syntax]
-The syntax "`my_plot.title("Hello").legend_on(true)...`" may appear unfamiliar. 
-However, it works on the same 'chaining' principle that the assignment operator, addition
-operator, and output operator in the following code works:
+The syntax
+
+`my_plot.title("Hello").legend_on(true)...`
+
+may appear unfamiliar.
+However, it works on the same 'chaining' principle that the assignment operator,
 
   a = b = c = d = 3;
+
+and the addition operator, and output operator in the following code works:
 
   std::cout << a + b + c + d << std::endl;  // prints 12
 
 Within all of the plot classes, 'chaining' works the same way.
-Equivalent tradional code for the example is as follows:
+Equivalent traditional code for the example is as follows:
 
   my_plot.title("Race Times");
   my_plot.legend_on(true);
   my_plot.x_range(-1, 11);
-  
+
 Chaining allows you to avoid repeatedly typing `myplot.`
 and to easily group related settings like plot window, axes, ... together,
 and avoids relying on the order of arguments in ordinary function calls.
 Order would clearly become impracticable with dozens of arguments required
 to set all the myriad plot options.
 
-In the long run, I think you will find that chaining helps organize your code 
-to read more clearly! 
+In the long run, I think you will find that chaining helps organize your code
+to read more clearly!
 
 [h4 Simple 1D Example Breakdown]
-Let's examine what this does in detail. 
+Let's examine what this does in detail.
 
   svg_1d_plot my_plot;
 
-This constructor initializes a new 1D plot, called my_plot, and also sets all the many default values. 
+This constructor initializes a new 1D plot, called my_plot, and also sets all the many default values.
 
   my_plot.title("Race Times")
          .legend_on(true)
          .x_range(-1, 11);
 
-All of the setter methods (or member functions) are fairly self-explanatory. To walk through it once, 
+All of the setter methods (or member functions) are fairly self-explanatory. To walk through it once,
 
-* the title, which will appear at the top of the graph, will say "Race Times". 
+* the title, which will appear at the top of the graph, will say "Race Times".
 * `legend_on(true)` means that the legend will display.
 * `x_range(-1, 11)` means that the axis displayed will be between -1 and 11,
 as you can see in the above image.
-  
+
   my_plot.plot(my_data, "Race times");
 
-This draws `my_data` onto `my_plot`. As many containers as you want can be drawn 
+This draws `my_data` onto `my_plot`. As many containers as you want can be drawn
 to `my_plot`. The name of this data series is "Race times", and this text will show up
-in the legend (if my_plot.legend_on() == true). These are the two required parameters for this plot function call. 
+in the legend (if my_plot.legend_on() == true). These are the two required parameters for this plot function call.
 There are also optional parameters, as seen in the section
 [@.\html\svg_plot\interface\svg_1d_plot_interface.html svg_1d_plot_interface.html]
 
@@ -93,7 +99,7 @@ or embedded into documents.
 
 
 [/ 1d_simple_tutorial.qbk
-  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Copyright 2008 Jake Voytko and Paul A. Bristow 2008, 2009.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

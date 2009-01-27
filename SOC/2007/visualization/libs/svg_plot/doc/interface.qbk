@@ -1,6 +1,6 @@
 [section:interface Public Interfaces]
 
-[include svg_interface.qbk] [/ just the SVG functions.] 
+[include svg_interface.qbk] [/ just the SVG functions.]
 
 [section:svg_1d_plot_interface `svg_1d_plot` Public Interface]
 [table 1D_plot Miscellaneous Functions
@@ -9,9 +9,9 @@
   [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced (pixels)] [500, 200]]
   [[`svg_1d_plot& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits).] [3]]
   [[`svg_1d_plot& document_title(std::string)`] [Sets title for the SVG XML document (not the plot). <title>My Document title</title>] [""]
-  [[`svg_1d_plot& description(std::string)`] [Sets description for the SVG XML document, as comment and XML, for example: <!-- My Document description --> 
+  [[`svg_1d_plot& description(std::string)`] [Sets description for the SVG XML document, as comment and XML, for example: <!-- My Document description -->
 <desc>My Document description</desc>]]
-  
+
   [[`svg_1d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.] [14]]
   [[`svg_1d_plot& legend_color(const svg_color& col)`] [Sets the color to be used for the legend text.] [black]]
   [[`svg_1d_plot& title(const std::string&)`] [Sets the string to be used for the title. Switches `title_on` to `true`.] [""]]
@@ -73,7 +73,7 @@
 
 
 [heading The 1D_plot `plot()` Method]
-The `plot()` method is defined using Boost.Parameter. As such, it supports a 
+The `plot()` method is defined using Boost.Parameter. As such, it supports a
 few extra named parameters, as well as a deduced parameter.
 
 [table 1D_plot Required parameter
@@ -111,14 +111,14 @@ class my_functor
 plot(my_plot, my_data, "Lions", _x_functor = my_functor());
 ``
 ][
-`boost_default_convert` is sufficient in all cases where the data stored in 
+`boost_default_convert` is sufficient in all cases where the data stored in
 the container can be directly cast to a `double`.]]
 ] [/ table 1D_plot Optional Parameters]
 
 Here are some examples of using of the 1D_plot `plot` method:
 [h4 Using 1D_plot fill and stroke colors]
 
-  my_plot.plot(my_data, "Lions") 
+  my_plot.plot(my_data, "Lions")
     .fill_color(red).
     .line_color(black);
 
@@ -132,7 +132,7 @@ Here are some examples of using of the 1D_plot `plot` method:
   [[`svg_2d_plot& title(const std::string&)`] [Sets the string to be used for the title.] [Null string.]]
   [[`svg_2d_plot& title_font_size(unsigned int)`] [Sets the font size for the title.] [16]]
   [[`svg_2d_plot& legend_title_font_size(unsigned int)`] [Sets the font size for the legend title.] [14]]
-  
+
  ] [/ table 2D_plot Miscellaneous]
 
 [table 2D_plot On/Off Switches
@@ -154,20 +154,20 @@ Here are some examples of using of the 1D_plot `plot` method:
   [[`svg_2d_plot& y_major_labels_on(int)`] [sets if and how the major ticks will be labelled on the Y axis.
   < 0 means to left (default), 0 (false) means none, > 0 means to right.] [left]]
   [[`svg_2d_plot& y_minor_grid_on(bool)`] [Sets if the minor grid on the Y axis will be displayed.] [false]]
-  
+
   [[`svg_2d_plot& x_label_on(bool)`] [Sets the label string for the X-axis.] [false, until label assigned.]]
   [[`svg_2d_plot& x_label_on()`] [Returns if to show the label string for the X-axis.] ]
   [[`svg_2d_plot& y_label_on(bool)`] [Sets to show the label string for the Y-axis.] [false, until label assigned.]]
   [[`svg_2d_plot& y_label_on()`] [Returns if to show the label string for the Y-axis.] ]
-  
+
   [[`svg_2d_plot& x_major_labels_on(int)`] [Sets if to show the value labels for the X-axis. < 0 means to down (default), 0 (false) means none, > 0 means to top] ]
   [[`svg_2d_plot& y_major_labels_on(int)`] [Sets if to show the value labels for the Y-axis. < 0 means to left(default), 0 (false) means none, > 0 means to right ] ]
-  
+
   [[`svg_2d_plot& x_value_precision(int)`] [Sets the iostream precison for value labels on the X axis major ticks will be displayed. Default is 3 (rather than the iostream default of 6).]]
   [[`svg_2d_plot& x_value_ioflags(int)`] [Sets the iostream flags for value labels on the X axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
   [[`svg_2d_plot& y_value_precision(int)`] [Sets the iostream precison for value labels on the Y axis major ticks will be displayed. Default is 3 (rather than the iostream default of 6).]]
   [[`svg_2d_plot& y_value_ioflags(int)`] [Sets the iostream flags for value labels on the Y axis major ticks will be displayed. Default is std::ios::dec.  This allows fine control of the value labels using, for example (ios::dec | ios::scientific), or (ios::dec | ios::fixed), particularly in conjunction with precision.]]
-  [[`svg_2d_plot& x_major_label_rotation`(int)] [Sets the direction of writing of value labels from the X axis ticks. `enum rotate_style` provides control is 45 degree steps. Default is horizontal. 
+  [[`svg_2d_plot& x_major_label_rotation`(int)] [Sets the direction of writing of value labels from the X axis ticks. `enum rotate_style` provides control is 45 degree steps. Default is horizontal.
   ``enum rotate_style
     { // Rotation in degrees from horizontal. horizontal = 0, // normal left to right.
       uphill = -45, // slope up.
@@ -179,8 +179,8 @@ Here are some examples of using of the 1D_plot `plot` method:
       upsidedown = 180 // == -180
     };``
   ]]
-  [[`svg_2d_plot& y_major_label_rotation(int)`] [Determines the direction of writing of value labels from the Y axis ticks. `enum rotate_style` provides control is 45 degree steps.] [Horizontal]] 
-    
+  [[`svg_2d_plot& y_major_label_rotation(int)`] [Determines the direction of writing of value labels from the Y axis ticks. `enum rotate_style` provides control is 45 degree steps.] [Horizontal]]
+
   [[`svg_2d_plot& `x_major_value_labels_on(int)`] [If label values for X major ticks, and direction:  -1 = bottom, 0 = *no* value labels, +1 = top. Default -1, bottom of plot window.] [bottom]]
   [[`svg_2d_plot& `y_major_value_labels_on(int)`] [If label values for Y major ticks, and direction:  -1 = left, 0 = *no* value labels, +1 = right. Default -1, left of plot window.] [left]]
   [[`svg_2d_plot& `x_ticks_on_plot_window_on(int)`] [Position of Y axis of value labels & ticks:  -1 = left, 0 = on Y-axis, +1 = right. Default -1, left of plot window.] [bottom]]
@@ -191,7 +191,7 @@ Here are some examples of using of the 1D_plot `plot` method:
   [[`svg_2d_plot& `y_axis_width(double)`] [Sets Y axis line width.] [2]]
   [[`svg_2d_plot& `x_axis_color(double)`] [Sets X axis line color.][black.]]
   [[`svg_2d_plot& `y_axis_color(double)`] [Sets Y axis line color.] [black.]]
-  
+
 ] [/ table 2D_plot Commands]
 
 [table 2D_plot Colors
@@ -262,22 +262,22 @@ These allow one to check the current value
 For example, after a call of
 
   my_plot.y_num_minor_ticks(9);  // Chose 9 minor ticks between y major ticks.
-  
+
   my_plot.y_num_minor_ticks() == 9
-  
-The function show_2d_settings displayed *all* the settings from accessors below.  
-  
+
+The function show_2d_settings displayed *all* the settings from accessors below.
+
 [table 2D_plot Accessor functions
   [[`axis_line_style& x_axis()`] [returns reference to X axis_line_style.] ]
   [[`axis_line_style& y_axis()`] [returns reference to Y axis_line_style.] ]
   [[`ticks_labels_style& x_ticks()`] [returns reference to X ticks_labels_style.] ]
   [[`ticks_labels_style& y_ticks()`] [returns reference to Y ticks_labels_style.] ]
-  [[`std::string x_label()`] [Returns string labelling the X-axis.] ] 
+  [[`std::string x_label()`] [Returns string labelling the X-axis.] ]
   [[`std::string y_label()`] [Returns string labelling the Y-axis.] ]
   [[`std::string x_label_units()`] [Returns string labelling units of the X-axis.] ]
   [[`std::string y_label_units()`] [Returns string labelling units of the Y-axis.] ]
  ] [/table 2D_plot Accessor functions]
- 
+
 
 [heading The `plot()` Method]
 The `plot()` method supports two parameters & some chained functions.
@@ -290,7 +290,7 @@ The `plot()` method supports two parameters & some chained functions.
 
 [table 2D_plotChained Functions
 [[ID] [Type] [Description] [Default]]
-[[fill_color] [`svg_color`] [This is the color that shows inside of the circle that is 
+[[fill_color] [`svg_color`] [This is the color that shows inside of the circle that is
 being drawn.] [white]]
 ] [/ table 2D_plot Deduced parameter]
 
@@ -320,7 +320,7 @@ class my_functor
 plot(my_plot, my_data, "People", _x_functor = my_functor());
 ``
 ]
-[`boost_default_2d_convert` (the default) is sufficient in all cases where the data stored in 
+[`boost_default_2d_convert` (the default) is sufficient in all cases where the data stored in
 the container can be directly cast to a double.] ]
 
 ] [/ table 2D_plot Optional Parameters]
@@ -328,8 +328,8 @@ the container can be directly cast to a double.] ]
 Here are some examples of correct uses:
 [h3 Using fill and stroke colors]
 
-  my_plot.(my_data, "Lions") 
-  .fill_color(red) 
+  my_plot.(my_data, "Lions")
+  .fill_color(red)
   .stroke_color(black);
 
 [endsect] [/section:svg_2d_plot_interface]
@@ -456,7 +456,7 @@ A box has a border and may be filled with the same or a different color.
       box_style(const svg_color& scolor = black,
         const svg_color& fcolor = antiquewhite,
         double width = 1, // of border
-        double margin = 2., // 
+        double margin = 2., //
         bool border_on = true, // Draw a border of width.
         bool fill_on = false) // Apply fill color.
         :
@@ -492,7 +492,7 @@ A box has a border and may be filled with the same or a different color.
 
 Text style constructor.
 
-  text_style(int size = 20,  
+  text_style(int size = 20,
   const std::string& font = "", // Default is sans with Firefox & IE, but serif with Opera.
   const std::string& style = "", // italic, bold.
    // Functions not yet implemented by most browsers.
@@ -508,7 +508,7 @@ Text style constructor.
     decoration_(decoration)
   { // text_style default constructor, defines defaults for all private members.
   }
-  
+
 [table Text Style Constructor
 [[parameter #] [name] [Default] [Description]]
 [[1] [font_size] [20] [text font size (svg units).]]
@@ -522,12 +522,12 @@ Text style constructor.
 
 Examples:
   text_style my_style;
-  
+
 produces a normal default font of size 20 svg units (usually pixels).
 
   text_style my_style(14, "Lucida Sans Unicode", "italic");
-  
-produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels). 
+
+produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels).
 
 [table Text Style Accessor functions
 [[name] [parameter type] [Default value] [Description] [Examples]]
@@ -562,7 +562,7 @@ produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels).
       symbols_style_.font_size(size);
       symbols_style_.font_family("Lucida Sans Unicode");
     }
-    
+
 [table Plot Point Style Constructor
 [[Parameter #] [Name] [Default] [Description]]
 [[1] [fill] [blank] [SVG fill color.]]
@@ -574,11 +574,11 @@ produces a Lucida Sans Unicode font of size of 14 svg units (usually pixels).
 
 Examples:
 
-  point_style_(black, blank, 10, round), // Default point style, black 10 point unfilled circle.
-  point_style_(red, yellow, 5, square), // Point style, red 5 square filled yellow.
-  
+  point_style(black, blank, 10, round), // Default point style, black 10 point unfilled circle.
+  point_style(red, yellow, 5, square), // Point style, red 5 square filled yellow.
+
 It is usually convenient to override point styles onto calls of plot function by chaining thus:
-  
+
   my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).shape(square);
 
 Shapes available are:
@@ -607,7 +607,7 @@ Shapes available are:
     symbol // Unicode symbol including letters, digits, greek & 'squiggles'.
     // For example: &#x3A9; = greek omega
     // Other shapes may be added.
-  }; 
+  };
 
 [table Plot Point Style Accessor Functions
 [[name] [parameter type] [Default value] [Description] [Examples]]
@@ -622,7 +622,7 @@ Shapes available are:
 [h6 plot_line_style defines how data points are joined.]
 
   class plot_line_style
-  { // Style of line joining data series values. 
+  { // Style of line joining data series values.
   public:
       svg_color color_; // Line stroke color. (No fill color for lines).
       svg_color area_fill_; // Fill color from line to axis. == true means color.blank = true.
@@ -636,7 +636,7 @@ Shapes available are:
       { // Defaults for all private data.
       }
 
-    
+
 [table Plot Line Style Constructor
 [[parameter #] [name] [Default] [Description]]
 [[1] [color] [black] [Line color (SVG stroke color).]]
@@ -647,14 +647,13 @@ Shapes available are:
 ] [/ table Plot Line Style]
 
 Examples:
-  
+
   my_line_style line_style_(black, true, 2, true, false);
   // Black straight line joining points (without area fill).
-  
-In practice it is often convenient to chain function calls onto plot function calls thus:
-  
-    my_plot.plot(data3, "-1 + 2x").bezier_on(true).line_color(blue);
 
+In practice it is often convenient to chain function calls onto plot function calls thus:
+
+    my_plot.plot(data3, "-1 + 2x").bezier_on(true).line_color(blue);
 
 [table Plot Line Style Accessor functions
 [[name] [parameter type] [Default value] [Description] [Examples]]

@@ -1,4 +1,4 @@
-// demoe_2d_plot.cpp
+// demo_2d_plot.cpp
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007, 2008
@@ -90,14 +90,14 @@ int main()
     std::string s = my_plot.title();
 
     my_plot.plot(data1, "Sqrt(x)").fill_color(red);
-	  my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5);
-	  my_plot.plot(data3, "-1 + 2x").fill_color(yellow).bezier_on(true).line_color(blue).shape(square);
+    my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5);
+    my_plot.plot(data3, "-1 + 2x").fill_color(yellow).bezier_on(true).line_color(blue).shape(square);
     cout << " my_plot.title() " << my_plot.title() << endl;
 
     my_plot.write("./demo_2d_simple.svg");
     cout << " my_plot.title() " << my_plot.title() << endl;
 
-    show_plot_settings(my_plot);
+    show_2d_plot_settings(my_plot);
   }
   catch(const std::exception& e)
   {
@@ -122,7 +122,7 @@ Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_2d_simple.exe"
  my_plot.title() demo_2d_simple title
  my_plot.title() demo_2d_simple title
- my_plot.title() 
+ my_plot.title()
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
@@ -130,10 +130,10 @@ background_color RGB(255,255,255)
 image_border_margin() 10
 image_border_width() 2
 coord_precision 3
-copyright_date  
-copyright_holder 
-description 
-document_title 
+copyright_date
+copyright_holder
+description
+document_title
 image_x_size 500
 image_y_size 400
 legend_on false
@@ -142,9 +142,9 @@ legend_top_left -1, -1, legend_bottom_right -1, -1
 legend_background_color blank
 legend_border_color RGB(255,255,0)
 legend_color blank
-legend_title 
+legend_title
 legend_title_font_size 14
-legend_font_weight 
+legend_font_weight
 legend_width 0
 legend_lines true
 license_on false
@@ -166,13 +166,13 @@ title_on true
 title ""
 title_color blank
 title_font_alignment 2
-title_font_decoration 
+title_font_decoration
 title_font_family Verdana
 title_font_rotation 0
 title_font_size 18
-title_font_stretch 
-title_font_style 
-title_font_weight 
+title_font_stretch
+title_font_style
+title_font_weight
 x_value_precision 3
 x_value_ioflags 200 IOS format flags (0x200) dec.
 y_value_precision 3
@@ -189,7 +189,7 @@ x_label X-axis
 x_label_color blank
 x_label_font_family Verdana
 x_label_font_size 14
-x_label_units 
+x_label_units
 x_label_units_on false
 x_major_value_labels_side left
 x_major_label_rotation 0
@@ -228,7 +228,7 @@ y_label_color blank
 y_label_font_family Verdana
 y_label_font_size 14
 y_label_on true
-y_label_units 
+y_label_units
 y_label_units_on false
 y_label_width 0
 y_major_grid_on false
@@ -248,7 +248,7 @@ y_minor_tick_color RGB(0,0,0)
 y_minor_tick_length 2
 y_minor_tick_width 1
 y_range() -10, 10
-y_num_minor_ticks 
+y_num_minor_ticks
 y_ticks_left_on true
 y_ticks_right_on false
 y_ticks_on_window_or_axis left

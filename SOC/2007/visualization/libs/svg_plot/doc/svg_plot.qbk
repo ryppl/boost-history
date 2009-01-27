@@ -1,14 +1,54 @@
-[article SVG_Plot
+[article SVG_Plot Manual
     [quickbook 1.4]
-    [authors [Voytko, Jake]]
-    [copyright 2007 Jake Voytko]
-    [purpose Plot STL containers onto graphs in SVG format]
+    [id SVG plot documentation]
+    [authors [Voytko, Jake], [Bristow, Paul A.]]
+    [copyright 2007, 2008, 2009 Jake Voytko and Paul A. Bristow]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
+    [source-mode c++]
+    [purpose Plot STL containers onto graphs in SVG format.]
 ]
+
+[/  Images   ]
+[/ $images is ref to folder where images are held.
+[def __note__                [$images/note.png]]
+[def __alert__               [$images/caution.png]]
+[def __detail__              [$images/note.png]]
+[def __tip__                 [$images/tip.png]]
+
+[/ Links   ]
+[/ By Eric's convention prefix and suffix _ means a defined value. ]
+[def _boost_                 [@http://www.boost.org Boost]]
+[/def _iterator_              [@../../libs/iterator/doc/index.html Boost.Iterator]]
+[/def _basic_regex_           [^[classref boost::xpressive::basic_regex basic_regex<>]]]
+[/ _basic_regex_ == file:///I:/boost_trunk/libs/xpressive/doc/html/boost/xpressive/basic_regex.html]
+[/def _regex_match_           [^[funcref boost::xpressive::regex_match regex_match()]]]
+[/def _syntax_option_type_    [^[enumref boost::xpressive::regex_constants::syntax_option_type syntax_option_type]]]
+[/def _regex_compile_         [^[memberref boost::xpressive::basic_regex::compile basic_regex<>::compile()]]]
+
+[/ Generating docs for compound boost::svg::svg]
+[/ Generating XML output for class boost::svg::svg]
+
+[def _svg [classref boost::svg::svg] ] [/ just a (default) name == boost::svg::svg]
+
+[def _svg_ [^[classref boost::svg::svg svg<>]]]
+[def _svg_1d_plot_ [^[classref boost::svg::svg_1d_plot svg_1d_plot<>]]]
+[def _svg_1d_plot_series_ [^[classref boost::svg::svg_1d_plot_series<>]]]
+
+[xinclude autodoc.xml] [/ Using Doxygen documentation.]
+
+[section:test_links testing links]
+
+Test link to _boost_
+[classref boost::svg::svg]
+Test Link to _svg_
+Test Link to _svg_1d_plot_
+Test Link to _svg_1d_plot_series_
+
+[endsect] [/test_links]
 
 [include how_to_use.qbk]
 [include to_do.qbk]
@@ -17,7 +57,8 @@
 [include 1d_tutorial.qbk]
 [include 2d_tutorial.qbk]
 [include boxplot_tutorial.qbk]
-[include stylesheet_tutorial.qbk]
+[auto_1d_containers.qbk
+[/include stylesheet_tutorial.qbk] [/ No longer implemented.]
 [include behavior_tutorial.qbk]
 [include plot_defaults.qbk]
 [include interface.qbk]
@@ -25,7 +66,7 @@
 [include acknowledgements.qbk]
 
 [/ svg_plot.qbk
-  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Copyright 2008, 2009 Jake Voytko and Paul A. Bristow.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

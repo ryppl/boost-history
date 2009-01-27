@@ -1,4 +1,10 @@
-// stylesheet.hpp 
+/*! \file stylesheet.hpp
+    \athor Jacob Voytko
+
+    \brief Implement Cascading Style Sheets for SVG plots (but NOT IMPLEMENTED yet).
+    \details
+     Get some inscrutable errors from this and so commented out of other modules.
+*/
 
 // Copyright Jacob Voytko 2007
 
@@ -6,7 +12,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-// -----------------------------------------------------------------
 
 #ifndef BOOST_SVG_STYLESHEET_HPP
 #define BOOST_SVG_STYLESHEET_HPP
@@ -15,7 +20,6 @@
 #include <boost/spirit/utility/distinct.hpp>
 
 #include <stdexcept>
-// TODO get some inscrutable errors from this and so commented out of other modules.
 #include <exception>
 #include <string>
 #include <fstream>
@@ -26,7 +30,6 @@ namespace boost
 {
 namespace svg
 {
-
 // Note: After GSoC, this will use the suggested CSS parser
 // from the W3C CSS 2.1 Standard
 struct css_parse : public ::boost::spirit::grammar<css_parse>
@@ -41,13 +44,13 @@ struct css_parse : public ::boost::spirit::grammar<css_parse>
                 ;
 
             class_expression
-                =   wspace >> ::boost::spirit::ch_p('.') 
+                =   wspace >> ::boost::spirit::ch_p('.')
                     >> *(::boost::spirit::alnum_p) >> wspace >> ::boost::spirit::ch_p('{')
                     >> *statement >> wspace >> ::boost::spirit::ch_p('}')
                 ;
 
             id_expression
-                =   wspace >> ::boost::spirit::ch_p('#') 
+                =   wspace >> ::boost::spirit::ch_p('#')
                     >> *(::boost::spirit::alnum_p) >> wspace >> ::boost::spirit::ch_p('{')
                     >> wspace >> *statement >> wspace >> ::boost::spirit::ch_p('}')
                 ;
@@ -60,13 +63,13 @@ struct css_parse : public ::boost::spirit::grammar<css_parse>
                 ;
 
             normal_expression
-                =   wspace >> *(::boost::spirit::alnum_p) >> wspace 
-                    >> ::boost::spirit::ch_p('{') >> wspace 
+                =   wspace >> *(::boost::spirit::alnum_p) >> wspace
+                    >> ::boost::spirit::ch_p('{') >> wspace
                     >> *statement >> wspace >> ::boost::spirit::ch_p('}') >> wspace
                 ;
 
             identifier
-                =   *(::boost::spirit::chset<>("a-zA-Z0-9#-")); 
+                =   *(::boost::spirit::chset<>("a-zA-Z0-9#-"));
                 ;
 
             // whitespace
@@ -81,7 +84,7 @@ struct css_parse : public ::boost::spirit::grammar<css_parse>
         ::boost::spirit::rule<ScannerT> const&
         start() const { return expression; }
     };
-}; // struct css_parse 
+}; // struct css_parse
 
 bool validate_stylesheet(std::ifstream& file)
 { // stream version used by file version below.
@@ -95,9 +98,9 @@ bool validate_stylesheet(std::ifstream& file)
     }
 
     ::boost::spirit::parse_info<> info = ::boost::spirit::
-            parse(str.c_str(), my_css_parser, 
+            parse(str.c_str(), my_css_parser,
                 ::boost::spirit::space_p);
-        
+
     if (!info.full)
     {
         std::cout << info.stop;

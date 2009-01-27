@@ -1,4 +1,10 @@
-// svg_fwd.cpp
+/*!
+  \file svg_fwd.hpp
+  \author Jacob Voytko & Paul A. Bristow
+
+  \brief Forward declarations of SVG classes and functions.
+  \details Doxygen descriptions are in the corresponding .hpp files.
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007, 2008
@@ -8,8 +14,6 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// Forward declarations of SVG classes and functions.
-
 #ifndef BOOST_SVG_FWD_HPP
 #define BOOST_SVG_FWD_HPP
 
@@ -18,7 +22,7 @@ namespace boost
 namespace svg
 {
 
-// svg_color.hpp
+// svg_color.hpp contains definitions.
 struct svg_color;
 enum svg_color_constant;
 void constant_to_rgb(svg_color_constant c, unsigned char &r,
@@ -26,7 +30,7 @@ void constant_to_rgb(svg_color_constant c, unsigned char &r,
 std::ostream& operator<< (std::ostream&, const svg_color&);
 enum svg_color_constant;
 
-// svg_style.hpp
+// svg_style.hpp contains definitions.
 
 enum point_shape;
 class plot_point_style;
@@ -43,12 +47,11 @@ int width_on();
 svg_style& stroke_color(const svg_color& col);
 svg_style& fill_color(const svg_color& col);
 svg_style& stroke_width(unsigned int width);
-//void write(std::ostream& rhs);
 
+//void write(std::ostream& rhs);
 // \detail\svg_style.hpp
 
 using boost::svg::detail::plot_doc_structure;
-
 enum plot_doc_structure;
 
 // svg.hpp
@@ -148,7 +151,7 @@ struct m_path; // moveto coordinates (x, y).
 struct l_path; // lineto coordinates (x, y).
 struct z_path; // z indicates a closepath.
 struct h_path; // Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
-struct v_path; // Draws a vertical line from the current point (cpx, cpy) to (cpx, y). 
+struct v_path; // Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
 struct c_path; // Draws a cubic Bézier curve from the current point to (x,y) using (x1,y1).
 struct q_path; // Draws a quadratic Bézier curve from the current point to (x,y).
 struct s_path; // Draws a cubic Bézier curve from the current point to (x,y).
@@ -158,7 +161,7 @@ class g_element; // 'g' element is a container element for grouping together rel
 
 // svg_1d_plot.hpp
 struct svg_plot_series;
-class svg_1d_plot; 
+class svg_1d_plot;
 
 } // namespace svg
 } // namespace boost

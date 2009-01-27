@@ -1,4 +1,10 @@
-// pair.hpp
+/*! \file pair.hpp
+    \brief Provides a private implementation of operator<< for std::pair that
+      outputs pairs with a comma separated format, for example: 1.2, 3.4
+    \details Hidden in namespace detail to avoid clashes with other implementations of std::pair operator<<.
+
+   \author Paul A. Bristow
+   */
 
 // Copyright Paul A. Bristow 2006 - 2008.
 
@@ -19,7 +25,7 @@ namespace svg
 {
 namespace detail
 {
-	// Hidden in namespace detail to avoid clashes with other implementations of std::pair operator<<.
+  // Hidden in namespace detail to avoid clashes with other implementations of std::pair operator<<.
 
   //std::ostream& operator<< (std::ostream&, const std::pair<double, double>&);
   //template<class T1, class T2> std::ostream& operator<< (std::ostream&, std::pair<T1, T1>&);

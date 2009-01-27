@@ -1,18 +1,13 @@
 [section:tutorial_code_1d_simple Tutorial: 1D]
 
 [include 1d_simple_tutorial.qbk]
-
 [include 1d_vector_tutorial.qbk]
 [include demo_1d_containers.qbk]
-[/include auto_1d_containers.qbk]
+[include auto_1d_containers.qbk]
 [include auto_1d_plot.qbk]
-
 [include 1d_full_tutorial.qbk]
-
 [include 1d_special_tutorial.qbk]
-
 [include 1d_autoscale_containers.qbk]
-
 [include demo_1d_axis_scaling.qbk]
 [include demo_1d_autoscaling.qbk]
 [include demo_1d_values.qbk]

@@ -1,18 +1,22 @@
-#   Copyright Jake Voytko 2007
-#   Copyright Paul A. Bristow 2007
-  
-#   Distributed under the Boost Software License, Version 1.0.
-#   (See accompanying file LICENSE_1_0.txt
-#   or copy at http://www.boost.org/LICENSE_1_0.txt)
+# jamfile.v2 for SVG_plot using Doxygen
 
-#   Reminder: whitespace MUST terminate variable name!
-#   so space BEFORE ; and :
+# Copyright Paul A. Bristow 2009
+# Derived from Copyright Eric Niebler 2005 Boost xPressive docs.
 
-# SVG plot documentation as html and pdf from Quickbook.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt
+# or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+# Reminder: whitespace MUST terminate variable name!
+# so spaces or newlines BEFORE ; and : and AFTER too.
+# (because : and ; are keywords!)
+
+# SVG plot documentation as html and pdf from Quickbook, using Doxygen.
 
 # project boost/doc ;
 
 using quickbook ;
+using doxygen ;
 
 path-constant images_location : html ;
 # location of SVG images referenced by Quickbook.
@@ -23,69 +27,91 @@ xml svg_plot
   :
 ;
 
+doxygen autodoc
+  :
+    [ glob ../../../boost/svg_plot/*.hpp ]
+    [ glob ../../../boost/svg_plot/detail/*.hpp ]
+  :
+    <doxygen:param>EXTRACT_ALL=YES
+    #<doxygen:param>"PREDEFINED=\"BOOST_DEDUCED_TYPENAME=typename\" "
+    #<doxygen:param>HIDE_UNDOC_MEMBERS=NO
+    #<doxygen:param>EXTRACT_PRIVATE=NO
+    #<doxygen:param>ENABLE_PREPROCESSING=YES
+    #<doxygen:param>MACRO_EXPANSION=YES
+    #<doxygen:param>EXPAND_ONLY_PREDEF=YES
+    #<doxygen:param>SEARCH_INCLUDES=YES
+    #<doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+;
+
+
 # import boostbook : boostbook ;
 
-boostbook standalone 
-  :  
+boostbook standalone
+  :
     svg_plot
   :
- 
-	# Path for links to Boost:
-	<xsl:param>boost.root=../../../../../../../../trunk
-	# Path for libraries index:
-	<xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm
-	# Use the main Boost stylesheet:
-	<xsl:param>html.stylesheet=../../../../../../../../trunk/doc/html/boostbook.css
-	# Use the svg_plot local Boost stylesheet:
-	# <xsl:param>html.stylesheet=./html/boostbook.css
 
-	# Some general style settings:
-	<xsl:param>table.footnote.number.format=1
-	<xsl:param>footnote.number.format=1
-        
-	# HTML options first:
-	# Use graphics not text for navigation:
-	<xsl:param>navig.graphics=1
-	# How far down we chunk nested sections, basically all of them:
-	<xsl:param>chunk.section.depth=10
-	# Don't put the first section on the same page as the TOC:
-	<xsl:param>chunk.first.sections=1
-	# How far down sections get TOC's
-	<xsl:param>toc.section.depth=10
-	# Max depth in each TOC:
-	<xsl:param>toc.max.depth=4
-	# How far down we go with TOC's
-	<xsl:param>generate.section.toc.level=10
-	#<xsl:param>root.filename="sf_dist_and_tools"
-        
+  # Path for links to Boost:
+  #<xsl:param>boost.root=../../../../../../../../trunk
+  <xsl:param>boost.root=../../../../../../../../boost_trunk
+  # Path for libraries index:
+  <xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm
+  # Use the main Boost stylesheet:
+  <xsl:param>html.stylesheet=../../../../../../../../boost_trunk/doc/html/boostbook.css
+  #<xsl:param>html.stylesheet=../../../../../../../../trunk/doc/html/boostbook.css
+  # Use the svg_plot local Boost stylesheet:
+  # <xsl:param>html.stylesheet=./html/boostbook.css
+
+  # Some general style settings:
+  <xsl:param>table.footnote.number.format=1
+  <xsl:param>footnote.number.format=1
+
+  # HTML options first:
+  # Use graphics not text for navigation:
+  <xsl:param>navig.graphics=1
+  # How far down we chunk nested sections, basically all of them:
+  <xsl:param>chunk.section.depth=10
+  # Don't put the first section on the same page as the TOC:
+  <xsl:param>chunk.first.sections=1
+  # How far down sections get TOC's
+  <xsl:param>toc.section.depth=10
+  # Max depth in each TOC:
+  <xsl:param>toc.max.depth=4
+  # How far down we go with TOC's
+  <xsl:param>generate.section.toc.level=10
+  #<xsl:param>root.filename="sf_dist_and_tools"
+
   # <xsl:param>project.root=http://beta.boost.org/development
   # <xsl:param>annotation.support=1
   # <xsl:param>quickbook.source.style.show="'true'"
-  
-	# PDF Options:
-	# TOC Generation: this is needed for FOP-0.9 and later:
-	# <xsl:param>fop1.extensions=1
-	<format>pdf:<xsl:param>xep.extensions=1
-	# TOC generation: this is needed for FOP 0.2, but must not be set to zero for FOP-0.9!
-	<format>pdf:<xsl:param>fop.extensions=0
-	# No indent on body text:
-	<format>pdf:<xsl:param>body.start.indent=0pt
-	# Margin size:
-	<format>pdf:<xsl:param>page.margin.inner=0.5in
-	# Margin size:
-	<format>pdf:<xsl:param>page.margin.outer=0.5in
-	# Paper type = A4
-	<format>pdf:<xsl:param>paper.type=A4
-	# Yes, we want graphics for admonishments:
-	<xsl:param>admon.graphics=1
-	# Set this one for PDF generation *only*:
-	# default pnd graphics are awful in PDF form,
-	# better use SVG's instead:
-	<format>pdf:<xsl:param>admon.graphics.extension=".svg"
-	<format>pdf:<xsl:param>use.role.for.mediaobject=1 
-	<format>pdf:<xsl:param>preferred.mediaobject.role=print
-	<format>pdf:<xsl:param>img.src.path=$(images_location)/
-	<format>pdf:<xsl:param>admon.graphics.path=$(images_location)/images/
-	<format>pdf:<xsl:param>draft.mode="no"
-	;
+
+  # PDF Options:
+  # TOC Generation: this is needed for FOP-0.9 and later:
+  # <xsl:param>fop1.extensions=1
+  <format>pdf:<xsl:param>xep.extensions=1
+  # TOC generation: this is needed for FOP 0.2, but must not be set to zero for FOP-0.9!
+  <format>pdf:<xsl:param>fop.extensions=0
+  # No indent on body text:
+  <format>pdf:<xsl:param>body.start.indent=0pt
+  # Margin size:
+  <format>pdf:<xsl:param>page.margin.inner=0.5in
+  # Margin size:
+  <format>pdf:<xsl:param>page.margin.outer=0.5in
+  # Paper type = A4
+  <format>pdf:<xsl:param>paper.type=A4
+  # Yes, we want graphics for admonishments:
+  <xsl:param>admon.graphics=1
+  # Set this one for PDF generation *only*:
+  # default pnd graphics are awful in PDF form,
+  # better use SVG's instead:
+  <format>pdf:<xsl:param>admon.graphics.extension=".svg"
+  <format>pdf:<xsl:param>use.role.for.mediaobject=1
+  <format>pdf:<xsl:param>preferred.mediaobject.role=print
+  <format>pdf:<xsl:param>img.src.path=$(images_location)/
+  <format>pdf:<xsl:param>admon.graphics.path=$(images_location)/images/
+  <format>pdf:<xsl:param>draft.mode="no"
+
+  <dependency>autodoc
+
+  ;
 

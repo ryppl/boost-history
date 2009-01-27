@@ -1,4 +1,11 @@
-// svg_tag.hpp
+/* \file svg_tag.hpp
+
+    \author Jacob Voytko and Paul A. Bristow
+
+   \brief Boost.Plot SVG plot Implemention details.
+   \details See svg.hpp etc for user functions.
+   svg_tag.hpp defines all classes that can occur in the SVG parse tree.
+*/
 
 // Copyright Jacob Voytko 2007, 2008
 // Copyright Paul A Bristow 2007, 2008
@@ -7,14 +14,9 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-// -----------------------------------------------------------------
 
 #ifndef BOOST_SVG_TAG_HPP
 #define BOOST_SVG_TAG_HPP
-
-// -----------------------------------------------------------------------------
-// File svg_tag.hpp defines all classes that can occur in the SVG parse tree.
-// -----------------------------------------------------------------------------
 
 #include <boost/ptr_container/ptr_container.hpp>
 // using boost::vec_ptr;
@@ -43,7 +45,7 @@ namespace svg
   // rect_element, circle_element, line_element, text_element,
   // polyline_element, polygon_element, path_element, clip_path_element,
   class text_parent; // Ancestor to both tspan and strings for the text_element class.
-  class text_element_text;  
+  class text_element_text;
   class tspan_element; // Within a text_element, adjust text and font properties.
   class text_element; // text with position, size, font, (& styles) & orientation.
   class rect_element; // clipping path restricts the region to which paint can be applied.
@@ -71,27 +73,27 @@ namespace svg
   // for grouping together related graphics elements, for example:
   // <g stroke="rgb(255,0,0)" <rect x="0" y="0"  width="500"  height="600"/> </g>
 
-  // --------------------------------------------------------------------------
-  // svg_element is base class for all the leaf elements:
-  // rect_element, circle_element, line_element, text_element,
-  // polygon_element, polyline_element, path_element, clip_path_element, 
-  // g_element
-  //
-  // g_element ('g' element is a container element
-  // for grouping together related graphics elements).
-  // http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview
-  // --------------------------------------------------------------------------
-
   class svg_element
-  { // Base class.
+  { //! \class svg_element Base class for all the leaf elements.
+  /*! \details
+     svg_element is base class for all the leaf elements:\n
+     rect_element, circle_element, line_element, text_element,
+     polygon_element, polyline_element, path_element, clip_path_element,
+     g_element.\n
+
+     g_element ('g' element is a container element
+     for grouping together related graphics elements).\n
+     See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
+  */
+
   protected:
-    svg_style style_info_; // Colors fill, stroke, width, get by function style.
-    std::string id_name_; // set & get by function id.
-    std::string class_name_; // set & get by class id.
-    std::string clip_name_; // set & get by function clip_id.
+    svg_style style_info_; //! Colors fill, stroke, width, get by function style.
+    std::string id_name_; //! SVG id name, set & get by function id.
+    std::string class_name_; //! SVG class name, set & get by function class id.
+    std::string clip_name_; //! SVG clip path name, set & get by function clip_id.
 
     void write_attributes(std::ostream& s_out)
-    { // group_element id and clip-path.
+    { //! Output group_element id and clip-path.
       if(id_name_.size() != 0)
       { // Example: id="imageBackground"
         s_out << " id=\"" << id_name_ << "\""; // Prefix with space.
@@ -101,18 +103,20 @@ namespace svg
         s_out << " class=\"" << class_name_ << "\"";
       }
       if(clip_name_.size() != 0)
-      { // Example: clip-path="url(#plot_window)" 
+      { // Example: clip-path="url(#plot_window)"
         s_out << " clip-path=\"url(#" << clip_name_ << ")\""; // Prefix with space.
       }
-      // Inherited classes add other references, 5.3.1, like color, fill, stroke, gradients...
-      // Example id: <g id="yMinorGrid" ></g>
-      // Example class: <g class="grid_style"></g>
-      // Example URI: fill="url(#Gradient01) // local URL
+      /*! \details
+        Classes inherited from svg_element add other references, 5.3.1, like color, fill, stroke, gradients...
+        Example id: <g id="yMinorGrid" ></g>
+        Example class: <g class="grid_style"></g>
+        Example URI: fill="url(#Gradient01) // local URL
+      */
     } // void write_attributes(std::ostream& s_out)
 
   public:
 
-    svg_element(const svg_style& style_info, 
+    svg_element(const svg_style& style_info,
                 const std::string& id_name = "",
                 const std::string& class_name = "",
                 const std::string& clip_name = "")
@@ -134,65 +138,74 @@ namespace svg
     }
 
     bool operator==(const svg_element& lhs)
-    { // might be useful for Boost.Test.
+    { //! Compare svg_elements, useful for Boost.Test.
       return lhs.id_name_ == id_name_;
+    }
+
+    bool operator!=(const svg_element& lhs)
+    { //! Compare svg_elements for inequality, useful for Boost.Test.
+      return lhs.id_name_ != id_name_;
     }
 
     // Set and get member functions.
     svg_style& style()
-    { // Indirect access to colors & width via style().stroke_color(), fill_color(), width()
+    { //! Get reference to svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width()
       return style_info_;
     }
 
     const svg_style& style() const
-    { // const version.
+    { //! Get reference to const svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width() (const version).
       return style_info_;
     }
 
     void id(const std::string& id)
-    { // Unique name for an element.
-      // http://www.w3.org/TR/SVG/struct.html#IDAttribute
-      // 5.10.1 Attributes common to all elements: id and xml:base
-      // The id and xml:base attributes are available on all SVG elements:
-      // Attribute definitions:
-      // id = "name"
-      // Standard XML attribute for assigning a unique name to an element.
-      // Refer to the "Extensible Markup Language (XML) 1.0" Recommendation [XML10].
-      // xml:base = "<uri>"
-      // Specifies a base URI other than the base URI of the document or external entity.
-      // Refer to the "XML Base" specification [XML-BASE].
-      // A group of elements, as well as individual objects,
-      // can be given a name using the id attribute.
-      // Named groups are needed for several purposes such as animation and re-usable objects.
+    { //! Provide a unique name for an element.
+      /*! \details
+        See http://www.w3.org/TR/SVG/struct.html#IDAttribute
+        5.10.1 Attributes common to all elements: id and xml:base
+        The id and xml:base attributes are available on all SVG elements:
+        Attribute definitions:
+        id = "name"
+        Standard XML attribute for assigning a unique name to an element.
+        Refer to the "Extensible Markup Language (XML) 1.0" Recommendation [XML10].
+        xml:base = "<uri>"
+        Specifies a base URI other than the base URI of the document or external entity.
+        Refer to the "XML Base" specification [XML-BASE].
+        A group of elements, as well as individual objects,
+        can be given a name using the id attribute.
+        Named groups are needed for several purposes such as animation and re-usable objects.
+        Example: id="plotBackground"
+      */
       id_name_ = id;
-      // Example: id="plotBackground"
-    }
+   }
 
     std::string id()
-    { // Unique name for an element.
+    { //! Get the unique name for an element, for example id() ="plotBackground".
       return id_name_;
     }
 
     void class_id(const std::string& class_id)
-    { // Non-unique identifier for an element.
-      // http://www.w3.org/TR/2001/REC-SVG-20010904/styling.html#ClassAttribute
-      // 6.12 Attributes common to all elements: id and xml:base
-      // Example: class="info"
+    { //! Class class id, non-unique identifier for an element.
+      /*! \details
+        http://www.w3.org/TR/2001/REC-SVG-20010904/styling.html#ClassAttribute
+        6.12 Attributes common to all elements: id and xml:base
+        Example: class="info"
+      */
       class_name_ = class_id;
     }
 
     std::string class_id()
-    { // Unique name for an element.
+    { //! Class id, non-unique identifier for an element.
       return class_name_;
     }
 
     void clip_id(const std::string& id)
-    { // Named clip, for example: g_ptr.clip_id(plot_window_clip_);
+    { //! Set name of a clip path, for example: g_ptr.clip_id(plot_window_clip_);
       clip_name_ = id;
     }
 
     std::string clip_id()
-    {
+    { //! Get name of a clip path, for example: g_ptr.clip_id(plot_window_clip_);
       return clip_name_;
     }
   }; // class svg_element
@@ -205,12 +218,12 @@ namespace svg
   // Represents a line
   // -----------------------------------------------------------------
   class line_element: public svg_element
-  {
+  { //! Line from (x1_, x2_) to (y1_, y2_)
   private:
-    double x1_; // Line from (x1_, x2_) to (y1_, y2_)
-    double x2_;
-    double y1_;
-    double y2_;
+    double x1_; //! Line from (x1_, x2_) to (y1_, y2_)
+    double x2_; //! Line from (x1_, x2_) to (y1_, y2_)
+    double y1_; //! Line from (x1_, x2_) to (y1_, y2_)
+    double y2_; //! Line from (x1_, x2_) to (y1_, y2_)
 
   public:
     line_element(double x1, double y1, double x2,  double y2)
@@ -219,21 +232,21 @@ namespace svg
     }
 
     line_element(double x1, double y1,
-                 double x2, double y2, 
-                 const svg_style& style_info, 
-                 const std::string& id_name="", 
+                 double x2, double y2,
+                 const svg_style& style_info,
+                 const std::string& id_name="",
                  const std::string& class_name="",
-                 const std::string& clip_name = "") 
+                 const std::string& clip_name = "")
                 : x1_(x1), y1_(y1), x2_(x2), y2_(y2),
                   svg_element(style_info, id_name, class_name, clip_name)
     {
     }
 
     void write(std::ostream& rhs)
-    {
+    { //! output line from (x1_, x2_) to (y1_, y2_)
+      //! \details Example: <line x1="5" y1="185" x2="340" y2="185"/>
       rhs << "<line x1=\"" << x1_ << "\" y1=\"" << y1_
           << "\" x2=\"" << x2_ << "\" y2=\"" << y2_ << "\"/>";
-      // Example: <line x1="5" y1="185" x2="340" y2="185"/>
     }
   }; // class line_element
 
@@ -271,7 +284,7 @@ namespace svg
         svg_element(style_info, id_name, class_name, clip_name)
     { // Constructor defines all private data (no defaults).
     }
-    
+
     double x() const
     {
       return x_;
@@ -327,7 +340,7 @@ namespace svg
   {  //
       os << "rect(" << r.x() << ", " << r.y()
          << ", " << r.width() << ", " << r.height() << ")" ;
-    // Usage: rect_element r(20, 20, 50, 50);  cout << r << endl; 
+    // Usage: rect_element r(20, 20, 50, 50);  cout << r << endl;
     // Outputs:  rect(20, 20, 50, 50)
     return os;
   } // std::ostream& operator<<
@@ -390,7 +403,7 @@ namespace svg
                  const std::string& id_name="",
                  const std::string& class_name="",
                  const std::string& clip_name="")
-      : cx(cx), cy(cy), rx(rx), ry(ry), 
+      : cx(cx), cy(cy), rx(rx), ry(ry),
         svg_element(style_info, id_name, class_name, clip_name)
     { // Define all private data.
     }
@@ -420,7 +433,9 @@ namespace svg
   // ----------------------------------------------------------------------
   enum align_style
   {
-    left_align, right_align, center_align
+    left_align, //!< Align text to left.
+    right_align, //!< Align text to right.
+    center_align //!< Center text.
   };
 
 class text_parent
@@ -432,12 +447,12 @@ class text_parent
   public:
     virtual void write(std::ostream& /* o_str */)
     {
-    } 
+    }
 
     text_parent(const std::string& text): text_(text)
     {
     }
-	  text_parent(const text_parent& rhs): text_(rhs.text_)
+    text_parent(const text_parent& rhs): text_(rhs.text_)
     {
     }
 }; // class text_parent
@@ -458,7 +473,7 @@ public:
 }; // class text_element_text
 
 class tspan_element : public text_parent, public svg_element
-{ // See 10.5 tspan element http://www.w3.org/TR/SVG/text.html#TSpanElement 
+{ // See 10.5 tspan element http://www.w3.org/TR/SVG/text.html#TSpanElement
 private:
   double x_;  // Absolute positions.
   double y_;
@@ -466,7 +481,7 @@ private:
   double dy_;
   int rotate_; // of a 1st single character of text.
   // A list of shifts or rotations for several characters is not yet implemented.
-  
+
   double text_length_;  // Allows the author to provide exact alignment.
 
   // dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
@@ -490,7 +505,7 @@ public:
 
   tspan_element(const tspan_element& rhs);
     // TODO all may need refactoring to separate declaration from definition - as example below.
-  
+
   //tspan_element(const tspan_element& rhs)
   //  :
   //  x_(rhs.x_), y_(rhs.y_), dx_(rhs.dx_), dy_(rhs.dy_), rotate_(rhs.rotate_),
@@ -505,34 +520,34 @@ public:
   //tspan_element(const tspan_element&);
   //tspan_element& text(const std::string& text);
   //tspan_element& dx(double dx);
-  //tspan_element& dy(double dy); 
-  //tspan_element& rotation(int rotation); 
+  //tspan_element& dy(double dy);
+  //tspan_element& rotation(int rotation);
   //tspan_element& x(double x);
   //tspan_element& y(double y);
   //tspan_element& text_length(double text_length);
 
-  tspan_element& text(const std::string& text) 
-  { 
-    text_=text; 
+  tspan_element& text(const std::string& text)
+  {
+    text_=text;
     return *this;
   }
 
-  tspan_element& dx(double dx) 
-  { 
-    dx_ = dx; 
+  tspan_element& dx(double dx)
+  {
+    dx_ = dx;
     return *this;
   }
 
-  tspan_element& dy(double dy) 
-  { 
-    dy_ = dy; 
+  tspan_element& dy(double dy)
+  {
+    dy_ = dy;
     return *this;
   }
 
-  tspan_element& rotation(int rotation) 
+  tspan_element& rotation(int rotation)
   { // Note implementation so far only rotates the 1st character in string.
     // text_element rotation rotates the whole text string, so it *much* more useful.
-    rotate_ = rotation; 
+    rotate_ = rotation;
     return *this;
   }
 
@@ -582,7 +597,7 @@ public:
 
   tspan_element& font_weight(const std::string& w)
   { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-    // Examples: "bold", "normal" 
+    // Examples: "bold", "normal"
     // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     // tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape
     style_.font_weight(w);
@@ -619,7 +634,7 @@ public:
   double text_length() { return text_length_; }
 
   unsigned int font_size()
-  { 
+  {
     return style_.font_size();
   }
 
@@ -661,7 +676,7 @@ public:
     style_info_.write(os); // fill, stroke, width...
 
     // All of the conditional writes within tspan_element.
-    
+
     // First, all elements that can be tested based on their value.
     if(rotate_ != 0)
     {
@@ -739,11 +754,11 @@ class text_element : public svg_element
   text_style style_; // font variants.
   align_style align_; // left_align, right_align, center_align
   rotate_style rotate_; // horizontal, upward, downward, upsidedown
-  
+
   void _generate_text(std::ostream& os)
   {
-    for(ptr_vector<text_parent>::iterator i = data_.begin(); 
-        i != data_.end(); 
+    for(ptr_vector<text_parent>::iterator i = data_.begin();
+        i != data_.end();
         ++i)
     {
       (*i).write(os);
@@ -813,7 +828,7 @@ public:
 
   text_element&  rotation(rotate_style rot)// TODO Change name to rotate???
   { // Degrees: horizontal  = 0, upward = -90, downward, upsidedown
-    // Generates: transform = "rotate(-45 100 100 )" 
+    // Generates: transform = "rotate(-45 100 100 )"
     rotate_ = rot;
     return *this;
   }
@@ -884,7 +899,7 @@ public:
   :
     x_(rhs.x_), y_(rhs.y_), style_(rhs.style_), align_(rhs.align_), rotate_(rhs.rotate_)
   { // Copy constructor.
-     data_ = (const_cast<text_element&>(rhs)).data_.release();  
+     data_ = (const_cast<text_element&>(rhs)).data_.release();
   }
 
   text_element& operator=(const text_element& rhs)
@@ -892,9 +907,9 @@ public:
     x_ = rhs.x_;
     y_ = rhs.y_;
     data_.clear(); // Copy data_
-	  data_.insert(data_.end(), rhs.data_.begin(), rhs.data_.end());
+    data_.insert(data_.end(), rhs.data_.begin(), rhs.data_.end());
     style_ = rhs.style_;
-    align_ = rhs.align_; 
+    align_ = rhs.align_;
     rotate_ = rhs.rotate_;
     return *this; // ADDed PAB.
   }
@@ -978,8 +993,8 @@ public:
   std::ostream& operator<< (std::ostream& os, text_element& t)
   {  //
       t.write(os);
-    // Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl; 
-    // Outputs:  
+    // Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl;
+    // Outputs:
     return os;
   } // std::ostream& operator<<
 
@@ -1296,8 +1311,8 @@ public:
       path = (const_cast<path_element&>(rhs)).path.release();
     }
 
-    path_element(const svg_style& style_info, 
-      const std::string& id_name="", 
+    path_element(const svg_style& style_info,
+      const std::string& id_name="",
       const std::string& class_name="",
       const std::string& clip_name="")
       :
@@ -1305,7 +1320,7 @@ public:
     {
     }
 
-    path_element() 
+    path_element()
     {
       // fill now got from the parent svg fill color.
     }
@@ -1419,7 +1434,7 @@ public:
     }
 
     path_element& S(double x1, double y1, double x, double y)
-    { // 
+    { //
       path.push_back(new s_path(x1, y1, x, y, false));
       return *this;
     }
@@ -1552,7 +1567,7 @@ public:
       poly_points.push_back(new poly_path_point(x3, y3));
       poly_points.push_back(new poly_path_point(x4, y4));
     }
-    
+
     polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
       :
       fill(f)
@@ -1589,7 +1604,7 @@ public:
       }
     }
 /*
-    template<int n> 
+    template<int n>
     polygon_element (boost::array<const poly_path_point, n>& points, bool f = true)
       :
       fill(f)
@@ -1604,7 +1619,7 @@ public:
     }
 
     // And non-const poly_path_point version, in case needed.
-    template<int n> 
+    template<int n>
     polygon_element (boost::array<poly_path_point, n>& points, bool f = true)
       :
       fill(f)
@@ -1646,14 +1661,14 @@ public:
     } // void write(std::ostream& o_str)
 
     std::ostream& operator<< (std::ostream& os)
-    { // May be needed for Boost.Test. 
+    { // May be needed for Boost.Test.
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
       {
         os << (*i); //  x, y coordinates as " (1, 2)"
       }
       // using os << "(" << p.x << ", " << p.y  << ")" ;
       // Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
-      //   my_polygon.operator<<(cout);  
+      //   my_polygon.operator<<(cout);
       // But NOT cout << my_polygon << endl;
       // Outputs: (1, 2)(3, 4)(5, 6)
       return os;
@@ -1739,7 +1754,7 @@ public:
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i!= poly_points.end(); ++i)
       {
         (*i).write(o_str); //  x, y coordinates as " 1,2"
-      } 
+      }
       o_str << "\"";
       write_attributes(o_str);
       style_info_.write(o_str);
@@ -1763,18 +1778,26 @@ public:
     return os;
   } // std::ostream& operator<<
 
+   /*! \class g_element
+      \brief g_element (group element) is the node element of our document tree.
+      'g' element is a container element for grouping together <g /></g>.
 
-  // -------------------------------------------------------------------
-  // g_element (group element) is the node element of our document tree.
-  // 'g' element is a container element for grouping together <g /></g>
-  // related graphics elements, for example:
-  // <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
-  // -------------------------------------------------------------------
+
+     \details g_element ('g' element is a container element
+     for grouping together related graphics elements).\n
+     See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
+
+     'g' element is a container element for grouping together <g /></g>.
+     related graphics elements, for example:
+     <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
+  */
+
   class g_element: public svg_element
   {
   private:
-    ptr_vector<svg_element> children; // of this group element node,
-    // containg graphics elements like text, circle line, polyline...
+    ptr_vector<svg_element> children; /*! Children of this group element node,
+      containg graphics elements like text, circle line, polyline...
+    */
     std::string clip_name;
     bool clip_on;
   public:
@@ -1789,12 +1812,16 @@ public:
     }
 
     size_t size()
-    {
+    { //! \return Number of child nodes.
       return children.size();
     }
 
     void write(std::ostream& os)
-    {
+    { /*! Output all children of a group element.
+         Example:
+         <g fill="rgb(255,255,255)" id="background"><rect x="0" y="0" width="500" height="350"/></g>
+      */
+
       if (children.size() > 0)
       { // Avoid useless output like: <g id="legendBackground"></g>
         // TODO check this doesn't mean that useful style is lost?
@@ -1805,12 +1832,10 @@ public:
         os << ">" ;
         for(unsigned int i = 0; i < children.size(); ++i)
         {
-          children[i].write(os); 
+          children[i].write(os);
         }
         os << "</g>" << std::endl;
       }
-      // Example:
-      // <g fill="rgb(255,255,255)" id="background"><rect x="0" y="0" width="500" height="350"/></g>
     } // void write(std::ostream& rhs)
 
     g_element& g(int i)
@@ -1818,35 +1843,40 @@ public:
       return *(static_cast<g_element*>(&children[i]));
     }
 
-    // Returns a reference to the new child node just created.
     g_element& g()
-    { // was add_g_element
+    { //! Add a new group element.
+      //! \return A reference to the new child node just created.
+      // was add_g_element
       children.push_back(new g_element());
       return *(static_cast<g_element*>(&children[children.size()-1]));
     }
 
     line_element& line(double x1, double y1, double x2, double y2)
-    {
+    { //! Add a new line element.
+      //! \return A reference to the new child node just created.
       children.push_back(new line_element(x1, y1, x2, y2));
-      return *(static_cast<line_element*>(&children[children.size()-1])); 
+      return *(static_cast<line_element*>(&children[children.size()-1]));
     }
 
     rect_element& rect(double x1, double y1, double x2, double y2)
-    {
+    { //! Add a new rect element.
+      //! \return A reference to the new child node just created.
       children.push_back(new rect_element(x1, y1, x2, y2));
-      return *(static_cast<rect_element*>(&children[children.size()-1])); 
+      return *(static_cast<rect_element*>(&children[children.size()-1]));
     }
 
     circle_element& circle(double x, double y, unsigned int radius = 5)
-    {
+    { //! Add a new circle element.
+      //! \return A reference to the new child node just created.
       children.push_back(new circle_element(x, y, radius));
-      return *(static_cast<circle_element*>(&children[children.size()-1])); 
+      return *(static_cast<circle_element*>(&children[children.size()-1]));
     }
 
     ellipse_element& ellipse(double rx, double ry, double cx, double cy)
-    {
+    { //! Add a new ellipse element.
+      //! \return A reference to the new child node just created.
       children.push_back(new ellipse_element(rx, ry, cx, cy));
-      return *(static_cast<ellipse_element*>(&children[children.size()-1])); 
+      return *(static_cast<ellipse_element*>(&children[children.size()-1]));
     }
 
     text_element& text(double x = 0., double y = 0.,
@@ -1854,87 +1884,98 @@ public:
     const text_style& style = no_style, // Use svg implementation's defaults.
     const align_style& align = left_align,
     const rotate_style& rotate = horizontal)
-    {
+    { //! Add a new text element.
+      //! \return A reference to the new child node just created.
       children.push_back(new text_element(x, y, text, style, align, rotate));
-      return *(static_cast<text_element*>(&children[children.size()-1])); 
+      return *(static_cast<text_element*>(&children[children.size()-1]));
     }
 
     // push_back info about polygon shapes:
+
     // Polygon for shapes with many vertices.
     polygon_element& polygon(double x, double y, bool f = true)
-    {
+    { //! Add a new polygon element.
+      //! \return A reference to the new child node just created.
       children.push_back(new polygon_element(x, y, f));
-      return *(static_cast<polygon_element*>(&children[children.size()-1])); 
+      return *(static_cast<polygon_element*>(&children[children.size()-1]));
     }
 
     //JVTODO: Replace with template version
     polygon_element& polygon(std::vector<poly_path_point>& v, bool f = true)
-    { // push_back a complete many-sided polygon to the document.
+    { //! Add a new complete polygon element.
+      //! \return A reference to the new child node just created.// push_back a complete many-sided polygon to the document.
       children.push_back(new polygon_element(v, f));
-      return *(static_cast<polygon_element*>(&children[children.size()-1])); 
+      return *(static_cast<polygon_element*>(&children[children.size()-1]));
     }
-    
+
     //JVTODO: Replace with template version
     polyline_element& polyline(std::vector<poly_path_point>& v)
-    { // push_back a complete many-sided polygon to the document.
+    {  //! Add a new complete polyline.
+       //! \return A reference to the new child node just created.
       children.push_back(new polyline_element(v));
-      return *(static_cast<polyline_element*>(&children[children.size()-1])); 
+      return *(static_cast<polyline_element*>(&children[children.size()-1]));
     }
 
-    polyline_element& polyline(double x, double y) // 1st point only, add others later with .P(x, y).
-    {
+    polyline_element& polyline(double x, double y)
+    { //! Add a new polyline element, but 1st point only, add others later with .P(x, y)...
+      //! \return A reference to the new child node just created.
       children.push_back(new polyline_element(x, y));
-      return *(static_cast<polyline_element*>(&children[children.size()-1])); 
-    }
-
-    void push_back(svg_element* g)
-    {
-      children.push_back(g);
+      return *(static_cast<polyline_element*>(&children[children.size()-1]));
     }
 
     polygon_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
-    {
+    { //! Add a new triangle element.
+      //! \return A reference to the new child node just created.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, f));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polygon_element& rhombus(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
-    {
+    { //! Add a new rhombus element.
+      //! \return A reference to the new child node just created.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, f = true));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polygon_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
-    { // push_back a complete pentagon to the document.
+    { //! Add a new pentagon element.
+      //! \return A reference to the new child node just created. // push_back a complete pentagon to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polygon_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
-    { // push_back a complete 6-sided star to the document.
+    { //! Add a new hexagon element.
+      //! \return A reference to the new child node just created. // push_back a complete 6-sided star to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, f));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
-    // These return a reference to the last child node just pushed.
-    // (Unlike the above functions that return a g_element&).
     polygon_element& polygon()
-    {
+    { //! Add a new polygon element.
+      //! \return A reference to the new child node just created.
       children.push_back(new polygon_element()); // Empty polygon,
       // to which poly_path_points can be added later using member function P.
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polyline_element& polyline()
-    {
+    { //! Add a new polyline element.
+      //! \return A reference to the new child node just created.
       children.push_back(new polyline_element()); // Empty polyline.
       return *(static_cast<polyline_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     path_element& path()
-    {
+    { //! Add a new path element.
+      //! \return A reference to the new child node just created.
       children.push_back(new path_element()); // Empty path.
       return *(static_cast<path_element*>(&(children[(unsigned int)(children.size()-1)])));
+    }
+
+    void push_back(svg_element* g)
+    { //! Add a new g_element.
+      children.push_back(g);
     }
 
     void clear()

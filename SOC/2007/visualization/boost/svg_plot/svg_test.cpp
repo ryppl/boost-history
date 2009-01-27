@@ -1,5 +1,6 @@
 #include "svg_2d_plot.hpp"
 #include "svg_boxplot.hpp"
+
 #include <map>
 #include <cmath>
 
@@ -34,7 +35,7 @@ int main()
            .x_major_labels_on(true)
            .plot_window_on(true)
            .y_external_style_on(true);
-    
+
     for(double i=.1; i < 10; i+=.1)
     {
         data1.insert(std::pair<double, double>(i, h(i)));

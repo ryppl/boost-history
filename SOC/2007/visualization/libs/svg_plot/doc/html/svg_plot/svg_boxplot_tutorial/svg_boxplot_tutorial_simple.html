@@ -1,23 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>
-      Simple Example</title>
+<title>Simple Example</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../svg_boxplot_tutorial.html" title=" Tutorial: Boxplot">
-<link rel="prev" href="../svg_boxplot_tutorial.html" title=" Tutorial: Boxplot">
-<link rel="next" href="svg_boxplot_tutorial_full.html" title="
-      Full Boxplot Layout">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../svg_boxplot_tutorial.html" title="Tutorial: Boxplot">
+<link rel="prev" href="../svg_boxplot_tutorial.html" title="Tutorial: Boxplot">
+<link rel="next" href="svg_boxplot_tutorial_full.html" title="Full Boxplot Layout">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -26,12 +24,10 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple"></a><a href="svg_boxplot_tutorial_simple.html" title="
-      Simple Example">
+<a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple"></a><a class="link" href="svg_boxplot_tutorial_simple.html" title="Simple Example">
       Simple Example</a>
 </h3></div></div></div>
-<pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_2d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_2d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
@@ -83,24 +79,24 @@
 <span class="special">}</span>
 </pre>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.image_boxplot_simple_svg"></a><h5>
-<a name="id545236"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.image_boxplot_simple_svg">Image
+<a name="id743259"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.image_boxplot_simple_svg">Image
         boxplot_simple.svg</a>
       </h5>
 <p>
         <span class="inlinemediaobject"><img src="../../images/boxplot_simple.png" alt="boxplot_simple"></span>
       </p>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.basic_example_breakdown"></a><h5>
-<a name="id545284"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.basic_example_breakdown">Basic
+<a name="id743290"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.basic_example_breakdown">Basic
         Example Breakdown</a>
       </h5>
 <p>
         Let's examine what this does.
       </p>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.initializing_a_new_boxplot"></a><h5>
-<a name="id545315"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.initializing_a_new_boxplot">Initializing
+<a name="id743307"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.initializing_a_new_boxplot">Initializing
         a new boxplot</a>
       </h5>
 <p>
@@ -108,20 +104,19 @@
         svg_boxplot my_plot;
       </p>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_a_color"></a><h5>
-<a name="id545349"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_a_color">Setting
+<a name="id743324"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_a_color">Setting
         a color</a>
       </h5>
 <p>
         This sets the border color of the entire image to black (not just the plot
         area).
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">background_border_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">background_border_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
 </pre>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_strings_in_the_plot"></a><h5>
-<a name="id545422"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_strings_in_the_plot">Setting
+<a name="id743367"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_strings_in_the_plot">Setting
         strings in the plot</a>
       </h5>
 <p>
@@ -129,14 +124,13 @@
         label that appears at the bottom to name the X-axis, and the label that appears
         to the left to name the Y-axis.
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Boxplots of Common Functions"</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Boxplots of Common Functions"</span><span class="special">)</span>
       <span class="special">.</span><span class="identifier">x_label</span><span class="special">(</span><span class="string">"Functions"</span><span class="special">)</span> 
       <span class="special">.</span><span class="identifier">y_label</span><span class="special">(</span><span class="string">"Population Size"</span><span class="special">);</span>
 </pre>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_axis_information"></a><h4>
-<a name="id545551"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_axis_information">Setting
+<a name="id743448"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.setting_axis_information">Setting
         axis information</a>
       </h4>
 <p>
@@ -151,23 +145,22 @@
         .y_major_interval(20);
       </p>
 <a name="svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.writing_to_a_file"></a><h5>
-<a name="id545594"></a>
-        <a href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.writing_to_a_file">Writing
+<a name="id743469"></a>
+        <a class="link" href="svg_boxplot_tutorial_simple.html#svg_plot.svg_boxplot_tutorial.svg_boxplot_tutorial_simple.writing_to_a_file">Writing
         to a file</a>
       </h5>
 <p>
         This finally writes our plot to the file "boxplot_simple.svg".
         
 </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"boxplot_simple.svg"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"boxplot_simple.svg"</span><span class="special">);</span>
 </pre>
 <p>
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

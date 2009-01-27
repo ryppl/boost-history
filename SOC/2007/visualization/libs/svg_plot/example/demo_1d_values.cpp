@@ -42,7 +42,7 @@ int main()
 
 //[demo_1d_values_2
 /*`Some fictional data is pushed into an STL container, here vector<double>:*/
-	vector<double> my_data;
+  vector<double> my_data;
   my_data.push_back(-1.6);
   my_data.push_back(2.0);
   my_data.push_back(4.2563);
@@ -51,8 +51,8 @@ int main()
   my_data.push_back(6.556);
 
   try
-  { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
-	  svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
+  { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
+    svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
     my_1d_plot.title("Default 1D Values Demo") // Add a string title of the plot.
       .x_range(-5, 10) // Add a range for the X-axis.
@@ -129,7 +129,7 @@ but for 2-D plots all writing orientations can be useful).
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-	return 0;
+  return 0;
 } // int main()
 
 /*

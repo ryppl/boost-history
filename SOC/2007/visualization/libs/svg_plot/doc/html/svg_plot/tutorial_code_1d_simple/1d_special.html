@@ -1,24 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Tutorial:
-      1D Special Features</title>
+<title>Tutorial: 1D Special Features</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
-<link rel="prev" href="full_1d_layout.html" title=" Tutorial:
-      1D Full Layout Example">
-<link rel="next" href="1d_autoscale_containers.html" title="
-      Tutorial: 1D Autoscale with Multiple Containers">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../tutorial_code_1d_simple.html" title="Tutorial: 1D">
+<link rel="prev" href="full_1d_layout.html" title="Tutorial: 1D Full Layout Example">
+<link rel="next" href="1d_autoscale_containers.html" title="Tutorial: 1D Autoscale with Multiple Containers">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -27,28 +24,25 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.tutorial_code_1d_simple.1d_special"></a><a href="1d_special.html" title=" Tutorial:
-      1D Special Features"> Tutorial:
+<a name="svg_plot.tutorial_code_1d_simple.1d_special"></a><a class="link" href="1d_special.html" title="Tutorial: 1D Special Features"> Tutorial:
       1D Special Features</a>
 </h3></div></div></div>
 <a name="svg_plot.tutorial_code_1d_simple.1d_special.x_axis_grid_lines"></a><h5>
-<a name="id514650"></a>
-        <a href="1d_special.html#svg_plot.tutorial_code_1d_simple.1d_special.x_axis_grid_lines">X-Axis
+<a name="id714955"></a>
+        <a class="link" href="1d_special.html#svg_plot.tutorial_code_1d_simple.1d_special.x_axis_grid_lines">X-Axis
         Grid Lines</a>
       </h5>
 <p>
         If you would like vertical grid lines that go on the graph, you can make
         the following call to <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>:
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_major_grid_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span> 
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_major_grid_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span> 
        <span class="special">.</span><span class="identifier">x_minor_grid_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 </pre>
 <p>
         To color style it, you might add the following calls:
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_major_grid_color</span><span class="special">(</span><span class="identifier">lightgray</span><span class="special">)</span> <span class="comment">// Darker color for major grid.
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_major_grid_color</span><span class="special">(</span><span class="identifier">lightgray</span><span class="special">)</span> <span class="comment">// Darker color for major grid.
 </span>       <span class="special">.</span><span class="identifier">x_minor_grid_color</span><span class="special">(</span><span class="identifier">whitesmoke</span><span class="special">);</span> <span class="comment">// Lighter color for minor grid.
 </span></pre>
 <p>
@@ -58,8 +52,8 @@
         <span class="inlinemediaobject"><img src="../../images/1d_x_grid.png" alt="1d_x_grid"></span>
       </p>
 <a name="svg_plot.tutorial_code_1d_simple.1d_special.x_axis_external_style"></a><h5>
-<a name="id514871"></a>
-        <a href="1d_special.html#svg_plot.tutorial_code_1d_simple.1d_special.x_axis_external_style">X-Axis
+<a name="id715106"></a>
+        <a class="link" href="1d_special.html#svg_plot.tutorial_code_1d_simple.1d_special.x_axis_external_style">X-Axis
         External Style</a>
       </h5>
 <p>
@@ -70,8 +64,7 @@
         By default the 'ticks' face into the plot area. Alternatively, you can use
         an 'external' style, so that the ticks face out from the X- and/or Y-axes.
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">y_external_style_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 </pre>
 <p>
@@ -94,7 +87,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

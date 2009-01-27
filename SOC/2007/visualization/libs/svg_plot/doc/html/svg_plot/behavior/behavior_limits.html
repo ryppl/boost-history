@@ -1,21 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Numerical Limits</title>
+<title>Numerical Limits</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../behavior.html" title=" Behavior">
-<link rel="prev" href="../behavior.html" title=" Behavior">
-<link rel="next" href="behavior_stylesheets.html" title=" Stylesheets">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../behavior.html" title="Behavior">
+<link rel="prev" href="../behavior.html" title="Behavior">
+<link rel="next" href="behavior_stylesheets.html" title="Stylesheets">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.behavior.behavior_limits"></a><a href="behavior_limits.html" title=" Numerical Limits"> Numerical Limits</a>
+<a name="svg_plot.behavior.behavior_limits"></a><a class="link" href="behavior_limits.html" title="Numerical Limits"> Numerical Limits</a>
 </h3></div></div></div>
 <p>
         All limits that are dealt with are double precision floating-point limits.
@@ -43,8 +43,8 @@
         <span class="identifier">whitesmoke</span></code>. This will become customizable.
       </p>
 <a name="svg_plot.behavior.behavior_limits.nan"></a><h5>
-<a name="id550740"></a>
-        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.nan">NaN</a>
+<a name="id748192"></a>
+        <a class="link" href="behavior_limits.html#svg_plot.behavior.behavior_limits.nan">NaN</a>
       </h5>
 <p>
         Any double precision floating-point numbers that return a nonzero value for
@@ -53,15 +53,14 @@
         user-defined coordinates as 0.
       </p>
 <a name="svg_plot.behavior.behavior_limits.infinity"></a><h5>
-<a name="id550799"></a>
-        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.infinity">Infinity</a>
+<a name="id748226"></a>
+        <a class="link" href="behavior_limits.html#svg_plot.behavior.behavior_limits.infinity">Infinity</a>
       </h5>
 <p>
         Any double precision floating point number that is equal to either of the
         following is considered to be Infinity:
       </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">max</span><span class="special">()</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">infinity</span><span class="special">()</span>
 </pre>
 <p>
@@ -70,16 +69,15 @@
         appear at the top of the graph.
       </p>
 <a name="svg_plot.behavior.behavior_limits.negative_infinity"></a><h5>
-<a name="id550936"></a>
-        <a href="behavior_limits.html#svg_plot.behavior.behavior_limits.negative_infinity">Negative
+<a name="id748862"></a>
+        <a class="link" href="behavior_limits.html#svg_plot.behavior.behavior_limits.negative_infinity">Negative
         Infinity</a>
       </h5>
 <p>
         Any double precision floating point number that is equal to either of the
         following is considered to be Negative Infinity:
       </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">min</span><span class="special">()</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">min</span><span class="special">()</span>
 <span class="special">-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">infinity</span><span class="special">()</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">numeric_limits</span><span class="special">&lt;</span><span class="keyword">double</span><span class="special">&gt;::</span><span class="identifier">denorm_min</span><span class="special">()</span>
 </pre>
@@ -97,7 +95,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

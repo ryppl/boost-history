@@ -1,23 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>
-      Simple 1D Example</title>
+<title>Simple 1D Example</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
-<link rel="prev" href="../tutorial_code_1d_simple.html" title=" Tutorial: 1D">
-<link rel="next" href="1d_vector_tutorial.html" title="
-      1-D Vector Example">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../tutorial_code_1d_simple.html" title="Tutorial: 1D">
+<link rel="prev" href="../tutorial_code_1d_simple.html" title="Tutorial: 1D">
+<link rel="next" href="1d_vector_tutorial.html" title="1-D Vector Example">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -26,12 +24,10 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example"></a><a href="tutorial_code_1d_example.html" title="
-      Simple 1D Example">
+<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example"></a><a class="link" href="tutorial_code_1d_example.html" title="Simple 1D Example">
       Simple 1D Example</a>
 </h3></div></div></div>
-<pre class="programlisting">
-<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_1d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">svg_plot</span><span class="special">/</span><span class="identifier">svg_1d_plot</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">vector</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">;</span>
@@ -52,11 +48,11 @@
   <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span> <span class="comment">// Set title and legend.
 </span>         <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
          <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
-         
+
   <span class="comment">// Add the containers of data to the plot.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">dan_times</span><span class="special">,</span> <span class="string">"Dan"</span><span class="special">,</span> <span class="identifier">blue</span><span class="special">);</span>
   <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">elaine_times</span><span class="special">,</span> <span class="string">"Elaine"</span><span class="special">,</span> <span class="identifier">orange</span><span class="special">);</span>
-  
+
   <span class="comment">// And finally write the plot to a file.
 </span>  <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
   <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
@@ -66,27 +62,32 @@
         <span class="inlinemediaobject"><img src="../../images/1d_simple.png" alt="1d_simple"></span>
       </p>
 <a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax"></a><h5>
-<a name="id508248"></a>
-        <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax">A
+<a name="id709315"></a>
+        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax">A
         Note On Syntax</a>
       </h5>
 <p>
-        The syntax "<code class="computeroutput"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Hello"</span><span class="special">).</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)...</span></code>"
-        may appear unfamiliar. However, it works on the same 'chaining' principle
-        that the assignment operator, addition operator, and output operator in the
-        following code works:
+        The syntax
       </p>
-<pre class="programlisting">
-<span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
-
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span> <span class="special">+</span> <span class="identifier">c</span> <span class="special">+</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>  <span class="comment">// prints 12
+<p>
+        <code class="computeroutput"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Hello"</span><span class="special">).</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)...</span></code>
+      </p>
+<p>
+        may appear unfamiliar. However, it works on the same 'chaining' principle
+        that the assignment operator,
+      </p>
+<pre class="programlisting"><span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
+</pre>
+<p>
+        and the addition operator, and output operator in the following code works:
+      </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span> <span class="special">+</span> <span class="identifier">c</span> <span class="special">+</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>  <span class="comment">// prints 12
 </span></pre>
 <p>
         Within all of the plot classes, 'chaining' works the same way. Equivalent
-        tradional code for the example is as follows:
+        traditional code for the example is as follows:
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
@@ -101,22 +102,20 @@
         code to read more clearly!
       </p>
 <a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown"></a><h5>
-<a name="id508659"></a>
-        <a href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown">Simple
+<a name="id709613"></a>
+        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown">Simple
         1D Example Breakdown</a>
       </h5>
 <p>
         Let's examine what this does in detail.
       </p>
-<pre class="programlisting">
-<span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 </pre>
 <p>
         This constructor initializes a new 1D plot, called my_plot, and also sets
         all the many default values.
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
@@ -138,8 +137,7 @@
           between -1 and 11, as you can see in the above image.
         </li>
 </ul></div>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">plot</span><span class="special">(</span><span class="identifier">my_data</span><span class="special">,</span> <span class="string">"Race times"</span><span class="special">);</span>
 </pre>
 <p>
         This draws <code class="computeroutput"><span class="identifier">my_data</span></code> onto
@@ -153,8 +151,7 @@
 <p>
         
 </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="string">"simple.svg"</span><span class="special">);</span>
 </pre>
 <p>
         This writes our plot to the file "simple.svg". SVG files can be
@@ -163,7 +160,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

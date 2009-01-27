@@ -1,21 +1,21 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title> Stylesheets</title>
+<title>Stylesheets</title>
 <link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.70.1">
-<link rel="start" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../behavior.html" title=" Behavior">
-<link rel="prev" href="behavior_limits.html" title=" Numerical Limits">
-<link rel="next" href="../plot_defaults.html" title=" Plot Defaults">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../../index.html" title="SVG_Plot">
+<link rel="up" href="../behavior.html" title="Behavior">
+<link rel="prev" href="behavior_limits.html" title="Numerical Limits">
+<link rel="next" href="../plot_defaults.html" title="Plot Defaults">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
 <td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
 <td align="center"><a href="../../libraries.html">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
@@ -24,7 +24,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="svg_plot.behavior.behavior_stylesheets"></a><a href="behavior_stylesheets.html" title=" Stylesheets"> Stylesheets</a>
+<a name="svg_plot.behavior.behavior_stylesheets"></a><a class="link" href="behavior_stylesheets.html" title="Stylesheets"> Stylesheets</a>
 </h3></div></div></div>
 <p>
         Stylesheets currently have only a single way of being used with the program:
@@ -50,8 +50,7 @@
         preclude a method that extracts appropriate data from the CSS file and calls
         the appropriate functions. For example, if the user provides the following:
       </p>
-<pre class="programlisting">
-<span class="preprocessor">#Background</span>
+<pre class="programlisting"><span class="preprocessor">#Background</span>
 <span class="special">{</span>
   <span class="identifier">fill</span> <span class="special">:</span> <span class="preprocessor">#FFF</span><span class="special">;</span>
   <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">041010</span> <span class="special">;</span> 
@@ -60,8 +59,7 @@
 <p>
         why shouldn't
       </p>
-<pre class="programlisting">
-<span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">background_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">background_color</span><span class="special">(</span><span class="identifier">black</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">background_border_color</span><span class="special">(</span><span class="identifier">svg_color</span><span class="special">(</span><span class="number">4</span><span class="special">,</span> <span class="number">16</span><span class="special">,</span> <span class="number">16</span><span class="special">));</span>
 </pre>
 <p>
@@ -89,8 +87,7 @@
 <p>
           
 </p>
-<pre class="programlisting">
-<span class="identifier">rect</span>
+<pre class="programlisting"><span class="identifier">rect</span>
 <span class="special">{</span>
   <span class="identifier">fill</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
   <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
@@ -113,7 +110,7 @@
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jake Voytko<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 , 2008, 2009 Jake Voytko and Paul A. Bristow<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
