@@ -110,14 +110,15 @@ ObjectT& operator ^=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, class CodomainT, class Traits,
+    class ObjectT, 
+	class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& 
+ObjectT& 
 operator -=
 (
-          interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object,
+          ObjectT& object,
     const IntervalSet<DomainT,Compare,Interval,Alloc>& erasure
 )
 {

@@ -346,7 +346,8 @@ public:
     )const;
 
 
-    SubType& flip(const domain_type& x){ flip(interval_type(x)); }
+    SubType& flip(const domain_type& x)
+	{ return flip(interval_type(x)); }
 
     SubType& flip(const value_type& x);
 

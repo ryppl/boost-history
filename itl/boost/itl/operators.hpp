@@ -87,10 +87,6 @@ typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>
 operator - (const ObjectT& object, const OperandT& operand)
 { return ObjectT(object) -= operand; }
 
-template<class ObjectT, class OperandT>
-typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator - (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) -= operand; }
 
 template<class ObjectT>
 ObjectT operator - (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
@@ -132,6 +128,22 @@ typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>,
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { return object.flip(operand); }
+
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+operator ^ (const ObjectT& object, const OperandT& operand)
+{ return ObjectT(object) ^= operand; }
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
+operator ^ (const OperandT& operand, const ObjectT& object)
+{ return ObjectT(object) ^= operand; }
+
+
+template<class ObjectT>
+ObjectT operator ^ (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+{ return ObjectT(object) ^= operand; }
 
 
 }} // namespace itl boost

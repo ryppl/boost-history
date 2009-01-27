@@ -168,7 +168,7 @@ namespace boost{namespace itl
     inline std::string unary_template_to_string<inplace_et>::apply() { return "&="; }
 
     // ------------------------------------------------------------------------
-    template <typename Type> struct inplace_hat
+    template <typename Type> struct inplace_caret
         : public neutron_based_inplace_combine<Type>
     {
         typedef Type type;
@@ -179,7 +179,7 @@ namespace boost{namespace itl
     };
 
     template<>
-    inline std::string unary_template_to_string<inplace_hat>::apply() { return "^="; }
+    inline std::string unary_template_to_string<inplace_caret>::apply() { return "^="; }
 
     // ------------------------------------------------------------------------
     template <typename Type> struct inserter
@@ -287,10 +287,10 @@ namespace boost{namespace itl
 
 	template<class Type> 
 	struct inverse<itl::inplace_et<Type> >
-	{ typedef itl::inplace_hat<Type> type; };
+	{ typedef itl::inplace_caret<Type> type; };
 
 	template<class Type> 
-	struct inverse<itl::inplace_hat<Type> >
+	struct inverse<itl::inplace_caret<Type> >
 	{ typedef itl::inplace_et<Type> type; };
 
 	template<class Type> 

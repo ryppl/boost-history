@@ -694,7 +694,8 @@ public:
 
 
 
-    SubType& flip(const domain_mapping_type& x){ flip(value_type(x)); }
+    SubType& flip(const domain_mapping_type& x)
+	{ return flip(value_type(interval_type(x.key), x.data)); }
 
     SubType& flip(const value_type& x);
 

@@ -8,7 +8,7 @@
 
 [section Interface]
 
-Section *Interface* gives an overview over the types and functions
+Section *Interface* outlines types and functions
 of the *Itl*. Synoptical tables allow to review the overall structure of
 the libraries design and to focus on structural equalities and differences
 with the corresponding containers of the standard template library.
@@ -26,7 +26,7 @@ template, because an interval is considered to be a set as well.
 [/    split_interval_set]
 [/              itl::set]
 
-[table set class templates
+[table Set class templates
 [[group]        [template]       [instance parameters]]
 [[__itv__]      [__itv__]        [`<DomainT,Compare>`]]
 [[__itv_bsets__][__itv_set__]    [`<DomainT,Compare,Interval,Alloc>`]]
@@ -40,7 +40,7 @@ Templates and template parameters, given in the preceeding table are
 described in detail below.
 __Itv_bsets__ represent three
 class templates __itv_set__, __sep_itv_set__ and __spl_itv_set__
-that all have equal template parameters.
+that all have equal template parameters. 
 
 [table Parameters of set class templates
 [[]                   [type of elements][order of elements]    [type of intervals]                             [memory allocation]]
@@ -77,8 +77,8 @@ that all have equal template parameters.
 [table Parameters of map class templates
 [[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]                      [type of intervals]                             [memory allocation]]
 [[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class, template<class>class> class`][`template <class, template<class>class> class`][`template <class>class`]]    
-[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_star`]                 [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_star`]                 [`Alloc = std::alloc`]]
+[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]                 [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]                 [`Alloc = std::alloc`]]
 [[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                                              []                                              [`class`]]
 [[=std::map=]         [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                                              []                                              [`Alloc = std::alloc<_Key>`]]
 ]
@@ -92,7 +92,7 @@ T  := class Traits,
 Cp := class Compare = std::less<DomainT>,
 cp := template<class D>class Compare = std::less,
 cb := template<class C>class Combine = itl::inplace_plus,
-s  := template<class C>class Section = itl::inplace_star,
+s  := template<class C>class Section = itl::inplace_et,
 i  := template<class D,template<class>class cp>class Interval = itl::interval
 Ad := class Alloc = std::allocator<DomainT>
 Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
@@ -175,7 +175,7 @@ functions that are expected for `DomainT`, if the default order
 [[]           [`IsIntegral<DomainT>`][`++, --`]                      [`IsIncrementable<DomainT> && IsDecrementable<DomainT>`]   ] 
 ]
 
-A domain type `DomainT` for intervals and interval conainers
+A domain type `DomainT` for intervals and interval containers
 has to satisfy the requirements of concept  
 [@http://www.generic-programming.org/languages/conceptcpp/issues/concepts-closed.html `Regular`]
 which
@@ -302,16 +302,11 @@ metafunction [classref boost::itl::inverse inverse]
 will infer [classref boost::itl::inplace_minus inplace_minus]
 as inverse functor, that requries `operator -=` on type `CodomainT`.
 
-The `CodomainT` parameter of Itl's `Maps` is designed under the
-assumption that for a `Combiner` functor particularly for the 
-default functor 
-[classref boost::itl::inplace_minus inplace_plus] are 
-
 In the itl's design we make the assumption,
 in particular for the default setting of parameters
 `Combine = `[classref boost::itl::inplace_minus inplace_plus],
 type `CodomainT` has a neutral element or `neutron` 
-with respect to the `Combine` functor. This `neutron`
+with respect to the `Combine` functor.
 
 
 [endsect][/ Required Concepts]
@@ -320,7 +315,7 @@ with respect to the `Combine` functor. This `neutron`
 [section Associated Types]
 
 [table Associated types of sets
-[[Aspects]        []        [type]              [__itv__]                     [__itv_sets__]                     [__itl_set__]       [`std::set`]]
+[[Aspects]        [purpose] [type]              [__itv__]                     [__itv_sets__]                     [__itl_set__]       [`std::set`]]
 [[__conceptual__] [data]    [`domain_type`]     [`DomainT`]                   [`DomainT`]                        [`DomainT`]         []]
 [[]               [ordering][`domain_compare`]  [`Compare<DomainT>`]          [`Compare<DomainT>`]               [`Compare<DomainT>`][]]
 [[__iterative__]  [data]    [`interval_type`]   []                            [`Interval<DomainT,Compare>`]      []                  []]
@@ -330,13 +325,51 @@ with respect to the `Combine` functor. This `neutron`
 [[]               []        [`key_compare`]     []                            [`exclusive_less <interval_type>`] []                  [`_Compare`]]
 [[__conceptual__] [size]    [`size_type`]       [`size<DomainT>::type`]       [`interval_type:: size_type`]      [`std::size_t`]     []]
 [[]               []        [`difference_type`] [`difference <DomainT>::type`][`interval_type:: difference_type`][`std::size_t`]     []]
+]
+                                     
+[table Associated types of maps JODO
+[[Aspects]        [purpose]    [type]              [__itv_maps__]                                     [__itl_map__]         [`std::map`]]
+[[__conceptual__] [data]       [`domain_type`]     [`DomainT`]                                        [`DomainT`]           []]
+[[]               []           [`codomain_type`]   [`CodomainT`]                                      [`CodomainT`]         []]
+[[]               [ordering]   [`domain_compare`]  [`Compare<DomainT>`]                               [`Compare<DomainT>`]  []]
+[[]               [aggregation][`codomain_combine`][`Combine<CodomainT>`]                             [`Combine<CodomainT>`][]]
+[[]               []           [`codomain_intersect`][`Section<CodomainT>`]                           [`Section<CodomainT>`][]]
+[[__iterative__]  [data]       [`interval_type`]   [`Interval<DomainT,Compare>`]                      []                    []]
+[[]               []           [`key_type`]        [`Interval<DomainT,Compare>`]                      []                    [`_Key`]]
+[[]               []           [`value_type`]      [`pair<Interval<DomainT,Compare>, CodomainT`]      []                       [`_Key`]]
+[[]               [ordering]   [`interval_compare`][`exclusive_less <interval_type>`]                 []                       []]
+[[]               []           [`key_compare`]     [`exclusive_less <interval_type>`]                 []                       [`_Compare`]]
+[[__conceptual__] [size]       [`size_type`]       [`interval_type:: size_type`]                      [`std::size_t`]          []]
+[[]               []           [`difference_type`] [`interval_type:: difference_type`]                [`std::size_t`]          []]
 ]                                     
 
 [endsect][/ Associated Types]
 
 [section Function Matrix]
 
-[table
+In this section a single ['*matrix*] is given, that shows all ['*functions*]
+with shared names and identical or analogous semantics and their 
+polymorphical overloads across the class templates of the *itl*.
+Associated are the corresponding functions of the *stl* for easy
+comparison. In order to achieve a concise representation, a series
+of ['*placeholders*] are used throughout the function matrix.
+
+The ['*placeholder's*] purpose is to express the polymorhic
+usage of the functions. The ['*first column*] of the function matrix
+contains the signatures of the functions. Within these
+signatures `T` denotes a container type and `I,J` and `P`
+polymorphic argument and result types.
+
+Within the body of the matrix, sets of *boldface* placeholders denote
+the sets of possible instantiations for a polymorhic
+placeholder `P`. For instance __eiS denotes that for the
+argument type `P`, an element __e, an interval __i or an interval_set __S
+can be instantiated. 
+
+If the polymorhism can not be described in this way, only the ['*number*] of
+overloaded implementations for the function of that row is shown.
+
+[table 
 [[Placeholder]                  [Argument types]          [Description]]
 [[`T`                         ] []                        [a container type]]             
 [[`P`                         ] []                        [polymorhical container argument type]]             
@@ -353,7 +386,7 @@ with respect to the `Combine` functor. This `neutron`
 [[[#interval_map_types]   [*M]] [interval_maps]           [one of the interval map types]]
 ]
 
-[memberref boost::itl::set::iterative_size `iterative_size`]
+[/ memberref boost::itl::set::iterative_size `iterative_size`]
 
 [table Itl Interfaces
 [[T]      [interval][interval\nsets][interval\nmaps][itl::set][itl::map][std::set][std::map]]                                                      								   

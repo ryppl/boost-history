@@ -45,20 +45,17 @@ ObjectT& operator +=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class ObjectT, 
+	class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-operator -=
-(
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
-)
+ObjectT& operator -=
+(ObjectT& object, const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
 {
         typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
         const_FORALL(typename operand_type, elem_, operand) 
-            object.subtract(*elem_); 
+            object.erase(*elem_); 
+            //CL?? object.subtract(*elem_); 
 
         return object; 
 }
@@ -68,18 +65,14 @@ operator -=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class ObjectT, 
+	class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-operator ^=
-(
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
-)
-{
-	return object.flip(operand);
+ObjectT& operator ^=
+	(ObjectT& object, const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
+{ 
+	return object.flip(operand); 
 }
 
 
