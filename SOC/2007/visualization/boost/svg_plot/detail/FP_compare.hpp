@@ -26,13 +26,15 @@ template<typename FPT> class close_to;
 template<typename FPT> class smallest;
 
 enum floating_point_comparison_type
-{ //! enum floating_point_comparison_type Two types of floating-point comparison "Very close" and "Close enough".
-  FPC_STRONG, // "Very close"   - Knuth equation 1' the default.
-  FPC_WEAK    // "Close enough" - equation 2'.
-  // equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
-  // pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
-  // Strong requires closeness relative to BOTH values begin compared,
-  // Weak only requires only closeness to EITHER ONE value.
+{ /*! \enum floating_point_comparison_type
+   \brief Two types of floating-point comparison "Very close" and "Close enough".
+   \details equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
+    pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
+    Strong requires closeness relative to BOTH values begin compared,
+    Weak only requires only closeness to EITHER ONE value.
+  */
+  FPC_STRONG, //!< "Very close"   - Knuth equation 1 (the default).
+  FPC_WEAK    //!< "Close enough" - Knuth equation 2.
 };
 
 // GNU int gsl_fcmp (double x, double y, double epsilon) provides similar function.
@@ -81,7 +83,7 @@ safe_fpt_division(FPT f1, FPT f2)
 
 template<typename FPT = double>
 class close_to
-{ //! Test if two floating-point values are close within a chosen tolerance.
+{ //! \brief Test if two floating-point values are close within a chosen tolerance.
 public:
   // One constructor for fraction tolerance only. (Percent is NOT implemented).
   template<typename FPT>
@@ -132,23 +134,22 @@ private:
 
 }; // class close_to
 
-/* \details
-   Check floating-point value is smaller than a chosen small value.
-   David Monniaux, http://arxiv.org/abs/cs/0701192v4,
-   It is somewhat common for beginners to add a comparison check to 0 before
-   computing a division, in order to avoid possible division-by-zero exceptions or
-   the generation of infinite results. A first objection to this practise is that, anyway,
-   computing 1/x for x very close to zero will generate very large numbers
-   that will most probably result in overflows later.
-   Another objection, which few programmers know about and that we wish to draw attention
-   to, is that it may actually fail to work, depending on what the compiler
-   does — that is, the program may actually test that x == 0, then, further down,
-   find that x = 0 without any apparent change to x!
- */
-
 template<typename FPT = double>
 class smallest
-{
+{ //! \brief   Check floating-point value is smaller than a chosen small value.
+  /* \details
+     David Monniaux, http://arxiv.org/abs/cs/0701192v4,
+     It is somewhat common for beginners to add a comparison check to 0 before
+     computing a division, in order to avoid possible division-by-zero exceptions or
+     the generation of infinite results. A first objection to this practise is that, anyway,
+     computing 1/x for x very close to zero will generate very large numbers
+     that will most probably result in overflows later.
+     Another objection, which few programmers know about and that we wish to draw attention
+     to, is that it may actually fail to work, depending on what the compiler
+     does — that is, the program may actually test that x == 0, then, further down,
+     find that x = 0 without any apparent change to x!
+   */
+
 public:
   template<typename FPT>
   explicit smallest(FPT s)
@@ -203,12 +204,14 @@ private:
 
 // Define two convenience typedefs.
 
-// Since double and the default smallest value 2 * min_value = 4.45015e-308
-// is a very common requirement, provide an convenience alias for this:
-typedef smallest<double> tiny; //! Allow tiny as a shorthand for 1e-308.
+/*! \details Since double and the default smallest value 2 * std::numeric_limits<double>::min_value() = 2 * 2.22507e-308 + 4.45015e-308
+  is a very common requirement, provide an convenience alias for this.
+*/
+typedef smallest<double> tiny; //!< Allow tiny as a shorthand for 4.45e-308.
 
-// Since double and the default smallest value 2 * min_value = 4.45015e-308
-// is a very common requirement, provide an convenience alias for this:
-typedef close_to<double> neareq; //! Allow tiny as a shorthand for epsilon.
+/*! \details Since double and the default close_to value 2 * epsilon =  std::numeric_limits<double>::epsilon = 2 * 2.220446e-016 = 4.440892e-016
+  is a very common requirement, provide an convenience alias for this.
+*/
+typedef close_to<double> neareq; //!< Allow neareq as a shorthand for 4.44e-16
 
 #endif // BOOST_FLOATING_POINT_COMPARISON_HPP
