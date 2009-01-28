@@ -544,7 +544,7 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
-  void copy_any( const path & from, const path & to, system::error_code & ec )
+  void copy( const path & from, const path & to, system::error_code & ec )
   {
     file_status s( symlink_status( from, ec ) );
     if ( &ec != &throws() && ec ) return;

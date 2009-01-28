@@ -57,6 +57,7 @@ namespace
   typedef int errno_t;
   std::string platform( BOOST_PLATFORM );
   bool report_throws;
+  bool cleanup = true;
   fs::directory_iterator end_itr;
   fs::path dir;
   fs::path d1;
@@ -741,6 +742,7 @@ namespace
 int test_main( int argc, char * argv[] )
 {
   if ( argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='t' ) report_throws = true;
+  if ( argc > 1 && *argv[1]=='-' && *(argv[1]+1)=='x' ) cleanup = false;
 
   // The choice of platform is make at runtime rather than compile-time
   // so that compile errors for all platforms will be detected even though
@@ -1072,11 +1074,14 @@ int test_main( int argc, char * argv[] )
   BOOST_CHECK( time_diff >= -60.0 && time_diff <= 60.0 );
 
   // post-test cleanup
-  BOOST_CHECK( fs::remove_all( dir ) != 0 );
-  // above was added just to simplify testing, but it ended up detecting
-  // a bug (failure to close an internal search handle). 
-  BOOST_CHECK( !fs::exists( dir ) );
-  BOOST_CHECK( fs::remove_all( dir ) == 0 );
+  if ( cleanup )
+  {
+    BOOST_CHECK( fs::remove_all( dir ) != 0 );
+    // above was added just to simplify testing, but it ended up detecting
+    // a bug (failure to close an internal search handle). 
+    BOOST_CHECK( !fs::exists( dir ) );
+    BOOST_CHECK( fs::remove_all( dir ) == 0 );
+  }
   return 0;
 } // main
 

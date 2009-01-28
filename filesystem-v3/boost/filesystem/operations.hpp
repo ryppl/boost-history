@@ -186,8 +186,7 @@ namespace boost
   path complete( const path & p, const path & base = initial_path() );
 
   BOOST_FILESYSTEM_DECL
-  void copy_any( const path & from, const path & to,
-                 system::error_code & ec = throws() );
+  void copy( const path & from, const path & to, system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void copy_directory( const path & from, const path & to,

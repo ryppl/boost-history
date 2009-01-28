@@ -85,7 +85,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Executing test $(TargetName).exe..."
-				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot;"
+				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot;  -x"
 			/>
 		</Configuration>
 		<Configuration
@@ -159,7 +159,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				Description="Executing test $(TargetName).exe..."
-				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot;"
+				CommandLine="&quot;$(TargetDir)\$(TargetName).exe&quot;  -x"
 			/>
 		</Configuration>
 	</Configurations>

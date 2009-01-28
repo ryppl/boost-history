@@ -17,7 +17,6 @@
                               TO DO
 
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
-   * Fix inserter/extractor problems; see comments in commented out code below.
    * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
    * test case: relational on paths differing only in trailing separator. rationale?
@@ -775,27 +774,6 @@ namespace path_traits
 
   //  inserters and extractors
 
-  // templated versions are too aggressive; path_test gets ambiguous overloads
-  // with std::basic_string.
-  //
-  //template < class Ostream >
-  //Ostream & operator<<( Ostream & os, const path & p )
-  //{
-  //  os << p.string< std::basic_string<typename Ostream::char_type,
-  //                                    typename Ostream::traits_type > >();
-  //  return os;
-  //}
-  //
-  //template < class Istream >
-  //Istream & operator>>( Istream & is, path & p )
-  //{
-  //  std::basic_string<typename Istream::char_type,
-  //                    typename Istream::traits_type > > str;
-  //  is >> str;
-  //  p = str;
-  //  return is;
-  //}
-
   inline std::ostream & operator<<( std::ostream & os, const path & p )
   {
     os << p.string();
@@ -823,6 +801,7 @@ namespace path_traits
     p = str;
     return is;
   }
+
   //  name_checks
 
   BOOST_FILESYSTEM_DECL bool portable_posix_name( const std::string & name );

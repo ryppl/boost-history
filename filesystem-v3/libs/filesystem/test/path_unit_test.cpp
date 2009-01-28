@@ -23,6 +23,7 @@
 #include "../src/utf8_codecvt_facet.hpp"  // for imbue tests
 
 #include <iostream>
+#include <sstream>
 #include <string>
 
 namespace fs = boost::filesystem;
@@ -306,6 +307,23 @@ namespace
     CHECK( p2 >= p );
 }
 
+  //  test_inserter_and_extractor  -----------------------------------------------------//
+
+  void test_inserter_and_extractor()
+  {
+    std::cout << "testing inserter and extractor..." << std::endl;
+
+    path p1("foo");
+    path p2;
+
+    std::stringstream ss;
+
+    CHECK( p1 != p2 );
+    ss << p1;
+    ss >> p2;
+    CHECK( p1 == p2 );
+  }
+
   //  test_other_non_members  ----------------------------------------------------------//
 
   void test_other_non_members()
@@ -328,7 +346,6 @@ namespace
     CHECK( p1 / wstring( L"bar" ) == path( "foo/bar" ).native() );
 
     swap( p1, p2 );
-    //  swap
 
     CHECK( p1 == "bar" );
     CHECK( p2 == "foo" );
@@ -596,6 +613,7 @@ int main( int, char*[] )
   test_observers();
   ////test_appends();
   test_relationals();
+  test_inserter_and_extractor();
   test_other_non_members();
   //test_modifiers();
   test_iterators();
@@ -604,6 +622,12 @@ int main( int, char*[] )
   test_imbue_locale();
   //test_convert_with_locale();
   test_user_supplied_type();
+
+  std::string foo("\\abc");
+  const char * bar = "/abc";
+
+  if ( foo == bar )
+    cout << "unintended consequence\n";
  
   cout << errors << " errors detected\n";
   

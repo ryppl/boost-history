@@ -55,17 +55,6 @@ namespace
     CHECK( is_regular_file( this_file ) );
     CHECK( !is_empty( this_file ) );
     CHECK( !is_other( this_file ) );
-
-    space_info info = space( "/" );
-
-    CHECK( info.available <= info.capacity );
-
-//    CHECK( equivalent( "/", "/" ) );
-//    CHECK( !equivalent( "/", "." ) );
-
-    std::time_t ft = last_write_time( "." );
-
-    last_write_time( ".", std::time_t(-1), ec );
   }
 
   //  directory_iterator_test  -----------------------------------------------//
@@ -122,6 +111,17 @@ namespace
 
     CHECK( !boost::filesystem::remove( "no-such-file-or-directory" ) );
     CHECK( !remove_all( "no-such-file-or-directory" ) );
+
+    space_info info = space( "/" );
+
+    CHECK( info.available <= info.capacity );
+
+    CHECK( equivalent( "/", "/" ) );
+    CHECK( !equivalent( "/", "." ) );
+
+    std::time_t ft = last_write_time( "." );
+
+    last_write_time( ".", std::time_t(-1), ec );
 
   }
 
