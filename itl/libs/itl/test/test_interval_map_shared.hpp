@@ -893,10 +893,10 @@ void interval_map_infix_minus_overload_4_bicremental_types()
 	itl::interval<T> itv = C_D(4,11);
 	typename IntervalMapT::interval_mapping_type itv_v = CDv(4,11,3);
 
-	IntervalMapT map_a, map_b;
-	//map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_a.add(IIv(6,11,3));
+	IntervalMapT map_a, map_b, map_c;
+	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
 	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+	map_c = map_a;
 
 	interval_set<T>          join_set_a;
 	separate_interval_set<T> sep_set_a;
@@ -906,7 +906,8 @@ void interval_map_infix_minus_overload_4_bicremental_types()
 	split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 	
 	//Happy day overloading
-	BOOST_CHECK_EQUAL(map_a - map_b, (map_a) - map_b);
+	BOOST_CHECK_EQUAL(map_a - map_b, (map_c = map_a) -= map_b);
+	BOOST_CHECK_EQUAL(map_a - map_b, map_c);
 
 	//This checks all cases of is_interval_map_derivative<T>
 	BOOST_CHECK_EQUAL((map_a - val_pair1) + val_pair1, (map_a + val_pair1) - val_pair1);
@@ -914,13 +915,13 @@ void interval_map_infix_minus_overload_4_bicremental_types()
 	BOOST_CHECK_EQUAL((map_b - map_pair)  + map_pair,  (map_b + map_pair)  - map_pair);
 
 	//This checks all cases of is_interval_set_derivative<T>
-	//BOOST_CHECK_EQUAL(map_a - itv,     (itv_v      + map_a) - itv);
-	//BOOST_CHECK_EQUAL(map_b - MK_v(8), (IIv(8,8,3) + map_b) - MK_v(8));
+	BOOST_CHECK_EQUAL(map_a - itv,     (map_a + itv_v) - itv);
+	BOOST_CHECK_EQUAL(map_b - MK_v(8), (IIv(8,8,3) + map_b) - MK_v(8));
 
 	//This checks all cases of is_interval_set_companion<T>
-	//BOOST_CHECK_EQUAL(map_a - split_set_a, (split_set_a + map_a) - split_set_a);
-	//BOOST_CHECK_EQUAL(map_a - sep_set_a,   (sep_set_a   + map_a) - sep_set_a);
-	//BOOST_CHECK_EQUAL(map_a - join_set_a,  (join_set_a  + map_a) - join_set_a);
+	BOOST_CHECK_EQUAL(map_a - split_set_a, ((split_set_a & map_a) + map_a) - split_set_a);
+	BOOST_CHECK_EQUAL(map_a - sep_set_a,   ((sep_set_a   & map_a) + map_a) - sep_set_a);
+	BOOST_CHECK_EQUAL(map_a - join_set_a,  ((join_set_a  & map_a) + map_a) - join_set_a);
 }
 
 
@@ -1010,11 +1011,6 @@ void interval_map_infix_caret_overload_4_bicremental_types()
 	BOOST_CHECK_EQUAL(map_a ^ val_pair1, val_pair1 ^ map_a);
 	BOOST_CHECK_EQUAL(map_b ^ val_pair2, val_pair2 ^ map_b);
 	BOOST_CHECK_EQUAL(map_b ^ map_pair,  map_pair ^ map_b);
-
-	//This checks all cases of is_interval_set_companion<T>
-	BOOST_CHECK_EQUAL(map_a & split_set_a, split_set_a & map_a);
-	BOOST_CHECK_EQUAL(map_a & sep_set_a,   sep_set_a   & map_a);
-	BOOST_CHECK_EQUAL(map_a & join_set_a,  join_set_a  & map_a);
 }
 
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__

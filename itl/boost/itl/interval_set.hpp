@@ -127,6 +127,8 @@ public:
     /// The codomaintype is the same as domain_type
     typedef DomainT   codomain_type;
 
+    /// The element type of the set
+    typedef DomainT   element_type;
     /// The interval type of the set
     typedef Interval<DomainT,Compare> interval_type;
 

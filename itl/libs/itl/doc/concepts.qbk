@@ -221,24 +221,26 @@ so they can be called directly.
 [endsect][/ Addability, Subtractability and Aggregation on Overlap]
 
 
-[section Kind of nuclear: Map Traits]
+[section Map Traits]
 
 Itl maps differ in their behavior dependent on how they handle
 ['*neutral elements*] of the associated type `CodomainT`. This 
 section became ['kind of nuclear] at least in wording. 
 But rest assured `itl::Maps` won't contaminate your software.
 
+[h4 Remarks on Neutral Elements or Neutrons]
+
 In the itl we call ['*neutral elements*] `neutrons` and all values
-that [*are not] `neutrons` we call `protons`. The way, in which
-`neutrons` are dealt with in maps can be specified by the template parameter
-`Traits`. In the pseudo code snipplets below `0` will be used to denote
+that [*are not] `neutrons` we call `protons`.
+
+In the pseudo code snipplets below `0` will be used to denote
 `neutrons`, which can be 
 different objects like `const double 0.0`, empty sets, empty strings, 
 null-vectors etc. dependent of the instance type for parameter `CodomainT`.
 The existence of a ['*neutral element*] wrt. an `operator+=` is a requirement
 for template type `CodomainT`. 
 
-[table
+[/ table
 [[Trait][]]
 [[__absorber__][Value pairs that carry neutrons `(x,0)` are never stored]]
 [[__enricher__][Value pairs that carry neutrons `(x,0)` are never deleted by subtract]]
@@ -275,7 +277,44 @@ inplace_times<int>::neutron() == 1
 inplace_times<T>::neutron() == unon<T>::value()
 ``
 
-[h4 Neutron Absorber]
+[h4 Definedness and Neutron Storage]
+
+There are two /properties/ or /traits/ of itl maps that can be
+chosen by a template parameter `Traits`.
+The ['*first trait*] relates to the ['*definedness*] of the map. Itl
+maps can be *partial* or *total* on the set of values given by
+domain type `DomainT`.
+
+* A ['*partial*] map in only defined on those key elements that have been
+inserted into the Map. This is usually expected and so ['*partial definedness]
+is the default.
+
+* Alternatively an itl Map can be ['*total*]. It is then considered to
+contain a ['*neutral value*] for all key values that are not
+stored in the map. 
+
+Such a total map can be useful if we use it to count or quantify the
+key values. An item that is not counted can be represented as counted
+0-times. A totally defined itl Map can be viewed as a very large or even 
+infinite vector.
+
+The second trait is related to the representation of `neutrons` in 
+the map. A itl map can be a neutron_absorber or a neutron_enricher.
+
+* A neutron absorber never stores value pairs `(k,0)` that carry neutrons.
+* A neutron enricher stores value pairs `(k,0)`.
+
+For the template parameter `Traits` of itl Maps we have the following
+four values.
+
+[table
+[[]       [neutron absorber][neutron enricher]]
+[[partial][partial_absorber][partial_enricher]]
+[[total]  [total_absorber]  [total_enricher]]
+]
+
+
+[h4 Trait Neutron Absorber]
 
 From a pragmatic perspective value pairs that carry `neutrons` as 
 mapped values can often be deleted. If we count, for instance,
@@ -287,7 +326,7 @@ has not been counted at all.
 
 A Map that does never insert
 associated neutrons or deletes them when they emerge, is called
-__absorber__. To be a __absorber__ is the default setting
+__absorber__. To be a partial __absorber__ is the default setting
 for the Trait parameter. Moreover a __absorber__ is able
 to erase a pair `(x,y)` from a map `{(x,y)}` by calling 
 `subtract((x,y))` or `operator - ` .

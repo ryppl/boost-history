@@ -82,6 +82,7 @@ namespace boost{namespace itl
     public:
         typedef DomainT     domain_type;
         typedef DomainT     codomain_type;
+        typedef DomainT     element_type;
         typedef DomainT     key_type;
         typedef DomainT     value_type;
         typedef DomainT     data_type;

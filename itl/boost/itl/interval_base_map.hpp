@@ -174,9 +174,11 @@ public:
     /// Domain type (type of the keys) of the map
     typedef CodomainT codomain_type;
     /// basic value type
-    typedef std::pair<domain_type,codomain_type> mapping_type;
+    typedef std::pair<domain_type,codomain_type> mapping_type; //JODO 
     /// Auxiliary type to help the compiler resolve ambiguities when using std::make_pair
     typedef mapping_pair<domain_type,codomain_type> domain_mapping_type;
+	/// Conceptual is a map a set of elements of type \c element_type
+    typedef domain_mapping_type element_type;
     /// The interval type of the map
     typedef Interval<DomainT,Compare> interval_type;
 

@@ -130,6 +130,7 @@ namespace boost{namespace itl
         typedef CodomainT                                   codomain_type;
         typedef CodomainT                                   mapped_type;
         typedef CodomainT                                   data_type;
+        typedef std::pair<const DomainT, CodomainT>         element_type;
         typedef std::pair<const DomainT, CodomainT>         value_type;
         typedef ITL_COMPARE_DOMAIN(Compare,DomainT)         domain_compare;
         typedef ITL_COMBINE_CODOMAIN(Combine,CodomainT)     codomain_combine;

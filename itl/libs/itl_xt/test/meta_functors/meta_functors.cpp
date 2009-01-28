@@ -252,10 +252,12 @@ void quantifier_subtract_test()
 
 void misc_test()
 {
-	typedef interval_set<int> SeT;
-	SeT a(interval<int>::rightopen(0,2));
-	a.flip(interval<int>::rightopen(1,3));
-	cout << a << endl;
+	typedef interval_map<int,int,neutron_enricher> MapT;
+	MapT m;
+	m += MapT::value_type(interval<int>::rightopen(1,3), 1);
+	cout << m << endl;
+	m -= MapT::value_type(interval<int>::rightopen(1,3), 1);
+	cout << m << endl;
 }
 
 int main()
