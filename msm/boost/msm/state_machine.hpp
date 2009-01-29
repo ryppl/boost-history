@@ -46,6 +46,7 @@
 #include <boost/msm/history_policies.hpp>
 #include <boost/msm/bind_helpers.hpp>
 #include <boost/msm/copy_policies.hpp>
+#include <boost/msm/visitable_policies.hpp>
 
 namespace mpl = boost::mpl;
 
@@ -56,7 +57,6 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_entry_state)
 
 namespace boost { namespace msm
 {
-
 // the interface for all states. Defines entry and exit functions. Overwrite to implement for any state needing it.
 struct state_base
 {
@@ -67,6 +67,8 @@ struct state_base
 #else
     ~state_base() {}
 #endif
+    // used only in conjunction with the VisitableStates state_machine policy
+    void accept(VisitorBase&){}
     // empty implementation for the states not wishing to define an entry condition
     // will not be called polymorphic way
 	template <class Event>
@@ -105,7 +107,6 @@ template<class SMPtrPolicy = NoSMPtr>
 struct state :  public state_base, SMPtrPolicy
 {
     // tags
-    typedef mpl::bool_<false>   is_composite_tag;
     // default: no flag
     typedef mpl::vector<>       flag_list;
     //default: no deferred events
@@ -131,7 +132,6 @@ template<class SMPtrPolicy = NoSMPtr>
 struct terminate_state : public state_base, SMPtrPolicy
 {
     // tags
-    typedef mpl::bool_<false>                           is_composite_tag;
     typedef mpl::vector<boost::msm::TerminateFlag>      flag_list;
     //default: no deferred events
     typedef mpl::vector<>                               deferred_events;
@@ -151,7 +151,6 @@ template <class EndInterruptEvent,class SMPtrPolicy = NoSMPtr>
 struct interrupt_state : public state_base, SMPtrPolicy
 {
     // tags
-    typedef mpl::bool_<false>                       is_composite_tag;
     typedef mpl::vector<boost::msm::InterruptedFlag,
                         boost::msm::EndInterruptFlag<EndInterruptEvent> >       
                                                     flag_list;
@@ -193,7 +192,6 @@ struct entry_pseudo_state
     :  public state_base, explicit_entry<Composite,ZoneIndex> ,SMPtrPolicy
 {
     // tags
-    typedef mpl::bool_<false>   is_composite_tag;
     typedef int                 pseudo_entry;
     // default: no flag
     typedef mpl::vector<>       flag_list;
@@ -216,7 +214,6 @@ template<class Composite,class Event,class SMPtrPolicy = NoSMPtr>
 struct exit_pseudo_state : public state_base , SMPtrPolicy
 {
     // tags
-    typedef mpl::bool_<false>   is_composite_tag;
     typedef int                 pseudo_exit;
     typedef int                 no_automatic_create;
     typedef Composite           owner;
@@ -293,13 +290,13 @@ struct direct_entry_event
 };
 
 // forward declaration
-template<class Derived,class HistoryPolicy,class CopyPolicy>
+template<class Derived,class HistoryPolicy,class VisitablePolicy,class CopyPolicy>
 class state_machine;
 
 // Generates a singleton runtime lookup table that maps current state
 // to a function that makes the SM take its transition on the given
 // Event type.
-template <class Fsm, class HistoryPolicy, class CopyPolicy,class Stt, class Event>
+template <class Fsm, class HistoryPolicy,class VisitablePolicy, class CopyPolicy,class Stt, class Event>
 struct dispatch_table
 {
  private:
@@ -398,7 +395,7 @@ struct dispatch_table
 	    {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
-            cell call_no_transition = &state_machine<Fsm,HistoryPolicy,CopyPolicy>::call_no_transition;
+            cell call_no_transition = &state_machine<Fsm,HistoryPolicy,VisitablePolicy,CopyPolicy>::call_no_transition;
             tofill_entries[state_id] = call_no_transition;
 	    }
 	    template <class State>
@@ -407,7 +404,7 @@ struct dispatch_table
 	    {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = (get_state_id<stt,State>::value));
-            cell call_no_transition = &state_machine<Fsm,HistoryPolicy,CopyPolicy>::defer_transition;
+            cell call_no_transition = &state_machine<Fsm,HistoryPolicy,VisitablePolicy,CopyPolicy>::defer_transition;
             tofill_entries[state_id] = call_no_transition;
 	    }
 	    dispatch_table* self;
@@ -470,30 +467,32 @@ struct dispatch_table
 
 
 // This declares the statically-initialized dispatch_table instance.
-template <class Fsm, class HistoryPolicy, class CopyPolicy,class Stt, class Event>
-const dispatch_table<Fsm, HistoryPolicy,CopyPolicy,Stt, Event>
-dispatch_table<Fsm, HistoryPolicy,CopyPolicy,Stt, Event>::instance;
+template <class Fsm, class HistoryPolicy,class VisitablePolicy, class CopyPolicy,class Stt, class Event>
+const dispatch_table<Fsm, HistoryPolicy,VisitablePolicy,CopyPolicy,Stt, Event>
+dispatch_table<Fsm, HistoryPolicy,VisitablePolicy,CopyPolicy,Stt, Event>::instance;
 
 // CRTP base class for state machines.  Pass the actual FSM class as
 // the Derived parameter.
-template<class Derived,class HistoryPolicy=NoHistory,class CopyPolicy=NoCopy>
-class state_machine : public state_base, CopyPolicy
+template<class Derived,class HistoryPolicy=NoHistory,
+         class VisitablePolicy=NotVisitableStates, class CopyPolicy=NoCopy>
+class state_machine : public state_base,public VisitablePolicy,CopyPolicy
 {
 private: 
     typedef boost::function<
-        execute_return ()>                   transition_fct;
+        execute_return ()>                          transition_fct;
     typedef boost::function<
-        execute_return () >                  deferred_fct;
-    typedef std::queue<deferred_fct >                                           deferred_events_queue_t;
-    typedef std::queue<transition_fct >	                                        events_queue_t;
-	typedef bool (*flag_handler)(state_machine<Derived,HistoryPolicy,CopyPolicy>&);
+        execute_return () >                         deferred_fct;
+    typedef std::queue<deferred_fct >               deferred_events_queue_t;
+    typedef std::queue<transition_fct >	            events_queue_t;
+    typedef bool (*flag_handler)(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>&);
 
     // all state machines are friend with each other to allow embedding any of them in another fsm
-    template <class ,class ,class > friend class state_machine;
+    template <class ,class ,class,class > friend class state_machine;
 
  public: 
     // tags
-    typedef mpl::bool_<true>   is_composite_tag;
+    typedef int composite_tag;
+
     // default: no flag
     typedef mpl::vector0<>     flag_list;
     //default: no deferred events
@@ -530,7 +529,7 @@ private:
         // extend the table with tables from composite states
         typedef typename extend_table<Derived>::type complete_table;
         // use this table as if it came directly from the user
-        typedef dispatch_table<Derived,HistoryPolicy,CopyPolicy,complete_table,Event> table;
+        typedef dispatch_table<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy,complete_table,Event> table;
 
         HandledEnum ret_handled=HANDLED_FALSE;
         // if the state machine is terminated, do not handle any event
@@ -545,8 +544,8 @@ private:
         if (m_event_processing)
         {
             // event has to be put into the queue
-            execute_return (state_machine<Derived,HistoryPolicy,CopyPolicy>::*pf) (Event const& evt) = 
-                &state_machine<Derived,HistoryPolicy,CopyPolicy>::process_event; 
+            execute_return (state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>::*pf) (Event const& evt) = 
+                &state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>::process_event; 
             transition_fct f = boost::bind(pf,this,evt);
             m_events_queue.push(f);
             return boost::make_tuple(HANDLED_TRUE,&this->m_states);
@@ -664,8 +663,8 @@ private:
                 boost::bind(boost::apply<bool>(),
                     boost::bind(deref<flag_handler>(),
                         boost::bind(plus2<flag_handler*,int>(),
-                        flags_entries, ::_2)),
-                        boost::ref(*this)), ::_1));		
+                        flags_entries, _2)),
+                        boost::ref(*this)), _1));		
     }
     // checks if a flag is active using no binary op if 1 region, or OR if > 1 regions
     template <class Flag>
@@ -674,10 +673,19 @@ private:
         typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
         return FlagHelper<Flag,(nr_regions::value>1)>::helper(*this,get_entries_for_flag<Flag>());
     }
-
+    // visit the currently active states (if these are defined as visitable
+    // by implementing accept)
+    void visit_current_states(VisitorBase& vis)
+    {
+        typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
+        for (int i=0; i<nr_regions::value;++i)
+        {
+            VisitablePolicy::execute(m_states[i],vis);
+        }
+    }
  protected:    // interface for the derived class
      typedef std::vector<pstate_base>	pstate_base_list;
-	 
+
      // helper used to fill the initial states
      struct init_states
      {
@@ -694,13 +702,16 @@ private:
      };
      // Construct with the default initial states
      state_machine()
-	     : m_states(),
-	     m_events_queue() ,
-	     m_deferred_events_queue(),
-	     m_history(),
-	     m_state_list(),
-         m_event_processing(false),
-         m_is_included(false)
+	     :state_base()
+         ,VisitablePolicy()
+         ,CopyPolicy()
+         ,m_states()
+	     ,m_events_queue() 
+	     ,m_deferred_events_queue()
+	     ,m_history()
+	     ,m_state_list()
+         ,m_event_processing(false)
+         ,m_is_included(false)
      {
          typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
          m_states.reserve(nr_regions::value);
@@ -711,18 +722,22 @@ private:
              initial_states, boost::msm::wrap<mpl::placeholders::_1>  
          >(init_states(m_states));
          m_history.set_initial_states(m_states);
+         // create states
          fill_states(this);
      }
      // template constructor. Needed only for sub-fsms having exit pseudo states.
      template <class ContainingSM>
      state_machine(ContainingSM* containing_sm)
-         : m_states(),
-         m_events_queue() ,
-         m_deferred_events_queue(),
-         m_history(),
-         m_state_list(),
-         m_event_processing(false),
-         m_is_included(true)
+         :state_base()
+         ,VisitablePolicy()
+         ,CopyPolicy()
+         ,m_states()
+         ,m_events_queue() 
+         ,m_deferred_events_queue()
+         ,m_history()
+         ,m_state_list()
+         ,m_event_processing(false)
+         ,m_is_included(true)
      {
          typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
          m_states.reserve(nr_regions::value);
@@ -733,10 +748,12 @@ private:
              initial_states, boost::msm::wrap<mpl::placeholders::_1>  
          >(init_states(m_states));
          m_history.set_initial_states(m_states);
+         // create states
          fill_states(containing_sm);
      }
      // assignment operator using the copy policy to decide if non_copyable, shallow or deep copying is necessary
-     state_machine<Derived,HistoryPolicy,CopyPolicy>& operator= (state_machine<Derived,HistoryPolicy,CopyPolicy> const& rhs)
+     state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& operator= 
+         (state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy> const& rhs)
      {
          if (this != &rhs) 
          {
@@ -745,7 +762,8 @@ private:
          }
         return *this;
      }
-     state_machine<Derived,HistoryPolicy,CopyPolicy> (state_machine<Derived,HistoryPolicy,CopyPolicy> const& rhs):CopyPolicy(rhs)
+     state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy> 
+         (state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy> const& rhs):CopyPolicy(rhs)
      {
         if (this != &rhs) 
         {
@@ -1039,7 +1057,7 @@ private:
     template <class Flag,bool orthogonalStates>
     struct FlagHelper 
     {
-        static bool helper(state_machine<Derived,HistoryPolicy,CopyPolicy>& sm,flag_handler* )
+        static bool helper(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& sm,flag_handler* )
         {
             // by default we use OR to accumulate the flags
             return sm.is_flag_active<Flag,Flag_OR>();
@@ -1048,7 +1066,7 @@ private:
     template <class Flag>
     struct FlagHelper<Flag,false>
     {
-        static bool helper(state_machine<Derived,HistoryPolicy,CopyPolicy>& sm,flag_handler* flags_entries)
+        static bool helper(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& sm,flag_handler* flags_entries)
         {
             // just one active state, so we can call operator[] with 0
             return flags_entries[sm.current_state()[0]](sm);
@@ -1059,15 +1077,15 @@ private:
     template <class StateType,class Flag>
     struct FlagHandler
     {
-        static bool flag_true(state_machine<Derived,HistoryPolicy,CopyPolicy>& )
+        static bool flag_true(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& )
         {
             return true;
         }
-        static bool flag_false(state_machine<Derived,HistoryPolicy,CopyPolicy>& )
+        static bool flag_false(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& )
         {
             return false;
         }
-        static bool forward(state_machine<Derived,HistoryPolicy,CopyPolicy>& fsm)
+        static bool forward(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>& fsm)
         {
             typedef typename create_stt<Derived>::type stt;
             return (static_cast<StateType& > 
@@ -1141,7 +1159,7 @@ private:
     template <class State, class Enable=void>
     struct create_state_helper
     {
-        static void set_sm(state_machine<Derived,HistoryPolicy,CopyPolicy>* ,pstate_base )
+        static void set_sm(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* ,pstate_base )
         {
 	        // state doesn't need its sm
         }
@@ -1150,7 +1168,7 @@ private:
     template <class State>
     struct create_state_helper<State,typename boost::enable_if<typename State::needs_sm >::type>
     {
-        static void set_sm(state_machine<Derived,HistoryPolicy,CopyPolicy>* sm,pstate_base new_state)
+        static void set_sm(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* sm,pstate_base new_state)
         {
 	        // create and set the fsm
 	        static_cast<State*>(new_state.get())->set_sm_ptr(static_cast<Derived*>(sm));
@@ -1161,7 +1179,7 @@ private:
     template<class ContainingSM>
     struct add_state
     {
-        add_state(state_machine<Derived,HistoryPolicy,CopyPolicy>* self_,ContainingSM* sm)
+        add_state(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* self_,ContainingSM* sm)
 	        : self(self_),containing_sm(sm){}
 
         // State is a sub fsm with exit pseudo states and gets a pointer to this fsm, so it can build a callback
@@ -1192,7 +1210,7 @@ private:
             execute_return (ContainingSM::*pf) (typename StateType::event const& evt)= 
                 &ContainingSM::process_event;
             boost::function<execute_return (typename StateType::event const&)> fct = 
-                boost::bind(pf,containing_sm,::_1);
+                boost::bind(pf,containing_sm,_1);
             static_cast<StateType*>(to_return)->set_forward_fct(fct);
             return to_return;
         }
@@ -1207,16 +1225,20 @@ private:
             pstate_base new_state (this->new_state_helper<State>());
             self->m_state_list[state_id]= new_state;
             create_state_helper<State>::set_sm(self,new_state);
+            // create a visitor callback
+            self->insert(state_id,boost::bind(&State::accept,
+                                                static_cast<State*>(new_state.get()),_1) );
         }
     private:
-        state_machine<Derived,HistoryPolicy,CopyPolicy>* self;
+        state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* self;
         ContainingSM*                                    containing_sm;
     };
 
      // helper used to copy every state if needed
      struct copy_helper
      {
-         copy_helper(pstate_base_list& to_fill,const pstate_base_list& rhs,state_machine<Derived,HistoryPolicy,CopyPolicy>* sm):
+         copy_helper(pstate_base_list& to_fill,const pstate_base_list& rhs,
+                     state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* sm):
             m_tofill_states(to_fill),m_rhs(rhs),m_sm(sm){}
          template <class StateType>
          void operator()(boost::msm::wrap<StateType> const& )
@@ -1233,14 +1255,15 @@ private:
          }
          pstate_base_list&                         m_tofill_states;
          const pstate_base_list&                   m_rhs;
-         state_machine<Derived,
-            HistoryPolicy,CopyPolicy>*	           m_sm;
+         state_machine<Derived,HistoryPolicy,
+             VisitablePolicy,CopyPolicy>*	       m_sm;
      };
 
      // copy functions for shallow or deep copy (no need of a 3rd version for NoCopy as noncopyable handles it)
      template <class IsShallowCopy>
      typename boost::disable_if<typename IsShallowCopy::type,void >::type
-     do_copy (state_machine<Derived,HistoryPolicy,CopyPolicy> const& rhs,boost::msm::dummy<0> = 0)
+     do_copy (state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy> const& rhs,
+              boost::msm::dummy<0> = 0)
      {
          // deep copy simply assigns the data
          m_states = rhs.m_states;
@@ -1254,7 +1277,8 @@ private:
      }
      template <class IsShallowCopy>
      typename boost::enable_if<typename IsShallowCopy::type,void >::type
-     do_copy (state_machine<Derived,HistoryPolicy,CopyPolicy> const& rhs,boost::msm::dummy<1> = 0)
+     do_copy (state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy> const& rhs,
+              boost::msm::dummy<1> = 0)
      {
          // shallow copy simply assigns the data
          m_states = rhs.m_states;
@@ -1323,7 +1347,7 @@ private:
      // helper used to set the correct state as active state upon entry into a fsm
      struct direct_event_start_helper 
      {
-         direct_event_start_helper(state_machine<Derived,HistoryPolicy,CopyPolicy>* self_):self(self_){}
+         direct_event_start_helper(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* self_):self(self_){}
          // this variant is for the standard case, entry due to activation of the containing FSM
          template <class EventType>
          typename boost::disable_if<typename has_direct_entry<EventType>::type,void>::type
@@ -1392,11 +1416,11 @@ private:
          }
      private:
          // helper for the fork case, does almost like the direct entry
-         state_machine<Derived,HistoryPolicy,CopyPolicy>* self;
+         state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* self;
          template <class EventType>
          struct fork_helper
          {
-             fork_helper(state_machine<Derived,HistoryPolicy,CopyPolicy>* self_,EventType const& evt_):
+             fork_helper(state_machine<Derived,HistoryPolicy,VisitablePolicy,CopyPolicy>* self_,EventType const& evt_):
                 helper_self(self_),helper_evt(evt_){}
              template <class StateType>
              void operator()(boost::msm::wrap<StateType> const& )
@@ -1409,7 +1433,8 @@ private:
                  helper_self->m_states[StateType::zone_index] = state_id;
              }
          private:
-             state_machine<Derived,HistoryPolicy,CopyPolicy>* helper_self;
+             state_machine<Derived,HistoryPolicy,
+                                 VisitablePolicy,CopyPolicy>* helper_self;
              EventType const&                                 helper_evt;
          };
      };
@@ -1574,6 +1599,7 @@ private:
         BOOST_STATIC_CONSTANT(int, max_state = (mpl::size<state_list>::value));
         // allocate the place without reallocation
         m_state_list.resize(max_state);
+        VisitablePolicy::fill_visitors(max_state);
         mpl::for_each<
 	        state_list,boost::msm::wrap<mpl::placeholders::_1>  
         >(add_state<ContainingSM>(this,containing_sm));
@@ -1601,6 +1627,11 @@ private:
         }
     };
 public:
+    template <class Composite,class Event>
+    struct make_frow 
+    {
+        typedef frow<Composite,Event> type;
+    };
     // gets the transition table from a composite and make from it a forwarding row
     template <class Composite>
     struct get_transition_table_as_frow
@@ -1612,6 +1643,7 @@ public:
         typedef typename mpl::fold<
             all_events, mpl::vector<>,
             mpl::push_back<mpl::placeholders::_1,
+            /*typename mpl::apply<make_frow<mpl::placeholders::_,mpl::placeholders::_>,Composite,mpl::placeholders::_2 >::type*/
                            frow<Composite,mpl::placeholders::_2> > >::type type;
     };
 
@@ -1631,7 +1663,7 @@ public:
 		>::type type;
     };
 private:
-    template <class Fsm, class History, class Copy,class Stt, class Event>
+    template <class Fsm, class History,class Visitable, class Copy,class Stt, class Event>
     friend struct dispatch_table;
     template <typename T1,class Event> friend struct frow;
 

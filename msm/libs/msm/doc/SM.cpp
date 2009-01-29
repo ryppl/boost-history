@@ -41,8 +41,17 @@ namespace  // Concrete FSM implementation
       player& m_player;
   };
 
+  // an easy visitor
+  struct SomeVisitor: public VisitorBase 
+  {
+      void visit_state(state_base* astate)
+      {
+          std::cout << "visiting state:" << typeid(*astate).name() << std::endl;
+      }
+  };
+
   // Concrete FSM implementation 
-  struct player : public state_machine<player>
+  struct player : public state_machine<player,NoHistory,VisitableStates>
   {
       // The list of FSM states
       struct Empty : public state<> 
@@ -53,6 +62,10 @@ namespace  // Concrete FSM implementation
 			void on_entry(Event const& ) {std::cout << "entering: Empty" << std::endl;}
 			template <class Event>
 			void on_exit(Event const& ) {std::cout << "leaving: Empty" << std::endl;}
+            void accept(VisitorBase& vis)
+            {
+                static_cast<SomeVisitor*>(&vis)->visit_state(this);
+            }
       };
       struct Open : public state<> 
       {	 
@@ -62,6 +75,10 @@ namespace  // Concrete FSM implementation
 			void on_entry(Event const& ) {std::cout << "entering: Open" << std::endl;}
 			template <class Event>
 			void on_exit(Event const& ) {std::cout << "leaving: Open" << std::endl;}
+            void accept(VisitorBase& vis)
+            {
+                static_cast<SomeVisitor*>(&vis)->visit_state(this);
+            }
       };
       // a state needing a pointer to the containing state machine
       // and using for this the non-default policy
@@ -82,7 +99,7 @@ namespace  // Concrete FSM implementation
       // then it will remember the last active state and reactivate it
       // also possible: AlwaysHistory, the last active state will always be reactivated
       // or NoHistory, always restart from the initial state
-      struct Playing : public state_machine<Playing,ShallowHistory<mpl::vector<end_pause> > >
+      struct Playing : public state_machine<Playing,ShallowHistory<mpl::vector<end_pause> >,VisitableStates >
       {
 			// when playing, the CD is loaded and we are in either pause or playing (duh)
 			typedef mpl::vector2<PlayingPaused,CDLoaded>		flag_list;
@@ -90,7 +107,12 @@ namespace  // Concrete FSM implementation
 			void on_entry(Event const& ) {std::cout << "entering: Playing" << std::endl;}
 			template <class Event>
 			void on_exit(Event const& ) {std::cout << "leaving: Playing" << std::endl;}
-
+            void accept(VisitorBase& vis)
+            {
+                static_cast<SomeVisitor*>(&vis)->visit_state(this);
+                // visit substates
+                visit_current_states(vis);
+            }
           // The list of FSM states
           // the Playing state machine contains a state which is himself a state machine
           // so we have a SM containing a SM containing a SM
@@ -101,7 +123,10 @@ namespace  // Concrete FSM implementation
 			  void on_entry(Event const& ) {std::cout << "starting: First song" << std::endl;}
 			  template <class Event>
 			  void on_exit(Event const& ) {std::cout << "finishing: First Song" << std::endl;}
-
+              void accept(VisitorBase& vis)
+              {
+                  static_cast<SomeVisitor*>(&vis)->visit_state(this);
+              }
 	          struct LightOn : public state<>
 	          {	 
 				 template <class Event>
@@ -345,7 +370,6 @@ namespace  // Concrete FSM implementation
 	        std::cout << " -> " << state_names[p.current_state()[i]] << std::endl;
       }
   }
-
   void test()
   {
       player p;
@@ -369,7 +393,12 @@ namespace  // Concrete FSM implementation
 
       // go to Open, call on_exit on Empty, then action, then on_entry on Open
       p.process_event(open_close()); pstate(p);
+      // visiting Paused and AllOk, but only Paused cares
+      SomeVisitor vis;
+      p.visit_current_states(vis);
       p.process_event(open_close()); pstate(p);
+      // visiting Empty and AllOk, but only Empty cares
+      p.visit_current_states(vis);
 
 
       p.process_event(cd_detected("louie, louie",p));
@@ -377,6 +406,9 @@ namespace  // Concrete FSM implementation
       //p.process_event(play());  
       // at this point, Play is active, along FirstSong and LightOn
       pstate(p);
+      // visiting Playing+Song1 and AllOk, but only Playing+Song1 care
+      p.visit_current_states(vis);
+
       std::cout << "PlayingPaused active:" << std::boolalpha << p.is_flag_active<PlayingPaused>() << std::endl;//=> true
       // call on_exit on LightOn,FirstSong,Play like stated in the UML spec.
       // and of course on_entry on Paused and StartBlinking
@@ -392,6 +424,9 @@ namespace  // Concrete FSM implementation
       p.process_event(NextSong());pstate(p);
       // We are now in second song, Flag inactive
       std::cout << "FirstSong active:" << std::boolalpha << p.is_flag_active<FirstSongPlaying>() << std::endl;//=> false
+      // visiting Playing+Song2 and AllOk, but only Playing cares
+      p.visit_current_states(vis);
+ 
       p.process_event(NextSong());pstate(p);
       // 2nd song active
       p.process_event(PreviousSong());pstate(p);

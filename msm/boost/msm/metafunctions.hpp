@@ -30,6 +30,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_creation)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_entry)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_exit)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(concrete_exit_state)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(composite_tag)
 
 namespace boost { namespace msm
 {
@@ -178,8 +179,8 @@ struct transition_event
 template <class State>
 struct is_composite_state
 {
-    enum {value = State::is_composite_tag::value};
-    typedef typename State::is_composite_tag type;
+    enum {value = has_composite_tag<State>::type::value};
+    typedef typename has_composite_tag<State>::type type;
 };
 
 // transform a transition table in a container of source states
