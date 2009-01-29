@@ -145,14 +145,19 @@
 // Use filter effects to help construct graphics via client-side graphics operations.
 
 namespace boost
-{ //! \namespace boost www.Boost.org
-namespace svg
 {
-  //! \namespace svg Scalable Vector Graph plot functions and classes and data.
-  //! \namespace boost::svg All SVG classes and functions in Boost.Plot.
+namespace svg
+{ //! \namespace boost \brief WWW.Boost.org.
+  //! \namespace boost::math \brief Boost.Math library at www.boost.org.
+  //! \namespace boost::math::detail \brief Boost.Math library at www.boost.org implementation details.
+  //! \namespace svg \brief Scalable Vector Graph plot functions, classes and data.
+  //! \namespace boost::svg \brief SVG classes and functions in Boost.Plot.
+  //! \namespace boost::svg::boxplot \brief SVG classes and functions specific to boxplots.
+  //! \namespace boost::svg::detail \brief SVG classes and functions implementation details (not recommended for normal use).
+
   // Inserted as a SVG comment, for example
   // "<!-- Demo of 1D plot features. --> \n"
-  // and also as a <desc />
+  // and also as a \verbatim <desc /> \endverbatim
   // http://www.w3.org/TR/SVG/struct.html#DescriptionAndTitleElements
   // 5.4 The 'desc' and 'title' elements
 
@@ -210,7 +215,10 @@ class svg;
 // static const std::string prohibit("prohibits");
 
 class svg
-{
+{ /*! \class boost::svg::svg
+  \brief Class to output Scalable Vector Graph XML graph elements: point, path, line, circle, rect, polygon and text.
+  \details (and handle plot stylesheets - but not implemented yet).
+*/
 protected:
   unsigned int x_size_; //!< SVG image X-axis size (in SVG units (default pixels).
   unsigned int y_size_; //!< SVG image Y-axis size (in SVG units (default pixels).
@@ -676,11 +684,11 @@ public:
   }
 
   // ------------------------------------------------------------------------
-  // push_back information about line, rec, circle & ellipse to the document.
+  // Add (push_back) information about line, rec, circle & ellipse to the document.
   // ------------------------------------------------------------------------
 
   line_element& line(double x1, double y1, double x2, double y2)
-  { //! push_back information about a line to the document.
+  { //! Add (push_back) information about a line to the document.
     //! 'line' element defines a line segment that starts at one point (x1, y1) and ends at another (x2, y2).
     return document.line(x1, y1, x2, y2);
   }
@@ -759,8 +767,7 @@ public:
     return document.polyline(v);
   }
 
-  // --------------------------------------------------------------------------------
-  // Write the information about path, clip_path to the document.
+  // Add the information about path, clip_path to the document.
 
   path_element& path()
   { //! Construct an empty path, ready for additions with chainable functions M., L. ...
@@ -774,7 +781,7 @@ public:
   }
 
   g_element& g()
-  { //! Writes information about a group element to the document.
+  { //! Add information about a group element to the document.
     return document.g(); //! return reference to the group element.
   }
 

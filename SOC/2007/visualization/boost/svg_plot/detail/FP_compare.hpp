@@ -83,7 +83,16 @@ safe_fpt_division(FPT f1, FPT f2)
 
 template<typename FPT = double>
 class close_to
-{ //! \brief Test if two floating-point values are close within a chosen tolerance.
+{ /*!
+   \class close_to
+   \brief Test if two floating-point values are close within a chosen tolerance.
+   \details Close can be one of two types of floating-point comparison "Very close" and "Close enough".
+    equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
+    pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
+    Strong requires closeness relative to BOTH values begin compared,
+    Weak only requires only closeness to EITHER ONE value.
+
+  */
 public:
   // One constructor for fraction tolerance only. (Percent is NOT implemented).
   template<typename FPT>
@@ -136,8 +145,10 @@ private:
 
 template<typename FPT = double>
 class smallest
-{ //! \brief   Check floating-point value is smaller than a chosen small value.
-  /* \details
+{ /*! \class smallest
+     \brief   Check floating-point value is smaller than a chosen small value,
+      default std::numeric_limits<FPT>::min_value().
+     \details
      David Monniaux, http://arxiv.org/abs/cs/0701192v4,
      It is somewhat common for beginners to add a comparison check to 0 before
      computing a division, in order to avoid possible division-by-zero exceptions or
@@ -204,14 +215,20 @@ private:
 
 // Define two convenience typedefs.
 
-/*! \details Since double and the default smallest value 2 * std::numeric_limits<double>::min_value() = 2 * 2.22507e-308 + 4.45015e-308
+typedef smallest<double> tiny;
+/*!
+  \typedef tiny
+  \brief Allow tiny as a shorthand for double min_value 4.45e-308.
+  \details Since double and the default smallest value 2 * std::numeric_limits<double>::min_value() = 2 * 2.22507e-308 + 4.45015e-308
   is a very common requirement, provide an convenience alias for this.
 */
-typedef smallest<double> tiny; //!< Allow tiny as a shorthand for 4.45e-308.
 
-/*! \details Since double and the default close_to value 2 * epsilon =  std::numeric_limits<double>::epsilon = 2 * 2.220446e-016 = 4.440892e-016
+/*!
+  \typedef neareq
+  \brief Allow neareq as a shorthand for 2 double epsilon = 4.44e-16
+  \details Since double and the default close_to value 2 * epsilon =  std::numeric_limits<double>::epsilon = 2 * 2.220446e-016 = 4.440892e-016
   is a very common requirement, provide an convenience alias for this.
 */
-typedef close_to<double> neareq; //!< Allow neareq as a shorthand for 4.44e-16
+typedef close_to<double> neareq;
 
 #endif // BOOST_FLOATING_POINT_COMPARISON_HPP

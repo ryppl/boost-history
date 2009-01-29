@@ -64,7 +64,12 @@ namespace svg
 // coordinates locally and transform them before we write them.
 // ------------------------------------------------------------------
 class svg_1d_plot_series
-{
+{ /*! \class boost::svg::svg_1d_plot_series
+   \brief Holds series of data values (points) to be plotted.
+  \details Scan each data point sorting them into the appropriate
+   std::vectors, normal or not (NaN or infinite).
+*/
+
 public:
   std::vector<double> series; // Normal 'OK to plot' data values.
   std::vector<double> series_limits; // 'limit' values: too big, too small or NaN.
@@ -133,19 +138,19 @@ line_style_(black, blank, 2, true, false) // Default line style, black, no fill,
 svg_1d_plot_series& svg_1d_plot_series::fill_color(const svg_color& col_)
 { //! Set fill color for plot point marker(s) (chainable).
   point_style_.fill_color_ = col_;
-  return *this; // Make chainable.
+  return *this; // \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::stroke_color(const svg_color& col_)
 { //! Set stroke color for plot point marker(s) (chainable).
   point_style_.stroke_color_ = col_;
-  return *this; // Make chainable.
+  return *this; // \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::shape(point_shape shape_)
 { //! Set shape for plot point marker(s) (chainable).
   point_style_.shape_ = shape_;
-  return *this; // Make chainable.
+  return *this; // \return reference to svg_1d_plot_series to make chainable.
 }
 
 point_shape svg_1d_plot_series::shape()
@@ -156,7 +161,7 @@ point_shape svg_1d_plot_series::shape()
 svg_1d_plot_series& svg_1d_plot_series::symbols(const std::string s)
 { //! Set symbol for plot point marker(s).
   point_style_.symbols_ = s;
-  return *this; // Make chainable.
+  return *this; // \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::size(int size_)
@@ -164,7 +169,7 @@ svg_1d_plot_series& svg_1d_plot_series::size(int size_)
   //point_style_.size_ = size_;
   //point_style_.symbols_style_.font_size(i); // in case using a symbol.
   point_style_.size(size_);
-  return *this; // Make chainable.
+  return *this; // \return reference to svg_1d_plot_series to make chainable.
 }
 
 int svg_1d_plot_series::size()
@@ -219,10 +224,15 @@ bool svg_1d_plot_series::bezier_on()
 // End Definitions of svg_plot_series Public Member Functions.
 
 class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
-{ //! See also svg_2d_plot.hpp for 2-D version.
+{ /*! \class boost::svg::svg_1d_plot
+     \brief Hold all data about a plot, and functions to get and set.
+     \details
+      axis_plot_frame.hpp contains functions common to 1 and 2-D.
+     See also svg_2d_plot.hpp for 2-D version.
+    */
+
   friend void show_plot_settings(svg_1d_plot&);
   friend class detail::axis_plot_frame<svg_1d_plot>;
-  //! axis_plot_frame.hpp contains functions common to 1 and 2-D.
 
  protected:
   // Member data names conventionally end with _.

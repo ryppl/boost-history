@@ -72,16 +72,20 @@ namespace svg
     unsigned char& r, unsigned char& g, unsigned char& b);
   std::ostream& operator<< (std::ostream&, const svg_color&);
 
-  // --------------------------------------------------------------------
-  // svg_color is the struct that contains information about RGB colors.
-  //
   // For the constructor, the SVG standard specifies that numbers
   // outside the normal rgb range are to be accepted,
   // but are constrained to acceptable range of integer values [0, 255].
   // --------------------------------------------------------------------
 
   struct svg_color
-  { //!
+  { /*! \struct boost::svg::svg_color
+    \brief svg_color holds information about RGB colors.
+    \details For the constructor, the SVG standard specifies that numbers
+     outside the normal rgb range are to be accepted,
+     but are constrained to acceptable range of integer values [0, 255].
+
+    */
+
     friend std::ostream& operator<< (std::ostream& os, const svg_color& rhs);
 
     unsigned char r; //!< unsigned char provides range [0 to 255].
@@ -91,9 +95,12 @@ namespace svg
     // If true should display & write as "none".
 
     svg_color(int red, int green, int blue) : is_blank(false)
-    {  //! \brief Construct a color from RGB values.
-       /*! \details Constrain rgb to [0 .. 255].
+    {  /*! \brief Construct a color from RGB values.
+         \details Constrain rgb to [0 .. 255].
           Default is to construct a blank 'pseudo-color'.
+         The SVG standard specifies that numbers
+         outside the normal rgb range are to be accepted,
+         but are constrained to acceptable range of integer values [0, 255].
        */
 
       red = ( red < 0 ) ? 0 : red;

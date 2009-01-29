@@ -9,7 +9,6 @@
   amount over the limit resulting in an ugly extra major tick.
   Also allow optional forcing of the ticks to be multiples of 1, 2, 5, 10.
 
-  \version 1.0
   \author Paul A. Bristow
  */
 

@@ -1,5 +1,5 @@
 /*! \file stylesheet.hpp
-    \athor Jacob Voytko
+    \author Jacob Voytko
 
     \brief Implement Cascading Style Sheets for SVG plots (but NOT IMPLEMENTED yet).
     \details
@@ -33,10 +33,16 @@ namespace svg
 // Note: After GSoC, this will use the suggested CSS parser
 // from the W3C CSS 2.1 Standard
 struct css_parse : public ::boost::spirit::grammar<css_parse>
-{
+{ /*! \struct boost::svg::css_parse
+    \brief CSS parser
+    \details not used and need replementing to useW3C CSS 2.1 Standard
+   */
     template <typename ScannerT>
     struct definition
-    {
+    { /*! \struct boost::svg::css_parse::definition
+    \brief CSS parser definition
+    \details not used and need replementing to useW3C CSS 2.1 Standard
+   */
         definition(css_parse const& /*self*/)
         {
             expression

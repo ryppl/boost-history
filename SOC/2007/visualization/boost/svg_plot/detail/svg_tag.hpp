@@ -1,14 +1,14 @@
-/* \file svg_tag.hpp
-
-    \author Jacob Voytko and Paul A. Bristow
+/*! \file svg_tag.hpp
 
    \brief Boost.Plot SVG plot Implemention details.
    \details See svg.hpp etc for user functions.
-   svg_tag.hpp defines all classes that can occur in the SVG parse tree.
+      svg_tag.hpp defines all classes that can occur in the SVG parse tree.
+
+   \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007, 2008
-// Copyright Paul A Bristow 2007, 2008
+// Copyright Paul A Bristow 2007, 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -63,10 +63,10 @@ namespace svg
   struct z_path; // z indicates a closepath.
   struct h_path; // Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
   struct v_path; // Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
-  struct c_path; // Draws a cubic Bézier curve from the current point to (x,y) using (x1,y1).
-  struct q_path; // Draws a quadratic Bézier curve from the current point to (x,y).
-  struct s_path; // Draws a cubic Bézier curve from the current point to (x,y).
-  struct t_path; // Draws a quadratic Bézier curve from the current point to (x,y).
+  struct c_path; // Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1).
+  struct q_path; // Draws a quadratic Bezier curve from the current point to (x,y).
+  struct s_path; // Draws a cubic Bezier curve from the current point to (x,y).
+  struct t_path; // Draws a quadratic Bezier curve from the current point to (x,y).
   struct a_path; // Draws a elliptical arc from the current point to (x,y).
   struct P_path; // Adds another (absolute) point to a polyline or polygon.
   class g_element; // 'g' element is a container element, <g ... /> </g>
@@ -74,17 +74,17 @@ namespace svg
   // <g stroke="rgb(255,0,0)" <rect x="0" y="0"  width="500"  height="600"/> </g>
 
   class svg_element
-  { //! \class svg_element Base class for all the leaf elements.
-  /*! \details
-     svg_element is base class for all the leaf elements:\n
-     rect_element, circle_element, line_element, text_element,
-     polygon_element, polyline_element, path_element, clip_path_element,
-     g_element.\n
+  { /*! \class boost::svg::svg_element
+       \brief svg_element is base class for all the leaf elements.
+       \details
+       rect_element, circle_element, line_element, text_element,
+       polygon_element, polyline_element, path_element, clip_path_element,
+       g_element.\n
 
-     g_element ('g' element is a container element
-     for grouping together related graphics elements).\n
-     See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
-  */
+       g_element ('g' element is a container element
+       for grouping together related graphics elements).\n
+       See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
+    */
 
   protected:
     svg_style style_info_; //! Colors fill, stroke, width, get by function style.
@@ -218,7 +218,9 @@ namespace svg
   // Represents a line
   // -----------------------------------------------------------------
   class line_element: public svg_element
-  { //! Line from (x1_, x2_) to (y1_, y2_)
+  { /*! \class boost::svg::line_element
+        \brief Line from (x1, x2) to (y1, y2).
+    */
   private:
     double x1_; //! Line from (x1_, x2_) to (y1_, y2_)
     double x2_; //! Line from (x1_, x2_) to (y1_, y2_)
@@ -250,29 +252,28 @@ namespace svg
     }
   }; // class line_element
 
-
-  // --------------------------------------------------
-  // class rect_element: Represents a single rectangle.
-  // http://www.w3.org/TR/SVG/shapes.html#RectElement
-  // --------------------------------------------------
-
   class rect_element : public svg_element
-  {
+  { /*! \class boost::svg::rect_element
+        \brief Rectangle from top left coordinate, width and height.
+        \details
+         Represents a single rectangle.
+         http://www.w3.org/TR/SVG/shapes.html#RectElement
+    */
     friend bool operator==(const rect_element&, const rect_element&);
     friend bool operator!=(const rect_element&, const rect_element&);
 
   private:
-    double x_; // x-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
-    double y_; // y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
-    // So is top left corner of rectangle.
-    double width_; // x + width is top right.
-    double height_; // y + height is bottom left
-    // x + width and y + height is bottom right.
+    double x_; //! x-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
+    double y_; //! y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
+    //! So is top left corner of rectangle.
+    double width_; //! x + width is top right.
+    double height_; //! y + height is bottom left.
+    //! x + width and y + height is bottom right.
   public:
 
     rect_element(double x, double y, double w, double h)
       : x_(x), y_(y), width_(w), height_(h)
-    { // Constructor defines all private data (no defaults).
+    { //! Constructor defines all private data (no defaults).
     }
 
     rect_element(double x, double y, double w, double h,
@@ -286,38 +287,38 @@ namespace svg
     }
 
     double x() const
-    {
+    { //! x-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
       return x_;
     }
 
     double y() const
-    {
+    { //! y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
       return y_;
     }
 
     double width() const
-    {
+    { //! x + width is top right.
       return width_;
     }
 
     double height() const
-    {
+    { //! y + height is bottom left.
       return height_;
     }
 
     void write(std::ostream& rhs)
-    { // SVG xml
+    { //! Output SVG XML for rectangle.
+      //! For example: <rect  x="0" y="0"  width="500"  height="350"/>
       rhs << "<rect";
       write_attributes(rhs); // id (& clip_path)
       rhs << " x=\"" << x_ << "\""
         << " y=\"" << y_ << "\""
         << " width=\"" << width_ << "\""
         << " height=\""<< height_<< "\"/>";
-      // For example: <rect  x="0" y="0"  width="500"  height="350"/>
     }
 
     bool operator==(const rect_element& lhs)
-    { // Useful for Boost.Test.
+    { // Comparison useful for Boost.Test.
       return (lhs.x() == x_) && (lhs.y() == y_) &&  (lhs.width() == width_) && (lhs.height() == height_);
     }
     bool operator!=(const rect_element& lhs)
@@ -337,11 +338,10 @@ namespace svg
   }
 
   std::ostream& operator<< (std::ostream& os, const rect_element& r)
-  {  //
+  { //! Example: rect_element r(20, 20, 50, 50);  cout << r << endl;
+    //! Outputs:  rect(20, 20, 50, 50)
       os << "rect(" << r.x() << ", " << r.y()
          << ", " << r.width() << ", " << r.height() << ")" ;
-    // Usage: rect_element r(20, 20, 50, 50);  cout << r << endl;
-    // Outputs:  rect(20, 20, 50, 50)
     return os;
   } // std::ostream& operator<<
 
@@ -349,7 +349,12 @@ namespace svg
   // class circle_element  Represents a single circle.
   // -----------------------------------------------------------------
   class circle_element : public svg_element
-  {
+  {/*! \class boost::svg::circle_element
+        \brief Circle from center coordinate, and radius.
+        \details
+         Represents a single circle.
+         http://www.w3.org/TR/SVG/shapes.html#CircleElement
+    */
   private:
     double x;
     double y;
@@ -357,7 +362,7 @@ namespace svg
   public:
     circle_element(double x, double y, double radius = 5)
       : x(x), y(y), radius(radius)
-    { // Define all private data.
+    { //! Constructor defines all private data (default radius only).
     }
 
     circle_element(double x, double y, double radius,
@@ -372,11 +377,11 @@ namespace svg
     }
 
     void write(std::ostream& rhs)
-    {
+    { //! Output SVG XML
+      //! Example: <circle cx="9.78571" cy="185" r="5"/>
       rhs << "<circle";
       write_attributes(rhs);
       rhs << " cx=\"" << x << "\" cy=\"" << y << "\" r=\"" << radius << "\"/>";
-      // Example: <circle cx="9.78571" cy="185" r="5"/>
     }
   }; // class circle_element
 
@@ -385,8 +390,13 @@ namespace svg
   // Represents a single ellipse.
   // -----------------------------------------------------------------
   class ellipse_element : public svg_element
-  { // http://www.w3.org/TR/SVG/shapes.html#EllipseElement
-    // 9.4 The 'ellipse'  element.
+  { /*! \class boost::svg::ellipse_element
+        \brief Ellipse from center coordinate, and radius.
+        \details
+        Represents a single ellipse.
+        http://www.w3.org/TR/SVG/shapes.html#EllipseElement
+        9.4 The 'ellipse'  element.
+        */
   private:
     double cx; // coordinate x of center of ellipse, default 0
     double cy; // coordinate y, default 0
@@ -395,7 +405,7 @@ namespace svg
   public:
     ellipse_element(double cx, double cy, double rx = 4,  double ry = 8)
       : cx(cx), cy(cy), rx(rx), ry(ry)
-    { // Define all private data.
+    { //! Define all private data (default radii).
     }
 
     ellipse_element(double cx, double cy, double rx,  double ry,
@@ -413,34 +423,33 @@ namespace svg
                  const std::string& id_name="",
                  const std::string& class_name="",
                  const std::string& clip_name="")
-      : cx(cx), cy(cy), rx(4), ry(8), // 4 and 8 are the same defaults used above
+      : cx(cx), cy(cy), rx(4), ry(8), // 4 and 8 are the same defaults used above.
         svg_element(style_info, id_name, class_name, clip_name)
     { // Define all private data.
     }
 
     void write(std::ostream& rhs)
-    {
+    { //! Output SVG XML for ellipse.
+      //! Example: <ellipse rx="250" ry="100" fill="red"  />
       rhs << "<ellipse";
       write_attributes(rhs);
       rhs << " cx=\"" << cx << "\" cy=\"" << cy << "\""
           << " rx=\"" << rx << "\" ry=\"" << ry  << "\"/>";
-      // Example: <ellipse rx="250" ry="100" fill="red"  />
     }
   }; // class ellipse_element
 
-  // ----------------------------------------------------------------------
-  // text_element Represents a single block of text, with font & alignment.
-  // ----------------------------------------------------------------------
   enum align_style
-  {
+  { //! text_element Represents a single block of text, with font & alignment.
     left_align, //!< Align text to left.
     right_align, //!< Align text to right.
     center_align //!< Center text.
   };
 
 class text_parent
-{ // An ancestor to both tspan and strings for the text_element class.
-  // This allows an array of both to be stored in text_element.
+{ /*! \class boost::svg::text_parent
+    \brief An ancestor to both tspan and strings for the text_element class.
+    \details This allows an array of both types to be stored in text_element.
+  */
   protected:
     std::string text_;
 
@@ -458,7 +467,10 @@ class text_parent
 }; // class text_parent
 
 class text_element_text : public text_parent
-{
+{ /*! \class boost::svg::text_element_text
+  \brief text (not tspan) element to be stored in text_parent.
+  \details See 10.4 text element http://www.w3.org/TR/SVG/text.html#TextElement
+  */
 public:
   text_element_text(const std::string& text): text_parent(text)
   {
@@ -473,25 +485,26 @@ public:
 }; // class text_element_text
 
 class tspan_element : public text_parent, public svg_element
-{ // See 10.5 tspan element http://www.w3.org/TR/SVG/text.html#TSpanElement
+{ /*! \class boost::svg::tspan_element
+    \brief tspan (not text) to be stored in text_parent.
+    \details See 10.5 tspan element http://www.w3.org/TR/SVG/text.html#TSpanElement
+    */
 private:
-  double x_;  // Absolute positions.
-  double y_;
-  double dx_;  // Relative positions.
-  double dy_;
-  int rotate_; // of a 1st single character of text.
+  double x_;  //!< Absolute X position.
+  double y_;  //!< Absolute Y position.
+  double dx_; //!< Relative X position of a 1st single character of text.
+  double dy_;//!< Relative Y position of a 1st single character of text.
+  int rotate_; //!< Rotation of a 1st single character of text.
   // A list of shifts or rotations for several characters is not yet implemented.
-
-  double text_length_;  // Allows the author to provide exact alignment.
-
-  // dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
-  // but see http://www.w3.org/TR/SVG/text.html#TSpanElement for ancestor rules.
-  // but x_, y_, and text_length need a flag.
+  double text_length_;  //!< Allows the author to provide exact alignment.
+  //! dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
+  //! but see http://www.w3.org/TR/SVG/text.html#TSpanElement for ancestor rules.
+  //! but x_, y_, and text_length need a flag.
   bool use_x_;
   bool use_y_;
   bool use_text_length_;
 
-  text_style style_; // font variants.
+  text_style style_; //!< font variants.
   bool use_style_;
 
 public:
@@ -529,79 +542,79 @@ public:
   tspan_element& text(const std::string& text)
   {
     text_=text;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& dx(double dx)
   {
     dx_ = dx;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& dy(double dy)
   {
     dy_ = dy;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& rotation(int rotation)
-  { // Note implementation so far only rotates the 1st character in string.
-    // text_element rotation rotates the whole text string, so it *much* more useful.
+  { //!< Note implementation so far only rotates the 1st character in string.
+    //!< text_element rotation rotates the whole text string, so it *much* more useful.
     rotate_ = rotation;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& x(double x)
   {
     x_ = x;
     use_x_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& y(double y)
   {
     y_ = y;
     use_y_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& text_length(double text_length)
   {
     text_length_ = text_length;
     use_text_length_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_size(unsigned int size)
   {
     style_.font_size(size);
     use_style_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_family(const std::string& family)
   {
     style_.font_family(family);
     use_style_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_style(const std::string& style)
-  { // font-style: normal | bold | italic | oblique
-    // Examples: "italic"
-    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+  { //! font-style: normal | bold | italic | oblique
+    //! Examples: "italic"
+    //! http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     style_.font_style(style);
     use_style_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_weight(const std::string& w)
-  { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-    // Examples: "bold", "normal"
-    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
-    // tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape
+  { //! svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+    //! Examples: "bold", "normal"
+    //! http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+    //! tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape.
     style_.font_weight(w);
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& fill_color(const svg_color& color)
@@ -609,9 +622,8 @@ public:
     style_info_.fill_color(color);
     style_info_.fill_on(true);
     use_style_ = true;
-    return *this;
+    return *this; //! \return tspan_element& to make chainable.
   }
-
 
   // All getters.
 
@@ -669,9 +681,8 @@ public:
   }
 
   void write(std::ostream& os)
-  { // tspan_element
+  { //! Output SVG XML for tspan_element
     os << "<tspan";
-
     write_attributes(os); // id & clip_path
     style_info_.write(os); // fill, stroke, width...
 
@@ -742,18 +753,37 @@ tspan_element::tspan_element(const tspan_element& rhs)
   } // tspan_element::tspan_element
 
 class text_element : public svg_element
-{ // Holds text with position, size, font, (& styles) & orientation.
-  // Not necessarily shown correctly by all browsers, alas.
+{ /*! \class boost::svg::text_element
+      \brief Holds text with position, size, font, (& styles) & orientation.
+      \details
+      Not necessarily shown correctly by all browsers, alas.
+      SVG Coordinates of 1st character EM box, see
+      http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+      So any text with y coordinate = 0 shows only any roman lower case descenders!\n\n
+
+      (Text may contain embedded xml Unicode characters
+      for Greek, math etc, for example: &#x3A9;).
+      int size; // " font-size = 12"
+      http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
+      std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
+      "sans", "serif", "times"
+      http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
+      10.10 Font selection properties
+      std::string style_; // font-style: normal | bold | italic | oblique
+      std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+      std::string stretch; // font-stretch: normal | wider | narrower ...
+      std::string decoration; // // "underline" | "overline" | "line-through"
+      Example:
+      <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
+
+  */
  private: // Access only via member functions below.
-  // SVG Coordinates of 1st character EM box, see
-  // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-  // So any text with y coordinate = 0  shows only any roman lower case descenders!
-  double x_; // Left edge.
-  double y_; // Bottom of roman capital character.
-  ptr_vector<text_parent> data_; // Stores all of the containing data.
-  text_style style_; // font variants.
-  align_style align_; // left_align, right_align, center_align
-  rotate_style rotate_; // horizontal, upward, downward, upsidedown
+  double x_; //!< Left edge.
+  double y_; //!< Bottom of roman capital character.
+  ptr_vector<text_parent> data_; //!< Stores all of the containing data.
+  text_style style_; //!< font variants.
+  align_style align_; //!< left_align, right_align, center_align
+  rotate_style rotate_; //!< horizontal, upward, downward, upsidedown
 
   void _generate_text(std::ostream& os)
   {
@@ -764,21 +794,6 @@ class text_element : public svg_element
       (*i).write(os);
     }
   }
-  // (Text may contain embedded xml Unicode characters
-  // for Greek, math etc, for example: &#x3A9;).
-  //int size; // " font-size = 12"
-  // http://www.w3.org/TR/SVG/text.html#CharactersAndGlyphs
-  //std::string font;  // font-family: "Arial" | "Times New Roman" | "Verdana" | "Lucida Sans Unicode"
-  // "sans", "serif", "times"
-  // http://www.w3.org/TR/SVG/text.html#FontFamilyProperty
-  // 10.10 Font selection properties
-  //std::string style_; // font-style: normal | bold | italic | oblique
-  //std::string weight; // font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-  //std::string stretch; // font-stretch: normal | wider | narrower ...
-  //std::string decoration; // // "underline" | "overline" | "line-through"
-  // Example:
-  // <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
-
 public:
   // Set
   //void alignment(align_style a);
@@ -798,7 +813,6 @@ public:
   //double x() const;
   //double y() const;
 
-
   text_style& style()
   { // Access to font family, size ...
     return style_;
@@ -812,25 +826,25 @@ public:
   text_element& style(text_style& ts)
   {
     style_ = ts;
-    return *this;
+    return *this; //! \return text_element& to make chainable.
   }
 
   text_element&  alignment(align_style a) // TODO Change name to align????
-  { // left_align, right_align, center_align
+  { //! left_align, right_align, center_align
     align_ = a;
-    return *this;
+    return *this; //! \return text_element& to make chainable.
   }
 
   align_style alignment()
-  { // left_align, right_align, center_align
+  { //! left_align, right_align, center_align
     return align_;
   }
 
   text_element&  rotation(rotate_style rot)// TODO Change name to rotate???
-  { // Degrees: horizontal  = 0, upward = -90, downward, upsidedown
-    // Generates: transform = "rotate(-45 100 100 )"
+  { //! Degrees: horizontal  = 0, upward = -90, downward, upsidedown
+    //! Generates: transform = "rotate(-45 100 100 )"
     rotate_ = rot;
-    return *this;
+    return *this; //! \return text_element& to make chainable.
   }
 
   rotate_style rotation() const
@@ -842,29 +856,29 @@ public:
   // my_text_element.style(no_style).x(999).y(555).alignment(right_align).rotation(vertical);
 
   text_element& x(double x)
-  { // x coordinate of text to write.
+  { //! x coordinate of text to write.
     x_ = x;
-    return *this;
+    return *this; //! \return text_element& to make chainable.
   }
 
   double x() const
-  { // x coordinate of text to write.
+  { //! x coordinate of text to write.
     return x_;
   }
 
   text_element& y(double y)
-  { // y coordinate of text to write.
+  { //! y coordinate of text to write.
     y_ = y;
-    return *this;
+    return *this; //! \return text_element& to make chainable.
   }
 
   double y() const
-  { // y coordinate of text to write.
+  { //! y coordinate of text to write.
     return y_;
   }
 
   void text(const std::string& t)
-  { // text to write.
+  { //! text string to write.
     data_.push_back(new text_element_text(t));
   }
 
@@ -875,8 +889,8 @@ public:
   }
 
   text_element(
-    // Coordinates of 1st character EM box, see
-    // http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+    //! Coordinates of 1st character EM box, see
+    //! http://www.w3.org/TR/SVG/text.html#TextElement 10.2
     double x = 0., // Left edge.
     double y = 0., // Bottom of character (roman capital).
     // So any text with y coordinate = 0  shows only the roman lower case descenders!
@@ -891,7 +905,7 @@ public:
     style_(ts),
     align_(align),
     rotate_(rotate)
-  { // text_element Default Constructor, defines defaults for all private members.
+  { //! text_element Default Constructor, defines defaults for all private members.
     data_.push_back(new text_element_text(text)); // Adds new text string.
   }
 
@@ -911,7 +925,7 @@ public:
     style_ = rhs.style_;
     align_ = rhs.align_;
     rotate_ = rhs.rotate_;
-    return *this; // ADDed PAB.
+    return *this; //! to make chainable.
   }
 
   std::string text()
@@ -922,7 +936,7 @@ public:
   }
 
   void write(std::ostream& os)
-  { // text_element, style & attributes to stream.
+  { //! Output text_element, style & attributes to stream.
     // Changed to new convention on spaces:
     // NO trailing space, but *start* each item with a space.
     // For debug, may be convenient to start with newline.
@@ -982,28 +996,28 @@ public:
     os << " font-decoration=\"" << style_.font_decoration() << "\"";
     }
     os << '>' ;
-
     _generate_text(os);
-
     os << "</text>";
     // Example:
   } // void write(std::ostream& os)
 }; // class text_element_
 
   std::ostream& operator<< (std::ostream& os, text_element& t)
-  {  //
+  { //! Outputs: text & style (useful for diagnosis).
+    //! Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl;
       t.write(os);
-    // Usage: text_element t(20, 30, "sometest", left_align, horizontal);  cout << t << endl;
-    // Outputs:
+
     return os;
   } // std::ostream& operator<<
 
   class clip_path_element: public svg_element
-  { // The clipping path restricts the region to which paint can be applied.
-    // 14.3 Clipping paths http://www.w3.org/TR/SVG/masking.html#ClipPathProperty
+  {  /*! \class boost::svg::clip_path_element
+      \brief The clipping path restricts the region to which paint can be applied.
+      \details 14.3 Clipping paths http://www.w3.org/TR/SVG/masking.html#ClipPathProperty.
+    */
   private:
-    std::string element_id;
-    rect_element rect; // Clipping rectangle.
+    std::string element_id; // SVG element id.
+    rect_element rect; //! Clipping rectangle.
 
   public:
 
@@ -1021,9 +1035,11 @@ public:
   }; // class clip_path_element
 
   struct path_point
-  { // Base class for m_path, z_path, q_path, h_path, v_path, c_path, s_path.
-    // Paths represent the outline of a shape which can be
-    // filled, stroked, used as a clipping path, or any combination of the three.
+  { /*! \struct boost::svg::path_point
+      \brief Base class for m_path, z_path, q_path, h_path, v_path, c_path, s_path.
+      \details Paths represent the outline of a shape which can be
+      filled, stroked, used as a clipping path, or any combination of the three.
+     */
     bool relative; // or if false then absolute.
 
     virtual void write(std::ostream& rhs) = 0;
@@ -1038,13 +1054,15 @@ public:
 
 
   struct m_path: public path_point
-  { // moveto coordinates (x, y)
-    //    8.3.2 The "moveto" commands.
+  { /*! \struct boost::svg::m_path
+      \brief moveto coordinates (x, y)
+     \details   8.3.2 The "moveto" commands.
+     */
     double x;
     double y;
 
     void write(std::ostream& o_str)
-    {
+    { //! Example: "M52.8571,180 "
       if(relative)
       {
         o_str << "m";
@@ -1054,7 +1072,7 @@ public:
         o_str << "M";
       }
       o_str << x << "," << y << " "; // separator changed to comma for clarity.
-      // Example: "M52.8571 180 "
+
     } // void write(std::ostream& o_str)
 
     m_path(double x, double y, bool relative = false)
@@ -1064,11 +1082,14 @@ public:
   }; // struct m_path
 
   struct z_path: public path_point
-  { // http://www.w3.org/TR/SVG/paths.html#PathElement
-    // 8.3.1 General information about path data.
-    // z indicates a closepath.
-    // Close the current subpath by drawing a straight line
-    // from the current point to current subpath's initial point.
+  { /*! \struct boost::svg::z_path
+       \brief Close current path.
+       \details
+       http://www.w3.org/TR/SVG/paths.html#PathElement
+       8.3.1 General information about path data.
+       Close the current subpath by drawing a straight line
+       from the current point to current subpath's initial point.
+    */
     void write(std::ostream& o_str)
     {
       o_str << "Z";
@@ -1081,9 +1102,10 @@ public:
 
   // 8.3.4 The "lineto" commands L, H & V.
   struct l_path: public path_point
-  {
-    // Draw a line from the current point to the given (x,y) coordinate
-    // which becomes the new current point.
+  {  /*! \struct boost::svg::l_path
+      \brief Draw a line from the current point to the given (x,y) coordinate
+       which becomes the new current point.
+    */
     double x;
     double y;
 
@@ -1106,11 +1128,13 @@ public:
     }
   }; // struct l_path
 
-  struct h_path: public path_point
-  { // Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
-    double x;
-    // No y needed, start from current point y.
 
+
+  struct h_path: public path_point
+  { /*! \struct boost::svg::h_path
+      \brief  Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
+       which becomes the new current point. No y needed, start from current point y.
+    */
     void write(std::ostream& o_str)
     {
       if(relative)
@@ -1131,9 +1155,11 @@ public:
   }; // struct h_path
 
   struct v_path: public path_point
-  { // Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
+  { /*! \struct boost::svg::v_path
+        \brief Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
+        No x coordinate needed - use current point x.
+    */
     double y;
-    // No x coordinate needed - use current point x
     void write(std::ostream& o_str)
     {
       if(relative)
@@ -1153,10 +1179,12 @@ public:
     }
   }; // struct v_path
 
-  // 8.3.5 The curve commands: C, Q & A.
 
   struct c_path: public path_point
-  { // Draws a cubic Bézier curve from the current point to (x,y) using (x1,y1).
+  { /*! \struct boost::svg::c_path
+     \brief Draws a cubic Bezier curve from the current point to (x, y) using (x1, y1).
+     \details 8.3.5 The curve commands: C, Q & A.
+    */
     double x1;
     double y1;
     double x2;
@@ -1187,8 +1215,10 @@ public:
   }; // struct c_path
 
   struct q_path: public path_point
-  { // Draws a quadratic Bézier curve from the current point to (x,y).
-    // using (x1,y1) as the control point.
+  { /*! \struct boost::svg::q_path
+      \brief Draws a quadratic Bezier curve from the current point to (x,y).
+       using (x1,y1) as the control point.
+    */
     double x1, y1, x, y;
 
     void write(std::ostream& o_str)
@@ -1212,7 +1242,11 @@ public:
   }; //struct q_path
 
   struct s_path : public path_point
-  { // Draws a cubic Bézier curve from the current point to (x,y).
+  { /*! \struct boost::svg::s_path
+      \brief Draws a cubic Bezier curve from the current point to (x,y).
+      \details see also t_path for a quadratic Bezier curve.
+
+    */
     double x1, y1, x, y;
 
     void write(std::ostream& o_str)
@@ -1236,7 +1270,10 @@ public:
   }; // struct s_path
 
   struct t_path: public path_point
-  { // Draws a quadratic Bézier curve from the current point to (x,y).
+  { /*! \struct boost::svg::t_path
+      \brief Draws a quadratic Bezier curve from the current point to (x,y).
+      \details see also s_path for a cubic Bezier curve.
+    */
     double x;
     double y;
 
@@ -1259,18 +1296,20 @@ public:
     }
   }; // struct t_path
 
-  struct a_path: public path_point
-  { // Draws a elliptical arc from the current point to (x,y),
-    // using two radii, axis rotation, and control two flags.
-    // See 8.3.8 The elliptical arc curve commands.
-    // Needed for pie charts, etc.
-    double x;
-    double y;
-    double rx;
-    double ry;
-    double x_axis_rotation;
-    bool large_arc; // true if arc >= 180 degrees wanted.
-    bool sweep; // true if to draw in positive-angle direction
+  struct a_path : public path_point
+  { /*! \struct boost::svg::a_path
+      \brief Draws a elliptical arc from the current point to (x,y),
+        using two radii, axis rotation, and control two flags.
+      \details See 8.3.8 The elliptical arc curve commands.!
+        Useful for pie charts, etc.
+     */
+    double x; //!< X End of arc from current point.
+    double y; //!< Y End of arc from current point.
+    double rx; //!< X radius
+    double ry; //!< Y radius
+    double x_axis_rotation; //!< Any rotation of the X axis.
+    bool large_arc; //!< true if arc >= 180 degrees wanted.
+    bool sweep; //!< true if to draw in positive-angle direction
 
     void write(std::ostream& o_str)
     {
@@ -1294,12 +1333,16 @@ public:
   }; // struct a_path
 
   class path_element: public svg_element
-  { // http://www.w3.org/TR/SVG/paths.html#PathElement
-    // 8.3.1 General information about path data.
-    // A path is defined by including a 'path'  element
-    // which contains a d="(path data)"  attribute,
-    // where the d attribute contains the moveto, line, curve
-    // (both cubic and quadratic Béziers), arc and closepath instructions.
+  {  /*! \class boost::svg::path_element
+     \brief Path element holds places on a path used by move, line ...
+     \details
+     http://www.w3.org/TR/SVG/paths.html#PathElement
+     8.3.1 General information about path data.
+     A path is defined by including a 'path'  element
+     which contains a d="(path data)"  attribute,
+     where the d attribute contains the moveto, line, curve
+     (both cubic and quadratic Beziers), arc and closepath instructions.
+     */
   private:
     ptr_vector<path_point> path; // All the (x, y) coordinate pairs,
     // filled by calls of m, M, l , L... that push_back.
@@ -1328,7 +1371,7 @@ public:
     path_element& fill_on(bool on_)
     { // Set area fill, on or off.
       style_info_.fill_on(on_);
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     bool fill_on()
@@ -1345,110 +1388,110 @@ public:
     path_element& m(double x, double y)
     { // relative.
       path.push_back(new m_path(x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& M(double x, double y)
     { // absolute.
       path.push_back(new m_path(x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& z()
     { // Note lower case z, see path_element& Z() below.
       path.push_back(new z_path());
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& Z()
     { // Upper case Z also provided for compatibility with
       // http://www.w3.org/TR/SVG/paths.html#PathDataClosePathCommand 8.3.3 which allows either case.
       path.push_back(new z_path());
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& l(double x, double y)
     {
       path.push_back(new l_path(x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& L(double x, double y)
     {
       path.push_back(new l_path(x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& h(double x)
     {
       path.push_back(new h_path(x, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& H(double x)
     {
       path.push_back(new h_path(x, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& v(double y)
     {
       path.push_back(new v_path(y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& V(double y)
     {
       path.push_back(new v_path(y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& c(double x1, double y1, double x2, double y2, double x, double y)
     {
       path.push_back(new c_path(x1, y1, x2, y2, x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& C(double x1, double y1, double x2, double y2, double x, double y)
     {
       path.push_back(new c_path(x1, y1, x2, y2, x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& q(double x1, double y1, double x, double y)
     {
       path.push_back(new q_path(x1, y1, x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& Q(double x1, double y1, double x, double y)
     {
       path.push_back(new q_path(x1, y1, x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& s(double x1, double y1, double x, double y)
     {
       path.push_back(new s_path(x1, y1, x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& S(double x1, double y1, double x, double y)
     { //
       path.push_back(new s_path(x1, y1, x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& t(double x, double y)
     {
       path.push_back(new t_path(x, y, true));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     path_element& T(double x, double y)
     {
       path.push_back(new t_path(x, y, false));
-      return *this;
+      return *this; //! \return path_element& to make chainable.
     }
 
     void write(std::ostream& o_str)
@@ -1480,8 +1523,10 @@ public:
   }; // class path_element
 
   struct poly_path_point
-  { // polyline or polygon point coordinates (x, y)
-    // 9.6 polyline & 9.7 The 'polygon' element.
+  { /*! \struct boost::svg::poly_path_point
+      \brief polyline or polygon point coordinates (x, y)
+      \details  9.6 polyline & 9.7 The 'polygon' element.
+      */
     double x;
     double y;
     // Polygon & polyline points are always absolute, never relative,
@@ -1489,11 +1534,11 @@ public:
     // So NOT derived from path_point.
 
     void write(std::ostream& o_str)
-    {
+    { //! Output SVG XML,
+      //! Example: " 250,180"
+      //! Leading space is redundant for 1st after "points= ",
+      //! but others are separators, and arkward to know which is 1st.
       o_str << " " << x << "," << y; // x, y separator comma for clarity.
-      // Leading space is redundant for 1st after "points= ",
-      // but others are separators, and arkward to know which is 1st.
-      // Example: " 250,180"
     } // void write(std::ostream& o_str)
 
     poly_path_point(double x, double y)
@@ -1509,29 +1554,32 @@ public:
   }; // struct poly_path_point
 
   std::ostream& operator<< (std::ostream& os, const poly_path_point& p)
-  { // May be needed for Boost.Test.
-    os << "(" << p.x << ", " << p.y  << ")";
-    // Usage:  poly_path_point p0(100, 200);
-    // cout << p0 << endl;
-    // Outputs: (100, 200)
+  { //! Output may be useful for Boost.Test.
+    //! Usage:  poly_path_point p0(100, 200);
+    //! cout << p0 << endl;
+    //! Outputs: (100, 200)
+     os << "(" << p.x << ", " << p.y  << ")";
     return os;
   } // std::ostream& operator<<
 
   class polygon_element: public svg_element
-  { // http://www.w3.org/TR/SVG/shapes.html#PolygonElement
-    // 9. 9.7 The 'polygon'  element
-    // The 'polygon' element defines a closed shape
-    // consisting of a set of connected straight line segments.
-    // A polygon is defined by including a 'path'  element
-    // which contains a points="(path data)"  attribute,
-    // where the d attribute contains the x, y coordinate pairs.
+  {  /*! \struct boost::svg::polygon_element
+     \brief The 'polygon' element defines a closed shape
+     consisting of a set of connected straight line segments.
+
+     \details http://www.w3.org/TR/SVG/shapes.html#PolygonElement
+     The 'polygon'  element 9.9.7.
+     A polygon is defined by including a 'path'  element
+     which contains a points="(path data)"  attribute,
+     where the d attribute contains the x, y coordinate pairs.
+    */
     friend std::ostream& operator<< (std::ostream&, const polygon_element&);
     friend std::ostream& operator<< (std::ostream&, polygon_element&);
 
   private:
     //using boost::ptr_vector;
-    ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
-    // push_backed by calls of p_path(x, y).
+    ptr_vector<poly_path_point> poly_points; //!< All the x, y coordinate pairs,
+    //!< push_backed by calls of p_path(x, y).
   public:
     bool fill; // polygon to have fill color.
 
@@ -1546,13 +1594,13 @@ public:
     }
 
     polygon_element (double x, double y, bool f = true) : fill(f)
-    { // Constructor - One absolute (x, y) point only.
-      // Can add more path points using member function P.
+    { //! Constructor - One absolute (x, y) point only.
+      //! Can add more path points using member function P.
       poly_points.push_back(new poly_path_point(x, y));
     }
 
     polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, bool f = true) : fill(f)
-    { // Constructor - Absolute (x, y) only. Used by triangle.
+    { //! Constructor - Absolute (x, y) only. Used by triangle.
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));
       poly_points.push_back(new poly_path_point(x3, y3));
@@ -1561,7 +1609,7 @@ public:
     polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, bool f = true)
       :
       fill(f)
-    { // Constructor - Absolute (x, y) only. Used by rhombus.
+    { //! Constructor - Absolute (x, y) only. Used by rhombus.
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));
       poly_points.push_back(new poly_path_point(x3, y3));
@@ -1571,7 +1619,7 @@ public:
     polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
       :
       fill(f)
-    { // Constructor - Absolute (x, y) only. Used by pentagon.
+    { //! Constructor - Absolute (x, y) only. Used by pentagon.
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));
       poly_points.push_back(new poly_path_point(x3, y3));
@@ -1582,7 +1630,7 @@ public:
     polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
       :
       fill(f)
-    { // Constructor - Six absolute (x, y) only. Used by hexagon.
+    { //! Constructor - Six absolute (x, y) only. Used by hexagon.
       // Might be done more efficiently with fixed size boost::array?
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));
@@ -1595,7 +1643,7 @@ public:
     polygon_element (std::vector<poly_path_point>& points, bool f = true)
       :
       fill(f)
-    { // Constructor from vector of path points.
+    { //! Constructor from vector of path points.
       poly_points.reserve(points.size()); // Since we know how many will be pushed.
       for(std::vector<poly_path_point>::iterator i = points.begin(); i != points.end(); ++i)
       {
@@ -1635,13 +1683,17 @@ public:
 */
     // Member function to add more points to polygon.
     polygon_element& P(double x, double y)
-    { // Add another  (x, y) - absolute only.
+    { //! Add another point (x, y) - absolute only.
       poly_points.push_back(new poly_path_point(x, y));
-      return *this;
+      return *this; //! \return polygon_element& to make chainable.
     }
 
     void write(std::ostream& o_str)
-    {
+    {  /*! \brief Output SVG XML:
+      \details Example: <polygon fill="lime" stroke="blue" stroke-width="10"
+         points="850,75  958,137.5 958,262.5
+               850,325 742,262.6 742,137.5" />
+       */
       o_str << "<polygon points=\"";
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
       {
@@ -1655,58 +1707,61 @@ public:
         o_str << " fill = \"none\"";
       }
       o_str<<"/>";
-      // Example: <polygon fill="lime" stroke="blue" stroke-width="10"
-      //      points="850,75  958,137.5 958,262.5
-      //             850,325 742,262.6 742,137.5" />
     } // void write(std::ostream& o_str)
 
     std::ostream& operator<< (std::ostream& os)
-    { // May be needed for Boost.Test.
+    { /*! \brief Output polygon info. (May be useful for Boost.Test.
+         using os << "(" << p.x << ", " << p.y  << ")" ;
+         Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
+           my_polygon.operator << (cout);
+         (But NOT cout << my_polygon << endl;)
+         Outputs: (1, 2)(3, 4)(5, 6)
+      */
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
       {
         os << (*i); //  x, y coordinates as " (1, 2)"
       }
-      // using os << "(" << p.x << ", " << p.y  << ")" ;
-      // Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
-      //   my_polygon.operator<<(cout);
-      // But NOT cout << my_polygon << endl;
-      // Outputs: (1, 2)(3, 4)(5, 6)
       return os;
     } // std::ostream& operator<<
 
   }; // class polygon_element
 
   std::ostream& operator<< (std::ostream& os, polygon_element& p)
-  { // May be needed for Boost.Test.
-    // ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
+  { /*! \brief Output poly_path_ points (May be useful  for Boost.Test).
+    \details ptr_vector<poly_path_point> poly_points; All the x, y coordinate pairs,
+      Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
+      cout << p << endl;
+      Outputs: (1, 2)(3, 4)(5, 6)
+    */
     for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
     {
       os << (*i); //  x, y coordinates as " (1, 2)(3, 4)..."
       // using os << "(" << p.x << ", " << p.y  << ")" ;
     }
-    // Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
-    // cout << p << endl;
-    // Outputs: (1, 2)(3, 4)(5, 6)
     return os;
   } // std::ostream& operator<<
 
   class polyline_element: public svg_element
-  { // http://www.w3.org/TR/SVG/shapes.html#PolylineElement
-    // 9.6 The 'polyline'  element: defines a set of connected straight line segments.
-    // Typically, 'polyline' elements define open shapes.
-    // A polyline is defined by including a 'path'  element
-    // which contains a points="(path data)"  attribute,
-    // where the points attribute contains the x, y coordinate pairs.
-    // * perform an absolute moveto operation
-    //   to the first coordinate pair in the list of points
-    // * for each subsequent coordinate pair,
-    //   perform an absolute lineto operation to that coordinate pair.
-    // The advantage of polyline is in reducing file size,
-    // avoiding M and repeated L before x & y coordinate pairs.
+  { /*! \class boost::svg::polyline_element
+     \brief The 'polyline'  element: defines a set of connected straight line segments.
+     \details
+      http://www.w3.org/TR/SVG/shapes.html#PolylineElement
+     9.6 The 'polyline'  element: defines a set of connected straight line segments.
+     Typically, 'polyline' elements define open shapes.
+     A polyline is defined by including a 'path'  element
+     which contains a points="(path data)"  attribute,
+     where the points attribute contains the x, y coordinate pairs.
+     * perform an absolute moveto operation
+       to the first coordinate pair in the list of points
+     * for each subsequent coordinate pair,
+       perform an absolute lineto operation to that coordinate pair.
+     The advantage of polyline is in reducing file size,
+     avoiding M and repeated L before x & y coordinate pairs.
+     */
   friend std::ostream& operator<< (std::ostream&, polyline_element&);
 
   private:
-    ptr_vector<poly_path_point> poly_points; // All the (x, y) coordinate pairs,
+    ptr_vector<poly_path_point> poly_points; //!< All the (x, y) coordinate pairs,
     // push_back by calls of p_path(x, y).
   public:
     //bool fill; // not needed for polyline, unlike polygon.
@@ -1717,23 +1772,23 @@ public:
     }
 
     polyline_element()
-    { // Construct an 'empty' line.
-      // Can new line path points add using polyline_element member function P.
+    { //! Construct an 'empty' line.
+      //! Can new line path points add using polyline_element member function P.
     }
 
     polyline_element (double x1, double y1)
-    { // One (x, y) path point, absolute only.
+    { //! One (x, y) path point, absolute only.
       poly_points.push_back(new poly_path_point(x1, y1));
     }
 
     polyline_element (double x1, double y1, double x2, double y2)
-    { // Two (x, y) path points, absolute only.
+    { //! Two (x, y) path points, absolute only.
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));
     }
 
     polyline_element (std::vector<poly_path_point>& points)
-    { // Constructor from vector of path points.
+    { //! Constructor from vector of path points.
       for(std::vector<poly_path_point>::iterator i = points.begin(); i != points.end(); ++i)
       {
         poly_path_point p = (*i);
@@ -1743,13 +1798,15 @@ public:
 
     // Member function to add new points to existing line.
     polyline_element& P(double x, double y)
-    { // Absolute (x, y) only, so Capital letter P.
+    { //! Absolute (x, y) only, so Capital letter P.
       poly_points.push_back(new poly_path_point(x, y));
-      return *this;
+      return *this; //! \return polyline_element& to make chainable.
     }
 
     void write(std::ostream& o_str)
-    {
+    { /*! \brief Output polyline info (useful for Boost.Test).
+          \details Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
+      */
       o_str << "<polyline points=\"";
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i!= poly_points.end(); ++i)
       {
@@ -1759,14 +1816,15 @@ public:
       write_attributes(o_str);
       style_info_.write(o_str);
       o_str<<"/>";
-      // Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
     } // void write(std::ostream& o_str)
 
   }; // class polyline_element
 
   std::ostream& operator<< (std::ostream& os, polyline_element& p)
-  { // May be needed for Boost.Test.
-    // ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs,
+  { /*! \brief Output polyline info (useful for Boost.Test).
+          \details Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
+         ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs.
+      */
     for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
     {
       os << (*i); //  x, y coordinates as " (1, 2)(3, 4)..."
@@ -1780,16 +1838,18 @@ public:
 
    /*! \class g_element
       \brief g_element (group element) is the node element of our document tree.
-      'g' element is a container element for grouping together <g /></g>.
+      'g' element is a container element for grouping together
+
+      \verbatim <g /> </g> \endverbatim.
 
 
      \details g_element ('g' element is a container element
      for grouping together related graphics elements).\n
      See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
 
-     'g' element is a container element for grouping together <g /></g>.
+     'g' element is a container element for grouping together \verbatim <g /> </g> \endverbatim.
      related graphics elements, for example:
-     <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
+     \verbatim <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g> \endverbatim
   */
 
   class g_element: public svg_element

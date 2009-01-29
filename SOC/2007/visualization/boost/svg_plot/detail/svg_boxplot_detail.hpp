@@ -1,5 +1,4 @@
 /*! \file svg_boxplot_detail.hpp
-    \author Jacob Voytko and Paul A. Bristow
 
    \brief Boost.Plot SVG Box plot Implemention details.
    \details See svg_boxplot.hpp for user functions.
@@ -8,6 +7,8 @@
    the enum value is used to index the array of id strings.
    void set_ids() copies all strings to matching image.get_g_element(i).id()
    So add any new id items to both!
+
+    \author Jacob Voytko and Paul A. Bristow
    */
 
 // Copyright Jacob Voytko 2007

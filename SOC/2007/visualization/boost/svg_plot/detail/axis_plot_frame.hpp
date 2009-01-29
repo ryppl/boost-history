@@ -1,10 +1,11 @@
-/*! \file axis_plot_frame.hpp
+/*!
+  \file axis_plot_frame.hpp
 
-\brief SVG Plot functions common to 1D, 2D and Boxplots.
+  \brief SVG Plot functions common to 1D, 2D and Boxplots.
 
-\details
+  \details Functions are derived from base class axis_plot_frame.
 
-    \author Jacob Voytko and Paul A. Bristow
+ \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007
@@ -61,7 +62,6 @@ namespace boost
       right = +1 //!< Y-axis free to left of end of X-axis (case of all X definitely > 0).
      };
 
-
     enum legend_places
     { //!  \enum legend_places Placing of legend box, if requested by legend_on == true.
       nowhere = 0, //!< Placing of legend box not requested or not calculated yet.
@@ -77,7 +77,9 @@ namespace boost
     {
       template <class Derived>
       class axis_plot_frame
-      { /*! \class axis_plot_frame is used as base class, for example:\n
+      { /*! \class boost::svg::detail::axis_plot_frame
+         \brief Used as base class for 1D, 2D and Box plots.
+         \details For example, svg_1d_plot, svg_2d_plot, svg_boxplot\n
          class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>\n
          class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
         */
@@ -540,7 +542,7 @@ namespace boost
         // --------------------------------------------------------------------
 
         void draw_title()
-        { /*! \fn \brief Draw title (for the whole plot).
+        { /*! \fn draw_title \brief Draw title (for the whole plot).
           \details  Update title_info_ with position.
             Assumes align = center_align.
             and center_align will ensure that will center correctly
@@ -1732,26 +1734,26 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::description(const std::string d)
-          { //! Writes description to the document (for header as <desc> My Data <\desc>).
+          { //! Writes description to the document (for header as \verbatim <desc> My Data <\desc> \endverbatim).
             derived().image.description(d);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::description()
-          { //! Get description of the document (for header as <desc> ... <\desc>).
+          { //! Get description of the document (for header as  \verbatim <desc> ... <\desc> \endverbatim).
             return derived().image.description();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::document_title(const std::string d)
-          { //! Write document title to the SVG document (for header as <title> My Title <\title>).
+          { //! Write document title to the SVG document (for header as  \verbatim <title> My Title <\title> \endverbatim).
             derived().image.document_title(d);
             return derived();
           }
           template <class Derived>
           std::string axis_plot_frame<Derived>::document_title()
-          { //! Get document title to the document (for header as <title> My Title <\title>).
+          { //! Get document title to the document (for header as  \verbatim <title> My Title <\title> \endverbatim).
             return derived().image.document_title();
           }
 
@@ -1759,7 +1761,7 @@ namespace boost
           Derived& axis_plot_frame<Derived>::copyright_holder(const std::string d)
           { //! Writes copyright_holder to the document
             //! (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
-            //! and as metadata: meta name="copyright" content="Paul A. Bristow" />
+            //! and as \verbatim metadata: meta name="copyright" content="Paul A. Bristow" /> \endverbatim
             derived().image.copyright_holder(d);
             return derived();
           }
@@ -1773,7 +1775,7 @@ namespace boost
           template <class Derived>
           Derived& axis_plot_frame<Derived>::copyright_date(const std::string d)
           { //! Writes copyright_date to the document.
-            //! and as metadata <meta name="date" content="2007" />
+            //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
             derived().image.copyright_date(d);
             return derived();
           }
@@ -2541,80 +2543,82 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_on(bool cmd)
-          {
+          { //! If set true, show a title for the plot.
             derived().title_on_ = cmd;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::title_on()
-          {
+          {//! If true, will show a title for the plot.
             return derived().title_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_grid_on(bool is)
-          {
+          { //! If set true, will include a major X-axis grid.
             derived().x_ticks_.major_grid_on_ = is;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_major_grid_on()
-          {
+          { //! If true, will include a major X-axis grid.
             return derived().x_ticks_.major_grid_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_grid_on(bool is)
-          {
+          { //! If set true, will include a minor X-axis grid.
             derived().x_ticks_.minor_grid_on_ = is;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_minor_grid_on()
-          {
+          {//! If true, will include a minor X-axis grid.
             return derived().x_ticks_.minor_grid_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::axes_on(bool is)
-          { // Draw *both* x and y axes (note plural).
+          { //! If set true, draw *both* x and y axes (note plural axes).
             derived().x_axis_.axis_line_on_ = is;
-            derived().y_axis_.axis_line_on_ = is; // Unsuitable for 1D?
+            derived().y_axis_.axis_line_on_ = is; // No meaning for 1D, but set anyway?
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::axes_on()
-          { // Used X in preference to Y for 1D, but now require *both* x and y axis on.
+          { //! \return true if *both* x and y axis on.
             return derived().x_axis_.axis_line_on_ && derived().y_axis_.axis_line_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_on(bool is)
-          { // Draw a horizontal x_axis_ line.
+          { //! If set true, draw a horizontal X-axis line.
             derived().x_axis_.axis_line_on_ = is;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_axis_on()
-          { // Use X in preference to Y for 1D
+          { //! If true, draw a horizontal X-axis line.
+          // Use X in preference to Y for 1D.
             return derived().x_axis_.axis_line_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_axis_on(bool is)
-          {// Draw a vertical y_axis_ line.
+          { //! If set true, draw a vertical Y-axis line.
             derived().y_axis_.axis_line_on_ = is;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::y_axis_on()
-          { // Should be always false for 1D.
+          { //! If true, draw a vertical Y-axis line.
+            // Should be always false for 1D.
             return derived().y_axis_.axis_line_on_;
           }
 
@@ -2623,7 +2627,8 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_color(const svg_color& col)
-          { // Function title_color could set both fill (middle) and stroke (outside),
+          { //! Set the color of any title of the plot.
+            // Function title_color could set both fill (middle) and stroke (outside),
             // but just setting fill if simplest,
             // but does not allow separate inside & outside colors.
             derived().image.g(PLOT_TITLE).style().fill_color(col);
@@ -2633,13 +2638,15 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::title_color()
-          { // Function title_color could get either fill and stroke,
+          { //! \return the color of any title of the plot.
+            // Function title_color could get either fill and stroke,
             // return derived().image.g(PLOT_TITLE).style().stroke_color();
             return derived().image.g(PLOT_TITLE).style().fill_color();
           }
 
           //Derived& title_font_width(double width)
-          //{ // width of text is effectively the boldness.
+          //{ // Set the width of the font for the title of the plot.
+          // width of text is effectively the boldness.
           //  // Not useful with current browsers, setting this may cause lower quality graphic fonts
           //  // perhaps because the font is created using graphics rather than a built-in font.
           //  derived().image.g(PLOT_TITLE).style().stroke_width(width);
@@ -2647,23 +2654,25 @@ namespace boost
           //}
 
          //Derived& legend_font_width(double width)
-          //{ // width of text is effectively the boldness.
+          //{ // Get the width of the font for the title of the plot.
+            // width of text is effectively the boldness.
           //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
           //  return derived();
           //}
 
           //double legend_font_width()
-          //{ // Probably not useful at present (se above).
+          //{ // Set the width of the font for the title of the legend.
+          // Probably not useful at present (se above).
           //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
           //}
-          //double title_font_width()
-          //{
+          //double legend_font_width()
+          //{ // Get the width of the font for the title of the legend.
           //  return derived().image.g(PLOT_TITLE).style().stroke_width();
           //}
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_color(const svg_color& col)
-          {
+          { //! Set the color of the title of the legend.
             // derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
             derived().image.g(PLOT_LEGEND_TEXT).style().fill_color(col);
             return derived();
@@ -2671,7 +2680,8 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_color()
-          { // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
+          { //! Get the color of the title of the legend.
+            // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
             // (It produces much lower quality fonts on some browsers).
             return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
             // return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
@@ -2679,7 +2689,7 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_background_color(const svg_color& col)
-          {
+          { //! Set the background fill color of the legend box.
             derived().legend_box_.fill(col);
             derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
             return derived();
@@ -2687,7 +2697,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_background_color()
-          {
+          { //! Get the background fill color of the legend box.
             return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
           }
 
@@ -2699,7 +2709,7 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_border_color(const svg_color& col)
-          {
+          { //! Set the border stroke color of the legend box.
             derived().legend_box_.stroke(col);
             derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
             return derived();
@@ -2707,27 +2717,27 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_border_color()
-          {
+          { //! Get the border stroke color of the legend box.
             return  derived().legend_box_.stroke();
             // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::plot_background_color(const svg_color& col)
-          {
+          { //! Set the fill color of the plot window background.
             derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::plot_background_color()
-          {
+          { //! Get the fill color of the plot window background.
             return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::x_axis_position()
-          { // Return the position of the X-axis.
+          { //! Get the position (or intersection with Y-axis) of the X-axis.
             switch(derived().x_axis_position_)
             {
             case top:
@@ -2743,61 +2753,64 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_color(const svg_color& col)
-          { // Note only stroke color is set.
+          { //! Set the color of the X-axis line.
+            // Note only stroke color is set.
             derived().image.g(PLOT_X_AXIS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_axis_color()
-          {
+          { //! Get the color of the X-axis line.
             return derived().image.g(PLOT_X_AXIS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_axis_color(const svg_color& col)
-          {
+          { //! Set the color of the Y-axis line.
             derived().image.g(PLOT_Y_AXIS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_axis_color()
-          {
+          { //! Get the color of the Y-axis line.
             return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_color(const svg_color& col)
-          { // add fill as well PAB Oct 07
+          { //! Set the color of X-axis label (including any units).
+            // add fill as well PAB Oct 07
             derived().image.g(PLOT_X_LABEL).style().fill_color(col);
             derived().image.g(PLOT_X_LABEL).style().stroke_color(col);
             return derived();
           }
 
-         // Browsers could implement better.
+          template <class Derived>
+          svg_color axis_plot_frame<Derived>::x_label_color()
+          { //! Get the color of X-axis label (including any units).
+            return derived().image.g(PLOT_X_LABEL).style().fill_color();
+          }
+
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_width(double width)
-          { // width of text is effectively the boldness.
+          { //! Set the width (boldness) of X-axis label (including any units).
+            //! (not recommended until browsers implement better).
+            // width of text is effectively the boldness.
             derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_label_width()
-          {
+          { //! Get the width (boldness) of X-axis label (including any units).
             return derived().image.g(PLOT_X_LABEL).style().stroke_width();
           }
 
           template <class Derived>
-          svg_color axis_plot_frame<Derived>::x_label_color()
-          {
-            return derived().image.g(PLOT_X_LABEL).style().fill_color();
-          }
-
-          template <class Derived>
           Derived& axis_plot_frame<Derived>::y_label_color(const svg_color& col)
-          {
+          { //! Set the color of Y-axis label (including any units).
             derived().image.g(PLOT_Y_LABEL).style().fill_color(col);
             derived().image.g(PLOT_Y_LABEL).style().stroke_color(col);
             return derived();
@@ -2805,120 +2818,118 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_label_color()
-          {
+          { //! Get the color of Y-axis label (including any units).
             return derived().image.g(PLOT_Y_LABEL).style().fill_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_tick_color(const svg_color& col)
-          {
+          { //! Set the color of X-axis major ticks.
             derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
-
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_tick_color()
-          {
+          { //! Get the color of X-axis major ticks.
             return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_tick_color(const svg_color& col)
-          {
+          { //! Set the color of X-axis minor ticks.
             derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_tick_color()
-          {
+          { //! Get the color of X-axis minor ticks.
             return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_grid_color(const svg_color& col)
-          {
+          { //! Set the color of X-axis major grid lines.
             derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_grid_color()
-          {
+          { //! Get the color of X-axis major grid lines.
             return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_grid_width(double w)
-          {
+          { //! Set the width of X-axis major grid lines.
             derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_grid_width()
-          {
+          { //! Get the color of X-axis major grid lines.
             return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
           }
 
-
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_grid_color(const svg_color& col)
-          {
+          { //! Set the color of X-axis minor grid lines.
             derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_grid_color()
-          {
+          { //! Get the color of X-axis minor grid lines.
             return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_grid_width(double w)
-          {
+          { //! Set the width of X-axis minor grid lines.
             derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_grid_width()
-          {
+          { //! Get the width of X-axis minor grid lines.
             return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_width(double width)
-          {
+          { //! Set the width of X-axis lines.
             derived().image.g(PLOT_X_AXIS).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_axis_width()
-          {
+          { //! Get the width of X-axis lines.
             return derived().image.g(PLOT_X_AXIS).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::data_lines_width(double width)
-          {
+          { //! Set the width of lines joining data points.
             derived().image.g(PLOT_DATA_LINES).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::data_lines_width()
-          {
+          { //! Get the width of lines joining data points.
             return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
           }
 
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label(const std::string& str)
-          {
+          { //! Set the text to label the X-axis (and set x_label_on(true)).
             derived().x_label_info_.text(str);
             derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
             // Might switch label_on false if null string?
@@ -2927,13 +2938,13 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::x_label()
-          {
+          { //! Get the text to label the X-axis.
             return derived().x_label_info_.text();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_units(const std::string& str)
-          {
+          { //! Set the text to add units to the X-axis label.
             derived().x_units_info_.text(str);
             derived().x_axis_.label_on_ = true; // Assume want x_label string displayed.
             return derived();
@@ -2941,14 +2952,15 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::x_label_units()
-          {
+          { //! Get the text to add units to the X-axis label.
+            //! The label will only be shown if  x_label_on() == true.
             return derived().x_units_info_.text();
           }
 
           // y_label not needed in 1D.
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_label(const std::string& str)
-          {
+          { //! Set the text for the Y-axis label (and set y_label_on(true)).
             derived().y_label_info_.text(str);
             derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
             return derived();
@@ -2956,13 +2968,14 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::y_label()
-          {
+          { //! Get the text for the Y-axis label.
+            //! The label will only be shown if  y_label_on() == true.
             return derived().y_label_info_.text();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_label_units(const std::string& str)
-          {
+          { //! Set the text to add units to the Y-axis label.
             derived().y_units_info_.text(str);
             derived().y_axis_.label_on_ = true; // Assume want y_label string displayed.
             return derived();
@@ -2970,59 +2983,66 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::y_label_units()
-          {
+          { //! Get the text to add units to the X-axis label.
             return derived().y_units_info_.text();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_on(bool b)
-          { // Show values near data points.
+          { //! If set true, show data point values near data points markers.
             derived().x_values_on_ = b;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_values_on()
-          { // Label data points with X values.
+          { //! If true, show data point values near data points markers.
             return derived().x_values_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_font_size(unsigned int i)
-          {
+          { //! Set font size of data point X values near data points markers.
             derived().x_values_style_.values_text_style_.font_size(i);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_values_font_size()
-          {
+          { //! Get font size of data point X values near data points markers.
             return derived().x_values_style_.values_text_style_.font_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_font_family(const std::string& family)
-          {
+          { //! Set font family of data point X values near data points markers.
             derived().x_values_style_.values_text_style_.font_family(family);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::x_values_font_family()
-          {
+          { //! Set font family of data point X values near data points markers.
             return derived().x_values_style_.values_text_style_.font_family();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_interval(double inter)
-          {
+          { //! Set the interval between X-axis major ticks.
             derived().x_ticks_.major_interval_ = inter;
             return derived();
           }
 
           template <class Derived>
+          double axis_plot_frame<Derived>::x_major_interval()
+          { //! Get the interval between X-axis major ticks.
+            return derived().x_ticks_.major_interval_;
+          }
+
+          template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_color(const svg_color& col)
-          { // Function could set both fill (middle) and stroke (outside),
+          { //! Set the color of data point X values near data points markers.
+            // Function could set both fill (middle) and stroke (outside),
             // but just setting fill if simplest,
             // but does not allow separate inside & outside colors.
             derived().image.g(PLOT_X_POINT_VALUES).style().fill_color(col);
@@ -3032,98 +3052,100 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_values_color()
-          { // Function could get either fill and stroke,
+          { //! Get the color of data point X values near data points markers.
+            // Function could get either fill and stroke,
             // return derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color();
             return derived().image.g(PLOT_X_POINT_VALUES).style().fill_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_rotation(rotate_style rotate)
-          { // Degrees (0 to 360).
+          { //! Get the rotation (rotate_style) of data point X values near data points markers.
+            //! (Degrees: 0 to 360 in 45 steps).
             derived().x_values_style_.value_label_rotation_ = rotate;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_values_rotation()
-          {
+          { //! Get the rotation of data point X values near data points markers.
             return derived().x_values_style_.value_label_rotation_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_precision(int p)
-          { // set iostream precision
+          { //! Set iostream decimal digits precision of data point X values near data points markers.
             derived().x_values_style_.value_precision_ = p;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_values_precision()
-          {
+          { //! Get iostream decimal digits precision of data point X values near data points markers.
             return derived().x_values_style_.value_precision_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_ioflags(std::ios_base::fmtflags f)
-          { // set iostream format flags
+          { //! Set iostream format flags of data point X values near data points markers.
+            //! Useful to set hexadecimal, fixed and scientific, (std::ios::scientific).
             derived().x_values_style_.value_ioflags_ = f;
             return derived();
           }
 
           template <class Derived>
           std::ios_base::fmtflags axis_plot_frame<Derived>::x_values_ioflags()
-          {
+          { //! Get iostream format flags of data point X values near data points markers.
+            //! Might be used to set hexadecimal, fixed and scientific, (std::ios::scientific).
             return derived().x_values_style_.value_ioflags_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_plusminus_on(bool b)
-          { // set if uncertainty to be append to X values labels.
+          { //! Set if to append uncertainty estimate to data point X values near data points markers.
+            //! (May not be implemented yet).
             derived().x_values_style_.plusminus_on_ = b;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_plusminus_on()
-          {
+          { //! Get if to append uncertainty estimate to data point X values near data points markers.
+            //! (May not be implemented yet).
             return derived().x_values_style_.plusminus_on_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_df_on(bool b)
-          { // set if uncertainty to be append to X values labels.
+          { //! Set if to append a degrees of freedom estimate to data point X values near data points markers.
+            //! (May not be implemented yet).
             derived().x_values_style_.df_on_ = b;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_df_on()
-          {
+          { //! Get if to append a degrees of freedom estimate to data point X values near data points markers.
+            //! (May not be implemented yet).
             return derived().x_values_style_.df_on_;
           }
 
           template <class Derived>
-          double axis_plot_frame<Derived>::x_major_interval()
-          {
-            return derived().x_ticks_.major_interval_;
-          }
-
-          template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_tick_length(double length)
-          {
+          { //! Set length of X major ticks.
             derived().x_ticks_.major_tick_length_ = length;
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick_length()
-          {
+          {//! Get length of X major ticks.
             return derived().x_ticks_.major_tick_length_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_tick_width(double width)
-          {
+          { //! Set width of X major ticks.
             derived().x_ticks_.major_tick_width_ = width; // Redundant?
             derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
             return derived();
@@ -3131,74 +3153,78 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick_width()
-          {
+          {//! Get wqidth of X major ticks.
             return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_tick_length(double length)
-          {
+          { //! Set length of X minor ticks.
             derived().x_ticks_.minor_tick_length_ = length;
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_tick_length()
-          {
+          { //! Get length of X minor ticks.
             return derived().x_ticks_.minor_tick_length_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_tick_width(double width)
-          {
+          { //! Set width of X minor ticks.
             derived().x_ticks_.minor_tick_width_ = width;
             derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
             return derived();
           }
 
-
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_tick_width()
-          {
+          { //! Get width of X minor ticks.
             // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
             return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_tick(double d)
-          { // Interval (Cartesian units) between major ticks.
+          { //! Set interval (Cartesian units) between major ticks.
             derived().x_ticks_.major_interval_ = d;
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick()
-          { // Interval (Cartesian units) between major ticks.
+          { // Get interval (Cartesian units) between major ticks.
             return derived().x_ticks_.major_interval_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_interval(double interval)
-          { // aka x_minor_tick
+          { //! Set interval between X-axis minor ticks.
+            // aka x_minor_tick
             derived().x_ticks_.minor_interval_ = interval;
             return derived();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_num_minor_ticks(unsigned int num)
-          {
+          { //! Set number of X-axis minor ticks between major ticks.
             derived().x_ticks_.num_minor_ticks_ = num;
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_num_minor_ticks()
-          { // NB NOT float or double!
+          { //! Get number of X-axis minor ticks between major ticks.
+            //! Note: NOT float or double!
             return derived().x_ticks_.num_minor_ticks_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_range(double min_x, double max_x)
-          {
+          { //! Set the range of values on the X-axis.
+            //! The minimum and maximum values must be finite and not too near
+            //! to the minima or maxima that can be represented by floating point doubles,
+            //! and the range must not be too small.
             if (!boost::math::isfinite(min_x))
             {
               throw std::runtime_error("X range: min not finite!");
@@ -3228,7 +3254,8 @@ namespace boost
 
           template <class Derived>
           std::pair<double, double> axis_plot_frame<Derived>::x_range()
-          { // Need to use boost::svg::detail::operator<< to display this.
+          { //! Get the range of values on the X-axis.
+            //! (Need to use boost::svg::detail::operator<< to display this).
             std::pair<double, double> r;
             r.first = derived().x_axis_.min_;
             r.second = derived().x_axis_.max_;
@@ -3237,7 +3264,7 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_min(double min_x)
-          {
+          { //! Set the minimum value on the X-axis.
             // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
             derived().x_axis_.min_ = min_x;
             return derived();
@@ -3245,13 +3272,14 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_min()
-          {
+          { //! Get the minimum value on the X-axis.
+            //! (Can also get both minimum and maximum as a std::pair).
             return derived().x_axis_.min_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_max(double x)
-          {
+          { //! Set the maximum value on the X-axis.
             // Not useful to check here that x_max_ > x_min_ because may not have set x_min_ yet.
             derived().x_axis_.max_ = x;
             return derived();
@@ -3259,32 +3287,35 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_max()
-          {
+          { //! Get the maximum value on the X-axis.
+            //! (Can also get both minimum and maximum as a std::pair).
             return derived().x_axis_.max_;
           }
 
           template <class Derived>
-          bool axis_plot_frame<Derived>::autoscale_check_limits()
-          {
-            return derived().autoscale_check_limits_;
-          }
-
-          template <class Derived>
           Derived& axis_plot_frame<Derived>::autoscale_check_limits(bool b)
-          { // Default is true, but can switch off checks for speed.
+          { //! Set to check that values used for autoscale are within limits.
+            //! Default is true, but can switch off checks for speed.
             derived().autoscale_check_limits_ = b;
             return derived();
           }
 
           template <class Derived>
+          bool axis_plot_frame<Derived>::autoscale_check_limits()
+          { //! Get to check that values used for autoscale are within limits.
+            //! Default is true, but can switch off checks for speed.
+            return derived().autoscale_check_limits_;
+          }
+
+         template <class Derived>
           bool axis_plot_frame<Derived>::x_autoscale()
-          { // Get autoscale setting.
+          { //! Get true if to use autoscale value for X-axis.
            return derived().x_autoscale_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_autoscale(bool b)
-          { // set whether to use autoscaled values.
+          { //! Set true if to use autoscale values for X-axis.
              if (b && derived().x_auto_tick_interval_ < 0)
              { // No autoscale values have been calculated, so not safe to make x_autoscale true.
                 throw std::runtime_error("X autoscale has not been calculated yet!" );
@@ -3295,14 +3326,15 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::autoscale()
-          { // AKA x_autoscale.
+          { //! Set true if to use autoscale values for X-axis.
+            //! autoscale() is same as x_autoscale.
            return derived().x_autoscale_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::autoscale(bool b)
-          { // AKA x_autoscale - set whether to use X autoscaled values.
-            // Used by boxplot too.
+          { //! Set whether to use X autoscaled values.
+            //! Same as x_autoscale, and used by boxplot too.
              if (derived().x_auto_tick_interval_ < 0)
              { // No autoscale values have been calculated, so not safe to make x_autoscale true.
                 throw std::runtime_error("X-axis autoscale has not been calculated yet!" );
@@ -3313,8 +3345,8 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_autoscale(std::pair<double, double> p)
-          { // Use X min & max pair values to autoscale.
-              scale_axis(p.first, p.second, // double min and max from pair.
+          { // Set to use X min & max pair values to autoscale X-axis.
+            scale_axis(p.first, p.second, // double min and max from pair.
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
               derived().autoscale_check_limits_,
               derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
@@ -3336,12 +3368,7 @@ namespace boost
        // ]
        // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(bool)'
        //'bool boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(void)'
-
-
-
-
-
-          //
+         //
           //template <class Derived, class T> // T an STL container: array, vector ...
           //Derived& axis_plot_frame<Derived>::x_autoscale(const T& begin, const T& end)
           //{ // Data series using iterators to calculate autoscaled values.
@@ -3369,84 +3396,86 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_with_zero(bool b)
-          { // Set autoscale to include zero (default = false).
-            // Must preceed x_autoscale(data) call.
+          { //! Set X-axis autoscale to include zero (default = false).
+            //! Must preceed x_autoscale(data) call.
             derived().x_include_zero_ = b;
             return derived();
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_with_zero()
-          { //
+          { //! Get true if X-axis autoscale to include zero (default = false).
            return derived().x_include_zero_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_min_ticks(int min_ticks)
-          { // Set autoscale to include at least min_ticks (default = 6).
-            // Must preceed x_autoscale(data) call.
+          { //! Set X-axis autoscale to include at least minimum number of ticks (default = 6).
+            //! Must preceed x_autoscale(data) call.
             derived().x_min_ticks_ = min_ticks;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_min_ticks()
-          { //
+          { //! Get X-axis autoscale minimum number of ticks.
            return derived().x_min_ticks_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_steps(int steps)
-          { // Set autoscale to set ticks in steps 2,4,6,8,10, or 1,5,10 or 2,5,10.
-            // default = 0 (none)
-            // Must preceed x_autoscale(data) call.
+          { //! Set autoscale to set ticks in steps multiples of:
+            //! 2,4,6,8,10, if 2,
+            //! or 1,5,10 if 5,
+            //! or 2,5,10 if 10.
+            //! default = 0 (none)
+            //! Must preceed x_autoscale(data) call.
             derived().x_steps_ = steps;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_steps()
-          { //
+          { //! Get autoscale to set ticks in steps.
            return derived().x_steps_;
           }
 
           template <class Derived>
-         Derived& axis_plot_frame<Derived>::x_tight(double tight)
-          { // Set autoscale to include permit data points slightly outside both end ticks.
-            // default 0.
-            // Must preceed x_autoscale(data) call.
+          Derived& axis_plot_frame<Derived>::x_tight(double tight)
+          { //! Set tolerance to autoscale to permit data points slightly outside both end ticks.
+            //! default 0.
+            //! Must preceed x_autoscale(data) call.
             derived().x_tight_ = tight;
             return derived();
           }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_tight()
-          { //
+         { //! Get tolerance given to autoscale to permit data points slightly outside both end ticks.
            return derived().x_tight_;
-          }
+         }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_auto_min_value()
-          {
+         { //! Get the X-axis minimum value computed by autoscale.
            return derived().x_auto_min_value_;
-          }
+         }
 
-        template <class Derived>
-          double axis_plot_frame<Derived>::x_auto_max_value()
-          {
+         template <class Derived>
+         double axis_plot_frame<Derived>::x_auto_max_value()
+         { //! Get the X-axis maximum value computed by autoscale.
            return derived().x_auto_max_value_;
-          }
+         }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_auto_tick_interval()
-          {
+         { //! Get the X-axis major tick interal computed by autoscale.
            return derived().x_auto_tick_interval_;
-          }
-
+         }
 
         template <class Derived>
         int axis_plot_frame<Derived>::x_auto_ticks()
-        {
+        { //! Get the X-axis number of major ticks computed by autoscale.
          return derived().x_auto_ticks_;
         }
 

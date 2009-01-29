@@ -1,8 +1,13 @@
 /*!
   \file svg_style.hpp
-  \author Jacob Voytko and Paul A. Bristow
 
-  \brief styles for SVG specifying font, sizes, shape, color etc for text, values, lines, axes etc.
+  \brief Styles for SVG specifying font, sizes, shape, color etc for text, values, lines, axes etc.
+  \details SVG style information is fill, stroke, width, line & bezier curve.
+   This module provides struct plot_point_style & struct plot_line_style
+   and class svg_style holding the styles.
+   See http://www.w3.org/TR/SVG11/styling.html
+
+  \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007
@@ -15,11 +20,6 @@
 
 #ifndef BOOST_SVG_SVG_STYLE_HPP
 #define BOOST_SVG_SVG_STYLE_HPP
-
-// svg style information is fill, stroke, width, line & bezier curve.
-// This module provides struct plot_point_style & struct plot_line_style
-// and class svg_style holding the styles.
-// http://www.w3.org/TR/SVG11/styling.html
 
 #include "svg_color.hpp"
 #include "detail/svg_style_detail.hpp"
@@ -57,7 +57,7 @@ enum rotate_style
   leftward= -180, //!< horizontal to left.
   rightward = 360, //!< horizontal to right.
   downhill = 45, //!< slope down.
-  downward = 90,  //!< vertical writing down.//! \enum
+  downward = 90,  //!< vertical writing down.
   backdown = 135, //!< slope down backwards.
   upsidedown = 180 //!< upside down!  (== -180)
 };
@@ -89,7 +89,7 @@ double string_svg_length(const std::string& s, const text_style& style);
 // and this is not a graphic.
 
 class svg_style
-{ //! \class svg_style Holds the basic stroke, fill colors and width, and their switches.
+{ //! \class boost::svg::svg_style Holds the basic SVG stroke, fill colors and width, and their switches.
   friend std::ostream& operator<< (std::ostream&, svg_style&);
 
 private: // Accesses only by set and get member functions below.
@@ -174,7 +174,7 @@ public:
   }
 
   svg_style& svg_style::fill_on(bool is)
-  { // Set fill is wanted.
+  { //! Set fill is wanted.
     fill_on_ = is;
     return *this; // Make chainable.
     //! \return svg_style& to make chainable.
@@ -188,8 +188,7 @@ public:
   svg_style& svg_style::stroke_on(bool is)
   {
     stroke_on_ = is;
-    return *this; // Make chainable.
-    //! \return svg_style& to make chainable.
+    return *this; //! \return svg_style& to make chainable.
   }
 
   bool svg_style::width_on() const
@@ -200,8 +199,7 @@ public:
   svg_style& svg_style::width_on(bool is)
   {
     width_on_ = is;
-    return *this; // Make chainable.
-    //! \return svg_style& to make chainable.
+    return *this; //! \return svg_style& to make chainable.
   }
 
   // Set svg_style member functions to set fill, stroke & width.
@@ -209,24 +207,21 @@ public:
   {
       stroke_ = col;
       stroke_on_ = true; // Assume want a stroke if color is set.
-      return *this; // Make chainable.
-      //! \return svg_style& to make chainable.
+      return *this;  //! \return svg_style& to make chainable.
 }
 
   svg_style& svg_style::fill_color(const svg_color& col)
   {
       fill_ = col;
       fill_on_ = ! col.is_blank; // If blank fill is off or "none".
-      return *this; // Make chainable.
-      //! \return svg_style& to make chainable.
+      return *this; //! \return svg_style& to make chainable.
 }
 
   svg_style& svg_style::stroke_width(double width)
   {
       width_ = width;
       width_on_ = ((width > 0) ? true : false);
-      return *this; // Make chainable.
-      //! \return svg_style& to make chainable.
+      return *this; //! \return svg_style& to make chainable.
 }
 
   bool svg_style::operator==(svg_style& s)
@@ -292,7 +287,9 @@ public:
   // End of svg_style definitions.
 
 class text_style
-{ //! \class text style font family, size, weight, style, stretch, decoration.
+{ /*! \class boost::svg::text_style
+     \brief font family, size, weight, style, stretch, decoration.
+  */
   friend std::ostream& operator<< (std::ostream&, const text_style&);
   friend bool operator== (const text_style&, const text_style&);
   friend bool operator!= (const text_style&, const text_style&);
@@ -362,7 +359,7 @@ public:
   text_style& text_style::font_size(unsigned int i)
   { //! Set font size (svg units usually pixels) default 10.
     font_size_ = i;
-    return *this; // Should be chainable.
+    return *this; //! \return text_style& to make chainable.
     //! \return reference to text_style to make chainable.
     // error C2663: 'boost::svg::text_style::font_size' : 2 overloads have no legal conversion for 'this' pointer
     // label_style.font_size(20).font_family("sans");
@@ -387,8 +384,7 @@ public:
       <text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
     */
     font_family_ = s;
-    return *this;
-    //! \return reference to text_style to make chainable.
+    return *this; //! \return reference to text_style to make chainable.
   }
 
   const std::string& text_style::font_style() const
@@ -397,7 +393,6 @@ public:
        Example "normal" is default.
      */
     return style_;
-    //! \return reference to text_style to make chainable.
  }
 
   text_style& text_style::font_style(const std::string& s)
@@ -407,8 +402,7 @@ public:
       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     */
     style_ = s;
-    return *this;
-    //! \return reference to text_style to make chainable.
+    return *this; //! \return reference to text_style to make chainable.
   }
 
   const std::string& text_style::font_weight() const
@@ -435,8 +429,7 @@ public:
   { // Examples: "wider" but implementation?
     // font-stretch: normal | wider | narrower ...
     stretch_ = s;
-    return *this;
-    //! \return reference to text_style to make chainable.
+    return *this; //! \return reference to text_style to make chainable.
   }
 
   const std::string& text_style::font_decoration() const
@@ -452,8 +445,7 @@ public:
       But implementation varies.
     */
     decoration_ = s;
-    return *this;
-    //! \return reference to text_style to make chainable.
+    return *this; //! \return reference to text_style to make chainable.
   }
 
   // http://www.croczilla.com/~alex/conformance_suite/svg/text-align-02-b.svg
@@ -521,8 +513,11 @@ std::ostream& operator<< (std::ostream& os, const text_style& ts)
 text_style no_style; //!< Text style that uses all constructor defaults.
 
 class value_style
-{ //! Data series point value label information, text, color, orientation, uncertainty & df.
-  //! \details For example, to output: 5.123 +- 0.01 (19)
+{ /*! \class boost::svg::value_style
+     \brief Data series point value label information, text, color, orientation, (uncertainty & df).
+     \details For example, to output: 5.123 +- 0.01 (19).
+     Uncertainty and degrees of freedom estimate not yet implemented.
+  */
 public:
   //private:  // ??
   rotate_style value_label_rotation_; //< Direction point value labels written.
@@ -576,7 +571,7 @@ value_style::value_style() //! Default data point value label style.
 // End class value_style Member Functions definitions.
 
 enum point_shape
-{ //! \enum Shape used for marking a data point.
+{ //! \enum point_shape used for marking a data point.
   // Used in draw_plot_point in axis_plot_frame.hpp
   none = 0, //!< No marker for data point.
   round, //!< Circle but name changed to round to avoid clash with function named circle.
@@ -609,7 +604,10 @@ enum point_shape
 }; // enum point_shape
 
 class plot_point_style
-{ //! Shape, color, (optional value & uncertainty) of data point markers.
+{ /*! \class boost::svg::plot_point_style
+    \brief Shape, color, of data point markers.
+    \details (optional value & uncertainty) not implemented yet.
+  */
   friend std::ostream& operator<< (std::ostream&, plot_point_style);
 
 public:
@@ -763,7 +761,7 @@ return os;
 plot_point_style default_plot_point_style(); // Uses all the defaults.
 
 class plot_line_style
-{ //! \class plot_line_style Style of line joining data series values.
+{ //! \class boost::svg::plot_line_style Style of line joining data series values.
   // TODO dotted and dashed line style would be useful for B&W.
 public:
   svg_color stroke_color_; //!< Stroke color of line. (no fill color for lines)
@@ -875,8 +873,10 @@ enum dim
 };
 
 class axis_line_style
-{ //! Style of the x and/or y axes lines.\n
-  //! (But NOT the ticks and value labels because different styles for x and y are possible).
+{ /*! \class boost::svg::axis_line_style
+    \brief Style of the x and/or y axes lines.
+   \details (But NOT the ticks and value labels because different styles for x and y are possible).
+  */
 public:
   dim dim_; //!< X, Y or none.
   double min_; //!< minimum x value (Cartesian units).
@@ -935,17 +935,18 @@ public:
     const svg_color col,
     double width,
     int axis_position,
+    int axis_,
     bool label_on,
     bool label_units_on,
     bool axis_lines_on)
     :
     dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
     axis_position_(axis_position),
-    label_on_(label_on),
-    label_units_on_(label_units_on), // default is include units.
+    label_on_(label_on), // default is to include axis label.
+    label_units_on_(label_units_on), // default is to include units after axis label.
     axis_line_on_(axis_lines_on),
-    axis_(-1) // Not calculated yet.
- { // Initialize all private data.
+    axis_(-1) // -1 means not calculated yet.
+  { // Initialize all private data.
     if(max_ <= min_)
     { // max_ <= min_.
       throw std::runtime_error("Axis range: max <= min!");
@@ -1022,12 +1023,14 @@ public:
 
 // End class axis_line_style member functions definitions:
 
-
 class ticks_labels_style
-{ //! Style of the x and y axes ticks, grids and their value labels.
-  //! But NOT the x and y axes lines.
-  //! These can be either on the axis lines or on the plot window edge(s),
-  //! (because different styles for x and y are possible).
+{ /*! \class boost::svg::ticks_labels_style
+   \brief Style of the x and y axes ticks, grids and their value labels.
+   \details
+   But NOT the x and y axes lines.
+   These can be either on the axis lines or on the plot window edge(s),
+   (because different styles for x and y are possible).
+  */
   friend class svg_2d_plot;
 
 public:
@@ -1240,7 +1243,7 @@ public:
 }; // class ticks_labels_style
 
 class box_style
-{ //! \class box_style Style of a rectangular box. (Used for boxplot image and plot window).
+{ //! \class boost::svg::box_style Style of a rectangular box. (Used for boxplot image and plot window).
 public:
     svg_color stroke_; //!< Box line (stroke) color.
     svg_color fill_; //!< Box fill color.
@@ -1373,17 +1376,19 @@ enum bar_option
 
 enum histogram_option
 { //! \enum histogram_option
-  //row = -1, // Row line (stroke width) horizontal to Y-axis. Not implemented.
+  // row = -1, // Row line (stroke width) horizontal to Y-axis. Not implemented.
   // See svg_2d_plot for details of why not.
   no_histogram = 0, //!< No histogram.
   column = +1 //!< Stick or column line (stroke width) vertically to/from X-axis.
-  // Column is the most common histogram style.
+  //! Column is the most common histogram style.
 };
 
 class histogram_style
-{ // Options for histograms.
+{ /*! \class boost::svg::histogram_style
+     \brief Histogram options.
+    */
 public:
-  histogram_option histogram_option_; // bar, no_histogram or column.
+  histogram_option histogram_option_; //! default bar, no_histogram or column.
 
   histogram_style(histogram_option opt = no_histogram);
 
@@ -1417,7 +1422,9 @@ double histogram_style::histogram()
 // End class histogram_style Definitions.
 
 class bar_style
-{ //! \class bar_style Style (color, width, fill ...) of histogram bars.
+{ /*! \class boost::svg::bar_style
+    \brief Style (color, width, fill) of histogram bars.
+  */
   // TODO should inherit from svg_style?
 public:
   svg_color color_; //!< Color of line (stroke) (no fill color for lines).

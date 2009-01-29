@@ -15,6 +15,7 @@
   See also : The Bagplot: A Bivariate Boxplot
   Peter J. Rousseeuw, Ida Ruts and John W. Tukey
   The American Statistician, Vol. 53, No. 4 (Nov., 1999), pp. 382-387
+
   \author Jacob Voytko & Paul A. Bristow
  */
 
@@ -90,7 +91,11 @@ namespace svg
   // For example, string title_, but set with title("my title") and get with title().
 
   class svg_boxplot_series
-  { //! \class svg_boxplot_series Information about a data series to be boxplotted.
+  { /*! \class boost::svg::svg_boxplot_series
+     \brief Information about a data series to be boxplotted.
+     \details A Box Plot that can contain several boxplot data series.
+     median, whiskers and outliers are computed for each series.
+     */
   public: // TODO private?
     std::vector<double> series_; //!< Data series for the boxplot.
     double whisker_min_; //!<
@@ -177,19 +182,19 @@ namespace svg
     } // svg_boxplot_series constructor.
 
     void calculate_quantiles()
-    {
+    { /*! \brief Divide sorted data set into four equal parts, called quartiles,
+        so each part represent 1/4th of the sampled population.
+       \details
+         Michael Frigge, David C. Hoaglin and Boris Iglewicz
+        The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
+        Tukey, J. W. Exploratory Data Analysis, Addison Wesley (1977, p 33)
+
+       "Some Implementations of the Boxplot"
+
+        x[1] .. x[n] == series[0] ... series[n - 1]
+        q1_ = (1 - g) * x[j] + g * [j+1];
+      */
       median_ = median(series_);
-      //! Divide sorted data set into four equal parts, called quartiles,
-      //! so each part represent 1/4th of the sampled population.
-
-      /*! "Some Implementations of the Boxplot"
-        Michael Frigge, David C. Hoaglin and Boris Iglewicz
-       The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
-       Tukey, J. W. Exploratory Data Analysis, Addison Wesley (1977, p 33)
-
-       x[1] .. x[n] == series[0] ... series[n - 1]
-       q1_ = (1 - g) * x[j] + g * [j+1];
-       */
       q1_ = quantile(series_, 0.25, quartile_definition_);
       q3_ = quantile(series_, 0.75, quartile_definition_);
 
@@ -317,7 +322,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::title(const std::string& t)
   { //! Set title of a data series.
     series_info_.text(t);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_boxplot_series& svg_boxplot_series::whisker_length(double width)
@@ -334,7 +339,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::min_whisker_width(double width)
   { // Line width of min whisker.
     min_whisker_style_.stroke_width(width);
-    return *this; // Chainable.
+    return *this;  // \return reference to svg_boxplot_series to make chainable..
   }
 
   double svg_boxplot_series::min_whisker_width()
@@ -345,7 +350,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::min_whisker_color(const svg_color& color)
   { // Color of min whisker.
     min_whisker_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
   svg_color svg_boxplot_series::min_whisker_color()
   { //  Color of min whisker.
@@ -355,8 +360,8 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::max_whisker_width(double width)
   {
     max_whisker_style_.stroke_width(width);
-    return *this; // Chainable.
-  }
+    return *this;  // \return reference to svg_boxplot_series to make chainable.
+ }
 
   double svg_boxplot_series::max_whisker_width()
   { // width of the box, not the margin.
@@ -366,7 +371,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::max_whisker_color(const svg_color& color)
   { // Color of whisker.
     max_whisker_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::max_whisker_color()
@@ -382,7 +387,7 @@ namespace svg
   svg_boxplot_series&  svg_boxplot_series::box_width(double l)
   { // width of the box, not the margin.
     box_width_ = l;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_style& svg_boxplot_series::box_style()
@@ -393,7 +398,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::box_style(svg_style& bs)
   {
     box_style_ = bs;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_style& svg_boxplot_series::median_style()
@@ -404,13 +409,13 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::median_style(svg_style& ms)
   {
     median_style_ = ms;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_boxplot_series& svg_boxplot_series::outlier_style(plot_point_style& os)
   {
     mild_outlier_ = os;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   plot_point_style& svg_boxplot_series::outlier_style()
@@ -421,7 +426,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::box_fill(const svg_color& color)
   { // Color of box fill, not border.
     box_style_.fill_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::box_fill()
@@ -432,7 +437,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::box_border(const svg_color& color)
   { // Color of box fill, not border.
     box_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::box_border()
@@ -443,7 +448,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::median_color(const svg_color& color)
   { // Color of median line in box.
     median_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::median_color()
@@ -454,7 +459,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::median_width(double width)
   { // Applies to BOTH min and max whisker.
     median_style_.stroke_width(width);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable..
   }
 
   double svg_boxplot_series::median_width()
@@ -465,7 +470,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::axis_color(const svg_color& color)
   { // Color of axis line in box.
     axis_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::axis_color()
@@ -476,7 +481,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::axis_width(double width)
   { // Applies to BOTH min and max whisker.
     axis_style_.stroke_width(width);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   double svg_boxplot_series::axis_width()
@@ -487,7 +492,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::outlier_color(const svg_color& color)
   { // Color of axis line in box.
     mild_outlier_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::outlier_color()
@@ -498,7 +503,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::outlier_fill(const svg_color& color)
   { // Fill color of axis line in box.
     mild_outlier_.fill_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::outlier_fill()
@@ -509,7 +514,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::extreme_outlier_color(const svg_color& color)
   { // Color of axis line in box.
     ext_outlier_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::extreme_outlier_color()
@@ -520,7 +525,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::extreme_outlier_fill(const svg_color& color)
   { // Color of axis line in box.
     ext_outlier_.fill_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   svg_color svg_boxplot_series::extreme_outlier_fill()
@@ -531,7 +536,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::outlier_shape(point_shape shape)
   { // Shape of outlier marker.
     mild_outlier_.shape_ = shape;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   point_shape svg_boxplot_series::outlier_shape()
@@ -542,7 +547,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::outlier_size(int size)
   { // Size of outlier marker.
     mild_outlier_.size_ = size;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   int svg_boxplot_series::outlier_size()
@@ -553,7 +558,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::extreme_outlier_shape(point_shape shape)
   { // Shape of extreme outlier marker.
     ext_outlier_.shape_ = shape;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   point_shape svg_boxplot_series::extreme_outlier_shape()
@@ -564,7 +569,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::extreme_outlier_size(int size)
   { // Size of extreme outlier marker.
     ext_outlier_.size_ = size;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable..
   }
 
   int svg_boxplot_series::extreme_outlier_size()
@@ -575,7 +580,7 @@ namespace svg
   svg_boxplot_series& svg_boxplot_series::quartile_definition(int def)
   { // Choice of H&F quartile definition.
     quartile_definition_ = def;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot_series to make chainable.
   }
 
   int svg_boxplot_series::quartile_definition()
@@ -611,7 +616,11 @@ namespace svg
 // End of svg_boxplot_series Definitions.
 
 class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
-{ // A plot that can display boxplots of several data series.
+{ /*! \class boost::svg::svg_boxplot
+    \brief A plot that can display boxplots of several data series.
+    \details Holds all data about the plot (but not any data series - see svg_boxplot_series)
+    axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
+*/
   friend svg_boxplot_series;
   friend class detail::axis_plot_frame<svg_boxplot>;
   // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
@@ -2025,54 +2034,54 @@ public:
   { // ostream version used by filename version.
     update_image();
     image.write(s_out);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::title_on(bool cmd)
   {
     title_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_label_on(bool cmd)
   { // If Y axis name or label, for example: "length of thing".
       x_axis_.label_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_label_on(bool cmd)
   {
       y_axis_.label_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_major_labels_on(int cmd)
   { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
     y_ticks_.major_value_labels_side_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_major_labels_on(int cmd)
   { //< 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top).
     x_ticks_.major_value_labels_side_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::median_values_on(bool cmd)
   {
     median_values_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::outlier_values_on(bool cmd)
   {
     outlier_values_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
   svg_boxplot& svg_boxplot::extreme_outlier_values_on(bool cmd)
   {
     extreme_outlier_values_on_ = cmd;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   bool svg_boxplot::median_values_on()
@@ -2092,25 +2101,25 @@ public:
   svg_boxplot& svg_boxplot::y_major_tick_color(const svg_color& col)
   {
     image.g(boxplot::Y_MAJOR_TICKS).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_tick_color(const svg_color& col)
   {
     image.g(boxplot::X_TICKS).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_minor_tick_color(const svg_color& col)
   {
     image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::title_color(const svg_color& col)
   {
     image.g(boxplot::PLOT_TITLE).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::background_color(const svg_color& col)
@@ -2121,19 +2130,19 @@ public:
   svg_boxplot& svg_boxplot::background_border_color(const svg_color& col)
   { // "imageBackground"
     image.g(boxplot::PLOT_BACKGROUND).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::plot_background_color(const svg_color& col)
   { // Plot Window "plotBackground"
     image.g(boxplot::PLOT_WINDOW_BACKGROUND).style().fill_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::plot_border_color(const svg_color& col)
   { // Plot window "plotBackground"
     image.g(boxplot::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_range(double min_y, double max_y)
@@ -2157,7 +2166,7 @@ public:
     y_axis_.min_ = min_y;
     y_axis_.max_ = max_y;
     y_autoscale_ = false;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   } // svg_boxplot& y_range(double y1, double y2)
 
   std::pair<double, double> svg_boxplot::y_range()
@@ -2171,36 +2180,36 @@ public:
   svg_boxplot& svg_boxplot::y_label(const std::string& str)
   {
     y_label_info_.text(str);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::image_size(unsigned int x, unsigned int y)
   {
     image.image_size(x, y);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_label_font_size(unsigned int size)
   {
      y_axis_label_style_.font_size(size);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_label_color(const svg_color& col)
   {
     image.g(boxplot::Y_LABEL).style().fill_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::title(const std::string& str)
   {
     title_info_.text(str);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
   svg_boxplot& svg_boxplot::title_size(unsigned int size)
   {
     y_label_info_.style().font_size(size);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_axis_position(int pos)
@@ -2210,7 +2219,7 @@ public:
      // so this only changes the default position from bottom to top,
      // but will be changed if X-axis intersects the Y-axis
      // (that is if Y-axis includes zero).
-    return *this; // Make chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::x_axis_position()
@@ -2221,7 +2230,7 @@ public:
   svg_boxplot& svg_boxplot::y_axis_position(int pos)
   { // Position of the vertical Y-axis line (on the border).
      y_axis_position_ = pos; // left or right
-    return *this; // Make chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::y_axis_position()
@@ -2232,18 +2241,18 @@ public:
   svg_boxplot& svg_boxplot::x_label(const std::string& str)
   {
     x_label_info_.text(str);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
   svg_boxplot& svg_boxplot::x_label_size(unsigned int size)
   {
     x_label_info_.style().font_size(size);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_label_color(const svg_color& col)
   {
     image.g(boxplot::X_LABEL).style().fill_color(col);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_major_interval(double inter)
@@ -2253,43 +2262,43 @@ public:
   }  svg_boxplot& svg_boxplot::x_tick_length(unsigned int length)
   {
     x_ticks_.major_tick_length_ = length;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_major_tick_length(unsigned int length)
   {
     y_ticks_.major_tick_length_ = length;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_minor_tick_length(unsigned int length)
   {
     y_ticks_.minor_tick_length_ = length;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_num_minor_ticks(unsigned int num)
   {
     y_ticks_.num_minor_ticks_ = num;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::x_tick_width(unsigned int width)
   {
     image.g(boxplot::X_TICKS).style().stroke_width(width);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_major_tick_width(unsigned int width)
   {
     image.g(boxplot::Y_MAJOR_TICKS).style().stroke_width(width);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_minor_tick_width(unsigned int width)
   {
     image.g(boxplot::Y_MINOR_TICKS).style().stroke_width(width);
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   unsigned int svg_boxplot::image_x_size()
@@ -2375,7 +2384,7 @@ public:
   svg_boxplot& svg_boxplot::whisker_length(double width)
   {
     whisker_length_ = width;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::whisker_length()
@@ -2386,7 +2395,7 @@ public:
  svg_boxplot& svg_boxplot::box_width(double width)
   { // Width of the box, not the border.
     box_width_ = width;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::box_width()
@@ -2397,7 +2406,7 @@ public:
   svg_boxplot& svg_boxplot::box_fill(const svg_color& color)
   { // Color of box fill, not border.
     box_style_.fill_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::box_fill()
@@ -2408,7 +2417,7 @@ public:
   svg_boxplot& svg_boxplot::box_border(const svg_color& color)
   { // Color of box fill, not border.
     box_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::box_border()
@@ -2419,7 +2428,7 @@ public:
   svg_boxplot& svg_boxplot::median_color(const svg_color& color)
   { // Color of median line in box.
     median_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::median_color()
@@ -2430,7 +2439,7 @@ public:
   svg_boxplot& svg_boxplot::median_width(double width)
   { // Width of the box, not the border.
     median_style_.stroke_width(width);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::median_width()
@@ -2441,7 +2450,7 @@ public:
   svg_boxplot& svg_boxplot::axis_color(const svg_color& color)
   { // Color of vertical whisker axis line in box.
     axis_style_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::axis_color()
@@ -2452,7 +2461,7 @@ public:
   svg_boxplot& svg_boxplot::axis_width(double width)
   { // Width of the box, not the border.
     median_style_.stroke_width(width);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   double svg_boxplot::axis_width()
@@ -2463,7 +2472,7 @@ public:
   svg_boxplot& svg_boxplot::outlier_color(const svg_color& color)
   { // Color of axis line in box.
     mild_outlier_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::outlier_color()
@@ -2474,7 +2483,7 @@ public:
   svg_boxplot& svg_boxplot::outlier_fill(const svg_color& color)
   { // Color of axis line in box.
     mild_outlier_.fill_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::outlier_fill()
@@ -2485,7 +2494,7 @@ public:
   svg_boxplot& svg_boxplot::extreme_outlier_color(const svg_color& color)
   { // Color of axis line in box.
     ext_outlier_.stroke_color(color);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::extreme_outlier_color()
@@ -2496,7 +2505,7 @@ public:
   svg_boxplot& svg_boxplot::extreme_outlier_fill(const svg_color& color)
   { // Color of axis line in box.
     ext_outlier_.fill_color(color);
-    return *this; // Chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   }
 
   svg_color svg_boxplot::extreme_outlier_fill()
@@ -2507,7 +2516,7 @@ public:
   svg_boxplot& svg_boxplot::outlier_shape(point_shape shape)
   { // Shape of outlier marker.
     mild_outlier_.shape_ = shape;
-    return *this; // Chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   }
 
   point_shape svg_boxplot::outlier_shape()
@@ -2518,7 +2527,7 @@ public:
   svg_boxplot& svg_boxplot::extreme_outlier_shape(point_shape shape)
   { // Shape of extreme outlier marker.
     ext_outlier_.shape_ = shape;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   point_shape svg_boxplot::extreme_outlier_shape()
@@ -2529,7 +2538,7 @@ public:
   svg_boxplot&  svg_boxplot::outlier_size(int size)
   { // Size of outlier marker.
     mild_outlier_.size(size);
-    return *this; // Chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   }
 
   int svg_boxplot::outlier_size()
@@ -2541,7 +2550,7 @@ public:
   svg_boxplot& svg_boxplot::extreme_outlier_size(int size)
   { // Size of extreme outlier marker.
     ext_outlier_.size(size);
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   int svg_boxplot::extreme_outlier_size()
@@ -2552,7 +2561,7 @@ public:
   svg_boxplot& svg_boxplot::quartile_definition(int def)
   { //! Set size of extreme outlier marker.
     quartile_definition_ = def;
-    return *this; // Chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   int svg_boxplot::quartile_definition()
@@ -2568,7 +2577,7 @@ public:
   svg_boxplot& svg_boxplot::y_autoscale(bool b)
   {
     y_autoscale_ = b;
-    return *this;
+    return *this; // \return reference to svg_boxplot to make chainable.
   }
 
   svg_boxplot& svg_boxplot::y_autoscale(std::pair<double, double> p)
@@ -2578,7 +2587,7 @@ public:
     autoscale_check_limits_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
-    return *this; // Make chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   } // autoscale(pair<double, double> p)
 
   svg_boxplot& svg_boxplot::y_autoscale(double first, double second)
@@ -2588,7 +2597,7 @@ public:
     autoscale_check_limits_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
-    return *this; // Make chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   } // autoscale(pair<double, double> p)
 
   template <class T> // T an STL container: array<double>, vector<double> ...
@@ -2599,7 +2608,7 @@ public:
     autoscale_check_limits_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true; // Change (from default false) to use calculated values.
-    return *this; // Make chainable.
+    return *this;  // \return reference to svg_boxplot to make chainable.
   } // y_autoscale(const T& begin, const T& end)
 
   template <class T> // T an STL container: array, vector ...
@@ -2610,7 +2619,7 @@ public:
     autoscale_check_limits_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
-    return *this; // Make chainable.
+    return *this; // \return reference to svg_boxplot to make chainable.
   } // y_autoscale(const T& container)
 
 

@@ -1,5 +1,6 @@
-/*! \file svg_style.hpp
-    \brief Plot document structure whose order controls the painting order, later ones overwriting earlier layers.
+/*! \file svg_style_detail.hpp
+    \brief Plot document structure whose order controls the painting order,
+    later layers overwriting earlier layers.
 
     \author Jacob Voytko and Paul A. Bristow
 */
