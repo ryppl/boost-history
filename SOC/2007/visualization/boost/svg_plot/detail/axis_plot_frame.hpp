@@ -542,12 +542,14 @@ namespace boost
         // --------------------------------------------------------------------
 
         void draw_title()
-        { /*! \fn draw_title \brief Draw title (for the whole plot).
-          \details  Update title_info_ with position.
+        { /*!  \verbatim
+            Draw title (for the whole plot).
+            Update title_info_ with position.
             Assumes align = center_align.
             and center_align will ensure that will center correctly
             even if original string is made much longer because it contains Unicode like &#x3A9;
             because the render engine does the centering.
+            \endverbatim
           */
           derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
           double y;
@@ -1925,9 +1927,11 @@ namespace boost
           Derived& axis_plot_frame<Derived>::title(const std::string title)
           { //! Set a title for plot.
             /*! \details
+            \verbatim
               The string may include Unicode for greek letter and symbols.
               For example: my_plot.title("Plot of &#x3A9; function");
               includes a greek omega.
+              \endverbatim
             */
             // Plot title.  TODO
             // new text parent code pushback

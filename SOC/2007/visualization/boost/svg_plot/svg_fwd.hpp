@@ -125,10 +125,6 @@ svg_style& style();
 void id(const std::string& id);
 std::string id( );
 void clip_id(const std::string& id);
-class rect_element;
-class circle_element;
-class ellipse_element;
-class line_element;
 enum align_style; // left_align, right_align, center_align
 enum rotate_style; // Rotation in degrees from horizontal.
 //    horizontal = 0, // normal left to right.

@@ -67,26 +67,28 @@ const std::string strip_e0s(std::string s);
 double string_svg_length(const std::string& s, const text_style& style);
 // Estimate length of string when appears as svg units.
 
-// -----------------------------------------------------------------
-// This is the style information for any <g> tag.
-// This may be expanded to include more data from the SVG standard.
-// -----------------------------------------------------------------
+/*
+\verbatim
+ This is the style information for any group (g) tag.
+ This may be expanded to include more data from the SVG standard.
 
-// There are some strange effects for text on some browsers
-// (Firefox especially) when only stroke is specified.
-// fill is interpreted as black, and the font outline is fuzzy and bolder.
-// <g id="title" stroke="rgb(255,0,0)"> .. is red border and black fill.
-// (because created as a graphic not a builtin font?)
-// <g id="title" fill="rgb(255,0,0)"> .. is red sharp font.
-// <g id="title" stroke="rgb(255,0,0)" fill="rgb(255,0,0)"> red and red fill also fuzzy.
-// So for text, only specific the fill unless a different outline is really wanted.
-// Defaults for text provide a built-in glyph, for example for title:
-// <g id="title">
-//   <text x="250" y="36" text-anchor="middle" font-size="18" font-family="Verdana">
-//     Plot of data
-//   </text>
-// </g>
-// and this is not a graphic.
+ There are some strange effects for text on some browsers
+ (Firefox especially) when only stroke is specified.
+ fill is interpreted as black, and the font outline is fuzzy and bolder.
+ <g id="title" stroke="rgb(255,0,0)"> .. is red border and black fill.
+ (because created as a graphic not a builtin font?)
+ <g id="title" fill="rgb(255,0,0)"> .. is red sharp font.
+ <g id="title" stroke="rgb(255,0,0)" fill="rgb(255,0,0)"> red and red fill also fuzzy.
+ So for text, only specific the fill unless a different outline is really wanted.
+ Defaults for text provide a built-in glyph, for example for title:
+ <g id="title">
+   <text x="250" y="36" text-anchor="middle" font-size="18" font-family="Verdana">
+     Plot of data
+   </text>
+ </g>
+ and this is not a graphic.
+ \endverbatim
+*/
 
 class svg_style
 { //! \class boost::svg::svg_style Holds the basic SVG stroke, fill colors and width, and their switches.
@@ -375,13 +377,15 @@ public:
 
   text_style& text_style::font_family(const std::string& s)
   { //! Set font family, for example: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
-    /*! \details Default for browser is sans with Firefox & IE but serif with Opera.\n
+    /*! \verbatim
+    \details Default for browser is sans with Firefox & IE but serif with Opera.\n
     See also browser conformance test at\n
       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-01-t.svg\n
       which tests three styles of font, serif, sans-serif and mono-spaced.\n
       <text font-family="Georgia, 'Minion Web', 'Times New Roman', Times, 'MS PMincho', Heisei-Mincho, serif " x="20" y="80">A serifed face</text>\n
       <text font-family="Arial, 'Arial Unicode', 'Myriad Web', Geneva, 'Lucida Sans Unicode', 'MS PGothic', Osaka, sans-serif " x="20" y="160">A sans-serif face</text>\n
       <text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
+      \endverbatim
     */
     font_family_ = s;
     return *this; //! \return reference to text_style to make chainable.
@@ -594,13 +598,16 @@ enum point_shape
   asterisk, //!< Asterix as * symbol
   x, //!< letter x
   cross, //!< cross
-  symbol //!< Unicode symbol including letters, digits, greek & 'squiggles'.
-  //! Default letter "X".\n
-  //! Other examples: "&#x3A9;"= greek omega, "&#x2721;" = Star of David hexagram
-  //! &#2720 Maltese cross & other dingbats. \n
-  //! See also http://en.wikipedia.org/wiki/List_of_Unicode_characters#Basic_Latin geometric shapes
-  //! that may be a better way to make these symbols: &#25A0 black square ...to &#25FF
-  //! But unclear how many browsers implement these properly.
+  symbol /*!< Unicode symbol including letters, digits, greek & 'squiggles'.
+  \verbatim
+    Default letter "X".\n
+    Other examples: "&#x3A9;"= greek omega, "&#x2721;" = Star of David hexagram
+    &#2720 Maltese cross & other dingbats. \n
+    See also http://en.wikipedia.org/wiki/List_of_Unicode_characters#Basic_Latin geometric shapes
+    that may be a better way to make these symbols: &#25A0 black square ...to &#25FF
+    But unclear how many browsers implement these properly.
+  \endverbatim
+  */
 }; // enum point_shape
 
 class plot_point_style
@@ -906,6 +913,7 @@ public:
     const svg_color col = black,
     double width = 1,
     int axis_position = 0,
+    double axis = -1,
     bool label_on = true,
     bool label_units_on = false,
     bool axis_lines_on = true);
@@ -927,17 +935,19 @@ public:
 
 // class axis_line_style Member Functions Definitions:
 
-  axis_line_style::axis_line_style( //! \class axis_line_style Default constructor, sets all member data items.
-    dim d,
-    double min,
-    double max, // Defaults.
+  axis_line_style::axis_line_style( // Default constructor. Sets all member data items with defaults for all.
+    dim d, //!< Dimension (zero if boxplot)
+    double min, //! Minimum of axis line.
+    double max, //! Maximum of axis line.
     // See also default in ticks_labels_style.
-    const svg_color col,
-    double width,
-    int axis_position,
-    int axis_,
-    bool label_on,
-    bool label_units_on,
+    const svg_color col, //!< Line color
+    double width, //!< Line width.
+    int axis_position, //!< Intersection of axis, if any.
+    double axis_, //     // double axis_, not referenced - but there is confusion about order of parameter in different constructors.
+    // TODO find  where used and resolve.
+
+    bool label_on,//!< If to include axis label (default true).
+    bool label_units_on, //!< If to include units after axis label (default true).
     bool axis_lines_on)
     :
     dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
@@ -1009,10 +1019,10 @@ public:
 
   double axis_line_style::position()
   { //! \returns How the axes intersect.\n
-  //! enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
-  //! enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
-  //! If axes look like an L, then is bottom left.
-  //! If a T then y intersects and X is at bottom.
+    //! enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+    //! enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+    //! If axes look like an L, then is bottom left.
+    //! If a T then y intersects and X is at bottom.
     return axis_position_;
   }
 
@@ -1563,24 +1573,29 @@ const std::string strip_e0s(std::string s)
   */
 
 double string_svg_length(const std::string& s, const text_style& style)
-{ //! \return length of string in SVG units depending on text_style (font size etc).
-  // If possible use an actual length, but probably platform and/or browser-dependent,
-  // else use average char width,
-  // and deal with Unicode, for example &#x3A9; = greek omega,
-  // counting each symbol(s) embedded between & amd ; as one character,
-  // and ignore embedded xml like <sub> (not implemented by browsers yet).
+{
+  /*
+  \verbatim
+  If possible use an actual length, but probably platform and/or browser-dependent,
+  else use average char width,
+  and deal with Unicode, for example &#x3A9; = greek omega,
+  counting each symbol(s) embedded between & amd ; as one character,
+  and ignore embedded xml like <sub> (not implemented by browsers yet).
+  \endverbatim
+  \return length of string in SVG units depending on text_style (font size etc).
+ */
 
  double d = 0.; // Estimated or actual width of resulting svg string.
  bool in_esc = false;
  for (std::string::const_iterator i = s.begin(); i != s.end(); i++)
  {
     if (*i == '&')
-    { // Start of Unicode 'escape sequence' &#x3A9;
+    { // Start of Unicode 'escape sequence'
       in_esc = true;
        while ((*i != ';')
          && (i != s.end())) // In case mistakenly not terminated.
        {
-          i++; // Only count &#x3A9; as 1 character wide.
+          i++; // Only count Unicode string as 1 character wide.
        }
        in_esc = false;
     }

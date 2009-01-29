@@ -361,7 +361,7 @@ namespace svg
   {
     max_whisker_style_.stroke_width(width);
     return *this;  // \return reference to svg_boxplot_series to make chainable.
- }
+  }
 
   double svg_boxplot_series::max_whisker_width()
   { // width of the box, not the margin.
@@ -620,7 +620,7 @@ class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
     \brief A plot that can display boxplots of several data series.
     \details Holds all data about the plot (but not any data series - see svg_boxplot_series)
     axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
-*/
+  */
   friend svg_boxplot_series;
   friend class detail::axis_plot_frame<svg_boxplot>;
   // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
@@ -1151,10 +1151,13 @@ public:
   void draw_title()
   { // Update title_info_ with position.
     title_info_.x(image.x_size() / 2.); // Center of image.
-    // Assumes align = center_align.
-    // Note: center_align will ensure that will center correctly
-    // even if original string is long because contains Unicode like &#x3A9;
-    // because the browser render engine does the centering.
+    /*! \verbatim
+      Assumes align = center_align.
+      Note: center_align will ensure that will center correctly
+      even if original string is long because contains Unicode like 
+      because the browser render engine does the centering.
+      \endverbatim
+    */
     double y = title_info_.style().font_size() * text_margin_; // Leave a linespace above.
     title_info_.y(y); // Vertical position.
     image.g(boxplot::PLOT_TITLE).push_back(new text_element(title_info_));
@@ -2213,12 +2216,13 @@ public:
   }
 
   svg_boxplot& svg_boxplot::x_axis_position(int pos)
-  {  // Position of the horizontal X-axis line (on the border).
+  {  /*! Position of the horizontal X-axis line (on the border).
+      But controlled by the intersection with Y-axis,
+      so this only changes the default position from bottom to top,
+      but will be changed if X-axis intersects the Y-axis
+      (that is if Y-axis includes zero).
+     */
      x_axis_position_ = pos; // top or bottom
-     // But controlled by the intersection with Y-axis,
-     // so this only changes the default position from bottom to top,
-     // but will be changed if X-axis intersects the Y-axis
-     // (that is if Y-axis includes zero).
     return *this;  // \return reference to svg_boxplot to make chainable.
   }
 

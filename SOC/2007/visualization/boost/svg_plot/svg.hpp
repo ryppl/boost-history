@@ -141,7 +141,7 @@
 // eliminate extraneous white space and separators.
 // Use symbols if the same graphic appears multiple times in the document.
 // Use CSS property inheritance and selectors to consolidate commonly used properties into named styles
-// or to assign the properties to a parent <g> element.
+// or to assign the properties to a parent group element.
 // Use filter effects to help construct graphics via client-side graphics operations.
 
 namespace boost
@@ -155,12 +155,13 @@ namespace svg
   //! \namespace boost::svg::boxplot \brief SVG classes and functions specific to boxplots.
   //! \namespace boost::svg::detail \brief SVG classes and functions implementation details (not recommended for normal use).
 
-  // Inserted as a SVG comment, for example
-  // "<!-- Demo of 1D plot features. --> \n"
-  // and also as a \verbatim <desc /> \endverbatim
-  // http://www.w3.org/TR/SVG/struct.html#DescriptionAndTitleElements
-  // 5.4 The 'desc' and 'title' elements
-
+  /*! Inserted as a SVG comment, for example
+   "<!-- Demo of 1D plot features. --> \n"
+   and also as a \verbatim <desc />
+   http://www.w3.org/TR/SVG/struct.html#DescriptionAndTitleElements
+   5.4 The 'desc' and 'title' elements
+   \endverbatim
+   */
     static const std::string package_info = //!< Default SVG package information about this program that produced the SVG image (not the image itself).
       "<!-- SVG plot written using Boost.Plot program (Creator Jacob Voytko) --> \n"
       "<!-- Use, modification and distribution of Boost.Plot subject to the --> \n"
@@ -168,12 +169,15 @@ namespace svg
       "<!-- (See accompanying file LICENSE_1_0.txt --> \n"
       "<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) --> \n";
 
-  // Copyright notice to be inserted into plot image produced by this program.
-  // Note: can have more than one copyright date, or a range.
-  // produces a copyright notice as an SVG comment like this:
-  // "<!-- Copyright Paul A. Bristow, 2007  --> \n"
-  // and as a meta item:
-  // <meta name="copyright" content="Paul A. Bristow" />
+  /* \verbatim
+  Copyright notice to be inserted into plot image produced by this program.
+   Note: can have more than one copyright date, or a range.
+   produces a copyright notice as an SVG comment like this:
+   "<!-- Copyright Paul A. Bristow, 2007  --> \n"
+   and as a meta item:
+   <meta name="copyright" content="Paul A. Bristow" />
+   \endverbatim
+   */
 
 //!  Class to output Scalable Vector Graph XML graph elements: point, path, line, circle, rect, polygon and text.
   // and handle plot stylesheets.
@@ -624,62 +628,62 @@ public:
   }
 
   void description(const std::string d)
-  { //! Write description to the document (for header as <desc>).
+  { //! \verbatim Write description to the document (for header as <desc>). \endverbatim
     image_desc_ = d;
   }
 
   const std::string& description()
-  { //! Get description of the document (for header as <desc>).
+  { //!  \verbatim Get description of the document (for header as <desc>).\endverbatim
     return image_desc_;
   }
 
   void author(const std::string a)
-  { //! Set author for the document (default is copyright_holder).
+  { //!  \verbatim Set author for the document (default is copyright_holder).\endverbatim
     author_ = a;
   }
 
   const std::string& author()
-  { //! Get author of the document (for header as <author>).
+  { //!  \verbatim Get author of the document (for header as <author>).\endverbatim
     return author_;
   }
 
   void document_title(const std::string d)
-  { //! Set document title for the document (for header as <title>)..
+  { //!  \verbatim Set document title for the document (for header as <title>). \endverbatim
     title_document_ = d;
   }
 
   const std::string document_title()
-  { //! Get document title for the document (for header as <title>)..
+  { //!  \verbatim Get document title for the document (for header as <title>). \endverbatim
     return title_document_;
   }
 
   void copyright_holder(const std::string d)
-  { //! Set document title for the document (for header as <copyright_holder>)..
+  { //!  \verbatim Set document title for the document (for header as <copyright_holder>). \endverbatim
     holder_copyright_ = d;
   }
 
   const std::string copyright_holder()
-  { //! Get document title for the document (for header as <copyright_holder>)..
+  { //!  \verbatim Get document title for the document (for header as <copyright_holder>). \endverbatim
     return holder_copyright_;
   }
 
   void copyright_date(const std::string d)
-  { //! Set document title for the document (for header as <copyright_date>)..
+  { //!  \verbatim Set document title for the document (for header as <copyright_date>). \endverbatim
     date_copyright_ = d;
   }
 
   const std::string copyright_date()
-  { //! Get document title for the document (for header as <copyright_date>)..
+  { //!  \verbatim Get document title for the document (for header as <copyright_date>). \endverbatim
     return date_copyright_;
   }
 
   void image_filename(const std::string filename)
-  { //! Set image filename for the document (for header as <filename>)..
+  { //!  \verbatim Set image filename for the document (for header as <filename>). \endverbatim
     filename_ = filename;
   }
 
   const std::string image_filename()
-  { //! Get image filename for the document (for header as <filename>)..
+  { //!  \verbatim Get image filename for the document (for header as <filename>). \endverbatim
     return filename_;
   }
 

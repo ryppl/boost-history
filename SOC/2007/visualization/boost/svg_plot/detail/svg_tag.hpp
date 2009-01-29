@@ -69,9 +69,12 @@ namespace svg
   struct t_path; // Draws a quadratic Bezier curve from the current point to (x,y).
   struct a_path; // Draws a elliptical arc from the current point to (x,y).
   struct P_path; // Adds another (absolute) point to a polyline or polygon.
-  class g_element; // 'g' element is a container element, <g ... /> </g>
-  // for grouping together related graphics elements, for example:
-  // <g stroke="rgb(255,0,0)" <rect x="0" y="0"  width="500"  height="600"/> </g>
+  class g_element; /*! \verbatim
+  'g' element is a container element, <g ... /> </g>
+  for grouping together related graphics elements, for example:
+   <g stroke="rgb(255,0,0)" <rect x="0" y="0"  width="500"  height="600"/> </g>
+   \endverbatim
+   */
 
   class svg_element
   { /*! \class boost::svg::svg_element
@@ -107,10 +110,12 @@ namespace svg
         s_out << " clip-path=\"url(#" << clip_name_ << ")\""; // Prefix with space.
       }
       /*! \details
+      \verbatim
         Classes inherited from svg_element add other references, 5.3.1, like color, fill, stroke, gradients...
         Example id: <g id="yMinorGrid" ></g>
         Example class: <g class="grid_style"></g>
         Example URI: fill="url(#Gradient01) // local URL
+        \endverbatim
       */
     } // void write_attributes(std::ostream& s_out)
 
@@ -246,7 +251,7 @@ namespace svg
 
     void write(std::ostream& rhs)
     { //! output line from (x1_, x2_) to (y1_, y2_)
-      //! \details Example: <line x1="5" y1="185" x2="340" y2="185"/>
+      //! \details \verbatim Example: <line x1="5" y1="185" x2="340" y2="185"/> \endverbatim
       rhs << "<line x1=\"" << x1_ << "\" y1=\"" << y1_
           << "\" x2=\"" << x2_ << "\" y2=\"" << y2_ << "\"/>";
     }
@@ -307,8 +312,11 @@ namespace svg
     }
 
     void write(std::ostream& rhs)
-    { //! Output SVG XML for rectangle.
-      //! For example: <rect  x="0" y="0"  width="500"  height="350"/>
+    { /*! \verbatim
+        Output SVG XML for rectangle.
+       For example: <rect  x="0" y="0"  width="500"  height="350"/>
+       \endverbatim
+       */
       rhs << "<rect";
       write_attributes(rhs); // id (& clip_path)
       rhs << " x=\"" << x_ << "\""
@@ -377,8 +385,11 @@ namespace svg
     }
 
     void write(std::ostream& rhs)
-    { //! Output SVG XML
-      //! Example: <circle cx="9.78571" cy="185" r="5"/>
+    { /*! Output SVG XML
+    \verbatim
+       Example: <circle cx="9.78571" cy="185" r="5"/>
+    \endverbatim
+    */
       rhs << "<circle";
       write_attributes(rhs);
       rhs << " cx=\"" << x << "\" cy=\"" << y << "\" r=\"" << radius << "\"/>";
@@ -429,8 +440,12 @@ namespace svg
     }
 
     void write(std::ostream& rhs)
-    { //! Output SVG XML for ellipse.
-      //! Example: <ellipse rx="250" ry="100" fill="red"  />
+    { /*!
+        \verbatim
+        Output SVG XML for ellipse.
+        Example: <ellipse rx="250" ry="100" fill="red"  />
+       \endverbatim
+     */
       rhs << "<ellipse";
       write_attributes(rhs);
       rhs << " cx=\"" << cx << "\" cy=\"" << cy << "\""
@@ -756,6 +771,7 @@ class text_element : public svg_element
 { /*! \class boost::svg::text_element
       \brief Holds text with position, size, font, (& styles) & orientation.
       \details
+      \verbatim
       Not necessarily shown correctly by all browsers, alas.
       SVG Coordinates of 1st character EM box, see
       http://www.w3.org/TR/SVG/text.html#TextElement 10.2
@@ -775,6 +791,7 @@ class text_element : public svg_element
       std::string decoration; // // "underline" | "overline" | "line-through"
       Example:
       <text x="250" y="219.5" text-anchor="middle"  font-family="verdana" font-size="12">0 </text>
+      \endverbatim
 
   */
  private: // Access only via member functions below.
@@ -1128,13 +1145,12 @@ public:
     }
   }; // struct l_path
 
-
-
   struct h_path: public path_point
   { /*! \struct boost::svg::h_path
       \brief  Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
        which becomes the new current point. No y needed, start from current point y.
     */
+    double x;
     void write(std::ostream& o_str)
     {
       if(relative)
@@ -1689,10 +1705,10 @@ public:
     }
 
     void write(std::ostream& o_str)
-    {  /*! \brief Output SVG XML:
-      \details Example: <polygon fill="lime" stroke="blue" stroke-width="10"
-         points="850,75  958,137.5 958,262.5
-               850,325 742,262.6 742,137.5" />
+    {  /*! \verbatim SVG XML:
+            Example: <polygon fill="lime" stroke="blue" stroke-width="10"
+            points="850,75  958,137.5 958,262.5 850,325 742,262.6 742,137.5" />
+         \endverbatim
        */
       o_str << "<polygon points=\"";
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i != poly_points.end(); ++i)
@@ -1710,7 +1726,7 @@ public:
     } // void write(std::ostream& o_str)
 
     std::ostream& operator<< (std::ostream& os)
-    { /*! \brief Output polygon info. (May be useful for Boost.Test.
+    { /*! Output polygon info. (May be useful for Boost.Test.
          using os << "(" << p.x << ", " << p.y  << ")" ;
          Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
            my_polygon.operator << (cout);
@@ -1727,11 +1743,11 @@ public:
   }; // class polygon_element
 
   std::ostream& operator<< (std::ostream& os, polygon_element& p)
-  { /*! \brief Output poly_path_ points (May be useful  for Boost.Test).
-    \details ptr_vector<poly_path_point> poly_points; All the x, y coordinate pairs,
-      Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
-      cout << p << endl;
-      Outputs: (1, 2)(3, 4)(5, 6)
+  { /*! Output poly_path_ points (May be useful  for Boost.Test).
+        ptr_vector<poly_path_point> poly_points; All the x, y coordinate pairs,
+        Usage:  polygon_element p(1, 2, 3, 4, 5, 6);
+        cout << p << endl;
+        Outputs: (1, 2)(3, 4)(5, 6)
     */
     for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
     {
@@ -1746,8 +1762,8 @@ public:
      \brief The 'polyline'  element: defines a set of connected straight line segments.
      \details
       http://www.w3.org/TR/SVG/shapes.html#PolylineElement
-     9.6 The 'polyline'  element: defines a set of connected straight line segments.
-     Typically, 'polyline' elements define open shapes.
+     9.6 The polyline  element: defines a set of connected straight line segments.
+     Typically, polyline elements define open shapes.
      A polyline is defined by including a 'path'  element
      which contains a points="(path data)"  attribute,
      where the points attribute contains the x, y coordinate pairs.
@@ -1804,8 +1820,10 @@ public:
     }
 
     void write(std::ostream& o_str)
-    { /*! \brief Output polyline info (useful for Boost.Test).
-          \details Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
+    { /*! \verbatim
+          Output polyline info (useful for Boost.Test).
+          Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
+          \endverbatim
       */
       o_str << "<polyline points=\"";
       for(ptr_vector<poly_path_point>::iterator i = poly_points.begin(); i!= poly_points.end(); ++i)
@@ -1821,9 +1839,11 @@ public:
   }; // class polyline_element
 
   std::ostream& operator<< (std::ostream& os, polyline_element& p)
-  { /*! \brief Output polyline info (useful for Boost.Test).
-          \details Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
+  { /*! \verbatim
+         Output polyline info (useful for Boost.Test).
+         Example: <polyline points=" 100,100 200,100 300,200 400,400"/>
          ptr_vector<poly_path_point> poly_points; // All the x, y coordinate pairs.
+        \endverbatim
       */
     for(ptr_vector<poly_path_point>::iterator i = p.poly_points.begin(); i != p.poly_points.end(); ++i)
     {
@@ -1836,24 +1856,24 @@ public:
     return os;
   } // std::ostream& operator<<
 
-   /*! \class g_element
-      \brief g_element (group element) is the node element of our document tree.
-      'g' element is a container element for grouping together
-
-      \verbatim <g /> </g> \endverbatim.
-
-
-     \details g_element ('g' element is a container element
-     for grouping together related graphics elements).\n
-     See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
-
-     'g' element is a container element for grouping together \verbatim <g /> </g> \endverbatim.
-     related graphics elements, for example:
-     \verbatim <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g> \endverbatim
-  */
 
   class g_element: public svg_element
-  {
+  { /*! \class boost::svg::g_element
+      \brief g_element (group element) is the node element of our document tree.
+      \verbatim
+      'g' element is a container element for grouping together  <g /> ... </g>
+     \endverbatim.
+      \details g_element ('g' element is a container element
+      for grouping together related graphics elements).\n
+      See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
+
+      \verbatim
+      'g' element is a container element for grouping together <g /> </g>
+      related graphics elements, for example:
+      <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
+      \endverbatim.
+   */
+
   private:
     ptr_vector<svg_element> children; /*! Children of this group element node,
       containg graphics elements like text, circle line, polyline...
@@ -1878,13 +1898,19 @@ public:
 
     void write(std::ostream& os)
     { /*! Output all children of a group element.
+    \verbatim
          Example:
          <g fill="rgb(255,255,255)" id="background"><rect x="0" y="0" width="500" height="350"/></g>
+         \endverbatim
       */
 
       if (children.size() > 0)
-      { // Avoid useless output like: <g id="legendBackground"></g>
-        // TODO check this doesn't mean that useful style is lost?
+      { /*!
+          \verbatim
+          Avoid useless output like: <g id="legendBackground"></g>
+          TODO check this doesn't mean that useful style is lost?
+        \endverbatim
+        */
 
         os << "<g"; // Do NOT need space if convention is to start following item with space.
         write_attributes(os); // id="background" (or clip_path)
