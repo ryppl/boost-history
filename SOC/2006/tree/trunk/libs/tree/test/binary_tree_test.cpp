@@ -87,7 +87,7 @@ BOOST_AUTO_TEST_CASE( assign_subtree_test )
 
 BOOST_AUTO_TEST_SUITE_END()
 
-BOOST_FIXTURE_TEST_SUITE( binary_tree_test, test_binary_tree_with_list_fixture<int> )
+BOOST_FIXTURE_TEST_SUITE( binary_tree_test, test_binary_tree_fixture<int> )
 
 using namespace boost::tree;
 

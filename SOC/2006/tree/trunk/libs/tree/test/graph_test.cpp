@@ -23,7 +23,7 @@
 
 typedef boost::tree::augmented_type< int, boost::default_color_type > data_type;
 
-BOOST_FIXTURE_TEST_SUITE(graph_algorithms_test, test_binary_tree_with_list_fixture<data_type>)
+BOOST_FIXTURE_TEST_SUITE(graph_algorithms_test, test_binary_tree_fixture<data_type>)
 
 BOOST_AUTO_TEST_CASE( graph_test )
 {
