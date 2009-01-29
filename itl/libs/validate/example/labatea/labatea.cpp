@@ -57,35 +57,35 @@ void test_Validater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-	//typedef InplaceSymmetricDifference<interval_map<int, itl::set<int>, neutron_emitter_and_enricher >, std_equal> TestLawT;
+	//typedef InplaceSymmetricDifference<interval_map<int, itl::set<int>, total_enricher >, std_equal> TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 	//test_law.run();
 
 	//typedef InplaceDistributivity
-	//	<split_interval_map<int, itl::set<int>, neutron_absorber >, 
+	//	<split_interval_map<int, itl::set<int>, partial_absorber >, 
 	//	inplace_et, inplace_plus, itl::std_equal>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
-	typedef InplaceSelfRemovability 
-		<split_interval_map<int, itl::set<int>, neutron_emitter >, 
+	typedef InplaceNaturalInversion 
+		<split_interval_map<int, itl::set<int>, total_absorber >, 
 		itl::inplace_plus, itl::protonic_equal>  TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
 	test_law.setTrialsCount(1000);
 
 	//typedef InplaceAssociativity
-	//   <interval_map<int, int, neutron_absorber >, inplace_plus>  TestLawT;
+	//   <interval_map<int, int, partial_absorber >, inplace_plus>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
 	//typedef InplaceCommutativity
-	//   <split_interval_map<int, int, neutron_emitter>, inplace_plus>  TestLawT;
+	//   <split_interval_map<int, int, total_absorber>, inplace_plus>  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 
 	//typedef ProtonicEquality
-	//   <split_interval_map<int, int, neutron_enricher > >  TestLawT;
+	//   <split_interval_map<int, int, partial_enricher > >  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(1000);
 

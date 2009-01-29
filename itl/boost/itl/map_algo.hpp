@@ -163,7 +163,7 @@ namespace boost{namespace itl
         template<class MapType>
         void flip(MapType& result, const MapType& x2)
         {
-			if(emits_neutrons<MapType>::value && absorbs_neutrons<MapType>::value)
+			if(is_total<MapType>::value && absorbs_neutrons<MapType>::value)
 			{
 				result.clear();
 				return;
@@ -192,7 +192,7 @@ namespace boost{namespace itl
 				}
 			}
 
-			if(emits_neutrons<MapType>::value && !absorbs_neutrons<MapType>::value)//JODO
+			if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)//JODO
 				FORALL(typename MapType, it_, result)
 					it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
         }

@@ -57,10 +57,10 @@ namespace boost{namespace itl
 
             _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
             _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::absorber]      = 50;
-            _neutronizerChoice[NeutronHandlerType::enricher]      = 50;
-            _neutronizerChoice[NeutronHandlerType::emitter]       = 0;
-            _neutronizerChoice[NeutronHandlerType::polluter]      = 0;
+            _neutronizerChoice[NeutronHandlerType::partial_absorber]      = 50;
+            _neutronizerChoice[NeutronHandlerType::partial_enricher]      = 50;
+            _neutronizerChoice[NeutronHandlerType::total_absorber]       = 0;
+            _neutronizerChoice[NeutronHandlerType::total_enricher]      = 0;
             setNeutronHandlerTypeNames();
             _neutronizerChoice.init();
 
@@ -103,27 +103,27 @@ namespace boost{namespace itl
             //-----------------------------------------------------------------
             case RootType::itl_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::absorber: return new InplaceMapValidater<itl::map<int,itl::set<int> > >;
-                case NeutronHandlerType::enricher: return new InplaceMapValidater<itl::map<int,itl::set<int>,neutron_enricher> >;
-                //case NeutronHandlerType::emitter : return new InplaceMapValidater<itl::map<int,itl::set<int>,neutron_emitter > >;
+                case NeutronHandlerType::partial_absorber: return new InplaceMapValidater<itl::map<int,itl::set<int> > >;
+                case NeutronHandlerType::partial_enricher: return new InplaceMapValidater<itl::map<int,itl::set<int>,partial_enricher> >;
+                //case NeutronHandlerType::total_absorber : return new InplaceMapValidater<itl::map<int,itl::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case itl_map 
             //-----------------------------------------------------------------
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::absorber: return new IntervalMapValidater<interval_map<int,itl::set<int> > >;
-                case NeutronHandlerType::enricher: return new IntervalMapValidater<interval_map<int,itl::set<int>,neutron_enricher> >;
-                //case NeutronHandlerType::emitter : return new IntervalMapValidater<interval_map<int,itl::set<int>,neutron_emitter > >;
+                case NeutronHandlerType::partial_absorber: return new IntervalMapValidater<interval_map<int,itl::set<int> > >;
+                case NeutronHandlerType::partial_enricher: return new IntervalMapValidater<interval_map<int,itl::set<int>,partial_enricher> >;
+                //case NeutronHandlerType::total_absorber : return new IntervalMapValidater<interval_map<int,itl::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case interval_map 
             //-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(neutronizerChoice) {
-                case NeutronHandlerType::absorber: return new IntervalMapValidater<split_interval_map<int,itl::set<int> > >;
-                case NeutronHandlerType::enricher: return new IntervalMapValidater<split_interval_map<int,itl::set<int>,neutron_enricher> >;
-                //case NeutronHandlerType::emitter : return new IntervalMapValidater<split_interval_map<int,itl::set<int>,neutron_emitter > >;
+                case NeutronHandlerType::partial_absorber: return new IntervalMapValidater<split_interval_map<int,itl::set<int> > >;
+                case NeutronHandlerType::partial_enricher: return new IntervalMapValidater<split_interval_map<int,itl::set<int>,partial_enricher> >;
+                //case NeutronHandlerType::total_absorber : return new IntervalMapValidater<split_interval_map<int,itl::set<int>,total_absorber > >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case split_interval_map 

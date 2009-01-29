@@ -43,7 +43,7 @@ for concepts InplaceAddable and InplaceSubtractable
 #include <boost/itl/type_traits/is_interval_splitter.hpp>
 #include <boost/itl/type_traits/is_interval_separator.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
-#include <boost/itl/type_traits/emits_neutrons.hpp>
+#include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 
@@ -512,7 +512,7 @@ namespace boost{namespace itl
     { enum{value = false}; };
 
     template <class Type>
-    struct emits_neutrons<itl::set<Type> >
+    struct is_total<itl::set<Type> >
     { enum{value = false}; };
 
     template <class Type>

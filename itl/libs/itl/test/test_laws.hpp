@@ -145,7 +145,7 @@ DEFINE_COMMUTATIVITY_CHECK_WRT      (caret, ^ );
 DEFINE_COMMUTATIVITY_CHECK_WRT_EQUAL(caret, ^ );
 
 //------------------------------------------------------------------------------
-// Inversion
+// InplaceNaturalInversion
 //------------------------------------------------------------------------------
 
 #define DEFINE_INVERSION_CHECK_WRT_EQUAL(plus_tag, plus_sign) \

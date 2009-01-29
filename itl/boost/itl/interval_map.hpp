@@ -111,7 +111,7 @@ template
 <
     typename DomainT,
     typename CodomainT,
-    class Traits = itl::neutron_absorber,
+    class Traits = itl::partial_absorber,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
     ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
 	ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
@@ -132,8 +132,8 @@ public:
     typedef interval_base_map <interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
-    typedef interval_map<DomainT,CodomainT,itl::neutron_absorber,Compare,Combine,Section,Interval,Alloc>
-            neutron_absorber_type;
+    typedef interval_map<DomainT,CodomainT,itl::partial_absorber,Compare,Combine,Section,Interval,Alloc>
+            partial_absorber_type;
 
     typedef Interval<DomainT,Compare> interval_type;
     typedef typename base_type::iterator iterator;
@@ -404,7 +404,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
         return this->_map.end();
 
     std::pair<iterator,bool> insertion;
-    if(Traits::emits_neutrons)
+    if(Traits::is_total)
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
@@ -435,7 +435,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
         return this->_map.end();
 
     std::pair<iterator,bool> insertion;
-    if(Traits::emits_neutrons)
+    if(Traits::is_total)
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, value.CONT_VALUE);
@@ -470,7 +470,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         return;
 
     std::pair<iterator,bool> insertion;
-    if(Traits::emits_neutrons)
+    if(Traits::is_total)
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, x_val);
@@ -1035,8 +1035,8 @@ struct absorbs_neutrons<itl::interval_map<KeyT,DataT,Traits> >
 { enum{value = Traits::absorbs_neutrons}; };
 
 template <class KeyT, class DataT, class Traits>
-struct emits_neutrons<itl::interval_map<KeyT,DataT,Traits> >
-{ enum{value = Traits::emits_neutrons}; };
+struct is_total<itl::interval_map<KeyT,DataT,Traits> >
+{ enum{value = Traits::is_total}; };
 
 template <class KeyT, class DataT, class Traits>
 struct type_to_string<itl::interval_map<KeyT,DataT,Traits> >

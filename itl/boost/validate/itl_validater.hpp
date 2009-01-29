@@ -39,7 +39,7 @@ namespace boost{namespace itl
 
     namespace NeutronHandlerType 
     {
-        enum NeutronHandlerTypes { absorber, enricher, emitter, polluter, NeutronHandlerTypes_size };
+        enum NeutronHandlerTypes { partial_absorber, partial_enricher, total_absorber, total_enricher, NeutronHandlerTypes_size };
     }
 
     
@@ -157,10 +157,10 @@ namespace boost{namespace itl
         void setNeutronHandlerTypeNames()
         {
             std::vector<std::string> type_names(NeutronHandlerType::NeutronHandlerTypes_size);
-            type_names[NeutronHandlerType::absorber]          = "absorber"; 
-            type_names[NeutronHandlerType::enricher]          = "enricher"; 
-            type_names[NeutronHandlerType::emitter]           = "emitter"; 
-            type_names[NeutronHandlerType::polluter]          = "polluter"; 
+            type_names[NeutronHandlerType::partial_absorber]        = "partial_absorber"; 
+            type_names[NeutronHandlerType::partial_enricher]        = "partial_enricher"; 
+            type_names[NeutronHandlerType::total_absorber]          = "total_absorber"; 
+            type_names[NeutronHandlerType::total_enricher]          = "total_enricher"; 
             _neutronizerChoice.setTypeNames(type_names);
         }
 

@@ -47,43 +47,43 @@ class itl::map
 namespace boost{namespace itl
 {
 
-    struct neutron_absorber
+    struct partial_absorber
     {
         enum { absorbs_neutrons = true };
-        enum { emits_neutrons = false };
+        enum { is_total = false };
     };
 
     template<> 
-    inline std::string type_to_string<neutron_absorber>::apply() { return "@0"; }
+    inline std::string type_to_string<partial_absorber>::apply() { return "@0"; }
 
 
-    struct neutron_enricher
+    struct partial_enricher
     {
         enum { absorbs_neutrons = false };
-        enum { emits_neutrons = false };
+        enum { is_total = false };
 
     };
 
     template<> 
-    inline std::string type_to_string<neutron_enricher>::apply() { return "e0"; }
+    inline std::string type_to_string<partial_enricher>::apply() { return "e0"; }
 
-    struct neutron_emitter
+    struct total_absorber
     {
         enum { absorbs_neutrons = true };
-        enum { emits_neutrons = true };
+        enum { is_total = true };
     };
 
     template<> 
-    inline std::string type_to_string<neutron_emitter>::apply() { return "^0"; }
+    inline std::string type_to_string<total_absorber>::apply() { return "^0"; }
 
-    struct neutron_polluter
+    struct total_enricher
     {
         enum { absorbs_neutrons = false };
-        enum { emits_neutrons = true };
+        enum { is_total = true };
     };
 
     template<> 
-    inline std::string type_to_string<neutron_polluter>::apply() { return "e^0"; }
+    inline std::string type_to_string<total_enricher>::apply() { return "e^0"; }
 
 
     /*JODO move this comment to concept InplaceAddable, InplaceSubtractable, InplaceCombinable
@@ -103,7 +103,7 @@ namespace boost{namespace itl
     <
         typename DomainT, 
         typename CodomainT, 
-        class Traits = itl::neutron_absorber,
+        class Traits = itl::partial_absorber,
         ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT),
         ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
 		ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
@@ -120,8 +120,8 @@ namespace boost{namespace itl
                                   allocator_type>              base_type;
         typedef typename itl::set<DomainT, Compare, Alloc >       set_type;
 
-        typedef itl::map<DomainT,CodomainT,itl::neutron_absorber,Compare,Combine,Section,Alloc> 
-                                                               neutron_absorber_type;
+        typedef itl::map<DomainT,CodomainT,itl::partial_absorber,Compare,Combine,Section,Alloc> 
+                                                               partial_absorber_type;
         typedef Traits traits;
 
     public:
@@ -193,7 +193,7 @@ namespace boost{namespace itl
 
     public:
         inline static bool has_symmetric_difference() 
-		{ return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::emits_neutrons); }
+		{ return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
 
     public:
         // --------------------------------------------------------------------
@@ -229,7 +229,7 @@ namespace boost{namespace itl
             subtraced from the data value stored in the map. */
         map& subtract(const value_type& value_pair)
 		{
-			if(Traits::emits_neutrons && !is_set<codomain_type>::value)
+			if(Traits::is_total && !is_set<codomain_type>::value)
 				this->template add<inverse_codomain_combine>(value_pair); 
 			else 
 				this->template subtract<inverse_codomain_combine>(value_pair); 
@@ -311,7 +311,7 @@ namespace boost{namespace itl
             *this;
 
         std::pair<iterator, bool> insertion;
-        if(Traits::emits_neutrons)
+        if(Traits::is_total)
         {
             CodomainT added_val = Combiner::neutron();
             Combiner()(added_val, val.CONT_VALUE);
@@ -591,7 +591,7 @@ namespace boost{namespace itl
 	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
     { 
 		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-		if(Traits::emits_neutrons && !is_set<typename ObjectT::codomain_type>::value)
+		if(Traits::is_total && !is_set<typename ObjectT::codomain_type>::value)
             const_FORALL(typename ObjectT, it_, operand)
 				object.template add<ObjectT::inverse_codomain_combine>(*it_);
         else Set::subtract(object, operand); 
@@ -633,7 +633,7 @@ namespace boost{namespace itl
     operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
 	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
     {
-		if(Traits::emits_neutrons) return object += operand;
+		if(Traits::is_total) return object += operand;
 		else{ Map::intersect(object, operand); return object; }
 	}
 
@@ -719,8 +719,8 @@ namespace boost{namespace itl
     { enum{value = Traits::absorbs_neutrons}; };
 
     template <class DomainT, class CodomainT, class Traits>
-    struct emits_neutrons<itl::map<DomainT,CodomainT,Traits> >
-    { enum{value = Traits::emits_neutrons}; };
+    struct is_total<itl::map<DomainT,CodomainT,Traits> >
+    { enum{value = Traits::is_total}; };
 
     template <class DomainT, class CodomainT, class Traits>
     struct type_to_string<itl::map<DomainT,CodomainT,Traits> >

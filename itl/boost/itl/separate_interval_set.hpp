@@ -288,7 +288,7 @@ struct absorbs_neutrons<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>
-struct emits_neutrons<itl::separate_interval_set<Type> >
+struct is_total<itl::separate_interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>

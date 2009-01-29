@@ -11,19 +11,19 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_monoid_plus_4_bicremental_types, T, bicremental_types)
-{         quantifier_map_check_monoid_plus_4_bicremental_types<T, std::string, neutron_absorber, interval_map>();}
+{         quantifier_map_check_monoid_plus_4_bicremental_types<T, std::string, partial_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_monoid_et_4_bicremental_types, T, bicremental_types)
-{         quantifier_map_check_monoid_et_4_bicremental_types<T, int, neutron_absorber, interval_map>();}
+{         quantifier_map_check_monoid_et_4_bicremental_types<T, int, partial_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_abelian_monoid_plus_4_bicremental_types, T, bicremental_types)
-{         quantifier_map_check_abelian_monoid_plus_4_bicremental_types<T, std::string, neutron_absorber, interval_map>();}
+{         quantifier_map_check_abelian_monoid_plus_4_bicremental_types<T, std::string, partial_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_abelian_monoid_et_4_bicremental_types, T, bicremental_types)
-{         quantifier_map_check_abelian_monoid_et_4_bicremental_types<T, int, neutron_absorber, interval_map>();}
+{         quantifier_map_check_abelian_monoid_et_4_bicremental_types<T, int, partial_absorber, interval_map>();}
 
 
 //------------------------------------------------------------------------------
@@ -31,21 +31,21 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 //------------------------------------------------------------------------------
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_monoid_plus_4_bicremental_types_ta, T, bicremental_types)
-{         quantifier_map_check_monoid_plus_4_bicremental_types<T, std::string, neutron_emitter, interval_map>();}
+{         quantifier_map_check_monoid_plus_4_bicremental_types<T, std::string, total_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_monoid_et_4_bicremental_types_ta, T, bicremental_types)
-{         quantifier_map_check_monoid_et_4_bicremental_types<T, int, neutron_emitter, interval_map>();}
+{         quantifier_map_check_monoid_et_4_bicremental_types<T, int, total_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_abelian_monoid_plus_4_bicremental_types_ta, T, bicremental_types)
-{         quantifier_map_check_abelian_monoid_plus_4_bicremental_types<T, std::string, neutron_emitter, interval_map>();}
+{         quantifier_map_check_abelian_monoid_plus_4_bicremental_types<T, std::string, total_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_abelian_monoid_et_4_bicremental_types_ta, T, bicremental_types)
-{         quantifier_map_check_abelian_monoid_et_4_bicremental_types<T, int, neutron_emitter, interval_map>();}
+{         quantifier_map_check_abelian_monoid_et_4_bicremental_types<T, int, total_absorber, interval_map>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_quantifier_map_check_abelian_group_plus_4_bicremental_types_ta, T, bicremental_types)
-{         quantifier_map_check_abelian_group_plus_4_bicremental_types<T, int, neutron_emitter, interval_map>();}
+{         quantifier_map_check_abelian_group_plus_4_bicremental_types<T, int, total_absorber, interval_map>();}
 

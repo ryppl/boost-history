@@ -139,7 +139,7 @@ template
     class SubType,
     typename DomainT,
     typename CodomainT,
-    class Traits = itl::neutron_absorber,
+    class Traits = itl::partial_absorber,
     ITL_COMPARE Compare  = ITL_COMPARE_INSTANCE(std::less, DomainT),
 	ITL_COMBINE Combine  = ITL_COMBINE_INSTANCE(itl::inplace_plus, CodomainT),
 	ITL_SECTION Section  = ITL_SECTION_INSTANCE(itl::inplace_et, CodomainT), 
@@ -164,8 +164,8 @@ public:
                               type;
 
     typedef interval_base_map<SubType,DomainT,CodomainT,
-                              itl::neutron_absorber,Compare,Combine,Section,Interval,Alloc>
-                              neutron_absorber_type;
+                              itl::partial_absorber,Compare,Combine,Section,Interval,Alloc>
+                              partial_absorber_type;
 
 	typedef type overloadable_type;
 
@@ -242,7 +242,7 @@ public:
 	
 public:
     inline static bool has_symmetric_difference() 
-    { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::emits_neutrons); }
+    { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
 
 	enum{ is_itl_container = true };
 
@@ -454,7 +454,7 @@ public:
         will be decremented by <tt>y</tt>: <tt>y0 -= y</tt> via operator <tt>-=</tt>
         which has to be implemented for CodomainT. If <tt>y</tt> becomes
         the neutral element CodomainT() <tt>k</tt> will also be removed from
-        the map, if the Traits include the property neutron_absorber. 
+        the map, if the Traits include the property partial_absorber. 
 
         Insertion and subtraction are reversible as follows:
         <tt>m0=m; m.add(x); m.subtract(x);</tt> implies <tt>m==m0 </tt>         
@@ -476,11 +476,11 @@ public:
 
         If <tt>y</tt> becomes the neutral element CodomainT() <tt>k</tt> will
         also be removed from the map, if the Traits include the property 
-        neutron_absorber. 
+        partial_absorber. 
     */
     SubType& subtract(const value_type& x)
     {
-		if(Traits::emits_neutrons && !is_set<codomain_type>::value)
+		if(Traits::is_total && !is_set<codomain_type>::value)
 			that()->template add_<inverse_codomain_combine>(x); 
         else 
 			that()->template subtract_<inverse_codomain_combine>(x); 
@@ -743,13 +743,13 @@ public:
             erase_if(content_is_neutron<value_type>());
     }
 
-    /// Copies this map into a neutron_absorber type.
+    /// Copies this map into a partial_absorber type.
     /** \c x is a copy of \c *this as a neutron_aborber.
         A neutron absorber is a map that does not store neutral elements
         (<tt>neutron() == codomain_type()</tt>)
         as associated values.
     */
-    void as_neutron_absorber(neutron_absorber_type& x)const
+    void as_neutron_absorber(partial_absorber_type& x)const
     { FOR_IMPLMAP(it) x.add(*it); }
 
     /// Join bounding intervals    
@@ -973,7 +973,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     typedef IntervalMap<DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> sectant_type;
 
-	if(Traits::emits_neutrons)
+	if(Traits::is_total)
 	{
 		intersection = *this;
 		intersection += sectant;
@@ -1002,7 +1002,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::value_type& sectant)const
 {
-	if(Traits::emits_neutrons)
+	if(Traits::is_total)
 	{
 		section = *this;
 		section.add(sectant);
@@ -1076,12 +1076,12 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 	// That which is not shall be added
 	// So x has to be 'complementary added' or flipped
 
-	if(Traits::emits_neutrons && Traits::absorbs_neutrons)
+	if(Traits::is_total && Traits::absorbs_neutrons)
 	{
 		clear();
 		return *that();
 	}
-	if(Traits::emits_neutrons && !Traits::absorbs_neutrons)//JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)//JODO
 	{
 		(*that()) += x;
 		FORALL(typename ImplMapT, it_, _map)
@@ -1140,7 +1140,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 	//If span is not empty here, it is not in the set so it shall be added
 	add(value_type(span, x_value));
 
-	if(Traits::emits_neutrons && !Traits::absorbs_neutrons) //JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons) //JODO
 		FORALL(typename ImplMapT, it_, _map)
 			it_->CONT_VALUE = neutron<codomain_type>::value();
 
@@ -1171,12 +1171,12 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 {
     typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
 
-	if(Traits::emits_neutrons && Traits::absorbs_neutrons)
+	if(Traits::is_total && Traits::absorbs_neutrons)
 	{
 		clear();
 		return *that();
 	}
-	if(Traits::emits_neutrons && !Traits::absorbs_neutrons)//JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)//JODO
 	{
 		(*that()) += operand;
 		FORALL(typename ImplMapT, it_, _map)
@@ -1206,7 +1206,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     while(it != operand.end())
         add(*it++);
 
-	if(Traits::emits_neutrons && !Traits::absorbs_neutrons) //JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons) //JODO
 		FORALL(typename ImplMapT, it_, _map)
 			it_->CONT_VALUE = neutron<codomain_type>::value();
 

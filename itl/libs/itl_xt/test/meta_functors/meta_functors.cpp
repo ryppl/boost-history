@@ -252,7 +252,7 @@ void quantifier_subtract_test()
 
 void misc_test()
 {
-	typedef interval_map<int,int,neutron_enricher> MapT;
+	typedef interval_map<int,int,partial_enricher> MapT;
 	MapT m;
 	m += MapT::value_type(interval<int>::rightopen(1,3), 1);
 	cout << m << endl;

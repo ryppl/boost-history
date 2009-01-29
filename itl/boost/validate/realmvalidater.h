@@ -56,10 +56,10 @@ namespace boost{namespace itl
 
             _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
             _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::absorber]      = 50;
-            _neutronizerChoice[NeutronHandlerType::enricher]      = 50;
-            _neutronizerChoice[NeutronHandlerType::emitter]       = 0;
-            _neutronizerChoice[NeutronHandlerType::polluter]      = 0;
+            _neutronizerChoice[NeutronHandlerType::partial_absorber]    = 50;
+            _neutronizerChoice[NeutronHandlerType::partial_enricher]    = 50;
+            _neutronizerChoice[NeutronHandlerType::total_absorber]      = 0;
+            _neutronizerChoice[NeutronHandlerType::total_enricher]      = 0;
             setNeutronHandlerTypeNames();
             _neutronizerChoice.init();
 
@@ -166,8 +166,8 @@ namespace boost{namespace itl
 
                 case DomainType::Double:
                     switch(codomainChoice) {
-                    case CodomainType::Int:     return new InplaceMapValidater<itl::map<double,int,neutron_enricher> >; 
-                    case CodomainType::set_int: return new InplaceSetValidater<itl::map<double,itl::set<int>,neutron_enricher > >;
+                    case CodomainType::Int:     return new InplaceMapValidater<itl::map<double,int,partial_enricher> >; 
+                    case CodomainType::set_int: return new InplaceSetValidater<itl::map<double,itl::set<int>,partial_enricher > >;
                     default: return choiceError(ITL_LOCATION("\nRootType::itl_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }//switch codomain
@@ -181,15 +181,15 @@ namespace boost{namespace itl
                 switch(domainChoice) {
                 case DomainType::Int:
                     switch(codomainChoice) {
-                    case CodomainType::Int:     return new IntervalMapValidater<interval_map<int,int,neutron_emitter> >; 
+                    case CodomainType::Int:     return new IntervalMapValidater<interval_map<int,int,total_absorber> >; 
                     case CodomainType::set_int: return new IntervalMapValidater<interval_map<int,itl::set<int> > >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }// switch codomain
                 case DomainType::Double:
                     switch(codomainChoice) {
-                    case CodomainType::Int:     return new IntervalMapValidater<interval_map<double,int,neutron_polluter> >; 
-                    case CodomainType::set_int: return new IntervalMapValidater<interval_map<double,itl::set<int>,neutron_enricher > >;
+                    case CodomainType::Int:     return new IntervalMapValidater<interval_map<double,int,total_enricher> >; 
+                    case CodomainType::set_int: return new IntervalMapValidater<interval_map<double,itl::set<int>,partial_enricher > >;
                     default: return choiceError(ITL_LOCATION("\nRootType::interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }// switch codomain
@@ -202,14 +202,14 @@ namespace boost{namespace itl
                 switch(domainChoice) {
                 case DomainType::Int:
                     switch(codomainChoice) {
-                    case CodomainType::Int:     return new IntervalMapValidater<split_interval_map<int,int,neutron_enricher> >; 
-                    case CodomainType::set_int: return new IntervalMapValidater<split_interval_map<int,itl::set<int>,neutron_enricher> >; 
+                    case CodomainType::Int:     return new IntervalMapValidater<split_interval_map<int,int,partial_enricher> >; 
+                    case CodomainType::set_int: return new IntervalMapValidater<split_interval_map<int,itl::set<int>,partial_enricher> >; 
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);
                     }
                 case DomainType::Double:
                     switch(codomainChoice) {
-                    case CodomainType::Int:     return new IntervalMapValidater<split_interval_map<double,int,neutron_emitter> >; 
+                    case CodomainType::Int:     return new IntervalMapValidater<split_interval_map<double,int,total_absorber> >; 
                     case CodomainType::set_int: return new IntervalSetValidater<split_interval_map<double,itl::set<int> > >;
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: codomainChoice:\n"),
                                                 codomainChoice, _codomainChoice);

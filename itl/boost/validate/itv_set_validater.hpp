@@ -57,10 +57,10 @@ namespace boost{namespace itl
 
             _neutronizerChoice.setSize(NeutronHandlerType::NeutronHandlerTypes_size);
             _neutronizerChoice.setMaxWeights(100);
-            _neutronizerChoice[NeutronHandlerType::absorber]      = 100;
-            _neutronizerChoice[NeutronHandlerType::enricher]      = 0;
-            _neutronizerChoice[NeutronHandlerType::emitter]       = 0;
-            _neutronizerChoice[NeutronHandlerType::polluter]      = 0;
+            _neutronizerChoice[NeutronHandlerType::partial_absorber]      = 100;
+            _neutronizerChoice[NeutronHandlerType::partial_enricher]      = 0;
+            _neutronizerChoice[NeutronHandlerType::total_absorber]       = 0;
+            _neutronizerChoice[NeutronHandlerType::total_enricher]      = 0;
             setNeutronHandlerTypeNames();
             _neutronizerChoice.init();
 

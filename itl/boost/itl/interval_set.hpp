@@ -405,7 +405,7 @@ struct absorbs_neutrons<itl::interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>
-struct emits_neutrons<itl::interval_set<Type> >
+struct is_total<itl::interval_set<Type> >
 { enum{value = false}; };
 
 template <class Type>

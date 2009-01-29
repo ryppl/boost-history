@@ -9,7 +9,7 @@
 [section Semantics]
 
 In the *itl* we follow the notion, that the semantics of a ['*concept*] or an
-['*abstract data type*] can be expressed by ['*laws*]. In the *itl* we formulate
+['*abstract data type*] can be expressed by ['*laws*]. We formulate
 laws over interval containers that can be evaluated for a given
 instantiation of the variables contained in the law. The following
 pseudocode gives a shorthand notation of such a law.
@@ -53,7 +53,7 @@ Transitivity<T,< >  : T a,b,c; a<b && b<c implies a<c
 
 `Operator <` depends on the itl::container's template parameter
 `Compare` that implements a ['strict weak ordering] for the container's
-`key_type`.
+`domain_type`.
 For a given `Compare` ordering, `operator <` implements a 
 lexicographical comparison on itl::containers, that uses the 
 `Compare` order to establish a unique sequence of values in 
@@ -99,18 +99,18 @@ w1 == w2;                        //false: Different segmentation
 is_element_equal(w1,w2);         //true:  Same elements contained  
 ``   
 
-So for a constant `Compare` order on key elements,
-memberfuntion `contained_in` that is defined for all 
+For a constant `Compare` order on key elements,
+memberfunktion `contained_in` that is defined for all 
 itl::containers implements a
 [@http://en.wikipedia.org/wiki/Partially_ordered_set partial order]
 on itl::containers.
 
 ``
 with <= for contained_in,
-      = for is_element_equal:
-Reflexivity<T,<= >   : T a;     a<=a
-Antisymmetry<T,<=,=> : T a,b;   a<=b && b<=a implies a=b 
-Transitivity<T,<= >  : T a,b,c; a<=b && b<=c implies a<c
+    =e= for is_element_equal:
+Reflexivity<T,<= >     : T a;     a <= a
+Antisymmetry<T,<=,=e=> : T a,b;   a <= b && b <= a implies a =e= b 
+Transitivity<T,<= >    : T a,b,c; a <= b && b <= c implies a <= c
 ``
 
 The induced equivalence is the equality of elements that
@@ -171,7 +171,7 @@ is non symmetrical.
 
 ``
 RightNeutrality<S,-,== > : S a;   a-S() == a
-SelfRemovability<S,-,== >: S a;   a - a == S()
+Inversion<S,-,== >:        S a;   a - a == S()
 ``
 
 Summarized in the next table are laws that use `+`, `&` and `-`
@@ -181,11 +181,11 @@ are lexicographically equal, as denoted by `==` in the cells
 of the table.
 
 ``
-                 +    *   -
+                 +    &   -
 Associativity    ==   == 
-Neutrality       ==       ==
+Neutrality       ==   ==  ==
 Commutativity    ==   ==
-SelfRemovability          ==
+Inversion                 ==
 ``
 
 [h5 Distributivity Laws]
@@ -200,10 +200,10 @@ Not all instances of distributivity laws hold for lexicographical equality.
 Therefore they are denoted using a /variable/ equality `=v=` below.
 
 ``
-     Distributivity<S,+,&,=v= > : S a,b,c; a + (b & c) =v= (a + b) * (a + c)
-     Distributivity<S,&,+,=v= > : S a,b,c; a * (b + c) =v= (a * b) + (a * c)
+     Distributivity<S,+,&,=v= > : S a,b,c; a + (b & c) =v= (a + b) & (a + c)
+     Distributivity<S,&,+,=v= > : S a,b,c; a & (b + c) =v= (a & b) + (a & c)
 RightDistributivity<S,+,-,=v= > : S a,b,c; (a + b) - c =v= (a - c) + (b - c)
-RightDistributivity<S,&,-,=v= > : S a,b,c; (a * b) - c =v= (a - c) * (b - c)
+RightDistributivity<S,&,-,=v= > : S a,b,c; (a & b) - c =v= (a - c) & (b - c)
 ``
 
 The next table shows the relationship between 
@@ -407,11 +407,11 @@ This problem can be dealt with in two ways.
   accounts for value pairs that that carry values unequal to the `neutron` value. 
 
 Solution (1) led to the introduction of map traits, particularly trait
-neutron_absorber trait which is the default setting in all itl's map
+partial_absorber trait which is the default setting in all itl's map
 templates.
 
 Solution (2), is applied to check the semantics of itl::Maps for the
-neutron_enricher trait that does not delete value pairs that carry
+partial_enricher trait that does not delete value pairs that carry
 neutrons. Protonic equality is implemented by a non member function
 called `is_protonic_equal`. Througout this chapter
 protonic equality in pseudocode and law denotations is denoted
@@ -435,43 +435,43 @@ Commutativity<C,+,== >: C a,b;       a+b == b+a
 Associativity<C,*,== >: C a,b,c; a&(b&c) ==(a&b)&c
 Commutativity<C,*,== >: C a,b;       a&b == b&a
 
-RightNeutrality<C,-,== >  : C a;   a-C() ==  a
-SelfRemovability<C,-,=v= >: C a;   a - a =v= C()
+RightNeutrality<C,-,== >: C a;   a-C() ==  a
+Inversion<C,-,=v= >     : C a;   a - a =v= C()
 ``
 
 All the fundamental laws could be validated for all 
 itl Maps in their instantiation as Maps of Sets or Collectors.
-As expected SelfRmovability only holds for protonic equality,
-if the map is not a `neutron_absorber`.
+As expected Inversion only holds for protonic equality,
+if the map is not a `partial_absorber`.
 
 ``
-                                   +    &    -
-Associativity                      ==   == 
-Neutrality                         ==        ==
-Commutativity                      ==   ==
-SelfRemovability neutron_absorber            ==
-                 neutron_enricher            =p=
+                             +    &    -
+Associativity                ==   == 
+Neutrality                   ==   ==   ==
+Commutativity                ==   ==
+Inversion partial_absorber             ==
+          partial_enricher             =p=
 ``
 
 [h5 Distributivity Laws]
 
 ``
-     Distributivity<C,+,&,=v= > : C a,b,c; a + (b & c) =v= (a + b) * (a + c)
-     Distributivity<C,&,+,=v= > : C a,b,c; a * (b + c) =v= (a * b) + (a * c)
+     Distributivity<C,+,&,=v= > : C a,b,c; a + (b & c) =v= (a + b) & (a + c)
+     Distributivity<C,&,+,=v= > : C a,b,c; a & (b + c) =v= (a & b) + (a & c)
 RightDistributivity<C,+,-,=v= > : C a,b,c; (a + b) - c =v= (a - c) + (b - c)
-RightDistributivity<C,&,-,=v= > : C a,b,c; (a * b) - c =v= (a - c) * (b - c)
+RightDistributivity<C,&,-,=v= > : C a,b,c; (a & b) - c =v= (a - c) & (b - c)
 ``
 
 Results for the distributivity laws are almost identical to 
 the validation of sets except that
-for a `neutron_enricher map` the law `(a * b) - c == (a - c) * (b - c)`
+for a `partial_enricher map` the law `(a & b) - c == (a - c) & (b - c)`
 holds for lexicographical equality.
 
 ``
                                                    +,&    &,+
      Distributivity  joining                       ==     ==
-                     splitting   neutron_absorber  =e=    =e=
-                                 neutron_enricher  =e=    ==                     
+                     splitting   partial_absorber  =e=    =e=
+                                 partial_enricher  =e=    ==                     
                      
                                                    +,-    &,-
 RightDistributivity  joining                       ==     ==
@@ -481,7 +481,7 @@ RightDistributivity  joining                       ==     ==
 [h5 DeMorgan's Law and Symmetric Difference]
 
 ``
-DeMorgan<C,+,&,=v= > : C a,b,c; a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<C,+,&,=v= > : C a,b,c; a - (b + c) =v= (a - b) & (a - c)
 DeMorgan<C,&,+,=v= > : C a,b,c; a - (b & c) =v= (a - b) + (a - c)
 ``
 
@@ -565,8 +565,8 @@ We will use the terms `TotalQuantifier` and
 
 [table
 [[Trait]           [CodomainT as number] [CodomainT more abstract] [Concept for Quanifier Map]]
-[[emits_neutrons]  [signed number]       [commutative group]       [InfiniteVector]]
-[[!emits_neutrons] [unsigned number]     [commutative monoid]      [hybrid type]]  
+[[is_total]  [signed number]       [commutative group]       [InfiniteVector]]
+[[!is_total] [unsigned number]     [commutative monoid]      [hybrid type]]  
 ]
 
 [h5 Intersection on Quantifiers]
@@ -631,26 +631,26 @@ Associativity<Q,*,== >: Q a,b,c; a&(b&c) ==(a&b)&c
 Commutativity<Q,*,== >: Q a,b;       a&b == b&a
 
 RightNeutrality<Q,-,== >  : Q a;   a-Q() ==  a
-SelfRemovability<Q,-,=v= >: Q a;   a - a =v= Q()
+Inversion<Q,-,=v= >: Q a;   a - a =v= Q()
 ``
 
 For a `Quantifier` the same basic laws apply that are
 valid for `Collectors`:
 
 ``
-                                    +    &    -
-Associativity                       ==   == 
-Neutrality                          ==        ==
-Commutativity                       ==   ==
-SelfRemovability absorbs_neutrons             ==
-                 enriches_neutrons            =p=
+                             +    &    -
+Associativity                ==   == 
+Neutrality                   ==        ==
+Commutativity                ==   ==
+Inversion absorbs_neutrons             ==
+          enriches_neutrons            =p=
 ``
 
 In addition also symmetrical difference is valid for 
-`Qunatifiers` and the 
+`Quantifiers` and the 
 modified `operator &`.
 ``
-SymmetricDifference<Q,== > : Q a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
+SymmetricDifference<Q,== > : Q a,b,c; (a + b) - (a & b) == (a - b) + (b - a)
 ``
 For a `TotalQuantifier` `Qt` symmetrical difference degenerates to 
 a trivial form since `operator &` and `operator +` become identical
@@ -703,7 +703,7 @@ of itl maps.
 [[`Map<D,Monoid>`]           [`Modoid`]           []                         [`interval_map<int,string>`]]
 [[`Map<D,Set,Trait>`]        [`Set`]              [`Trait::absorbs_neutrons`][`interval_map<int,itl::set<int> >`]]
 [[`Map<D,CommutativeMonoid>`][`CommutativeMonoid`][]                         [`interval_map<int,unsigned int>`]]
-[[`Map<D,CommutativeGroup>`] [`CommutativeGroup`] [`Trait::emits_neutrons`]  [`interval_map<int,int,neutron_emitter>`]]
+[[`Map<D,CommutativeGroup>`] [`CommutativeGroup`] [`Trait::is_total`]  [`interval_map<int,int,total_absorber>`]]
 ]
 
 [endsect][/ Concept Induction]

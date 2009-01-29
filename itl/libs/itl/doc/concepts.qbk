@@ -205,7 +205,7 @@ variing aggregation functors.
 But you could instantiate an __itv_map__ to have 
 `insert/erase` semantics this way:
 ``
-interval_map<int,int,neutron_absorber,
+interval_map<int,int,partial_absorber,
              std::less,
              inplace_identity //Combine parameter specified
             > m; 
@@ -228,7 +228,7 @@ Itl maps differ in their behavior dependent on how they handle
 section became ['kind of nuclear] at least in wording. 
 But rest assured `itl::Maps` won't contaminate your software.
 
-[h4 Remarks on Neutral Elements or Neutrons]
+[h4 Remarks on Neutral Elements]
 
 In the itl we call ['*neutral elements*] `neutrons` and all values
 that [*are not] `neutrons` we call `protons`.
@@ -250,8 +250,9 @@ for template type `CodomainT`.
                 In addition, associated neutrons that emerge from aggregations are stored.]]
 ]
 
-Note, that a neutron is defined in relation to a combiner operation. In many cases
-this relation is provided by the default parameters of itl `Maps`.
+Note, that a neutron is defined in relation to a combiner operation. 
+[/ In most cases
+this relation is provided by the default parameters of itl `Maps`.]
 
 [table
 [[type]     [operation]     [neutron]]
@@ -260,16 +261,20 @@ this relation is provided by the default parameters of itl `Maps`.
 [[`set<T>`] [union]         [`{}`]   ]
 ]
 
-In those cases the `neutron` value is delivered by the default constructor
-of a type. But there are well known exceptions like e.g. numeric multiplication:
+In these cases the `neutron` value is delivered by the default constructor
+of the maps `CodomainT` type. But there are well known exceptions 
+like e.g. numeric multiplication:
 
 [table
 [[type]   [operation]        [neutron]]
 [[`int`]  [multiplication]   [`1`]    ]
 ]
 
-Therefore an itl functor implements a static function `neutron()` to make
-shure that the correct `neutron()` is used, which is used in the implementation
+Therefore itl functors,
+that serve as `Combiner` parameters of itl Maps
+implement a static function `neutron()` to make
+shure that the correct `neutron()` is used
+in the implementation
 of ['aggregate on overlap].
 ``
 inplace_times<int>::neutron() == 1
@@ -299,7 +304,7 @@ key values. An item that is not counted can be represented as counted
 infinite vector.
 
 The second trait is related to the representation of `neutrons` in 
-the map. A itl map can be a neutron_absorber or a neutron_enricher.
+the map. An itl map can be a neutron absorber or a neutron enricher.
 
 * A neutron absorber never stores value pairs `(k,0)` that carry neutrons.
 * A neutron enricher stores value pairs `(k,0)`.
@@ -314,7 +319,7 @@ four values.
 ]
 
 
-[h4 Trait Neutron Absorber]
+[h4 Partial Neutron Absorber]
 
 From a pragmatic perspective value pairs that carry `neutrons` as 
 mapped values can often be deleted. If we count, for instance,
@@ -326,20 +331,27 @@ has not been counted at all.
 
 A Map that does never insert
 associated neutrons or deletes them when they emerge, is called
-__absorber__. To be a partial __absorber__ is the default setting
-for the Trait parameter. Moreover a __absorber__ is able
-to erase a pair `(x,y)` from a map `{(x,y)}` by calling 
-`subtract((x,y))` or `operator - ` .
+neutron absorber. A partial neutron absorber (short __absorber__) 
+is the default setting
+for the Trait parameter. A __absorber__ is able
+to erase a pair `(k,v)` from a map `{(k,v)}` by calling 
+`subtract((k,v))` or `operator - ` .
 
-``{(x,y)} - (x,y) == {}`` 
+``{(k,v)} - (k,v) == {}`` 
 
-[h4 Neutron Enricher]
 
-With a __enricher__, on the contrary, subtraction of a 
-pair `(x,y)` that is in the map results in a pair `(x,0)`.
-`{(x,y)} - (x,y) == {(x,0)}`. Mapping pairs that carry
-`neutrons` may emerge as a result of computations and they can
-not be erased by subtractions, so they are /enriched/ in the map.
+[h4 Partial Neutron Enricher]
+
+With a neutron enricher, 
+on the contrary, subtraction of a 
+pair `(k,v)` that is in the map results in a pair `(k,0)`.
+
+``{(k,v)} - (k,v) == {(k,0)}`` 
+
+Mapping pairs that carry
+`neutrons` may emerge as a result of additions or aggregations
+and they can not be erased by subtractions, so they are 
+/enriched/ in the map.
 
 A neutron enricher carries the information, if values have
 been added or aggregated for certain keys and resulted in a `neutron` 
@@ -349,8 +361,8 @@ exists for a key.
 The following distinction can *not* be made for a __absorber__ map
 but it can be made for an __enricher__ map:
 [pre
-(k,y) does not exist in the map: Pair (k,y) has NOT been dealt with
-(k,0) key k carries 0          : Pair (k,y) has     been dealt with resulting in y=0
+(k,v) does not exist in the map: Pair (k,v) has NOT been dealt with
+(k,0) key k carries 0          : Pair (k,v) has     been dealt with resulting in y=0
 ]
 
 Sometimes this subtle distiction is needed. Then a __enricher__
@@ -358,11 +370,13 @@ is the right choice. Also, If we want to give two `itl::Maps`
 a common set of keys in order to, say, iterate synchronously
 over both maps, we need __enrichers__. 
 
-[h4 Neutron Emitter]
+[h4 Total Neutron Absorber]
 
-The third neutronic Trait is called __emitter__.
+The third neutronic Trait is a total map that does not
+store value pairs with associated neutrons `(k,0)`.
+It is called total neutron absorber (short __emitter__).
 A map that is a __emitter__ is defined on every value
-of it's domain. It emits a 
+of it's domain. It provides a 
 neutron value for every key value, that has not been set or 
 aggregated to a value unequal to the `neutron` value.
 
@@ -382,7 +396,7 @@ and a __enticher__. Value pairs, that emerged due to aggregations
 and carry `neutron` values are actually stored. All value pairs,
 that are not represented carry `neutrons` via default but are not stored.
 
-['Neutronic traits] can be summarized as follows
+The traits for itl Maps can be summarized as follows
 
 [table
 [[]                 []      [absorbs neutrons] []]

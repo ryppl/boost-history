@@ -20,8 +20,8 @@ namespace boost{namespace itl
     template <typename Type, 
               template<class>class Combiner = inplace_plus,
 		      template<class>class Equality = itl::std_equal>
-    class InplaceSelfRemovability 
-        : public Law<InplaceSelfRemovability<Type,Combiner,Equality>, 
+    class InplaceNaturalInversion 
+        : public Law<InplaceNaturalInversion<Type,Combiner,Equality>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
     {
         //a - a == 0
@@ -32,15 +32,15 @@ namespace boost{namespace itl
     public:
 		typedef typename inverse<Combiner<Type> >::type InverseCombinerT;
 
-        std::string name()const { return "InplaceSelfRemovability"; }
+        std::string name()const { return "InplaceNaturalInversion"; }
         std::string formula()const { return "a -= a; a == 0"; }
 
         std::string typeString()const
         {
-            return "SelfRemovability<"+type_to_string<Type>::apply()+","
+            return "NaturalInversion<"+type_to_string<Type>::apply()+","
                                       +unary_template_to_string<Combiner>::apply()+","
                                       +unary_template_to_string<Equality>::apply()
-									  +">";
+							          +">";
         }
 
     public:
@@ -70,8 +70,8 @@ namespace boost{namespace itl
     template <typename Type, 
               template<class>class Combiner = inplace_plus,
 		      template<class>class Equality = itl::std_equal>
-    class InplaceInverseRemovability 
-        : public Law<InplaceInverseRemovability<Type,Combiner,Equality>, 
+    class InplaceInverseExistence 
+        : public Law<InplaceInverseExistence<Type,Combiner,Equality>, 
                      LOKI_TYPELIST_1(Type), LOKI_TYPELIST_2(Type,Type)>
     {
         //(0 - a) + a == 0
@@ -82,12 +82,12 @@ namespace boost{namespace itl
     public:
 		typedef typename inverse<Combiner<Type> >::type InverseCombinerT;
 
-        std::string name()const { return "InplaceInverseRemovability"; }
+        std::string name()const { return "InplaceInverseExistence"; }
         std::string formula()const { return "(0-a) + a == 0"; }
 
         std::string typeString()const
         {
-            return "InverseRemovability<"+type_to_string<Type>::apply()+","
+            return "InverseExistence<"+type_to_string<Type>::apply()+","
                                       +unary_template_to_string<Combiner>::apply()+","
                                       +unary_template_to_string<Equality>::apply()
 									  +">";
