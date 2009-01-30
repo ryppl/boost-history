@@ -24,15 +24,6 @@ inline void solid_background<BaseView>::draw_prologue()
     BaseView::draw_prologue();
     glColor3d(m_background_color[0], m_background_color[1], m_background_color[2]);
     glRectd(0.0, 0.0, solid_background::size().x, solid_background::size().y);
-
-    using namespace draw;
-
-    color(blue());
-    line_loop
-      (0, 0)
-      (0, solid_background::size().y)
-      (solid_background::size().x, solid_background::size().y)
-      (solid_background::size().x, 0);
 }
 
 }}}

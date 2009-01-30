@@ -18,19 +18,9 @@ namespace boost { namespace guigl {
 
 namespace draw {
 
-  inline color_type red()
+  inline void color(const color_type &color)
     {
-    return color_type(1, 0, 0);
-    }
-
-  inline color_type green()
-    {
-    return color_type(0, 1, 0);
-    }
-
-  inline color_type blue()
-    {
-    return color_type(0, 0, 1);
+    glColor4f(color[0], color[1], color[2], color[3]);
     }
 
   class begin : boost::noncopyable
@@ -57,20 +47,15 @@ namespace draw {
     vertex(position.x, position.y);
     }
 
-  inline void color(const color_type &color)
-    {
-    glColor3d(color[0], color[1], color[2]);
-    }
-
   struct vertex_creator : boost::noncopyable
     {
-    inline vertex_creator& operator()(const position_type &position)
+    inline vertex_creator const& operator()(const position_type &position) const
       {
       vertex(position);
       return *this;
       }
 
-    inline vertex_creator& operator()(double x, double y)
+    inline vertex_creator const& operator()(double x, double y) const
       {
       vertex(x, y);
       return *this;
