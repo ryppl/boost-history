@@ -422,7 +422,7 @@ should now be quite evident. So the following text shows the
 laws that are validated for all `Collector` types `C`. Which are
 __itl_map__`<D,S,T>`, __itv_map__`<D,S,T>` and __spl_itv_map__`<D,S,T>`
 where `CodomainT` type `S` is a model of `Set` and `Trait` type `T` is either 
-__absorber__ or __enricher__.
+__pabsorber__ or __penricher__.
 
 
 [h5 Laws on set union, set intersection and set difference]
@@ -549,8 +549,8 @@ Such a `Quantifier` can be conceived as an `InfiniteVector`.
 
 To create an infinite vector
 that is totally defined on it's domain we can set
-the map's `Trait` parameter to the value __emitter__.
-The __emitter__ trait fits specifically well with
+the map's `Trait` parameter to the value __tabsorber__.
+The __tabsorber__ trait fits specifically well with
 a `Quantifier` if it's `CodomainT` has an inverse 
 element, like all signed numerical type have.
 

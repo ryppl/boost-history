@@ -240,15 +240,6 @@ null-vectors etc. dependent of the instance type for parameter `CodomainT`.
 The existence of a ['*neutral element*] wrt. an `operator+=` is a requirement
 for template type `CodomainT`. 
 
-[/ table
-[[Trait][]]
-[[__absorber__][Value pairs that carry neutrons `(x,0)` are never stored]]
-[[__enricher__][Value pairs that carry neutrons `(x,0)` are never deleted by subtract]]
-[[__emitter__] [All value pairs that don't carry protons are mapped to neutrons as a default. 
-                But those neutrons are not stored in the map.]]
-[[__polluter__][All value pairs that don't carry protons are mapped to neutrons as a default.
-                In addition, associated neutrons that emerge from aggregations are stored.]]
-]
 
 Note, that a neutron is defined in relation to a combiner operation. 
 [/ In most cases
@@ -290,124 +281,154 @@ The ['*first trait*] relates to the ['*definedness*] of the map. Itl
 maps can be *partial* or *total* on the set of values given by
 domain type `DomainT`.
 
-* A ['*partial*] map in only defined on those key elements that have been
-inserted into the Map. This is usually expected and so ['*partial definedness]
+* A ['*partial*] map is only defined on those key elements that have been
+inserted into the Map. This is usually expected and so ['*partial definedness*]
 is the default.
 
 * Alternatively an itl Map can be ['*total*]. It is then considered to
 contain a ['*neutral value*] for all key values that are not
 stored in the map. 
 
-Such a total map can be useful if we use it to count or quantify the
-key values. An item that is not counted can be represented as counted
-0-times. A totally defined itl Map can be viewed as a very large or even 
-infinite vector.
+The ['*second trait*] is related to the representation of `neutrons` in 
+the map. An itl map can be a ['*neutron absorber*] or a ['*neutron enricher*].
 
-The second trait is related to the representation of `neutrons` in 
-the map. An itl map can be a neutron absorber or a neutron enricher.
-
-* A neutron absorber never stores value pairs `(k,0)` that carry neutrons.
-* A neutron enricher stores value pairs `(k,0)`.
+* A ['*neutron absorber*] never stores value pairs `(k,0)` that carry neutrons.
+* A ['*neutron enricher*] stores value pairs `(k,0)`.
 
 For the template parameter `Traits` of itl Maps we have the following
 four values.
 
 [table
-[[]       [neutron absorber][neutron enricher]]
-[[partial][partial_absorber][partial_enricher]]
-[[total]  [total_absorber]  [total_enricher]]
+[[]       [neutron absorber]            [neutron enricher]]
+[[partial][partial_absorber /(default)/][partial_enricher]]
+[[total]  [total_absorber]              [total_enricher]]
 ]
 
+[h4 Map Traits motivated]
 
-[h4 Partial Neutron Absorber]
+Map traits are a late extension to the *itl*. Interval maps have
+been used for a couple of years  
+in a variety of applications at Cortex Software GmbH
+with an implementaion that resembled the default trait.
+Only the deeper analysis of the itl's ['*aggregating Map's
+concept*] in the course of preparation of the library for boost 
+led to the introduction of map Trais.
+
+[h5 Add-Subtract Antinomy in Aggregating Maps]
+
+Constitutional for the absorber/enricher propery is a little
+antinomie.
+
+We can insert value pairs to the map by ['*adding*] them to the map
+via operations `add, +=` or `+`:
+``{} + {(k,1)} == {(k,1)} // addition``
+
+Further addition on common keys triggers aggregation:
+``{(k,1)} + {(k,1)} == {(k,2)} // aggregation for common key k``
+
+A subtraction of existing pairs
+``{(k,2)} - {(k,2)} == {(k,0)} // aggregation for common key k``
+yields value pairs that are associated with 0-values or `neutrons`.
+
+So once a value pair is created for a key `k` it can not be 
+removed from the map via subtraction (`subtract, -=` or `-`).
+
+The very basic fact on sets, that we can remove what we have
+previously added
+``x - x = {}``
+does not apply.
+
+This is the motivation for the ['*neutron absorber*] Trait.
+A neutron absorber map handles value pairs that carry
+neutrons as ['*non-existent*], which saves the law:
+``x - x = {}``
+
+Yet this introduces a new problem: With such a /neutron absorber/
+we are /by definition/ unable to store a value `(k,0)` in
+the map. This may be unfavorable because it is not inline with the 
+behavior of stl::maps and this is not necessarily expected by clients
+of the library.
+
+[/ CL On the other hand, the notion of a neutron absorbing map
+is more than just an akademic rescue effort for a formal law.
+It turns out that absorber maps have desirable properties
+for aggregation computations (see section semantics) 
+that proved to be useful in practice and are in many cases
+just what is needed.]
+
+The solution to the problem is the introduction of the
+neutron enricher Trait, so the user can choose a map variant
+according to her needs.
+
+[h5 Partial and Total Maps]
+
+The idea of a neutron absorbing map is
+that an ['*associated neutron*] value of a pair `(k,0)` 
+['*codes non-existence*] for it's key `k`.
+So the pair `(k,0)` immediately tunnels from
+a map where it may emerge into the realm
+of non existence.
+``{(k,0)} == {}``
+
+If neutrons do not code ['*non-existence*] but 
+['*existence with null quantification*], 
+we can also think of a map
+that has an associated neutron value
+['*for every*] key `k` that has no associated value
+different from 0.
+So in contrast to modelling *all* neutronic
+value pairs `(k,0)` as being ['*non-existent*]
+we can model *all* neutronic value pairs `(k,0)` as being
+['*implicitly existent*].
+
+
+A map that is modelled in this way, is one large vector with
+a value `v` for every key `k` of it's domain type `DomainT`.
+But only protonic value are actually stored.
+This is the motivation for the definedness-Trait on `itl Maps`.
+
+A ['*partial*] map models the intuitive view that only value
+pairs are existent, that are stored in the map.
+A ['*total*] map exploits the possibility that all 
+value pairs that are not stored can be considered 
+as being existent and ['*quantified*] with the neutron value.
+
+[/ Alle vier traits sind varianten eines denkmodells das
+um die handhabung von neutronen kreist.]   
+
+[/                        
+partial existential view
+total   quantifying view
+] 
+
+
+[h4 Pragmatical Aspects of Map Traits]
 
 From a pragmatic perspective value pairs that carry `neutrons` as 
-mapped values can often be deleted. If we count, for instance,
+mapped values can often be ignored.
+If we count, for instance,
 the number of overlaps of inserted intervals in an __itv_map__
 (see example [link boost_itl.examples.overlap_counter overlap counter]), 
 most of the time, we are not
 interested in whether an overlap has been counted `0` times or
-has not been counted at all.
+has not been counted at all. A neutron enricher map
+is only needed, if we want to distinct between non-existence
+and 0-quantification.
 
-A Map that does never insert
-associated neutrons or deletes them when they emerge, is called
-neutron absorber. A partial neutron absorber (short __absorber__) 
-is the default setting
-for the Trait parameter. A __absorber__ is able
-to erase a pair `(k,v)` from a map `{(k,v)}` by calling 
-`subtract((k,v))` or `operator - ` .
-
-``{(k,v)} - (k,v) == {}`` 
-
-
-[h4 Partial Neutron Enricher]
-
-With a neutron enricher, 
-on the contrary, subtraction of a 
-pair `(k,v)` that is in the map results in a pair `(k,0)`.
-
-``{(k,v)} - (k,v) == {(k,0)}`` 
-
-Mapping pairs that carry
-`neutrons` may emerge as a result of additions or aggregations
-and they can not be erased by subtractions, so they are 
-/enriched/ in the map.
-
-A neutron enricher carries the information, if values have
-been added or aggregated for certain keys and resulted in a `neutron` 
-value or if they have not been aggregated at all: No values
-exists for a key. 
-
-The following distinction can *not* be made for a __absorber__ map
-but it can be made for an __enricher__ map:
+The following distinction can *not* be made for a __pabsorber__ map
+but it can be made for an __penricher__ map:
 [pre
 (k,v) does not exist in the map: Pair (k,v) has NOT been dealt with
-(k,0) key k carries 0          : Pair (k,v) has     been dealt with resulting in y=0
+(k,0) key k carries 0          : Pair (k,v) has     been dealt with resulting in v=0
 ]
 
-Sometimes this subtle distiction is needed. Then a __enricher__
+Sometimes this subtle distiction is needed. Then a __penricher__
 is the right choice. Also, If we want to give two `itl::Maps`
 a common set of keys in order to, say, iterate synchronously
 over both maps, we need __enrichers__. 
 
-[h4 Total Neutron Absorber]
 
-The third neutronic Trait is a total map that does not
-store value pairs with associated neutrons `(k,0)`.
-It is called total neutron absorber (short __emitter__).
-A map that is a __emitter__ is defined on every value
-of it's domain. It provides a 
-neutron value for every key value, that has not been set or 
-aggregated to a value unequal to the `neutron` value.
-
-That way a __emitter__ map is a ['*large*] or 
-theoretically ['*infinite vector*], that
-is always initialized with neutron values.
-
-Of course those initial neutronic values for all keys of the
-maps domain are *not* stored on the __emitter__ map. So it's
-implementation is as minimal as the implementation of an
-__absorber__.
-
-[h4 Neutron Polluter]
-
-A __polluter__ combines the characteristics of a __emitter__
-and a __enticher__. Value pairs, that emerged due to aggregations
-and carry `neutron` values are actually stored. All value pairs,
-that are not represented carry `neutrons` via default but are not stored.
-
-The traits for itl Maps can be summarized as follows
-
-[table
-[[]                 []      [absorbs neutrons] []]
-[[]                 []      [true]             [false]]
-[[[*emits neutrons]][false] [__absorber__]     [__enricher__]]
-[[]                 [true]  [__emitter__]      [__polluter__]]
-]
-
-
-
-[endsect] [/ kind of nuclear]
+[endsect] [/ Map Traits]
 
 [endsect][/ Concepts]
 
