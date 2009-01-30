@@ -29,6 +29,15 @@ void two_buttons::draw()
     glEnable (GL_BLEND);
     glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+
+    {
+      scoped_matrix m;
+      rotateZ(20);
+      translateX(20);
+      translateY(20);
+      rect(10);
+    }
+
     line_loop
       (0, 0)
       (size().x, 0)
