@@ -49,7 +49,7 @@ enum floating_point_comparison_type
 // www.boost.org/libs/test/doc/components/test_tools/floating_point_comparison.html
 // Comparison of Floating Point Numbers, Matthias Ruppwww.mrupp.info/Data/2007floatingcomp.pdf, July 2007.
 // The pitfalls of verifying floating-point computations, David Monniaux
-// CNRS Ecole normale sup´erieure, 1 Feb 2008, http://arxiv.org/abs/cs/0701192v4
+// CNRS Ecole normale superieure, 1 Feb 2008, http://arxiv.org/abs/cs/0701192v4
 // submitted to ACM TOPLAS.
 
 // FPT is Floating-Point Type: float, double, long double, or User-Defined like NTL quad_float or RR.
@@ -146,19 +146,19 @@ private:
 template<typename FPT = double>
 class smallest
 { /*! \class smallest
-     \brief   Check floating-point value is smaller than a chosen small value,
-      default std::numeric_limits<FPT>::min_value().
-     \details
-     David Monniaux, http://arxiv.org/abs/cs/0701192v4,
-     It is somewhat common for beginners to add a comparison check to 0 before
-     computing a division, in order to avoid possible division-by-zero exceptions or
-     the generation of infinite results. A first objection to this practise is that, anyway,
-     computing 1/x for x very close to zero will generate very large numbers
-     that will most probably result in overflows later.
-     Another objection, which few programmers know about and that we wish to draw attention
-     to, is that it may actually fail to work, depending on what the compiler
-     does — that is, the program may actually test that x == 0, then, further down,
-     find that x = 0 without any apparent change to x!
+      \brief   Check floating-point value is smaller than a chosen small value,
+       default std::numeric_limits<FPT>::min_value().
+      \details
+       David Monniaux, http://arxiv.org/abs/cs/0701192v4,
+       It is somewhat common for beginners to add a comparison check to 0 before
+       computing a division, in order to avoid possible division-by-zero exceptions or
+       the generation of infinite results. A first objection to this practise is that, anyway,
+       computing 1/x for x very close to zero will generate very large numbers
+       that will most probably result in overflows later.
+       Another objection, which few programmers know about and that we wish to draw attention
+       to, is that it may actually fail to work, depending on what the compiler
+       does, that is, the program may actually test that x == 0, then, further down,
+       find that x = 0 without any apparent change to x!
    */
 
 public:

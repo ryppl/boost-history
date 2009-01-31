@@ -881,8 +881,8 @@ enum dim
 
 class axis_line_style
 { /*! \class boost::svg::axis_line_style
-    \brief Style of the x and/or y axes lines.
-   \details (But NOT the ticks and value labels because different styles for x and y are possible).
+    \brief Style of the X and/or Y axes lines.
+    \details (But NOT the ticks and value labels because different styles for X and Y are possible).
   */
 public:
   dim dim_; //!< X, Y or none.
@@ -892,7 +892,6 @@ public:
   // but they might have different uses, so are left pro tem.
   // TODO reconsider the implications of this (largely accidental) decision.
   // double interval_; does NOT duplicate major_interval_ in ticks_label_style.
-  double axis_; //!< Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
   svg_color color_; //!< Axis line (stroke) color.
   double axis_width_; //!< Axis line width.
   int axis_position_; /*!< How the axes intersect with values as below:\n
@@ -904,7 +903,8 @@ public:
   bool label_on_; //!< Label axis with text - example: "length".
   bool label_units_on_; //!< Label axis units, example: "cm".
   bool axis_line_on_; //!< Draw an X horizontal or Y vertical axis line.
-
+  double axis_; //!< Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
+  // Used in axis_plot_frame.hpp
   axis_line_style( // class axis_line_style default constructor, sets all member data items.
     dim d = X,
     double min = -10.,
@@ -913,10 +913,10 @@ public:
     const svg_color col = black,
     double width = 1,
     int axis_position = 0,
-    double axis = -1,
     bool label_on = true,
     bool label_units_on = false,
-    bool axis_lines_on = true);
+    bool axis_lines_on = true,
+    double axis = -1); // -1 means not calculated yet.
 
   // class axis_line_style member functions Declarations:
   // Set and get member functions.
@@ -934,28 +934,26 @@ public:
 }; // class axis_line_style
 
 // class axis_line_style Member Functions Definitions:
-
-  axis_line_style::axis_line_style( // Default constructor. Sets all member data items with defaults for all.
+  // Default constructor.
+  axis_line_style::axis_line_style(  // Sets all member data items with defaults for all.
     dim d, //!< Dimension (zero if boxplot)
-    double min, //! Minimum of axis line.
-    double max, //! Maximum of axis line.
+    double min, //!< Minimum of axis line.
+    double max, //!< Maximum of axis line.
     // See also default in ticks_labels_style.
     const svg_color col, //!< Line color
     double width, //!< Line width.
     int axis_position, //!< Intersection of axis, if any.
-    double axis_, //     // double axis_, not referenced - but there is confusion about order of parameter in different constructors.
-    // TODO find  where used and resolve.
-
     bool label_on,//!< If to include axis label (default true).
     bool label_units_on, //!< If to include units after axis label (default true).
-    bool axis_lines_on)
+    bool axis_lines_on, //!< If to draw an axis line.
+    double axis) // Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
     :
     dim_(d), min_(min), max_(max), color_(col), axis_width_(width),
     axis_position_(axis_position),
     label_on_(label_on), // default is to include axis label.
     label_units_on_(label_units_on), // default is to include units after axis label.
     axis_line_on_(axis_lines_on),
-    axis_(-1) // -1 means not calculated yet.
+    axis_(axis) // -1 means not calculated yet.
   { // Initialize all private data.
     if(max_ <= min_)
     { // max_ <= min_.
@@ -965,6 +963,7 @@ public:
     { // Range too small to display.
       throw std::runtime_error("Axis range too small!" );
     }
+    axis_ = -1; // means not calculated yet - see axis_plot_frame.
   } // axis_line_style constructor
 
   axis_line_style& axis_line_style::color(const svg_color& color)

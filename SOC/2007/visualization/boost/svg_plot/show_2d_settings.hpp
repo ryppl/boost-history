@@ -11,8 +11,6 @@
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007
 
-
-
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
@@ -149,8 +147,8 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
   }
 
 void show_2d_plot_settings(svg_2d_plot& plot)
-{ //! Diagnostic display of all of a 2D plot's settings.
-  /*! Outputs to cout, a long list of about hundred of plot parameter settings,
+{ /*! Diagnostic display of all of a 2D plot's settings.
+     Outputs to cout, a long list of about hundred of plot parameter settings,
     invaluable if the plot does not look as expected.
    \warning This creates about 100 lines of output, so should be used sparingly!
   */

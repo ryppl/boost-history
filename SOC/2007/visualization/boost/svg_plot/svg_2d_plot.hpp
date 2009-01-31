@@ -1422,7 +1422,7 @@ namespace boost
             back_vtr.second = ((n_minus_1.second - n.second) + // y
               (n_minus_2.second - n_minus_1.second)) * control;
 
-            // 8.3.6 The cubic Bézier curve commands path.S(x, y).
+            // 8.3.6 The cubic Bezier curve commands path.S(x, y).
             // Start point, end point, & two control points.
             // Example: S378.5,519.3 381,519.3 ...
             // S end_control_point, end point

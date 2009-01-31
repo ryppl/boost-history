@@ -135,10 +135,10 @@
 // http://www.adobe.com/svg/basics/intro.html SVG Workflow on optimising SVG
 // Gzip compression - can give files that are 1/10th size of gif or jpeg.
 // Use default values whenever possible rather than defining all attributes and properties explicitly.
-// Take advantage of the path data compaction facilities — use relative coordinates;
-// use h and v for horizontal and vertical lines;
-// use s or t for cubic and quadratic Bezier segments whenever possible;
-// eliminate extraneous white space and separators.
+// Take advantage of the path data compaction facilities so use relative coordinates.
+// Use h and v for horizontal and vertical lines.
+// Use s or t for cubic and quadratic Bezier segments whenever possible.
+// Eliminate extraneous white space and separators.
 // Use symbols if the same graphic appears multiple times in the document.
 // Use CSS property inheritance and selectors to consolidate commonly used properties into named styles
 // or to assign the properties to a parent group element.

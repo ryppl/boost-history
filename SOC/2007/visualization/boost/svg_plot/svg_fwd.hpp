@@ -148,12 +148,14 @@ struct l_path; // lineto coordinates (x, y).
 struct z_path; // z indicates a closepath.
 struct h_path; // Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
 struct v_path; // Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
-struct c_path; // Draws a cubic Bézier curve from the current point to (x,y) using (x1,y1).
-struct q_path; // Draws a quadratic Bézier curve from the current point to (x,y).
-struct s_path; // Draws a cubic Bézier curve from the current point to (x,y).
-struct t_path; // Draws a quadratic Bézier curve from the current point to (x,y).
+struct c_path; // Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1).
+struct q_path; // Draws a quadratic Bezier curve from the current point to (x,y).
+struct s_path; // Draws a cubic Bezier curve from the current point to (x,y).
+struct t_path; // Draws a quadratic Bezier curve from the current point to (x,y).
 struct a_path; // Draws a elliptical arc from the current point to (x,y).
 class g_element; // 'g' element is a container element for grouping together related graphics elements.
+
+// Note don't try to use accent in Bezier - causes failure in autodoc .xml files - not UTF-8.
 
 // svg_1d_plot.hpp
 struct svg_plot_series;
