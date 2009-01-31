@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2008 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,7 @@
 #include <boost/guigl/event.hpp>
 #include <boost/guigl/types.hpp>
 #include <boost/parameter/typed_name.hpp>
+#include <boost/guigl/color.hpp>
 
 namespace boost { namespace guigl {
 

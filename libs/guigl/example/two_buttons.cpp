@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2008 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,7 +12,7 @@
 #include <boost/guigl/view/impl/positioned.hpp>
 #include <boost/guigl/types.hpp>
 #include <boost/guigl/draw.hpp>
-
+#include <boost/guigl/color.hpp>
 
 void two_buttons::draw()
 {
@@ -21,22 +21,40 @@ void two_buttons::draw()
     using namespace boost::guigl;
     using namespace boost::guigl::draw;
 
-    color(black((float)0.3));
+    color(black(0.3f));
 
     glLineWidth(2.5);
     glEnable(GL_LINE_SMOOTH);
-    glHint(GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
-    glEnable (GL_BLEND);
-    glBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glHint (GL_LINE_SMOOTH_HINT, GL_DONT_CARE);
+    glEnable(GL_POLYGON_SMOOTH);
+    glEnable(GL_POINT_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     {
       scoped_matrix m;
-      rotateZ(20);
-      translateX(20);
-      translateY(20);
-      rect(10);
+
+      rotate_z(20);
+      translate_x(20);
+      translate_y(20);
+      //scale_y(4);
+
+      polygon
+        (0, 0)
+        (0, size().y)
+        (size().x, size().y)
+        (size().x, 0);
+
+      //rect(10);
     }
+
+    color(yellow(0.5f));
+    polygon
+      (0, 0)
+      (size().x, size().y)
+      (size().x, 0);
 
     line_loop
       (0, 0)

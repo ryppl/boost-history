@@ -28,6 +28,16 @@ namespace draw {
     glColor4f(color[0], color[1], color[2], color[3]);
   }
 
+  inline void vertex(double x, double y)
+  {
+    glVertex2d(x, y);
+  }
+
+  inline void vertex(const position_type &position)
+  {
+    vertex(position.x, position.y);
+  }
+
   class begin : boost::noncopyable
   {
   public:
@@ -42,18 +52,36 @@ namespace draw {
     }
   };
 
-  inline void vertex(double x, double y)
-  {
-    glVertex2d(x, y);
-  }
+  class point_creator;
+  class line_loop_creator;
+  class polygon_creator;
 
-  inline void vertex(const position_type &position)
+  class vertex_creator : boost::noncopyable
   {
-    vertex(position.x, position.y);
-  }
+  private:
+    begin m_scoped_begin;
 
-  struct vertex_creator : boost::noncopyable
-  {
+    vertex_creator(GLenum type)
+      : m_scoped_begin(type)
+    {}
+
+    vertex_creator(GLenum type, double x, double y)
+      : m_scoped_begin(type)
+    {
+      vertex(x, y);
+    }
+
+    vertex_creator(GLenum type, const position_type& position)
+      : m_scoped_begin(type)
+    {
+      vertex(position);
+    }
+
+    friend point_creator;
+    friend line_loop_creator;
+    friend polygon_creator;
+
+  public:
     inline vertex_creator const& operator()(const position_type &position) const
     {
       vertex(position);
@@ -67,18 +95,21 @@ namespace draw {
     }
   };
 
-  struct point_creator : begin, vertex_creator
+  class point_creator : public vertex_creator
   {
-
+  public:
     point_creator()
-      : begin(GL_POINTS), vertex_creator()
+      : vertex_creator(GL_POINTS)
     {}
 
     point_creator(double x, double y)
-      : begin(GL_POINTS), vertex_creator()
-    {
-      vertex(x, y);
-    }
+      : vertex_creator(GL_POINTS, x, y)
+    {}
+
+    point_creator(const position_type& position)
+      : vertex_creator(GL_POINTS, position)
+    {}
+
   };
 
   inline void point(double x, double y)
@@ -146,18 +177,20 @@ namespace draw {
   //  std::for_each(begin_it, end_it, &vertex);
   //  }
 
-  struct line_loop_creator : begin, vertex_creator
+  class line_loop_creator : public vertex_creator
   {
-
+  public:
     line_loop_creator()
-      : begin(GL_LINE_LOOP), vertex_creator()
+      : vertex_creator(GL_LINE_LOOP)
     {}
 
     line_loop_creator(double x, double y)
-      : begin(GL_LINE_LOOP), vertex_creator()
-    {
-      vertex(x, y);
-    }
+      : vertex_creator(GL_LINE_LOOP, x, y)
+    {}
+
+    line_loop_creator(const position_type& position)
+      : vertex_creator(GL_LINE_LOOP, position)
+    {}
   };
 
   //template<class ForwardIterator>
@@ -180,6 +213,32 @@ namespace draw {
     return line_loop(position.x, position.y);
   }
 
+  class polygon_creator : public vertex_creator
+  {
+  public:
+    polygon_creator()
+      : vertex_creator(GL_POLYGON)
+    {}
+
+    polygon_creator(double x, double y)
+      : vertex_creator(GL_POLYGON, x, y)
+    {}
+
+    polygon_creator(const position_type& position)
+      : vertex_creator(GL_POLYGON, position)
+    {}
+  };
+
+  inline polygon_creator polygon(double x, double y)
+  {
+    return polygon_creator(x, y);
+  }
+
+  inline polygon_creator polygon(const position_type& pos)
+  {
+    return polygon_creator(pos);
+  }
+
   class scoped_matrix : boost::noncopyable
   {
   public:
@@ -194,17 +253,17 @@ namespace draw {
     glRotated(angle, x, y, z);
   }
 
-  inline void rotateX(double angle)
+  inline void rotate_x(double angle)
   {
     glRotated(angle, 1, 0, 0);
   }
 
-  inline void rotateY(double angle)
+  inline void rotate_y(double angle)
   {
     glRotated(angle, 0, 1, 0);
   }
 
-  inline void rotateZ(double angle)
+  inline void rotate_z(double angle)
   {
     glRotated(angle, 0, 0, 1);
   }
@@ -214,20 +273,41 @@ namespace draw {
     glTranslated(x, y, z);
   }
 
-  inline void translateX(double distance)
+  inline void translate_x(double distance)
   {
     translate(distance, 0, 0);
   }
 
-  inline void translateY(double distance)
+  inline void translate_y(double distance)
   {
     translate(0, distance, 0);
   }
 
-  inline void translateZ(double distance)
+  inline void translate_z(double distance)
   {
     translate(0, 0, distance);
   }
+
+  inline void scale(double x, double y, double z)
+  {
+    glScaled(x, y, z);
+  }
+
+  inline void scale_x(double x)
+  {
+    scale(x, 1, 1);
+  }
+
+  inline void scale_y(double y)
+  {
+    scale(1, y, 1);
+  }
+
+  inline void scale_z(double z)
+  {
+    scale(1, 1, z);
+  }
+
 
   inline void rect(double x1, double y1, double x2, double y2)
   {
@@ -254,6 +334,11 @@ namespace draw {
   inline void rect(const position_type& pos2)
   {
     rect(zero_position(), pos2);
+  }
+
+  inline void line_width(float width)
+  {
+    glLineWidth(width);
   }
 
 }
