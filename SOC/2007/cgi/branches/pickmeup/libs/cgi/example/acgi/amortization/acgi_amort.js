@@ -119,7 +119,7 @@ return;
 
 
 function replaceChar(entry) {
-	out = "$"; 
+	out = "£"; 
 	add = ""; 
 	temp = "" + entry;
 	while (temp.indexOf(out)>-1) {
@@ -159,13 +159,13 @@ function formatCurrency(num) {
 			num=replaceChars(num);
 		if ( checkForm(num));
 {
-			num = num.toString().replace(/$|,/g,'');
+			num = num.toString().replace(/[$£,]/g,'');
 			if(isNaN(num)) num = "0";
 			num = Math.floor(num).toString();
 		for (var i = 0; i < Math.floor((num.length-(1+i))/3); i++) 
 			num = num.substring(0,num.length-(4*i+3))+','+num.substring(num.length-(4*i+3));
 			 
-	return ('$' + num );	
+	return ('£' + num );	
 }
 }
 

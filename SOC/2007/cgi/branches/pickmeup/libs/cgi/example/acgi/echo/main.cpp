@@ -20,6 +20,7 @@
 #include <vector>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/acgi.hpp"
+#include "boost/cgi/utility/has_key.hpp"
 
 using namespace std;
 using namespace boost::acgi;
@@ -119,10 +120,12 @@ int main()
                "Process ID = " << process_id() << "<br />"
                "<form method=POST enctype='multipart/form-data'>"
                  "<input type=text name=name value='"
-          <<         req[post]["name"] << "' />"
+          <<         (has_key(req[post],"name") ? req[post]["name"] : "")
+          <<      "' />"
                  "<br />"
                  "<input type=text name=hello value='"
-          <<         req[post]["hello"] << "' />"
+          <<         (has_key(req[post],"hello") ? req[post]["hello"] : "")
+          <<      "' />"
                  "<br />"
                  "<input type=file name=user_file />"
                  "<input type=hidden name=cmd value=multipart_test />"

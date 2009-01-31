@@ -27,6 +27,9 @@
 
 using namespace boost::acgi;
 
+#define DEFAULT_LOAN_AMT "£250,000"
+#define DEFAULT_INTEREST_RATE "6.000"
+
 /// Convert a string like '$250,000' into one like '250000'.
 std::string string_from_currency(std::string amt)
 {
@@ -44,36 +47,57 @@ void get_prepayment_frequency(Request& req, Dictionary& dict)
   dict.SetValue("PrePmtFreq_" + val, " selected=\"selected\"");
 }
 
+template<typename Request, typename Dictionary>
+double get_term_years(Request& req, Dictionary& dict)
+{
+  std::string val(has_key(req[form], "TermYrs")
+                       ? req[form]["TermYrs"]
+                       : "");
+  dict.SetValue("TermYrs_" + val, " selected=\"selected\"");
+  return boost::lexical_cast<double>(val);
+}
+
+template<typename Request, typename Dictionary>
+double get_interest_rate(Request& req, Dictionary& dict)
+{
+  std::string val(has_key(req[form], "YearlyIntRate")
+                       ? req[form]["YearlyIntRate"]
+                       : DEFAULT_INTEREST_RATE);
+  dict.SetValue("YearlyIntRate", val);
+  return boost::lexical_cast<double>(val);
+  
+}
+
+template<typename Request, typename Dictionary>
+double get_loan_amount(Request& req, Dictionary& dict)
+{
+  std::string val(has_key(req[form], "LoanAmt")
+                       ? req[form]["LoanAmt"]
+                       : "£250,000");
+  dict.SetValue("LoanAmt", val);
+  return boost::lexical_cast<double>(string_from_currency(val));
+}
+
 /// This function fills the dictionary and sub-dictionaries with relevant values.
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
   dict.SetValue("SCRIPT_NAME", req.script_name());
-  dict.SetValue("LoanAmt", has_key(req[form],"LoadAmt")
-                              ? req[form]["LoanAmt"]
-                              : "£250,000");
 
-  dict.SetValue("YearlyIntRate", has_key(req[form],"YearlyIntRate")
-                                    ? req[form]["YearlyIntRate"]
-                                    : "6.000");
-
-  boost::array<std::string, 8> year_opts
-    = {{ "5", "7", "10", "20", "30", "40", "50" }};
-    
-  BOOST_FOREACH(std::string& year, year_opts)
-  {
-    dict.SetValueAndShowSection("TermYrs", year, "SELECT_TERM_YEARS");
-  }
-  
   get_prepayment_frequency(req, dict);
 
   if ( ! has_key(req[form], "Amortize") )
+  {
     dict.ShowSection("NotAmortize");
+    // Set some default values
+    dict.SetValue("LoanAmt", DEFAULT_LOAN_AMT);
+    dict.SetValue("YearlyIntRate", "6.000");
+  }
   else
   {
-    double P = boost::lexical_cast<double>(string_from_currency(req[form]["LoanAmt"]));
-    double i = boost::lexical_cast<double>(req[form]["YearlyIntRate"]) / 1200;
-    double n = boost::lexical_cast<double>(req[form]["TermYrs"]) * 12;
+    double P = get_loan_amount(req, dict);
+    double i = get_interest_rate(req, dict) / 1200;
+    double n = get_term_years(req, dict) * 12;
     double monthly_payments = (P*i) / (1 - std::pow((1+i), -n));
     
     google::TemplateDictionary* sub_dict = dict.AddSectionDictionary("RegPmtSummary");
@@ -189,6 +213,7 @@ int main()
     response resp;
 
     write_amortization_template(req, resp);
+    resp<< req[form]["YearlyIntRate"];
   
     return_(resp, req, 0);
   }catch(boost::system::system_error* err){

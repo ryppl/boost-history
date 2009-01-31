@@ -49,9 +49,13 @@
       <td class="td1">Length of Loan</td>
       <td class="td2">
         <select name="TermYrs">
-          {{#SELECT_TERM_YEARS}}
-            <option value="{{TermYrs}}">{{TermYrs}} Years</option>
-          {{/SELECT_TERM_YEARS}}
+            <option value="5" {{TermYrs_5}}">5 Years</option>
+            <option value="7" {{TermYrs_7}}">7 Years</option>
+            <option value="10" {{TermYrs_10}}">10 Years</option>
+            <option value="20" {{TermYrs_20}}">20 Years</option>
+            <option value="30" {{TermYrs_30}}">30 Years</option>
+            <option value="40" {{TermYrs_40}}">40 Years</option>
+            <option value="50" {{TermYrs_50}}">50 Years</option>
         </select>
       </td>
       <td class="td1">Start with Payment</td>
