@@ -52,36 +52,29 @@ namespace draw {
     }
   };
 
-  class point_creator;
-  class line_loop_creator;
-  class polygon_creator;
-
+  template<GLenum type>
   class vertex_creator : boost::noncopyable
   {
   private:
     begin m_scoped_begin;
 
-    vertex_creator(GLenum type)
+  public:
+    vertex_creator()
       : m_scoped_begin(type)
     {}
 
-    vertex_creator(GLenum type, double x, double y)
+    vertex_creator(double x, double y)
       : m_scoped_begin(type)
     {
       vertex(x, y);
     }
 
-    vertex_creator(GLenum type, const position_type& position)
+    vertex_creator(const position_type& position)
       : m_scoped_begin(type)
     {
       vertex(position);
     }
 
-    friend point_creator;
-    friend line_loop_creator;
-    friend polygon_creator;
-
-  public:
     inline vertex_creator const& operator()(const position_type &position) const
     {
       vertex(position);
@@ -95,22 +88,7 @@ namespace draw {
     }
   };
 
-  class point_creator : public vertex_creator
-  {
-  public:
-    point_creator()
-      : vertex_creator(GL_POINTS)
-    {}
-
-    point_creator(double x, double y)
-      : vertex_creator(GL_POINTS, x, y)
-    {}
-
-    point_creator(const position_type& position)
-      : vertex_creator(GL_POINTS, position)
-    {}
-
-  };
+  typedef vertex_creator<GL_POINTS> point_creator;
 
   inline void point(double x, double y)
   {
@@ -177,22 +155,7 @@ namespace draw {
   //  std::for_each(begin_it, end_it, &vertex);
   //  }
 
-  class line_loop_creator : public vertex_creator
-  {
-  public:
-    line_loop_creator()
-      : vertex_creator(GL_LINE_LOOP)
-    {}
-
-    line_loop_creator(double x, double y)
-      : vertex_creator(GL_LINE_LOOP, x, y)
-    {}
-
-    line_loop_creator(const position_type& position)
-      : vertex_creator(GL_LINE_LOOP, position)
-    {}
-  };
-
+  typedef vertex_creator<GL_LINE_LOOP> line_loop_creator;
   //template<class ForwardIterator>
   //inline void line_loop(
   //  const color_type& cl,
@@ -213,21 +176,7 @@ namespace draw {
     return line_loop(position.x, position.y);
   }
 
-  class polygon_creator : public vertex_creator
-  {
-  public:
-    polygon_creator()
-      : vertex_creator(GL_POLYGON)
-    {}
-
-    polygon_creator(double x, double y)
-      : vertex_creator(GL_POLYGON, x, y)
-    {}
-
-    polygon_creator(const position_type& position)
-      : vertex_creator(GL_POLYGON, position)
-    {}
-  };
+  typedef vertex_creator<GL_POLYGON> polygon_creator;
 
   inline polygon_creator polygon(double x, double y)
   {
