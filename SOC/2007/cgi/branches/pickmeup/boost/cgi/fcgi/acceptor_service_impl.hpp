@@ -28,7 +28,7 @@
 #include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
-   
+
    namespace detail {
 
      /// Helper functions for async_accept operation.
@@ -54,7 +54,7 @@ namespace cgi {
        typename T::implementation_type::request_type& request;
        Handler handler;
      };
-  
+
    } // namespace detail
 
   namespace fcgi {
@@ -81,7 +81,7 @@ namespace cgi {
 
      /// The unique service identifier
      //static boost::asio::io_service::id id;
- 
+
      struct implementation_type
      {
        typedef Protocol_                             protocol_type;
@@ -97,14 +97,14 @@ namespace cgi {
        typedef boost::asio::ip::tcp::endpoint        endpoint_type;
        //typedef typename
        //  acceptor_service_type::native_type          native_type;
- 
+
        acceptor_service_type::implementation_type    acceptor_;
        boost::mutex                                  mutex_;
        std::queue<boost::shared_ptr<request_type> >  waiting_requests_;
        protocol_service_type*                        service_;
        port_number_type                              port_num_;
        endpoint_type                                 endpoint_;
-     }; 
+     };
 
      typedef acceptor_service_impl<Protocol_>            type;
      typedef typename
@@ -122,9 +122,9 @@ namespace cgi {
      typedef typename
        acceptor_service_type::native_type                native_type;
 
-     typedef typename 
+     typedef typename
        type::implementation_type::endpoint_type          endpoint_type;
- 
+
 
      explicit acceptor_service_impl(::cgi::common::io_service& ios)
        : detail::service_base< ::cgi::fcgi::acceptor_service_impl<Protocol_> >(ios)
@@ -132,7 +132,7 @@ namespace cgi {
        //, endpoint(boost::asio::ip::tcp::v4())
      {
      }
- 
+
      protocol_service_type&
        service(implementation_type const& impl) const
      {
@@ -172,7 +172,7 @@ namespace cgi {
        impl.protocol_service_ = &ps;
      }
 
-     protocol_service_type& 
+     protocol_service_type&
        get_protocol_service(implementation_type& impl)
      {
        BOOST_ASSERT(impl.service_ != NULL);
@@ -184,25 +184,25 @@ namespace cgi {
        acceptor_service_.construct(impl.acceptor_);
        //impl.acceptor_ptr().reset(impl::acceptor_type(this->io_service()));
      }
- 
+
      void destroy(implementation_type& impl)
      {
        // close/reject all the waiting requests
        /***/
        acceptor_service_.destroy(impl.acceptor_);
      }
- 
+
      void shutdown_service()
      {
        acceptor_service_.shutdown_service();
      }
- 
+
      /// Check if the given implementation is open.
      bool is_open(implementation_type& impl)
      {
        return acceptor_service_.is_open(impl.acceptor_);
      }
- 
+
      /// Open a new *socket* acceptor implementation.
      boost::system::error_code
        open(implementation_type& impl, const native_protocol_type& protocol
@@ -210,7 +210,7 @@ namespace cgi {
      {
        return acceptor_service_.open(impl.acceptor_, protocol, ec);
      }
- 
+
      template<typename Endpoint>
      boost::system::error_code
        bind(implementation_type& impl, const Endpoint& endpoint
@@ -220,7 +220,7 @@ namespace cgi {
            boost::asio::socket_base::reuse_address(true), ec);
        return acceptor_service_.bind(impl.acceptor_, endpoint, ec);
      }
- 
+
      /// Assign an existing native acceptor to a *socket* acceptor.
      boost::system::error_code
        assign(implementation_type& impl, const native_protocol_type& protocol
@@ -229,14 +229,14 @@ namespace cgi {
      {
        return acceptor_service_.assign(impl.acceptor_, protocol
                                       , native_acceptor, ec);
-     }    
- 
+     }
+
      boost::system::error_code
        listen(implementation_type& impl, int backlog, boost::system::error_code& ec)
      {
        return acceptor_service_.listen(impl.acceptor_, backlog, ec);
      }
- 
+
      /// Accepts one request.
      template<typename CommonGatewayRequest>
      boost::system::error_code
@@ -275,7 +275,6 @@ namespace cgi {
        {
          request.clear();
        }
-       //request.clear(); // **FIXME** (this should be cleverer)
 
        // If we can reuse this request's connection, return.
        if (request.client().keep_connection())
@@ -285,12 +284,11 @@ namespace cgi {
        return acceptor_service_.accept(impl.acceptor_,
                 request.client().connection()->next_layer(), endpoint, ec);
      }
- 
+
      /// Asynchronously accepts one request.
-     //template<typename CommonGatewayRequest, typename Handler>
-     //void async_accept(implementation_type& impl, CommonGatewayRequest& request
      template<typename Handler>
-     void async_accept(implementation_type& impl, typename implementation_type::request_type& request
+     void async_accept(implementation_type& impl
+					  , typename implementation_type::request_type& request
                       , Handler handler)
      {
        this->io_service().post(
@@ -330,7 +328,7 @@ namespace cgi {
        return false;
 #endif
      }
- 
+
    public:
      template<typename CommonGatewayRequest, typename Handler>
      void check_for_waiting_request(implementation_type& impl
@@ -356,16 +354,15 @@ namespace cgi {
        return acceptor_service_.async_accept(impl.acceptor_,
          request.client().connection()->next_layer(), 0, handler);
      }
- 
+
    public:
      /// The underlying socket acceptor service.
      acceptor_service_type& acceptor_service_;
    };
- 
+
  } // namespace fcgi
 } // namespace cgi
- 
+
 #include "boost/cgi/detail/pop_options.hpp"
 
 #endif // CGI_FCGI_ACCEPTOR_SERVICE_IMPL_HPP_INCLUDED__
-

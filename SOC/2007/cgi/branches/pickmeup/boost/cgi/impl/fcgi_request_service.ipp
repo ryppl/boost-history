@@ -161,7 +161,7 @@ namespace cgi {
 
       return ec;
     }
-*/
+/*/
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::load(
         implementation_type& impl, bool parse_stdin
@@ -171,7 +171,9 @@ namespace cgi {
       BOOST_ASSERT(!ec && "Can't load request due to previous errors.");
 
       impl.client_.construct(impl, ec);
-      BOOST_ASSERT(impl.client_.connection_->is_open());
+      // Bomb out if the client isn't open here.
+      if (!impl.client_.connection_->is_open())
+          return error::client_not_open;
 
       for(;;)
       {
@@ -236,6 +238,7 @@ namespace cgi {
       );
     }
 
+    /// Check if the params have been read (ie. FCGI_PARAMS packets)
     BOOST_CGI_INLINE
     bool fcgi_request_service::params_read(implementation_type& impl)
     {

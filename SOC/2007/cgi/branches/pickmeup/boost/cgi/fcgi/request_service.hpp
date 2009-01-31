@@ -174,14 +174,15 @@ namespace cgi {
      *    packet for this request arrives from the server.
      *
      */
+
     boost::system::error_code
     load(implementation_type& impl, bool parse_stdin
           , boost::system::error_code& ec);
-
+/*
     boost::system::error_code
     load(implementation_type& impl, common::parse_options parse_opts
           , boost::system::error_code& ec);
-
+*/
     // **FIXME**
     template<typename Handler>
     void async_load(implementation_type& impl, bool parse_stdin, Handler handler);

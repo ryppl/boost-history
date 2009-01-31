@@ -15,6 +15,8 @@
 #include "boost/cgi/common/form_parser.hpp"
 #include "boost/cgi/common/source_enums.hpp"
 
+#include <iostream> // **FIXME**
+
 namespace cgi {
  namespace detail {
 
@@ -115,7 +117,7 @@ namespace cgi {
               str.append(1, detail::hex_to_char(ch, ch1));
             }
             else // we don't have a hex sequence
-            {
+            { // **FIXME** isn't this broken? What about '%%53' ? - use url_decode instead!
               str.append(1, '%').append(1, ch).append(1, ch1);
             }
             bytes_left_ -= 2;
@@ -459,6 +461,7 @@ namespace cgi {
     {
       //BOOST_ASSERT(!content_type.empty());
 
+      // **FIXME** (don't use Boost.Regex)
       boost::regex re("; ?boundary=\"?([^\"\n\r]+)\"?");
       boost::smatch match_results;
       if (!boost::regex_search(content_type_, match_results, re))

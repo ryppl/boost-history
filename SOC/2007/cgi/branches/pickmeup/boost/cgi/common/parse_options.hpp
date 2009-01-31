@@ -5,9 +5,12 @@
 namespace cgi {
  namespace common {
 
+   // Parser options for loading requests. Note that you should *always*
+   // parse the environment before using a request object. If you don't parse
+   // anything you will have unspecified behaviour.
    enum parse_options
    {
-       parse_none      = 0  // you should *always* parse the environment.
+       parse_none      = 0
      , parse_env       = 1
      , parse_get       = 2 | parse_env
      , parse_post      = 4 | parse_env

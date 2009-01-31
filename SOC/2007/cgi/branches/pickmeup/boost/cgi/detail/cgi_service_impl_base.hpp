@@ -124,7 +124,7 @@ namespace cgi {
       impl.http_status() = http_s;
       return status;
     }
-/*
+
     /// Synchronously read/parse the request meta-data
     boost::system::error_code&
     load(implementation_type& impl, common::parse_options parse_opts
@@ -164,7 +164,7 @@ namespace cgi {
 
       return ec;
     }
-*/
+
     /// Synchronously read/parse the request meta-data
     /**
      * @param parse_stdin if true then STDIN data is also read/parsed
@@ -173,6 +173,8 @@ namespace cgi {
       load(implementation_type& impl, bool parse_stdin
           , boost::system::error_code& ec)
     {
+      return load(impl, parse_stdin ? parse_all : (parse_env | parse_cookies), ec);
+    }/*
       detail::save_environment(env_vars(impl.vars_));
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
       impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
@@ -194,7 +196,7 @@ namespace cgi {
 
       return ec;
     }
-
+*/
     role_type
     get_role(implementation_type& impl)
     {
@@ -210,7 +212,7 @@ namespace cgi {
     /// Set the request status
     void set_status(implementation_type& impl, common::request_status status)
     {
-      impl.request_status_ = status;
+      impl.status() = status;
     }
 
     std::size_t

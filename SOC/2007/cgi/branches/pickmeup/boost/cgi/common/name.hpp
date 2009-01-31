@@ -61,7 +61,7 @@ namespace cgi {
 
    };
 
-   // typedef for typical usage.
+   // typedefs for typical usage.
    typedef std::basic_string<char, ichar_traits<char> >       name;
    typedef std::basic_string<wchar_t, ichar_traits<wchar_t> > wname;
 
@@ -72,7 +72,7 @@ namespace cgi {
                , std::basic_string<CharT, ichar_traits<CharT> > const& str)
   {
     return os<< str.c_str();
-  } 
+  }
 
  } // namespace common
 } // namespace cgi

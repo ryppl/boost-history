@@ -84,39 +84,50 @@ namespace cgi {
     typedef typename implementation_type::buffer_type    buffer_type;
 
 
+    /*
     // Throws
-    basic_request(bool load_now = true, bool parse_post = true)
+    basic_request(bool load_now, bool parse_post = true)
       : detail::basic_sync_io_object<service_type>()
     {
       if (load_now) load(parse_post);//this->service.load(this->implementation, true, ec);
     }
+    */
 
-		// Won't throw
-    basic_request(boost::system::error_code& ec
-                 , const bool load_now = true
-                 , const bool parse_post = true)
+    basic_request(const parse_options opts = parse_none)
       : detail::basic_sync_io_object<service_type>()
     {
-      if (load_now) load(ec, parse_post);//this->service.load(this->implementation, true, ec);
+      if (opts > parse_none) load(opts);//this->service.load(this->implementation, true, ec);
+    }
+
+    // Won't throw
+    basic_request(boost::system::error_code& ec
+                 , const bool load_now = true
+                 , const bool parse_post_now = true)
+      : detail::basic_sync_io_object<service_type>()
+    {
+        const parse_options opts = parse_post_now ? parse_post : parse_env;
+        if (load_now) load(opts, ec);//this->service.load(this->implementation, true, ec);
     }
 
 		// Throws
     basic_request(protocol_service_type& s, const bool load_now = false
-                 , const bool parse_post = false)
+                 , const bool parse_post_now = false)
       : basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
-      if (load_now) load(parse_post);//this->service.load(this->implementation, false, ec);
+      const parse_options opts = parse_post_now ? parse_post : parse_env;
+      if (load_now) load(opts);//this->service.load(this->implementation, false, ec);
     }
 
 		// Won't throw
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
-                 , const bool load_now = false, const bool parse_post = false)
+                 , const bool load_now = false, const bool parse_post_now = false)
       : basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
-      if(load_now) load(ec, parse_post);//this->service.load(this->implementation, false, ec);
+      const parse_options opts = parse_post_now ? parse_post : parse_env;
+      if(load_now) load(opts, ec);//this->service.load(this->implementation, false, ec);
     }
 
     /// Make a new mutiplexed request from an existing connection.
@@ -168,10 +179,10 @@ namespace cgi {
      * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
      */
     // Throwing semantics
-    void load(bool parse_stdin = false)
+    void load(parse_options parse_opts = parse_env)
     {
       boost::system::error_code ec;
-      this->service.load(this->implementation, parse_stdin, ec);
+      this->service.load(this->implementation, parse_opts, ec);
       detail::throw_error(ec);
     }
 
@@ -181,7 +192,7 @@ namespace cgi {
     {
       return this->service.load(this->implementation, parse_opts, ec);
     }
-
+/*
     // Error-code semantics (**FIXME**)
     boost::system::error_code
       load(bool parse_stdin, boost::system::error_code& ec)
@@ -195,7 +206,7 @@ namespace cgi {
     {
       return this->service.load(this->implementation, parse_stdin, ec);
     }
-
+*/
     /// Get the buffer containing the POST data.
     /**
      * **FIXME**

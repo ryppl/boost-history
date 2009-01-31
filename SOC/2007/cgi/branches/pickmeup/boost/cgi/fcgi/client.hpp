@@ -281,6 +281,11 @@ namespace cgi {
       return bytes_left_;
     }
 
+    boost::uint16_t const& request_id() const
+    {
+      return request_id_;
+    }
+
   public:
     friend class fcgi_request_service;
     boost::uint16_t request_id_;

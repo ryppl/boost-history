@@ -93,7 +93,7 @@ int main()
     try {
 
       boost::system::error_code ec;
-      req.load(ec, parse_all); // parse everything.
+      req.load(parse_all, ec); // parse everything.
 
       if (ec)
       {

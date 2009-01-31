@@ -130,7 +130,7 @@ namespace cgi {
     /// Allow more headers to be added (WARNING: avoid using this).
     void unterminate_headers();
 
-    /// Get the length of the body of the response
+    /// Get the length of the body of the response (ie. not including the headers).
     std::size_t content_length();
 
     /// Add a header after appending the CRLF sequence.
@@ -140,7 +140,9 @@ namespace cgi {
     /// Format and add a header given name and value, appending CRLF.
     basic_response<char_type>&
       set_header(string_type const& name, string_type const& value);
-    
+
+    string_type header_value(string_type const& name);
+
     void clear_headers();
 
     void reset_headers();
@@ -152,6 +154,10 @@ namespace cgi {
 
     /// Get the ostream containing the response body.
     ostream_type& ostream();
+
+    /// Get the headers
+    std::vector<string_type>& headers();
+
   protected:
     // Vector of all the headers, each followed by a CRLF
     std::vector<string_type> headers_;
@@ -163,7 +169,7 @@ namespace cgi {
 
     http::status_code http_status_;
 
-    // True if no more headers can be appended. 
+    // True if no more headers can be appended.
     bool headers_terminated_;
 
   private:
@@ -201,14 +207,24 @@ namespace cgi {
    * library.
    */
   template<typename charT, typename T>
-  cgi::common::basic_response<charT>& 
+  cgi::common::basic_response<charT>&
     operator<< (cgi::common::basic_response<charT>&
                , cgi::common::basic_cookie<T>&);
-
+/*
+  template<typename charT, typename T>
+  cgi::common::basic_response<charT>&
+    operator<< (cgi::common::basic_response<charT>&
+               , cgi::common::basic_cookie<T> const&);
+*/
   template<typename charT, typename T>
   cgi::common::basic_response<charT>&
     operator<< (cgi::common::basic_response<charT>&
                , cgi::common::http::status_code);
+
+  template<typename charT, typename T>
+  cgi::common::basic_response<charT>&
+    operator<< (cgi::common::basic_response<charT>&
+               , cgi::common::basic_response<charT>&);
 
 #include "boost/cgi/detail/pop_options.hpp"
 

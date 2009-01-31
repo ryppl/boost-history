@@ -324,6 +324,23 @@ namespace cgi {
   }
 
   template<typename T> BOOST_CGI_INLINE
+  typename basic_response<T>::string_type
+  basic_response<T>::header_value(string_type const& name)
+  {
+    for(std::vector<std::string>::iterator iter = headers_.begin(), end = headers_.end();
+        iter != end; ++iter)
+    {
+        if (iter->substr(0,name.length()) == name)
+        {
+            // Extract the value (assumes there's at most one space after the separator.
+            int start(name.length() + (iter->at(name.length()+1) == ' ' ? 2 : 1));
+            return iter->substr(start, iter->length()-start-2); // strip the trailing \r\n
+        }
+    }
+    return headers_.back();
+  }
+
+  template<typename T> BOOST_CGI_INLINE
   void basic_response<T>::clear_headers()
     {
       BOOST_ASSERT(!headers_terminated_);
@@ -343,17 +360,22 @@ namespace cgi {
       return headers_terminated_;
     }
 
-    // Is this really necessary?
+  // Is this really necessary?
   template<typename T> BOOST_CGI_INLINE
   void basic_response<T>::end_headers()
   {
     headers_terminated_ = true;
   }
 
-    /// Get the ostream containing the response body.
+  /// Get the ostream containing the response body.
   template<typename T> BOOST_CGI_INLINE
   typename basic_response<T>::ostream_type&
     basic_response<T>::ostream() { return ostream_; }
+    
+  /// Get the ostream containing the response body.
+  template<typename T> BOOST_CGI_INLINE
+  std::vector<typename basic_response<T>::string_type>&
+    basic_response<T>::headers() { return headers_; }
     
   // Send the response headers and mark that they've been sent.
   template<typename T>
@@ -435,14 +457,14 @@ namespace cgi {
    */
   template<typename T> BOOST_CGI_INLINE
   cgi::common::basic_response<T>& 
-    operator<< (cgi::common::basic_response<T> const& resp
+    operator<< (cgi::common::basic_response<T>& resp
                , cgi::common::basic_cookie<T> ck)
   {
     BOOST_ASSERT(!resp.headers_terminated());
     resp.set_header("Set-cookie", ck.to_string());
     return resp;
   }
-
+/*
   template<typename T> BOOST_CGI_INLINE
   cgi::common::basic_response<T>& 
     operator<< (cgi::common::basic_response<T>& resp
@@ -452,7 +474,7 @@ namespace cgi {
     resp.set_header("Set-cookie", ck.to_string());
     return resp;
   }
-
+*/
   template<typename T> BOOST_CGI_INLINE
   cgi::common::basic_response<T>&
     operator<< (cgi::common::basic_response<T>& resp
@@ -461,6 +483,23 @@ namespace cgi {
     BOOST_ASSERT(!resp.headers_terminated());
     return resp.set_status(status);
   }
+
+  template<typename charT> BOOST_CGI_INLINE
+  cgi::common::basic_response<charT>&
+    operator<< (cgi::common::basic_response<charT>& resp
+               , cgi::common::basic_response<charT>& other_resp)
+  {
+    BOOST_ASSERT(!resp.headers_terminated());
+    for(std::vector<std::string>::iterator iter = other_resp.headers().begin(), end = other_resp.headers().end();
+        iter != end; ++iter)
+    {
+        if (iter->substr(0,13) != "Content-type:") // Don't overwrite the content-type.
+            resp.headers().push_back(*iter);
+    }
+    resp.ostream()<< other_resp.ostream().rdbuf();
+    return resp;
+  }
+
 
 #undef BOOST_CGI_ADD_DEFAULT_HEADER
 

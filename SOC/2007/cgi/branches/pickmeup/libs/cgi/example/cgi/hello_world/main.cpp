@@ -11,6 +11,9 @@
 //
 // The simplest CGI program, outputs only "Hello there, universe."
 //
+// If you think this is a pointless example, try getting it to work;
+// It doesn't always go to plan... ;)
+//
 
 #include <boost/cgi/cgi.hpp>
 

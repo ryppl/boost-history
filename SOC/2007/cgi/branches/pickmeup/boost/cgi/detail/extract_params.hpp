@@ -18,12 +18,19 @@
 namespace cgi {
  namespace detail {
 
-   /// Extract name/value pairs from a supplied string buffer
-   template<typename Map, typename Separator>
-   boost::system::error_code& extract_params(const std::string& input
-                                            , Map& destination
-                                            , const Separator& separator
-                                            , boost::system::error_code& ec)
+   /// Extract name/value pairs from a supplied string buffer.
+   /**
+    * Name / value pairs can be separated by either '&' or ';', and the format
+    * of the name / value pairs is:
+    * 	<name>=<value>
+    *
+    */
+   template<typename String, typename Map, typename Separator>
+   boost::system::error_code&
+   extract_params(const String& input
+                 , Map& destination
+                 , const Separator& separator
+                 , boost::system::error_code& ec)
    {
      if( input.empty() )
        return ec;// = boost::system::error_code(34, boost::system::errno_ecat);
@@ -38,10 +45,6 @@ namespace cgi {
         ; iter != toker.end()
         ; ++iter)
      {
-//       if( *iter == "%" )
-//       {
-//         current_token += detail::url_decode( *++iter );
-//       }else
        if(*iter == "=")
        {
          name = current_token;
@@ -57,6 +60,7 @@ namespace cgi {
          current_token = url_decode(*iter);
        }
      }
+     // Save the name if the last n/v pair has no value.
      if( !name.empty() )
        destination[name.c_str()] = current_token;
 

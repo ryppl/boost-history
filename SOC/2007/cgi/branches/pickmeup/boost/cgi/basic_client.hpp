@@ -67,6 +67,11 @@ namespace cgi {
       connection_->close();
     }
 
+    boost::uint16_t const& request_id() const
+    {
+      return 1;
+    }
+
     /// Associate a connection with this client
     /**
      * Note: the connection must have been created using the new operator

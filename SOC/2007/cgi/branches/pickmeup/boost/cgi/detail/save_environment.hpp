@@ -30,6 +30,10 @@ namespace cgi {
    /**
     * @param env This defaults to `::environ`, or the current process'
     *            environment.
+	*
+	* Note: empty variables are not guaranteed to be set by the server, so
+    * we are free to ignore them too. Whether we do or not depends on the
+	* macro: BOOST_CGI_KEEP_EMPTY_VARS
     */
    template<typename MapT>
    void save_environment(MapT& env_map, char** env = 
@@ -51,15 +55,21 @@ namespace cgi {
          if ((*env)[i] == '=')
            break;
 
-       // Note: empty variables are not guaranteed to be set by the server, so
-       // we are free to ignore them too.
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS) && BOOST_CGI_KEEP_EMPTY_VARS != 0
+       sa.assign(*env, i);
+       if ((*env)[i+1] != '\0')
+       {
+		 env_map[sa] = sb.clear();
+	   }
+#else
        if ((*env)[i+1] != '\0')
        {
          sa.assign(*env, i);
          sb.assign((*env+i+1), j-i-1);
          env_map[sa.c_str()] = sb;
        }
-     }
+#endif
+	 }
    }
 
  } // namespace detail

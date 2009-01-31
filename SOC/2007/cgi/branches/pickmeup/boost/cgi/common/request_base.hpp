@@ -37,9 +37,9 @@ namespace cgi {
 
     /// Get the request ID of a FastCGI request, or 1.
     template<typename ImplType>
-    int request_id(ImplType& impl)
+    boost::uint16_t const& request_id(ImplType& impl) const
     {
-      return impl.client_.request_id_;
+      return impl.client_.request_id();
     }
 
     // impl_base is the common base class for all request types'
@@ -98,6 +98,7 @@ namespace cgi {
       }
 
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
+      // This will throw if the content-length isn't a valid number (which shouldn't ever happen).
       impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
       impl.client_.bytes_left() = impl.characters_left_;
 

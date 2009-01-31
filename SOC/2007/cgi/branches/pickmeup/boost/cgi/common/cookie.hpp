@@ -13,11 +13,13 @@
 #include <boost/system/error_code.hpp>
 #include <boost/tokenizer.hpp>
 
+#define BOOST_CGI_DATE_IN_THE_PAST "Fri, 05-Jun-1989 15:30:00 GMT"
+
 namespace cgi {
  namespace common {
 
   template<typename CharT> struct basic_cookie;
-  
+
   // typedefs for common usage
   typedef basic_cookie<char>    cookie;
   typedef basic_cookie<wchar_t> wcookie;
@@ -41,11 +43,11 @@ namespace cgi {
 
     basic_cookie() {}
 
-    /// Delete the cookie named `_name`.
+    /// Create a cookie for deleting the cookie named `_name`.
     basic_cookie(const string_type& _name)
       : name(_name)
       , value()
-      , expires("Fri, 05-Jun-1989 15:30:00 GMT")
+      , expires(BOOST_CGI_DATE_IN_THE_PAST)
       , path("/")
       , secure(false)
       , http_only(false)
@@ -103,13 +105,15 @@ namespace cgi {
     static basic_cookie<string_type> from_string(const char* str)
     {
       boost::system::error_code ec;
-      cookie ck = from_string(ec);
+      basic_cookie<string_type> ck = from_string(ec);
       detail::throw_error(ec);
       return ck;
     }
 
     static basic_cookie<string_type> from_string(std::string& str)
     {
+      basic_cookie<string_type> ck;
+	  std::string val""
       return from_string(str.c_str());
     }
 
@@ -136,13 +140,14 @@ namespace cgi {
  } // namespace common
 } // namespace cgi
 
-
-template<typename OutStream, typename T>
-inline OutStream& operator<< (OutStream& os, cgi::common::basic_cookie<T> const& ck)
+/*
+template<typename OutStream, typename CharT>
+inline OutStream& operator<< (OutStream& os, cgi::common::basic_cookie<CharT> const& ck)
 {
   os<< ck.to_string();
   return os;
 }
+*/
 
 #endif // CGI_COOKIE_HPP_INCLUDED__
 

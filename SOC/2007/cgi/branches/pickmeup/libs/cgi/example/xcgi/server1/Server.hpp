@@ -3,6 +3,7 @@
 
 //[xcgi_server1_server
 #include <boost/cgi.hpp>
+#include <boost/cgi/fcgi.hpp>
 
 class Server
 {

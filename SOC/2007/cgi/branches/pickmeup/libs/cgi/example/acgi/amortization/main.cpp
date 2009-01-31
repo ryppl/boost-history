@@ -21,6 +21,7 @@
 #include <iostream>
 #include <iomanip>
 #include <boost/cgi/acgi.hpp>
+#include <boost/cgi/utility.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <google/template.h>
 
@@ -30,19 +31,31 @@ using namespace boost::acgi;
 std::string string_from_currency(std::string amt)
 {
   // this is much too hardcore, but it works fine...
-  boost::algorithm::erase_all_regex(amt, boost::regex("[$, ]"));
+  boost::algorithm::erase_all_regex(amt, boost::regex("[£$, ]"));
   return amt;
+}
+
+template<typename Request, typename Dictionary>
+void get_prepayment_frequency(Request& req, Dictionary& dict)
+{
+  std::string val(has_key(req[form], "PrePmtFreq")
+                       ? req[form]["PrePmtFreq"]
+                       : "Monthly");
+  dict.SetValue("PrePmtFreq_" + val, " selected=\"selected\"");
 }
 
 /// This function fills the dictionary and sub-dictionaries with relevant values.
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
-  std::string tmp( req[post]["LoanAmt"] );
-  dict.SetValue("LoanAmt", tmp.empty() ? "$250,000" : tmp);
+  dict.SetValue("SCRIPT_NAME", req.script_name());
+  dict.SetValue("LoanAmt", has_key(req[form],"LoadAmt")
+                              ? req[form]["LoanAmt"]
+                              : "£250,000");
 
-  tmp = req[post]["YearlyIntRate"];
-  dict.SetValue("YearlyIntRate", tmp.empty() ? "6.000" : tmp);
+  dict.SetValue("YearlyIntRate", has_key(req[form],"YearlyIntRate")
+                                    ? req[form]["YearlyIntRate"]
+                                    : "6.000");
 
   boost::array<std::string, 8> year_opts
     = {{ "5", "7", "10", "20", "30", "40", "50" }};
@@ -51,14 +64,16 @@ void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req
   {
     dict.SetValueAndShowSection("TermYrs", year, "SELECT_TERM_YEARS");
   }
+  
+  get_prepayment_frequency(req, dict);
 
-  if (req[post]["Amortize"].empty())
+  if ( ! has_key(req[form], "Amortize") )
     dict.ShowSection("NotAmortize");
   else
   {
-    double P = boost::lexical_cast<double>(string_from_currency(req[post]["LoanAmt"]));
-    double i = boost::lexical_cast<double>(req[post]["YearlyIntRate"]) / 1200;
-    double n = boost::lexical_cast<double>(req[post]["TermYrs"]) * 12;
+    double P = boost::lexical_cast<double>(string_from_currency(req[form]["LoanAmt"]));
+    double i = boost::lexical_cast<double>(req[form]["YearlyIntRate"]) / 1200;
+    double n = boost::lexical_cast<double>(req[form]["TermYrs"]) * 12;
     double monthly_payments = (P*i) / (1 - std::pow((1+i), -n));
     
     google::TemplateDictionary* sub_dict = dict.AddSectionDictionary("RegPmtSummary");
@@ -67,11 +82,11 @@ void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req
 
     dict.ShowSection("Amortize");
 
-    double balance = P;
-    int row_num = 0;
-    double interest;
-    double principal_paid;
-    double total_interest;
+    double balance (P);
+    int row_num (0);
+    double interest (0);
+    double principal_paid (0);
+    double total_interest (0);
     do{
       google::TemplateDictionary* sub_dict2 = dict.AddSectionDictionary("PaymentEntry");
       sub_dict2->ShowSection("PaymentEntry");
@@ -101,11 +116,11 @@ void write_amortization_template(Request& req, response& resp)
   fill_amortization_dictionary(dict, req);
 
   google::Template* tmpl
-    = google::Template::GetTemplate("example.tpl", google::STRIP_WHITESPACE);
+    = google::Template::GetTemplate("../templates/acgi_amort.html", google::STRIP_WHITESPACE);
 
   std::string arg(req[get]["arg"]);
   if (arg.empty())
-    arg = "4"; // Make this the default
+    arg = "2"; // Make this the default
 
   // Depending on the value of `arg`, we can write the output in
   // different ways.
@@ -145,7 +160,7 @@ void write_amortization_template(Request& req, response& resp)
   if (arg == "4")
   {
     // Write the output directly to the request's client.
-    std::string headers("Content-type: text/html\r\n\r\n");
+    std::string headers ("Content-type: text/html\r\n\r\n");
     write(req.client(), buffer(headers));
     std::string output;
     tmpl->Expand(&output, &dict);
@@ -170,15 +185,32 @@ int main()
   try{
     service s;
     request req(s);
-    req.load(true);
+    req.load(parse_all);
     response resp;
 
     write_amortization_template(req, resp);
   
     return_(resp, req, 0);
+  }catch(boost::system::system_error* err){
+    std::cout<< "Content-type: text/plain\r\n\r\n"
+             << "Error (" << err->code() << "): " << err->what();
+    return 0;
+  }catch(boost::system::system_error& err){
+    std::cout<< "Content-type: text/plain\r\n\r\n"
+             << "Error (" << err.code() << "): " << err.what();
+    return 0;
+  }catch(std::exception* e){
+    std::cout<< "Content-type: text/html\r\n\r\n"
+             << "Exception caught: " << e->what();
+    return 0;
+  }catch(std::exception& e){
+    std::cout<< "Content-type: text/html\r\n\r\n"
+             << "Exception caught: " << e.what();
+    return 0;
   }catch(...){
     std::cout<< "Content-type: text/html\r\n\r\n"
-      << "ERROR!! BOOM!";
+             << "Unknown error!";    
+    return 0;
   }
 }
 //]
