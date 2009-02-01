@@ -30,21 +30,7 @@ namespace fs = boost::filesystem;
 using boost::filesystem::path;
 using std::cout;
 using std::string;
-
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-
-    using std::wstring;
-    typedef std::wstring bstring;
-#   define BOO_LIT( lit ) L##lit
-#   define BOO_COUT std::wcout
-
-# else
-
-    typedef std::string bstring;
-#   define BOO_LIT( lit ) lit
-#   define BOO_COUT std::cout
-
-#   endif
+using std::wstring;
 
 #define CHECK(x) check( x, __FILE__, __LINE__ )
 #define PATH_IS( a, b ) check_path( a, b, __FILE__, __LINE__ )
@@ -61,22 +47,16 @@ namespace
   std::string platform( BOOST_PLATFORM );
 
   void check_path( const path & source,
-              const bstring & expected, const char* file, int line )
+              const wstring & expected, const char* file, int line )
   {
     if ( source == expected ) return;
 
     ++errors;
 
     std::cout << file;
-#   ifndef BOOST_FILESYSTEM_NARROW_ONLY
     std::wcout << L'(' << line << L"): source.wstring(): \"" << source.wstring()
                << L"\" != expected: \"" << expected
                << L"\"\n" ;
-#   else
-    std::cout << '(' << line << "): source.string(): \"" << source.string()
-              << "\" != expected: \"" << expected
-              << "\"\n" ;
-#   endif
   }
 
   template< class T1, class T2 >
@@ -89,16 +69,10 @@ namespace
 
     std::cout << file;
 
-#   ifndef BOOST_FILESYSTEM_NARROW_ONLY
     std::wcout << L'(' << line << L"): value: \"" << value
                << L"\" != expected: \"" << expected
                << L"\"\n" ;
-#   else
-    std::cout << '(' << line << "): value: \"" << value
-              << "\" != expected: \"" << expected
-              << "\"\n" ;
-#   endif
-   }
+  }
 
   void check( bool ok, const char* file, int line )
   {
@@ -121,35 +95,35 @@ namespace
     std::cout << "testing constructors..." << std::endl;
 
     path x0;                                           // #1
-    PATH_IS(x0, BOO_LIT(""));
+    PATH_IS(x0, L"");
 
     path x1("path x1");                                // #3
-    PATH_IS(x1, BOO_LIT("path x1"));
+    PATH_IS(x1, L"path x1");
 
     path x2(x1);                                       // #2
-    PATH_IS(x2, BOO_LIT("path x1"));
+    PATH_IS(x2, L"path x1");
 
     path x3(L"const wchar_t *");                       // #3
     PATH_IS(x3, L"const wchar_t *");
 
     string s3a( "s3a.c_str()" );
     path x3a( s3a.c_str() );                           // #3
-    PATH_IS(x3a, BOO_LIT("s3a.c_str()"));
+    PATH_IS(x3a, L"s3a.c_str()");
 
     path x4(string("std::string::iterator").begin());  // #3
-    PATH_IS(x4, BOO_LIT("std::string::iterator"));
+    PATH_IS(x4, L"std::string::iterator");
 
     path x5(wstring(L"std::wstring::iterator").begin()); // #3
     PATH_IS(x5, L"std::wstring::iterator");
 
     path x7(s.begin(), s.end());                       // #4
-    PATH_IS(x7, BOO_LIT("string iterators"));
+    PATH_IS(x7, L"string iterators");
 
     path x8(ws.begin(), ws.end());                     // #4
     PATH_IS(x8, L"wstring iterators");
 
     path x10(string("std::string"));                   // #5
-    PATH_IS(x10, BOO_LIT("std::string"));
+    PATH_IS(x10, L"std::string");
 
     path x11(wstring(L"std::wstring"));                // #5
     PATH_IS(x11, L"std::wstring");

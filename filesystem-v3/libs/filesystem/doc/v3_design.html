@@ -197,11 +197,33 @@ http://svn.boost.org/svn/boost/sandbox/filesystem-v3/boost/filesystem/path.hpp</
 
 <h2><a name="Trying-the-prototype">Using the prototype</a></h2>
 
+<p>Note that testing has been concentrated on VC++ 9.0 Express, with occasional 
+Linux GCC tests. Only the core path tests and operations tests are passing. 
+Expect problems with other compilers or test programs.</p>
+
+<p>Windows install:</p>
+
 <blockquote>
-  <pre>svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
+  <pre>cd to the directory where you wish to download the prototype
+svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
 rmdir /s /q filesystem-v3\boost\filesystem
 rmdir /s /q filesystem-v3\libs\filesystem
 svn --force co http://svn.boost.org/svn/boost/sandbox/filesystem-v3 filesystem-v3</pre>
+</blockquote>
+<p>POSIX install (warning - untested code):</p>
+
+<blockquote>
+  <pre>cd to the directory where you wish to download the prototype
+svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
+rm -fr filesystem-v3/boost/filesystem
+rm -fr filesystem-v3/libs/filesystem
+svn --force co http://svn.boost.org/svn/boost/sandbox/filesystem-v3 filesystem-v3</pre>
+</blockquote>
+<p>To see what tests are passing on your system:</p>
+
+<blockquote>
+  <pre>cd filesystem-v3/libs/filesystem/test
+bjam</pre>
 </blockquote>
 <h2><a name="Acknowledgements">Acknowledgements</a></h2>
 

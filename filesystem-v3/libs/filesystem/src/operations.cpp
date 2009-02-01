@@ -716,7 +716,6 @@ namespace boost
   void create_symlink( const path & to, const path & from, error_code & ec )
   {
 #   if defined(BOOST_WINDOWS_API) && _WIN32_WINNT < 0x0600  // SDK earlier than Vista and Server 2008
-	  std::cout << "*********************************" << _WIN32_WINNT << std::endl;
     error( true, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category), to, from, ec,
       "boost::filesystem::create_directory_symlink" );
 #   else
@@ -1438,7 +1437,7 @@ namespace
 {
 # ifdef BOOST_WINDOWS_API
 
-  error_code dir_itr_first( void *& handle, const path & dir,
+  error_code dir_itr_first( void *& handle, const fs::path & dir,
     wstring & target, fs::file_status & sf, fs::file_status & symlink_sf )
   // Note: an empty root directory has no "." or ".." entries, so this
   // causes a ERROR_FILE_NOT_FOUND error which we do not considered an
