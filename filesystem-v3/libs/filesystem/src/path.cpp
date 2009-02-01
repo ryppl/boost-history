@@ -279,6 +279,21 @@ namespace filesystem
     return *this;
   }
 
+  path & path::replace_extension( const path & source )
+  {
+    // erase existing extension if any
+    size_type pos( m_path.rfind( dot ) );
+    if ( pos != string_type::npos )
+      m_path.erase( pos );
+
+    // append source extension if any
+    pos = source.m_path.rfind( dot );
+    if ( pos != string_type::npos )
+      m_path += source.c_str() + pos;
+
+    return *this;
+  }
+
 }  // namespace filesystem
 }  // namespace boost
   

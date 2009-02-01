@@ -1,6 +1,6 @@
 //  path_test program  -----------------------------------------------------------------//
 
-//  Copyright Beman Dawes 2002
+//  Copyright Beman Dawes 2002, 2008
 //  Copyright Vladimir Prus 2002
 
 //  Use, modification, and distribution is subject to the Boost Software
@@ -1270,6 +1270,61 @@ namespace
     BOOST_CHECK( !fs::portable_directory_name( std::string( "foo." ) ) );
     BOOST_CHECK( !fs::portable_file_name( std::string( "foo." ) ) );
   }
+  
+  //  stem_tests  ---------------------------------------------------//
+
+  void stem_tests()
+  {
+    std::cout << "stem_tests..." << std::endl;
+
+    BOOST_CHECK( path("b").stem() == "b" );
+    BOOST_CHECK( path("a/b.txt").stem() == "b" );
+    BOOST_CHECK( path("a/b.").stem() == "b" ); 
+    BOOST_CHECK( path("a.b.c").stem() == "a.b" );
+    BOOST_CHECK( path("a.b.c.").stem() == "a.b.c" );
+    BOOST_CHECK( path("").stem() == "" );
+  }
+
+  //  extension_tests  ---------------------------------------------------//
+
+  void extension_tests()
+  {
+    std::cout << "extension_tests..." << std::endl;
+
+    BOOST_CHECK( path("a/b").extension() == "" );
+    BOOST_CHECK( path("a/b.txt").extension() == ".txt" );
+    BOOST_CHECK( path("a/b.").extension() == "." );
+    BOOST_CHECK( path("a.b.c").extension() == ".c" );
+    BOOST_CHECK( path("a.b.c.").extension() == "." );
+    BOOST_CHECK( path("").extension() == "" );
+    BOOST_CHECK( path("a/").extension() == "." );
+  }
+  
+  //  replace_extension_tests  ---------------------------------------------------//
+
+  void replace_extension_tests()
+  {
+    std::cout << "replace_extension_tests..." << std::endl;
+
+    BOOST_CHECK( path().replace_extension().empty() );
+    BOOST_CHECK( path().replace_extension("a").empty() );
+    BOOST_CHECK( path().replace_extension("a.") == "." );
+    BOOST_CHECK( path().replace_extension("a.txt") == ".txt" );
+    // see the rationale in html docs for explanation why this works:
+    BOOST_CHECK( path().replace_extension(".txt") == ".txt" );
+
+    BOOST_CHECK( path("a.txt").replace_extension() == "a" );
+    BOOST_CHECK( path("a.txt").replace_extension("") == "a" );
+    BOOST_CHECK( path("a.txt").replace_extension(".") == "a." );
+    BOOST_CHECK( path("a.txt").replace_extension(".tex") == "a.tex" );
+    BOOST_CHECK( path("a.txt").replace_extension("tex") == "a" );
+    BOOST_CHECK( path("a.").replace_extension(".tex") == "a.tex" );
+    BOOST_CHECK( path("a.").replace_extension("tex") == "a" );
+    BOOST_CHECK( path("a").replace_extension(".txt") == "a.txt" );
+    BOOST_CHECK( path("a").replace_extension("txt") == "a" );
+    BOOST_CHECK( path("a.b.txt" ).replace_extension(".tex") == "a.b.tex" );  
+    BOOST_CHECK( path("a.b.txt" ).replace_extension("tex") == "a.b" );  
+  }
 
 } // unnamed namespace
 
@@ -1305,6 +1360,9 @@ int test_main( int, char*[] )
   non_member_tests();
   exception_tests();
   name_function_tests();
+  stem_tests();
+  extension_tests();
+  replace_extension_tests();
 
   // verify deprecated names still available
 
@@ -1367,41 +1425,6 @@ int test_main( int, char*[] )
   BOOST_CHECK( p1.parent_path().string() == "fe/fi/fo" );
   BOOST_CHECK( path( "" ).empty() == true );
   BOOST_CHECK( path( "foo" ).empty() == false );
-
-  
-// extension() tests
-
-  BOOST_CHECK( path("a/b").extension() == "" );
-  BOOST_CHECK( path("a/b.txt").extension() == ".txt" );
-  BOOST_CHECK( path("a/b.").extension() == "." );
-  BOOST_CHECK( path("a.b.c").extension() == ".c" );
-  BOOST_CHECK( path("a.b.c.").extension() == "." );
-  BOOST_CHECK( path("").extension() == "" );
-  BOOST_CHECK( path("a/").extension() == "." );
-  
-// stem() tests
-
-  BOOST_CHECK( path("b").stem() == "b" );
-  BOOST_CHECK( path("a/b.txt").stem() == "b" );
-  BOOST_CHECK( path("a/b.").stem() == "b" ); 
-  BOOST_CHECK( path("a.b.c").stem() == "a.b" );
-  BOOST_CHECK( path("a.b.c.").stem() == "a.b.c" );
-  BOOST_CHECK( path("").stem() == "" );
-  
-//// replace_extension() tests
-//
-//  BOOST_CHECK( path("a.txt").replace_extension("").string() == "a" );
-//  BOOST_CHECK( path("a.txt").replace_extension(".").string() == "a." );
-//  BOOST_CHECK( path("a.txt").replace_extension(".tex").string() == "a.tex" );
-//  BOOST_CHECK( path("a.txt").replace_extension("tex").string() == "a.tex" );
-//  BOOST_CHECK( path("a.").replace_extension(".tex").string() == "a.tex" );
-//  BOOST_CHECK( path("a.").replace_extension("tex").string() == "a.tex" );
-//  BOOST_CHECK( path("a").replace_extension(".txt").string() == "a.txt" );
-//  BOOST_CHECK( path("a").replace_extension("txt").string() == "a.txt" );
-//  BOOST_CHECK( path("a.b.txt" ).replace_extension(".tex").string() == "a.b.tex" );  
-//  BOOST_CHECK( path("a.b.txt" ).replace_extension("tex").string() == "a.b.tex" );  
-//  // see the rationale in html docs for explanation why this works
-//  BOOST_CHECK( path("").replace_extension(".png").string() == ".png" );
 
   // inserter and extractor tests
 # if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300 // bypass VC++ 7.0 and earlier

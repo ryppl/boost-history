@@ -604,7 +604,7 @@ namespace boost
       return;
 
 	// preconditions met, so attempt the copy
-	error( !::CopyFileEx( from.c_str(), to.c_str(), 0, 0, 0,
+	error( !::CopyFileExW( from.c_str(), to.c_str(), 0, 0, 0,
 		COPY_FILE_COPY_SYMLINK | COPY_FILE_FAIL_IF_EXISTS ), to, from, ec,
 		"boost::filesystem::copy_symlink" );
 

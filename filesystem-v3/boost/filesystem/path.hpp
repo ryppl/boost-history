@@ -16,6 +16,7 @@
 /*
                               TO DO
 
+   * Document breaking changes, provide workarounds where possible.
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
    * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
@@ -25,8 +26,8 @@
      Make sure current trunk has passing tests for those cases, all decompositions.
      See test_decompositions() in path_unit_test.cpp
    * Get the deprecated names working.
-   * path_test ~line 1200 replace_extension() tests commented out
    * Document leading //: no longer treated specially.
+   * Document behavior of path::replace_extension has change WRT argument w/o a dot.
    * reference.html: operator /= is underspecified as to when a "/" is appended, and
      whether a '/' or '\' is appended.
    * path.cpp: locale and detail append/convert need error handling.
@@ -130,16 +131,16 @@ namespace filesystem
     String m_source;
   };
 
-  //------------------------------------------------------------------------------------//
-  //                                                                                    //
-  //                                path_traits                                         //
-  //                                                                                    //
-  //   Specializations are provided for char, wchar_t, char16_t, and char32_t value     //
-  //   types and their related string and iterator types.                               //
-  //                                                                                    //
-  //   Users are permitted to add specializations for additional types.                 //
-  //                                                                                    //
-  //------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                  path_traits                                         //
+//                                                                                      //
+//    Specializations are provided for char, wchar_t, char16_t, and char32_t value      //
+//    types and their related string and iterator types .                               //
+//                                                                                      //
+//    Users are permitted to add specializations for additional types.                  //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 namespace path_traits
 {
@@ -492,17 +493,10 @@ namespace path_traits
 
     //  -----  modifiers  -----
 
-    void clear() { m_path.clear(); }
-
-    void swap( path & rhs )
-    {
-      m_path.swap( rhs.m_path );
-#     ifdef BOOST_CYGWIN_PATH
-        std::swap( m_cygwin_root, rhs.m_cygwin_root );
-#     endif
-    }
-
-    path & remove_filename();
+    void    clear()             { m_path.clear(); }
+    void    swap( path & rhs )  { m_path.swap( rhs.m_path ); }
+    path &  remove_filename();
+    path &  replace_extension( const path & source = path() );
 
     //  -----  observers  -----
   
@@ -568,14 +562,14 @@ namespace path_traits
     //  -----  decomposition  -----
 
     path  root_path() const; 
-    path  root_name() const;        // returns 0 or 1 element path
-                                    // even on POSIX, root_name() is non-empty() for network paths
-    path  root_directory() const;   // returns 0 or 1 element path
+    path  root_name() const;         // returns 0 or 1 element path
+                                     // even on POSIX, root_name() is non-empty() for network paths
+    path  root_directory() const;    // returns 0 or 1 element path
     path  relative_path() const;
     path  parent_path() const;
-    path  filename() const;         // returns 0 or 1 element path
-    path  stem() const;             // returns 0 or 1 element path
-    path  extension() const;        // returns 0 or 1 element path
+    path  filename() const;          // returns 0 or 1 element path
+    path  stem() const;              // returns 0 or 1 element path
+    path  extension() const;         // returns 0 or 1 element path
 
     //  -----  query  -----
 
