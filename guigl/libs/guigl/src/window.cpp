@@ -72,7 +72,7 @@ public:
         : m_window(ptr)
     {
         if(!s_glut)
-            s_glut = new glut();
+            initialize_s_glut();
         m_label = map[_label];
         m_id = s_glut->create_window(map[_size], m_label, map[_depth], this);
     }
@@ -123,6 +123,11 @@ public:
     {   return m_id; }
     static glut *s_glut;
 private:
+    void initialize_s_glut()
+    {
+        static glut s_glut_impl;
+        s_glut = &s_glut_impl;
+    }
     int m_id;
     window *m_window;
     std::string m_label;
