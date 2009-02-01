@@ -57,7 +57,7 @@ project boost/cgi
       <library>/boost/thread/
       <library>/boost/system/
       <library>/boost/regex/
-			<library>/boost/date_time/
+      <library>/boost/date_time/
       <define>_CRT_SECURE_NO_WARNINGS
       <define>_SCL_SECURE_NO_WARNINGS
       $(DEFINES)
@@ -67,10 +67,11 @@ project boost/cgi
       <library>/boost/thread/
       <library>/boost/system/
       <library>/boost/regex/
-			<library>/boost/date_time/
+      <library>/boost/date_time/
       <define>_CRT_SECURE_NO_WARNINGS
       <define>_SCL_SECURE_NO_WARNINGS
       <os>unix:<linkflags>-pthread
+      <linkflags>-pthread
       #<tag>@$(__name__).tag
       $(DEFINES)
   ;

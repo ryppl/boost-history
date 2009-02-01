@@ -43,7 +43,7 @@ namespace cgi {
     bool has_key(MapT& data, common::name const& name)
     {
         if (!data.empty())
-            for(MapT::const_iterator iter = data.begin(), end = data.end();
+            for(typename MapT::const_iterator iter = data.begin(), end = data.end();
                 iter != end; ++iter)
             {
                 if (iter->first == name)

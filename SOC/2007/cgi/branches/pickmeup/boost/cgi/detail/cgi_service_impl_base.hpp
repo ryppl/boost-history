@@ -173,7 +173,7 @@ namespace cgi {
       load(implementation_type& impl, bool parse_stdin
           , boost::system::error_code& ec)
     {
-      return load(impl, parse_stdin ? parse_all : (parse_env | parse_cookies), ec);
+      return load(impl, parse_stdin ? common::parse_all : (common::parse_env | common::parse_cookie), ec);
     }/*
       detail::save_environment(env_vars(impl.vars_));
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];

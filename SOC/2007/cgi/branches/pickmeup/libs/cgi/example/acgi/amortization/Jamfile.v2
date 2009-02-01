@@ -30,22 +30,34 @@ exe acgi_amort
   ;
 
 # Our install rule (builds binaries and copies them to <location>)
-install install-app
+install install-exe
  :
    acgi_amort
-   acgi_amort.tpl
  :
  :
    <location>$(cgi-bin)
  ;
 
-install install-extra
+install install-css
  :
    acgi_amort.css
+ :
+   <location>$(htdocs)/css/
+ ;
+
+ install install-js
+ :
    acgi_amort.js
  :
+   <location>$(htdocs)/js/
+ ;
+
+install install-extra
  :
-   <location>$(htdocs)
+   acgi_amort.html
+ :
+ :
+   <location>$(htdocs)/../templates/
  ;
 
 explicit install-app ;
@@ -53,7 +65,9 @@ explicit install-extra ;
 
 install install
   :
-    install-app
+    install-exe
+    install-css
+    install-js
     install-extra
   ;
 

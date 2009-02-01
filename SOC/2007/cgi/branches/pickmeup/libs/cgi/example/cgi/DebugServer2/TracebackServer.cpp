@@ -6,7 +6,7 @@
 namespace detail {
 
 boost::uint64_t
-get_microseconds(boost::chrono::process_clock::duration& tp)
+get_microseconds(boost::chrono::process_clock::duration const& tp)
 {
   return boost::chrono::duration_cast<boost::chrono::microseconds>(tp).count();
 }
