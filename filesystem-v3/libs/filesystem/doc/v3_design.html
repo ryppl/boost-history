@@ -5,7 +5,7 @@
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
 <meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Filesystem Home</title>
+<title>Filesystem V3 Introduction</title>
 <link rel="stylesheet" type="text/css" href="minimal.css">
 </head>
 
@@ -17,7 +17,7 @@
 <a href="../../../index.htm">
 <img src="boost.png" alt="boost.png (6897 bytes)" align="middle" width="277" height="86" border="0"></a></td>
     <td width="410" align="middle">
-    <font size="7">Filesystem Library V3 Prototype Design</font>
+    <font size="7">Boost.Filesystem Version 3 </font>
     </td>
   </tr>
 </table>
@@ -43,6 +43,7 @@
     <a href="#Details">Details</a><br>
     <a href="#Other-changes">Other changes</a><br>
     <a href="#Prototype">Prototype</a><br>
+    <a href="#Trying-the-prototype">Trying the prototype</a><br>
     <a href="#Acknowledgements">Acknowledgements</a></td>
   </tr>
   <tr>
@@ -58,7 +59,7 @@
 <h2><a name="Introduction">Introduction</a></h2>
 
 <p>During the review of Boost.Filesystem.V2 (Internationalization), Peter Dimov 
-suggested that the class basic_path template was unwieldy, and that a single 
+suggested that the  basic_path class template was unwieldy, and that a single 
 path type that accommodated multiple character types and encodings would be more 
 flexible. Although I wasn't willing to stop development at that time to 
 explore how this idea might be implemented, or to break from the pattern for 
@@ -173,13 +174,12 @@ been consistently applied to all applicable functions.</p>
 <p><b>Additional filesystem operations:</b></p>
 
 <ul>
-  <li>copy_any() added.</li>
-  <li>copy_directory() added.</li>
-  <li>copy_symlink() added.</li>
-  <li>create_symlink() now available on Windows if supported (i.e. Vista and 
-  later).</li>
-  <li>create_directory_symlink() added.</li>
-  <li>read_symlink() added.</li>
+  <li>copy_directory().</li>
+  <li>copy_symlink(). On Windows, requires Vista or later.</li>
+  <li>copy().</li>
+  <li>create_symlink().&nbsp; On Windows, requires Vista or later.</li>
+  <li>create_directory_symlink().&nbsp; On Windows, requires Vista or later.</li>
+  <li>read_symlink().&nbsp; Not supported on Windows.</li>
 </ul>
 
 <h2><a name="Prototype">Prototype</a></h2>
@@ -187,14 +187,31 @@ been consistently applied to all applicable functions.</p>
 <p>Currently incomplete. Not thoroughly tested. Should not be used for 
 production work.</p>
 
+<p>The prototype can be viewed at
+<a href="http://svn.boost.org/svn/boost/sandbox/filesystem-v3/">
+http://svn.boost.org/svn/boost/sandbox/filesystem-v3/</a></p>
+
+<p>There is a (partial) TO DO list at the beginning of
+<a href="http://svn.boost.org/svn/boost/sandbox/filesystem-v3/boost/filesystem/path.hpp">
+http://svn.boost.org/svn/boost/sandbox/filesystem-v3/boost/filesystem/path.hpp</a></p>
+
+<h2><a name="Trying-the-prototype">Trying the prototype</a></h2>
+
+<blockquote>
+  <pre>svn export http://svn.boost.org/svn/boost/trunk filesystem-v3
+rmdir /s /q filesystem-v3/boost/filesystem
+rmdir /s /q filesystem-v3/libs/filesystem
+svn --force co http://svn.boost.org/svn/boost/sandbox/filesystem-v3 filesystem-v3</pre>
+</blockquote>
 <h2><a name="Acknowledgements">Acknowledgements</a></h2>
 
-<p>Walter Landry contributed both the design and implementation of the copy_any, 
+<p>Peter Dimov suggested the idea of a single path class that could cope with 
+multiple character types and encodings. Walter Landry contributed both the design and implementation of the copy_any, 
 copy_directory, copy_symlink, and read_symlink functions.</p>
 
 <hr>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->24 January, 2009<!--webbot bot="Timestamp" endspan i-checksum="39342" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B, %Y" startspan -->01 February, 2009<!--webbot bot="Timestamp" endspan i-checksum="40404" --></p>
 
 <p>© Copyright Beman Dawes, 2008</p>
 <p> Use, modification, and distribution are subject to the Boost Software 
