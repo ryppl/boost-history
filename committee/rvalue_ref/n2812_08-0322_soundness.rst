@@ -7,7 +7,8 @@
 :organization: `BoostPro Computing`_, Apple
 :date: 2008-12-05
 
-:Number: n2812=08-0322
+:Number: dXXXX=09-NNNN
+:Revises: n2812=08-0322 
 
 .. _`BoostPro Computing`: http://www.boostpro.com
 .. _patch: http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00436.html
@@ -535,6 +536,68 @@ implementations. The GCC implementation required a day's effort to
 update both the language and the library, although more effort would
 certainly be required to update the test cases associated with this
 feature.
+
+Proposed Wording
+================
+
+Modify the first bullet of [dcl.init.ref]p5 as follows:
+
+5) A reference to type “``cv1 T1``” is initialized by an expression of type “``cv2 T2``” as follows: 
+
+  - If **the reference is an lvalue reference and** the initializer expression 
+   
+    - is an lvalue (but is not a bit-ﬁeld), and “``cv1 T1``” is reference-compatible with “``cv2 T2``,” or 
+    - has a class type (i.e., ``T2`` is a class type) and can be implicitly converted to an lvalue of type “``cv3 T3``,” where “``cv1 T1``” is reference-compatible with “``cv3 T3``” (this conversion is selected by enumerating the applicable conversion functions (13.3.1.6) and choosing the best one through overload resolution (13.3)), then the reference is bound directly to the initializer expression lvalue in the ﬁrst case, and the reference is bound to the lvalue result of the conversion in the second case. In these cases the reference is said to bind directly to the initializer expression. [ *Note:* the usual lvalue-to-rvalue (4.1), array-to-pointer (4.2), and function-to-pointer (4.3) standard conversions are not needed, and therefore are suppressed, when such direct bindings to lvalues are done. - *end note* ]  [ *Example:* ::
+
+        double d = 2.0; 
+        double& rd = d; // rd refers to d 
+        const double& rcd = d; // rcd refers to d 
+        struct A { }; 
+        struct B : A { } b; 
+        A& ra = b; // ra refers to A subobject in b 
+        const A& rca = b; // rca refers to A subobject in b 
+
+     *— end example* ] 
+
+Then modify the last sub-bullet of that paragraph as follows:
+
+      -  Otherwise, **if the reference is an lvalue reference or if "cv1 T1" is not reference-compatible with "cv2 T2",** a temporary of type “cv1 T1” is created and initialized from the initializer expression using the rules for a non-reference copy initialization (8.5). The reference is then bound to the temporary. If T1 is reference-related to T2, cv1 must be the same cv-qualiﬁcation as, or greater cv-qualiﬁcation than, cv2 ; otherwise, the program is ill-formed.
+
+Add a new paragraph to [expr.static.cast] after paragraph 2
+
+3) **A value of type "cv1 T2" can be cast to type "rvalue reference to cv2 T1" if "cv1 T1" is reference-compatible with "cv2 T2" (8.5.3). If T1 is a base class of T2, a program that necessitates such a cast is ill-formed if T1 is an inaccessible (Clause 11) or ambiguous (10.2) base class of T2.**
+
+Modify [over.ics.rank]p3, bullet1, sub-bullet 4 as follows:
+
+3) Two implicit conversion sequences of the same form are indistinguishable conversion sequences unless one of the following rules applies: 
+
+  - Standard conversion sequence ``S1`` is a better conversion sequence than standard conversion sequence ``S2`` if 
+
+    - ...
+    - S1 and S2 are reference bindings (8.5.3) and neither refers to an implicit object parameter of a non-static member function declared without a ref-qualiﬁer, and (**remove--either S1 binds an lvalue reference to an lvalue and S2 binds an rvalue reference or--end remove**) S1 binds an rvalue reference to an rvalue and S2 binds an lvalue reference. [ *Example:* ::
+
+       int i; 
+       int f(); 
+       int g(const int&); 
+       int g(const int&&); 
+       int j = g(i); // calls g(const int&) 
+       int k = g(f()); // calls g(const int&&) 
+       struct A { 
+       A& operator<<(int); 
+       void p() &; 
+       void p() &&; 
+       }; 
+       A& operator<<(A&&, char); 
+       A() << 1; // calls A::operator<<(int) 
+       A() << ’c’; // calls operator<<(A&&, char) 
+       A a; 
+       a << 1; // calls A::operator<<(int) 
+       a << ’c’; // calls operator<<(A&&, char) CHANGE TO: calls A::operator<<(int)
+       A().p(); // calls A::p()&& 
+       a.p(); // calls A::p()& 
+
+      *— end example* ] or, if not that, 
+
 
 Alternative Solutions
 ======================
