@@ -56,3 +56,4 @@ public:
     // Add the running times to the dictionary.
     void dump_times(dictionary_type& dict);
 };
+
