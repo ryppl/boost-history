@@ -1,4 +1,4 @@
-//           -- detail/save_environment.hpp --
+ //           -- detail/save_environment.hpp --
 //
 //           Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -55,12 +55,13 @@ namespace cgi {
          if ((*env)[i] == '=')
            break;
 
-#if defined(BOOST_CGI_KEEP_EMPTY_VARS) && BOOST_CGI_KEEP_EMPTY_VARS != 0
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
        sa.assign(*env, i);
        if ((*env)[i+1] != '\0')
-       {
-		 env_map[sa] = sb.clear();
-	   }
+         sb.assign((*env+i+1), j-i-1);
+       else
+         sb.clear();
+	   env_map[sa.c_str()] = sb;
 #else
        if ((*env)[i+1] != '\0')
        {

@@ -10,7 +10,10 @@
 //#ifdef _MSC_VER
 
 //#pragma warning (disable:)
-//#define _CRT_SECURE_NO_DEPRECATE 1
+// You may want to remove these.
+#define _CRT_SECURE_NO_DEPRECATE 1
+#define _SCL_SECURE_NO_WARNINGS 1
+#define _CRT_SECURE_NO_WARNINGS 1
 //#pragma warning (disable:4996)
 
 //#endif
