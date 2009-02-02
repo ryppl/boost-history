@@ -1,0 +1,39 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+import feature ;
+
+lib glut : : <name>glut <link>shared ;
+lib freeglut : : <name>freeglut <link>shared ;
+lib nrglut32 : : <name>glut32 <link>shared ;
+lib opengl32 : : <name>opengl32 <link>shared ;
+lib glu32 : : <name>glu32 <link>shared ;
+
+alias platform_glut :  :  :  :
+        <toolset>gcc:<library>glut
+        <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <toolset>msvc:<library>freeglut
+        <toolset>msvc:<library>opengl32
+        <toolset>msvc:<library>glu32
+        ;
+
+alias glut32 :  :  :  :
+        <library>nrglut32
+        <library>opengl32
+        <library>glu32
+        ;
+
+feature.extend use-window-manager : platform_glut ;
+feature.compose <use-window-manager>platform_glut 
+        : <library>/boost/guigl/window_manager//platform_glut/<use-window-manager>none ;
+feature.set-default use-window-manager : platform_glut ;
+
+feature.extend use-window-manager : glut32 ;
+feature.compose <use-window-manager>glut32 
+        : <library>/boost/guigl/window_manager//glut32/<use-window-manager>none ;
+
