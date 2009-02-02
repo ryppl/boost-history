@@ -154,6 +154,7 @@
 		08A048C40E77A1B70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
 		08A048CF0E77A2E70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
 		08A13C090E535040008C8A10 /* field_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = field_map.hpp; sourceTree = "<group>"; };
+		08A61CEE0F37B50300F2DF50 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A6D3950E7B99C700BF2671 /* two_buttons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = two_buttons.hpp; sourceTree = "<group>"; };
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
 		08A77AB40E4F91AB00B8793E /* LICENSE_1_0.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = LICENSE_1_0.txt; path = ../../../../LICENSE_1_0.txt; sourceTree = SOURCE_ROOT; };
@@ -189,6 +190,7 @@
 		080DD7560C13908400EEB53D = {
 			isa = PBXGroup;
 			children = (
+				08A61CED0F37B50300F2DF50 /* window_manager */,
 				08F5068A0E5B41900020D95E /* parameter */,
 				08A13C080E535040008C8A10 /* field_map */,
 				08A454D80E5243ED002C4151 /* guigl */,
@@ -355,6 +357,15 @@
 			);
 			name = guigl;
 			path = ../../../../boost/guigl;
+			sourceTree = SOURCE_ROOT;
+		};
+		08A61CED0F37B50300F2DF50 /* window_manager */ = {
+			isa = PBXGroup;
+			children = (
+				08A61CEE0F37B50300F2DF50 /* Jamfile */,
+			);
+			name = window_manager;
+			path = ../../window_manager;
 			sourceTree = SOURCE_ROOT;
 		};
 		08AD8F610E5CD62600BFB2C8 /* platform */ = {
