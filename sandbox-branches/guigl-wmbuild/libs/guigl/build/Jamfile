@@ -1,0 +1,46 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+import feature ;
+
+lib glut : : <name>glut <link>shared ;
+lib glut32 : : <name>glut32 <link>shared ;
+lib opengl32 : : <name>opengl32 <link>shared ;
+lib glu32 : : <name>glu32 <link>shared ;
+
+project boost/guigl 
+    : source-location ../src
+    : requirements
+        <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <define>BOOST_ALL_NO_LIB=1
+    : usage-requirements
+    	<toolset>gcc:<library>glut
+        <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <toolset>msvc:<library>glut32
+        <toolset>msvc:<library>opengl32
+        <toolset>msvc:<library>glu32
+        <library>/boost/signals//boost_signals
+        <define>BOOST_ALL_NO_LIB=1
+    ;
+
+feature.feature guigl_binding : glut fltk : propagated ;
+feature.set-default guigl_binding : glut ;
+
+SOURCES =
+    application
+    widget/button widget/labeled_button
+    widget/slider widget/labeled_slider
+    widget/compound widget/label ;
+
+lib boost_guigl
+    : $(SOURCES).cpp
+    [ obj binding_window_obj : window.cpp/<guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT ]
+    [ obj widget_window_obj : widget/window.cpp ]
+    ;
+
+
