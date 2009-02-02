@@ -52,7 +52,16 @@ namespace cgi {
        }else
        if( *iter == "&" || *iter == ";" )
        {
-         destination[name.c_str()] = current_token;
+// Empty parameters (eg. `empty` in /path/to/script?empty&foo=bar) aren't
+// guaranteed by the CGI spec to be kept, but you might want to use them.
+// You just have to define `BOOST_CGI_KEEP_EMPTY_VARS` (**FIXME** currently
+// on by default).
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
+         if (name.empty())
+           destination[current_token.c_str()] = "";
+         else
+#endif // BOOST_CGI_KEEP_EMPTY_VARS
+           destination[name.c_str()] = current_token;
          current_token.clear();
          name.clear();
        }else
@@ -61,7 +70,9 @@ namespace cgi {
        }
      }
      // Save the name if the last n/v pair has no value.
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
      if( !name.empty() )
+#endif
        destination[name.c_str()] = current_token;
 
      return ec;

@@ -23,3 +23,11 @@
 #  endif
 #endif
 
+/// Keep empty query string variables.
+/** Empty query string parameters (eg.
+ *   `empty` in /path/to/script?empty&foo=bar)
+ * aren't guaranteed by the CGI spec to be kept, but you might want to use
+ * them. You just have to define `BOOST_CGI_KEEP_EMPTY_VARS` (**FIXME**
+ * currently on by default).
+ */
+#define BOOST_CGI_KEEP_EMPTY_VARS
