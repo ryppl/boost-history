@@ -70,10 +70,13 @@ namespace cgi {
        }
      }
      // Save the name if the last n/v pair has no value.
-#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
-     if( !name.empty() )
-#endif
+     if ( !name.empty() )
        destination[name.c_str()] = current_token;
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
+     else // Save the final 'toggle' - eg /path/to/script?foo=bar&toggle
+     if ( !current_token.empty() )
+       destination[current_token.c_str()] = "";
+#endif
 
      return ec;
    }

@@ -19,6 +19,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_debug_server", "cgi_deb
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cgi_ctemplate_debug_server", "cgi_ctemplate_debug_server\cgi_ctemplate_debug_server.vcproj", "{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DebugServer3", "DebugServer3\DebugServer3.vcproj", "{C0B7A721-6E2B-4594-94DD-94A6D21919DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -61,6 +63,10 @@ Global
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Debug|Win32.Build.0 = Release|Win32
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Release|Win32.ActiveCfg = Release|Win32
 		{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}.Release|Win32.Build.0 = Release|Win32
+		{C0B7A721-6E2B-4594-94DD-94A6D21919DB}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C0B7A721-6E2B-4594-94DD-94A6D21919DB}.Debug|Win32.Build.0 = Debug|Win32
+		{C0B7A721-6E2B-4594-94DD-94A6D21919DB}.Release|Win32.ActiveCfg = Release|Win32
+		{C0B7A721-6E2B-4594-94DD-94A6D21919DB}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

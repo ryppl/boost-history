@@ -47,12 +47,12 @@ void TracebackServer::stop_timer()
 
 void TracebackServer::dump_times(dictionary_type& dict)
 {
-    dict.ShowSection("RUNNING_TIME");
     dict.SetValue("RUNNING_TIME_RESOLUTION", "microseconds");
     dict.SetFormattedValue("REAL_TIME", "%d us", detail::get_microseconds(stop_times_.real));
     dict.SetFormattedValue("CPU_TIME", "%d us", detail::get_microseconds(stop_times_.user + stop_times_.system));
     dict.SetFormattedValue("USER_TIME", "%d us", detail::get_microseconds(stop_times_.user));
     dict.SetFormattedValue("SYSTEM_TIME", "%d us", detail::get_microseconds(stop_times_.system));
+    dict.ShowSection("RUNNING_TIME");
 }
 
 void TracebackServer::bomb_out(std::string const& error, response_type& response, request_type& request)
@@ -83,8 +83,9 @@ void TracebackServer::bomb_out(std::string const& error, response_type& response
 
 
 void TracebackServer::bomb_out(boost::system::system_error* err, response_type& response, request_type& request) {
+    //dictionary_type* sub_dict = dict.AddSectionDictionary("REQUEST_DATA_MAP");
     typedef request_type::string_type string;
-    string err_msg("<ul class=nvpair>boost::system::system_error*<li class=name>Code:</li>");
+    string err_msg("boost::system::system_error*<ul class=nvpair><li class=name>Code:</li>");
     err_msg += string("<li class=value>") + boost::lexical_cast<std::string>(err->code()) + "</li>" 
             + "<li class=name>What:</li>"
             + "<li class=value>" + err->what() + "</li>"
@@ -95,7 +96,7 @@ void TracebackServer::bomb_out(boost::system::system_error* err, response_type& 
 
 void TracebackServer::bomb_out(std::exception* e, response_type& response, request_type& request) {
     typedef request_type::string_type string;
-    string err_msg("<ul class=nvpair>std::exception*<li class=name>What:</li>");
+    string err_msg("std::exception*<ul class=nvpair><li class=name>What:</li>");
     err_msg += string("<li class=value>") + e->what() + "</li>" 
             + "<li class=name>Type:</li>"
             + "<li class=value>" + typeid(*e).name() + "</li><br class=clear /></ul>";
@@ -104,7 +105,7 @@ void TracebackServer::bomb_out(std::exception* e, response_type& response, reque
 
 void TracebackServer::bomb_out(std::exception& e, response_type& response, request_type& request) {
     typedef request_type::string_type string;
-    string err_msg("<ul class=nvpair>std::exception<li class=name>What:</li>");
+    string err_msg("std::exception<ul class=nvpair><li class=name>What:</li>");
     err_msg += string("<li class=value>") + e.what() + "</li>" 
             + "<li class=name>Type:</li>"
             + "<li class=value>" + typeid(e).name() + "</li><br class=clear /></ul>";

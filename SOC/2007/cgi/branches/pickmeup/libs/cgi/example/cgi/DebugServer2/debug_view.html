@@ -26,6 +26,15 @@
 </p>
 <div class="info">
 	{{ERROR}}
+	{{#SYSTEM_ERROR}}
+        <ul class=nvpair><p>{{ERROR_MSG}}</p>
+            <li class=name>Code:</li>");
+    err_msg += string("<li class=value>") + boost::lexical_cast<std::string>(err->code()) + "</li>" 
+            + "<li class=name>What:</li>"
+            + "<li class=value>" + err->what() + "</li>"
+            + "<li class=name>Type:</li>"
+            + "<li class=value>" + typeid(*err).name() + "</li><br class=clear /></ul>";	    
+	{{/SYSTEM_ERROR}}
 </div>
 
 Some details about the request:

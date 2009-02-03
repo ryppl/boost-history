@@ -21,38 +21,16 @@ int cgi_handler(request& req, response& resp)
         std::sqrt(123.456L); // waste time
     }
     */
+    
+    // Load the HTML template and strip all whitespace...
+    google::Template* tmpl = google::Template::GetTemplate("../templates/default_view.html", google::STRIP_WHITESPACE);
+    // Since this is a really basic template, this is all we need to load. We can expand it into a string.
+    std::string output;
+    tmpl->Expand(&output, NULL);
     resp<< header("X-Custom-Header: some value")
         << content_type("text/html")
-        << "<html>"
-           "<head>"
-             "<title>Debug Server</title>"
-           "</head>"
-           "<body>"
-           "<h1>Debugging Server Example</h1>"
-           "<p>"
-             "The server used in this example will catch exceptions thrown by "
-             "your request handler, or a non-zero return value. It will print "
-             "some presumably helpful info about what might have caused the "
-             "problem - obviously this is just an example, which you'd "
-             "probably want to ammend."
-           "</p>"
-           "<p>"
-             "The handler in this example will throw a std::runtime_error if "
-             "you pass 'badger=bait!' to the script, for example by following "
-             "<a href=\"?badger=bait%21\">this link</a>."
-           "</p>"
-           "<p>"
-             "The handler in this example will also return false if you pass "
-             "pass 'spam' to the script, for example by clicking "
-             "<a href=\"?spam=1\">here</a>."
-           "</p>"
-           "<p>"
-             "Finally, you can simulate an error and get traceback details "
-             "regardless of whether the script completed by passing 'debug=1',"
-             " or by following <a href=\"?debug=1\">this link</a>."
-           "</p>"               
-           "</body>"
-           "</html>";
+        << output;
+
     if (req[form]["badger"] == "bait!")    throw std::runtime_error("AOUHFAEOUHAEOUHAEOUHOUH!!!!!!");
     else if (has_key(req[form], "spam"))   return 33;
     return 0;
