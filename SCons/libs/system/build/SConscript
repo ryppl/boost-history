@@ -1,2 +1,3 @@
+# vi: syntax=python:et:ts=4
 Import("env")
 env.BoostLibrary("system", "error_code.cpp")
