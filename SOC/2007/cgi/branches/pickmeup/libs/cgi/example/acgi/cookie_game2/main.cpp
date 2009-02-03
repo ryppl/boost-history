@@ -1,0 +1,133 @@
+#include <boost/cgi/acgi.hpp>
+#include <boost/cgi/utility.hpp>
+#include <google/template.h>
+
+/**
+ * The following example has a few stages.
+ * It is best understood by compiling and testing it, and then looking at
+ * the source code.
+ */
+
+using namespace boost::acgi;
+
+// The types we use. Only here because this is an example.
+
+// Uses cTemplate, from Google. It's simple and powerful.
+typedef google::Template stencil_type;
+// You will usually load a template and then populate variables in it
+// using a TemplateDictionary.
+typedef google::TemplateDictionary dictionary_type;
+// The acgi and fcgi parts of the CGI library use a `service` class to 
+// manage asynchronous dispatching (eg. async I/O). If you're not interested
+// in async I/O, you can just use the plain cgi stuff (which is the same as
+// acgi, but without the *a*sync bits).
+// If you're unsure, you can use acgi without having to really do anything with
+// the service - it's only used on two lines in this example. In one of them
+// it is constructed...
+typedef service service_type;
+// ... and on the other it's used to construct the `request`.
+typedef request request_type;
+// The `response` will make your life easier (and more efficient).
+typedef response response_type;
+
+// These are some of the functions / types / enums used in this example.
+using boost::acgi::has_key;
+using boost::acgi::cookie;
+using boost::acgi::header;
+using boost::acgi::redirect;
+using boost::acgi::parse_all;
+using boost::acgi::form;
+using boost::acgi::cookies;
+using boost::acgi::content_type;
+
+// This function just makes it easier to change the templating engine. It's
+// only here to keep the cTemplate code out of the core of this example...
+stencil_type* get_stencil(std::string const& filename)
+{
+  return google::Template::GetTemplate(filename, google::STRIP_WHITESPACE);
+}
+
+// Show the data in the passed map, updating the passed dictionary.
+template<typename MapT, typename Dict>
+void print_formatted_data(MapT& data, Dict& dict)
+{
+  Dict* subd = dict.AddSectionDictionary("DATA_MAP");
+  if (data.empty())
+    subd->ShowSection("EMPTY");
+  else
+    for(typename MapT::const_iterator iter=data.begin(), end = data.end(); iter != end; ++iter)
+    {
+      Dict* row_dict = subd->AddSectionDictionary("ROW");
+      row_dict->SetValue("NAME", iter->first.c_str());
+      row_dict->SetValue("VALUE", iter->second);
+      row_dict->ShowSection("ROW");
+    }
+}
+
+
+int main()
+{
+  try {
+    service_type srv;
+    request_type req(srv);
+
+    // Load up the request data
+    req.load(parse_all);
+
+    response_type resp;
+
+    if (has_key(req[form], "reset") && req[form]["reset"] == "true")
+    {
+      resp<< cookie("name")
+          << redirect(req, req.script_name()); // redirect them.
+      resp.send(req.client());
+      return 0;
+    }
+
+    if (has_key(req[form], "name"))
+    {
+      if (has_key(req[form], "del"))
+        resp<< cookie(req[form]["name"]);
+      else
+        resp<< cookie(req[form]["name"], req[form]["value"]);
+      resp<< redirect(req, req.script_name());
+      return_(resp, req, http::ok);
+    }
+
+    dictionary_type dict("cookie-game dict");
+
+    // First, see if they have a cookie set
+    if (has_key(req[cookies], "name"))
+      dict.SetValueAndShowSection("USER_NAME", req[cookies]["name"], "HAS_NAME_IN_COOKIE_true");
+    else
+      dict.ShowSection("HAS_NAME_IN_COOKIE_false");
+
+    print_formatted_data(req[cookies], dict);
+
+    dict.SetValue("SCRIPT_NAME", req.script_name());  
+    dict.SetValue("COOKIE_NAME", get_value(req[form], "name", ""));
+    dict.SetValue("COOKIE_VALUE", req[form]["value"]);
+
+    // Load the HTML stencil now from the index.html file.
+    stencil_type* stencil = get_stencil("../templates/index.html");
+
+    // Expand the stencil with the the given dictionary into `output`.
+    std::string output;
+    stencil->Expand(&output, &dict);
+
+    // Add the template to the response.
+    resp<< content_type("text/html")
+        << output;
+
+    // Send the response to the requestor and return control.
+    return_(resp, req, http::ok);
+    
+  }catch(std::exception* e){
+    std::cout<< "Exception: [" << typeid(e).name() << "] - " << e->what() << std::endl;
+  }catch(std::exception const& e){
+    std::cout<< "Exception: [" << typeid(e).name() << "] - " << e.what() << std::endl;
+  }catch(...){
+    std::cout<< "boom<blink>.</blink>";
+  }
+}
+
