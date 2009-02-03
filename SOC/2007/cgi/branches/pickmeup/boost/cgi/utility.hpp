@@ -11,6 +11,7 @@
 
 // #include all utility headers.
 #include "boost/cgi/utility/has_key.hpp"
+#include "boost/cgi/utility/get.hpp"
 #include "boost/cgi/utility/redirect.hpp"
 //#include "boost/cgi/utility/get_value.hpp"
 //#include "boost/cgi/utility/get_as.hpp"

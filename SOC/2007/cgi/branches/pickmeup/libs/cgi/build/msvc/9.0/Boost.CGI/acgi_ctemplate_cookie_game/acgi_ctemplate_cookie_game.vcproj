@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="cgi_ctemplate_debug_server"
-	ProjectGUID="{CED278B4-18C9-41F5-9026-1DB8CD0AC5D4}"
-	RootNamespace="cgi_ctemplate_debug_server"
+	Name="acgi_ctemplate_cookie_game"
+	ProjectGUID="{AC2E336C-7C32-468C-9847-470436CF668F}"
+	RootNamespace="acgi_ctemplate_cookie_game"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -40,7 +40,6 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalOptions="/D &quot;_SCL_SECURE_NO_WARNINGS&quot;"
 				Optimization="0"
 				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
@@ -87,7 +86,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\debug_view.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\debug_view.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.html&quot; &quot;c:\code\c++\boost.cgi\templates\debug_view.html&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\style.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -135,7 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="libctemplate.lib"
+				AdditionalOptions="libctemplate.lib&#x0D;&#x0A;libboost_system-vc90-mt-1_38.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -163,7 +162,6 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\debug_view.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\debug_view.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\debug_view.html&quot; &quot;c:\code\c++\boost.cgi\templates\debug_view.html&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\cgi\DebugServer2\default_view.html&quot; &quot;c:\code\c++\boost.cgi\templates\default_view.html&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -176,11 +174,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\example\cgi\DebugServer2\ctemplate.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\..\example\cgi\DebugServer2\TracebackServer.cpp"
+				RelativePath="..\..\..\..\..\example\acgi\cookie_game2\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -189,10 +183,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\..\..\..\example\cgi\DebugServer2\TracebackServer.hpp"
-				>
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -201,19 +191,15 @@
 			>
 		</Filter>
 		<File
-			RelativePath="..\..\..\..\..\example\cgi\DebugServer2\debug_view.css"
+			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\index.html"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\example\cgi\DebugServer2\debug_view.html"
+			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\main.js"
 			>
 		</File>
 		<File
-			RelativePath="..\..\..\..\..\example\cgi\DebugServer2\debug_view.js"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\..\example\cgi\DebugServer2\default_view.html"
+			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\style.css"
 			>
 		</File>
 	</Files>
