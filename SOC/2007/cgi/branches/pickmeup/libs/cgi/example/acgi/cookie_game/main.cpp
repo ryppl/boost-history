@@ -166,7 +166,7 @@ void print_formatted_data(Response& resp, MapT& data)
         resp<< "<span class='value'>None found</span>";
     else {
         resp<< "<ul class=\"nvpair\">";
-        for(MapT::const_iterator iter=data.begin(), end = data.end(); iter != end; ++iter)
+        for(typename MapT::const_iterator iter=data.begin(), end = data.end(); iter != end; ++iter)
         {
             resp<< "<li class=\"name\">"
                 <<     iter->first
@@ -250,3 +250,4 @@ int main()
 
   return_(resp, req, http::ok);
 }
+
