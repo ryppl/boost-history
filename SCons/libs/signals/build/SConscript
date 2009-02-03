@@ -1,6 +1,6 @@
 Import("env")
-env.Library(
-    "boost_signals",
+env.BoostLibrary(
+    "signals",
     Split("""
     trackable.cpp
     connection.cpp

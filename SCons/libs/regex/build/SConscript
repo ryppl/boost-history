@@ -1,5 +1,6 @@
 Import("env")
-env.Library("boost_regex",
+env.BoostLibrary(
+    "regex",
     Split("""
     c_regex_traits.cpp
     cpp_regex_traits.cpp

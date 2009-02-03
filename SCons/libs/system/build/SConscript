@@ -1,2 +1,2 @@
 Import("env")
-env.Library("boost_system", "error_code.cpp")
+env.BoostLibrary("system", "error_code.cpp")

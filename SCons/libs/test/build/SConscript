@@ -1,14 +1,14 @@
 Import("env")
-env.Library(
-    "boost_prg_exec_monitor",
+env.BoostLibrary(
+    "prg_exec_monitor",
     Split("""
     execution_monitor.cpp
     debug.cpp
     cpp_main.cpp
     """)
     )
-env.Library(
-    "boost_test_exec_monitor",
+env.BoostLibrary(
+    "test_exec_monitor",
     Split("""
     compiler_log_formatter.cpp
     debug.cpp
@@ -29,8 +29,8 @@ env.Library(
     xml_report_formatter.cpp
     """)
     )
-env.Library(
-    "boost_unit_test_framework",
+env.BoostLibrary(
+    "unit_test_framework",
     Split("""
     compiler_log_formatter.cpp
     debug.cpp

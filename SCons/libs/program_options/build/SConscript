@@ -1,6 +1,6 @@
 Import("env")
-env.Library(
-    "boost_program_options",
+env.BoostLibrary(
+    "program_options",
     Split("""
     cmdline.cpp
     config_file.cpp

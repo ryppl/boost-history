@@ -1,6 +1,6 @@
 Import("env")
-env.Library(
-    "boost_serialization",
+env.BoostLibrary(
+    "serialization",
     Split("""
     basic_archive.cpp
     basic_iarchive.cpp

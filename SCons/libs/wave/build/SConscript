@@ -1,6 +1,6 @@
 Import("env")
-env.Library(
-    "boost_wave",
+env.BoostLibrary(
+    "wave",
     Split("""
     instantiate_cpp_exprgrammar.cpp
     instantiate_cpp_grammar.cpp
