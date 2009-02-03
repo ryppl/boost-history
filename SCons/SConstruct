@@ -1,7 +1,7 @@
 # vi: syntax=python:et:ts=4
 EnsureSConsVersion(0, 98, 5)
 
-env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs"])
+env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants"])
 Export("env")
 
 SConscript("libs/SConscript")

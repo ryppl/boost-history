@@ -2,12 +2,24 @@
 Import("env")
 env.Append(
     CPPPATH = "#/",
-    CXXFLAGS = "-ftemplate-depth-128"
+    CPPDEFINES = ["BOOST_ALL_NO_LIB=1"],
+    CCFLAGS = Split("$DEBUG_RELEASE_CCFLAGS $THREADING_CCFLAGS"),
+    LIBFLAGS = Split("$DEBUG_RELEASE_LIBFLAGS $THREADING_LIBFLAGS")
     )
 
 sconscripts = Glob("*/build/SConscript")
-for sconscript in sconscripts:
-    lib = str(sconscript.get_dir().up())
-    VariantDir(src_dir = lib + "/src", variant_dir = "#/bin.SCons/" + lib, duplicate = False)
-    VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
-    SConscript("#/bin.SCons/" + lib + "/SConscript")
+for debug_release in ["debug", "release"]:
+    for linking in ["static", "dynamic"]:
+        env["DEBUG_RELEASE_CCFLAGS"] = env.get(debug_release.upper() + "_CCFLAGS")
+        env["DEBUG_RELEASE_LIBFLAGS"] = env.get(debug_release.upper() + "_LIBFLAGS")
+        env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
+        if linking == "dynamic":
+            env["LINK_DYNAMIC"] = True
+        else:
+            env["LINK_DYNAMIC"] = False
+        for sconscript in sconscripts:
+            lib = str(sconscript.get_dir().up())
+            target_dir = "#/bin.SCons/" + lib + "/" + debug_release + "/" + linking
+            VariantDir(src_dir = lib + "/src", variant_dir = target_dir, duplicate = False)
+            VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
+            SConscript(target_dir + "/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
