@@ -19,7 +19,7 @@ else
 
 project boost/cgi/example/cgi/debug_server2 ;
 
-exe cgi_debug_server2
+exe cgi_ctemplate_debug_server
   :
     ctemplate.cpp
     TracebackServer.cpp
@@ -44,11 +44,12 @@ install install-js
 
 install install-template
  : debug_view.html
+   default_view.html
  : <location>$(htdocs)/../templates/
  ;
 
 install install-exe
- : cgi_debug_server2
+ : cgi_ctemplate_debug_server
  : <location>$(cgi-bin)
  ;
 
