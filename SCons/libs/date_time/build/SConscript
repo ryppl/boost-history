@@ -1,0 +1,9 @@
+Import("env")
+env.Library(
+    "boost_date_time",
+    map(Dir("gregorian").File, Split("""
+        greg_month.cpp
+        greg_weekday.cpp
+        date_generators.cpp
+    """))
+    )

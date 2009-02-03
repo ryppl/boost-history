@@ -1,0 +1,10 @@
+Import("env")
+env.Library(
+    "boost_filesystem",
+    Split("""
+        operations.cpp
+        path.cpp
+        portability.cpp
+        utf8_codecvt_facet.cpp
+    """)
+    )

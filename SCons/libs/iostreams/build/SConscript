@@ -1,0 +1,9 @@
+Import("env")
+
+env.Library(
+   "boost_iostreams",
+   Split("""
+   file_descriptor.cpp
+   mapped_file.cpp
+   """)
+   )

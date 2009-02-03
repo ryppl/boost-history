@@ -1,0 +1,12 @@
+Import("env")
+env.Append(
+    CPPPATH = "#/",
+    CXXFLAGS = "-ftemplate-depth-128"
+    )
+
+sconscripts = Glob("*/build/SConscript")
+for sconscript in sconscripts:
+    lib = str(sconscript.get_dir().up())
+    VariantDir(src_dir = lib + "/src", variant_dir = "#/bin.SCons/" + lib, duplicate = False)
+    VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
+    SConscript("#/bin.SCons/" + lib + "/SConscript")

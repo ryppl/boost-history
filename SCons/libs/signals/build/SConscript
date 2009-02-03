@@ -1,0 +1,12 @@
+Import("env")
+env.Library(
+    "boost_signals",
+    Split("""
+    trackable.cpp
+    connection.cpp
+    named_slot_map.cpp
+    signal_base.cpp
+    slot.cpp
+    """)
+    )
+
