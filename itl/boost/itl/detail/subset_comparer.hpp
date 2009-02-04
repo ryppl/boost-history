@@ -54,19 +54,6 @@ public:
 
 	bool covalues_are_equal(LeftIterT& left, RightIterT& right)
 	{
-		if(left == _left_end)//CL
-		{
-			cout << "l: " << _left << endl;
-			cout << "r: " << _right << endl;
-			int dummy = 1;
-		}
-		if(right == _right_end)//CL
-		{
-			cout << "l: " << _left << endl;
-			cout << "r: " << _right << endl;
-			int dummy = 2;
-		}
-
 		if(LeftT::codomain_value(left) == RightT::codomain_value(right))
 			return true;
 		
@@ -78,20 +65,6 @@ public:
 
     int proceed(LeftIterT& left, RightIterT& right)
     {
-		if(left == _left_end)//CL
-		{
-			cout << "l: " << _left << endl;
-			cout << "r: " << _right << endl;
-			int dummy = 1;
-		}
-		if(right == _right_end)//CL
-		{
-			cout << "l: " << _left << endl;
-			cout << "r: " << _right << endl;
-			int dummy = 2;
-		}
-
-
 		if(LeftT::key_value(left).upper_less(RightT::key_value(right)))
 		{   // left  ..)  
 			// right .....)
