@@ -1,7 +1,24 @@
 # vi: syntax=python:et:ts=4
 EnsureSConsVersion(0, 98, 5)
 
-env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants"])
+vars = Variables("build-config.py")
+vars.AddVariables(
+    ListVariable("variant", "Build configuration", "release", ["release", "debug"]),
+    ListVariable("link", "Library linking", "all", ["static", "dynamic"])
+)
+env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants"], variables = vars)
+vars.Save("build-config.py", env)
 Export("env")
+
+Help("""
+Usage: scons [--option...] [variable=value...] [target...]
+target is a library name, e.g. 'iostreams' or 'signals'
+variable may be one of:
+""" + vars.GenerateHelpText(env, sort=cmp) + """
+Variables are saved in build-config.py and persist between scons invocations.
+""")
+
+if(GetOption("help")):
+    Return()
 
 SConscript("libs/SConscript")

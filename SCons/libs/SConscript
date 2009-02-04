@@ -8,11 +8,11 @@ env.Append(
     )
 
 sconscripts = Glob("*/build/SConscript")
-for debug_release in ["debug", "release"]:
-    for linking in ["static", "dynamic"]:
-        env["DEBUG_RELEASE_CCFLAGS"] = env.get(debug_release.upper() + "_CCFLAGS")
-        env["DEBUG_RELEASE_LIBFLAGS"] = env.get(debug_release.upper() + "_LIBFLAGS")
-        env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
+env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
+for debug_release in env["variant"]:
+    env["DEBUG_RELEASE_CCFLAGS"] = env.get(debug_release.upper() + "_CCFLAGS")
+    env["DEBUG_RELEASE_LIBFLAGS"] = env.get(debug_release.upper() + "_LIBFLAGS")
+    for linking in env["link"]:
         if linking == "dynamic":
             env["LINK_DYNAMIC"] = True
         else:
