@@ -8,15 +8,12 @@
 
 project boost/guigl/example
     : requirements
-        <library>$(TOP)/libs/guigl/build//boost_guigl
+        <library>$(TOP)/libs/guigl/build//boost_guigl/<use-window-manager>platform_glut
     ;
 
 exe window_example
     :
         window_example.cpp two_spheres.cpp two_buttons.cpp
-    :
-        # default choice - can be omitted
-        <use-window-manager>platform_glut
     ;
 
 install window_example_stage : window_example

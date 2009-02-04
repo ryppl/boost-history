@@ -17,6 +17,7 @@ lib glu32 : : <name>glu32 <link>shared ;
 alias platform_glut :  :  :  :
         <toolset>gcc:<library>glut
         <toolset>darwin:<linkflags>"-framework GLUT -framework OpenGL"
+        <toolset>darwin:<define>BOOST_GUIGL_GLUT_H=\\\"GLUT/glut.h\\\"
         <toolset>msvc:<library>freeglut
         <toolset>msvc:<library>opengl32
         <toolset>msvc:<library>glu32
@@ -31,7 +32,6 @@ alias glut32 :  :  :  :
 feature.extend use-window-manager : platform_glut ;
 feature.compose <use-window-manager>platform_glut 
         : <library>/boost/guigl/window_manager//platform_glut/<use-window-manager>none ;
-feature.set-default use-window-manager : platform_glut ;
 
 feature.extend use-window-manager : glut32 ;
 feature.compose <use-window-manager>glut32 

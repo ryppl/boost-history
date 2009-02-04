@@ -8,19 +8,17 @@
 
 import feature ;
 
+feature.feature use-window-manager : none : composite propagated ;
+feature.set-default use-window-manager : none ;
+
 project boost/guigl
     : source-location ../src
     : requirements
         <define>BOOST_ALL_NO_LIB=1
     : usage-requirements
-        <library>/boost/signals//boost_signals
+        <library>/boost/signals//boost_signals/<use-window-manager>none
         <define>BOOST_ALL_NO_LIB=1
     ;
-
-feature.feature guigl_binding : glut fltk : propagated ;
-feature.set-default guigl_binding : glut ;
-
-feature.feature use-window-manager : none : composite propagated ;
 
 SOURCES =
     application
@@ -30,7 +28,7 @@ SOURCES =
 
 lib boost_guigl
     : $(SOURCES).cpp
-    [ obj binding_window_obj : window.cpp/<guigl_binding>fltk:<define>BOOST_GUIGL_USE_FLTK_GLUT ]
+    [ obj binding_window_obj : window.cpp ]
     [ obj widget_window_obj : widget/window.cpp ]
     ;
 
