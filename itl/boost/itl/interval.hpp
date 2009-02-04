@@ -328,11 +328,22 @@ template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, D
 class interval
 {
 public:
+    typedef interval<DomainT,Compare> type;
 
     /// Domain type or element type
     typedef DomainT domain_type;
+    typedef DomainT codomain_type;
+    typedef DomainT element_type;
+    typedef type    segment_type;
+
+	typedef DomainT key_type;
+	typedef DomainT data_type;
+	typedef DomainT value_type;
+    typedef type    interval_type;
+
 	/// Compare order on the data
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
+	typedef domain_compare key_compare;
 
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename itl::difference<DomainT>::type difference_type;

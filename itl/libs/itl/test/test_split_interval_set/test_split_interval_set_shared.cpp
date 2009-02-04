@@ -31,6 +31,10 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 {         interval_set_isolate_4_bicremental_continuous_types<split_interval_set, T>();}
 
 BOOST_AUTO_TEST_CASE_TEMPLATE
+(test_itl_interval_set_element_compare_4_bicremental_types, T, bicremental_types)
+{         interval_set_element_compare_4_bicremental_types<split_interval_set, T>();}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_interval_set_contains_4_bicremental_types, T, bicremental_types)
 {         interval_set_contains_4_bicremental_types<split_interval_set, T>();}
 

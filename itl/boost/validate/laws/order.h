@@ -52,7 +52,7 @@ namespace boost{namespace itl
     template<> 
     std::string unary_template_to_string<std::less>::apply()        { return "<"; }
     template<> 
-    std::string unary_template_to_string<itl::contained_in>::apply(){ return "C="; }
+    std::string unary_template_to_string<itl::sub_super_set>::apply(){ return "C="; }
 
     // ---------------------------------------------------------------------------
     template <typename Type, template<class>class Relation>
@@ -108,7 +108,7 @@ namespace boost{namespace itl
         bool holds()
         {
             Type a = this->template getInputValue<operand_a>();
-            Type b = this->template getInputValue<operand_a>();
+            Type b = this->template getInputValue<operand_b>();
 
             return !(Relation<Type>()(a,b) && Relation<Type>()(b,a)) || a == b;
         }
@@ -118,7 +118,7 @@ namespace boost{namespace itl
         size_t size()const 
         { 
             return value_size<Type>::apply(this->template getInputValue<operand_a>())+
-                value_size<Type>::apply(this->template getInputValue<operand_b>());
+                   value_size<Type>::apply(this->template getInputValue<operand_b>());
         }
     };
 

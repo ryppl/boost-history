@@ -314,34 +314,74 @@ with respect to the `Combine` functor.
 
 [section Associated Types]
 
-[table Associated types of sets
-[[Aspects]        [purpose] [type]              [__itv__]                     [__itv_sets__]                     [__itl_set__]       [`std::set`]]
-[[__conceptual__] [data]    [`domain_type`]     [`DomainT`]                   [`DomainT`]                        [`DomainT`]         []]
-[[]               [ordering][`domain_compare`]  [`Compare<DomainT>`]          [`Compare<DomainT>`]               [`Compare<DomainT>`][]]
-[[__iterative__]  [data]    [`interval_type`]   []                            [`Interval<DomainT,Compare>`]      []                  []]
-[[]               []        [`key_type`]        []                            [`Interval<DomainT,Compare>`]      []                  [`_Key`]]
-[[]               []        [`value_type`]      []                            [`Interval<DomainT,Compare>`]      []                  [`_Key`]]
-[[]               [ordering][`interval_compare`][]                            [`exclusive_less <interval_type>`] []                  []]
-[[]               []        [`key_compare`]     []                            [`exclusive_less <interval_type>`] []                  [`_Compare`]]
-[[__conceptual__] [size]    [`size_type`]       [`size<DomainT>::type`]       [`interval_type:: size_type`]      [`std::size_t`]     []]
-[[]               []        [`difference_type`] [`difference <DomainT>::type`][`interval_type:: difference_type`][`std::size_t`]     []]
+In order to give an overview over ['*associated types*] the *itl* works
+with we will again work with abbreviations that were introduced in the
+presentaiton of itl class templates,
+
+[pre
+interval     <D,       cp,             >
+interval_sets<D,       cp,        i, a >
+itl::set     <D,       cp,           a >
+std::set     <D,       Cp,           Ad>
+interval_maps<D, C, T, cp, cb, s, i, a >
+itl::map     <D, C, T, cp, cb, s,    a >
+std::map     <D, C     Cp,           Av>
 ]
-                                     
-[table Associated types of maps JODO
-[[Aspects]        [purpose]    [type]              [__itv_maps__]                                     [__itl_map__]         [`std::map`]]
-[[__conceptual__] [data]       [`domain_type`]     [`DomainT`]                                        [`DomainT`]           []]
-[[]               []           [`codomain_type`]   [`CodomainT`]                                      [`CodomainT`]         []]
-[[]               [ordering]   [`domain_compare`]  [`Compare<DomainT>`]                               [`Compare<DomainT>`]  []]
-[[]               [aggregation][`codomain_combine`][`Combine<CodomainT>`]                             [`Combine<CodomainT>`][]]
-[[]               []           [`codomain_intersect`][`Section<CodomainT>`]                           [`Section<CodomainT>`][]]
-[[__iterative__]  [data]       [`interval_type`]   [`Interval<DomainT,Compare>`]                      []                    []]
-[[]               []           [`key_type`]        [`Interval<DomainT,Compare>`]                      []                    [`_Key`]]
-[[]               []           [`value_type`]      [`pair<Interval<DomainT,Compare>, CodomainT`]      []                       [`_Key`]]
-[[]               [ordering]   [`interval_compare`][`exclusive_less <interval_type>`]                 []                       []]
-[[]               []           [`key_compare`]     [`exclusive_less <interval_type>`]                 []                       [`_Compare`]]
-[[__conceptual__] [size]       [`size_type`]       [`interval_type:: size_type`]                      [`std::size_t`]          []]
-[[]               []           [`difference_type`] [`interval_type:: difference_type`]                [`std::size_t`]          []]
-]                                     
+
+where these placeholders were used:
+
+``
+D  := class DomainT,
+C  := class CodomainT,
+T  := class Traits,
+Cp := class Compare = std::less<DomainT>,
+cp := template<class D>class Compare = std::less,
+cb := template<class C>class Combine = itl::inplace_plus,
+s  := template<class C>class Section = itl::inplace_et,
+i  := template<class D,template<class>class cp>class Interval = itl::interval
+Ad := class Alloc = std::allocator<DomainT>
+Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
+a  := template<class>class Alloc = std::allocator
+``
+with some additions,
+``
+sz := template<class D>size
+df := template<class D>difference
+Xl := class ExclusiveLess = exclusive_less<Interval<DomainT,Compare> >
+inv:= template<class Combiner>inverse
+(T,U) := std::pair<T,U> for typnames T,U
+``
+
+we can summarize the associated types as follows. 
+Again two additional colums for easy comparison with stl
+sets and maps are provided. 
+
+[table Itl Associated types
+[[Purpose][Aspect][Type][interval][interval\nsets][interval\nmaps][itl::set][itl::map][std::set][std::map]]                                                      								   
+[/[ ]             [ ]             [ ]                   [ ]      [ ]      [ ]       [ ]      [ ]      [ ]      [ ]]
+[/                                                     interval  itvset   itvmap  itl:set  itl:map  std:set  std:map]
+[[['*Data*]]     [__conceptual__][`domain_type`]       [`D`]    [`D`]    [`D`]     [`D`]    [`D`]    [ ]      [ ]]
+[[         ]     [              ][`codomain_type`]     [`D`]    [`D`]    [`C`]     [`D`]    [`C`]    [ ]      [ ]]
+[[         ]     [              ][`element_type`]      [`D`]    [`D`]  [`(D,C)`]   [`D`]  [`(D,C)`]  [ ]      [ ]]
+[[         ]     [              ][`segment_type`][`i<D,cp>`][`i<D,cp>`][`(i<D,cp>,C)`][ ]   [ ]      [ ]      [ ]]
+[[         ]     [['size]       ][`size_type`]       [`sz<D>`][`sz<D>`][`sz<D>`] [size_t]  [size_t]  [ ]      [ ]]
+[[         ]     [              ][`difference_type`] [`df<D>`][`df<D>`][`df<D>`] [size_t]  [size_t]  [ ]      [ ]]
+[[         ]     [             ][][interval][interval\nsets][interval\nmaps][itl::set][itl::map][std::set][std::map]]                                                      								   
+[[['*Data*]]     [__iterative__ ][`key_type`]          [`D`][`i<D,cp>`][`i<D,cp>`] [`D`]    [`D`]   [`D`]    [`D`]]
+[[         ]     [              ][`data_type`]         [`D`][`i<D,cp>`]   [`C`]    [`D`]    [`C`]   [`D`]    [`D`]]
+[[         ]     [              ][`value_type`]        [`D`][`i<D,cp>`][`(i<D,cp>,C)`][`D`][`(D,C)`][`D`]  [`(D,C)`]]
+[[         ]     [              ][`interval_type`] [`i<D,cp>`][`i<D,cp>`][`i<D,cp>`] [ ]     [ ]     [ ]       [ ]]
+[[         ]     [['allocation]][`allocator_type`] [ ][`a<i<D,cp>>`][`a<(i<D,cp>, C)>`][`a<D>`][`a<(D,C)>`][`Ad`][`Av`]]
+[[         ]     [             ][][interval][interval\nsets][interval\nmaps][itl::set][itl::map][std::set][std::map]]                                                      								   
+[[['*Ordering*]] [__conceptual__][`domain_compare`]  [`cp<D>`][`cp<D>`][`cp<D>`][`cp<D>`][`cp<D>`]    [ ]      [ ]]
+[[         ]     [__iterative__ ][`key_compare`]     [`cp<D>`]   [`Xl`]  [`Xl`] [`cp<D>`] [`cp<D>`] [`Cp`]  [`Cp`]]
+[[         ]     [              ][`interval_compare`]   [ ]      [`Xl`]  [`Xl`]     [ ]      [ ]      [ ]      [ ]]
+[[['*Aggregation*]][__conceptual__][`codomain_combine`] [ ]      [ ]    [`cb<C>`]   [ ]   [`cb<C>`]   [ ]      [ ]]
+[[         ]     [        ][`inverse_codomain_combine`] [ ]      [ ][`inv<cb<C>>`] [ ][`inv<cb<C>>`]  [ ]      [ ]]
+[[         ]     [        ]      [`codomain_intersect`] [ ]      [ ]     [`s<C>`]   [ ]    [`s<C>`]   [ ]      [ ]]
+[[         ]     [      ][`inverse_codomain_intersect`] [ ]      [ ] [`inv<s<C>>`]  [ ][`inv<s<C>>`]  [ ]      [ ]]
+]
+
 
 [endsect][/ Associated Types]
 
@@ -376,12 +416,12 @@ overloaded implementations for the function of that row is shown.
 [[`I,J`                       ] []                        [polymorhical iterator type]]
 [[1,2,...                     ] []                        [number of implementations for this function]]             
 [[A                           ] []                        [implementation generated by compilers]]             
-[[[#element_type]         [*e]] [T::domain_type]          [the element type of the container]]
-[[[#interval_type]        [*i]] [T::interval_type]        [the interval type of the container]]
+[[[#element_type]         [*e]] [T::element_type]         [the element type of __itv_sets__ or __itl_sets__]]
+[[[#interval_type]        [*i]] [T::segment_type]         [the segment type of of __itv_sets__]]
 [[[#itl_set_type]         [*s]] [__itl_set__]             [itl's set type]]
 [[[#interval_set_types]   [*S]] [interval_sets]           [one of the interval set types]]
-[[[#element_mapping_type] [*b]] [T::element_mapping_type] [type of the element mapping of the map]]
-[[[#interval_mapping_type][*p]] [T::interval_mapping_type][type of the interval mapping of the map]]
+[[[#element_mapping_type] [*b]] [T::element_type]         [type of __itv_map_s__ or __itl_map_s__ element value pairs]]
+[[[#interval_mapping_type][*p]] [T::segment_type]         [type of __itv_map_s__ interval value pairs]]
 [[[#itl_map_type]         [*m]] [__itl_map__]             [itl's map type]]
 [[[#interval_map_types]   [*M]] [interval_maps]           [one of the interval map types]]
 ]

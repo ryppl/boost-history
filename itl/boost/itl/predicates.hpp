@@ -128,7 +128,7 @@ namespace boost{namespace itl
 
     /// Functor class template contained_in implements the subset relation.
     template<class Type> 
-    struct contained_in : public relation<Type,Type>
+    struct sub_super_set : public relation<Type,Type>
     {
         /// Apply the subset relation.
         /** <tt>contained_in(sub, super)</tt> is true if <tt>sub</tt> 
@@ -139,16 +139,16 @@ namespace boost{namespace itl
         }
     };
 
-    /// Functor class template <b>containes</b> implements the superset relation. 
+    /// Functor class template <b>contains</b> implements the superset relation. 
     template<class Type> 
-    struct containes : public relation<Type,Type>
+    struct super_sub_set : public relation<Type,Type>
     {
         /// Apply the superset relation.
         /** <tt>containes(super, sub)</tt> is true if <tt>super</tt> containes 
             <tt>sub</tt> */
         bool operator()(const Type& super, const Type& sub)const
         {
-            return super.containes(sub);
+            return super.contains(sub);
         }
     };
 

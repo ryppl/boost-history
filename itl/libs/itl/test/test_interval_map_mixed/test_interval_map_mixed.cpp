@@ -942,6 +942,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     split_ab2 += make_pair(interval<T>::rightopen(v1,v7), u1);
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
+
+	split_interval_map<T,U> left, right;
+	left. add(IDv(0,2,2));
+	right.add(IDv(0,2,2));
+    BOOST_CHECK_EQUAL( is_element_equal(left, right), true );
+
+	split_interval_set<T> left2, right2;
+	left2. add(I_D(0,2));
+	right2.add(I_D(0,1));
+	is_element_equal(left2, right2);
+    BOOST_CHECK_EQUAL( is_element_equal(left2, right2), false );
 }
 
 
@@ -1274,3 +1285,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_et_overload_4_bi
 	BOOST_CHECK_EQUAL(join_a & split_a, (split_b = split_a) &= join_a);
 	BOOST_CHECK_EQUAL(join_a & split_a, split_b);
 }
+

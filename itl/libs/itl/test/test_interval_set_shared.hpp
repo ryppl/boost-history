@@ -349,6 +349,50 @@ void interval_set_isolate_4_bicremental_continuous_types()
     BOOST_CHECK_EQUAL( iso_set, iso_set4 );
 }
 
+template <template< class T, 
+                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
+					template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet, 
+          class T>
+void interval_set_element_compare_4_bicremental_types()
+{
+	typedef IntervalSet<T> IntervalSetT;
+	typedef IntervalSet<T> ISet;
+
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet()),         true );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet(I_D(0,1))), false );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)), ISet()),         false );
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)), ISet(I_D(0,1))), true );
+
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,5)), ISet(I_D(3,8))), false );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(3,8)), ISet(I_D(0,5))), false );	
+
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)),          ISet(I_D(0,1))          ), true  );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)),          ISet(I_D(0,1))+I_D(1,2) ), false );
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(1,2)+ISet(I_D(0,1)), ISet(I_D(0,1))          ), false );
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(1,2)+ISet(I_D(0,1)), ISet(I_D(0,1))+I_D(1,2) ), true  );
+
+	//[0   1)[1   2)
+	//[0          2)
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(1,2)), ISet(I_D(0,2))          ), true );
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,2)),          ISet(I_D(0,1))+I_D(1,2) ), true );
+
+	//[0   1)  [2   3)
+	//[0            3)
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(2,3)), ISet(I_D(0,3))          ), false );
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,3)),          ISet(I_D(0,1))+I_D(2,3) ), false );
+
+	//[0   2)[2       4)
+	//  [1            4)
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(0,2)+ISet(I_D(2,4)), ISet(I_D(1,4))          ), false );
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(1,4)),          ISet(I_D(0,2))+I_D(2,4) ), false );
+
+	//[0     2)[2       4)
+	//[0 1)[1     3)[3  4)
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(0,2)+ISet(I_D(2,4)), I_D(0,1)+ISet(I_D(1,4))+I_D(3,4) ), true );
+    BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(1,4))+I_D(3,4), I_D(0,2)+ISet(I_D(2,4)) ), true );
+}
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),

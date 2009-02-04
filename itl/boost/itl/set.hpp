@@ -487,6 +487,21 @@ namespace boost{namespace itl
     { return object -= operand; }
 
 
+	//---------------------------------------------------------------------------------
+	template<class CharType, class CharTraits, 
+		class DomainT, ITL_COMPARE Compare,	ITL_ALLOC Alloc>
+	std::basic_ostream<CharType, CharTraits>& operator <<
+	  (std::basic_ostream<CharType, CharTraits>& stream, 
+	   const set<DomainT,Compare,Alloc>& object)
+	{
+		typedef itl::set<DomainT,Compare,Alloc> SetT;
+		stream << "{";
+		const_FORALL(typename SetT, it, object)
+			stream << *it;
+
+		return stream << "}";
+	}
+
 
     //-------------------------------------------------------------------------
     template <class Type>

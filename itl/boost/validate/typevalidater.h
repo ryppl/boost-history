@@ -229,7 +229,7 @@ namespace boost{namespace itl
     public:
         typedef StrictWeakOrderValidater<Type, std::less> LessValidaterT;
         typedef PartialOrderValidater<Type, std::less_equal> LessEqualValidaterT;
-        typedef PartialOrderValidater<Type, itl::contained_in> ContainedInValidaterT;
+        typedef PartialOrderValidater<Type, itl::sub_super_set> ContainedInValidaterT;
 
         enum Laws 
         { 

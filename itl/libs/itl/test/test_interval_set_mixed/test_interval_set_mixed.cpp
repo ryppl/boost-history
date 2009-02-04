@@ -236,6 +236,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_equal_4_bicremental_ty
     BOOST_CHECK_EQUAL( is_element_equal(sep_set,   split_set), true );
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_contains_4_bicremental_types, T, bicremental_types)
+{
+	split_interval_set<T> split_set;
+	split_set.add(I_D(0,4)).add(I_D(4,8));
+    BOOST_CHECK_EQUAL( split_set.contains(MK_v(4)), true );
+    BOOST_CHECK_EQUAL( split_set.contains(C_D(2,5)), true );
+
+	interval_set<T> join_set_gap4(split_set.erase(MK_v(4)));
+    BOOST_CHECK_EQUAL( join_set_gap4.contains(MK_v(4)), false );
+    BOOST_CHECK_EQUAL( join_set_gap4.contains(C_D(2,5)), false );
+
+    BOOST_CHECK_EQUAL( split_set.contains(split_set), true );
+    BOOST_CHECK_EQUAL( split_set.contains(join_set_gap4), true );
+	
+}
+
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_add_4_bicremental_types, T, bicremental_types)
 {         

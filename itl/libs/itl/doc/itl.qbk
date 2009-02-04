@@ -81,6 +81,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __ele_maps__     [classref boost::itl::map maps]]
 [def __itl_map__      [classref boost::itl::map itl::map]]
 [def __itl_maps__     [classref boost::itl::map itl::maps]]
+[def __itl_map_s__    [classref boost::itl::map itl::map's]]
 
 [def __pabsorber__     [classref boost::itl::partial_absorber partial_absorber]]
 [def __penricher__     [classref boost::itl::partial_enricher partial_enricher]]

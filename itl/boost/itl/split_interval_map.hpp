@@ -155,6 +155,7 @@ namespace boost{namespace itl
         typedef typename base_type::iterator iterator;
         typedef typename base_type::value_type value_type;
         typedef typename base_type::element_type element_type;
+        typedef typename base_type::segment_type segment_type;
         typedef typename base_type::domain_mapping_type    domain_mapping_type;
         typedef typename base_type::interval_mapping_type  interval_mapping_type;
         typedef typename base_type::ImplMapT ImplMapT;

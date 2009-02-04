@@ -183,6 +183,7 @@ public:
     typedef Interval<DomainT,Compare> interval_type;
 
 	typedef std::pair<interval_type,CodomainT> interval_mapping_type;
+	typedef std::pair<interval_type,CodomainT> segment_type;
 
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename interval_type::difference_type difference_type;

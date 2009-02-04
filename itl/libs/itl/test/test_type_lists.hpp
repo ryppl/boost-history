@@ -28,9 +28,9 @@ typedef ::boost::mpl::list<
 > bicremental_types;
 
 //DBG short list for debugging
-//typedef ::boost::mpl::list<
-//    int
-//> bicremental_types;
+typedef ::boost::mpl::list<
+    int
+> debug_int_type;
 
 typedef ::boost::mpl::list<
     float, double

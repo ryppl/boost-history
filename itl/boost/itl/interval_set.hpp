@@ -131,6 +131,8 @@ public:
     typedef DomainT   element_type;
     /// The interval type of the set
     typedef Interval<DomainT,Compare> interval_type;
+    /// The segment type of the set
+    typedef interval_type   segment_type;
 
     /// Comparison functor for domain values
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;

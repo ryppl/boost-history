@@ -130,6 +130,23 @@ namespace boost{namespace itl
 namespace boost{namespace itl
 {
 	typedef unsigned int nat;
+
+	namespace comparison
+	{
+		static const int less    = -1;
+		static const int equal   =  0;
+		static const int greater =  1;
+	}
+
+	namespace inclusion
+	{
+		static const int unrelated =  0;
+		static const int subset    =  1;
+		static const int superset  =  2;
+		static const int equal     =  3;
+	}
+
+
 }} // namespace itl boost
 
 #endif // __itl_NOTATE_H_JOFA_990119__

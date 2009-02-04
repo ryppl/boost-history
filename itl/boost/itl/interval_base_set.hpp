@@ -131,6 +131,8 @@ public:
 
     /// The interval type of the set
     typedef Interval<DomainT,Compare> interval_type;
+    /// The segment type of the set
+    typedef interval_type   segment_type;
 
     /// The difference type of an interval which is sometimes different form the data_type
     typedef typename interval_type::difference_type difference_type;
@@ -219,12 +221,27 @@ public:
     bool contains(const interval_type& x)const
     { return that()->contains_(x); }
 
-    /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     bool contains(const interval_base_set& sub)const 
     { return sub.contained_in(*this); }
 
+    /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
+	template
+    <
+        template<class DomT, ITL_COMPARE Comp, 
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
+    bool contains(const IntervalSet<DomainT,Compare,Interval,Alloc>& sub)const 
+    { return sub.contained_in(*that()); }
+
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
-    bool contained_in(const interval_base_set& super)const;
+	template
+    <
+        template<class DomT, ITL_COMPARE Comp, 
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
+    bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const;
 
 /** @name E: Bounds and other selectors
     */
@@ -524,13 +541,16 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 }
 
 
-template
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
->
+template<class SubType, 
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    template
+    <
+        template<class DomT, ITL_COMPARE Comp,
+		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+        class IntervalSet
+    >
 bool interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::contained_in(const interval_base_set& x2)const
+    ::contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& x2)const
 {
     // The empty set is subset of every set
     if(empty())
@@ -643,11 +663,13 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
 template
 <
 	class SubType, 
-    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-    template
-    <template<class DomT, ITL_COMPARE Comp, template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
-    class IntervalSet
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
+    template
+    <
+		template<class DomT, ITL_COMPARE Comp, template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
+		class IntervalSet
+	>
 SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     ::flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
 {
