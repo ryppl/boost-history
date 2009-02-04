@@ -6,7 +6,6 @@
 #project boost.cgi.docs
 #  ;
 
-import boostbook : boostbook ;
 import doxygen ;
 import quickbook ;
 

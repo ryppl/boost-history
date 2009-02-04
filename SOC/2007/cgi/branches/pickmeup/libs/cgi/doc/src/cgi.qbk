@@ -96,7 +96,7 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 /
 /[include:server_config user_guide/server_configuration.qbk]
 /
-/[include:headers user_guide/headers.qbk]
+[include:headers user_guide/headers.qbk]
 /
 /[endsect]
 /]
@@ -115,7 +115,7 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 
 [include:examples examples.qbk]
 
-[include:reference reference.qbk]
+[/include:reference reference.qbk]
 
 [include:future future_development.qbk]
 

@@ -1,3 +1,20 @@
+//                     -- main.hpp --
+//
+//           Copyright (c) Darren Garvey 2007.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+//
+////////////////////////////////////////////////////////////////
+//
+//[acgi_cookie_game
+//
+// Cookie Tests
+// ------------
+//
+// This simple example shows the user their cookies and lets them set and
+// delete them.
+//
 #include <boost/cgi/acgi.hpp>
 #include <boost/cgi/utility.hpp>
 
@@ -250,4 +267,5 @@ int main()
 
   return_(resp, req, http::ok);
 }
+//]
 

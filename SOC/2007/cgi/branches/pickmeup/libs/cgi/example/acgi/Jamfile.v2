@@ -10,6 +10,7 @@ project boost/cgi/example/acgi ;
 build-project hello_world ;
 build-project echo ;
 build-project cookie_game ;
+build-project cookie_game2 ;
 build-project amortization ;
 
 # If the user explicitly passes "install" on the command line, build the
@@ -19,6 +20,7 @@ install install
     hello_world
     echo
     cookie_game
+    cookie_game2
     amortization
   :
     <location>$(cgi-bin)

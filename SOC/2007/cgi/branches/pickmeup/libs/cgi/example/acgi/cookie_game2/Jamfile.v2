@@ -6,7 +6,6 @@
 
 project boost/cgi/example/acgi/cookie_game2 ;
 
-
 import os ;
 
 if [ os.name ] = NT
@@ -22,8 +21,6 @@ else
 exe acgi_cookie_game2
   :
     main.cpp
-    /boost/regex/
-    /boost/cgi/
   :
     <library>ctemplate
   :
@@ -59,7 +56,7 @@ install install-extra
     <location>$(htdocs)/../templates/
   ;
 
-explicit install-app ;
+explicit install-exe ;
 explicit install-extra ;
 
 install install

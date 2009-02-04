@@ -60,7 +60,7 @@ install install-extra
    <location>$(htdocs)/../templates/
  ;
 
-explicit install-app ;
+explicit install-exe ;
 explicit install-extra ;
 
 install install

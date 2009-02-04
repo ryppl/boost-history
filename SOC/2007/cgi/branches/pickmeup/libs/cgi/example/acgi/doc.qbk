@@ -11,5 +11,9 @@ If not, there may be a small speed/size gain to be had from the plain CGI compon
 
 [include amortization/doc.qbk]
 
+[include cookie_game/doc.qbk]
+
+[include cookie_game2/doc.qbk]
+
 [endsect][/ cgi_examples]
 

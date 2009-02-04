@@ -26,7 +26,11 @@ namespace cgi {
            , bool secure, boost::system::error_code& ec)
    {
      std::string url(secure ? "https" : "http");
-     url += "://" + req.server_name() + "/" + dest;
+     url += "://" + req.server_name();
+     if (dest[0] == '/')
+       url += dest;
+     else
+       url += "/" + dest;
      basic_header<typename RequestT::char_type> hdr("Location", url);
      return hdr;
    }

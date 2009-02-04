@@ -27,14 +27,14 @@
 
 using namespace boost::acgi;
 
-#define DEFAULT_LOAN_AMT "£250,000"
+#define DEFAULT_LOAN_AMT "$250,000"
 #define DEFAULT_INTEREST_RATE "6.000"
 
 /// Convert a string like '$250,000' into one like '250000'.
 std::string string_from_currency(std::string amt)
 {
   // this is much too hardcore, but it works fine...
-  boost::algorithm::erase_all_regex(amt, boost::regex("[£$, ]"));
+  boost::algorithm::erase_all_regex(amt, boost::regex("[$, ]"));
   return amt;
 }
 
@@ -73,7 +73,7 @@ double get_loan_amount(Request& req, Dictionary& dict)
 {
   std::string val(has_key(req[form], "LoanAmt")
                        ? req[form]["LoanAmt"]
-                       : "£250,000");
+                       : DEFAULT_LOAN_AMT);
   dict.SetValue("LoanAmt", val);
   return boost::lexical_cast<double>(string_from_currency(val));
 }
