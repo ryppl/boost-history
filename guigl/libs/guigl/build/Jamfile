@@ -24,7 +24,8 @@ SOURCES =
     application
     widget/button widget/labeled_button
     widget/slider widget/labeled_slider
-    widget/compound widget/label ;
+    widget/compound widget/label
+    widget/custom ;
 
 lib boost_guigl
     : $(SOURCES).cpp

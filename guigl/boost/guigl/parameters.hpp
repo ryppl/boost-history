@@ -33,6 +33,8 @@ namespace keywords {
 
     BOOST_PARAMETER_UNTYPED_NAME(value)
     BOOST_PARAMETER_UNTYPED_NAME(children)
+    BOOST_PARAMETER_UNTYPED_NAME(draw_prologue)
+    BOOST_PARAMETER_UNTYPED_NAME(draw_epilogue)
     
     typedef boost::parameter::aux::empty_typed_arg_list default_parameters;
 }

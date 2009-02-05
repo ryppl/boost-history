@@ -142,6 +142,10 @@
 		089C813C0E7D814B00CE0901 /* untyped_keyword.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = untyped_keyword.hpp; sourceTree = "<group>"; };
 		089C81CF0E7D8EEB00CE0901 /* keyword_base.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = keyword_base.hpp; sourceTree = "<group>"; };
 		089C81F20E7D949400CE0901 /* two_buttons.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = two_buttons.cpp; sourceTree = "<group>"; };
+		089C8CFE0F3AC3650062EFEC /* custom_drawable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = custom_drawable.hpp; sourceTree = "<group>"; };
+		089C8D040F3AC52A0062EFEC /* custom.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = custom.hpp; sourceTree = "<group>"; };
+		089D7DE70F3B738600590295 /* custom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = custom.cpp; sourceTree = "<group>"; };
+		089D7E0E0F3B75C800590295 /* custom_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = custom_example.cpp; sourceTree = "<group>"; };
 		089D83740E5A35D800325868 /* parameters.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parameters.hpp; sourceTree = "<group>"; };
 		089D83780E5A3AA900325868 /* test_parameter_map_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_parameter_map_compilation.cpp; sourceTree = "<group>"; };
 		089D83800E5A3C0B00325868 /* test_parameter_map_compilation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = test_parameter_map_compilation.hpp; sourceTree = "<group>"; };
@@ -221,6 +225,7 @@
 				08E17F6F0E773D30008EAE5E /* two_spheres.hpp */,
 				08A6D3950E7B99C700BF2671 /* two_buttons.hpp */,
 				089C81F20E7D949400CE0901 /* two_buttons.cpp */,
+				089D7E0E0F3B75C800590295 /* custom_example.cpp */,
 			);
 			name = example;
 			path = ../../example;
@@ -246,6 +251,7 @@
 				08DD9E4D0E7B2799008DC46A /* static_base.hpp */,
 				08ADC1F90E7B62BD00D8CB9D /* static_compound.hpp */,
 				089F14D60E7DC87700B91674 /* periodic.hpp */,
+				089C8CFE0F3AC3650062EFEC /* custom_drawable.hpp */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -260,6 +266,7 @@
 				0899266B0E78664900285958 /* compound.cpp */,
 				0896AFB70E7FFB5800543446 /* labeled_slider.cpp */,
 				0899FC7A0E805A8100BD5F3E /* label.cpp */,
+				089D7DE70F3B738600590295 /* custom.cpp */,
 			);
 			path = widget;
 			sourceTree = "<group>";
@@ -316,6 +323,7 @@
 				089926680E7865B500285958 /* compound.hpp */,
 				0896AFB40E7FFAF000543446 /* labeled_slider.hpp */,
 				0899FC770E8059FC00BD5F3E /* label.hpp */,
+				089C8D040F3AC52A0062EFEC /* custom.hpp */,
 			);
 			path = widget;
 			sourceTree = "<group>";
