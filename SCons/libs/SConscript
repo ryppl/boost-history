@@ -3,23 +3,26 @@ Import("env")
 env.Append(
     CPPPATH = "#/",
     CPPDEFINES = ["BOOST_ALL_NO_LIB=1"],
-    CCFLAGS = Split("$DEBUG_RELEASE_CCFLAGS $THREADING_CCFLAGS"),
-    LIBFLAGS = Split("$DEBUG_RELEASE_LIBFLAGS $THREADING_LIBFLAGS")
+    CCFLAGS = Split("$VARIANT_CCFLAGS $THREADING_CCFLAGS"),
+    LINKFLAGS = Split("$VARIANT_LINKFLAGS $THREADING_LINKFLAGS"),
     )
 
 sconscripts = Glob("*/build/SConscript")
 env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
-for debug_release in env["variant"]:
-    env["DEBUG_RELEASE_CCFLAGS"] = env.get(debug_release.upper() + "_CCFLAGS")
-    env["DEBUG_RELEASE_LIBFLAGS"] = env.get(debug_release.upper() + "_LIBFLAGS")
+for variant in env["variant"]:
+    env["VARIANT_CCFLAGS"] = env.get(variant.upper() + "_CCFLAGS")
+    env["VARIANT_LINKFLAGS"] = env.get(variant.upper() + "_LINKFLAGS")
     for linking in env["link"]:
         if linking == "dynamic":
             env["LINK_DYNAMIC"] = True
         else:
             env["LINK_DYNAMIC"] = False
-        for sconscript in sconscripts:
-            lib = str(sconscript.get_dir().up())
-            target_dir = "#/bin.SCons/" + lib + "/" + debug_release + "/" + linking
-            VariantDir(src_dir = lib + "/src", variant_dir = target_dir, duplicate = False)
-            VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
-            SConscript(target_dir + "/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+        for threading in env["threading"]:
+            env["THREADING_CCFLAGS"] = env.get("THREADING_" + threading.upper() + "_CCFLAGS")
+            env["THREADING_LINKFLAGS"] = env.get("THREADING_" + threading.upper() + "_LINKFLAGS")
+            for sconscript in sconscripts:
+                lib = str(sconscript.get_dir().up())
+                target_dir = "#/bin.SCons/" + lib + "/" + variant + "/" + linking + "/threading-" + threading
+                VariantDir(src_dir = lib + "/src", variant_dir = target_dir, duplicate = False)
+                VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
+                SConscript(target_dir + "/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })

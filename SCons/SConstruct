@@ -4,7 +4,8 @@ EnsureSConsVersion(0, 98, 5)
 vars = Variables("build-config.py")
 vars.AddVariables(
     ListVariable("variant", "Build configuration", "release", ["release", "debug"]),
-    ListVariable("link", "Library linking", "all", ["static", "dynamic"])
+    ListVariable("link", "Library linking", "all", ["static", "dynamic"]),
+    ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"])
 )
 env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants"], variables = vars)
 vars.Save("build-config.py", env)
