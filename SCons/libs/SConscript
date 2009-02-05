@@ -3,30 +3,25 @@ Import("env")
 env.Append(
     CPPPATH = "#/",
     CPPDEFINES = ["BOOST_ALL_NO_LIB=1"],
-    CCFLAGS = Split("$VARIANT_CCFLAGS $THREADING_CCFLAGS"),
-    LINKFLAGS = Split("$VARIANT_LINKFLAGS $THREADING_LINKFLAGS"),
     )
 
 sconscripts = Glob("*/build/SConscript")
 env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
 for variant in env["variant"]:
-    env["VARIANT_CCFLAGS"] = env.get(variant.upper() + "_CCFLAGS")
-    env["VARIANT_LINKFLAGS"] = env.get(variant.upper() + "_LINKFLAGS")
     env.SetProperty(profile = False)
     if variant == "release":
-        env.SetProperty(optimize = "speed")
+        env.SetProperty(optimize = "speed", debug = False)
     elif variant == "debug":
-        env.SetProperty(optimize = "no")
+        env.SetProperty(optimize = "no", debug = True)
     elif variant == "profile":
-        env.SetProperty(optimize = "speed", profile = True)
+        env.SetProperty(optimize = "speed", profile = True, debug = True)
     for linking in env["link"]:
         if linking == "dynamic":
             env["LINK_DYNAMIC"] = True
         else:
             env["LINK_DYNAMIC"] = False
         for threading in env["threading"]:
-            env["THREADING_CCFLAGS"] = env.get("THREADING_" + threading.upper() + "_CCFLAGS")
-            env["THREADING_LINKFLAGS"] = env.get("THREADING_" + threading.upper() + "_LINKFLAGS")
+            env.SetProperty(threading = threading)
             for sconscript in sconscripts:
                 lib = str(sconscript.get_dir().up())
                 target_dir = "#/bin.SCons/" + lib + "/" + variant + "/" + linking + "/threading-" + threading

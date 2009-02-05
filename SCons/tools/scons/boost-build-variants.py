@@ -1,24 +1,43 @@
 # vi: syntax=python:et:ts=4
 from SCons.Script import Split
+import traceback
 
 class gcc_features:
     def optimize(self, env, optimize):
-        env.AppendUnique(CCFLAGS = "$OPTIMIZE_CCFLAGS")
         if not optimize or optimize == "no":
-            env.Replace(OPTIMIZE_CCFLAGS = "-O0")
+            env._AppendFeatureFlag(CCFLAGS = "-O0 -fno-inline")
         elif optimize == "speed":
-            env.Replace(OPTIMIZE_CCFLAGS = "-O3 -finline-functions -Wno-inline")
+            env._AppendFeatureFlag(CCFLAGS = "-O3 -finline-functions -Wno-inline")
         elif optimize == "space":
-            env.Replace(OPTIMIZE_CCFLAGS = "-Os")
+            env._AppendFeatureFlag(CCFLAGS = "-Os")
         else:
-            env.Replace(OPTIMIZE_CCFLAGS = "")
+            env._AppendFeatureFlag(CCFLAGS = "")
 
     def profile(self, env, profile):
-        env.AppendUnique(CCFLAGS = "$PROFILE_CCFLAGS", LINKFLAGS = "$PROFILE_LINKFLAGS")
         if profile:
-            env.Replace(PROFILE_CCFLAGS = "-pg", PROFILE_LINKFLAGS = "-pg")
+            env._AppendFeatureFlag(CCFLAGS = "-pg", LINKFLAGS = "-pg")
         else:
-            env.Replace(PROFILE_CCFLAGS = "", PROFILE_LINKFLAGS = "")
+            env._AppendFeatureFlag(CCFLAGS = "", LINKFLAGS = "")
+
+    def threading(self, env, threading):
+        if threading == "multi":
+            env._AppendFeatureFlag(CCFLAGS = "-pthread", LINKFLAGS = "-pthread")
+        else:
+            env._AppendFeatureFlag(CCFLAGS = "", LINKFLAGS = "")
+
+    def debug(self, env, debug):
+        if debug:
+            env._AppendFeatureFlag(CCFLAGS = "-g", CPPDEFINES = [])
+        else:
+            env._AppendFeatureFlag(CCFLAGS = "", CPPDEFINES = "NDEBUG")
+
+def _AppendFeatureFlag(env, **kw):
+    stack = traceback.extract_stack(limit = 3)
+    feature = stack[0][2].upper()
+    for (key, val) in kw.items():
+        feature_var = feature + "_" + key
+        env.AppendUnique(**{ key : "$" + feature_var })
+        env[feature_var] = val
 
 features = gcc_features()
 
@@ -32,7 +51,4 @@ def exists():
 def generate(env):
     env["CXXFLAGS"] = Split("-ftemplate-depth-128 -Wall")
     env.AddMethod(SetProperty)
-    env["THREADING_MULTI_CCFLAGS"] = "-pthread"
-    env["THREADING_MULTI_LINKFLAGS"] = "-pthread"
-    env["DEBUG_CCFLAGS"] = Split("-g -fno-inline")
-    env["RELEASE_CCFLAGS"] = Split("-DNDEBUG")
+    env.AddMethod(_AppendFeatureFlag)
