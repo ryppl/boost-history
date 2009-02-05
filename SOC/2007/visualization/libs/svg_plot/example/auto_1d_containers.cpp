@@ -1,4 +1,10 @@
-// auto_1d_containers.cpp
+/*!
+ \file auto_1d_containers.cpp
+ \brief Example to demonstrate autoscaling with *multiple* STL containers.
+ \details See also auto_1d_plot.cpp and auto_1d_container.cpp.
+
+ \author Paul A Bristow
+ */
 
 // Copyright Paul A Bristow 2008
 
@@ -6,9 +12,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate autoscaling with *multiple* STL containers.
-// See also auto_1d_plot.cpp and auto_1d_container.cpp.
 
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
@@ -28,7 +31,7 @@
   using boost::svg::show_all; // Multiple STL containers.
   using boost::svg::range; // Find min and max of a STL container.
   using boost::svg::range_all;// Find min and max of multipler STL containers.
-  // Note neither of these chack for 'limits' (infinite, NaN) values
+  // Note neither of these check for 'limits' (infinite, NaN) values.
 
 #include <boost/svg_plot/detail/pair.hpp>
   using boost::svg::detail::operator<<; // Output pair as 1.23, 4.56
@@ -55,7 +58,7 @@
 
 #include <utility>
   using std::pair;
-  using boost::svg::detail::operator<<; // Output pair as 1.23, 4.56
+  using boost::svg::detail::operator<<; // Output pair as, for example: 1.23, 4.56
 
 #include <algorithm>
   using std::multiplies;
@@ -65,7 +68,7 @@
   using std::iterator;
   using std::iterator_traits;
   using std::ostream_iterator;
-  
+
 //] [/auto_1d_containers_1]
 
 int main()
@@ -76,8 +79,8 @@ int main()
   Autoscaling must probably inspect all the containers of these series
   in order to find axis ranges that will be suitable for all of them.
   */
-	vector<double> my_data_1;
-	// Initialize STL container my_data_1 with some entirely fictional data.
+  vector<double> my_data_1;
+  // Initialize STL container my_data_1 with some entirely fictional data.
   my_data_1.push_back(0.2); // [0]
   my_data_1.push_back(1.1); // [1]
   my_data_1.push_back(4.2); // [2]
@@ -109,9 +112,9 @@ int main()
     They must all be the same STL container type, in this example, vector<double>.
     And we use pushback to add the containers.
   */
-  vector<vector<double> > my_containers; 
+  vector<vector<double> > my_containers;
 
-  my_containers.push_back(my_data_1); // Add 1st data series. 
+  my_containers.push_back(my_data_1); // Add 1st data series.
   my_containers.push_back(my_data_2); // Add another data series.
   cout << my_containers.size() << " containers." << endl;
   show_all(my_containers);
@@ -140,10 +143,10 @@ int main()
   /*`If we want, we can check the autoscale range used, or even all the plot settings.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 15
   //show_1d_plot_settings(my_1d_plot); // If required.
- 
+
 //] [/auto_1d_containers_2]
 
-	return 0;
+  return 0;
 } // int main()
 
 /*
@@ -155,10 +158,10 @@ auto_1d_containers.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\auto_1d_containers.exe"
-6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
+6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
 2 containers.
-6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
-6 values in container: 0.46 2.53 9.66 7.59 12.42 14.95 
+6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
+6 values in container: 0.46 2.53 9.66 7.59 12.42 14.95
 Data range: 0.2, 14.9
 x_range() 0, 15
 Build Time 0:03

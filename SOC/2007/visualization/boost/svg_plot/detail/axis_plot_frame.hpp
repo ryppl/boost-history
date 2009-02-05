@@ -45,7 +45,7 @@ namespace boost
     // JV: G++ can't resolve names in these enums in axis_plot_frame
     //    when they are in svg_2d_plot.hpp
 
-    static const double sin45 = 0.707; // Use to calculate 'length' if axis value labels are sloping.
+    static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
 
     // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect.
     enum x_axis_intersect

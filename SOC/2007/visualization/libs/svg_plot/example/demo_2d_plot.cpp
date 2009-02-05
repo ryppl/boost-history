@@ -19,7 +19,7 @@
 #include <boost/svg_plot/svg_2d_plot.hpp>
 
 #include <boost/svg_plot/show_2d_settings.hpp>
-// Only needed for showing which settings in use.
+// for show_2d_plot_settings - Only needed for showing which settings in use.
 
 //#include ".\axis_scaling.hpp"
 
@@ -220,7 +220,7 @@ void plot(const std::string& title, const std::string& file,
 
   cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " << file << endl;
   my_plot.write(file);
-  show_plot_settings(my_plot);
+  show_2d_plot_settings(my_plot);
 
   } // plot
 

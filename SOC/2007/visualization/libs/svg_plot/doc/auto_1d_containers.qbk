@@ -3,16 +3,12 @@
 [import ..\example\auto_1d_containers.cpp]
 [auto_1d_containers_1]
 [auto_1d_containers_2]
-[auto_1d_containers_3]
-[auto_1d_containers_4]
-[auto_1d_containers_5]
-[auto_1d_containers_6]
 
 The output is:
 [auto_1d_containers_output]
 
 You can view the svg file, for example: [@..\images\auto_1d_containers.svg auto_1d_containers.svg]
-with most internet browsers, and other programs too. 
+with most internet browsers, and other programs too.
 [/ image as .png of svg?]
 [/$images/2d_simple.png]
 

@@ -2,25 +2,25 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Simple 1D Example</title>
-<link rel="stylesheet" href="../../../../../../../../../../trunk/doc/html/boostbook.css" type="text/css">
+<link rel="stylesheet" href="../../../../../../../../../../boost_trunk/doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
-<link rel="home" href="../../index.html" title="SVG_Plot">
-<link rel="up" href="../tutorial_code_1d_simple.html" title="Tutorial: 1D">
-<link rel="prev" href="../tutorial_code_1d_simple.html" title="Tutorial: 1D">
+<link rel="home" href="../../index.html" title="SVG Plot">
+<link rel="up" href="../tutorial_code_1d_simple.html" title="Tutorials: 1D">
+<link rel="prev" href="../tutorial_code_1d_simple.html" title="Tutorials: 1D">
 <link rel="next" href="1d_vector_tutorial.html" title="1-D Vector Example">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../trunk/boost.png"></td>
-<td align="center"><a href="../../../../../../../../../../trunk/index.html">Home</a></td>
-<td align="center"><a href="../../libraries.html">Libraries</a></td>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../../../../../boost_trunk/boost.png"></td>
+<td align="center"><a href="../../../../../../../../../../boost_trunk/index.html">Home</a></td>
+<td align="center"><a href="I:/boost_trunk/libs/libraries.htm">Libraries</a></td>
 <td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
 <td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../../../../../../../../trunk/more/index.htm">More</a></td>
+<td align="center"><a href="../../../../../../../../../../boost_trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_vector_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_vector_tutorial.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -61,50 +61,54 @@
 <p>
         <span class="inlinemediaobject"><img src="../../images/1d_simple.png" alt="1d_simple"></span>
       </p>
-<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax"></a><h5>
-<a name="id709315"></a>
-        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_syntax">A
-        Note On Syntax</a>
+<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_chaining_syntax"></a><h5>
+<a name="id780108"></a>
+        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.a_note_on_chaining_syntax">A
+        Note on Chaining Syntax</a>
       </h5>
 <p>
         The syntax
       </p>
+<pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Hello"</span><span class="special">).</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">).</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
+</pre>
 <p>
-        <code class="computeroutput"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Hello"</span><span class="special">).</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)...</span></code>
-      </p>
-<p>
-        may appear unfamiliar. However, it works on the same 'chaining' principle
-        that the assignment operator,
+        may appear unfamiliar. However, it works on the same 'chaining' way as the
+        assignment operator in
       </p>
 <pre class="programlisting"><span class="identifier">a</span> <span class="special">=</span> <span class="identifier">b</span> <span class="special">=</span> <span class="identifier">c</span> <span class="special">=</span> <span class="identifier">d</span> <span class="special">=</span> <span class="number">3</span><span class="special">;</span>
 </pre>
 <p>
-        and the addition operator, and output operator in the following code works:
+        And the addition operator and output operator, in
       </p>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">a</span> <span class="special">+</span> <span class="identifier">b</span> <span class="special">+</span> <span class="identifier">c</span> <span class="special">+</span> <span class="identifier">d</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>  <span class="comment">// prints 12
 </span></pre>
 <p>
-        Within all of the plot classes, 'chaining' works the same way. Equivalent
-        traditional code for the example is as follows:
+        Within all of the plot classes, 'chaining' works the same way, by returning
+        a reference to the calling object thus <code class="computeroutput"><span class="keyword">return</span>
+        <span class="special">*</span><span class="keyword">this</span><span class="special">;</span></code>
+      </p>
+<p>
+        Equivalent traditional code for the example above is as follows:
       </p>
 <pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">);</span>
 <span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
 <p>
-        Chaining allows you to avoid repeatedly typing <code class="computeroutput"><span class="identifier">myplot</span><span class="special">.</span></code> and to easily group related settings like
-        plot window, axes, ... together, and avoids relying on the order of arguments
-        in ordinary function calls. Order would clearly become impracticable with
-        dozens of arguments required to set all the myriad plot options.
+        Chaining allows you to avoid repeatedly typing <code class="computeroutput"><span class="identifier">myplot</span></code>
+        and to easily group related settings like plot window, axes, ... together.
+        Chaining avoids relying on the order of arguments in ordinary function calls.
+        Order would clearly become impracticable with dozens of arguments required
+        to set all the myriad plot options.
       </p>
 <p>
         In the long run, I think you will find that chaining helps organize your
-        code to read more clearly!
+        code to read more clearly <span class="inlinemediaobject"><img src="../../images/smiley.png" alt="smiley"></span>
       </p>
-<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown"></a><h5>
-<a name="id709613"></a>
-        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example_breakdown">Simple
-        1D Example Breakdown</a>
+<a name="svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example___breakdown"></a><h5>
+<a name="id780461"></a>
+        <a class="link" href="tutorial_code_1d_example.html#svg_plot.tutorial_code_1d_simple.tutorial_code_1d_example.simple_1d_example___breakdown">Simple
+        1D Example - Breakdown</a>
       </h5>
 <p>
         Let's examine what this does in detail.
@@ -112,25 +116,25 @@
 <pre class="programlisting"><span class="identifier">svg_1d_plot</span> <span class="identifier">my_plot</span><span class="special">;</span>
 </pre>
 <p>
-        This constructor initializes a new 1D plot, called my_plot, and also sets
-        all the many default values.
+        This constructor initializes a new 1D plot, called 'my_plot', and also sets
+        all the very many default values.
       </p>
 <pre class="programlisting"><span class="identifier">my_plot</span><span class="special">.</span><span class="identifier">title</span><span class="special">(</span><span class="string">"Race Times"</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span>
        <span class="special">.</span><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">);</span>
 </pre>
 <p>
-        All of the setter methods (or member functions) are fairly self-explanatory.
-        To walk through it once,
+        All of the setter methods (or member functions) are fairly self-explanatory,
+        but
       </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-          the title, which will appear at the top of the graph, will say "Race
+          The title, which will appear at the top of the graph, will say "Race
           Times".
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">legend_on</span><span class="special">(</span><span class="keyword">true</span><span class="special">)</span></code> means
-          that the legend will display.
+          that the legend box will include "Dan" and "Elaine".
         </li>
 <li>
 <code class="computeroutput"><span class="identifier">x_range</span><span class="special">(-</span><span class="number">1</span><span class="special">,</span> <span class="number">11</span><span class="special">)</span></code> means that the axis displayed will be
@@ -142,11 +146,13 @@
 <p>
         This draws <code class="computeroutput"><span class="identifier">my_data</span></code> onto
         <code class="computeroutput"><span class="identifier">my_plot</span></code>. As many containers
-        as you want can be drawn to <code class="computeroutput"><span class="identifier">my_plot</span></code>.
+        of data series as you want can be drawn on <code class="computeroutput"><span class="identifier">my_plot</span></code>
+        (See reference <code class="literal"><code class="computeroutput"><a class="link" href="../../boost/svg/svg_1d_plot_series.html" title="Class svg_1d_plot_series">boost::svg::svg_1d_plot_series&lt;&gt;</a></code></code>).
         The name of this data series is "Race times", and this text will
-        show up in the legend (if my_plot.legend_on() == true). These are the two
-        required parameters for this plot function call. There are also optional
-        parameters, as seen in the section <a href="../../.%5Chtml%5Csvg_plot%5Cinterface%5Csvg_1d_plot_interface.html" target="_top">svg_1d_plot_interface.html</a>
+        show up in the legend (if my_plot.legend_on() == true). A data series is
+        the one required parameter for this plot function call, but a title is always
+        helpful. There are also optional parameters, as seen in the reference section
+        <code class="literal"><code class="computeroutput"><a class="link" href="../../boost/svg/svg_1d_plot.html" title="Class svg_1d_plot">svg_1d_plot&lt;&gt;</a></code></code>.
       </p>
 <p>
         
@@ -155,7 +161,8 @@
 </pre>
 <p>
         This writes our plot to the file "simple.svg". SVG files can be
-        viewed with most browsers, or embedded into documents.
+        viewed with most browsers, or embedded into documents, or converted to bitmap
+        images like .png.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -168,7 +175,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_vector_tutorial.html"><img src="../../../../../../../../../../trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial_code_1d_simple.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="1d_vector_tutorial.html"><img src="../../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

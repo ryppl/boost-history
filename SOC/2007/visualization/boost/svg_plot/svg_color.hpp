@@ -1,6 +1,6 @@
 /*!
   \file svg_color.hpp
-  \brief SVG standard names of colors, and functions to create and output colors.
+  \brief SVG standard named colors, and functions to create and output colors.
   \author Jacob Voytko & Paul A. Bristow
 */
 // Copyright Jacob Voytko 2007
@@ -25,9 +25,9 @@ namespace svg
 {
   /*!
     \brief Colors that have SVG standard special names.
-    \details  The reason that the underscore separator convention does not match
-    the normal Boost format is that these names that are specified by the SVG standard.
-    http://www.w3.org/TR/SVG/types.html#ColorKeywords
+    \details  The reason that the underscore separator convention does not match\n
+    the normal Boost format is that these names that are specified by the SVG standard.\n
+    http://www.w3.org/TR/SVG/types.html#ColorKeywords.\n
     tan is also renamed to tanned to avoid clash with function tan in math.h.
   */
 
@@ -73,8 +73,8 @@ namespace svg
     blank // 'NotAColor' == 147
   }; // enum svg_color_constant
 
-  svg_color color_array[] =
-  { //! SVG standard colors, see also enum svg_color_constant.
+  svg_color color_array[] =  //!< SVG standard colors, see also enum \#boost::svg::svg_color_constant.
+  {
     svg_color(240, 248, 255), // aliceblue
     svg_color(250, 235, 215), // antiquewhite
     svg_color(0  , 255, 255), // aqua
@@ -259,18 +259,14 @@ namespace svg
     } // svg_color(int red, int green, int blue)
 
     svg_color(bool is) : is_blank(!is)
-    { //! Constructor from bool permits svg_color my_blank(false) as a (non-)color.
-      /*! \details with same effect as svg_color my_blank(blank);
-        color is set to zeros (black) rather than undefined.
-        my_blank(true) also set color to default (black), but is_blank is false,
-        so effect is same as svg_color my_blank(black).
-
-        This is somewhat counter-intuitive!
-        Now changed - svg_color(true) means default (black?)
+    { /*! \brief Constructor from bool permits svg_color my_blank(false) as a (non-)color.
+        \details with same effect as svg_color my_blank(blank);
+        svg_color(true) means default (black?)
         svg_color(false) means blank.
         For example:
           plot.area_fill(false) will be a blank == no fill.
           plot.area_fill(true) will be a default(black) fill.
+        RGB colors are set to zeros (black) rather than left undefined.
       */
       r = 0; // Safer to assign *some* value to rgb: zero, or 255 or something,
       g = 0; // rather than leaving them random.
@@ -294,7 +290,7 @@ namespace svg
     }
 
     void write(std::ostream& os)
-    { //! Write to ostream a color in svg format..
+    { //! Write to ostream a color in svg format.
       if(!is_blank)
       {
         os << "rgb(" << (unsigned int)r << ","

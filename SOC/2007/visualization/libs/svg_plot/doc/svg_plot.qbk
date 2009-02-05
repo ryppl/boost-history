@@ -1,6 +1,6 @@
-[article SVG_Plot Manual
+[article SVG Plot
     [quickbook 1.4]
-    [id SVG plot documentation]
+    [id SVG_plot]
     [authors [Voytko, Jake], [Bristow, Paul A.]]
     [copyright 2007, 2008, 2009 Jake Voytko and Paul A. Bristow]
     [license
@@ -9,61 +9,88 @@
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
     [source-mode c++]
-    [purpose Plot STL containers onto graphs in SVG format.]
+    [purpose Plot STL containers of data series onto graphs in SVG format.]
 ]
 
-[/  Images   ]
-[/ $images is ref to folder where images are held.
-[def __note__                [$images/note.png]]
-[def __alert__               [$images/caution.png]]
-[def __detail__              [$images/note.png]]
-[def __tip__                 [$images/tip.png]]
+[/ Images]
+[/ $images is ref to folder where images are held.]
+[def __detail__     [$images/note.png]]
+[def __note__       [$images/note.png]]
+[def __alert__      [$images/alert.png]]
+[def __tip__        [$images/tip.png]]
+[def :-)            [$images/smiley.png]]
+[def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __docbook__    [@http://www.docbook.org/ DocBook]]
 
 [/ Links   ]
-[/ By Eric's convention prefix and suffix _ means a defined value. ]
-[def _boost_                 [@http://www.boost.org Boost]]
-[/def _iterator_              [@../../libs/iterator/doc/index.html Boost.Iterator]]
-[/def _basic_regex_           [^[classref boost::xpressive::basic_regex basic_regex<>]]]
-[/ _basic_regex_ == file:///I:/boost_trunk/libs/xpressive/doc/html/boost/xpressive/basic_regex.html]
-[/def _regex_match_           [^[funcref boost::xpressive::regex_match regex_match()]]]
-[/def _syntax_option_type_    [^[enumref boost::xpressive::regex_constants::syntax_option_type syntax_option_type]]]
-[/def _regex_compile_         [^[memberref boost::xpressive::basic_regex::compile basic_regex<>::compile()]]]
+[/ By Eric's convention prefix *and* suffix _ means a defined value.  But Use JM and SW double underscore prefix convention.]
+[def __boost [@http://www.boost.org Boost]]
+[/def __iterator             [@../../libs/iterator/doc/index.html Boost.Iterator]]
+[/def __basic_regex           [^[classref boost::xpressive::basic_regex basic_regex<>]]]
+[/ __basic_regex == file:///I:/boost_trunk/libs/xpressive/doc/html/boost/xpressive/basic_regex.html]
+[/def __regex_match           [^[funcref boost::xpressive::regex_match regex_match()]]]
+[/def __syntax_option_type    [^[enumref boost::xpressive::regex_constants::syntax_option_type syntax_option_type]]]
+[/def __regex_compile         [^[memberref boost::xpressive::basic_regex::compile basic_regex<>::compile()]]]
 
 [/ Generating docs for compound boost::svg::svg]
 [/ Generating XML output for class boost::svg::svg]
 
-[def _svg [classref boost::svg::svg] ] [/ just a (default) name == boost::svg::svg]
+[def __svg [^[classref boost::svg::svg svg<>]]]
+[def __svg_1d_plot [^[classref boost::svg::svg_1d_plot svg_1d_plot<>]]]
+[def __svg_1d_plot_series [^[classref boost::svg::svg_1d_plot_series<>]]]
+[def __svg_2d_plot [^[classref boost::svg::svg_2d_plot svg_2d_plot<>]]]
+[def __svg_2d_plot_series [^[classref boost::svg::svg_2d_plot_series<>]]]
 
-[def _svg_ [^[classref boost::svg::svg svg<>]]]
-[def _svg_1d_plot_ [^[classref boost::svg::svg_1d_plot svg_1d_plot<>]]]
-[def _svg_1d_plot_series_ [^[classref boost::svg::svg_1d_plot_series<>]]]
+[def __todo [link svg_plot.todo TODO]]
+[def __rationale [link svg_plot.implementation rationale and implementation]]
 
-[xinclude autodoc.xml] [/ Using Doxygen documentation.]
-
-[section:test_links testing links]
-
-Test link to _boost_
-[classref boost::svg::svg]
-Test Link to _svg_
-Test Link to _svg_1d_plot_
-Test Link to _svg_1d_plot_series_
-
-[endsect] [/test_links]
+[def __caution Boost.Plot is not (yet) an official Boost library, but remains a library under construction,
+     the code is functional, but interfaces, library structure, and function and distribution names
+     may still be changed without notice.]
 
 [include how_to_use.qbk]
-[include to_do.qbk]
 [include colors.qbk]
 [include svg_tutorial.qbk]
 [include 1d_tutorial.qbk]
 [include 2d_tutorial.qbk]
 [include boxplot_tutorial.qbk]
-[auto_1d_containers.qbk
 [/include stylesheet_tutorial.qbk] [/ No longer implemented.]
 [include behavior_tutorial.qbk]
 [include plot_defaults.qbk]
 [include interface.qbk]
+[xinclude autodoc.xml] [/ Using Doxygen reference documentation.]
 [include rationale.qbk]
+[include to_do.qbk]
 [include acknowledgements.qbk]
+
+[/Include the index]
+'''
+
+   <index type="class_name">
+     <title>Class Index</title>
+   </index>
+
+   <index type="typedef_name">
+     <title>Typedef Index</title>
+    </index>
+
+    <index type="function_name">
+     <title>Function Index</title>
+    </index>
+
+   <index type="macro_name">
+     <title>Macro Index</title>
+   </index>
+
+   <index/>
+
+'''
+
+[important This is not (yet) an official Boost library. It was a
+[@http://code.google.com/soc/2007/boost/about.html Google Summer of Code project (2007)]
+whose mentor organization was Boost. It remains a library under construction,
+the code is functional, but interfaces, library structure, and names
+may still be changed without notice.]
 
 [/ svg_plot.qbk
   Copyright 2008, 2009 Jake Voytko and Paul A. Bristow.

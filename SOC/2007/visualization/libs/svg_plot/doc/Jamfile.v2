@@ -12,14 +12,17 @@
 # (because : and ; are keywords!)
 
 # SVG plot documentation as html and pdf from Quickbook, using Doxygen.
+# AND auto-indexing.
 
 # project boost/doc ;
 
 using quickbook ;
 using doxygen ;
+using auto-index ;
 
-path-constant images_location : html ;
-# location of SVG images referenced by Quickbook.
+#path-constant local-boost-root : [ get_boost_root ] ;
+#path-constant pdf-images : $(local-boost-root)/doc/src/images ;
+path-constant images_location : html ; # location of SVG images referenced by Quickbook.
 
 xml svg_plot
   :
@@ -51,14 +54,23 @@ boostbook standalone
     svg_plot
   :
 
+    # This one turns on indexing:
+    <auto-index>on
+    # Choose indexing method for pdf's:
+    <format>pdf:<auto-index-internal>off
+    # Choose indexing method for html:
+    <format>html:<auto-index-internal>on
+    # Set the name of the script file to use:
+    <auto-index-script>index.idx
+
   # Path for links to Boost:
-  #<xsl:param>boost.root=../../../../../../../../trunk
+  #<xsl:param>boost.root=$(local-boost-root) # better?
   <xsl:param>boost.root=../../../../../../../../boost_trunk
   # Path for libraries index:
-  <xsl:param>boost.libraries=$(boost-root)/libs/libraries.htm
+  <xsl:param>boost.libraries=I:/boost_trunk/libs/libraries.htm
   # Use the main Boost stylesheet:
   <xsl:param>html.stylesheet=../../../../../../../../boost_trunk/doc/html/boostbook.css
-  #<xsl:param>html.stylesheet=../../../../../../../../trunk/doc/html/boostbook.css
+  #<xsl:param>html.stylesheet=$(local-boost-root)/doc/html/boostbook.css #?  better
   # Use the svg_plot local Boost stylesheet:
   # <xsl:param>html.stylesheet=./html/boostbook.css
 
@@ -79,18 +91,18 @@ boostbook standalone
   <xsl:param>toc.max.depth=4
   # How far down we go with TOC's
   <xsl:param>generate.section.toc.level=10
-  #<xsl:param>root.filename="sf_dist_and_tools"
+  #<xsl:param>root.filename="svg_plot"
 
   # <xsl:param>project.root=http://beta.boost.org/development
   # <xsl:param>annotation.support=1
   # <xsl:param>quickbook.source.style.show="'true'"
 
   # PDF Options:
-  # TOC Generation: this is needed for FOP-0.9 and later:
-  # <xsl:param>fop1.extensions=1
+  # TOC Generation
+  <xsl:param>fop1.extensions=0
   <format>pdf:<xsl:param>xep.extensions=1
-  # TOC generation: this is needed for FOP 0.2, but must not be set to zero for FOP-0.9!
   <format>pdf:<xsl:param>fop.extensions=0
+
   # No indent on body text:
   <format>pdf:<xsl:param>body.start.indent=0pt
   # Margin size:
@@ -114,4 +126,9 @@ boostbook standalone
   <dependency>autodoc
 
   ;
+
+# install html : ../../../doc/html/boostbook.css ;
+# install ../ : ../../../boost.png ;
+
+# install pdf-install : standalone : <location>. <install-type>PDF ;
 

@@ -1,4 +1,9 @@
-// test_svg.cpp
+/*! \file test_svg.cpp
+   \brief Tests for svg class.
+   \details (See also other test modules for 1d_plot, 2d_plot and boxplot).
+
+   \author Jacob Voytko and Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007
@@ -8,17 +13,13 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// Test svg class (see also other test modules for 1d_plot, 2d_plot and boxplot).
-
 //#if defined (BOOST_MSVC) // requires a prior Boost include, so use MSC_VER instead.
-
 #if defined (_MSC_VER)
 //#  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int'
-//#  pragma warning(disable : 4172) //  returning address of local variable or temporary
 
 #  pragma warning(disable : 4310) //  cast truncates constant value
 #  pragma warning(disable : 4512) //  assignment operator could not be generated
-//#  pragma warning(disable : 4702) //  unreachable code 
+//#  pragma warning(disable : 4702) //  unreachable code
 
 #endif
 
@@ -66,14 +67,14 @@
   BOOST_CHECK_NE(black, white);
 
 
-  // Test operator== 
-  svg_color my_red(255, 0, 0); // 
+  // Test operator==
+  svg_color my_red(255, 0, 0); //
   BOOST_CHECK_EQUAL(my_red, svg_color(red));
   BOOST_CHECK_EQUAL(my_red, red);
-  // Test operator!= 
+  // Test operator!=
   BOOST_CHECK_NE(my_red, black); // BOOST_CHECK_NE Needs Boost 1.35.
 
-  // Test svg_color operator<< 
+  // Test svg_color operator<<
   ostringstream oss;
   oss << svg_color(red);
   BOOST_CHECK_EQUAL(oss.str().c_str(), "RGB(255,0,0)");
@@ -118,7 +119,7 @@
   plot_line_style my_plot_line2(svg_color(red), true, true);
   my_plot_line2.area_fill(green);
   // Note 1: it is a color constant, nor a svg_color.
-  // Note 2:  
+  // Note 2:
   BOOST_CHECK_EQUAL(my_plot_line2.color(), svg_color(red));
   BOOST_CHECK_EQUAL(my_plot_line2.area_fill(), green);
   BOOST_CHECK_EQUAL(my_plot_line2.line_on(), true);
@@ -145,7 +146,7 @@
   BOOST_CHECK_EQUAL(my_style.stroke_width(), 10U); // & check.
 
   // Test the text_element class.
-  // text_element::text_element(double x, double y, 
+  // text_element::text_element(double x, double y,
   //  const std::string&,
   // text_style&,
 
@@ -163,7 +164,7 @@
   BOOST_CHECK_EQUAL(text.text(), "X");
 
   // Test the text_style class.
-  //  int, 
+  //  int,
   //  const std::string& font,
   //  const std::string& style, const std::string& weight,
   //  const std::string& stretch, const std::string& decoration,
@@ -227,18 +228,18 @@
 
   // Test the svg_element class.
 
-	svg my_svg;
+  svg my_svg;
   // Check the default svg image sizes:
-	BOOST_CHECK_EQUAL(my_svg.x_size(), 400U);
-	BOOST_CHECK_EQUAL(my_svg.y_size(), 400U);
+  BOOST_CHECK_EQUAL(my_svg.x_size(), 400U);
+  BOOST_CHECK_EQUAL(my_svg.y_size(), 400U);
 
   my_svg.image_size(200U, 100U);
-	BOOST_CHECK_EQUAL(my_svg.x_size(), 200U);
+  BOOST_CHECK_EQUAL(my_svg.x_size(), 200U);
   my_svg.image_size(500U, 100U); // update x
-	BOOST_CHECK_EQUAL(my_svg.x_size(), 500U); // & check
+  BOOST_CHECK_EQUAL(my_svg.x_size(), 500U); // & check
   my_svg.image_size(500U, 300U); // update y
-	BOOST_CHECK_EQUAL(my_svg.y_size(), 300U); // & check
-	BOOST_CHECK_EQUAL(my_svg.x_size(), 500U);
+  BOOST_CHECK_EQUAL(my_svg.y_size(), 300U); // & check
+  BOOST_CHECK_EQUAL(my_svg.x_size(), 500U);
 
   BOOST_CHECK_EQUAL(my_svg.document_title(), ""); // Default no document title
   my_svg.document_title("Document Title");
@@ -254,7 +255,7 @@
 
   BOOST_CHECK_EQUAL(my_svg.copyright_date(), ""); // Default no copyright_date.
   my_svg.copyright_date("2007");
-  BOOST_CHECK_EQUAL(my_svg.copyright_date(), "2007"); 
+  BOOST_CHECK_EQUAL(my_svg.copyright_date(), "2007");
 
   ostringstream ossvg;
   my_svg.write(ossvg);
@@ -267,9 +268,9 @@
   // Test rect_element
 
   rect_element my_rect(1, 2, 3, 4);
-  BOOST_CHECK_EQUAL(my_rect.x(), 1); 
-  BOOST_CHECK_EQUAL(my_rect.y(), 2); 
-  BOOST_CHECK_EQUAL(my_rect.width(), 3); 
+  BOOST_CHECK_EQUAL(my_rect.x(), 1);
+  BOOST_CHECK_EQUAL(my_rect.y(), 2);
+  BOOST_CHECK_EQUAL(my_rect.width(), 3);
   BOOST_CHECK_EQUAL(my_rect.height(), 4);
   BOOST_CHECK(my_rect.height() == 4);
 
@@ -322,15 +323,15 @@ text_style(12, Arial, italic, bold)
 <svg width="500" height ="300" version="1.1" xmlns="http://www.w3.org/2000/svg"
  xmlns:xlink="http://www.w3.org/1999/xlink"
  xmlns:ev="http://www.w3.org/2001/xml-events">
-<!-- SVG plot written using Boost.Plot program (Creator Jacob Voytko) --> 
-<!-- Use, modification and distribution of Boost.Plot subject to the --> 
-<!-- Boost Software License, Version 1.0.--> 
-<!-- (See accompanying file LICENSE_1_0.txt --> 
-<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) --> 
-<!-- SVG Plot Copyright Jake Voytko 2007 --> 
+<!-- SVG plot written using Boost.Plot program (Creator Jacob Voytko) -->
+<!-- Use, modification and distribution of Boost.Plot subject to the -->
+<!-- Boost Software License, Version 1.0.-->
+<!-- (See accompanying file LICENSE_1_0.txt -->
+<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) -->
+<!-- SVG Plot Copyright Jake Voytko 2007 -->
 <meta name="copyright" content="Jake Voytko" />
 <meta name="date" content="2007" />
-<!-- Document Description --> 
+<!-- Document Description -->
 <desc>Document Description</desc>
 <title>Document Title</title>
 </svg>
