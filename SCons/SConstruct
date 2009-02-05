@@ -3,7 +3,7 @@ EnsureSConsVersion(0, 98, 5)
 
 vars = Variables("build-config.py")
 vars.AddVariables(
-    ListVariable("variant", "Build configuration", "release", ["release", "debug"]),
+    ListVariable("variant", "Build configuration", "release", ["release", "debug", "profile"]),
     ListVariable("link", "Library linking", "all", ["static", "dynamic"]),
     ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"])
 )

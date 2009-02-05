@@ -12,6 +12,13 @@ env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_
 for variant in env["variant"]:
     env["VARIANT_CCFLAGS"] = env.get(variant.upper() + "_CCFLAGS")
     env["VARIANT_LINKFLAGS"] = env.get(variant.upper() + "_LINKFLAGS")
+    env.SetProperty(profile = False)
+    if variant == "release":
+        env.SetProperty(optimize = "speed")
+    elif variant == "debug":
+        env.SetProperty(optimize = "no")
+    elif variant == "profile":
+        env.SetProperty(optimize = "speed", profile = True)
     for linking in env["link"]:
         if linking == "dynamic":
             env["LINK_DYNAMIC"] = True
