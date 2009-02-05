@@ -6,13 +6,9 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-#if defined(BOOST_GUIGL_USE_FLTK_GLUT)
+#if defined(BOOST_GUIGL_GLUT_H)
 
-#include <Fl/glut.H>
-
-#elif defined(__APPLE__)
-
-#include <GLUT/glut.h>
+#include BOOST_GUIGL_GLUT_H
 
 #else
 

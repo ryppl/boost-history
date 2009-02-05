@@ -18,15 +18,14 @@ path-constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
 path-constant TOP : . ;
 
 # we are using Boost
-use-project boost
-   : $(BOOST_ROOT)
-   ;
+use-project boost : $(BOOST_ROOT) ;
 
-use-project guigl : libs/guigl/build ;
+use-project /boost/guigl : libs/guigl/build ;
+use-project /boost/guigl/window_manager : libs/guigl/window_manager ;
 
-# the Dataflow project and anything using it needs Dataflow and Boost headers
+# this project and anything using it needs these and Boost headers
 project guigl
-   : build-dir bin.v2
+   : build-dir bin
    : usage-requirements
         <include>.
         <include>$(BOOST_ROOT)

@@ -31,11 +31,8 @@ public:
     {
         glutInitWindowSize((int)size.x, (int)size.y);
         glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_ALPHA | (depth?GLUT_DEPTH:0));
-#if defined(BOOST_GUIGL_USE_FLTK_GLUT)
+        // FLTK GLUT requires a char * label
         int id = glutCreateWindow(const_cast<char *>(label.c_str()));
-#else
-        int id = glutCreateWindow(label.c_str());
-#endif
         if(depth)
             glEnable(GL_DEPTH_TEST);
         else

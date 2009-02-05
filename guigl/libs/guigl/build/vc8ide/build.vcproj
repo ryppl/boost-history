@@ -340,6 +340,14 @@
 		<Filter
 			Name="src"
 			>
+			<File
+				RelativePath="..\..\src\application.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\src\window.cpp"
+				>
+			</File>
 			<Filter
 				Name="widget"
 				>
@@ -372,6 +380,14 @@
 					>
 				</File>
 			</Filter>
+		</Filter>
+		<Filter
+			Name="window_manager"
+			>
+			<File
+				RelativePath="..\..\window_manager\Jamfile"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath="..\Jamfile"
