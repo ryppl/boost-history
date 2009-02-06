@@ -1,4 +1,7 @@
-// 1d_color_consistency.cpp
+/*! \file  1d_color_consistency.cpp
+  \brief Test of SVG 1D plot
+  \author Jacob Voytko & Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007
@@ -17,6 +20,7 @@
 #  pragma warning(disable : 4512) //  assignment operator could not be generated
 #  pragma warning(disable : 4702) //  unreachable code
 #  pragma warning(disable : 4701) //  potentially uninitialized local variable 'old_iph' used
+#  pragma warning(disable : 4996) //  Deprecated.
 #endif
 
 #define BOOST_TEST_MAIN

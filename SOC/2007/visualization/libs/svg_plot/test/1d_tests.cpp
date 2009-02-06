@@ -1,4 +1,7 @@
-// 1d_tests.cpp
+/*! \file  1d_tests.cpp
+  \brief Test of SVG 1D plot
+  \author Jacob Voytko & Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
@@ -46,8 +49,6 @@
     bottom_side = -1,
     top_side = +1,
   };
-
-
 
 BOOST_AUTO_TEST_CASE( test1 )
 {
@@ -491,7 +492,8 @@ BOOST_AUTO_TEST_CASE( test1 )
 
 /*
 
-Using Jake's g() version 22 Jan 2008
+
+6 Feb 2008 Vista MSVC 9
 
 Compiling...
 1d_tests.cpp
@@ -500,7 +502,5 @@ Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\1d_tests.exe"
 Running 1 test case...
 *** No errors detected
-Build Time 0:09
-Build log was saved at "file://j:\Cpp\SVG\1d_tests\Debug\BuildLog.htm"
-
+Build Time 0:10
 */

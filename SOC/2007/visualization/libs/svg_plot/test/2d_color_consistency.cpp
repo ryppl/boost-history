@@ -9,10 +9,11 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifdef _MSC_VER
+#  pragma warning(disable : 4996) // 
 #  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int' in spirit
 #  pragma warning(disable : 4180) // warning C4180: qualifier applied to function type has no meaning; ignored
 #  pragma warning(disable : 4172) // warning C4180: qualifier applied to function type has no meaning; ignored
-
+#  pragma warning(disable : 4224) // nonstandard extension used : formal parameter 'arg' was previously defined as a type
 // added to boost.test/detail supress_warnings
 //#  pragma warning(disable : 4310) //  cast truncates constant value
 //#  pragma warning(disable : 4512) //  assignment operator could not be generated
@@ -35,18 +36,18 @@ BOOST_AUTO_TEST_CASE( test1 )
 {
 	svg_2d_plot my_plot;
 
-  BOOST_CHECK_EQUAL(my_plot.title(), "Plot of data");
+  BOOST_CHECK_EQUAL(my_plot.title(), ""); // Default now null string.
   my_plot.title("Plot of my data");
   cout << my_plot.title() << endl;
-  BOOST_CHECK_EQUAL(my_plot.title(), "Plot of my data");
+  BOOST_CHECK_EQUAL(my_plot.title(), "Plot of my data"); 
 
   my_plot.x_range(-1., 1.);
-  cout << "x max " << my_plot.x_minimum() << endl;
-  cout << "x min " << my_plot.x_maximum() << endl;
+  cout << "x max " << my_plot.x_min() << endl;
+  cout << "x min " << my_plot.x_max() << endl;
 
   // Tests that do NOT apply to 1D.
 
-  BOOST_CHECK_EQUAL(my_plot.y_label(), "Y Axis"); //  Check default label.
+  BOOST_CHECK_EQUAL(my_plot.y_label(), ""); //  Check default label is null.
   my_plot.y_label("Y"); // 
  	BOOST_CHECK_EQUAL(my_plot.y_label(), "Y"); // & check.
 
