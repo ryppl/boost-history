@@ -1,10 +1,17 @@
 # vi: syntax=python:et:ts=4
 Import("env")
 
+sources = Split("""
+    file_descriptor.cpp
+    mapped_file.cpp
+    """)
+
+if env.CheckZLib():
+    sources.append("zlib.cpp")
+if env.CheckBZip2():
+    sources.append("bzip2.cpp")
+
 env.BoostLibrary(
    "iostreams",
-   Split("""
-   file_descriptor.cpp
-   mapped_file.cpp
-   """)
+   sources
    )
