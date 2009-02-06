@@ -478,21 +478,26 @@ public:
      || (ts.decoration_ != decoration_);
   } //  operator!=
 
-  //bool text_style::operator==(const text_style& lhs, const text_style& rhs)
-  //{ // Note operator== and operator << both needed to use Boost.text.
-  //   return (lhs.font_size_ == rhs.font_size_)
-  //     && (lhs.font_family() == rhs.font_family())
-  //     && (lhs.stretch_ ==  rhs.stretch_)
-  //     && (lhs.style_ ==  rhs.style_)
-  //     && (lhs.weight_ ==  rhs.weight_)
-  //     && (lhs.decoration_ ==  rhs.decoration_);
-  //} // operator==
+  bool operator==(const text_style& lhs, const text_style& rhs)
+  { // Note operator== and operator << both needed to use Boost.text.
+     return (lhs.font_size_ == rhs.font_size_)
+       && (lhs.font_family() == rhs.font_family())
+       && (lhs.stretch_ ==  rhs.stretch_)
+       && (lhs.style_ ==  rhs.style_)
+       && (lhs.weight_ ==  rhs.weight_)
+       && (lhs.decoration_ ==  rhs.decoration_);
+  } //   bool operator==(const text_style& lhs, const text_style& rhs)
 
-//bool operator!= (const text_style& lhs, const text_style& rhs)
-//{ // Note operator== and operator << both needed to use Boost.Test.
-//   But can be avoided with a macro whose name I forget.
-//  return false;
-//}
+  bool operator!= (const text_style& lhs, const text_style& rhs)
+  { // Note operator== and operator << both needed to use Boost.Test.
+    // But can be avoided with a macro .
+      return (lhs.font_size_ != rhs.font_size_)
+       && (lhs.font_family() != rhs.font_family())
+       && (lhs.stretch_ !=  rhs.stretch_)
+       && (lhs.style_ !=  rhs.style_)
+       && (lhs.weight_ !=  rhs.weight_)
+       && (lhs.decoration_ !=  rhs.decoration_);
+  } //   bool operator!= (const text_style& lhs, const text_style& rhs)
 
 std::ostream& operator<< (std::ostream& os, const text_style& ts)
 { //! Output a text style as a text string (mainly useful for diagnostic use).
