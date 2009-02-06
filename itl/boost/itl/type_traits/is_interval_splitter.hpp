@@ -10,9 +10,11 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    template <class Type> struct is_interval_splitter;
-
-    template <class Type> struct is_interval_splitter{ enum {value = false}; };
+    template <class Type> struct is_interval_splitter
+	{ 
+		typedef is_interval_splitter<Type> type;
+		static const bool value = false; 
+	};
 
 }} // namespace boost itl
 

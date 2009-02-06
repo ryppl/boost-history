@@ -376,45 +376,40 @@ void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& x
 //-----------------------------------------------------------------------------
 // equality of elements
 //-----------------------------------------------------------------------------
-template <typename DomainT, template<class,ITL_COMPARE>class Interval, 
-          ITL_COMPARE Compare, ITL_ALLOC Alloc>
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline bool is_element_equal(const interval_set<DomainT,Compare,Interval,Alloc>& lhs,
                              const interval_set<DomainT,Compare,Interval,Alloc>& rhs)
 {
+	// Since both are joining interval sets we can use the simpler Set::lexicographical_equal
     return &lhs == &rhs || Set::lexicographical_equal(lhs, rhs);
 }
 
-template <class Type>
-struct is_set<itl::interval_set<Type> >
+//-----------------------------------------------------------------------------
+// type traits
+//-----------------------------------------------------------------------------
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_set<itl::interval_set<Type> > type;
+	typedef is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
 	static const bool value = true; 
 };
 
-template <class Type>
-struct is_interval_container<itl::interval_set<Type> >
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_interval_container<itl::interval_set<Type> > type;
-	enum{value = true}; 
+	typedef is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
+	static const bool value = true; 
 };
 
-template <class Type>
-struct is_interval_splitter<itl::interval_set<Type> >
-{ enum{value = false}; };
 
-template <class Type>
-struct absorbs_neutrons<itl::interval_set<Type> >
-{ enum{value = false}; };
-
-template <class Type>
-struct is_total<itl::interval_set<Type> >
-{ enum{value = false}; };
-
-template <class Type>
-struct type_to_string<itl::interval_set<Type> >
+//-----------------------------------------------------------------------------
+// type representation
+//-----------------------------------------------------------------------------
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct type_to_string<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 {
     static std::string apply()
-    { return "itv_set<"+ type_to_string<Type>::apply() +">"; }
+    { return "itv_set<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 }} // namespace itl boost

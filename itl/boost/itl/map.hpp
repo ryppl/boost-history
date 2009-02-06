@@ -690,48 +690,48 @@ namespace boost{namespace itl
 	//-----------------------------------------------------------------------------
 	// type traits
 	//-----------------------------------------------------------------------------
-	template <class KeyT, class DataT, class Traits>
-	struct is_set<itl::map<KeyT,DataT,Traits> >
+    template<class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	struct is_set<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 	{ 
-		typedef is_set<itl::map<KeyT,DataT,Traits> > type;
+		typedef is_set<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
 		static const bool value = true; 
 	};
 
-	template <class KeyT, class DataT, class Traits>
-	struct is_map<itl::map<KeyT,DataT,Traits> >
+	template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	struct is_map<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 	{ 
-		typedef is_map<itl::map<KeyT,DataT,Traits> > type;
+		typedef is_map<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
 		static const bool value = true; 
 	};
 
-	template <class KeyT, class DataT, class Traits>
-	struct has_inverse<itl::map<KeyT,DataT,Traits> >
+	template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+	struct has_inverse<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 	{ 
-		typedef has_inverse<itl::map<KeyT,DataT,Traits> > type;
-		static const bool value = has_inverse<DataT>::value; 
+		typedef has_inverse<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
+		static const bool value = has_inverse<CodomainT>::value; 
 	};
 
-    template <class DomainT, class CodomainT, class Traits>
-    struct is_interval_container<itl::map<DomainT,CodomainT,Traits> >
+    template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    struct is_interval_container<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
     { 
-		typedef is_interval_container<itl::map<DomainT,CodomainT,Traits> > type;
+		typedef is_interval_container<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
 		enum{value = true}; 
 	};
 
-    template <class DomainT, class CodomainT, class Traits>
-    struct is_interval_splitter<itl::map<DomainT,CodomainT,Traits> >
+    template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    struct is_interval_splitter<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
     { enum{value = false}; };
 
-    template <class DomainT, class CodomainT, class Traits>
-    struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits> >
+    template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
     { enum{value = Traits::absorbs_neutrons}; };
 
-    template <class DomainT, class CodomainT, class Traits>
-    struct is_total<itl::map<DomainT,CodomainT,Traits> >
+    template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    struct is_total<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
     { enum{value = Traits::is_total}; };
 
-    template <class DomainT, class CodomainT, class Traits>
-    struct type_to_string<itl::map<DomainT,CodomainT,Traits> >
+    template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
     {
         static std::string apply()
         {

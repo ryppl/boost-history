@@ -9,16 +9,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 +----------------------------------------------------------------------------*/
 #pragma once
 
-//CL
-//#include <boost/mpl/bool.hpp> 
-//#include <boost/mpl/if.hpp> 
-//#include <boost/itl/type_traits/is_continuous.hpp>
-//#include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
-//#include <boost/itl/interval_morphism.hpp>
-//#include <boost/validate/laws/set_laws.h>
-//#include <boost/validate/laws/order.h>
-//#include <boost/validate/laws/pushouts.h>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/lawvalidater.h>
 #include <boost/validate/algebra_validater.hpp>

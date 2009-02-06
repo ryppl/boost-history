@@ -126,7 +126,7 @@ namespace boost{namespace itl
             switch(_lawChoice.some())
             {
             case transitivity: return new LawValidater<Transitivity<Type, Relation>, RandomGentor>;
-            case antisymmetry: return new LawValidater<Antisymmetry<Type, Relation>, RandomGentor>;
+            case antisymmetry: return new LawValidater<Antisymmetry<Type, Relation, Equality>, RandomGentor>;
             case reflexivity:  return new LawValidater<Reflexivity <Type, Relation>, RandomGentor>;
             default: return NULL;
             }

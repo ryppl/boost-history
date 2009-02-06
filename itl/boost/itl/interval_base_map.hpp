@@ -1534,12 +1534,50 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 
-template < //JODO class KeyT, class DataT, class Traits>
+//-----------------------------------------------------------------------------
+// type traits
+//-----------------------------------------------------------------------------
+template 
+<
     class SubType,
-    class DomainT, class CodomainT, class Traits> 
-struct is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits> >
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+struct is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-	typedef is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits> > type;
+	typedef is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = true; 
+};
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+struct is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = true; 
+};
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+struct has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = has_inverse<CodomainT>::value; 
+};
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+struct is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
 	static const bool value = true; 
 };
 

@@ -258,46 +258,38 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
     add_(rightResid);
 }
 
-
 //-----------------------------------------------------------------------------
-// equality of elements
+// type traits
 //-----------------------------------------------------------------------------
-
-template <class Type>
-struct is_set<itl::separate_interval_set<Type> >
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_set<itl::separate_interval_set<Type> > type;
+	typedef is_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
 	static const bool value = true; 
 };
 
-template <class Type>
-struct is_interval_container<itl::separate_interval_set<Type> >
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_container<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_interval_container<itl::separate_interval_set<Type> > type;
-	enum{value = true}; 
+	typedef is_interval_container<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
+	static const bool value = true; 
 };
 
-template <class Type>
-struct is_interval_separator<itl::separate_interval_set<Type> >
-{ enum{value = true}; };
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_separator<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
+{ 
+	typedef is_interval_separator<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
+	static const bool value = true; 
+};
 
-template <class Type>
-struct is_interval_splitter<itl::separate_interval_set<Type> >
-{ enum{value = false}; };
-
-template <class Type>
-struct absorbs_neutrons<itl::separate_interval_set<Type> >
-{ enum{value = false}; };
-
-template <class Type>
-struct is_total<itl::separate_interval_set<Type> >
-{ enum{value = false}; };
-
-template <class Type>
-struct type_to_string<itl::separate_interval_set<Type> >
+//-----------------------------------------------------------------------------
+// type representation
+//-----------------------------------------------------------------------------
+template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct type_to_string<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 {
     static std::string apply()
-    { return "se_itv_set<"+ type_to_string<Type>::apply() +">"; }
+    { return "se_itv_set<"+ type_to_string<DomainT>::apply() +">"; }
 };
 
 }} // namespace itl boost

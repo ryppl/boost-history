@@ -822,6 +822,27 @@ std::basic_ostream<CharType, CharTraits>& operator <<
     return stream << "}";
 }
 
+//-----------------------------------------------------------------------------
+// type traits
+//-----------------------------------------------------------------------------
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
+{ 
+	typedef is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
+	static const bool value = true; 
+};
+
+template<class SubType,
+         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
+{ 
+	typedef is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
+	static const bool value = true; 
+};
+
+
+
 }} // namespace itl boost
 
 #endif

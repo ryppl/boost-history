@@ -14,7 +14,6 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #include <boost/mpl/or.hpp> 
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
-//CL #include <boost/itl/type_traits/is_interval_splitter.hpp> 
 
 namespace boost{namespace itl
 {

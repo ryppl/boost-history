@@ -776,54 +776,64 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 // type traits
 //-----------------------------------------------------------------------------
 
-template <class KeyT, class DataT, class Traits>
-struct is_set<itl::split_interval_map<KeyT,DataT,Traits> >
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-	typedef is_set<itl::split_interval_map<KeyT,DataT,Traits> > type;
+	typedef is_set<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
 	static const bool value = true; 
 };
 
-template <class KeyT, class DataT, class Traits>
-struct is_map<itl::split_interval_map<KeyT,DataT,Traits> >
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_map<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-	typedef is_map<itl::split_interval_map<KeyT,DataT,Traits> > type;
+	typedef is_map<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
 	enum{value = true}; 
 };
 
-template <class KeyT, class DataT, class Traits>
-struct has_inverse<itl::split_interval_map<KeyT,DataT,Traits> >
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct has_inverse<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-	typedef has_inverse<itl::split_interval_map<KeyT,DataT,Traits> > type;
-	static const bool value = has_inverse<DataT>::value; 
+	typedef has_inverse<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = has_inverse<CodomainT>::value; 
 };
 
-template <class KeyT, class DataT, class Traits>
-struct is_interval_container<itl::split_interval_map<KeyT,DataT,Traits> >
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_container<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
-	typedef is_interval_container<itl::split_interval_map<KeyT,DataT,Traits> > type;
-	enum{value = true}; 
+	typedef is_interval_container<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = true; 
 };
 
-template <class KeyT, class DataT, class Traits>
-struct is_interval_splitter<itl::split_interval_map<KeyT,DataT,Traits> >
-{ enum{value = true}; };
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_interval_splitter<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef is_interval_splitter<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = true; 
+};
 
-template <class KeyT, class DataT, class Traits>
-struct absorbs_neutrons<itl::split_interval_map<KeyT,DataT,Traits> >
-{ enum{value = Traits::absorbs_neutrons}; };
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct absorbs_neutrons<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef absorbs_neutrons<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = Traits::absorbs_neutrons; 
+};
 
-template <class KeyT, class DataT, class Traits>
-struct is_total<itl::split_interval_map<KeyT,DataT,Traits> >
-{ enum{value = Traits::is_total}; };
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct is_total<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
+{ 
+	typedef is_total<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
+	static const bool value = Traits::is_total; 
+};
 
-template <class KeyT, class DataT, class Traits>
-struct type_to_string<itl::split_interval_map<KeyT,DataT,Traits> >
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+struct type_to_string<itl::split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 {
     static std::string apply()
     { 
-        return "sp_itv_map<"+ type_to_string<KeyT>::apply()  + ","
-                            + type_to_string<DataT>::apply() + ","
-                            + type_to_string<Traits>::apply() +">"; 
+        return "sp_itv_map<"+ type_to_string<DomainT>::apply()   + ","
+                            + type_to_string<CodomainT>::apply() + ","
+                            + type_to_string<Traits>::apply()    +">"; 
     }
 };
 

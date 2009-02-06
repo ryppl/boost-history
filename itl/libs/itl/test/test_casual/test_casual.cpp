@@ -31,9 +31,9 @@ using namespace boost::itl;
 BOOST_AUTO_TEST_CASE(subset_test)
 {
 	typedef interval_map<int,int>  IntervalMapT;
-	typedef split_interval_map<int,int>  Splimp;
+	typedef split_interval_map<int,int>  SplitIntervalMapT;
 	
-	Splimp left, right;
+	SplitIntervalMapT left, right;
 	left.add(CDv(2,7,5)).add(IIv(9,9,5));
 	right.add(CDv(-8,-6,2)).add(CIv(2,7,5)).add(CDv(7,9,1)).add(IIv(9,11,5));
 	BOOST_CHECK_EQUAL(is_contained_in(left,right), true);
@@ -48,10 +48,26 @@ BOOST_AUTO_TEST_CASE(subset_test)
 BOOST_AUTO_TEST_CASE(superset_test)
 {
 	typedef interval_map<int,int>  IntervalMapT;
-	typedef split_interval_map<int,int>  Splimp;
+	typedef split_interval_map<int,int>  SplitIntervalMapT;
 	
-	Splimp left, right;
+	SplitIntervalMapT left, right;
 	left.add(IDv(-7,-1,1)).add(IIv(8,16,9));
 	right.add(CDv(-8,-4,1)).add(IIv(8,8,9));
 	BOOST_CHECK_EQUAL(contains(left,right), true);
+}
+
+BOOST_AUTO_TEST_CASE(casual_test)
+{
+	typedef interval_map<int,int>  IntervalMapT;
+	typedef split_interval_map<int,int>  SplitIntervalMapT;
+	
+	SplitIntervalMapT left, right;
+	left.add(IDv(-7,-1,1)).add(IIv(8,16,9));
+	right.add(CDv(-8,-4,1)).add(IIv(8,8,9));
+
+	IntervalMapT join_left;
+	join_left.add(CDv(-8,-4,1));
+	join_left = left;
+
+	BOOST_CHECK_EQUAL(contains(join_left,right), true);
 }

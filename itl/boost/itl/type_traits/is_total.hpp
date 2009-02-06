@@ -10,9 +10,11 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    template <class Type> struct is_total;
-
-    template <class Type> struct is_total{ enum {value = false}; };
+    template <class Type> struct is_total
+	{ 
+		typedef is_total<Type> type;
+		static const bool value = false; 
+	};
 
 }} // namespace boost itl
 

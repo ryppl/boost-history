@@ -10,8 +10,6 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 
 namespace boost{ namespace itl
 {
-    template <class Type> struct is_map;
-
     template <class Type> struct is_map
 	{
 		typedef is_map<Type> type;
