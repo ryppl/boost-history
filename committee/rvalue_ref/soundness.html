@@ -1,0 +1,386 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Fixing a Safety Problem with Rvalue References: Proposed Wording</title>
+</head>
+
+<body>
+<center><h1>Fixing a Safety Problem with Rvalue References: Proposed Wording</h1></center>
+
+<p>Authors: Douglas Gregor, David Abrahams<br>
+Contact: doug.gregor@gmail.com, dave@boostpro.com<br>
+Organization: Apple, BoostPro Computing<br>
+Date: 2009-02-06<br>
+Number: D2831=09-0021<br>
+Revises: N2812=08-0322</p>
+
+<h2>Proposed Wording</h2>
+
+<h3>5.2.9 Static cast [expr.static.cast]</h3>
+<p>Add the following new paragraph after paragraph 2</p>
+<ol start="3">
+  <li><ins>A value of type "cv1 T2" can be cast to type "rvalue reference to cv2 T1" if "cv1 T1" is reference-compatible with "cv2 T2" (8.5.3). If T1 is a base class of T2, a program that necessitates such a cast is ill-formed if T1 is an inaccessible (Clause 11) or ambiguous (10.2) base class of T2.</ins></li>
+</ol>
+
+<h3>8.5.3 References [dcl.init.ref]</h3>
+<p>Modify paragraph 5 as follows:</p>
+<ol start="5">
+  <li>A reference to type "cv1 T1" is initialized by an expression of
+  type "cv2 T2" as follows:
+  <ul>
+    <li>If <ins>the reference is an lvalue reference and</ins> the
+    initializer expression
+      <ul>
+        <li>is an lvalue (but is not a bit-field), and "cv1 T1" is reference-compatible with "cv2 T2," or</li>
+        <li>has a class type (i.e., T2 is a class type) and can be implicitly converted to an lvalue of type "cv3 T3," where "cv1 T1" is reference-compatible with "cv3 T3" (this conversion is selected by enumerating the applicable conversion functions (13.3.1.6) and choosing the best one through overload resolution (13.3)), then the reference is bound directly to the initializer expression lvalue in the first case, and the reference is bound to the lvalue result of the conversion in the second case. In these cases the reference is said to bind directly to the initializer expression. [ <i>Note</i>: the usual lvalue-to-rvalue (4.1), array-to-pointer 
+(4.2), and function-to-pointer (4.3) standard conversions are not needed, and therefore are suppressed, when such direct bindings to lvalues are done. -- <i>end note</i> ] 
+[ <i>Example</i>: 
+<pre>double d = 2.0; 
+double&amp; rd = d; // rd refers to d 
+const double&amp; rcd = d; // rcd refers to d 
+struct A { }; 
+struct B : A { } b; 
+A&amp; ra = b; // ra refers to A subobject in b 
+const A&amp; rca = b; // rca refers to A subobject in b </pre>
+        -- <i>end example</i> ]</li>
+      </ul>
+    </li>
+  <li>Otherwise, the reference shall be an lvalue reference to a non-volatile const type (i.e., cv1 shall be const), or shall be an rvalue reference. [ <i>Example</i>: <pre>
+double&amp; rd2 = 2.0; // error: not an lvalue and reference not const 
+int i = 2; 
+double&amp; rd3 = i; // error: type mismatch and reference not const 
+double&amp;&amp; rd4 = i; // OK: reference bound to temporary double </pre>
+-- <i>end example</i> ]
+  <ul>
+    <li>If the initializer expression is an rvalue, with T2 a class type, and "cv1 T1" is reference-compatible with "cv2 T2," the reference is bound to the object represented by the rvalue (see 3.10) or to a sub-object within that object. [ <i>Example</i>: <pre>
+struct A { }; 
+struct B : A { } b; 
+extern B f(); 
+const A&amp; rca = f(); // Bound to the A subobject of the B rvalue. 
+A&amp;&amp; rcb = f(); // Same as above </pre>
+-- <i>end example</i> ]</li>
+    <li>If the initializer expression is an rvalue, with T2 an array type, and "cv1 T1" is reference-compatible with "cv2 T2," the reference is bound to the object represented by the rvalue (see 3.10).</li>
+    <li>Otherwise, <ins>if the reference is an lvalue reference or if
+    "cv1 T1" is not reference-compatible with "cv2 T2",</ins> a temporary of type "cv1 T1" is created and initialized from the initializer expression using the rules for a non-reference copy initialization (8.5). The reference is then bound to the temporary. If T1 is reference-related to T2, cv1 must be the same cv-qualification as, or greater cv-qualification than, cv2 ; otherwise, the program is ill-formed. [ <i>Example</i>: <pre>
+const double&amp; rcd2 = 2; // rcd2 refers to temporary with value 2.0 
+double&amp;&amp; rcd3 = 2; // rcd3 refers to temporary with value 2.0 
+const volatile int cvi = 1; 
+const int&amp; r = cvi; // error: type qualifiers dropped </pre>
+-- <i>end example</i> ]</ul></li>
+  </li>
+</ol>  
+
+<h3>13.3.3.2 Ranking implicit conversion sequences [over.ics.rank]</h3>
+<p>Modify paragraph 3 as follows</p>
+<ol start="3">
+  <li>Two implicit conversion sequences of the same form are
+  indistinguishable conversion sequences unless one of the following
+  rules applies:
+  <ul>
+    <li>Standard conversion sequence S1 is a better conversion
+    sequence than standard conversion sequence S2 if
+    <ul>
+      <li>S1 is a proper subsequence of S2 (comparing the conversion
+      sequences in the canonical form defined by 13.3.3.1.1, excluding
+      any Lvalue Transformation; the identity conversion sequence is
+      considered to be a subsequence of any non-identity conversion
+      sequence) or, if not that, </li>
+      <li>the rank of S1 is better than the rank of S2, or S1 and S2
+      have the same rank and are distinguishable by the rules in the
+      paragraph below, or, if not that,</li>
+      <li>S1 and S2 differ only in their qualification conversion and yield similar types T1 and T2 (4.4), respectively, and the cv-qualification signature of type T1 is a proper subset of the cv-qualification signature of type T2, and S1 is not the deprecated string literal array-to-pointer conversion (4.2). 
+[ <i>Example</i>: <pre>
+int f(const int *); 
+int f(int *); 
+int i; 
+int j = f(&amp;i); // calls f(int*) </pre>
+-- <i>end example</i> ] or, if not that, </li>
+      <li>S1 and S2 are reference bindings (8.5.3) and neither refers to an implicit object parameter of a non-static member function declared without a ref-qualifier , and <del>either S1 binds an lvalue reference to an lvalue and S2 binds an rvalue reference or</del> S1 binds an rvalue reference to an rvalue and S2 binds an lvalue reference.
+[ <i>Example</i>: <pre>
+int i; 
+int f(); 
+int g(const int&amp;); 
+int g(const int&amp;&amp;); 
+int j = g(i); // calls g(const int&amp;) 
+int k = g(f()); // calls g(const int&amp;&amp;)
+
+struct A { 
+  A&amp; operator&lt;&lt;(int); 
+  void p() &amp;; 
+  void p() &amp;&amp;; 
+}; 
+A&amp; operator&lt;&lt;(A&amp;&amp;, char); 
+A() &lt;&lt; 1; // calls A::operator&lt;&lt;(int) 
+A() &lt;&lt; 'c'; // calls operator&lt;&lt;(A&amp;&amp;, char) 
+A a; 
+a &lt;&lt; 1; // calls A::operator&lt;&lt;(int) 
+a &lt;&lt; 'c'; // calls <del>operator&lt;&lt;(A&amp;&amp;, char)</del><ins>A::operator&lt;&lt;(int)</ins>
+A().p(); // calls A::p()&amp;&amp; 
+a.p(); // calls A::p()&amp; </pre> 
+-- <i>end example</i> ] or, if not that, </li>
+    <li>...</li>
+    </ul></li>
+  </ul></li>
+</ol>
+
+<p>Add the following new section</p>
+<h3><ins>20.1.2 Type classifications [concept.classify]</ins></h3>
+<ol>
+  <li><ins>The concepts in 20.1.2 provide simple type classifications that
+  can be used within constrained templates.</ins></li>
+  <li><ins>A program shall not provide concept maps for any concept in
+  20.1.2</ins></li>
+</ol>
+<pre>
+  <ins>concept LvalueReference&lt;typename T&gt; { }</ins>
+  <ins>template&lt;typename T&gt; concept_map LvalueReference&lt;T&amp;&gt; { }</ins>
+</pre>
+<ol start="3">
+  <li><ins><i>Note</i>: determines whether a given type is an lvalue
+  reference type.</ins></li>
+</ol>
+<pre>
+  <ins>concept RvalueReference&lt;typename T&gt; { }</ins>
+  <ins>template&lt;typename T&gt; concept_map RvalueReference&lt;T&amp;&amp;&gt; { }</ins>
+</pre>
+<ol start="4">
+  <li><ins><i>Note</i>: determines whether a given type is an rvalue
+  reference type.</ins></li>
+</ol>
+
+<h3>20.2.2 forward/move helpers [forward]</h3>
+<p>Change the definitions of <code>forward</code> and
+<code>move</code> as follows:</p>
+
+<pre>
+  template &lt;IdentityOf T&gt; <ins>requires !LvalueReference&lt;T&gt;</ins>
+    T&amp;&amp; forward(IdentityOf&lt;T&gt;::type&amp;&amp; t); 
+  <ins>template &lt;IdentityOf T&gt; T&amp; forward(IdentityOf&lt;T&gt;::type&amp; t);</ins>
+
+</pre>
+
+<ol start="2">
+  <li>[ <i>Note</i>: The use of IdentityOf in forward forces users to explicitly specify the template parameter. This is necessary to get the correct forwarding semantics. -- <i>end note</i> ]</li>
+  <li><i>Returns</i>: <ins><code>static_cast&lt;T&amp;&amp;&gt;(t)</code>
+  or </ins><code>t</code><ins>, respectively</ins>.</li>
+</ol>
+
+<pre>
+  template &lt;RvalueOf T&gt; RvalueOf&lt;T&gt;::type move(T&amp;&amp; t);
+</pre>
+<ol start="6">
+  <li><i>Returns</i>: <code><ins>static_cast&lt;RvalueOf&lt;T&gt;::type&gt;(</ins>t<ins>)</ins></code></li>
+</ol>
+
+<h3>20.2.3 Pairs [pairs]</h3>
+<p>Update the declaration of pair's <code>swap</code> as follows:</p>
+
+<pre>
+  requires Swappable&lt;T1&gt; &amp;&amp; Swappable&lt;T2&gt; void swap(pair&amp;<del>&amp;</del> p);
+</pre>
+<ol start="17">
+  <li><i>Effects</i>: Swaps first with p.first and second with p.second.</li>
+</ol>
+
+<pre>
+  template&lt;class T1, class T2&gt; 
+    requires Swappable&lt;T1&gt; &amp;&amp; Swappable&lt;T2&gt; 
+    void swap(pair&lt;T1, T2&gt;&amp; x, pair&lt;T1, T2&gt;&amp; y); 
+  <del>template&lt;class T1, class T2&gt;</del>
+    <del>requires Swappable&lt;T1&gt; &amp;&amp; Swappable&lt;T2&gt;</del>
+    <del>void swap(pair&lt;T1, T2&gt;&amp;&amp; x, pair&lt;T1, T2&gt;&amp; y);</del>
+  <del>template&lt;class T1, class T2&gt;</del>
+    <del>requires Swappable&lt;T1&gt; &amp;&amp; Swappable&lt;T2&gt;</del>
+    <del>void swap(pair&lt;T1, T2&gt;&amp; x, pair&lt;T1, T2&gt;&amp;&amp; y);</del>
+</pre>
+<ol start="20">
+  <li><i>Effects</i>: <code>x.swap(y)</code></li>
+</ol>
+
+<h3>20.4.2.6 Tuple swap [tuple.swap]</h3>
+<p>Change the declaration of tuple's <code>swap</code> as follows:</p>
+
+<pre>
+  <ins>requires Swappable&lt;Types&gt;...</ins> void swap(tuple&amp;<del>&amp;</del> rhs);
+</pre>
+
+<ol>
+  <li><del><i>Requires</i>: each type in Types shall be Swappable.</del></li>
+</ol>
+
+<h3>20.4.2.7 Tuple specialized algorithms [tuple.special]</h3>
+<p>Change the declaration of tuple's <code>swap</code> as follows:</p>
+
+<pre>
+template &lt;class... Types&gt;
+  <ins>requires Swappable&lt;Types&gt;...</ins>
+  void swap(tuple&lt;Types...&gt;&amp; x, tuple&lt;Types...&gt;&amp; y); 
+<del>template &lt;class... Types&gt;</del>
+  <del>void swap(tuple&lt;Types...&gt;&amp;&amp; x, tuple&lt;Types...&gt;&amp; y);</del>
+<del>template &lt;class... Types&gt;</del>
+  <del>void swap(tuple&lt;Types...&gt;&amp; x, tuple&lt;Types...&gt;&amp;&amp; y);</del>
+</pre>
+<ol>
+  <li><i>Effects</i>: <code>x.swap(y)</code></li>
+</ol>
+
+<h3>20.6.16.2.2 function modifiers [func.wrap.func.mod]</h3>
+<p>Change the declaration of function's <code>swap</code> as
+follows:</p>
+
+<pre>
+void swap(function&amp;<del>&amp;</del> other); 
+</pre>
+<ol>
+  <li><i>Effects</i>: interchanges the targets of <code>*this</code> and other. </li>
+  <li><i>Throws</i>: nothing. </li>
+</ol>
+
+<h3>20.7.12.2.5 unique_ptr modifiers [unique.ptr.single.modifiers]</h3>
+<p>Change the declaration of unique_ptr's <code>swap</code> as
+follows:</p>
+
+<pre>
+  void swap(unique_ptr&amp;<del>&amp;</del> u);
+</pre>
+<ol start="8">
+<li><i>Requires</i>: The deleter D shall be Swappable and shall not throw an exception under swap.</li>
+<li><i>Effects</i>: The stored pointers of this and u are exchanged. The stored deleters are swap'd (un-qualified).</li>
+<li><i>Throws</i>: nothing.</li>
+</ol>
+
+<h3>20.7.12.4 unique_ptr specialized algorithms
+[unique.ptr.special]</h3>
+<p>Change the declaration of unique_ptr's <code>swap</code> as
+follows:</p>
+
+<pre>
+template &lt;class T, class D&gt; void swap(unique_ptr&lt;T, D&gt;&amp; x, unique_ptr&lt;T, D&gt;&amp; y); 
+<del>template &lt;class T, class D&gt; void swap(unique_ptr&lt;T, D&gt;&amp;&amp; x, unique_ptr&lt;T, D&gt;&amp; y);</del> 
+<del>template &lt;class T, class D&gt; void swap(unique_ptr&lt;T, D&gt;&amp; x, unique_ptr&lt;T, D&gt;&amp; y);</del>
+</pre>
+<ol>
+  <li>Effects: Calls <code>x.swap(y)</code>.</li>
+</ol>
+
+<h3>20.7.13.2.4 shared_ptr modifiers [util.smartptr.shared.mod]</h3>
+<p>Change the declaration of shared_ptr's <code>swap</code> as
+follows:</p>
+
+<pre>
+void swap(shared_ptr&amp;<del>&amp;</del> r);
+</pre>
+<ol>
+  <li><i>Effects</i>: Exchanges the contents of <code>*this</code> and <code>r</code>.</li> 
+  <li><i>Throws</i>: nothing.</li>
+</ol>
+
+<h3>20.7.13.2.9 shared_ptr specialized algorithms
+[util.smartptr.shared.spec]</h3>
+<p>Change the declaration of shared_ptr's <code>swap</code> as
+follows:</p>
+
+<pre>
+template&lt;class T&gt; void swap(shared_ptr&lt;T&gt;&amp; a, shared_ptr&lt;T&gt;&amp; b); 
+<del>template&lt;class T&gt; void swap(shared_ptr&lt;T&gt;&amp;&amp; a, shared_ptr&lt;T&gt;&amp; b);</del>
+<del>template&lt;class T&gt; void swap(shared_ptr&lt;T&gt;&amp; a, shared_ptr&lt;T&gt;&amp;&amp; b);</del>
+</pre>
+<ol>
+  <li><i>Effects</i>: Equivalent to <code>a.swap(b)</code>.</li>
+  <li><i>Throws</i>: nothing.</li>
+</ol>
+
+<h3>21.3.6.8 basic_string::swap [string::swap]</h3>
+<p>Change the declaration of basic_string's <code>swap</code> as follows:</p>
+
+<pre>
+void swap(basic_string&lt;charT,traits,Allocator&gt;&amp;<del>&amp;</del> s);
+</pre>
+
+<ol>
+  <li><i>Throws</i>: Nothing.</li>
+  <li><i>Postcondition</i>: <code>*this</code> contains the same sequence of characters that was in s, s contains the same sequence of characters that was in <code>*this</code>.</li>
+  <li><i>Complexity</i>: constant time.</li>
+</ol>
+
+<h3>21.3.8.8 swap [string.special]</h3>
+<p>Change the declaration of basic_string's <code>swap</code> as follows:</p>
+
+<pre>
+template&lt;class charT, class traits, class Allocator&gt; 
+  void swap(basic_string&lt;charT,traits,Allocator&gt;&amp; lhs, 
+            basic_string&lt;charT,traits,Allocator&gt;&amp; rhs); 
+<del>template&lt;class charT, class traits, class Allocator&gt;</del>
+  <del>void swap(basic_string&lt;charT,traits,Allocator&gt;&amp;&amp; lhs,</del>
+            <del>basic_string&lt;charT,traits,Allocator&gt;&amp; rhs);</del>
+<del>template&lt;class charT, class traits, class Allocator&gt;</del>
+  <del>void swap(basic_string&lt;charT,traits,Allocator&gt;&amp; lhs,</del>
+            <del>basic_string&lt;charT,traits,Allocator&gt;&amp;&amp; rhs);</del>
+</pre>
+<ol>
+  <li><i>Effects</i>: <code>lhs.swap(rhs);</code></li>
+</ol>
+
+<h3>23.2.2 Class template deque [deque]</h3>
+<p>Change the declaration of deque's <code>swap</code> as follows:</p>
+
+<pre>
+void swap(deque&lt;T,Alloc&gt;&amp;<del>&amp;</del>); 
+</pre>
+
+<h3>23.2.2.4 deque specialized algorithms [deque.special]</h3>
+<p>Change the declaration of deque's <code>swap</code> as follows:</p>
+
+<pre>
+template &lt;ValueType T, class Alloc&gt; 
+  void swap(deque&lt;T,Alloc&gt;&amp; x, deque&lt;T,Alloc&gt;&amp; y); 
+<del>template &lt;ValueType T, class Alloc&gt;</del>
+  <del>void swap(deque&lt;T,Alloc&gt;&amp;&amp; x, deque&lt;T,Alloc&gt;&amp; y);</del>
+<del>template &lt;ValueType T, class Alloc&gt;</del>
+  <del>void swap(deque&lt;T,Alloc&gt;&amp; x, deque&lt;T,Alloc&gt;&amp;&amp; y);</del>
+</pre>
+<ol>
+  <li><i>Effects</i>: <code>x.swap(y);</code></li>
+</ol>
+
+<h3>23.2.3 Class template forward_list [forwardlist]</h3>
+<p>Change the declaration of forward_list's <code>swap</code> as follows:</p>
+
+<pre>
+void swap(forward_list&lt;T,Alloc&gt;&amp;<del>&amp;</del>); 
+</pre>
+
+<h3>23.2.3.6 forward_list specialized algorithms
+[forwardlist.spec]</h3>
+<p>Change the declaration of forward_list's <code>swap</code> as follows:</p>
+
+<pre>
+template &lt;ValueType T, class Alloc&gt; 
+  void swap(forward_list&lt;T,Alloc&gt;&amp; x, forward_list&lt;T,Alloc&gt;&amp; y); 
+<del>template &lt;ValueType T, class Alloc&gt;</del>
+  <del>void swap(forward_list&lt;T,Alloc&gt;&amp;&amp; x, forward_list&lt;T,Alloc&gt;&amp; y);</del>
+<del>template &lt;ValueType T, class Alloc&gt;</del>
+  <del>void swap(forward_list&lt;T,Alloc&gt;&amp; x, forward_list&lt;T,Alloc&gt;&amp;&amp; y);</del>
+</pre>
+<ol>
+  <li><i>Effects</i>: x.swap(y) </li>
+</ol>
+
+
+<h3>24.1.1 Iterator [iterator.iterators]</h3>
+<p>Change the iterator concept as follows:</p>
+<pre>
+concept Iterator&lt;typename X&gt; : Semiregular&lt;X&gt; { 
+  MoveConstructible reference = typename X::reference; 
+  MoveConstructible postincrement_result; 
+  requires HasDereference&lt;postincrement_result&gt;; 
+  reference operator*(X&amp;&amp;); 
+  <ins>reference operator*(X&amp;&amp;);</ins>
+  X&amp; operator++(X&amp;); 
+  postincrement_result operator++(X&amp;, int); 
+}
+</pre>
+
+<hr>
+<address></address>
+<!-- hhmts start --> Last modified: Thu Feb  5 23:57:33 PST 2009 <!-- hhmts end -->
+</body> </html>

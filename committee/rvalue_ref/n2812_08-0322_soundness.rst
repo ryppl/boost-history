@@ -1,14 +1,14 @@
-===================================================================
- A Safety Problem with RValue References (and what to do about it)
-===================================================================
+=================================================================
+ Fixing a Safety Problem with Rvalue References: Proposed Wording
+=================================================================
 
 :Author: David Abrahams, Doug Gregor
 :Contact: dave@boostpro.com, doug.gregor@gmail.com
 :organization: `BoostPro Computing`_, Apple
 :date: 2008-12-05
 
-:Number: dXXXX=09-NNNN
-:Revises: n2812=08-0322 
+:Number: D2831=09-0021
+:Revises: N2812=08-0322 
 
 .. _`BoostPro Computing`: http://www.boostpro.com
 .. _patch: http://gcc.gnu.org/ml/gcc-patches/2008-10/msg00436.html
@@ -598,6 +598,19 @@ Modify [over.ics.rank]p3, bullet1, sub-bullet 4 as follows:
 
       *— end example* ] or, if not that, 
 
+In [forward], update paragraph 2 as follows::
+
+  template<typename T> T& forward(typename std::identity<T>::type& x);
+  template<typename T>
+    typename disable_if<is_lvalue_reference<T>, T&&>::type
+    forward(typename std::identity<T>::type&& x)
+  
+
+In [forward], update paragraph 6 as follows::
+
+  template<typename T> typename std::remove_reference<T>::type&& move(T&& x);
+
+6)  
 
 Alternative Solutions
 ======================
