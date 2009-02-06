@@ -139,6 +139,10 @@ namespace boost{namespace itl
         }
     };
 
+    template<>
+    inline std::string unary_template_to_string<itl::sub_super_set>::apply()  
+    { return "C="; }
+
     /// Functor class template <b>contains</b> implements the superset relation. 
     template<class Type> 
     struct super_sub_set : public relation<Type,Type>
@@ -151,6 +155,10 @@ namespace boost{namespace itl
             return super.contains(sub);
         }
     };
+
+    template<>
+    inline std::string unary_template_to_string<itl::super_sub_set>::apply()  
+    { return "D="; }
 
 }} // namespace itl boost
 

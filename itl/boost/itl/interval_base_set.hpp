@@ -241,7 +241,10 @@ public:
 		         template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
         class IntervalSet
     >
-    bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const;
+    bool contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& super)const
+	{
+		return Interval_Set::is_contained_in(*this, super);
+	}
 
 /** @name E: Bounds and other selectors
     */
@@ -541,6 +544,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 }
 
 
+/*CL
 template<class SubType, 
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template
@@ -570,7 +574,7 @@ bool interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
         return true;
     }
 }
-
+*/
 
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>

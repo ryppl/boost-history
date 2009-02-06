@@ -91,7 +91,6 @@ void test_LawValidater()
 	//LawValidater<TestLawT, RandomGentor> test_law;
 	//test_law.setTrialsCount(10000);
 
-	ptime start, stop;
 
 	//-----------------------------------------------------------------------------
 	/*
@@ -131,40 +130,57 @@ void test_LawValidater()
 
 	//-----------------------------------------------------------------------------
 	int test_count = 10000;
+	ptime start, stop;
 
-	typedef InclusionEqualDefined
-		<split_interval_map<int,int> >  TestLaw4T;
-	LawValidater<TestLaw4T, RandomGentor> test_law4;
-	test_law4.setTrialsCount(test_count);
+	//typedef InclusionEqualDefined
+	//	<split_interval_map<int,int> >  TestLaw4T;
+	//LawValidater<TestLaw4T, RandomGentor> test_law4;
+	//test_law4.setTrialsCount(test_count);
 
-	std::cout << "4Start\n";
+	//std::cout << "4Start\n";
+	//start = ptime(microsec_clock::local_time());
+	//test_law4.run();
+	//stop = ptime(microsec_clock::local_time());
+	//std::cout << "Stop. Time elapsed: " << stop - start << endl;
+
+	//typedef SubsetDefined
+	//	<split_interval_map<int,int> >  TestLaw5T;
+	//LawValidater<TestLaw5T, RandomGentor> test_law5;
+	//test_law5.setTrialsCount(test_count);
+
+	//std::cout << "5Start\n";
+	//start = ptime(microsec_clock::local_time());
+	//test_law5.run();
+	//stop = ptime(microsec_clock::local_time());
+	//std::cout << "Stop. Time elapsed: " << stop - start << endl;
+
+	//typedef SupersetDefined
+	//	<split_interval_map<int,int> >  TestLaw6T;
+	//LawValidater<TestLaw6T, RandomGentor> test_law6;
+	//test_law6.setTrialsCount(test_count);
+
+	//std::cout << "6Start\n";
+	//start = ptime(microsec_clock::local_time());
+	//test_law6.run();
+	//stop = ptime(microsec_clock::local_time());
+	//std::cout << "Stop. Time elapsed: " << stop - start << endl;
+
+	//typedef InplaceAssociativity
+	//	<split_interval_map<int, int, total_absorber>, inplace_et, itl::element_equal>  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+	//test_law.setTrialsCount(10000);
+
+	typedef Antisymmetry
+		<split_interval_map<int, int, total_enricher >, sub_super_set, element_equal >  TestLawT;
+	LawValidater<TestLawT, RandomGentor> test_law;
+	test_law.setTrialsCount(1000);
+
+
+	std::cout << "Start\n";
 	start = ptime(microsec_clock::local_time());
-	test_law4.run();
+	test_law.run();
 	stop = ptime(microsec_clock::local_time());
 	std::cout << "Stop. Time elapsed: " << stop - start << endl;
-
-	typedef SubsetDefined
-		<split_interval_map<int,int> >  TestLaw5T;
-	LawValidater<TestLaw5T, RandomGentor> test_law5;
-	test_law5.setTrialsCount(test_count);
-
-	std::cout << "5Start\n";
-	start = ptime(microsec_clock::local_time());
-	test_law5.run();
-	stop = ptime(microsec_clock::local_time());
-	std::cout << "Stop. Time elapsed: " << stop - start << endl;
-
-	typedef SupersetDefined
-		<split_interval_map<int,int> >  TestLaw6T;
-	LawValidater<TestLaw6T, RandomGentor> test_law6;
-	test_law6.setTrialsCount(test_count);
-
-	std::cout << "6Start\n";
-	start = ptime(microsec_clock::local_time());
-	test_law6.run();
-	stop = ptime(microsec_clock::local_time());
-	std::cout << "Stop. Time elapsed: " << stop - start << endl;
-
 }
 
 

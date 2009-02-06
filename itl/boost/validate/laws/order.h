@@ -51,8 +51,6 @@ namespace boost{namespace itl
     std::string unary_template_to_string<std::less_equal>::apply()  { return "<="; }
     template<> 
     std::string unary_template_to_string<std::less>::apply()        { return "<"; }
-    template<> 
-    std::string unary_template_to_string<itl::sub_super_set>::apply(){ return "C="; }
 
     // ---------------------------------------------------------------------------
     template <typename Type, template<class>class Relation>
@@ -84,10 +82,12 @@ namespace boost{namespace itl
     };
 
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Relation>
+    template <typename Type, 
+		      template<class>class Relation,
+			  template<class>class Equality = itl::std_equal>
     class Antisymmetry 
-        : public Law<Antisymmetry<Type,Relation>, 
-                     LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_1(Type)> 
+        : public Law<Antisymmetry<Type,Relation,Equality>, 
+                     LOKI_TYPELIST_2(Type,Type), Loki::NullType> 
     {
         /** a <= b && b <= a  =>  a == b 
         Input  = (a := inVal1, b := inVal2)
@@ -100,7 +100,8 @@ namespace boost{namespace itl
         std::string typeString()const
         {
             return "Antisymmetry<"+type_to_string<Type>::apply()+"," 
-                                  +unary_template_to_string<Relation>::apply()+">";
+                                  +unary_template_to_string<Relation>::apply()+","
+                                  +unary_template_to_string<Equality>::apply()+">";
         }
 
     public:
@@ -110,7 +111,7 @@ namespace boost{namespace itl
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
 
-            return !(Relation<Type>()(a,b) && Relation<Type>()(b,a)) || a == b;
+            return !(Relation<Type>()(a,b) && Relation<Type>()(b,a)) || Equality<Type>()(a,b);
         }
 
         bool debug_holds(){ return holds(); }

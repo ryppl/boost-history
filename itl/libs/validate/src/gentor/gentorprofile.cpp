@@ -41,12 +41,12 @@ GentorProfile::GentorProfile()
 
     //---------------------------------
     //small values
-    //set_range_int(0, 10);
+    //set_range_int(-5, 5);
     //set_range_nat(0, 16);
     //set_range_double(0.0, 1.0);
     //set_range_ContainerSize(0,4);
 
-    //set_range_interval_int(0, 10);
+    //set_range_interval_int(-5, 5);
     //set_maxIntervalLength(5);
     //set_range_element_ContainerSize(0,4);
 

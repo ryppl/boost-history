@@ -791,6 +791,13 @@ struct is_map<itl::split_interval_map<KeyT,DataT,Traits> >
 };
 
 template <class KeyT, class DataT, class Traits>
+struct has_inverse<itl::split_interval_map<KeyT,DataT,Traits> >
+{ 
+	typedef has_inverse<itl::split_interval_map<KeyT,DataT,Traits> > type;
+	static const bool value = has_inverse<DataT>::value; 
+};
+
+template <class KeyT, class DataT, class Traits>
 struct is_interval_container<itl::split_interval_map<KeyT,DataT,Traits> >
 { 
 	typedef is_interval_container<itl::split_interval_map<KeyT,DataT,Traits> > type;

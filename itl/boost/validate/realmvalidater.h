@@ -29,13 +29,13 @@ namespace boost{namespace itl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 14;
-            _rootChoice[RootType::interval_set]          = 14;
-            _rootChoice[RootType::separate_interval_set] = 14;
-            _rootChoice[RootType::split_interval_set]    = 14;
-            _rootChoice[RootType::itl_map]               = 14;
-            _rootChoice[RootType::interval_map]          = 15;
-            _rootChoice[RootType::split_interval_map]    = 15;
+            _rootChoice[RootType::itl_set]               = 0;
+            _rootChoice[RootType::interval_set]          = 0;
+            _rootChoice[RootType::separate_interval_set] = 0;
+            _rootChoice[RootType::split_interval_set]    = 0;
+            _rootChoice[RootType::itl_map]               = 33;
+            _rootChoice[RootType::interval_map]          = 33;
+            _rootChoice[RootType::split_interval_map]    = 34;
             setRootTypeNames();
             _rootChoice.init();
 
@@ -89,27 +89,6 @@ namespace boost{namespace itl
 
         }
 
-		/*CL
-        void validate()
-        {
-            //srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
-            srand(static_cast<unsigned>(1)); //Same numbers each run (std)
-            //srand(static_cast<unsigned>(4711)); //Same numbers each run (varying)
-
-            for(int idx=0; hasValidProfile(); idx++)
-            {
-				if(_frequencies.size() == 402)
-				{
-					reportFrequencies("freq402.txt");
-					break;
-				}
-                if(idx>0 && idx % 100 == 0)
-                    reportFrequencies();
-                validateType();
-            }
-        }
-		*/
-
         AlgebraValidater* chooseValidater()
         {
             int rootChoice         = _rootChoice.some();
@@ -119,38 +98,38 @@ namespace boost{namespace itl
 
             switch(rootChoice)
             {
-            case RootType::itl_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new InplaceSetValidater<itl::set<int> >; 
-                    case DomainType::Double: return new InplaceSetValidater<itl::set<double> >; 
-                    default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
-            case RootType::interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new IntervalSetValidater<interval_set<int> >;
-                    case DomainType::Double: return new InplaceSetValidater<interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
-            case RootType::separate_interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new IntervalSetValidater<separate_interval_set<int> >;
-                    case DomainType::Double: return new IntervalSetValidater<separate_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                 }
-            case RootType::split_interval_set: {
-                    switch(domainChoice) {
-                    case DomainType::Int:    return new IntervalSetValidater<split_interval_set<int> >;
-                    case DomainType::Double: return new IntervalSetValidater<split_interval_set<double> >;
-                    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
-                                                domainChoice, _domainChoice);
-                    }
-                }
+            //case RootType::itl_set: {
+            //        switch(domainChoice) {
+            //        case DomainType::Int:    return new InplaceSetValidater<itl::set<int> >; 
+            //        case DomainType::Double: return new InplaceSetValidater<itl::set<double> >; 
+            //        default: return choiceError(ITL_LOCATION("\nRootType::itl_set: domainChoice:\n"), 
+            //                                    domainChoice, _domainChoice);
+            //        }
+            //    }
+            //case RootType::interval_set: {
+            //        switch(domainChoice) {
+            //        case DomainType::Int:    return new IntervalSetValidater<interval_set<int> >;
+            //        case DomainType::Double: return new InplaceSetValidater<interval_set<double> >;
+            //        default: return choiceError(ITL_LOCATION("\nRootType::interval_set: domainChoice:\n"), 
+            //                                    domainChoice, _domainChoice);
+            //        }
+            //    }
+            //case RootType::separate_interval_set: {
+            //        switch(domainChoice) {
+            //        case DomainType::Int:    return new IntervalSetValidater<separate_interval_set<int> >;
+            //        case DomainType::Double: return new IntervalSetValidater<separate_interval_set<double> >;
+            //        default: return choiceError(ITL_LOCATION("\nRootType::separate_interval_set: domainChoice:\n"), 
+            //                                    domainChoice, _domainChoice);
+            //        }
+            //     }
+            //case RootType::split_interval_set: {
+            //        switch(domainChoice) {
+            //        case DomainType::Int:    return new IntervalSetValidater<split_interval_set<int> >;
+            //        case DomainType::Double: return new IntervalSetValidater<split_interval_set<double> >;
+            //        default: return choiceError(ITL_LOCATION("\nRootType::split_interval_set: domainChoice:\n"), 
+            //                                    domainChoice, _domainChoice);
+            //        }
+            //    }
             //-----------------------------------------------------------------
             // Maps
             //-----------------------------------------------------------------

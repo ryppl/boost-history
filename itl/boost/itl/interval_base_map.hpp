@@ -306,7 +306,10 @@ public:
     { return sub.contained_in(*this); }
 
     /// <tt>*this</tt> is subset of <tt>super</tt>
-    bool contained_in(const interval_base_map& super)const;
+    bool contained_in(const interval_base_map& super)const
+	{ 
+		return Interval_Set::is_contained_in(*this, super); 
+	}
 //@}
 
 
@@ -931,7 +934,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
 
 
 
-
+/*CL
 template 
 <
     class SubType,
@@ -945,7 +948,7 @@ bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
             return false;
     return true;
 }
-
+*/
 
 template 
 <
@@ -1529,6 +1532,18 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
     return stream << "}";
 }
+
+
+template < //JODO class KeyT, class DataT, class Traits>
+    class SubType,
+    class DomainT, class CodomainT, class Traits> 
+struct is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits> >
+{ 
+	typedef is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits> > type;
+	static const bool value = true; 
+};
+
+
 
 }} // namespace itl boost
 

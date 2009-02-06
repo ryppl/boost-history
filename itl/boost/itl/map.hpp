@@ -36,6 +36,7 @@ class itl::map
 #include <string>
 #include <boost/itl/notate.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
+#include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/predicates.hpp>
@@ -701,6 +702,13 @@ namespace boost{namespace itl
 	{ 
 		typedef is_map<itl::map<KeyT,DataT,Traits> > type;
 		static const bool value = true; 
+	};
+
+	template <class KeyT, class DataT, class Traits>
+	struct has_inverse<itl::map<KeyT,DataT,Traits> >
+	{ 
+		typedef has_inverse<itl::map<KeyT,DataT,Traits> > type;
+		static const bool value = has_inverse<DataT>::value; 
 	};
 
     template <class DomainT, class CodomainT, class Traits>

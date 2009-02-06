@@ -12,6 +12,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
 #include <boost/itl/type_traits/is_continuous.hpp>
+#include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
 #include <boost/itl/interval_morphism.hpp>
 #include <boost/validate/laws/set_laws.h>
@@ -95,7 +96,7 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
 
-    template <typename Type, template<class>class Relation>
+	template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
     class PartialOrderValidater : public AlgebraValidater
     {
     public:
@@ -229,7 +230,7 @@ namespace boost{namespace itl
     public:
         typedef StrictWeakOrderValidater<Type, std::less> LessValidaterT;
         typedef PartialOrderValidater<Type, std::less_equal> LessEqualValidaterT;
-        typedef PartialOrderValidater<Type, itl::sub_super_set> ContainedInValidaterT;
+		typedef PartialOrderValidater<Type, itl::sub_super_set, itl::element_equal> ContainedInValidaterT;
 
         enum Laws 
         { 
@@ -239,8 +240,8 @@ namespace boost{namespace itl
             inplacePlusAssociativity,
             inplacePlusNeutrality,
             inplacePlusCommutativity,
-            inplaceStarAssociativity,
-            inplaceStarCommutativity,
+            inplaceEtAssociativity,
+            inplaceEtCommutativity,
             Laws_size 
         };
 
@@ -248,22 +249,36 @@ namespace boost{namespace itl
 
         void setProfile()
         {
+			const int sum_of_shares = 100;
+			const int prior_share_count = 11;
+			const int prior_share = sum_of_shares / prior_share_count;
+
+			int assoc_share = prior_share;
+
+			if(    is_map<Type>::value 
+				&& has_inverse<typename Type::codomain_type>::value
+				&& absorbs_neutrons<Type>::value && !is_total<Type>::value)
+				// NOTE ASSOC: if codomain_type has an inverse 
+				// all absorber maps loose associativity on intersection
+				assoc_share = 0;
+			
+			int rest_shares   = sum_of_shares - assoc_share;
+			int single_share  = rest_shares / 10;
+			int single_shares = single_share * 4;
+			int order_rest    = rest_shares - single_shares;
+			int order_share   = order_rest / 3;
+			int first_share   = order_rest - 2*order_share;
+
             _lawChoice.setSize(Laws_size);
-            _lawChoice.setMaxWeights(100);
-            _lawChoice[strictWeakStdOrder]         = 19;
-            _lawChoice[partialStdOrder]            = 18;
-            _lawChoice[containedInOrder]           = 18;
-            _lawChoice[inplacePlusAssociativity]   = 9;
-            _lawChoice[inplacePlusNeutrality]      = 9;
-            _lawChoice[inplacePlusCommutativity]   = 9;
-            _lawChoice[inplaceStarAssociativity]   = 9;
-            _lawChoice[inplaceStarCommutativity]   = 9;
-            //JODO _lawChoice[inplaceSymmetricDifference] = 10; // only (map|cop)<set> NOT (map|cop)<group>
-            //JODO _lawChoice[inplacePlusDistributivity] = 100; // only (map|cop)<set> NOT (map|cop)<group>
-            //JODO _lawChoice[inplaceStarDistributivity] = 100; // only (map|cop)<set> NOT (map|cop)<group>
-            //JODO _lawChoice[inplacePlusDeMorgan]       = 100; // only (map|cop)<set> NOT (map|cop)<group>
-            //JODO _lawChoice[inplaceStarDeMorgan]       = 100; // only (map|cop)<set> NOT (map|cop)<group>
-            //JODO _lawChoice[inplaceNaturalInversion]  = 25;  // only cop NOT map
+            _lawChoice.setMaxWeights(sum_of_shares);
+            _lawChoice[strictWeakStdOrder]         = first_share;
+            _lawChoice[partialStdOrder]            = order_share;
+            _lawChoice[containedInOrder]           = order_share;
+            _lawChoice[inplacePlusAssociativity]   = single_share;
+            _lawChoice[inplacePlusNeutrality]      = single_share;
+            _lawChoice[inplacePlusCommutativity]   = single_share;
+            _lawChoice[inplaceEtAssociativity]     = assoc_share;
+            _lawChoice[inplaceEtCommutativity]     = single_share;
             _lawChoice.init();
         }
 
@@ -275,11 +290,25 @@ namespace boost{namespace itl
             case strictWeakStdOrder:         return _lessValidater.chooseValidater();
             case partialStdOrder:            return _lessEqualValidater.chooseValidater();
             case containedInOrder:           return _containedInValidater.chooseValidater();
-            case inplacePlusAssociativity:   return new LawValidater<InplaceAssociativity<Type>, RandomGentor>;
+            case inplacePlusAssociativity:
+				if(    is_interval_container<Type>::value 
+					&& is_map<Type>::value 
+					&& has_inverse<typename Type::codomain_type>::value
+					&& is_interval_splitter<Type>::value )
+						                     return new LawValidater<InplaceAssociativity<Type, inplace_plus, element_equal>, RandomGentor>;
+				else
+					                         return new LawValidater<InplaceAssociativity<Type, inplace_plus>, RandomGentor>;
             case inplacePlusNeutrality:      return new LawValidater<InplaceNeutrality<Type>, RandomGentor>;
             case inplacePlusCommutativity:   return new LawValidater<InplaceCommutativity<Type>, RandomGentor>;
-            case inplaceStarAssociativity:   return new LawValidater<InplaceAssociativity<Type, inplace_et>, RandomGentor>;
-            case inplaceStarCommutativity:   return new LawValidater<InplaceCommutativity<Type, inplace_et>, RandomGentor>;
+            case inplaceEtAssociativity:
+				if(    is_interval_container<Type>::value 
+					&& is_map<Type>::value 
+					&& has_inverse<typename Type::codomain_type>::value
+					&& is_total<Type>::value && is_interval_splitter<Type>::value )
+						                     return new LawValidater<InplaceAssociativity<Type, inplace_et, element_equal>, RandomGentor>;
+				else
+					                         return new LawValidater<InplaceAssociativity<Type, inplace_et>, RandomGentor>;
+            case inplaceEtCommutativity:     return new LawValidater<InplaceCommutativity<Type, inplace_et>, RandomGentor>;
             default: return NULL;
             }
         }
@@ -328,11 +357,11 @@ namespace boost{namespace itl
             inplaceFlip,
             inplaceNaturalInversion,
             inplacePlusDistributivity,
-            inplaceStarDistributivity,
+            inplaceEtDistributivity,
             inplacePlusDashRightDistrib,
-            inplaceStarDashRightDistrib,
+            inplaceEtDashRightDistrib,
             inplacePlusDeMorgan,
-            inplaceStarDeMorgan,
+            inplaceEtDeMorgan,
             Laws_size 
         };
 
@@ -350,11 +379,11 @@ namespace boost{namespace itl
             _lawChoice[inplaceFlip]                 = weight;
             _lawChoice[inplaceNaturalInversion]     = weight;
             _lawChoice[inplacePlusDistributivity]   = weight;
-            _lawChoice[inplaceStarDistributivity]   = weight;
+            _lawChoice[inplaceEtDistributivity]     = weight;
             _lawChoice[inplacePlusDashRightDistrib] = weight;
-            _lawChoice[inplaceStarDashRightDistrib] = weight;
+            _lawChoice[inplaceEtDashRightDistrib]   = weight;
             _lawChoice[inplacePlusDeMorgan]         = weight;
-            _lawChoice[inplaceStarDeMorgan]         = weight;
+            _lawChoice[inplaceEtDeMorgan]           = weight;
             _lawChoice.init();
         }
 
@@ -392,7 +421,7 @@ namespace boost{namespace itl
 				else
 					return new LawValidater<InplaceDistributivity<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
 
-            case inplaceStarDistributivity:  
+            case inplaceEtDistributivity:  
                 if(    itl::is_interval_container<Type>::value && itl::is_interval_splitter<Type>::value
                     && absorbs_neutrons<Type>::value && !is_total<Type>::value)
 					return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal>, RandomGentor>;
@@ -406,13 +435,13 @@ namespace boost{namespace itl
 				else
 					return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal>, RandomGentor>;
 
-            case inplaceStarDashRightDistrib:
+            case inplaceEtDashRightDistrib:
 				return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus>, RandomGentor>;
 
             case inplacePlusDeMorgan:        
 				return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
 
-            case inplaceStarDeMorgan:        
+            case inplaceEtDeMorgan:        
                 if(     itl::is_interval_container<Type>::value 
 					&& (itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value))
 					return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal>, RandomGentor>;
@@ -439,7 +468,7 @@ namespace boost{namespace itl
 				else
 					return new LawValidater<InplaceDistributivity<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
 
-            case inplaceStarDistributivity:  
+            case inplaceEtDistributivity:  
                 if(    itl::is_interval_container<Type>::value && itl::is_interval_splitter<Type>::value)
 					return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal>, RandomGentor>;
 				else
@@ -451,13 +480,13 @@ namespace boost{namespace itl
 				else
 					return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal>, RandomGentor>;
 
-            case inplaceStarDashRightDistrib:
+            case inplaceEtDashRightDistrib:
 				return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus>, RandomGentor>;
 
             case inplacePlusDeMorgan:        
 				return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
 
-            case inplaceStarDeMorgan:        
+            case inplaceEtDeMorgan:        
                 if(     itl::is_interval_container<Type>::value 
 					&& (itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value))
 					return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal>, RandomGentor>;
@@ -682,23 +711,12 @@ namespace boost{namespace itl
         {
             switch(_lawChoice.some())
             {
-            case atomize_plus:    
-                return new LawValidater
-                           <
-                               BinaryPushout
-                               <
-                                    Type, 
-                                    typename Type::atomized_type, 
-                                    Interval::Atomize, 
-                                    inplace_plus
-                               >,                                
-                               RandomGentor
-                           >();
+            case atomize_plus:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_plus>,  RandomGentor>();
             case atomize_minus:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_minus>, RandomGentor>();
-            case atomize_star:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_et>,  RandomGentor>();
+            case atomize_star:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_et>,    RandomGentor>();
             case cluster_plus:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_plus>,  RandomGentor>();
             case cluster_minus:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_minus>, RandomGentor>();
-            case cluster_star:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_et>,  RandomGentor>();
+            case cluster_star:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_et>,    RandomGentor>();
             case atomize_insert: return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inserter>,      RandomGentor>();
             case atomize_erase:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, eraser>,        RandomGentor>();
             case cluster_insert: return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inserter>,      RandomGentor>();
