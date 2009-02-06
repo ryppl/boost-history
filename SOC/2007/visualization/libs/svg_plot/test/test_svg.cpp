@@ -16,7 +16,8 @@
 //#if defined (BOOST_MSVC) // requires a prior Boost include, so use MSC_VER instead.
 #if defined (_MSC_VER)
 //#  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int'
-
+#  pragma warning(disable : 4996) // Deprecated.
+#  pragma warning(disable : 4224) // nonstandard extension used : formal parameter 'arg' was previously defined as a type
 #  pragma warning(disable : 4310) //  cast truncates constant value
 #  pragma warning(disable : 4512) //  assignment operator could not be generated
 //#  pragma warning(disable : 4702) //  unreachable code
@@ -63,8 +64,13 @@
   BOOST_CHECK_EQUAL(svg_color(aliceblue), svg_color(240, 248, 255));
   BOOST_CHECK_EQUAL(svg_color(red), svg_color(255, 0, 0));
   BOOST_CHECK_EQUAL(svg_color(black), svg_color(0, 0, 0)); // default black.
-  BOOST_CHECK_EQUAL(svg_color(blank), svg_color(0, 0, 0));
+  BOOST_CHECK_EQUAL(svg_color(blank), svg_color(255, 255, 255)); // blank is now white
   BOOST_CHECK_NE(black, white);
+  BOOST_CHECK_NE(red, green);
+
+  BOOST_CHECK_EQUAL(black, black); // 
+  BOOST_CHECK_EQUAL(white, white); // 
+  BOOST_CHECK_EQUAL(svg_color(blank), svg_color(blank)); // 
 
 
   // Test operator==
@@ -113,7 +119,7 @@
 
   plot_line_style my_plot_line(svg_color(black), false, false);
   BOOST_CHECK_EQUAL(my_plot_line.color(), svg_color(black));
-  BOOST_CHECK_EQUAL(my_plot_line.area_fill(), blank);
+  BOOST_CHECK_EQUAL(my_plot_line.area_fill(), svg_color(blank));
   BOOST_CHECK_EQUAL(my_plot_line.line_on(), true);
   BOOST_CHECK_EQUAL(my_plot_line.bezier_on(), false);
   plot_line_style my_plot_line2(svg_color(red), true, true);
@@ -137,7 +143,7 @@
   my_style.stroke_color(white); // change
   BOOST_CHECK_EQUAL(my_style.stroke_color(), svg_color(white)); // & check.
 
-  BOOST_CHECK_EQUAL(my_style.fill_color(), svg_color(black)); // default black.
+  BOOST_CHECK_EQUAL(my_style.fill_color(), svg_color(blank)); // default black.
   my_style.fill_color(white); // change
   BOOST_CHECK_EQUAL(my_style.fill_color(), svg_color(white)); // & check.
 

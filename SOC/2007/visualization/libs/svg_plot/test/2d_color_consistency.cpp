@@ -9,7 +9,7 @@
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifdef _MSC_VER
-#  pragma warning(disable : 4996) // 
+#  pragma warning(disable : 4996) // Deprecated.
 #  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int' in spirit
 #  pragma warning(disable : 4180) // warning C4180: qualifier applied to function type has no meaning; ignored
 #  pragma warning(disable : 4172) // warning C4180: qualifier applied to function type has no meaning; ignored

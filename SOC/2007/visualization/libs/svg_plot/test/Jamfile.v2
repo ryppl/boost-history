@@ -38,8 +38,8 @@ project SVG_Plot
       # Warning suppression:
       <toolset>msvc:<cxxflags>/wd4996 # 'putenv': The POSIX name for this item is deprecated.
       <toolset>msvc:<cxxflags>/wd4512 # assignment operator could not be generated.
-      <toolset>msvc:<cxxflags>/wd4610 # 
-      <toolset>msvc:<cxxflags>/wd4510 # 
+      <toolset>msvc:<cxxflags>/wd4610 #
+      <toolset>msvc:<cxxflags>/wd4510 #
       <toolset>msvc:<cxxflags>/wd4224 # nonstandard extension used : formal parameter 'arg' was previously defined as a type.
       <toolset>msvc:<cxxflags>/wd4127 # expression is constant.
       <toolset>msvc:<cxxflags>/wd4701 # needed for lexical cast - temporary.
@@ -51,4 +51,5 @@ project SVG_Plot
 test-suite "SVG Plot"
     : [ run 1d_tests.cpp ]
       [ run 1d_color_consistency.cpp ]
+      [ run test_svg.cpp ]
     ;
