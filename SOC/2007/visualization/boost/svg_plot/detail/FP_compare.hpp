@@ -11,13 +11,19 @@
 
 //  Derived from Boost.Test Copyright Gennadiy Rozental 2001-2007.
 //  See http://www.boost.org/libs/test for the library home page.
-//  Deliberately removed any treatment of percent!
+//  Deliberately removed any treatment of percent to avoid further potential confusion!
 
 #ifndef BOOST_FLOATING_POINT_COMPARISON_HPP
 #define BOOST_FLOATING_POINT_COMPARISON_HPP
 
 #include <boost/limits.hpp>  // for std::numeric_limits
 #include <boost/math/tools/precision.hpp> // for max_value, min_value & epsilon for floating_point type;
+
+//namespace boost
+//{
+//  namespace math
+//  {
+  // Reminder - add full specification to \enum \class etc
 
 // Check two floating-point values are close within a chosen tolerance.
 template<typename FPT> class close_to;
@@ -29,9 +35,9 @@ enum floating_point_comparison_type
 { /*! \enum floating_point_comparison_type
    \brief Two types of floating-point comparison "Very close" and "Close enough".
    \details equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
-    pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
-    Strong requires closeness relative to BOTH values begin compared,
-    Weak only requires only closeness to EITHER ONE value.
+    pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.\n
+    Strong requires closeness relative to \b BOTH values being compared,
+    Weak only requires only closeness relative to \b EITHER \b ONE value.
   */
   FPC_STRONG, //!< "Very close"   - Knuth equation 1 (the default).
   FPC_WEAK    //!< "Close enough" - Knuth equation 2.
@@ -112,12 +118,17 @@ public:
   :
   fraction_tolerance_(2 * boost::math::tools::epsilon<FPT>()),
     strong_or_weak_(FPC_STRONG)
-  { //! Default is two epsilon.
+  { /*! Default is two epsilon for the FPT.\n
+        Note that some user-defined floating-point types may not specialize std::numeric_limits<FPT>::epsilon()
+        so it is convenient to use boost::math::tools::epsilon<FPT>(); instead.
+     */
+
   }
 
   bool operator()(FPT left, FPT right) const
   { //! \brief Test if two floating-point values are close within a chosen tolerance.
     //! \details Tolerance can be interpreted as Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
+
     FPT diff = fpt_abs(left - right);
     FPT d1   = safe_fpt_division(diff, fpt_abs(right));
     FPT d2   = safe_fpt_division(diff, fpt_abs(left));
@@ -127,13 +138,14 @@ public:
       : ((d1 <= fraction_tolerance_) || (d2 <= fraction_tolerance_)); // Weak.
   }
 
+  template<typename FPT>
   FPT size()
-  { //! Get fraction_tolerance_.
+  { //! Get the chosen fraction_tolerance_.
     return fraction_tolerance_;
   }
 
   floating_point_comparison_type strength()
-  { // Get strength of comparison, Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
+  { //! Get strength of comparison, Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
     return strong_or_weak_;
   }
 
@@ -147,18 +159,19 @@ template<typename FPT = double>
 class smallest
 { /*! \class smallest
       \brief   Check floating-point value is smaller than a chosen small value,
-       default std::numeric_limits<FPT>::min_value().
+       default twice min_value() for the Floating-point type.
       \details
-       David Monniaux, http://arxiv.org/abs/cs/0701192v4,
        It is somewhat common for beginners to add a comparison check to 0 before
        computing a division, in order to avoid possible division-by-zero exceptions or
-       the generation of infinite results. A first objection to this practise is that, anyway,
+       the generation of infinite results.\n
+       A first objection to this practise is that, anyway,
        computing 1/x for x very close to zero will generate very large numbers
-       that will most probably result in overflows later.
+       that will most probably result in overflows later.\n
        Another objection, which few programmers know about and that we wish to draw attention
        to, is that it may actually fail to work, depending on what the compiler
        does, that is, the program may actually test that x == 0, then, further down,
-       find that x = 0 without any apparent change to x!
+       find that x = 0 without any apparent change to x!\n
+       David Monniaux, http://arxiv.org/abs/cs/0701192v4.
    */
 
 public:
@@ -166,19 +179,22 @@ public:
   explicit smallest(FPT s)
   :
   smallest_(s)
-  { //! Default constructor.
+  { /*! Constructor with user defined value of smallest, for example 10 * min_value<FPT>.
+        Note that some user-defined floating-point types may not specialize std::numeric_limits<FPT>::min_value()
+        so it is convenient to use boost::math::tools::min_value<FPT>(); instead.
+    */
   }
 
   smallest()
   :
   smallest_(2 * boost::math::tools::min_value<FPT>())
-  { // Default Constructor.
-    // smallest_ =  2. * boost::math::tools::min_value<double>();
-    // multiplier m = 2 (must be integer or static_cast<FPT>())
-    // is chosen to allow for a few bits of computation error.
-    // Pessimistic multiplier is the number of arithmetic operations,
-    // assuming every operation causes a 1 least significant bit error,
-    // but a more realistic average might be half this.
+  { /*! Default Constructor with smallest_ =  2. * boost::math::tools::min_value<double>();\n
+       multiplier m = 2 (must be integer or static_cast<FPT>())
+       is chosen to allow for a few bits of computation error.\n
+       Pessimistic multiplier is the number of arithmetic operations,
+       assuming every operation causes a 1 least significant bit error,
+       but a more realistic average might be half this.
+     */
   }
 
   template<typename FPT>
@@ -204,8 +220,9 @@ public:
     return fpt_abs(fp_value) < fpt_abs(smallest_);
   } // bool operator()
 
+  template<typename FPT>
   FPT size()
-  { //! Get chosen smallest value.
+  { //! \fn size Get chosen smallest value.
     return smallest_;
   }
 
@@ -230,5 +247,8 @@ typedef smallest<double> tiny;
   is a very common requirement, provide an convenience alias for this.
 */
 typedef close_to<double> neareq;
+
+ // namespace math
+ // namespace boost
 
 #endif // BOOST_FLOATING_POINT_COMPARISON_HPP
