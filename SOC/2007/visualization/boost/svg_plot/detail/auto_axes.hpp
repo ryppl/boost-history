@@ -434,8 +434,8 @@ void scale_axis(double min_value, double max_value, // Scale axis from Input ran
   } // switch
   double range = max_value - min_value;  // range of data.
 
-  smallest<> is_small(1000. * std::numeric_limits<double>::min()); // 1000 * min value
-  close_to<> is_near_100eps(100. * std::numeric_limits<double>::epsilon()); // 100 * epsilon
+  smallest<> is_small(1000. * (std::numeric_limits<double>::min)()); // 1000 * min value
+  close_to<> is_near_100eps(100. * (std::numeric_limits<double>::epsilon)()); // 100 * epsilon
 
   if ((tight < 0.) || tight > 1.)
   { // Tight can't be negative and > 1 is very likely a mistake, 0.01 = 1% more reasonable.
@@ -643,7 +643,7 @@ std::pair<double, double> range(const T& container) // Container Data series
 template <class T> // T an STL container: array, vector, set, map ...
 std::pair<double, double> range_all(const T& containers) // Container of STL containers of Data series.
 {
-  std::pair<double, double> minmax(numeric_limits<double>::max(), numeric_limits<double>::min());
+  std::pair<double, double> minmax((numeric_limits<double>::max)(), (numeric_limits<double>::min)());
   for (T::const_iterator it = containers.begin(); it != containers.end(); it++)
   {
     pair<double, double> mm = range(*it); // Scale of this container.
@@ -656,7 +656,7 @@ std::pair<double, double> range_all(const T& containers) // Container of STL con
 
 double roundup10(double value)
 {
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value.
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
     return 0.; // Just return zero.
@@ -688,7 +688,7 @@ double roundup10(double value)
 
 double rounddown10(double value)
 {
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value
   if (is_small(value))
   { // Value very close to zero.
     return 0.; // Just return zero.
@@ -721,7 +721,7 @@ double rounddown10(double value)
 double roundup5(double value)
 {
   // Binary scaling, so return 0.1, 0.5, 1, 5, 10, 50, 100 ....
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value.
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
     return 0.; // Just return zero.
@@ -748,7 +748,7 @@ double roundup5(double value)
 
 double rounddown5(double value)
 {
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value
   if (is_small(value))
   { // Value very close to zero.
     return 0.; // Just return zero.
@@ -777,7 +777,7 @@ double rounddown5(double value)
 double roundup2(double value)
 {
   // Binary scaling, so return 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2, 4, 6, 8, 10, 20, 40 60, 80, 100...
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value.
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
     return 0.; // Just return zero.
@@ -812,7 +812,7 @@ double roundup2(double value)
 
 double rounddown2(double value)
 {
-  smallest<> is_small(100. * std::numeric_limits<double>::min()); // 100 * min value
+  smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value
   if (is_small(value))
   { // Value very close to zero.
     return 0.; // Just return zero.
