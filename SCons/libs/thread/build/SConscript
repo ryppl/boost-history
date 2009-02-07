@@ -1,0 +1,12 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+if env["THREADING"] == "multi":
+    env.BoostLibrary(
+    "thread",
+    Split("""
+    pthread/thread.cpp
+    pthread/exceptions.cpp
+    pthread/once.cpp
+    """)
+    )

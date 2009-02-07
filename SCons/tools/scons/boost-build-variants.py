@@ -44,6 +44,7 @@ features = gcc_features()
 def SetProperty(env, **kw):
     for (prop,value) in kw.items():
         getattr(features, prop, lambda x, y : None)(env, value)
+        env[prop.upper()] = value
 
 def exists():
     return True
