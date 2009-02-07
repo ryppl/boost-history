@@ -343,6 +343,18 @@ namespace detail {
 					>::type type;
 			};
 
+			/** This template is used to query the return value
+			 *  type of the getter for the I-th member attribute
+			 */
+			template <int I>
+			struct type_of_address
+			{
+				typedef typename mpl::at<
+						member_attrib_type_list, 
+						mpl::int_<I> 
+					>::type* type;
+			};
+
 			template <int I>
 			struct inherited_attrib_meta_class_and_pos
 			{
@@ -409,12 +421,36 @@ namespace detail {
 			}
 
 		
-			/** This function is used to get the member attributes 
+			/** This function is used to point to the member attributes
+		 	 *  from the base classes.
+		 	 */
+			template <class Class, int I>
+			static inline typename type_of_address<I>::type
+			address(Class& instance, mpl::int_<I> pos, mpl::bool_<true>)
+			{
+				typedef typename inherited_attrib_meta_class_and_pos<I>
+					::ancestor ancestor;
+				typedef typename inherited_attrib_meta_class_and_pos<I>
+					::position new_position;
+
+				return ancestor::attributes::address(instance, new_position());
+
+			}
+			template <class Class, int I>
+			static inline typename type_of_address<I>::type
+			address(Class& instance, mpl::int_<I> pos, mpl::bool_<false>)
+			{
+				typedef typename own_attrib_meta_class_and_pos<I>
+					::position new_position;
+				return scope::attributes::address(instance, new_position());
+			}
+
+			/** This function is used to get the member attribute 
 		 	 *  from the base classes.
 		 	 */
 			template <class Class, int I>
 			static inline typename result_of_get<I>::type
-			get(Class instance, mpl::int_<I> pos, mpl::bool_<true>)
+			get(const Class& instance, mpl::int_<I> pos, mpl::bool_<true>)
 			{
 				typedef typename inherited_attrib_meta_class_and_pos<I>
 					::ancestor ancestor;
@@ -426,7 +462,7 @@ namespace detail {
 			}
 			template <class Class, int I>
 			static inline typename result_of_get<I>::type
-			get(Class instance, mpl::int_<I> pos, mpl::bool_<false>)
+			get(const Class& instance, mpl::int_<I> pos, mpl::bool_<false>)
 			{
 				typedef typename own_attrib_meta_class_and_pos<I>
 					::position new_position;
@@ -601,12 +637,49 @@ namespace detail {
 			);
 		}
 
+		/** Gets the address of the I-th member (including 
+		 *  the inherited ones)
+		 */
+		template <class Class, int I>
+		static inline typename detail::template type_of_address<I>::type
+		address(Class& instance, mpl::int_<I> pos)
+		{
+			return detail::address(
+				instance, 
+				pos, 
+				is_inherited(pos)
+			);
+		}
+	private:
+		static inline ptrdiff_t calculate_offset(
+			const unsigned char* base_ptr, 
+			const unsigned char* attr_ptr
+		)
+		{
+			// we are unable to calculate the offset
+			if(attr_ptr == 0) return -1;
+			else return attr_ptr - base_ptr;
+		}
+	public:
+
+		/** Gets the byte-offset of the I-th member (including 
+		 *  the inherited ones)
+		 */
+		template <class Class, int I>
+		static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
+		{
+			return calculate_offset(
+				(const unsigned char*)&instance,
+				(const unsigned char*)address(instance, pos)
+			);
+		}
+
 		/** Gets the value of the I-th member (including 
 		 *  the inherited ones)
 		 */
 		template <class Class, int I>
 		static inline typename detail::template result_of_get<I>::type
-		get(Class instance, mpl::int_<I> pos)
+		get(const Class& instance, mpl::int_<I> pos)
 		{
 			return detail::get(
 				instance, 
@@ -765,6 +838,18 @@ namespace detail {
 			);
 		}
 
+		// address getter
+		inline static attribute_type* address(owner_class& instance)
+		{
+			return meta_attributes::address(instance, position());
+		}
+
+		// offset getter
+		inline static ptrdiff_t offset(owner_class& instance)
+		{
+			return meta_attributes::offset(instance, position());
+		}
+
 		// value getter
 		inline static typename result_of_get::type get(
 			const owner_class& instance
@@ -823,6 +908,12 @@ namespace detail {
 			type;
 
 	};
+
+/** This macro returns the meta-attribute for the ATTRIBUTE 
+ *  of the CLASS. 
+ *  Note that this requires mirror::at<> meta-function to be 
+ *  defined.
+ */
 
 } // namespace mirror
 } // namespace boost

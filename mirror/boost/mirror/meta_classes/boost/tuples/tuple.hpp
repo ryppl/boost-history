@@ -59,11 +59,21 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	template <int I>
 	struct att_val_pass
 	{
+		typedef typename mpl::at<template_params, mpl::int_<I> >::type* 
+			pointer;
 		typedef typename call_traits<
 			typename mpl::at<template_params, mpl::int_<I> >::type
 		>::param_type type;
 	};
 
+	// member attrib address
+	template <int I> 
+	static typename att_val_pass<I>::pointer
+	address(Class& a_tuple, mpl::int_<I>)
+	{
+		return &::boost::tuples::get<I>(a_tuple);
+	}
+	
 	// member attrib value get
 	template <int I> 
 	static typename att_val_pass<I>::type

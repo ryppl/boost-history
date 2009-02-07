@@ -23,20 +23,20 @@ namespace test {
 	
 struct person 
 {
-	::std::string first_name;
-	::std::string family_name;
-	::std::string street;
-	::std::string number;
-	::std::string city;
-	::std::string postal_code;
+	::boost::cts::bstring first_name;
+	::boost::cts::bstring family_name;
+	::boost::cts::bstring street;
+	::boost::cts::bstring number;
+	::boost::cts::bstring city;
+	::boost::cts::bstring postal_code;
 
 	person(
-		const ::std::string& _first_name,
-		const ::std::string& _family_name,
-		const ::std::string& _street,
-		const ::std::string& _number,
-		const ::std::string& _city,
-		const ::std::string& _postal_code
+		const ::boost::cts::bstring& _first_name,
+		const ::boost::cts::bstring& _family_name,
+		const ::boost::cts::bstring& _street,
+		const ::boost::cts::bstring& _number,
+		const ::boost::cts::bstring& _city,
+		const ::boost::cts::bstring& _postal_code
 	): first_name(_first_name)
 	 , family_name(_family_name)
 	 , street(_street)
@@ -61,12 +61,12 @@ BOOST_MIRROR_REG_TYPE( ::test, person)
 // register the constructors of ::test::person
 BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( ::test::person )
 	BOOST_MIRROR_REG_CONSTRUCTOR(0, 
-		((::std::string)(first_name))
-		((::std::string)(family_name))
-		((::std::string)(street))
-		((::std::string)(number))
-		((::std::string)(city))
-		((::std::string)(postal_code))
+		((::boost::cts::bstring)(first_name))
+		((::boost::cts::bstring)(family_name))
+		((::boost::cts::bstring)(street))
+		((::boost::cts::bstring)(number))
+		((::boost::cts::bstring)(city))
+		((::boost::cts::bstring)(postal_code))
 	)
 BOOST_MIRROR_REG_CONSTRUCTORS_END
 
@@ -161,8 +161,8 @@ int main(void)
 	::std::list< ::test::person > persons;
 	// 
 	// keep inserting while insert_more == 'y'
-	char insert_more = 'y';
-	while(insert_more == 'y')
+	cts::bchar insert_more = BOOST_CTS_LIT('y');
+	while(insert_more == BOOST_CTS_LIT('y'))
 	{
 		// the name of the function argument.
 		// there is only one in this case
@@ -178,9 +178,12 @@ int main(void)
 		// check whether to insert more persons
 		do
 		{
-			cts::bcout() << "Insert more ? (y/n) " << ::std::flush;
+			cts::bcout() << BOOST_CTS_LIT("Insert more ? (y/n) ") << ::std::flush;
 			cts::bcin() >> insert_more;
-		} while(insert_more != 'y' && insert_more != 'n');
+		} while(
+			insert_more != BOOST_CTS_LIT('y') && 
+			insert_more != BOOST_CTS_LIT('n')
+		);
 	}
 	//
 	// print out all the persons in the list

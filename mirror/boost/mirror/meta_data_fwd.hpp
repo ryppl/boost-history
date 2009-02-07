@@ -136,6 +136,17 @@ struct meta_class;
 >
 
 
+/** This macro returns the meta-attribute for the ATTRIBUTE 
+ *  of the CLASS. 
+ *  Note that this requires mirror::at<> meta-function to be 
+ *  defined.
+ */
+#define BOOST_MIRRORED_CLASS_ATTRIBUTE(CLASS, ATTRIBUTE) \
+::boost::mirror::at< \
+	BOOST_MIRRORED_CLASS(CLASS)::attributes, \
+	BOOST_MIRRORED_CLASS(CLASS)::attributes::position_of_##ATTRIBUTE \
+>::type
+
 
 } // namespace mirror
 } // namespace boost

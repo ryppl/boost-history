@@ -251,13 +251,6 @@ struct meta_class_attribute_traits<
 			type_of_##NAME \
 		>::param_type value \
 	) SETTER_BODY \
-	inline static void set( \
-		const Class& instance, \
-		position_of_##NAME, \
-		TYPENAME_KW call_traits< \
-			type_of_##NAME \
-		>::param_type value \
-	) { } 
 
 #define BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
 	SPECIFIERS, \
@@ -316,6 +309,10 @@ struct meta_class_attribute_traits<
 		SETTER_BODY, \
 		TYPENAME_KW \
 	) \
+	inline type_of_##NAME* address( \
+		Class& instance, \
+		position_of_##NAME position \
+	){return NULL;} \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
 		TYPE_SELECTOR, \
 		NAME, \
@@ -372,13 +369,26 @@ struct meta_class_attribute_traits<
 	TYPE_SELECTOR, \
 	NAME, \
 	TYPENAME_KW \
-) BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB( \
-		SPECIFIERS, TYPE_SELECTOR, NAME, \
+) 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_PROLOGUE( \
+		SPECIFIERS, \
+		TYPE_SELECTOR, \
+		NAME, \
 		{return instance.NAME;}, \
 		{dest = DestType(instance.NAME);}, \
 		{instance.NAME = value;}, \
 		TYPENAME_KW \
-	)
+	) \
+	inline type_of_##NAME* address( \
+		Class& instance, \
+		position_of_##NAME position \
+	){return &instance.NAME;} \
+	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
+		TYPE_SELECTOR, \
+		NAME, \
+		TYPENAME_KW \
+	) 
+/*
+*/
 
 
 /** Macro used for registering meta-data about class' attribute

@@ -41,6 +41,8 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(
 	template <int I>
 	struct att_val_pass
 	{
+		typedef typename mpl::at<template_params, mpl::int_<I> >::type* 
+			pointer;
 		typedef typename call_traits<
 			typename mpl::at<template_params, mpl::int_<I> >::type
 		>::param_type type;
@@ -77,6 +79,14 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(
 		typename att_val_pass<I>::type
 	> get_traits(mpl::int_<I>);
 
+	
+	// member attrib pointer
+	template <int I> 
+	static typename att_val_pass<I>::pointer
+	address(Class& an_inst, mpl::int_<I>)
+	{
+		return &::boost::fusion::at_c<I>(an_inst);
+	}
 	
 	// member attrib value get
 	template <int I> 

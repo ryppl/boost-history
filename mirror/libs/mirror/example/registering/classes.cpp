@@ -491,8 +491,17 @@ int main(void)
 	// type of an expression
 	bcout << "|06| " << endl << pretty_printer<BOOST_MIRRORED_TYPEOF("foo")>() << endl;
 	//
-	// full typenames
-	//bcout << "|07| " << BOOST_MIRRORED_TYPEOF("foo") ::full_name() << endl;
+	// attribute reflection prints out the type name and the name of the member attrib
+	bcout << "|07| " << 
+		BOOST_MIRRORED_CLASS_ATTRIBUTE(bar, a_double) ::type::base_name() << 
+		" " << 
+		BOOST_MIRRORED_CLASS_ATTRIBUTE(bar, a_double) ::base_name() << 
+	endl;
+	bcout << "|07| " << 
+		BOOST_MIRRORED_CLASS_ATTRIBUTE(bar, a_float) ::type::base_name() << 
+		" " << 
+		BOOST_MIRRORED_CLASS_ATTRIBUTE(bar, a_float) ::base_name() << 
+	endl;
 	//
 	bar_base x = {123, 456L};
 	bar_base y = {234, 567L};

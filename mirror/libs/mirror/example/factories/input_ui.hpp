@@ -70,9 +70,9 @@ struct console_input_ui
 	template <class Context, class ConstrIndex, class ParamIndex>
 	console_input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
 	{
-                ::boost::cts::bcout() <<
+			::boost::cts::bcout() <<
 			::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
-                        BOOST_CTS_LIT("Enter ") << 
+			BOOST_CTS_LIT("Enter ") << 
 			BOOST_MIRRORED_TYPE(Product)::full_name() << 
 			BOOST_CTS_LIT(" ") << 
 			boost::mirror::meta_constructors<
@@ -100,7 +100,7 @@ struct input_ui< TYPE > : console_input_ui< TYPE > \
 }; 
 
 BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(double)
-BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(::std::string)
+BOOST_MIRROR_EXAMPLES_SPECIALIZE_CONSOLE_INPUT_UI(::boost::cts::bstring)
 
 /** A manager of this input user interface, which picks the 
  *  constructor that will be used by the means of the result
