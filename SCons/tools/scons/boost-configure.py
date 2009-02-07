@@ -29,9 +29,17 @@ class CheckBZip2(DependencyChecker):
         self.flags = dict(LIBS = ["bz2"])
         self.have_dep = self.conf.CheckLibWithHeader("bz2", "bzlib.h", "c", autoadd = False)
 
+class CheckPython(DependencyChecker):
+    def Check(self, env):
+        import distutils.sysconfig
+        self.flags = dict(CPPPATH = [distutils.sysconfig.get_python_inc()])
+        env.AppendUnique(**self.flags)
+        self.have_dep = self.conf.CheckCHeader("Python.h")
+
 def generate(env):
     env.AddMethod(CheckZLib())
     env.AddMethod(CheckBZip2())
+    env.AddMethod(CheckPython())
 
 def exists():
     return True
