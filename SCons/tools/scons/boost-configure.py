@@ -1,40 +1,37 @@
 # vi: syntax=python:et:ts=4
 
-def ConfigureBoost(env):
-    global conf
-    return conf
+class DependencyChecker:
+    flags = {}
+    checked = False
+    have_dep = False
+    def __init__(self):
+        self.__name__ = str(self.__class__).split(".")[-1]
+    def __call__(self, env):
+        if not self.checked:
+            build_dir = "#/bin.SCons/"
+            self.conf = env.Configure(conf_dir = build_dir + "sconf_temp", log_file = build_dir + "config.log")
+            self.Check(env)
+            self.conf.Finish()
+            self.checked = True
+        if(self.have_dep):
+            env.AppendUnique(**self.flags)
+            return True
+        else:
+            return False
 
-have_zlib = None
-zlib_flags = None
-def CheckZLib(env):
-    global have_zlib, zlib_flags
-    if zlib_flags == None:
-        zlib_flags = dict(LIBS = ["z"])
-        conf = env.ConfigureBoost()
-        have_zlib = conf.CheckLibWithHeader("z", "zlib.h", "c", autoadd = False)
-    if have_zlib:
-        env.AppendUnique(**zlib_flags)
-        return have_zlib
+class CheckZLib(DependencyChecker):
+    def Check(self, env):
+        self.flags = dict(LIBS = ["z"])
+        self.have_dep = self.conf.CheckLibWithHeader("z", "zlib.h", "c", autoadd = False)
 
-have_bzip2 = None
-bzip2_flags = None
-def CheckBZip2(env):
-    global have_bzip2, bzip2_flags
-    if bzip2_flags == None:
-        bzip2_flags = dict(LIBS = ["bz2"])
-        conf = env.ConfigureBoost()
-        have_bzip2 = conf.CheckLibWithHeader("bz2", "bzlib.h", "c", autoadd = False)
-    if have_bzip2:
-        env.AppendUnique(**bzip2_flags)
-        return have_bzip2
+class CheckBZip2(DependencyChecker):
+    def Check(self, env):
+        self.flags = dict(LIBS = ["bz2"])
+        self.have_dep = self.conf.CheckLibWithHeader("bz2", "bzlib.h", "c", autoadd = False)
 
 def generate(env):
-    env.AddMethod(ConfigureBoost)
-    env.AddMethod(CheckZLib)
-    env.AddMethod(CheckBZip2)
-    global conf
-    build_dir = "#/bin.SCons/"
-    conf = env.Configure(conf_dir = build_dir + "sconf_temp", log_file = build_dir + "config.log")
+    env.AddMethod(CheckZLib())
+    env.AddMethod(CheckBZip2())
 
 def exists():
     return True
