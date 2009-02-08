@@ -1,6 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -21,7 +22,7 @@
 #include <iostream>                             // std::ostream
 #include <sstream>                              // std::stringstream
 
-boost::mutex out_global_mutex;
+//boost::mutex out_global_mutex;
 
 namespace boost {
 namespace interthreads {
@@ -37,6 +38,10 @@ namespace detail {
         : current_(new element_type()) 
         , seq_(0)
         {}
+            
+        ~async_ostream_thread_ctx() {
+            delete current_;
+        }
 
         boost::mutex& get_mutex() {return mutex_;}
         std::stringstream& buffer() {return current_->value_;}
@@ -70,7 +75,6 @@ namespace detail {
         }
         void print_stats() {
             boost::thread::id id= boost::this_thread::get_id();
-            boost::lock_guard<boost::mutex> lock(out_global_mutex);
             std::cout << "TID=" << id <<" nb_push " << nb_push  << std::endl;
             std::cout << "TID=" << id <<" nb_push_gt_1 " << nb_push  << std::endl;
             std::cout << "TID=" << id <<" nb_get " << nb_push  << std::endl;
@@ -78,6 +82,7 @@ namespace detail {
             std::cout << "TID=" << id <<" inc " << inc_  << std::endl;
         };
         bool empty() {
+            boost::lock_guard<boost::mutex> lock(mutex_);
             return queue_.empty();
         }
         void inc() {
@@ -97,7 +102,10 @@ namespace detail {
             return  e;
         }
         element_type *current_;
+#if 1        
         queue_type queue_;   
+#else
+#endif
         unsigned seq_;   
         boost::mutex mutex_;
         unsigned nb_push_gt_1;
@@ -111,29 +119,34 @@ namespace detail {
     //==========================================================================================
 #ifdef CONCENTRATOR            
     struct async_ostream_concentrator {
-		static void loop(async_ostream_sink::impl* that);
-		async_ostream_concentrator(async_ostream_sink::impl* impl_ptr) 
+        static void loop(async_ostream_sink::impl* that);
+        async_ostream_concentrator(async_ostream_sink::impl* impl_ptr) 
             : thread_(boost::bind(loop, impl_ptr)) {}
-		~async_ostream_concentrator() {}
+        ~async_ostream_concentrator() {}
 
-	private:
-		boost::thread thread_;
-	};
+    private:
+        boost::thread thread_;
+    };
 #endif            
-	
+    
     //==========================================================================================
     
     typedef thread_specific_shared_ptr<async_ostream_thread_ctx> tsss_type;
     
     struct async_ostream_sink::impl {
         impl(std::ostream& os) 
-        : os_(os)
+        : end_(false)
+        ,os_(os)
         , tsss_(terminate)
 #ifndef CONCENTRATOR            
         , thread_(boost::bind(loop, this)) 
 #endif            
         {}
-        
+            
+        ~impl()  {
+        }
+            
+        bool end_;
         std::ostream& os_;
         tsss_type tsss_;
         priority_queue_type queue_;
@@ -141,14 +154,13 @@ namespace detail {
         boost::once_flag concentrator_flag_;
         async_ostream_concentrator* concentrator_;
 #else
-		boost::thread thread_;            
+        boost::thread thread_;            
 #endif            
             
         static void terminate(shared_ptr<async_ostream_thread_ctx> that) {
             while (!that->empty()) {
                 that->inc();
             }
-            //that->print_stats();            
         }
         
 #ifdef CONCENTRATOR            
@@ -160,7 +172,7 @@ namespace detail {
                              boost::bind(create_concentrator_once, this));
         }
 #else        
-		static void loop(impl* that);
+        static void loop(impl* that);
 #endif            
         
         std::streamsize write(const char* s, std::streamsize n) {
@@ -171,6 +183,14 @@ namespace detail {
             tsss_->flush();
         }            
         
+        void close() {
+            end_=true;
+#ifdef CONCENTRATOR            
+            concentrator_.close();
+#else
+            thread_.join();            
+#endif            
+        }            
             
     };
 
@@ -178,6 +198,10 @@ namespace detail {
     
     async_ostream_sink::async_ostream_sink(std::ostream& os)
         : impl_(new async_ostream_sink::impl(os)) {}
+
+    async_ostream_sink::~async_ostream_sink()
+        {
+        }
 
     std::streamsize async_ostream_sink::write(const char* s, std::streamsize n) {
         return impl_->write(s,n);
@@ -209,14 +233,16 @@ namespace detail {
                 //it->second->print_stats();                
             }
             if (that->queue_.empty()) {
+                if (that->end_) break;
                 boost::this_thread::sleep(boost::posix_time::milliseconds(10));
             } else {
                 element_type* e = that->queue_.top();
                 that->queue_.pop();
+
     #ifdef XTIME
-                os_ << e->seq_ << "["<<e->date_.sec<<":"<<e->date_.nsec<<"]| " << e->value_.str();
+                os_ << e->seq_ << "["<<e->date_.sec<<":"<<e->date_.nsec<<"]| " << e->value_.str().length() << " | " <<  e->value_.str();
     #else
-                os_ << e->seq_ <<  "| " << e->value_.str();
+                os_ << e->seq_ <<  " | " << e->value_.str().length() <<  " | " << e->value_.str();
     #endif
                 delete e;
             }
@@ -233,14 +259,21 @@ namespace detail {
         : base_type(os) 
         {}
 
+    async_ostream::~async_ostream()
+        {
+        cout_->impl_->close();
+
+        }
+
     void async_ostream::flush() {
-        this->base_type::flush();
+        //this->base_type::flush();
         async_ostream& d = *this;
         d->flush();
     }
             
     //==========================================================================================
     
+    // WARNING: static_variable
     async_ostream cout_(std::cout);
     
     void async_ostream::thread_specific_setup() {
@@ -249,9 +282,14 @@ namespace detail {
         cout_->impl_->create_concentrator();
 #endif        
     }
-    
-    namespace detail 	{
-	    thread_decoration async_ostream_decoration(boost::interthreads::async_ostream::thread_specific_setup);
+
+#if 0    
+    void close() {
+        //cout_->impl_->close();
+    }
+#endif    
+    namespace detail {
+        thread_decoration async_ostream_decoration(boost::interthreads::async_ostream::thread_specific_setup);
     }
     
 }

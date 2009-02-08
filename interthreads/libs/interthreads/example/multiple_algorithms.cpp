@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Roland Schwarz 2006. 
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. 
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -16,8 +16,8 @@ boost::mutex out_global_mutex;
 
 void sleep(int sec)
 {
-	boost::xtime t;
-	boost::xtime_get(&t,1);	
+    boost::xtime t;
+    boost::xtime_get(&t,1);
     t.sec += sec; 
     boost::thread::sleep(t);
 }
@@ -35,39 +35,42 @@ void sleep(int sec)
 namespace bith = boost::interthreads;
 
 int my_thread1() {
+    sleep(3);
     {
         boost::lock_guard<boost::mutex> lock(out_global_mutex);
         std::cout << "1 thread_id=" << boost::this_thread::get_id() << std::endl;
     }
-    sleep(3);
     return 0;
 }
     
 int my_thread2() {
+    sleep(1);
     {
         boost::lock_guard<boost::mutex> lock(out_global_mutex);
         std::cout << "2 thread_id=" << boost::this_thread::get_id() << std::endl;
     }
-    sleep(1);
     return 0;
 }
 
 int my_thread3() {
+    sleep(2);
     {
         boost::lock_guard<boost::mutex> lock(out_global_mutex);
         std::cout << "3 thread_id=" << boost::this_thread::get_id() << std::endl;
     }
-    sleep(2);
     return 0;
 }
 
 
 int main() {
     bith::shared_threader ae;
-    BOOST_AUTO(handles,bith::fork_all(ae, my_thread1, my_thread2, my_thread3));
     BOOST_AUTO(result,bith::wait_for_any(ae, my_thread1, my_thread2, my_thread3));
-    std::cout << "Algotithm " << result.first+1 << " finished the first with wait_for_any" << std::endl;
+    std::cout << "Algotithm " << result.first+1 << " finished the first with wait_for_any result=" << result.second << std::endl;
 
+
+#if 0
+    //BOOST_AUTO(handles,bith::fork_all(ae, my_thread1, my_thread2, my_thread3));
+    
     bith::thread_tuple<3> tt_0(my_thread1, my_thread2, my_thread3);
     bith::thread_tuple<3> tt_1;
     tt_1= tt_0.move();
@@ -80,8 +83,6 @@ int main() {
     bith::thread_tuple<3> kk_0= bith::make_thread_tuple(my_thread1, my_thread2, my_thread3);
     kk_0.join_all();
     std::cout << "All finished join_all" << std::endl;
-
-#if 0
         
     bith::thread_group_once tgo;
     boost::thread* th1 = tgo.create_thread(my_thread1);

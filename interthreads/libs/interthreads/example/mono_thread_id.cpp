@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Roland Schwarz 2006. 
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. 
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -16,8 +16,8 @@ boost::mutex out_global_mutex;
 
 void sleep(int sec)
 {
-	boost::xtime t;
-	boost::xtime_get(&t,1);	
+    boost::xtime t;
+    boost::xtime_get(&t,1); 
     t.sec += sec; 
     boost::thread::sleep(t);
 }
@@ -76,7 +76,7 @@ struct mono_thread_id_out {
               << std::endl;
     }
 };
-
+#if 0
 struct mono_thread_id_wait_and_get {
     template<typename T>
     void operator()(T& t) const {
@@ -87,7 +87,7 @@ struct mono_thread_id_wait_and_get {
         }
     }
 };
-
+#endif
 bith::thread_decoration mono_thread_id::decoration_(mono_thread_id::setup);
 mono_thread_id::tssp_type mono_thread_id::current_;
 unsigned mono_thread_id::counter_=0;
@@ -107,8 +107,9 @@ void my_thread() {
 
 void doit() {
     bith::shared_threader_decorator ae;
-    bith::result_of::fork_all<bith::shared_threader_decorator, boost::fusion::tuple<void(*)(), void(*)()> >::type handles = 
-               bith::fork_all(ae, my_thread, my_thread);
+    BOOST_AUTO(handles, bith::fork_all(ae, my_thread, my_thread));
+#if 0
+    //bith::result_of::fork_all<bith::shared_threader_decorator, boost::fusion::tuple<void(*)(), void(*)()> >::type handles = 
     {
         const boost::shared_ptr<unsigned> shp1 = mono_thread_id::current_.wait_and_get(boost::fusion::at_c<0>(handles).get_id());
         if (shp1.get()==0) {
@@ -124,7 +125,8 @@ void doit() {
         }
     }
     //sleep(1);
-    boost::fusion::for_each(handles, mono_thread_id_wait_and_get());
+    //boost::fusion::for_each(handles, mono_thread_id_wait_and_get());
+#endif    
     boost::fusion::for_each(handles, mono_thread_id_out());
     bith::join_all(handles);
 }

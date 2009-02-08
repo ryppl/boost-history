@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. 
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or 
 //  copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -28,6 +28,7 @@ namespace interthreads {
             typedef  boost::iostreams::sink_tag  category;
             
             async_ostream_sink(std::ostream& os);
+            ~async_ostream_sink();
             
             std::streamsize write(const char* s, std::streamsize n);
             void flush();

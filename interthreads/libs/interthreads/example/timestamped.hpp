@@ -3,7 +3,7 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -23,7 +23,7 @@ namespace interthreads {
 #ifdef XTIME
         boost::xtime date_;
         void reset_date(unsigned seq) {
-	        boost::xtime_get(&date_,1);
+            boost::xtime_get(&date_,1);
             seq_ = seq;
         }
         struct ref_comparator {
@@ -56,7 +56,7 @@ namespace interthreads {
 #else
         system_time date_;
         void reset_date(unsigned seq) {
-            date_ = system_time();	
+            date_ = system_time();
             seq_ = seq;
         }
         struct ref_comparator {
