@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -12,6 +12,7 @@
 #define BOOST_INTERTHREADS_DETACH_ALL__HPP
 
 #include <boost/fusion/include/for_each.hpp>
+#include <boost/interthreads/algorithm/detach.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -34,14 +35,14 @@ namespace interthreads {
             typedef typename fusion::result_of::for_each<Sequence, fct::detach>::type type;
         };
     }
-    
+
     template <typename Sequence>
     void detach_all(Sequence& t) {
         fusion::for_each(t, fct::detach());
     }
-    
 
-}    
+
+}
 }   // namespace boost
 
 #include <boost/config/abi_suffix.hpp>

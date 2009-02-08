@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -19,6 +19,11 @@
 #include <boost/thread/thread_time.hpp>
 #endif
 
+#include <boost/interthreads/algorithm/wait.hpp>
+#include <boost/fusion/support/is_sequence.hpp>
+#include <boost/utility/enable_if.hpp>
+//#include <boost/utility/disable_if.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost {
@@ -29,7 +34,7 @@ namespace interthreads {
             typedef void result_type;
             template<typename ACT>
             void operator()(ACT& act) const {
-                act.wait();
+                interthreads::wait(act);
             }
         };
     }
@@ -41,13 +46,23 @@ namespace interthreads {
         };
     }
 
+
     template <typename Sequence>
-    typename result_of::wait_all<Sequence>::type
+    typename boost::enable_if<fusion::traits::is_sequence<Sequence>,
+        typename result_of::template wait_all<Sequence>::type
+    >::type
     wait_all(Sequence& t) {
         fusion::for_each(t, fct::wait());
     }
 
-}    
+    template <typename ACT>
+    typename boost::disable_if<fusion::traits::is_sequence<ACT>,
+        typename result_of::template wait<ACT>::type
+    >::type
+    wait_all(ACT& t) {
+        interthreads::wait(t);
+    }
+}
 }   // namespace boost
 
 #include <boost/config/abi_suffix.hpp>

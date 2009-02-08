@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -13,18 +13,19 @@
 
 #include <boost/fusion/include/all.hpp>
 
+#include <boost/interthreads/algorithm/interruption_requested.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost {
-namespace interthreads {
-  
+namespace boost { namespace interthreads {
+
     namespace fct {
         struct interruption_requested {
             typedef bool result_type;
 
             template<typename ACT>
             bool operator()(ACT& act) const {
-                return act.interruption_requested();
+                return interthreads::interruption_requested(act);
             }
         };
     }
@@ -42,8 +43,7 @@ namespace interthreads {
     }
 
 
-}    
-}   // namespace boost
+}}   // namespace boost
 
 #include <boost/config/abi_suffix.hpp>
 

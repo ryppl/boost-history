@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -23,7 +23,8 @@
 #else
 #include <boost/thread/thread_time.hpp>
 #endif
-#include <boost/interthreads/algorithm/get_all.hpp>
+#include <boost/interthreads/algorithm/get_until.hpp>
+//#include <boost/interthreads/algorithm/get_all.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -35,7 +36,7 @@ namespace interthreads {
             get_until(const system_time& abs_time) : abs_time_(abs_time) {}
             template<typename ACT>
             typename std::pair<bool,typename ACT::result_type> operator()(ACT& act) const {
-                return act.get_until(abs_time_);
+                return interthreads::get_until(act, abs_time_);
             }
         private:
             const system_time& abs_time_;
@@ -48,7 +49,7 @@ namespace interthreads {
             get_for(const Duration& abs_time) : abs_time_(get_system_time()+abs_time) {}
             template<typename ACT>
             typename std::pair<bool,typename ACT::result_type> operator()(ACT& act) const {
-                return act.get_until(abs_time_);
+                return interthreads::get_until(act, abs_time_);
             }
         private:
             const system_time& abs_time_;
@@ -68,12 +69,12 @@ namespace interthreads {
             typedef std::pair<bool, typename result_of::get_all<Sequence>::type >  type;
         };
     }
-    
+
     template <typename Sequence>
-    typename result_of::get_all_until<Sequence> 
+    typename result_of::template get_all_until<Sequence>::type
     get_all_until(Sequence& t, const system_time& abs_time) {
         std::pair<bool,typename fusion::result_of::at_c<Sequence, 0>::type::result_type > r = fct::get_until(abs_time)(fusion::at_c<0>(t));
-       	if (r.first) return std::make_pair(true, result_of::get_all<Sequence>::type());
+        if (r.first) return std::make_pair(true, result_of::get_all<Sequence>::type());
         else {
             if (fusion::size(t)==1) {
                 return std::make_pair(false, result_of::get_all<Sequence>::type(r.first));
@@ -85,13 +86,13 @@ namespace interthreads {
     }
 
     template <typename Sequence, typename Duration>
-    typename result_of::get_all_for<Sequence> 
-    get_all_for(Sequence& t, const Duration& rel_time) {
+    typename result_of::template get_all_for<Sequence>::type
+    get_all_for(Sequence& t, Duration rel_time) {
         return get_all_until(t, get_system_time()+rel_time);
     }
 
 
-}    
+}
 }   // namespace boost
 
 #include <boost/config/abi_suffix.hpp>
