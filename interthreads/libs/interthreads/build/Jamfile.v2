@@ -39,9 +39,9 @@ import path ;
 project boost/interthreads
     : source-location ../src
     : requirements <threading>multi
-#      <target-os>cygwin
-#      <threadapi>pthread
-#      <variant>debug
+      <target-os>cygwin
+      <threadapi>pthread
+      <variant>debug
 #      <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
@@ -201,9 +201,9 @@ explicit interthreads_sources ;
 
 
 
-lib boost_interthreads
+static-lib boost_interthreads
     : thread_decorator.cpp  thread_keep_alive.cpp interthreads_sources
-    ../../../../libs/thread/build//boost_thread
+#    ../../../../libs/thread/build//boost_thread
     : <conditional>@requirements
     :
     : <link>shared:<define>BOOST_INTERTHREADS_USE_DLL=1
