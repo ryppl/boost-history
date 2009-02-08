@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -42,9 +42,9 @@ inline boost::xtime delay(int secs, int msecs=0, int nsecs=0)
 
 void sleep(int sec)
 {
-	boost::xtime t;
-	boost::xtime_get(&t,1);	
-    t.sec += sec; 
+    boost::xtime t;
+    boost::xtime_get(&t,1);
+    t.sec += sec;
     boost::thread::sleep(t);
 }
 }
@@ -56,11 +56,11 @@ struct non_copyable_functor
 {
     unsigned value;
     typedef unsigned result_type;
-    
+
     non_copyable_functor():
         value(0)
     {}
-    
+
     unsigned operator()()
     {
         value=999;
@@ -72,11 +72,11 @@ struct copyable_functor
 {
     unsigned value;
     typedef int result_type;
-    
+
     copyable_functor():
         value(0)
     {}
-    
+
     int operator()()
     {
         value=999;
@@ -91,9 +91,9 @@ struct print_xml
     {
         std::cout
 //            << '<' << typeid(x).name() << '>'
-            << x
+            << x << " "
 //            << "</" << typeid(x).name() << '>'
-            << std::endl
+            //<< std::endl
             ;
     }
 };

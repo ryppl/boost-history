@@ -1,7 +1,7 @@
-#  (C) Copyright William E. Kempf 2001. 
-#  (C) Copyright 2007 Anthony Williams. 
-#  (C) Copyright 2008-2009 Vicente Botet Escriba. 
-#  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+#  (C) Copyright William E. Kempf 2001.
+#  (C) Copyright 2007 Anthony Williams.
+#  (C) Copyright 2008-2009 Vicente Botet Escriba.
+#  Distributed under the Boost Software License, Version 1.0. (See accompanying
 #  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #
 # Boost.InterThreads test Jamfile
@@ -20,47 +20,53 @@
 import testing ;
 
 project
-    : requirements <library>/boost/test//boost_unit_test_framework/<link>static
+    : requirements
+    <library>/boost/test//boost_unit_test_framework/<link>static
     <library>../build//boost_interthreads
-            
+    <library>/boost/thread//boost_thread/<link>static
+
       <include>.
       <include>../../..
       <threading>multi
-#      <target-os>cygwin
-#      <threadapi>pthread
-#      <variant>debug
+      <target-os>cygwin
+      <threadapi>pthread
+      <variant>debug
 #      <define>BOOST_THREAD_HAS_THREAD_ATTR
 
     ;
 
 rule interthreads-run ( sources * )
 {
-    return 
+    return
     [ run $(sources)  :  :  : <link>static ]
 #    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :              : $(sources[1]:B)_lib ]
     ;
-}    
+}
 
 
 
 {
     test-suite "tests"
-        : 
+        :
 #          [ interthreads-run move_test.cpp ]
-          [ interthreads-run test_basic_threader.cpp ]
+#          [ interthreads-run test_thread_move.cpp ]
+#          [ interthreads-run test_basic_threader.cpp ]
           [ interthreads-run test_launcher.cpp ]
-          [ interthreads-run test_threader.cpp ]
-          [ interthreads-run test_thread_pool.cpp ]
+           [ interthreads-run test_threader.cpp ]
+           [ interthreads-run test_thread_pool.cpp ]
           [ interthreads-run test_thread_decorator.cpp ]
           [ interthreads-run test_thread_shared_ptr.cpp ]
     ;
     test-suite "example"
-        : 
+        :
           [ interthreads-run ../example/hello_world.cpp ]
           [ interthreads-run ../example/mono_thread_id.cpp ]
           [ interthreads-run ../example/basic_keep_alive.cpp ../example/async_ostream.cpp ]
           [ interthreads-run ../example/multiple_algorithms.cpp ]
-          
-          
+#          [ interthreads-run ../example/parallel_sort.cpp ]
+#          [ interthreads-run ../example/x_sort.cpp ]
+#          [ interthreads-run ../example/x_sort2.cpp ]
+
+
     ;
 }

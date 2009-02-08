@@ -1,13 +1,13 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/sync for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
-  
+
 #include "boost/thread/mutex.hpp"
 #include "boost/thread/locks.hpp"
 
@@ -36,30 +36,37 @@ void do_test_member_fork_detach() {
     aetst::do_test_member_fork_detach(ae);
 }
 
-void do_test_member_fork() {  
+void do_test_member_fork() {
     bith::shared_threader ae;
     aetst::do_test_member_fork(ae);
-}    
+}
+
+#if 0
+void do_test_member_lazy_fork() {
+    bith::shared_threader ae;
+    aetst::do_test_member_lazy_fork(ae);
+}
+#endif
 
 void do_test_member_fork_move_unique() {
     bith::unique_threader ae;
-    aetst::do_test_member_fork_move(ae);
+    aetst::do_test_member_fork_m_fut(ae);
 }
 
 void do_test_member_fork_bind() {
     bith::shared_threader ae;
     aetst::do_test_member_fork_bind(ae);
-}    
+}
 
 void do_test_fork() {
     bith::shared_threader ae;
     aetst::do_test_fork(ae);
-}    
+}
 
 void do_test_fork_1() {
     bith::shared_threader ae;
     aetst::do_test_fork_1(ae);
-}    
+}
 
 void do_test_creation_through_reference_wrapper()
 {
@@ -73,18 +80,70 @@ void do_test_creation_through_functor()
     aetst::do_test_creation_through_functor(ae);
 }
 
+void do_test_wait() {
+    bith::shared_threader ae;
+    aetst::do_test_wait(ae);
+}
+
+void do_test_wait_until() {
+    bith::shared_threader ae;
+    aetst::do_test_wait_until(ae);
+}
+
+void do_test_wait_for() {
+    bith::shared_threader ae;
+    aetst::do_test_wait_for(ae);
+}
+
+void do_test_join() {
+    bith::shared_threader ae;
+    aetst::do_test_join(ae);
+}
+
+void do_test_join_until() {
+    bith::shared_threader ae;
+    aetst::do_test_join_until(ae);
+}
+
+void do_test_join_for() {
+    bith::shared_threader ae;
+    aetst::do_test_join_for(ae);
+}
+
+
 void do_test_thread_interrupts_at_interruption_point() {
     bith::shared_threader ae;
     aetst::do_test_thread_interrupts_at_interruption_point(ae);
-}    
+}
 
 void do_test_join_all() {
     bith::shared_threader ae;
-    aetst::do_test_join_all(ae);    
+    aetst::do_test_join_all(ae);
 }
+
+void do_test_join_all_until() {
+    bith::shared_threader ae;
+    aetst::do_test_join_all_until(ae);
+}
+
+void do_test_join_all_for() {
+    bith::shared_threader ae;
+    aetst::do_test_join_all_for(ae);
+}
+
 void do_test_wait_all() {
     bith::shared_threader ae;
     aetst::do_test_wait_all(ae);
+}
+
+void do_test_wait_all_until() {
+    bith::shared_threader ae;
+    aetst::do_test_wait_all_until(ae);
+}
+
+void do_test_wait_all_for() {
+    bith::shared_threader ae;
+    aetst::do_test_wait_all_for(ae);
 }
 
 void do_test_wait_for_any() {
@@ -115,24 +174,25 @@ void do_test_wait_for_any_fusion_sequence()
 {
     typedef bith::shared_threader  AE;
     AE ae;
-    typedef bith::result_of::fork_all<bith::shared_threader,bfus::tuple<int(*)(),std::string(*)()> >::type type;   
+    typedef bith::result_of::fork_all<AE,bfus::tuple<int(*)(),std::string(*)()> >::type type;
     type tple = bith::fork_all(ae, simple_thread, simple_string_thread);
     unsigned r = my_wait_for_any<AE>(tple);
     bith::interrupt_all(tple);
     BOOST_CHECK_EQUAL(r, 0u);
+    boost::this_thread::sleep(boost::posix_time::milliseconds(5000));
+    std::cout << "<<do_test_wait_for_any_fusion_sequence" << std::endl;
+
 }
 
-#if 0
+void do_test_get() {
+    bith::shared_launcher ae;
+    aetst::do_test_get(ae);
+}
+
 void do_test_get_all() {
     bith::shared_threader ae;
-    typedef bith::result_of::fork_all<bith::shared_threader,bfus::tuple<int(*)(),int(*)()> >::type auto_type;
-    //auto_type tple = bith::fork_all(ae, simple_thread, simple_thread);
-    BOOST_AUTO(tple,bith::fork_all(ae, simple_thread, simple_thread));
-    bith::wait_all(tple);
-    BOOST_AUTO(res,bith::get_all(tple));   
-    //bfus::for_each(res, print_xml());
+    aetst::do_test_set_all(ae);
 }
-#endif
 
 void do_test_set_all() {
     bith::shared_threader ae;
@@ -144,22 +204,22 @@ void do_test_wait_for_all() {
     aetst::do_test_wait_for_all(ae);
 }
 
-void do_test_fork_after_join() {  
+void do_test_fork_after_join() {
     bith::shared_threader ae;
     aetst::do_test_fork_after_join(ae);
-}    
+}
 
-void do_test_fork_after_wait() {  
+void do_test_fork_after_wait() {
     bith::shared_threader ae;
     aetst::do_test_fork_after_wait(ae);
-}    
+}
 
-void do_test_fork_after_get() {  
+void do_test_fork_after_get() {
     bith::shared_threader ae;
     aetst::do_test_fork_after_get(ae);
-}    
+}
 
-void do_test_other() {  
+void do_test_other() {
     boost::mutex mtx_;
     int i=0;
     for (boost::mutex::scoped_lock lock_(mtx_), *continue_hlp_,**continue_=&continue_hlp_; continue_; continue_=0) {
@@ -176,34 +236,51 @@ void do_test_other() {
         i++;
     }
     BOOST_CHECK_EQUAL(i, 3);
-}    
+}
 
 test_suite* init_unit_test_suite(int, char*[])
 {
     test_suite* test = BOOST_TEST_SUITE("shared_threader");
-    
-    test->add(BOOST_TEST_CASE(&do_test_member_fork_detach));
+
+
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
     test->add(BOOST_TEST_CASE(&do_test_fork));
     test->add(BOOST_TEST_CASE(&do_test_fork_1));
-    test->add(BOOST_TEST_CASE(&do_test_thread_interrupts_at_interruption_point));
     test->add(BOOST_TEST_CASE(&do_test_creation_through_functor));
     test->add(BOOST_TEST_CASE(&do_test_creation_through_reference_wrapper));
-    
+
+    test->add(BOOST_TEST_CASE(&do_test_get));
+    test->add(BOOST_TEST_CASE(&do_test_wait));
+    test->add(BOOST_TEST_CASE(&do_test_wait_until));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for));
+
     test->add(BOOST_TEST_CASE(&do_test_wait_all));
-    test->add(BOOST_TEST_CASE(&do_test_join_all));
-    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
+    test->add(BOOST_TEST_CASE(&do_test_wait_all_until));
+    test->add(BOOST_TEST_CASE(&do_test_wait_all_for));
     test->add(BOOST_TEST_CASE(&do_test_set_all));
+    test->add(BOOST_TEST_CASE(&do_test_get_all));
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_detach));
+    test->add(BOOST_TEST_CASE(&do_test_thread_interrupts_at_interruption_point));
+    test->add(BOOST_TEST_CASE(&do_test_join));
+    test->add(BOOST_TEST_CASE(&do_test_join_until));
+    test->add(BOOST_TEST_CASE(&do_test_join_for));
+    test->add(BOOST_TEST_CASE(&do_test_join_all));
+    test->add(BOOST_TEST_CASE(&do_test_join_all_until));
+    test->add(BOOST_TEST_CASE(&do_test_join_all_for));
     test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
+    test->add(BOOST_TEST_CASE(&do_test_wait_for_any_fusion_sequence));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_join));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_wait));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_get));
-    test->add(BOOST_TEST_CASE(&do_test_wait_for_any_fusion_sequence));
 
-    #if 0
+#if 0
+    test->add(BOOST_TEST_CASE(&do_test_member_lazy_fork));
     test->add(BOOST_TEST_CASE(&do_test_other));
-    test->add(BOOST_TEST_CASE(&do_test_get_all));
-    #endif
+    test_suite* test = BOOST_TEST_SUITE("unique_threader");
+
+    test->add(BOOST_TEST_CASE(&do_test_member_fork_move_unique));
+#endif
   return test;
 }
