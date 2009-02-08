@@ -1,7 +1,7 @@
 // Copyright (C) 2001-2003
 // William E. Kempf
 //
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_INTERTHREADS_CONFIG_WEK01032003_HPP
@@ -63,7 +63,7 @@
 #if !defined(BOOST_ALL_NO_LIB) && !defined(BOOST_INTERTHREADS_NO_LIB) && !defined(BOOST_INTERTHREADS_BUILD_DLL) && !defined(BOOST_INTERTHREADS_BUILD_LIB)
 //
 // Tell the autolink to link dynamically, this will get undef'ed by auto_link.hpp
-// once it's done with it: 
+// once it's done with it:
 //
 #if defined(BOOST_INTERTHREADS_USE_DLL)
 #   define BOOST_DYN_LINK

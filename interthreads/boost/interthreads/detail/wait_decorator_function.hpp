@@ -1,5 +1,5 @@
-#ifndef BOOST_INTERTHREADS_DECORATION_FUNCTION__HPP
-#define BOOST_INTERTHREADS_DECORATION_FUNCTION__HPP
+#ifndef BOOST_INTERTHREADS_WAIT_DECORATION_FUNCTION__HPP
+#define BOOST_INTERTHREADS_WAIT_DECORATION_FUNCTION__HPP
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -20,6 +20,7 @@
 #include <boost/function.hpp>
 #include <boost/utility/result_of.hpp>
 
+#include <boost/interthreads/detail/decorator_function.hpp>
 //#define BOOST_INTERTHREADS_THREAD_DECORATOR_MOVE
 
 #include <boost/config/abi_prefix.hpp>
@@ -27,33 +28,37 @@
 namespace boost {
 namespace interthreads {
     namespace detail {
-        template <typename T>
-        struct decorator_function_base {
-            virtual ~decorator_function_base() {}
-            virtual T operator()() const=0;
-        };
 
         template<typename F>
-        struct BOOST_INTERTHREADS_DECL decorator_function : decorator_function_base<typename boost::result_of<F()>::type> {
+        struct BOOST_INTERTHREADS_DECL wait_decorator_function : decorator_function_base<typename boost::result_of<F()>::type> {
             F f_;
+            boost::condition_variable& cond_;
+            bool started_&;
 
-            decorator_function(F f)
+            typedef  typename boost::result_of<F()>::type result_type;
+
+            wait_decorator_function(boost::condition_variable& cond, bool& started, F f)
                 : f_(f)
+                , cond_(cond)
+                , started_(started)
                 {}
 
             typename boost::result_of<F()>::type operator()() const {
+                started_=true;
+                cond_.notify_one();
                 return f_();
             }
         private:
-            decorator_function();
+            wait_decorator_function();
 
         };
 
         template<typename F>
-        static inline boost::shared_ptr<decorator_function_base<typename boost::result_of<F()>::type> > make_decorator_function(F f)
+        static inline boost::shared_ptr<wait_decorator_function_base<typename boost::result_of<F()>::type> > make_wait_decorator_function(F f)
         {
-            return boost::shared_ptr<decorator_function_base<typename boost::result_of<F()>::type> >(new decorator_function<F>(f));
+            return boost::shared_ptr<wait_decorator_function_base<typename boost::result_of<F()>::type> >(new wait_decorator_function<F>(f));
         }
+
     }
 
 }
