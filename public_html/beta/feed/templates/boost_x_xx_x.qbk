@@ -1,4 +1,4 @@
-[article Version 1.37.0
+[article Version 1.xx.x
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Updated Libraries: ]
@@ -8,8 +8,9 @@
 
 [include ext.qbk]
 
-[/ TODO: Update download link on release]
-[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041&release_id=616969]
+[/ TODO: Update download link on release, it currently just links to the list
+         of versions of boost on sourceforge.]
+[download http://sourceforge.net/project/showfiles.php?group_id=7586&package_id=8041]
 
 [/
     When adding libraries:
