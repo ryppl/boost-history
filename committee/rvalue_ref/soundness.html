@@ -19,6 +19,10 @@ Date: 2009-02-07<br>
 Number: D2831=09-0021<br>
 Revises: N2812=08-0322</p>
 
+<!-- TODO: string's getline? -->
+<!-- TODO: 27.6.2.7, then pick up after that with the insertion/extraction operators -->
+<!-- TODO: add the rvalue stream insertion/extraction operations -->
+
 <h2>Introduction</h2>
 <p><a href="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2008/n2812.html">N2812=08-0322</a> describes a safety problem with rvalue references that can cause unintentional modification of lvalues. The problem is summarized below; however, please read N2812 for a comprehensive discussion of the motivation behind this change. This paper provides proposed wording that fixes the safety problem in both the language and in the library. Specifically, this paper proposes XXX changes:</p>
 <ul>
@@ -28,11 +32,13 @@ Revises: N2812=08-0322</p>
 
   <li>Added the concepts <code>LvalueReference</code> and <code>RvalueReference</code>; the former is required for <code>std::forward</code>, the latter for consistency.</li>
 
-  <li>Removed the rvalue-reference <code>swap</code> functions throughout the library. This addresses library issue <a href="http://www.open-std.org/JTC1/SC22/WG21/docs/lwg-active.html#884">884</a> and follows the guidance of an informal vote of the LWG to remove these functions.</li>
+  <li>Reverted the rvalue-reference changes to <code>swap</code> functions throughout the library, removing rvalue-reference overloads and using lvalue references for the arguments to <code>swap</code>. This addresses library issue <a href="http://www.open-std.org/JTC1/SC22/WG21/docs/lwg-active.html#884">884</a> and follows the guidance of an informal vote of the LWG to remove these functions.</li>
 
   <li>Added missing <code>Swappable</code> requirements to <code>tuple</code>'s <code>swap</code>.</li>
 
   <li>Added an additional <code>operator*</code> associated function to the <code>Iterator</code> and <code>HasDereference</code> concepts to permit dereferencing lvalue iterators.</li>
+
+  <li>Changed the input and output streaming operators back to their C++03 versions by using lvalue references for the stream argument rather than rvalue references. Added new <code>operator&lt;&lt;</code> and <code>operator&gt;&gt;</code> overloads that accept rvalue streams and forward to the appropriate operator.</li>
 </ul>
 
 
@@ -381,6 +387,25 @@ template&lt;class charT, class traits, class Allocator&gt;
 <ol>
   <li><i>Effects</i>: <code>lhs.swap(rhs);</code></li>
 </ol>
+
+<h3>21.3.8.9 Inserters and extractors [string.io]</h3>
+<p>Change the declaration of basic_string's <code>operator&gt;&gt;</code> as follows:</p>
+
+<pre>
+template&lt;class charT, class traits, class Allocator&gt; 
+  basic_istream&lt;charT,traits&gt;&amp; 
+   operator&gt;&gt;(basic_istream&lt;charT,traits&gt;&amp;<del>&amp;</del> is, 
+              basic_string&lt;charT,traits,Allocator&gt;&amp; str);
+</pre>
+
+<p>Change the declaration of basic_string's <code>operator&lt;&lt;</code> as follows:</p>
+
+<pre>
+template&lt;class charT, class traits, class Allocator&gt; 
+  basic_ostream&lt;charT, traits&gt;&amp; 
+    operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp;<del>&amp;</del> os, 
+               const basic_string&lt;charT,traits,Allocator&gt;&amp; str);
+</pre>
 
 <h3>23.2.2 Class template deque [deque]</h3>
 <p>Change the declaration of deque's <code>swap</code> as follows:</p>
@@ -871,6 +896,79 @@ template &lt;class charT, class traits&gt;
   <del>void swap(basic_ostream&lt;charT, traits&gt;&amp; x, basic_ostream&lt;charT, traits&gt;&amp;&amp; y);</del>
 </pre>
 
+<h3>27.6.2.6.4 Character inserter function templates [ostream.inserters.character]</h3>
+<p>Remove the rvalue-reference overloads of <code>basic_ostream</code>'s inserter function templates prior to paragraph 1 as follows:</p>
+
+<pre>
+template&lt;class charT, class traits&gt; 
+  basic_ostream&lt;charT,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;charT,traits&gt;&amp; out, 
+                                          charT c); 
+<del>template&lt;class charT, class traits&gt;</del>
+  <del>basic_ostream&lt;charT,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;charT,traits&gt;&amp;&amp; out,</del>
+                                          <del>charT c);</del>
+template&lt;class charT, class traits&gt; 
+  basic_ostream&lt;charT,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;charT,traits&gt;&amp; out, 
+                                          char c);
+<del>template&lt;class charT, class traits&gt; </del>
+  <del>basic_ostream&lt;charT,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;charT,traits&gt;&amp;&amp; out,</del>
+                                          <del>char c);</del>
+// specialization 
+template&lt;class traits&gt; 
+  basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp; out, 
+                                          char c); 
+<del>template&lt;class traits&gt;</del>
+  <del>basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp;&amp; out,</del>
+                                          <del>char c);</del>
+// signed and unsigned 
+template&lt;class traits&gt; 
+  basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp; out, 
+                                          signed char c); 
+<del>template&lt;class traits&gt;</del>
+  <del>basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp;&amp; out,</del>
+                                          <del>signed char c);</del>
+template&lt;class traits&gt; 
+  basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp; out, 
+un                                          signed char c); 
+<del>template&lt;class traits&gt;</del>
+  <del>basic_ostream&lt;char,traits&gt;&amp; operator&lt;&lt;(basic_ostream&lt;char,traits&gt;&amp;&amp; out,</del>
+                                          <del>unsigned char c);</del>
+</pre>
+
+<p>Remove the rvalue-reference overloads of <code>basic_ostream</code>'s inserter function templates prior to paragraph 3 as follows:</p>
+
+<pre>
+template<class charT, class traits> 
+basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& out, 
+const charT* s); 
+template<class charT, class traits> 
+basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&& out, 
+const charT* s); 
+template<class charT, class traits> 
+basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>& out, 
+const char* s); 
+template<class charT, class traits> 
+basic_ostream<charT,traits>& operator<<(basic_ostream<charT,traits>&& out, 
+const char* s); 
+template<class traits>
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>& out, 
+const char* s); 
+template<class traits> 
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&& out, 
+const char* s); 
+template<class traits> 
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>& out, 
+const signed char* s); 
+template<class traits> 
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&& out, 
+const signed char* s); 
+template<class traits> 
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>& out, 
+const unsigned char* s); 
+template<class traits> 
+basic_ostream<char,traits>& operator<<(basic_ostream<char,traits>&& out, 
+const unsigned char* s);
+</pre>
+
 <h3>27.7.1 Class template basic_stringbuf [stringbuf]</h3>
 <p>Change the declaration of basic_stringbuf's <code>swap</code> as follows:</p>
 
@@ -1155,5 +1253,5 @@ template &lt;class Mutex&gt;
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sat Feb  7 21:43:11 PST 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sat Feb  7 22:15:10 PST 2009 <!-- hhmts end -->
 </body> </html>
