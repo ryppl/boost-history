@@ -1,0 +1,70 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+if not env.CheckMPI():
+    Return()
+
+env.Append(
+    CPPDEFINES = "BOOST_MPI_SOURCE=1",
+    LIBPATH = Dir("#/" + Dir(".").path.replace("/mpi/", "/serialization/")),
+    LIBS = "boost_serialization"
+    )
+env.BoostLibrary(
+    "mpi",
+    Split("""
+    broadcast.cpp
+    communicator.cpp
+    computation_tree.cpp
+    content_oarchive.cpp
+    environment.cpp
+    exception.cpp
+    graph_communicator.cpp
+    group.cpp
+    intercommunicator.cpp
+    mpi_datatype_cache.cpp
+    mpi_datatype_oarchive.cpp
+    packed_iarchive.cpp
+    packed_oarchive.cpp
+    packed_skeleton_iarchive.cpp
+    packed_skeleton_oarchive.cpp
+    point_to_point.cpp
+    request.cpp
+    text_skeleton_oarchive.cpp
+    timer.cpp
+    """)
+    )
+
+if not env.CheckPython():
+    Return()
+
+env = env.Clone()
+env.Append(
+    CPPDEFINES = "BOOST_MPI_PYTHON_SOURCE=1",
+    LIBPATH = [Dir("."), Dir("#/" + Dir(".").path.replace("/mpi/", "/python/"))],
+    LIBS = ["boost_mpi", "boost_python"]
+    )
+if env["LINK_DYNAMIC"]:
+    env.Append(CPPDEFINES = ["BOOST_MPI_PYTHON_DYN_LINK=1", "BOOST_PYTHON_DYN_LINK=1"])
+env.BoostLibrary(
+    "mpi_python",
+    "python/serialize.cpp"
+    )
+
+env.PythonExtension(
+    "mpi",
+    Split("""
+    python/collectives.cpp
+    python/py_communicator.cpp
+    python/datatypes.cpp
+    python/documentation.cpp
+    python/py_environment.cpp
+    python/py_nonblocking.cpp
+    python/py_exception.cpp
+    python/module.cpp
+    python/py_request.cpp
+    python/skeleton_and_content.cpp
+    python/status.cpp
+    python/py_timer.cpp
+    """),
+    LIBS = env["LIBS"] + ["boost_mpi_python"]
+    )

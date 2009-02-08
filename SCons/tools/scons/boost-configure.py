@@ -36,10 +36,21 @@ class CheckPython(DependencyChecker):
         env.AppendUnique(**self.flags)
         self.have_dep = self.conf.CheckCHeader("Python.h")
 
+class CheckMPI(DependencyChecker):
+    def Check(self, env):
+        try:
+            from subprocess import Popen, PIPE
+            self.flags = env.ParseFlags(Popen(["mpic++", "-showme"], stdout = PIPE).communicate()[0].split(" ", 1)[1])
+            env.AppendUnique(**self.flags)
+            self.have_dep = self.conf.CheckCHeader("mpi.h")
+        except:
+            self.have_dep = False
+
 def generate(env):
     env.AddMethod(CheckZLib())
     env.AddMethod(CheckBZip2())
     env.AddMethod(CheckPython())
+    env.AddMethod(CheckMPI())
 
 def exists():
     return True
