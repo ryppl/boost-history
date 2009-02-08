@@ -1,7 +1,7 @@
 
-# (C) Copyright 2008-20009 Vicente J Botet Escriba.
+# (C) Copyright 2008-2009 Vicente J Botet Escriba.
 #
-# Distributed under the Boost Software License, Version 1.0. (See accompanying 
+# Distributed under the Boost Software License, Version 1.0. (See accompanying
 # file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #path-constant boost-images : ../../../../doc/src/images ;
@@ -32,7 +32,7 @@ boostbook standalone
         <xsl:param>boost.libraries=../../../../libs/libraries.htm
         # Use the main Boost stylesheet:
         <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
-        
+
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:
         #<xsl:param>fop1.extensions=1

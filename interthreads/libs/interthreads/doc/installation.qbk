@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008-20009 Vicente J. Botet Escriba
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -23,14 +23,17 @@ You can also access the latest (unstable?) state from the [@https://svn.boost.or
 [heading Building Boost.InterThreads]
 [/==================================]
 
-__Boost_InterThreads__ is not a header only library. There is a need to compile it before use.
+__Boost_InterThreads__ is not a header only library. You need to compile it before use.
+
+    cd libs/interthreads/build
+    bjam
 
 [/=========================]
 [heading Build Requirements]
 [/=========================]
 
 
-[*Boost.InterThreads] depends on Boost. You must use either Boost version 1.37.x 
+[*Boost.InterThreads] depends on Boost. You must use either Boost version 1.37.x
 or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
 
 [variablelist
@@ -59,7 +62,7 @@ or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
     [[@http://www.boost.org/libs/smart_ptr [*Boost.SmartPtr]]] [for shared_ptr, ...]
 ]
 [
-    [[@http://www.boost.org/libs/thread [*Boost.Threads]]] [for thread, thread_specific_ptr, call_once, mutex, ...]
+    [[@http://www.boost.org/libs/thread [*Boost.Threads]]] [for thread, thread_specific_ptr, call_once, mutex, condition_variable, ...]
 ]
 [
     [[@http://www.boost.org/libs/typeof [*Boost.TypeOf]]] [to register the ACT types.]
@@ -72,35 +75,42 @@ or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
 ]
 ]
 
-In addition it depends on the following libraries that are not accepted yet on Boost
+In addition it depends on the following libraries that are not yet accepted on Boost
+[variablelist
+[
+    [[@http://www.boost.org/libs/futures [*Boost.Futures]]] [for futures]
+]
+[
+    [[@http://www.boost.org/libs/tp [*Boost.ThreadPool]]] [Only when using the __AE_ boost::tp::pool and the __ACT__ boost::tp::task]
+]
+]
+
+And also could depend conditionaly on the following libraries that even not submited on Boost.
 [variablelist
 [
     [[@http://www.boost.org/libs/chrono [*Boost.Chrono]]] [for time and duration]
 ]
 [
-    [[@http://www.boost.org/libs/futures [*Boost.Futures]]] [for futures]
-]
-[
     [[@http://www.boost.org/libs/move [*Boost.Move]]] [to emulate the move semantic.]
 ]
 [
-    [[@http://www.boost.org/libs/tp [*Boost.ThreadPool]]] [for pool and task, whne you use the scheduler class]
+    [[@https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.SmartPtr.UniquePtr [*Boost.SmartPtr.UniquePtr]]] [for unique_ptr, ...]
 ]
+
 ]
 
 [/========================]
 [heading Exceptions safety]
 [/========================]
 
-All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as 
-the underlying parameters provide it. 
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
+the underlying parameters provide it.
 
 [/====================]
 [heading Thread safety]
 [/====================]
 
-All functions in the library are exception-safe except:
-To be completed:
+All functions in the library are thread-unsafe except when notes explicitly.
 
 [/=======================]
 [heading Tested compilers]

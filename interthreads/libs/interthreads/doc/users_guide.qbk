@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2008-20009 Vicente J. Botet Escriba
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -18,13 +18,28 @@
 [section:bibliography References]
 [/==============================]
 
+[/
 [variablelist
 [[boost::call_once] [Boost.Thread implementation for call_once.]]
 [[boost::this_thread::at_thread_exit] [Boost.Thread implementation for at thread exit cleanup registration.]]
 [[boost::thread_specific_ptr] [Boost.Thread implementation for TSS.]]
 [[boost::thread_group] [Boost.Thread thread_group.]]
 ]
+]
+
+[variablelist
+[[[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]] []]
+[[[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html N2185 - Proposed Text for Parallel Task Execution]] []]
+[[[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2276.html N2276 - Thread Pools and Futures]] []]
+[[[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802: A plea to reconsider detach-on-destruction for thread objects] ] []]
+[[[@http://www.boostpro.com/vault/index.php?action=downloadfile&filename=boost-threadpool.3.tar.gz&directory=Concurrent%20Programming&  Boost.ThreadPool (O. Kowalke)]] []]
+[[[@http://www.justsoftwaresolutions.co.uk/threading/free-implementation-of-c++-futures.html  Boost.Futures (A. Williams)]] []]
+[[[@http://www.boost.org/libs/thread  Boost.Thread (A. Williams)]] []]
+]
+
+
 [endsect]
+
 
 [/=======================]
 [section:glosary Glossary]

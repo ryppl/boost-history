@@ -1,6 +1,5 @@
 [/
-[/
-  (C) Copyright 2008-20009 Vicente J. Botet Escriba
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -12,69 +11,152 @@
 
 [include changes.qbk]
 
-[include rationale.qbk]
+[/include rationale.qbk]
 
-[include implementation.qbk]
+[/include implementation.qbk]
 
 [include acknowledgements.qbk]
 
+[include tests.qbk]
+[include tickets.qbk]
+
 [/=====================================]
-[section:todo  Appendix E: Future plans]
+[section:todo  Appendix G: Future plans]
 [/=====================================]
 
 [section Tasks to do before review]
-[variablelist
 
-[[Solve the bugs] [v0.2#1]]
 
-[[Add polymorphic act and adapters] []]
+[heading Add an overloading for wait_for_all(ae, f, seq)]
 
-[[Add more examples] [ae/act framework.]]
+This will be quite useful on recursive algorithms evaluating asynchronously the same function on different parts.
 
-[[Complete the reference] [ae/act framework, typeof.]]
+    template <
+        typename DirectSolver,
+        typename Composer,
+        typename AsynchronousExecutor,
+        typename Input>
+    void inplace_solve(AsynchronousExecutor& ae, Problem& input) {
+      //  if (problem is small)
+        if (size(range) < concurrency_threshold) {
+        // directly solve problem
+            DirectSolver()(input);
+        } else {
+            // split problem into independent parts
+            BOOST_AUTO(partition, partition_view(input));
+            // evaluates asynchronously inplace_solve on each element of the partition
+            // using the asynchronous executor as scheduler
+            wait_for_all(ae, inplace_solve, partition);
+            // compose the result in place from subresults
+            Composer()(partition);
+        }
+    }
 
-[[Change the rational and implementation sections] []]
 
-[[Use set_once to implement wait_for_any] [The current implementation uses the Boost.Futures 
-wait_for_any to implement this feauture, which add an superflous constraint be able to get a future to all the AE/ACT. 
-In adition the wait_for_any has now 0(N) complexity.]]
+[heading Scoped forking]
 
-[[Complete the tests] [Even if the current release include some test there is yet a long way before been able to review the library.]]
+In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802: A plea to reconsider detach-on-destruction for thread objects]
+Hans-J. Boehm explain why is detaching on destruction so dangerous and gives two solutions: 1) replace the call to detach by a join, 2) replace by a terminate call
 
-[[Complete the STM example] [.]]
+The library could provide
 
-[[Optimize the TSSS maps using intrusive containers] [.]]
+* a RAII scoped_join which will join the assocaited act on the destructor if not already joined,
 
-[[Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise] [.]]
+    basic_threader ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+    scoped_join<BOOST_TYPEOF(act)> j(act);
 
-[[Use C++0x variadic templates on compilers supporting it and the Use the preprocesor otherwise] [.]]
+* a RAII scoped_terminate which will call to teminate on the destructor if not already joined,
 
-]
+    basic_threader ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+    scoped_terminate<BOOST_TYPEOF(act)> j(act);
+
+* a RAII scoped_fork_join which will fork on construction and join the assocaited act on the destructor if not already joined,
+
+    basic_threader ae;
+    scoped_fork_join<BOOST_TYPEOF(bith::fork(ae, simple_thread)) > act(ae, simple_thread);
+
+* a RAII scoped_fork_terminate which will fork on construction and call to teminate on the destructor if not already joined,
+
+    basic_threader ae;
+    scoped_fork_terminate<BOOST_TYPEOF(bith::fork(ae, simple_thread) > act(ae, simple_thread);
+
+* an __AE__ adapter  which will return an __ACT__ that will join the assocaited act on the destructor if not already joined.
+
+    ae_scoped_fork_join<basic_threader> ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+
+* an __AE__ adapter ae_scoped_fork_terminate which will return an__ACT__ that will join the assocaited act on the destructor if not already joined.
+
+    ae_scoped_fork_terminate<basic_threader> ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+
+
+[heading Add polymorphic act and adapters]
+When we need to chain __ACT__ using the fork_after the nature of the __ACT__ can change over time, an why not change also its
+template parameter. So at least we need to make polymorphic every function used by fork_after.
+
+[heading Use set_once to implement wait_for_any]
+The current implementation uses the Boost.Futures wait_for_any to implement this feauture, which add weigth  constraint:
+be able to get a future from all the AE/ACT. As AE/ACT wait_for_any evaluates the function itselfs, he can decorate the
+function and signal the first one.]]
+
+[heading Complete the tests]
+
+Even if the current release include some test there is yet a long way before been able to review the library.]]
+
+* change the test so they take less time using locks; conditions and variables.
+* Complete the test for the AE/ACT framework
+* Add test with functions throwing
+* Formalize the tests for thread_decoratoor
+* Formalize the tests for thread_specific_shared_ptr
+* Add tests for asynchronous_executor_decorator, basic_threader_decorator and threader_decorator
+* Add tests for keep alive mechanism
+
+[heading Add more examples]
+
+* Use of the ae/act framework instead of thread_tuples in the Getting Started section.
+* Complete the STM example.
+* A a parallel sort
+* Change the implementation of the file on the async_ostream.
+
+[heading Complete the reference]
+
+* ae/act framework
+* typeof
+
+[heading Change the rational and implementation sections]
+
 [endsect]
 
 [section For later releases]
 
-[variablelist
-[
-    [Add Message queues] [Messages queue are the next step concerning the communication between threads on the InterThreads library.]
-]
-[
-    [Add Rendez-vous] 
-    [Concurrent components may interact in different ways: they may access the same objects by, for example, 
-    executing functions of these objects; or they may communicate directly by executing functions of each other. 
-    These library will provide the so-called rendezvous mechanism for handling direct communication between active objects.]
-]
-[
-    [Add a daemon controlling all the keep alive controller threads] [This daemon will send regular keep_alive messages and kill the process when dead]
-]
-[
-    [Generalize both specific pointers in a template class basic_thread_specific_ptr] []
-]
 
-]
+[heading Use Boost.Chrono]
 
+[heading Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise]
 
-[section `basic_thread_specific_ptr` Domain Features]
+[heading Use C++0x variadic templates on compilers supporting it and use the preprocesor otherwise]
+
+[heading Use C++0x Concepts on compilers supporting them and use the Boost.ConceptCheck or Boost.ConceptTraits otherwise]
+
+[heading Add Message queues]
+Messages queue are the next step concerning the communication between threads on the InterThreads library.]
+
+[heading  Add Rendez-vous]
+Concurrent components may interact in different ways: they may access the same objects by, for example,
+executing functions of these objects; or they may communicate directly by executing functions of each other.
+These library will provide the so-called rendezvous mechanism for handling direct communication between active objects.]
+
+[heading Add a daemon controlling all the keep alive controller threads]
+This daemon will send regular keep_alive messages and kill the process when dead.
+
+[heading Optimize the TSSS maps using intrusive containers]
+
+[heading Generalize both specific pointers in a template class basic_thread_specific_ptr]
+
+[*Domain Features]
 
 [variablelist
 
@@ -88,58 +170,57 @@ In adition the wait_for_any has now 0(N) complexity.]]
 
 ]
 
-The current `thread_specific_ptr` is exclusive, has a variable key range and so the key is initialized at construction time and 
+The current `thread_specific_ptr` is exclusive, has a variable key range and so the key is initialized at construction time and
 explicit context setting by user on the current thread.
 
     typedef basic_thread_specific_ptr<exclusive, variable_key_range<>, eager_context_setting> thread_specific_ptr;
 
-The current `thread_specific_shared_ptr` is shared, has a variable key range and so the key is initialized at construction time and 
+The current `thread_specific_shared_ptr` is shared, has a variable key range and so the key is initialized at construction time and
 explicit context setting by user on the current thread.
 
     typedef basic_thread_specific_ptr<exclusive, variable_key_range<>, eager_context_setting> thread_specific_ptr;
 
 [*Design rationale]
 
-`boost::thread_specific_ptr` uses as key the address of the variable. This has as consequence that 
-the mapping from keys to the thread specific context pointer is much less efficient that the direct access provided 
-by some implementations. In this concern this library would try to improve the performance to this mapping providing 
-direct access keys. As the number of direct access keys must be know at compile time this has a limit on the number 
-of thread specific pointers. A mixed approach would be also provided in which the key could be a fixed one or a 
-variable one. It is up to the user to give an hint of the key sort. 
-When using fixed or mixed keys, there is decision to take related to when the key is created, i.e. eager before the 
+`boost::thread_specific_ptr` uses as key the address of the variable. This has as consequence that
+the mapping from keys to the thread specific context pointer is much less efficient that the direct access provided
+by some implementations. In this concern this library would try to improve the performance to this mapping providing
+direct access keys. As the number of direct access keys must be know at compile time this has a limit on the number
+of thread specific pointers. A mixed approach would be also provided in which the key could be a fixed one or a
+variable one. It is up to the user to give an hint of the key sort.
+When using fixed or mixed keys, there is decision to take related to when the key is created, i.e. eager before the
 threads starts or lazy when we need it.
 
 Non-portable: The interfaces of POSIX Pthreads, Solaris threads, and Win32 threads are very similar. However,
 the semantics of Win32 threads are subtly different since they do not provide a reliable means of cleaning up objects
-allocated in thread-specific storage when a thread exits. Moreover, there is no API to delete a key in Solaris 
+allocated in thread-specific storage when a thread exits. Moreover, there is no API to delete a key in Solaris
 threads. This makes it hard to write portable code among UNIX and Win32 platforms.
 
-So we need to implement it on top of the underlying OS. The idea is to take a native thread specific pointer which 
-will manage with the fixed, variable and mixed keys. This exactly the approach of `boost::thread_specific_ptr` but 
+So we need to implement it on top of the underlying OS. The idea is to take a native thread specific pointer which
+will manage with the fixed, variable and mixed keys. This exactly the approach of `boost::thread_specific_ptr` but
 only for variable keys.
 
-Just to finish, we need to decide when the context is set, two possibilities: the user sets explicitlly the context 
-when it considers pertinent or the context is created lazily the first time we try to get it. The first approach has 
-the liability that the user needs to ensure that the context is set before get them, but when the context must be set 
-before the function thread starts this is a no issue. The second is safe but has as consequence that every access 
-include a check. In addition the type must be default constructible. 
+Just to finish, we need to decide when the context is set, two possibilities: the user sets explicitlly the context
+when it considers pertinent or the context is created lazily the first time we try to get it. The first approach has
+the liability that the user needs to ensure that the context is set before get them, but when the context must be set
+before the function thread starts this is a no issue. The second is safe but has as consequence that every access
+include a check. In addition the type must be default constructible.
 
     bith::thread_specific_shared_ptr<myclass, lazy_setting> ptr;
 
 The pointer will be initilaized when needed as if we had do
 
-    if (ptr.get()==0) { 
+    if (ptr.get()==0) {
         ptr.reset( new myclass() );
     }
 
-Between the features: 
+Between the features:
 
-Thread_specific key mapping optimization: Replace the Boost.Thread thread_specific_ptr thread specific key mapping implementation 
-by a mix of fixed/variable mapping which will provide efficient access to the fixed keys and scalability with the 
+Thread_specific key mapping optimization: Replace the Boost.Thread thread_specific_ptr thread specific key mapping implementation
+by a mix of fixed/variable mapping which will provide efficient access to the fixed keys and scalability with the
 others keys.
 
 Configuration the fixed/variable/mixed key range, ordered/unordered map, intrusive/extrusive map, shared/exclusive locking.
-[endsect]
 
 
 [endsect]

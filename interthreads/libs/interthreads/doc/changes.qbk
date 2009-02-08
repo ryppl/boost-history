@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008-20009 Vicente J Botet Escriba.
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -7,26 +7,62 @@
 
 [section:changes  Appendix A: History]
 
+[section [*Version 0.4, January 31, 2009] bug fixes]
+
+[*New Features:]
+
+* New free functions for all the __ACT__ operations, providing a higher degree of freedom.
+* Missing `have_all_values()`, `have_all_exception()` and `are_all_ready()` functions on __ACT__ fusion tuples.
+* `get_all`: getting all the values from a tuple of __ACT__ works now.
+* fork_after overloaded for a single dependency
+* wait_all overloaded for a single ACT.
+* wait_for_all evaluate one of its elements on the current thread
+* No need to use `wait_and_get()` on `thread_specific_shared_ptr<>` to synchronize with the decoration
+if the thread is created using a __AE__ decorator. In this case the synchro is done before returning the __ACT__.
+See the tutorial and the mono_thread_id example.
+
+[*Documentation:]
+
+* New Tickets and test appendices
+
+[*Fixed Bugs:]
+
+[*v0.2#1: `ae::get_all` do not work yet.]
+`get_all()` do not work because fusion transform sequence function can not take non const sequences.
+I have emulated it using `set_all()` and a transformation for a tuple of __ACT_ to a tuple of result_type.
+
+[*v0.3.1#1: keep alive mechanism crash when setting `set_on_dead_thread()` before enabling the mechanism.]
+This was due to the fact that there were no default data for the backup.
+
+[*v0.3.1#2: keep alive mechanism do not detect dead threads.]
+We need to reset the counters only when the period is 0.
+
+[*v0.3.1#3: The `set_on_dead_thread()` setting is not recovered by embeeding kep_alive enablers/disablers.]
+The problem is that the `on_dead()` the function and the thread pointer were stored on the backup. It is enough to store
+them on the `thread_keep_alive_ctx` and make the functions thread_safe.
+
+[endsect]
+
 [section [*Version 0.3.1, January 25, 2009] bug fixes]
 
 [*Fixed Bugs:]
 
-[*v0.3#3: scheduler::do_test_fork_after_wait do not work yet.]
+[*v0.3#3: `scheduler::do_test_fork_after_wait` do not work yet.]
 To solve this issue it enough to define boost::move for tp::task
 
-[*v0.3#2: scheduler::do_test_fork_after_get do not work yet.]
+[*v0.3#2: `scheduler::do_test_fork_after_get` do not work yet.]
 To solve this issue it enough to define boost::move for tp::task
 
-[*v0.3#1: scheduler::do_test_wait_for_any do not work yet.]
+[*v0.3#1: `scheduler::do_test_wait_for_any` do not work yet.]
 Not reproductible
 
-[*v0.2#2: Some trouble with the use of tp::pool directly, use scheduler instead.]
-Four issues. 
+[*v0.2#2: Some trouble with the use of `tp::pool` directly, use `scheduler` instead.]
+Four issues.
 
-* The parameter to fork on tp:pool was a const F& instead of a F. 
-* Direct use of fork_all resolved for the other AE by ADL, which could not be the case fro the tp::pool.
-* fork specialization for tp::pool incorrent.
-* use of the default handle instead of asynchronous_completion_token traits class
+* The parameter to fork on `tp:pool` was a `const F&` instead of a `F`.
+* Direct use of `fork_all` resolved for the other __AE__ by ADL, which could not be the case for the `tp::pool`.
+* `fork` specialization for `tp::pool` incorrect.
+* use of the default handle instead of `asynchronous_completion_token` traits class
 
 [endsect]
 
@@ -34,9 +70,9 @@ Four issues.
 
 [*New Features:]
 
-* fork_after: request the AE to execute a function asynchronously once each one of ACTs in the dependency tuple parameter are ready.
+* `fork_after`: request the __AE__ to execute a function asynchronously once each one of __ACT__ s in the dependency tuple parameter are ready.
 * Add act traits, as value type, is movable, has_future_if, has_thread_if
- 
+
 [endsect]
 
 [section [*Version 0.2, January 14, 2009] Asynchronous execution and test on more toolsets]
@@ -44,16 +80,16 @@ Four issues.
 [*New Features:]
 
 * Asynchronous executors (AE) and asynchronous completion token (ACT) framework
-    * fork and fork_all functions
-    * wait_for_all, wait_for_any functions
-    * set_all, join_all, ...
-* unique/shared threader (AE) and unique/shared joiner(ACT) classes
-* basic_threader(AE) class
-* unique/shared launcher(AE) class
-* scheduler(AE) class (working with tp::pool(AE) and tp::task (ACT))
-* thread_decorator can now decorate a nullary function in addition to a callable function
-* asynchronous_executor_decorator mixin allows to decorate the functions launched by an asynchronous executor
-* Boost.Typeof registration for the ACT classes
+    * `fork` and `fork_all` functions
+    * `wait_for_all`, `wait_for_any` functions
+    * `set_all`, `join_all`, ...
+* `unique/shared_threader` (AE) and `unique/shared_joiner` (ACT) classes
+* `basic_threader` (AE) class
+* `unique/shared_launcher` (AE) class
+* `scheduler` (AE) class (working with `tp::pool`(AE) and `tp::task<>` (ACT))
+* `thread_decorator` can now decorate a nullary function in addition to a callable function
+* `asynchronous_executor_decorator` mixin allows to decorate the functions launched by an asynchronous executor
+* Boost.Typeof registration for the __ACT__ classes
 * The AE/ACT framework comes with significant tests
 
 [*Toolsets:]
@@ -64,7 +100,7 @@ Four issues.
 
 [*Fixed Bugs:]
 
-[*v0.1#1: basic_keep_alive example do not link.] 
+[*v0.1#1: basic_keep_alive example do not link.]
 
 [endsect]
 
@@ -72,22 +108,33 @@ Four issues.
 
 [*Features:]
 
-* thread setup/cleanup decorator, 
-* thread specific shared pointer, 
-* thread keep alive mechanism, 
+* `thread_decorator` setup/cleanup thread decorator,
+* thread specific shared pointer,
+* thread keep alive mechanism,
 * thread tuples, set_once synchonizer, thread_tuple_once and thread_group_once.
 
 [endsect]
- 
+
 [section [*Bugs]]
 
 [heading [*Open Bugs:]]
 
-[*v0.2#1: ae::get_all do not work yet, use set_all instead.] 
-get_all do not work because fusion transform sequence function can not take non const sequences.
-Maybe we can emulate it using set_all and a mpl a transformation for a tuple of ACT to a tuple of result_type.
+[*v0.4.0#1: wait_for_any.]
 
 [heading [*Fixed Bugs:]]
+
+[*v0.3.1#1: keep alive mechanism crash when setting set_on_dead_thread before enabling the mechanism.]
+This was due to the fact that there were no default data for the backup.
+
+[*v0.3.1#2: keep alive mechanism do not detect dead threads.]
+We need to reste the counters only when the period is 0.
+
+[*v0.3.1#3: The set_on_dead_thread setting is not recovered by embeeding enablers/disablers.]
+The problem is that the on_dead  and th thread pointer were stored on the backup. It is enough to store them on the
+
+[*v0.2#1: ae::get_all do not work yet.]
+get_all do not work because fusion transform sequence function can not take non const sequences.
+I have emulated it using set_all and a transformation for a tuple of ACT to a tuple of result_type.
 
 [*v0.3#3: scheduler::do_test_fork_after_wait do not work yet.]
 To solve this issue it enough to define boost::move for tp::task
@@ -99,14 +146,14 @@ To solve this issue it enough to define boost::move for tp::task
 Not reproductible
 
 [*v0.2#2: Some trouble with the use of tp::pool directly, use scheduler instead.]
-Four issues. 
+Four issues.
 
-* The parameter to fork on tp:pool was a const F& instead of a F. 
+* The parameter to fork on tp:pool was a const F& instead of a F.
 * Direct use of fork_all resolved for the other AE by ADL, which could not be the case fro the tp::pool.
 * fork specialization for tp::pool incorrent.
 * use of the default handle instead of asynchronous_completion_token traits class
 
-[*v0.1#1: basic_keep_alive example do not link.] 
+[*v0.1#1: basic_keep_alive example do not link.]
 
 [endsect]
 

@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2008-20009 Vicente J. Botet Escriba
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -22,7 +22,7 @@ This is a little bit more than a Hello World! example. It will also say Bye, Bye
     #include <boost/interthreads/thread_decorator.hpp>
     #include <boost/thread.hpp>
     #include <iostream>
-        
+
     namespace bith = boost::interthreads;
 
     void my_setup() {
@@ -38,7 +38,7 @@ This is a little bit more than a Hello World! example. It will also say Bye, Bye
     void my_thread() {
         std::cout << "..." << std::endl;
     }
-    
+
     int main() {
         boost::thread th(bith::make_decorator(my_thread));
         th.join();
@@ -46,8 +46,8 @@ This is a little bit more than a Hello World! example. It will also say Bye, Bye
     }
 
 When `th` is created with the `bith::thread_decorator` wrapper, it will initialize all the decorations before calling `my_thread`.
-This `my_cleanup` will be registered with the `boost:this_thread::at_thread_exit` if the `my_setup` function succeeds i.e. do not throws. 
-Then the thread function `my_thread` is called. At the thread exit, the `my_cleanup` function is called. This results on the following output    
+This `my_cleanup` will be registered with the `boost:this_thread::at_thread_exit` if the `my_setup` function succeeds i.e. do not throws.
+Then the thread function `my_thread` is called. At the thread exit, the `my_cleanup` function is called. This results on the following output
 
 [pre
 Hello World!
@@ -55,11 +55,14 @@ Hello World!
 Bye, Bye!
 ]
 
+[/
 
     int main() {
         bith::wait_for_all(basic_threader_decorator, my_thread);
         return 0;
     }
+
+]
 
 [endsect]
 
@@ -67,22 +70,28 @@ Bye, Bye!
 [section Monotonic Thread Id]
 [/==========================]
 
-This example use thread decorator and threas specific pointers to implement a monotonic thread identifier.
+This example use thread decorator and thread specific pointers to implement a monotonic thread identifier.
+
+The monotonic thread identifier is managed by the mono_thread_id class.
+There is a mutex protecting the access to the monotonic counter.
+The main difference between a thread_specific_shared_ptr and thread_specific_ptr is that we can get the specific pointer of another thread (*)
+Whith the help of bith::thread_decoration the setting of the thread specific shared pointer is done transparently as far as the thread
+is created using a thread decorator. This setup function reset the specific pointer with the value of the monotonic counter which will be self increased.
 
     #include <boost/interthreads/thread_decorator.hpp>
     #include <boost/interthreads/thread_specific_shared_ptr.hpp>
     #include <boost/thread.hpp>
     #include <iostream>
-        
+
     namespace bith = boost::interthreads;
 
     class mono_thread_id {
         static bith::thread_decoration decoration_;
         typedef bith::thread_specific_shared_ptr<unsigned> tssp_type;
         static tssp_type current_;
-        static unsigned counter_=0;
+        static unsigned counter_;
         static boost::mutex sync_;
-        
+
         static unsigned create() {
             boost::lock_guard<boost::mutex> lock(sync_);
             unsigned res = counter_;
@@ -92,12 +101,12 @@ This example use thread decorator and threas specific pointers to implement a mo
         static void setup() {
             current_.reset(new unsigned(create());
         }
-    public:        
+    public:
         static unsigned id() {
             return *current_;
         }
         static unsigned id(boost::thread::id id) {
-            return *current_[id]
+            return *current_[id];                       // (*)
         }
 
     };
@@ -106,35 +115,33 @@ This example use thread decorator and threas specific pointers to implement a mo
     mono_thread_id::tssp_type mono_thread_id::current_;
     unsigned mono_thread_id::counter_=0;
     boost::mutex mono_thread_id::sync_;
-    
 
-The monotonic thread identifier is managed by the mono_thread_id class. 
-There is a mutex protecting the access to the monotonic counter. 
-A decoration for the setup function will set the thread specific shared pointer with the value of the monotonic counter which 
-will be self increased.
-
-In this way the applications using the thread_decorator can have access to a monotonic thread id mono_thread_id::id() 
+In this way the applications using the thread_decorator can have access to a monotonic thread id mono_thread_id::id()
 and this id is accesible to other threads providing the boost::thread::id.
 
     void my_thread() {
         std::cout << "mono_thread_id=" << mono_thread_id::id() << std::endl;
         sleep(5);
     }
-    
-    int main() {
-        boost::thread th1(bith::make_decorator(my_thread));
-        boost::thread th2(bith::make_decorator(my_thread));
-        sleep(2);
 
-        std::cout << "thread::id=" << th1.get_id() 
-                  << " mono_thread_id=" << mono_thread_id::id(th1.get_id()) 
+    struct mono_thread_id_out {
+        template<typename T>
+        void operator()(T& t) const {
+            std::cout << "thread::id=" << t.get_id()
+                  << " mono_thread_id=" << mono_thread_id::id(t.get_id())
                   << std::endl;
-        th1.join();
-        th2.join();
+        }
+    };
+
+    int main() {
+        bith::shared_threader_decorator ae;
+        BOOST_AUTO(handles, bith::fork_all(basic_threader_decorator, my_thread, my_thread));
+        boost::fusion::for_each(handles, mono_thread_id_out());
+        bith.join_all();
         return 0;
     }
 
-This results on the following output    
+This results on the following output
 
 [pre
 mono_thread_id=1
@@ -143,25 +150,6 @@ thread::id=xxxx mono_thread_id=1
 thread::id=xxxx mono_thread_id=2
 
 ]
-
-    struct mono_thread_id_out {
-        template<typename T>
-        void operator()(T& t) const {
-            std::cout << "thread::id=" << t.get_id() 
-                  << " mono_thread_id=" << mono_thread_id::id(t.get_id()) 
-                  << std::endl;
-        }
-    };
-
-    int main() {
-        bith::result_of::fork_all<basic_threader_decorator, my_thread, my_thread> handles = 
-                   bith::fork_all(basic_threader_decorator, my_thread, my_thread);
-        sleep(2);
-        boost::fusion::for_each(handles, mono_thread_id_out());
-        bith.join_all();
-        return 0;
-    }
-
 
 [endsect]
 
@@ -175,38 +163,29 @@ This example shows the keep_alive basics.
     #include <boost/interthreads/keep_alive.hpp>
     #include <boost/thread/thread.hpp>
     #include <iostream>
-        
+
     namespace bith = boost::interthreads;
 
     void my_thread() {
         bith::this_thread::enable_keep_alive enabler;
         for (int i=0; i<5; i++) {
-            bith::this_thread::keep_alive_point();            
+            bith::this_thread::keep_alive_point();
             std::cout << "thread_id=" << boost::this_thread::get_id() << std::endl;
             sleep(1);
         }
     }
-    
+
     int main() {
         bith::shared_threader_decorator ae;
-        bith::wait_for_all(ae, my_thread, my_thread);
+        bith::wait_for_all(ae, my_thread, my_thread, my_thread, my_thread);
+
         return 0;
     }
 
-    int main() {
-        boost::thread th1(bith::make_decorator(my_thread));
-        boost::thread th2(bith::make_decorator(my_thread));
-        sleep(2);
+The user creates 4 threads using the shared_threader_decorator __AE__ to be able to use the keep_alive mechanism.
+It uses the default enabler (one keep_alive_point every 2 seconds).
 
-        th1.join();
-        th2.join();
-        return 0;
-    }
-
-The user creates two threads using the thread_decorator wrapper to be able to use the keep_alive mechanism.
-It uses the default enabler (one keep_alive_point every 2 seconds)
-
-This results on the following output    
+This results on the following output
 
 [pre
 ]
@@ -223,29 +202,39 @@ This example shows how to launch several algorithms and wait only for the more e
     #include <boost/interthreads/typeof/threader.hpp>
     #include <boost/interthreads/wait_for_any.hpp>
     #include <iostream>
-        
+
     namespace bith = boost::interthreads;
 
-    void my_thread1() {
+    int my_thread1() {
+        sleep(3);
         std::cout << "1 thread_id=" << boost::this_thread::get_id() << std::endl;
-        sleep(1);
     }
-    
-    void my_thread2() {
+
+    int my_thread2() {
+        sleep(1);
         std::cout << "2 thread_id=" << boost::this_thread::get_id() << std::endl;
-        sleep(5);
+    }
+
+    int my_thread3() {
+        sleep(2);
+        std::cout << "3 thread_id=" << boost::this_thread::get_id() << std::endl;
     }
 
     int main() {
         bith::shared_threader ae;
-        BOOST_AUTO(res,bith::wait_for_any(ae, my_thread, my_thread));
-        std::cout << "Algotithm " << res.first+1 << " finished the first" << std::endl;
+        BOOST_AUTO(res,bith::wait_for_any(ae, my_thread1, my_thread2, my_thread3));
+        std::cout << "Algotithm " << result.first+1 << " finished the first. result=" << result.second << std::endl;
         return 0;
     }
 
-This results on the following output    
+This results on the following output
 
 [pre
+3 thread_id=0x9c03f8
+2 thread_id=0x9c0850
+1 thread_id=0x9d0c40
+Algotithm 2 finished the first. result=0
+
 ]
 
 
