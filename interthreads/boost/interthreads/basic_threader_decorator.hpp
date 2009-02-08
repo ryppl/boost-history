@@ -3,10 +3,10 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Roland Schwarz 2006. 
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Roland Schwarz 2006.
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Extension of the init class of the threadalert library of Roland Schwarz
@@ -15,8 +15,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interthreads/asynchronous_executor_decorator.hpp>
-#include <boost/interthreads/thread_decorator.hpp>
+#include <boost/interthreads/asynchronous_executor_wait_decorator.hpp>
+#include <boost/interthreads/wait_thread_decorator.hpp>
 #include <boost/interthreads/basic_threader.hpp>
 
 
@@ -24,10 +24,10 @@
 
 namespace boost {
 namespace interthreads {
-    
 
-    typedef asynchronous_executor_decorator<basic_threader,thread_decorator> basic_threader_decorator;
-    
+
+    typedef asynchronous_executor_wait_decorator<basic_threader,thread_decorator> basic_threader_decorator;
+
 }
 }
 

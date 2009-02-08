@@ -3,9 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Based on the threader/joiner design from of Kevlin Henney (n1883)
@@ -31,7 +31,7 @@ namespace interthreads {
 
     template<typename ACT>
     struct act_traits;
-    
+
     template <typename ACT>
     struct is_movable : mpl::false_{};
 
@@ -44,13 +44,13 @@ namespace interthreads {
     template <typename AE, typename T>
     struct asynchronous_completion_token {
         typedef typename AE::template handle<T>::type type;
-    };    
+    };
 
     template <typename AE>
     struct get_future {
         template <typename T>
-        shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) { 
-            return act.get_future(); 
+        shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act) {
+            return act.get_future();
         }
     };
 

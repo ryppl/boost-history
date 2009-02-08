@@ -3,9 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Based on the unique_threader/unique_joiner design from of Kevlin Henney (n1883)
@@ -38,7 +38,8 @@ class unique_joiner;
 
 template<typename T>
 struct act_traits<unique_joiner<T> > : act_traits<unique_future<T> > {};
-        
+
+
 template <typename ResultType>
 class unique_joiner {
 public:
@@ -50,9 +51,12 @@ private:
         thread th_;
 
         unique_joiner_data() {}
-            
-        template <typename Nullary> 
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
+        ~unique_joiner_data() {
+            //if (th_.joinable()) th_.join();
+        }
+
+        template <typename Nullary>
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
         unique_joiner_data(thread::native_handle_attr_type& attr, Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
@@ -63,14 +67,14 @@ private:
         unique_joiner_data(Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
-#if 0            
+#if 0
             th_ = boost::move(tsk);
-#else            
+#else
             thread th(boost::move(tsk));
             th_ = boost::move(th);
-#endif            
+#endif
         }
-#endif        
+#endif
 
     };
     shared_ptr<unique_joiner_data> data_;
@@ -82,16 +86,18 @@ private:
 //protected:
 public:
     friend class unique_threader;
-    template <typename Nullary> 
+
+    template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
-    unique_joiner(thread::native_handle_attr_type& attr, Nullary f) 
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
+    unique_joiner(thread::native_handle_attr_type& attr, Nullary f)
     : data_(new this_impl_type(attr, f))
 #else
-    unique_joiner(Nullary f) 
+    unique_joiner(Nullary f)
     : data_(new this_impl_type(f))
-#endif        
-    {} 
+#endif
+    {}
+
 
 public:
     // move support
@@ -108,12 +114,12 @@ public:
     unique_joiner&& move() {
         return static_cast<unique_joiner&&>(*this);
     }
-#else        
+#else
     unique_joiner(boost::detail::thread_move_t<unique_joiner> x) {
         data_=x->data_;
         x->data_.reset(new this_impl_type());
     }
-            
+
     unique_joiner& operator=(boost::detail::thread_move_t<unique_joiner> x) {
         this_type tmp_(x);
         swap(tmp_);
@@ -122,28 +128,28 @@ public:
 
     operator boost::detail::thread_move_t<unique_joiner>() {
         return move();
-    }            
+    }
 
     boost::detail::thread_move_t<unique_joiner> move() {
         return boost::detail::thread_move_t<unique_joiner>(*this);
-    }            
-            
-#endif        
-        
+    }
+
+#endif
+
     void swap(this_type& x) {
         data_.swap(x.data_);
     }
 
-    bool joinable() { 
-        return data_->th_.joinable(); 
+    bool joinable() {
+        return data_->th_.joinable();
     }
-    
-    void join() { 
-        data_->th_.join(); 
+
+    void join() {
+        data_->th_.join();
     }
 
     bool join_until(const system_time& abs_time) {
-		return data_->th_.timed_join(abs_time);
+        return data_->th_.timed_join(abs_time);
     }
 
     template<typename TimeDuration>
@@ -151,26 +157,26 @@ public:
     {
         return join_until(get_system_time()+rel_time);
     }
-    move_dest_type get()  { 
-        return data_->fut_.get(); 
+    move_dest_type get()  {
+        return data_->fut_.get();
     }
     move_dest_type operator()() { return get(); }
 
     bool is_ready() const {
-        return data_->fut_.is_ready(); 
+        return data_->fut_.is_ready();
     }
     bool has_exception() const {
-        return data_->fut_.has_exception(); 
+        return data_->fut_.has_exception();
     }
     bool has_value() const {
-        return data_->fut_.has_value(); 
+        return data_->fut_.has_value();
     }
 
     void wait() {
-        data_->fut_.wait(); 
+        data_->fut_.wait();
     }
     bool wait_until(const system_time& abs_time) {
-        return data_->fut_.timed_wait_until(abs_time); 
+        return data_->fut_.timed_wait_until(abs_time);
     }
 
     template<typename TimeDuration>
@@ -180,23 +186,23 @@ public:
     }
 
     void detach() {
-        data_->th_.detach(); 
+        data_->th_.detach();
     }
-            
+
     void interrupt() {
-        data_->th_.interrupt(); 
+        data_->th_.interrupt();
     }
 
     bool interruption_requested() const {
-        return data_->th_.interruption_requested(); 
+        return data_->th_.interruption_requested();
     }
-    
+
     thread::id get_id() const {
-        return data_->th_.get_id(); 
+        return data_->th_.get_id();
     }
-    
+
     unique_future<result_type>& get_future() {
-        return data_->fut_; 
+        return data_->fut_;
     }
 };
 
@@ -208,39 +214,39 @@ struct has_future_if<unique_joiner<R> > : mpl::true_{};
 
 template <typename R>
 struct has_thread_if<unique_joiner<R> > : mpl::true_{};
-    
+
 class unique_threader {
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
-private: 
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
+private:
     thread_specific_ptr<thread::native_handle_attr_type> attr_;
-public: 
+public:
     thread::native_handle_attr_type& attr() {
         if(attr_.get() ==0) {
             attr_.reset(new thread::native_handle_attr_type());
         };
         return *attr_.get();
     }
-#endif  
+#endif
 
-public: 
+public:
     template <typename T>
     struct handle {
         typedef unique_joiner<T> type;
     };
     template <typename F>
-    unique_joiner<typename boost::result_of<F()>::type> 
+    unique_joiner<typename boost::result_of<F()>::type>
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
         unique_joiner<result_type> unique_joiner_(attr(), f);
 #else
         unique_joiner<result_type> unique_joiner_(f);
-#endif  
-        return boost::move(unique_joiner_);        
+#endif
+        return boost::move(unique_joiner_);
     }
 
 };
-   
+
 template <>
 struct get_future<unique_threader> {
     template <typename T>
@@ -250,7 +256,7 @@ struct get_future<unique_threader> {
     template <typename T>
     unique_future<T>& operator()(unique_joiner<T>& j) { return j.get_future(); }
 };
-    
+
 template <typename ResultType>
 class shared_joiner;
 
@@ -269,9 +275,9 @@ private:
         thread th_;
 
         shared_joiner_data() {}
-            
-        template <typename Nullary> 
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
+
+        template <typename Nullary>
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
         shared_joiner_data(thread::native_handle_attr_type& attr, Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
@@ -282,14 +288,14 @@ private:
         shared_joiner_data(Nullary f) {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
-#if 0            
+#if 0
             th_ = boost::move(tsk);
-#else            
+#else
             thread th(boost::move(tsk));
             th_ = boost::move(th);
-#endif            
+#endif
         }
-#endif        
+#endif
 
     };
     shared_ptr<shared_joiner_data> data_;
@@ -299,17 +305,18 @@ private:
 //protected:
 public:
     friend class shared_threader;
-    template <typename Nullary> 
+    template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
-    shared_joiner(thread::native_handle_attr_type& attr, Nullary f) 
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
+    shared_joiner(thread::native_handle_attr_type& attr, Nullary f)
     : data_(new this_impl_type(attr, f))
 #else
-    shared_joiner(Nullary f) 
+    shared_joiner(Nullary f)
     : data_(new this_impl_type(f))
-#endif        
+#endif
     {
-    } 
+    }
+
 
 public:
     shared_joiner() : data_() {};
@@ -334,12 +341,12 @@ public:
     shared_joiner&& move() {
         return static_cast<shared_joiner&&>(*this);
     }
-#else        
+#else
     shared_joiner(boost::detail::thread_move_t<shared_joiner> x) {
         data_=x->data_;
         x->data_.reset(new this_impl_type());
     }
-            
+
     shared_joiner& operator=(boost::detail::thread_move_t<shared_joiner> x) {
         this_type tmp_(x);
         swap(tmp_);
@@ -348,28 +355,28 @@ public:
 
     operator boost::detail::thread_move_t<shared_joiner>() {
         return move();
-    }            
+    }
 
     boost::detail::thread_move_t<shared_joiner> move() {
         return boost::detail::thread_move_t<shared_joiner>(*this);
-    }            
-            
-#endif        
-        
+    }
+
+#endif
+
     void swap(this_type& x) {
         data_.swap(x.data_);
     }
 
-    bool joinable() { 
-        return data_->th_.joinable(); 
+    bool joinable() {
+        return data_->th_.joinable();
     }
-    
-    void join() { 
-        data_->th_.join(); 
+
+    void join() {
+        data_->th_.join();
     }
 
     bool join_until(const system_time& abs_time) {
-		return data_->th_.timed_join(abs_time);
+        return data_->th_.timed_join(abs_time);
     }
 
     template<typename TimeDuration>
@@ -377,27 +384,27 @@ public:
     {
         return join_until(get_system_time()+rel_time);
     }
-    move_dest_type get() const { 
-        return data_->fut_.get(); 
+    move_dest_type get() const {
+        return data_->fut_.get();
     }
-   
+
     move_dest_type operator()() const { return get(); }
 
     bool is_ready() const {
-        return data_->fut_.is_ready(); 
+        return data_->fut_.is_ready();
     }
     bool has_exception() const {
-        return data_->fut_.has_exception(); 
+        return data_->fut_.has_exception();
     }
     bool has_value() const {
-        return data_->fut_.has_value(); 
+        return data_->fut_.has_value();
     }
 
     void wait() {
-        data_->fut_.wait(); 
+        data_->fut_.wait();
     }
     bool wait_until(const system_time& abs_time) {
-        return data_->fut_.timed_wait_until(abs_time); 
+        return data_->fut_.timed_wait_until(abs_time);
     }
 
     template<typename TimeDuration>
@@ -407,23 +414,23 @@ public:
     }
 
     void detach() {
-        data_->th_.detach(); 
+        data_->th_.detach();
     }
-            
+
     void interrupt() {
-        data_->th_.interrupt(); 
+        data_->th_.interrupt();
     }
 
     bool interruption_requested() const {
-        return data_->th_.interruption_requested(); 
+        return data_->th_.interruption_requested();
     }
-    
+
     thread::id get_id() const {
-        return data_->th_.get_id(); 
+        return data_->th_.get_id();
     }
-    
+
     shared_future<result_type>& get_future() {
-        return data_->fut_; 
+        return data_->fut_;
     }
 };
 
@@ -438,36 +445,38 @@ struct has_thread_if<shared_joiner<R> > : mpl::true_{};
 
 
 class shared_threader {
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
-private: 
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
+private:
     thread_specific_ptr<thread::native_handle_attr_type> attr_;
-public: 
+public:
     thread::native_handle_attr_type& attr() {
         if(attr_.get() ==0) {
             attr_.reset(new thread::native_handle_attr_type());
         };
         return *attr_.get();
     }
-#endif  
+#endif
 
-public: 
+public:
     template <typename T>
     struct handle {
         typedef shared_joiner<T> type;
     };
     template <typename F>
-    shared_joiner<typename boost::result_of<F()>::type> 
+    shared_joiner<typename boost::result_of<F()>::type>
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR    
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
         return shared_joiner<result_type>(attr(), f);
 #else
         return shared_joiner<result_type>(f);
-#endif  
+#endif
     }
 
+
+
 };
-   
+
 template <>
 struct get_future<shared_threader> {
     template <typename T>
@@ -501,7 +510,7 @@ struct get_future<shared_threader> {
     }
 #else
     template <typename T>
-    inline boost::detail::thread_move_t<interthreads::shared_joiner<T> > 
+    inline boost::detail::thread_move_t<interthreads::shared_joiner<T> >
     move(boost::interthreads::shared_joiner<T>& t)
     {
         return boost::detail::thread_move_t<interthreads::shared_joiner<T> >(t);

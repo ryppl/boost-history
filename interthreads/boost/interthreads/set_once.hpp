@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -52,7 +52,7 @@ namespace interthreads {
             assigned_=false;
             return val_;
         }
-        
+
         std::pair<bool,value_type> get_until(const system_time& until) {
             boost::unique_lock<boost::mutex> lock(mutex_);
             bool res = assigned_;
@@ -64,42 +64,42 @@ namespace interthreads {
         bool set_value_if_unassigned(value_type val) {
             boost::unique_lock<boost::mutex> lock(mutex_);
             if (!assigned_) { /*< first post assigns the current thread id >*/
-            	assigned_=true;
-            	val_ = val;
-            	cond_.notify_all();
-            	return true;
+                assigned_=true;
+                val_ = val;
+                cond_.notify_all();
+                return true;
             } else { /*< the other settings are ignored >*/
-            	return false;
+                return false;
             }
-        }
-        
-        template<typename F>
-        //static typename boost::enable_if<is_void<typename result_of<F()>::type>,void>::type 
-        void
-        decorator(this_type& once, T value, F fct) { 
-    		fct();
-    		once.set_value_if_unassigned(value);
         }
 
         template<typename F>
-        //static typename boost::disable_if<is_void<typename result_of<F()>::type>, typename result_of<F()>::type>::type 
+        //static typename boost::enable_if<is_void<typename result_of<F()>::type>,void>::type
+        void
+        decorator(this_type& once, T value, F fct) {
+            fct();
+            once.set_value_if_unassigned(value);
+        }
+
+        template<typename F>
+        //static typename boost::disable_if<is_void<typename result_of<F()>::type>, typename result_of<F()>::type>::type
         typename result_of<F()>::type
-        decoratorT(this_type& once, T value, F fct) { 
-    		typename result_of<F()>::type res =fct();
-    		once.set_value_if_unassigned(value);
+        decoratorT(this_type& once, T value, F fct) {
+            typename result_of<F()>::type res =fct();
+            once.set_value_if_unassigned(value);
             return res;
         }
         template<typename F>
-        boost::detail::thread_move_t<thread> fork(T value, F fct) { 
+        boost::detail::thread_move_t<thread> fork(T value, F fct) {
             thread tmp_thread(bind(decorator<F>, ref(*this), value, fct));
-            return tmp_thread;          
-        }   
+            return tmp_thread;
+        }
 
         template<typename F>
-        static boost::detail::thread_move_t<thread> make_thread(this_type& once, T value, F fct) { 
+        static boost::detail::thread_move_t<thread> make_thread(this_type& once, T value, F fct) {
             thread tmp_thread(bind(decorator<F>, ref(once), value, fct));
-            return tmp_thread;          
-        }   
+            return tmp_thread;
+        }
 
     private:
         mutex mutex_;
@@ -107,7 +107,7 @@ namespace interthreads {
         bool assigned_;
         value_type val_;
     };
-}    
+}
 }   // namespace boost
 #include <boost/config/abi_suffix.hpp>
 

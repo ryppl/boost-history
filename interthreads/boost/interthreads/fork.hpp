@@ -3,9 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Based on the threader/joiner design from of Kevlin Henney (n1883)
@@ -26,30 +26,33 @@ namespace boost {
 namespace interthreads {
 
 
-    
-namespace result_of { 
+
+namespace result_of {
     template <typename AE,typename F>
     struct fork {
         typedef typename boost::result_of<F()>::type result_type;
         typedef typename asynchronous_completion_token<AE, result_type>::type type;
     };
 }
-  
+
 namespace partial_specialization_workaround {
-template< typename AE, typename F > 
+template< typename AE, typename F >
 struct fork {
     static typename result_of::fork<AE,F>::type apply(AE& ae, F fn ) {
         return ae.fork(fn);
     }
 };
 }
-template< typename AE, typename F > 
-typename result_of::fork<AE,F>::type 
+
+template< typename AE, typename F >
+//    typename boost::disable_if<is_movable_only<ACT>,
+        typename result_of::fork<AE,F>::type
+//    >::type
 fork( AE& ae, F fn ) {
     return partial_specialization_workaround::fork<AE,F>::apply(ae,fn);
 }
 
-template< typename AE, typename F, typename A1 > 
+template< typename AE, typename F, typename A1 >
 typename asynchronous_completion_token<AE, typename boost::result_of<F(A1)>::type >::type
 fork( AE& ae, F fn, A1 a1 ) {
     return ae.fork( bind( fn, a1 ) );

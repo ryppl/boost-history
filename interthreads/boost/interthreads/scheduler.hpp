@@ -3,9 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Based on the unique_threader/unique_joiner design from of Kevlin Henney (n1883)
@@ -16,7 +16,7 @@
 
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/condition_variable.hpp>
-#include <boost/thread/thread.hpp>
+//#include <boost/thread/thread.hpp>
 #include <boost/thread/tss.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
@@ -25,29 +25,47 @@
 #include <boost/futures/future.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <boost/interthreads/fork.hpp>
+#include <boost/interthreads/algorithm.hpp>
 
 #include <boost/config/abi_prefix.hpp>
+
+namespace boost
+{
+#ifdef TASK_POOL
+    template<typename Pool, typename T>
+    boost::tp::task<Pool, T>& move(boost::tp::task<Pool, T>& t)
+#else
+    template<typename T>
+    boost::tp::task<T>& move(boost::tp::task<T>& t)
+#endif
+    {
+        return t;
+    }
+}
 
 
 namespace boost {
 namespace interthreads {
 
-   
+#if 0
 template <typename C>
 class scheduler {
     tp::pool<C> _pool;
-public: 
+public:
     explicit scheduler(
         tp::poolsize const& psize
     ) : _pool(psize)
     {};
     template <typename T>
     struct handle {
+#ifdef TASK_POOL
+        typedef typename tp::pool<C>::template handle<T>::type type;
+#else
         typedef tp::task<T> type;
+#endif
     };
     template <typename F>
-    tp::task<typename boost::result_of<F()>::type> 
+    typename handle<typename boost::result_of<F()>::type>::type
     fork(F f) {
         return _pool.submit(f);
     }
@@ -65,30 +83,57 @@ struct get_future<scheduler<Channel> > {
 };
 
 
+#endif
+
 
 template <typename Channel, typename T>
 struct asynchronous_completion_token<boost::tp::pool<Channel>,T> {
+#ifdef TASK_POOL
+    typedef typename tp::template pool<Channel>::template handle<T>::type type;
+#else
     typedef boost::tp::task<T> type;
-};    
+#endif
+};
 
 
 namespace partial_specialization_workaround {
-template< typename Channel, typename F > 
-struct fork<boost::tp::pool<Channel>,F> {
-    static typename result_of::fork<boost::tp::pool<Channel>, F>::type  
-    apply( boost::tp::pool<Channel>& ae, F fn ) {
-        return ae.submit(fn);
-    }
-};
-
+    template< typename Channel, typename F >
+    struct fork<boost::tp::pool<Channel>,F> {
+        static typename result_of::fork<boost::tp::pool<Channel>, F>::type
+        apply( boost::tp::pool<Channel>& ae, F fn ) {
+            return ae.submit(fn);
+        }
+    };
 }
+
 template <typename C>
 struct get_future<tp::pool<C> > {
     template <typename T>
-    shared_future<T>& operator()(tp::task<T>& act) { return act.get_future(); }
+    shared_future<T>& operator()(
+#ifdef TASK_POOL
+        //typename asynchronous_completion_token<tp::pool<C>,T>::type & act
+        tp::task<tp::pool<C>, T>& act
+#else
+        tp::task<T>& act
+#endif
+    ) { return act.get_future(); }
 };
 
+#ifdef TASK_POOL
+template <typename Pool, typename ResultType>
+struct act_traits< tp::task<Pool, ResultType> > {
+    typedef ResultType move_dest_type;
+};
 
+template <typename Pool, typename R>
+struct is_movable<tp::task<Pool, R> > : mpl::false_{};
+
+template <typename Pool, typename R>
+struct has_future_if<tp::task<Pool, R> > : mpl::true_{};
+
+template <typename Pool, typename R>
+struct has_thread_if<tp::task<Pool, R> > : mpl::true_{};
+#else
 template <typename ResultType>
 struct act_traits< tp::task<ResultType> > {
     typedef ResultType move_dest_type;
@@ -101,22 +146,69 @@ template <typename R>
 struct has_future_if<tp::task<R> > : mpl::true_{};
 
 template <typename R>
-struct has_thread_if<tp::task<R> > : mpl::false_{};
+struct has_thread_if<tp::task<R> > : mpl::true_{};
+#endif
 
-}
-}
+#ifdef TASK_POOL
 
-#if 1
-namespace boost
-{
-    template<typename T>
-    boost::tp::task<T>& move(boost::tp::task<T>& t)
-    {
-        return t;
+    namespace partial_specialization_workaround {
+        template <typename Pool, typename R>
+        struct join<tp::task<Pool, R> > {
+            static typename result_of::template join<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act) {
+                return act.wait();
+            }
+        };
+        template <typename Pool, typename R>
+        struct join_until<tp::task<Pool, R> > {
+            static typename result_of::template join_until<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act, const system_time& abs_time ) {
+                return act.wait_until(abs_time);
+            }
+        };
+        template <typename Pool, typename R, typename Duration>
+        struct join_for<tp::task<Pool, R>, Duration> {
+            static typename result_of::template join_for<tp::task<Pool, R>,Duration>::type apply( tp::task<Pool, R>& act, Duration rel_time ) {
+                return interthreads::join_until(act, get_system_time()+rel_time );
+            }
+        };
+        template <typename Pool, typename R, typename Duration>
+        struct wait_for<tp::task<Pool, R>, Duration> {
+            static typename result_of::template wait_for<tp::task<Pool, R>,Duration>::type apply( tp::task<Pool, R>& act, Duration rel_time ) {
+                return interthreads::wait_until(act, get_system_time()+rel_time );
+            }
+        };
     }
-}
+#else
+    namespace partial_specialization_workaround {
+        template <typename R>
+        struct join<tp::task<R> > {
+            static typename result_of::template join<tp::task<R> >::type apply( tp::task<R>& act) {
+                return act.wait();
+            }
+        };
+        template <typename R>
+        struct join_until<tp::task<R> > {
+            static typename result_of::template join_until<tp::task<R> >::type apply( tp::task<R>& act, const system_time& abs_time ) {
+                return act.wait_until(abs_time);
+            }
+        };
+        template <typename R, typename Duration>
+        struct join_for<tp::task<R>, Duration> {
+            static typename result_of::template join_for<tp::task<R>,Duration>::type apply( tp::task<R>& act, Duration abs_time ) {
+                return interthreads::wait_until(act, get_system_time()+abs_time);
+            }
+        };
+        template <typename R, typename Duration>
+        struct wait_for<tp::task<R>, Duration> {
+            static typename result_of::template wait_for<tp::task<R>,Duration>::type apply( tp::task<R>& act, Duration abs_time ) {
+                return interthreads::wait_until(act, get_system_time()+abs_time);
+            }
+        };
+    }
 
 #endif
+}
+}
+
 #include <boost/config/abi_suffix.hpp>
 
 #endif

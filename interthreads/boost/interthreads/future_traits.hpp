@@ -3,9 +3,9 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008-20009. 
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // Based on the threader/joiner design from of Kevlin Henney (n1883)
@@ -48,7 +48,7 @@ namespace interthreads {
             {
                 storage.reset(new T(t));
             }
-            
+
             static void init(storage_type& storage,rvalue_source_type t)
             {
                 storage.reset(new T(static_cast<rvalue_source_type>(t)));
@@ -59,7 +59,7 @@ namespace interthreads {
                 storage.reset();
             }
         };
-        
+
         template<typename T>
         struct act_traits<unique_future<T&> >
         {
@@ -96,7 +96,7 @@ namespace interthreads {
                 storage=false;
             }
 
-        };    
+        };
 
         template<typename T>
         struct act_traits<shared_future<T> >
@@ -117,7 +117,7 @@ namespace interthreads {
             {
                 storage.reset(new T(t));
             }
-            
+
             static void init(storage_type& storage,rvalue_source_type t)
             {
                 storage.reset(new T(static_cast<rvalue_source_type>(t)));
@@ -128,7 +128,7 @@ namespace interthreads {
                 storage.reset();
             }
         };
-        
+
         template<typename T>
         struct act_traits<shared_future<T&> >
         {
@@ -165,7 +165,7 @@ namespace interthreads {
                 storage=false;
             }
 
-        };            
+        };
 
 }
 }
