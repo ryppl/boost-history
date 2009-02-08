@@ -1,4 +1,5 @@
 # vi: syntax=python:et:ts=4
+from subprocess import Popen, PIPE
 
 class DependencyChecker:
     flags = {}
@@ -39,10 +40,18 @@ class CheckPython(DependencyChecker):
 class CheckMPI(DependencyChecker):
     def Check(self, env):
         try:
-            from subprocess import Popen, PIPE
             self.flags = env.ParseFlags(Popen(["mpic++", "-showme"], stdout = PIPE).communicate()[0].split(" ", 1)[1])
             env.AppendUnique(**self.flags)
             self.have_dep = self.conf.CheckCHeader("mpi.h")
+        except:
+            self.have_dep = False
+
+class CheckICU(DependencyChecker):
+    def Check(self, env):
+        try:
+            self.flags = env.ParseFlags(Popen(["icu-config", "--ldflags", "--cxxflags"], stdout = PIPE).communicate()[0])
+            env.AppendUnique(**self.flags)
+            self.have_dep = self.conf.CheckCHeader("unicode/utypes.h")
         except:
             self.have_dep = False
 
@@ -51,6 +60,7 @@ def generate(env):
     env.AddMethod(CheckBZip2())
     env.AddMethod(CheckPython())
     env.AddMethod(CheckMPI())
+    env.AddMethod(CheckICU())
 
 def exists():
     return True

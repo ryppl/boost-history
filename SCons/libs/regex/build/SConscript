@@ -1,5 +1,7 @@
 # vi: syntax=python:et:ts=4
 Import("env")
+if env.CheckICU():
+    env.Append(CPPDEFINES = ["BOOST_HAS_ICU=1"])
 env.BoostLibrary(
     "regex",
     Split("""
