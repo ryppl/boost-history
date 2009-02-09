@@ -9,9 +9,10 @@ class DependencyChecker:
         self.__name__ = str(self.__class__).split(".")[-1]
     def __call__(self, env):
         if not self.checked:
+            conf_env = env.Clone()
             build_dir = "#/bin.SCons/"
-            self.conf = env.Configure(conf_dir = build_dir + "sconf_temp", log_file = build_dir + "config.log")
-            self.Check(env)
+            self.conf = conf_env.Configure(conf_dir = build_dir + "sconf_temp", log_file = build_dir + "config.log")
+            self.Check(conf_env)
             self.conf.Finish()
             self.checked = True
         if(self.have_dep):
@@ -55,12 +56,22 @@ class CheckICU(DependencyChecker):
         except:
             self.have_dep = False
 
+class CheckExpat(DependencyChecker):
+    def Check(self, env):
+        try:
+            self.flags = dict(LIBS = ["expat"])
+            env.AppendUnique(**self.flags)
+            self.have_dep = self.conf.CheckLibWithHeader("expat", "expat.h", "c", autoadd = False)
+        except:
+            self.have_dep = False
+
 def generate(env):
     env.AddMethod(CheckZLib())
     env.AddMethod(CheckBZip2())
     env.AddMethod(CheckPython())
     env.AddMethod(CheckMPI())
     env.AddMethod(CheckICU())
+    env.AddMethod(CheckExpat())
 
 def exists():
     return True

@@ -1,0 +1,15 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+if env.CheckExpat():
+    graphml = "graphml.cpp"
+else:
+    graphml = []
+
+env.BoostLibrary(
+    "graph",
+    [
+    "read_graphviz_spirit.cpp",
+    graphml
+    ]
+    )
