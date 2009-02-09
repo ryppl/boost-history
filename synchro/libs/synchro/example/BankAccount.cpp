@@ -38,7 +38,7 @@ public:
             synchronizer _(*rhs.mutex());
             balance=rhs.balance_;
         }
-        synchronizer _(*this.mutex());
+        synchronizer _(*this->mutex());
         balance_=balance;
         return *this;
     }
@@ -48,7 +48,7 @@ public:
         if(&rhs == this) return *this;
         int balance=0;
         synchronize (*rhs.mutex()) balance=rhs.balance_;
-        synchronize (*this.mutex()) balance_=balance;
+        synchronize (*this->mutex()) balance_=balance;
         return *this;
     }
 #endif
