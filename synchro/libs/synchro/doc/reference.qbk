@@ -1,0 +1,921 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section Reference]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/lock_generator.hpp>`]
+[/==========================================================================================]
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/lockable_concept.hpp>`]
+[/==========================================================================================]
+
+
+[section Class `exclusive_lockable`]
+[*Synopsis]
+Polimorphic exclusive lock interface.
+
+[*Description]
+The boost::mutex and boost:interprocess mutex family classes are a non-polymorphic
+classes that encapsulates
+a system primitive and portion of C API. Clearly, many of the synchronisation
+primitives support common operations, and hence interfaces. In some cases a more
+general interface is useful.
+The exclusive_lockable interface class may be used explicitly as a base class for a
+class supporting exclusive synchronisation.
+
+[*`exclusive_lock` public member functions]
+
+# `;`
+
+[endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/locker_concept.hpp>`]
+[/==========================================================================================]
+
+    template <typename Lockable> struct LockableConcept;
+    template <typename Lockable> struct TimedLockableConcept;
+    template <typename Lockable> struct ShareLockableConcept;
+    template <typename Lockable> struct UpgradeLockableConcept;
+
+
+[section Template Class `LockableConcept`]
+
+
+
+[endsect]
+
+[section Template Class `TimedLockableConcept`]
+
+
+
+[endsect]
+[section Template Class `ShareLockableConcept`]
+
+
+
+[endsect]
+[section Template Class `UpgradeLockableConcept`]
+
+
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/make_lockable.hpp>`]
+[/==========================================================================================]
+
+    template <typename Lockable> class make_exclusive_lockable;
+    template <typename TimedLock> class make_timed_lockable;
+    template <typename SharableLock> class make_share_lockable;
+    template <typename UpgradableLock> class make_upgrade_lockable;
+    template <typename Lockable, typename category, typename timed_interface>
+    struct make_lockable;
+
+
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/monitor.hpp>`]
+[/==========================================================================================]
+
+template <
+	typename Lockable,
+	class Condition,
+	class ConditionBoosted
+>
+class exclusive_monitor;
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/null_condition.hpp>`]
+[/==========================================================================================]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/null_mutex.hpp>`]
+[/==========================================================================================]
+
+[endsect]
+
+[/==========================================================================================]
+[section Header `<boost/synchro/null_synchronization_family.hpp>`]
+[/==========================================================================================]
+
+[section Class `null_synchronization_policy`]
+
+[*Synopsis]
+
+
+    struct null_synchronization_policy
+    {
+        typedef boost::interprocess::null_mutex     mutex_type;
+        typedef boost::interprocess::null_mutex     recursive_mutex_type;
+        typedef boost::interprocess::null_mutex     timed_mutex_type;
+        typedef boost::interprocess::null_mutex     recursive_timed_mutex_type;
+        typedef boost::interprocess::null_mutex     shared_mutex_type;
+        typedef boost::condition_variable_any       condition_variable_type;
+    };
+
+[*Description]
+
+[*`nesteed_strict_locker` public types]
+
+# `;`
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/semaphore.hpp>`]
+[/==========================================================================================]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/process_synchronization_family.hpp>`]
+[/==========================================================================================]
+
+[section Class `process_synchronization_family`]
+
+[*Synopsis]
+
+    struct process_synchronization_family
+    {
+        typedef boost::interprocess::interprocess_mutex             mutex_type;
+        typedef boost::interprocess::interprocess_recursive_mutex   recursive_mutex_type;
+        typedef boost::interprocess::interprocess_mutex             timed_mutex_type;
+        typedef boost::interprocess::interprocess_recursive_mutex   recursive_timed_mutex_type;
+        typedef boost::interprocess::interprocess_upgradable_mutex  shared_mutex_type;
+        typedef boost::interprocess::interprocess_condition         condition_variable_type;
+    };
+
+[*Description]
+
+[*`process_synchronization_family` public member types]
+
+# `;`
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/thread_synchronization_family.hpp>`]
+[/==========================================================================================]
+
+[section Class `thread_synchronization_family`]
+
+[*Synopsis]
+
+    struct thread_synchronization_family
+    {
+        typedef boost::mutex                    mutex_type;
+        typedef boost::recursive_mutex          recursive_mutex_type;
+        typedef boost::timed_mutex              timed_mutex_type;
+        typedef boost::recursive_timed_mutex    recursive_timed_mutex_type;
+        typedef boost::shared_mutex             shared_mutex_type;
+        typedef boost::condition_variable_any   condition_variable_type;
+    };
+
+
+[endsect]
+
+
+
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/condition_locker.hpp>`]
+[/==========================================================================================]
+
+    template <typename Condition> struct condition_backdoor;
+    template <typename Condition> class condition_safe;
+    template <typename Condition> class condition_safe_boosted;
+    template <typename Lockable, typename Condition>
+    class condition_unique_locker
+    template <typename Lockable, typename Condition>
+    class condition_shared_locker
+
+    template <typename Lockable, typename Condition>
+    class condition_unique_lockable
+    template <typename Lockable, typename Condition>
+    class condition_shared_lockable
+
+
+[section Template Class `condition_backdoor`]
+
+    template <class Condition>
+    struct condition_backdoor {
+	    condition_backdoor(condition_safe<Condition>&cnd);
+        template <typename Locker>
+        void wait(Locker& lock);
+        template <typename Locker>
+        bool wait_until(Locker& lock, boost::system_time  const&  abs_time);
+        template<typename Locker, typename duration_type>
+        bool wait_for(Locker& lock, duration_type const& rel_time);
+
+        template <typename Locker, typename Predicate>
+        void wait_when(Locker& lock, Predicate pred);
+        template<typename Locker, typename predicate_type>
+        bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time);
+        template<typename Locker, typename predicate_type, typename duration_type>
+        bool wait_when_for(Locker& lock, predicate_type pred, duration_type const& rel_time);
+
+        template <typename Locker>
+        void notify_one(Locker& lock);
+        template <typename Locker>
+        void notify_all(Locker& lock);
+    };
+
+[endsect]
+
+[section Template Class `condition_safe`]
+
+    template <class Condition>
+    class condition_safe {
+    public:
+	    typedef Condition condition;
+	    typedef condition_backdoor<Condition> backdoor;
+        void notify_one();
+        void notify_all();
+    };
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/externally_locked.hpp>`]
+[/==========================================================================================]
+
+
+[section Template Class `externally_locked`]
+[*Synopsis]
+
+    template <class T, class Lockable>
+    class externally_locked {
+    public:
+        externally_locked(Lockable& owner);
+        externally_locked(const T& obj, Lockable& own);
+
+        template <typename Locker>
+        T& get(Locker& locker);
+        void set(const T& obj, Lockable& owner);
+    };
+
+[*Description]
+`externally_locked` cloaks an object of type T, and actually provides full access to that object through
+the get and set member functions, provided you pass a reference to a strict_locker<Lockable> object.
+
+[*`externally_locked` template parameters]
+
+* `T` :    the type locked externally
+* `Lockable` : The lockable type used to synchronize the access to a T instance
+
+[*`externally_locked` public member functions]
+
+* `template <typename Locker> T& get(Locker& locker);`
+
+[*Requires:] mpl:and_<is_strict_locker<Locker>, is_same<lockable_type_trait<Locker>, Lockable>.
+
+[*Returns:] a reference to the type locked externally.
+
+[*Throws:] lock_error when the locker do not owns the lockable instance
+
+* `void set(const T& obj, Lockable& owner);`
+
+[*Effect:] reinit the type and lockable references with the given values.
+
+[*Example:]
+See
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/is_strict_locker.hpp>`]
+[/==========================================================================================]
+
+
+[section Template Class `is_strict_locker`]
+
+    template <typename Locker>
+    struct is_strict_locker {
+        typedef unspecified value;
+    };
+
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/locking_ptr.hpp>`]
+[/==========================================================================================]
+
+[section Class `locking_ptr`]
+
+[*Synopsis]
+
+    template <typename T, typename Lockable>
+    class locking_ptr : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef Lockable mutex_type;
+
+        locking_ptr(volatile value_type& obj, mutex_type& mtx);
+        ~locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+[*Description]
+
+The `locking_ptr` overloads `operator->` to return a temporary object that will
+perform the locking. This too provides an `operator->`. Calls to `operator->`
+are automatically chained by the compiler until a raw pointer type is returned. In
+pointer's `operator->` the lock is applied and in its destructor, called at the
+end of a full expression, it is released.
+
+[warning Programmers should be careful about attempting to access the same object twice in
+a statement using `locking_ptr`: this will cause deadlock if the synchronisation
+strategy is not re-entrant.]
+
+[*Example Code]
+
+
+[*`locking_ptr` constructors:destructors]
+# `locking_ptr(volatile value_type& obj, mutex_type& mtx);`
+# `~locking_ptr();`
+
+[*`locking_ptr` public member functions]
+
+# `value_type& operator*();`
+# `const value_type& operator*() const;`
+# `value_type* operator->();`
+# `const value_type* operator->() const;`
+
+[endsect]
+
+[section Class `sharable_locking_ptr`]
+[*Synopsis]
+
+    template <typename T, typename SharableLockable>
+    class sharable_locking_ptr
+        : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef SharableLockable mutex_type;
+
+        sharable_locking_ptr(volatile value_type& obj, mutex_type& mtx);
+        ~sharable_locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+    template <typename T, typename SharableLockable>
+    class sharable_locking_ptr<const T, SharableLockable>
+        : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef SharableLockable mutex_type;
+
+        sharable_locking_ptr(
+            volatile const value_type& obj,
+            mutex_type& mtx);
+        ~sharable_locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+[*Description]
+
+[*`nesteed_strict_locker` public member functions]
+
+# `;`
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/on_derreference_locking_ptr.hpp>`]
+[/==========================================================================================]
+
+[section Class `on_derreference_locking_ptr`]
+[*Synopsis]
+
+    template<typename T, typename Lockable>
+    class on_derreference_locking_ptr
+    {
+    public:
+        class pointer
+        {
+        public:
+            explicit pointer(T* target, Lockable* mutex);
+            ~pointer();
+            T *operator->();
+        };
+
+        explicit on_derreference_locking_ptr(T &target, Lockable& mutex);
+        pointer operator->() const;
+    };
+
+[*Description]
+
+[*`nesteed_strict_locker` public member functions]
+
+# `;`
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/reverse_lock.hpp>`]
+[/==========================================================================================]
+
+[section Class `reverse_lock`]
+A reverse (or anti) lock.
+
+[*Synopsis]
+
+[*Description]
+
+This is an interesting adapter class that changes a lock into a reverse lock, i.e.,
+`lock` on this class calls `unlock` on the lockable, and `unlock` on this class
+calls `lock` on the lock. One motivation for this class is when we temporarily
+want to release a lock (which we have already acquired) but then reacquire it soon
+after.
+
+
+[*`reverse_lock` public member functions]
+
+# `;`
+# `;`
+# `;`
+
+[endsect]
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/locker/strict_loker.hpp>`]
+[/==========================================================================================]
+
+[section Class `strict_locker`]
+[*Synopsis]
+
+[strict_locker_synopsis]
+[*Description]
+
+[Note strict_locker is not a model of Locable concept.]
+
+[*`strict_locker` template parameters]
+
+* `Lockable` : The exclusive lockable type used to synchronize exclusive access
+
+[*`strict_locker` public types]
+
+* `lockable_type` : The exclusive lockable type used to synchronize exclusive access
+* `lock_error` : The exception type throw incase of errors
+* `bool_type` : The bool_type  of the safe_bool idiom
+
+[*`nesteed_strict_locker` public member functions]
+
+* `explicit strict_locker(lockable_type& obj);`
+* `~strict_locker();`
+* `operator bool_type() const;`
+* `bool operator!() const;`
+* `operator bool_type() const;`
+* `lockable_type* mutex() const;`
+* `lockable_type* get_lockable() const;`
+
+[*`nesteed_strict_locker` private and not defined member functions]
+
+* `strict_locker()`
+* `strict_locker(strict_locker&);`
+* `operator=(strict_locker&);`
+* `operator&();`
+* `void* operator new(std::size_t)`
+* `void* operator new[](std::size_t)`
+* `void operator delete(void*)`
+* `void operator delete[](void*)`
+
+[endsect]
+[section Class `nesteed_strict_locker`]
+[*Synopsis]
+
+    template <typename Locker>
+    class nesteed_strict_locker : private boost::noncopyable {
+    public:
+        typedef typename locker_traits<Locker>::bad_lock bad_lock;
+
+        nesteed_strict_locker(Locker& lock);
+        ~nesteed_strict_locker();
+
+        typedef unspecified bool_type;
+        operator bool_type() const;
+
+        bool operator!() const
+        bool owns_lock() const
+        Mutex* mutex() const
+    private:
+        strict_locker();
+        BOOST_NON_ALIAS(strict_locker);
+        BOOST_NON_HEAP_ALLOCATED();
+    };
+
+[*Description]
+
+[*`nesteed_strict_locker` public member functions]
+
+# `;`
+
+[endsect]
+
+[section Template Class `reverse_locker`]
+A reverse (or anti) locker.
+
+[*Synopsis]
+
+[*Description]
+`unlock` on construction and `lock` destruction.
+
+[*`reverse_locker` public member functions]
+
+# `;`
+# `;`
+# `;`
+
+[*Example Code]
+
+[endsect]
+
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/conc/concurrent_component.hpp>`]
+[/==========================================================================================]
+
+    class port;
+    class object_port;
+    template <typename TYPE> class qualified_port;
+    class concurrent_component;
+
+[section Class `port`]
+
+    class port {
+    public:
+        class synchronizer {
+            synchronizer(port& that);
+            ~synchronizer() {
+        };
+    	port();
+    	~port();
+        void accept();
+        bool accept_until(const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Class `object_port`]
+
+    class object_port {
+    public:
+        class synchronizer {
+            synchronizer(object_port& that, const concurrent_component_base* snd);
+            ~synchronizer() {
+        };
+    	object_port();
+    	~object_port();
+        void accept(const void* snd);
+        bool accept_until(const void* snd, const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(const void* snd, TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Class `qualified_port`]
+
+    template <typename TYPE>
+    class qualified_port {
+    public:
+        class synchronizer {
+            synchronizer(qualified_port& that, const concurrent_component_base* snd);
+            ~synchronizer() {
+        };
+    	object_port();
+    	~object_port();
+        void accept(const TYPE* snd);
+        bool accept_until(const TYPE* snd, const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(const TYPE* snd, TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Class `concurrent_component`]
+
+    class concurrent_component
+        typedef unspecified port;
+        typedef unspecified object_port;
+        typedef unspecified qualified_port;
+
+        static void accept(port& p);
+        static void accept_until(const boost::posix_time::ptime &abs_time, port& p);
+        template<typename TimeDuration>
+        static bool accept_for(TimeDuration const& rel_time, port& p);
+
+        static void accept_all(port& p1, ..., port& pn);
+        static void accept_all_until(const boost::posix_time::ptime &abs_time, port& p1, ..., port& pn);
+        template<typename TimeDuration>
+        static void accept_all_for(TimeDuration const& rel_time, port& p1, ..., port& pn);
+
+        static void accept_any(port& p1, ..., port& pn);
+        static void accept_any_until(const boost::posix_time::ptime &abs_time, port& p1, ..., port& pn);
+        template<typename TimeDuration>
+        static void accept_any_for(TimeDuration const& rel_time, port& p1, ..., port& pn);
+
+    };
+
+[endsect]
+
+
+
+[endsect]
+[/==========================================================================================]
+[section Header `<boost/synchro/lockable_traits.hpp>`]
+[/==========================================================================================]
+
+namespace boost { namespace synchro {
+
+    struct mono_threaded_tag;
+    struct multi_threaded_tag;
+    struct multi_process_tag;
+    template <typename Lockable> struct scope_tag;
+
+    template <typename Lockable> struct is_mono_threaded;
+    template <typename Lockable> struct is_multi_threaded;
+    template <typename Lockable> struct is_multi_process;
+
+    struct process_lifetime_tag;
+    struct kernel_lifetime_tag;
+    struct filesystem_lifetime_tag;
+    template <typename Lockable> struct lifetime_tag;
+
+    struct anonymous_tag;
+    struct named_tag;
+    template <typename Lockable> struct naming_tag;
+
+    struct exclusive_lock_tag;
+    struct sharable_lock_tag;
+    struct upgradable_lock_tag;
+    template <typename Lockable> struct category_tag;
+
+    template <typename Lockable> struct is_exclusive_lock;
+    template <typename Lockable> struct is_sharable_lock;
+    template <typename Lockable> struct is_upgradable_lock;
+
+    struct non_recursive_tag;
+    struct recursive_tag;
+    template <typename Lockable> struct reentrancy_tag;
+
+    template <typename Lockable> struct is_recursive_lock;
+
+    struct hasnt_timed_interface_tag;
+    struct has_timed_interface_tag;
+    template <typename Lockable> struct timed_interface_tag;
+
+    template <typename Lockable> struct has_timed_interface;
+
+    template <typename Locker> struct lockable_type;
+
+    template <typename Lockable> struct best_condition;
+
+    template <typename Lockable> struct best_condition_any;
+
+    template <typename Lockable> struct scoped_lock_type;
+    template <typename Lockable> struct unique_lock_type;
+    template <typename Lockable> struct shared_lock_type;
+    template <typename Lockable> struct upgrade_lock_type;
+
+    template <typename Lockable> struct lock_error_type;
+
+    template <typename Lockable> struct move_object_type;
+
+    template <typename Lockable> struct defer_lock_type;
+    template <typename Lockable> struct adopt_lock_type;
+    template <typename Lockable> struct try_to_lock_type;
+
+    template<typename Scope> struct default_lifetime;
+
+    template<
+        typename Scope=multi_threaded_tag,
+        typename Cathegory=exclusive_lock_tag,
+        typename Reentrancy=non_recursive_tag,
+        typename TimedInterface=has_timed_interface_tag,
+        typename Lifetime=typename default_lifetime<Scope>,
+        typename Naming=anonymous_tag,
+        typename Base=void
+    > struct lock_traits_base;
+
+
+
+[section Template Class `has_timed_interface`]
+
+    template <typename Lockable>
+    struct has_timed_interface
+        : is_same_or_is_base_and_derived<
+            has_timed_interface_tag,
+            typename timed_interface_tag<Lockable>::type
+        >
+    {};
+
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_exclusive`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_shared`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_recursive`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_mono_threaded`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_multi_threaded`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_multi_process`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `mutex_type`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `scoped_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `unique_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `shared_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `upgrade_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `moved_object`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error2`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error3`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error4`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+
+[section Class `lock_traits`]
+
+[*Synopsis]
+
+    template<typename Lockable>
+    struct lock_traits;
+        typedef Lockable            mutex_type;
+        typedef unspecified            scoped_lock;
+        typedef unspecified            unique_lock;
+        typedef unspecified            shared_lock;
+        typedef unspecified            upgrade_lock;
+        typedef unspecified               lock_error;
+        typedef unspecified         moved_object;
+        static const unspecified     defer_lock();
+        static const unspecified     adopt_lock();
+        static const unspecified     try_to_lock();
+    };
+
+
+[*Description]
+Lock Traits characterise lockable types.
+
+[*`nesteed_strict_locker` public member types]
+
+# `;`
+
+[endsect]
+
+[endsect]
+
+
+
+
+
+
+
+
+[/==========================================================================================]
+[section Header `<boost/synchro/poly/adaptive_lock.hpp>`]
+[/==========================================================================================]
+
+[section Class `lock_adapter`]
+[*Synopsis]
+
+[*Description]
+
+More usefully for primitives, which are best left as
+non-polymorphic, an adaptor class can be used to provide the interface - run-time
+polymorphism - on behalf of anything supporting the correctly named functions -
+sometimes known as compile time polymorphism. It easier to take a nonpolymorphic
+class and adapt it to be polymorphic, than it is do it the other way
+around: the overhead and semantics of polymorphism can only introduced to a class,
+not removed.
+
+[*`lock_adapter` public member functions]
+
+# `;`
+
+[endsect]
+[section Class `adaptive_lock`]
+An adaptive general locking class that defers the decision of lockable type to run time.
+
+[*Synopsis]
+
+[*Description]
+
+This class, as locable, provide a set of general locking APIs.
+However, it defers our decision of what kind of lockable to use to the run time and delegates
+all locking operations to the actual lockable. Users must define a constructor in their subclass
+to initialize lock_.
+
+[*`adaptive_lock` public member functions]
+
+# `;`
+
+
+[endsect]
+
+[endsect]
+
+[endsect]
+
+

@@ -1,0 +1,81 @@
+[/
+  (C) Copyright 2008 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/======================================]
+[section:install Installing Synchro]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Synchro]
+[/=================================]
+
+You can get the last stable release of Boost.Synchro by downloading [^synchro.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Boost Vault]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/synchro Boost Sandbox].
+
+[/=================================]
+[heading Building Boost.Synchro]
+[/=================================]
+
+There is no need to compile [*Boost.Synchro], since it's
+a header only library. Just include your Boost header directory in your
+compiler include path.
+
+[/=========================]
+[heading Requirements]
+[/=========================]
+
+[*Boost.Synchro] depends on Boost. You must use either Boost version 1.35.x
+or the version in SVN trunk. In particular, [*Boost.Synchro] depends on:
+
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/interprocess [*Boost.Interprocess]]]
+    [interprocess synchronization primitives]
+]
+[
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]]
+    [for all the meta programing task]
+]
+[
+    [[@http://www.boost.org/libs/thread [*Boost.Thread]]]
+    [thread synchronization primitives]
+]
+]
+
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
+the underlying parameters provide it.
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are exception-safe except:
+
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+Currently, [*Boost.Synchro] has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+*  GCC 3.4.6 Linux
+*  GCC 4.3.2 Cygwin
+*  GCC 4.1.2 Linux
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+

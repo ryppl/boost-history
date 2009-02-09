@@ -1,0 +1,101 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.Synchro
+    [quickbook 1.3]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2008 Vicente J. Botet Escriba]
+    [id boost.synchro]
+    [dirname synchro]
+    [purpose Concurrent synchronization utilities]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+[template concept_param[role concept] A type playing the role of [role] in the [concept] concept.]
+
+[template concept_var[type] Object of type [type].]
+
+[template var[name type]
+
+*    [*[name]] Object of type [type].
+]
+
+[template concept_arg[name concept]
+
+The type [*[name]] must be a model of [*[concept]].
+]
+
+[template concept_valid_expressions[concept]
+[*Valid expressions]
+
+In addition to the expressions defined in [concept], the following expressions must be valid.
+]
+
+[/
+[section Preface]
+
+[:[".]]
+[:[*['-- ]]]
+
+[endsect]
+/]
+
+[warning Synchro is not a part of the Boost libraries.]
+
+[import ../../../boost/synchro/lockable_traits.hpp]
+[import ../../../boost/synchro/lockable_concepts.hpp]
+[import ../../../boost/synchro/make_lockable.hpp]
+[import ../../../boost/synchro/monitor.hpp]
+[import ../../../boost/synchro/thread_synchronization_family.hpp]
+
+[import ../../../boost/synchro/conc/concurrent_component.hpp]
+
+[import ../../../boost/synchro/lockers/condition_locker.hpp]
+[import ../../../boost/synchro/lockers/externally_locked.hpp]
+[import ../../../boost/synchro/lockers/locking_ptr.hpp]
+[import ../../../boost/synchro/lockers/strict_locker.hpp]
+
+[import ../../../boost/synchro/queues/synchro_buffer_monitor.hpp]
+[import ../../../boost/synchro/queues/synchro_buffer_family.hpp]
+
+[import ../example/BankAccount.cpp]
+[import ../example/EL_BancAccount.cpp]
+[import ../example/Histogram.cpp]
+[import ../example/HotelReservation.cpp]
+[import ../example/IL_BancAccount.cpp]
+[import ../example/IL_Lockable_BancAccount.cpp]
+[import ../example/IL_Rec_Lockable_BancAccount.cpp]
+[import ../example/Master_Slave.cpp]
+[import ../example/SingleBuf.cpp]
+[import ../example/QualifiedSingleBuf.cpp]
+
+
+
+
+
+[include overview.qbk]
+
+[thread_synchronization_family]
+
+[include users_guide.qbk]
+
+
+[include reference.qbk]
+
+
+[/xinclude autodoc.xml]
+
+
+[include case_studies.qbk]
+
+
+[include appendices.qbk]
+
+
