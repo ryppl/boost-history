@@ -31,9 +31,9 @@ struct scope_traits<multi_process_tag>
         moved_object(T& t_): boost::interprocess::detail::moved_object<T>(t_) {}
     };
 
-    typedef boost::interprocess::detail::defer_lock_type defer_lock_t;
-    typedef boost::interprocess::detail::accept_ownership_type adopt_lock_t;
-    typedef boost::interprocess::detail::try_to_lock_type try_to_lock_t;
+    typedef boost::interprocess::defer_lock_type defer_lock_t;
+    typedef boost::interprocess::accept_ownership_type adopt_lock_t;
+    typedef boost::interprocess::try_to_lock_type try_to_lock_t;
 
 
     static const defer_lock_t& defer_lock()	{return boost::interprocess::defer_lock;}
