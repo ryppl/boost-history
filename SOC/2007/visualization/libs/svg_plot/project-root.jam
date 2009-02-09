@@ -1,0 +1,53 @@
+#  I:\boost-sandbox\SOC\2007\visualization\libs\svg_plot\project-root.jam
+#
+#   Copyright (c) 2006 João Abecasis
+#   Copyright Paul A. Bristow 2009
+
+#   Distributed under the Boost Software License, Version 1.0. (See
+#   accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+
+#  IMPORTANT NOTE: This file MUST NOT be copied over a boost installation
+
+path-constant top : . ;
+
+import modules ;
+import path ;
+
+boost-root = [ modules.peek : BOOST_ROOT ] ;
+local svgplot-header-include = $(top)/../.. ;
+
+if ! $(boost-root)
+{ # not defined by global environment variable BOOST_ROOT,
+  # try to find from global environment variable BOOST_BUILD_PATH.
+    local boost-search-dirs = [ modules.peek : BOOST_BUILD_PATH ] ;
+    for local dir in $(boost-search-dirs)
+    {
+        if [ path.glob $(dir)/../../../ : boost/version.hpp ]
+        {
+            boost-root += $(dir)/../../../ ;
+        }
+    }
+    if $(boost-root)
+    {
+        boost-root = [ path.make $(boost-root[1]) ] ;
+    }
+    else
+    {
+        ECHO "Warning: couldn't find BOOST_ROOT in" $(boost-root) ;
+    }
+}
+
+#use-project /boost/regex : $(boost-root)/libs/regex/build ;
+#use-project /boost/unit_test : $(boost-root)/libs/test/build ;
+
+project SVG_plot
+    : requirements
+        <include>$(boost-root)
+        <include>$(svgplot-header-include)
+    :   #   build everything in ./bin.v2
+        build-dir bin.v2
+    ;
+
+
+
