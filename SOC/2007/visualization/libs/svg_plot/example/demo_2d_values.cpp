@@ -1,5 +1,9 @@
-// demo_2d_values.hpp
+/*! \file demo_2d_values.hpp
+    \brief Demonstration of marking values in 2D plots.
+    \details Contains Quickbook Markup to be included in documentation.
 
+    \author Jacob Voytko and Paul A. Bristow 
+*/ 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
 
@@ -185,13 +189,16 @@ demo_2d_values.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_2d_values.exe"
- my_2d_plot.x_values_font_size() 14
+my_2d_plot.x_values_font_size() 16
 my_2d_plot.x_values_font_family() Times New Roman
 my_2d_plot.x_values_color() RGB(255,0,0)
-my_2d_plot.x_values_precision() 2
- my_2d_plot.x_values_ioflags() 1020
-Build Time 0:03
-
+my_2d_plot.x_values_precision() 3
+my_2d_plot.x_values_ioflags() 200
+my_2d_plot.y_values_font_size() 14
+my_2d_plot.y_values_font_family() Arial
+my_2d_plot.y_values_color() RGB(0,0,255)
+my_2d_plot.y_values_precision() 5
+ my_2d_plot.y_values_ioflags() 200
 
 //] [demo_2d_values_output]
 

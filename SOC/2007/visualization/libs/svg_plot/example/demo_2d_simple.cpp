@@ -1,4 +1,10 @@
-// demo_2d_plot.cpp
+/*! \file demo_2d_simple.cpp
+    \brief Demonstration of some simple 2D plot features.
+    \details Uses some simple math functions to generate curves.
+    The detailed output shows the plot settings for each plot.
+
+    \author Jacob Voytko and Paul A. Bristow 
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007, 2008
@@ -60,7 +66,6 @@ double h(double x)
 
 int main()
 {
-
   try
   {
     // Some containers for (sorted) sample data.
@@ -104,9 +109,6 @@ int main()
     std::cout <<
       "\n""Message from thrown exception was:\n  " << e.what() << std::endl;
   }
-
-
-
   return 0;
 } // int main()
 

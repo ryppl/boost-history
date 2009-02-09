@@ -1,4 +1,9 @@
-// demo_boxplot_full.cpp
+/*! \file demo_Hoaglin.cpp
+  \brief Demonstration of Boxplot quartile options.
+  \details Includes Quickbook markup.
+    Boxplots appear different depending the choice of definition for the quartile.
+  \author Paul A Bristow 
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
@@ -232,9 +237,6 @@ Output:
 
 //[demo_Hoaglin_output
 
-demo_Hoaglin.cpp
-Linking...
-Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_Hoaglin.exe"
 Hoaglin definition #4, q1 70.25, q2 83.5, q3 90.5, IQR 20.25
 Hoaglin definition #5, q1 76.5, q2 85, q3 93.5, IQR 17
@@ -244,20 +246,6 @@ Hoaglin definition #8, q1 76, q2 85, q3 94, IQR 18
 Default boxplot.quartile_definition() = 8
 boxplot.quartile_definition() = 8
 boxplot_series.quartile_definition() = 4
-Min outlier fences <49 or >121
-Min extreme fences <22 or >148
-Min outlier fences <39.875 or >120.875
-Min extreme fences <9.5 or >151.25
-Min outlier fences <51 or >119
-Min extreme fences <25.5 or >144.5
-Min outlier fences <45 or >125
-Min extreme fences <15 or >155
-Min outlier fences <57 or >113
-Min extreme fences <36 or >134
-Min outlier fences <49 or >121
-Min extreme fences <22 or >148
-Build Time 0:02
-Build log was saved at "file://j:\Cpp\SVG\demo_Hoaglin\Debug\BuildLog.htm"
 
 //] [demo_Hoaglin_output]
 

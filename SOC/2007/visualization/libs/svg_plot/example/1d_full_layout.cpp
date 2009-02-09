@@ -1,4 +1,8 @@
-// 1d_full_layout.cpp
+/*! \file 1d_full_layout.cpp
+    \brief Example of 1 D plot of 3 different STL container types using several layout features.
+    \detail creates file 1d_complex.svg
+
+*/
 
 // Copyright Jacob Voytko 2007
 
@@ -19,76 +23,79 @@ using namespace boost::svg;
 #include <cmath>
   using std::sqrt;
 
+//
+
 double f(double x)
 {
-	return sqrt(x);
+  return sqrt(x);
 }
 
 double g(double x)
 {
-	return -2 + x*x;
+  return -2 + x*x;
 }
 
 double h(double x)
 {
-	return -1 + 2*x;
+  return -1 + 2*x;
 }
 
 int main()
 {
-	vector<double> data1;
-	deque<double> data2;
-	boost::array<double, 10> data3;
-	
-	int j=0;
-	for(double i=0; i<9.5; i+=1.)
-	{
-		data1.push_back(f(i));
-		data2.push_front(g(i));
-		data3[j++] = h(i);
-	}
+  vector<double> data1;
+  deque<double> data2;
+  boost::array<double, 10> data3;
 
-	svg_1d_plot my_plot;
+  int j=0;
+  for(double i=0; i<9.5; i+=1.)
+  {
+    data1.push_back(f(i));
+    data2.push_front(g(i));
+    data3[j++] = h(i);
+  }
 
-	// Size/scale settings.
-	my_plot.image_size(500, 350)
-	       .x_range(-3, 10);
+  svg_1d_plot my_plot;
 
-	// Text settings.
-	my_plot.title("Oh My!")
-	       .title_font_size(29)
-	       .x_label("Time in Months");
-	
-	// Commands.
-	my_plot.legend_on(true)
-	       .plot_window_on(true)
-	       .x_label_on(true)
-	       .x_major_value_labels_side(true);
-	
-	// Color settings.
-	my_plot.background_color(svg_color(67, 111, 69))
-	       .legend_background_color(svg_color(207, 202,167))
-	       .legend_border_color(svg_color(102, 102, 84))
-	       .plot_background_color(svg_color(136, 188, 126))
-	       .title_color(white);
+  // Size/scale settings.
+  my_plot.image_size(500, 350)
+         .x_range(-3, 10);
 
-	// Axis settings.
-	my_plot.x_major_interval(2)
-	       .x_major_tick_length(14)
-	       .x_major_tick_width(1)
-	       .x_minor_tick_length(7)
-	       .x_minor_tick_width(1)
-	       .x_num_minor__ticks(3);
-	
-	// Legend settings.
-	my_plot.legend_title_font_size(15);
-	
-	my_plot.plot(data1, "Lions",  blue);
-	my_plot.plot(data2, "Tigers", orange);
-	my_plot.plot(data3, "Bears",  red);
+  // Text settings.
+  my_plot.title("Oh My!")
+         .title_font_size(29)
+         .x_label("Time in Months");
+
+  // Commands.
+  my_plot.legend_on(true)
+         .plot_window_on(true)
+         .x_label_on(true)
+         .x_major_value_labels_side(true);
+
+  // Color settings.
+  my_plot.background_color(svg_color(67, 111, 69))
+         .legend_background_color(svg_color(207, 202,167))
+         .legend_border_color(svg_color(102, 102, 84))
+         .plot_background_color(svg_color(136, 188, 126))
+         .title_color(white);
+
+  // Axis settings.
+  my_plot.x_major_interval(2)
+         .x_major_tick_length(14)
+         .x_major_tick_width(1)
+         .x_minor_tick_length(7)
+         .x_minor_tick_width(1)
+         .x_num_minor_ticks(3);
+
+  // Legend settings.
+  my_plot.legend_title_font_size(15);
+
+  my_plot.plot(data1, "Lions",  blue);
+  my_plot.plot(data2, "Tigers", orange);
+  my_plot.plot(data3, "Bears",  red);
 
   my_plot.write("./1d_complex.svg");
 
-	return 0;
-}
+  return 0;
+} // int main()
+
 // 1d_full_layout.cpp

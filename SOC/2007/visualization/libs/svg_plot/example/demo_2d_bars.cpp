@@ -1,9 +1,13 @@
-// demo 2d_bar.cpp
+/*! \file demo 2d_bar.cpp
+    \brief Demonstrate the bars (& columns or sticks).
+    \details 
+    \author Paul A. Bristow
+    */
 
 // Copyright Paul A. Bristow 2008
+
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
-// -----------------------------------------------------------------
 
 // Demonstrate the bars (& columns or sticks).
 
@@ -56,3 +60,11 @@ int main()
 	return 0;
 } // int main()
 
+/* Output:
+
+demo_2d_bars.cpp
+Linking...
+Embedding manifest...
+Autorun "j:\Cpp\SVG\debug\demo_2d_bars.exe"
+
+*/

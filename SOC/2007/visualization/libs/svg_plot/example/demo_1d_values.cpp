@@ -1,7 +1,12 @@
-// demo_1d_values.hpp
+/*! \file demo_1d_values.hpp
+    \brief Demonstration of some simple 1D value formatting.
+    \details Quickbook markup to include in documentation.
+
+    \author Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A Bristow 2008
+// Copyright Paul A Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.

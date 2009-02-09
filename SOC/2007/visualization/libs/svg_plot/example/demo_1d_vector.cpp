@@ -1,4 +1,9 @@
-// demo_1d_vector.cpp
+/*! \file demo_1d_vector.cpp
+    \brief Simple plot of vector of 1D data.
+    \details Includes Quickbook markup to be included in documentation.
+
+    \author Jacob Voytko & Paul A. Bristow
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008

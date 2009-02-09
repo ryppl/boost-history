@@ -1,4 +1,10 @@
-// demo_2d_plot.cpp
+/*! \file demo_2d_plot.cpp
+    \brief Demonstration of some 2D plot features.
+    \details Uses some simple math functions to generate curves.
+    The detailed output shows the plot settings for each plot.
+
+    \author Jacob Voytko and Paul A. Bristow 
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2007, 2008
@@ -267,6 +273,1114 @@ int main()
 
   return 0;
 } // int main()
+
+/*
+
+Output :
+
+Compiling...
+demo_2d_plot.cpp
+Linking...
+Embedding manifest...
+Autorun "j:\Cpp\SVG\debug\demo_2d_plot.exe"
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYPM.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min -10
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -10, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis none
+y_axis_position y_axis_position intersects X axis (X range includes zero)
+x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis none
+y_max 10
+y_min -10
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XP.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 92, 513
+plot_window_x_left 92
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min 1
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() 1, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis none
+y_axis_position y_axis_position left (all X values < 0)
+x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis left
+y_max 10
+y_min -10
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XN.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max -1
+x_min -10
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -10, -1
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis none
+y_axis_position y_axis_position right (all X values > 0)
+x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis right
+y_max 10
+y_min -10
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_YP.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 430
+plot_window_y_top 62
+plot_window_y_bottom 430.4
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min -1
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -1, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis bottom
+y_axis_position y_axis_position intersects X axis (X range includes zero)
+x_axis_position x_axis_position bottom (all Y values > 0)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() 1, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis none
+y_max 10
+y_min 1
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_YN.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min -1
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -1, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis top
+y_axis_position y_axis_position intersects X axis (X range includes zero)
+x_axis_position x_axis_position top (all Y values < 0)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, -1
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis none
+y_max -1
+y_min -10
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYP.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 83.6, 513
+plot_window_x_left 83.6
+plot_window_x_right 512.6
+plot_window_y 62, 430
+plot_window_y_top 62
+plot_window_y_bottom 430.4
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min 1
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() 1, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis bottom
+y_axis_position y_axis_position left (all X values < 0)
+x_axis_position x_axis_position bottom (all Y values > 0)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() 1, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis left
+y_max 10
+y_min 1
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYN.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max -1
+x_min -10
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -10, -1
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis top
+y_axis_position y_axis_position right (all X values > 0)
+x_axis_position x_axis_position top (all Y values < 0)
+y_label_on true
+y_label_axis Y-axis
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, -1
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis right
+y_max -1
+y_min -10
+data lines width 2
+>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYPM.svg
+axes_on true
+background_border_width 2
+background_border_color RGB(255,255,0)
+background_color RGB(248,248,255)
+image_border_margin() 10
+image_border_width() 2
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 700
+image_y_size 500
+legend_on true
+legend_place 2
+legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_background_color RGB(255,255,224)
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 16
+legend_font_weight 
+legend_width 161.4
+legend_lines true
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(0,128,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 50, 513
+plot_window_x_left 50
+plot_window_x_right 512.6
+plot_window_y 62, 450
+plot_window_y_top 62
+plot_window_y_bottom 450
+title_on true
+title ""
+title_color RGB(255,0,0)
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 20
+title_font_stretch 
+title_font_style 
+title_font_weight 
+x_value_precision 2
+x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
+y_value_precision 1
+y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_max 10
+x_min -10
+x_autoscale false
+y_autoscale false
+xy_autoscale false
+x_autoscale_check_limits true
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label X-axis &#x00B1;&#x3A9;
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_value_labels_side left
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on true
+x_major_grid_width 1
+x_major_interval 2
+x_major_tick 2
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 10
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 5
+x_minor_tick_width 1
+x_minor_grid_on true
+x_minor_grid_color RGB(240,240,255)
+x_minor_grid_width 0.5
+x_range() -10, 10
+x_num_minor_ticks 2
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis none
+y_axis_position y_axis_position intersects X axis (X range includes zero)
+x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+y_label_on true
+y_label_axis Y-axis &#x221E;&#x221A;
+y_axis_color RGB(0,0,0)
+y_axis_label_color RGB(0,0,0)
+y_axis_on true
+axes_on true
+y_axis_value_color RGB(0,0,0)
+y_axis_width 1
+y_label Y-axis &#x221E;&#x221A;
+y_label_color blank
+y_label_font_family Verdana
+y_label_font_size 14
+y_label_on true
+y_label_units 
+y_label_units_on false
+y_label_width 0
+y_major_grid_on true
+y_major_grid_color RGB(200,220,255)
+y_major_grid_width 2
+y_major_interval 2
+y_major_value_labels_side bottom
+y_major_label_rotation 0
+y_major_tick_color RGB(0,0,0)
+y_major_tick_length  10
+y_major_tick_width  2
+y_minor_grid_on true
+y_minor_grid_color  RGB(240,240,255)
+y_minor_grid_width 1
+y_minor_interval 0
+y_minor_tick_color RGB(0,0,0)
+y_minor_tick_length 5
+y_minor_tick_width 1
+y_range() -10, 10
+y_num_minor_ticks 
+y_ticks_left_on true
+y_ticks_right_on false
+y_ticks_on_window_or_axis none
+y_max 10
+y_min -10
+data lines width 2
+
+*/
 
 /*
 

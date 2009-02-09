@@ -1,18 +1,22 @@
-// demo 2d_histogram.cpp
+/*! \file demo 2d_histogram.cpp
+    \brief Demonstrate drawing histogram as SVG files.
+    \details
+     Demonstrate drawing histogram as SVG files.
+     The *area* under each bin shows the number of cases or value in that bin or class.
+     (For bar charts the *height shows the value*).
+     Bins can be the same (most common) or different widths.
+     Intervals must not overlap and bins must be adjacent.
+     Various suggestions for choosing good bins have been made,
+     some a common bin width.  The example below has different bin widths
+     reflecting very roughly the log of the journey time.
+
+    \author Paul A. Bristow
+    */
 
 // Copyright Paul A. Bristow 2008
+
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
-// -----------------------------------------------------------------
-
-// Demonstrate drawing histogram as SVG files.
-// The *area* under each bin shows the number of cases or value in that bin or class.
-// (For bar charts the *height shows the value*).
-// Bins can be the same (most common) or different widths.
-// Intervals must not overlap and bins must be adjacent.
-// Various suggestions for choosing good bins have been made,
-// some a common bin width.  The example below has different bin widths
-// reflecting very roughly the log of the journey time.
 
 #include <iostream>
   using std::cout; using std::endl;
@@ -158,6 +162,57 @@ int main()
 /*
 
 Output:
+
+demo_2d_histogram.cpp
+Linking...
+Embedding manifest...
+Autorun "j:\Cpp\SVG\debug\demo_2d_histogram.exe"
+List all input data:
+Time   Number of people
+0  4180
+5 13687
+10 18618
+15 19634
+20 17981
+25  7190
+30 16369
+35  3212
+40  4122
+45  9200
+60  6461
+90  3435
+150     0
+Interval width  Quantity  quantity/width
+  5       54180       836
+ 10       513687    2737.4
+ 15       518618    3723.6
+ 20       519634    3926.8
+ 25       517981    3596.2
+ 30       57190      1438
+ 35       516369    3273.8
+ 40       53212     642.4
+ 45       54122     824.4
+ 60      159200   613.333
+ 90      306461   215.367
+150      603435     57.25
+Bin_start height
+0 836
+5 2737.4
+10 3723.6
+15 3926.8
+20 3596.2
+25 1438
+30 3273.8
+35 642.4
+40 824.4
+45 613.333
+60 215.367
+90 57.25
+12 bins
+RGB(255,0,0)
+blank
+none
+Build Time 0:03
 
 */
 

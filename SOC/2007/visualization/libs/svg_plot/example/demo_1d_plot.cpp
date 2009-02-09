@@ -1,4 +1,8 @@
-// svg_1d_plot.hpp
+/*! \file svg_1d_plot.hpp
+    \brief Demonstration of many features for 1D plots.
+    \details Contains Quickbook markup.
+
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008

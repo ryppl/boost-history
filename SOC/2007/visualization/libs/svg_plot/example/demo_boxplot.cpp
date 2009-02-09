@@ -1,4 +1,9 @@
-// demo_boxplot.cpp
+/*! \file demo_boxplot.cpp
+    \brief Demonstration of boxplots.
+    \details Contains Quickbook Markup to be included in documentation.
+
+    \author Jacob Voytko and Paul A. Bristow 
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
@@ -140,15 +145,12 @@ int main()
 
 Output:
 
-
 Compiling...
 demo_boxplot.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_boxplot.exe"
 Build Time 0:02
-
-
 
 */
 
