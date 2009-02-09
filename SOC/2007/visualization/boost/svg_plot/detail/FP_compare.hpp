@@ -222,7 +222,7 @@ public:
 
   template<typename FPT>
   FPT size()
-  { //! \fn size Get chosen smallest value.
+  { //! Get chosen smallest value that will be counted as effectively zero.
     return smallest_;
   }
 
