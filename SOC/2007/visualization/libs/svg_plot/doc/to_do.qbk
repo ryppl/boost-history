@@ -25,9 +25,13 @@ consider using it for other purposes.
 'nicely' it works in practice would be welcome. Some of the uglier features
 of Microsoft Excel autoscaling have been avoided, but optinions on aesthetics vary widely.
 
-* Allow *2D plots of 1D containers*.
+* Allow *2D plots of 1D containers* - a very common need, for exampoe for Time Series.
 Jake had trouble with having functors that update state interact
 with `make_transform_iterator`, and omitted the feature.
+
+* Make time and/or data labelled axis possible, with datetime a first class citizen type.
+
+* Add way of providing uncertainty estimates (+-, degrees of freedom ...).
 
 * Allow *other image formats*. There are many inherent difficulties with this part.
 The solution that was explored is allowing the user to pass a functor that traverses
