@@ -1,0 +1,176 @@
+\documentclass[american]{book}
+\usepackage{refbib}
+\usepackage{pdfsync}
+
+\input{macros}
+
+%%--------------------------------------------------
+%% PDF
+
+\usepackage[pdftex,
+            pdftitle={Proposed Wording for Concepts},
+            pdfsubject={C++ International Standard Proposal},
+            pdfcreator={Douglas Gregor},
+            bookmarks=true,
+            bookmarksnumbered=true,
+            pdfpagelabels=true,
+            pdfpagemode=UseOutlines,
+            pdfstartview=FitH,
+            linktocpage=true,
+            colorlinks=true,
+            linkcolor=blue,
+            plainpages=false
+           ]{hyperref}
+
+%%--------------------------------------------------
+%% Set section numbering limit, toc limit
+\setcounter{secnumdepth}{5}
+\setcounter{tocdepth}{3}
+
+%%--------------------------------------------------
+%% Parameters that govern document appearance
+\setlength{\oddsidemargin}{0pt}
+\setlength{\evensidemargin}{0pt}
+\setlength{\textwidth}{6.6in}
+
+%%--------------------------------------------------
+%% Handle special hyphenation rules
+\hyphenation{tem-plate ex-am-ple in-put-it-er-a-tor name-space name-spaces}
+
+\definecolor{editbackground}{rgb}{.8,.8,.8}
+%\newcommand{\einline}[1]{\colorbox{editbackground}{#1}}
+%\newcommand{\editorial}[1]{\colorbox{editbackground}{\begin{minipage}{\linewidth
+%}#1\end{minipage}}}
+
+\begin{document}
+\raggedbottom
+
+\begin{titlepage}
+\huge
+\begin{center}
+Concepts and Ref-qualifiers
+\end{center}
+
+\normalsize
+\vspace{0.25in}
+\par\noindent Author: Douglas Gregor, Apple \vspace{-6pt}
+\par\noindent Document number: N2832=09-0022 \vspace{-6pt}
+\par\noindent Date: \today\vspace{-6pt}
+\par\noindent Project: Programming Language \Cpp{}, Library Library Working Group\vspace{-6pt}
+\par\noindent Reply-to: Douglas Gregor $<$\href{mailto:doug.gregor@gmail.com}{doug.gregor@gmail.com}$>$
+
+\section*{Introduction}
+This proposal updates the Standard Library's assignability concepts to
+avoid a type-safety hole that concerns associated member function
+requirements within concepts and their interaction with
+\techterm{ref-qualifier}s~\cite{Gesemann09:ref-qualifiers}.
+
+The type-safety hole occurs due to the way in which associated member
+function requirements are type-checked. For example, consider a simple
+\tcode{Assignable} concept:
+
+\begin{codeblock}
+auto concept Assignable<typename T> {
+  T& T::operator=(const T&);
+}
+\end{codeblock}
+
+\noindent
+Using this concept, we can assign to both an lvalue and an rvalue of
+type \tcode{T},  as in the following well-formed code:
+
+\begin{codeblock}
+template<typename T>
+  requires Assignable<T> && std::DefaultConstructible<T>
+  void f(T x) {
+    x = T(); // okay
+    T() = x;  // okay
+  }
+\end{codeblock}
+
+\noindent
+This code is well-formed since the type-checking of the assignment
+expressions is done using an archetyp for \tcode{T} and the
+\tcode{operator=} requirement is translated into a member function of
+the archetype.
+
+However, the \tcode{Assignable} concept applies to built-in types,
+e.g., the following concept map is well-formed:
+
+\begin{codeblock}
+concept_map Assignable<int> { }
+\end{codeblock}
+
+\noindent
+The concept map is well-formed because type-checking for the
+\tcode{operator=} requirement involves type-checking an expression
+\tcode{a = b}, where \tcode{a} is an lvalue. Hence, both the concept
+map \tcode{Assignable<int>} and the constrained function template
+\tcode{f} are well-formed, but attempting to instantiate
+\tcode{f<int>} will result in an error because one cannot assign to an
+rvalue of non-class type.
+
+Closing this type-safety hole in the language will be the subject of a
+separate proposal. This proposal, in the other hand, modifies all of
+the assignability concepts by adding a \tcode{\&}
+\techterm{ref-qualifier} to the \tcode{operator=} requirement, so they
+constrained templates will only be permitted to assign to
+lvalues. This change avoids the type-safety hole and prepares for the
+language changes that will close that hole.
+\end{titlepage}
+
+%%--------------------------------------------------
+%% Headers and footers
+\pagestyle{fancy}
+\fancyhead[LE,RO]{\textbf{\rightmark}}
+\fancyhead[RE]{\textbf{\leftmark\hspace{1em}\thepage}}
+\fancyhead[LO]{\textbf{\thepage\hspace{1em}\leftmark}}
+
+\fancypagestyle{plain}{
+\renewcommand{\headrulewidth}{0in}
+\fancyhead[LE,RO]{}
+\fancyhead[RE,LO]{}
+\fancyfoot{}
+}
+
+\renewcommand{\sectionmark}[1]{\markright{\thesection\hspace{1em}#1}}
+\renewcommand{\chaptermark}[1]{\markboth{#1}{}}
+\begin{paras}
+\setcounter{chapter}{20}
+\setcounter{section}{1}
+\setcounter{subsection}{2}
+\rSec2[concept.operator]{Operator concepts}
+
+\setcounter{Paras}{27}
+\begin{itemdecl}
+auto concept HasAssign<typename T, typename U> {
+  typename result_type;
+  result_type T::operator=(U) @\added{\&}@;
+}
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\realnote describes types with an assignment operator.
+\end{itemdescr}
+
+\setcounter{subsection}{7}
+\rSec2[concept.copymove]{Copy and move}
+\setcounter{Paras}{6}
+
+\begin{itemdecl}
+result_type T::operator=(T&& rv) @\added{\&}@; // inherited from HasAssign<T, T\&\&>
+\end{itemdecl}
+
+\begin{itemdescr}
+\pnum
+\postconditions
+the constructed \tcode{T} object is equivalent to the value of
+\tcode{rv} before the assignment. 
+\enternote there is no requirement on the value of
+\tcode{rv} after 
+the assignment. \exitnote
+\end{itemdescr}
+
+\end{paras}
+\end{document}
