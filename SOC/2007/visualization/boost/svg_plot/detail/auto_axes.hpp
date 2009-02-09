@@ -8,7 +8,7 @@
   Provide fine control over any overlap at the edges of the axes to avoid a tiny
   amount over the limit resulting in an ugly extra major tick.
   Also allow optional forcing of the ticks to be multiples of 1, 2, 5, 10.
-
+  \date 7 Feb 09
   \author Paul A. Bristow
  */
 
@@ -653,9 +653,8 @@ std::pair<double, double> range_all(const T& containers) // Container of STL con
   return minmax;
 } // template <class T> scale_all
 
-
 double roundup10(double value)
-{
+{ //! Decimal scaling steps, so value is 0.1, 0.2, 0.5, 1., 2., 5. or 10., 20., 50., 100. ...
   smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
@@ -664,7 +663,6 @@ double roundup10(double value)
   bool is_neg = (value >= 0) ? false : true;
   value = abs(value);
 
-  // Decimal scaling, so value is 0.1, 0.2, 0.5, 1., 2., 5. or 10., 20., 50., 100. ...
   int order = int(floor(log10(value))); // 0 to 9.999, gives 0, 10 to 99.9 gives 2 ...
   double scaled = value * pow(10., -order); // 0 to 9.99 is unchanged, 10 to 9.99 scaled down to 1. to 9.99
   double pow10order = is_neg ? -pow(10., order) : pow(10., order); //  power of ten, signed.
@@ -687,7 +685,7 @@ double roundup10(double value)
 } // double roundup10(double value)
 
 double rounddown10(double value)
-{
+{ //! Decimal scaling steps, so value is 0.1, 0.2, 0.5, 1., 2., 5. or 10., 10., 20., 100. ...
   smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value
   if (is_small(value))
   { // Value very close to zero.
@@ -695,7 +693,6 @@ double rounddown10(double value)
   }
   bool is_neg = (value >= 0) ? false : true;
   value = abs(value);
-  // Decimal scaling, so value is 0.1, 0.2, 0.5, 1., 2., 5. or 10., 10., 20., 100. ...
   int order = int(floor(log10(value))); // 0 to 9.999, gives 0, 10 to 99.9 gives 2 ...
   double scaled = value * pow(10., -order); // 0 to 9.99 is unchanged, 10 to 9.99 scaled down to 1. to 9.99
   double pow10order = is_neg ? -pow(10., order) : pow(10., order); //  power of ten, signed.
@@ -719,8 +716,7 @@ double rounddown10(double value)
 } // double rounddown10(double value)
 
 double roundup5(double value)
-{
-  // Binary scaling, so return 0.1, 0.5, 1, 5, 10, 50, 100 ....
+{ //! Binary scaling, so return 0.1, 0.5, 1, 5, 10, 50, 100 ....
   smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
@@ -775,8 +771,7 @@ double rounddown5(double value)
 } // double rounddow5(double value)
 
 double roundup2(double value)
-{
-  // Binary scaling, so return 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2, 4, 6, 8, 10, 20, 40 60, 80, 100...
+{ //! Binary scaling steps, so return 0.1, 0.2, 0.4, 0.6, 0.8, 1.0, 2, 4, 6, 8, 10, 20, 40 60, 80, 100...
   smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value.
   if (is_small(value) )
   { // Value very close to zero.
@@ -811,7 +806,7 @@ double roundup2(double value)
 } // double roundup2(double value)
 
 double rounddown2(double value)
-{
+{ //! Binary scaling steps, so value is 0.1, 0.2, 0.4, 0.6, 0.8, 0., 2., 4., 6., 8., 10., 20., 40., 60, 80, 100. ...
   smallest<> is_small(100. * (std::numeric_limits<double>::min)()); // 100 * min value
   if (is_small(value))
   { // Value very close to zero.
@@ -819,7 +814,6 @@ double rounddown2(double value)
   }
   bool is_neg = (value >= 0) ? false : true;
   value = abs(value);
-  // Binary scaling, so value is 0.1, 0.2, 0.4, 0.6, 0.8, 0., 2., 4., 6., 8., 10., 20., 40., 60, 80, 100. ...
   int order = int(floor(log10(value))); // 0 to 9.999, gives 0, 10 to 99.9 gives 2 ...
   double scaled = value * pow(10., -order); // 0 to 9.99 is unchanged, 10 to 9.99 scaled down to 1. to 9.99
   double pow10order = is_neg ? -pow(10., order) : pow(10., order); //  power of ten, signed.
