@@ -30,17 +30,17 @@
 #include <boost/preprocessor/wstringize.hpp>
 
 #include <boost/char_type_switch/string.hpp>
+#include <boost/mirror/meta_data_fwd.hpp>
 
 namespace boost {
 namespace mirror {
 
 template <class Class /*, class VariantTag*/ >
-struct meta_constructors;
-
+struct meta_constructors_base;
 
 #define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTORS_BEGIN(TEMPLATE, TEMPL_ARG_COUNT) \
 template < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, typename T) >  \
-struct meta_constructors< \
+struct meta_constructors_base< \
 	TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
 > \
 { \
@@ -49,7 +49,7 @@ struct meta_constructors< \
 
 #define BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN(CLASS) \
 template <> \
-struct meta_constructors< CLASS > \
+struct meta_constructors_base< CLASS > \
 { \
         typedef mpl::vector0<>
 
@@ -152,6 +152,86 @@ BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::string)
 BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::wstring)
 
 #undef BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS
+
+template <class Class /*, class VariantTag*/ >
+struct meta_constructors : public meta_constructors_base<Class>
+{
+	typedef meta_constructors_base<Class> base_class;
+	template <class ConstructorIndex>
+	struct constructor
+	{
+		struct params
+		{
+		private:
+			typedef typename mpl::at<
+				typename base_class::param_type_lists,
+				ConstructorIndex
+			>::type type_list;
+		public:
+			template <class ParamIndex>
+			struct param
+			{
+			private:
+				typedef typename mpl::at<
+					type_list, 
+					ParamIndex
+				>::type param_type;
+			public:
+				typedef BOOST_MIRRORED_TYPE(param_type)
+					type;
+			};
+
+			typedef mpl::int_<
+				mpl::size< type_list>::value
+			> size;
+
+			template <class CharT, class ParamIndex>
+			inline static const ::std::basic_string<CharT>& get_param_name(
+				mpl::false_ full_or_base,
+				const ::std::char_traits<CharT>& traits,
+				ParamIndex
+			)
+			{
+				return meta_constructors::get_param_name(
+					full_or_base, 
+					traits,
+					ConstructorIndex(),
+					ParamIndex()
+				);
+			}
+
+			template <class ParamIndex>
+			inline static const cts::bstring& base_param_name(
+				ParamIndex
+			)
+			{
+				return meta_constructors::base_param_name(
+					ConstructorIndex(),
+					ParamIndex()
+				);
+			}
+
+
+			template <class Functor>
+			static void for_each(Functor f)
+			{
+				call_for_each(f, mpl::int_<0>());
+			}
+		private:
+			template <class Functor, class ParamIndex>
+			static inline void call_for_each(Functor func, ParamIndex pi)
+			{
+				func((params*)0, pi);
+				call_for_each(func, mpl::next<ParamIndex>::type());
+			}
+
+			template <class Functor>
+			static inline void call_for_each(const Functor&, size)
+			{
+			}
+		};
+	};
+};
 
 } // namespace mirror
 } // namespace boost

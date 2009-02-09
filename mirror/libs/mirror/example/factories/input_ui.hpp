@@ -124,7 +124,8 @@ struct input_ui<void>
 			names[factory_index]  << ::std::endl;
 	}
 
-	inline int param(void) const 
+	template <class Product, class ConstructorIndex>
+	inline int param(Product* pp, ConstructorIndex ci) const 
 	{
 		return tabs+1;
 	}

@@ -148,6 +148,15 @@ struct meta_class;
 >::type
 
 
+/** This is a forward declaration of the meta_constructors template
+ */
+template <class Class /*, class VariantTag*/ >
+struct meta_constructors;
+
+#define BOOST_MIRRORED_CONSTRUCTORS(TYPE)\
+	meta_constructors< TYPE >
+
+
 } // namespace mirror
 } // namespace boost
 

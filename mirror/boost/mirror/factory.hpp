@@ -160,7 +160,7 @@ constructor< \
 /** Factory constructor initalizer
  */
 #define BOOST_MIRROR_INITIALIZE_FACTORY_CONSTRUCTOR(Z, INDEX, X)\
-        , _##INDEX (manager.param())
+        , _##INDEX (manager.param((Product*)0, mpl::int_<INDEX>() ))
 
 #define BOOST_MIRROR_CALL_FACTORY_FUNCTOR(Z, INDEX, X)\
         case INDEX: return _##INDEX ();
