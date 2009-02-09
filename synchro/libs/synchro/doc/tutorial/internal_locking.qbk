@@ -1,0 +1,197 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[section  Internal Locking--Monitors]
+
+[section Concurrent threads of execution]
+
+Consider, for example, modeling a bank account class that supports
+simultaneous deposits and withdrawals from multiple locations (arguably
+the "Hello, World" of multithreaded programming).
+
+From here a component is a model of the `Callable` concept.
+
+On C++0X (Boost) concurrent execution of a component is obtained by means of the `std::thread`(`boost::thread`):
+
+    boost::thread thread1(S);
+
+where `S` is a model of `Callable`. The meaning of this expression is that execution
+of `S()` will take place concurrently with the current thread of execution executing the expression.
+
+The following example includes a bank account of a person (Joe) and two
+components, one corresponding to a bank agent depositing money in Joe's
+account, and one representing Joe. Joe will only be withdrawing money from
+the account:
+
+[BankAccount_ussage]
+
+From time to time, the `bankAgent` will deposit $500 in `JoesAccount`.
+Joe will similarly withdraw $100 from his account. These sentences describe that
+the bankAgent and Joe are executed concurrently.
+
+The above example works well as long as the bankAgent and Joe do not
+access JoesAccount at the same time. There is, however, no guarantee that
+this will not happen. We may use a mutex to guarantee exclusive access to each bank.
+
+[IL_BankAccount_BankAccount_mutex]
+
+Execution of the Deposit and Withdraw operations will no longer be able
+to make simultaneous access to balance.
+
+Mutex is a simple and basic mechanism for obtaining synchronization.
+In the above example it is relatively easy to be convinced that the
+synchronization works correctly (in the absence of exception). In a system with several concurrent objects
+and several shared objects, it may be difficult to describe synchronization by
+means of mutexes. Programs that make heavy use of mutexes may be
+difficult to read and write. Instead, we shall introduce a number of generic
+classes for handling more complicated forms of synchronization and communication.
+
+With the RAII idion we can simplify a lot this using the scoped locks. In the code
+below, guard's constructor locks the passed-in object this, and guard's destructor
+unlocks this.
+
+[IL_BankAccount_BankAccount]
+
+The object-level locking idiom doesn't cover the entire richness of a threading model. For example,
+the model above is quite deadlock-prone when you try to coordinate multi-object transactions.
+Nonetheless, object-level locking is useful in many cases, and in combination with other mechanisms
+can provide a satisfactory solution to many threaded access problems in object-oriented programs.
+
+The BankAccount class above uses internal locking. Basically, a class that uses internal locking
+guarantees that any concurrent calls to its public member functions don't corrupt an instance of that
+class. This is typically ensured by having each public member function acquire a lock on the object
+upon entry. This way, for any given object of that class, there can be only one member function call
+active at any moment, so the operations are nicely serialized.
+
+This approach is reasonably easy to implement and has an attractive simplicity. Unfortunately,
+"simple" might sometimes morph into "simplistic."
+
+Internal locking is insufficient for many real-world synchronization tasks. Imagine that you want to
+implement an ATM withdrawal transaction with the BankAccount class. The requirements are simple.
+The ATM transaction consists of two withdrawals-one for the actual money and one for the $2 commission.
+The two withdrawals must appear in strict sequence; that is, no other transaction can exist between them.
+
+The obvious implementation is erratic:
+
+[IL_BankAccount_ATMWithdrawal]
+
+
+The problem is that between the two calls above, another thread can perform another operation on the
+account, thus breaking the second design requirement.
+
+In an attempt to solve this problem, let's lock the account from the outside during the two operations:
+
+[IL_BankAccount_ATMWithdrawal_do_not_compile]
+
+
+Notice that the code above do not compiles, the `mtx_` field is private.
+We have two possibilities:
+
+* make `mtx_` public which seams odd
+* make the `BankAccount` lockable by adding the lock/unlock functions
+
+We can add these functions explicitly
+
+[IL_Lockable_BancAccount_BankAccount_explicit]
+
+or inheriting from a class which add these lockable functions.
+
+The `make_exclusive_lockable` class
+
+[make_exclusive_lockable]
+
+The `BankAccount` class result now in
+
+[IL_Lockable_BancAccount_BankAccount_inherit]
+
+and the code that do not comiles becomes
+
+[IL_Lockable_BancAccount_ATMWithdrawal]
+
+
+Notice that now acct is being locked by Withdraw after it has already been locked by guard. When running
+such code, one of two things happens.
+
+* Your mutex implementation might support the so-called recursive mutex semantics. This means that
+    the same thread can lock the same mutex several times successfully. In this case, the implementation
+    works but has a performance overhead due to unnecessary locking. (The locking/unlocking sequence in
+    the two Withdraw calls is not needed but performed anyway-and that costs time.)
+* Your mutex implementation might not support recursive locking, which means that as soon as you try
+    to acquire it the second time, it blocks-so the ATMWithdrawal function enters the dreaded deadlock.
+
+As `boost::mutex` is not recursive, we need to use its recursive version `boost::recursive_mutex`.
+
+[IL_Rec_Lockable_BancAccount_BankAccount]
+
+
+[endsect]
+
+[section  Monitors]
+
+The use of `mutex` and `lockers`, as in `BankAccount`, is a common way of defining objects
+shared by two or more concurrent components. The make_exclusive_lockable class was a first step.
+We shall therefore introduce an abstraction that makes it easier to define such objects. The following class
+describes a so-called monitor pattern.
+
+[monitor_1st_Synopsis]
+
+[/shared_monitor]
+[/monitor]
+
+A monitor object behaves like a `ExclusiveLockable` object but only for the inheriting classes.
+Protected inheritance from make_exclusive_lockable provide to all the derived classes all ExclusiveLockable operations.
+In addition has a protected nested class,
+synchroronizer, used when defining the monitor operations to synchronize the access critical regions.
+The BankAccount may be described using Monitor in the following way:
+
+[BankAccount]
+
+In the following, a monitor means some sub-class of monitor. A synchroronized operation means an operation
+using the synchroronizer guard defined within some monitor. Monitor is one example of a high-level concurrency abstraction
+that can be defined by means of mutexes.
+
+
+[section Monitor Conditions]
+
+It may happen that a component executing an entry operation of a monitor is
+unable to continue execution due to some condition not being fulfilled. Consider,
+for instance, a bounded buffer of characters. Such a buffer may be implemented
+as a monitor with two operations Push and Pull: the Puss operation
+cannot be executed if the buffer is full, and the Pull operation cannot be executed
+if the buffer is empty. A sketch of such a buffer monitor may look as
+follows:
+
+[sync_buffer_schema]
+
+The meaning of a wait is that the calling component is delayed until the condition
+becomes true. We can do that using Boost.Thread condition variables like:
+
+[sync_buffer_boost_thread_style]
+
+The Monitor class replace the nested synchroronizer unique_lock with the class `condition_locker`
+for this purpose:
+
+[condition_unique_locker]
+
+We may now give the complete version of the buffer class. The content
+of the buffer is: `data_[out_+1], data_[out_+2], ... data_R[in_-1]`
+where all the indexes are modulo size. The buffer is full if `in_=out_` and it
+is empty if `in_=(out_+1)%size`.
+
+[sync_buffer_monitor]
+
+Monitors and conditions are useful for describing simple cases of shared objects
+(by simple we mean a limited use of conditions). If the conditions for
+delaying a calling component become complicated, the monitor may similarly
+become difficult to program and read.
+
+[endsect]
+
+[endsect]
+[endsect]
+

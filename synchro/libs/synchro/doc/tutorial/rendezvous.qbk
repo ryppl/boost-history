@@ -1,0 +1,213 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+
+[section  Concurrent components]
+
+[section  Direct communication between components]
+In the previous section we have described a mechanism for concurrent components
+to communicate through shared objects. In many cases it appears more
+natural for concurrent components to communicate directly instead of using
+shared objects. Consider the following example:
+
+[synchronized_communication_between_components_schema]
+
+Here the concurrent components `S` and `R` call operations on each other. The
+state of `S` may, however, not be meaningful when `R` executes `m`, and vice versa.
+In the following sections we will introduce abstractions for making it possible
+to synchronize such communication.
+
+[section  Synchrohronized communication between components]
+
+In this section we will introduce the notion of synchronized execution of objects.
+A component `S` may request execution of a member function of a component
+`R`. The component `R` must accept that the request can be fulfilled.
+Synchrohronized communication is described in a generic class concurrent_component.
+A `concurrent_component` defines the notion of a `port` for controlling the communication. A
+`port` has a nested `synchroronizer` class for defining operations controlled by the
+`port`; it also has an accept operation for signaling that an operation associated
+with the `port` can be executed. The `concurrent_component` has the following structure:
+
+[port]
+
+The following object illustrates two communicating `concurrent_component`s:
+
+[synchronized_communication_between_components]
+
+The concurrent_component `S` may execute a request, which is a normal remote procedure call:
+
+```
+    e2 = r_.m(e1);
+```
+
+Since `m` is a synchroronized port operation, the execution of M has to be accepted
+by R before it is executed.
+For M to be accepted, R must execute an accept, which has the following
+form:
+
+```
+    port::accept(p);
+```
+
+The communication is carried out when `S` is executing `r\_.m` and `R` is executing
+`port::accept(p)`. Both `S` and `R` are blocked until the communication takes place. A
+communication has the effect that `S` and `R` together execute the evaluation: `e2 = r\_.m(e1);`
+
+This takes place as follows:
+
+# When S executes `e2 = r\_.m(e1)`, `S` is now ready to execute the
+internals of the `R::m`.
+#  When `R` executes `port::accept(p)`, `R` has signaled that the internals of a function
+protected with `port::synchronizer \_(p)`; may be executed. `R` will wait until such an
+execution has taken place.
+# When both `R` and `S` are ready, the internals of `R::m` can be executed.
+# When the internals of `R::m` has been executed, `R` will continue execution. In
+addition, a possible return of `R::m` is assigned to `e2`.
+
+The object `S` executing `r\_.m()` is called the sender, and the object `R` having `m` as
+an operation is called the receiver.
+
+In the following example, two systems `Prod` and `Cons` communicate via
+a single element buffer represented by a `SingleBuf` concurrent_component. The `SingleBuf`
+concurrent_component alternates between accepting a `Push` and a `Pull`:
+
+[SingleBuf]
+
+[endsect]
+[section  Ports controlling several operations]
+
+It is possible to associate more than one operation with a port.
+
+The `Master`-concurrent_component transmits a sequence of values to the two
+`Slave`-systems, and each Slave-concurrent_component computes the sum of the values being
+received. Each value is received and accumulated by a synchronous execution
+of `Add`. A Slave object can be used according to the following protocol:
+
+# The `Clear` operation must be used to initiate a new sequence of summations.
+A `Clear` thus terminates any ongoing summation.
+# The `Add` operation accumulates a new value.
+# The `Result` operation returns the current sum.
+In the example, positive numbers are transmitted to `Slave1` and negative numbers
+are transmitted to `Slave2`.
+
+[Master_Slave_Slave]
+
+[Master_Slave_Master]
+
+
+[endsect]
+
+[section  Restricted acceptance]
+
+An accept operation on a port signals that any object is allowed to execute
+an operation associated with the port. Sometimes it is desirable to restrict the
+possible objects that are allowed to execute a port operation. The restriction
+may specify that one specific object is allowed to execute a port operation, or
+it may specify that instances of a specific class are allowed to execute a port
+operation. These two types of restrictions are described in the following two
+sections.
+
+[*Object restriction]
+
+It is possible to restrict the sender of an operation by declaring the port as an
+instance of the `object_port` class. The `accept` operation of an `object_port`
+has a parameter which is a reference to the object that is allowed to
+execute a port operation. As C++ do not allows to recover the sender of an operation
+we need pass it as parameter.
+
+The syntax for this is:
+
+    T S;    //some component reference
+    object_port request_;
+    void Close(const concurrent_component_base* snd) {
+        object_port::synchronizer _(request_, snd);
+        // ...
+    }
+    //...
+    object_port::accept(request_, sender_); // sender_ has been stored previously
+
+
+The example describes an abstract pattern for handling reservations
+of some kind. The reservations are supposed to be stored in some
+register. The actual way this is done is supposed to be described in subpatterns
+of ReservationHandler. At most, one person at a time is allowed to
+make reservations. An agent making a reservation must perform the following
+steps:
+
+
+# The register must be locked by executing the Lock operation.
+# The agent may then perform one or more reservations using Reserve.
+# The agent terminates the reservation session by executing Close.
+
+The example includes a sketch of a handler for hotel reservations. The concurrent_component
+P describes a scenario of an agent making two hotel reservations.
+
+[ReservationHandler]
+
+[HotelResHandler]
+
+[HotelResHandler_main]
+
+[*Qualified restriction]
+
+The object_port described above makes it possible to ensure that only one
+specific concurrent_component may execute a port operation. It is often desirable to specify
+that a port operation may be executed by a restricted set of `concurrent_component`s. By using a
+port instantiated from `qualified_port`, it is possible to define port operations
+that may be executed by objects of a given class. The syntax for
+this is:
+
+
+Port operations associated with P may now be executed by an object which is
+an instance of T or inherits from T.
+
+The following example illustrates the use of a qualified port. The
+single buffer example is modified such that Push can only be executed by
+Producer objects and Pull can only be executed by Consumer objects.
+
+[QualifiedSingleBuf]
+
+[endsect]
+
+[endsect]
+
+[section Compound concurrent components]
+
+[section Indirect communication between internal concurrent components]
+
+Composition is a fundamental means for organizing objects. We have several
+examples of defining an object as compositions of other objects using part
+objects, references and block structure. We have also seen how the action part of
+an object may be composed of other objects. In this section we shall show how
+to construct compound systems that are concurrent_component objects consisting of several
+internal multiple action sequences.
+
+In Boost.Synchro the actions to be performed by a concurrent_component may be distributed
+among several internal systems. The internal systems may be more or less
+independent, and they may access common data (items in an enclosing concurrent_component),
+communicate with each other, communicate with external systems or
+control communication between external systems, and the enclosing concurrent_component.
+
+In the following, examples of such compound systems are described.
+For compound systems consisting of several internal concurrent systems,
+we are often interested in describing that execution of the outermost concurrent_component
+cannot terminate before execution of all inner systems have terminated. The
+outermost concurrent_component may have to do some initialization before executing the inner
+concurrent_component, and it may have to do some finalization (clean-up) when they
+have finished execution. The concurrent_component class has a concurrent_execution nested class that can
+be used for this purpose. concurrent_component can be used in the following way:
+
+    concurrent_execution<S1,S2, S3)> conc(s1,s2, s3);
+    conc();
+    conc.join();
+
+[Histogram]
+
+[endsect]
+[endsect]
+[endsect]

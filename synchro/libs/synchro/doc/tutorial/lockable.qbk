@@ -1,0 +1,217 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+
+[section Lockables]
+The following is an adaptation of the article "C++ Threading - A Generic-Programming Approach" by Kevin Henney.
+
+[*Lock substitutability]
+
+The Boost (C++0x) mutexes have associated a category which  form a subtyping hierarchy:
+ExclusiveLock <- SharableLock <- UpgradableLock
+
+    exclusive_lock <- sharable_lock <- upgradable_lock
+
+[category_tag_hierarchy]
+
+
+Locking behaviour can be further cathegorized as:
+
+* Re-entrancy: recursive or not
+
+    non_recursive <- recursive
+
+[reentrancy_tag_hierarchy]
+
+* Scope: whether the lock is usable with a mono-threaded, multi-threaded or multi-process context
+
+    mono_threaded <- multi_threaded <- multi_process
+
+[scope_tag_hierarchy]
+
+* Lifetime: The lifetime of a lock coudl be associated to the process, the kernel or the filesystem
+
+    process_lifetime <- kernel_lifetime <- filesystem_lifetime
+
+[lifetime_tag_hierarchy]
+
+* Timed interface: has or not a timed interfaces
+
+    hasnt_timed_interface <- has_timed_interface
+
+[timed_interface_tag_hierarchy]
+
+
+Substitutability applies both to the degree of syntactic support and to the locking semantics
+
+* A recursive mutex and binary semaphore are substitutable in code written against a exclusive mutex
+* A null mutex is substitutable for all others in a single-threaded environment
+
+We can see these axes of variation expressed against some
+Boost synchronisation mechanisms (from now bip stands for boost::interprocess):
+
+* boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface, multi-threaded
+* boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface, multi-threaded
+* bip::synchro::null_mutex: UpgradableLock, recursive, has-timed-interface, mono-threaded
+* bip::synchro::interprocess_recursive_mutex ExclusiveLock, recursive, has-timed-interface, multi_process.
+
+[*Lock traits]
+
+Generic programming (writing code which works with any data type meeting a set of requirements) has become
+the method of choice for providing reusable code.
+However, there are times in generic programming when "generic" just isn't good enough - sometimes the
+differences between types are too large for an efficient generic implementation. This is when the traits
+technique becomes important - by encapsulating those properties that need to be considered on a type by
+type basis inside a traits class, we can minimize the amount of code that has to differ from one type to
+another, and maximize the amount of generic code.
+
+Consider an example:
+
+Boost.Synchro follow the design of Boost.TypeTraits, and contains a set of very specific traits classes, each
+of which encapsulate a single trait from the Localble or Loker concepts; for example, is the lock
+recursive? Or does the lock have a timed interface?
+
+The Boost.Synchro traits classes share a unified design: each class inherits from a the type true_type if the type
+has the specified property and inherits from false_type  otherwise. As we will show, these classes can be used
+in generic programming to determine the properties of a given lock type and introduce optimizations that are
+appropriate for that case.
+
+The type-traits library also contains a set of classes that perform a specific transformation on a type; for
+example, they can remove a top-level const or volatile qualifier from a type. Each class that performs a
+transformation defines a single typedef-member type that is the result of the transformation. All of the
+type-traits classes are defined inside namespace boost; for brevity, namespace-qualification is omitted in
+most of the code samples given.
+
+
+[*Implementation]
+
+Most of the implementation is fairly repetitive anyway, so here we will just give you a flavor for how some of the classes are implemented. See the reference section for the full details
+
+A lockable implementer must specialize the scope_tag template class. By default the scope_tag forward to a nested type scope.
+
+[scope_tag]
+
+So the implementer can either have a nested type scope or inherit from the helper lock_traits_base.
+
+[lock_traits_base]
+
+which defines the correct types. The lock_traits_base has a lot of parameters, and the defaults are the ones from boost::mutex. So Boost.Thread could use it as follows
+
+    class mutex : public lock_traits_base<> {
+        // ...
+    };
+
+Waiting for that Boost.Synchro specialize the scope_tag in the synchro/thread/mutex.hpp file.
+
+    template<>
+    struct scope_tag<boost::mutex> {
+        typedef multi_threaded_tag type;
+    };
+
+So the user must include this file to make boost::mutex a model of Locakble for Boost.Synchro.
+
+For example the trait is_multi_threaded is defined as : If Lockable has a scope_tag that inherits from multi_threaded_tag then inherits from true_type,
+otherwise inherits from false_type.
+
+[is_multi_threaded]
+
+
+[*Finding the best lock]
+
+Inverse traits can match a lockable type based on specific traits, for a given family of lock types.
+
+It is also possible to specify characteristics to perform a reverse lookup to find a primitive lock type, either by
+exact match or by substitutable match.
+
+    find_best_lock<>::type == boost::mutex
+    find_best_lock<mono_threaded_tag>::type == bsync::null_mutex
+    find_best_lock<multi_threaded_tag>::type == bsync::thread_mutex
+    find_best_lock<multi_process_tag>::type == bsync::interprocess_mutex
+
+The user can also find a lock using mpl constraints as follows
+
+    typedef find_best_lock_between<Lockables,
+            mpl::and<is_multi_threaded<_>, is_recursive<_> > >::type best;
+
+[*Synchrohronization familly]
+
+A class that will do internal locking can be parameterized by the type of synchronization familly needed to achieve
+the desired level of concurrency control. This could depends of the usage scope of this class, and this can be
+mono_threaded, multi_threaded, multi_process.
+
+For example the thread_synchronization_familly can be used to instantiate a message_queue class in a multi_threaded
+environment, all public methods will be thread-safe, with the corresponding overhead that implies. In contrast, if a
+null_synchronization_policy class is used to instantiate message_queue, all public methods will not be thread-safe,
+and there will be no additional overhead. A synchronization family must define typedef as for example
+
+[thread_synchronization_family]
+
+[*Lockable concept]
+
+For the main category clasification, the library provides concept classes that can be used with Boost.ConceptCheck.
+For example LockableConcept object supports the basic features required to delimit a critical region.
+Supports the basic lock, unlock and try_lock functions and defines the lock traits.
+
+[LockableConcept]
+
+The user can now check staticaly that the template parameter is a model of Locable as follows
+
+    #include "boost/synchro/lockable_concepts.hpp"
+    template <typename Lockable>
+    class my_class {
+      BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+        // ...
+    };
+
+The same can be done for TimedLockableConcept, ShareLockableConcept and UpgradeLockableConcept
+(See the reference section for more details).
+
+[*Syntactic lock traits]
+
+The locks on Boost.Thread and Boost::Interprocess do not follow the same interface.
+Most of the differences can be handled through traits, but other are better handled by adapting the interface.
+
+The
+* The scoped locks live in a different namespace and some have different names with the same semantic.
+
+[lock_lockers_traits]
+
+So instead of using directly the locker of the respective libraries, use these traits.
+
+    bsync::shared_lock_type<Lockable>::type lock(mutex_);
+
+* The exception thrown lives in a different name space and different names with the same semantic.
+
+[lock_exception_traits]
+
+So instead of using directly the exception type of the respective libraries, use these traits.
+
+    try {
+        // ...
+    } catch (bsync::lock_error_type<Lockable>::type& ex) {
+        // ...
+    }
+
+* The move semantics (&&) are expressed with a class named differently.
+
+[lock_movable_traits]
+
+
+* The scoped locks can be initialized with static const variables in order to overload the constructor for lock
+adoption, lock deferral or try to lock. Even if the name of these variables is the same,  these variables live in
+different namespace.
+
+[lockers_init_traits]
+
+So instead of using directly the variables of the respective libraries, use these traits.
+
+    bsync::shared_lock_type<Lockable>::type lock(mutex_, bsync::try_to_lock_type::value());
+
+
+[endsect]
+
