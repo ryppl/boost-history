@@ -14,7 +14,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/functors.hpp>
-#include <boost/validate/laws/order.h>
+#include <boost/validate/laws/order.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
 
