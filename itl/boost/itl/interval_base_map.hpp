@@ -934,22 +934,6 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
 
 
 
-/*CL
-template 
-<
-    class SubType,
-    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
->
-bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::contained_in(const interval_base_map& super)const
-{
-    // x2 should be larger than *this; so every element in this should be in x2
-    const_FOR_IMPLMAP(it) 
-        if(!super.contains(*it)) 
-            return false;
-    return true;
-}
-*/
-
 template 
 <
     class SubType,
