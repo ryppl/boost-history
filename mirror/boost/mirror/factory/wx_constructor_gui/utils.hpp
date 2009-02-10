@@ -44,6 +44,9 @@ protected:
 			parent_data->get_window(),
 			wxID_ANY
 		);
+		panel->SetExtraStyle(
+			panel->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY
+		);
 		// the sizer
 		wxBoxSizer* sizer = new wxBoxSizer(wxHORIZONTAL);
 		panel->SetSizer(sizer);

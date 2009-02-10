@@ -12,6 +12,7 @@
 
 #include <wx/wx.h>
 #include <wx/sizer.h>
+#include <boost/mirror/factory/wx_constructor_gui/regex_validator.hpp>
 
 namespace boost {
 namespace mirror {
@@ -25,11 +26,33 @@ private:
 
 	struct text_ctl_maker
 	{
+		wxString pattern;
+		wxString message;
+
+		text_ctl_maker(
+			const wxString& pat,
+			const wxString& msg
+		): pattern(pat)
+		 , message(msg)
+		{ }
+
 		inline wxTextCtrl* operator()(wxWindow* parent) const
 		{
-			return new wxTextCtrl(parent, wxID_ANY);
+			if(pattern.empty())
+				return new wxTextCtrl(
+					parent, 
+					wxID_ANY
+				);
+			else return new wxTextCtrl(
+				parent, 
+				wxID_ANY,
+				wxEmptyString,
+				wxDefaultPosition,
+				wxDefaultSize,
+				0, 
+				detail::RegExValidator(pattern, message)
+			);
 		}
-
 		typedef wxTextCtrl result_type;
 	};
 protected:
@@ -43,14 +66,25 @@ public:
 		wx_constructor_gui_data* parent_data, 
 		Context* pc, 
 		ConstrIndex ci, 
-		ParamIndex pi
-	): text_ctl(make_ctl(text_ctl_maker(), parent_data, pc, ci, pi))
-	{ }
+		ParamIndex pi,
+		wxString pattern,
+		wxString message
+	): text_ctl(
+		make_ctl(
+			text_ctl_maker(pattern, message), 
+			parent_data, 
+			pc, 
+			ci, 
+			pi
+		)
+	){ }
 };
 
 #define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI( \
 	PRODUCT, \
-	FUNCTOR_BODY \
+	FUNCTOR_BODY, \
+	PATTERN, \
+	MESSAGE \
 ) \
 template <> \
 class wx_constructor_gui< PRODUCT > \
@@ -66,21 +100,31 @@ public: \
 		Context* pc, \
 		ConstrIndex ci, \
 		ParamIndex pi \
-	): base_class(parent_data, pc, ci, pi) \
-	{ } \
+	): base_class( \
+		parent_data, \
+		pc, \
+		ci, \
+		pi, \
+		wxT( PATTERN ), \
+		wxT( MESSAGE ) \
+	){ } \
  \
 	inline PRODUCT operator()(void) FUNCTOR_BODY \
 };
 
 BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 	cts::bstring,
-	{return cts::bstring(get_text().c_str());}
+	{return cts::bstring(get_text().c_str());},
+	"",
+	""
 )
 
 #define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
 	TYPE, \
 	TEMP_TYPE, \
-	CONVERSION \
+	CONVERSION, \
+	PATTERN, \
+	MESSAGE \
 ) BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI( \
 	TYPE, \
 	{ \
@@ -88,18 +132,52 @@ BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 		if(!get_text().CONVERSION(&result)) \
 			throw ::std::bad_cast(); \
 		return TYPE(result); \
-	} \
+	}, \
+	PATTERN, \
+	MESSAGE \
 )
 
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(unsigned char, unsigned long, ToULong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(short, long, ToLong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(unsigned short, unsigned long, ToULong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(int, long, ToLong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(unsigned int, unsigned long, ToULong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(long, long, ToLong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(unsigned long, unsigned long, ToULong)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(float, double, ToDouble)
-BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT(double, double, ToDouble)
+#define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_UINT(TYPE) \
+	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
+		TYPE, \
+		unsigned long, \
+		ToULong, \
+		"^[+]?[[:digit:]]+$", \
+		"invalid unsigned integer" \
+	)
+
+#define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_INT(TYPE) \
+	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
+		TYPE, \
+		long, \
+		ToLong, \
+		"^[+-]?[[:digit:]]+$", \
+		"invalid integer" \
+	)
+
+#define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_FLOAT(TYPE) \
+	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
+		TYPE, \
+		double, \
+		ToDouble, \
+		"^[+-]?[[:digit:]]+\\.?[[:digit:]]*$", \
+		"invalid floating point number" \
+	)
+
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_UINT(unsigned short)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_UINT(unsigned int)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_UINT(unsigned long)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_INT(short)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_INT(int)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_INT(long)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_FLOAT(float)
+BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_FLOAT(double)
+
+
+#undef BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_UINT
+#undef BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_INT
+#undef BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_FLOAT
+#undef BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT
 
 } // namespace utils
 } // namespace mirror

@@ -45,7 +45,10 @@ private:
 		// all child widgets
 		wxPanel* panel = new wxPanel(
 			parent_data->get_window(),
-			wxID_ANY
+			wxID_ANY 
+		);
+		panel->SetExtraStyle(
+			panel->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY
 		);
 		// the sizer
 		wxStaticBoxSizer* sizer = new wxStaticBoxSizer(

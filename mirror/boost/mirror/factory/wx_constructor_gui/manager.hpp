@@ -28,7 +28,32 @@ private:
 	// pointer to the parent data
 	wx_constructor_gui_data* parent_data;
 	//
-	typedef wxChoicebook BookCtrl;
+	class BookCtrl : public wxChoicebook
+	{
+	private:
+	public:
+		BookCtrl(wxWindow* parent, int id)
+		 : wxChoicebook(parent, id)
+		{ }
+
+		virtual bool Validate()
+		{
+			// validate only the currently selected page
+			wxWindow* visible_child(GetCurrentPage());
+			if(visible_child)
+				return visible_child->Validate();
+			else return true;
+		}
+
+		virtual bool TransferDataFromWindow()
+		{
+			// validate only the currently selected page
+			wxWindow* visible_child(GetCurrentPage());
+			if(visible_child)
+				return visible_child->TransferDataFromWindow();
+			else return true;
+		}
+	};
 	// the book ctrl
 	BookCtrl* book_ctl;
 	static inline BookCtrl* make_book_ctl(
@@ -42,6 +67,10 @@ private:
 			parent_data->get_window(),
 			wxID_ANY
 		);
+		book_ctl->SetExtraStyle(
+			book_ctl->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY
+		);
+		
 		// add the widget to the sizer
 		parent_data->get_sizer()->Add(book_ctl, 0, wxEXPAND);
 		// return the pointer
@@ -98,7 +127,13 @@ public:
 	{
 		assert(parent_data);
 		// create a panel and a sizer for the page
-		wxPanel* panel = new wxPanel(book_ctl, wxID_ANY);
+		wxPanel* panel = new wxPanel(
+			book_ctl, 
+			wxID_ANY
+		);
+		panel->SetExtraStyle(
+			panel->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY
+		);
 		wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 		panel->SetSizer(sizer);
 		//

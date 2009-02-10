@@ -62,7 +62,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase$(WXWIDGETS_VERSION)ud.lib wxmsw$(WXWIDGETS_VERSION)ud_core.lib wxmsw$(WXWIDGETS_VERSION)ud_adv.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
+				AdditionalDependencies="wxbase$(WXWIDGETS_VERSION)ud.lib wxmsw$(WXWIDGETS_VERSION)ud_core.lib wxmsw$(WXWIDGETS_VERSION)ud_adv.lib wxregexud.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="$(WXWIDGETS_ROOT)\lib\vc_lib"
 				GenerateDebugInformation="true"
@@ -137,7 +137,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase28ud.lib wxmsw28ud_core.lib wxmsw28ud_adv.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
+				AdditionalDependencies="wxbase$(WXWIDGETS_VERSION)u.lib wxmsw$(WXWIDGETS_VERSION)u_core.lib wxmsw$(WXWIDGETS_VERSION)u_adv.lib wxregexu.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="$(WXWIDGETS_ROOT)\lib\vc_lib"
 				GenerateDebugInformation="true"

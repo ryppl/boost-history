@@ -40,8 +40,11 @@ private:
 	{
 		assert(parent != 0);
 		//
-		// create the main panel od the dialog
+		// create the main panel of the dialog
 		wxPanel* panel = new wxPanel(parent, wxID_ANY);
+		panel->SetExtraStyle(
+			panel->GetExtraStyle() | wxWS_EX_VALIDATE_RECURSIVELY
+		);
 		// create the main sizer
 		wxBoxSizer* main_sizer = new wxBoxSizer(wxVERTICAL);
 		// top padding
@@ -92,12 +95,21 @@ private:
 	factory< wx_constructor_gui, Product > fact;
 public:
 	wx_factory_dialog(wxWindow* parent, wxString caption)
-	 : dialog(new wxDialog(parent, wxID_ANY, caption))
-	 , data(make_data(dialog))
+	 : dialog(
+		new wxDialog(
+			parent, 
+			wxID_ANY, 
+			caption
+		)
+	), data(make_data(dialog))
 	 , fact(&data, 0)
 	{
 		// and resize the dialog
 		dialog->GetSizer()->SetSizeHints(dialog);
+		dialog->SetExtraStyle(
+			dialog->GetExtraStyle() | 
+			wxWS_EX_VALIDATE_RECURSIVELY
+		);
 	}
 
 	~wx_factory_dialog(void)
