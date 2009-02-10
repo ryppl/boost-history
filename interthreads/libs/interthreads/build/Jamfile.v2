@@ -40,11 +40,12 @@ project boost/interthreads
     : source-location ../src
     : requirements <threading>multi
       <target-os>cygwin
-      <threadapi>pthread
+      <interthreadapi>pthread
       <variant>debug
 #      <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
+      <include>../../../../../boost_1_38_0
       <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
       <link>shared:<define>BOOST_INTERTHREADS_BUILD_DLL=1 
 #      <link>shared:<library>/boost/thread//boost_thread/<link>shared
@@ -54,15 +55,15 @@ project boost/interthreads
     : default-build <threading>multi
     ;
 
-local rule default_threadapi ( )
+local rule default_interthreadapi ( )
 {
     local api = pthread ;
     if [ os.name ] = "NT" { api = win32 ; }
     return $(api) ;
 }
 
-#feature.feature threadapi : pthread win32 : propagated ;
-#feature.set-default threadapi : [ default_threadapi ] ;
+feature.feature interthreadapi : pthread win32 : propagated ;
+feature.set-default interthreadapi : [ default_interthreadapi ] ;
 
 rule tag ( name : type ? : property-set )
 {
@@ -70,10 +71,10 @@ rule tag ( name : type ? : property-set )
     
     if $(type) in STATIC_LIB SHARED_LIB IMPORT_LIB
     {
-        local api = [ $(property-set).get <threadapi> ] ;
+        local api = [ $(property-set).get <interthreadapi> ] ;
         
         # non native api gets additional tag
-        if $(api) != [ default_threadapi ] {
+        if $(api) != [ default_interthreadapi ] {
             result = $(result)_$(api) ;
         }
     }
@@ -149,7 +150,7 @@ rule win32_pthread_paths ( properties * )
 rule usage-requirements ( properties * )
 {
     local result ;
-    if <threadapi>pthread in $(properties)
+    if <interthreadapi>pthread in $(properties)
     {
         result += <define>BOOST_THREAD_POSIX ;
         if <target-os>windows in $(properties)
@@ -166,7 +167,7 @@ rule requirements ( properties * )
 {
     local result ;
 
-    if <threadapi>pthread in $(properties)
+    if <interthreadapi>pthread in $(properties)
     {
         result += <define>BOOST_THREAD_POSIX ;
         if <target-os>windows in $(properties) 
@@ -188,13 +189,13 @@ rule requirements ( properties * )
 alias interthreads_sources
     : ## win32 sources ##
     : ## requirements ##
-      <threadapi>win32
+      <interthreadapi>win32
     ;
 
 alias interthreads_sources
     : ## pthread sources ##
     : ## requirements ##
-      <threadapi>pthread
+      <interthreadapi>pthread
     ;
 
 explicit interthreads_sources ;
