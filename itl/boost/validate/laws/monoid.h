@@ -12,6 +12,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/functors.hpp>
+#include <boost/itl/predicates.hpp>
 #include <boost/validate/law.h>
 
 namespace boost{namespace itl

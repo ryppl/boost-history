@@ -14,6 +14,13 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 
 #define ITL_LOCATION(message) location(__FILE__,__LINE__,message)
 
+#define NEURONIZER_CASES(validater_Template, itl_Map, domain_Type, codomain_Type) \
+case NeutronHandlerType::partial_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_absorber> >; \
+case NeutronHandlerType::partial_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,partial_enricher> >; \
+case NeutronHandlerType::total_absorber: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_absorber> >; \
+case NeutronHandlerType::total_enricher: return new validater_Template<itl_Map<domain_Type,codomain_Type,total_enricher> >;
+
+
 namespace boost{namespace itl
 {
     std::string location(const std::string& file, int line, const std::string& message)

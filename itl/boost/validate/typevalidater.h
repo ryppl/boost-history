@@ -9,6 +9,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 +----------------------------------------------------------------------------*/
 #pragma once
 
+#ifdef __DOOMED
+
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
 #include <boost/itl/type_traits/is_continuous.hpp>
@@ -18,8 +20,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/laws/set_laws.h>
 #include <boost/validate/laws/order.h>
 #include <boost/validate/laws/pushouts.h>
-#include <boost/validate/lawvalidater.h>
-#include <boost/validate/algebra_validater.hpp>
+#include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/validater/algebra_validater.hpp>
 
 namespace boost{namespace itl
 {
@@ -30,7 +32,7 @@ namespace boost{namespace itl
     // ------------------------------------------------------------------------
 
     template <typename Type, template<class>class Relation>
-    class StrictWeakOrderValidater : public AlgebraValidater
+    class StrictWeakOrderValidater : public algebra_validater
     {
     public:
         enum Laws 
@@ -91,13 +93,13 @@ namespace boost{namespace itl
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;
-    }; //class AlgebraValidater
+    }; //class algebra_validater
 
 
     // ------------------------------------------------------------------------
 
 	template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
-    class PartialOrderValidater : public AlgebraValidater
+    class PartialOrderValidater : public algebra_validater
     {
     public:
         enum Laws 
@@ -166,7 +168,7 @@ namespace boost{namespace itl
     // ------------------------------------------------------------------------
     /*JODO currently not used, incomplete.
     template <typename Type>
-    class InplaceCommutativeMonoidValidater : public AlgebraValidater
+    class InplaceCommutativeMonoidValidater : public algebra_validater
     {
     public:
         enum Laws 
@@ -225,7 +227,7 @@ namespace boost{namespace itl
 
 
     template <typename Type>
-    class InplaceSetBaseValidater : public AlgebraValidater
+    class InplaceSetBaseValidater : public algebra_validater
     {
     public:
         typedef StrictWeakOrderValidater<Type, std::less> LessValidaterT;
@@ -665,7 +667,7 @@ namespace boost{namespace itl
 
 
     template <typename Type>
-    class IntervalMorphicValidater : public AlgebraValidater
+    class IntervalMorphicValidater : public algebra_validater
     {
     public:
         enum Laws 
@@ -891,4 +893,6 @@ namespace boost{namespace itl
 
 
 }} // namespace itl boost
+
+#endif //__DOOMED
 

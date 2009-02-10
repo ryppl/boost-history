@@ -35,6 +35,7 @@ DEALINGS IN THE SOFTWARE.
 
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
+#include <boost/validate/type/nat.hpp>
 
 using namespace std;
 using namespace boost;

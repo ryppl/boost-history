@@ -195,6 +195,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\..\..\..\boost\validate\itv_map_groupig_validater.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\validate\law.h"
 				>
 			</File>
@@ -216,10 +220,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\validate\laws\pushouts.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\..\boost\validate\realmvalidater.h"
 				>
 			</File>
 			<File

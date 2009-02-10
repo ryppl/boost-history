@@ -13,13 +13,13 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <stdio.h>
 #include <time.h>
 #include <boost/validate/typevalidater.h>
-#include <boost/validate/itl_validater.hpp>
+#include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>
 
 namespace boost{namespace itl
 {
     
-	class ItlSetBaseValidater : public itl_validater
+	class ItlSetBaseValidater : public itl_driver
     {
     public:
         ItlSetBaseValidater() { setProfile(); }
@@ -91,7 +91,7 @@ namespace boost{namespace itl
         }
 
 
-        AlgebraValidater* chooseValidater()
+        algebra_validater* chooseValidater()
         {
             int rootChoice         = _rootChoice.some();
             int domainChoice       = _domainChoice.some();

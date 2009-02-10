@@ -9,28 +9,11 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 +----------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
-
-#include <boost/itl/ptime.hpp> //CL (4 a quick test only)
-
-#include <boost/validate/loki_xt/Tuple.h>
-#include <boost/itl/set.hpp>
-#include <boost/itl/map.hpp>
-#include <boost/validate/lawvalidater.h>
-#include <boost/validate/laws/monoid.h>
-#include <boost/validate/gentor/gentorprofile.h>
-#include <boost/validate/gentor/rangegentor.h>
-
 #include <boost/validate/itl_relations_validater.hpp>
-#include <boost/itl/interval_set.hpp>
-#include <boost/itl_xt/numbergentor.hpp>
-#include <boost/itl_xt/setgentor.hpp>
-#include <boost/itl/functors.hpp>
 
 using namespace std;
-using namespace Loki;
 using namespace boost;
 using namespace boost::itl;
-using namespace boost::posix_time;
 
 void test_Validater()
 {

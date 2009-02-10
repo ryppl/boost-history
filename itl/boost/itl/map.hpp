@@ -230,7 +230,7 @@ namespace boost{namespace itl
             subtraced from the data value stored in the map. */
         map& subtract(const value_type& value_pair)
 		{
-			if(Traits::is_total && !is_set<codomain_type>::value)
+			if(Traits::is_total && has_inverse<codomain_type>::value) //CL !is_set<codomain_type>::value)
 				this->template add<inverse_codomain_combine>(value_pair); 
 			else 
 				this->template subtract<inverse_codomain_combine>(value_pair); 
@@ -592,7 +592,7 @@ namespace boost{namespace itl
 	             const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
     { 
 		typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-		if(Traits::is_total && !is_set<typename ObjectT::codomain_type>::value)
+		if(Traits::is_total && has_inverse<ObjectT::codomain_type>::value) //CL !is_set<typename ObjectT::codomain_type>::value)
             const_FORALL(typename ObjectT, it_, operand)
 				object.template add<ObjectT::inverse_codomain_combine>(*it_);
         else Set::subtract(object, operand); 

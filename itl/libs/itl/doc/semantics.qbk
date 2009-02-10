@@ -432,8 +432,8 @@ Associativity<C,+,== >: C a,b,c; a+(b+c) == (a+b)+c
 Neutrality<C,+,== >   : C a;       a+C() == a
 Commutativity<C,+,== >: C a,b;       a+b == b+a
 
-Associativity<C,*,== >: C a,b,c; a&(b&c) ==(a&b)&c
-Commutativity<C,*,== >: C a,b;       a&b == b&a
+Associativity<C,&,== >: C a,b,c; a&(b&c) ==(a&b)&c
+Commutativity<C,&,== >: C a,b;       a&b == b&a
 
 RightNeutrality<C,-,== >: C a;   a-C() ==  a
 Inversion<C,-,=v= >     : C a;   a - a =v= C()
@@ -447,7 +447,7 @@ if the map is not a `partial_absorber`.
 ``
                              +    &    -
 Associativity                ==   == 
-Neutrality                   ==   ==   ==
+Neutrality                   ==        ==
 Commutativity                ==   ==
 Inversion partial_absorber             ==
           partial_enricher             =p=
@@ -521,7 +521,7 @@ itl::map<int,some_number> q = {(1->1)};
 q -= (2->1);
 `` 
 If type `some_number` is `unsigned` a /set difference/ kind of
-still subtraction make sense 
+subtraction make sense 
 ``
 itl::map<int,some_number> q = {(1->1)};
 q -= (2->1);   // key 2 is not not in the map so  
@@ -535,8 +535,8 @@ q -= (2->1);             // subtracting works like
 q == {(1->1), (2-> -1)}; // adding the inverse element
 `` 
 As commented in the example, subtraction of a key value
-pair (k,v) can obviously defined as adding the ['*inverse element*]
-for that key (k,-v), if the key is not yet stored in the map.
+pair `(k,v)` can obviously defined as adding the ['*inverse element*]
+for that key `(k,-v)`, if the key is not yet stored in the map.
 
 [h4 Partial and Total Quantifiers and Infinite Vectors]
 
@@ -544,8 +544,8 @@ Another concept, that we can think of, is that in a `Quantifier`
 every `key_value` is initially quantified `0`-times, where `0` stands
 for the neutral element of the numeric `CodomainT` type.
 Such a `Quantifier` would be totally defined on all values of
-it's `DomainT` type.
-Such a `Quantifier` can be conceived as an `InfiniteVector`. 
+it's `DomainT` type and can be
+conceived as an `InfiniteVector`. 
 
 To create an infinite vector
 that is totally defined on it's domain we can set
@@ -560,14 +560,6 @@ elements of a
 [@http://en.wikipedia.org/wiki/Vector_space vector space] 
 do provide.
 
-We will use the terms `TotalQuantifier` and
-`PartialQuantifier` for those objects. 
-
-[table
-[[Trait]           [CodomainT as number] [CodomainT more abstract] [Concept for Quanifier Map]]
-[[is_total]  [signed number]       [commutative group]       [InfiniteVector]]
-[[!is_total] [unsigned number]     [commutative monoid]      [hybrid type]]  
-]
 
 [h5 Intersection on Quantifiers]
 
@@ -582,26 +574,27 @@ for `Quantifiers`, since numeric types do not implement
 intersection.
 
 For `CodomainT` types that are not models of `Sets` 
-`operator &` is defined as aggregation on the intersection
-of the domains.
+`operator & ` is defined as ['aggregation on the intersection
+of the domains]. Instead of the `codomain_intersect` functor
+`codomain_combine` is used as aggregation operation: 
 ``
-//Pseudocode example:
+//Pseudocode example for partial Quantifiers p, q:
 interval_map<int,int> p, q;
-p   = {[1     3)->1   };
-q   = {   ([2    4)->1};
-p*q =={    [2 3)->2   };
+p     = {[1     3)->1   };
+q     = {   ([2    4)->1};
+p & q =={    [2 3)->2   };
 ``
 So an addition or aggregation of associated values is
 done like for `operator +` but value pairs that have
 no common keys are not added to the result.
 
-For `Quantifier` that is a model of an `InfiniteVector`
+For a `Quantifier` that is a model of an `InfiniteVector`
 and which is therefore defined for every key value of
 the `DomainT` type, this definition of `operator &`
 degenerates to the same sematics that `operaotor +`
 implements:
 ``
-//Pseudocode example:
+//Pseudocode example for total Quantifiers p, q:
 interval_map<int,int> p, q;
 p   = {[min   1)[1      3)[3         max]};
           ->0      ->1         ->0
@@ -611,30 +604,34 @@ p*q =={[min   1)[1  2)[2 3)[3 4)[4   max]};
           ->0    ->1   ->2  ->1    ->0
 ``
 
+[h4 Laws for Quantifiers of unsigned Numbers]
 
+The semantics of itl Maps of Numbers is different
+for unsigned or signed numbers. So the sets of
+laws that are valid for Quantifiers will be different
+depending on the instantiation of an unsigned or
+a signed number type as CodomainT parameter.
 
-[h5 Laws on set union, set intersection and set difference]
-
-Again, we are pacing the parade of laws, this time for
+Again, we are presenting the investigated sets of laws, this time for
 `Quantifier` types `Q` which are
 __itl_map__`<D,N,T>`, __itv_map__`<D,N,T>` and __spl_itv_map__`<D,N,T>`
 where `CodomainT` type `N` is a `Number` and `Trait` type `T` is one of
 the itl's map traits. 
-
 
 ``
 Associativity<Q,+,== >: Q a,b,c; a+(b+c) == (a+b)+c
 Neutrality<Q,+,== >   : Q a;       a+Q() == a
 Commutativity<Q,+,== >: Q a,b;       a+b == b+a
 
-Associativity<Q,*,== >: Q a,b,c; a&(b&c) ==(a&b)&c
-Commutativity<Q,*,== >: Q a,b;       a&b == b&a
+Associativity<Q,&,== >: Q a,b,c; a&(b&c) ==(a&b)&c
+Commutativity<Q,&,== >: Q a,b;       a&b == b&a
 
-RightNeutrality<Q,-,== >  : Q a;   a-Q() ==  a
-Inversion<Q,-,=v= >: Q a;   a - a =v= Q()
+RightNeutrality<Q,-,== >: Q a;   a-Q() ==  a
+Inversion<Q,-,=v= >     : Q a;   a - a =v= Q()
 ``
 
-For a `Quantifier` the same basic laws apply that are
+For an `unsigned Quantifier`, an itl Map of `unsigned numbers`,
+the same basic laws apply that are
 valid for `Collectors`:
 
 ``
@@ -646,30 +643,85 @@ Inversion absorbs_neutrons             ==
           enriches_neutrons            =p=
 ``
 
-In addition also symmetrical difference is valid for 
-`Quantifiers` and the 
-modified `operator &`.
+The subset of laws, that relates to `operator +` and the neutral
+element `Q()` is that of a commutative monoid. This is the same
+concept, that applies for the `CodomainT` type. This gives 
+rise to the assumption that an itl `Map` over a `CommutativeModoid`
+is again a `CommutativeModoid`.
+
+Other laws that were valid for `Collectors` are not valid
+for an `unsigned Quantifier`. 
+
+ 
+[h4 Laws for Quantifiers of signed Numbers]
+
+For `Quantifiers` of signed numbers, or 
+`signed Quantifiers`, the pattern of valid
+laws is somewhat different:
+``
+                             +    &    -
+Associativity                =v=  =v=  
+Neutrality                   ==        ==
+Commutativity                ==   ==
+Inversion absorbs_neutrons             ==
+          enriches_neutrons            =p=
+``
+
+The differences are tagged as `=v=` indicating, that
+the associativity law is not uniquely valid for a single
+equality relation `==` as this was the case for
+`Collector` and `unsigned Quntifier` maps.
+
+The differences are these:
+``
+                                   +  
+Associativity         itl::map     ==   
+                  interval_map     ==
+            split_interval_map     =e=
+``
+For `operator +` the associativity on __spl_itv_maps__ is only valid
+with element equality `=e=`, which is not a big constrained, because
+only element equality is required.
+
+For `operator &` the associativity is broken for all maps
+that are partial absorbers. For total absorbers associativity
+is valid for element equality. All maps having the neutron enricher
+Trait are associative wrt. lexicigraphical equality `==`.
+``                               
+Associativity                      &
+   absorbs_neutrons && !is_total   false
+   absorbs_neutrons &&  is_total   =e=
+   enriches_neutrons               ==                  
+``
+
+Note, that all laws that establish a commutative
+monoid for `operator +` and neutron `Q()` are valid
+for `signed Quantifiers`.
+In addition symmetric difference that does not
+hold for `unsigned Qunatifiers` is valid
+for `signed Qunatifiers`.
+
 ``
 SymmetricDifference<Q,== > : Q a,b,c; (a + b) - (a & b) == (a - b) + (b - a)
 ``
-For a `TotalQuantifier` `Qt` symmetrical difference degenerates to 
+For a `signed TotalQuantifier` `Qt` symmetrical difference degenerates to 
 a trivial form since `operator &` and `operator +` become identical
 ``
-SymmetricDifference<Qt,== > : Qt a,b,c; (a + b) - (a + b) == (a - b) + (b - a) == 0
+SymmetricDifference<Qt,== > : Qt a,b,c; (a + b) - (a + b) == (a - b) + (b - a) == Qt()
 ``
 
 [h5 Existence of an Inverse]
 
-By now Quantifiers `Q` are 
+By now `signed Quantifiers` `Q` are 
 commutative monoids 
 with respect to the
-operation `+` and the neutral element Q(). 
+`operator +` and the neutral element `Q()`. 
 If the Quantifiers `CodomainT` type has an /inverse element/ 
-like e.g. signed numbers do,
+like e.g. `signed numbers` do,
 the `CodomainT` type is a 
-commutative or abelian group.
-In this case a `TotalQuantifier` also has an 
-inverse and the following law holds:
+['*commutative*] or ['*abelian group*].
+In this case a `signed Quantifier` that is also ['*total*] 
+has an ['*inverse*] and the following law holds:
 
 ``
 InverseElement<Qt,== > : Qt a; (0 - a) + a == 0

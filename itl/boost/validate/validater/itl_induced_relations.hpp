@@ -10,9 +10,10 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #pragma once
 
 #include <boost/itl/functors.hpp>
+#include <boost/itl/interval_morphism.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
-#include <boost/validate/lawvalidater.h>
-#include <boost/validate/algebra_validater.hpp>
+#include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/validater/algebra_validater.hpp>
 
 namespace boost{namespace itl
 {
@@ -20,7 +21,7 @@ namespace boost{namespace itl
 
 
     template <typename Type>
-    class itl_induced_relations_validater : public AlgebraValidater
+    class itl_induced_relations_validater : public algebra_validater
     {
     public:
         enum Laws 

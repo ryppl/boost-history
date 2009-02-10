@@ -15,8 +15,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
-#include <boost/validate/lawvalidater.h>
-#include <boost/validate/laws/monoid.h>
+#include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/gentor/gentorprofile.h>
 #include <boost/validate/gentor/rangegentor.h>
 

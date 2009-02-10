@@ -15,8 +15,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
-#include <boost/validate/lawvalidater.h>
-#include <boost/validate/laws/monoid.h>
+#include <boost/validate/validater/law_validater.hpp>
+#include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/element_order.hpp>
 #include <boost/validate/laws/subset_order.hpp>
 #include <boost/validate/gentor/gentorprofile.h>
@@ -49,8 +49,12 @@ void test_LawValidater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-	typedef InplaceFlip
-		<interval_map<int, int, total_enricher > >  TestLawT;
+	//typedef InplaceFlip
+	//	<interval_map<int, nat> >  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef InplaceAssociativity
+		<itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
 
 	//-----------------------------------------------------------------------------

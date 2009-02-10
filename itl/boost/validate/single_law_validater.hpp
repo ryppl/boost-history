@@ -12,7 +12,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/validate/typevalidater.h>
+#include <boost/validate/validater/algebra_validater.hpp>
 #include <boost/validate/utility.hpp>
 
 
@@ -76,7 +76,7 @@ namespace boost{namespace itl
 
         void setInvalid() { _isValid = false; }
 
-        AlgebraValidater* choiceError(const std::string& location, int value, const ChoiceT& choice)
+        algebra_validater* choiceError(const std::string& location, int value, const ChoiceT& choice)
         {
             reportTypeChoiceError(location, value, choice); 
             setInvalid();
@@ -150,7 +150,7 @@ namespace boost{namespace itl
             }
         }
 
-        AlgebraValidater* chooseValidater()
+        algebra_validater* chooseValidater()
         {
             int rootChoice = _rootChoice.some();
             int domainChoice    = _domainChoice.some();
@@ -334,7 +334,7 @@ namespace boost{namespace itl
         ChoiceT            _rootChoice;
         ChoiceT            _domainChoice;
         ChoiceT            _codomainChoice;
-        AlgebraValidater*  _validater;
+        algebra_validater*  _validater;
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;

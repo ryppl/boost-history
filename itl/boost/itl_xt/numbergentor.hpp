@@ -35,6 +35,7 @@ class NumberGentorT
 
 #include <stdlib.h>
 #include <vector>
+#include <boost/validate/type/nat.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl_xt/gentorit.hpp>
 
@@ -66,9 +67,9 @@ inline NumTV rnd_within_exUpb(NumTV lwb, NumTV exclusive_upb)
 }
 
 template <class NumTV>
-inline NumTV rnd_within(NumTV lwb, NumTV exclusive_upb) 
+inline NumTV rnd_within(NumTV lwb, NumTV upb) 
 { 
-    NumTV some = (NumTV)RND_WITHIN(lwb,exclusive_upb); 
+    NumTV some = (NumTV)RND_WITHIN(lwb,upb); 
     return some;
 }
 

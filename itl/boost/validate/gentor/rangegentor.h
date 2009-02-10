@@ -33,6 +33,7 @@ class IntevalGentor
 
 #include <boost/itl/interval.hpp>
 #include <boost/itl_xt/gentorit.hpp>
+#include <boost/itl_xt/numbergentor.hpp>
 
 namespace boost{namespace itl
 {

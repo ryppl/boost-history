@@ -20,6 +20,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
+#include <boost/validate/type/nat.hpp>
 
 using namespace std;
 using namespace boost;
@@ -58,16 +59,14 @@ BOOST_AUTO_TEST_CASE(superset_test)
 
 BOOST_AUTO_TEST_CASE(casual_test)
 {
-	typedef interval_map<int,int>  IntervalMapT;
-	typedef split_interval_map<int,int>  SplitIntervalMapT;
+	typedef interval_map<int,nat>  IntervalMapT;
+	typedef split_interval_map<int,nat>  SplitIntervalMapT;
 	
 	SplitIntervalMapT left, right;
-	left.add(IDv(-7,-1,1)).add(IIv(8,16,9));
-	right.add(CDv(-8,-4,1)).add(IIv(8,8,9));
+	//[1   2]->2
+	//    [2   3]->2
+	left.add(IIv(1,2,2));
+	left.flip(IIv(2,3,3));
 
-	IntervalMapT join_left;
-	join_left.add(CDv(-8,-4,1));
-	join_left = left;
-
-	BOOST_CHECK_EQUAL(contains(join_left,right), true);
+	BOOST_CHECK_EQUAL(left, right);
 }

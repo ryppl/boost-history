@@ -12,7 +12,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/validate/typevalidater.h>
+#include <boost/validate/validater/algebra_validater.hpp>
 #include <boost/validate/utility.hpp>
 
 namespace boost{namespace itl
@@ -34,7 +34,7 @@ namespace boost{namespace itl
 
     namespace CodomainType 
     {
-        enum CodomainTypes { Int, Double, set_int, raw_bitset, CodomainTypes_size };
+        enum CodomainTypes { Nat, Int, Double, set_int, raw_bitset, CodomainTypes_size };
     }
 
     namespace NeutronHandlerType 
@@ -49,7 +49,7 @@ namespace boost{namespace itl
         bool hasValidProfile()const { return _isValid; }
 
         virtual void setProfile() = 0;
-        virtual AlgebraValidater* chooseValidater() = 0;
+        virtual algebra_validater* chooseValidater() = 0;
 
         void validate()
         {
@@ -164,7 +164,7 @@ namespace boost{namespace itl
             _neutronizerChoice.setTypeNames(type_names);
         }
 
-        AlgebraValidater* choiceError(const std::string& location, int value, const ChoiceT& choice)
+        algebra_validater* choiceError(const std::string& location, int value, const ChoiceT& choice)
         {
             reportTypeChoiceError(location, value, choice); 
             setValid(false);
@@ -178,7 +178,7 @@ namespace boost{namespace itl
         ChoiceT            _neutronizerChoice;
 
     private:
-        AlgebraValidater*  _validater;
+        algebra_validater*  _validater;
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;

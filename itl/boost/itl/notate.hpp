@@ -129,8 +129,6 @@ namespace boost{namespace itl
 //------------------------------------------------------------------------------
 namespace boost{namespace itl
 {
-	typedef unsigned int nat;
-
 	namespace comparison
 	{
 		static const int less    = -1;
