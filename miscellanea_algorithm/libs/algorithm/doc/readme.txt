@@ -33,6 +33,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1 (Apple Inc. build 5490)
 The compiler search path must include
 boost_1_37_0
 boost/sandbox/miscellanea_iterator_facade
+boost/sandbox/miscellanea_algorithm
 
 ////////////////////////
 / Output from main.cpp /
