@@ -12,7 +12,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/interval_morphism.hpp>
-#include <boost/validate/law.h>
+#include <boost/validate/laws/law.hpp>
 
 namespace boost{namespace itl
 {

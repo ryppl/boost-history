@@ -12,7 +12,6 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
-#include <boost/validate/typevalidater.h>
 #include <boost/validate/validater/itl_induced_relations.hpp>
 #include <boost/validate/driver/itl_driver.hpp>
 #include <boost/validate/utility.hpp>

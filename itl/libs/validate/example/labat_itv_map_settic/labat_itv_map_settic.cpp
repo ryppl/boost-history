@@ -17,8 +17,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/itl/map.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/laws/monoid.hpp>
-#include <boost/validate/gentor/gentorprofile.h>
-#include <boost/validate/gentor/rangegentor.h>
+#include <boost/validate/gentor/gentorprofile.hpp>
+#include <boost/validate/gentor/rangegentor.hpp>
 
 #include <boost/validate/itv_map_settic_validater.hpp>
 #include <boost/itl/interval_set.hpp>

@@ -11,7 +11,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #define __itl_set_laws_h_JOFA_071124__
 
 #include <boost/itl/type_traits/value_size.hpp>
-#include <boost/validate/law.h>
+#include <boost/validate/laws/law.hpp>
 #include <boost/itl/functors.hpp>
 
 namespace boost{namespace itl

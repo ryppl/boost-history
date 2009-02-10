@@ -14,10 +14,10 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
-#include <boost/validate/gentor/randomgentor.h>
+#include <boost/validate/gentor/randomgentor.hpp>
 
 #include <boost/validate/laws/monoid.hpp>
-#include <boost/validate/lawviolations.h>
+#include <boost/validate/laws/law_violations.hpp>
 
 namespace boost{namespace itl
 {

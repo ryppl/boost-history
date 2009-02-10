@@ -484,7 +484,7 @@ public:
     */
     SubType& subtract(const value_type& x)
     {
-		if(Traits::is_total && has_inverse<codomain_type>::value) //CL !is_set<codomain_type>::value)
+		if(Traits::is_total && has_inverse<codomain_type>::value)
 			that()->template add_<inverse_codomain_combine>(x); 
         else 
 			that()->template subtract_<inverse_codomain_combine>(x); 

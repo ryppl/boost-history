@@ -10,22 +10,14 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 
-#include <boost/itl/ptime.hpp> //CL (4 a quick test only)
+#include <boost/itl/ptime.hpp>
 
-#include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/validate/validater/law_validater.hpp>
-#include <boost/validate/laws/monoid.hpp>
-#include <boost/validate/laws/element_order.hpp>
-#include <boost/validate/laws/subset_order.hpp>
-#include <boost/validate/gentor/gentorprofile.h>
-#include <boost/validate/gentor/rangegentor.h>
-
-#include <boost/validate/single_law_validater.hpp>
+#include <boost/validate/gentor/gentorprofile.hpp>
+#include <boost/validate/gentor/rangegentor.hpp>
 #include <boost/itl/interval_set.hpp>
-//#include <boost/itl_xt/numbergentor.hpp>
-//#include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl/functors.hpp>
 
 using namespace std;

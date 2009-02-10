@@ -17,7 +17,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/itl/interval_morphism.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/laws/order.hpp>
-#include <boost/validate/laws/pushouts.h>
+#include <boost/validate/laws/pushouts.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
 
