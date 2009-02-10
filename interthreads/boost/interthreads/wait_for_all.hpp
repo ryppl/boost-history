@@ -50,6 +50,15 @@ namespace result_of {
             typename boost::result_of<F3()>::type
         > type;
     };
+    template <typename L, typename F1, typename F2, typename F3, typename F4>
+    struct wait_for_all<L, fusion::tuple<F1,F2,F3,F4> > {
+        typedef  fusion::tuple<
+            typename boost::result_of<F1()>::type,
+            typename boost::result_of<F2()>::type,
+            typename boost::result_of<F3()>::type,
+            typename boost::result_of<F4()>::type
+        > type;
+    };
 
 }
 
@@ -109,6 +118,22 @@ wait_for_all( AE& ae, F1 f1, F2 f2 , F3 f3 ) {
     set_all(handles,values);
     return typename result_of::wait_for_all<AE, fusion::tuple<F1,F2, F3> >::type(
         fusion::at_c<0>(values), fusion::at_c<1>(values), f3());
+    #endif
+}
+template< typename AE, typename F1, typename F2, typename F3, typename F4>
+typename result_of::wait_for_all<AE, fusion::tuple<F1,F2,F3,F4> >::type
+wait_for_all( AE& ae, F1 f1, F2 f2 , F3 f3, F4 f4 ) {
+    #if 1
+    typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles(fork_all(ae, f1, f2, f3, f4));
+    typename result_of::wait_for_all<AE, fusion::tuple<F1,F2,F3> >::type values;
+    set_all(handles,values);
+    return values;
+    #else
+    typename result_of::fork_all<AE, fusion::tuple<F1, F2> >::type handles(fork_all(ae, f1, f2, f3));
+    typename result_of::wait_for_all<AE, fusion::tuple<F1, F2> >::type values;
+    set_all(handles,values);
+    return typename result_of::wait_for_all<AE, fusion::tuple<F1,F2, F3, F4> >::type(
+        fusion::at_c<0>(values), fusion::at_c<1>(values), fusion::at_c<2>(values), f4());
     #endif
 }
 
