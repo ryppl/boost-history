@@ -89,6 +89,15 @@ namespace result_of {
             typename fork<AE,F3>::type
         > type;
     };
+    template <typename AE, typename F1, typename F2, typename F3, typename F4>
+    struct fork_all<AE, fusion::tuple<F1,F2,F3,F4> > {
+        typedef  fusion::tuple<
+            typename fork<AE,F1>::type,
+            typename fork<AE,F2>::type,
+            typename fork<AE,F3>::type,
+            typename fork<AE,F4>::type
+        > type;
+    };
 
 }
 
@@ -130,11 +139,11 @@ fork_all_apply( AE& ae, F f, Sequence seq ) {
 }
 #endif
 
-template< typename AE, typename F1, typename F2, typename F3>
-typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type
-fork_all( AE& ae, F1 f1, F2 f2, F3 f3 ) {
-    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type type;
-    return type(ae.fork(f1),ae.fork(f2),ae.fork(f3));
+template< typename AE, typename F1, typename F2, typename F3, typename F4>
+typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3,F4> >::type
+fork_all( AE& ae, F1 f1, F2 f2, F3 f3, F4 f4 ) {
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3,F4> >::type type;
+    return type(ae.fork(f1),ae.fork(f2),ae.fork(f3),ae.fork(f4));
 }
 
 }
