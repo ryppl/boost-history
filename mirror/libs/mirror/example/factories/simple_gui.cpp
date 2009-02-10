@@ -10,6 +10,7 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
+#include <boost/shared_ptr.hpp>
 #include <boost/mirror/factory/wx_constructor_gui.hpp>
 #include "./tetrahedron.hpp"
 
@@ -44,7 +45,7 @@ bool simple_gui_test_app::OnInit()
 	try
 	{
 		// use the factory to create a tetrahedron
-		T* t = fact.create();
+		::boost::shared_ptr<T> t(fact.create());
 		// if we were successful
 		if(t)
 		{
@@ -59,8 +60,6 @@ bool simple_gui_test_app::OnInit()
 				message,
 				wxT("Tetrahedron info")
 			);
-			// and delete the instance
-			delete t;
 		}
 	}
 	catch(::std::exception& e)
