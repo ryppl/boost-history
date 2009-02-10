@@ -21,17 +21,21 @@ import testing ;
 
 project
     : requirements
-    <library>/boost/test//boost_unit_test_framework/<link>static
-    <library>../build//boost_interthreads
-    <library>/boost/thread//boost_thread/<link>static
+#       <library>/boost/test//boost_unit_test_framework/<link>static
+#       <library>/boost/thread//boost_thread/<link>static
+#       <library>$BOOST_ROOT/libs/test/build//boost_unit_test_framework/<link>static
+        <library>../../../../../boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
+        <library>../build//boost_interthreads/<link>static
+        <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
 
-      <include>.
-      <include>../../..
-      <threading>multi
-      <target-os>cygwin
-      <threadapi>pthread
-      <variant>debug
-#      <define>BOOST_THREAD_HAS_THREAD_ATTR
+        <include>.
+        <include>../../..
+        <include>../../../../../boost_1_38_0
+        <threading>multi
+        <target-os>cygwin
+        <interthreadapi>pthread
+        <variant>debug
+#       <define>BOOST_THREAD_HAS_THREAD_ATTR
 
     ;
 
