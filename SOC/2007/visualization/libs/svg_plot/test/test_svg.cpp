@@ -1,7 +1,8 @@
 /*! \file test_svg.cpp
    \brief Tests for svg class.
-   \details (See also other test modules for 1d_plot, 2d_plot and boxplot).
-
+   \details Tests some of the fundamental SVG class functions used by SVG plot functions.
+   (See also other test modules for 1d_plot, 2d_plot and boxplot).
+   \date 10 Feb 2009
    \author Jacob Voytko and Paul A. Bristow
 */
 
@@ -15,17 +16,14 @@
 
 //#if defined (BOOST_MSVC) // requires a prior Boost include, so use MSC_VER instead.
 #if defined (_MSC_VER)
-//#  pragma warning(disable : 4267) //  '=' : conversion from 'size_t' to 'unsigned int'
 #  pragma warning(disable : 4996) // Deprecated.
-#  pragma warning(disable : 4224) // nonstandard extension used : formal parameter 'arg' was previously defined as a type
-#  pragma warning(disable : 4310) //  cast truncates constant value
-#  pragma warning(disable : 4512) //  assignment operator could not be generated
-//#  pragma warning(disable : 4702) //  unreachable code
-
+#  pragma warning(disable : 4224) // nonstandard extension used : formal parameter 'arg' was previously defined as a type.
+#  pragma warning(disable : 4310) //  cast truncates constant value.
+#  pragma warning(disable : 4512) //  assignment operator could not be generated.
 #endif
 
 #define BOOST_TEST_MAIN
-// NB Must come BEFORE this include.
+// NB define BOOST_TEST_MAIN must come BEFORE this include.
 #include <boost/test/included/unit_test.hpp>
 
 #include <boost/svg_plot/svg.hpp>
@@ -35,8 +33,8 @@
   using boost::svg::svg_style;
   using namespace boost::svg;
 
-#include <boost/svg_plot/svg_fwd.hpp> // forward declarations.
-  // Included as a cross check.
+#include <boost/svg_plot/svg_fwd.hpp> // Forward declarations.
+  // Included here as a cross check.
 
 #include <iostream>
   using std::cout;
@@ -46,16 +44,15 @@
 #include <sstream>
   using std::ostringstream;
 
-//int test_main(int, char*[])
-  BOOST_AUTO_TEST_CASE( test_styles )
+BOOST_AUTO_TEST_CASE(test_styles)
 {
   // Check on default values and all set and get functions.
   // (Note: changes to default will mean tests must change too!)
   // Note that constants for comparison must be exactly the right type
   // to avoid a warning from within Boost.Test.
   // Use of unsigned int means that test value must also be unsigned,
-  // for example 12U rather 12,
-  // double must be 1. rather than 1...
+  // for example, "12U" rather "12", and
+  // double must be "1." rather than integer "1".
 
   // Test svg_color
   BOOST_CHECK_EQUAL(aliceblue, 0); // Is 1st array element, index zero.
@@ -72,13 +69,12 @@
   BOOST_CHECK_EQUAL(white, white); // 
   BOOST_CHECK_EQUAL(svg_color(blank), svg_color(blank)); // 
 
-
   // Test operator==
   svg_color my_red(255, 0, 0); //
   BOOST_CHECK_EQUAL(my_red, svg_color(red));
   BOOST_CHECK_EQUAL(my_red, red);
   // Test operator!=
-  BOOST_CHECK_NE(my_red, black); // BOOST_CHECK_NE Needs Boost 1.35.
+  BOOST_CHECK_NE(my_red, black);
 
   // Test svg_color operator<<
   ostringstream oss;
@@ -87,7 +83,7 @@
   //oss.str().erase(); // doesn't seem to erase the string - only a copy!
   //BOOST_CHECK_EQUAL(oss.str().size(), 0U); // fails.
   //BOOST_CHECK_EQUAL(oss.str().c_str(), ""); // fails.
-  oss.str(""); // So use this to erase the string.
+  oss.str(""); // So use this null string to erase the string.
   BOOST_CHECK_EQUAL(oss.str().c_str(), "");
   oss << svg_color(lime);
   BOOST_CHECK_EQUAL(oss.str().c_str(), "RGB(0,255,0)");
@@ -95,18 +91,17 @@
   oss << svg_color(blue);
   BOOST_CHECK_EQUAL(oss.str().c_str(), "RGB(0,0,255)");
 
-  // TODO? special treatment of blank == NotAColor??
-  // Tests?
+  BOOST_CHECK_EQUAL(blank, blank);
+  BOOST_CHECK_NE(blank, red);
+  BOOST_CHECK_EQUAL(blank, svg_color(blank));
 
 // Test style in svg_style (fill stroke & width)
-
-// in \detail\svg_style.hpp
 
   BOOST_CHECK_EQUAL(detail::PLOT_BACKGROUND, 0);
   // 1st MUST be zero because indexing an array.
   BOOST_CHECK_EQUAL(detail::document_ids[0], "imageBackground");
   BOOST_CHECK_EQUAL(detail::document_ids[detail::SVG_PLOT_DOC_CHILDREN], "plotDocChildren");
-  // This will change if new document elements are added.
+  // This will change if any new document elements are added.
 
   // svg_style.hpp
   // Test the point and line style structures.
@@ -124,8 +119,7 @@
   BOOST_CHECK_EQUAL(my_plot_line.bezier_on(), false);
   plot_line_style my_plot_line2(svg_color(red), true, true);
   my_plot_line2.area_fill(green);
-  // Note 1: it is a color constant, nor a svg_color.
-  // Note 2:
+  // Note 1: green is a color constant, nor a svg_color.
   BOOST_CHECK_EQUAL(my_plot_line2.color(), svg_color(red));
   BOOST_CHECK_EQUAL(my_plot_line2.area_fill(), green);
   BOOST_CHECK_EQUAL(my_plot_line2.line_on(), true);
@@ -267,9 +261,9 @@
   my_svg.write(ossvg);
 
   cout << ossvg.str().c_str() << endl;
-  // TODO compare string with 'expected' output
+  // Might use Boost.Test to compare string with 'expected' output
   // but it has lots of " so can't be used as a C string,
-  // so would need to compare with a file of 'expected' svg stuff?
+  // so would need to compare with a file of 'expected' svg stuff.
 
   // Test rect_element
 
@@ -311,7 +305,7 @@
   oss << my_polyline;
   BOOST_CHECK_EQUAL(oss.str().c_str(), "(1, 2)(3, 4)(5, 6)");
 
-} //BOOST_AUTO_TEST_CASE( test_styles )
+} // BOOST_AUTO_TEST_CASE(test_styles)
 
 /*
 
