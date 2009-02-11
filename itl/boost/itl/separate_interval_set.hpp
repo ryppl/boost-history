@@ -112,9 +112,6 @@ public:
     /// allocator type of the corresponding element set
     typedef Alloc<DomainT> domain_allocator_type;
 
-    /// The type of the set of elements that is equivalent to the set of intervals
-    typedef typename itl::set<DomainT,Compare,Alloc> element_set;
-
     /// The corresponding atomized type representing this interval container of elements
     typedef typename itl::set<DomainT,Compare,Alloc> atomized_type;
 
@@ -136,9 +133,11 @@ public:
 
 	enum { fineness = 2 };
 
-
-    // B: Constructors, destructors, assignment
-    /// Default constructor for the empty set 
+public:
+	//==========================================================================
+	//= Construct, copy, destruct
+	//==========================================================================
+    /// Default constructor for the empty object
     separate_interval_set(): base_type() {}
     /// Copy constructor
     separate_interval_set(const separate_interval_set& src): base_type(src) {}

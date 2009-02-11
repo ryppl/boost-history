@@ -36,7 +36,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #undef min
 #undef max
 
-#define BOUND_VAL first
+#define BOUND_VALUE first
 #define BOUND_TYPES second
 
 namespace boost{namespace itl
@@ -329,6 +329,10 @@ public:
     /// The size type of an interval which is mostly std::size_t
     typedef typename itl::size<DomainT>::type size_type;
 
+public:
+	//==========================================================================
+	//= Construct, copy, destruct
+	//==========================================================================
     /** Default constructor; yields an empty interval <tt>[1,0]</tt> */
     interval() : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()), 
 		         _boundtype(itl::closed_bounded) {}
@@ -361,6 +365,38 @@ public:
 
     //NOTE: Compiler generated assignment operator = used
 
+	//==========================================================================
+	//= Emptieness, containmnet
+	//==========================================================================
+    /** Is the interval empty? */
+    bool empty()const;
+
+    /** Does the interval contain <tt>x</tt>? */
+    bool contains(const DomainT& x)const;
+    /** <tt>*this</tt> is subset of <tt>super</tt> */
+    bool contained_in(const interval& super)const ;
+    /** <tt>*this</tt> is superset of <tt>sub</tt> */
+    bool contains(const interval& sub)const;
+
+    /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
+    bool is_disjoint(const interval& x2)const
+    { return exclusive_less(x2) || x2.exclusive_less(*this); }
+
+	//==========================================================================
+	//= Size
+	//==========================================================================
+    /** Cardinality of the interval: The number of elements */
+    size_type cardinality()const;
+
+    /** Arithmetic size of the interval */
+    difference_type length()const;
+
+    /** Size of the interval */
+    size_type size()const { return cardinality(); }
+
+	//==========================================================================
+	//= Range
+	//==========================================================================
     /** Lower bound of the interval */
     DomainT lower()const { return _lwb; }
     /** Upper bound of the interval */
@@ -368,10 +404,6 @@ public:
     /** Typ of interval bounds */
     bound_type boundtype()const { return _boundtype; }
 
-    /** Is the interval empty? */
-    bool empty()const;
-    /** Does the interval contain <tt>x</tt>? */
-    bool contains(const DomainT& x)const;
 
 	/** What type is the interval?
 \code
@@ -408,14 +440,6 @@ interval.is_right(open_bounded);   //[x, y) or (x, y)
 	}
 
 
-    /** <tt>*this</tt> is subset of <tt>super</tt> */
-    bool contained_in(const interval& super)const ;
-    /** <tt>*this</tt> is superset of <tt>sub</tt> */
-    bool contains(const interval& sub)const;
-
-    /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
-    bool is_disjoint(const interval& x2)const
-    { return exclusive_less(x2) || x2.exclusive_less(*this); }
     /** There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common */
     bool touches(const interval& x2)const;
 
@@ -500,15 +524,6 @@ left_over = x1 - x2; //on the right side.
     /** Last (largest) element of the interval */
     DomainT last()const;
 
-    /** Cardinality of the interval: The number of elements */
-    size_type cardinality()const;
-
-    /** Arithmetic size of the interval */
-    difference_type length()const;
-
-    /** Size of the interval */
-    size_type size()const { return cardinality(); }
-
     /** Transforms the interval to the bound-type <tt>bounded</tt> without
         changing it's content. Requires Integral<domain_type>. 
 \code
@@ -572,8 +587,8 @@ private:
 
     bound_type succession_bounds()const;
 
-    void set_lwb(const BoundT& lw) { _lwb=lw.BOUND_VAL; set_lwb_type(lw.BOUND_TYPES); }
-    void set_upb(const BoundT& up) { _upb=up.BOUND_VAL; set_upb_type(up.BOUND_TYPES); }
+    void set_lwb(const BoundT& lw) { _lwb=lw.BOUND_VALUE; set_lwb_type(lw.BOUND_TYPES); }
+    void set_upb(const BoundT& up) { _upb=up.BOUND_VALUE; set_upb_type(up.BOUND_TYPES); }
 
     BoundT lwb_min(const interval& x2)const;
     BoundT lwb_max(const interval& x2)const;
@@ -1082,7 +1097,9 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::as(bound_type bounded)
 	return *this;
 }
 
-
+//==============================================================================
+//= Equivalences and Orderings
+//==============================================================================
 /** Equality on intervals */
 template <class DomainT, ITL_COMPARE Compare>
 inline bool operator == (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
@@ -1114,23 +1131,8 @@ template <class DomainT, ITL_COMPARE Compare>
 inline bool operator >= (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 { return !(lhs < rhs); }
 
+
 /// Comparison functor on intervals implementing an overlap free less 
-/**    
-    <b>Template-Klasse exclusive_less: Comparison Functor for Intervals</b>
-
-       Template parameter <b>IntervalType</b>: needs to implement the boolean function
-
-    <tt>bool IntervalType::exclusive_less(IntervalType x2)const; </tt>
-    
-    <b>exclusive_less</b> implements a strict weak ordering that serves to
-    sort sets and maps of intervals interval_set, split_interval_set and
-    split_interval_map. 
-    
-    Function <tt>bool IntervalType::exclusive_less(IntervalType x2)const; </tt> is true if every
-    element of the interval <tt>*this</tt> is less than any element of <tt>x2</tt>
-
-    @author  Joachim Faulhaber
-*/
 template <class IntervalType>
 struct exclusive_less {
     /** Operator <tt>operator()</tt> implements a strict weak ordering on intervals. */

@@ -18,6 +18,57 @@ namespace boost{namespace itl
 template<typename, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC> 
 class interval_set;
 
+//==============================================================================
+//= Equivalences and Orderings
+//==============================================================================
+//------------------------------------------------------------------------------
+// is_element_equal
+//------------------------------------------------------------------------------
+template 
+<
+    class SubType, class DomainT, 
+    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+>
+bool is_element_equal
+(
+    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
+    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+)
+{
+	return Interval_Set::is_element_equal(left, right);
+}
+
+template 
+<
+    class SubType, class DomainT, 
+    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+>
+bool is_element_less
+(
+    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
+    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+)
+{
+	return Interval_Set::is_element_less(left, right);
+}
+
+template 
+<
+    class SubType, class DomainT, 
+    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+>
+bool is_element_greater
+(
+    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
+    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+)
+{
+	return Interval_Set::is_element_greater(left, right);
+}
+
 //-----------------------------------------------------------------------------
 // addition +=
 //-----------------------------------------------------------------------------
@@ -73,55 +124,6 @@ ObjectT& operator ^=
 	(ObjectT& object, const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
 { 
 	return object.flip(operand); 
-}
-
-
-//-----------------------------------------------------------------------------
-// is_element_equal
-//-----------------------------------------------------------------------------
-template 
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-bool is_element_equal
-(
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
-)
-{
-	return Interval_Set::is_element_equal(left, right);
-}
-
-template 
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-bool is_element_less
-(
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
-)
-{
-	return Interval_Set::is_element_less(left, right);
-}
-
-template 
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-bool is_element_greater
-(
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
-)
-{
-	return Interval_Set::is_element_greater(left, right);
 }
 
 

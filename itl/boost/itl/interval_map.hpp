@@ -132,9 +132,6 @@ public:
     typedef interval_base_map <interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
-    typedef interval_map<DomainT,CodomainT,itl::partial_absorber,Compare,Combine,Section,Interval,Alloc>
-            partial_absorber_type;
-
     typedef Interval<DomainT,Compare> interval_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::value_type value_type;
@@ -151,7 +148,11 @@ public:
 
 	enum { fineness = 1 };
 
-    /// Default constructor for the empty map 
+public:
+	//==========================================================================
+	//= Construct, copy, destruct
+	//==========================================================================
+    /// Default constructor for the empty object
     interval_map(): base_type() {}
     /// Copy constructor
     interval_map(const interval_map& src): base_type(src) {}
