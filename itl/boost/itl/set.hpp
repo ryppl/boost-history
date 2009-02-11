@@ -106,7 +106,7 @@ public:
 
 public:
 	//==========================================================================
-	//= Emptieness, containmnet
+	//= Emptieness, containment
 	//==========================================================================
 
     /// Checks if the element \c x is in the set
@@ -201,7 +201,7 @@ void set<DomainT,Compare,Alloc>
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void set<DomainT,Compare,Alloc>
-	::add_intersection(set& section, const typename set& sectant)const
+	::add_intersection(set& section, const set& sectant)const
 {
     const_iterator common_lwb_;
     const_iterator common_upb_;

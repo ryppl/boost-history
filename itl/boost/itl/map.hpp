@@ -164,7 +164,7 @@ public:
 
 public:
 	//==========================================================================
-	//= Emptieness, containmnet
+	//= Emptieness, containment
 	//==========================================================================
 
     /** Checks if a key element is in the map */
@@ -187,13 +187,6 @@ public:
     size_t iterative_size()const { return size(); }
 
     size_t cardinality()const { return size(); }
-
-    void absorb_neutrons()
-    {
-        //content_is_neutron<key_type, data_type> neutron_dropper;
-        if(!Traits::absorbs_neutrons)
-            erase_if(content_is_neutron<value_type>());
-    }
 
     std::pair<iterator,bool> insert(const value_type& value_pair)
     {
@@ -234,6 +227,29 @@ public:
         Erase only if, the exact value content \c val is stored at key \key. */
     size_type erase(const value_type& value);
 
+
+	//==========================================================================
+	//= Morphisms
+	//==========================================================================
+	
+	void absorb_neutrons()
+    {
+        //content_is_neutron<key_type, data_type> neutron_dropper;
+        if(!Traits::absorbs_neutrons)
+            erase_if(content_is_neutron<value_type>());
+    }
+
+	//==========================================================================
+	//= Representaion
+	//==========================================================================
+	
+    /** Represent this map as string */
+    std::string as_string()const;
+
+	//==========================================================================
+	//= Algorithm unifiers
+	//==========================================================================
+
     /** \c key_value allows for a uniform access to \c key_values which is
         is used for common algorithms on sets and maps. */
     template<typename IteratorT>
@@ -266,9 +282,6 @@ public:
     into \c *this map. */
     template<class Predicate>
     map& assign_if(const map& src, const Predicate&);
-
-    /** Represent this map as string */
-    std::string as_string()const;
 
 private:
     template<class Combiner>
@@ -403,7 +416,7 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 	if(!Set::common_range(common_lwb_, common_upb_, sectant, *this))
         return;
 
-	typename const_iterator sec_ = common_lwb_;
+	const_iterator sec_ = common_lwb_;
 	while(sec_ != common_upb_)
 	{
 		const_iterator it_ = find(sec_->KEY_VALUE);

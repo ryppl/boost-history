@@ -285,20 +285,6 @@ enum BoundTypes {
 typedef unsigned char bound_type;
 
 /// A class template for intervals
-/**    Bounds of the interval may be closed or open.
-    Discrete or continuous datatypes may be used as domain datatypes DomainT.
-
-       Template parameter <b>DomainT</b>:
-    The intervals domain type or type of the elements of the interval.
-    The interface <b>DomainT</b> has to be implemented by any actual template
-    parameter.
-
-    The class defines intervals with closed or open bounds for discrete
-    <tt>(short, int, date, time etc.)</tt> and continuous 
-    <tt>float, double, Rational etc.</tt> elements. The domain parameter
-    may be a built in c++ datatype or a class type. It has to implement
-    the interface DomainT.
-*/
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 #ifdef USE_CONCEPTS
 	requires std::LessThanComparable<DomainT>
@@ -366,17 +352,23 @@ public:
     //NOTE: Compiler generated assignment operator = used
 
 	//==========================================================================
-	//= Emptieness, containmnet
+	//= Emptieness, containment
 	//==========================================================================
     /** Is the interval empty? */
     bool empty()const;
 
+    /** Set the interval empty */
+    void clear()
+	{ set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); 
+	  _boundtype=itl::closed_bounded; }
+
     /** Does the interval contain <tt>x</tt>? */
     bool contains(const DomainT& x)const;
-    /** <tt>*this</tt> is subset of <tt>super</tt> */
-    bool contained_in(const interval& super)const ;
     /** <tt>*this</tt> is superset of <tt>sub</tt> */
     bool contains(const interval& sub)const;
+
+    /** <tt>*this</tt> is subset of <tt>super</tt> */
+    bool contained_in(const interval& super)const ;
 
     /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
     bool is_disjoint(const interval& x2)const
@@ -401,65 +393,42 @@ public:
     DomainT lower()const { return _lwb; }
     /** Upper bound of the interval */
     DomainT upper()const { return _upb; }
+
+    /** First (smallest) element of the interval */
+    DomainT first()const;
+    /** Last (largest) element of the interval */
+    DomainT last()const;
+
+	//==========================================================================
+	//= Selection
+	//==========================================================================
+
     /** Typ of interval bounds */
     bound_type boundtype()const { return _boundtype; }
 
+	//==========================================================================
+	//= Addition
+	//==========================================================================
 
-	/** What type is the interval?
-\code
-interval.is(closed_bounded); //[x, y] a closed interval
-interval.is(right_open);     //[x, y) a right-open interval (also left-closed interval)
-interval.is(left_open);      //(x, y] a left-open interval  (also right-closed interval)
-interval.is(open_bounded);   //(x, y) an open interval
-\endcode
-	*/
-    bool is(bound_type bounded)const { return _boundtype == bounded; }
-
-	/** What bound type is the left interval border? 	
-\code
-interval.is_left(closed_bounded); //[x, y] or [x, y)
-interval.is_left(open_bounded);   //(x, y] or (x, y)
-\endcode
-	*/
-	bool is_left(bound_type bounded)const
-	{
-		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
-		return ((_boundtype & right_open)>>1) == (bounded>>1); 
-	}
-
-	/** What bound type is the right interval border? 	
-\code
-interval.is_right(closed_bounded); //[x, y] or (x, y]
-interval.is_right(open_bounded);   //[x, y) or (x, y)
-\endcode
-	*/
-	bool is_right(bound_type bounded)const
-	{
-		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
-		return ((_boundtype & left_open) == (bounded>>1)); 
-	}
-
-
-    /** There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common */
-    bool touches(const interval& x2)const;
-
-    /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
-    bool exclusive_less(const interval& x2)const;
-
-    /** Set the interval empty */
-    void clear()
-	{ set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); _boundtype=itl::closed_bounded; }
-
-	/** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
-    interval& set(const DomainT& low, const DomainT& up, bound_type bounds) 
-    { _lwb=low; _upb=up; _boundtype=bounds; return *this; }
-
-    /** Extend <tt>*this</tt> to <tt>x2</tt> yielding an interval from the minimum of lower bounds
-        to the maximum of upper bounds */
+    /** Extend <tt>*this</tt> to <tt>x2</tt> yielding an interval from the 
+	    minimum of lower bounds to the 
+		maximum of upper bounds */
     interval& extend(const interval& x2);
 
-	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
-    void intersect(interval& isec, const interval& x2)const;
+	/** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
+        Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
+    interval span(const interval& rhs)const
+    {
+        if(empty())          return rhs;
+        else if(rhs.empty()) return *this;
+        else return 
+                interval(_lwb, rhs._upb, span(boundtype(), rhs.boundtype()));
+    }
+
+
+	//==========================================================================
+	//= Subtraction
+	//==========================================================================
 
     /** subtract \c x2 from \c *this interval on it's left side. Assign the difference 
 		to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
@@ -503,26 +472,65 @@ left_over = x1 - x2; //on the right side.
 	*/
 	interval& right_subtract(const interval& x2);
 
-    /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
-        Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
-    interval span(const interval& rhs)const
-    {
-        if(empty())          return rhs;
-        else if(rhs.empty()) return *this;
-        else return 
-                interval(_lwb, rhs._upb, span(boundtype(), rhs.boundtype()));
-    }
+	//==========================================================================
+	//= Intersection
+	//==========================================================================
 
+	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
+    void intersect(interval& isec, const interval& x2)const;
+	
+	//==========================================================================
+	//= Representation
+	//==========================================================================
 	
 	/** Interval as string */
     const std::string as_string()const;
 
 
+	/** What type is the interval?
+\code
+interval.is(closed_bounded); //[x, y] a closed interval
+interval.is(right_open);     //[x, y) a right-open interval (also left-closed interval)
+interval.is(left_open);      //(x, y] a left-open interval  (also right-closed interval)
+interval.is(open_bounded);   //(x, y) an open interval
+\endcode
+	*/
+    bool is(bound_type bounded)const { return _boundtype == bounded; }
 
-    /** First (smallest) element of the interval */
-    DomainT first()const;
-    /** Last (largest) element of the interval */
-    DomainT last()const;
+	/** What bound type is the left interval border? 	
+\code
+interval.is_left(closed_bounded); //[x, y] or [x, y)
+interval.is_left(open_bounded);   //(x, y] or (x, y)
+\endcode
+	*/
+	bool is_left(bound_type bounded)const
+	{
+		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
+		return ((_boundtype & right_open)>>1) == (bounded>>1); 
+	}
+
+	/** What bound type is the right interval border? 	
+\code
+interval.is_right(closed_bounded); //[x, y] or (x, y]
+interval.is_right(open_bounded);   //[x, y) or (x, y)
+\endcode
+	*/
+	bool is_right(bound_type bounded)const
+	{
+		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
+		return ((_boundtype & left_open) == (bounded>>1)); 
+	}
+
+
+    /** There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common */
+    bool touches(const interval& x2)const;
+
+    /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
+    bool exclusive_less(const interval& x2)const;
+
+	/** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
+    interval& set(const DomainT& low, const DomainT& up, bound_type bounds) 
+    { _lwb=low; _upb=up; _boundtype=bounds; return *this; }
 
     /** Transforms the interval to the bound-type <tt>bounded</tt> without
         changing it's content. Requires Integral<domain_type>. 

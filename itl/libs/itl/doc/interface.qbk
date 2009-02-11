@@ -461,6 +461,8 @@ overloaded implementations for the function of that row is shown.
 [[['*Range*]]                                  [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[`domain_type T::lower()const`]               [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
 [[`domain_type T::upper()const`]               [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[`domain_type T::first()const`]               [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
+[[`domain_type T::last()const`]                [1]       [1]      [1]     [ ]      [ ]      [ ]      [ ]]
 [[['*Selection*]]                              [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[`J T::find(const domain_type&)`]             [ ]       [2]      [2]     [2]      [2]      [2]      [2]]
 [[`codomain_type& operator[] (const domain_type&)`][ ]    [ ]      [??]     [ ]      [1]      [ ]      [1]]

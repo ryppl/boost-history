@@ -23,57 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 namespace boost{namespace itl
 {
 
-//JODO update documentation (all invterval containers; template parameters have changed)
 /// Implements a set as a set of intervals (base class)
-/**    
-    Abstract template-class <b>interval_base_set</b> 
-    implements a set as a set of intervals
-
-    Template parameter <b>DomainT</b>: The set's domain-type. Type of the 
-    set's elements.
-
-    Suitable as domain types are all datatypes that posess a partial order.
-    In particular all discrete atomic datatypes like <tt>int, short, long</tt> and
-    atomic pseudo-continuous datatypes <tt>float, double</tt> may be instantiated.
-    
-      Template parameter <b>Interval=itl::interval</b>: Type of interval used
-    to implement the set. The default <b>itl::interval</b> uses the
-    interval class template that comes with this library. Own implementation of interval
-    classes are possible (but not trivial).
-
-    <b>interval_base_set</b> implements a set <tt>set<DomainT></tt> as a set of intervals
-    <tt>set<interval<DomainT>></tt>.
-  
-    interval_base_set<DomainT> can thus be used like a set. As it is known from mathematics
-    the union over a set of intervls is a set itself.
-
-    <b>Class <tt>interval_base_set</tt> yields the following benefits: </b>
-  
-    <ul>
-        <li> 
-            A set of intervals is conceived as a set. The complexity involved with
-            operations on intervals and sets of intervals is encapsulated.
-            The user of the class who
-            wants to perform set operations on sets of intervals is no more concerned
-            with questions of overlapping, joining and bordering intervals.
-        <li>
-            <b>interval_base_set</b> gives an efficient implementation of sets consisting
-            of larger contiguous chunks. Very large, even uncountably infinite sets of
-            elements can be represented in a compact way and handled efficiently.
-    </ul>
-
-    <b>Restrictions: </b>
-    
-    A small number of functions can only be used for <b>discrete</b> domain datatypes 
-    (<tt>short, int, Date</tt> etc.) that implement operators <tt>++</tt> and <tt>--</tt>.
-
-    These functions are tagged in the documentation. Using such functions
-    for continuous domain datatypes yields compiletime errors. C.f. getting
-    the <tt>first()</tt> element of a left open interval makes sense for intervals of
-    int but not for intervals of double.
-
-    @author  Joachim Faulhaber
-*/
 template 
 <
     typename             SubType,
@@ -192,7 +142,7 @@ public:
     void swap(interval_base_set& x) { _set.swap(x._set); }
 
 	//==========================================================================
-	//= Emptieness, containmnet
+	//= Emptieness, containment
 	//==========================================================================
 
     /// sets the container empty
@@ -233,7 +183,50 @@ public:
 		return Interval_Set::is_contained_in(*this, super);
 	}
 
+	//==========================================================================
+	//= Size
+	//==========================================================================
 
+    /** Number of elements in the set (cardinality). 
+        Infinite for continuous domain datatyps    */
+    size_type cardinality()const;
+
+    /// An interval set's size is it's cardinality
+    size_type size()const { return cardinality(); }
+
+    /// The length of the interval container which is the sum of interval lenghts
+    difference_type length()const;
+
+    /// Number of intervals which is also the size of the iteration over the object
+    std::size_t interval_count()const { return _set.size(); }
+
+    /// Size of the iteration over this container
+    std::size_t iterative_size()const { return _set.size(); }
+
+	//==========================================================================
+	//= Range
+	//==========================================================================
+
+    /// lower bound of all intervals in the object
+    DomainT lower()const 
+    { return empty()? interval_type().lower() : (*(_set.begin())).lower(); }
+    /// upper bound of all intervals in the object
+    DomainT upper()const 
+    { return empty()? interval_type().upper() : (*(_set.rbegin())).upper(); }
+
+    /** Smallest element of the set (wrt. the partial ordering on DomainT).
+        first() does not exist for continuous datatypes and open interval 
+		bounds. */
+    DomainT first()const { return (*(_set.begin())).first(); }
+
+    /** Largest element of the set (wrt. the partial ordering on DomainT).
+        last() does not exist for continuous datatypes and open interval 
+		bounds. */
+    DomainT last()const { return (*(_set.rbegin())).last(); }
+
+	//==========================================================================
+	//= Selection
+	//==========================================================================
 
 	/// Find the interval value pair, that contains element \c x
     const_iterator find(const DomainT& x)const
@@ -242,38 +235,9 @@ public:
         return it; 
     }
 
-
-/** @name E: Bounds and other selectors
-    */
-//@{ 
-    /// lower bound of all intervals in the set
-    DomainT lower()const 
-    { return empty()? interval_type().lower() : (*(_set.begin())).lower(); }
-    /// upper bound of all intervals in the set
-    DomainT upper()const 
-    { return empty()? interval_type().upper() : (*(_set.rbegin())).upper(); }
-
-    iterator lower_bound(const value_type& interval)
-    { return _set.lower_bound(interval); }
-
-    iterator upper_bound(const value_type& interval)
-    { return _set.upper_bound(interval); }
-
-    const_iterator lower_bound(const value_type& interval)const
-    { return _set.lower_bound(interval); }
-
-    const_iterator upper_bound(const value_type& interval)const
-    { return _set.upper_bound(interval); }
-
-    /// number of intervals
-    std::size_t interval_count()const { return _set.size(); }
-    std::size_t iterative_size()const { return _set.size(); }
-//@}
-
-
-//-----------------------------------------------------------------------------
-/** @name G.add: Addition */
-//@{
+	//==========================================================================
+	//= Addition
+	//==========================================================================
 
     /// Add a single element \c x to the set
     SubType& add(const DomainT& x) 
@@ -283,11 +247,9 @@ public:
     SubType& add(const value_type& x) 
     { that()->add_(x); return *that(); }
 
-//@}
-
-//-----------------------------------------------------------------------------
-/** @name G.sub: Subtraction */
-//@{
+	//==========================================================================
+	//= Subtraction
+	//==========================================================================
 
     /// Subtract a single element \c x from the set
     SubType& subtract(const DomainT& x) 
@@ -297,19 +259,10 @@ public:
     SubType& subtract(const value_type& x) 
     { that()->subtract_(x); return *that(); }
 
-    ///// Subtract a single element \c x from the set
-    //interval_base_set& operator -= (const DomainT& x) 
-    //{ subtract(x); return *this; }
+	//==========================================================================
+	//= Insertion, erasure
+	//==========================================================================
 
-    ///// Subtract an interval of elements \c x from the set
-    //interval_base_set& operator -= (const value_type& x)
-    //{ that()->subtract(x); return *this; }
-
-//@}
-
-//-----------------------------------------------------------------------------
-/** @name G.ins&ers: Insertion and erasure  */
-//@{
     /// Insert an element \c x into the set
     SubType& insert(const DomainT& x) 
     { return add(interval_type(x)); }
@@ -325,28 +278,11 @@ public:
     /// Erase an interval of element \c x from the set
     SubType& erase(const value_type& x) 
     { return subtract(x); }
-//@}
 
-//-----------------------------------------------------------------------------
-/** @name G.sect: Intersection */
-//@{
+	//==========================================================================
+	//= Intersection
+	//==========================================================================
 
-    /*JODO DOC Intersection with interval x; The intersection is assigned to <tt>section</tt>. 
-    
-        Intersection also serves a generalized <tt>find</tt>-function to search
-        for intervals in the set:
-
-        <tt>ItvSetT<int> x, sec; interval<int> i; fill x; fill i;</tt>
-
-        <tt>x.intersect(sec,i);</tt> 
-        
-        If <tt>i</tt> is an interval of <tt>x</tt>, then 
-        
-        <tt>sec.nOfIntervals()==1</tt> and <tt>*(sec.begin())==x</tt> 
-    */
-    //CL void intersect(interval_base_set& section, const value_type& x)const;
-
-    //JODO DOC; welche intersect-varianten kann ich ganz los werden.
     void add_intersection(interval_base_set& section, const domain_type& x)const
 	{ add_intersection(section, interval_type(x)); }
 
@@ -366,6 +302,10 @@ public:
     )const;
 
 
+	//==========================================================================
+	//= Symmetric difference
+	//==========================================================================
+
     SubType& flip(const domain_type& x)
 	{ return flip(interval_type(x)); }
 
@@ -379,32 +319,10 @@ public:
     >
     SubType& flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand);
 
+	//==========================================================================
+	//= Iterator related
+	//==========================================================================
 
-    //JODO doku
-    /** Perform intersection of <tt>*this</tt> and <tt>x</tt>; assign result
-        to <tt>section</tt>
-    */
-
-    /** Perform intersection of <tt>*this</tt> and <tt>x</tt>; assign result
-        to <tt>*this</tt>
-
-        Aufruf <tt>x &= y</tt> bedeutet <tt>x = x geschnitten mit y </tt>
-    */
-//@}
-
-//-----------------------------------------------------------------------------
-/** @name G.jodo: JODO */
-
-    /// Join bordering intervals    
-    interval_base_set& join();
-
-//@}
-
-
-
-/** @name I: Interval iterators
-    */
-//@{
     ///
     iterator begin() { return _set.begin(); }
     ///
@@ -421,48 +339,28 @@ public:
     const_reverse_iterator rbegin()const { return _set.rbegin(); }
     ///
     const_reverse_iterator rend()const   { return _set.rend(); }
-//@}
 
+    iterator lower_bound(const value_type& interval)
+    { return _set.lower_bound(interval); }
 
+    iterator upper_bound(const value_type& interval)
+    { return _set.upper_bound(interval); }
 
-/** @name S: String representation
-    */
-//@{
-    /// Interval-set as string
-    const std::string as_string()const
-    { std::string res(""); const_FOR_IMPL(it) res += (*it).as_string(); return res; }
-//@}
+    const_iterator lower_bound(const value_type& interval)const
+    { return _set.lower_bound(interval); }
 
-    
-/** @name T: For discrete domain datatypes only that implement operators <tt>++</tt> 
-        and <tt>--</tt>
-    */
-//@{
-    /** Smallest element of the set (wrt. the partial ordering on DomainT).
-        first() does not exist for continuous datatypes and open interval bounds.
-    */
-    DomainT first()const { return (*(_set.begin())).first(); }  // JODO NONCONT
+    const_iterator upper_bound(const value_type& interval)const
+    { return _set.upper_bound(interval); }
 
-    /** Largest element of the set (wrt. the partial ordering on DomainT).
-        first() does not exist for continuous datatypes and open interval bounds.
-    */
-    DomainT last()const { return (*(_set.rbegin())).last(); } // JODO NONCONT
 
 	//==========================================================================
-	//= Size
+	//= Morphisms
 	//==========================================================================
+	
+    /** Join bordering intervals */
+    interval_base_set& join();
 
-    /** Number of elements in the set (cardinality). 
-        Infinite for continuous domain datatyps    */
-    size_type cardinality()const;
-
-    /// An interval set's size is it's cardinality
-    size_type size()const { return cardinality(); }
-
-    difference_type length()const;
-
-    /**    Set interval bounds to the type <tt>bt</tt> for intervals in the set.
-
+	/** Set interval bounds to the type <tt>bt</tt> for intervals in the set.
         Interval bounds of different types are created by opeations on
         interval sets. This function allows to reset them uniformly without,
         of course, changing their value. This is only possible for discrete
@@ -470,8 +368,19 @@ public:
     */
 	void uniform_bounds(itl::bound_type bounded);
 
-//@}
 
+	//==========================================================================
+	//= Representation
+	//==========================================================================
+	
+    /** Interval container's string representation */
+    const std::string as_string()const
+    { std::string res(""); const_FOR_IMPL(it) res += (*it).as_string(); return res; }
+
+    
+	//==========================================================================
+	//= Algorithm unifiers
+	//==========================================================================
 
     template<typename IteratorT>
     static const key_type& key_value(IteratorT& value_){ return (*value_); }
