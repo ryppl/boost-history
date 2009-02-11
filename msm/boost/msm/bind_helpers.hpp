@@ -1,6 +1,3 @@
-#ifndef BIND_HELPERS_H
-#define BIND_HELPERS_H
-
 // Copyright 2008 Christophe Henry
 // henry UNDERSCORE christophe AT hotmail DOT com
 // This is an extended version of the state machine available in the boost::mpl library
@@ -10,7 +7,11 @@
 // under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
+
+#ifndef BOOST_MSM_BIND_HELPERS_H
+#define BOOST_MSM_BIND_HELPERS_H
+
+#include <functional>
 
 namespace boost { namespace msm
 {
@@ -35,4 +36,4 @@ namespace boost { namespace msm
 	    }
     };
 } } //boost::msm
-#endif //BIND_HELPERS_H
+#endif //BOOST_MSM_BIND_HELPERS_H

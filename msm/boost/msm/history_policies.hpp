@@ -1,6 +1,3 @@
-#ifndef HISTORY_POLICIES_H
-#define HISTORY_POLICIES_H
-
 // Copyright 2008 Christophe Henry
 // henry UNDERSCORE christophe AT hotmail DOT com
 // This is an extended version of the state machine available in the boost::mpl library
@@ -10,7 +7,12 @@
 // under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
+
+#ifndef BOOST_MSM_HISTORY_POLICIES_H
+#define BOOST_MSM_HISTORY_POLICIES_H
+
+#include <vector>
+#include <boost/mpl/contains.hpp>
 
 namespace boost { namespace msm
 {
@@ -87,7 +89,7 @@ public:
     template <class Event>
 	std::vector<int>& history_entry(Event const&)
     {
-		if (mpl::contains<Events,Event>::value)
+        if ( ::boost::mpl::contains<Events,Event>::value)
 		{
 		    return m_currentStates;
 	    }
@@ -100,4 +102,4 @@ private:
 };
 
 } }//boost::msm
-#endif //HISTORY_POLICIES_H
+#endif //BOOST_MSM_HISTORY_POLICIES_H

@@ -1,6 +1,3 @@
-#ifndef TOOLS_H
-#define TOOLS_H
-
 // Copyright 2008 Christophe Henry
 // henry UNDERSCORE christophe AT hotmail DOT com
 // This is an extended version of the state machine available in the boost::mpl library
@@ -10,9 +7,14 @@
 // under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
-//
+
+#ifndef BOOST_MSM_TOOLS_H
+#define BOOST_MSM_TOOLS_H
+
+
 #include <string>
-#include "metafunctions.hpp"
+#include <iostream>
+#include <boost/msm/metafunctions.hpp>
 
 namespace boost { namespace msm
 {
@@ -62,4 +64,4 @@ struct display_type
 };
 
 } } //boost::msm
-#endif //TOOLS_H
+#endif //BOOST_MSM_TOOLS_H
