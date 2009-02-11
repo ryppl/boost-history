@@ -2520,28 +2520,36 @@ namespace boost
           }
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::x_major_value_labels_side(int cmd)
-          { //! Set the side for X ticks major value labels.
-            derived().x_ticks_.major_value_labels_side_ = cmd;
-            return derived();
+          Derived& axis_plot_frame<Derived>::x_major_value_labels_side(int place)
+          { /*! Position of labels for major ticks on horizontal X axis line.
+               \arg \c place > 0 labels to left of Y axis line (default),
+               \arg \c place = 0 (false) no major tick labels on Y axis.
+               \arg \c place > 0 labels to right of Y axis line.
+            */
+            derived().x_ticks_.major_value_labels_side_ = place;
+            return derived(); // \return reference to svg_2d_plot to make chainable.
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_major_value_labels_side()
-          { //! Get the side for X ticks major value labels.
+          { //! \return the side for X ticks major value labels.
             return derived().x_ticks_.major_value_labels_side_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_label_rotation(rotate_style rot)
-          { //! Set rotation for X ticks major value labels.
+          { /*! Set rotation for X ticks major value labels. (Default horizontal).
+               \see rotate_style
+            */
             derived().x_ticks_.label_rotation_ = rot;
             return derived();
           }
 
           template <class Derived>
           rotate_style axis_plot_frame<Derived>::x_major_label_rotation()
-          { //! Get rotation for X ticks major value labels.
+          { /*! \return rotation for X ticks major value labels.
+                \see rotate_style
+             */
             return derived().x_ticks_.label_rotation_;
           }
 

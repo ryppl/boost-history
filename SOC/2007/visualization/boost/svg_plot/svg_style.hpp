@@ -1103,9 +1103,9 @@ public:
     // Other data can be changed by set functions.
 
     // Initialize all private data.
-    // These are the defaults.
-    //major_interval_(2.), // x stride between major ticks & value label.
-    //num_minor_ticks_(4), // suits: major 0, minor 2, 4, 6, 8, major 10
+    // These are the plot defaults.
+    // major_interval_(2.), // x stride between major ticks & value label.
+    // num_minor_ticks_(4), // suits: major 0, minor 2, 4, 6, 8, major 10
     minor_interval_(0), //!< Calculated from x & y_num_minor_ticks_
     // but given a value here for safety.
     major_tick_color_(black), // line stroke color.
