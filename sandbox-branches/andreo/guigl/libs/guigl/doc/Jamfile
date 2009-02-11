@@ -1,0 +1,65 @@
+#==================================---------------------------------------------
+#   Copyright 2008 Stjepan Rajko
+#  
+#   Distributed under the Boost Software License, Version 1.0.
+#   (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#----------------------------------------------===============================*/
+
+
+project boost/guigl/doc ;
+
+import boostbook : boostbook ;
+using quickbook ;
+
+local loc = [ path.native [ path.pwd ] ] ;
+
+xml guigl_xml : guigl.qbk ;
+
+doxygen guigl_doxygen
+   :
+      [ glob $(TOP)/boost/guigl/window.hpp ]
+      [ glob $(TOP)/boost/guigl/widget/button.hpp ]
+      [ glob $(TOP)/boost/guigl/widget/slider.hpp ]
+      [ glob $(TOP)/boost/guigl/view/active_colored.hpp ]
+      [ glob $(TOP)/boost/guigl/view/clickable.hpp ]
+      [ glob $(TOP)/boost/guigl/view/draggable.hpp ]
+      [ glob $(TOP)/boost/guigl/view/solid_background.hpp ]
+   :
+        <doxygen:param>TAB_SIZE=4
+        <doxygen:param>EXAMPLE_PATH=../test
+        <doxygen:param>EXAMPLE_PATH=../example
+        <doxygen:param>STRIP_FROM_PATH=$(TOP)
+        <doxygen:param>STRIP_FROM_INC_PATH=$(TOP)
+        <doxygen:param>EXTRACT_ALL=NO
+        <doxygen:param>HIDE_UNDOC_MEMBERS=YES
+        <doxygen:param>INHERIT_DOCS=YES
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=$(TOP)
+        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+        <doxygen:param>PREDEFINED=DOXYGEN_DOCS_BUILD
+   ;
+
+boostbook standalone
+   :
+      guigl_xml
+      guigl_doxygen
+    :
+        # pull in the online .css and images
+        <xsl:param>project.root=http://dancinghacker.com
+        # without the next line, build complains
+        <xsl:param>annotation.support=1
+        # pulled this from the doc_test Jamfile
+        <xsl:param>quickbook.source.style.show="'true'"
+        # formatting options
+        <xsl:param>chunk.first.sections=1
+        <xsl:param>chunk.section.depth=10
+        <xsl:param>toc.section.depth=4
+        <xsl:param>toc.max.depth=2
+        <xsl:param>generate.section.toc.level=4
+    ;
+
+install png : [ glob *.png ] : <location>html ;
