@@ -1,4 +1,14 @@
-// auto_boxplot.cpp
+/*! \file auto_boxplot.cpp
+
+   \brief 
+    An example to demonstrate boxplot settings, including *auto-scaling*. See also 
+    \example auto_boxcontainers.cpp
+    for an example autoscaling with multiple data series.
+    \example demo_boxplot.cpp for a wider range of use.
+
+  \date 11 feb 2009
+  \author Paul A Bristow
+/*
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
@@ -7,10 +17,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate boxplot settings, including *auto-scaling*.
-// See auto_boxcontainers.cpp for an example autoscaling with multiple data series.
-// See also demo_boxplot.cpp for a wider range of use.
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can

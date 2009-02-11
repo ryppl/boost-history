@@ -120,8 +120,8 @@ void plot(const std::string& title, const std::string& file,
           .plot_border_color(magenta)
           .x_label_on(true)
           .y_label_on(true)
-          .y_major_value_labels_side(left_side)
-          .x_major_value_labels_side(left_side)
+          .y_major_labels_side(left_side)
+          .x_major_labels_side(left_side)
           //.legend_title("Function")
           .legend_title("Unicode &#x3A9;&#x3A6;")
           .legend_title_font_size(16);
@@ -193,14 +193,14 @@ void plot(const std::string& title, const std::string& file,
   my_plot.y_ticks_on_window_or_axis(0); // ticks on axes.
 
   // Which side of axis line or plot window the value labels go.
-  //my_plot.x_major_value_labels_side(0); // NO value labels.
-  //my_plot.y_major_value_labels_side(0); // NO value labels.
+  //my_plot.x_major_labels_side(0); // NO value labels.
+  //my_plot.y_major_labels_side(0); // NO value labels.
 
-  //my_plot.x_major_value_labels_side(top_side); // Top side value labels.
-  //my_plot.x_major_value_labels_side(bottom_side); // Bottom side value labels (default).
-  //my_plot.y_major_value_labels_side(no_labels); // NO value labels.
-  //my_plot.y_major_value_labels_side(right_side); // Right side of axis value labels.
-  //my_plot.y_major_value_labels_side(left_side); // Left side value labels (default).
+  //my_plot.x_major_labels_side(top_side); // Top side value labels.
+  //my_plot.x_major_labels_side(bottom_side); // Bottom side value labels (default).
+  //my_plot.y_major_labels_side(no_labels); // NO value labels.
+  //my_plot.y_major_labels_side(right_side); // Right side of axis value labels.
+  //my_plot.y_major_labels_side(left_side); // Left side value labels (default).
 
   //my_plot.x_major_label_rotation(rotate_style(x_rotation));// Use this plot function's defaults.
   //my_plot.x_major_label_rotation(horizontal); // svg_2d_plot default.
@@ -356,7 +356,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -400,7 +400,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -493,7 +493,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -537,7 +537,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -630,7 +630,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -674,7 +674,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -767,7 +767,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -811,7 +811,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -904,7 +904,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -948,7 +948,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -1041,7 +1041,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -1085,7 +1085,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -1178,7 +1178,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -1222,7 +1222,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10
@@ -1315,7 +1315,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units 
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on true
@@ -1359,7 +1359,7 @@ y_major_grid_on true
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 2
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  10

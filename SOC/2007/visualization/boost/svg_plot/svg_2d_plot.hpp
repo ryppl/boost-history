@@ -56,8 +56,8 @@ namespace boost
     class svg_2d_plot_series
     { /*! \class boost::svg::svg_2d_plot_series
         \brief Holds a series of 2D data values (points) to be plotted.
-        \details Data values are sorted into normal and 'at limits'
-          - NaN, infinity or too small or too large.\n\n
+        \details Data values are sorted into normal and 'at limits':
+          NaN, infinity or too small or too large.\n\n
           multimap is used rather than vector of pairs because
           multimap sorts and ensures that lines joining data points
           are unaffected by the order in which data is presented.
@@ -71,12 +71,12 @@ namespace boost
       std::multimap<double, double> series; //!< Normal 'OK to plot' data values.
       std::multimap<double, double> series_limits; //!< 'limit' values: too big or small, or NaN.
 
-      std::string title_; // Title of data series (to show on legend using legend style).
-      plot_point_style point_style_; // circle, square...
-      plot_point_style limit_point_style_; // Default is cone pointing down.
-      plot_line_style line_style_;
-      bar_style bar_style_;
-      histogram_style histogram_style_;
+      std::string title_; //!< Title of data series (to show on legend using legend style).
+      plot_point_style point_style_; //!< Data point marker like circle, square...
+      plot_point_style limit_point_style_; //!< At limit data point marker. Default is cone pointing down.
+      plot_line_style line_style_; //!< Style (color, width...) of line joining data points.
+      bar_style bar_style_; //!< Style of bar used in histograms.
+      histogram_style histogram_style_; //!< Style of histogram.
 
       // Constructor.
       template <class T>  // T an STL container: for example: multimap.
@@ -119,11 +119,12 @@ namespace boost
 
    // svg_2d_plot_series constructor.
 
-  template <class T>  // T an STL container: for example: multimap.
-  svg_2d_plot_series::svg_2d_plot_series(T begin, T end, // of data series.
-    std::string title) // Title of data series.
+  template <class T>  // \tparam T an STL container: for example: multimap.
+  svg_2d_plot_series::svg_2d_plot_series(T begin, //! \param begin of data series.
+    T end, //! \param end of data series.
+    std::string title) //! \param std::string title Title of data series.
     :
-    title_(title),
+    title_(title), //!< Title of a series of data values.
     // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
     // int size = 10, point_shape shape = round, const std::string& symbols = "X")
     point_style_(black, blank, 10, round), // Default point style.
@@ -147,37 +148,37 @@ namespace boost
   } // svg_2d_plot_series
 
   svg_2d_plot_series& svg_2d_plot_series::fill_color(const svg_color& col_)
-  { // Data series point marker fill color.
+  { //! Set data series point marker fill color.
     point_style_.fill_color_ = col_;
     return *this;
   }
 
    svg_2d_plot_series& svg_2d_plot_series::stroke_color(const svg_color& col_)
-  { // Data series point marker stroke color.
+  { //! Set Data series point marker stroke color.
     point_style_.stroke_color_ = col_;
     return *this;
   }
 
   svg_2d_plot_series& svg_2d_plot_series::shape(point_shape shape_)
-  { // Data series point marker shape.
+  { //! Set Data series point marker shape.
     point_style_.shape_ = shape_;
     return *this;
   }
 
   svg_2d_plot_series& svg_2d_plot_series::size(int size_)
-  { // Data series point marker size.
+  { //! Set Data series point marker size.
     point_style_.size_ = size_;
     return *this;
   }
 
   svg_2d_plot_series& svg_2d_plot_series::line_color(const svg_color& col_)
-  { // Data series line color.
+  { //! Set Data series line color.
     line_style_.stroke_color_ = col_;
     return *this;
   }
 
   svg_2d_plot_series& svg_2d_plot_series::area_fill(const svg_color& col_)
-  { // Data series area fill color.
+  { //! Set Data series area fill color.
     line_style_.area_fill_ = col_;
     // Note that area_fill(false) will produce a *blank* color, and so NO FILL.
     // area_fill(blank) will produce the default non-blank color (black?).
@@ -185,129 +186,130 @@ namespace boost
   }
 
   svg_2d_plot_series& svg_2d_plot_series::line_width(double wid_)
-  {  // Data series line width.
+  { //! Set data series line width.
     line_style_.width_ = wid_; // Sets legend line width too.
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::line_on(bool on_)
-  {
+  { //! Set to draw line linking data points.
     line_style_.line_on_ = on_;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::bezier_on(bool on_)
-  {
+  {//! Set to draw bezier curved line linking data points.
     line_style_.bezier_on_ = on_;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::bar_opt(bar_option opt_)
-  {
+  { //! Set bar option.
     bar_style_.bar_option_ = opt_;
-    return *this;  // \return reference to svg_2d_plot_series to make chainable.
+    return *this;  //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::bar_width(double wid_)
-  {
+  { //! Set Bar width.
     bar_style_.width_ = wid_;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::bar_color(const svg_color& col)
-  {
+  {//! Set bar color.
     bar_style_.color_ = col;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   svg_2d_plot_series& svg_2d_plot_series::bar_area_fill(const svg_color& col)
-  {
+  { //! \param col Set bar area fill color.
     bar_style_.area_fill_ = col;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
 
   plot_line_style svg_2d_plot_series::line_style()
-  {
+  { //! \return line_style for line joining data points..
     return line_style_;
   }
 
   double svg_2d_plot_series::line_width()
-  {
+  { //! \return width of line joining data points.
     return line_style_.width_;
   }
 
   bool svg_2d_plot_series::bezier_on()
-  {
+  { //! \return true if line joing data points should be a bezier curve.
     return svg_2d_plot_series::line_style_.bezier_on_;
   }
 
   bool svg_2d_plot_series::line_on()
-  {
+  { //! \return true if a line is to join data points.
     return svg_2d_plot_series::line_style_.line_on_;
   }
 
  svg_color& svg_2d_plot_series::line_color()
-  {
+  { //! \return color of a line to join data points.
     return line_style_.stroke_color_;
   }
 
   svg_color& svg_2d_plot_series::area_fill()
-  {
+  { //! \return area_fill info below line(s) joining data points.
     return line_style_.area_fill_;
   }
 
   int svg_2d_plot_series::size()
-  {
+  { //! \return size of data point marker(s).
     return point_style_.size_;
   }
 
   point_shape svg_2d_plot_series::shape()
-  {
+  { //! \return shape of data point marker(s).
     return point_style_.shape_;
   }
 
   bar_option svg_2d_plot_series::bar_opt()
-  {
+  { //! \return bar options.
     return bar_style_.bar_option_;
   }
 
   double svg_2d_plot_series::bar_width()
-  {
+  { //! \return bar width
     return bar_style_.width_;
   }
 
   svg_color& svg_2d_plot_series::bar_color()
-  {
+  {  //! \return bar color.
     return bar_style_.color_;
   }
 
   svg_color& svg_2d_plot_series::bar_area_fill()
-  {
+  { //! \return bar area fill.
     return bar_style_.area_fill_;
   }
 
   svg_2d_plot_series& svg_2d_plot_series::histogram(histogram_option opt_)
-  { // column = -1, // Bar or row line (stroke width) horizontal to Y-axis.
-    // no_histogram = 0,
-    // bar = +1 // Stick or column line (stroke width) vertical to X-axis.
+  { /*! 
+      \param opt_ no_histogram = 0,
+      \param opt_ bar = +1 // Stick or column line (stroke width) vertical to X-axis.
+    */
     histogram_style_.histogram_option_ = opt_;
-    return *this; // \return reference to svg_2d_plot_series to make chainable.
+    return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
   // end svg_2d_plot_series Member Functions Definitions.
 
     class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
     {  /*! \class boost::svg::svg_2d_plot
     \brief Provides svg_2d_plot data and functions to create plots.
-        Very many functions allow very fine control of the
-        appearance and layout of plots, data markers and lines.
-    \details See also svg_2d_plot_series to allow data values to be added.
+       Very many functions allow very fine control of the
+       appearance and layout of plots, data markers and lines.
+    \details
+       See also svg_2d_plot_series to allow data values to be added.
+       svg_2d_plot allows us to store plot state locally in svg_plot.
+       We don't store it in "svg" because transforming the points after they are
+       written to the document would be difficult. We store the Cartesian
+       coordinates locally and transform them before we write them.\n
 
-    svg_2d_plot allows us to store plot state locally in svg_plot.
-    We don't store it in "svg" because transforming the points after they are
-    written to the document would be difficult. We store the Cartesian
-    coordinates locally and transform them before we write them.\n
-
-    See also svg_1d_plot.hpp for 1-D version.
+       See also svg_1d_plot.hpp for 1-D version.
     */
      friend void show_plot_settings(svg_2d_plot&);
      friend svg_2d_plot_series;
@@ -320,127 +322,137 @@ namespace boost
       // and set & get accessor functions are named without _ suffix,
       // for example: border_margin() & border_margin(int).
 
-      double x_scale_; // Use by function transform()
-      double x_shift_; // to go from Cartesian to svg coordinates.
-      double y_scale_;
-      double y_shift_;
+      double x_scale_; //!< scale factor used by transform() to go from Cartesian to SVG coordinates.
+      double x_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates. 
+      double y_scale_; //!< scale factor used by transform() to go from Cartesian to SVG coordinates.
+      double y_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates. 
 
-      // Stored so as to avoid rewriting style information constantly.
-      svg image;
+      svg image; //!< Stored so as to avoid rewriting style information constantly.
 
-      double text_margin_; // Marginal space around text items like title,
-      // text_margin_ * font_size to get distance in svg units.
+      double text_margin_; //!< Marginal space around text items like title, text_margin_ * font_size to get distance in svg units.
 
-      text_style a_style_; // Defaults.
-      // text_style contains font size & type etc.
-      text_style title_style_;
-      text_style legend_style_;
-      text_style x_axis_label_style_;
-      text_style x_value_label_style_;
-      text_style y_axis_label_style_;
-      text_style y_value_label_style_;
-      text_style point_symbols_style_; // Used for data point marking.
-      text_element title_info_; // Plot title.
-      text_element legend_header_; // legend box header or title (if any).
-      text_element x_label_info_; // For example: "length"
-      text_element x_label_value_; // For example: "1.2" or "1.2e+001"
-      text_element y_label_info_; // For example: "volume"
-      text_element x_units_info_; // For example: "mm"
-      text_element y_units_info_; // 2-D only.
-      text_element y_label_value_; // For example: "1.2" or "1.2e+001"
+      text_style a_style_; //!< Defaults for text_style (contains font size & type etc).
+      text_style title_style_; //!< Style for plot title.
+      text_style legend_style_; //! Style for legend title and text.
+      text_style x_axis_label_style_; //!< Style for tick labels on X axis.
+      text_style x_value_label_style_; //!< Style for data point value labels on X axis.
+      text_style y_axis_label_style_; //!< Style for tick labels on Y axis.
+      text_style y_value_label_style_;//!< Style for data point value labels on Y axis.
+      text_style point_symbols_style_; //!< Style used for symbol marking a data point.
+      text_element title_info_; //!< Plot title text.
+      text_element legend_header_; //!< Legend box header or title (if any).
+      text_element x_label_info_; //!< X axis label text, for example: "length".
+      text_element x_label_value_; //!< X axis value text, for example: "1.2" or "1.2e+001"
+      text_element y_label_info_; //!< Y axis label text, for example: "volume".
+      text_element x_units_info_; //!< X axis units, for example: "mm".
+      text_element y_units_info_; //!<  Y axis units, for example: "min". (2-D only).
+      text_element y_label_value_; //!< Y axis value text, for example: "1.2" or "1.2e+001"
 
-      text_style value_style_; // Used for data point value label.
-      value_style x_values_style_; // Data point X value marking.
-      value_style y_values_style_; // Data point Y value marking.
-      //bool x_plusminus_on_; // http://en.wikipedia.org/wiki/Plus-minus_sign
-      //// Unicode &#0xB1; HTML &plusmn;
+      text_style value_style_; //!< Style used for data point value label.
+      value_style x_values_style_; //!< Data point X value marking.
+      value_style y_values_style_; //!< Data point Y value marking.
+      bool x_plusminus_on_; //!<  http://en.wikipedia.org/wiki/Plus-minus_sign Unicode \&\#0xB1; HTML \&plusmn;
 
-      //rotate_style y_value_label_rotation_; // Direction point Y value labels written.
-      //int y_value_precision_;
-      //std::ios_base::fmtflags y_value_ioflags_;
+      rotate_style y_value_label_rotation_; //!< Direction point Y value labels written (default horizontal).
+      int y_value_precision_; //!< std::ios precision used for Y value labels (default 3).
+      std::ios_base::fmtflags y_value_ioflags_; //!< std::iosflags used for Y vale labels (default ios::dec).
 
-      box_style image_border_; // rectangular border of all image width, color...
-      box_style plot_window_border_; // rectangular border of plot window width, color...
-      box_style legend_box_; // rectangular box of legend width, color...
+      box_style image_border_; //!< rectangular border box style of all image width, color...
+      box_style plot_window_border_; //!< rectangular border box style of plot window width, color...
+      box_style legend_box_; //!< rectangular box style of legend width, color...
 
- // TODO doubles also could be float?
-      double plot_left_;
-      double plot_right_;
-      double plot_top_;
-      double plot_bottom_;
+      // TODO doubles also could be float?
+      double plot_left_; //!< SVG X coordinate (pixels) of left side of plot window.
+      double plot_right_; //!< SVG X coordinate of right side of plot window.
+      double plot_top_; //!< SVG Y coordinate of top side of plot window.
+      double plot_bottom_; //!< SVG Y coordinate of bottom side of plot window.
 
       // enum legend_places{ nowhere, inside...}
-      legend_places legend_place_; // Place for any legend box.
-      double legend_width_; // Width of legend box (pixels).
-      double legend_height_; // Height of legend box (in pixels).
+      legend_places legend_place_; //!< Place for any legend box.
+      double legend_width_; //!< Width of legend box (pixels).
+      double legend_height_; //!< Height of legend box (in pixels).
       // Size of legend box is controlled by its contents,
       // but helpful to store computed coordinates.
-      double legend_left_; // Left of legend box.
-      double legend_top_; // Top of legend box.
+      double legend_left_; //!< Left of legend box.
+      double legend_top_; //!< Top of legend box.
       // Both optionally set by legend_top_left.
-      double legend_right_; // SVG Coordinates of right of legend box,
-      double legend_bottom_; // bottom of legend box.
-      size_t legend_longest_; // longest (both header & data) string in legend box,
+      double legend_right_; //!< SVG Coordinates of right of legend box,
+      double legend_bottom_; //!< SVG Coordinates of bottom of legend box.
+      size_t legend_longest_; //!< longest (both header & data) string in legend box.
+      // (used to calculate how big the legend box needs to be, and thus position of it and plot window).
 
-      axis_line_style x_axis_;
-      axis_line_style y_axis_;
+      axis_line_style x_axis_; //!< Style of X axis.
+      axis_line_style y_axis_; //!< Style of Y axis.
 
-      ticks_labels_style x_ticks_;
-      ticks_labels_style y_ticks_;
+      ticks_labels_style x_ticks_; //!< Style of X axis tick marks and labels.
+      ticks_labels_style y_ticks_; //!< Style of Y axis tick marks and labels.
 
-      bool title_on_; // Provide a title for the whole plot.
-      bool legend_on_; // Provide a legend box.
-      bool outside_legend_on_; // Legend box outside the plot window.
-      bool legend_lines_; // get/set by legend_lines(bool); data colored line type in legend box.
-      bool plot_window_on_; // Use a separate plot window (not whole image).
-      bool x_ticks_on_; // TODO check these are really useful.
-      bool y_ticks_on_;
-      bool x_values_on_; // If values of X data are shown.
-      bool y_values_on_; // If values of Y data are shown.
-      bool xy_values_on_; // If values of X & Y pairs are shown.
+      bool title_on_; //!< true if to display a title for the whole plot.
+      bool legend_on_; //!< true if to provide a legend box.
+      bool outside_legend_on_; //! true if legend box should be outside the plot window.
+      bool legend_lines_; //! true if to add a colored line for each data series in legend box.
+      bool plot_window_on_; //!< true if to use a separate plot window (not the whole image).
+      bool x_ticks_on_; //!< true if X axis to have ticks.
+      bool y_ticks_on_; //!< true if Y axis to have ticks.
+      bool x_values_on_; // If values of X data are shown (as 1.23).
+      bool y_values_on_; // If values of Y data are shown (as 3.45).
+      bool xy_values_on_; // If values of X & Y pairs are shown (as 1.23, 3.43).
 
-      int x_axis_position_;
-      int y_axis_position_;
+      int x_axis_position_; //!< Intersection with Y axis, or not.
+      int y_axis_position_; //!< Intersection with X axis, or not.
 
-      bool autoscale_check_limits_; // Whether to check autoscale values for infinity, NaN, max, min.
-      bool x_autoscale_; // Whether to use any X-axis autoscale values.
-      bool x_include_zero_; // If autoscaled, include zero.
-      int  x_min_ticks_;  // If autoscaled, set a minimum number of X ticks.
-      double x_tight_;
-      int  x_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+      bool autoscale_check_limits_; //!< true if to check autoscale values for infinity, NaN, max, min.
+      bool x_autoscale_; //!< true if to use any X-axis autoscale values.
+      bool x_include_zero_; //!< true if autoscaled, to include zero.
+      int  x_min_ticks_;  //!< If autoscaled, set a minimum number of X ticks.
+      double x_tight_; //!< Tolerance used by autoscale to avoid extra ticks.
+      int  x_steps_;  //!< true if autoscale to set any prescaling to multiple of decimal 1, 2, 5, 10 etc.
 
-      // Values calculated by scale_axis, and is used only if x_autoscale == true.
-      double x_auto_min_value_;
-      double x_auto_max_value_;
-      double x_auto_tick_interval_; // tick major interval.
-      int x_auto_ticks_; // Number of ticks.
+      double x_auto_min_value_; //!< Values calculated by scale_axis (used only if x_autoscale == true).
+      double x_auto_max_value_; //!< Values calculated by scale_axis (used only if x_autoscale == true).
 
-      bool y_autoscale_; // Whether to use any y_axis autoscale values.
-      bool y_include_zero_; // If autoscaled, include zero.
+      double x_auto_tick_interval_; //!< tick major interval.
+      int x_auto_ticks_; //!< Number of ticks.
+
+      bool y_autoscale_; //!< true if to use any y_axis autoscale values.
+      bool y_include_zero_; //!< true if autoscale to include zero.
       int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
-      double y_tight_;
-      int  y_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+      double y_tight_; //!< Tolerance used by autoscale to avoid extra ticks.
+      int  y_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
-        // Values calculated by scale_axis, and is used only if y_autoscale == true.
-      double y_auto_min_value_;
-      double y_auto_max_value_;
-      double y_auto_tick_interval_; // tick major interval.
-      int y_auto_ticks_; // Number of ticks.
+      double y_auto_min_value_; //!< Values calculated by scale_axis (used only if y_autoscale == true).
+      double y_auto_max_value_; //!< Values calculated by scale_axis (used only if y_autoscale == true).
+      double y_auto_tick_interval_; //!< tick major interval (calculated by Y autoscale).
+      int y_auto_ticks_; //!< Number of ticks (calculated by Y autoscale).
 
-      // Where we will be storing the data points (series) for transformation.
-      std::vector<svg_2d_plot_series> series; // Defined above.
+      std::vector<svg_2d_plot_series> series; //!< Store of data points (series) for transformation.
 
-      std::string plot_window_clip_; // = "clip_plot_window" id for clippath
-      // http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction
-      // clipping paths, which uses any combination of 'path', 'text' and basic shapes
-      // to serve as the outline where everything on the "inside" of the outline
-      // is allowed to show through but everything on the outside is masked out.
-      // So the plot_window_clip_ limits display to a plot_window rectangle.
+      std::string plot_window_clip_; /*!< = "clip_plot_window" id for clippath
+        http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction clipping paths,\n
+        which uses any combination of 'path', 'text' and basic shapes
+        to serve as the outline where everything on the "inside" of the outline
+        is allowed to show through but everything on the outside is masked out.
+        So the plot_window_clip_ limits display to a plot_window rectangle.
+      */
 
     public: // of class svg_2d_plot: public detail::axis_plot_frame<svg_2d_plot>
 
-      svg_2d_plot() // Constructor, including all the very many default plot options,
-        // some of which use some or all of the class defaults.
+      svg_2d_plot()
+        /*! Default constructor, including all the very many default plot options,
+            some of which use some or all of the style class defaults.\n
+        All these settings can be changed by chainable functions, for example:\n
+        \code
+svg_2d_plot my_plot;
+my_plot.background_color(ghostwhite) // Whole image.
+  .legend_border_color(yellow) // Just the legend box.
+  .legend_background_color(lightyellow)  // Fill color of the legend box.
+  .plot_background_color(svg_color(white)) // Just the plot window
+  .plot_border_color(svg_color(green)) // The border rectangle color.
+  .plot_border_width(1) // Thin border (SVG units, default pixels).
+  .title_color(red) // Title of whole image. 
+;
+        \endcode
+    */
         :
         // See documentation for default settings rationale.
         // text_styles:
@@ -499,8 +511,8 @@ namespace boost
         y_autoscale_(false),
         y_include_zero_(false), // If autoscaled, include zero on Y-axis.
         y_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
-        y_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
-        y_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+        y_steps_(0),  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
+        y_tight_(1e-6), //!< margin that point can lie outside top and bottom tick without triggering another interval and tick .
 
         // Used to transform Cartesian to SVG.
         x_scale_(1.), x_shift_(0.),
@@ -569,7 +581,7 @@ namespace boost
       // svg_2d_plot Member Functions.
 
       void set_ids()  // This only used once in constructor and should be inlined.
-      { // document ids for use in <g id = "PLOT_TITLE".../>
+      { //! document ids for use in <g id = "PLOT_TITLE".../>
         for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
         { // Order determines the painting order.
           image.g(i).id(detail::document_ids[i]);
@@ -577,16 +589,16 @@ namespace boost
       } //  void set_ids()
 
       void transform_pair(std::pair<double, double>& pt)
-      { // Transform both x and y from Cartesian to SVG coordinates.
-        // SVG image is 0, 0 at top left, Cartesian at bottom left.
+      { //! Transform both x and y from Cartesian to SVG coordinates.
+        //! SVG image is 0, 0 at top left, Cartesian at bottom left.
         transform_point(pt.first, pt.second);
       }
       void calculate_plot_window()
-      { // The plot window is used to set a clip path:
-        // this ensures that data points and lines (and anything else)
-        // outside this window are NOT drawn.
+      { //! The plot window is used to set a clip path:
+        //! this ensures that data points and lines (and anything else)
+        //! outside this window are NOT drawn.
 
-        // All calculation use svg units, pixels by default.
+        //! All calculation use svg units, pixels by default.
 
         // Start by assuming we can use all the svg image,
         // but reduce by the width of any image border.
@@ -866,7 +878,7 @@ namespace boost
       } // calculate_plot_window
 
       void draw_y_axis()
-      {
+      { //! Draw the Y axis line, grids and ticks with labels.
         double x;
         x = y_axis_.axis_; // Y-axis (x = 0) transformed into X SVG coordinates.
         // Perhaps to left or right of plot window if X values do not include zero.
@@ -985,7 +997,7 @@ namespace boost
       } // draw_y_axis
 
       void draw_y_label()
-      { // Draw vertical y_axis_ label, and optional y units.
+      { //! Draw a vertical Y axis label, and optional y units.
         // Y-label color is set in constructor thus:
         // image.g(detail::PLOT_Y_LABEL).style().stroke_color(black);
         // and changed using y_label_color(color);
@@ -1021,7 +1033,7 @@ namespace boost
       } // draw_y_label
 
       void draw_y_major_tick(double value, path_element& tick_path, path_element& grid_path)
-      { // Draw a Y axis major tick, tick value labels & grids.
+      { //! Draw a Y axis major tick, tick value labels & grids.
         double y(value); // for tick and/or grid.
         transform_y(y); // Cartesian to SVG coordinates.
         if((y < plot_top_ - 0.01) || (y > plot_bottom_ + 0.01))
@@ -1235,7 +1247,7 @@ namespace boost
       } // draw_y_major_tick
 
       void draw_y_minor_tick(double value, path_element& tick_path, path_element& grid_path)
-      { // Draw a Y-axis minor tick and optional grid.
+      { //! Draw a Y-axis minor tick and optional grid. (minor ticks do not have value labels).
         double x_left(0.); // Start on vertical Y axis line.
         double x_right(image.y_size()); // right edge of image.
         double y(value); // Tick position and value label,
@@ -1304,7 +1316,7 @@ namespace boost
       } // void draw_y_minor_tick
 
       void draw_straight_lines(const svg_2d_plot_series& series)
-      { // Straight line between data points (rather than a Bezier curve).
+      { //! Add straight line between data points (rather than a Bezier curve).
         double prev_x; // Previous data points.
         double prev_y;
         double temp_x(0.);
@@ -1371,7 +1383,7 @@ namespace boost
       } // draw_straight_lines
 
       void draw_bezier_lines(const svg_2d_plot_series& series)
-      {
+      { //! Add Bezier curve line between data points.
         g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
         g_ptr.style().stroke_color(series.line_style_.stroke_color_);
@@ -1447,7 +1459,7 @@ namespace boost
       } // draw_bezier_lines
 
       void draw_plot_lines()
-      { // Draw line through data series, Bezier curved or straight, or none.
+      { //! Draw line through data series, Bezier curved or straight, or none.
         for(unsigned int i = 0; i < series.size(); ++i)
         {
           if(series[i].line_style_.bezier_on_)
@@ -1465,7 +1477,7 @@ namespace boost
       } // draw_plot_lines
 
       void draw_plot_points()
-      { // Draw normal 'good' non-limit points.
+      { //! Draw normal 'good' non-limit points and then any 'at limits' points.
         double x(0.);
         double y(0.);
         for(unsigned int i = 0; i < series.size(); ++i)
@@ -1530,7 +1542,7 @@ namespace boost
       } //  void draw_plot_points()
 
       void draw_bars()
-      { // Draw normal bar chart for 'good' non-limit points.
+      { //! Draw normal bar chart for 'good' non-limit points.
         g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g(); // Moved up out of loop.
         double x(0.);
         double y(0.); // Cartesian coord y = 0.
@@ -1599,23 +1611,25 @@ namespace boost
       } //  void draw_bars()
 
       void draw_histogram()
-      { // Draw a histogram with variable width but contiguous bins.
-        // Histograms differ from bar charts in the the *area* denotes the value,
-        // whereas the bar *height* denotes the value for a bar chart.
-        // bin widths are provided from the X-axis data series values.
-        // The 1st data X-value provides the start of the 1st bin,
-        // the 2nd data X-value provides the end of the 1st bin,
-        // and the 1st Y-value the area of the 1st bin,
-        // and the start of the second bin, and so on, until the
-        // width of last bin is calculated from the last data point in series,
-        // that must have a zero area.  ? NaN
-        // Bins can be the same (most common) or different widths.
-        // Intervals must not overlap and bins must be adjacent.
-        // http://en.wikipedia.org/wiki/Histogram
+      { /*!
+         Draw a histogram with variable width but contiguous bins.
+         Histograms differ from bar charts in the the *area* denotes the value,
+         whereas the bar *height* denotes the value for a bar chart.
+         bin widths are provided from the X-axis data series values.
+         The 1st data X-value provides the start of the 1st bin,
+         the 2nd data X-value provides the end of the 1st bin,
+         and the 1st Y-value the area of the 1st bin,
+         and the start of the second bin, and so on, until the
+         width of last bin is calculated from the last data point in series,
+         that must have a zero area.  ? NaN
+         Bins can be the same (most common) or different widths.
+         Intervals must not overlap and bins must be adjacent.
+         http://en.wikipedia.org/wiki/Histogram
 
-        // Attempts to allow a row or horizontal were abandoned because of complications
-        // with the use of map which orders the x values providing the bins.
-        // Using the y values for the bins implies changing the Y axes labeling and scaling too.
+         Attempts to allow a row or horizontal were abandoned because of complications
+         with the use of map which orders the x values providing the bins.
+         Using the y values for the bins implies changing the Y axes labeling and scaling too.
+        */
 
         g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g(); // Moved up out of loop.
         for(unsigned int i = 0; i < series.size(); ++i)
@@ -1679,7 +1693,7 @@ namespace boost
       } //  void draw_histogram()
 
       void update_image()
-      {
+      { //! Draw the whole SVG image.
         clear_all();
         // svg paint rules are that later 'painting' writes over
         // previous painting, so the order of drawing is important.
@@ -1726,11 +1740,10 @@ namespace boost
         draw_histogram();
     } // void update_image()
 
-
     public: // Declarations of member functions (definitions in separate file).
 
       // All return *this to permit chaining, doucmented with
-      // \return reference to svg_2d_plot_series to make chainable.
+      //! \return reference to svg_2d_plot_series to make chainable.
 
       // write() has two flavors, a file and a ostream.
       // The file version opens an ostream, and calls the stream version.
@@ -1753,8 +1766,8 @@ namespace boost
       bool y_label_on();
       svg_2d_plot& x_label_on(bool cmd);
       bool x_label_on();
-      svg_2d_plot& y_major_labels_on(int place);
-      int y_major_labels_on();
+      svg_2d_plot& y_major_labels_side(int place);
+      int y_major_labels_side();
       svg_2d_plot& y_major_label_rotation(rotate_style rot);
       int y_major_label_rotation();
       svg_2d_plot& y_axis_width(double width);
@@ -1823,12 +1836,10 @@ namespace boost
       double y_minor_tick_width();
       svg_2d_plot& x_ticks_on_window_or_axis(int is);
       int x_ticks_on_window_or_axis();
-      svg_2d_plot& x_major_value_labels_side(int is);
-      int x_major_value_labels_side();
+      svg_2d_plot& x_major_labels_side(int is);
+      int x_major_labels_side();
       svg_2d_plot& y_ticks_on_window_or_axis(int is);
       int y_ticks_on_window_or_axis();
-      svg_2d_plot& y_major_value_labels_side(int is);
-      int y_major_value_labels_side();
       svg_2d_plot& y_ticks_left_on(bool cmd);
       bool y_ticks_left_on();
       svg_2d_plot& y_ticks_right_on(bool cmd);
@@ -1875,29 +1886,29 @@ namespace boost
   // Definition of member functions, (ready to be) externally defined in another (.ipp) file.
 
       axis_line_style& svg_2d_plot::x_axis()
-      { // \return true if horizontal X axis line to be drawn.
+      { //! \return true if horizontal X axis line to be drawn.
         return x_axis_;
       }
 
      axis_line_style&  svg_2d_plot::y_axis()
-      { // \return true if vertical Y axis line to be drawn.
+      { //! \return true if vertical Y axis line to be drawn.
         return y_axis_;
       }
 
       ticks_labels_style& svg_2d_plot::x_ticks()
-      { // \return true if ticks are to be marked on the X axis.
+      { //! \return true if ticks are to be marked on the X axis.
         return x_ticks_;
       }
 
       ticks_labels_style& svg_2d_plot::y_ticks()
-      {// \return true if ticks are to be marked on the Y axis.
+      { //! \return true if ticks are to be marked on the Y axis.
         return y_ticks_;
       }
 
       svg_2d_plot& svg_2d_plot::y_label_on(bool cmd)
       { // If Y axis name or label.
         y_axis_.label_on_ = cmd;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_label_on()
@@ -1906,27 +1917,27 @@ namespace boost
       }
 
       svg_2d_plot& svg_2d_plot::x_label_on(bool cmd)
-      {
+      {//! Set to include an X axis text label.
         x_axis_.label_on_ = cmd;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::x_label_on()
-      {
+      { //! \return true if to include an X axis text label.
         return x_axis_.label_on_;
       }
 
-      svg_2d_plot& svg_2d_plot::y_major_labels_on(int place)
+      svg_2d_plot& svg_2d_plot::y_major_labels_side(int side)
       { /*! Position of labels for major ticks on vertical Y axis line.
-           \arg \c place > 0 label to left of Y axis line (default),
-           \arg \c place = 0 (false) means no major tick labels on Y axis.
-           \arg \c place > 0 means to right of Y axis line.
+           \arg \c side > 0 label to left of Y axis line (default),
+           \arg \c side = 0 (false) means no major tick labels on Y axis.
+           \arg \c side > 0 means to right of Y axis line.
         */
-        y_ticks_.major_value_labels_side_ = place;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        y_ticks_.major_value_labels_side_ = side;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-      int svg_2d_plot::y_major_labels_on()
+      int svg_2d_plot::y_major_labels_side()
       { //! \return Position of labels (if any) for major ticks on vertical Y axis line.
         return y_ticks_.major_value_labels_side_;
       }
@@ -1937,63 +1948,65 @@ namespace boost
         \see rotate_style for possible values.
         */
         y_ticks_.label_rotation_ = rot;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_major_label_rotation()
-      {
+      { //! \return rotation of Y axis major tick labels.
         return  y_ticks_.label_rotation_ ;
       }
 
-
       svg_2d_plot& svg_2d_plot::y_axis_width(double width)
-      {
+      { //! Set width of Y axis line.
         image.g(detail::PLOT_Y_AXIS).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_axis_width()
-      {
+      {//! \return width of Y axis line.
         return image.g(detail::PLOT_Y_AXIS).style().stroke_width();
       }
 
       svg_2d_plot& svg_2d_plot::y_value_precision(int digits)
-      { // Precision of Y tick label values in decimal digits (default 3).
+      { //! Set precision of Y tick label values in decimal digits (default 3).
+        //!  code my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2); \endcode
         y_ticks_.value_precision_ = digits;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_value_precision()
-      { // Precision of Y tick label values in decimal digits (default 3).
+      { //! \return precision of Y tick value labels in decimal digits (default 3).
         return y_ticks_.value_precision_;
       }
 
-      svg_2d_plot& svg_2d_plot::y_value_ioflags( std::ios_base::fmtflags flags)
-      { // IO flags of Y tick label values (default 0X201).
+      svg_2d_plot& svg_2d_plot::y_value_ioflags(std::ios_base::fmtflags flags)
+      { //! set IO flags of Y tick label values (default 0X201 == dec).
+        //!  code my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2); \endcode
         y_ticks_.value_ioflags_ = flags;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_value_ioflags()
-      { // ALL stream ioflags for control of format of Y value labels.
+      { //! \return All stream ioflags for control of format of Y tick value labels.
         return y_ticks_.value_ioflags_;
       }
 
       svg_2d_plot& svg_2d_plot::y_labels_strip_e0s(bool cmd)
-      {
+      { //! If true then strip unnecessary zeros, signs from labels.
         y_ticks_.strip_e0s_ = cmd;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_labels_strip_e0s()
-      {
+      { //! \return true if to strip unnecessary zeros, signs from labels.
         return y_ticks_.strip_e0s_;
       }
 
       svg_2d_plot& svg_2d_plot::y_axis_color(const svg_color& col)
-      { // Set only stroke color.
+      { //! Set Y axis linecolor.
+        // set only stroke color.
         image.g(detail::PLOT_Y_AXIS).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_color()
@@ -2004,7 +2017,7 @@ namespace boost
       svg_2d_plot& svg_2d_plot::y_axis_label_color(const svg_color& col)
       { // Set stroke color.
         image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_label_color()
@@ -2014,85 +2027,85 @@ namespace boost
       }
 
       svg_2d_plot& svg_2d_plot::y_label_units_on(bool b)
-      {
+      { //! Set true to add units text to the Y axis label.
         y_axis_.label_units_on_ = b;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_label_units_on()
-      {
+      { //! \return true if to add units text to the Y axis label.
         return y_axis_.label_units_on_;
       }
 
       svg_2d_plot& svg_2d_plot::y_axis_value_color(const svg_color& col)
-      {
+      { //! Set color of Y axis value labels.
         image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
-        return *this;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_value_color()
-      { // Only return the stroke color.
+      { //! \return color of Y axis value labels.
+        // Only return the stroke color.
         return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
-
-     svg_2d_plot& svg_2d_plot::y_label_width(double width)
-      {
+      svg_2d_plot& svg_2d_plot::y_label_width(double width)
+      { //! Set width of Y axis value labels.
         image.g(detail::PLOT_Y_LABEL).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_label_width()
-      {
+      { //! \return color of Y axis value labels.
         return image.g(detail::PLOT_Y_LABEL).style().stroke_width();
       }
 
       svg_2d_plot& svg_2d_plot::y_major_grid_color(const svg_color& col)
-      {
+      { //! Set color of Y major grid lines.
         image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const svg_color svg_2d_plot::y_major_grid_color()
-      {
+      { //! \return color of Y major grid lines.
         return image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_minor_grid_color(const svg_color& col)
-      {
+      { //! Set color of Y minor grid lines.
         image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const svg_color svg_2d_plot::y_minor_grid_color()
-      {
+      { //! \return color of Y minor grid lines.
         return image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_major_tick_color(const svg_color& col)
-      {
+      { //! Set color of Y major tick lines.
         image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const svg_color svg_2d_plot::y_major_tick_color()
-      {
+      { //! \return color of Y major tick lines.
         return image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_minor_tick_color(const svg_color& col)
-      {
+      {  //! Set color of Y minor tick lines.
         image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const svg_color svg_2d_plot::y_minor_tick_color()
-      {
+      { //! \return color of Y minor tick lines.
         return image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_color();
       }
 
       const std::string svg_2d_plot::y_axis_position()
-      {
+      { //! \return text information about Y axis position.
         switch(y_axis_position_)
         {
         case left:
@@ -2106,8 +2119,8 @@ namespace boost
         }
       } // const std::string svg_2d_plot::y_axis_position()
 
-        svg_2d_plot& svg_2d_plot::y_range(double min_y, double max_y)
-      { // Set the range (max and min) for Y values.
+      svg_2d_plot& svg_2d_plot::y_range(double min_y, double max_y)
+      { //! Set the range (max and min) for Y axis from the parameters provided.
         if (!boost::math::isfinite(min_y))
         {
           throw std::runtime_error("Y range: min not finite!");
@@ -2128,11 +2141,11 @@ namespace boost
         y_axis_.min_ = min_y;
         y_axis_.max_ = max_y;
         y_autoscale_ = false;
-       return *this; // \return reference to svg_2d_plot to make chainable.
+       return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       std::pair<double, double> svg_2d_plot::y_range()
-      {
+      { //! Set the range (max and min) for Y axis from the pair parameter provided.
         std::pair<double, double> r;
         r.first = y_axis_.min_;
         r.second = y_axis_.max_;
@@ -2140,106 +2153,107 @@ namespace boost
       }
 
       double svg_2d_plot::y_min()
-      { // Can't check finite ness and relation to y_max.
+      { //! \return minimum for Y axis.
+        // Can't check finite ness and relation to y_max.
         return y_axis_.min_;
       }
 
       double svg_2d_plot::y_max()
-      { // Can't check finite ness and relation to y_min.
+      {  //! \return minimum for Y axis.
+        // Can't check finite ness and relation to y_min.
         return y_axis_.max_;
       }
 
       bool svg_2d_plot::y_autoscale()
-      {
+      { //! \return true if to autoscale minimum and maximum for Y axis.
         return y_autoscale_;
       }
 
       svg_2d_plot& svg_2d_plot::y_autoscale(bool b)
-      {
+      { //! Set true if to autoscale minimum and maximum for Y axis.
         y_autoscale_ = b;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool  svg_2d_plot::y_values_on()
-      {
+      { //! \return true if values of Y data points are shown (as 1.23).
         return y_values_on_;
       }
 
       svg_2d_plot&  svg_2d_plot::y_values_on(bool b)
-      {
+      { //! Set true if values of Y data points are shown (as 1.23).
         y_values_on_ = b;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool  svg_2d_plot::xy_values_on()
-      {
+      { //! \return true if values of X and Y data points are shown (as 1.23).
         return xy_values_on_;
       }
 
       svg_2d_plot&  svg_2d_plot::xy_values_on(bool b)
-      {
+      { //! Set true if values of X and Y data points are shown (as 1.23).
         xy_values_on_ = b;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_plusminus_on()
-      {
+      {//! \return true if values of Y data points are to include uncertainty estimates.
         return y_values_style_.plusminus_on_;
       }
 
       svg_2d_plot& svg_2d_plot::y_plusminus_on(bool b)
-      {
+      { //! Set true if values of Y data points are to include uncertainty estimates.
         y_values_style_.plusminus_on_ = b;
         return *this;
-      } // \return reference to svg_2d_plot to make chainable.
+      } //! \return reference to svg_2d_plot to make chainable.
 
       bool svg_2d_plot::y_df_on()
-      {
+      { //! \return true if values of Y data points are to include degrees of freedom estimates.
         return svg_2d_plot::y_values_style_.df_on_;
       }
 
       svg_2d_plot& svg_2d_plot::y_df_on(bool b)
-      {
+      { //! Set true if values of Y data points are to include degrees of freedom estimates.
         y_values_style_.df_on_ = b;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-      svg_2d_plot& svg_2d_plot::y_autoscale(double first, double second)
-      { // Use Y min & max values to autoscale.
-        scale_axis(first, second, // double min and max from two doubles.
+      svg_2d_plot& svg_2d_plot::y_autoscale(double minimum, double maximum)
+      { //! Set Y min & max values to use to autoscale.
+        // Does this assume first is min and second is max?
+        scale_axis(minimum, maximum, // double min and max from two doubles.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
         autoscale_check_limits_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true;  // Default to use calculated values.
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       } // autoscale(pair<double, double> p)
 
       svg_2d_plot& svg_2d_plot::y_autoscale(std::pair<double, double> p)
-      { // Use Y min & max pair values to autoscale.
+      { //! Set Y min & max values as a \b pair to use to autoscale.
         scale_axis(p.first, p.second, // double min and max from pair.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
         autoscale_check_limits_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true;  // Default to use calculated values.
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       } // autoscale(pair<double, double> p)
 
-       template <class T> // T an STL container: array, vector ...
-      svg_2d_plot& svg_2d_plot::y_autoscale(const T& begin, const T& end) // Data series using iterators to
-      { // to use to calculate autoscaled values.
+      template <class T> //! \tparam T an STL container: array, vector ...
+      svg_2d_plot& svg_2d_plot::y_autoscale(const T& begin, const T& end)
+      { //! Data series using iterator's range to use to calculate autoscaled values.
         scale_axis(begin, end,
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
         autoscale_check_limits_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true; // Default to use calculated values.
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-
-
       template <class T> // T an STL container: array, vector ...
-      svg_2d_plot& svg_2d_plot::y_autoscale(const T& container) // Whole data series.
-      { // to use to calculate autoscaled values.
+      svg_2d_plot& svg_2d_plot::y_autoscale(const T& container) 
+      { //! Whole data series to use to calculate autoscaled values.
         scale_axis(container.begin(), container.end(), // All the container.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
         autoscale_check_limits_,
@@ -2249,8 +2263,8 @@ namespace boost
       }
 
       template <class T> // T a 2D STL container: array, vector ...
-      svg_2d_plot& svg_2d_plot::xy_autoscale(const T& container) // Whole data series,
-      { // to use to calculate autoscaled values for *both* X and Y axes.
+      svg_2d_plot& svg_2d_plot::xy_autoscale(const T& container)
+      { //! Whole data series to use to calculate autoscaled values for \b both X and Y axes.
         scale_axis(container, // All the container.
           &x_auto_min_value_, &x_auto_max_value_, &x_auto_tick_interval_, &x_auto_ticks_,
           &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
@@ -2259,304 +2273,313 @@ namespace boost
           y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         x_autoscale_ = true; // Default to use calculated values.
         y_autoscale_ = true; // Can be switch off with autoscale(false);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       } // xy_autoscale
 
       bool svg_2d_plot::xy_autoscale()
-      {
+      { //! \return true if to autoscale both X and Y Axes.
         return y_autoscale_ && x_autoscale_;
       }
 
       svg_2d_plot& svg_2d_plot::y_major_interval(double inter)
-      {
+      { //! Set major interval between ticks on Y axis.
         y_ticks_.major_interval_ = inter;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_major_interval()
-      {
+      { //! \return major interval between ticks on Y axis.
         return y_ticks_.major_interval_;
       }
 
       svg_2d_plot& svg_2d_plot::y_major_tick_length(double length)
-      {
+      { //! Set major tick length on Y axis.
         y_ticks_.major_tick_length_ = length;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_major_tick_length()
-      {
+      { //! \return major tick length on Y axis.
         return y_ticks_.major_tick_length_;
       }
 
       svg_2d_plot& svg_2d_plot::y_minor_tick_length(double length)
-      {
+      { //! Set minor tick length on Y axis.
         y_ticks_.minor_tick_length_ = length;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_minor_tick_length()
-      {
+      { //! \return minor tick length on Y axis.
         return y_ticks_.minor_tick_length_;
       }
 
       svg_2d_plot& svg_2d_plot::y_num_minor_ticks(unsigned int num)
-      {
+      { //! Set number of minor ticks on Y axis.
         y_ticks_.num_minor_ticks_ = num;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       unsigned int svg_2d_plot::y_num_minor_ticks()
-      {
+      { //! \return number of minor ticks on Y axis.
         return y_ticks_.num_minor_ticks_;
       }
 
       svg_2d_plot& svg_2d_plot::y_label_axis(const std::string& str)
-      { // Set label for Y-axis.
+      { //! Set text to label Y-axis.
         y_label_info_.text(str);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       std::string svg_2d_plot::y_label_axis()
-      { // text to label Y axis.
+      { //! \return text to label Y axis.
         return y_label_info_.text();
       }
 
       svg_2d_plot& svg_2d_plot::y_major_tick_width(double width)
-      {
+      { //! Set width of major ticks on Y axis.
         y_ticks_.major_tick_width_ = width;
         image.g(detail::PLOT_Y_MAJOR_TICKS).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_major_tick_width()
-      {
+      { //! \return width of major ticks on Y axis.
         return y_ticks_.major_tick_width_;
       }
 
       svg_2d_plot& svg_2d_plot::y_minor_tick_width(double width)
-      {
+      { //! Set width of minor ticks on Y axis.
         y_ticks_.minor_tick_width_ = width;
         image.g(detail::PLOT_Y_MINOR_TICKS).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_minor_tick_width()
-      {
+      { //! \return width of minor ticks on Y axis.
         return y_ticks_.minor_tick_width_;
       }
 
-      svg_2d_plot& svg_2d_plot::x_ticks_on_window_or_axis(int is)
-      {
-        x_ticks_.ticks_on_window_or_axis_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+      svg_2d_plot& svg_2d_plot::x_ticks_on_window_or_axis(int side)
+      { //! Set if ticks on the plot window or on the X axis.
+        //! \param side -1 ticks downward.
+        //! \param side 0 no ticks.
+        //! \param side +1 ticks upward.
+        x_ticks_.ticks_on_window_or_axis_ = side;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::x_ticks_on_window_or_axis()
-      {
+      { //! \return if ticks on the plot window or on the X axis.
         return x_ticks_.ticks_on_window_or_axis_;
       }
 
-      svg_2d_plot& svg_2d_plot::x_major_value_labels_side(int is)
-      { // Label values side for major ticks left -1, (right +1 or none 0).
-        x_ticks_.major_value_labels_side_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+      svg_2d_plot& svg_2d_plot::x_major_labels_side(int side)
+      { /*! Side for major ticks label values: 
+         \param side -1 labels downward.
+         \param side 0 no ticks.
+         \param side +1 labels upward.
+        */
+        x_ticks_.major_value_labels_side_ = side;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-      int svg_2d_plot::x_major_value_labels_side()
-      { // Label values side for major ticks left -1, (right +1 or none 0).
+      int svg_2d_plot::x_major_labels_side()
+      { //! \return Label values side for major ticks.
         return x_ticks_.major_value_labels_side_;
       }
 
-      svg_2d_plot& svg_2d_plot::y_ticks_on_window_or_axis(int is)
-      {
-        y_ticks_.ticks_on_window_or_axis_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+      svg_2d_plot& svg_2d_plot::y_ticks_on_window_or_axis(int cmd)
+      {  /*!  Set Y ticks on window or axis 
+              \arg cmd -1 left of plot window,
+              \arg cmd 0 on Y axis.
+              \arg cmd +1 right of plot window.
+            */
+        y_ticks_.ticks_on_window_or_axis_ = cmd;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_ticks_on_window_or_axis()
-      {
+      { //! \return true if Y axis ticks wanted on the window (rather than on axis).\n
+        //! -1 left of plot window, 0 on Y axis, +1 right of plot window.
         return y_ticks_.ticks_on_window_or_axis_;
       }
 
-      svg_2d_plot& svg_2d_plot::y_major_value_labels_side(int is)
-      {  // Label values side for major ticks left -1, (right +1 or none 0).
-        y_ticks_.major_value_labels_side_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
-      }
-
-      int svg_2d_plot::y_major_value_labels_side()
-      { // Label values side for major ticks left -1, (right +1 or none 0).
-        return y_ticks_.major_value_labels_side_;
-      }
-
       svg_2d_plot& svg_2d_plot::y_ticks_left_on(bool cmd)
-      {
+      { //! Set true if ticks on the Y axis are to be on left of axis line.
         y_ticks_.left_ticks_on_ = cmd;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_ticks_left_on()
-      {
+      { //! \return true if ticks on the Y axis are to be on left of axis line.
         return y_ticks_.left_ticks_on_;
       }
 
       svg_2d_plot& svg_2d_plot::y_ticks_right_on(bool cmd)
-      {
+      {//! Set true if ticks on the Y axis are to be on right of axis line.
         y_ticks_.right_ticks_on_ = cmd;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_ticks_right_on()
-      {
+      { //! \return true if ticks on the Y axis are to be on right of axis line.
         return y_ticks_.right_ticks_on_;
       }
-      // Only need y_ticks_left_on & y_ticks_right_on in 2D
-
+      // Only need y_ticks_left_on & y_ticks_right_on in 2D plots.
 
       svg_2d_plot& svg_2d_plot::y_major_grid_on(bool is)
-      {
+      { //! Set true to include major grid lines.
         y_ticks_.major_grid_on_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_major_grid_on()
-      {
+      { //! \return true to include major grid lines.
         return y_ticks_.major_grid_on_;
       }
 
-
       svg_2d_plot& svg_2d_plot::y_minor_grid_on(bool is)
-      {
+      {//! Set true to include minor grid lines.
         y_ticks_.minor_grid_on_ = is;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_minor_grid_on()
-      {
+      {//! Set true to include minor grid lines.
         return y_ticks_.minor_grid_on_;
       }
 
       svg_2d_plot& svg_2d_plot::y_minor_grid_width(double width)
-      {
+      { //! Set width of minor grid lines.
         y_ticks_.minor_grid_width_ = width;
         image.g(detail::PLOT_Y_MINOR_GRID).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_minor_grid_width()
-      {
+      {//! \return width of minor grid lines.
         return y_ticks_.minor_grid_width_;
       }
 
       svg_2d_plot& svg_2d_plot::y_major_grid_width(double width)
-      {
+      { //! Set width of major grid lines.
         y_ticks_.major_grid_width_ = width;
         image.g(detail::PLOT_Y_MAJOR_GRID).style().stroke_width(width);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       double svg_2d_plot::y_major_grid_width()
-      {
+      {//! Set width of major grid lines.
         return y_ticks_.major_grid_width_;
       }
 
       svg_2d_plot& svg_2d_plot::y_label_font_size(unsigned int i)
-      { // May be best to tie label & unit font sizes together?
+      { //! Set Y axis label text font size.
+        // May be best to tie label & unit font sizes together?
         x_axis_label_style_.font_size(i);
         // y_units_info_.font_size(i);
         return *this;
       }
 
       unsigned int svg_2d_plot::y_label_font_size()
-      {
+      { //! \return Y axis label text font size.
         return y_axis_label_style_.font_size();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_weight(std::string s)
-      { // "bold" is only one that works so far.
+      { //! Set Y axis label text font weight (for example: "bold").
+        //! ("bold" is only one that works so far, and quality may be poor for some browsers).
         x_axis_label_style_.font_weight(s);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const std::string& svg_2d_plot::y_label_weight()
-      {
+      { //! \return Y axis label text font weight (for example: "bold").
         return x_axis_label_style_.font_weight();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
-      {
+      { //! Set Y axis label text font family (for example: "Lucida console sans").
         x_axis_label_style_.font_family(family);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+      
+      const std::string& svg_2d_plot::y_label_font_family()
+      { //! \return the font family for label on Y axis.
+        return y_axis_label_style_.font_family();
       }
 
       svg_2d_plot& svg_2d_plot::y_values_font_size(unsigned int i)
-      {
+      { //! \return  font size for Y axis values.
         y_values_style_.values_text_style_.font_size(i);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       unsigned int svg_2d_plot::y_values_font_size()
-      {
+      {//! \return font size for Y axis values. 
         return y_values_style_.values_text_style_.font_size();
       }
 
       svg_2d_plot& svg_2d_plot::y_values_font_family(const std::string& family)
-      {
+      { //! Set font family for Y axis values.
         y_values_style_.values_text_style_.font_family(family);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const std::string& svg_2d_plot::y_values_font_family()
-      {
+      { //! \return font family for Y axis valuess.
         return y_values_style_.values_text_style_.font_family();
       }
 
       svg_2d_plot& svg_2d_plot::y_values_color(const svg_color& col)
-      { // Function could set both fill (middle) and stroke (outside),
+      { //! Set color for Y axis values.
+        // Function could set both fill (middle) and stroke (outside),
         // but just setting fill if simplest,
         // but does not allow separate inside & outside colors.
         image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color(col);
         //svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color(col);
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_values_color()
-      { // Function could get either fill and stroke,
+      { //! \return color for Y axis values.
+        // Function could get either fill and stroke,
         // return svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color();
         return image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_values_rotation(rotate_style rotate)
-      { // Degrees (0 to 360).
+      { //! Set rotation for value labels on Y axis ticks.
+        //! \see rotate_style
         y_values_style_.value_label_rotation_ = rotate;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_values_rotation()
-      {
+      { //! \return rotation for value labels on Y axis.
         return y_values_style_.value_label_rotation_;
       }
 
       svg_2d_plot& svg_2d_plot::y_values_precision(int p)
-      { // set iostream precision
+      { //! Set iostream precision for data points Y values.
         y_values_style_.value_precision_ = p;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::y_values_precision()
-      {
+      { //! \return iostream precision for data points Y values.
         return y_values_style_.value_precision_;
       }
 
       svg_2d_plot& svg_2d_plot::y_values_ioflags(std::ios_base::fmtflags f)
-      { // set iostream format flags
+      { //! Set iostream format flags for data point values.
         y_values_style_.value_ioflags_ = f;
-        return *this; // \return reference to svg_2d_plot to make chainable.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       std::ios_base::fmtflags svg_2d_plot::y_values_ioflags()
-      {
+      { //! \return iostream format flags for data point values.
         return y_values_style_.value_ioflags_;
       }
 
@@ -2567,84 +2590,82 @@ namespace boost
     { // No file type suffix, so provide the default .svg.
       filename.append(".svg");
     }
-
     std::ofstream fout(filename.c_str());
     if(fout.fail())
     {
       throw std::runtime_error("Unable to open " + filename);
     }
     write(fout); // Using the ostream version.
-    return *this; // \return reference to svg_2d_plot to make chainable.
+    return *this; //! \return reference to svg_2d_plot to make chainable.
   }
 
-  template <class T>
+  template <class T> //! \tparam T Type of data in series (must be convertible to double).
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
-  { // Version converting to double.
-    // Note that this version assumes that *ALL* the data value in the container is used.
+  { /*! Add a container of a data series to the plot.
+      This version assumes that *ALL* the data value in the container is used.
+      \code my_plot.plot(data1, "Sqrt(x)");\endcode
+      Version converting to double with \c boost_default_2d_convert.
+    */
     series.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
       boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
       title)
     );
-    return series[series.size()-1]; // Reference to data series just added.
+    return series[series.size()-1]; //! \return Reference to data series just added to make chainable.
   }
 
   template <class T, class U>
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title /* = "" */, U functor /* = boost_default_2d_convert*/)
-  { // Version with functor.
-    // Note that this version assumes that *ALL* the data value in the container is used.
+  { /*! This version permits a custom functor (rather than default conversion to double).\n
+       Note that this version assumes that *ALL* the data value in the container is used.
+    */
     series.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size()-1];// Reference to data series just added.
+    return series[series.size()-1]; //! \return Reference to data series just added to make chainable.
   }
 
   template <class T>
   svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title)
-  { // Add a data series to the plot (by default, converting to doubles).
-    // Note that this version permits a *partial range*,
-    // begin to end, of the container to be used.
+  { /*! Add a data series to the plot (by default, converting automatically to doubles).\n
+      This version permits part of the container to be used, a partial range, using iterators begin to end.\n
+      For example: \code  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container"); \endcode
+       \code my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data series. \endcode
+   */
     series.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(begin, detail::boost_default_convert()),
       boost::make_transform_iterator(end, detail::boost_default_convert()),
       title)
     );
-    // For example:  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
-    // my_2d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
-    // Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
-    return series[series.size() - 1]; // Reference to data series just added.
+    return series[series.size() - 1]; //! \return Reference to data series just added to make chainable.
   } // plot(const T& begin, const T& end, const std::string& title = "")
 
   template <class T, class U>
   svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title, U functor)
-  { // Add a data series to the plot. (Version with custom functor, rather than to double).
-    // Note that this version permits a partial range,
-    // begin to end, of the container to be used.
+  { /* Add (part of) a container of a data series to the plot.
+      This version permits part of the container to be used, a partial range, using iterators begin to end.\n
+      Version with custom functor, rather than automatically converting to double).
+    */
     series.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; // Reference to data series just added.
+    return series[series.size() - 1]; //! \return Reference to data series just added to make chainable.
   }
 
    svg_2d_plot& svg_2d_plot::write(std::ostream& s_out)
-    { // Write the image to an ostream.
-      update_image();
-      image.write(s_out); // Use the ostream version of write.
-      return *this; // \return reference to svg_2d_plot to make chainable.
-    }
-
-  const std::string& svg_2d_plot::y_label_font_family()
-  {
-    return y_axis_label_style_.font_family();
-  }
+   { //! Write the SVG image to an ostream.
+     update_image();
+     image.write(s_out); // Use the ostream version of write.
+     return *this; //! \return reference to svg_2d_plot to make chainable.
+   }
 
 #if defined (BOOST_MSVC)
 #  pragma warning(pop)

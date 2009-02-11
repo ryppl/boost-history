@@ -255,7 +255,7 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_label_units_on " << plot.x_label_units_on() << endl;
   //cout << "x_label_width " << plot.x_label_width() << endl;
   // Not useful at present, so not longer implemented.
-  cout << "x_major_value_labels_side " << l_or_r(plot.x_major_value_labels_side()) << endl;
+  cout << "x_major_labels_side " << l_or_r(plot.x_major_labels_side()) << endl;
   cout << "x_major_label_rotation " << plot.x_major_label_rotation() << endl;
   cout << "x_major_grid_color " << plot.x_major_grid_color() << endl;
   cout << "x_major_grid_on " << plot.x_major_grid_on() << endl;
@@ -299,7 +299,7 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_major_grid_color " << plot.y_major_grid_color() << endl;
   cout << "y_major_grid_width " << plot.y_major_grid_width() << endl;
   cout << "y_major_interval " << plot.y_major_interval() << endl;
-  cout << "y_major_value_labels_side " << t_or_b(plot.y_major_value_labels_side()) << endl;
+  cout << "y_major_labels_side " << t_or_b(plot.y_major_labels_side()) << endl;
   cout << "y_major_label_rotation " << plot.y_major_label_rotation() << endl;
   cout << "y_major_tick_color " << plot.y_major_tick_color() << endl;
   cout << "y_major_tick_length  " << plot.y_major_tick_length() << endl;

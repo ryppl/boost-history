@@ -154,12 +154,12 @@ namespace svg
 
     // Set and get member functions.
     svg_style& style()
-    { //! Get reference to svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width()
+    { //! \return  reference to svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width()
       return style_info_;
     }
 
     const svg_style& style() const
-    { //! Get reference to const svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width() (const version).
+    { //! \return  reference to const svg_style to provide indirect access to colors & width via style().stroke_color(), fill_color(), width() (const version).
       return style_info_;
     }
 
@@ -185,7 +185,7 @@ namespace svg
    }
 
     std::string id()
-    { //! Get the unique name for an element, for example id() ="plotBackground".
+    { //! \return  the unique name for an element, for example id() ="plotBackground".
       return id_name_;
     }
 
@@ -210,7 +210,7 @@ namespace svg
     }
 
     std::string clip_id()
-    { //! Get name of a clip path, for example: g_ptr.clip_id(plot_window_clip_);
+    { //! \return  name of a clip path, for example: g_ptr.clip_id(plot_window_clip_);
       return clip_name_;
     }
   }; // class svg_element

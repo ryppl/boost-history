@@ -1,11 +1,15 @@
-// 2d_area_fill.cpp
+/*! \file 2d_area_fill.cpp
+  \brief Demo of area fill below a curve.
+  \date 2007
+  \author Jacob Voytko 
+*/
+
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
 
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
-// -----------------------------------------------------------------
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
   using namespace boost::svg; // Needed to get svg colors and others.
@@ -61,8 +65,8 @@ int main()
 	       .title_font_size(20)
 	       .x_label("x")
 	       .y_label("50 * f(x)")
-         .x_major_value_labels_side(bottom)
-         .y_major_value_labels_side(left)
+         .x_major_labels_side(bottom)
+         .y_major_labels_side(left)
          .x_major_grid_on(true)
          .y_major_grid_on(true)
          .x_major_grid_color(cyan)

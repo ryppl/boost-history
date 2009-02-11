@@ -233,9 +233,9 @@ BOOST_AUTO_TEST_CASE( test1 )
  // my_plot.x_label_units_on(true); // Set
  //	BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), true); // & check.
 
- //	BOOST_CHECK_EQUAL(my_plot.x_major_value_labels_side(), true); // Check default.
- // my_plot.x_major_value_labels_side(false); // Set
- //	BOOST_CHECK_EQUAL(my_plot.x_major_value_labels_side(), false); // & check.
+ //	BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), true); // Check default.
+ // my_plot.x_major_labels_side(false); // Set
+ //	BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), false); // & check.
 
  //	BOOST_CHECK_EQUAL(my_plot.title_on(), true); // Check default.
  // my_plot.title_on(false); // Set

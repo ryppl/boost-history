@@ -362,12 +362,12 @@ public:
   }
 
   unsigned int x_size()
-  { //! Get X-axis (horizontal) image size.
+  { //! \return  X-axis (horizontal) image size.
     return x_size_;
   }
 
   unsigned int y_size()
-  { //! Get Y-axis (vertical) image size.
+  { //! \return  Y-axis (vertical) image size.
     return y_size_;
   }
 
@@ -392,7 +392,7 @@ public:
   }
 
   int coord_precision()
-  { //!< Get decimal digits to be output for X and Y coordinates.
+  { //!< \return  decimal digits to be output for X and Y coordinates.
     return coord_precision_;
   }
 
@@ -600,20 +600,20 @@ public:
   }
 
   const std::string& reproduction()
-  { //! Get license reproduction requirement.
+  { //! \return  license reproduction requirement.
     return reproduction_;
   }
 
   const std::string& distribution()
-  { //! Get license distribution requirement.
+  { //! \return  license distribution requirement.
     return distribution_;
   }
   const std::string& attribution()
-  { //! Get license attribution requirement.
+  { //! \return  license attribution requirement.
     return attribution_;
   }
   const std::string& commercialuse()
-  { //! Get license commercial use requirement.
+  { //! \return  license commercial use requirement.
     return commercialuse_;
   }
 
@@ -633,7 +633,7 @@ public:
   }
 
   const std::string& description()
-  { //!  \verbatim Get description of the document (for header as <desc>).\endverbatim
+  { //! \return \verbatim  description of the document (for header as <desc>).\endverbatim
     return image_desc_;
   }
 
@@ -643,7 +643,7 @@ public:
   }
 
   const std::string& author()
-  { //!  \verbatim Get author of the document (for header as <author>).\endverbatim
+  { //!  \return  \verbatim author of the document (for header as <author>).\endverbatim
     return author_;
   }
 
@@ -653,7 +653,7 @@ public:
   }
 
   const std::string document_title()
-  { //!  \verbatim Get document title for the document (for header as <title>). \endverbatim
+  { //!   \return \verbatim document title for the document (for header as <title>). \endverbatim
     return title_document_;
   }
 
@@ -663,7 +663,7 @@ public:
   }
 
   const std::string copyright_holder()
-  { //!  \verbatim Get document title for the document (for header as <copyright_holder>). \endverbatim
+  { //!  \verbatim \return  document title for the document (for header as <copyright_holder>). \endverbatim
     return holder_copyright_;
   }
 
@@ -673,7 +673,7 @@ public:
   }
 
   const std::string copyright_date()
-  { //!  \verbatim Get document title for the document (for header as <copyright_date>). \endverbatim
+  { //!  \return \verbatim  document title for the document (for header as <copyright_date>). \endverbatim
     return date_copyright_;
   }
 
@@ -683,7 +683,7 @@ public:
   }
 
   const std::string image_filename()
-  { //!  \verbatim Get image filename for the document (for header as <filename>). \endverbatim
+  { //! \return  \verbatim image filename for the document (for header as <filename>). \endverbatim
     return filename_;
   }
 
@@ -790,7 +790,7 @@ public:
   }
 
   g_element& g(int i)
-  { //! Get from the array of g_elements, indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
+  { //! \return  from the array of g_elements, indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
     return document.g(i); //! return reference to the ith group element.
   }
 

@@ -156,17 +156,17 @@ public:
 
   // Member Functions definitions.
   svg_color svg_style::fill_color() const
-  { //! Get SVG fill color.
+  { //! \return  SVG fill color.
     return svg_color(fill_);
   }
 
   svg_color svg_style::stroke_color() const
-  { //! Get SVG stroke color.
+  { //! \return  SVG stroke color.
     return svg_color(stroke_);
   }
 
   double svg_style::stroke_width() const
-  { //! Get SVG stroke width.
+  { //! \return  SVG stroke width.
     return width_;
   }
 
@@ -354,7 +354,7 @@ public:
   }
 
   int text_style::font_size() const
-  { //! Get font size (svg units, usually pixels).
+  { //! \return  font size (svg units, usually pixels).
     return font_size_;
   }
 
@@ -371,7 +371,7 @@ public:
   }
 
   const std::string& text_style::font_family() const
-  { //! Get font family as string.
+  { //! \return  font family as string.
     return font_family_;
   }
 
@@ -392,7 +392,7 @@ public:
   }
 
   const std::string& text_style::font_style() const
-  { //! Get font style.
+  { //! \return  font style.
     /*! \details font-style: normal | bold | italic | oblique.
        Example "normal" is default.
      */
@@ -437,7 +437,7 @@ public:
   }
 
   const std::string& text_style::font_decoration() const
-  { //! Get font decoration.
+  { //! \return  font decoration.
     return decoration_;
   }
 
@@ -703,7 +703,7 @@ public:
   }
 
   svg_color& plot_point_style::fill_color()
-  { //! Get fill color of shape or symbol used to mark data value plot point(s).
+  { //! \return  fill color of shape or symbol used to mark data value plot point(s).
     return fill_color_;
   }
 
@@ -714,7 +714,7 @@ public:
   }
 
   svg_color& plot_point_style::stroke_color()
-  { //! Get stroke color of shape or symbol used to mark data value plot point(s).
+  { //! \return  stroke color of shape or symbol used to mark data value plot point(s).
     return stroke_color_;
   }
 
@@ -725,7 +725,7 @@ public:
   }
 
   point_shape plot_point_style::shape()
-  { //! Get shape used to mark data value plot point(s).
+  { //! \return  shape used to mark data value plot point(s).
     return shape_;
   }
 
@@ -816,7 +816,7 @@ public:
   }
 
   double plot_line_style::width()
-  { //! Get width of line(s) joining data points.
+  { //! \return  width of line(s) joining data points.
     return width_;
   }
 
@@ -827,7 +827,7 @@ public:
   }
 
   svg_color& plot_line_style::color()
-  { //! Get color of line(s) joining data points.
+  { //! \return  color of line(s) joining data points.
     return stroke_color_;
   }
 
@@ -838,7 +838,7 @@ public:
   }
 
   svg_color& plot_line_style::area_fill()
-  { //! Get if area under line joining data points is to be color filled.
+  { //! \return  if area under line joining data points is to be color filled.
     return area_fill_;
   }
 
@@ -978,7 +978,7 @@ public:
   }
 
   svg_color axis_line_style::color()
-  { //! Get color of an axis line.
+  { //! \return  color of an axis line.
     return color_;
   }
 
@@ -989,7 +989,7 @@ public:
   }
 
   double axis_line_style::width()
-  { //! Get width of an axis line.
+  { //! \return  width of an axis line.
     return axis_width_;
   }
 
@@ -1567,7 +1567,7 @@ const std::string strip_e0s(std::string s)
   {
     s.erase(j+2, 1); // remove "0", leave "-dd"
   }
-  return s; // \return length of trimmed string (perhaps unchanged).
+  return s; //! \return length of trimmed string (perhaps unchanged).
 } // const std::string strip(double d)
 
  static const double wh = 0.7; //!< font text width/height ratio.

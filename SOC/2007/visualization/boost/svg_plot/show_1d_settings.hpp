@@ -256,7 +256,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_label_units_on " << plot.x_label_units_on() << endl;
   // Not implemented yet.
   //cout << "x_label_width " << plot.x_label_width() << endl;
-  cout << "x_major_value_labels_side " << l_or_r(plot.x_major_value_labels_side()) << endl;
+  cout << "x_major_labels_side " << l_or_r(plot.x_major_labels_side()) << endl;
   cout << "x_values_font_size " << plot.x_values_font_size() << endl;
   cout << "x_values_color " << plot.x_values_color() << endl;
   cout << "x_values_precision " << plot.x_values_precision() << endl;
@@ -307,7 +307,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   //cout << "y_major_grid_color " << plot.y_major_grid_color() << endl;
   //cout << "y_major_grid_width " << plot.y_major_grid_width() << endl;
   //cout << "y_major_interval " << plot.y_major_interval() << endl;
-  //cout << "y_major_value_labels_side " << t_or_b(plot.y_major_value_labels_side()) << endl;
+  //cout << "y_major_labels_side " << t_or_b(plot.y_major_labels_side()) << endl;
   //cout << "y_major_label_rotation " << plot.y_major_label_rotation() << endl;
   //cout << "y_major_tick_color " << plot.y_major_tick_color() << endl;
   //cout << "y_major_tick_length  " << plot.y_major_tick_length() << endl;

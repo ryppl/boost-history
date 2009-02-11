@@ -1,11 +1,9 @@
-/*!
+ /*!
   \file axis_plot_frame.hpp
-
   \brief SVG Plot functions common to 1D, 2D and Boxplots.
-
   \details Functions are derived from base class axis_plot_frame.
-
- \author Jacob Voytko and Paul A. Bristow
+  \date 11 Feb 2009
+  \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007
@@ -47,7 +45,7 @@ namespace boost
 
     static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
 
-    // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect.
+    // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect
     enum x_axis_intersect
     { //! \enum x_axis_intersect If and how the X axes intersects Y axis.
       bottom = -1, //!< X-axis free below bottom of end of Y-axis (case of all Y definitely < 0).
@@ -63,7 +61,7 @@ namespace boost
      };
 
     enum legend_places
-    { //!  \enum legend_places Placing of legend box, if requested by legend_on == true.
+    { //! \enum legend_places Placing of legend box, if requested by legend_on == true.
       nowhere = 0, //!< Placing of legend box not requested or not calculated yet.
       inside = -1,  //!< Default place for inside is top left of plot window, (exact location controlled by legend_top_left()).
       outside_left = 1, //!< Outside on the left of the graph.
@@ -542,14 +540,12 @@ namespace boost
         // --------------------------------------------------------------------
 
         void draw_title()
-        { /*!  \verbatim
-            Draw title (for the whole plot).
+        { /*! Draw title (for the whole plot).
             Update title_info_ with position.
             Assumes align = center_align.
             and center_align will ensure that will center correctly
-            even if original string is made much longer because it contains Unicode like &#x3A9;
+            (even if original string is made much longer because it contains Unicode)
             because the render engine does the centering.
-            \endverbatim
           */
           derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
           double y;
@@ -1122,9 +1118,9 @@ namespace boost
           } // std::string sv(double v, const value_style& sty)
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
-          { //! Write the *pair* of data point's values as a string.
+          { //! Write the \b pair of data point's values as a string.
 
-            std::string label_xv = sv(vx, x_sty); //! Also trip unnecessary e, + and leading exponent zeros, if required.
+            std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
             std::string label_yv = sv(vy, y_sty);
             std::string label_xu;
             std::string label_yu;
@@ -1467,8 +1463,8 @@ namespace boost
           int x_ticks_on_window_or_axis();
           Derived& x_label_units_on(bool cmd);
           bool x_label_units_on();
-          Derived& x_major_value_labels_side(int cmd);
-          int x_major_value_labels_side();
+          Derived& x_major_labels_side(int cmd);
+          int x_major_labels_side();
           Derived& x_major_label_rotation(rotate_style rot);
           rotate_style x_major_label_rotation();
           Derived& title_on(bool cmd);
@@ -1664,7 +1660,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_x_size()
-          { //! Get SVG image X-axis size (SVG units, default pixels).
+          { //! \return  SVG image X-axis size (SVG units, default pixels).
             return derived().image.x_size();
           }
 
@@ -1677,7 +1673,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_y_size()
-          { //! Get SVG image Y-axis size (SVG units, default pixels).
+          { //! \return  SVG image Y-axis size (SVG units, default pixels).
             return derived().image.y_size();
           }
 
@@ -1690,7 +1686,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::background_color()
-          { //! Get plot background color.
+          { //! \return  plot background color.
             return derived().image.g(PLOT_BACKGROUND).style().fill_color();
           }
 
@@ -1706,18 +1702,17 @@ namespace boost
           { //! Set plot background border color.
             derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
             /*!
-              /code
-                // background_border_color example:
-                svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_color(azure);
-              /endcode
+              \code
+// background_border_color example:
+svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_color(azure);
+              \endcode
             */
-
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::background_border_color()
-          { //! Get plot background border color.
+          { //! \return  plot background border color.
             return derived().image.g(PLOT_BACKGROUND).style().stroke_color();
           }
 
@@ -1730,32 +1725,32 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::background_border_width()
-          { //! Get plot background border width.
+          { //! \return  plot background border width.
             return derived().image.g(PLOT_BACKGROUND).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::description(const std::string d)
-          { //! Writes description to the document (for header as \verbatim <desc> My Data <\desc> \endverbatim).
+          { //! Writes description to the document for header as \verbatim <desc> My Data <\desc> \endverbatim
             derived().image.description(d);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::description()
-          { //! Get description of the document (for header as  \verbatim <desc> ... <\desc> \endverbatim).
+          { //! \return  description of the document for header as \verbatim <desc> ... <\desc> \endverbatim
             return derived().image.description();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::document_title(const std::string d)
-          { //! Write document title to the SVG document (for header as  \verbatim <title> My Title <\title> \endverbatim).
+          { //! Write document title to the SVG document for header as \verbatim <title> My Title <\title> \endverbatim
             derived().image.document_title(d);
             return derived();
           }
           template <class Derived>
           std::string axis_plot_frame<Derived>::document_title()
-          { //! Get document title to the document (for header as  \verbatim <title> My Title <\title> \endverbatim).
+          { //! \return  document title to the document for header as \verbatim <title> My Title <\title> \endverbatim
             return derived().image.document_title();
           }
 
@@ -1770,7 +1765,7 @@ namespace boost
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::copyright_holder()
-          { //! Get copyright_holder.
+          { //! \return  copyright_holder.
             return derived().image.copyright_holder();
           }
 
@@ -1784,7 +1779,7 @@ namespace boost
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::copyright_date()
-          { //! Get copyright_date.
+          { //! \return  copyright_date.
             return derived().image.copyright_date();
           }
 
@@ -1818,7 +1813,7 @@ namespace boost
           }
           template <class Derived>
           bool axis_plot_frame<Derived>::boost_license_on()
-          { //! Get if the Boost license conditions should be included in the SVG document.
+          { //! \return  if the Boost license conditions should be included in the SVG document.
             //! To set see axis_plot_frame::boost_license_on(bool).
             return derived().image.boost_license_one();
           }
@@ -1832,25 +1827,25 @@ namespace boost
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_reproduction()
-          { //! Get reproduction license conditions, usually "permits", "requires", or "prohibits".
+          { //! \return  reproduction license conditions, usually "permits", "requires", or "prohibits".
             return derived().image.reproduction();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_distribution()
-          { //! Get distribution license conditions, usually "permits", "requires", or "prohibits".
+          { //! \return  distribution license conditions, usually "permits", "requires", or "prohibits".
             return derived().image.distribution();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_attribution()
-          { //! Get attribution license conditions, usually "permits", "requires", or "prohibits".
+          { //! \return  attribution license conditions, usually "permits", "requires", or "prohibits".
             return derived().image.attribution();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_commercialuse()
-          { //! Get commercial use license conditions, usually "permits", "requires", or "prohibits".
+          { //! \return  commercial use license conditions, usually "permits", "requires", or "prohibits".
             return derived().image.commercialuse();
           }
 
@@ -1869,7 +1864,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::coord_precision()
-          { //! Get precision of SVG coordinates in decimal digits.
+          { //! \return  precision of SVG coordinates in decimal digits.
             return derived().image.coord_precision();
           }
 
@@ -1888,7 +1883,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_value_precision()
-          { //! Get precision of X tick label values in decimal digits
+          { //! \return  precision of X tick label values in decimal digits
             return derived().x_ticks_.value_precision_;
           }
 
@@ -1905,7 +1900,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_value_ioflags()
-          { //! Get stream ioflags for control of format of X value labels.
+          { //! \return  stream ioflags for control of format of X value labels.
             return derived().x_ticks_.value_ioflags_;
           }
 
@@ -1919,7 +1914,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::y_labels_strip_e0s()
-          { //! Get if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
+          { //! \return  if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
             return derived().x_ticks_.strip_e0s_;
           }
 
@@ -1927,11 +1922,9 @@ namespace boost
           Derived& axis_plot_frame<Derived>::title(const std::string title)
           { //! Set a title for plot.
             /*! \details
-            \verbatim
               The string may include Unicode for greek letter and symbols.
-              For example: my_plot.title("Plot of &#x3A9; function");
-              includes a greek omega.
-              \endverbatim
+              For example a title that includes a greek omega:
+              \verbatim my_plot.title("Plot of &#x3A9; function");\endverbatim
             */
             // Plot title.  TODO
             // new text parent code pushback
@@ -1946,7 +1939,7 @@ namespace boost
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::title()
-          { //! Get a title for plot, whose string may include Unicode for greek letter and symbols.
+          { //! \return  a title for plot, whose string may include Unicode for greek letter and symbols.
             return derived().title_info_.text();
           }
 
@@ -1959,7 +1952,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::title_font_size()
-          { //! Get the font size for the title (svg units, default pixels).
+          { //! \return  the font size for the title (svg units, default pixels).
             return derived().title_info_.style().font_size();
           }
 
@@ -1972,7 +1965,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_family()
-          { //! Get the font family for the title
+          { //! \return  the font family for the title
             return derived().title_info_.style().font_family();
           }
 
@@ -1985,7 +1978,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_style()
-          { //! Get the font style for the title (default normal).
+          { //! \return  the font style for the title (default normal).
             return derived().title_info_.style().font_style();
           }
 
@@ -1998,7 +1991,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_weight()
-          {//! Get the font weight for the title.
+          {//! \return  the font weight for the title.
             return derived().title_info_.style().font_weight();
           }
 
@@ -2011,7 +2004,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_stretch()
-          { //! Get the font stretch for the title.
+          { //! \return  the font stretch for the title.
             return derived().title_info_.style().font_stretch();
           }
 
@@ -2024,7 +2017,7 @@ namespace boost
 
            template <class Derived>
          const std::string& axis_plot_frame<Derived>::title_font_decoration()
-          { //! Get the font decoration for the title (default normal, or underline, overline or strike-thru).
+          { //! \return  the font decoration for the title (default normal, or underline, overline or strike-thru).
             return derived().title_info_.style().font_decoration();
           }
 
@@ -2037,7 +2030,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::title_font_rotation()
-          { //! Get the rotation for the title font (degrees).
+          { //! \return  the rotation for the title font (degrees).
             return derived().title_info_.rotation();
           }
 
@@ -2050,7 +2043,7 @@ namespace boost
 
           template <class Derived>
           align_style axis_plot_frame<Derived>::title_font_alignment()
-          { //! Get the alignment for the title.
+          { //! \return  the alignment for the title.
             return derived().title_info_.alignment();
           }
 
@@ -2065,7 +2058,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::legend_width()
-          { //! Get the width for the legend.
+          { //! \return  the width for the legend.
             return derived().legend_width_;
           }
 
@@ -2078,7 +2071,7 @@ namespace boost
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::legend_title()
-          { //! Get the title for the legend.
+          { //! \return  the title for the legend.
             return derived().legend_header_.text();
           }
 
@@ -2091,7 +2084,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::legend_font_weight()
-          { //! Get the font weight for the legend title.
+          { //! \return  the font weight for the legend title.
             return derived().legend_header_.style().font_weight();
           }
 
@@ -2104,7 +2097,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::legend_font_family()
-          { //! Get the font family for the legend title.
+          { //! \return  the font family for the legend title.
             return derived().legend_header_.style().font_family();
           }
 
@@ -2117,7 +2110,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::legend_title_font_size()
-          { //! Get the font size for the legend title (svg units, default pixels).
+          { //! \return  the font size for the legend title (svg units, default pixels).
             return derived().legend_header_.style().font_size();
           }
 
@@ -2137,7 +2130,7 @@ namespace boost
 
           template <class Derived>
           const std::pair<double, double> axis_plot_frame<Derived>::legend_top_left()
-          { //! Get svg coordinate (default pixels) of top left of legend box.
+          { //! \return  svg coordinate (default pixels) of top left of legend box.
             std::pair<double, double> r;
             r.first = derived().legend_left_;
             r.second = derived().legend_top_;
@@ -2146,7 +2139,7 @@ namespace boost
 
           template <class Derived>
           const std::pair<double, double> axis_plot_frame<Derived>::legend_bottom_right()
-          { //! Get svg coordinate (default pixels) of Bottom right of legend box.
+          { //! \return  svg coordinate (default pixels) of Bottom right of legend box.
             std::pair<double, double> r;
             r.first = derived().legend_right_;
             r.second = derived().legend_bottom_;
@@ -2164,7 +2157,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::legend_lines()
-          {//! Get true if legend should include samples of the lines joining data points.
+          {//! \return  true if legend should include samples of the lines joining data points.
             return derived().legend_lines_;
           }
 
@@ -2177,7 +2170,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::legend_on()
-          { //! Get true if a legend is wanted.
+          { //! \return  true if a legend is wanted.
             return derived().legend_on_;
           }
 
@@ -2190,13 +2183,13 @@ namespace boost
 
           template <class Derived>
           legend_places axis_plot_frame<Derived>::legend_place()
-          { //! Get the position of the legend, \see  boost::svg::legend_places
+          { //! \return  the position of the legend, \see  boost::svg::legend_places
             return derived().legend_place_;
           }
 
           template <class Derived>
           bool axis_plot_frame<Derived>::legend_outside()
-          { //! Get if the legend should be outside the plot area.
+          { //! \return  if the legend should be outside the plot area.
             return derived().outside_legend_on_;
           }
 
@@ -2209,7 +2202,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::legend_header_font_size()
-          { //! Get legend header font size (svg units, default pixels).
+          { //! \return  legend header font size (svg units, default pixels).
             return derived().legend_header_.style().font_size();
           }
 
@@ -2229,7 +2222,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::plot_window_on()
-          {//! Get true if a plot window is wanted (or false if the whole image is to be used).
+          {//! \return  true if a plot window is wanted (or false if the whole image is to be used).
             return derived().plot_window_on_;
           }
 
@@ -2243,13 +2236,13 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::plot_border_color()
-          { //! Get the color for the plot window background.
+          { //! \return  the color for the plot window background.
             return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::plot_border_width()
-          { //! Get the width for the plot window border (svg units, default pixels).
+          { //! \return  the width for the plot window border (svg units, default pixels).
             return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
           }
 
@@ -2271,7 +2264,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::image_border_margin()
-          { //! Get the margin around the plot window border (svg units, default pixels).
+          { //! \return  the margin around the plot window border (svg units, default pixels).
             return derived().image_border_.margin_;
           }
 
@@ -2284,7 +2277,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::image_border_width()
-          { //! Get the svg image border width (svg units, default pixels).
+          { //! \return  the svg image border width (svg units, default pixels).
             return derived().image_border_.width_;
           }
 
@@ -2323,34 +2316,34 @@ namespace boost
             return derived();
           }
 
-          //! Get the minimum and maximum (cartesian data units) for the plot window axes.
+          // Get the minimum and maximum (cartesian data units) for the plot window axes.
 
           template <class Derived>
           double axis_plot_frame<Derived>::plot_window_x_left()
-          { //! Get the left of the plot window.
+          { //! \return  left of the plot window.
             return derived().plot_left_;
           }
           template <class Derived>
           double axis_plot_frame<Derived>::plot_window_x_right()
-          { //! Get the right of the plot window.
+          { //! \return  right of the plot window.
             return derived().plot_right_;
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::plot_window_y_top()
-          { //! Get the top of the plot window.
+          { //! \return  top of the plot window.
             return derived().plot_top_;
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::plot_window_y_bottom()
-          { //! Get the top of the plot window.
+          { //! \return  top of the plot window.
             return derived().plot_bottom_;
           }
 
           template <class Derived>
           std::pair<double, double> axis_plot_frame<Derived>::plot_window_x()
-          { //! Get both the left and right (X axis) of the plot window.
+          { //! \return  both the left and right (X axis) of the plot window.
             std::pair<double, double> r;
             r.first = derived().plot_left_;
             r.second = derived().plot_right_;
@@ -2359,7 +2352,7 @@ namespace boost
 
           template <class Derived>
           std::pair<double, double> axis_plot_frame<Derived>::plot_window_y()
-          { //! Get both the top and bottom (Y axis) of the plot window.
+          { //! \return  both the top and bottom (Y axis) of the plot window.
             std::pair<double, double> r;
             r.first = derived().plot_top_;
             r.second = derived().plot_bottom_;
@@ -2368,13 +2361,13 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_interval()
-          { //! Get the interval between X minor ticks.
+          { //! \return  interval between X minor ticks.
             return derived().x_ticks_.minor_interval_;  // interval
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::y_minor_interval()
-          { //! Get the interval between Y minor ticks.
+          { //! \return  interval between Y minor ticks.
             return derived().y_ticks_.minor_interval_;  // interval
           }
 
@@ -2387,7 +2380,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_ticks_up_on()
-          { //! Get true if X major ticks should mark upwards.
+          { //! \return  true if X major ticks should mark upwards.
             return derived().x_ticks_.up_ticks_on_;
           }
 
@@ -2400,7 +2393,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_ticks_down_on()
-          { //! Get true if X major ticks should mark downwards.
+          { //! \return  true if X major ticks should mark downwards.
             return derived().x_ticks_.down_ticks_on_;
           }
           // Only need y_ticks_left_on & y_ticks_right_on in 2D, so not defined here.
@@ -2417,7 +2410,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_label_on()
-          { //! Get true if want to show X-axis label text.
+          { //! \return  true if want to show X-axis label text.
             return derived().x_axis_.label_on_;
           }
 
@@ -2430,7 +2423,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_label_font_size()
-          { //! Get X axis label font size (svg units, default pixels).
+          { //! \return  X axis label font size (svg units, default pixels).
             return derived().x_label_info_.style().font_size();
           }
 
@@ -2443,7 +2436,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_value_font_size()
-          { //! Get X tick value label font size (svg units, default pixels).
+          { //! \return  X tick value label font size (svg units, default pixels).
             return derived().x_value_value.style().font_size();
           }
 
@@ -2456,7 +2449,7 @@ namespace boost
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::x_label_font_family()
-          { //! Get X tick value label font family.
+          { //! \return  X tick value label font family.
             return derived().x_label_info_.style().font_family();
           }
 
@@ -2471,7 +2464,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_axis_label_color()
-          { //! Get X axis label color.
+          { //! \return  X axis label color.
             // But only return the stroke color.
             return derived().image.g(detail::PLOT_X_LABEL).style().stroke_color();
           }
@@ -2487,22 +2480,26 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_axis_value_color()
-          { //! Get X axis tick value label color.
+          { //! \return  X axis tick value label color.
             // But only return the stroke color.
             return derived().image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_ticks_on_window_or_axis(int cmd)
-          { // External style, top = +1, bottom = -1 (default).
+          { /*!  Set  X ticks on window or axis 
+              \arg cmd -1 bottom of plot window,
+              \arg cmd 0 on X axis.
+              \arg cmd +1 top of plot window.
+            */
             derived().x_ticks_.ticks_on_window_or_axis_ = cmd;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_ticks_on_window_or_axis()
-          { //! Get true if X axis ticks wanted on the window (rather than on axis).
-            // External style = true.
+          { //! \return true if X axis ticks wanted on the window (rather than on axis).\n
+            //! -1 bottom of plot window, 0 on X axis, +1 top of plot window.
             return derived().x_ticks_.ticks_on_window_or_axis_;
           }
 
@@ -2520,18 +2517,18 @@ namespace boost
           }
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::x_major_value_labels_side(int place)
+          Derived& axis_plot_frame<Derived>::x_major_labels_side(int place)
           { /*! Position of labels for major ticks on horizontal X axis line.
                \arg \c place > 0 labels to left of Y axis line (default),
                \arg \c place = 0 (false) no major tick labels on Y axis.
                \arg \c place > 0 labels to right of Y axis line.
             */
             derived().x_ticks_.major_value_labels_side_ = place;
-            return derived(); // \return reference to svg_2d_plot to make chainable.
+            return derived(); //! \return reference to svg_2d_plot to make chainable.
           }
 
           template <class Derived>
-          int axis_plot_frame<Derived>::x_major_value_labels_side()
+          int axis_plot_frame<Derived>::x_major_labels_side()
           { //! \return the side for X ticks major value labels.
             return derived().x_ticks_.major_value_labels_side_;
           }
@@ -2594,7 +2591,7 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::axes_on(bool is)
-          { //! If set true, draw *both* x and y axes (note plural axes).
+          { //! If set true, draw \b both x and y axes (note plural axes).
             derived().x_axis_.axis_line_on_ = is;
             derived().y_axis_.axis_line_on_ = is; // No meaning for 1D, but set anyway?
             return derived();
@@ -2602,7 +2599,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::axes_on()
-          { //! \return true if *both* x and y axis on.
+          { //! \return true if \b both x and y axis on.
             return derived().x_axis_.axis_line_on_ && derived().y_axis_.axis_line_on_;
           }
 
@@ -2666,7 +2663,7 @@ namespace boost
           //}
 
          //Derived& legend_font_width(double width)
-          //{ // Get the width of the font for the title of the plot.
+          //{ //! \return  the width of the font for the title of the plot.
             // width of text is effectively the boldness.
           //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
           //  return derived();
@@ -2678,7 +2675,7 @@ namespace boost
           //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
           //}
           //double legend_font_width()
-          //{ // Get the width of the font for the title of the legend.
+          //{ //! \return  the width of the font for the title of the legend.
           //  return derived().image.g(PLOT_TITLE).style().stroke_width();
           //}
 
@@ -2692,7 +2689,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_color()
-          { //! Get the color of the title of the legend.
+          { //! \return  the color of the title of the legend.
             // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
             // (It produces much lower quality fonts on some browsers).
             return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
@@ -2709,7 +2706,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_background_color()
-          { //! Get the background fill color of the legend box.
+          { //! \return  the background fill color of the legend box.
             return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
           }
 
@@ -2729,7 +2726,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_border_color()
-          { //! Get the border stroke color of the legend box.
+          { //! \return  the border stroke color of the legend box.
             return  derived().legend_box_.stroke();
             // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
           }
@@ -2743,13 +2740,13 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::plot_background_color()
-          { //! Get the fill color of the plot window background.
+          { //! \return  the fill color of the plot window background.
             return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::x_axis_position()
-          { //! Get the position (or intersection with Y-axis) of the X-axis.
+          { //! \return  the position (or intersection with Y-axis) of the X-axis.
             switch(derived().x_axis_position_)
             {
             case top:
@@ -2773,7 +2770,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_axis_color()
-          { //! Get the color of the X-axis line.
+          { //! \return  the color of the X-axis line.
             return derived().image.g(PLOT_X_AXIS).style().stroke_color();
           }
 
@@ -2786,7 +2783,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_axis_color()
-          { //! Get the color of the Y-axis line.
+          { //! \return  the color of the Y-axis line.
             return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
           }
 
@@ -2801,7 +2798,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_label_color()
-          { //! Get the color of X-axis label (including any units).
+          { //! \return  the color of X-axis label (including any units).
             return derived().image.g(PLOT_X_LABEL).style().fill_color();
           }
 
@@ -2816,7 +2813,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_label_width()
-          { //! Get the width (boldness) of X-axis label (including any units).
+          { //! \return  the width (boldness) of X-axis label (including any units).
             return derived().image.g(PLOT_X_LABEL).style().stroke_width();
           }
 
@@ -2830,7 +2827,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_label_color()
-          { //! Get the color of Y-axis label (including any units).
+          { //! \return  the color of Y-axis label (including any units).
             return derived().image.g(PLOT_Y_LABEL).style().fill_color();
           }
 
@@ -2843,7 +2840,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_tick_color()
-          { //! Get the color of X-axis major ticks.
+          { //! \return  the color of X-axis major ticks.
             return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
           }
 
@@ -2856,7 +2853,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_tick_color()
-          { //! Get the color of X-axis minor ticks.
+          { //! \return  the color of X-axis minor ticks.
             return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
           }
 
@@ -2869,7 +2866,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_grid_color()
-          { //! Get the color of X-axis major grid lines.
+          { //! \return  the color of X-axis major grid lines.
             return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
           }
 
@@ -2882,7 +2879,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_grid_width()
-          { //! Get the color of X-axis major grid lines.
+          { //! \return  the color of X-axis major grid lines.
             return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
           }
 
@@ -2895,7 +2892,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_grid_color()
-          { //! Get the color of X-axis minor grid lines.
+          { //! \return  the color of X-axis minor grid lines.
             return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
           }
 
@@ -2908,7 +2905,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_grid_width()
-          { //! Get the width of X-axis minor grid lines.
+          { //! \return  the width of X-axis minor grid lines.
             return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
           }
 
@@ -2921,7 +2918,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_axis_width()
-          { //! Get the width of X-axis lines.
+          { //! \return  the width of X-axis lines.
             return derived().image.g(PLOT_X_AXIS).style().stroke_width();
           }
 
@@ -2934,10 +2931,9 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::data_lines_width()
-          { //! Get the width of lines joining data points.
+          { //! \return  the width of lines joining data points.
             return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
           }
-
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label(const std::string& str)
@@ -2950,7 +2946,7 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::x_label()
-          { //! Get the text to label the X-axis.
+          { //! \return  the text to label the X-axis.
             return derived().x_label_info_.text();
           }
 
@@ -2964,7 +2960,7 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::x_label_units()
-          { //! Get the text to add units to the X-axis label.
+          { //! \return  the text to add units to the X-axis label.
             //! The label will only be shown if  x_label_on() == true.
             return derived().x_units_info_.text();
           }
@@ -2980,7 +2976,7 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::y_label()
-          { //! Get the text for the Y-axis label.
+          { //! \return  the text for the Y-axis label.
             //! The label will only be shown if  y_label_on() == true.
             return derived().y_label_info_.text();
           }
@@ -2995,7 +2991,7 @@ namespace boost
 
           template <class Derived>
           std::string axis_plot_frame<Derived>::y_label_units()
-          { //! Get the text to add units to the X-axis label.
+          { //! \return  the text to add units to the X-axis label.
             return derived().y_units_info_.text();
           }
 
@@ -3021,7 +3017,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_values_font_size()
-          { //! Get font size of data point X values near data points markers.
+          { //! \return  font size of data point X values near data points markers.
             return derived().x_values_style_.values_text_style_.font_size();
           }
 
@@ -3047,7 +3043,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_interval()
-          { //! Get the interval between X-axis major ticks.
+          { //! \return  the interval between X-axis major ticks.
             return derived().x_ticks_.major_interval_;
           }
 
@@ -3064,7 +3060,7 @@ namespace boost
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_values_color()
-          { //! Get the color of data point X values near data points markers.
+          { //! \return  the color of data point X values near data points markers.
             // Function could get either fill and stroke,
             // return derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color();
             return derived().image.g(PLOT_X_POINT_VALUES).style().fill_color();
@@ -3072,7 +3068,7 @@ namespace boost
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_rotation(rotate_style rotate)
-          { //! Get the rotation (rotate_style) of data point X values near data points markers.
+          { //! \return  the rotation (rotate_style) of data point X values near data points markers.
             //! (Degrees: 0 to 360 in 45 steps).
             derived().x_values_style_.value_label_rotation_ = rotate;
             return derived();
@@ -3080,7 +3076,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_values_rotation()
-          { //! Get the rotation of data point X values near data points markers.
+          { //! \return  the rotation of data point X values near data points markers.
             return derived().x_values_style_.value_label_rotation_;
           }
 
@@ -3093,7 +3089,7 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_values_precision()
-          { //! Get iostream decimal digits precision of data point X values near data points markers.
+          { //! \return  iostream decimal digits precision of data point X values near data points markers.
             return derived().x_values_style_.value_precision_;
           }
 
@@ -3107,7 +3103,7 @@ namespace boost
 
           template <class Derived>
           std::ios_base::fmtflags axis_plot_frame<Derived>::x_values_ioflags()
-          { //! Get iostream format flags of data point X values near data points markers.
+          { //! \return  iostream format flags of data point X values near data points markers.
             //! Might be used to set hexadecimal, fixed and scientific, (std::ios::scientific).
             return derived().x_values_style_.value_ioflags_;
           }
@@ -3122,7 +3118,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_plusminus_on()
-          { //! Get if to append uncertainty estimate to data point X values near data points markers.
+          { //! \return  if to append uncertainty estimate to data point X values near data points markers.
             //! (May not be implemented yet).
             return derived().x_values_style_.plusminus_on_;
           }
@@ -3137,7 +3133,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_df_on()
-          { //! Get if to append a degrees of freedom estimate to data point X values near data points markers.
+          { //! \return  if to append a degrees of freedom estimate to data point X values near data points markers.
             //! (May not be implemented yet).
             return derived().x_values_style_.df_on_;
           }
@@ -3151,7 +3147,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick_length()
-          {//! Get length of X major ticks.
+          {//! \return  length of X major ticks.
             return derived().x_ticks_.major_tick_length_;
           }
 
@@ -3165,7 +3161,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick_width()
-          {//! Get wqidth of X major ticks.
+          {//! \return  width of X major ticks.
             return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
           }
 
@@ -3178,7 +3174,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_tick_length()
-          { //! Get length of X minor ticks.
+          { //! \return  length of X minor ticks.
             return derived().x_ticks_.minor_tick_length_;
           }
 
@@ -3192,7 +3188,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_tick_width()
-          { //! Get width of X minor ticks.
+          { //! \return  width of X minor ticks.
             // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
             return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
           }
@@ -3205,7 +3201,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick()
-          { // Get interval (Cartesian units) between major ticks.
+          { //! \return  interval (Cartesian units) between major ticks.
             return derived().x_ticks_.major_interval_;
           }
 
@@ -3226,7 +3222,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_num_minor_ticks()
-          { //! Get number of X-axis minor ticks between major ticks.
+          { //! \return  number of X-axis minor ticks between major ticks.
             //! Note: NOT float or double!
             return derived().x_ticks_.num_minor_ticks_;
           }
@@ -3266,7 +3262,7 @@ namespace boost
 
           template <class Derived>
           std::pair<double, double> axis_plot_frame<Derived>::x_range()
-          { //! Get the range of values on the X-axis.
+          { //! \return  the range of values on the X-axis.
             //! (Need to use boost::svg::detail::operator<< to display this).
             std::pair<double, double> r;
             r.first = derived().x_axis_.min_;
@@ -3284,7 +3280,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_min()
-          { //! Get the minimum value on the X-axis.
+          { //! \return  the minimum value on the X-axis.
             //! (Can also get both minimum and maximum as a std::pair).
             return derived().x_axis_.min_;
           }
@@ -3299,7 +3295,7 @@ namespace boost
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_max()
-          { //! Get the maximum value on the X-axis.
+          { //! \return  the maximum value on the X-axis.
             //! (Can also get both minimum and maximum as a std::pair).
             return derived().x_axis_.max_;
           }
@@ -3314,14 +3310,14 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::autoscale_check_limits()
-          { //! Get to check that values used for autoscale are within limits.
+          { //! \return  to check that values used for autoscale are within limits.
             //! Default is true, but can switch off checks for speed.
             return derived().autoscale_check_limits_;
           }
 
          template <class Derived>
           bool axis_plot_frame<Derived>::x_autoscale()
-          { //! Get true if to use autoscale value for X-axis.
+          { //! \return  true if to use autoscale value for X-axis.
            return derived().x_autoscale_;
           }
 
@@ -3416,7 +3412,7 @@ namespace boost
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_with_zero()
-          { //! Get true if X-axis autoscale to include zero (default = false).
+          { //! \return  true if X-axis autoscale to include zero (default = false).
            return derived().x_include_zero_;
           }
 
@@ -3430,25 +3426,26 @@ namespace boost
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_min_ticks()
-          { //! Get X-axis autoscale minimum number of ticks.
+          { //! \return  X-axis autoscale minimum number of ticks.
            return derived().x_min_ticks_;
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_steps(int steps)
-          { //! Set autoscale to set ticks in steps multiples of:
-            //! 2,4,6,8,10, if 2,
-            //! or 1,5,10 if 5,
-            //! or 2,5,10 if 10.
-            //! default = 0 (none)
-            //! Must preceed x_autoscale(data) call.
+          { /*! Set autoscale to set ticks in steps multiples of:\n
+             2,4,6,8,10, if 2\n
+             or 1,5,10 if 5\n
+             or 2,5,10 if 10.\n
+             default = 0 (none).
+             \note: Must preceed x_autoscale(data) call).
+             */
             derived().x_steps_ = steps;
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_steps()
-          { //! Get autoscale to set ticks in steps.
+          { //! \return  autoscale to set ticks in steps.
            return derived().x_steps_;
           }
 
@@ -3463,31 +3460,31 @@ namespace boost
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_tight()
-         { //! Get tolerance given to autoscale to permit data points slightly outside both end ticks.
+         { //! \return  tolerance given to autoscale to permit data points slightly outside both end ticks.
            return derived().x_tight_;
          }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_auto_min_value()
-         { //! Get the X-axis minimum value computed by autoscale.
+         { //! \return  the X-axis minimum value computed by autoscale.
            return derived().x_auto_min_value_;
          }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_auto_max_value()
-         { //! Get the X-axis maximum value computed by autoscale.
+         { //! \return  the X-axis maximum value computed by autoscale.
            return derived().x_auto_max_value_;
          }
 
          template <class Derived>
          double axis_plot_frame<Derived>::x_auto_tick_interval()
-         { //! Get the X-axis major tick interal computed by autoscale.
+         { //! \return  the X-axis major tick interal computed by autoscale.
            return derived().x_auto_tick_interval_;
          }
 
         template <class Derived>
         int axis_plot_frame<Derived>::x_auto_ticks()
-        { //! Get the X-axis number of major ticks computed by autoscale.
+        { //! \return  the X-axis number of major ticks computed by autoscale.
          return derived().x_auto_ticks_;
         }
 

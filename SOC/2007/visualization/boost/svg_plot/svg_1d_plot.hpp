@@ -138,30 +138,30 @@ line_style_(black, blank, 2, true, false) // Default line style, black, no fill,
 svg_1d_plot_series& svg_1d_plot_series::fill_color(const svg_color& col_)
 { //! Set fill color for plot point marker(s) (chainable).
   point_style_.fill_color_ = col_;
-  return *this; // \return reference to svg_1d_plot_series to make chainable.
+  return *this; //! \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::stroke_color(const svg_color& col_)
 { //! Set stroke color for plot point marker(s) (chainable).
   point_style_.stroke_color_ = col_;
-  return *this; // \return reference to svg_1d_plot_series to make chainable.
+  return *this; //! \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::shape(point_shape shape_)
 { //! Set shape for plot point marker(s) (chainable).
   point_style_.shape_ = shape_;
-  return *this; // \return reference to svg_1d_plot_series to make chainable.
+  return *this; //! \return reference to svg_1d_plot_series to make chainable.
 }
 
 point_shape svg_1d_plot_series::shape()
-{//! Get shape for plot point marker(s).
+{ //! \return  shape for plot point marker(s).
   return point_style_.shape_;
 }
 
 svg_1d_plot_series& svg_1d_plot_series::symbols(const std::string s)
 { //! Set symbol for plot point marker(s).
   point_style_.symbols_ = s;
-  return *this; // \return reference to svg_1d_plot_series to make chainable.
+  return *this; //! \return reference to svg_1d_plot_series to make chainable.
 }
 
 svg_1d_plot_series& svg_1d_plot_series::size(int size_)
@@ -169,16 +169,16 @@ svg_1d_plot_series& svg_1d_plot_series::size(int size_)
   //point_style_.size_ = size_;
   //point_style_.symbols_style_.font_size(i); // in case using a symbol.
   point_style_.size(size_);
-  return *this; // \return reference to svg_1d_plot_series to make chainable.
+  return *this; //! \return reference to svg_1d_plot_series to make chainable.
 }
 
 int svg_1d_plot_series::size()
-{ //! Get size of plot point marker(s).
+{ //! \return  size of plot point marker(s).
   return point_style_.size();
 }
 
 const std::string svg_1d_plot_series::symbols()
-{ //! Get symbol for plot point marker(s).
+{ //! \return  symbol for plot point marker(s).
   return point_style_.symbols_;
 }
 
@@ -195,7 +195,7 @@ svg_1d_plot_series& svg_1d_plot_series::line_width(double wid_)
 }
 
 double svg_1d_plot_series::line_width()
-{ //! Get width of any line joining plot points.
+{ //! \return  width of any line joining plot points.
   return line_style_.width_;
 }
 
@@ -206,7 +206,7 @@ svg_1d_plot_series& svg_1d_plot_series::line_on(bool on_)
 }
 
 bool svg_1d_plot_series::line_on()
-{ //! Get if to draw a line joining plot points (if true).
+{ //! \return  if to draw a line joining plot points (if true).
   return line_style_.bezier_on_;
 }
 
@@ -217,7 +217,7 @@ svg_1d_plot_series& svg_1d_plot_series::bezier_on(bool on_)
 }
 
 bool svg_1d_plot_series::bezier_on()
-{ //! Get to draw bezier curved line joining plot points (if true).
+{ //! \return  to draw bezier curved line joining plot points (if true).
   return line_style_.bezier_on_;
 }
 

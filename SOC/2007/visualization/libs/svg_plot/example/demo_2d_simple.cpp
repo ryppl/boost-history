@@ -193,7 +193,7 @@ x_label_font_family Verdana
 x_label_font_size 14
 x_label_units
 x_label_units_on false
-x_major_value_labels_side left
+x_major_labels_side left
 x_major_label_rotation 0
 x_major_grid_color RGB(200,220,255)
 x_major_grid_on false
@@ -237,7 +237,7 @@ y_major_grid_on false
 y_major_grid_color RGB(200,220,255)
 y_major_grid_width 1
 y_major_interval 2
-y_major_value_labels_side bottom
+y_major_labels_side bottom
 y_major_label_rotation 0
 y_major_tick_color RGB(0,0,0)
 y_major_tick_length  5
