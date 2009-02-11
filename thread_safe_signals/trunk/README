@@ -4,17 +4,16 @@ thread-safety.  See the html documentation in the
 "libs/signals2/doc/html" subdirectory for more information.
 
 This implementation is header-only.  It should be useable by simply adding
-this directory to your include path when compiling.  However, it does depend
-on the Boost.thread library if you use the multi_threaded ThreadingModel for
-your signals.  Be sure to place this directory before the path to your 
+this directory to your include path when compiling.
+Be sure to place this directory in your include path before the path to your 
 full boost headers.
 
-The web page for thread_safe_signals is at:
+The documentation for thread_safe_signals is online at:
 
 http://www.comedi.org/projects/signals2/libs/signals2/doc/html/index.html
 
 Releases should also contain the html documentation, under the 
-subdirectory libs/thread_safe_signals/doc/html/
+subdirectory libs/signals2/doc/html/
 
 The latest version of this library should be available from the
 boost sandbox svn:
@@ -27,6 +26,6 @@ following command:
 
 svn co http://svn.boost.org/svn/boost/sandbox/thread_safe_signals/trunk signals2
 
-2007-09-25
+2009-02-11
 Frank Mori Hess <fmhess@users.sourceforge.net>
 
