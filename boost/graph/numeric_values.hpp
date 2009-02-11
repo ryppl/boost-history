@@ -1,4 +1,4 @@
-// (C) Copyright Andrew Sutton 2007
+// (C) Copyright 2007-2009 Andrew Sutton
 //
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0 (See accompanying file
@@ -12,63 +12,41 @@
 namespace boost
 {
 
-    // This generic type reports various numeric values for
-    // some type. This must be specialized for non-numeric
-    // types such that the return values have the equivalent
-    // semantics of zero and infinity. This classd essentially
-    // builds abstractions for zero and infinity out of types
-    // that don't necessarily support it.
-    //
-    // Specializations are provided for float and double types
-    // since they actually have an infinity value.
+#define BOOST_GRAPH_SPECIALIZE_NUMERIC_FLOAT(type) \
+    template <> struct numeric_values<type> { \
+        typedef type value_type; \
+        static type zero() { return 0.0; } \
+        static type infinity() { return std::numeric_limits<type>::infinity(); } \
+    };
 
+    /**
+     * This generic type reports various numeric values for some type. In the
+     * general case, numeric values simply treat their maximum value as infinity
+     * and the default-constructed value as 0.
+     *
+     * Specializations of this template can redefine the notions of zero and
+     * infinity for various types. For example, the class is specialized for
+     * floating point types to use the built in notion of infinity.
+     */
     template <typename T>
     struct numeric_values
     {
         typedef T value_type;
 
-        static inline T zero()
+        static T zero()
         { return T(); }
 
-        static inline T infinity()
+        static T infinity()
         { return std::numeric_limits<T>::max(); }
     };
 
-    template <>
-    struct numeric_values<float>
-    {
-        typedef float value_type;
+    // Specializations for floating point types refer to 0.0 and their infinity
+    // value defined by numeric_limits.
+    BOOST_GRAPH_SPECIALIZE_NUMERIC_FLOAT(float)
+    BOOST_GRAPH_SPECIALIZE_NUMERIC_FLOAT(double)
+    BOOST_GRAPH_SPECIALIZE_NUMERIC_FLOAT(long double)
 
-        static inline float zero()
-        { return float(0.0); }
-
-        static inline float infinity()
-        { return std::numeric_limits<float>::infinity(); }
-    };
-
-    template <>
-    struct numeric_values<double>
-    {
-        typedef double value_type;
-
-        static inline double zero()
-        { return double(0.0); }
-
-        static inline double infinity()
-        { return std::numeric_limits<double>::infinity(); }
-    };
-
-    template <>
-    struct numeric_values<long double>
-    {
-        typedef long double value_type;
-
-        static inline long double zero()
-        { return value_type(0.0); }
-
-        static inline long double infinity()
-        { return std::numeric_limits<long double>::infinity(); }
-    };
+#undef BOOST_GRAPH_SPECIALIZE_NUMERIC_VALUE
 }
 
 #endif
