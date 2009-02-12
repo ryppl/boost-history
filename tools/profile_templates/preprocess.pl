@@ -24,7 +24,7 @@ $ws = qr/(?:$comment|$pp|\s|(?:\\(?:\n|\r\n)))/;
 
 $class_header = qr/(?>(?>\b(?:class|struct))(?>$ws+\w+)(?>(?>[^(){;=]|$parens|$ignored)*)\{)/;
 
-$control = qr/(?:\b(?:__if_exists|__if_not_exists|for|while|if|catch|switch)\b)/;
+$control = qr/(?:\b(?:__attribute__|__if_exists|__if_not_exists|for|while|if|catch|switch)\b)/;
 $modifiers = qr/(?:\b(?:try|const|volatile)\b)/;
 $start = qr/(?:^|\G|[{};])(?>$ws*)/;
 $body = qr/(?:(?!$control)(?>$ignored|[^{};]))/;
