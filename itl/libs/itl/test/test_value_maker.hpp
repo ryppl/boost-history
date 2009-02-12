@@ -81,6 +81,7 @@ struct map_val
 	typedef typename ItvMapT::interval_type     interval_type;
 	typedef typename ItvMapT::value_type        value_type;
 	typedef typename ItvMapT::domain_mapping_type domain_mapping_type;
+	typedef std::pair<domain_type, codomain_type> std_pair_type; 
 
 	static interval<domain_type> interval(int lower, int upper, int bounds = 2)
 	{
@@ -96,8 +97,14 @@ struct map_val
 
 	static domain_mapping_type map_pair(int key, int val)
 	{
-		return domain_mapping_type(test_value<domain_type>::make(key), 
-			                     test_value<codomain_type>::make(val));
+		return domain_mapping_type(test_value<  domain_type>::make(key), 
+			                       test_value<codomain_type>::make(val));
+	}
+
+	static std_pair_type std_pair(int key, int val)
+	{
+		return std_pair_type(test_value<  domain_type>::make(key), 
+			                 test_value<codomain_type>::make(val));
 	}
 };
 
@@ -123,6 +130,7 @@ struct map_val
 #define CIv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, left_open)
 #define CDv(low,up,val) map_val<IntervalMapT>::val_pair(low,up,val, open_bounded)
 #define K_v(key,val)    map_val<IntervalMapT>::map_pair(key,val)
+#define sK_v(key,val)   map_val<IntervalMapT>::std_pair(key,val)
 
 
 }} // namespace boost itl

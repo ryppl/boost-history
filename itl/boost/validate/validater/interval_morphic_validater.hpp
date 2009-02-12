@@ -33,10 +33,12 @@ namespace boost{namespace itl
         { 
             atomize_plus,
             atomize_minus,
-            atomize_star,
+            atomize_et,
+            atomize_caret,
             cluster_plus,
             cluster_minus,
-            cluster_star,
+            cluster_et,
+            cluster_caret,
             atomize_insert,
             atomize_erase,
             cluster_insert,
@@ -52,17 +54,19 @@ namespace boost{namespace itl
         {
             _lawChoice.setSize(Laws_size);
             _lawChoice.setMaxWeights(100);
-            _lawChoice[atomize_plus]   = 10;
-            _lawChoice[atomize_minus]  = 5;
-            _lawChoice[atomize_star]   = 5;
-            _lawChoice[cluster_plus]   = 10;
-            _lawChoice[cluster_minus]  = 5;
-            _lawChoice[cluster_star]   = 5;
-            _lawChoice[atomize_insert] = 10;
-            _lawChoice[atomize_erase]  = 10;
-            _lawChoice[cluster_insert] = 10;
-            _lawChoice[cluster_erase]  = 20;
-            _lawChoice[join_plus]      = 10;
+            _lawChoice[atomize_plus]   = 8;
+            _lawChoice[atomize_minus]  = 8;
+            _lawChoice[atomize_et]     = 8;
+            _lawChoice[atomize_caret]  = 8;
+            _lawChoice[cluster_plus]   = 8;
+            _lawChoice[cluster_minus]  = 8;
+            _lawChoice[cluster_et]     = 8;
+            _lawChoice[cluster_caret]  = 8;
+            _lawChoice[atomize_insert] = 8;
+            _lawChoice[atomize_erase]  = 7;
+            _lawChoice[cluster_insert] = 7;
+            _lawChoice[cluster_erase]  = 7;
+            _lawChoice[join_plus]      = 7;
             _lawChoice[absorb_plus]    = 0;
             _lawChoice.init();
         }
@@ -74,10 +78,12 @@ namespace boost{namespace itl
             {
             case atomize_plus:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_plus>,  RandomGentor>();
             case atomize_minus:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_minus>, RandomGentor>();
-            case atomize_star:   return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_et>,    RandomGentor>();
+            case atomize_et:     return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_et>,    RandomGentor>();
+            case atomize_caret:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inplace_caret>,    RandomGentor>();
             case cluster_plus:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_plus>,  RandomGentor>();
             case cluster_minus:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_minus>, RandomGentor>();
-            case cluster_star:   return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_et>,    RandomGentor>();
+            case cluster_et:     return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_et>,    RandomGentor>();
+            case cluster_caret:  return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inplace_caret>,    RandomGentor>();
             case atomize_insert: return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, inserter>,      RandomGentor>();
             case atomize_erase:  return new LawValidater<BinaryPushout<Type, typename Type::atomized_type, Interval::Atomize, eraser>,        RandomGentor>();
             case cluster_insert: return new LawValidater<BinaryPushout<typename Type::atomized_type, Type, Interval::Cluster, inserter>,      RandomGentor>();

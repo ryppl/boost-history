@@ -61,6 +61,8 @@ public:
     typedef typename base_type::reverse_iterator       reverse_iterator;
     typedef typename base_type::const_reverse_iterator const_reverse_iterator;
 
+	enum { fineness = 4 };
+
 public:
 	//==========================================================================
 	//= Construct, copy, destruct
@@ -76,6 +78,8 @@ public:
     set(InputIterator f, InputIterator l, const key_compare& comp): std::set<InputIterator>(f,l,comp) {}
 
     set(const set& src): base_type::set(src){}
+
+    explicit set(const element_type& key): base_type::set(){ insert(key); }
 
     set& operator=(const set& src) { base_type::operator=(src); return *this; } 
     void swap(set& src) { base_type::swap(src); }
@@ -141,6 +145,7 @@ public:
 
 	void add_intersection(set& section, const set& sectant)const;
 
+    set& flip(const element_type& value);
 
     /** \c key_value allows for a uniform access to \c key_values which is
         is used for common algorithms on sets and maps. */
@@ -212,6 +217,18 @@ void set<DomainT,Compare,Alloc>
 	while(sec_ != common_upb_)
 		add_intersection(section, *sec_++);
 }
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+inline itl::set<DomainT,Compare,Alloc>& 
+set<DomainT,Compare,Alloc>::flip(const element_type& operand)
+{
+	std::pair<iterator,bool> insertion = insert(operand);
+	if(!insertion.WAS_SUCCESSFUL)
+		erase(insertion.ITERATOR);
+
+	return *this;
+} 
+
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 std::string set<DomainT,Compare,Alloc>::as_string(const char* sep)const
@@ -440,20 +457,18 @@ operator &  (const itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 {
-	typedef itl::set<DomainT,Compare,Alloc> ObjectT;
-	if(object.contains(operand))
-		return erase(operand);
-	else
-		return add(operand);
+	return object.flip(operand);
 } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+{ 
+	return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+}
 
 
 
@@ -463,13 +478,17 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ Set::flip(object, operand); return object; }
+{ 
+	Set::flip(object, operand); return object; 
+}
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+{ 
+	return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+}
 
 
 
@@ -491,11 +510,11 @@ template<class CharType, class CharTraits,
 	class DomainT, ITL_COMPARE Compare,	ITL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
-   const set<DomainT,Compare,Alloc>& object)
+  const itl::set<DomainT,Compare,Alloc>& object)
 {
-	typedef itl::set<DomainT,Compare,Alloc> SetT;
+	typedef itl::set<DomainT,Compare,Alloc> ObjectT;
 	stream << "{";
-	const_FORALL(typename SetT, it, object)
+	const_FORALL(typename ObjectT, it, object)
 		stream << *it;
 
 	return stream << "}";
