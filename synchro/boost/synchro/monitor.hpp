@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,11 +11,11 @@
 #ifndef BOOST_SYNCHRO_CONC_MONITOR__HPP
 #define BOOST_SYNCHRO_CONC_MONITOR__HPP
 
-#include "boost/synchro/lockers/condition_locker.hpp"
-#include "boost/synchro/lockable_concepts.hpp"
-#include "boost/synchro/make_lockable.hpp"
-#include "boost/synchro/thread/mutex.hpp"
-#include "boost/synchro/thread/shared_mutex.hpp"
+#include <boost/synchro/lockers/condition_locker.hpp>
+#include <boost/synchro/lockable_concepts.hpp>
+#include <boost/synchro/lockable_adapter.hpp>
+#include <boost/synchro/thread/mutex.hpp>
+#include <boost/synchro/thread/shared_mutex.hpp>
 
 namespace boost { namespace synchro {
 
@@ -26,7 +26,7 @@ namespace boost { namespace synchro {
 template <
     typename Lockable=boost::mutex
 >
-class exclusive_monitor : protected make_exclusive_lockable<Lockable> { /*< behaves like an ExclusiveLockable for the derived classes >*/
+class exclusive_monitor : protected exclusive_lockable_adapter<Lockable> { /*< behaves like an ExclusiveLockable for the derived classes >*/
 protected:
     typedef unspecified synchronizer; /*< is an strict lock guard >*/
 };
@@ -39,7 +39,7 @@ template <
     typename Lockable=boost::mutex,
     class Condition=typename best_condition<Lockable>::type
 >
-class exclusive_monitor : protected make_lockable<Lockable> {
+class exclusive_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
@@ -52,7 +52,7 @@ template <
     typename Lockable=boost::shared_mutex,
     class Condition=condition_safe<typename best_condition_any<Lockable>::type >,
 >
-class shared_monitor : protected make_lockable<Lockable> {
+class shared_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
@@ -68,7 +68,7 @@ template <
     class Condition=condition_safe<typename best_condition<Lockable>::type >,
     class ConditionBoosted=condition_safe_boosted<typename best_condition<Lockable>::type >
 >
-class exclusive_monitor : protected make_lockable<Lockable> {
+class exclusive_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
@@ -81,7 +81,7 @@ template <
     class Condition=condition_safe<typename best_condition_any<Lockable>::type >,
     class ConditionBoosted=condition_safe_boosted<typename best_condition_any<Lockable>::type >
 >
-class shared_monitor : protected make_lockable<Lockable> {
+class shared_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
@@ -95,7 +95,7 @@ protected:
 //    typename Lockable=boost::shared_mutex,
 //    typename Condition=condition_safe<best_condition<Lockable> >
 //>
-//class upgrade_monitor : protected make_lockable<Lockable> {
+//class upgrade_monitor : protected lockable_adapter<Lockable> {
 //    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 //protected:
 //    typedef Condition condition;

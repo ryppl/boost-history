@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,16 +11,16 @@
 #ifndef BOOST_SYNCHRO_STRICT_LOCKER__HPP
 #define BOOST_SYNCHRO_STRICT_LOCKER__HPP
 
-#include "boost/assert.hpp"
-#include "boost/concept_check.hpp"
-#include "boost/synchro/detail/deleted_functions.hpp"
-#include "boost/mpl/bool.hpp"
-#include "boost/synchro/lockers/is_strict_locker.hpp"
-#include "boost/synchro/syntactic_lock_traits.hpp"
-#include "boost/synchro/lockable_traits.hpp"
-#include "boost/synchro/lockable_concepts.hpp"
-#include "boost/synchro/locker_concepts.hpp"
-#include "boost/thread/exceptions.hpp"
+#include <boost/assert.hpp>
+#include <boost/concept_check.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/synchro/lockers/is_strict_locker.hpp>
+#include <boost/synchro/syntactic_lock_traits.hpp>
+#include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/lockable_concepts.hpp>
+#include <boost/synchro/locker_concepts.hpp>
+#include <boost/thread/exceptions.hpp>
 
 namespace boost {  namespace synchro {
 

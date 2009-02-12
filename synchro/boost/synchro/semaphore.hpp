@@ -1,7 +1,7 @@
 //////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Ion Gaztanaga 2005-2008.
-// (C) Copyright Vicente J. Botet Escriba 2008.
+// (C) Copyright Vicente J. Botet Escriba 2008-2009.
 // Distributed under the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -13,11 +13,8 @@
 #ifndef BOOST_SYNCHRO_SEMAPHORE_HPP
 #define BOOST_SYNCHRO_SEMAPHORE_HPP
 
-//#include "boost/thread/mutex.hpp"
-//#include "boost/thread/condition_variable.hpp"
-//#include "boost/thread/locks.hpp"
-#include "boost/synchro/thread_synchronization_family.hpp"
-#include "boost/synchro/lockable_traits.hpp"
+#include <boost/synchro/thread_synchronization_family.hpp>
+#include <boost/synchro/lockable_traits.hpp>
 
 //!\file
 //!Describes a semaphore class for inter-process synchronization

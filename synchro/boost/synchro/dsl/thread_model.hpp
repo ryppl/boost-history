@@ -1,4 +1,4 @@
-/* Copyright 2008 Vicente J. Botet Escriba
+/* Copyright 2008-2009 Vicente J. Botet Escriba
  * Distributed under the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or copy at
  * http://www.boost.org/LICENSE_1_0.txt)
@@ -11,8 +11,7 @@
 
 #include <boost/detail/is_xxx.hpp>
 #include <boost/parameter/aux_/void.hpp>
-#include "boost/iccl/thread_locking_traits.hpp"
-//#include "boost/iccl/process_locking_traits.hpp"
+#include <boost/iccl/thread_locking_traits.hpp>
 
 /* DSL:
  * 

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,16 +11,16 @@
 #ifndef BOOST_SYNCHRO_LOCK_GENERATOR__HPP
 #define BOOST_SYNCHRO_LOCK_GENERATOR__HPP
 
-#include "boost/synchro/lock_traits.hpp"
-#include "boost/synchro/null/mutex.hpp"
-#include "boost/synchro/thread/mutex.hpp"
-#include "boost/synchro/thread/recursive_mutex.hpp"
-#include "boost/synchro/thread/shared_mutex.hpp"
-#include "boost/synchro/process/mutex.hpp"
-#include "boost/synchro/process/recursive_mutex.hpp"
-#include "boost/synchro/process/upgradable_mutex.hpp"
-#include "boost/mpl/and.hpp"
-#include "boost/type_traits.hpp"
+#include <boost/synchro/lock_traits.hpp>
+#include <boost/synchro/null/mutex.hpp>
+#include <boost/synchro/thread/mutex.hpp>
+#include <boost/synchro/thread/recursive_mutex.hpp>
+#include <boost/synchro/thread/shared_mutex.hpp>
+#include <boost/synchro/process/mutex.hpp>
+#include <boost/synchro/process/recursive_mutex.hpp>
+#include <boost/synchro/process/upgradable_mutex.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits.hpp>
 
 namespace boost {
 namespace synchro {
@@ -116,7 +116,7 @@ struct find_best_lock<
     process_lifetime_tag,
     anonymous_tag
 > {
-  typedef boost::mutex type;
+  typedef boost::synchro::thread_mutex type;
 };
 
 template<>
@@ -128,7 +128,7 @@ struct find_best_lock<
     process_lifetime_tag,
     anonymous_tag
 > {
-  typedef boost::recursive_mutex type;
+  typedef boost::synchro::thread_recursive_mutex type;
 };
 
 template<>
@@ -140,7 +140,7 @@ struct find_best_lock<
     process_lifetime_tag,
     anonymous_tag
 > {
-  typedef boost::timed_mutex type;
+  typedef boost::synchro::thread_timed_mutex type;
 };
 
 template<>
@@ -152,7 +152,7 @@ struct find_best_lock<
     process_lifetime_tag,
     anonymous_tag
 > {
-  typedef boost::recursive_timed_mutex type;
+  typedef boost::synchro::thread_recursive_timed_mutex type;
 };
 
 template <
@@ -167,7 +167,7 @@ struct find_best_lock<
     process_lifetime_tag,
     anonymous_tag
 > {
-  typedef boost::shared_mutex type;
+  typedef boost::synchro::thread_shared_mutex type;
 };
 
 //////////////////////////

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,7 +11,7 @@
 #ifndef BOOST_SYNCHRO_LOCKABLE_CONCEPTS_HPP
 #define BOOST_SYNCHRO_LOCKABLE_CONCEPTS_HPP
 
-#include "boost/synchro/lockable_traits.hpp"
+#include <boost/synchro/lockable_traits.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/concept_check.hpp>

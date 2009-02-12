@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -11,15 +11,10 @@
 #ifndef BOOST_SYNCHRO_CONC_SYSTEM__HPP
 #define BOOST_SYNCHRO_CONC_SYSTEM__HPP
 
-//#include "boost/synchro/lockers/is_strict_locker.hpp"
-//#include "boost/synchro/lockers/strict_locker.hpp"
-//#include "boost/synchro/syntactic_lock_traits.hpp"
-//#include "boost/synchro/lock_traits.hpp"
-//#include "boost/static_assert.hpp"
-//#include "boost/type_traits/is_same.hpp"
-//#include "boost/synchro/lock_concepts.hpp"
-//#include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/semaphore.hpp>
+#include <boost/interthreads/fork.hpp>
+#include <boost/bind.hpp>
+#include <boost/ref.hpp>
 #include <typeinfo>
 
 namespace boost { namespace synchro {
@@ -283,5 +278,18 @@ public:
 //]
 #endif
 }
+#if 0
+namespace interthreads {
+namespace partial_specialization_workaround {
+template< typename AE, typename CC >
+struct fork<AE,CC&> {
+    static typename result_of::fork<AE,CC>::type 
+    apply(AE& ae, CC& cc ) {
+        return ae.fork(boost::bind(boost::ref(cc)));
+    }
+};
+}
+}
+#endif
 }
 #endif
