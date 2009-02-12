@@ -22,12 +22,27 @@
 void two_spheres::draw_prologue()
 {
     using namespace boost::guigl::gl;
-
     base_type::draw_prologue();
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    wire_sphere(20, 20, 20);
+    //glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_COLOR_MATERIAL);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT1);
+
+    light_ambient(GL_LIGHT1, 0.6f, 0.6f, 0.6f, 1.0f);
+    light_diffuse(GL_LIGHT1, 1.0f, 1.0f, 1.0f, 1.0f);
+    light_specular(GL_LIGHT1, 1.0f, 1.0f, 1.0f, 1.0f);
+    light_position(GL_LIGHT1, 100, 40, 40, 1);
+    light_spot_direction(GL_LIGHT1, -100, -40, -40);
+    light_constant_ambient(GL_LIGHT1, 1.5f);
+    light_linear_attenuation(GL_LIGHT1, 0.5f);
+    light_quadratic_attenuation(GL_LIGHT1, 0.2f);
+    light_spot_cutoff(GL_LIGHT1, 180.0f);
+    light_spot_exponent(GL_LIGHT1, 2.0f);
+
+    solid_sphere(50, 10, 10);
     glLoadIdentity();
     translate(50.f, 50.f, 50.f);
     wire_sphere(20, 20, 20);

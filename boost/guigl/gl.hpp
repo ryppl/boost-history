@@ -137,6 +137,7 @@ namespace boost{ namespace guigl { namespace gl {
 #include "platform/impl/color.hpp"
 #include "platform/impl/rect.hpp"
 #include "platform/impl/transform.hpp"
+#include "platform/impl/light.hpp"
 #include "platform/impl/glut.hpp"
 
 #endif BOOST__GUIGL__GL_HPP

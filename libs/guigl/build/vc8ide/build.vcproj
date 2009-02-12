@@ -131,6 +131,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\boost\guigl\platform\impl\light.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\boost\guigl\platform\impl\rect.hpp"
 						>
 					</File>
