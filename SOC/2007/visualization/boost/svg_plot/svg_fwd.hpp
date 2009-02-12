@@ -61,7 +61,7 @@ svg& x_size(unsigned int x);
 unsigned int x_size();
 svg& y_size(unsigned int y);
 unsigned int y_size();
-svg& image_size(unsigned int x, unsigned int y);
+svg& size(unsigned int x, unsigned int y);
 
 // Information about the image file: description, title, copyright and date.
 svg& description(const std::string d);

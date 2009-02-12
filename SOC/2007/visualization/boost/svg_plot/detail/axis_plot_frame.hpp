@@ -1,9 +1,9 @@
- /*!
-  \file axis_plot_frame.hpp
+ /*!  \file axis_plot_frame.hpp
   \brief SVG Plot functions common to 1D, 2D and Boxplots.
   \details Functions are derived from base class axis_plot_frame.
   \date 11 Feb 2009
   \author Jacob Voytko and Paul A. Bristow
+
 */
 
 // Copyright Jacob Voytko 2007
@@ -900,14 +900,11 @@ namespace boost
             g_element& g_ptr,
             plot_point_style& sty)
           { //! Draw a plot data point marker shape whose size and color are specified in plot_point_style.
-            int size = sty.size_;
-            double half_size = size / 2.;
-
-            /*! \details
+            /*
               For 1-D plots, the points do not *need* to be centered on the X-axis,
               and putting them just above, or sitting on, the X-axis is much clearer.
               For 2-D plots, the symbol center should, of course,
-              be *centered exactly* on x, y.
+              be centered exactly on x, y.
               circle and ellipse are naturally centered on the point.
               for rect x and y half_size offset centers square on the point.
               But symbols are in a rectangular box and the offset is different for x & y
@@ -915,6 +912,8 @@ namespace boost
               the vertical and horizontal ticks are deliberately offset above the axes.
               TODO Not sure this is fully resolved.
             */
+            int size = sty.size_;
+            double half_size = size / 2.;
 
             switch(sty.shape_) // from enum point_shape none, round, square, point, egg
             {
@@ -1102,24 +1101,23 @@ namespace boost
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
 
           std::string sv(double v, const value_style& sty, bool unc = false)
-          { //! Strip from values any unecessary e, +, & leading exponent zeros, reducing to "1.2, 3.4" or "3.4e1, 5.6e1"...
+          { //! Strip from double value any unecessary e, +, & leading exponent zeros, reducing "1.200000" to "1.2" or "3.4e1"...
             std::stringstream label;
             // Precision of uncertainty is usually less than precision of value,
             // label.precision((unc) ? ((sty.value_precision_ > 3) ?  sty.value_precision_-2 : 1) : sty.value_precision_);
             // Possible but simpler to fix at precision=2
             label.precision((unc) ? 2 : sty.value_precision_);
             label.flags(sty.value_ioflags_);
-            label << v; // "1.2, 3.4" or "3.4e+001, 5.6e+001"...
+            label << v; // "1.2" or "3.4e+001"...
             return  (sty.strip_e0s_) ?
               // Default is to strip unecessary e, +, & leading exponent zeros.
-              strip_e0s(label.str())  // reduce to "1.2, 3.4" or "3.4e1, 5.6e1"...
+              strip_e0s(label.str())  // reduce to "1.2" or "3.4e1"...
               :
-              label.str();  // Unstripped.
+              label.str();  // Leave unstripped.
           } // std::string sv(double v, const value_style& sty)
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
           { //! Write the \b pair of data point's values as a string.
-
             std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
             std::string label_yv = sv(vy, y_sty);
             std::string label_xu;
@@ -1342,7 +1340,7 @@ namespace boost
           // If both are set, stroke is considered 'more important',
           // and so is returned by get functions.
 
-          Derived& image_size(unsigned int x, unsigned int y);
+          Derived& size(unsigned int x, unsigned int y);
           unsigned int image_x_size();
           Derived& image_x_size(unsigned int i);
           unsigned int image_y_size();
@@ -1650,11 +1648,11 @@ namespace boost
           } // x_autoscale(const T& container)
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::image_size(unsigned int x, unsigned int y)
+          Derived& axis_plot_frame<Derived>::size(unsigned int x, unsigned int y)
           { //! Set SVG image size (SVG units, default pixels).
             // Might put default sizes here?
             // Check on sanity of these values?
-            derived().image.image_size(x, y);
+            derived().image.size(x, y);
             return derived();
           }
 
@@ -1702,8 +1700,8 @@ namespace boost
           { //! Set plot background border color.
             derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
             /*!
+              background_border_color example:
               \code
-// background_border_color example:
 svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_color(azure);
               \endcode
             */
@@ -1765,13 +1763,13 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::copyright_holder()
-          { //! \return  copyright_holder.
+          { //! \return copyright holder.
             return derived().image.copyright_holder();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::copyright_date(const std::string d)
-          { //! Writes copyright_date to the document.
+          { //! Writes copyright date to the document.
             //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
             derived().image.copyright_date(d);
             return derived();
@@ -1851,9 +1849,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::coord_precision(int digits)
-          { //! Precision of SVG coordinates in decimal digits (default 3).
-            /*!
-              \details 3 decimal digits precision is sufficient for small images.
+          { /*! Precision of SVG coordinates in decimal digits (default 3).
+              3 decimal digits precision is sufficient for small images.
               4 or 5 decimal digits precision will give higher quality plots,
               especially for larger images, at the expense of larger .svg files,
               particularly if there are very many data points.
@@ -1870,9 +1867,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_value_precision(int digits)
-          { //! Precision of X tick label values in decimal digits (default 3).
-            /*!
-              \details 3 decimal digits precision is sufficient for small images.
+          { /*! Precision of X tick label values in decimal digits (default 3).
+              3 decimal digits precision is sufficient for small images.
               4 or 5 decimal digits precision will give more cluttered plots.
               If the range of labels is very small, then more digits will be essential.
             */
@@ -1889,8 +1885,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_value_ioflags(int flags)
-          { //! Set iostream std::ios::fmtflags for X value label (default decimal == 0X201).
-            /*! \details
+          { /*! Set iostream std::ios::fmtflags for X value label (default decimal == 0X201).
               Mainly useful for changing to scientific, fixed or hexadecimal format.
               For example: .x_value_ioflags(std::ios::dec | std::ios::scientific)
             */
@@ -1920,11 +1915,11 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title(const std::string title)
-          { //! Set a title for plot.
-            /*! \details
+          { /*! 
+              Set a title for plot.
               The string may include Unicode for greek letter and symbols.
               For example a title that includes a greek omega:
-              \verbatim my_plot.title("Plot of &#x3A9; function");\endverbatim
+              \verbatim my_plot.title("Plot of &#x3A9; function"); \endverbatim
             */
             // Plot title.  TODO
             // new text parent code pushback
@@ -2113,7 +2108,6 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           { //! \return  the font size for the legend title (svg units, default pixels).
             return derived().legend_header_.style().font_size();
           }
-
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_top_left(double x, double y)
@@ -2506,6 +2500,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_units_on(bool cmd)
           { //! Set true if want X axis label to include units (as well as label like "length").
+            //! \see x_label_units which also sets true.
             derived().x_axis_.label_units_on_ = cmd;
             return derived();
           }

@@ -104,7 +104,7 @@ void plot(const std::string& title, const std::string& file,
 
   svg_2d_plot my_plot;
   // Size/scale settings.
-  my_plot.image_size(700, 500);
+  my_plot.size(700, 500);
   //my_plot.legend_top_left(175, 100);
   my_plot.title(title)
           .title_font_size(20)

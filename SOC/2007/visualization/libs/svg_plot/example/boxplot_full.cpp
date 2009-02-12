@@ -1,8 +1,15 @@
-// boxplot_full.cpp
-// Copyright (C) Jacob Voytko 2007
+/*! \file boxplot_full.cpp
+
+  \brief More complex boxplot plot.
+
+  \author Jacob Voytko
+
+  \date 2007
+*/
+
+// Copyright Jacob Voytko 2007
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
-// -----------------------------------------------------------------
 
 #include <vector>
 #include <cmath>
@@ -61,4 +68,5 @@ int main()
 
     my_plot.write("boxplot_full.svg");
     return 0;
-}
+} // int main()
+

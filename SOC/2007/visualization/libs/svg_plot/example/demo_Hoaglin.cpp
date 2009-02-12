@@ -1,8 +1,83 @@
 /*! \file demo_Hoaglin.cpp
-  \brief Demonstration of Boxplot quartile options.
-  \details Includes Quickbook markup.
-    Boxplots appear different depending the choice of definition for the quartile.
-  \author Paul A Bristow 
+  \brief Demonstration of Boxplot quartile options. Boxplots appear different depending the choice of definition for the quartile.
+
+  \details
+    "Some Implementations of the Boxplot"
+    Michael Frigge, David C. Hoaglin and Boris Iglewicz
+    The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
+    discusses the design of the boxplot.
+
+    However the plot of their example data shown below shows the considerable variation in the appearance of the same data,
+    using different definitions of quartiles used in various popular statistics packages.
+
+    One obvious conclusion is that you should not expect boxplots to look the same when using more than one program.
+
+    Boost.Plot provides 5 popular definitions for the quartiles.
+    This should allow the user to produce plots that look similar to boxplots from most statistics plotting program.
+    To confuse matter further, most have their own default definition *and* options to chose other definitions:
+    these options are shown below as type, method, PCTLDEF.
+
+    The interquartile range is calculated using the 1st \& 3rd sample quartiles,
+    but there are various ways to calculate those quartiles, summarised in
+    Rob J. Hyndman and Yanan Fan, 1996, "Sample Quantiles in Statistical Packages",
+    The American Statistician 50(4):361-365, (1996).
+
+    The interquartile range, often called IQR is quartile 3 (p = 3/4) - quartile 1 (1/4).
+    The median is the 2nd quartile (p = 2/4 = 1/2).
+
+    Five of Hyndman and Fan's sample quantile definitions have a particularly simple common form
+    selected according to which definition of m is chosen in function quantiles.
+    This is implemented in function quantiles by parameter `HF_definition`:
+
+      double quantile(vector<double>& data, double p, int HF_definition = 8);
+
+    The default definition is that recommended by Hyndman and Fan, or
+    users can select which definition is used for all boxplots, or individual data series as shown in the example below.
+
+       my_boxplot.quartile_definition(5); // All plots
+
+       my_boxplot.plot.quartile_definition(7); // Just this data series plot.
+
+    Hyndman and Fan definitions 4 to 8 are used by the following packages:
+
+    * #4 SAS (PCTLDEF=1), R (type=4), Maple (method=3)
+    * #5 R (type=5), Maple (method=4), Wolfram Mathematica quartiles.
+    * #6 Minitab, SPSS, BMDP, JMP, SAS (PCTLDEF=4), R(type=6), Maple (method=5).
+    * #7 Excel, S-Plus, R (type=7[default]), Maxima, Maple (method=6).
+    * #8 H&F 8: R (type=8), Maple (method=7[default]).
+
+    Some observations on the various options are:
+
+    * #4 Often a moderate interquartile range.
+
+    * #5 Symmetric linear interpolation: a common choice when the data represent a sample
+    from a continuous distribution and you want an unbiased estimate of the quartiles of that distribution.
+
+    * #6 This "half" sample excludes the sample median (k observations) for odd n (=2*k+1).
+    This will tend to be a better estimate for the population quartiles,
+    but will tend to give quartile estimates that are a bit too far
+    from the center of the whole sample (too wide an interquartile range).
+
+    * #7 Smallest interquartile range, so flags most outliers.
+    For a continuous distribution,
+    this will tend to give too narrow an interquartile range,
+    since there will tend to be a small fraction of the population beyond the extreme
+    sample observations. In particular, for odd n (=2*k+1), Excel calculates the
+    1st (3rd) quartile as the median of the lower (upper) "half" of the sample
+    including the sample median (k+1 observations).
+
+    * #8 recommended by H&F because it is
+    approximately median-unbaised estimate regardless of distribution
+    and thus suitable for continuous and discrete distributions.
+    which gives quartiles between those reported by Minitab and Excel.
+    This approach is approximately median unbiased for continuous distributions.
+    Slightly higher interquartile range than definition 7.
+
+    The 'fences' beyond which points are regarded as outliers, or extreme outliers,
+    are a multiplying factor, usually called k, and usually 1.5 * interquartile range,
+    and 3 * interquartile range as recommended by Hoaglin et al.
+
+  \author Paul A Bristow
 */
 
 // Copyright Jacob Voytko 2007
@@ -58,7 +133,7 @@ This is implemented in function quantiles by parameter `HF_definition`:
 The default definition is that recommended by Hyndman and Fan, or
 users can select which definition is used for all boxplots, or individual data series as shown in the example below.
 
-   my_boxplot.quartile_definition(5); // All plots 
+   my_boxplot.quartile_definition(5); // All plots
 
    my_boxplot.plot.quartile_definition(7); // Just this data series plot.
 
@@ -136,22 +211,22 @@ int main()
   const boost::array<double, 11> Hoaglin_data = {53., 56., 75., 81., 82., 85., 87., 89., 95., 99., 100.};
   //                                                       q1           median           q3
 
-  vector<double> Hoaglin(Hoaglin_data.begin(), Hoaglin_data.end()); 
+  vector<double> Hoaglin(Hoaglin_data.begin(), Hoaglin_data.end());
   for (int def = 4; def <= 8; def++)
   { // All the F&Y definitions of quartiles.
     double q1 = quantile(Hoaglin, 0.25, def); // 75
     double q2 = quantile(Hoaglin, 0.5, def); // 85
     double q3 = quantile(Hoaglin, 0.75, def); // 95
-    cout << "Hoaglin definition #" << def << ", q1 " << q1 
+    cout << "Hoaglin definition #" << def << ", q1 " << q1
       << ", q2 " << q2 << ", q3 " << q3 << ", IQR " << q3 - q1 << endl;
   } // for
 
   // Same data copied for different data series.
-  vector<double> Hoaglin4(Hoaglin_data.begin(), Hoaglin_data.end()); 
-  vector<double> Hoaglin5(Hoaglin_data.begin(), Hoaglin_data.end()); 
-  vector<double> Hoaglin6(Hoaglin_data.begin(), Hoaglin_data.end()); 
-  vector<double> Hoaglin7(Hoaglin_data.begin(), Hoaglin_data.end()); 
-  vector<double> Hoaglin8(Hoaglin_data.begin(), Hoaglin_data.end()); 
+  vector<double> Hoaglin4(Hoaglin_data.begin(), Hoaglin_data.end());
+  vector<double> Hoaglin5(Hoaglin_data.begin(), Hoaglin_data.end());
+  vector<double> Hoaglin6(Hoaglin_data.begin(), Hoaglin_data.end());
+  vector<double> Hoaglin7(Hoaglin_data.begin(), Hoaglin_data.end());
+  vector<double> Hoaglin8(Hoaglin_data.begin(), Hoaglin_data.end());
 
   svg_boxplot H_boxplot;
 
@@ -171,7 +246,7 @@ int main()
 
 /*`Add a few setting to the plot including setting quartile definition (though is actually same as the default 8),
 and show that the value is stored.
-*/ 
+*/
     svg_boxplot& b = H_boxplot.median_values_on(true)
     .outlier_values_on(true)
     .extreme_outlier_values_on(true)

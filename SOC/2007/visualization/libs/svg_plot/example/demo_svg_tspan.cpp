@@ -1,4 +1,13 @@
-// demo_svg_tspan.cpp
+/*! \file demo_svg_tspan.cpp
+  \brief demonstrate use of SVG tspan command.
+  \details
+    Shows the use of SVG tspan command to control text layout.
+    tspen is needed to continue text
+    changing color, position(next line effect), superscript or subscript.
+  \author Jacob Voytko \& Paul A. Bristow
+
+  \date 2007
+*/
 
 // Copyright Jacob Voytko 2008
 // Copyright Paul A. Bristow 2008
@@ -8,12 +17,9 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// Shows the use of SVG tspan command to control text layout.
-// tspec is needed to continue text
-// changing color, position(next line effect), superscript or subscript.
 
 #ifdef _MSC_VER
-#  pragma warning (disable : 4512) // assignment operator could not be generated
+#  pragma warning (disable : 4512) // assignment operator could not be generated.
 #endif
 
 #include <boost/svg_plot/svg.hpp>
@@ -28,7 +34,7 @@ int main()
 {
     svg doc;
 
-    doc.image_size(400, 400);
+    doc.size(400, 400);
 
     text_element& t = doc.text(100, 100, "This ", no_style, center_align, uphill);
     tspan_element ts = t.tspan("text").dx(10).dy(20.).font_size(40).font_family("Arial").font_weight("bold").fill_color(pink);

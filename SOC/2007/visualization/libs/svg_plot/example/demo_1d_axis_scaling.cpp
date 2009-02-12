@@ -1,4 +1,12 @@
-// demo_1d_axis_scaling.cpp
+/*! \file demo_1d_axis_scaling.cpp
+
+  \brief Demonstration of 1D plot with axis scaling.
+  \details See auto_1d_containers.cpp for an example axis_scaling with multiple data series.
+
+  \author Paul A Bristow
+
+  \date 2009
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
@@ -7,9 +15,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate use of *axis-scaling*.
-// See auto_1d_containers.cpp for an example axis_scaling with multiple data series.
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
@@ -86,8 +91,8 @@ int main()
   axis_scaling must inspect the container in order to find axis ranges that will be suitable.
   First we create a container and fill with some fictional data.
   */
-	vector<double> my_data;
-	// Initialize my_data with some entirely fictional data.
+  vector<double> my_data;
+  // Initialize my_data with some entirely fictional data.
   my_data.push_back(0.2);
   my_data.push_back(1.1); // [1]
   my_data.push_back(4.2); // [2]
@@ -95,14 +100,14 @@ int main()
   my_data.push_back(5.4); // [4]
   my_data.push_back(6.5); // [5]
   show(my_data); // Show entire container contents,
-  // 6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
+  // 6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
 
 //] [/demo_1d_axis_scaling_2]
 
 //[demo_1d_axis_scaling_3
 
   multiset<double> my_set;
-	// Initialize my_set with some entirely fictional data.
+  // Initialize my_set with some entirely fictional data.
   my_set.insert(1.2);
   my_set.insert(2.3);
   my_set.insert(3.4);
@@ -114,7 +119,7 @@ int main()
   // Show the set.
   multiset<double>::const_iterator si;
   show(my_set); // for two different types of container.
-  // 8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+  // 8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 
 /*` Show can also display just a part of the container contents.
 */
@@ -192,7 +197,7 @@ A number of variations are shown below, mianly by way of testing.
     true, false, tol100eps, 6); // Display range.
   cout << "Axis_scaled 6 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
-	svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
+  svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
   // One could intercept and change any values calculated by scale_axis here?
   // Set the plot to use range and interval from the scale_axis values.
@@ -218,35 +223,35 @@ A number of variations are shown below, mianly by way of testing.
   // Show the flags just set.
   cout << (my_1d_plot.x_with_zero() ? "x_with_zero, " : "not x_with_zero, ")
     << my_1d_plot.x_min_ticks() << " x_min_ticks, "
-    << my_1d_plot.x_steps() << " x_steps, " 
+    << my_1d_plot.x_steps() << " x_steps, "
     << my_1d_plot.x_tight() << " tightness." << endl;
 
   my_1d_plot.x_autoscale(my_data);  // Use all my_data to autoscale.
   cout << "Axis_scaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 0, max 6.5, interval 0.5
 
   my_1d_plot.x_autoscale(my_data.begin(), my_data.end());  // Use all my_data to autoscale.
 
   cout << "Axis_scaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 0, max 6.5, interval 0.5
 
   my_1d_plot.x_autoscale(my_data[1], my_data[4]);  // Use only part of my_data to autoscale.
 
   cout << "Axis_scaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 1, max 5.5, interval 0.5
 
   my_1d_plot.x_autoscale(true);  // Ensure autoscale values are used for the plot.
 
   my_1d_plot.plot(my_data, "Auto 1D"); // Add the one data series.
   cout << "Axis_scaled " // Show the results of autoscale:
-    " min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    " min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 1, max 5.5, interval 0.5
 
   my_1d_plot.plot(my_set.begin(), my_set.end(), "Auto 1D"); // Add another data series from my_set.
@@ -255,7 +260,7 @@ A number of variations are shown below, mianly by way of testing.
   //my_1d_plot.plot(&my_set[1], &my_set[4], "Auto 1D"); // operator[] is not defined for set container!
 
   my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
-  
+
   using boost::svg::detail::operator<<;
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 1, 5.5
 
@@ -267,10 +272,10 @@ A number of variations are shown below, mianly by way of testing.
     std::cout <<
       "\n""Message from thrown exception was:\n  " << e.what() << std::endl;
   }
- 
 
 
- 	return 0;
+
+  return 0;
 } // int main()
 
 /*
@@ -278,8 +283,8 @@ A number of variations are shown below, mianly by way of testing.
 //[demo_1d_axis_scaling_output
 
 Autorun "j:\Cpp\SVG\debug\demo_1d_axis_scaling.exe"
-6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 0.2 1.1 4.2 3.3 5.4 : 5 values used.
 1.1 4.2 3.3 5.4 : 4 values used.
 0.2 1.1 4.2 3.3 5.4 6.5 : 6 values used.

@@ -802,7 +802,7 @@ class text_element : public svg_element
   align_style align_; //!< left_align, right_align, center_align
   rotate_style rotate_; //!< horizontal, upward, downward, upsidedown
 
-  void _generate_text(std::ostream& os)
+  void generate_text(std::ostream& os)
   {
     for(ptr_vector<text_parent>::iterator i = data_.begin();
         i != data_.end();
@@ -948,7 +948,7 @@ public:
   std::string text()
   {
     std::stringstream os;
-    _generate_text(os);
+    generate_text(os);
     return os.str();
   }
 
@@ -1013,7 +1013,7 @@ public:
     os << " font-decoration=\"" << style_.font_decoration() << "\"";
     }
     os << '>' ;
-    _generate_text(os);
+    generate_text(os);
     os << "</text>";
     // Example:
   } // void write(std::ostream& os)
@@ -1201,12 +1201,12 @@ public:
      \brief Draws a cubic Bezier curve from the current point to (x, y) using (x1, y1).
      \details 8.3.5 The curve commands: C, Q & A.
     */
-    double x1;
-    double y1;
-    double x2;
-    double y2;
-    double x;
-    double y;
+    double x1; //!< Middle of curve.
+    double y1; //!< Middle of curve.
+    double x2; //!< End point.
+    double y2; //!< End point.
+    double x; //!< Current (start point).
+    double y; //!< Current (start point).
 
     void write(std::ostream& o_str)
     {
@@ -1221,7 +1221,7 @@ public:
       o_str << x1 << "," << y1 << " "
         << x2 << "," << y2 << " "
         << x << "," << y << " ";
-    }
+    } // void write(ostream&)
 
     c_path(double x1, double y1, double x2, double y2,
             double x, double y, bool relative = false)

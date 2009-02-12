@@ -3,6 +3,7 @@
     \details Contains Quickbook Markup to be included in documentation.
 
     \author Jacob Voytko and Paul A. Bristow 
+    \date 11 Feb 2009
 */
 
 // Copyright Jacob Voytko 2007

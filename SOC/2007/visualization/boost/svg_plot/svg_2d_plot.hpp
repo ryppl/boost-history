@@ -440,8 +440,8 @@ namespace boost
       svg_2d_plot()
         /*! Default constructor, including all the very many default plot options,
             some of which use some or all of the style class defaults.\n
-        All these settings can be changed by chainable functions, for example:\n
-        \code
+            All these settings can be changed by chainable functions, for example:\n
+            \code
 svg_2d_plot my_plot;
 my_plot.background_color(ghostwhite) // Whole image.
   .legend_border_color(yellow) // Just the legend box.
@@ -451,8 +451,8 @@ my_plot.background_color(ghostwhite) // Whole image.
   .plot_border_width(1) // Thin border (SVG units, default pixels).
   .title_color(red) // Title of whole image. 
 ;
-        \endcode
-    */
+           \endcode
+        */
         :
         // See documentation for default settings rationale.
         // text_styles:
@@ -520,7 +520,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         x_axis_position_(0),
         y_axis_position_(0)
       {
-        image_size(500, 400); // Default image size for 2-D.
+        size(500, 400); // Default image size for 2-D.
         // 2-D usually needs to be squarer than 1-D.
 
         using namespace boost::svg::detail; // Avoid need for prefix detail::
@@ -1834,11 +1834,11 @@ my_plot.background_color(ghostwhite) // Whole image.
       double y_major_tick_width();
       svg_2d_plot& y_minor_tick_width(double width);
       double y_minor_tick_width();
-      svg_2d_plot& x_ticks_on_window_or_axis(int is);
+      svg_2d_plot& x_ticks_on_window_or_axis(int);
       int x_ticks_on_window_or_axis();
-      svg_2d_plot& x_major_labels_side(int is);
+      svg_2d_plot& x_major_labels_side(int);
       int x_major_labels_side();
-      svg_2d_plot& y_ticks_on_window_or_axis(int is);
+      svg_2d_plot& y_ticks_on_window_or_axis(int);
       int y_ticks_on_window_or_axis();
       svg_2d_plot& y_ticks_left_on(bool cmd);
       bool y_ticks_left_on();
@@ -1918,6 +1918,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
       svg_2d_plot& svg_2d_plot::x_label_on(bool cmd)
       {//! Set to include an X axis text label.
+        //! \see x_label_units
         x_axis_.label_on_ = cmd;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -1968,8 +1969,11 @@ my_plot.background_color(ghostwhite) // Whole image.
       }
 
       svg_2d_plot& svg_2d_plot::y_value_precision(int digits)
-      { //! Set precision of Y tick label values in decimal digits (default 3).
-        //!  code my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2); \endcode
+      { /*! Set precision of Y tick label values in decimal digits (default 3).
+          \code
+my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
+          \endcode
+        */
         y_ticks_.value_precision_ = digits;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -1980,8 +1984,11 @@ my_plot.background_color(ghostwhite) // Whole image.
       }
 
       svg_2d_plot& svg_2d_plot::y_value_ioflags(std::ios_base::fmtflags flags)
-      { //! set IO flags of Y tick label values (default 0X201 == dec).
-        //!  code my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2); \endcode
+      { /*! set IO flags of Y tick label values (default 0X201 == dec).
+          \code
+my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
+          \endcode
+        */
         y_ticks_.value_ioflags_ = flags;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -2028,6 +2035,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
       svg_2d_plot& svg_2d_plot::y_label_units_on(bool b)
       { //! Set true to add units text to the Y axis label.
+        //! \see 
         y_axis_.label_units_on_ = b;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -2377,7 +2385,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& svg_2d_plot::x_major_labels_side(int side)
       { /*! Side for major ticks label values: 
          \param side -1 labels downward.
-         \param side 0 no ticks.
+         \param side 0 no labels.
          \param side +1 labels upward.
         */
         x_ticks_.major_value_labels_side_ = side;
@@ -2597,13 +2605,15 @@ my_plot.background_color(ghostwhite) // Whole image.
     }
     write(fout); // Using the ostream version.
     return *this; //! \return reference to svg_2d_plot to make chainable.
-  }
+  } // write(file)
 
   template <class T> //! \tparam T Type of data in series (must be convertible to double).
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
   { /*! Add a container of a data series to the plot.
       This version assumes that *ALL* the data value in the container is used.
-      \code my_plot.plot(data1, "Sqrt(x)");\endcode
+      \code
+my_plot.plot(data1, "Sqrt(x)");
+      \endcode
       Version converting to double with \c boost_default_2d_convert.
     */
     series.push_back(
@@ -2633,8 +2643,13 @@ my_plot.background_color(ghostwhite) // Whole image.
   svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title)
   { /*! Add a data series to the plot (by default, converting automatically to doubles).\n
       This version permits part of the container to be used, a partial range, using iterators begin to end.\n
-      For example: \code  my_2d_plot.plot(my_data.begin(), my_data.end(), "My container"); \endcode
-       \code my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data series. \endcode
+      For example:
+      \code  
+my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
+      \endcode
+      \code
+my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data series.
+      \endcode
    */
     series.push_back(
       svg_2d_plot_series(

@@ -1,7 +1,9 @@
 /*! \file 1d_full_layout.cpp
     \brief Example of 1 D plot of 3 different STL container types using several layout features.
-    \detail creates file 1d_complex.svg
+    \details creates file 1d_complex.svg
+    \author Jacob Voytko
 
+    \date 2007
 */
 
 // Copyright Jacob Voytko 2007
@@ -13,17 +15,15 @@
 
 #include <boost/svg_plot/svg_1d_plot.hpp>
 using namespace boost::svg;
-
 #include <boost/array.hpp>
   using boost::array;
+
 #include <vector>
   using std::vector;
 #include <deque>
   using std::deque;
 #include <cmath>
   using std::sqrt;
-
-//
 
 double f(double x)
 {
@@ -57,7 +57,7 @@ int main()
   svg_1d_plot my_plot;
 
   // Size/scale settings.
-  my_plot.image_size(500, 350)
+  my_plot.size(500, 350)
          .x_range(-3, 10);
 
   // Text settings.
@@ -69,7 +69,7 @@ int main()
   my_plot.legend_on(true)
          .plot_window_on(true)
          .x_label_on(true)
-         .x_major_value_labels_side(true);
+         .x_major_labels_side(true);
 
   // Color settings.
   my_plot.background_color(svg_color(67, 111, 69))
@@ -89,11 +89,11 @@ int main()
   // Legend settings.
   my_plot.legend_title_font_size(15);
 
-  my_plot.plot(data1, "Lions",  blue);
-  my_plot.plot(data2, "Tigers", orange);
-  my_plot.plot(data3, "Bears",  red);
+  my_plot.plot(data1, "Lions").stroke_color(blue);
+  my_plot.plot(data2, "Tigers").stroke_color(orange);
+  my_plot.plot(data3, "Bears").stroke_color(red);
 
-  my_plot.write("./1d_complex.svg");
+  my_plot.write("./1d_full_layout.svg");
 
   return 0;
 } // int main()

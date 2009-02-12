@@ -1,8 +1,9 @@
 /*! \file 1d_simple.cpp
     \brief Example of a simple 1D plot of two vectors of data.
-    \detail Creates file 1d_simple.svg
+    \details Creates file 1d_simple.svg
 
     \author Jacob Voytko
+    \date 2007
   */
 
 // Copyright Jacob Voytko 2007
@@ -13,8 +14,8 @@
 #include <boost/svg_plot/svg_1d_plot.hpp>
 #include <vector>
 
-using std::vector;
 using namespace boost::svg;
+using std::vector;
 
 int main()
 {
@@ -28,13 +29,12 @@ int main()
 
   svg_1d_plot my_plot;
 
-  my_plot.background_border_color(black)
-         .legend_on(true)
+  my_plot.legend_on(true)
          .title("Race Times")
          .x_range(-1, 11);
 
-  my_plot.plot(dan_times, "Dan", blue);
-  my_plot.plot(elaine_times, "Elaine", orange);
+  my_plot.plot(dan_times, "Dan").stroke_color(blue);
+  my_plot.plot(elaine_times, "Elaine").stroke_color(orange);
 
   my_plot.write("./1d_simple.svg");
   return 0;

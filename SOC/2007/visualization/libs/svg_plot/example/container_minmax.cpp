@@ -1,6 +1,6 @@
 /*! \file container_minmax.cpp
     \brief Finding minmax of an STL container.
-    \author Paul A Bristow 
+    \author Paul A Bristow
 */
 
 // Copyright Paul A Bristow 2008
@@ -9,7 +9,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
 
 #ifdef _MSC_VER
 //#  pragma warning(disable : 4512) //  assignment operator could not be generated
@@ -23,7 +22,7 @@
   using std::min_element;
   using std::max_element;
 
-#include <iostream> 
+#include <iostream>
   using std::cout;
   using std::endl;
 
@@ -222,8 +221,8 @@ pair<double, double> s_all(const T& containers) // Container of containers of Da
 
 int main()
 {
-	vector<double> my_data;
-	// Initialize my_data with some entirely fictional data.
+  vector<double> my_data;
+  // Initialize my_data with some entirely fictional data.
   my_data.push_back(0.2);
   my_data.push_back(1.1); // [1]
   my_data.push_back(4.2); // [2]
@@ -285,7 +284,7 @@ int main()
   mm = s(my_data); // Display range.
 
   multiset<double> my_set;
-	// Initialize my_set with some entirely fictional data.
+  // Initialize my_set with some entirely fictional data.
   my_set.insert(2.3);
   my_set.insert(7.8);
   my_set.insert(3.4);
@@ -301,7 +300,7 @@ int main()
     cout << *si << ' ';
   }
   cout << endl;
-  cout << my_set.size() << " values in my_set. " << endl; // 8 values in my_set. 
+  cout << my_set.size() << " values in my_set. " << endl; // 8 values in my_set.
 
   mm = s(my_set); // Display range.
   cout << mm << endl; //  1.2, 8.9
@@ -309,7 +308,7 @@ int main()
 
 
 
-	return 0;
+  return 0;
 } // int main()
 
 /*

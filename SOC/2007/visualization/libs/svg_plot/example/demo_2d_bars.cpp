@@ -1,15 +1,14 @@
-/*! \file demo 2d_bar.cpp
+/*! \file demo_2d_bars.cpp
     \brief Demonstrate the bars (& columns or sticks).
     \details 
+    \date 11 Feb 2009
     \author Paul A. Bristow
-    */
+*/
 
 // Copyright Paul A. Bristow 2008
 
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
-
-// Demonstrate the bars (& columns or sticks).
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
 #include <map>

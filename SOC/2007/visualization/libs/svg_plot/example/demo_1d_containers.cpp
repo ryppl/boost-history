@@ -1,4 +1,11 @@
-// demo_1d_containers.cpp
+/*! \file demo_1d_containers.cpp
+
+  \brief An example to demonstrate simple 1D settings, with a range of different STL containers.
+
+  \author Paul A Bristow
+
+  \date Feb 2009
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
@@ -8,7 +15,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// An example to demonstrate simple 1D settings, 
+// An example to demonstrate simple 1D settings,
 // with a range of different STL containers.
 
 // This file is written to be included from a Quickbook .qbk document.
@@ -48,13 +55,13 @@ int main()
 and fictional values are inserted using push_back.
 Since this is a 1-D plot the order of data values is not important.
 */
-	vector<float> values;
-	values.push_back(3.1f);
-	values.push_back(-5.5f);
-	values.push_back(8.7f);
-	values.push_back(0.5f);
+  vector<float> values;
+  values.push_back(3.1f);
+  values.push_back(-5.5f);
+  values.push_back(8.7f);
+  values.push_back(0.5f);
 
-/*`The constructor initializes a new 1D plot, called `my_plot`, and also sets all the many default values. 
+/*`The constructor initializes a new 1D plot, called `my_plot`, and also sets all the many default values.
 */
   svg_1d_plot my_plot;
 
@@ -62,7 +69,7 @@ Since this is a 1-D plot the order of data values is not important.
 Title provides a title at the top for the whole plot,
 and plot adds a (unamed) data series (naming isn't very useful if there is only one data series).
 */
-	my_plot.title("vector&lt;float&gt; example");
+  my_plot.title("vector&lt;float&gt; example");
 /*`
 [note One must insert the XML character entity equivalents of &lt; for < and &gt; for >).]
 */
@@ -129,14 +136,14 @@ and plot adds a (unamed) data series (naming isn't very useful if there is only 
   values.push_front(5.6);
   values.push_front(7.8);
 
-	svg_1d_plot my_plot;
-	my_plot.title("deque&lt;double&gt; example");
+  svg_1d_plot my_plot;
+  my_plot.title("deque&lt;double&gt; example");
   my_plot.plot(values);
   my_plot.write("./demo_1d_deque_double.svg");
 //] [/demo_1d_containers_6]
   }
 
-	return 0;
+  return 0;
 } // int main()
 
 /*

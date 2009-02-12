@@ -1,4 +1,11 @@
-// auto_1d_plot.cpp
+/*! \file auto_1d_plot.cpp
+    \brief An example to demonstrate simple 1D settings, including auto-scaling.
+    \details See auto_1d_containers.cpp for an example autoscaling with multiple data series.
+    See also demo_1d_plot.cpp for a wider range of use.
+
+    \author Paul A Bristow
+    \date Feb 2009
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
@@ -7,10 +14,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate simple 1D settings, including *auto-scaling*.
-// See auto_1d_containers.cpp for an example autoscaling with multiple data series.
-// See also demo_1d_plot.cpp for a wider range of use.
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can

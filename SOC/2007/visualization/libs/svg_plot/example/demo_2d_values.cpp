@@ -1,7 +1,8 @@
-/*! \file demo_2d_values.hpp
+/*! \file demo_2d_values.cpp
     \brief Demonstration of marking values in 2D plots.
     \details Contains Quickbook Markup to be included in documentation.
 
+    \date 11 Feb 2009
     \author Jacob Voytko and Paul A. Bristow 
 */ 
 // Copyright Jacob Voytko 2007

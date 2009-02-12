@@ -1,4 +1,13 @@
-// boxplot_simple.cpp
+/*! \file boxplot_simple.cpp
+
+    \brief An example to demonstrate simplest use of boxplot.\n
+           See also boxplot_full.cpp for a wider range of use.
+
+
+    \author Paul A Bristow
+
+    \date 2009
+*/
 
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
@@ -7,9 +16,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate simplest use of boxplot.
-// See also boxplot_full.cpp for a wider range of use.
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
@@ -21,7 +27,7 @@
 //[boxplot_1d_1
 
 /*`
-Boxplot is a  convenient way of graphically depicting groups of numerical data 
+Boxplot is a  convenient way of graphically depicting groups of numerical data
 through their five-number summaries.
 Show 1st quartile, median and 3rd quartile as a box, outliers and extreme outliers.
 
@@ -103,7 +109,7 @@ int main()
 
 /*  cout << "my_boxplot.title " << my_boxplot.title() << endl;
   cout << "my_boxplot.x_label_text "<< my_boxplot.x_label_text() << endl;
-  cout << "my_boxplot.y_label_text " << my_boxplot.y_label_text() << endl; 
+  cout << "my_boxplot.y_label_text " << my_boxplot.y_label_text() << endl;
 
   cout << "my_boxplot.background_color " << my_boxplot.background_color() << endl;
   cout << "my_boxplot.background_border_color " << my_boxplot.background_border_color() << endl;

@@ -1,8 +1,8 @@
-/*!
- \file auto_1d_containers.cpp
+/*! \file auto_1d_containers.cpp
  \brief Example to demonstrate autoscaling with *multiple* STL containers.
  \details See also auto_1d_plot.cpp and auto_1d_container.cpp.
 
+ \date Feb 2009
  \author Paul A Bristow
  */
 

@@ -242,8 +242,8 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
 
   double x_scale_; //! scale used for transform from Cartesian to SVG coordinates.
   double x_shift_; //! shift from SVG origin is top left, Cartesian is bottom right.
-  double y_scale_;
-  double y_shift_;
+  double y_scale_; //! scale used for transform from Cartesian to SVG coordinates.
+  double y_shift_; //! shift from SVG origin is top left, Cartesian is bottom right.
 
   svg image; // Stored so as to avoid rewriting style information constantly.
 
@@ -387,14 +387,12 @@ public:
     x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
     x_tight_(1e-6), // margin that point can lie outside top and bottom tick.
     y_autoscale_(false), // Not used for 1-D.
-
     // Used to transform Cartesian to SVG.
     x_scale_(1.), x_shift_(0.),
     y_scale_(1.), y_shift_(0.),
     x_axis_position_(0) // Move into axis_style?
-
   {
-    image_size(500, 200); // Default image size.
+    size(500, 200); // Default image size.
     // Only need to be quite shallow (y_size) for a 1-D plot.
     // 200 barely leaves enough room for five data series in the legend).
     // (2-D usually needs to be much more rectangular).
@@ -759,14 +757,13 @@ public:
       title)
     );
    /*
-   \code
-     // Plot example:
-     std::vector<float> my_data; // my container.
-     my_data.pushback(2.f); // Fill container with some data.
-     my_data.pushback(3.f);
-     my_data.pushback(4.f);
-     my_1d_plot.plot(my_data, "All my container"); // Plot all data.
-   \endcode
+     \code
+std::vector<float> my_data; // my container.
+my_data.pushback(2.f); // Fill container with some data.
+my_data.pushback(3.f);
+my_data.pushback(4.f);
+my_1d_plot.plot(my_data, "All my container"); // Plot all data.
+     \endcode
    */
     return series[series.size() - 1]; // Reference to data series just added.
   }
@@ -788,14 +785,13 @@ public:
     //! my_1d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
     //! Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
     return series[series.size() - 1]; // Reference to data series just added.
-  }
+  } // plot
 
   template <class T, class U>
   svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title /* = ""*/, U functor /* = boost_default_convert */)
-  { //! Add a data series to the plot, with optional title. (Version with custom functor, rather than to double).
-    /*!
-    Note that this version permits a partial range, begin to end, of the container to be used.
-    Returns a reference to data series just added.
+  { /*! Add a data series to the plot, with optional title. (Version with custom functor, rather than to double).
+      Note that this version permits a partial range, begin to end, of the container to be used.
+      Returns a reference to data series just added.
     */
     series.push_back(
       svg_1d_plot_series(
@@ -804,7 +800,7 @@ public:
       title)
     );
     return series[series.size() - 1]; // Reference to data series just added.
-  }
+  } // plot
 
   template <class T, class U>
   svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /* = "" */, U functor/*= boost_default_convert*/)
@@ -820,7 +816,7 @@ public:
       title)
     );
     return series[series.size() - 1]; // Reference to data series just added.
-  }
+  } // plot
 
 // End svg_1d_plot Member functions definitions.
 

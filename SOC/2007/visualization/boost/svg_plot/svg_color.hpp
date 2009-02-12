@@ -72,15 +72,14 @@ namespace svg
   struct svg_color;
   void constant_to_rgb(svg_color_constant c, unsigned char& r, unsigned char& g, unsigned char& b);
   std::ostream& operator<< (std::ostream&, const svg_color&);
-  // --------------------------------------------------------------------
-  //  svg_color is the struct that contains information about RGB colors.
-  //  // For the constructor, the SVG standard specifies that numbers
-  // outside the normal rgb range are to be accepted,
-  // but are constrained to acceptable range of integer values [0, 255].
-  // --------------------------------------------------------------------
 
   struct svg_color
-  //!< SVG standard colors, see also enum \#boost::svg::svg_color_constant.
+  /*! SVG standard colors, see also enum boost::svg::svg_color_constant.\n
+      svg_color is the struct that contains information about RGB colors.
+      For the constructor, the SVG standard specifies that numbers
+      outside the normal rgb range are to be accepted,
+      but are constrained to acceptable range of integer values [0, 255].
+  */
   {
     friend std::ostream& operator<< (std::ostream& os, const svg_color& rhs);
 

@@ -191,7 +191,7 @@ class svg;
 // unsigned int x_size()
 // svg& y_size(unsigned int y)
 // unsigned int y_size()
-// svg& image_size(unsigned int x, unsigned int y)
+// svg& size(unsigned int x, unsigned int y)
 // information about the image file
 // svg& description(std::string d)
 // std::string& description()
@@ -233,7 +233,7 @@ protected:
   std::string image_desc_; //!< SVG image description (for header as \verbatim <desc> ... <\desc> \endverbatim).
   std::string holder_copyright_; //!< SVG info on holder of copyright (probably == author, but could be institution).
   std::string date_copyright_; //!< SVG info on date of copyright claimed.
-  std::string css; //!< Cascading Style Sheet.
+  std::string css_; //!< Cascading Style Sheet.
   std::string filename_; //!< file SVG XML written to.
   std::string author_; //!< Author(s) name. (Probably == copyright holder).
   bool is_boost_license_; //!< If true, to include the Boost license as a XML comment.
@@ -281,13 +281,13 @@ private:
   void write_css(std::ostream& s_out)
   { //! Output CSS (Cascading Style Sheet)
   // Not used at present.
-    if (css.size() != 0) // css != ""
+    if (css_.size() != 0) // css != ""
     { // TODO confirm that this isn't useful if css is "".
       // [CDATA[ ... ]] enclosing the style information
       // is a standard XML construct for hiding information
       // necessary since CSS style sheets can include characters,
       // such as ">", which conflict with XML parsers.
-      s_out << "<defs><style type=\"text/css\"><![CDATA[" << css
+      s_out << "<defs><style type=\"text/css\"><![CDATA[" << css_
         << "]]></style></defs>" << std::endl;
       // CSS inline style can be declared within a style attribute in SVG
       // by specifying a semicolon-separated list of property declarations,
@@ -332,7 +332,7 @@ public:
     author_(""), //!< Author of image (defaults to the copyright holder).
     holder_copyright_(""),  //!< Name of copyright holder.
     date_copyright_(""), //!<  Date of copyright claim.
-    css(""), //!< Stylesheet filename.
+    css_(""), //!< Stylesheet filename.
     filename_(""), //!< Name of file to which SVG XML has been written is embedded in the file as an XML comment (if written only to an ostream, filename will not appear in comment).
     is_license_(false), //!< If true, license text is written as comment in SVG XML. (Default is no license).
     is_boost_license_(false), //!< If true, Boost license text is written as comment in SVG XML. (Default is no license). Suggested strings for license permission are "permits", "requires", or "prohibits", or "".
@@ -621,7 +621,7 @@ public:
   // Writes the information about the image to the document.
   // TODO: allow other unit identifiers.
   // -------------------------------------------------------
-  void image_size(unsigned int x, unsigned int y)
+  void size(unsigned int x, unsigned int y)
   { //! Set both X and Y image size (SVG units, default pixels).
     x_size_ = x;
     y_size_ = y;

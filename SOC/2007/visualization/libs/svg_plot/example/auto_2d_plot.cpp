@@ -1,4 +1,12 @@
-// auto_2d_plot.cpp
+/*! \file auto_2d_plot.cpp
+
+  \brief An example to demonstrate autoscaling with *multiple* STL containers.
+  \details See also auto_1d_plot.cpp and auto_1d_container.cpp.
+
+  \author Paul A Bristow
+
+  \date 2009
+*/
 
 // Copyright Paul A Bristow 2008
 
@@ -6,9 +14,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// An example to demonstrate autoscaling with *multiple* STL containers.
-// See also auto_1d_plot.cpp and auto_1d_container.cpp.
 
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
@@ -70,47 +75,47 @@ int main()
   /*`This example uses a single map to demonstrate autoscaling.
   We create a map to hold our data series.
   */
-	map<const double, double> my_map;
+  map<const double, double> my_map;
   /*`
   Inserting some fictional values also sorts the data.
   The index value in [] is the x value.
   */
-	my_map[1.1] = 3.2;
-	my_map[7.3] = 9.1;
-	my_map[2.1] = 5.4;
+  my_map[1.1] = 3.2;
+  my_map[7.3] = 9.1;
+  my_map[2.1] = 5.4;
 
 /*`Also include some 'limits' values that would confuse autoscaling.
 */
-	my_map[99.99] = numeric_limits<double>::quiet_NaN();
-	my_map[999.9] = numeric_limits<double>::infinity();
-	my_map[999.] = +numeric_limits<double>::infinity();
+  my_map[99.99] = numeric_limits<double>::quiet_NaN();
+  my_map[999.9] = numeric_limits<double>::infinity();
+  my_map[999.] = +numeric_limits<double>::infinity();
 
 
   /*`Next a 2D plot is created using defaults for the very many possible settings.
   */
-	svg_2d_plot my_plot;
+  svg_2d_plot my_plot;
 
   /*`Add at least a title,
   specify the both x and y axes are to use autoscaling,
   and add the one data series to plotted.
   */
-	my_plot.title("Autoscale example");
+  my_plot.title("Autoscale example");
   //my_plot.autoscale_check_limits(false);  // Skip checks for speed.
   // Will fail at run-time if any infinite or NaNs.
 
   // my_plot.y_autoscale(0., 9.);  // autoscale using two doubles.
-	my_plot.xy_autoscale(my_map);
+  my_plot.xy_autoscale(my_map);
 
-	my_plot.plot(my_map);
+  my_plot.plot(my_map);
   /*`Finally write the SVG image to a file. */
   my_plot.write("./auto_2d_plot.svg");
 
-  cout << "X min " << my_plot.x_range().first <<  ", X max " << my_plot.x_range().second << endl; 
-  cout << "Y min " << my_plot.y_range().first << ", Y max "  << my_plot.y_range().second << endl; 
+  cout << "X min " << my_plot.x_range().first <<  ", X max " << my_plot.x_range().second << endl;
+  cout << "Y min " << my_plot.y_range().first << ", Y max "  << my_plot.y_range().second << endl;
 
 //] [/auto_2d_plot_2]
 
-	return 0;
+  return 0;
 }
 
 /*
@@ -157,7 +162,7 @@ Parked pro tem.
  // int axis_ticks;
 
  // multiset<double> my_set;
-	//// Initialize my_set with some entirely fictional data.
+  //// Initialize my_set with some entirely fictional data.
  // my_set.insert(1.2);
  // my_set.insert(2.3);
  // my_set.insert(3.4);

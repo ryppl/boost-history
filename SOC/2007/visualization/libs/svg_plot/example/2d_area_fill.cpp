@@ -4,7 +4,6 @@
   \author Jacob Voytko 
 */
 
-
 // Copyright Jacob Voytko 2007
 // Copyright Paul A. Bristow 2008
 
@@ -56,7 +55,7 @@ int main()
 	svg_2d_plot my_plot;
 
 	// Size/scale settings.
-	my_plot.image_size(700, 500)
+	my_plot.size(700, 500)
 	       .x_range(-1, 10)
 	       .y_range(-75, 75);
 
@@ -106,7 +105,7 @@ int main()
   std::cout << "s_tan.area_fill() " << s_tan.area_fill() << std::endl;
   std::cout << my_plot.title() << std::endl;
 
-  my_plot.write("./2d_area_fill.svg");
+  my_plot.write("./2d_area_fill_1.svg");
   std::cout << my_plot.title() << std::endl;
 
   // 
@@ -114,8 +113,7 @@ int main()
 	my_plot.plot(data_cos, "cos(x)").area_fill(green).shape(square).fill_color(red);
   my_plot.write("./2d_area_fill_2.svg");
 
-
-	return 0;
+   return 0;
 } // int main()
 
 /*
@@ -129,8 +127,5 @@ Autorun "j:\Cpp\SVG\debug\2d_area_fill.exe"
 s_sin.area_fill() RGB(255,0,0)
 s_cos.area_fill() blank
 s_tan.area_fill() blank
-
-
-
 
 */

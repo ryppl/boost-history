@@ -1,6 +1,7 @@
-/*! \file demo_1d_values.hpp
+/*! \file demo_1d_values.cpp
     \brief Demonstration of some simple 1D value formatting.
     \details Quickbook markup to include in documentation.
+    \date 11 Feb 2009
 
     \author Paul A. Bristow
 */

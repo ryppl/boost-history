@@ -1,4 +1,4 @@
-/*! \file demo 2d_histogram.cpp
+/*! \file demo_2d_histogram.cpp
     \brief Demonstrate drawing histogram as SVG files.
     \details
      Demonstrate drawing histogram as SVG files.

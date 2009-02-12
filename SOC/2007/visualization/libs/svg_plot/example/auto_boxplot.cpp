@@ -1,12 +1,12 @@
 /*! \file auto_boxplot.cpp
 
-   \brief 
-    An example to demonstrate boxplot settings, including *auto-scaling*. See also 
-    \example auto_boxcontainers.cpp
-    for an example autoscaling with multiple data series.
-    \example demo_boxplot.cpp for a wider range of use.
+   \brief An example to demonstrate boxplot settings, including auto-scaling.
+   \details See also:
+     example auto_1d_containers.cpp
+     for an example autoscaling with multiple data series.
+     example demo_boxplot.cpp for a wider range of use.
 
-  \date 11 feb 2009
+  \date 11 Feb 2009
   \author Paul A Bristow
 /*
 

@@ -233,11 +233,11 @@ BOOST_AUTO_TEST_CASE(test_styles)
   BOOST_CHECK_EQUAL(my_svg.x_size(), 400U);
   BOOST_CHECK_EQUAL(my_svg.y_size(), 400U);
 
-  my_svg.image_size(200U, 100U);
+  my_svg.size(200U, 100U);
   BOOST_CHECK_EQUAL(my_svg.x_size(), 200U);
-  my_svg.image_size(500U, 100U); // update x
+  my_svg.size(500U, 100U); // update x
   BOOST_CHECK_EQUAL(my_svg.x_size(), 500U); // & check
-  my_svg.image_size(500U, 300U); // update y
+  my_svg.size(500U, 300U); // update y
   BOOST_CHECK_EQUAL(my_svg.y_size(), 300U); // & check
   BOOST_CHECK_EQUAL(my_svg.x_size(), 500U);
 
