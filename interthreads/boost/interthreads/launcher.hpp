@@ -135,9 +135,21 @@ struct has_thread_if<shared_future<R> > : mpl::true_{};
 
     namespace partial_specialization_workaround {
         template <typename R>
+        struct join<unique_future<R> > {
+            static typename result_of::template join<unique_future<R> >::type apply( unique_future<R>& act) {
+                return act.wait();
+            }
+        };
+        template <typename R>
         struct join<shared_future<R> > {
             static typename result_of::template join<shared_future<R> >::type apply( shared_future<R>& act) {
                 return act.wait();
+            }
+        };
+        template <typename R>
+        struct join_until<unique_future<R> > {
+            static typename result_of::template join_until<unique_future<R> >::type apply( unique_future<R>& act, const system_time& abs_time ) {
+                return act.timed_wait_until(abs_time);
             }
         };
         template <typename R>
@@ -147,15 +159,33 @@ struct has_thread_if<shared_future<R> > : mpl::true_{};
             }
         };
         template <typename R, typename Duration>
+        struct join_for<unique_future<R>, Duration> {
+            static typename result_of::template join_for<unique_future<R>,Duration>::type apply( unique_future<R>& act, Duration rel_time ) {
+                return act.timed_wait(rel_time);
+            }
+        };
+        template <typename R, typename Duration>
         struct join_for<shared_future<R>, Duration> {
             static typename result_of::template join_for<shared_future<R>,Duration>::type apply( shared_future<R>& act, Duration rel_time ) {
                 return act.timed_wait(rel_time);
             }
         };
         template <typename R>
+        struct wait_until<unique_future<R> > {
+            static typename result_of::template wait_until<unique_future<R> >::type apply( unique_future<R>& act, const system_time& abs_time ) {
+                return act.timed_wait_until(abs_time);
+            }
+        };
+        template <typename R>
         struct wait_until<shared_future<R> > {
             static typename result_of::template wait_until<shared_future<R> >::type apply( shared_future<R>& act, const system_time& abs_time ) {
                 return act.timed_wait_until(abs_time);
+            }
+        };
+        template <typename R, typename Duration>
+        struct wait_for<unique_future<R>, Duration> {
+            static typename result_of::template wait_for<unique_future<R>,Duration>::type apply( unique_future<R>& act, Duration rel_time ) {
+                return act.timed_wait(rel_time);
             }
         };
         template <typename R, typename Duration>
