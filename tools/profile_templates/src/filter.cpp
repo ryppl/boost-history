@@ -40,7 +40,7 @@ void copy_flat_only() {
 #else
                 int instantiations = counter;
 #endif
-                if(++instantiations % 100 == 0) {
+                if(instantiations % 100 == 0) {
                     std::fprintf(stderr, "On Instantiation %d\n", instantiations);
                 }
             }
@@ -72,14 +72,8 @@ void copy_call_graph() {
                 for(std::size_t i = 0; i < buffer.size(); ++i) {
                     std::putchar(buffer[i]);
                 }
-                ++counter;
-#ifdef _MSC_VER
-                int instantiations = counter / 2;
-#else
-                int instantiations = counter;
-#endif
-                if(++instantiations % 100 == 0) {
-                    std::fprintf(stderr, "On Instantiation %d\n", instantiations);
+                if(++counter % 100 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", counter);
                 }
                 buffer.clear();
                 matched = false;
