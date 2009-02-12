@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Vicente J. Botet Escriba 2008. Distributed under the Boost
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -8,11 +8,11 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include "boost/synchro/conc/concurrent_component.hpp"
-#include "boost/synchro/thread/mutex.hpp"
-#include "boost/thread.hpp"
-#include "boost/ref.hpp"
-#include "boost/synchro/conc/conc_tuple.hpp"
+#include <boost/synchro/conc/concurrent_component.hpp>
+#include <boost/synchro/thread/mutex.hpp>
+#include <boost/thread.hpp>
+#include <boost/ref.hpp>
+#include <boost/synchro/conc/conc_tuple.hpp>
 
 namespace {
     volatile int Run = 1;

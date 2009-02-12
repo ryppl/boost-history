@@ -1,9 +1,18 @@
-#include <boost/synchro/make_lockable.hpp>
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// Software License, Version 1.0. (See accompanying file
+// LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/synchro for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include <boost/synchro/lockable_adapter.hpp>
 #include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/thread/locks.hpp>
 #include <boost/synchro/lockers/strict_locker.hpp>
 #include <boost/synchro/lockers/externally_locked.hpp>
-
 
 using namespace boost::synchro;
 using namespace boost;
@@ -25,10 +34,10 @@ public:
 
 //[AccountManager
 class AccountManager
-    : public make_exclusive_lockable<boost::mutex>
+    : public exclusive_lockable_adapter<boost::mutex>
 {
 public:
-    typedef make_exclusive_lockable<boost::mutex> lockable_base_type;
+    typedef exclusive_lockable_adapter<boost::mutex> lockable_base_type;
     AccountManager()
         : checkingAcct_(*this)
         , savingsAcct_(*this)

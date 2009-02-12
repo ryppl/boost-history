@@ -1,4 +1,14 @@
-#include <boost/synchro/make_lockable.hpp>
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// Software License, Version 1.0. (See accompanying file
+// LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/synchro for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include <boost/synchro/lockable_adapter.hpp>
 #include <boost/synchro/thread/recursive_mutex.hpp>
 #include <boost/thread/locks.hpp>
 
@@ -6,7 +16,7 @@ using namespace boost::synchro;
 using namespace boost;
 //[IL_Rec_Lockable_BancAccount_BankAccount
 class BankAccount
-: public make_exclusive_lockable<boost::recursive_mutex>
+: public exclusive_lockable_adapter<boost::recursive_mutex>
 {
 /*<-*/
     int balance_;

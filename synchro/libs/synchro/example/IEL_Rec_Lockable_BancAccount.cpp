@@ -1,4 +1,14 @@
-#include <boost/synchro/make_lockable.hpp>
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// Software License, Version 1.0. (See accompanying file
+// LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/synchro for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include <boost/synchro/lockable_adapter.hpp>
 #include <boost/synchro/thread/recursive_mutex.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/synchro/lockers/strict_locker.hpp>
@@ -22,7 +32,7 @@ public:
 
 class BankAccount
 : protected BankAccount_TN
-, public make_exclusive_lockable<boost::recursive_mutex>
+, public exclusive_lockable_adapter<boost::recursive_mutex>
 {
 //        int balance_;
     void throw_if_not_owned(strict_locker<BankAccount>&locker) {
@@ -31,7 +41,7 @@ class BankAccount
     }
 
 public:
-    typedef make_exclusive_lockable<boost::recursive_mutex> lockable_base_type;
+    typedef exclusive_lockable_adapter<boost::recursive_mutex> lockable_base_type;
     void Deposit(int amount) {
         lock_guard<BankAccount> guard(*this);
 //        lock_guard<boost::recursive_mutex> guard(*this->mutex());

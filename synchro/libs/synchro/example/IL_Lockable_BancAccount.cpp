@@ -1,4 +1,14 @@
-#include <boost/synchro/make_lockable.hpp>
+//////////////////////////////////////////////////////////////////////////////
+//
+// (C) Copyright Vicente J. Botet Escriba 2008-2009. Distributed under the Boost
+// Software License, Version 1.0. (See accompanying file
+// LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+// See http://www.boost.org/libs/synchro for documentation.
+//
+//////////////////////////////////////////////////////////////////////////////
+
+#include <boost/synchro/lockable_adapter.hpp>
 #include <boost/synchro/thread/mutex.hpp>
 #include <boost/thread/locks.hpp>
 
@@ -29,7 +39,7 @@ public:
 #else
 //[IL_Lockable_BancAccount_BankAccount_inherit
 class BankAccount
-: public make_exclusive_lockable<boost::mutex>
+: public exclusive_lockable_adapter<boost::mutex>
 {
     int balance_;
 public:
