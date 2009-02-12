@@ -15,3 +15,7 @@ template<class T>
 struct X {};
 
 struct Y {};
+
+template<class T>
+void f(const T&) {
+}

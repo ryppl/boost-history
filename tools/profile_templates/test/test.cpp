@@ -12,4 +12,6 @@
 int main() {
     X<int> x1;
     X<char> x2;
+    f(1);
+    f('a');
 }
