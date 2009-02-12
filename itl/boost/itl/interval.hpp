@@ -483,7 +483,7 @@ left_over = x1 - x2; //on the right side.
 	//= Representation
 	//==========================================================================
 	
-	/** Interval as string */
+	/** Object as string */
     const std::string as_string()const;
 
 

@@ -20,7 +20,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
 #include <boost/itl/interval_sets.hpp>
-//CL #include <boost/itl/interval.hpp>
 
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
@@ -44,7 +43,7 @@ struct mapping_pair
 
 
 
-/// Implements a map as a map of intervals (base class)
+/** Implements a map as a map of intervals (base class) */
 template
 <
     class SubType,
@@ -169,30 +168,35 @@ public:
 	//==========================================================================
 	//= Construct, copy, destruct
 	//==========================================================================
-    /// Default constructor for the empty object
+    /** Default constructor for the empty object */
     interval_base_map(){}
 
-    /// Copy constructor
+    /** Copy constructor */
     interval_base_map(const interval_base_map& src): _map(src._map) {}
 
-    /// Assignment operator
+    /** Assignment operator */
     interval_base_map& operator = (const interval_base_map& src) 
     { 
         if(this!=&src) that()->assign(src);
         return *this; 
     }
 
-    /// swap the content of containers
-    void swap(interval_base_map& x) { _map.swap(x._map); }
+    /** swap the content of containers */
+    void swap(interval_base_map& object) { _map.swap(object._map); }
+
+    /** Copy all elements if predicate <tt>pred</tt> holds */
+    template<class Predicate>
+    interval_base_map& assign_if(const interval_base_map& src, const Predicate& pred)
+    { _map.assign_if(src._map, pred); return *this; }
 
 	//==========================================================================
 	//= Emptieness, containment
 	//==========================================================================
 
-    /// clear the map
+    /** clear the map */
     void clear() { _map.clear(); }
 
-    /// is the map empty?
+    /** is the map empty? */
     bool empty()const { return _map.empty(); }
 
     //--- contains: set view ---------------------------------------------------
@@ -210,15 +214,16 @@ public:
 	                                                      key_value_pair.data));    
 	}
 
-    /// Does the map contain all element value pairs represented by the interval-value pair sub?
-    bool contains(const value_type& sub)const
-	{ return that()->contains_(sub); }
+    /** Does the map contain all element value pairs represented by the 
+	    \c interval_value_pair ? */
+    bool contains(const segment_type& interval_value_pair)const
+	{ return that()->contains_(interval_value_pair); }
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
     bool contains(const interval_base_map& sub)const 
     { return sub.contained_in(*this); }
 
-    /// <tt>*this</tt> is subset of <tt>super</tt>
+    /** <tt>*this</tt> is subset of <tt>super</tt>? */
     bool contained_in(const interval_base_map& super)const
 	{ 
 		return Interval_Set::is_contained_in(*this, super); 
@@ -228,30 +233,32 @@ public:
 	//= Size
 	//==========================================================================
 
-    /// Number of elements in the map (cardinality). 
+    /** Number of elements in the map (cardinality). */
     size_type cardinality()const;
 
-    /// An interval map's size is it's cardinality
+    /** An interval map's size is it's cardinality */
     size_type size()const { return cardinality(); }
 
-    /// The length of the interval container which is the sum of interval lenghts
+    /** The length of the interval container which is the sum of 
+	    interval lenghts */
     difference_type length()const;
 
-    /// Number of intervals which is also the size of the iteration over the object
+    /** Number of intervals which is also the size of the 
+	    iteration over the object */
     size_t interval_count()const { return _map.size(); }
 
-    /// Size of the iteration over this container
+    /** Size of the iteration over this container */
     size_t iterative_size()const { return _map.size(); }
 
 	//==========================================================================
 	//= Range
 	//==========================================================================
 
-    /// Lower bound of the first interval
+    /** Lower bound of the first interval */
     DomainT lower()const 
     { return empty()? interval_type().lower() : (*(_map.begin())).KEY_VALUE.lower(); }
 
-    /// Upper bound of the last interval
+    /** Upper bound of the last interval */
     DomainT upper()const 
     { return empty()? interval_type().upper() : (*(_map.rbegin())).KEY_VALUE.upper(); }
 
@@ -270,18 +277,17 @@ public:
 	//= Selection
 	//==========================================================================
 
-	//--- find -----------------------------------------------------------------
-    /// Find the interval value pair, that contains element \c x
-    const_iterator find(const domain_type& key_value)const
+    /** Find the interval value pair, that contains \c key */
+    const_iterator find(const domain_type& key)const
     { 
-        const_iterator it = _map.find(interval_type(key_value)); 
+        const_iterator it = _map.find(interval_type(key)); 
         return it; 
     }
 
 	/** Total select function. */
-	codomain_type operator()(const domain_type& key_value)const
+	codomain_type operator()(const domain_type& key)const
 	{
-        const_iterator it = _map.find(interval_type(key_value)); 
+        const_iterator it = _map.find(interval_type(key)); 
 		return it==end() ? neutron<codomain_type>::value()
 			             : it->CONT_VALUE;
 	}
@@ -292,7 +298,7 @@ public:
 	//==========================================================================
 private:
 	/** Addition of an interval value pair to the map.
-	    On overlap an aggregation is performed using functor `Combiner`.
+	    On overlap an aggregation is performed using functor \c Combiner.
 		This function is not public, because the `codomain_combine` shall be
 		an invariant for all itl maps.*/
     template<class Combiner>
@@ -313,7 +319,7 @@ public:
 	//==========================================================================
 private:
 	/** Subtraction of an interval value pair from the map.
-	    On overlap an aggregation is performed using functor `Combiner`.
+	    On overlap an aggregation is performed using functor Combiner.
 		This function is not public, because the `codomain_combine` shall be
 		an invariant for all itl maps.*/
     template<class Combiner>
@@ -416,17 +422,16 @@ public:
     /** Erase all value pairs from \c *this map that are elements of map \eraser */
     SubType& erase(const interval_base_map& eraser);
 
+
+	/** Remove all elements where property <tt>p</tt> holds, keep all others */
+    template<class Predicate>
+    interval_base_map& erase_if(const Predicate& pred)
+	{ _map.erase_if(pred); return *this; }
+
+
 	//==========================================================================
 	//= Intersection
 	//==========================================================================
-
-    //CL Intersect the sectant with *this. Pass the result to section.
-    //template<class SectantT>
-    //void intersect(interval_base_map& section, const SectantT& sectant)const
-    //{
-    //    section.clear();
-    //    add_intersection(section, sectant);
-    //}
 
 	/** The intersection of \c key in \c *this map is added to \c section.
 	    This can also be used to find \c key in \c *this map */
@@ -526,31 +531,32 @@ public:
     const_iterator upper_bound(const key_type& interval)const
     { return _map.upper_bound(interval); }
 
-    ///
     iterator begin() { return _map.begin(); }
-    ///
     iterator end()   { return _map.end(); }
-    ///
     const_iterator begin()const { return _map.begin(); }
-    ///
     const_iterator end()const   { return _map.end(); }
-    ///
     reverse_iterator rbegin() { return _map.rbegin(); }
-    ///
     reverse_iterator rend()   { return _map.rend(); }
-    ///
     const_reverse_iterator rbegin()const { return _map.rbegin(); }
-    ///
     const_reverse_iterator rend()const   { return _map.rend(); }
+
+	//==========================================================================
+	//= Representation
+	//==========================================================================
+	
+	/** Object as string */
+    std::string as_string()const;
+
 
 	//==========================================================================
 	//= Morphisms
 	//==========================================================================
 
-    /// Removal of neutral element values
+    /** Join bounding intervals */
+    interval_base_map& join();
+            
     /** All value pairs \c (I,y) that have neutral elements \c y==codomain_type()
-        as associated values are removed form the map.
-    */
+        as associated values are removed form the map.    */
     void absorb_neutrons()
     {
         //content_is_neutron<key_type, data_type> neutron_dropper;
@@ -558,11 +564,22 @@ public:
             erase_if(content_is_neutron<value_type>());
     }
 
-    /// Join bounding intervals    
-    interval_base_map& join();
-            
+    /** Set all intervals in the map to be of type <tt>bounded</tt>. 
+		Requires Integral<domain_type>.
 
-    /// Gives the domain of the map as interval set
+        Interval bounds of different types are created by opeations on
+        interval maps. This function allows to reset them uniformly without,
+        of course, changing their value. This is only possible for discrete
+        domain datatypes.
+    */
+	void uniform_bounds(itl::bound_type bounded);
+
+
+	//==========================================================================
+	//= Domain, sum
+	//==========================================================================
+
+    /** Gives the domain of the map as interval set */
     template 
     <
         template
@@ -576,66 +593,17 @@ public:
             dom += (*it).KEY_VALUE; 
     } 
 
- 
+    /* Sum of associated elements of the map */
+    void sum(codomain_type& total)const;
+
+    /* Sum of associated elements of the map */
+    codomain_type sum()const
+	{ codomain_type total; sum(total); return total; }
 
 
-/** @name I: Interval search
-    */
-//@{
-    /** A find function has <b>NOT</b> been implemented; Use \ref intersect
-        as a generalized find operation on interval maps.
-    
-        All find operations can be expressed by means of intersection \ref intersect
-        or \ref operator &=. Searching for an interval in an interval map yields
-        an interval map anyway in the general case.
-    */
-//@}
-
-
-
-/** @name K: Selection by predicates
-    */
-//@{
-    /// Remove all elements where property <tt>p</tt> holds, keep all others
-    template<class Predicate>
-    interval_base_map& erase_if(const Predicate& pred)
-	{ _map.erase_if(pred); return *this; }
-
-    /// Copy all elements if property <tt>p</tt> holds
-    template<class Predicate>
-    interval_base_map& assign_if(const interval_base_map& src, const Predicate& pred)
-    { _map.assign_if(src._map, pred); return *this; }
-
-//@}
-
-
-/** @name S: String representation
-    */
-//@{
-    /** Convert the interval map to string (c.f. \ref value)
-
-        This string converter is based on a general converter function <tt>as_string</tt>
-        and the template class \ref value which serves as base for string
-        representation.
-    */
-    std::string as_string() const;
-//@}
-    
-
-
-    /* Sum of associated elements of the map
-        <b>Nicht getestet</b> */
-    CodomainT sum()const;
-
-    /** Set all intervals in the map to be of type <tt>bounded</tt>. 
-		Requires Integral<domain_type>.
-
-        Interval bounds of different types are created by opeations on
-        interval maps. This function allows to reset them uniformly without,
-        of course, changing their value. This is only possible for discrete
-        domain datatypes.
-    */
-	void uniform_bounds(itl::bound_type bounded);
+	//==========================================================================
+	//= Algorithm unifiers
+	//==========================================================================
 
     template<typename IteratorT>
     static const key_type& key_value(IteratorT& value_){ return (*value_).first; }
@@ -1047,12 +1015,12 @@ template
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-CodomainT interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::sum()const
+void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::sum(codomain_type& total)const
 {
-	CodomainT sum = codomain_combine::neutron();
+	total = codomain_combine::neutron();
     const_FOR_IMPLMAP(it) 
-        sum += (*it).CONT_VALUE;
-    return sum;
+        total += (*it).CONT_VALUE;
 }
 
 
