@@ -19,87 +19,24 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
-// TODO: iterate over all elements.
-
-BOOST_AUTO_TEST_CASE( test_successor_preorder )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root().begin();
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 3);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 1);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 6);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 4);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 7);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 10);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 14);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 13);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 11);
-    boost::tree::successor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 12);
-}
+    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root(); //.begin();
+    to_first(Order(), c);
+    // Replace by a fake_to_first function for dependency minimization's sake?
+    // preorder: fbt1.root_tracking_root().begin();
+    // in- and postorder: fbt1.root_tracking_root().begin().begin().begin(); 
 
-BOOST_AUTO_TEST_CASE( test_successor_inorder )
-{
-    fake_binary_tree<int>::root_tracking_cursor c
-    = fbt1.root_tracking_root().begin().begin().begin().begin();
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 1);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 3);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 4);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 6);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 7);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 8);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 10);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 11);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 12);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 13);
-    boost::tree::successor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 14);
-}
+    typedef std::vector< std::pair<std::size_t, int> > container_type;
+    container_type po(11);
+    generate_mock_cursor_data(Order(), po);
+    container_type::const_iterator ci = po.begin();
+    container_type::const_iterator cie = po.end();
 
-BOOST_AUTO_TEST_CASE( test_successor_postorder )
-{
-    fake_binary_tree<int>::root_tracking_cursor c
-    = fbt1.root_tracking_root().begin().begin().begin().begin();
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 1);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 4);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 7);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 6);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 3);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 12);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 11);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 13);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 14);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 10);
-    boost::tree::successor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 8);
+    for (; ci!=cie; ++ci) {
+        BOOST_CHECK_EQUAL(*c, ci->second);
+        boost::tree::successor(Order(), c);
+    }
 }
 
 BOOST_AUTO_TEST_CASE( test_successor_ascending )

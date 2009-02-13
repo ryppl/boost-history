@@ -14,6 +14,11 @@
 [section TODO]
 
 General:
+* Further reduce test data redundancy: make mock cursor use the data from fake_binary_tree, 
+  and give it an Order template argument. Calculate *order positions from level order indices
+  as of fake_binary_tree. Possibly change fake_binary_tree internal representation to a 
+  vector<bool> with indices indicating the level order position (and also the value),
+  and values indicating "empty or not".
 * Re-merge algorithm tests into algorithm_test.cpp after they're all tidied up?
 * Add algorithms for construction of a tree based on two ranges specifying its
   pre-/in-/postorder linearization (see Knuth).

@@ -10,11 +10,7 @@
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#include <vector>
-
 #include <boost/mpl/list.hpp>
-
-
 
 typedef boost::mpl::list<boost::tree::preorder
                         ,boost::tree::inorder
