@@ -44,7 +44,7 @@ struct LockableConcept {
 //]
 /**
  * TimedLockableConcept object extends ExclusiveLockConcept
- * with the timed_lock function
+ * with the try_lock_until and try_lock_for functions
  */
 
 //[TimedLockableConcept
@@ -53,8 +53,8 @@ struct TimedLockableConcept {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(TimedLockableConcept) {
-        l.timed_lock(t);
-//        l.timed_lock(1);
+        l.try_lock_until(t);
+//        l.try_lock_for(1);
     }
     Lockable l;
     system_time t;
@@ -63,7 +63,7 @@ struct TimedLockableConcept {
 
 /**
  * ShareLockableConcept object extends ExclusiveTimedLockConcept
- * with the lock_shared, timed_lock_shared, try_lock_shared
+ * with the lock_shared, try_lock_shared_until, try_lock_shared
  * and unlock_shared functions
  */
 //[ShareLockableConcept
@@ -73,7 +73,7 @@ struct ShareLockableConcept {
 
     BOOST_CONCEPT_USAGE(ShareLockableConcept) {
         l.lock_shared();
-        l.timed_lock_shared(t);
+        l.try_lock_shared_until(t);
         l.try_lock_shared();
         l.unlock_shared();
     }
@@ -85,7 +85,7 @@ struct ShareLockableConcept {
 
 /**
  * UpgradeLockableConcept object extends SharableLockableConcept
- * with the lock_upgrade, timed_lock_upgrade, unlock_upgrade_and_lock,
+ * with the lock_upgrade, lock_upgrade_until, unlock_upgrade_and_lock,
  * unlock_and_lock_shared and unlock_upgrade_and_lock_shared functions
  */
 
@@ -96,7 +96,8 @@ struct UpgradeLockableConcept {
 
     BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
         l.lock_upgrade();
-        l.timed_lock_upgrade(t);
+        l.try_lock_upgrade();
+        // l.try_lock_upgrade_until(t);
         l.unlock_upgrade_and_lock();
         l.unlock_and_lock_upgrade();
         l.unlock_and_lock_shared();

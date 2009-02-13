@@ -16,7 +16,45 @@
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 
 namespace boost { namespace synchro {
+class named_recursive_mutex
+:   public boost::interprocess::named_recursive_mutex,
+    public lock_traits_base<
+    multi_process_tag,
+    exclusive_lock_tag,
+    recursive_tag,
+    has_timed_interface_tag,
+    kernel_lifetime_tag,
+    named_tag
+>
+{
 
+    //Non-copyable
+    named_recursive_mutex(const named_recursive_mutex &);
+    named_recursive_mutex &operator=(const named_recursive_mutex &);
+    named_recursive_mutex();
+
+public:
+
+    typedef boost::interprocess::interprocess_condition  best_condition_type;
+    typedef boost::interprocess::interprocess_condition  best_condition_any_type;
+
+	named_recursive_mutex(interprocess::create_only_t create_only, const char *name)
+   	    : interprocess::named_recursive_mutex(create_only, name) {};
+   	named_recursive_mutex(interprocess::open_or_create_t open_or_create, const char *name)
+  	    : interprocess::named_recursive_mutex(open_or_create, name) {};
+  	named_recursive_mutex(interprocess::open_only_t open_only, const char *name)
+  	    : interprocess::named_recursive_mutex(open_only, name) {};
+
+    bool try_lock_until(system_time const & abs_time)
+    {return this->timed_lock(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_for(TimeDuration const & relative_time)
+    {return timed_lock(relative_time);}
+   
+
+};    
+
+#if 0
 typedef boost::interprocess::named_recursive_mutex named_recursive_mutex;
 
 template<>
@@ -56,10 +94,6 @@ struct best_condition_any<boost::interprocess::named_recursive_mutex> {
 	typedef boost::interprocess::interprocess_condition type;
 };
 
-#if 0
-template<>
-struct syntactic_lock_traits<boost::interprocess::named_mutex>
-	: syntactic_process_lock_traits<boost::interprocess::named_mutex> {};
 #endif
 
 }

@@ -14,17 +14,16 @@
 //!\file
 //!Describes null_mutex class
 #include <boost/synchro/null_mutex.hpp>
+#include <boost/thread/thread_time.hpp>
 
 namespace boost {
 
-namespace posix_time
-{  class ptime;   }
 
 namespace synchro {
 
 class null_condition
 {
-public:
+private:
    /// @cond
    //Non-copyable
    null_condition(const null_condition &);
@@ -62,15 +61,16 @@ public:
    //!this->notify_one() or this->notify_all(), or until time abs_time is reached,
    //!and then reacquires the lock.
    //!Returns: false if time abs_time is reached, otherwise true.
+
    template <typename L>
-   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time)
+   bool timed_wait(L& lock, const boost::system_time &abs_time)
    { return true; }
 
    //!The same as:   while (!pred()) {
    //!                  if (!timed_wait(lock, abs_time)) return pred();
    //!               } return true;
    template <typename L, typename Pr>
-   bool timed_wait(L& lock, const boost::posix_time::ptime &abs_time, Pr pred)
+   bool timed_wait(L& lock, const boost::system_time &abs_time, Pr pred)
    { return true; }
 
 };

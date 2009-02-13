@@ -17,6 +17,42 @@
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
 
 namespace boost { namespace synchro {
+    
+class thread_shared_mutex
+: public lock_traits_base<
+    multi_threaded_tag,
+    upgradable_lock_tag,
+    non_recursive_tag,
+    has_timed_interface_tag,
+    process_lifetime_tag,
+    anonymous_tag,
+    shared_mutex
+>
+{
+
+    //Non-copyable
+    thread_shared_mutex(const thread_shared_mutex &);
+    thread_shared_mutex &operator=(const thread_shared_mutex &);
+
+public:
+    typedef boost::condition_variable_any  best_condition_type;
+    typedef boost::condition_variable_any  best_condition_any_type;
+
+    thread_shared_mutex() {}
+
+    bool try_lock_until(system_time const & abs_time)
+    {return this->timed_lock(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_for(TimeDuration const & relative_time)
+    {return timed_lock(relative_time);}
+    
+    bool try_lock_shared_until(system_time const& abs_time)
+    {return timed_lock_shared(abs_time);}
+
+    
+};    
+
+#if 0
 
 typedef boost::shared_mutex thread_shared_mutex;
 
@@ -56,7 +92,7 @@ template <>
 struct best_condition_any<boost::shared_mutex> {
 	typedef boost::condition_variable_any type;
 };
-
+#endif
 }
 }
 

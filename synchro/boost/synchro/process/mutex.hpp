@@ -18,6 +18,38 @@
 
 namespace boost { namespace synchro {
 
+class interprocess_mutex
+: public lock_traits_base<
+    multi_process_tag,
+    exclusive_lock_tag,
+    non_recursive_tag,
+    has_timed_interface_tag,
+    kernel_lifetime_tag,
+    anonymous_tag,
+    boost::interprocess::interprocess_mutex
+>
+{
+
+    //Non-copyable
+    interprocess_mutex(const interprocess_mutex &);
+    interprocess_mutex &operator=(const interprocess_mutex &);
+
+public:
+
+    typedef boost::interprocess::interprocess_condition  best_condition_type;
+    typedef boost::interprocess::interprocess_condition  best_condition_any_type;
+
+    bool try_lock_until(system_time const & abs_time)
+    {return timed_lock(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_for(TimeDuration const & relative_time)
+    {return timed_lock(relative_time);}
+    
+    //bool try_lock_shared_until(system_time const& abs_time)
+    //{return timed_lock_shared(abs_time);}
+
+};    
+#if 0    
 typedef boost::interprocess::interprocess_mutex interprocess_mutex;
 
 template<>
@@ -57,7 +89,7 @@ struct best_condition_any<boost::interprocess::interprocess_mutex> {
 	typedef boost::interprocess::interprocess_condition type;
 };
 
-
+#endif
 }
 }
 

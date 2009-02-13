@@ -35,16 +35,22 @@ class interprocess_upgradable_mutex
 
 public:
 
-	typedef boost::interprocess::interprocess_condition  condition_type;
-	typedef boost::interprocess::interprocess_condition  condition_any_type;
+    typedef boost::interprocess::interprocess_condition  condition_type;
+    typedef boost::interprocess::interprocess_condition  condition_any_type;
 
-   void lock_shared()
-   {lock_sharable();}
+    bool try_lock_until(system_time const & abs_time)
+    {return timed_lock(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_for(TimeDuration const & relative_time)
+    {return timed_lock(relative_time);}
+
+    void lock_shared()
+    {lock_sharable();}
 
    bool try_lock_shared()
    {return try_lock_sharable();}
 
-   bool timed_lock_shared(const boost::posix_time::ptime &abs_time)
+   bool try_lock_shared_until(const boost::posix_time::ptime &abs_time)
    {return timed_lock_sharable(abs_time);}
 
    void unlock_shared()
@@ -56,7 +62,7 @@ public:
    bool try_lock_upgrade()
    {return try_lock_upgradable();}
 
-   bool timed_lock_upgrade(const boost::posix_time::ptime &abs_time)
+   bool try_lock_upgrade_until(const boost::posix_time::ptime &abs_time)
    {return timed_lock_upgradable(abs_time);}
 
    void unlock_upgrade()

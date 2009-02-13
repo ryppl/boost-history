@@ -30,7 +30,7 @@ class basic_semaphore
 {
     typedef typename Sync::mutex_type lockable_type;
     typedef typename Sync::condition_type condition_variable;
-    typedef typename scoped_lock_type<lockable_type>::type scoped_lock;
+    typedef typename unique_lock_type<lockable_type>::type scoped_lock;
     typedef basic_semaphore this_type;
 
     /// @cond

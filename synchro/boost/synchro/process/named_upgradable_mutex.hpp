@@ -18,80 +18,86 @@
 namespace boost { namespace synchro {
 
 class interprocess_named_upgradable_mutex
-	: public lock_traits_base<
+	: public interprocess::named_upgradable_mutex,
+      public lock_traits_base<
 		multi_process_tag,
 		upgradable_lock_tag,
 		non_recursive_tag,
 		has_timed_interface_tag,
         kernel_lifetime_tag,
-        named_tag,
-		interprocess::named_upgradable_mutex
-	>
+        named_tag
+    > 	
 {
    //Non-copyable
-	interprocess_named_upgradable_mutex();
 	interprocess_named_upgradable_mutex(const interprocess_upgradable_mutex &);
 	interprocess_named_upgradable_mutex &operator=(const interprocess_named_upgradable_mutex &);
+	interprocess_named_upgradable_mutex();
 public:
 	typedef boost::interprocess::interprocess_condition  condition_type;
 	typedef boost::interprocess::interprocess_condition  condition_any_type;
-#if 0
+#if 1
 	interprocess_named_upgradable_mutex(interprocess::create_only_t create_only, const char *name)
-   	: interprocess::named_upgradable_mutex(create_only, name) {};
-   	interprocess_named_upgradable_mutex(interprocess::open_or_create_t open_or_create, const char *name);
-  	: interprocess::named_upgradable_mutex(open_or_create, name) {};
+   	    : interprocess::named_upgradable_mutex(create_only, name) {};
+   	interprocess_named_upgradable_mutex(interprocess::open_or_create_t open_or_create, const char *name)
+  	    : interprocess::named_upgradable_mutex(open_or_create, name) {};
   	interprocess_named_upgradable_mutex(interprocess::open_only_t open_only, const char *name)
-  	: interprocess::named_upgradable_mutex(open_only, name) {};
+  	    : interprocess::named_upgradable_mutex(open_only, name) {};
 #endif
-   void lock_shared()
-   {lock_sharable();}
+    bool try_lock_until(system_time const & abs_time)
+    {return timed_lock(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_for(TimeDuration const & relative_time)
+    {return timed_lock(relative_time);}
+        
+    void lock_shared()
+    {lock_sharable();}
 
-   bool try_lock_shared()
-   {return try_lock_sharable();}
+    bool try_lock_shared()
+    {return try_lock_sharable();}
 
-   bool timed_lock_shared(const boost::posix_time::ptime &abs_time)
-   {return timed_lock_sharable(abs_time);}
+    bool try_lock_shared_until(const boost::posix_time::ptime &abs_time)
+    {return timed_lock_sharable(abs_time);}
 
-   void unlock_shared()
-   {unlock_sharable();}
+    void unlock_shared()
+    {unlock_sharable();}
 
-   void lock_upgrade()
-   {lock_upgradable();}
+    void lock_upgrade()
+    {lock_upgradable();}
 
-   bool try_lock_upgrade()
-   {return try_lock_upgradable();}
+    bool try_lock_upgrade()
+    {return try_lock_upgradable();}
 
-   bool timed_lock_upgrade(const boost::posix_time::ptime &abs_time)
-   {return timed_lock_upgradable(abs_time);}
+    bool tru_lock_upgrade_until(const boost::posix_time::ptime &abs_time)
+    {return timed_lock_upgradable(abs_time);}
 
-   void unlock_upgrade()
-   {unlock_upgradable();}
+    void unlock_upgrade()
+    {unlock_upgradable();}
 
-   void unlock_and_lock_upgrade()
-   {unlock_and_lock_upgrade();}
+    void unlock_and_lock_upgrade()
+    {unlock_and_lock_upgrade();}
 
-   void unlock_and_lock_shared()
-   {unlock_and_lock_sharable();}
+    void unlock_and_lock_shared()
+    {unlock_and_lock_sharable();}
 
 #if 0
-   void unlock_upgrade_and_lock_shared();
-   {unlock_upgradable_and_lock_sharable();}
+    void unlock_upgrade_and_lock_shared();
+    {unlock_upgradable_and_lock_sharable();}
 #endif
-   void unlock_upgrade_and_lock()
-   {unlock_upgrade_and_lock();}
+    void unlock_upgrade_and_lock()
+    {unlock_upgrade_and_lock();}
 
-   bool try_unlock_upgrade_and_lock()
-   {return try_unlock_upgradable_and_lock();}
+    bool try_unlock_upgrade_and_lock()
+    {return try_unlock_upgradable_and_lock();}
 
 #if 0
-   bool timed_unlock_upgrade_and_lock(const boost::posix_time::ptime &abs_time);
-   {return timed_unlock_upgradable_and_lock(abs_time);}
+    bool unlock_upgrade_and_lock_until(const boost::posix_time::ptime &abs_time);
+    {return timed_unlock_upgradable_and_lock(abs_time);}
 
-   bool try_unlock_share_and_lock();
-   {return try_unlock_sharable_and_lock();}
+    bool try_unlock_share_and_lock();
+    {return try_unlock_sharable_and_lock();}
 
-   bool try_unlock_share_and_lock_upgrade();
-   {return try_unlock_sharable_and_lock_upgradable();}
+    bool try_unlock_share_and_lock_upgrade();
+    {return try_unlock_sharable_and_lock_upgradable();}
 #endif
 
 };

@@ -40,8 +40,8 @@ class null_mutex
    null_mutex &operator= (const null_mutex&);
    /// @endcond
 public:
-    typedef null_condition condition_type;
-    typedef null_condition condition_any_type;
+    typedef null_condition best_condition_type;
+    typedef null_condition best_condition_any_type;
 
    //!Constructor.
    //!Empty.
@@ -61,13 +61,13 @@ public:
 
    //!Simulates a mutex timed_lock() operation.
    //!Equivalent to "return true;"
-   bool timed_lock(const boost::posix_time::ptime &)
+   bool try_lock_until(const boost::posix_time::ptime &)
    {  return true;   }
 
 //   bool timed_lock(system_time const & abs_time)
 //   {return true;}
    template<typename TimeDuration>
-   bool timed_lock(TimeDuration const & relative_time)
+   bool try_lock_for(TimeDuration const & relative_time)
    {return true;}
 
 
@@ -86,7 +86,7 @@ public:
 
    //!Simulates a mutex timed_lock_share() operation.
    //!Equivalent to "return true;"
-   bool timed_lock_shared(const boost::posix_time::ptime &)
+   bool try_lock_shared_until(const boost::posix_time::ptime &)
    {  return true;   }
 
    //!Simulates a mutex unlock_share() operation.
@@ -104,7 +104,7 @@ public:
 
    //!Simulates a mutex timed_lock_upgrade() operation.
    //!Equivalent to "return true;"
-   bool timed_lock_upgrade(boost::posix_time::ptime const &)
+   bool try_lock_upgrade_until(boost::posix_time::ptime const &)
    {  return true;   }
 
    //!Simulates a mutex unlock_upgrade() operation.
@@ -136,7 +136,7 @@ public:
 
    //!Simulates timed_unlock_upgrade_and_lock().
    //!Equivalent to "return true;"
-   bool timed_unlock_upgrade_and_lock(const boost::posix_time::ptime &)
+   bool unlock_upgrade_and_lock_until(const boost::posix_time::ptime &)
    {  return true;   }
 
    //!Simulates try_unlock_share_and_lock().

@@ -33,11 +33,28 @@ protected:
     Lockable lock_;
 };
 
+template <typename TimeLockable>
+class timed_lock_adapter
+        : public exclusive_lock_adapter<TimeLockable>
+        , public virtual timed_lock
+{
+public:
+    virtual ~timed_lock_adapter()    {}
+    bool try_lock_until(boost::system_time  const&  abs_time)
+    {return the_lock().try_lock_until(abs_time);}
+    template<typename DurationType>
+    bool try_lock_for(DurationType const& rel_time)
+    {return try_lock_for(rel_time);}
+private:
+    TimeLockable& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
+};
+
+
 //////////////////////////////////////////////////////////////////////////////
 
 template <typename SharableLock>
 class sharable_lock_adapter
-        : public exclusive_lock_adapter<SharableLock>
+        : public timed_lock_adapter<SharableLock>
         , public virtual sharable_lock
 {
 public:

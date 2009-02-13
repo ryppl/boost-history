@@ -30,6 +30,7 @@ struct lockable_type<boost::upgrade_lock<T> > {
 	typedef T type;
 };
 
+
 }
 }
 

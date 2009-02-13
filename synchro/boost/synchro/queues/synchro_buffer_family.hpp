@@ -11,9 +11,10 @@
 #ifndef BOOST_SYNCHRO_QUEUES_SYNCHRO_BUFFER__HPP
 #define BOOST_SYNCHRO_QUEUES_SYNCHRO_BUFFER__HPP
 
-#include <boost/thread/locks.hpp>
-#include <boost/thread/mutex.hpp>
-#include <boost/thread/condition_variable.hpp>
+//#include <boost/thread/locks.hpp>
+//#include <boost/thread/mutex.hpp>
+//#include <boost/thread/condition_variable.hpp>
+#include <boost/synchro/lockable_traits.hpp>
 
 namespace boost { namespace synchro {
 #if 0
@@ -69,7 +70,7 @@ class sync_buffer
 {
 	typedef typename Sync::mutex_type mutex_type;
 	typedef typename Sync::condition_type condition_type;
-	typedef typename boost::unique_lock<mutex_type> unique_lock_type;
+	typedef typename unique_lock_type<mutex_type>::type unique_lock_type;
 	mutex_type mtx_;
 	condition_type not_full_;
 	condition_type not_empty_;
