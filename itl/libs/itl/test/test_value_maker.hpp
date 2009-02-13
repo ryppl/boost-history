@@ -120,8 +120,7 @@ struct map_val
 #define C_D(low,up) itl::interval<T>::open     (make<T>(low), make<T>(up))
 
 #define MK_v(key)  make<T>(key)
-
-
+#define MK_u(key)  make<U>(key)
 
 // Very short value denotation for interval value pairs
 // Assumption typename IntervalMapT existes in scope

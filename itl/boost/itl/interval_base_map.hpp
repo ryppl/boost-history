@@ -374,7 +374,7 @@ public:
 	    for all keys in interval \c I in the map. */
     SubType& set(const segment_type& interval_value_pair)
 	{ 
-		that()->erase_(interval_value_pair.KEY_VALUE); 
+		erase(interval_value_pair.KEY_VALUE); 
 		that()->insert_(interval_value_pair); 
 		return *that(); 
 	}
@@ -438,11 +438,11 @@ public:
     void add_intersection(interval_base_map& section, const domain_type& key)const
     { add_intersection(section, interval_type(key)); }
 
-	/** The intersection of \c key_value_pair in \c *this map is added to \c section. */
+	/** The intersection of \c key_value_pair and \c *this map is added to \c section. */
     void add_intersection(interval_base_map& section, const element_type& key_value_pair)const
     { add_intersection(section, value_type(interval_type(key_value_pair.key), key_value_pair.data)); }
 
-	/** The intersection of \c interval_value_pair in \c *this map is added to \c section. */
+	/** The intersection of \c interval_value_pair and \c *this map is added to \c section. */
     void add_intersection(interval_base_map& section, const segment_type& interval_value_pair)const;
 
 	/** The intersection of \c inter_val with \c *this map is added to \c section. */

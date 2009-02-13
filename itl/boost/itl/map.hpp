@@ -199,6 +199,17 @@ public:
         else
             return base_type::insert(value_pair);
     }
+	//==========================================================================
+	//= Selection
+	//==========================================================================
+
+	/** Total select function. */
+	codomain_type operator()(const domain_type& key)const
+	{
+        const_iterator it = find(key); 
+		return it==end() ? neutron<codomain_type>::value()
+			             : it->CONT_VALUE;
+	}
 
 	//==========================================================================
 	//= Addition, subtraction
@@ -224,7 +235,12 @@ public:
 	//==========================================================================
 	//= Insertion, erasure
 	//==========================================================================
-    //JODO 
+
+    /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
+	map& set(const element_type& key_value_pair)
+	{ (*this)[key_value_pair.KEY_VALUE] = key_value_pair.CONT_VALUE; return *this; }
+
+	//JODO
     /** erase the value pair \c pair(key,val) from the map.
         Erase only if, the exact value content \c val is stored at key \key. */
     size_type erase(const value_type& value);
@@ -233,12 +249,16 @@ public:
 	//= Intersection
 	//==========================================================================
 
+	/** The intersection of \c key in \c *this map is added to \c section. */
 	void add_intersection(map& section, const domain_type& key_value)const;
 
-	void add_intersection(map& section, const value_type& value_pair)const;
+	/** The intersection of \c key_value_pair and \c *this map is added to \c section. */
+	void add_intersection(map& section, const element_type& key_value_pair)const;
 
+	/** The intersection of set \c sectant with \c *this map is added to \c section. */
 	void add_intersection(map& section, const set_type& sectant)const;
 
+	/** The intersection of map \c sectant with \c *this map is added to \c section. */
 	void add_intersection(map& section, const map& sectant)const;
 
 	//==========================================================================

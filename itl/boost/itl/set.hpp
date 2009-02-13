@@ -72,10 +72,12 @@ public:
         std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
     template <class InputIterator>
-    set(InputIterator f, InputIterator l): std::set<InputIterator>(f,l) {}
+    set(InputIterator first, InputIterator last): 
+		std::set<InputIterator>(first,last) {}
 
     template <class InputIterator>
-    set(InputIterator f, InputIterator l, const key_compare& comp): std::set<InputIterator>(f,l,comp) {}
+    set(InputIterator first, InputIterator last, const key_compare& comp): 
+		std::set<InputIterator>(first, last, comp) {}
 
     set(const set& src): base_type::set(src){}
 
@@ -83,6 +85,11 @@ public:
 
     set& operator=(const set& src) { base_type::operator=(src); return *this; } 
     void swap(set& src) { base_type::swap(src); }
+
+    /** Copy the elements in set \c src to which property \c hasProperty applies 
+        into \c *this set. */
+    template<class Predicate>
+    set& assign_if(const set& src, const Predicate&);
 
 	//==========================================================================
     using base_type::empty;
@@ -113,17 +120,19 @@ public:
 	//= Emptieness, containment
 	//==========================================================================
 
-    /// Checks if the element \c x is in the set
-    bool contains(const DomainT& x)const { return !(find(x) == end()); }
+    /// Checks if the element \c value is in the set
+    bool contains(const element_type& value)const 
+	{ return !(find(value) == end()); }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
-    bool contained_in(const set& super)const { return Set::contained_in(*this, super); }
+    bool contained_in(const set& super)const 
+	{ return Set::contained_in(*this, super); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
     bool contains(const set& sub)const { return Set::contained_in(sub, *this); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
-    bool disjoint(const set& x2)const { return disjoint(*this, x2); }
+	bool disjoint(const set& x2)const { return Set::disjoint(*this, x2); }
 
 	//==========================================================================
 	//= Size
@@ -135,17 +144,47 @@ public:
 
 	size_t cardinality()const { return size(); }
 
+	//==========================================================================
+	//= Addition, subtraction
+	//==========================================================================
 	/** Add an element \c value to the set. */
-    set& add(const value_type& value) { insert(value); return *this; } 
+    set& add(const element_type& value) { insert(value); return *this; } 
 
 	/** Subtract an element \c value from the set. */
-    set& subtract(const value_type& value);
+    set& subtract(const element_type& value);
 
-	void add_intersection(set& section, const domain_type& key_value)const;
+	//==========================================================================
+	//= Insertion, erasure
+	//==========================================================================
+    /** Erase the elements in *this set to which property \c hasProperty applies. 
+        Keep all the rest. */
+    template<class Predicate>
+    set& erase_if(const Predicate&);
 
+	//==========================================================================
+	//= Intersection, symmetric difference
+	//==========================================================================
+
+	/** The intersection of \c key in \c *this set is added to \c section. */
+	void add_intersection(set& section, const element_type& key)const;
+
+	/** The intersection of set \c sectant with \c *this set is added 
+	    to \c section. */
 	void add_intersection(set& section, const set& sectant)const;
 
+	/** If \c *this set contains \c value it is erased, otherwise it is added. */
     set& flip(const element_type& value);
+
+	//==========================================================================
+	//= Representation
+	//==========================================================================
+
+    /** Represent this set as a string */
+    std::string as_string(const char* sep = " ")const;
+
+	//==========================================================================
+	//= Algorithm unifiers
+	//==========================================================================
 
     /** \c key_value allows for a uniform access to \c key_values which is
         is used for common algorithms on sets and maps. */
@@ -168,25 +207,13 @@ public:
     static value_type make_element(const key_type& key_val, const data_type& data_val)
     { return key_val; }
 
-    /** Erase the elements in *this set to which property \c hasProperty applies. 
-    Keep all the rest. */
-    template<class Predicate>
-    set& erase_if(const Predicate&);
-
-    /** Copy the elements in set \c src to which property \c hasProperty applies 
-        into \c *this set. */
-    template<class Predicate>
-    set& assign_if(const set& src, const Predicate&);
-
-    /** Represent this set as a string */
-    std::string as_string(const char* sep = " ")const;
 };
 
 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 set<DomainT,Compare,Alloc>&
-    set<DomainT,Compare,Alloc>::subtract(const value_type& val)
+    set<DomainT,Compare,Alloc>::subtract(const element_type& val)
 {
     iterator it_ = find(val);
     if(it_ != end())
@@ -197,7 +224,7 @@ set<DomainT,Compare,Alloc>&
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void set<DomainT,Compare,Alloc>
-	::add_intersection(set& section, const domain_type& sectant)const
+	::add_intersection(set& section, const element_type&sectant)const
 {
 	const_iterator it_ = find(sectant);
 	if(it_ != end()) 
@@ -333,13 +360,13 @@ inline bool operator >= (const itl::set<DomainT,Compare,Alloc>& lhs,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator += (      itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return object.add(operand); } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator +  (const itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return itl::set<DomainT,Compare,Alloc>(object) += operand; }
 
 /// Add a set \c operand to this set \object.
@@ -360,13 +387,13 @@ operator +  (const itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator |= (      itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return object.add(operand); } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator |  (const itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return itl::set<DomainT,Compare,Alloc>(object) |= operand; }
 
 /// Add a set \c operand to this set \object.
@@ -387,13 +414,13 @@ operator |  (const itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator -= (      itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return object.subtract(operand); } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator -  (const itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return itl::set<DomainT,Compare,Alloc>(object) -= operand; }
 
 
@@ -416,7 +443,7 @@ operator -  (const itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator &= (      itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 {
 	itl::set<DomainT,Compare,Alloc> section;
 	object.add_intersection(section, operand);
@@ -427,7 +454,7 @@ operator &= (      itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator &  (const itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
 
 
@@ -465,7 +492,7 @@ operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
-    const typename itl::set<DomainT,Compare,Alloc>::value_type& operand)
+    const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { 
 	return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
 }

@@ -192,7 +192,6 @@ void interval_set_ctor_4_bicremental_types()
 
 }
 
-
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
 					template<class,ITL_COMPARE>class Interval = interval,
@@ -690,6 +689,30 @@ void interval_set_infix_caret_overload_4_bicremental_types()
 	//This checks all cases of is_interval_set_derivative<T>
 	BOOST_CHECK_EQUAL(set_a ^ itv, itv ^ set_a);
 	BOOST_CHECK_EQUAL(set_b ^ MK_v(4), MK_v(4) ^ set_b);
+}
+
+
+template <template< class T, 
+                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
+					template<class,ITL_COMPARE>class Interval = interval,
+                    ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalSet, 
+          class T>
+void interval_set_find_4_bicremental_types()
+{
+	typedef IntervalSet<T> IntervalSetT;
+	itl::interval<T> itv = I_D(3,5);
+
+	IntervalSetT set_a;
+	set_a.add(C_D(1,3)).add(I_I(6,11));
+
+	IntervalSetT::const_iterator found = set_a.find(MK_v(6));
+
+	BOOST_CHECK_EQUAL( *found, I_I(6,11) );
+
+	found = set_a.find(MK_v(5));
+
+	BOOST_CHECK_EQUAL( found == set_a.end(), true );
 }
 
 #endif // __test_itl_interval_set_shared_h_JOFA_080920__

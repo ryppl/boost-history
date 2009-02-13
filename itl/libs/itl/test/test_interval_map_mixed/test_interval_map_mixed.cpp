@@ -102,8 +102,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_assign_4_ordered_types
 
     SplitIntervalMapT split_map;
     IntervalMapT      join_map;
-    split_map.add(v0_u1); //JODO make_pair(v0,u1); fails
-    join_map = split_map;
+    split_map.add(v0_u1); //NOTE: make_pair(v0,u1); fails
+    join_map = split_map; //=t T& T::operator=(const P&) ...
+
 
     BOOST_CHECK_EQUAL( split_map.lower(), join_map.lower() );
     BOOST_CHECK_EQUAL( split_map.upper(), join_map.upper() );

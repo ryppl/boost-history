@@ -1013,5 +1013,62 @@ void interval_map_infix_caret_overload_4_bicremental_types()
 	BOOST_CHECK_EQUAL(map_b ^ map_pair,  map_pair ^ map_b);
 }
 
+template <template<class T, class U,
+                   class Traits = partial_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap, 
+          class T, class U>
+void interval_map_find_4_bicremental_types()
+{
+	typedef IntervalMap<T,U> IntervalMapT;
+
+	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+	mapping_pair<T,U> map_pair = K_v(4,3);
+
+	IntervalMapT map_a;
+	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+
+	IntervalMapT::const_iterator found = map_a.find(MK_v(6));
+
+	BOOST_CHECK_EQUAL( found->CONT_VALUE, MK_u(3) );
+	BOOST_CHECK_EQUAL( map_a(MK_v(6)), MK_u(3) );
+
+	found = map_a.find(MK_v(5));
+
+	BOOST_CHECK_EQUAL( found == map_a.end(), true );
+	BOOST_CHECK_EQUAL( map_a(MK_v(5)), MK_u(0) );
+}
+
+
+template <template<class T, class U,
+                   class Traits = partial_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap, 
+          class T, class U>
+void interval_map_set_4_bicremental_types()
+{
+	typedef IntervalMap<T,U> IntervalMapT;
+
+	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+	mapping_pair<T,U> map_pair = K_v(4,3);
+
+	IntervalMapT map_a;
+	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+
+	BOOST_CHECK_EQUAL( map_a.set(CDv(2,10,4)).contains(CDv(2,10,4)), true );
+	BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).contains(K_v(4,5)), true );
+	BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).set(CDv(3,5,6)).contains(CDv(3,5,6)), true );
+}
+
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__
 

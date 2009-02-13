@@ -294,6 +294,5 @@ void quantifier_map_check_abelian_group_plus_prot_inv_4_bicremental_types()
 	CHECK_ABELIAN_GROUP_INSTANCE_WRT_EQUAL(pipe) (is_protonic_equal, map_a, map_b, map_c, map_pair1, map_pair2);
 }
 
-
 #endif // __test_itl_quantifier_itl_map_h_JOFA_090119__
 

@@ -233,7 +233,7 @@ public:
 	/** Find the interval value pair, that contains element \c key */
     const_iterator find(const element_type& key)const
     { 
-        typename ImplSetT::const_iterator it = this->_map.find(interval_type(key)); 
+        typename ImplSetT::const_iterator it = this->_set.find(interval_type(key)); 
         return it; 
     }
 

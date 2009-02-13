@@ -59,14 +59,19 @@ BOOST_AUTO_TEST_CASE(superset_test)
 
 BOOST_AUTO_TEST_CASE(casual_test)
 {
-	typedef interval_map<int,nat>  IntervalMapT;
-	typedef split_interval_map<int,nat>  SplitIntervalMapT;
+	typedef int T;
+	typedef itl::map<int,int>  ItlMapT;
+	typedef interval_map<int,int>  IntervalMapT;
+	typedef split_interval_map<int,int>  SplitIntervalMapT;
 	
-	SplitIntervalMapT left, right;
-	//[1   2]->2
-	//    [2   3]->2
-	left.add(IIv(1,2,2));
-	left.flip(IIv(2,3,3));
+	IntervalMapT left, right;
 
-	BOOST_CHECK_EQUAL(left, right);
+	left.add(IDv(1,3,1));
+	BOOST_CHECK_EQUAL(IntervalMapT().add(IDv(1,3,1))(2), 1);
+	BOOST_CHECK_EQUAL(IntervalMapT().add(IDv(1,3,1))(3) == 1, false);
+	BOOST_CHECK_EQUAL(IntervalMapT().add(IDv(1,3,1))(3), 0);
+	BOOST_CHECK_EQUAL(SplitIntervalMapT().add(IDv(1,3,1))(2), 1);
+	BOOST_CHECK_EQUAL(SplitIntervalMapT().add(IDv(1,3,1))(3) == 1, false);
+	BOOST_CHECK_EQUAL(ItlMapT().add(sK_v(2,1))(2), 1);
+	BOOST_CHECK_EQUAL(ItlMapT().add(sK_v(2,1))(3) == 1, false);
 }
