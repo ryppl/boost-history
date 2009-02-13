@@ -39,7 +39,7 @@ public:
 #else
 //[IL_Lockable_BancAccount_BankAccount_inherit
 class BankAccount
-: public exclusive_lockable_adapter<boost::mutex>
+: public exclusive_lockable_adapter<thread_mutex>
 {
     int balance_;
 public:

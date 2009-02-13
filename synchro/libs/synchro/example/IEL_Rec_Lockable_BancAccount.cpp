@@ -32,7 +32,7 @@ public:
 
 class BankAccount
 : protected BankAccount_TN
-, public exclusive_lockable_adapter<boost::recursive_mutex>
+, public exclusive_lockable_adapter<thread_recursive_mutex>
 {
 //        int balance_;
     void throw_if_not_owned(strict_locker<BankAccount>&locker) {
@@ -42,6 +42,8 @@ class BankAccount
 
 public:
     typedef exclusive_lockable_adapter<boost::recursive_mutex> lockable_base_type;
+
+    BankAccount() {}
     void Deposit(int amount) {
         lock_guard<BankAccount> guard(*this);
 //        lock_guard<boost::recursive_mutex> guard(*this->mutex());

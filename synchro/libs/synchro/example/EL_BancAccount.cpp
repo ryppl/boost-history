@@ -34,10 +34,10 @@ public:
 
 //[AccountManager
 class AccountManager
-    : public exclusive_lockable_adapter<boost::mutex>
+    : public exclusive_lockable_adapter<thread_mutex>
 {
 public:
-    typedef exclusive_lockable_adapter<boost::mutex> lockable_base_type;
+    typedef exclusive_lockable_adapter<thread_mutex> lockable_base_type;
     AccountManager()
         : checkingAcct_(*this)
         , savingsAcct_(*this)

@@ -16,11 +16,12 @@ using namespace boost::synchro;
 using namespace boost;
 //[IL_Rec_Lockable_BancAccount_BankAccount
 class BankAccount
-: public exclusive_lockable_adapter<boost::recursive_mutex>
+: public exclusive_lockable_adapter<thread_recursive_mutex>
 {
 /*<-*/
     int balance_;
 public:
+    BankAccount() {}
     void Deposit(int amount) {
         lock_guard<BankAccount> guard(*this);
         balance_ += amount;
