@@ -112,6 +112,87 @@ namespace boost{ namespace guigl { namespace gl {
     void translate_z(T z);
 
     //////////////////////////////////////////////////////////////////////////
+    template<class T>
+    inline void light(GLenum i_light, GLenum pname, T param);
+
+    template<class T>
+    inline void light(GLenum i_light, GLenum pname, T const* param);
+
+    template<class T>
+    inline void light_position(GLenum i_light, T x, T y, T z, T w);
+
+    template<class T>
+    void light_constant_attenuation(GLenum i_light, T value);
+
+    template<class T>
+    void light_linear_attenuation(GLenum i_light, T value);
+
+    template<class T>
+    void light_quadratic_attenuation(GLenum i_light, T value);
+
+    template<class T>
+    void light_spot_cutoff(GLenum i_light, T value);
+
+    template<class T>
+    void light_spot_exponent(GLenum i_light, T value);
+
+    template<class T>
+    void light_spot_direction(GLenum i_light, T x, T y, T z);
+
+    template<class T>
+    void light_specular(GLenum i_light, T r, T g, T b, T a);
+
+    template<class T>
+    void light_diffuse(GLenum i_light, T r, T g, T b, T a);
+
+    template<class T>
+    void light_ambient(GLenum i_light, T r, T g, T b, T a);
+
+    //////////////////////////////////////////////////////////////////////////
+    class light_setup : boost::noncopyable
+    {
+    private:
+        GLenum m_light;
+        light_setup(GLenum i_light):m_light(i_light){};
+
+        friend light_setup light(GLenum i_light);
+
+    public:
+        template<class T>
+        light_setup& position(T x, T y, T z, T w);
+
+        template<class T>
+        light_setup& constant_attenuation(T value);
+
+        template<class T>
+        light_setup& linear_attenuation(T value);
+
+        template<class T>
+        light_setup& quadratic_attenuation(T value);
+
+        template<class T>
+        light_setup& spot_cutoff(T value);
+
+        template<class T>
+        light_setup& spot_exponent(T value);
+
+        template<class T>
+        light_setup& spot_direction(T x, T y, T z);
+
+        template<class T>
+        light_setup& specular(T r, T g, T b, T a);
+
+        template<class T>
+        light_setup& diffuse(T r, T g, T b, T a);
+
+        template<class T>
+        light_setup& ambient(T r, T g, T b, T a);
+    };
+
+    light_setup light(GLenum i_light);
+
+
+    //////////////////////////////////////////////////////////////////////////
     void wired_cube(GLdouble size);
     void solid_cube(GLdouble size);
     void wire_sphere(GLdouble radius, GLint slices, GLint stacks);

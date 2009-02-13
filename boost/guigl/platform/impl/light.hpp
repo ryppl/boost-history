@@ -4,9 +4,6 @@
 namespace boost{ namespace guigl { namespace gl {
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    inline void light(GLenum i_light, GLenum pname, T param);
-
     template<>
     inline void light<GLfloat>(GLenum i_light, GLenum pname, GLfloat param)
     {
@@ -20,9 +17,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    inline void light(GLenum i_light, GLenum pname, T const* param);
-
     template<>
     inline void light<GLfloat>(GLenum i_light, GLenum pname, GLfloat const* params)
     {
@@ -36,9 +30,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    inline void light_position(GLenum i_light, T x, T y, T z, T w);
-
     template<>
     inline void light_position<GLfloat>(
         GLenum i_light,
@@ -58,25 +49,19 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_constant_ambient(GLenum i_light, T value);
-
     template<>
-    inline void light_constant_ambient<GLfloat>(GLenum i_light, GLfloat value)
+    inline void light_constant_attenuation<GLfloat>(GLenum i_light, GLfloat value)
     {
         light(i_light, GL_CONSTANT_ATTENUATION, value);
     }
 
     template<>
-    inline void light_constant_ambient<GLint>(GLenum i_light, GLint value)
+    inline void light_constant_attenuation<GLint>(GLenum i_light, GLint value)
     {
         light(i_light, GL_CONSTANT_ATTENUATION, value);
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_linear_attenuation(GLenum i_light, T value);
-
     template<>
     inline void light_linear_attenuation<GLfloat>(GLenum i_light, GLfloat value)
     {
@@ -90,9 +75,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_quadratic_attenuation(GLenum i_light, T value);
-
     template<>
     inline void light_quadratic_attenuation<GLfloat>(GLenum i_light, GLfloat value)
     {
@@ -106,9 +88,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_spot_cutoff(GLenum i_light, T value);
-
     template<>
     inline void light_spot_cutoff<GLfloat>(GLenum i_light, GLfloat value)
     {
@@ -122,9 +101,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_spot_exponent(GLenum i_light, T value);
-
     template<>
     inline void light_spot_exponent<GLfloat>(GLenum i_light, GLfloat value)
     {
@@ -138,9 +114,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_spot_direction(GLenum i_light, T x, T y, T z);
-
     template<>
     inline void light_spot_direction<GLfloat>(GLenum i_light, GLfloat x, GLfloat y, GLfloat z)
     {
@@ -156,9 +129,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_specular(GLenum i_light, T r, T g, T b, T a);
-
     template<>
     inline void light_specular<GLfloat>(GLenum i_light,
         GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -176,9 +146,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_diffuse(GLenum i_light, T r, T g, T b, T a);
-
     template<>
     inline void light_diffuse<GLfloat>(GLenum i_light,
         GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -196,9 +163,6 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     //////////////////////////////////////////////////////////////////////////
-    template<class T>
-    void light_ambient(GLenum i_light, T r, T g, T b, T a);
-
     template<>
     inline void light_ambient<GLfloat>(GLenum i_light,
         GLfloat r, GLfloat g, GLfloat b, GLfloat a)
@@ -213,6 +177,82 @@ namespace boost{ namespace guigl { namespace gl {
     {
         GLint const ambient_color[] = {r, g, b, a};
         light(i_light, GL_AMBIENT, ambient_color);
+    }
+
+    //////////////////////////////////////////////////////////////////////////
+    template<class T>
+    inline light_setup& light_setup::position(T x, T y, T z, T w)
+    {
+        light_position(m_light, x, y, z, w);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::constant_attenuation(T value)
+    {
+        light_constant_attenuation(m_light, value);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::linear_attenuation(T value)
+    {
+        light_linear_attenuation(m_light, value);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::quadratic_attenuation(T value)
+    {
+        light_quadratic_attenuation(m_light, value);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::spot_cutoff(T value)
+    {
+        light_spot_cutoff(m_light, value);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::spot_exponent(T value)
+    {
+        light_spot_exponent(m_light, value);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::spot_direction(T x, T y, T z)
+    {
+        light_spot_direction(m_light, x, y, z);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::specular(T r, T g, T b, T a)
+    {
+        light_specular(m_light, r, g, b, a);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::diffuse(T r, T g, T b, T a)
+    {
+        light_diffuse(m_light, r, g, b, a);
+        return *this;
+    }
+
+    template<class T>
+    inline light_setup& light_setup::ambient(T r, T g, T b, T a)
+    {
+        light_ambient(m_light, r, g, b, a);
+        return *this;
+    }
+
+    inline light_setup light(GLenum i_light)
+    {
+        return light_setup(i_light);
     }
 
 }}}

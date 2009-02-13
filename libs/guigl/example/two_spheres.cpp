@@ -30,27 +30,42 @@ void two_spheres::draw_prologue()
     //glEnable(GL_COLOR_MATERIAL);
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT1);
+    glEnable(GL_LIGHT2);
 
-    light_ambient(GL_LIGHT1, 0.6f, 0.6f, 0.6f, 1.0f);
-    light_diffuse(GL_LIGHT1, 1.0f, 1.0f, 1.0f, 1.0f);
-    light_specular(GL_LIGHT1, 1.0f, 1.0f, 1.0f, 1.0f);
-    light_position(GL_LIGHT1, 100, 40, 40, 1);
-    light_spot_direction(GL_LIGHT1, -100, -40, -40);
-    light_constant_ambient(GL_LIGHT1, 1.5f);
-    light_linear_attenuation(GL_LIGHT1, 0.5f);
-    light_quadratic_attenuation(GL_LIGHT1, 0.2f);
-    light_spot_cutoff(GL_LIGHT1, 180.0f);
-    light_spot_exponent(GL_LIGHT1, 2.0f);
+    light(GL_LIGHT1)
+        .ambient(0.3f, 0.3f, 0.3f, 1.0f)
+        .diffuse(1.0f, 1.0f, 1.0f, 1.0f)
+        .specular(1.0f, 1.0f, 1.0f, 1.0f)
+        .spot_direction(100, 100, 100)
+        .position(-100, -100, -100, 0)
+        .constant_attenuation(1.5f)
+        .linear_attenuation(0.5f)
+        .quadratic_attenuation(0.2f)
+        .spot_cutoff(180.0f)
+        .spot_exponent(2.0f);
 
-    solid_sphere(50, 10, 10);
+    light(GL_LIGHT2)
+        .ambient(0.3f, 0.3f, 0.3f, 1.0f)
+        .diffuse(1.0f, 1.0f, 1.0f, 1.0f)
+        .specular(1.0f, 0.0f, 1.0f, 1.0f)
+        .spot_direction(-100, 100, 100)
+        .position(100, -100, -100, 0)
+        .constant_attenuation(1.2f)
+        .linear_attenuation(0.5f)
+        .quadratic_attenuation(0.2f)
+        .spot_cutoff(180.0f)
+        .spot_exponent(2.0f);
+
+    solid_sphere(50, 50, 50);
     glLoadIdentity();
-    translate(50.f, 50.f, 50.f);
-    wire_sphere(20, 20, 20);
+    translate_x(50.f);
+    boost::guigl::gl::color(1.0, 1.0, 0.0, 0.5);
+    solid_sphere(50, 100, 100);
 
     {
         scoped_matrix m;
-        translate_x(-70.0f);
-        wire_teapot(20);
+        translate_x(-100.0f);
+        solid_teapot(20);
     }
 }
 
