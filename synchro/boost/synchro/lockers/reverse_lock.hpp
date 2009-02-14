@@ -26,8 +26,8 @@ namespace boost { namespace synchro {
  * shared_lock<mutex> lock(smtx);
  * // ... some read operations
  * { // non locked block
- * 		reverse_lock<shared_lock<mutex> > rlock(lock);
- * 	 // ... some code not needing
+ *         reverse_lock<shared_lock<mutex> > rlock(lock);
+ *      // ... some code not needing
  * } // locked again
  * // ...
  */
@@ -37,7 +37,7 @@ namespace boost { namespace synchro {
 template <typename SharableMutex>
 class exclusive_lockable_adapter
 {
-	exclusive_lockable_adapter(SharableMutex& mtx):  mtx_(mtx) {}
+    exclusive_lockable_adapter(SharableMutex& mtx):  mtx_(mtx) {}
     ~exclusive_lockable_adapter() {}
     void lock()
     {mtx_.lock_shared();}
@@ -47,23 +47,23 @@ class exclusive_lockable_adapter
     { return mtx_.try_lock_shared();}
 
 protected:
-	SharableMutex& mtx_;
+    SharableMutex& mtx_;
 };
 
 
 /*
  * template <class Lockable>
  * void f(Lokable&l) const {
- * 	boos::shared_lock<Lokable> lock(smtx);
+ *     boos::shared_lock<Lokable> lock(smtx);
  * // ... some read operations
  * }
  * // elsewhere
- * 		boost::mutex mtx;
+ *         boost::mutex mtx;
  *  //
  *   {
- * 		shared_lockable_adapter smtx(mtx);
- * 		f(smtx);
- * 		//..
+ *         shared_lockable_adapter smtx(mtx);
+ *         f(smtx);
+ *         //..
  * }
  *
  */

@@ -24,8 +24,8 @@ namespace boost { namespace synchro {
  * unique_lock<mutex> lock(smtx);
  * // ... some read operations
  * { // non locked block
- * 		nested_reverse_locker<unique_lock<mutex> > rlock(lock);
- * 	 // ... some code not needing
+ *         nested_reverse_locker<unique_lock<mutex> > rlock(lock);
+ *      // ... some code not needing
  * } // locked again
  * // ...
  */
@@ -49,22 +49,22 @@ public:
         }
 #endif
         if (tmp_locker_) { /*< ensures it is unlocked >*/
-        	tmp_locker_.unlock();
-        	was_locked_=true;
+            tmp_locker_.unlock();
+            was_locked_=true;
         }
     }
     ~nested_reverse_locker() {
-    	if (was_locked_) {
-        	tmp_locker_.lock();
-    	}
+        if (was_locked_) {
+            tmp_locker_.lock();
+        }
         locker_=tmp_locker_.move(); /*< Move ownership to nesting locker >*/
     }
 
 protected:
-	Locker& locker_;
-	Locker tmp_locker_;
-	bool was_locked_;
-	nested_reverse_locker();
+    Locker& locker_;
+    Locker tmp_locker_;
+    bool was_locked_;
+    nested_reverse_locker();
 };
 
 }

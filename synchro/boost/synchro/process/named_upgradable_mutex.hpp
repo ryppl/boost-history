@@ -19,30 +19,30 @@
 namespace boost { namespace synchro {
 
 class interprocess_named_upgradable_mutex
-	: public interprocess::named_upgradable_mutex,
+    : public interprocess::named_upgradable_mutex,
       public lock_traits_base<
-		multi_process_tag,
-		upgradable_lock_tag,
-		non_recursive_tag,
-		has_timed_interface_tag,
+        multi_process_tag,
+        upgradable_lock_tag,
+        non_recursive_tag,
+        has_timed_interface_tag,
         kernel_lifetime_tag,
         named_tag
-    > 	
+    >     
 {
    //Non-copyable
-	interprocess_named_upgradable_mutex(const interprocess_upgradable_mutex &);
-	interprocess_named_upgradable_mutex &operator=(const interprocess_named_upgradable_mutex &);
-	interprocess_named_upgradable_mutex();
+    interprocess_named_upgradable_mutex(const interprocess_upgradable_mutex &);
+    interprocess_named_upgradable_mutex &operator=(const interprocess_named_upgradable_mutex &);
+    interprocess_named_upgradable_mutex();
 public:
-	typedef boost::interprocess::interprocess_condition  condition_type;
-	typedef boost::interprocess::interprocess_condition  condition_any_type;
+    typedef boost::interprocess::interprocess_condition  condition_type;
+    typedef boost::interprocess::interprocess_condition  condition_any_type;
 #if 1
-	interprocess_named_upgradable_mutex(interprocess::create_only_t create_only, const char *name)
-   	    : interprocess::named_upgradable_mutex(create_only, name) {};
-   	interprocess_named_upgradable_mutex(interprocess::open_or_create_t open_or_create, const char *name)
-  	    : interprocess::named_upgradable_mutex(open_or_create, name) {};
-  	interprocess_named_upgradable_mutex(interprocess::open_only_t open_only, const char *name)
-  	    : interprocess::named_upgradable_mutex(open_only, name) {};
+    interprocess_named_upgradable_mutex(interprocess::create_only_t create_only, const char *name)
+           : interprocess::named_upgradable_mutex(create_only, name) {};
+       interprocess_named_upgradable_mutex(interprocess::open_or_create_t open_or_create, const char *name)
+          : interprocess::named_upgradable_mutex(open_or_create, name) {};
+      interprocess_named_upgradable_mutex(interprocess::open_only_t open_only, const char *name)
+          : interprocess::named_upgradable_mutex(open_only, name) {};
 #endif
     bool try_lock_until(system_time const & abs_time)
     {return timed_lock(abs_time);}
@@ -116,25 +116,25 @@ public:
 
 //template<>
 //struct timed_interface_tag<boost::synchro::named_upgradable_mutex> {
-//	typedef has_timed_interface_tag type;
+//    typedef has_timed_interface_tag type;
 //};
 //template<>
 //struct reentrancy_tag<boost::synchro::named_upgradable_mutex> {
-//	typedef non_recursive_tag type;
+//    typedef non_recursive_tag type;
 //};
 //template<>
 //struct category_tag<boost::synchro::named_upgradable_mutex> {
-//	typedef upgradable_lock_tag type;
+//    typedef upgradable_lock_tag type;
 //};
 //template<>
 //struct scope_tag<boost::synchro::named_upgradable_mutex> {
-//	typedef multi_process_tag type;
+//    typedef multi_process_tag type;
 //};
 
 #if 0
 template<>
 struct syntactic_lock_traits<boost::synchro::named_upgradable_mutex>
-	: syntactic_process_lock_traits<boost::synchro::named_upgradable_mutex> {};
+    : syntactic_process_lock_traits<boost::synchro::named_upgradable_mutex> {};
 #endif
 
 }

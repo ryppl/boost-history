@@ -26,8 +26,8 @@ namespace boost { namespace synchro {
  * mutex mtx;
  * // ... some read operations
  * { // non locked block
- * 		reverse_locker<boost::mutex> > rlock(mutex);
- * 	 // ... some code not needing
+ *         reverse_locker<boost::mutex> > rlock(mutex);
+ *      // ... some code not needing
  * } // locked again
  * // ...
  */

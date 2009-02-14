@@ -22,12 +22,12 @@ namespace boost { namespace synchro {
 template <typename T, unsigned size>
 class sync_buffer
 {
-	typedef boost::mutex mutex_type;
-	typedef boost::condition_variable condition_type;
-	typedef boost::unique_lock<mutex_type> unique_lock_type;
-	mutex_type mtx_;
-	condition_type not_full_;
-	condition_type not_empty_;
+    typedef boost::mutex mutex_type;
+    typedef boost::condition_variable condition_type;
+    typedef boost::unique_lock<mutex_type> unique_lock_type;
+    mutex_type mtx_;
+    condition_type not_full_;
+    condition_type not_empty_;
 
     T data_[size+1];
     unsigned in_, out_;
@@ -68,12 +68,12 @@ public:
 template <typename T, unsigned size, typename Sync>
 class sync_buffer
 {
-	typedef typename Sync::mutex_type mutex_type;
-	typedef typename Sync::condition_type condition_type;
-	typedef typename unique_lock_type<mutex_type>::type unique_lock_type;
-	mutex_type mtx_;
-	condition_type not_full_;
-	condition_type not_empty_;
+    typedef typename Sync::mutex_type mutex_type;
+    typedef typename Sync::condition_type condition_type;
+    typedef typename unique_lock_type<mutex_type>::type unique_lock_type;
+    mutex_type mtx_;
+    condition_type not_full_;
+    condition_type not_empty_;
 
     T data_[size+1];
     unsigned in_, out_;

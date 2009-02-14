@@ -22,39 +22,39 @@ template <
     class Condition
 >
 struct condition_backdoor {
-	condition_backdoor(condition_safe<Condition>&cnd): that_(cnd) {}
+    condition_backdoor(condition_safe<Condition>&cnd): that_(cnd) {}
     template <typename Locker, typename Predicate>
     void wait_when(Locker& lock, Predicate pred){
-    	that_.wait_when(lock, pred);
+        that_.wait_when(lock, pred);
     }
     template <typename Locker>
     void wait(Locker& lock) {
-    	that_.wait(lock);
+        that_.wait(lock);
     }
     template <typename Locker>
     bool wait_until(Locker& lock, boost::system_time  const&  abs_time) {
-    	return that_.wait_until(lock, abs_time);
+        return that_.wait_until(lock, abs_time);
     }
 
     template<typename Locker, typename duration_type>
     bool wait_for(Locker& lock, duration_type const& rel_time) {
-    	return that_.wait_for(lock, rel_time);
+        return that_.wait_for(lock, rel_time);
     }
 
     template<typename Locker, typename predicate_type>
     bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
-    	return that_.timed_wait(lock, pred, abs_time);
+        return that_.timed_wait(lock, pred, abs_time);
     }
     template <typename Locker>
     void notify_one(Locker& lock) {
-    	that_.notify_one(lock);
+        that_.notify_one(lock);
     }
     template <typename Locker>
     void notify_all(Locker& lock) {
-    	that_.notify_all(lock);
+        that_.notify_all(lock);
     }
 private:
-	condition_safe<Condition>& that_;
+    condition_safe<Condition>& that_;
 };
 
 }

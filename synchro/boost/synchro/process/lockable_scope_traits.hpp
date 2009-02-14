@@ -36,19 +36,19 @@ struct scope_traits<multi_process_tag>
     typedef boost::interprocess::try_to_lock_type try_to_lock_t;
 
 
-    static const defer_lock_t& defer_lock()	{return boost::interprocess::defer_lock;}
-	static const adopt_lock_t& adopt_lock() {return boost::interprocess::accept_ownership;}
-	static const try_to_lock_t& try_to_lock()	{return boost::interprocess::try_to_lock;}
+    static const defer_lock_t& defer_lock()    {return boost::interprocess::defer_lock;}
+    static const adopt_lock_t& adopt_lock() {return boost::interprocess::accept_ownership;}
+    static const try_to_lock_t& try_to_lock()    {return boost::interprocess::try_to_lock;}
 
 };
 template<typename Lockable>
 struct lockable_scope_traits<multi_process_tag, Lockable> : scope_traits<multi_process_tag>
 {
-	typedef Lockable                                             lockable_type;
-	typedef boost::interprocess::scoped_lock<lockable_type>     scoped_lock;
-	typedef boost::interprocess::scoped_lock<lockable_type>     unique_lock;
-	typedef boost::interprocess::sharable_lock<lockable_type>   shared_lock;
-	typedef boost::interprocess::upgradable_lock<lockable_type> upgrade_lock;
+    typedef Lockable                                             lockable_type;
+    typedef boost::interprocess::scoped_lock<lockable_type>     scoped_lock;
+    typedef boost::interprocess::scoped_lock<lockable_type>     unique_lock;
+    typedef boost::interprocess::sharable_lock<lockable_type>   shared_lock;
+    typedef boost::interprocess::upgradable_lock<lockable_type> upgrade_lock;
 
 };
 //template<typename Lockable>

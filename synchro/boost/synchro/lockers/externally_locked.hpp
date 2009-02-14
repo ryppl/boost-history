@@ -33,7 +33,7 @@ template <typename  T, typename Lockable>
 class externally_locked {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
-//	/*<-*/ typedef boost::lock_error lock_error; /*->*/
+//    /*<-*/ typedef boost::lock_error lock_error; /*->*/
     typedef typename syntactic_lock_traits<Lockable>::lock_error lock_error; /*< needed until Boost Thread and Interprocess unify the exceptions >*/
 public:
     externally_locked(T& obj, Lockable& lockable)
@@ -66,8 +66,8 @@ private:
 //[externally_locked_any
 template <typename  T, typename Lockable>
 class externally_locked_any {
-	/*<-*/ typedef typename syntactic_lock_traits<Lockable>::lock_error lock_error; /*->*/
-//	/*<-*/ typedef boost::lock_error lock_error; /*->*/
+    /*<-*/ typedef typename syntactic_lock_traits<Lockable>::lock_error lock_error; /*->*/
+//    /*<-*/ typedef boost::lock_error lock_error; /*->*/
 public:
 /*<-*/    externally_locked_any(T& obj, Lockable& lockable)
         : obj_(obj)
@@ -85,7 +85,7 @@ public:
 
         BOOST_STATIC_ASSERT((is_strict_locker<Locker>::value)); /*< locker is a strict locker "sur parolle" >*/
         BOOST_STATIC_ASSERT((is_same<Lockable,
-        		typename lockable_type<Locker>::type>::value)); /*< that locks the same type >*/
+                typename lockable_type<Locker>::type>::value)); /*< that locks the same type >*/
 #ifndef BOOST_SYNCHRO_EXTERNALLY_LOCKED_DONT_CHECK_OWNERSHIP  /*< define BOOST_SYNCHRO_EXTERNALLY_LOCKED_NO_CHECK_OWNERSHIP if you don't want to check locker ownership >*/
         if (! locker ) throw lock_error(); /*< run time check throw if no locked >*/
 #endif

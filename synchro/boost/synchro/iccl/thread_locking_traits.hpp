@@ -19,30 +19,30 @@ namespace iccl {
 
 namespace detail {    
 struct null_tag{
-	template <typename T> null_tag(T&) {} 
+    template <typename T> null_tag(T&) {} 
 };
 
 }
 struct null_locking_traits {
-	typedef detail::null_tag	mutex_type;
-	typedef detail::null_tag	scoped_lock;
-	static const int try_to_lock() {return 0;}
+    typedef detail::null_tag    mutex_type;
+    typedef detail::null_tag    scoped_lock;
+    static const int try_to_lock() {return 0;}
 };
 
 
 struct thread_locking_traits {
-	typedef boost::mutex			    mutex_type;
-	typedef boost::mutex::scoped_lock	scoped_lock;
-	static const boost::try_to_lock_t try_to_lock() {return boost::try_to_lock;}
+    typedef boost::mutex                mutex_type;
+    typedef boost::mutex::scoped_lock    scoped_lock;
+    static const boost::try_to_lock_t try_to_lock() {return boost::try_to_lock;}
 };
 
 struct process_locking_traits {
-	typedef boost::interprocess::interprocess_mutex			mutex_type;
-	typedef boost::interprocess::scoped_lock<mutex_type>	scoped_lock;
-	static boost::interprocess::detail::try_to_lock_type    try_to_lock() 
-	{
-		return boost::interprocess::try_to_lock;
-	}
+    typedef boost::interprocess::interprocess_mutex            mutex_type;
+    typedef boost::interprocess::scoped_lock<mutex_type>    scoped_lock;
+    static boost::interprocess::detail::try_to_lock_type    try_to_lock() 
+    {
+        return boost::interprocess::try_to_lock;
+    }
 };
 
 

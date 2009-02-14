@@ -27,42 +27,42 @@ template <
 >
 class condition_safe {
 public:
-	typedef Condition condition;
-	typedef condition_backdoor<Condition> backdoor;
+    typedef Condition condition;
+    typedef condition_backdoor<Condition> backdoor;
     void notify_one() { cond_.notify_one(); }
     void notify_all() { cond_.notify_all(); }
 private:
     friend class condition_backdoor<Condition>;
     template <typename Locker, typename Predicate>
     void wait_when(Locker& lock, Predicate pred) {
-    	cond_.wait(lock, pred);
+        cond_.wait(lock, pred);
     }
     template <typename Locker>
     void wait(Locker& lock) {
-    	cond_.wait(lock);
+        cond_.wait(lock);
     }
 
     template <typename Locker>
     bool wait_until(Locker& lock, boost::system_time  const&  abs_time) {
-    	return cond_.timed_wait(lock);;
+        return cond_.timed_wait(lock);;
     }
 
     template<typename Locker, typename duration_type>
     bool wait_for(Locker& lock,duration_type const& rel_time) {
-    	return cond_.timed_wait(lock);
+        return cond_.timed_wait(lock);
     }
 
 //    template<typename Locker, typename predicate_type>
 //    bool wait_when(Locker& lock, predicate_type pred) {
-//    	return cond_.wait(lock, pred);
+//        return cond_.wait(lock, pred);
 //    }
     template<typename Locker, typename predicate_type>
     bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
-    	return cond_.timed_wait(lock, pred, abs_time);
+        return cond_.timed_wait(lock, pred, abs_time);
     }
     template<typename Locker, typename duration_type, typename predicate_type>
     bool wait_when_for(Locker& lock, predicate_type pred, duration_type const& rel_time) {
-    	return cond_.timed_wait(lock, pred, rel_time);
+        return cond_.timed_wait(lock, pred, rel_time);
     }
 private:
     Condition cond_;

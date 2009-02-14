@@ -21,15 +21,15 @@ namespace boost { namespace synchro {
 
 template <typename T>
 struct lockable_type<boost::interprocess::scoped_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 template <typename T>
 struct lockable_type<boost::interprocess::sharable_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 template <typename T>
 struct lockable_type<boost::interprocess::upgradable_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 
 }

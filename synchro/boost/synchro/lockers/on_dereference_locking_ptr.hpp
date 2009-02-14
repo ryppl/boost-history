@@ -80,8 +80,8 @@ public:
       return target_;
     }
   private:
-	  Lockable *target_;
-	  bool locked_;
+      Lockable *target_;
+      bool locked_;
   };
 
   explicit on_dereference_locking_ptr(Lockable &target)
@@ -93,7 +93,7 @@ public:
     return pointer(target);
   }
 private:
-	Lockable *target;
+    Lockable *target;
 };
 
 

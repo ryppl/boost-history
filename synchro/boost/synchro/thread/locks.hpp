@@ -19,15 +19,15 @@ namespace boost { namespace synchro {
 
 template <typename T>
 struct lockable_type<boost::unique_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 template <typename T>
 struct lockable_type<boost::shared_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 template <typename T>
 struct lockable_type<boost::upgrade_lock<T> > {
-	typedef T type;
+    typedef T type;
 };
 
 

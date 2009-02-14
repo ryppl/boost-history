@@ -21,10 +21,10 @@ namespace boost { namespace synchro {
 template<>
 struct scope_traits<multi_threaded_tag>
 {
-	typedef boost::lock_error lock_error;
+    typedef boost::lock_error lock_error;
     template <typename T>
     struct moved_object : boost::detail::thread_move_t<T> {
-    	moved_object(T& t_): boost::detail::thread_move_t<T>(t_) {}
+        moved_object(T& t_): boost::detail::thread_move_t<T>(t_) {}
     };
     typedef boost::defer_lock_t defer_lock_t;
     typedef boost::adopt_lock_t adopt_lock_t;
@@ -54,11 +54,11 @@ const boost::try_to_lock_t lockable_scope_traits<multi_threaded_tag>::try_to_loc
 template<typename Lockable>
 struct lockable_scope_traits<multi_threaded_tag, Lockable> : scope_traits<multi_threaded_tag>
 {
-	typedef Lockable                            lockable_type;
-	typedef boost::unique_lock<lockable_type>   scoped_lock;
-	typedef boost::unique_lock<lockable_type>   unique_lock;
-	typedef boost::shared_lock<lockable_type>   shared_lock;
-	typedef boost::upgrade_lock<lockable_type>  upgrade_lock;
+    typedef Lockable                            lockable_type;
+    typedef boost::unique_lock<lockable_type>   scoped_lock;
+    typedef boost::unique_lock<lockable_type>   unique_lock;
+    typedef boost::shared_lock<lockable_type>   shared_lock;
+    typedef boost::upgrade_lock<lockable_type>  upgrade_lock;
 
 
 };
