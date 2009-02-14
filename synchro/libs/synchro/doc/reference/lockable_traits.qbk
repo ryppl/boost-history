@@ -1,0 +1,212 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:lockable_traits_hpp Header `<boost/synchro/lockable_traits.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+
+        struct mono_threaded_tag;
+        struct multi_threaded_tag;
+        struct multi_process_tag;
+        template <typename Lockable> struct scope_tag;
+
+        template <typename Lockable> struct is_mono_threaded;
+        template <typename Lockable> struct is_multi_threaded;
+        template <typename Lockable> struct is_multi_process;
+
+        struct process_lifetime_tag;
+        struct kernel_lifetime_tag;
+        struct filesystem_lifetime_tag;
+        template <typename Lockable> struct lifetime_tag;
+
+        struct anonymous_tag;
+        struct named_tag;
+        template <typename Lockable> struct naming_tag;
+
+        struct exclusive_lock_tag;
+        struct sharable_lock_tag;
+        struct upgradable_lock_tag;
+        template <typename Lockable> struct category_tag;
+
+        template <typename Lockable> struct is_exclusive_lock;
+        template <typename Lockable> struct is_sharable_lock;
+        template <typename Lockable> struct is_upgradable_lock;
+
+        struct non_recursive_tag;
+        struct recursive_tag;
+        template <typename Lockable> struct reentrancy_tag;
+
+        template <typename Lockable> struct is_recursive_lock;
+
+        struct hasnt_timed_interface_tag;
+        struct has_timed_interface_tag;
+        template <typename Lockable> struct timed_interface_tag;
+
+        template <typename Lockable> struct has_timed_interface;
+
+        template <typename Locker> struct lockable_type;
+
+        template <typename Lockable> struct best_condition;
+
+        template <typename Lockable> struct best_condition_any;
+
+        template <typename Lockable> struct scoped_lock_type;
+        template <typename Lockable> struct unique_lock_type;
+        template <typename Lockable> struct shared_lock_type;
+        template <typename Lockable> struct upgrade_lock_type;
+
+        template <typename Lockable> struct lock_error_type;
+
+        template <typename Lockable> struct move_object_type;
+
+        template <typename Lockable> struct defer_lock_type;
+        template <typename Lockable> struct adopt_lock_type;
+        template <typename Lockable> struct try_to_lock_type;
+
+        template<typename Scope> struct default_lifetime;
+
+        template<
+            typename Scope=multi_threaded_tag,
+            typename Cathegory=exclusive_lock_tag,
+            typename Reentrancy=non_recursive_tag,
+            typename TimedInterface=has_timed_interface_tag,
+            typename Lifetime=typename default_lifetime<Scope>,
+            typename Naming=anonymous_tag,
+            typename Base=void
+        > struct lock_traits_base;
+
+    }}
+
+[section Template Class `has_timed_interface`]
+
+    template <typename Lockable>
+    struct has_timed_interface
+        : is_same_or_is_base_and_derived<
+            has_timed_interface_tag,
+            typename timed_interface_tag<Lockable>::type
+        >
+    {};
+
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_exclusive`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_shared`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_recursive`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_mono_threaded`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_multi_threaded`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `is_multi_process`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `mutex_type`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `scoped_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `unique_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `shared_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `upgrade_lock`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `moved_object`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error2`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error3`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+[section Class `lock_error4`]
+[*Synopsis]
+[*Description]
+
+[endsect]
+
+[section Class `lock_traits`]
+
+[*Synopsis]
+
+    template<typename Lockable>
+    struct lock_traits;
+        typedef Lockable            mutex_type;
+        typedef unspecified            scoped_lock;
+        typedef unspecified            unique_lock;
+        typedef unspecified            shared_lock;
+        typedef unspecified            upgrade_lock;
+        typedef unspecified               lock_error;
+        typedef unspecified         moved_object;
+        static const unspecified     defer_lock();
+        static const unspecified     adopt_lock();
+        static const unspecified     try_to_lock();
+    };
+
+
+[*Description]
+Lock Traits characterise lockable types.
+
+[*`nested_strict_locker` public member types]
+
+# `;`
+
+[endsect]
+
+[endsect]
+

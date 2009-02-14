@@ -1,0 +1,113 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:condition_locker_hpp Header `<boost/synchro/locker/condition_locker.hpp>`]
+[/==========================================================================================]
+
+    template <typename Condition> struct condition_backdoor;
+    template <typename Condition> class condition_safe;
+    template <typename Lockable, typename Condition>
+    class condition_unique_locker
+    template <typename Lockable, typename Condition>
+    class condition_shared_locker
+
+    template <typename Lockable, typename Condition>
+    class condition_unique_lockable
+    template <typename Lockable, typename Condition>
+    class condition_shared_lockable
+
+
+[section Template Class `condition_backdoor`]
+
+    template <class Condition>
+    struct condition_backdoor {
+	    condition_backdoor(condition_safe<Condition>&cnd);
+        template <typename Locker>
+        void wait(Locker& lock);
+        template <typename Locker>
+        bool wait_until(Locker& lock, boost::system_time  const&  abs_time);
+        template<typename Locker, typename duration_type>
+        bool wait_for(Locker& lock, duration_type const& rel_time);
+
+        template <typename Locker, typename Predicate>
+        void wait_when(Locker& lock, Predicate pred);
+        template<typename Locker, typename predicate_type>
+        bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time);
+        template<typename Locker, typename predicate_type, typename duration_type>
+        bool wait_when_for(Locker& lock, predicate_type pred, duration_type const& rel_time);
+
+        template <typename Locker>
+        void notify_one(Locker& lock);
+        template <typename Locker>
+        void notify_all(Locker& lock);
+    };
+
+[endsect]
+
+[section Template Class `condition_safe`]
+
+    template <class Condition>
+    class condition_safe {
+    public:
+	    typedef Condition condition;
+	    typedef condition_backdoor<Condition> backdoor;
+        void notify_one();
+        void notify_all();
+    };
+
+[endsect]
+
+[section Template Class `condition_unique_locker`]
+
+template <
+	typename Lockable,
+    class Condition=condition_safe<typename best_condition<Lockable>::type >
+>
+class condition_unique_locker
+	: protected unique_lock<Lockable>
+{
+    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+public:
+    typedef Lockable lockable_type;
+    typedef Condition condition;
+
+    explicit condition_unique_locker(lockable_type& obj);
+    condition_unique_locker(lockable_type& obj, condition &cond);
+    template <typename Predicate>
+    condition_unique_locker(lockable_type& obj, condition &cond, Predicate pred);
+    ~condition_unique_locker();
+
+    typedef bool (condition_unique_locker::*bool_type)() const;
+    operator bool_type() const;
+    bool operator!() const;
+    bool owns_lock() const;
+    bool is_locking(lockable_type* l) const;
+
+    void relock_on(condition & cond);
+    void relock_until(condition & cond, boost::system_time const& abs_time);
+    template<typename duration_type>
+    void relock_on_for(condition & cond, duration_type const& rel_time);
+
+    template<typename Predicate>
+    void relock_when(condition &cond, Predicate pred);
+    template<typename Predicate>
+    void relock_when_until(condition &cond, Predicate pred,
+    		boost::system_time const& abs_time);
+    template<typename Predicate, typename duration_type>
+    void relock_when_for(condition &cond, Predicate pred,
+    		duration_type const& rel_time);
+
+    /*< no possibility to unlock without blocking on wait... >*/
+
+};
+
+[endsect]
+
+[endsect]

@@ -1,0 +1,110 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:lockable_concept_hpp Header `<boost/synchro/lockable_concepts.hpp>`]
+[/==========================================================================================]
+
+Lockable concepts.
+
+    template <typename Lockable> struct LockableConcept;
+    template <typename Lockable> struct TimedLockableConcept;
+    template <typename Lockable> struct ShareLockableConcept;
+    template <typename Lockable> struct UpgradeLockableConcept;
+
+
+[section Template Class `LockableConcept<>`]
+
+The boost::mutex and boost:interprocess mutex family classes are a non-polymorphic classes that encapsulates a system primitive and portion of C API. Clearly, many of the synchronisation
+primitives support common operations, and hence a Concept.
+The ExclusiveLockable class can be used with the Boost.ConceptCheck in templates that work with a exclusive synchronisation.
+
+LockableConcept object supports the basic features required to delimit a critical region. Supports the basic lock, unlock and try_lock functions and defines the lock traits
+
+    template <typename Lockable>
+    struct LockableConcept {
+        typedef typename category_tag<Lockable>::type category;
+        typedef typename timed_interface_tag<Lockable>::type timed_interface;
+        typedef typename reentrancy_tag<Lockable>::type reentrancy;
+        typedef typename scope_tag<Lockable>::type  scope;
+        typedef typename lifetime_tag<Lockable>::type  lifetime;
+        typedef typename naming_tag<Lockable>::type  naming;
+
+        BOOST_CONCEPT_USAGE(LockableConcept) {
+            l.lock();
+            l.unlock();
+            l.try_lock();
+        }
+        Lockable l;
+    };
+
+[endsect]
+[section Template Class `TimedLockableConcept<>`]
+
+TimedLockableConcept object extends ExclusiveLockConcept with the timed_lock function
+
+    template <typename Lockable>
+    struct TimedLockableConcept {
+        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(TimedLockableConcept) {
+            l.timed_lock(t);
+    //        l.timed_lock(1);
+        }
+        Lockable l;
+        system_time t;
+    };
+
+[endsect]
+[section Template Class `ShareLockableConcept<>`]
+
+ShareLockableConcept object extends ExclusiveTimedLockConcept with the lock_shared, timed_lock_shared, try_lock_shared and unlock_shared functions
+
+    template <typename Lockable>
+    struct ShareLockableConcept {
+        BOOST_CONCEPT_ASSERT((TimedLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
+            l.lock_shared();
+            l.timed_lock_shared(t);
+            l.try_lock_shared();
+            l.unlock_shared();
+        }
+        Lockable l;
+        system_time t;
+    };
+
+
+[endsect]
+[section Template Class `UpgradeLockableConcept<>`]
+
+UpgradeLockableConcept object extends SharableLockableConcept with the lock_upgrade, timed_lock_upgrade, unlock_upgrade_and_lock, unlock_and_lock_shared and unlock_upgrade_and_lock_shared functions.
+
+
+    template <typename Lockable>
+    struct UpgradeLockableConcept {
+        BOOST_CONCEPT_ASSERT((ShareLockableConcept<Lockable>));
+
+        BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
+            l.lock_upgrade();
+            l.timed_lock_upgrade(t);
+            l.unlock_upgrade_and_lock();
+            l.unlock_and_lock_upgrade();
+            l.unlock_and_lock_shared();
+            l.unlock_upgrade_and_lock_shared();
+        }
+        Lockable l;
+        system_time t;
+    };
+
+
+
+[endsect]
+[endsect]
+
+
+

@@ -1,0 +1,104 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:concurrent_component_hpp Header `<boost/synchro/conc/concurrent_component.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        class port;
+        class object_port;
+        template <typename TYPE> class qualified_port;
+        class concurrent_component;
+    }}
+
+[section Class `port`]
+
+    class port {
+    public:
+        class synchronizer {
+            synchronizer(port& that);
+            ~synchronizer() {
+        };
+    	port();
+    	~port();
+        void accept();
+        bool accept_until(const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Class `object_port`]
+
+    class object_port {
+    public:
+        class synchronizer {
+            synchronizer(object_port& that, const concurrent_component_base* snd);
+            ~synchronizer() {
+        };
+    	object_port();
+    	~object_port();
+        void accept(const void* snd);
+        bool accept_until(const void* snd, const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(const void* snd, TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Template Class `qualified_port`]
+
+    template <typename TYPE>
+    class qualified_port {
+    public:
+        class synchronizer {
+            synchronizer(qualified_port& that, const concurrent_component_base* snd);
+            ~synchronizer() {
+        };
+    	object_port();
+    	~object_port();
+        void accept(const TYPE* snd);
+        bool accept_until(const TYPE* snd, const boost::posix_time::ptime &abs_time);
+        template<typename TimeDuration>
+        bool accept_for(const TYPE* snd, TimeDuration const& rel_time);
+    };
+
+[endsect]
+
+[section Class `concurrent_component`]
+
+    class concurrent_component
+        typedef unspecified port;
+        typedef unspecified object_port;
+        typedef unspecified qualified_port;
+
+        static void accept(port& p);
+        static void accept_until(const boost::posix_time::ptime &abs_time, port& p);
+        template<typename TimeDuration>
+        static bool accept_for(TimeDuration const& rel_time, port& p);
+
+        static void accept_all(port& p1, ..., port& pn);
+        static void accept_all_until(const boost::posix_time::ptime &abs_time, port& p1, ..., port& pn);
+        template<typename TimeDuration>
+        static void accept_all_for(TimeDuration const& rel_time, port& p1, ..., port& pn);
+
+        static void accept_any(port& p1, ..., port& pn);
+        static void accept_any_until(const boost::posix_time::ptime &abs_time, port& p1, ..., port& pn);
+        template<typename TimeDuration>
+        static void accept_any_for(TimeDuration const& rel_time, port& p1, ..., port& pn);
+
+    };
+
+[endsect]
+
+
+
+[endsect]

@@ -1,0 +1,25 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:is_strict_locker_hpp Header `<boost/synchro/locker/is_strict_locker.hpp>`]
+[/==========================================================================================]
+
+
+[section Metafunction `is_strict_locker`]
+
+    template <typename Locker>
+    struct is_strict_locker {
+        typedef unspecified value;
+    };
+
+
+[endsect]
+
+[endsect]

@@ -1,0 +1,57 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:externally_locked_hpp Header `<boost/synchro/locker/externally_locked.hpp>`]
+[/==========================================================================================]
+
+
+[section Template Class `externally_locked`]
+[*Synopsis]
+
+    template <class T, class Lockable>
+    class externally_locked {
+    public:
+        externally_locked(Lockable& owner);
+        externally_locked(const T& obj, Lockable& own);
+
+        template <typename Locker>
+        T& get(Locker& locker);
+        void set(const T& obj, Lockable& owner);
+    };
+
+[*Description]
+`externally_locked` cloaks an object of type T, and actually provides full access to that object through
+the get and set member functions, provided you pass a reference to a strict_locker<Lockable> object.
+
+[*`externally_locked` template parameters]
+
+* `T` :    the type locked externally
+* `Lockable` : The lockable type used to synchronize the access to a T instance
+
+[*`externally_locked` public member functions]
+
+* `template <typename Locker> T& get(Locker& locker);`
+
+[*Requires:] mpl:and_<is_strict_locker<Locker>, is_same<lockable_type_trait<Locker>, Lockable>.
+
+[*Returns:] a reference to the type locked externally.
+
+[*Throws:] lock_error when the locker do not owns the lockable instance
+
+* `void set(const T& obj, Lockable& owner);`
+
+[*Effect:] reinit the type and lockable references with the given values.
+
+[*Example:]
+See
+
+[endsect]
+
+[endsect]

@@ -1,0 +1,106 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:locking_ptr_hpp Header `<boost/synchro/locker/locking_ptr.hpp>`]
+[/==========================================================================================]
+
+[section Class `locking_ptr`]
+
+[*Synopsis]
+
+    template <typename T, typename Lockable>
+    class locking_ptr : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef Lockable mutex_type;
+
+        locking_ptr(volatile value_type& obj, mutex_type& mtx);
+        ~locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+[*Description]
+
+The `locking_ptr` overloads `operator->` to return a temporary object that will
+perform the locking. This too provides an `operator->`. Calls to `operator->`
+are automatically chained by the compiler until a raw pointer type is returned. In
+pointer's `operator->` the lock is applied and in its destructor, called at the
+end of a full expression, it is released.
+
+[warning Programmers should be careful about attempting to access the same object twice in
+a statement using `locking_ptr`: this will cause deadlock if the synchronisation
+strategy is not re-entrant.]
+
+[*Example Code]
+
+
+[*`locking_ptr` constructors:destructors]
+# `locking_ptr(volatile value_type& obj, mutex_type& mtx);`
+# `~locking_ptr();`
+
+[*`locking_ptr` public member functions]
+
+# `value_type& operator*();`
+# `const value_type& operator*() const;`
+# `value_type* operator->();`
+# `const value_type* operator->() const;`
+
+[endsect]
+
+[section Class `sharable_locking_ptr`]
+[*Synopsis]
+
+    template <typename T, typename SharableLockable>
+    class sharable_locking_ptr
+        : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef SharableLockable mutex_type;
+
+        sharable_locking_ptr(volatile value_type& obj, mutex_type& mtx);
+        ~sharable_locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+    template <typename T, typename SharableLockable>
+    class sharable_locking_ptr<const T, SharableLockable>
+        : private boost::noncopyable {
+    public:
+        typedef T value_type;
+        typedef SharableLockable mutex_type;
+
+        sharable_locking_ptr(
+            volatile const value_type& obj,
+            mutex_type& mtx);
+        ~sharable_locking_ptr();
+
+        value_type& operator*();
+        const value_type& operator*() const;
+        value_type* operator->();
+        const value_type* operator->() const;
+    };
+
+[*Description]
+
+[*`nested_strict_locker` public member functions]
+
+# `;`
+
+[endsect]
+
+[endsect]

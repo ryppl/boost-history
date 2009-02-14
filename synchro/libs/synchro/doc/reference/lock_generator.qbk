@@ -1,0 +1,103 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:lock_generator_hpp Header `<boost/synchro/lock_generator.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        template<typename Scope>
+        struct default_lifetime {
+            typedef see_below type;
+        }
+        template<
+            typename Scope=multi_threaded_tag,
+            typename Category=exclusive_lock_tag,
+            typename Reentrancy=non_recursive_tag,
+            typename TimedInterface=has_timed_interface_tag,
+            typename Lifetime=typename default_lifetime<Scope>,
+            typename Naming=anonymous_tag
+        >
+        struct find_best_lock{
+            typedef see_below type;
+        }
+    }}
+
+[section Metafunction `default_lifetime<>`]
+[/==========================================================================================]
+
+Metafunction that returns the default lifetime depending on the Scope.
+
+    template<typename Scope> struct default_lifetime;
+    template<> struct default_lifetime<multi_threaded_tag> {
+        typedef process_lifetime_tag type;
+    };
+    template<> struct default_lifetime<multi_process_tag> {
+        typedef kernel_lifetime_tag type;
+    };
+
+
+[variablelist
+[[Expression:] [default_lifetime<Scope>::type]]
+[[Return type:] [A lifetime tag.]]
+[[Complexity:] [constant.]]
+]
+
+[table default_lifetime relationship
+[
+    [[*`Scope`]]               [[*`default_lifetime<Scope>::type`]]
+]
+[
+    [`multi_threaded_tag`]    [`process_lifetime_tag`]
+]
+[
+    [`multi_process_tag`]     [`kernel_lifetime_tag`]
+]
+]
+
+[endsect]
+
+[section Metafunction `find_best_lock<>`]
+[/==========================================================================================]
+
+        template<
+            typename Scope=multi_threaded_tag,
+            typename Category=exclusive_lock_tag,
+            typename Reentrancy=non_recursive_tag,
+            typename TimedInterface=has_timed_interface_tag,
+            typename Lifetime=typename default_lifetime<Scope>,
+            typename Naming=anonymous_tag
+        >
+        struct find_best_lock{
+            typedef see_below type;
+        }
+
+
+[variablelist
+[[Expression:] [find_best_lock<...>::type]]
+[[Return type:] [A model of `Lockable`.]]
+[[Complexity:] [constant.]]
+]
+
+The library defines already the following matchings:
+
+[table find_best_lock relationship
+    [[[*`Scope`]]           [[*`Category`]]         [[*`Reentrancy`]]       [[*`TimedInterface`]]           [[*`Lifetime`]]             [[*`Naming`]]       [[*`find_best_lock<...>::type`]]       ]
+    [[`multi_threaded_tag`] [`exclusive_lock_tag`]  [`non_recursive_tag`]   [`hasnt_timed_interface_tag`]   [`process_lifetime_tag`]    [`anonymous_tag`]   [`boost::synchro::thread_mutex`]       ]
+    [[`multi_threaded_tag`] [`exclusive_lock_tag`]  [`recursive_tag`]       [`hasnt_timed_interface_tag`]   [`process_lifetime_tag`]    [`anonymous_tag`]   [`boost::synchro::thread_recursive_mutex`]       ]
+    [[`multi_threaded_tag`] [`exclusive_lock_tag`]  [`non_recursive_tag`]   [`has_timed_interface_tag`]     [`process_lifetime_tag`]    [`anonymous_tag`]   [`boost::synchro::thread_timed_mutex`]       ]
+    [[`multi_threaded_tag`] [`*`]                   [`non_recursive_tag`]   [`*`]                           [`process_lifetime_tag`]    [`anonymous_tag`]   [`boost::synchro::thread_shared_mutex`]       ]
+    [[`multi_process_tag`]  [`exclusive_lock_tag`]  [`non_recursive_tag`]   [`*`]                           [`kernel_lifetime_tag`]     [`anonymous_tag`]   [`boost::synchro::interprocess_mutex`]       ]
+    [[`multi_process_tag`]  [`exclusive_lock_tag`]  [`recursive_tag`]       [`*`]                           [`kernel_lifetime_tag`]     [`anonymous_tag`]   [`boost::synchro::interprocess_recursive_mutex`]       ]
+    [[`multi_process_tag`]  [`*`]                   [`non_recursive_tag`]   [`*`]                           [`process_lifetime_tag`]    [`anonymous_tag`]   [`boost::synchro::interprocess_upgradable_mutex`]       ]
+]
+
+[endsect]
+[endsect]
+
+
+

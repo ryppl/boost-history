@@ -1,0 +1,36 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:semaphore_hpp Header `<boost/synchro/semaphore.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+
+        template <typename Sync=thread_synchronization_family>
+        class basic_semaphore {
+            basic_semaphore(const basic_semaphore &);
+            this_type& operator=(const basic_semaphore &);
+        public:
+            basic_semaphore(int initialCount);
+            ~basic_semaphore();
+            void post();
+            void wait();
+            bool try_wait();
+            bool wait_until(const system_time &abs_time);
+            template<typename TimeDuration>
+            bool wait_for(const TimeDuration &rel_time);
+        };
+
+        typedef basic_semaphore<> semaphore;
+
+    }}
+
+[endsect]
+

@@ -1,0 +1,76 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:locker_concepts_hpp Header `<boost/synchro/locker_concepts.hpp>`]
+[/==========================================================================================]
+
+Locker concepts.
+
+    namespace boost {  namespace synchro {
+
+        template <typename Locker>
+        struct LockerConcept {
+            typedef typename lockable_type<Locker>::type lockable_type;
+            BOOST_CONCEPT_USAGE(LockerConcept) {
+                Locker l(mtx_);
+            }
+            lockable_type mtx_;
+        };
+
+        template <typename Locker>
+        struct MovableLockerConcept {
+            typedef typename lockable_type<Locker>::type lockable_type;
+            BOOST_CONCEPT_ASSERT((LockerConcept<lockable_type>));
+
+            BOOST_CONCEPT_USAGE(MovableLockerConcept) {
+                Locker l1(mtx_);
+                Locker& l2(l1);
+                Locker l3(l1.move());
+                BOOST_ASSERT((l2.mutex()!=&mtx_));
+                l3.lock();
+                l2 = l3.move();
+            }
+            lockable_type mtx_;
+        };
+    }}
+
+[section Template Class `LockerConcept<>`]
+
+        template <typename Locker>
+        struct LockerConcept {
+            typedef typename lockable_type<Locker>::type lockable_type;
+            BOOST_CONCEPT_USAGE(LockerConcept) {
+                Locker l(mtx_);
+            }
+            lockable_type mtx_;
+        };
+
+[endsect]
+[section Template Class `MovableLockerConcept<>`]
+
+        template <typename Locker>
+        struct MovableLockerConcept {
+            typedef typename lockable_type<Locker>::type lockable_type;
+            BOOST_CONCEPT_ASSERT((LockerConcept<lockable_type>));
+
+            BOOST_CONCEPT_USAGE(MovableLockerConcept) {
+                Locker l1(mtx_);
+                Locker& l2(l1);
+                Locker l3(l1.move());
+                BOOST_ASSERT((l2.mutex()!=&mtx_));
+                l3.lock();
+                l2 = l3.move();
+            }
+            lockable_type mtx_;
+        };
+
+[endsect]
+[endsect]
+
+
+

@@ -1,0 +1,89 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:lockable_adapter_hpp Header `<boost/synchro/lockable_adapter.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        template <typename Lockable> class exclusive_lockable_adapter;
+        template <typename TimedLock> class timed_lockable_adapter;
+        template <typename SharableLock> class shared_lockable_adapter;
+        template <typename UpgradableLock> class upgrade_lockable_adapter;
+        template <
+            typename Lockable, 
+            typename category, 
+            typename timed_interface
+        > struct lockable_adapter;
+    }}
+
+[section Template Class `exclusive_lockable_adapter<>`]
+
+    template <typename Lockable>
+    class exclusive_lockable_adapter : private boost::noncopyable {
+    public:
+        typedef Lockable lockable_type;
+        typedef typename scope_tag<Lockable>::type scope;
+        typedef typename category_tag<Lockable>::type category;
+        typedef typename reentrancy_tag<Lockable>::type reentrancy;
+        typedef typename timed_interface_tag<Lockable>::type timed_interface;
+        typedef typename lifetime_tag<Lockable>::type lifetime;
+        typedef typename naming_tag<Lockable>::type naming;
+
+
+        void lock();
+        void unlock();
+        bool try_lock();
+    };
+
+[endsect]
+[section Template Class `timed_lockable_adapter<>`]
+
+    template <typename TimedLock>
+    class timed_lockable_adapter : public exclusive_lockable_adapter<TimedLock> {
+    public:
+        bool timed_lock(system_time const & abs_time);
+        template<typename TimeDuration>
+        bool timed_lock(TimeDuration const & relative_time);
+    };
+
+[endsect]
+[section Template Class `shared_lockable_adapter<>`]
+
+    template <typename SharableLock>
+    class shared_lockable_adapter : public timed_lockable_adapter<SharableLock>     {
+    public:
+        void lock_shared();
+        bool try_lock_shared();
+        void unlock_shared();
+        bool timed_lock_shared(system_time const& t);
+    };
+
+
+[endsect]
+[section Template Class `upgrade_lockable_adapter<>`]
+
+    template <typename UpgradableLock>
+    class upgrade_lockable_adapter : public shared_lockable_adapter<UpgradableLock>{
+    public:
+        void lock_upgrade();
+        void unlock_upgrade();
+
+        void unlock_upgrade_and_lock();
+        void unlock_and_lock_upgrade();
+        void unlock_and_lock_shared();
+        void unlock_upgrade_and_lock_shared();
+        bool timed_lock_upgrade(system_time const&t);
+    };
+
+
+
+[endsect]
+[endsect]
+
+
+

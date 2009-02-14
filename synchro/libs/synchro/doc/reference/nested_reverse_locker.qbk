@@ -1,0 +1,33 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, 
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or 
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:nested_reverse_locker_hpp Header `<boost/synchro/locker/nested_reverse_locker.hpp>`]
+[/==========================================================================================]
+
+        template <typename Locker>
+        class nested_reverse_locker;
+
+[section Class `nested_reverse_locker`]
+This is an interesting adapter class that changes a locker into a reverse locker, i.e., `unlock` on construction and `lock` on destruction. One motivation for this class is when we temporarily want to unlock a lock (locked by another locker) but then re-lock it soon after.
+
+[*Synopsis]
+
+template <typename Locker>
+class nested_reverse_locker : boost::noncopyable
+{
+    BOOST_CONCEPT_ASSERT((MovableLockerConcept<Locker>));
+public:
+    explicit nested_reverse_locker(Locker& locker);
+    ~nested_reverse_locker();
+};
+
+[endsect]
+
+[endsect]

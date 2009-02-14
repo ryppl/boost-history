@@ -1,0 +1,162 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:strict_locker_hpp Header `<boost/synchro/locker/strict_locker.hpp>`]
+[/==========================================================================================]
+
+[section Class `strict_locker`]
+[*Synopsis]
+
+namespace boost {  namespace synchro {
+
+    template <typename Locker>
+    struct StrictLockerConcept {
+        typedef typename lockable_type<Locker>::type lockable_type;
+        BOOST_STATIC_ASSERT((is_strict_locker<Locker>::value));
+
+        void f(Locker& l ) {
+            BOOST_ASSERT((l.is_locking(lock)));
+        }
+
+        BOOST_CONCEPT_USAGE(StrictLockerConcept) {
+            {
+    //            Locker l(lock);
+    //            BOOST_ASSERT((l));
+            }
+        }
+        lockable_type lock;
+    };
+
+    template <typename Lockable>
+    class strict_locker {
+    public:
+        typedef Lockable lockable_type;
+        typedef unspecified bool_type;
+
+        explicit strict_locker(lockable_type& obj);
+        ~strict_locker();
+
+        operator bool_type() const;
+        bool operator!() const;
+        bool owns_lock() const;
+        lockable_type* mutex() const;
+
+        BOOST_ADRESS_OF_DELETE(strict_locker)
+        BOOST_HEAP_ALLOCATION_DELETE()
+        BOOST_DEFAULT_CONSTRUCTOR_DELETE(strict_locker) /*< disable default construction >*/
+        BOOST_COPY_CONSTRUCTOR_DELETE(strict_locker) /*< disable copy construction >*/
+        BOOST_COPY_ASSIGNEMENT_DELETE(strict_locker) /*< disable copy asignement >*/
+    };
+
+    template <typename Lockable>
+    struct is_strict_locker<strict_locker<Lockable> > : mpl::true_ {};
+
+    template <typename Locker > class nested_strict_locker {
+          BOOST_CONCEPT_ASSERT((MovableLockerConcept<Locker>));
+    public:
+        typedef typename lockable_type<Locker>::type lockable_type;
+        typedef typename syntactic_lock_traits<lockable_type>::lock_error lock_error;
+
+        nested_strict_locker(Locker& locker);
+        ~nested_strict_locker();
+        typedef bool (nested_strict_locker::*bool_type)() const;
+        operator bool_type() const;
+        bool operator!() const;
+        bool owns_lock() const;
+        const lockable_type* mutex() const;
+        bool is_locking(lockable_type* l) const;
+
+        BOOST_ADRESS_OF_DELETE(nested_strict_locker)
+        BOOST_HEAP_ALLOCATEION_DELETE(nested_strict_locker)
+        BOOST_DEFAULT_CONSTRUCTOR_DELETE(strict_locker) /*< disable default construction >*/
+        BOOST_COPY_CONSTRUCTOR_DELETE(strict_locker) /*< disable copy construction >*/
+        BOOST_COPY_ASSIGNEMENT_DELETE(strict_locker) /*< disable copy asignement >*/
+    };
+
+    template <typename Locker>
+    struct is_strict_locker<nested_strict_locker<Locker> > : mpl::true_ {} ;
+
+}}
+
+[*Description]
+
+[Note strict_locker is not a model of Lockable concept.]
+
+[*`strict_locker` template parameters]
+
+* `Lockable` : The exclusive lockable type used to synchronize exclusive access
+
+[*`strict_locker` public types]
+
+* `lockable_type` : The exclusive lockable type used to synchronize exclusive access
+* `lock_error` : The exception type throw incase of errors
+* `bool_type` : The bool_type  of the safe_bool idiom
+
+[*`nested_strict_locker` public member functions]
+
+* `explicit strict_locker(lockable_type& obj);`
+* `~strict_locker();`
+* `operator bool_type() const;`
+* `bool operator!() const;`
+* `operator bool_type() const;`
+* `lockable_type* mutex() const;`
+* `lockable_type* get_lockable() const;`
+
+[*`nested_strict_locker` private and not defined member functions]
+
+* `strict_locker()`
+* `strict_locker(strict_locker&);`
+* `operator=(strict_locker&);`
+* `operator&();`
+* `void* operator new(std::size_t)`
+* `void* operator new[](std::size_t)`
+* `void operator delete(void*)`
+* `void operator delete[](void*)`
+
+[endsect]
+[section Class `nested_strict_locker`]
+[*Synopsis]
+
+    template <typename Locker>
+    class nested_strict_locker : private boost::noncopyable {
+    public:
+        typedef typename locker_traits<Locker>::bad_lock bad_lock;
+
+        nested_strict_locker(Locker& lock);
+        ~nested_strict_locker();
+
+        typedef unspecified bool_type;
+        operator bool_type() const;
+
+        bool operator!() const
+        bool owns_lock() const
+        Mutex* mutex() const
+    private:
+        strict_locker();
+        BOOST_NON_ALIAS(strict_locker);
+        BOOST_NON_HEAP_ALLOCATED();
+    };
+
+[*Description]
+
+
+[endsect]
+
+[section Template Class `nested_strict_locker`]
+A reverse (or anti) locker.
+
+[*Synopsis]
+
+[*Description]
+
+[endsect]
+
+
+[endsect]

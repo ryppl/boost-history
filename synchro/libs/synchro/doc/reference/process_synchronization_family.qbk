@@ -1,0 +1,35 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:process_synchronization_family_hpp Header `<boost/synchro/process_synchronization_family.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        struct process_synchronization_family;
+    }}
+
+[section Class `process_synchronization_family`]
+
+[*Synopsis]
+
+        struct process_synchronization_family {
+           typedef boost::synchro::interprocess_mutex              mutex_type;
+           typedef boost::synchro::interprocess_recursive_mutex    recursive_mutex_type;
+           typedef boost::synchro::interprocess_mutex                 timed_mutex_type;
+           typedef boost::synchro::interprocess_recursive_mutex    recursive_timed_mutex_type;
+           typedef boost::synchro::interprocess_upgradable_mutex    shared_mutex_type;
+           typedef boost::interprocess::interprocess_condition             condition_type;
+           typedef boost::interprocess::interprocess_condition             condition_any_type;
+        };
+
+
+[endsect]
+
+[endsect]
