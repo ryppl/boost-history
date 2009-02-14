@@ -7,12 +7,14 @@ namespace boost{ namespace guigl { namespace gl {
     template<>
     inline void light<GLfloat>(GLenum i_light, GLenum pname, GLfloat param)
     {
+        BOOST_ASSERT(GL_LIGHT0 <= i_light && i_light <= GL_LIGHT7);
         glLightf(i_light, pname, param);
     }
 
     template<>
     inline void light<GLint>(GLenum i_light, GLenum pname, GLint param)
     {
+        BOOST_ASSERT(GL_LIGHT0 <= i_light && i_light <= GL_LIGHT7);
         glLighti(i_light, pname, param);
     }
 
@@ -20,12 +22,14 @@ namespace boost{ namespace guigl { namespace gl {
     template<>
     inline void light<GLfloat>(GLenum i_light, GLenum pname, GLfloat const* params)
     {
+        BOOST_ASSERT(GL_LIGHT0 <= i_light && i_light <= GL_LIGHT7);
         glLightfv(i_light, pname, params);
     }
 
     template<>
     inline void light<GLint>(GLenum i_light, GLenum pname, GLint const* params)
     {
+        BOOST_ASSERT(GL_LIGHT0 <= i_light && i_light <= GL_LIGHT7);
         glLightiv(i_light, pname, params);
     }
 
@@ -252,6 +256,7 @@ namespace boost{ namespace guigl { namespace gl {
 
     inline light_setup light(GLenum i_light)
     {
+        glEnable(i_light);
         return light_setup(i_light);
     }
 

@@ -66,6 +66,10 @@ namespace boost{ namespace guigl { namespace gl {
     void rect(boost::array<T, 2> const& pt1, boost::array<T, 2> const& pt2);
 
     ////////////////////////////////////////////////////////////////////////////////
+    void load_identity();
+    void push_matrix();
+    void pop_matrix();
+
     struct scoped_matrix : boost::noncopyable
     {
         scoped_matrix();
@@ -113,13 +117,13 @@ namespace boost{ namespace guigl { namespace gl {
 
     //////////////////////////////////////////////////////////////////////////
     template<class T>
-    inline void light(GLenum i_light, GLenum pname, T param);
+    void light(GLenum i_light, GLenum pname, T param);
 
     template<class T>
-    inline void light(GLenum i_light, GLenum pname, T const* param);
+    void light(GLenum i_light, GLenum pname, T const* param);
 
     template<class T>
-    inline void light_position(GLenum i_light, T x, T y, T z, T w);
+    void light_position(GLenum i_light, T x, T y, T z, T w);
 
     template<class T>
     void light_constant_attenuation(GLenum i_light, T value);
@@ -191,6 +195,24 @@ namespace boost{ namespace guigl { namespace gl {
 
     light_setup light(GLenum i_light);
 
+    //////////////////////////////////////////////////////////////////////////
+    template<class T>
+    void material(GLenum face, GLenum pname, T param);
+
+    template<class T>
+    void material(GLenum face, GLenum pname, T const* param);
+
+    template<class T>
+    void material_shininess(GLenum face, T value);
+
+    template<class T>
+    void material_specular(GLenum face, T r, T g, T b, T a);
+
+    template<class T>
+    void material_diffuse(GLenum face, T r, T g, T b, T a);
+
+    template<class T>
+    void material_ambient(GLenum face, T r, T g, T b, T a);
 
     //////////////////////////////////////////////////////////////////////////
     void wired_cube(GLdouble size);
@@ -219,6 +241,7 @@ namespace boost{ namespace guigl { namespace gl {
 #include "platform/impl/rect.hpp"
 #include "platform/impl/transform.hpp"
 #include "platform/impl/light.hpp"
+#include "platform/impl/material.hpp"
 #include "platform/impl/glut.hpp"
 
 #endif BOOST__GUIGL__GL_HPP

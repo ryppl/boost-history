@@ -24,47 +24,84 @@ void two_spheres::draw_prologue()
     using namespace boost::guigl::gl;
     base_type::draw_prologue();
     glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
+    load_identity();
+
+    scoped_matrix m;
+    //translate_y(-100.0f);
+    rotate_y(20.0f);
+
 
     //glEnable(GL_DEPTH_TEST);
     //glEnable(GL_COLOR_MATERIAL);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT1);
-    glEnable(GL_LIGHT2);
 
-    light(GL_LIGHT1)
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_DEPTH_TEST);
+    //glEnable(GL_BLEND); 
+    //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
+    //glShadeModel(GL_SMOOTH); 
+    //glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST); 
+    //glEnable(GL_POLYGON_SMOOTH);
+
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    light(GL_LIGHT0)
         .ambient(0.3f, 0.3f, 0.3f, 1.0f)
-        .diffuse(1.0f, 1.0f, 1.0f, 1.0f)
-        .specular(1.0f, 1.0f, 1.0f, 1.0f)
-        .spot_direction(100, 100, 100)
-        .position(-100, -100, -100, 0)
+        .diffuse(0.5f, 0.5f, 0.5f, 1.0f)
+        .specular(1.0f, 0.0f, 1.0f, 1.0f)
+        .spot_direction(100, -100, 300)
+        .position(-100, 100, -300, 0)
         .constant_attenuation(1.5f)
         .linear_attenuation(0.5f)
         .quadratic_attenuation(0.2f)
         .spot_cutoff(180.0f)
         .spot_exponent(2.0f);
 
-    light(GL_LIGHT2)
+    light(GL_LIGHT1)
         .ambient(0.3f, 0.3f, 0.3f, 1.0f)
-        .diffuse(1.0f, 1.0f, 1.0f, 1.0f)
-        .specular(1.0f, 0.0f, 1.0f, 1.0f)
-        .spot_direction(-100, 100, 100)
-        .position(100, -100, -100, 0)
+        .diffuse(0.5f, 0.5f, 0.5f, 1.0f)
+        .specular(1.0f, 1.0f, 1.0f, 1.0f)
+        .spot_direction(-100, 100, -300)
+        .position(100, -100, 300, 0)
         .constant_attenuation(1.2f)
         .linear_attenuation(0.5f)
         .quadratic_attenuation(0.2f)
         .spot_cutoff(180.0f)
         .spot_exponent(2.0f);
 
-    solid_sphere(50, 50, 50);
-    glLoadIdentity();
-    translate_x(50.f);
-    boost::guigl::gl::color(1.0, 1.0, 0.0, 0.5);
-    solid_sphere(50, 100, 100);
+    double offset = 30;
+    material_ambient(GL_FRONT, 1.0f, 0.0f, 0.0f, 0.0f);
+    {   scoped_matrix m;
+        translate(offset, offset, 0.0);
+        solid_sphere(50, 30, 30);
+    }
+
+    material_ambient(GL_FRONT, 1.0f, 1.0f, 0.0f, 0.0f);
+    {   scoped_matrix m;
+        translate(-offset, offset, 0.0);
+        solid_sphere(50, 30, 30);
+    }
+
+    material_ambient(GL_FRONT, 1.0f, 0.0f, 1.0f, 0.0f);
+    {   scoped_matrix m;
+        translate(-offset, -offset, 0.0);
+        solid_sphere(50, 100, 100);
+    }
+
+    material_ambient(GL_FRONT, 0.0f, 0.0f, 1.0f, 0.0f);
+    {   scoped_matrix m;
+        translate(offset, -offset, 0.0);
+        solid_sphere(50, 30, 30);
+    }
 
     {
         scoped_matrix m;
-        translate_x(-100.0f);
+        material_shininess(GL_FRONT, 20.0f);
+        material_specular(GL_FRONT, 0.3f, 0.3f, 0.3f, 0.3f);
+        material_ambient(GL_FRONT, 0.0f, 0.0f, 0.0f, 0.0f);
+        material_diffuse(GL_FRONT, 0.0f, 1.0f, 0.0f, 0.0f);
+
+        translate_z(100.0f);
+        rotate_y(20.0f);
         solid_teapot(20);
     }
 }

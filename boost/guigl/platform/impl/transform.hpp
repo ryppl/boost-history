@@ -5,6 +5,11 @@
 
 namespace boost{ namespace guigl { namespace gl {
 
+    inline void load_identity()
+    {
+        glLoadIdentity();
+    }
+
     inline void push_matrix()
     {
         glPushMatrix();
