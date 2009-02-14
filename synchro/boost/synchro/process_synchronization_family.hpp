@@ -14,6 +14,7 @@
 #include <boost/synchro/process/mutex.hpp>
 #include <boost/synchro/process/recursive_mutex.hpp>
 #include <boost/synchro/process/upgradable_mutex.hpp>
+#include <boost/synchro/process/locks.hpp>
 #include <boost/interprocess/sync/interprocess_condition.hpp>
 
 namespace boost {

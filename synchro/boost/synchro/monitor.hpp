@@ -16,6 +16,7 @@
 #include <boost/synchro/lockable_adapter.hpp>
 #include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/thread/shared_mutex.hpp>
+#include <boost/synchro/thread/locks.hpp>
 
 namespace boost { namespace synchro {
 
@@ -38,12 +39,13 @@ protected:
 template <
     typename Lockable=thread_mutex,
     class Condition=typename best_condition<Lockable>::type
+    , typename ScopeTag=typename scope_tag<Lockable>::type
 >
 class exclusive_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
-    typedef condition_unique_locker<Lockable, Condition> synchronizer;
+    typedef condition_unique_locker<Lockable, Condition, ScopeTag> synchronizer;
 };
 //]
 
@@ -51,13 +53,14 @@ protected:
 template <
     typename Lockable=thread_shared_mutex,
     class Condition=condition_safe<typename best_condition_any<Lockable>::type >,
+    , typename ScopeTag=typename scope_tag<Lockable>::type
 >
 class shared_monitor : protected lockable_adapter<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 protected:
     typedef Condition condition;
-    typedef condition_unique_locker<Lockable, Condition> synchronizer;
-    typedef condition_shared_locker<Lockable, Condition> shared_synchronizer;
+    typedef condition_unique_locker<Lockable, Condition, ScopeTag> synchronizer;
+    typedef condition_shared_locker<Lockable, Condition, ScopeTag> shared_synchronizer;
 };
 //]
 
@@ -66,6 +69,7 @@ protected:
 template <
     typename Lockable=thread_mutex,
     class Condition=condition_safe<typename best_condition<Lockable>::type >
+    , typename ScopeTag=typename scope_tag<Lockable>::type
     //, class ConditionBoosted=condition_safe_boosted<typename best_condition<Lockable>::type >
 >
 class exclusive_monitor : protected lockable_adapter<Lockable> {
@@ -73,7 +77,7 @@ class exclusive_monitor : protected lockable_adapter<Lockable> {
 protected:
     typedef Condition condition;
     //typedef ConditionBoosted condition_boosted;
-    typedef condition_unique_locker<Lockable, Condition
+    typedef condition_unique_locker<Lockable, Condition, ScopeTag
     //    , ConditionBoosted
     > synchronizer;
 };
@@ -81,6 +85,7 @@ protected:
 template <
     typename Lockable=thread_shared_mutex,
     class Condition=condition_safe<typename best_condition_any<Lockable>::type >
+    , typename ScopeTag=typename scope_tag<Lockable>::type
     //, class ConditionBoosted=condition_safe_boosted<typename best_condition_any<Lockable>::type >
 >
 class shared_monitor : protected lockable_adapter<Lockable> {
@@ -88,10 +93,10 @@ class shared_monitor : protected lockable_adapter<Lockable> {
 protected:
     typedef Condition condition;
     //typedef ConditionBoosted condition_boosted;
-    typedef condition_unique_locker<Lockable, Condition
+    typedef condition_unique_locker<Lockable, Condition, ScopeTag
         //, ConditionBoosted
     > synchronizer;
-    typedef condition_shared_locker<Lockable, Condition
+    typedef condition_shared_locker<Lockable, Condition, ScopeTag
         //, ConditionBoosted
     > shared_synchronizer;
 };
@@ -115,21 +120,22 @@ protected:
 template <
       typename Lockable=thread_mutex
     , typename lock_tag=typename category_tag<Lockable>::type
+    , typename ScopeTag=typename scope_tag<Lockable>::type
 > struct monitor;
 
-template <typename Lockable>
-struct monitor<Lockable, exclusive_lock_tag>
-    : protected exclusive_monitor<Lockable>
+template <typename Lockable, typename ScopeTag>
+struct monitor<Lockable, exclusive_lock_tag, ScopeTag>
+    : protected exclusive_monitor<Lockable, ScopeTag>
 {};
 
-template <typename Lockable>
-struct monitor<Lockable, sharable_lock_tag>
-    : protected shared_monitor<Lockable>
+template <typename Lockable, typename ScopeTag>
+struct monitor<Lockable, sharable_lock_tag, ScopeTag>
+    : protected shared_monitor<Lockable, ScopeTag>
 {};
 
-template <typename Lockable>
-struct monitor<Lockable, upgradable_lock_tag>
-    : protected shared_monitor<Lockable>
+template <typename Lockable, typename ScopeTag>
+struct monitor<Lockable, upgradable_lock_tag, ScopeTag>
+    : protected shared_monitor<Lockable, ScopeTag>
 {};
 //]
 }

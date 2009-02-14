@@ -305,6 +305,13 @@ struct upgrade_lock_type {
     typedef typename lockable_scope_traits<
                 typename scope_tag<Lockable>::type, Lockable>::upgrade_lock type;
 };
+
+template <typename Lockable>
+struct upgrade_to_unique_locker_type {
+    typedef typename lockable_scope_traits<
+                typename scope_tag<Lockable>::type, Lockable>::upgrade_to_unique_locker type;
+};
+
 //]
 
 //[lock_exception_traits

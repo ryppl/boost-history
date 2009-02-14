@@ -12,10 +12,11 @@
 #define BOOST_SYNCHRO_CONDITION_LOCKER__HPP
 
 #include <boost/synchro/lockable_concepts.hpp>
-#include <boost/thread/condition.hpp>
-#include <boost/synchro/thread/mutex.hpp>
+//#include <boost/thread/condition.hpp>
+//#include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/condition_backdoor.hpp>
 #include <boost/synchro/condition_safe.hpp>
+#include <boost/synchro/lockers.hpp>
 
 namespace boost { namespace synchro {
 
@@ -24,12 +25,13 @@ namespace boost { namespace synchro {
 template <
     typename Lockable,
     class Condition=condition_safe<typename best_condition<Lockable>::type >
+    , typename ScopeTag=typename scope_tag<Lockable>::type
 >
 class condition_unique_locker
-    : protected unique_lock_type<Lockable>::type
+    : protected unique_locker<Lockable,ScopeTag>
 {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-    typedef typename unique_lock_type<Lockable>::type super_type;
+    typedef unique_locker<Lockable, ScopeTag> super_type;
 public:
     typedef Lockable lockable_type;
     typedef Condition condition;
@@ -68,13 +70,16 @@ public:
 template <
     typename Lockable,
     class Condition=condition_safe<typename best_condition<Lockable>::type >
+    , typename ScopeTag=typename scope_tag<Lockable>::type
     //, class ConditionBoosted=condition_safe_boosted<typename best_condition<Lockable>::type >
 >
 class condition_unique_locker
-    : protected unique_lock_type<Lockable>::type
+    : protected unique_locker<Lockable, ScopeTag>
+//    : protected unique_lock_type<Lockable>::type
 {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-    typedef typename unique_lock_type<Lockable>::type super_type;
+    typedef unique_locker<Lockable, ScopeTag> super_type;
+    //typedef typename unique_lock_type<Lockable>::type super_type;
 public:
     typedef Lockable lockable_type;
     typedef Condition condition;
@@ -85,7 +90,8 @@ public:
 
     condition_unique_locker(lockable_type& obj, condition &cond)
         : super_type(obj) {
-            typename condition::backdoor(cond).wait(*static_cast<typename unique_lock_type<Lockable>::type*>(this)); /*< relock on condition >*/
+            typename condition::backdoor(cond).wait(*static_cast<super_type*>(this)); /*< relock on condition >*/
+            //typename condition::backdoor(cond).wait(*this); /*< relock on condition >*/
         }
     //condition_unique_locker(lockable_type& obj, condition_boosted &cond)
     //    : super_type(obj) {
@@ -95,7 +101,8 @@ public:
     template <typename Predicate>
     condition_unique_locker(lockable_type& obj, condition &cond, Predicate pred)
         : super_type(obj) {
-            typename condition::backdoor(cond).wait_when(*static_cast<typename unique_lock_type<Lockable>::type*>(this), pred); /*< relock condition when predicate satisfaied>*/
+            typename condition::backdoor(cond).wait_when(*static_cast<super_type*>(this), pred); /*< relock condition when predicate satisfaied>*/
+            //typename condition::backdoor(cond).wait_when(*this, pred); /*< relock condition when predicate satisfaied>*/
         }
     //template <typename Predicate>
     //condition_unique_locker(lockable_type& obj, condition_boosted &cond, Predicate pred)
@@ -188,12 +195,14 @@ private:
 template <
     typename Lockable,
     class Condition=condition_safe<typename best_condition_any<Lockable>::type >
+    , typename ScopeTag=typename scope_tag<Lockable>::type
     //, class ConditionBoosted=condition_safe_boosted<typename best_condition_any<Lockable>::type >
 >
 class condition_shared_locker
-    : protected shared_lock<Lockable> {
+    : protected shared_locker<Lockable, ScopeTag> {
+//    : protected shared_lock<Lockable> {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-    typedef shared_lock<Lockable> super_type;
+    typedef shared_locker<Lockable,ScopeTag> super_type;
 public:
     typedef Lockable lockable_type;
     typedef Condition condition;
@@ -294,7 +303,7 @@ private:
 //]
 
 
-
+#if 0
 //[condition_lockable
 template <
     typename Lockable,
@@ -359,7 +368,7 @@ private:
     friend class boost::condition_variable_any;
 };
 //]
-
+#endif
 }
 }
 #endif

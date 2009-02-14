@@ -14,6 +14,7 @@
 #include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/thread/recursive_mutex.hpp>
 #include <boost/synchro/thread/shared_mutex.hpp>
+#include <boost/synchro/thread/locks.hpp>
 #include <boost/thread/condition_variable.hpp>
 
 namespace boost {

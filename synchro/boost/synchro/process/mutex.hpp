@@ -56,6 +56,28 @@ public:
     //{return timed_lock_shared(abs_time);}
 
 };    
+
+
+template <>
+struct unique_lock_type<interprocess_mutex> {
+    typedef boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> type;
+};
+
+template <>
+struct shared_lock_type<interprocess_mutex> {
+    typedef boost::interprocess::sharable_lock<boost::interprocess::interprocess_mutex> type;
+};
+
+template <>
+struct upgrade_lock_type<interprocess_mutex> {
+    typedef boost::interprocess::upgradable_lock<boost::interprocess::interprocess_mutex> type;
+};
+#if 0
+template <>
+struct upgrade_to_unique_locker_type<interprocess_mutex> {
+    typedef boost::interprocess::upgrade_to_unique_lock<boost::interprocess::interprocess_mutex> type;
+};
+#endif
 #if 0    
 typedef boost::interprocess::interprocess_mutex interprocess_mutex;
 
