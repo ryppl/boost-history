@@ -29,7 +29,7 @@ class Slave : boost::synchro::concurrent_component
     unsigned sum_;
     bool End;
 public:
-	Slave() : End(false) {}
+    Slave() : End(false) {}
     void Clear() {
 //        std::cout << "Clear()" << std::endl;
         port::synchronizer _(receive_);
@@ -48,7 +48,7 @@ public:
     void Interrupt() {
 //        std::cout << "Interrupt()" << std::endl;
         port::synchronizer _(receive_);
-    	End=true;
+        End=true;
     }
     void operator()() {
         while (!End) {

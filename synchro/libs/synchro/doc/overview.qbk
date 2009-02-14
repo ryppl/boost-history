@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2008 Vicente J Botet Escriba.
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
@@ -13,30 +13,35 @@
 [heading Description]
 [/==================]
 
-To date, C++ multi threaded programs that need to be efficient use the same mutexes,
-semaphores, and events that Dijkstra described 40 years ago. This unfortunate state
-of affairs makes multi threaded programs difficult to design, debug, ensure correct,
-optimize, maintain, and analyze formally. Consequently, building tools that automate
-detection of race conditions and deadlocks is highly desirable.
+To date, C++ multi threaded programs that need to be efficient use the same mutexes, semaphores, and events that Dijkstra described 40 years ago. This unfortunate state of affairs makes multi threaded programs difficult to design, debug, ensure correct, optimize, maintain, and analyze formally. Consequently, building tools that automate detection of race conditions and deadlocks is highly desirable.
+
+This can not be done if the basic lock and lockers take a different form depending of the library provider. We need to states the bases through concepts. Specific mapping to these concepts is needed for the current Boost locks and lockers. This mapping can be done by the owner of the candidate model or using some explicit adapters.
 
 [*Boost.Synchro] provides:
 
-* A uniforme usage of Boost.Thread and Boost.Interprocess synchronization mechanisms
-based on some lock concepts, lock traits and locking families.
-* semaphore, null_mutex and null_condition
-* Some lockers are also provided as `strict_locker`, `nested_strict_locker`,
-`condition_locker`, `locking_ptr`, `externally_locked`, `reverse_lock`.
-* Introduce high-level abstractions for handling more complicated
-synchronization problems, including monitor for guaranteeing exclusive access to an object,
-and a so-called rendezvous mechanism for handling direct communication between
-objects.
+* A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on some lock(mutexes) concepts, lock traits, locker(guards) concepts and locking families.
+    * add lock adapters to the Boost.Thread and Boost.Interprocess lockable models
+    * add locker adapters to the Boost.Thread and Boost.Interprocess lockers models
+    * `semaphore`, `null_mutex` and `null_condition` classes
+    * add lock functions throwing a timeout exception when the the operation is not achieved before a given time is reached or a duration elapsed.
+    * add a condition_lockable lock
+
+* Some additional lockers are also provided as
+    * `strict_locker`,
+    * `nested_strict_locker`,
+    * `condition_locker`,
+    * `locking_ptr`,
+    * `externally_locked`,
+    * `reverse_locker` and
+    * `nested_reverse_locker`.
+
+* Introduce high-level abstractions for handling more complicated synchronization problems, including
+    * `monitor` for guaranteeing exclusive access to an object, and
+    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol.
+
 * In addition a polymorph lockable hierarchy is also included.
 
-This library is much more a compilation of what I have found in the literature
-that is not yet present in Boost.
-
-Other abstractions that I would also like to see soon in Boost are futures, task
-schedulers, continuations, coroutines, non-premptyble threads, ...
+This library is much more a compilation of what I have found in the literature that is not yet present in Boost.
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -47,20 +52,13 @@ This documentation makes use of the following naming and formatting conventions.
 * Code is in `fixed width font` and is syntax-highlighted.
 * Replaceable text that you will need to supply is in [~italics].
 * If a name refers to a free function, it is specified like this:
-  `free_function()`; that is, it is in code font and its name is followed by `()`
-  to indicate that it is a free function.
-* If a name refers to a class template, it is specified like this:
-  `class_template<>`; that is, it is in code font and its name is followed by `<>`
-  to indicate that it is a class template.
+  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
 * If a name refers to a function-like macro, it is specified like this: `MACRO()`;
-  that is, it is uppercase in code font and its name is followed by `()` to
-  indicate that it is a function-like macro. Object-like macros appear without the
-  trailing `()`.
-* Names that refer to /concepts/ in the generic programming sense are
-  specified in CamelCase.
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
 
-[note In addition, notes such as this one specify non-essential information that
-provides additional background or rationale.]
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
 
 Finally, you can mentally add the following to any code fragments in this document:
 

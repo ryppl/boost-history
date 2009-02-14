@@ -9,25 +9,14 @@
 
 [section:tutorial  Tutorial]
 
-Concurrent components may interact in different ways: they may access
-the same shared objects by, for example, executing functions of
-these objects; or they may communicate directly by executing functions of
-each other.
+Concurrent components may interact in different ways: they may access the same shared objects by, for example, executing functions of these objects; or they may communicate directly by executing functions of each other.
 
-Concurrent execution of objects requires a mechanism
-for synchronizing the access to shared objects, just as direct communication
-between objects may require synchronization. The basic mechanism for synchronization in
-Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes
-and condition variables are, however, only useful for very simple synchronization problems.
-The Synchro Library therefore introduce high-level abstractions for handling more complicated
-synchronization problems, including monitor for guaranteeing exclusive access to an object,
-controling external locking and last a so-called rendezvous mechanism for handling direct communication between
-objects. All the concurrency abstractions being introduced are defined by means of mutexes an conditions.
+Concurrent execution of objects requires a mechanism for synchronizing the access to shared objects, just as direct communication between objects may require synchronization. The basic mechanism for synchronization in Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes and condition variables are, however, only useful for very simple synchronization problems. The Synchro Library therefore introduce high-level abstractions for handling more complicated synchronization problems, including monitor for guaranteeing exclusive access to an object, controlling external locking and last a so-called rendezvous mechanism for handling direct communication between objects. All the concurrency abstractions being introduced are defined by means of mutexes an conditions.
 
 [include tutorial/lockable.qbk]
 
 [include tutorial/internal_locking.qbk]
-[incude volatile_locking_ptr.qbk]
+[include tutorial/volatile_locking_ptr.qbk]
 [include tutorial/external_locking.qbk]
 [include tutorial/rendezvous.qbk]
 
@@ -71,7 +60,7 @@ means of mutexes. Programs that make heavy use of mutexes may be
 difficult to read and write. Instead, we shall introduce a number of generic
 classes for handling more complicated forms of synchronization and communication.
 
-With the RAII idion (Boost.Thread lock_guard) we can simplify a lot this using the scoped locks.
+With the RAII idiom (Boost.Thread lock_guard) we can simplify a lot this using the scoped locks.
 
 [BankAccount_raii]
 
@@ -86,20 +75,20 @@ describes a so-called monitor pattern.
 
 [monitor]
 
-Depending on the lock cathegory we have exclusive monitors and shared monitors
+Depending on the lock category we have exclusive monitors and shared monitors
 [exclusive_monitor]
 [shared_monitor]
 
 A monitor object behaves like a ExclusiveLockable object but only for the inheriting classes.
-Protected inheritance from make_exclusive_lockable provide to all the derived classes all ExclusiveLockable operations.
+Protected inheritance from exclusive_lockable_adapter provide to all the derived classes all ExclusiveLockable operations.
 In addition has a protected nested class,
-synchroronizer, used when defining the monitor operations to synchronize the access critical regions.
+synchronizer, used when defining the monitor operations to synchronize the access critical regions.
 The BankAccount may be described using Monitor in the following way:
 
 [BankAccount]
 
-In the following, a monitor means some sub-class of monitor. A synchroronized operation means an operation
-using the synchroronizer guard defined within some monitor. Monitor is one example of a high-level concurrency abstraction
+In the following, a monitor means some sub-class of monitor. A synchronized operation means an operation
+using the synchronizer guard defined within some monitor. Monitor is one example of a high-level concurrency abstraction
 that can be defined by means of mutexes.
 
 
@@ -120,7 +109,7 @@ becomes true. We can do that using Boost.Thread condition variables like:
 
 [sync_buffer_boost_thread_style]
 
-The Monitor class replace the nested synchroronizer unique_lock with the class `condition_locker`
+The Monitor class replace the nested synchronizer unique_lock with the class `condition_locker`
 for this purpose:
 
 [condition_locker]
@@ -150,11 +139,11 @@ This tutorial is an adaptation of the article of Andrei Alexandrescu "Multithrea
 to the Boost library.
 
 
-[section  Internall locking]
+[section  Internal locking]
 
 Consider, for example, modeling a bank account class that supports
 simultaneous deposits and withdrawals from multiple locations (arguably
-the "Hello, World" of multithreaded programming). In the code below, guard's
+the "Hello, World" of multi-threaded programming). In the code below, guard's
 constructor locks the passed-in object this, and guard's destructor unlocks this.
 
 [IL_BankAccount_BankAccount]
@@ -208,9 +197,9 @@ We can add these functions explicitly
 
 or inheriting from a class which add these lockable functions.
 
-The `make_exclusive_lockable` class
+The `exclusive_lockable_adapter` class
 
-[make_exclusive_lockable]
+[exclusive_lockable_adapter]
 
 The `BankAccount` class result now in
 
@@ -241,7 +230,7 @@ don't manipulate it at all. Deposit and Withdraw are not thread-safe anymore. In
 is responsible for locking BankAccount properly.
 
     class BankAccount
-        : public make_exclusive_lockable<boost:mutex> {
+        : public exclusive_lockable_adapter<boost:mutex> {
         int balance_;
     public:
         void Deposit(int amount) {
@@ -258,7 +247,7 @@ BankAccount objects. In designing applications, it's important to differentiate 
 imposed on bounded code and unbounded code. If your class makes undue requirements on unbounded code,
 that's usually a sign that encapsulation is out the window.
 
-To conclude, if in designing a multithreaded class you settle on internal locking, you expose yourself to
+To conclude, if in designing a multi-threaded class you settle on internal locking, you expose yourself to
 inefficiency or deadlocks. On the other hand, if you rely on caller-provided locking, you make your class
 error-prone and difficult to use. Finally, external locking completely avoids the issue by leaving it all
 to the client code.
@@ -396,7 +385,7 @@ interface for BankAccount? The idea is as follows:
 A little code is worth 1,000 words, a (hacked into) saying goes, so here's the new BankAccount class:
 
     class BankAccount
-    : public make_exclusive_lockable<boost:recursive_mutex>
+    : public exclusive_lockable_adapter<boost:recursive_mutex>
     {
         int balance_;
     public:
@@ -435,7 +424,7 @@ It's worth noting that `strict_locker` being a template gives extra safety compa
 polymorphic approach. In such a design, BankAccount would derive from a Lockable interface.
 `strict_locker` would manipulate Lockable references so there's no need for templates. This approach is
 sound; however, it provides fewer compile-time guarantees. Having a `strict_locker` object would only tell
-that some object derived from Lockable is currently locked. In the templated approach, having a
+that some object derived from Lockable is currently locked. In the template approach, having a
 `strict_lock<BankAccount>` gives a stronger guarantee-it's a `BankAccount` that stays locked.
 
 There's a weasel word in there-I mentioned that ATMWithdrawal is reasonably safe. It's not really
@@ -487,7 +476,7 @@ a reference to the locked object.
 Second, BankAccount needs to compare the locked object against this:
 
     class BankAccount {
-    : public make_exclusive_lockable<boost::recursive_mutex>
+    : public exclusive_lockable_adapter<boost::recursive_mutex>
         int balance_;
     public:
         void Deposit(int amount, strict_lock<BankAccount>& guard) {
@@ -525,7 +514,7 @@ provide your own synchronization in the latter case.
 Say we have an AccountManager class that holds and manipulates a BankAccount object:
 
     class AccountManager
-    : public make_exclusive_lockable<boost::mutex>
+    : public exclusive_lockable_adapter<boost::mutex>
     {
         BankAccount checkingAcct_;
         BankAccount savingsAcct_;
@@ -585,10 +574,10 @@ The drawback is that instead of having only one strict locker we have two and we
 to duplicate every function taking a `strict\_lock`
 or make these function templates functions.
 The problem with template functions is that we don't profit anymore of
-the C++ type system. We must add some static metafunction that check that the Locker parameter is a strict locker.
-The problem is that we can not really check this or can we?. The `is_strict_locker` metafunction must be specialized by the strict locker
-developer. We need to belive it "sur parolle".
-The advantage is that now we can manage with more than two strict lockers without changing our code. Ths is really nice.
+the C++ type system. We must add some static meta-function that check that the Locker parameter is a strict locker.
+The problem is that we can not really check this or can we?. The `is_strict_locker` meta-function must be specialized by the strict locker
+developer. We need to believe it "sur parolle".
+The advantage is that now we can manage with more than two strict lockers without changing our code. This is really nice.
 
 Now we need to state that both classes are `strict_locker`s.
 
@@ -641,14 +630,14 @@ state of `S` may, however, not be meaningful when `R` executes `m`, and vice ver
 In the following sections we will introduce abstractions for making it possible
 to synchronize such communication.
 
-[section  Synchrohronized communication between components]
+[section  Synchronized communication between components]
 
 In this section we will introduce the notion of synchronized execution of objects.
 A component `S` may request execution of a member function of a component
 `R`. The component `R` must accept that the request can be fulfilled.
-Synchrohronized communication is described in a generic class concurrent_component.
+Synchronized communication is described in a generic class concurrent_component.
 A `concurrent_component` defines the notion of a `port` for controlling the communication. A
-`port` has a nested `synchroronizer` class for defining operations controlled by the
+`port` has a nested `synchronizer` class for defining operations controlled by the
 `port`; it also has an accept operation for signaling that an operation associated
 with the `port` can be executed. The `concurrent_component` has the following structure:
 
@@ -664,7 +653,7 @@ The concurrent_component `S` may execute a request, which is a normal remote pro
     e2 = r_.m(e1);
 ```
 
-Since `m` is a synchroronized port operation, the execution of M has to be accepted
+Since `m` is a synchronized port operation, the execution of M has to be accepted
 by R before it is executed.
 For M to be accepted, R must execute an accept, which has the following
 form:
@@ -673,22 +662,22 @@ form:
     port::accept(p);
 ```
 
-The communication is carried out when `S` is executing `r\_.m` and `R` is executing
+The communication is carried out when `S` is executing `r_.m` and `R` is executing
 `port::accept(p)`. Both `S` and `R` are blocked until the communication takes place. A
-communication has the effect that `S` and `R` together execute the evaluation: `e2 = r\_.m(e1);`
+communication has the effect that `S` and `R` together execute the evaluation: `e2 = r_.m(e1);`
 
 This takes place as follows:
 
-# When S executes `e2 = r\_.m(e1)`, `S` is now ready to execute the
+# When S executes `e2 = r_.m(e1)`, `S` is now ready to execute the
 internals of the `R::m`.
 #  When `R` executes `port::accept(p)`, `R` has signaled that the internals of a function
-protected with `port::synchronizer \_(p)`; may be executed. `R` will wait until such an
+protected with `port::synchronizer _(p)`; may be executed. `R` will wait until such an
 execution has taken place.
 # When both `R` and `S` are ready, the internals of `R::m` can be executed.
 # When the internals of `R::m` has been executed, `R` will continue execution. In
 addition, a possible return of `R::m` is assigned to `e2`.
 
-The object `S` executing `r\_.m()` is called the sender, and the object `R` having `m` as
+The object `S` executing `r_.m()` is called the sender, and the object `R` having `m` as
 an operation is called the receiver.
 
 In the following example, two systems `Prod` and `Cons` communicate via
@@ -753,7 +742,7 @@ The syntax for this is:
 
 The example describes an abstract pattern for handling reservations
 of some kind. The reservations are supposed to be stored in some
-register. The actual way this is done is supposed to be described in subpatterns
+register. The actual way this is done is supposed to be described in sub-patterns
 of ReservationHandler. At most, one person at a time is allowed to
 make reservations. An agent making a reservation must perform the following
 steps:
@@ -1026,8 +1015,7 @@ skeleton of a class `mutex` with which `locking_ptr` will work:
 `locking_ptr` is templated with the type of the controlled variable and the exclusive lockable type.
 For example, if you want to
 control a Widget, you use a `locking_ptr<Widget> that you initialize with a variable of type `volatile` Widget.
-`locking_ptr`'s definition is very simple. `locking_ptr` implements an unsophisticated smart pointer. It focuses
-solely on collecting a `const_cast` and a critical section.
+`locking_ptr`'s definition is very simple. `locking_ptr` implements an unsophisticated smart pointer. It focuses solely on collecting a `const_cast` and a critical section.
 
     template <typename T>
     class locking_ptr {
@@ -1051,10 +1039,7 @@ solely on collecting a `const_cast` and a critical section.
         locking_ptr& operator=(const locking_ptr&);
     };
 
-In spite of its simplicity, `locking_ptr` is a very useful aid in writing correct multithreaded code. You
-should define objects that are shared between threads as volatile and never use `const_cast` with them --
-always use `locking_ptr` automatic objects. Let's illustrate this with an example. Say you have two threads
-that share a vector<char> object:
+In spite of its simplicity, `locking_ptr` is a very useful aid in writing correct multithreaded code. You should define objects that are shared between threads as volatile and never use `const_cast` with them -- always use `locking_ptr` automatic objects. Let's illustrate this with an example. Say you have two threads that share a vector<char> object:
 
     class SynchroBuf {
     public:
@@ -1066,8 +1051,7 @@ that share a vector<char> object:
         mutex mtx_; // controls access to buffer_
     };
 
-Inside a thread function, you simply use a `locking_ptr<BufT>` to get controlled access to the `buffer_`
-member variable:
+Inside a thread function, you simply use a `locking_ptr<BufT>` to get controlled access to the `buffer_` member variable:
 
     void SynchroBuf::Thread1() {
         locking_ptr<BufT> lpBuf(buffer_, mtx_);
@@ -1077,9 +1061,7 @@ member variable:
         }
     }
 
-The code is very easy to write and understand -- whenever you need to use `buffer_`, you must create a
-`locking_ptr<BufT>` pointing to it. Once you do that, you have access to vector's entire interface. The nice
-part is that if you make a mistake, the compiler will point it out:
+The code is very easy to write and understand -- whenever you need to use `buffer_`, you must create a `locking_ptr<BufT>` pointing to it. Once you do that, you have access to vector's entire interface. The nice part is that if you make a mistake, the compiler will point it out:
 
     void SynchroBuf::Thread2() {
         // Error! Cannot access 'begin' for a volatile object
@@ -1090,10 +1072,7 @@ part is that if you make a mistake, the compiler will point it out:
         }
     }
 
-You cannot access any function of `buffer_` until you either apply a `const_cast` or use `locking_ptr`. The
-difference is that `locking_ptr` offers an ordered way of applying `const_cast` to volatile variables.
-`locking_ptr` is remarkably expressive. If you only need to call one function, you can create an unnamed
-temporary `locking_ptr` object and use it directly:
+You cannot access any function of `buffer_` until you either apply a `const_cast` or use `locking_ptr`. The difference is that `locking_ptr` offers an ordered way of applying `const_cast` to volatile variables. `locking_ptr` is remarkably expressive. If you only need to call one function, you can create an unnamed temporary `locking_ptr` object and use it directly:
 
     unsigned int SynchroBuf::Size() {
         return locking_ptr<BufT>(buffer_, mtx_)->size();
@@ -1103,10 +1082,7 @@ temporary `locking_ptr` object and use it directly:
 [endsect]
 [section  Back to Primitive Types]
 
-We saw how nicely `volatile` protects objects against uncontrolled access and how `locking_ptr` provides a
-simple and effective way of writing thread-safe code. Let's now return to primitive types, which are
-treated differently by `volatile`. Let's consider an example where multiple threads share a variable of
-type int.
+We saw how nicely `volatile` protects objects against uncontrolled access and how `locking_ptr` provides a simple and effective way of writing thread-safe code. Let's now return to primitive types, which are treated differently by `volatile`. Let's consider an example where multiple threads share a variable of type int.
 
     class Counter
     {
@@ -1118,19 +1094,13 @@ type int.
         int ctr_;
     };
 
-If Increment and Decrement are to be called from different threads, the fragment above is buggy. First,
-`ctr_` must be volatile. Second, even a seemingly atomic operation such as `++ctr_` is actually a
-three-stage operation. Memory itself has no arithmetic capabilities. When incrementing a variable, the
-processor:
+If Increment and Decrement are to be called from different threads, the fragment above is buggy. First, `ctr_` must be volatile. Second, even a seemingly atomic operation such as `++ctr_` is actually a three-stage operation. Memory itself has no arithmetic capabilities. When incrementing a variable, the processor:
 
 * Reads that variable in a register
 * Increments the value in the register
 * Writes the result back to memory
 
-This three-step operation is called RMW (Read-Modify-Write). During the Modify part of an RMW operation,
-most processors free the memory bus in order to give other processors access to the memory. If at that
-time another processor performs a RMW operation on the same variable, we have a race condition: the second
-write overwrites the effect of the first. To avoid that, you can rely, again, on `locking_ptr`:
+This three-step operation is called RMW (Read-Modify-Write). During the Modify part of an RMW operation, most processors free the memory bus in order to give other processors access to the memory. If at that time another processor performs a RMW operation on the same variable, we have a race condition: the second write overwrites the effect of the first. To avoid that, you can rely, again, on `locking_ptr`:
 
     class Counter
     {
@@ -1143,25 +1113,13 @@ write overwrites the effect of the first. To avoid that, you can rely, again, on
         boost::mutex mtx_;
     };
 
-Now the code is correct, but its quality is inferior when compared to SynchroBuf's code. Why? Because with
-Counter, the compiler will not warn you if you mistakenly access `ctr_` directly (without locking it). The
-compiler compiles `++ctr_` if `ctr_` is volatile, although the generated code is simply incorrect. The compiler
-is not your ally anymore, and only your attention can help you avoid race conditions. What should you do
-then? Simply encapsulate the primitive data that you use in higher-level structures and use `volatile` with
-those structures. Paradoxically, it's worse to use `volatile` directly with built-ins, in spite of the fact
-that initially this was the usage intent of `volatile`!
+Now the code is correct, but its quality is inferior when compared to SynchroBuf's code. Why? Because with Counter, the compiler will not warn you if you mistakenly access `ctr_` directly (without locking it). The compiler compiles `++ctr_` if `ctr_` is volatile, although the generated code is simply incorrect. The compiler is not your ally anymore, and only your attention can help you avoid race conditions. What should you do then? Simply encapsulate the primitive data that you use in higher-level structures and use `volatile` with those structures. Paradoxically, it's worse to use `volatile` directly with built-ins, in spite of the fact that initially this was the usage intent of `volatile`!
 
 
 [endsect]
 [section  `volatile` Member Functions]
 
-So far, we've had classes that aggregate `volatile` data members; now let's think of designing classes that
-in turn will be part of larger objects and shared between threads. Here is where `volatile` member functions
-can be of great help. When designing your class, you volatile-qualify only those member functions that are
-thread safe. You must assume that code from the outside will call the volatile functions from any code at
-any time. Don't forget: `volatile` equals free multithreaded code and no critical section; non-volatile
-equals single-threaded scenario or inside a critical section. For example, you define a class Widget that
-implements an operation in two variants -- a thread-safe one and a fast, unprotected one.
+So far, we've had classes that aggregate `volatile` data members; now let's think of designing classes that in turn will be part of larger objects and shared between threads. Here is where `volatile` member functions can be of great help. When designing your class, you volatile-qualify only those member functions that are thread safe. You must assume that code from the outside will call the volatile functions from any code at any time. Don't forget: `volatile` equals free multithreaded code and no critical section; non-volatile equals single-threaded scenario or inside a critical section. For example, you define a class Widget that implements an operation in two variants -- a thread-safe one and a fast, unprotected one.
 
     class Widget
     {
@@ -1173,10 +1131,7 @@ implements an operation in two variants -- a thread-safe one and a fast, unprote
         boost::mutex mtx_;
     };
 
-Notice the use of overloading. Now Widget's user can invoke Operation using a uniform syntax either for
-volatile objects and get thread safety, or for regular objects and get speed. The user must be careful
-about defining the shared Widget objects as `volatile`. When implementing a `volatile` member function, the
-first operation is usually to lock this with a `locking_ptr`. Then the work is done by using the non-volatile sibling:
+Notice the use of overloading. Now Widget's user can invoke Operation using a uniform syntax either for volatile objects and get thread safety, or for regular objects and get speed. The user must be careful about defining the shared Widget objects as `volatile`. When implementing a `volatile` member function, the first operation is usually to lock this with a `locking_ptr`. Then the work is done by using the non-volatile sibling:
 
     void Widget::Operation() volatile
     {
@@ -1186,9 +1141,8 @@ first operation is usually to lock this with a `locking_ptr`. Then the work is d
 
 [endsect]
 [section  Generic `locking_ptr`]
-The `locking_ptr` works with a mutex class. How to use it with other mutexes?
-We can make a more generic `locking_ptr` adding a Lockable template parameter.
-[/As the more common use will be `boos::mutex` this will be the default value]
+
+The `locking_ptr` works with a mutex class. How to use it with other mutexes? We can make a more generic `locking_ptr` adding a Lockable template parameter. [/As the more common use will be `boos::mutex` this will be the default value]
 
 [locking_ptr]
 

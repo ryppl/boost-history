@@ -8,28 +8,20 @@
 
 [section:uniform Using thread, Interprocess and null synchronization mechanisms  uniformly]
 
-One of the problems when doing multi threaded application with Bosst.Thread and
-Boost.Interprocess is that the synchronization mechanism of these two libraries
-even if they are very close since the release 1.35, there are some minor
-differences that make quite difficult to design a class that can work
-independently with synchronization mechanisms of both libraries.
+One of the problems when doing multi threaded application with Boost.Thread and Boost.Interprocess is that the synchronization mechanism of these two libraries even if they are very close since the release 1.35, there are some minor differences that make quite difficult to design a class that can work independently with synchronization mechanisms of both libraries.
 
-This library proposes some classes that allows to write code that can be used
-distinguishably with thread or interprocess synchronization mechanisms. It is inspired on the work
-from [*C++ Threading - A Generic-Programming Approach] - Kevlin Henney and
-[*An OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit] Douglas C. Schmidt.
+This library proposes some classes that allows to write code that can be used indistinguishably with thread or interprocess synchronization mechanisms. It is inspired on the work from [*C++ Threading - A Generic-Programming Approach] - Kevlin Henney and [*An OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit] Douglas C. Schmidt.
 
 
 [*Lock substitutability]
 
-The Boost (C++0x) mutexes have associated a category which  form a subtyping hierarchy:
-ExclusiveLock <- SharableLock <- UpgradableLock
+The Boost (C++0x) mutexes have associated a category which  form a sub-typing hierarchy:
 
-    exclusive_lock <- sharable_lock <- upgradable_lock
+    ExclusiveLockable <- SharedLockable <- UpgradeLockable
 
 [category_tag_hierarchy]
 
-Locking behaviour can be further cathegorized as:
+Locking behavior can be further categorized as:
 
 * Re-entrancy: recursive or not
 
@@ -39,7 +31,7 @@ Locking behaviour can be further cathegorized as:
 
     mono_threaded <- multi_threaded <- multi_process
 
-* Lifetime: The lifetime of a lock coudl be associated to the process, the kernel or the filesystem
+* Lifetime: The lifetime of a lock could be associated to the process, the kernel or the file-system
 
     process_lifetime <- kernel_lifetime <- filesystem_lifetime
 
@@ -54,7 +46,7 @@ Substitutability applies both to the degree of syntactic support and to the lock
 
 
 We can see these axes of variation expressed against some
-Boost synchronisation mechanisms (from now bip stands for boost::interprocess):
+Boost synchronization mechanisms (from now bip stands for boost::interprocess):
 
 * boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface, multi-threaded
 * boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface, multi-threaded
@@ -81,13 +73,13 @@ Inverse traits can match a lockable type based on specific traits, for a given f
 It is also possible to specify characteristics to perform a reverse lookup to find a primitive lock type, either by
 exact match or by substitutable match.
 
-[*Synchrohronization familly]
+[*Synchronization family]
 
-A class that will do internal locking can be parameterized by the type of synchronization familly needed to achieve
+A class that will do internal locking can be parameterized by the type of synchronization family needed to achieve
 the desired level of concurrency control. This depends of the usage scope of this class, and this can be
 mono_threaded, multi_threaded, multi_process.
 
-For example the thread_synchronization_familly can be used to instantiate a message_queue class in a multi_threaded
+For example the thread_synchronization_family can be used to instantiate a message_queue class in a multi_threaded
 environment, all public methods will be thread-safe, with the corresponding overhead that implies. In contrast, if a
 null_synchronization_policy class is used to instantiate message_queue, all public methods will not be thread-safe,
 and there will be no additional overhead.

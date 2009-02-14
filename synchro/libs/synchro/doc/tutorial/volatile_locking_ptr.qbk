@@ -1,8 +1,9 @@
 [/
  / Copyright (c) 2008 Vicente J. Botet Escriba
  /
- / Distributed under the Boost Software License, Version 1.0. (See accompanying
- / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ / Distributed under the Boost Software License, Version 1.0. 
+ / (See accompanying file LICENSE_1_0.txt or 
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
 
@@ -10,18 +11,13 @@
 [section  `volatile ` and `locking_ptr`]
 
 
-This tutorial is an adaptation of the article of Andrei Alexandrescu "`volatile` - Multithreaded
-Programmer's Best Friend" to the Boost library.
+This tutorial is an adaptation of the article of Andrei Alexandrescu "`volatile` - Multithreaded Programmer's Best Friend" to the Boost library.
 
 [section  Just a Little Keyword]
 
-Although both C and C++ Standards are conspicuously silent when it comes to threads, they do make a
-little concession to multithreading, in the form of the volatile keyword.
+Although both C and C++ Standards are conspicuously silent when it comes to threads, they do make a little concession to multi-threading, in the form of the volatile keyword.
 
-Just like its better-known counterpart const, volatile is a type modifier. It's intended to be used
-in conjunction with variables that are accessed and modified in different threads. Basically, without
-volatile, either writing multithreaded programs becomes impossible, or the compiler wastes vast
-optimization opportunities. An explanation is in order.
+Just like its better-known counterpart const, volatile is a type modifier. It's intended to be used in conjunction with variables that are accessed and modified in different threads. Basically, without volatile, either writing multi-threaded programs becomes impossible, or the compiler wastes vast optimization opportunities. An explanation is in order.
 
 Consider the following code:
 
@@ -44,19 +40,7 @@ Consider the following code:
         bool flag_;
     };
 
-The purpose of `Gadget::Wait` above is to check the `flag_` member variable every second and return when that
-variable has been set to true by another thread. At least that's what its programmer intended, but, alas,
-Wait is incorrect. Suppose the compiler figures out that `sleep(1000)` is a call into an external library
-that cannot possibly modify the member variable `flag_`. Then the compiler concludes that it can cache `flag_`
-in a register and use that register instead of accessing the slower on-board memory. This is an excellent
-optimization for single-threaded code, but in this case, it harms correctness: after you call Wait for some
-`Gadget` object, although another thread calls Wakeup, Wait will loop forever. This is because the change of
-`flag_` will not be reflected in the register that caches `flag_`. The optimization is too ... optimistic.
-Caching variables in registers is a very valuable optimization that applies most of the time, so it would
-be a pity to waste it. C and C++ give you the chance to explicitly disable such caching. If you use the
-volatile modifier on a variable, the compiler won't cache that variable in registers -- each access will
-hit the actual memory location of that variable. So all you have to do to make Gadget's Wait/Wakeup combo
-work is to qualify `flag_` appropriately:
+The purpose of `Gadget::Wait` above is to check the `flag_` member variable every second and return when that variable has been set to true by another thread. At least that's what its programmer intended, but, alas, Wait is incorrect. Suppose the compiler figures out that `sleep(1000)` is a call into an external library that cannot possibly modify the member variable `flag_`. Then the compiler concludes that it can cache `flag_` in a register and use that register instead of accessing the slower on-board memory. This is an excellent optimization for single-threaded code, but in this case, it harms correctness: after you call Wait for some `Gadget` object, although another thread calls Wakeup, Wait will loop forever. This is because the change of `flag_` will not be reflected in the register that caches `flag_`. The optimization is too ... optimistic. Caching variables in registers is a very valuable optimization that applies most of the time, so it would be a pity to waste it. C and C++ give you the chance to explicitly disable such caching. If you use the volatile modifier on a variable, the compiler won't cache that variable in registers -- each access will hit the actual memory location of that variable. So all you have to do to make Gadget's Wait/Wakeup combo work is to qualify `flag_` appropriately:
 
     class Gadget
     {
@@ -66,20 +50,12 @@ work is to qualify `flag_` appropriately:
         volatile bool flag_;
     };
 
-Most explanations of the rationale and usage of `volatile` stop here and advise you to volatile-qualify the
-primitive types that you use in multiple threads. However, there is much more you can do with `volatile`,
-because it is part of C++'s wonderful type system.
+Most explanations of the rationale and usage of `volatile` stop here and advise you to volatile-qualify the primitive types that you use in multiple threads. However, there is much more you can do with `volatile`, because it is part of C++'s wonderful type system.
 
 [endsect]
 [section  Using `volatile` with User-Defined Types]
 
-You can volatile-qualify not only primitive types, but also user-defined types. In that case, `volatile`
-modifies the type in a way similar to const. (You can also apply const and `volatile` to the same type
-simultaneously.) Unlike `const`, `volatile` discriminates between primitive types and user-defined types.
-Namely, unlike classes, primitive types still support all of their operations (addition, multiplication,
-assignment, etc.) when volatile-qualified. For example, you can assign a non-volatile `int` to a `volatile` `int`,
-but you cannot assign a non-volatile object to a `volatile` object. Let's illustrate how `volatile` works on
-user-defined types on an example.
+You can volatile-qualify not only primitive types, but also user-defined types. In that case, `volatile` modifies the type in a way similar to const. (You can also apply const and `volatile` to the same type simultaneously.) Unlike `const`, `volatile` discriminates between primitive types and user-defined types. Namely, unlike classes, primitive types still support all of their operations (addition, multiplication, assignment, etc.) when volatile-qualified. For example, you can assign a non-volatile `int` to a `volatile` `int`, but you cannot assign a non-volatile object to a `volatile` object. Let's illustrate how `volatile` works on user-defined types on an example.
 
     class Gadget
     {
@@ -106,67 +82,34 @@ If you think `volatile` is not that useful with objects, prepare for some surpri
     volatileGadget.Bar();   // error! Non-volatile function called for
                             // volatile object!
 
-The conversion from a non-qualified type to its `volatile` counterpart is trivial. However, just as with
-const, you cannot make the trip back from `volatile` to non-qualified. You must use a cast:
+The conversion from a non-qualified type to its `volatile` counterpart is trivial. However, just as with const, you cannot make the trip back from `volatile` to non-qualified. You must use a cast:
 
     Gadget& ref = const_cast<Gadget&>(volatileGadget);
     ref.Bar(); // ok
 
-A volatile-qualified class gives access only to a subset of its interface, a subset that is under the
-control of the class implementer. Users can gain full access to that type's interface only by using a
-`const_cast`. In addition, just like constness, volatileness propagates from the class to its members
-(for example, `volatileGadget.name_` and `volatileGadget.state_` are `volatile` variables).
+A volatile-qualified class gives access only to a subset of its interface, a subset that is under the control of the class implementer. Users can gain full access to that type's interface only by using a `const_cast`. In addition, just like constness, volatileness propagates from the class to its members (for example, `volatileGadget.name_` and `volatileGadget.state_` are `volatile` variables).
 
 [endsect]
 
 
 [section  `volatile`, Critical Sections, and Race Conditions]
 
-The simplest and the most often-used synchronization device in multithreaded programs is the mutex.
+The simplest and the most often-used synchronization device in multi-threaded programs is the mutex.
 
 [/A mutex
-exposes the `lock` and `unlock` primitives. Once you call `lock` in some thread, any other thread calling
-`lock` will block. Later, when that thread calls `unlock`, precisely one thread blocked in an `lock` call
-will be released. In other words, for a given mutex, only one thread can get processor time in between a
-call to `lock` and a call to `unlock`. The executing code between a call to `lock` and a call to `unlock`
-is called a critical section. (Windows terminology is a bit confusing because it calls the mutex itself a
-critical section, while "mutex" is actually an inter-process mutex. It would have been nice if they were
-called thread mutex and process mutex.)
+exposes the `lock` and `unlock` primitives. Once you call `lock` in some thread, any other thread calling `lock` will block. Later, when that thread calls `unlock`, precisely one thread blocked in an `lock` call will be released. In other words, for a given mutex, only one thread can get processor time in between a call to `lock` and a call to `unlock`. The executing code between a call to `lock` and a call to `unlock` is called a critical section. (Windows terminology is a bit confusing because it calls the mutex itself a critical section, while "mutex" is actually an inter-process mutex. It would have been nice if they were called thread mutex and process mutex.)
 /]
-Mutexes are used to protect data against race conditions. By
-definition, a race condition occurs when the effect of more threads on data depends on how threads are
-scheduled. Race conditions appear when two or more threads compete for using the same data. Because threads
-can interrupt each other at arbitrary moments in time, data can be corrupted or misinterpreted. Consequently,
-changes and sometimes accesses to data must be carefully protected with critical sections. In
-object-oriented programming, this usually means that you store a mutex in a class as a member variable and
-use it whenever you access that class' state. Experienced multithreaded programmers might have yawned
-reading the two paragraphs above, but their purpose is to provide an intellectual workout, because now we
-will link with the `volatile` connection. We do this by drawing a parallel between the C++ types' world and
-the threading semantics world.
+Mutexes are used to protect data against race conditions. By definition, a race condition occurs when the effect of more threads on data depends on how threads are scheduled. Race conditions appear when two or more threads compete for using the same data. Because threads can interrupt each other at arbitrary moments in time, data can be corrupted or misinterpreted. Consequently, changes and sometimes accesses to data must be carefully protected with critical sections. In object-oriented programming, this usually means that you store a mutex in a class as a member variable and use it whenever you access that class' state. Experienced multi-threaded programmers might have yawned reading the two paragraphs above, but their purpose is to provide an intellectual workout, because now we will link with the `volatile` connection. We do this by drawing a parallel between the C++ types' world and the threading semantics world.
 
-* Outside a critical section, any thread might interrupt any other at any time; there is no control, so
-    consequently variables accessible from multiple threads are `volatile`. This is in keeping with the
-    original intent of `volatile` -- that of preventing the compiler from unwittingly caching values used by
-    multiple threads at once.
-* Inside a critical section defined by a mutex, only one thread has access. Consequently, inside a
-    critical section, the executing code has single-threaded semantics. The controlled variable is not
-    `volatile` anymore -- you can remove the `volatile` qualifier.
+* Outside a critical section, any thread might interrupt any other at any time; there is no control, so consequently variables accessible from multiple threads are `volatile`. This is in keeping with the original intent of `volatile` -- that of preventing the compiler from unwittingly caching values used by multiple threads at once.
+* Inside a critical section defined by a mutex, only one thread has access. Consequently, inside a critical section, the executing code has single-threaded semantics. The controlled variable is not `volatile` anymore -- you can remove the `volatile` qualifier.
 
-In short, data shared between threads is conceptually `volatile` outside a critical section, and non-volatile
-inside a critical section. You enter a critical section by locking a mutex. You remove the `volatile`
-qualifier from a type by applying a `const_cast`. If we manage to put these two operations together, we
-create a connection between C++'s type system and an application's threading semantics. We can make the
-compiler check race conditions for us.
+In short, data shared between threads is conceptually `volatile` outside a critical section, and non-volatile inside a critical section. You enter a critical section by locking a mutex. You remove the `volatile` qualifier from a type by applying a `const_cast`. If we manage to put these two operations together, we create a connection between C++'s type system and an application's threading semantics. We can make the compiler check race conditions for us.
 
 [endsect]
 [section  `locking_ptr`]
 
-We need a tool that collects a mutex acquisition and a `const_cast`. Let's develop a `locking_ptr` class template
-that you initialize with a volatile object obj and a mutex mtx. During its lifetime, a `locking_ptr` keeps mtx
-acquired. Also, `locking_ptr` offers access to the volatile-stripped obj. The access is offered in a smart
-pointer fashion, through operator-> and operator*. The `const_cast` is performed inside `locking_ptr`. The cast
-is semantically valid because `locking_ptr` keeps the mutex acquired for its lifetime. First, let's define the
-skeleton of a class `mutex` with which `locking_ptr` will work:
+We need a tool that collects a mutex acquisition and a `const_cast`. Let's develop a `locking_ptr` class template that you initialize with a volatile object obj and a mutex mtx. During its lifetime, a `locking_ptr` keeps `mtx` acquired. Also, `locking_ptr` offers access to the volatile-stripped obj. The access is offered in a smart pointer fashion, through operator-> and operator*. The `const_cast` is performed inside `locking_ptr`. The cast is semantically valid because `locking_ptr` keeps the mutex acquired for its lifetime. First, let's define the skeleton of a class `mutex` with which `locking_ptr` will work:
 
     class mutex
     {
@@ -176,11 +119,7 @@ skeleton of a class `mutex` with which `locking_ptr` will work:
         ...
     };
 
-`locking_ptr` is templated with the type of the controlled variable and the exclusive lockable type.
-For example, if you want to
-control a Widget, you use a `locking_ptr<Widget> that you initialize with a variable of type `volatile` Widget.
-`locking_ptr` is very simple. `locking_ptr` implements an unsophisticated smart pointer. It focuses
-solely on collecting a `const_cast` and a critical section.
+`locking_ptr` is templated with the type of the controlled variable and the exclusive lockable type. For example, if you want to control a Widget, you use a `locking_ptr<Widget> that you initialize with a variable of type `volatile` Widget. `locking_ptr` is very simple. `locking_ptr` implements an unsophisticated smart pointer. It focuses solely on collecting a `const_cast` and a critical section.
 
     template <typename T>
     class locking_ptr {
@@ -204,10 +143,7 @@ solely on collecting a `const_cast` and a critical section.
         locking_ptr& operator=(const locking_ptr&);
     };
 
-In spite of its simplicity, `locking_ptr` is a very useful aid in writing correct multithreaded code. You
-should define objects that are shared between threads as volatile and never use `const_cast` with them --
-always use `locking_ptr` automatic objects. Let's illustrate this with an example. Say you have two threads
-that share a vector<char> object:
+In spite of its simplicity, `locking_ptr` is a very useful aid in writing correct multi-threaded code. You should define objects that are shared between threads as volatile and never use `const_cast` with them -- always use `locking_ptr` automatic objects. Let's illustrate this with an example. Say you have two threads that share a vector<char> object:
 
     class SynchroBuf {
     public:
@@ -219,8 +155,7 @@ that share a vector<char> object:
         mutex mtx_; // controls access to buffer_
     };
 
-Inside a thread function, you simply use a `locking_ptr<BufT>` to get controlled access to the `buffer_`
-member variable:
+Inside a thread function, you simply use a `locking_ptr<BufT>` to get controlled access to the `buffer_` member variable:
 
     void SynchroBuf::Thread1() {
         locking_ptr<BufT> lpBuf(buffer_, mtx_);
@@ -230,9 +165,7 @@ member variable:
         }
     }
 
-The code is very easy to write and understand -- whenever you need to use `buffer_`, you must create a
-`locking_ptr<BufT>` pointing to it. Once you do that, you have access to vector's entire interface. The nice
-part is that if you make a mistake, the compiler will point it out:
+The code is very easy to write and understand -- whenever you need to use `buffer_`, you must create a `locking_ptr<BufT>` pointing to it. Once you do that, you have access to vector's entire interface. The nice part is that if you make a mistake, the compiler will point it out:
 
     void SynchroBuf::Thread2() {
         // Error! Cannot access 'begin' for a volatile object
@@ -243,10 +176,7 @@ part is that if you make a mistake, the compiler will point it out:
         }
     }
 
-You cannot access any function of `buffer_` until you either apply a `const_cast` or use `locking_ptr`. The
-difference is that `locking_ptr` offers an ordered way of applying `const_cast` to volatile variables.
-`locking_ptr` is remarkably expressive. If you only need to call one function, you can create an unnamed
-temporary `locking_ptr` object and use it directly:
+You cannot access any function of `buffer_` until you either apply a `const_cast` or use `locking_ptr`. The difference is that `locking_ptr` offers an ordered way of applying `const_cast` to volatile variables. `locking_ptr` is remarkably expressive. If you only need to call one function, you can create an unnamed temporary `locking_ptr` object and use it directly:
 
     unsigned int SynchroBuf::Size() {
         return locking_ptr<BufT>(buffer_, mtx_)->size();
@@ -256,10 +186,7 @@ temporary `locking_ptr` object and use it directly:
 [endsect]
 [section  Back to Primitive Types]
 
-We saw how nicely `volatile` protects objects against uncontrolled access and how `locking_ptr` provides a
-simple and effective way of writing thread-safe code. Let's now return to primitive types, which are
-treated differently by `volatile`. Let's consider an example where multiple threads share a variable of
-type int.
+We saw how nicely `volatile` protects objects against uncontrolled access and how `locking_ptr` provides a simple and effective way of writing thread-safe code. Let's now return to primitive types, which are treated differently by `volatile`. Let's consider an example where multiple threads share a variable of type int.
 
     class Counter
     {
@@ -271,19 +198,13 @@ type int.
         int ctr_;
     };
 
-If Increment and Decrement are to be called from different threads, the fragment above is buggy. First,
-`ctr_` must be volatile. Second, even a seemingly atomic operation such as `++ctr_` is actually a
-three-stage operation. Memory itself has no arithmetic capabilities. When incrementing a variable, the
-processor:
+If Increment and Decrement are to be called from different threads, the fragment above is buggy. First, `ctr_` must be volatile. Second, even a seemingly atomic operation such as `++ctr_` is actually a three-stage operation. Memory itself has no arithmetic capabilities. When incrementing a variable, the processor:
 
 * Reads that variable in a register
 * Increments the value in the register
 * Writes the result back to memory
 
-This three-step operation is called RMW (Read-Modify-Write). During the Modify part of an RMW operation,
-most processors free the memory bus in order to give other processors access to the memory. If at that
-time another processor performs a RMW operation on the same variable, we have a race condition: the second
-write overwrites the effect of the first. To avoid that, you can rely, again, on `locking_ptr`:
+This three-step operation is called RMW (Read-Modify-Write). During the Modify part of an RMW operation, most processors free the memory bus in order to give other processors access to the memory. If at that time another processor performs a RMW operation on the same variable, we have a race condition: the second write overwrites the effect of the first. To avoid that, you can rely, again, on `locking_ptr`:
 
     class Counter
     {
@@ -296,25 +217,13 @@ write overwrites the effect of the first. To avoid that, you can rely, again, on
         boost::mutex mtx_;
     };
 
-Now the code is correct, but its quality is inferior when compared to SynchroBuf's code. Why? Because with
-Counter, the compiler will not warn you if you mistakenly access `ctr_` directly (without locking it). The
-compiler compiles `++ctr_` if `ctr_` is volatile, although the generated code is simply incorrect. The compiler
-is not your ally anymore, and only your attention can help you avoid race conditions. What should you do
-then? Simply encapsulate the primitive data that you use in higher-level structures and use `volatile` with
-those structures. Paradoxically, it's worse to use `volatile` directly with built-ins, in spite of the fact
-that initially this was the usage intent of `volatile`!
+Now the code is correct, but its quality is inferior when compared to SynchroBuf's code. Why? Because with Counter, the compiler will not warn you if you mistakenly access `ctr_` directly (without locking it). The compiler compiles `++ctr_` if `ctr_` is volatile, although the generated code is simply incorrect. The compiler is not your ally anymore, and only your attention can help you avoid race conditions. What should you do then? Simply encapsulate the primitive data that you use in higher-level structures and use `volatile` with those structures. Paradoxically, it's worse to use `volatile` directly with built-ins, in spite of the fact that initially this was the usage intent of `volatile`!
 
 
 [endsect]
 [section  `volatile` Member Functions]
 
-So far, we've had classes that aggregate `volatile` data members; now let's think of designing classes that
-in turn will be part of larger objects and shared between threads. Here is where `volatile` member functions
-can be of great help. When designing your class, you volatile-qualify only those member functions that are
-thread safe. You must assume that code from the outside will call the volatile functions from any code at
-any time. Don't forget: `volatile` equals free multithreaded code and no critical section; non-volatile
-equals single-threaded scenario or inside a critical section. For example, you define a class Widget that
-implements an operation in two variants -- a thread-safe one and a fast, unprotected one.
+So far, we've had classes that aggregate `volatile` data members; now let's think of designing classes that in turn will be part of larger objects and shared between threads. Here is where `volatile` member functions can be of great help. When designing your class, you volatile-qualify only those member functions that are thread safe. You must assume that code from the outside will call the volatile functions from any code at any time. Don't forget: `volatile` equals free multi-threaded code and no critical section; non-volatile equals single-threaded scenario or inside a critical section. For example, you define a class Widget that implements an operation in two variants -- a thread-safe one and a fast, unprotected one.
 
     class Widget
     {
@@ -326,10 +235,7 @@ implements an operation in two variants -- a thread-safe one and a fast, unprote
         boost::mutex mtx_;
     };
 
-Notice the use of overloading. Now Widget's user can invoke Operation using a uniform syntax either for
-volatile objects and get thread safety, or for regular objects and get speed. The user must be careful
-about defining the shared Widget objects as `volatile`. When implementing a `volatile` member function, the
-first operation is usually to lock this with a `locking_ptr`. Then the work is done by using the non-volatile sibling:
+Notice the use of overloading. Now Widget's user can invoke Operation using a uniform syntax either for volatile objects and get thread safety, or for regular objects and get speed. The user must be careful about defining the shared Widget objects as `volatile`. When implementing a `volatile` member function, the first operation is usually to lock this with a `locking_ptr`. Then the work is done by using the non-volatile sibling:
 
     void Widget::Operation() volatile
     {
@@ -339,9 +245,7 @@ first operation is usually to lock this with a `locking_ptr`. Then the work is d
 
 [endsect]
 [section  Generic `locking_ptr`]
-The `locking_ptr` works with a mutex class. How to use it with other mutexes?
-We can make a more generic `locking_ptr` adding a Lockable template parameter.
-[/As the more common use will be `boos::mutex` this will be the default value]
+The `locking_ptr` works with a mutex class. How to use it with other mutexes? We can make a more generic `locking_ptr` adding a Lockable template parameter. [/As the more common use will be `boos::mutex` this will be the default value]
 
 [locking_ptr]
 
@@ -354,7 +258,6 @@ Every model of the ExclusiveLockable concept can be used as parameter.
 When the value type is itself lockable we can simplify the `locking_ptr` as follows:
 
 [locking_ptr_lockable_value_type]
-
 
 
 [endsect]

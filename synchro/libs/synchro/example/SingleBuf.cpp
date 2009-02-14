@@ -27,7 +27,7 @@ class SingleBuf : boost::synchro::concurrent_component {
     char bufCh_;
     bool End;
 public:
-	SingleBuf() : End(false) {}
+    SingleBuf() : End(false) {}
     void Put(char ch) {
         port::synchronizer _(PutPort_);
 //        std::cout << "void Put("<<ch<<")" << std::endl;
@@ -41,7 +41,7 @@ public:
     void Interrupt() {
         port::synchronizer _(PutPort_);
 //        std::cout << "Interrupt()" << std::endl;
-    	End=true;
+        End=true;
     }
     void operator()() {
         while (!End) {

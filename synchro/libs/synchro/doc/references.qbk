@@ -5,9 +5,9 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[section:ext_references Appendix E: References]
+[section:ext_references References]
 
-[variablelist References
+[variablelist
 [
     [[@http://www.ddj.com/cpp/184403766
     [*volatile - Multithreaded Programmer's Best Friend]]]
@@ -27,12 +27,11 @@
     [Kevlin Henney]
 ]
 
-[/
-    [[@http://www.comedi.org/projects/libpoet/boostbook/doc/boostbook/html/index.html
-    [*libpoet]]]
-    [Frank Mori Hess]
-/]
-
+[
+    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/MoreC++Threading.pdf
+    [*More C++ Threading - From Procedural to Generic, by Example]]]
+    [Kevlin Henney]
+]
 [
     [[@http://www.cs.wustl.edu/~schmidt/PDF/ACE-concurrency.pdf
     [*An OO Encapsulation of Lightweight OS

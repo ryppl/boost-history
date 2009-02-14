@@ -8,82 +8,77 @@
 [section:intro Introduction]
 
 
-[*Description]
-
-To date, C++ multi threaded programs that need to be efficient use the same mutexes,
-semaphores, and events that Dijkstra described 40 years ago. This unfortunate state
-of affairs makes multi threaded programs difficult to design, debug, ensure correct,
-optimize, maintain, and analyze formally. Consequently, building tools that automate
-detection of race conditions and deadlocks is highly desirable.
-
-[*Boost.Synchro] provides:
-
-* A uniforme usage of Boost.Thread and Boost.Interprocess synchronization mechanisms
-based on some lock concepts, lock traits and locking families.
-* semaphore, null_mutex and null_condition
-* Some lockers are also provided as `strict_locker`, `nested_strict_locker`,
-`condition_locker`, `locking_ptr`, `externally_locked`, `reverse_lock`.
-* Introduce high-level abstractions for handling more complicated
-synchronization problems, including monitor for guaranteeing exclusive access to an object,
-and a so-called rendezvous mechanism for handling direct communication between
-objects.
-* In addition a polymorph lockable hierarchy is also included.
-
-This library is much more a compilation of what I have found in the literature
-that is not yet present in Boost.
-
-Other abstractions that I would also like to see soon in Boost are futures, task
-schedulers, continuations, coroutines, non-premptyble threads, ...
-
 [include introduction_traits_and_concepts.qbk]
 
-
-[section:conc Concurrent components]
-
-Concurrent components may interact in different ways: they may access
-the same objects by, for example, executing functions of
-these objects; or they may communicate directly by executing functions of
-each other.
-
-Concurrent execution of objects requires a mechanism
-for synchronizing the access to shared objects, just as direct communication
-between objects may require synchronization. The basic mechanism for synchronization in
-Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes
-and condition variables are, however, only useful for very simple synchronization problems.
-The Synchro Library therefore introduce high-level abstractions for handling more complicated
-synchronization problems, including monitor for guaranteeing exclusive access to an object,
-and a so-called rendezvous mechanism for handling direct communication between
-objects. All the concurrency abstractions being introduced are defined by
-means of mutexes an conditions.
+[section Mapping the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts]
 
 [endsect]
 
+[section  Condition lockable]
+
+The library provides condition lockable, which allows a condition variable to be associated with a Lockable. 
+
+Treating condition locking as a property of Lockable rather than viceversa has the benefit of making clear how something is locked and accessed, as it were emphasising it in the first person.
+
+    class product_queue {
+    public:
+        ...
+        product *pull() {
+            guard.lock();
+            while(queue.empty())
+                guard.relock_on(not_empty);
+            product *pulled = queue.front();
+            queue.pop();
+            guard.unlock();
+            return pulled;
+        }
+        ...
+    };
+
+Requiring the user of a condition variable to implement a while loop to verify a condition's predicate is potentially error prone. It can be better encapsulated by passing the predicate as a function object to the locking function.
+
+    class product_queue {
+    public:
+        ...
+        product *pull() {
+            guard.lock_when(not_empty, has_products(queue));
+            product *pulled = queue.front();
+            queue.pop();
+            guard.unlock();
+            return pulled;
+        }
+        ...
+    };
+
+[endsect]
+
+[section  Timeouts]
+
+The library supports timeout exception for all the locking functions having a time or duration parameter.
+* A lock with a timeout parameter throws a timed_out exception on expiry
+* A try_lock with a timeout simply returns false on expiry
+* Any of the conditional locks throw a timed_out exception on expiry
+
+Use of timeouts can create more robust programs, by not blocking forever, but at the same time one needs to avoid annoyingly arbitrary limits.
+
+[endsect]
+
+
 [section:lockers Lockers]
 
-Typically, object-oriented programs use object-level locking by associating a
-synchronization object (mutex) with each object that is susceptible to be shared
-between threads. Then, code that manipulates the state of the object can synchronize
-by locking that object. Inside a synchronized section, the mutex associated with the
-object is locked, and consequently that object's fields can be accessed safely.
+Typically, object-oriented programs use object-level locking by associating a synchronization object (mutex) with each object that is susceptible to be shared between threads. Then, code that manipulates the state of the object can synchronize by locking that object. Inside a synchronized section, the mutex associated with the object is locked, and consequently that object's fields can be accessed safely.
 
 In C++, this fundamental idiom is typically implemented with a helper Locker object.
 
-A locker is any object or function responsible for coordinating the use of lockable objects
+A locker is any object or function responsible for coordinating the use of lockable objects.
 
-* Lockers depend on lockable objects - which need not be locking primitives - and not vice-versa.
-This avoids cycles in the dependency graph
-* Lockers are applications of lockable objects and, as such, form a potentially unbounded family
-Most common role of lockers is for exception safety and programming convenience
+* Lockers depend on lockable objects - which need not be locking primitives - and not vice-versa. This avoids cycles in the dependency graph.
+* Lockers are applications of lockable objects and, as such, form a potentially unbounded family. Most common role of lockers is for exception safety and programming convenience
 * Lockers execute-around the lock-unlock pairing.
 
-A locker defines an execution strategy for locking and unlocking that
-is automated by construction and destruction. It simplifies common
-use of locking, and does so in an exception-safe fashion. As such,
-lockers depend on the interface of lockables -e.g. lock and unlock
-- but lockables do not depend on lockers. The relationship is strictly
-layered, open and extensible: lockable types may be whole, externally
-locked objects against which existing lockers can be used; new lockers
-can be defined that work against existing lockable types.
+A locker defines an execution strategy for locking and unlocking that is automated by construction and destruction. It simplifies common use of locking, and does so in an exception-safe fashion. As such, lockers depend on the interface of lockables -e.g. lock and unlock - but lockables do not depend on lockers. The relationship is strictly layered, open and extensible: lockable types may be whole, externally locked objects against which existing lockers can be used; new lockers can be defined that work against existing lockable types.
+
+Substitutability between lockables and lockers does not make sense, so the constructor is always explicit. Implicit copyability is also disabled. 
 
 Boost.Thread and Boost.Interprocess defines already a good starting point with these lockers:
 
@@ -92,62 +87,123 @@ Boost.Thread and Boost.Interprocess defines already a good starting point with t
 * `boost::share_lock` and `boost::interprocess::sharable_lock`
 * `boost::upgrade_lock` and `boost::interprocess::upgradable_lock`.
 
+The problem is that even if these locker models the same model, there is no a single syntax.
+
+The library defines some locker adapters which take care of naming differences and that can be used like
+
+        boost::synchro::unique_locker<Lockable> scoped(guard);
+
+        boost::synchro::unique_deferred_locker<Lockable> scoped(guard);
+        boost::synchro::unique_adopt_locker<Lockable> scoped(guard);
+        boost::synchro::unique_try_locker<Lockable> scoped(guard);
+
 [*Strict lockers]
 
-A `strict_locker` is a scoped lock guard ensuring the mutex is locked on the
-scope of the lock, by locking the mutex on construction and unlocking it on
-destruction.
+A strict locker is a scoped lock guard ensuring the mutex is locked on the scope of the lock, by locking the mutex on construction and unlocking it on destruction.
 
-The library provides two strict lockers
+`boost::lock_guard` could be seen as a strict_locker if the following constructor didn't exists
 
-* `strict_locker`
-* `neested_strict_locker`
+    lock_guard(Lockable &  m, boost::adopt_lock_t)
+
+We can say that lock_guard is a strict locker "sur parolle".
+
+
+There is a const function that is very useful when working with strict lockers and external locking which check is the strict locker is locking an instace of a lockable.
+
+    bool is_locking(lockable_type* l) const;
+
+The library provides three strict lockers
+
+* `strict_locker`: is the basic strict locker
+* `neested_strict_locker`: is a strict_locker of another locker as a unique_lock.
+* `conditional_locker` : is a strict locker with the condition_lockable interface
 
 and a meta function `is_strict_locker` which states if a locker is a strict locker
 
-Substitutability between lockables and lockers does not make sense,
-so the constructor is explicit. Implicit copyability is also disabled.
-strict_lockers are not Lockables.
+So as strict lockers do not provide lock/unlock functions they are not models of Lockable.
+
+[*Try lockers]
+
+Most of the lockers defined in Boost.Thread and Boost.Interprocess are TryLockers, i.e. them allows to be initialize is a such way that instead of locking on the constructor with lock() they can try to lock with try_lock().
+
+The following code shows one way to use the TryLocker:
+
+    product *product_queue::try_pull() {
+        product *pulled = 0;
+        boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
+        if(scoped && !queue.empty()) {
+            pulled = queue.front();
+            queue.pop();
+        }
+        return pulled;
+    }
+
+If we use interprocess mutexes the following line
+
+        boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
+
+need to be changed by
+
+        boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> scoped(guard, boost::interprocess::try_to_lock);
+
+All of them use a safe strategy for a Boolean conversion which use a member pointer rather than a bool, which is typically too permissive:
+
+    typedef bool try_locker::*is_locked;
+    operator is_locked() const {
+        return locked ? &try_locker::locked : 0;
+    }
+
+Two mechanisms can allow a try_locker to be used directly in a condition: a variable can be declared in a condition if its type is convertible to bool and temporaries are scope bound to references to const. The common usage will be captured and the mechanism further generalised for convenience, but the model and code above demonstrates the essential concepts.
+
+    typedef const a_try_locker<mutex> &locked;
+    product *product_queue::try_pull() {
+        product *pulled = 0;
+        if(locked scoped = guard) {
+            if(!queue.empty()) {
+                pulled = queue.front();
+                queue.pop();
+            }
+        }
+        return pulled;
+    }
+
+The library defines a try_locker adapter which take care of naming differences and that can be used like
+
+        boost::synchro::unique_try_locker<Lockable> scoped(guard);
+
 
 
 [*External lockers]
 
-An alternative or complementary approach to internal locking is
-to support external locking for an object - Multiple calls may be
-grouped within the same externally defined critical region.
+An alternative or complementary approach to internal locking is to support external locking for an object - Multiple calls may be grouped within the same externally defined critical region.
 
-External locking has some associated risks for high-level objects.
-Incorrect usage can be too easy: a forgotten call to lock or unlock is
-more likely than with synchronisation primitives because the focus of
-using the object is on the rest of its non-Lockable interface, so it
-becomes easy to forget that to use the interface correctly also requires
-participation in a locking scheme.
+External locking has some associated risks for high-level objects. Incorrect usage can be too easy: a forgotten call to lock or unlock is more likely than with synchronisation primitives because the focus of using the object is on the rest of its non-Lockable interface, so it becomes easy to forget that to use the interface correctly also requires participation in a locking scheme.
 
-To some extent lockers can help, but such a co-operative scheme
-should only be employed when internal locking is too restricted for a
-given use, e.g. multiple operations must be performed together.
-Ideally, if such operations are common they should be defined
-internally locked and defined in the interface of the object as
-Combined Methods.
-Assuming that locks are re-entrant, external locking can be provided
-to complement the more encapsulated internal locking, i.e. by default
-if you want to call a single function you just call it and it
-automatically locks, but if you want to call multiple functions
-together you first apply an external lock.
+To some extent lockers can help, but such a co-operative scheme should only be employed when internal locking is too restricted for a given use, e.g. multiple operations must be performed together. Ideally, if such operations are common they should be defined internally locked and defined in the interface of the object as Combined Methods.
 
-The library provides a `externally_locked` class that allows to access a
-externally locked class in a thread safe mode through strict lockers.
+Assuming that locks are re-entrant, external locking can be provided to complement the more encapsulated internal locking, i.e. by default if you want to call a single function you just call it and it automatically locks, but if you want to call multiple functions together you first apply an external lock.
 
-Where only external locking is used, a safe approach is needed for
-calling single functions easily. The library provides two classes
+The library provides a `externally_locked` class that allows to access a externally locked class in a thread safe mode through strict lockers.
+
+Where only external locking is used, a safe approach is needed for calling single functions easily. The library provides two classes
 
 * `locking_ptr` and
 * `on_dereference_locking_ptr`
+* `externally_locked`
 
 [endsect]
 
 [section:poly  Polymorphic lockable]
 
 [endsect]
+
+[section:conc Concurrent components]
+
+Concurrent components may interact in different ways: they may access the same objects by, for example, executing functions of these objects; or they may communicate directly by executing functions of each other.
+
+Concurrent execution of objects requires a mechanism for synchronizing the access to shared objects, just as direct communication between objects may require synchronization. The basic mechanism for synchronization in Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes and condition variables are, however, only useful for very simple synchronization problems. The Synchro Library therefore introduce high-level abstractions for handling more complicated synchronization problems, including monitor for guaranteeing exclusive access to an object, and a so-called rendezvous mechanism for handling direct communication between objects. All the concurrency abstractions being introduced are defined by means of mutexes an conditions.
+
+[endsect]
+
 
 [endsect]

@@ -51,7 +51,7 @@ In addition to the expressions defined in [concept], the following expressions m
 
 [import ../../../boost/synchro/lockable_traits.hpp]
 [import ../../../boost/synchro/lockable_concepts.hpp]
-[import ../../../boost/synchro/make_lockable.hpp]
+[import ../../../boost/synchro/lockable_adapter.hpp]
 [import ../../../boost/synchro/monitor.hpp]
 [import ../../../boost/synchro/thread_synchronization_family.hpp]
 
@@ -82,13 +82,9 @@ In addition to the expressions defined in [concept], the following expressions m
 
 [include overview.qbk]
 
-[thread_synchronization_family]
-
 [include users_guide.qbk]
 
-
 [include reference.qbk]
-
 
 [/xinclude autodoc.xml]
 
