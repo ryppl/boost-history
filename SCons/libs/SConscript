@@ -22,9 +22,10 @@ for variant in env["variant"]:
             env["LINK_DYNAMIC"] = False
         for threading in env["threading"]:
             env.SetProperty(threading = threading)
+
+            target_dir = "#/bin.SCons/libs/" + variant + "/" + linking + "/threading-" + threading
+            VariantDir(src_dir = ".", variant_dir = target_dir, duplicate = False)
             for sconscript in sconscripts:
                 lib = str(sconscript.get_dir().up())
-                target_dir = "#/bin.SCons/libs/" + lib + "/" + variant + "/" + linking + "/threading-" + threading
-                VariantDir(src_dir = lib + "/src", variant_dir = target_dir, duplicate = False)
                 VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
-                SConscript(target_dir + "/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+                SConscript(target_dir + "/" + lib + "/src/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
