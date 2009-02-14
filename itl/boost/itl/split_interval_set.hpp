@@ -248,8 +248,7 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
         interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
 
         // handle special case for first
-        interval_type interSec;
-        cur_itv.intersect(interSec, x);
+        interval_type interSec = cur_itv & x;
 
         iterator snd_it = fst_it; snd_it++;
         if(snd_it == end_it) 
@@ -295,8 +294,7 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(const inter
     // this is a new Interval that is a gap in the current map
     add_(newGap);
 
-    interval_type interSec;
-    cur_itv.intersect(interSec, x_itv);
+    interval_type interSec = cur_itv & x_itv;
 
     if(nxt_it==end_it)
     {
@@ -350,8 +348,6 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_t
     interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
 
     // handle special case for first
-    interval_type interSec;
-    cur_itv.intersect(interSec, x);
 
     iterator snd_it = fst_it; snd_it++;
     if(snd_it == end_it) 
@@ -396,14 +392,10 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_rest(const int
         this->_set.erase(it);
     else
     {
-        interval_type interSec; cur_itv.intersect(interSec, x_itv);
         this->_set.erase(it);
         this->_set.insert(rightResid);
     }
 }
-
-
-
 
 
 //==============================================================================

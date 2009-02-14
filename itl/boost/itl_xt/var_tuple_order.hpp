@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #define __var_tuple_order_JOFA_040620_H__
 
 #include <functional>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl_xt/fixtupelconst.hpp>
 #include <boost/itl_xt/var_tuple.hpp>
 #include <boost/itl_xt/var_permutation.hpp>

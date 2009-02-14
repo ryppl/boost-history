@@ -41,9 +41,6 @@ Function-templates for discrete Datatypes like int, unsigned or
 
 #include <boost/date_time/gregorian/gregorian.hpp>
 
-//JODO Produce a better compietime error here. 
-//JODO (Write Macro to reduce codereplication. Generate line info.) not needed if compile-time error is nifty.
-//JODO Make it complete for all date_time classes. check portability.
 #ifdef ITL_NEUTRONS_PROVIDED
 #pragma message("error: No neutral element provided for type boost::gregorian::date")
 #pragma message(".. please #include <boost/itl/gregorian.hpp> PRIOR TO other itl/* classes")
@@ -90,18 +87,6 @@ namespace boost{namespace itl
 
     // ------------------------------------------------------------------------
 
-    //JODO testing of boost gregorian fails 
-    // boost::date_time::date_duration<duration_rep_traits> lacks op <<
-    //
-    //template<class CharType, class CharTraits, class duration_rep_traits>
-    //std::basic_ostream<CharType, CharTraits>& operator <<
-    //(std::basic_ostream<CharType, CharTraits> &stream, 
-    // boost::date_time::date_duration<duration_rep_traits> const& x)
-    //{
-    //    return stream << "[date_duration<duration_rep_traits>]";
-    //}
-
-    //boost::date_time::date_duration<duration_rep_traits>
 
 }} // namespace itl boost
 

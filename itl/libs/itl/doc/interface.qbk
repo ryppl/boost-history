@@ -75,12 +75,12 @@ class templates __itv_map__ and __spl_itv_map__
 that all have equal template parameters.
 
 [table Parameters of map class templates
-[[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]                      [type of intervals]                             [memory allocation]]
-[[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class, template<class>class> class`][`template <class, template<class>class> class`][`template <class>class`]]    
-[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]                 [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
-[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]                 [`Alloc = std::alloc`]]
-[[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                                              []                                              [`class`]]
-[[=std::map=]         [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                                              []                                              [`Alloc = std::alloc<_Key>`]]
+[[]                   [elements][mapped values][traits]                      [order of elements]           [aggregation propagation]  [intersection propagation]     [type of intervals]                             [memory allocation]]
+[[template parameter] [`class`]  [`class`]     [`class`]                     [`template <class>class`]     [`template <class>class`]  [`template <class>class`]      [`template <class, template<class>class> class`][`template <class>class`]]    
+[[__itv_bmaps__]      [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Interval = itl::interval`]                    [`Alloc = std::alloc`]]
+[[__itl_map__]        [`DomainT`][`CodomainT`] [`Traits = neutron_absorber`] [`Compare = std::less`]       [`Combine = inplace_plus`] [`Section = itl::inplace_et`]  [`Alloc = std::alloc`]]
+[[template parameter] [`class`]  [`class`]     []                            [`class`]                     []                         []                             []                                              [`class`]]
+[[=std::map=]         [`_Key`]   [`_Data`]     []                            [`_Compare = std::less<_Key>`][]                         []                             []                                              [`Alloc = std::alloc<_Key>`]]
 ]
 
 Using the following placeholders,

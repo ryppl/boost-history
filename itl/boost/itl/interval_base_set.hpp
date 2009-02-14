@@ -14,7 +14,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_set_algo.hpp>
 #include <boost/itl/set.hpp>
 #include <boost/itl/interval.hpp>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 
 #define const_FOR_IMPL(iter) for(typename ImplSetT::const_iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
 #define FOR_IMPL(iter) for(typename ImplSetT::iterator iter=_set.begin(); (iter)!=_set.end(); (iter)++)
@@ -502,11 +502,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
     typename ImplSetT::const_iterator end_it = _set.upper_bound(inter_val);
 
     for(typename ImplSetT::const_iterator it=fst_it; it != end_it; it++) 
-    {
-        interval_type isec; 
-        (*it).intersect(isec, inter_val);
-        section.add(isec);
-    }
+        section.add((*it) & inter_val);
 }
 
 
@@ -541,6 +537,9 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
         add_intersection(intersection, *it++);
 }
 
+//==============================================================================
+//= Symmetric difference
+//==============================================================================
 
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>

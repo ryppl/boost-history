@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #define __itl_enum_bitset_JOFA_021204_H__
 
 #include <bitset>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 namespace boost{namespace itl
 {
 

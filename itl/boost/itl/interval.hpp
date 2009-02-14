@@ -25,7 +25,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
 #include <boost/mpl/assert.hpp> 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/type_traits/unon.hpp>
 #include <boost/itl/type_traits/is_continuous.hpp>
@@ -477,7 +478,20 @@ left_over = x1 - x2; //on the right side.
 	//==========================================================================
 
 	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
-    void intersect(interval& isec, const interval& x2)const;
+ //   void intersect(interval& isec, const interval& x2)const
+	//{
+	//	isec = *this;
+	//	isec &= x2;
+	//}
+
+	interval& operator &= (const interval& sectant)
+	{
+		set_lwb(lwb_max(sectant));
+		set_upb(upb_min(sectant));
+		return *this;
+	}
+
+
 	
 	//==========================================================================
 	//= Representation
@@ -893,7 +907,6 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_max(co
 }
 
 
-// JODO THINK URG do borders reverse when lwb_max is used as upb etc. ?
 template <class DomainT, ITL_COMPARE Compare>
 typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_max(const interval& x2)const
 {
@@ -995,15 +1008,6 @@ inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_subtract(cons
     return *this; 
 }
 
-
-template <class DomainT, ITL_COMPARE Compare>
-void interval<DomainT,Compare>::intersect(interval<DomainT,Compare>& isec, const interval<DomainT,Compare>& x2)const
-{
-    isec.set_lwb(lwb_max(x2));
-    isec.set_upb(upb_min(x2));
-}
-
-
 template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::right_subtract(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
 {
@@ -1046,17 +1050,9 @@ const std::string interval<DomainT,Compare>::as_string()const
     return itvRep;
 }
 
-
-// NOTE ------- DISCRETE ONLY ------- DISCRETE ONLY ------- DISCRETE ONLY ------- 
-// these functions do only compile with discrete DomainT-Types that implement 
-// operators ++ and --
-// NOTE: they must be used in any function that is essential to all instances
-// of DomainT
-
 template <class DomainT, ITL_COMPARE Compare>
 DomainT interval<DomainT,Compare>::first()const
 {
-    //JODO BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value)); //complains incorrectly sometimes
     BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
     return is_left(closed_bounded) ? _lwb : succ(_lwb); 
 }
@@ -1153,15 +1149,7 @@ struct exclusive_less {
 // operators
 // ----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare>
-itl::interval<DomainT,Compare>& operator &= (      itl::interval<DomainT,Compare>& section, 
-                                             const itl::interval<DomainT,Compare>& sectant)
-{
-    section.intersect(section, sectant);
-    return section;
-}
-
-template <class DomainT, ITL_COMPARE Compare>
-itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
+inline itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
                                            const itl::interval<DomainT,Compare>& right)
 {
 	return itl::interval<DomainT,Compare>(left) &= right;

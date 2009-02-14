@@ -38,7 +38,7 @@ class itl::string_list
 
 #include <string>    
 #include <list>    
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl/itl_list.hpp>
 
 namespace boost{namespace itl

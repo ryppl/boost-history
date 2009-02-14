@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_string_map_JOFA_021215_H__
 #define __itl_string_map_JOFA_021215_H__
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl/map.hpp>
 #include <string>
 

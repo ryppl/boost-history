@@ -98,7 +98,6 @@ template
     >
     class IntervalMap
 >
-//JODO boost::enable_if
 bool is_disjoint
 (
           interval_base_map<SubType,DomainT,CodomainT,
@@ -146,7 +145,6 @@ template
     class IntervalMap,
     template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-//JODO boost::enable_if
 bool is_disjoint
 (
     const IntervalMap<DomainT,CodomainT,
@@ -191,7 +189,6 @@ template
     class IntervalMap,
     template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-//JODO boost::enable_if
 bool is_disjoint
 (
     const IntervalSet<DomainT,Compare,Interval,Alloc>& left,

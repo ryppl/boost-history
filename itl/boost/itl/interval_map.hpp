@@ -217,7 +217,6 @@ private:
     { 
         return !value.KEY_VALUE.empty() 
 			&& !(Traits::absorbs_neutrons && value.CONT_VALUE == codomain_combine::neutron()); 
-            //CL && !(Traits::absorbs_neutrons && value.CONT_VALUE == CodomainT()); 
     }
 
     bool join_left(iterator& it);
@@ -292,7 +291,6 @@ typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,
 
     interval_type interval    = left_it->KEY_VALUE;
     //It has to be a copy, because is location will be erased 
-    //JODO: Try optimizing inplace.
     CodomainT value = left_it->CONT_VALUE;
     interval.extend(right_it->KEY_VALUE);
 
@@ -369,7 +367,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
 
     join_left(insertion.ITERATOR);
 
-    return insertion.ITERATOR; //JODO return value currently unused
+    return insertion.ITERATOR;
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
@@ -420,7 +418,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
 
     join_left(insertion.ITERATOR);
 
-    return insertion.ITERATOR; //JODO return value currently unused
+    return insertion.ITERATOR;
 }
 
 template <typename DomainT, typename CodomainT, class Traits,
@@ -498,7 +496,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         interval_type fst_itv = (*fst_it).KEY_VALUE;
         CodomainT cur_val     = (*fst_it).CONT_VALUE;
 
-
         interval_type leadGap; x_itv.right_subtract(leadGap, fst_itv);
         // this is a new Interval that is a gap in the current map
         //The first collision interval may grow by joining neighbours after insertion
@@ -509,8 +506,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
         // handle special case for first
 
-        interval_type interSec;
-        fst_itv.intersect(interSec, x_itv);
+        interval_type interSec = fst_itv & x_itv;
 
         CodomainT cmb_val = cur_val;
         Combiner()(cmb_val, x_val);
@@ -604,9 +600,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     interval_type lead_gap;
     x_rest.right_subtract(lead_gap, cur_itv);
 
-    interval_type common;
-    cur_itv.intersect(common, x_rest);
-
+    interval_type common = cur_itv & x_rest;
     CodomainT cmb_val = cur_val;
     Combiner()(cmb_val, x_val);
 
@@ -664,8 +658,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     // handle special case for first
 
-    interval_type interSec;
-    fst_itv.intersect(interSec, x_itv);
+    interval_type interSec = fst_itv & x_itv;
 
     CodomainT cmb_val = fst_val;
     Combiner()(cmb_val, x_val);
@@ -757,8 +750,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         CodomainT cur_val = (*it).CONT_VALUE ;
         CodomainT cmb_val = cur_val ;
         Combiner()(cmb_val, x_val);
-        interval_type interSec; 
-        cur_itv.intersect(interSec, x_itv);
+        interval_type interSec = cur_itv & x_itv; 
 
         this->_map.erase(it);
         if(rightResid.empty())
@@ -810,9 +802,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         interval_type leftResid;  fst_itv.right_subtract(leftResid, x_itv);
 
         // handle special case for first
-
-        interval_type interSec;
-        fst_itv.intersect(interSec, x_itv);
 
         iterator snd_it = fst_it; snd_it++;
         if(snd_it == end_it) 
@@ -886,9 +875,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         join_left(it);
     }
 
-    interval_type common;
-    cur_itv.intersect(common, x_rest);
-
     interval_type end_gap; 
     x_rest.left_subtract(end_gap, cur_itv);
 
@@ -926,8 +912,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     // handle special case for first
 
-    interval_type interSec;
-    fst_itv.intersect(interSec, x_itv);
+    interval_type interSec = fst_itv & x_itv;
 
     iterator snd_it = fst_it; snd_it++;
     if(snd_it == end_it) 
@@ -939,7 +924,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         {
             this->_map.erase(fst_it);
             insert_(value_type(leftResid,  fst_val));
-            // erased: insert(value_type(interSec,  cmb_val));
             insert_(value_type(rightResid, fst_val));
         }
     }
@@ -950,7 +934,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         {
             this->_map.erase(fst_it);
             insert_(value_type(leftResid, fst_val));
-            // erased: insert(value_type(interSec,  cmb_val));
         }
 
         erase_rest(x_itv, x_val, snd_it, end_it);
@@ -990,13 +973,10 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     }
     else
     {
-        interval_type interSec; 
-        cur_itv.intersect(interSec, x_itv);
-
+        interval_type interSec = cur_itv & x_itv; 
         if(!interSec.empty() && cur_val == x_val)
         {
             this->_map.erase(it);
-            //erased: insert(value_type(interSec, cmb_val));
             insert_(value_type(rightResid, cur_val));
         }
     }

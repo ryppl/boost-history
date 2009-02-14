@@ -9,7 +9,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #define __itl_map_h_JOFA_070519__
 
 #include <string>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -240,7 +241,6 @@ public:
 	map& set(const element_type& key_value_pair)
 	{ (*this)[key_value_pair.KEY_VALUE] = key_value_pair.CONT_VALUE; return *this; }
 
-	//JODO
     /** erase the value pair \c pair(key,val) from the map.
         Erase only if, the exact value content \c val is stored at key \key. */
     size_type erase(const value_type& value);
@@ -570,7 +570,6 @@ inline bool operator != (const itl::map<DomainT,CodomainT,Traits,Compare,Combine
                          const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 { return !(lhs == rhs); }
 
-//JODO comment... 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool is_element_equal(const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
                              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
@@ -584,6 +583,8 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& lhs,
                                const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 {
+	//return Map::lexicographical_protonic_equal(lhs, rhs);
+
     //JODO: Efficient implementation.
     typedef std::map<DomainT,CodomainT,ITL_COMPARE_DOMAIN(Compare,DomainT),Alloc<DomainT> > base_type;
 
@@ -592,6 +593,7 @@ inline bool is_protonic_equal (const itl::map<DomainT,CodomainT,Traits,Compare,C
     lhs0.absorb_neutrons();
     rhs0.absorb_neutrons();
     return operator==((const base_type&)lhs0, (const base_type&)rhs0);
+
 }
 
 /** Strict weak less ordering which is given by the Compare order */
@@ -750,7 +752,6 @@ operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 		object.swap(section);
 		return object;
 	}
-	//CL{ Map::intersect(object, operand); return object; }
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>

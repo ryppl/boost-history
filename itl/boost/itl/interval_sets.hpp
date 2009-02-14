@@ -106,7 +106,6 @@ ObjectT& operator -=
         typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
         const_FORALL(typename operand_type, elem_, operand) 
             object.erase(*elem_); 
-            //CL?? object.subtract(*elem_); 
 
         return object; 
 }

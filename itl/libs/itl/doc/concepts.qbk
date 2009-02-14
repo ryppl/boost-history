@@ -425,7 +425,7 @@ but it can be made for an __penricher__ map:
 Sometimes this subtle distiction is needed. Then a __penricher__
 is the right choice. Also, If we want to give two `itl::Maps`
 a common set of keys in order to, say, iterate synchronously
-over both maps, we need __enrichers__. 
+over both maps, we need /enrichers/. 
 
 
 [endsect] [/ Map Traits]

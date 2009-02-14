@@ -199,6 +199,17 @@ public:
             this->_map.insert(*it); 
     }
 
+	//==========================================================================
+	//= Selection
+	//==========================================================================
+
+	//MEMO DESIGN DECISION: split_interval_map::operator[](interval): 
+	// If used for selection will deliver a set of associated
+	// values. It could only implemented for a single key value. But this 
+	// would mislead the unexperienced user to hash a split_interval_map into 
+	// singular intervals by inapt usage of op[]. So op[] will not be implemented
+	// codomain_type& operator[](const interval_type& interval_of_keys)
+
 private:
 	// The following _suffixed function templates funx_ are implementations
 	// correspoding unsuffixed function templates funx of the base class.
@@ -354,9 +365,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 
         // handle special case for first
 
-        interval_type interSec;
-        fst_itv.intersect(interSec, x_itv);
-
+        interval_type interSec = fst_itv & x_itv;
         CodomainT cmb_val = cur_val;
         Combiner()(cmb_val, x_val);
 
@@ -433,9 +442,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     x_rest.right_subtract(left_gap, cur_itv);
     fill_gap<Combiner>(value_type(left_gap, x_val));
 
-    interval_type common;
-    cur_itv.intersect(common, x_rest);
-
+    interval_type common = cur_itv & x_rest;
     CodomainT cmb_val = cur_val;
     Combiner()(cmb_val, x_val);
 
@@ -485,9 +492,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 
     // handle special case for first
 
-    interval_type interSec;
-    fst_itv.intersect(interSec, x_itv);
-
+    interval_type interSec = fst_itv & x_itv;
     CodomainT cmb_val = fst_val;
     Combiner()(cmb_val, x_val);
 
@@ -553,11 +558,9 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
         CodomainT cur_val = (*it).CONT_VALUE ;
         CodomainT cmb_val = cur_val ;
         Combiner()(cmb_val, x_val);
-        interval_type interSec; 
-        cur_itv.intersect(interSec, x_itv);
 
         this->_map.erase(it);
-        fill(value_type(interSec, cmb_val));
+        fill(value_type(cur_itv & x_itv, cmb_val));
         fill(value_type(rightResid, cur_val));
     }
 }
@@ -601,9 +604,6 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
         interval_type leftResid;  fst_itv.right_subtract(leftResid, x_itv);
 
         // handle special case for first
-
-        interval_type interSec;
-        fst_itv.intersect(interSec, x_itv);
 
         iterator snd_it = fst_it; snd_it++;
         if(snd_it == end_it) 
@@ -657,9 +657,6 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     x_rest.right_subtract(left_gap, cur_itv);
     fill(value_type(left_gap, x_val));
 
-    interval_type common;
-    cur_itv.intersect(common, x_rest);
-
     interval_type end_gap; 
     x_rest.left_subtract(end_gap, cur_itv);
     fill(value_type(end_gap, x_val));
@@ -696,8 +693,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 
     // handle special case for first
 
-    interval_type interSec;
-    fst_itv.intersect(interSec, x_itv);
+    interval_type interSec = fst_itv & x_itv;
 
     iterator snd_it = fst_it; snd_it++;
     if(snd_it == end_it) 
@@ -709,7 +705,6 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
         {
             this->_map.erase(fst_it);
             fill(value_type(leftResid,  fst_val));
-            // erased: fill(value_type(interSec,  cmb_val));
             fill(value_type(rightResid, fst_val));
         }
     }
@@ -720,7 +715,6 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
         {
             this->_map.erase(fst_it);
             fill(value_type(leftResid, fst_val));
-            // erased: fill(value_type(interSec,  cmb_val));
         }
 
         erase_rest(x_itv, x_val, snd_it, end_it);
@@ -760,13 +754,10 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     }
     else
     {
-        interval_type interSec; 
-        cur_itv.intersect(interSec, x_itv);
-
+        interval_type interSec = cur_itv & x_itv; 
         if(!interSec.empty() && cur_val == x_val)
         {
             this->_map.erase(it);
-            //erased: fill(value_type(interSec, cmb_val));
             fill(value_type(rightResid, cur_val));
         }
     }

@@ -9,7 +9,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #define __itl_interval_set_algo_JOFA_081005_H__
 
 #include <boost/itl/type_traits/is_map.hpp>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/element_comparer.hpp>

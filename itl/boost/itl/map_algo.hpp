@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_MAPALGO_H_JOFA_080225__
 #define __itl_MAPALGO_H_JOFA_080225__
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl/set_algo.hpp>
 
 namespace boost{namespace itl
@@ -63,31 +63,6 @@ namespace boost{namespace itl
             return true;
         }
 
-		/*CL
-        template<class MapType>
-        void intersection(MapType& y, const MapType& x1, const MapType& x2)
-        {
-            MapType tmp;
-            typename MapType::const_iterator i1 = x1.begin(), i2;
-
-            while(i1 != x1.end())
-            {
-                i2 = x2.find(i1->first);
-                if(i2 != x2.end())
-                {
-                    tmp += *i1; 
-                    if(is_set<typename MapType::codomain_type>::value)
-                        tmp *= *i2;
-                    else
-                        tmp += *i2;
-                }
-                i1++;
-            }
-            tmp.swap(y);
-        }
-		*/
-
-        // optimized version
         template<class MapType>
         void intersect(MapType& result, const MapType& x1, const MapType& x2)
         {

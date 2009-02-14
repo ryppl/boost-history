@@ -8,7 +8,7 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #ifndef __itl_interval_map_algo_JOFA_081026_H__
 #define __itl_interval_map_algo_JOFA_081026_H__
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 
 namespace boost{namespace itl

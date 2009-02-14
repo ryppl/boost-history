@@ -30,7 +30,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_set_algo_H_JOFA_990225__
 #define __itl_set_algo_H_JOFA_990225__
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl/predicates.hpp>
 #include <boost/itl/functors.hpp>
 

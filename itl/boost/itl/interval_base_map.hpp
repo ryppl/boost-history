@@ -11,7 +11,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define __interval_base_map_h_JOFA_990223__
 
 #include <limits>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/design_config.hpp>
 
 #ifdef USE_CONCEPTS
 #include <bits/concepts.h>
@@ -461,12 +462,16 @@ public:
         const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
     )const
     {
-        typedef IntervalSet<DomainT,Compare,Interval,Alloc> set_type;
+        typedef IntervalSet<DomainT,Compare,Interval,Alloc> sectant_type;
         if(sectant.empty()) return;
 
-        // THINK JODO optimize using the ordering: if intervalls are beyond borders we can terminate
-        typename set_type::const_iterator it = sectant.begin();
-        while(it != sectant.end())
+		typename sectant_type::const_iterator common_lwb;
+		typename sectant_type::const_iterator common_upb;
+		if(!Set::common_range(common_lwb, common_upb, sectant, *this))
+			return;
+
+        typename sectant_type::const_iterator it = common_lwb;
+        while(it != common_upb)
             add_intersection(section, *it++);
     }
 
@@ -670,7 +675,9 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
     return length;
 }
 
-
+//==============================================================================
+//= Intersection
+//==============================================================================
 
 template 
 <
@@ -743,8 +750,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 
 		for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
 		{
-			interval_type common_interval; 
-			(*it).KEY_VALUE.intersect(common_interval, sectant_interval); //JODO refa: reduce intersect variants
+			interval_type common_interval = ((*it).KEY_VALUE) & sectant_interval; 
 
 			if(!common_interval.empty())
 			{
@@ -776,19 +782,15 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 
     for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
     {
-        interval_type common_interval; 
-        (*it).KEY_VALUE.intersect(common_interval, sectant_interval);
-
+        interval_type common_interval = ((*it).KEY_VALUE) & sectant_interval; 
         if(!common_interval.empty())
             section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
     }
 }
 
-
-
-
-
-
+//==============================================================================
+//= Symmetric difference
+//==============================================================================
 
 template 
 <
@@ -807,7 +809,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 		clear();
 		return *that();
 	}
-	if(Traits::is_total && !Traits::absorbs_neutrons)//JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)
 	{
 		(*that()) += interval_value_pair;
 		FORALL(typename ImplMapT, it_, _map)
@@ -847,8 +849,6 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 				inverse_codomain_intersect()(common_value, co_value);
 				erase(common_interval);
 				add(value_type(common_interval, common_value));
-
-				//JODO flip<inverse_codomain_intersect>(value_type(common_interval, co_value));
 			}
 			else
 				subtract(value_type(common_interval, co_value));
@@ -866,7 +866,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 	//If span is not empty here, it is not in the set so it shall be added
 	add(value_type(span, x_value));
 
-	if(Traits::is_total && !Traits::absorbs_neutrons) //JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)
 		FORALL(typename ImplMapT, it_, _map)
 			it_->CONT_VALUE = neutron<codomain_type>::value();
 
@@ -902,7 +902,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 		clear();
 		return *that();
 	}
-	if(Traits::is_total && !Traits::absorbs_neutrons)//JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)
 	{
 		(*that()) += operand;
 		FORALL(typename ImplMapT, it_, _map)
@@ -932,7 +932,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     while(it != operand.end())
         add(*it++);
 
-	if(Traits::is_total && !Traits::absorbs_neutrons) //JODO
+	if(Traits::is_total && !Traits::absorbs_neutrons)
 		FORALL(typename ImplMapT, it_, _map)
 			it_->CONT_VALUE = neutron<codomain_type>::value();
 

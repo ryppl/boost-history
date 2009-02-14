@@ -52,7 +52,7 @@ for(interval_set<seconds>::iterator telecast = myTvProgam.begin();
    TV.switch_on(*telecast);
 ``
 
-Working with __itv_sets__ and __itv_maps__ can be 
+Working with __itv_bsets__ and __itv_bmaps__ can be 
 beneficial whenever the elements of 
 sets appear in contiguous chunks: __itvs__. This is obviously the 
 case in many problem domains, particularly in fields that deal with 
@@ -60,13 +60,13 @@ computations related to date and time.
 
 [h4 Addabitlity and Subtractability]
 
-Unlike `std::sets` and `maps`, __itv_sets__ and __itv_maps__ implement
-concept `Addable` and `Subtractable`. So __itv_sets__ define an 
+Unlike `std::sets` and `maps`, __itv_bsets__ and __itv_bmaps__ implement
+concept `Addable` and `Subtractable`. So __itv_bsets__ define an 
 `operator +=` that is naturally implemented as ['*set union*] and an
 `operator -=` that is consequently implemented as ['*set difference*].
-In the *Itl* __itv_maps__ are addable and subtractable as well. 
+In the *Itl* __itv_bmaps__ are addable and subtractable as well. 
 It turned out to be a very fruitful concept to propagate the
-addition or subtraction to the __itv_map_s__ associated values
+addition or subtraction to the __itv_bmap_s__ associated values
 in cases where the insertion of an interval value pair into an
 __itv_map__ resulted in a collision of the inserted interval
 value pair with interval value pairs, that are already in the 

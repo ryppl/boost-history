@@ -28,7 +28,7 @@ DEALINGS IN THE SOFTWARE.
 #ifndef __itl_interval_morphism_H_JOFA_080315__
 #define __itl_interval_morphism_H_JOFA_080315__
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 namespace boost{namespace itl
 {
     namespace Interval
@@ -41,7 +41,7 @@ namespace boost{namespace itl
                 const typename IntervalContainerT::key_type& itv   = IntervalContainerT::key_value(itv_);
                 typename IntervalContainerT::codomain_type   coval = IntervalContainerT::codomain_value(itv_);
 
-                for(typename IntervalContainerT::domain_type element = itv.first(); element <= itv.last(); element++)
+                for(typename IntervalContainerT::domain_type element = itv.first(); element <= itv.last(); ++element)
                 {
                     result.insert(ElementContainerT::make_element(element, coval));
                 }

@@ -9,7 +9,8 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 #define __itl_subset_comparer_JOFA_090202_H__
 
 #include <boost/itl/type_traits/is_map.hpp>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/interval.hpp>
 

@@ -31,7 +31,7 @@ DEALINGS IN THE SOFTWARE.
 #include <iostream>
 #include <fstream>
 #include <boost/itl/string_list.hpp>
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 
 namespace boost{namespace itl
 {

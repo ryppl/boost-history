@@ -17,6 +17,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_interval_separator.hpp>
 #include <boost/itl/type_traits/absorbs_neutrons.hpp>
 #include <boost/itl/type_traits/is_total.hpp>
+#include <boost/itl/detail/notate.hpp>
+#include <boost/itl/detail/design_config.hpp>
 #include <boost/itl/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 

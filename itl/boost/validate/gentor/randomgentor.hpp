@@ -10,7 +10,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #pragma once
 
 
-#include <boost/itl/notate.hpp>
+#include <boost/itl/detail/notate.hpp>
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
@@ -20,7 +20,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
-#include <boost/validate/gentor/gentorprofile.h>
+#include <boost/validate/gentor/gentorprofile.hpp>
 
 
 namespace boost{namespace itl
