@@ -12,6 +12,7 @@
 #define BOOST_SYNCHRO_LOCKABLE_ADAPTER__HPP
 
 #include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/timeout_exception.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/thread/thread_time.hpp>
 
@@ -55,6 +56,13 @@ public:
     template<typename TimeDuration>
     bool try_lock_for(TimeDuration const & relative_time)
     {return the_lock().try_lock_for(relative_time);}
+    
+    void lock_until(system_time const & abs_time)
+    {the_lock().lock_until(abs_time);}
+    template<typename TimeDuration>
+    void lock_for(TimeDuration const & relative_time)
+    {return the_lock().lock_for(relative_time);}
+    
 protected:
     TimedLock& the_lock() {return *static_cast<TimedLock*>(&this->lock_);}
 };
@@ -78,10 +86,13 @@ public:
     {the_lock().unlock_shared();}
     bool try_lock_shared_until(system_time const& t)
     {return the_lock().try_lock_shared_until(t);}
+    void lock_shared_until(system_time const& t)
+    {the_lock().lock_shared_until(t);}
 
 protected:
     SharableLock& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
 };
+
 //]
 
 //[upgrade_lockable_adapter
@@ -97,11 +108,9 @@ public:
     void lock_upgrade()
     {the_lock().lock_upgrade();}
 
-   bool try_lock_upgrade()
-   {  return the_lock().try_lock_upgrade(); }
+    bool try_lock_upgrade()
+    {  return the_lock().try_lock_upgrade(); }
 
-    
-    
     void unlock_upgrade()
     {the_lock().unlock_upgrade();}
 
@@ -115,6 +124,8 @@ public:
     {the_lock().unlock_upgrade_and_lock_shared();}
     bool try_lock_upgrade_until(system_time const&t)
     {return the_lock().try_lock_upgrade_until(t);}
+    void lock_upgrade_until(system_time const&t)
+    {the_lock().lock_upgrade_until(t);}
 
 protected:
     UpgradableLock& the_lock() {return *static_cast<UpgradableLock*>(&this->lock_);}
@@ -124,7 +135,7 @@ protected:
 
 //[lockable_adapter
 template <
-      typename Lockable
+        typename Lockable
       , typename category=typename category_tag<Lockable>::type
       , typename timed_interface=typename timed_interface_tag<Lockable>::type
 > struct lockable_adapter;

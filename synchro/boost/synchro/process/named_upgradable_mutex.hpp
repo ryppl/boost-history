@@ -14,6 +14,7 @@
 #include <boost/interprocess/sync/named_upgradable_mutex.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/process/lockable_scope_traits.hpp>
+#include <boost/synchro/timeout_exception.hpp>
 
 namespace boost { namespace synchro {
 
@@ -48,7 +49,13 @@ public:
     template<typename TimeDuration>
     bool try_lock_for(TimeDuration const & relative_time)
     {return timed_lock(relative_time);}
-        
+
+    void lock_until(system_time const & abs_time)
+    {if(!timed_lock(abs_time)) throw timeout_exception();}
+    template<typename TimeDuration>
+    void lock_for(TimeDuration const & relative_time)
+    {if(!timed_lock(relative_time)) throw timeout_exception();}
+    
     void lock_shared()
     {lock_sharable();}
 
@@ -57,6 +64,8 @@ public:
 
     bool try_lock_shared_until(const boost::posix_time::ptime &abs_time)
     {return timed_lock_sharable(abs_time);}
+    void lock_shared_until(const boost::posix_time::ptime &abs_time)
+    {if(!timed_lock_sharable(abs_time)) throw timeout_exception();}
 
     void unlock_shared()
     {unlock_sharable();}
@@ -67,8 +76,10 @@ public:
     bool try_lock_upgrade()
     {return try_lock_upgradable();}
 
-    bool tru_lock_upgrade_until(const boost::posix_time::ptime &abs_time)
+    bool try_lock_upgrade_until(const boost::posix_time::ptime &abs_time)
     {return timed_lock_upgradable(abs_time);}
+    void lock_upgrade_until(const boost::posix_time::ptime &abs_time)
+    {if(!timed_lock_upgradable(abs_time)) throw timeout_exception();}
 
     void unlock_upgrade()
     {unlock_upgradable();}

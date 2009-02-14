@@ -72,7 +72,7 @@ public:
     operator bool_type() const;
     bool operator!() const;
     bool owns_lock() const;
-    lockable_type* mutex() const;
+    bool is_locking(lockable_type* l) const; /*< strict locker specific function >*/
 
     BOOST_ADRESS_OF_DELETE(strict_locker)
     BOOST_HEAP_ALLOCATION_DELETE()

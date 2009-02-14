@@ -14,6 +14,7 @@
 #include <boost/interprocess/sync/named_mutex.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/process/lockable_scope_traits.hpp>
+#include <boost/synchro/timeout_exception.hpp>
 
 namespace boost { namespace synchro {
 class named_mutex
@@ -50,7 +51,12 @@ public:
     template<typename TimeDuration>
     bool try_lock_for(TimeDuration const & relative_time)
     {return timed_lock(relative_time);}
-    
+
+    void lock_until(system_time const & abs_time)
+    {if(!timed_lock(abs_time)) throw timeout_exception();}
+    template<typename TimeDuration>
+    void lock_for(TimeDuration const & relative_time)
+    {if(!timed_lock(relative_time)) throw timeout_exception();}    
 };    
 #if 0
 typedef boost::interprocess::named_mutex named_mutex;

@@ -17,6 +17,7 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
+#include <boost/synchro/timeout_exception.hpp>
 
 
 namespace boost { namespace synchro {
@@ -41,11 +42,7 @@ public:
     typedef boost::condition_variable  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
 
-    thread_mutex() : lock_traits_base<multi_threaded_tag,exclusive_lock_tag,
-                        non_recursive_tag, hasnt_timed_interface_tag, 
-                        process_lifetime_tag,anonymous_tag,
-                        mutex>()
-    {}
+    thread_mutex() {}
 };
 
 template <>
@@ -118,16 +115,24 @@ class thread_timed_mutex
     thread_timed_mutex &operator=(const thread_mutex &);
 
 public:
-
+    
     typedef boost::condition_variable_any  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
 
+    thread_timed_mutex () {}
+        
     bool try_lock_until(system_time const & abs_time)
     {return timed_lock(abs_time);}
     template<typename TimeDuration>
     bool try_lock_for(TimeDuration const & relative_time)
     {return timed_lock(relative_time);}
 
+    void lock_until(system_time const & abs_time)
+    {if(!timed_lock(abs_time)) throw timeout_exception();}
+    template<typename TimeDuration>
+    void lock_for(TimeDuration const & relative_time)
+    {if(!timed_lock(relative_time)) throw timeout_exception();}
+    
 };    
 
 #if 0
