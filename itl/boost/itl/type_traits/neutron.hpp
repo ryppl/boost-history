@@ -18,7 +18,7 @@ namespace boost{ namespace itl
     template <class Type> struct neutron
     { 
         static Type value(); 
-        inline Type operator()()const { return value(); } //JODO everything static??
+        Type operator()()const { return value(); }
     };
 
 #ifdef ITL_NEEDS_GREGORIAN_DATE_NEUTRON_VALUE

@@ -99,7 +99,6 @@ namespace boost{namespace itl
             tmp.swap(result);
         }
 
-        // optimized version
         template<class MapType, class SetType>
         void intersect(MapType& result, const MapType& x1, const SetType& x2)
         {
@@ -124,7 +123,7 @@ namespace boost{namespace itl
         }
 
         template<class MapType, class SetType>
-        void intersect(MapType& result, const SetType& x2) //JODO TEST
+        void intersect(MapType& result, const SetType& x2)
         {
             // result = result * x2;
             MapType tmp;
@@ -160,14 +159,13 @@ namespace boost{namespace itl
 						MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
 						result.subtract(*res_);
 						result.add(MapType::value_type(res_->KEY_VALUE, common_value));
-						//JODO result.template flip<MapType::inverse_codomain_intersect>(*insertion.ITERATOR);
 					}
                     else
                         result.subtract(*insertion.ITERATOR);
 				}
 			}
 
-			if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)//JODO
+			if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)
 				FORALL(typename MapType, it_, result)
 					it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
         }

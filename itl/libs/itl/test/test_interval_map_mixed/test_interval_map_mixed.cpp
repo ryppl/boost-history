@@ -331,10 +331,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_subtract_4_bicremental
     std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
     std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
 
-    //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
-    //Never does a subtract operation introduce or preserve interval borders within
-    //the range of the subtracted elements. This is almost trivial.
-    //LAW: y -= x == y -= x.join()
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
     BOOST_CHECK_EQUAL( split_map.iterative_size(), 7 );
@@ -417,10 +413,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_4_bicremental_ty
     std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
     std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
 
-    //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
-    //Never does a subtract operation introduce or preserve interval borders within
-    //the range of the subtracted elements. This is almost trivial.
-    //LAW: y -= x == y -= x.join()
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
     BOOST_CHECK_EQUAL( split_map.iterative_size(), 7 );
@@ -505,10 +497,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase2_4_bicremental_t
     std::pair<interval<T>,U> I8_9D_1(I8_9D, u1);
     std::pair<interval<T>,U> I8_9I_1(I8_9I, u1);
 
-    //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
-    //Never does a subtract operation introduce or preserve interval borders within
-    //the range of the subtracted elements. This is almost trivial.
-    //LAW: y -= x == y -= x.join()
     SplitIntervalMapT split_map;
     split_map.add(I0_4D_1).add(I2_6D_1).add(I5_7D_1).add(I7_8D_1).add(I8_9I_1);
     BOOST_CHECK_EQUAL( split_map.iterative_size(), 7 );
@@ -838,7 +826,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect_4_bicr
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB &= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
     split_AB &= mapping_pair<T,U>(v1,u1);
     split_AB += make_pair(interval<T>::open(v1,v7), u2);
     split_ab2.clear();
@@ -936,7 +923,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
     BOOST_CHECK_EQUAL( split_AB, split_ab );
 
     split_AB = split_A;
-    //(split_AB &= mapping_pair<T,U>(v1,u1)) += make_pair(interval<T>::open(v1,v7), u1); //JODO
     split_AB &= interval<T>(v1);
     split_AB += make_pair(interval<T>::open(v1,v7), u1);
     split_ab2.clear();

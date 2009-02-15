@@ -28,7 +28,7 @@ void interval_map_fundamentals_4_ordered_types()
     // we are able to test operations only for the most basic values
     // neutron (0, empty, T() ...) and unon.
 
-    //T v0 = neutron<T>(); //JODO check operator() variant
+    //T v0 = neutron<T>();
     //T v1 = unon<T>();
     T v0 = neutron<T>::value();
     T v1 = unon<T>::value();
@@ -256,8 +256,6 @@ void interval_map_add_sub_4_bicremental_types()
     BOOST_CHECK_EQUAL( enclosure(map_A), I0_9I );
     BOOST_CHECK_EQUAL( map_A.lower(), I0_9I.lower() );
     BOOST_CHECK_EQUAL( map_A.upper(), I0_9I.upper() );
-    //JODO: LAW !a.empty() => enclosure(a).lower() == a.lower()
-    //JODO: LAW !a.empty() => enclosure(a).upper() == a.upper()
 
     IntervalMapT map_A1 = map_A, map_B1 = map_B,
                  map_A2 = map_A, map_B2 = map_B;
@@ -591,7 +589,6 @@ void interval_map_base_intersect_4_bicremental_types()
     //map_AB ->      [1]
     //                1
 
-    //JODO intersection with key-element not yet working
     map_A.clear();
     map_A.add(I0_3D_1).add(I6_9D_1);
     map_AB = map_A;

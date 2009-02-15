@@ -96,7 +96,6 @@ namespace boost{namespace itl
         ObjectT& operator += (ObjectT& result, const ObjectT& x2)
         { return Set::add(result, x2); }
 
-        //JODO CL??
         template<class ObjectT, class CoObjectT>
         ObjectT& subtract(ObjectT& result, const CoObjectT& x2)
         {

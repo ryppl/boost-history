@@ -24,8 +24,6 @@ void interval_set_fundamentals_4_ordered_types()
     // we are able to test operations only for the most basic values
     // neutron (0, empty, T() ...) and unon.
 
-    //T v0 = neutron<T>(); //JODO check operator() variant
-    //T v1 = unon<T>();
     T v0 = neutron<T>::value();
     T v1 = unon<T>::value();
     interval<T> I0_0I(v0);
@@ -217,8 +215,6 @@ void interval_set_add_sub_4_bicremental_types()
     BOOST_CHECK_EQUAL( enclosure(set_A), I0_9I );
     BOOST_CHECK_EQUAL( set_A.lower(), I0_9I.lower() );
     BOOST_CHECK_EQUAL( set_A.upper(), I0_9I.upper() );
-    //JODO: LAW !a.empty() => enclosure(a).lower() == a.lower()
-    //JODO: LAW !a.empty() => enclosure(a).upper() == a.upper()
 
     IntervalSet<T> set_A1 = set_A, set_B1 = set_B,
                    set_A2 = set_A, set_B2 = set_B;

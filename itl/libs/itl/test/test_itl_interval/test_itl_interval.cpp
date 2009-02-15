@@ -30,8 +30,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_ordered_types, T, ordered
     BOOST_CHECK_EQUAL(interval<T>().empty(), true);
     BOOST_CHECK_EQUAL(interval<T>().cardinality(), itl::neutron<typename itl::size<T>::type>::value());
     BOOST_CHECK_EQUAL(interval<T>().size(), itl::neutron<typename itl::size<T>::type>::value());
-    //JODO STATIC_ASSERTS length fails with std::string
-    //BOOST_CHECK_EQUAL(interval<T>().length(), itl::neutron<itl::typename difference<T>::type>::value());
     BOOST_CHECK_EQUAL(interval<T>().lower(), itl::unon<T>::value());
     BOOST_CHECK_EQUAL(interval<T>().upper(), itl::neutron<T>::value());
 

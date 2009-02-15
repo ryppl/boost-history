@@ -111,21 +111,6 @@ void mapTestShell()
 
                 }
                 break;
-            //JODO REV
-            //case '_': 
-            //    {
-            //        cout << "input: lwb upb >> ";
-            //        cin >> lwb >> upb;
-            //        typename MapTV::interval_type 
-            //            itv = typename MapTV::interval_type(lwb,upb);
-            //        split_interval_set<typename MapTV::domain_type> sgl(itv);
-            //        m1.erase(itv);
-
-            //        cout << "_" << itv.as_string().c_str()<<" "<< " =" << endl;
-            //        cout << "{" << m1.as_string() << "}" << endl;
-
-            //    }
-            //    break;
             case 'j':
                 {
                     m1.join();
@@ -158,7 +143,7 @@ int main()
 {
     cout << ">> Interval Template Library: Test splititvmap_shell.cpp <<\n";
     cout << "-----------------------------------------------------------\n";
-    mapTestShell< interval_map<int, int> >(); //JODO REV
+    mapTestShell< interval_map<int, int> >();
 
     return 0;
 }

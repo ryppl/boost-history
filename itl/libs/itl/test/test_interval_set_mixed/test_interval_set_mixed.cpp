@@ -321,10 +321,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_subtract_4_bicremental
     interval<T> I8_9D = interval<T>::rightopen(v8,v9);
     interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
-    //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
-    //Never does a subtract operation introduce or preserve interval borders within
-    //the range of the subtracted elements. This is almost trivial.
-    //LAW: y -= x == y -= x.join()
     split_interval_set<T> split_set;
     split_set.add(I0_4D).add(I2_6D).add(I5_7D).add(I7_8D).add(I8_9I);
     BOOST_CHECK_EQUAL( split_set.iterative_size(), 7 );
@@ -432,10 +428,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_erase_4_bicremental_ty
     interval<T> I8_9D = interval<T>::rightopen(v8,v9);
     interval<T> I8_9I =    interval<T>::closed(v8,v9);
 
-    //JODO INSIGHT: With respect to subtraction all interval_sets are working equivalently:
-    //Never does a subtract operation introduce or preserve interval borders within
-    //the range of the subtracted elements. This is almost trivial.
-    //LAW: y -= x == y -= x.join()
     split_interval_set<T> split_set;
     split_set.add(I0_4D).add(I2_6D).add(I5_7D).add(I7_8D).add(I8_9I);
     BOOST_CHECK_EQUAL( split_set.iterative_size(), 7 );

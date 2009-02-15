@@ -14,6 +14,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
+#include <boost/itl/interval_morphism.hpp>
+#include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 #include <boost/validate/gentor/rangegentor.hpp>
@@ -45,8 +47,14 @@ void test_LawValidater()
 	//	<interval_map<int, nat> >  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef InplaceAssociativity
-		<itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
+	//typedef InplaceAssociativity
+	//	<itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef InducedRelation
+		<itl::interval_map<int, int, partial_enricher>, 
+		typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
+		Interval::Atomize, protonic_equal> TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
 
 	//-----------------------------------------------------------------------------
