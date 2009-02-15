@@ -28,44 +28,49 @@ namespace {
                 // let each orthogonal zone handle the event (can be handled by more than 1)
                 process_event(evt);
             }
-
-            template <int Index>
-            struct Alarm : public state_machine<Alarm<Index> >
+            // g++ refuses to compile if the Alarm submachines are template
+            struct AlarmImpl : public state_machine<AlarmImpl >
             {
-                struct NoBeep : public state<> 
-                {
-                    template <class Event>
-                    void on_entry(Event const& ) {std::cout << "Entering NoBeep:"<< Index << std::endl;}
-                };
-                struct Beeps : public state<> 
-                {
-                    template <class Event>
-                    void on_entry(Event const& ) {std::cout << "Beeping alarm:"<< Index << std::endl;}
-                };
+		        AlarmImpl(int index):Index(index){}
+                struct NoBeep : public state<> {};
+                struct Beeps : public state<> {};
                 // friend definition needed.
-                friend class state_machine<Alarm<Index> >;
-                typedef Alarm<Index> A; // makes transition table cleaner
+                friend class state_machine<AlarmImpl>;
+                typedef AlarmImpl A; // makes transition table cleaner
                 // the initial state of the AlarmBeeps SM. Must be defined
                 typedef NoBeep initial_state;
                 // guard
                 bool check_beep(const P& evt)
                 {
+		            bool beep = ((evt.index & Index)!=0);
+		            if (beep)
+		    	        std::cout << "Beeping alarm:"<< Index  << std::endl;
                     // check if our bit is set in the event
-                    return ((evt.index & Index)!=0);
+                    return beep;
                 }
-                // Transition table for AlarmBeeps
+                // Transition table for Alarm
                 struct transition_table : mpl::vector<
                     //    Start     Event         Next      Action				Guard
                     //  +---------+-------------+---------+------------------------+----------------------+
                  g_row  < NoBeep  , P           , Beeps                            ,&A::check_beep        >
                     //  +---------+-------------+---------+------------------------+----------------------+
                 > {};
+            private:
+		        int Index;
             };
+	        struct Alarm1 : public AlarmImpl
+	        {
+		        Alarm1():AlarmImpl(1){}
+	        }; 
+	        struct Alarm2 : public AlarmImpl
+	        {
+		        Alarm2():AlarmImpl(2){}
+	        }; 
 
             // friend definition needed.
             friend class state_machine<AlarmBeeps>;
             // the initial state of the AlarmBeeps SM. Must be defined
-            typedef mpl::vector<Alarm<1>,Alarm<2> > initial_state;
+            typedef mpl::vector<Alarm1,Alarm2 > initial_state;
 
             // Transition table for AlarmBeeps. Can be empty as no transition defined
             struct transition_table : mpl::vector<> {};

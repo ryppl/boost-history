@@ -6,11 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090212;23243800">
+	<META NAME="CHANGED" CONTENT="20090215;22424300">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="xtoff">
@@ -1916,21 +1917,21 @@ methods</FONT></FONT></FONT></CODE></H2>
 also provides a few helper methods which you might need but will
 probably not:</FONT></FONT></FONT></CODE></P>
 <UL>
-	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">const</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">std</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">::</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">vector</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">&lt;</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">int</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">&gt;&amp;
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">current_state</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">()
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">const</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>std</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>::</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>vector</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&lt;</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>int</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;&amp;
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>current_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>()
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
 	the ids of currently active states</FONT></FONT></FONT></CODE></P>
-	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">const</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">BaseState</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">*
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">get_state_by_id</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">(</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">int</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">id</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">)
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">const</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>BaseState</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>*
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>get_state_by_id</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>(</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>int</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>id</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>)
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
 	returns the state with the given id as a pointer to a (user- or
 	default-) base state.</FONT></FONT></FONT></CODE></P>
-	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">bool</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">is_contained</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">()
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">const</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
+	<LI><P><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>bool</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>is_contained</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>()
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>const</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>:
 	returns true if the state machine is used as a composite in another
 	state machine, false otherwise.</FONT></FONT></FONT></CODE></P>
 </UL>
@@ -1959,28 +1960,29 @@ user-defined. To do this, you need two simple changes:</P>
 	which it is the second argument, the first one being the event
 	ending the interrupt), for example, <FONT FACE="Courier New, monospace">my_base_state</FONT>
 	being your new base state for <U>all states</U> in a given state
-	machine: <BR><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>
-	</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>
-	: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>
-	</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>&lt;my_base_state&gt;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2><BR></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Now,
-	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>my_base_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>
-	is your new base state. If it has a virtual function, your states
+	machine: <BR><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>Empty</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=3>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=3>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3>&lt;my_base_state&gt;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2><BR></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Now,
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>my_base_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>is
+	your new base state. If it has a virtual function, your states
 	become polymorphic. Msm also provides a default polymorphic base
 	type for your convenience, </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>msm::polymorphic_</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>state</FONT></FONT></FONT></CODE></P>
 	<LI><P><CODE><FONT COLOR="#030003"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Add
 	the user-defined base state in the state machine definition, as a
-	third template argument (after History), for example:<BR></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">struct</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">player
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">:
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">public</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">
-	</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">state_machine</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">&lt;</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">player</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">,</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">NoHistory</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">,</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">my_base_state</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">&gt;</SPAN></FONT></FONT></FONT></CODE></P>
+	third template argument (after History), for example:<BR></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>struct</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>player
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>:
+	</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><FONT SIZE=3>public</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+	</FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>state_machine</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&lt;</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>player</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>,</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>NoHistory</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>,</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><FONT SIZE=3>my_base_state</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>&gt;</FONT></FONT></FONT></CODE></P>
 </UL>
 <P><BR><BR>
 </P>
-<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">You
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>You
 now have polymorphic states. Please have a look at <A HREF="SM-0arg.cpp">an
 example using polymorphic states</A> and the concept presented in the
-next paragraph, visitors.</SPAN></FONT></FONT></FONT></CODE></P>
+next paragraph, visitors.</FONT></FONT></FONT></CODE></P>
 <H2 CLASS="western"><A NAME="Visiting active states|outline"></A><FONT SIZE=3>Visiting
 active states</FONT></H2>
 <P><FONT SIZE=3>In some cases, having only the id or a
@@ -2002,114 +2004,113 @@ to provide an empty default <FONT FACE="Courier New, monospace">accept</FONT>
 in your base state in order to not force all your states to implement
 <FONT FACE="Courier New, monospace">accept</FONT>. For example your
 base state could be:</FONT></P>
-<P STYLE="margin-bottom: 0cm">  <FONT SIZE=3><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace"><SPAN LANG="">struct</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><SPAN LANG="">
-</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT FACE="Courier New, monospace"><SPAN LANG="">my_visitable_state</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-signature of the accept function</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">args</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&lt;</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&gt;
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept_sig</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-we also want polymorphic states</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">virtual</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-~</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">my_visitable_state</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">()
-{}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-default implementation for states who do not need to be visited</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">()
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">const</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-{}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">};</SPAN></FONT></FONT></FONT></P>
-<P><BR><BR>
-</P>
-<P><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">This makes your
-states polymorphic and visitable. In this case, </SPAN></FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">accept</SPAN></FONT></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">
-is made const and takes no argument. It could also be:</SPAN></FONT></FONT></P>
-<P><FONT COLOR="#000000">  </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">struct</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">SomeVisitor</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-{&hellip;};</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">struct</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">my_visitable_state</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-signature of the accept function</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">args</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&lt;</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">,</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">SomeVisitor</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&amp;&gt;
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept_sig</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-we also want polymorphic states</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">virtual</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-~</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">my_visitable_state</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">()
-{}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-default implementation for states who do not need to be visited</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">(</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">SomeVisitor</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&amp;)
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">const</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-{}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">};</SPAN></FONT></FONT></FONT></P>
-<P><BR><BR>
-</P>
-<P><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">And now, </SPAN></FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">accept</SPAN></FONT></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">
-will take one argument. It could also be non-const. </SPAN></FONT></FONT>
-</P>
-<P><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">By default,
-</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">accept</SPAN></FONT></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">
-takes up to 2 arguments. To get more, simply #define
-</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">BOOST_MSM_VISITOR_ARG_SIZE</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=3><SPAN LANG="">
-to another value before including state_machine.hpp. For example:</SPAN></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">#define</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">BOOST_MSM_VISITOR_ARG_SIZE</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-3</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">#include</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#a31515"><SPAN LANG="">&lt;boost/msm/state_machine.hpp&gt;</SPAN></FONT></FONT></FONT></P>
-<P><FONT COLOR="#030003"><FONT SIZE=3><SPAN LANG="">...</SPAN></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">struct</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">my_visitable_state</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-signature of the accept function</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">args</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&lt;</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">,</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">SomeVisitor</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&amp;,</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">,</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">const</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">char</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">*&gt;
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept_sig</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><BR>
-</P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-we also want polymorphic states</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">virtual</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-~</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">my_visitable_state</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">()
-{}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-default implementation for states who do not need to be visited. Not
-const</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">      </FONT><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">void</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">accept</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">(</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">SomeVisitor</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&amp;,</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">,</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">const</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">char</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">*)
-</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG=""> {}</SPAN></FONT></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">  <FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">};</SPAN></FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff"><FONT FACE="Courier New, monospace">struct</FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003"><FONT FACE="Courier New, monospace">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
-<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000"><SPAN LANG="">You
-now only need implement </SPAN></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><SPAN LANG="">accept</SPAN></FONT></FONT><FONT COLOR="#000000"><SPAN LANG="">
-in states needing it. Note that </SPAN></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><SPAN LANG="">accept</SPAN></FONT></FONT><FONT COLOR="#000000"><SPAN LANG="">
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">()
+</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000"> {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>This makes your states
+polymorphic and visitable. In this case, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>is made const and takes no
+argument. It could also be:</FONT></FONT></P>
+<P><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">
+{&hellip;};</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;)
+</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000"> {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P><BR><BR>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And now, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>will take one argument. It
+could also be non-const. </FONT></FONT>
+</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>By default, </FONT></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>accept</FONT></FONT></FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#000000"><FONT SIZE=3>takes up to 2 arguments. To
+get more, simply #define </FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2>BOOST_MSM_VISITOR_ARG_SIZE</FONT></FONT><FONT COLOR="#030003">
+</FONT><FONT COLOR="#030003"><FONT SIZE=3>to another value before
+including state_machine.hpp. For example:</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">#define</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">BOOST_MSM_VISITOR_ARG_SIZE</FONT><FONT COLOR="#000000">
+3</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">#include</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#a31515">&lt;boost/msm/state_machine.hpp&gt;</FONT></FONT></FONT></P>
+<P><FONT COLOR="#030003"><FONT SIZE=3>...</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">my_visitable_state</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>{</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+signature of the accept function</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">args</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;,</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">char</FONT><FONT COLOR="#000000">*&gt;
+</FONT><FONT COLOR="#030003">accept_sig</FONT><FONT COLOR="#000000">;</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+we also want polymorphic states</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">virtual</FONT><FONT COLOR="#000000">
+~</FONT><FONT COLOR="#030003">my_visitable_state</FONT><FONT COLOR="#000000">()
+{}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>//
+default implementation for states who do not need to be visited. Not
+const</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#0000ff">void</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">accept</FONT><FONT COLOR="#000000">(</FONT><FONT COLOR="#030003">SomeVisitor</FONT><FONT COLOR="#000000">&amp;,</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">,</FONT><FONT COLOR="#0000ff">const</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">char</FONT><FONT COLOR="#000000">*) {}</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>};</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000">You
+now only need implement </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
+in states needing it. Note that </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
 will be called on ALL active states but not automatically on
 substates of a composite. You can however choose to have it called by
-calling </SPAN></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><SPAN LANG="">visit_current_states</SPAN></FONT></FONT><FONT COLOR="#000000"><SPAN LANG="">
-in the </SPAN></FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><SPAN LANG="">accept</SPAN></FONT></FONT><FONT COLOR="#000000"><SPAN LANG="">
-of the composite.</SPAN></FONT></FONT></FONT></P>
+calling </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">visit_current_states</FONT></FONT><FONT COLOR="#000000">
+in the </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
+of the composite.</FONT></FONT></FONT></P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
-<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000"><SPAN LANG="">Please
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Please
 have a look at the example using accept <A HREF="SM-0arg.cpp">with 0
 argument</A>, <A HREF="SM-1arg.cpp">with 1</A>, and <A HREF="SM-3arg.cpp">with
-3</A>.</SPAN></FONT></FONT></FONT></P>
+3</A>.</FONT></FONT></FONT></P>
 <H1 CLASS="western"><A NAME="8.Performance|outline"></A>Performance</H1>
 <P>Tests were made on different PCs running either Windows XP and
 Vista and compiled with VC9 SP1 or Ubuntu and compiled with g++
@@ -2262,54 +2263,79 @@ company producing watches.</P>
 <P><BR><BR>
 </P>
 <P>Please keep in mind that these companies produce hundreds of
-models, which makes this quite a realistic scenario.</P>
+slightly different products, which makes this quite a realistic
+scenario.</P>
 <P>What would be the result? New states like &ldquo;alarm3 beeps&rdquo;
 or &ldquo;three beep&rdquo; + &ldquo;both beep&rdquo; (backward
 compatibility). Maintenance would quickly become a nightmare. The
 reason? A breach of encapsulation caused by &ldquo;alarm beeps&rdquo;
 letting other state machines use its internals.</P>
-<P>Luckily, UML provides the dangerous explicit entry weapons but
-also some much more powerful ones, which Msm also supports, for
-example orthogonal zones and instances of a same state machine.</P>
-<P>Let us redesign Alarm-Beeps by defining orthogonal zones, one for
-each sub alarm instance. This way it can easily be extended to
-support new alarms. This leads to the following diagram:</P>
+<P>Luckily, UML provides not only the dangerous explicit entry
+weapons but also some much more powerful ones, which Msm also
+supports, for example orthogonal zones and instances of a same state
+machine.</P>
+<P>Let us redesign Alarm-Beeps by:</P>
+<UL>
+	<LI><P>encapsulating the alarm functionality in its own state
+	(machine).</P>
+	<LI><P>defining orthogonal zones, one for each sub alarm instance.
+	This way it can easily be extended to support new alarms. This leads
+	to the following diagram:</P>
+</UL>
 <P><IMG SRC="index_html_m743a147d.jpg" NAME="graphics8" ALIGN=LEFT WIDTH=693 HEIGHT=648 BORDER=0><BR CLEAR=LEFT><BR><BR>
 </P>
 <P><BR><BR>
 </P>
-<P>As you see, it is quite simple. You only need to define an
-instance of Alarm in each zone. The Alarm submachine is defined
-simply as:</P>
+<P>As you see, it is quite simple. You only need define an instance
+of Alarm in each zone. To add a new alarm is as simple as adding a
+new instance. The Alarm submachine is simply defined as:</P>
 <P><IMG SRC="index_html_m312ff8f2.jpg" NAME="graphics9" ALIGN=LEFT WIDTH=584 HEIGHT=382 BORDER=0><BR CLEAR=LEFT><BR><BR>
 </P>
 <P><BR><BR>
 </P>
 <P>All what still has to be done is to forward the event in the entry
 method of alarmBeeps to give each alarm instance a chance to handle
-the event.</P>
+or reject the event in its <FONT FACE="Courier New, monospace">check_beep</FONT>
+guard condition.</P>
 <P>To make implementation easier, each alarm is identified by a bit
-and check_beep is simply calling operator&amp; to decide if it wants
-to accept the event.</P>
+and <FONT FACE="Courier New, monospace">check_beep </FONT>is simply
+calling operator&amp; to decide if it wants to accept the event.</P>
 <P>How are instances defined with Msm? Msm knows only types, not
-instances, so you need to define Alarms as: <FONT COLOR="#0000ff"><FONT SIZE=3>template</FONT></FONT><FONT COLOR="#000000">
+instances, so you need to define Alarms as: 
+</P>
+<P><FONT COLOR="#0000ff"><FONT SIZE=3>template</FONT></FONT><FONT COLOR="#000000">
 </FONT><FONT COLOR="#000000"><FONT SIZE=3>&lt;</FONT></FONT><FONT COLOR="#0000ff"><FONT SIZE=3>int</FONT></FONT><FONT COLOR="#000000">
 </FONT><FONT COLOR="#000000"><FONT SIZE=3>Index&gt; </FONT></FONT><FONT COLOR="#0000ff"><FONT SIZE=3>struct</FONT></FONT><FONT COLOR="#000000">
 </FONT><FONT COLOR="#000000"><FONT SIZE=3>Alarm...</FONT></FONT></P>
-<P><FONT COLOR="#000000"><FONT SIZE=3>And identify them in alarmBeeps
-as Alarm&lt;1&gt;, Alarm&lt;2&gt;, etc.</FONT></FONT></P>
-<P><BR><BR>
-</P>
+<P><FONT COLOR="#000000"><FONT SIZE=3>And identify each instance in
+alarmBeeps as Alarm&lt;1&gt;, Alarm&lt;2&gt;, etc. in the
+<FONT FACE="Courier New, monospace">initial_state</FONT> typedef  of
+alarmBeeps, which can therefore do without a single row in its
+transition table:</FONT></FONT></P>
+<P><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>typedef
+mpl::vector&lt;Alarm&lt;1&gt;,Alarm&lt;2&gt; &gt; initial_state;</FONT></FONT></FONT></P>
+<P>This way, if Harel ever needs to support a third alarm, he simply
+needs a third entry in this typedef.</P>
 <P><FONT COLOR="#000000"><FONT SIZE=3>Please have a look at the
 example <A HREF="HarelWithoutEntry.cpp">not using any explicit entry</A>.</FONT></FONT></P>
+<P>As g++ refuses to accept template state machines, you might need a
+small workaround: define alarms as a non-template type, then derive
+each instance from this base type, like:</P>
+<P><FONT FACE="Courier New, monospace">struct AlarmImpl : public
+state_machine&lt;AlarmImpl &gt;...</FONT></P>
+<P><FONT FACE="Courier New, monospace">struct Alarm1 : public
+AlarmImpl...</FONT></P>
+<P><FONT FACE="Courier New, monospace">struct Alarm2 : public
+AlarmImpl...</FONT></P>
+<P>An <A HREF="HarelWithoutEntryNoTemplateSM.cpp">example</A> is also
+provided.</P>
 <P><BR><BR>
 </P>
 <P>Which of both methods should you use? It is a matter of taste and
 you will hear different opinions from different designers. If you
 need something fast and with a short life cycle, then you could
 consider the method with explicit entries. If you are more interested
-in reusable design, maybe is the method using orthogonal zones for
-you.</P>
+in reusable design, then the method using instances is for you.</P>
 <H1 CLASS="western" STYLE="page-break-before: always"><A NAME="12.Annex A Debugging|outline"></A><A NAME="10.Annex A Debugging|outline"></A>
 Annex A Debugging</H1>
 <P>Normally, one does not need to know the ids generated for all the
