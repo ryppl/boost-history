@@ -17,6 +17,8 @@
 
 namespace boost { namespace synchro {
 
+    struct force_lock_t
+    {};
     struct defer_lock_t
     {};
     struct try_to_lock_t
@@ -27,6 +29,8 @@ namespace boost { namespace synchro {
     {};
 
 
+
+    const force_lock_t force_lock={};
     const defer_lock_t defer_lock={};
     const try_to_lock_t try_to_lock={};
     const adopt_lock_t adopt_lock={};
@@ -34,6 +38,9 @@ namespace boost { namespace synchro {
 
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class unique_locker;
+
+    template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
+    class try_unique_locker;
 
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class shared_locker;
@@ -66,6 +73,28 @@ namespace boost { namespace synchro {
     }
 #endif
 
+#ifdef BOOST_HAS_RVALUE_REFS
+    template<typename Mutex, typename ScopeTag>
+    void swap(try_unique_locker<Mutex, ScopeTag>&& lhs, try_unique_locker<Mutex, ScopeTag>&& rhs)
+    {
+        lhs.swap(rhs);
+    }
+#else
+    template<typename Mutex, typename ScopeTag>
+    void swap(try_unique_locker<Mutex, ScopeTag>& lhs, try_unique_locker<Mutex, ScopeTag>& rhs)
+    {
+        lhs.swap(rhs);
+    }
+#endif
+
+#ifdef BOOST_HAS_RVALUE_REFS
+    template<typename Mutex, typename ScopeTag>
+    inline try_unique_locker<Mutex, ScopeTag>&& move(try_unique_locker<Mutex, ScopeTag>&& ul)
+    {
+        return ul;
+    }
+#endif
+    
     #ifdef BOOST_HAS_RVALUE_REFS
     template<typename Mutex, typename ScopeTag>
     void swap(shared_locker<Mutex, ScopeTag>&& lhs,shared_locker<Mutex, ScopeTag>&& rhs)

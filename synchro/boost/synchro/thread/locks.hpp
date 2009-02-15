@@ -77,6 +77,17 @@ namespace boost { namespace synchro {
         {
             lock_until(target_time);
         }
+        template<typename TimeDuration>
+        unique_locker(TimeDuration const& target_time, Mutex& m_)
+            : base_type(m_, defer_lock)
+        {
+            lock_for(target_time);
+        }
+        unique_locker(system_time const& target_time, Mutex& m_)
+            : base_type(m_, defer_lock)
+        {
+            lock_until(target_time);
+        }
 #ifdef BOOST_HAS_RVALUE_REFS
         unique_locker(unique_locker&& other): base_type(other)
         {}
@@ -182,29 +193,135 @@ namespace boost { namespace synchro {
         friend class shared_locker<Mutex,scope_tag_type>;
         friend class upgrade_locker<Mutex,scope_tag_type>;
     };
-#if 0
+    
+    template<typename Mutex>
+    class try_unique_locker<Mutex,multi_threaded_tag>:  public unique_locker<Mutex,multi_threaded_tag> {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    private:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef unique_locker<Mutex,multi_threaded_tag> base_type;
+        //try_unique_locker(try_unique_locker&);
+        explicit try_unique_locker(try_unique_locker<Mutex, scope_tag_type>&);
+        //try_unique_locker& operator=(try_unique_locker&);
+        try_unique_locker& operator=(try_unique_locker<Mutex, scope_tag_type>& other);
+    public:
+        try_unique_locker(): base_type()
+        {}
+
+        explicit try_unique_locker(Mutex& m_): base_type(m_, boost::defer_lock)
+        { this->try_lock(); }
+        try_unique_locker(Mutex& m_,force_lock_t): base_type(m_)
+        {}
+        try_unique_locker(Mutex& m_,adopt_lock_t): base_type(m_, boost::adopt_lock)
+        {}
+        try_unique_locker(Mutex& m_,defer_lock_t): base_type(m_, boost::defer_lock)
+        {}
+        try_unique_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
+        {}
+        template<typename TimeDuration>
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
+        {}
+        try_unique_locker(Mutex& m_,system_time const& target_time): base_type(m_, target_time)
+        {}
+        template<typename TimeDuration>
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time, throw_lock_t)
+            : base_type(m_, defer_lock)
+        {
+            this->lock_for(target_time);
+        }
+        try_unique_locker(Mutex& m_,system_time const& target_time, throw_lock_t)
+            : base_type(m_, defer_lock)
+        {
+            this->lock_until(target_time);
+        }
+        template<typename TimeDuration>
+        try_unique_locker(TimeDuration const& target_time, Mutex& m_)
+            : base_type(m_, defer_lock)
+        {
+            this->lock_for(target_time);
+        }
+        try_unique_locker(system_time const& target_time, Mutex& m_)
+            : base_type(m_, defer_lock)
+        {
+            this->lock_until(target_time);
+        }
 #ifdef BOOST_HAS_RVALUE_REFS
-    template<typename Mutex, typename ScopeTag>
-    void swap(unique_locker<Mutex, ScopeTag>&& lhs, unique_locker<Mutex, ScopeTag>&& rhs)
-    {
-        lhs.swap(rhs);
-    }
+        try_unique_locker(try_unique_locker&& other): base_type(other)
+        {}
+        explicit try_unique_locker(upgrade_locker<Mutex,scope_tag_type>&& other) : base_type(other)
+        {}
+
+        try_unique_locker<Mutex, scope_tag_type>&& move()
+        {
+            return static_cast<try_unique_locker<Mutex, scope_tag_type>&&>(*this);
+        }
+
+
+        try_unique_locker& operator=(try_unique_locker<Mutex, scope_tag_type>&& other)
+        {
+            try_unique_locker temp(other);
+            swap(temp);
+            return *this;
+        }
+
+        try_unique_locker& operator=(upgrade_locker<Mutex>&& other)
+        {
+            try_unique_locker temp(other);
+            swap(temp);
+            return *this;
+        }
+        void swap(try_unique_locker&& other)
+        {
+            this->base_type.swap(other);
+        }
 #else
-    template<typename Mutex, typename ScopeTag>
-    void swap(unique_locker<Mutex, ScopeTag>& lhs, unique_locker<Mutex, ScopeTag>& rhs)
-    {
-        lhs.swap(rhs);
-    }
+        try_unique_locker(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(detail::thread_move_t<base_type>(other.t))
+        {}
+        try_unique_locker(detail::thread_move_t<upgrade_locker<Mutex,scope_tag_type> > other)
+            : base_type(detail::thread_move_t<upgrade_locker<Mutex,scope_tag_type> >(other.t))
+        {}
+
+        operator detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> >()
+        {
+            return move();
+        }
+
+        detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > move()
+        {
+            return detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> >(*this);
+        }
+
+        try_unique_locker& operator=(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other)
+        {
+            try_unique_locker temp(other);
+            swap(temp);
+            return *this;
+        }
+
+        try_unique_locker& operator=(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other)
+        {
+            try_unique_locker temp(other);
+            swap(temp);
+            return *this;
+        }
+        void swap(try_unique_locker& other)
+        {
+            this->base_type.swap(other);
+        }
+        void swap(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other)
+        {
+            this->base_type.swap(detail::thread_move_t<base_type>(other.t));
+        }
 #endif
 
-#ifdef BOOST_HAS_RVALUE_REFS
-    template<typename Mutex, typename ScopeTag>
-    inline unique_locker<Mutex, ScopeTag>&& move(unique_locker<Mutex, ScopeTag>&& ul)
-    {
-        return ul;
-    }
-#endif
-#endif
+        ~try_unique_locker() {}
+
+        friend class shared_locker<Mutex,scope_tag_type>;
+        friend class upgrade_locker<Mutex,scope_tag_type>;
+    };
+    
     template<typename Mutex>
     class shared_locker<Mutex,multi_threaded_tag>:  public shared_lock_type<Mutex>::type {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
@@ -239,12 +356,26 @@ namespace boost { namespace synchro {
             lock_until(target_time);
         }
         template<typename TimeDuration>
-        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t)
+        shared_locker(Mutex& m_,TimeDuration const& target_time,throw_lock_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_for(target_time);
         }
-
+        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t)
+            : base_type(m_, boost::defer_lock)
+        {
+            lock_until(target_time);
+        }
+        template<typename TimeDuration>
+        shared_locker(TimeDuration const& target_time, Mutex& m_)
+        {
+            lock_for(target_time);
+        }
+        shared_locker(system_time const& target_time, Mutex& m_)
+            : base_type(m_, boost::defer_lock)
+        {
+            lock_until(target_time);
+        }
 
         shared_locker(detail::thread_move_t<shared_locker<Mutex, scope_tag_type> > other)
             : base_type(detail::thread_move_t<base_type>(other.t))

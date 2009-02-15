@@ -36,14 +36,14 @@ class interprocess_named_upgradable_mutex
 public:
     typedef boost::interprocess::interprocess_condition  condition_type;
     typedef boost::interprocess::interprocess_condition  condition_any_type;
-#if 1
+
     interprocess_named_upgradable_mutex(interprocess::create_only_t create_only, const char *name)
            : interprocess::named_upgradable_mutex(create_only, name) {};
        interprocess_named_upgradable_mutex(interprocess::open_or_create_t open_or_create, const char *name)
           : interprocess::named_upgradable_mutex(open_or_create, name) {};
       interprocess_named_upgradable_mutex(interprocess::open_only_t open_only, const char *name)
           : interprocess::named_upgradable_mutex(open_only, name) {};
-#endif
+
     bool try_lock_until(system_time const & abs_time)
     {return timed_lock(abs_time);}
     template<typename TimeDuration>
@@ -90,10 +90,12 @@ public:
     void unlock_and_lock_shared()
     {unlock_and_lock_sharable();}
 
+    void unlock_upgrade_and_lock_shared()
+    {
+        unlock_upgradable_and_lock_sharable();
 #if 0
-    void unlock_upgrade_and_lock_shared();
-    {unlock_upgradable_and_lock_sharable();}
 #endif
+    }
     void unlock_upgrade_and_lock()
     {unlock_upgrade_and_lock();}
 

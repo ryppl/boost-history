@@ -39,7 +39,7 @@ struct LockableConcept {
         l.unlock();
         l.try_lock();
     }
-    Lockable l;
+    Lockable& l;
 };
 //]
 /**
@@ -56,7 +56,7 @@ struct TimedLockableConcept {
         l.try_lock_until(t);
 //        l.try_lock_for(1);
     }
-    Lockable l;
+    Lockable& l;
     system_time t;
 };
 //]
@@ -77,7 +77,7 @@ struct ShareLockableConcept {
         l.try_lock_shared();
         l.unlock_shared();
     }
-    Lockable l;
+    Lockable& l;
     system_time t;
 };
 //]
@@ -103,7 +103,7 @@ struct UpgradeLockableConcept {
         l.unlock_and_lock_shared();
         l.unlock_upgrade_and_lock_shared();
     }
-    Lockable l;
+    Lockable& l;
     system_time t;
 };
 //]
