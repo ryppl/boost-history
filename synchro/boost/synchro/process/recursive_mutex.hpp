@@ -45,13 +45,13 @@ public:
     {return this->timed_lock(abs_time);}
     template<typename TimeDuration>
     bool try_lock_for(TimeDuration const & relative_time)
-    {return timed_lock(relative_time);}
+    {return timed_lock(boost::get_system_time()+relative_time);}
 
     void lock_until(system_time const & abs_time)
     {if(!timed_lock(abs_time)) throw timeout_exception();}
     template<typename TimeDuration>
     void lock_for(TimeDuration const & relative_time)
-    {if(!timed_lock(relative_time)) throw timeout_exception();}
+    {if(!timed_lock(boost::get_system_time()+relative_time)) throw timeout_exception();}
     
     //bool try_lock_shared_until(system_time const& abs_time)
     //{return timed_lock_shared(abs_time);}

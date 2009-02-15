@@ -40,17 +40,13 @@ namespace boost {  namespace synchro {
 
 template <typename Locker>
 struct StrictLockerConcept {
-    typedef typename lockable_type<Locker>::type lockable_type;
+    BOOST_CONCEPT_ASSERT((BasicLockerConcept<Locker>));
     BOOST_STATIC_ASSERT((is_strict_locker<Locker>::value));
+    typedef typename lockable_type<Locker>::type lockable_type;
 
-    void f(Locker& l ) {
-        BOOST_ASSERT((l.is_locking(lock)));
-    }
 
     BOOST_CONCEPT_USAGE(StrictLockerConcept) {
         {
-//            Locker l(lock);
-//            BOOST_ASSERT((l));
         }
     }
     lockable_type lock;
@@ -58,12 +54,9 @@ struct StrictLockerConcept {
 #if 0
 //[strict_locker_synopsis
 template <typename Lockable>
-class strict_locker
-    : private boost::noncopyable
-{
+class strict_locker {
 public:
     typedef Lockable lockable_type;
-    typedef typename lock_traits<lockable_type>::lock_error bad_lock;
     typedef unspecified bool_type;
 
     explicit strict_locker(lockable_type& obj);
@@ -74,23 +67,17 @@ public:
     bool owns_lock() const;
     bool is_locking(lockable_type* l) const; /*< strict locker specific function >*/
 
-    BOOST_ADRESS_OF_DELETE(strict_locker)
-    BOOST_HEAP_ALLOCATION_DELETE()
+    BOOST_ADRESS_OF_DELETE(strict_locker)  /*< disable aliasing >*/
+    BOOST_HEAP_ALLOCATION_DELETE() /*< disable heap allocation >*/
     BOOST_DEFAULT_CONSTRUCTOR_DELETE(strict_locker) /*< disable default construction >*/
     BOOST_COPY_CONSTRUCTOR_DELETE(strict_locker) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(strict_locker) /*< disable copy asignement >*/
-
-private:
-    strict_locker();
 };
 //]
 #endif
 //[strict_locker
 template <typename Lockable>
 class strict_locker
-#if 0
-    : private boost::noncopyable /*< Is not copyable >*/
-#endif
 {
 
       BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
@@ -107,28 +94,17 @@ public:
     const lockable_type* mutex() const { return &obj_; }
     bool is_locking(lockable_type* l) const { return l==mutex(); } /*< strict lockers specific function >*/
 
-    /*< no possibility to unlock >*/
-
-#if 0
-private:                                            \
-  strict_locker* operator&();                                   \
-public:
-#else
 
     BOOST_ADRESS_OF_DELETE(strict_locker) /*< disable aliasing >*/
     BOOST_HEAP_ALLOCATEION_DELETE(strict_locker) /*< disable heap allocation >*/
     BOOST_DEFAULT_CONSTRUCTOR_DELETE(strict_locker) /*< disable default construction >*/
     BOOST_COPY_CONSTRUCTOR_DELETE(strict_locker) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(strict_locker) /*< disable copy asignement >*/
-#endif
+
+    /*< no possibility to unlock >*/
 
 private:
     lockable_type& obj_;
-#if 0
-    strict_locker(); /*< disable default constructor >*/
-#endif
-
-
 };
 //]
 template <typename Lockable>
@@ -142,9 +118,6 @@ struct is_strict_locker<strict_locker<Lockable> > : mpl::true_ {};
 //[nested_strict_locker
 template <typename Locker >
 class nested_strict_locker
-#if 0
-    : private boost::noncopyable
-#endif
     {
       BOOST_CONCEPT_ASSERT((MovableLockerConcept<Locker>));
 public:
@@ -155,12 +128,12 @@ public:
         : locker_(locker) /*< Store reference to locker >*/
         , tmp_locker_(locker.move()) /*< Move ownership to temporaty locker >*/
     {
-#ifndef BOOST_SYNCHRO_STRCIT_LOCKER_DONT_CHECK_OWNERSHIP  /*< Define BOOST_SYNCHRO_EXTERNALLY_LOCKED_DONT_CHECK_OWNERSHIP if you don't want to check locker ownership >*/
+        #ifndef BOOST_SYNCHRO_STRCIT_LOCKER_DONT_CHECK_OWNERSHIP  /*< Define BOOST_SYNCHRO_EXTERNALLY_LOCKED_DONT_CHECK_OWNERSHIP if you don't want to check locker ownership >*/
         if (tmp_locker_.mutex()==0) {
             locker_=tmp_locker_.move(); /*< Rollback for coherency purposes >*/
             throw lock_error();
         }
-#endif
+        #endif
         if (!tmp_locker_) tmp_locker_.lock(); /*< ensures it is locked >*/
     }
     ~nested_strict_locker() {
@@ -173,23 +146,15 @@ public:
     const lockable_type* mutex() const { return tmp_locker_.mutex(); }
     bool is_locking(lockable_type* l) const { return l==mutex(); }
 
-#if 1
-private:                                            \
-  nested_strict_locker* operator&();                                   \
-public:
-#else
     BOOST_ADRESS_OF_DELETE(nested_strict_locker)
     BOOST_HEAP_ALLOCATEION_DELETE(nested_strict_locker)
-    BOOST_DEFAULT_CONSTRUCTOR_DELETE(strict_locker) /*< disable default construction >*/
-    BOOST_COPY_CONSTRUCTOR_DELETE(strict_locker) /*< disable copy construction >*/
-    BOOST_COPY_ASSIGNEMENT_DELETE(strict_locker) /*< disable copy asignement >*/
-#endif
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(nested_strict_locker) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(nested_strict_locker) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(nested_strict_locker) /*< disable copy asignement >*/
+
 private:
     Locker& locker_;
     Locker tmp_locker_;
-#if 0
-    nested_strict_locker();
-#endif
 };
 //]
 

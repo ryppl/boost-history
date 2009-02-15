@@ -18,16 +18,24 @@ namespace boost { namespace synchro { namespace poly {
 
 template <typename Lockable>
 class exclusive_lock_adapter
-    : public virtual exclusive_lock
+    : public exclusive_lock
 {
-    exclusive_lock_adapter(): lock_() {}
-    virtual ~exclusive_lock_adapter() {}
+    typedef Lockable lockable_type;
+    typedef typename scope_tag<Lockable>::type scope;
+    typedef typename category_tag<Lockable>::type category;
+    typedef typename reentrancy_tag<Lockable>::type reentrancy;
+    typedef typename timed_interface_tag<Lockable>::type timed_interface;
+    typedef typename lifetime_tag<Lockable>::type lifetime;
+    typedef typename naming_tag<Lockable>::type naming;
 
-    virtual void lock()
+    exclusive_lock_adapter(): lock_() {}
+    ~exclusive_lock_adapter() {}
+
+    void lock()
     {lock_.lock();}
-    virtual void unlock()
+    void unlock()
     {lock_.unlock();}
-    virtual bool try_lock()
+    bool try_lock()
     { return lock_.try_lock();}
 protected:
     Lockable lock_;
@@ -36,15 +44,20 @@ protected:
 template <typename TimeLockable>
 class timed_lock_adapter
         : public exclusive_lock_adapter<TimeLockable>
-        , public virtual timed_lock
+        , public timed_lock
 {
 public:
-    virtual ~timed_lock_adapter()    {}
+    ~timed_lock_adapter()    {}
     bool try_lock_until(boost::system_time  const&  abs_time)
     {return the_lock().try_lock_until(abs_time);}
     template<typename DurationType>
     bool try_lock_for(DurationType const& rel_time)
     {return try_lock_for(rel_time);}
+    bool lock_until(boost::system_time  const&  abs_time)
+    {return the_lock().lock_until(abs_time);}
+    template<typename DurationType>
+    bool lock_for(DurationType const& rel_time)
+    {return lock_for(rel_time);}
 private:
     TimeLockable& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
 };
@@ -55,17 +68,30 @@ private:
 template <typename SharableLock>
 class sharable_lock_adapter
         : public timed_lock_adapter<SharableLock>
-        , public virtual sharable_lock
+        , public sharable_lock
 {
 public:
-    virtual ~sharable_lock_adapter()
+    ~sharable_lock_adapter()
     {}
-    virtual void lock_shared()
+    void lock_shared()
     {the_lock().lock_shared();}
-    virtual bool try_lock_shared()
+    bool try_lock_shared()
     {return the_lock().try_lock_shared();}
-    virtual void unlock_shared()
+    void unlock_shared()
     {the_lock().unlock_shared();}
+
+    bool try_lock_shared_until(system_time const& t)
+    {return the_lock().try_lock_shared_until(t);}
+    template<typename TimeDuration>   
+    bool try_lock_shared_for(TimeDuration const& t)
+    {return the_lock().try_lock_shared_for(t);}
+    
+    template<typename TimeDuration>   
+    void lock_shared_for(TimeDuration const& t)
+    {the_lock().lock_shared_for(t);}
+    void lock_shared_until(system_time const& t)
+    {the_lock().lock_shared_until(t);}
+    
 private:
     SharableLock& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
 };
@@ -75,24 +101,35 @@ private:
 template <typename UpgradableLock>
 class upgradable_lock_adapter
     : public sharable_lock_adapter<UpgradableLock>
-    , public virtual upgradable_lock
+    , public upgradable_lock
 {
 public:
-    virtual ~upgradable_lock_adapter() {}
-    virtual void lock_upgrade()
+    ~upgradable_lock_adapter() {}
+    void lock_upgrade()
     {the_lock().lock_upgrade();}
-
-    virtual void unlock_upgrade()
+    void unlock_upgrade()
     {the_lock().unlock_upgrade();}
 
-    virtual void unlock_upgrade_and_lock()
+    void unlock_upgrade_and_lock()
     {the_lock().unlock_upgrade_and_lock();}
-    virtual void unlock_and_lock_upgrade()
+    void unlock_and_lock_upgrade()
     {the_lock().unlock_and_lock_upgrade();}
-    virtual void unlock_and_lock_shared()
+    void unlock_and_lock_shared()
     {the_lock().unlock_and_lock_shared();}
-    virtual void unlock_upgrade_and_lock_shared()
+    void unlock_upgrade_and_lock_shared()
     {the_lock().unlock_upgrade_and_lock_shared();}
+
+    bool try_lock_upgrade_until(system_time const&t)   
+    {return the_lock().try_lock_upgrade_until(t);}
+    template<typename TimeDuration>   
+    bool try_lock_upgrade_for(TimeDuration const&t)   
+    {return the_lock().try_lock_upgrade_for(t);}
+    void lock_upgrade_until(system_time const&t)
+    {the_lock().lock_upgrade_until(t);}
+    template<typename TimeDuration>   
+    void lock_upgrade_for(TimeDuration const&t)
+    {the_lock().lock_upgrade_for(t);}
+
 private:
     UpgradableLock& the_lock() {return *static_cast<UpgradableLock*>(&this->lock_);}
 };

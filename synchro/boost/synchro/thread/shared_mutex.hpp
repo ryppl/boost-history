@@ -55,8 +55,14 @@ public:
     
     bool try_lock_shared_until(system_time const& abs_time)
     {return timed_lock_shared(abs_time);}
+    template<typename TimeDuration>
+    bool try_lock_shared_for(TimeDuration const& rel_time)
+    {return timed_lock_shared(rel_time);}
 
     void lock_shared_until(system_time const& abs_time)
+    {if(!timed_lock_shared(abs_time)) throw timeout_exception();}
+    template<typename TimeDuration>
+    void lock_shared_for(TimeDuration const& abs_time)
     {if(!timed_lock_shared(abs_time)) throw timeout_exception();}
     
 };    

@@ -12,7 +12,7 @@
 #define BOOST_SYNCHRO_REVERSE_LOCKER__HPP
 
 #include <boost/mpl/bool.hpp>
-#include <boost/noncopyable.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/locker_concepts.hpp>
@@ -37,6 +37,9 @@ class reverse_locker
 {
     reverse_locker(Lockable& mtx):  mtx_(mtx) {mtx_.unlock();}
     ~reverse_locker() {mtx_.lock();}
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(reverse_locker) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(reverse_locker) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(reverse_locker) /*< disable copy asignement >*/
 
 protected:
     Lockable& mtx_;

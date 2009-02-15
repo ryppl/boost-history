@@ -11,12 +11,14 @@
 #ifndef BOOST_SYNCHRO_ON_DEREFERENCE_LOCKING_PTR__HPP
 #define BOOST_SYNCHRO_ON_DEREFERENCE_LOCKING_PTR__HPP
 
-#include <boost/noncopyable.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost {  namespace synchro {
 
+template<typename T, typename Lockable=T>
+class on_dereference_locking_ptr;
 template<typename T, typename Lockable>
-class on_dereference_locking_ptr : private boost::noncopyable
+class on_dereference_locking_ptr
 {
 public:
   class pointer
@@ -51,6 +53,9 @@ public:
   {
     return pointer(target_, mutex_);
   }
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(on_dereference_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(on_dereference_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(on_dereference_locking_ptr) /*< disable copy asignement >*/
 private:
   T* target_;
   Lockable* mutex_;
@@ -92,6 +97,9 @@ public:
   {
     return pointer(target);
   }
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(on_dereference_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(on_dereference_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(on_dereference_locking_ptr) /*< disable copy asignement >*/
 private:
     Lockable *target;
 };

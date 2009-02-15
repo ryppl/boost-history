@@ -12,10 +12,10 @@
 #define BOOST_SYNCHRO_NESTED_REVERSE_LOCKER__HPP
 
 #include <boost/mpl/bool.hpp>
-#include <boost/noncopyable.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/locker_concepts.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -31,8 +31,7 @@ namespace boost { namespace synchro {
  */
 
 template <typename Locker>
-class nested_reverse_locker : boost::noncopyable
-{
+class nested_reverse_locker {
 //    BOOST_CONCEPT_ASSERT((MovableLockConcept<Locker>));
     typedef typename lock_error_type<typename lockable_type<Locker>::type >::type lock_error;
 
@@ -60,11 +59,14 @@ public:
         locker_=tmp_locker_.move(); /*< Move ownership to nesting locker >*/
     }
 
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(nested_reverse_locker) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(nested_reverse_locker) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(nested_reverse_locker) /*< disable copy asignement >*/
+
 protected:
     Locker& locker_;
     Locker tmp_locker_;
     bool was_locked_;
-    nested_reverse_locker();
 };
 
 }

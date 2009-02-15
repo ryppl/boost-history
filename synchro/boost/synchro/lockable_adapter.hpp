@@ -13,14 +13,14 @@
 
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
-#include <boost/noncopyable.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/thread/thread_time.hpp>
 
 namespace boost { namespace synchro {
 
 //[exclusive_lockable_adapter
 template <typename Lockable>
-class exclusive_lockable_adapter : private boost::noncopyable
+class exclusive_lockable_adapter
 {
 public:
     typedef Lockable lockable_type;
@@ -35,6 +35,10 @@ public:
     void lock() {lock_.lock();}
     void unlock() {lock_.unlock();}
     bool try_lock() { return lock_.try_lock();}
+
+    BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lockable_adapter) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lockable_adapter) /*< disable copy asignement >*/
+    
 protected:
     lockable_type* mutex() const { return &lock_; }
     mutable Lockable lock_;
@@ -61,7 +65,7 @@ public:
     {the_lock().lock_until(abs_time);}
     template<typename TimeDuration>
     void lock_for(TimeDuration const & relative_time)
-    {return the_lock().lock_for(relative_time);}
+    {the_lock().lock_for(relative_time);}
     
 protected:
     TimedLock& the_lock() {return *static_cast<TimedLock*>(&this->lock_);}
@@ -84,8 +88,16 @@ public:
     {return the_lock().try_lock_shared();}
     void unlock_shared()
     {the_lock().unlock_shared();}
+
     bool try_lock_shared_until(system_time const& t)
     {return the_lock().try_lock_shared_until(t);}
+    template<typename TimeDuration>   
+    bool try_lock_shared_for(TimeDuration const& t)
+    {return the_lock().try_lock_shared_for(t);}
+    
+    template<typename TimeDuration>   
+    void lock_shared_for(TimeDuration const& t)
+    {the_lock().lock_shared_for(t);}
     void lock_shared_until(system_time const& t)
     {the_lock().lock_shared_until(t);}
 
@@ -122,10 +134,16 @@ public:
     {the_lock().unlock_and_lock_shared();}
     void unlock_upgrade_and_lock_shared()
     {the_lock().unlock_upgrade_and_lock_shared();}
-    bool try_lock_upgrade_until(system_time const&t)
+    bool try_lock_upgrade_until(system_time const&t)   
     {return the_lock().try_lock_upgrade_until(t);}
+    template<typename TimeDuration>   
+    bool try_lock_upgrade_for(TimeDuration const&t)   
+    {return the_lock().try_lock_upgrade_for(t);}
     void lock_upgrade_until(system_time const&t)
     {the_lock().lock_upgrade_until(t);}
+    template<typename TimeDuration>   
+    void lock_upgrade_for(TimeDuration const&t)
+    {the_lock().lock_upgrade_for(t);}
 
 protected:
     UpgradableLock& the_lock() {return *static_cast<UpgradableLock*>(&this->lock_);}

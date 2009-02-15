@@ -64,10 +64,21 @@ public:
    bool try_lock_until(const boost::posix_time::ptime &)
    {  return true;   }
 
-//   bool timed_lock(system_time const & abs_time)
-//   {return true;}
+   //!Simulates a mutex try_lock_for() operation.
+   //!Equivalent to "return true;"
    template<typename TimeDuration>
    bool try_lock_for(TimeDuration const & relative_time)
+   {return true;}
+
+   //!Simulates a mutex timed_lock() operation.
+   //!Equivalent to "return true;"
+   bool lock_until(const boost::posix_time::ptime &)
+   {  return true;   }
+
+   //!Simulates a mutex lock_for() operation.
+   //!Equivalent to "return true;"
+   template<typename TimeDuration>
+   bool lock_for(TimeDuration const & relative_time)
    {return true;}
 
 
@@ -84,9 +95,26 @@ public:
    bool try_lock_shared()
    {  return true;   }
 
-   //!Simulates a mutex timed_lock_share() operation.
+   //!Simulates a mutex try_lock_shared_until() operation.
    //!Equivalent to "return true;"
    bool try_lock_shared_until(const boost::posix_time::ptime &)
+   {  return true;   }
+
+   //!Simulates a mutex try_lock_shared_for() operation.
+   //!Equivalent to "return true;"
+   template<typename TimeDuration>
+   bool try_lock_shared_for(const TimeDuration &)
+   {  return true;   }
+
+   //!Simulates a mutex lock_shared_until() operation.
+   //!Equivalent to "return true;"
+   bool lock_shared_until(const boost::posix_time::ptime &)
+   {  return true;   }
+
+   //!Simulates a mutex lock_shared_for() operation.
+   //!Equivalent to "return true;"
+   template<typename TimeDuration>
+   bool lock_shared_for(const TimeDuration &)
    {  return true;   }
 
    //!Simulates a mutex unlock_share() operation.
@@ -102,7 +130,7 @@ public:
    bool try_lock_upgrade()
    {  return true;   }
 
-   //!Simulates a mutex timed_lock_upgrade() operation.
+   //!Simulates a mutex try_lock_upgrade_until() operation.
    //!Equivalent to "return true;"
    bool try_lock_upgrade_until(boost::posix_time::ptime const &)
    {  return true;   }
@@ -134,7 +162,7 @@ public:
    bool try_unlock_upgrade_and_lock()
    {  return true;   }
 
-   //!Simulates timed_unlock_upgrade_and_lock().
+   //!Simulates unlock_upgrade_and_lock_until().
    //!Equivalent to "return true;"
    bool unlock_upgrade_and_lock_until(const boost::posix_time::ptime &)
    {  return true;   }

@@ -11,7 +11,7 @@
 #ifndef BOOST_SYNCHRO_LOCKING_PTR__HPP
 #define BOOST_SYNCHRO_LOCKING_PTR__HPP
 
-#include <boost/noncopyable.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/thread/mutex.hpp>
 
 namespace boost { namespace synchro {
@@ -68,7 +68,7 @@ namespace boost { namespace synchro {
 */
 //[locking_ptr
 template <typename T, typename Lockable=boost::mutex>
-class locking_ptr : private boost::noncopyable /*< Is not copyable >*/ {
+class locking_ptr  {
 public:
     typedef T value_type;
     typedef Lockable lockable_type;
@@ -85,6 +85,11 @@ public:
     {    return *ptr_;    }
     value_type* operator->()
     {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(locking_ptr) /*< disable copy asignement >*/
+    
 private:
     value_type* ptr_;
     lockable_type& mtx_;
@@ -93,7 +98,7 @@ private:
 
 //[locking_ptr_lockable_value_type
 template <typename Lockable>
-class locking_ptr_1 : private boost::noncopyable {
+class locking_ptr_1  {
 public:
     typedef Lockable value_type;
     typedef Lockable mutex_type;
@@ -108,13 +113,18 @@ public:
     {    return *ptr_;    }
     value_type* operator->()
     {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(locking_ptr_1) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(locking_ptr_1) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(locking_ptr_1) /*< disable copy asignement >*/
+
 private:
     value_type* ptr_; /*< only one pointer needed >*/
 };
 //]
 
 template <typename T, typename SharableLockable>
-class sharable_locking_ptr : private boost::noncopyable {
+class sharable_locking_ptr {
 public:
     typedef T value_type;
     typedef SharableLockable mutex_type;
@@ -135,13 +145,17 @@ public:
     {   return ptr_;   }
     const value_type* operator->() const
     {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(sharable_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(sharable_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(sharable_locking_ptr) /*< disable copy asignement >*/
 private:
     value_type* ptr_;
     mutex_type* mtx_;
 };
 
 template <typename T, typename SharableLockable>
-class sharable_locking_ptr<const T, SharableLockable> : private boost::noncopyable {
+class sharable_locking_ptr<const T, SharableLockable> {
 public:
   typedef T value_type;
   typedef SharableLockable mutex_type;
@@ -162,6 +176,10 @@ public:
    {   return ptr_;   }
    const value_type* operator->() const
    {   return ptr_;   }
+   
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(sharable_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(sharable_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(sharable_locking_ptr) /*< disable copy asignement >*/
 private:
    value_type* ptr_;
    mutex_type* mtx_;
@@ -169,7 +187,7 @@ private:
 #if 0
 
 template <typename T, typename MUTEX>
-class rw_locking_ptr<T, MUTEX> : private boost::noncopyable {
+class rw_locking_ptr<T, MUTEX>  {
 public:
   typedef const T value_type;
   typedef MUTEX mutex_type;
@@ -186,13 +204,18 @@ public:
    {    return *ptr_;    }
    value_type* operator->()
    {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(rw_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(rw_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(rw_locking_ptr) /*< disable copy asignement >*/
+
 private:
    value_type* ptr_;
    mutex_type* mtx_;
 };
 
 template <typename T, typename MUTEX>
-class rw_locking_ptr<const T, MUTEX> : private boost::noncopyable {
+class rw_locking_ptr<const T, MUTEX> {
 public:
   typedef T value_type;
   typedef MUTEX mutex_type;
@@ -209,13 +232,17 @@ public:
    {    return *ptr_;    }
    const value_type* operator->()
    {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(rw_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(rw_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(rw_locking_ptr) /*< disable copy asignement >*/
 private:
    value_type* ptr_;
    mutex_type* mtx_;
 };
 
 template <typename LOCKABLE>
-class locking_ptr<LOCKABLE, LOCKABLE> : private boost::noncopyable {
+class locking_ptr<LOCKABLE, LOCKABLE> {
 public:
   typedef LOCKABLE value_type;
   typedef LOCKABLE mutex_type;
@@ -231,12 +258,16 @@ public:
    {    return *ptr_;    }
    value_type* operator->()
    {   return ptr_;   }
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(locking_ptr) /*< disable copy asignement >*/
 private:
    value_type* ptr_;
 };
 
 template <typename T, typename MUTEX>
-class read_locking_ptr : private boost::noncopyable {
+class read_locking_ptr {
 public:
   typedef T value_type;
   typedef MUTEX mutex_type;
@@ -253,6 +284,10 @@ public:
    {    return *ptr_;    }
    const value_type* operator->() const
    {   return ptr_;   }
+   
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(read_locking_ptr) /*< disable default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(read_locking_ptr) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(read_locking_ptr) /*< disable copy asignement >*/
 private:
    const value_type* ptr_;
    mutex_type* mtx_;
