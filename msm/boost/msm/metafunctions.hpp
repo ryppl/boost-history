@@ -30,6 +30,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_entry)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_exit)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(concrete_exit_state)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(composite_tag)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(not_real_row_tag)
 
 namespace boost { namespace msm
 {
@@ -255,6 +256,7 @@ struct has_state_delayed_event
 template< typename T1 >
 struct not_a_row
 {
+    typedef int not_real_row_tag;
     struct dummy_event 
     {
     };
