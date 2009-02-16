@@ -6,11 +6,13 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090215;22424300">
+	<META NAME="CHANGED" CONTENT="20090216;22481600">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
@@ -133,6 +135,16 @@ nevertheless relevant were also implemented :</P>
 </P>
 <H1 CLASS="western" STYLE="page-break-before: always"><A NAME="2.Changes compared to previous version|outline"></A>
 Changes compared to previous version</H1>
+<P>Changes from 1.10 to 1.20 (RC1)</P>
+<UL>
+	<LI><P>Added visitor implementation</P>
+	<LI><P>Added by state&lt;&gt;, terminate_state&lt;&gt;... a BASE
+	template parameter in first position defaulting to
+	default_base_state. No breaking change if no SMPtr policy chosen.</P>
+	<LI><P>Renamed SMPtr/NoSMPtr to sm_ptr / no_sm_ptr. Old names
+	deprecated by still supported.</P>
+</UL>
+<P>Changes from 1.0 to 1.10</P>
 <UL>
 	<LI><P>Corrected bugs that events were not forwarded to the sub-
 	state machine if this sub- state machine appeared only as target in
@@ -1832,7 +1844,7 @@ declaration to:</P>
 <P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>struct</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
 </FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>Stopped</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
 </FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>: </FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>public</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
-</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>SMPtr</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;</FONT></FONT></CODE></P>
+</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>sm_ptr</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;</FONT></FONT></CODE></P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
 <P STYLE="margin-bottom: 0cm">And to provide a set_sm_ptr function:</P>
@@ -2309,7 +2321,7 @@ instances, so you need to define Alarms as:
 </FONT><FONT COLOR="#000000"><FONT SIZE=3>Alarm...</FONT></FONT></P>
 <P><FONT COLOR="#000000"><FONT SIZE=3>And identify each instance in
 alarmBeeps as Alarm&lt;1&gt;, Alarm&lt;2&gt;, etc. in the
-<FONT FACE="Courier New, monospace">initial_state</FONT> typedef  of
+<FONT FACE="Courier New, monospace">initial_state</FONT> typedef of
 alarmBeeps, which can therefore do without a single row in its
 transition table:</FONT></FONT></P>
 <P><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>typedef

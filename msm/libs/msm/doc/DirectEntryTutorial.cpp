@@ -119,9 +119,9 @@ namespace  // Concrete FSM implementation
             struct transition_table : mpl::vector<
                 //    Start          Event         Next         Action				   Guard
                 //  +--------------+-------------+------------+------------------------+----------------------+
-              a_row < PseudoEntry1 , event4      , SubState3  ,&SubFsm2::entry_action                         >,
-               _row < SubState2    , event6      , SubState1                                                  >,
-               _row < SubState3    , event5      , PseudoExit1                                                >
+                a_row < PseudoEntry1 , event4      , SubState3  ,&SubFsm2::entry_action                         >,
+                _row < SubState2    , event6      , SubState1                                                  >,
+                _row < SubState3    , event5      , PseudoExit1                                                >
                 //  +--------------+-------------+------------+------------------------+----------------------+
             > {};
             // Replaces the default no-transition response.
@@ -141,7 +141,7 @@ namespace  // Concrete FSM implementation
 #endif 
         // transition actions
         // guard conditions
- 
+
 
 #ifdef __MWERKS__
     private:
@@ -156,7 +156,7 @@ namespace  // Concrete FSM implementation
             _row < State1              , event1       , SubFsm2                                           >,
             _row < State1              , event2       , SubFsm2::SubState2                                >,
             _row < State1              , event3       , mpl::vector<SubFsm2::SubState2,
-                                                                    SubFsm2::SubState2b>                  >,
+            SubFsm2::SubState2b>                  >,
             _row < State1              , event4       , SubFsm2::PseudoEntry1                             >,
             //   +---------------------+-------------+------------------------------------+-------+-------+
             _row < SubFsm2             , event1       , State1                                            >,
@@ -205,7 +205,7 @@ namespace  // Concrete FSM implementation
         p.process_event(event4()); pstate(p);
         std::cout << "using exit pseudo state" << std::endl;
         p.process_event(event5()); pstate(p);
-   }
+    }
 }
 
 int main()

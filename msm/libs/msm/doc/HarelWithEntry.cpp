@@ -65,12 +65,12 @@ namespace {
         struct transition_table : mpl::vector<
             //    Start      Event          Next                      Action	Guard
             //  +-----------+-------------+-------------------------+----------+----------------------+
-          _row  < Displays  , P1          , AlarmBeeps::Alarm1Beeps                                    >,
-          _row  < Displays  , P2          , AlarmBeeps::Alarm2Beeps                                    >,
-          _row  < Displays  , P           , AlarmBeeps::BothBeep                                       >,
-          _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
-          _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
-           //  +-----------+-------------+--------------------------+----------+----------------------+
+            _row  < Displays  , P1          , AlarmBeeps::Alarm1Beeps                                    >,
+            _row  < Displays  , P2          , AlarmBeeps::Alarm2Beeps                                    >,
+            _row  < Displays  , P           , AlarmBeeps::BothBeep                                       >,
+            _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
+            _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
+            //  +-----------+-------------+--------------------------+----------+----------------------+
         > {};
     };
 }

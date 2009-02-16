@@ -44,34 +44,34 @@ namespace  // Concrete FSM implementation
             // every (optional) entry/exit methods get the event passed.
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Empty" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Empty" << std::endl;}
         };
         struct Open : public state<> 
         {	 
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Open" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Open" << std::endl;}
         };
-        
+
         struct Stopped : public state<> 
         {	 
             // when stopped, the CD is loaded
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Stopped" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Stopped" << std::endl;}
         };
-        
+
         struct Playing : public state<>
         {
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Playing" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Playing" << std::endl;}
         };
-        
+
         // state not defining any entry or exit
         struct Paused : public state<>
         {
@@ -129,23 +129,23 @@ namespace  // Concrete FSM implementation
         struct transition_table : mpl::vector<
             //    Start     Event         Next      Action				Guard
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Stopped , play        , Playing , &p::start_playback                       >,
-          a_row < Stopped , open_close  , Open    , &p::open_drawer                          >,
-           _row < Stopped , stop        , Stopped                                            >,
+            a_row < Stopped , play        , Playing , &p::start_playback                       >,
+            a_row < Stopped , open_close  , Open    , &p::open_drawer                          >,
+            _row < Stopped , stop        , Stopped                                            >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Open    , open_close  , Empty   , &p::close_drawer                         >,
+            a_row < Open    , open_close  , Empty   , &p::close_drawer                         >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Empty   , open_close  , Open    , &p::open_drawer                          >,
+            a_row < Empty   , open_close  , Open    , &p::open_drawer                          >,
             row < Empty   , cd_detected , Stopped , &p::store_cd_info   ,&p::good_disk_format>,
             row < Empty   , cd_detected , Playing , &p::store_cd_info   ,&p::auto_start      >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Playing , stop        , Stopped , &p::stop_playback                        >,
-          a_row < Playing , pause       , Paused  , &p::pause_playback                       >,
-          a_row < Playing , open_close  , Open    , &p::stop_and_open                        >,
+            a_row < Playing , stop        , Stopped , &p::stop_playback                        >,
+            a_row < Playing , pause       , Paused  , &p::pause_playback                       >,
+            a_row < Playing , open_close  , Open    , &p::stop_and_open                        >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Paused  , end_pause   , Playing , &p::resume_playback                      >,
-          a_row < Paused  , stop        , Stopped , &p::stop_playback                        >,
-          a_row < Paused  , open_close  , Open    , &p::stop_and_open                        >
+            a_row < Paused  , end_pause   , Playing , &p::resume_playback                      >,
+            a_row < Paused  , stop        , Stopped , &p::stop_playback                        >,
+            a_row < Paused  , open_close  , Open    , &p::stop_and_open                        >
             //  +---------+-------------+---------+---------------------+----------------------+
         > {};
 
@@ -183,7 +183,7 @@ namespace  // Concrete FSM implementation
         p.process_event(
             cd_detected("louie, louie",DISK_CD,p)); pstate(p);
         // no need to call play() as the previous event does it in its action method
-  
+
         // at this point, Play is active      
         p.process_event(pause()); pstate(p);
         // go back to Playing

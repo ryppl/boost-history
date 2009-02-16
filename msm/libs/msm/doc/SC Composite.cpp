@@ -186,7 +186,7 @@ namespace test_fsm // Concrete FSM implementation
         struct Playing : public state_machine<Playing>
         {
             // when playing, the CD is loaded and we are in either pause or playing (duh)
-            
+
 
             // The list of FSM states
             struct Song1 : public state<>

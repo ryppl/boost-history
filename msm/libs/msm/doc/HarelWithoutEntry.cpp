@@ -57,7 +57,7 @@ namespace {
                 struct transition_table : mpl::vector<
                     //    Start     Event         Next      Action				Guard
                     //  +---------+-------------+---------+------------------------+----------------------+
-                 g_row  < NoBeep  , P           , Beeps                            ,&A::check_beep        >
+                    g_row  < NoBeep  , P           , Beeps                            ,&A::check_beep        >
                     //  +---------+-------------+---------+------------------------+----------------------+
                 > {};
             };
@@ -78,9 +78,9 @@ namespace {
         struct transition_table : mpl::vector<
             //    Start     Event         Next      Action				Guard
             //  +-----------+-------------+------------+------------------------+----------------------+
-          _row  < Displays  , P           , AlarmBeeps                                                 >,
-          _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
-          _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
+            _row  < Displays  , P           , AlarmBeeps                                                 >,
+            _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
+            _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
             //  +-----------+-------------+------------+------------------------+----------------------+
         > {};
     };

@@ -21,90 +21,90 @@ namespace mpl = boost::mpl;
 namespace test_sc
 {
 
-//events
-struct play : sc::event< play > {};
-struct end_pause : sc::event< end_pause > {};
-struct stop : sc::event< stop > {};
-struct pause : sc::event< pause > {};
-struct open_close : sc::event< open_close > {};
-struct cd_detected : sc::event< cd_detected > {};
+    //events
+    struct play : sc::event< play > {};
+    struct end_pause : sc::event< end_pause > {};
+    struct stop : sc::event< stop > {};
+    struct pause : sc::event< pause > {};
+    struct open_close : sc::event< open_close > {};
+    struct cd_detected : sc::event< cd_detected > {};
 
 
-struct Empty;
-struct Open;
-struct Stopped;
-struct Playing;
-struct Paused;
-// SM
-struct player : sc::state_machine< player, Empty > 
-{
-    void open_drawer(open_close const&)         { /*std::cout << "player::open_drawer\n";*/ }
-    void store_cd_info(cd_detected const& cd)   {/*std::cout << "player::store_cd_info\n";*/ }
-    void close_drawer(open_close const&)        { /*std::cout << "player::close_drawer\n";*/ }
-    void start_playback(play const&)            { /*std::cout << "player::start_playback\n";*/ }
-    void stopped_again(stop const&)	            {/*std::cout << "player::stopped_again\n";*/}
-    void stop_playback(stop const&)             { /*std::cout << "player::stop_playback\n";*/ }
-    void pause_playback(pause const&)           { /*std::cout << "player::pause_playback\n"; */}
-    void stop_and_open(open_close const&)       { /*std::cout << "player::stop_and_open\n";*/ }
-    void resume_playback(end_pause const&)      { /*std::cout << "player::resume_playback\n";*/ }
-};
+    struct Empty;
+    struct Open;
+    struct Stopped;
+    struct Playing;
+    struct Paused;
+    // SM
+    struct player : sc::state_machine< player, Empty > 
+    {
+        void open_drawer(open_close const&)         { /*std::cout << "player::open_drawer\n";*/ }
+        void store_cd_info(cd_detected const& cd)   {/*std::cout << "player::store_cd_info\n";*/ }
+        void close_drawer(open_close const&)        { /*std::cout << "player::close_drawer\n";*/ }
+        void start_playback(play const&)            { /*std::cout << "player::start_playback\n";*/ }
+        void stopped_again(stop const&)	            {/*std::cout << "player::stopped_again\n";*/}
+        void stop_playback(stop const&)             { /*std::cout << "player::stop_playback\n";*/ }
+        void pause_playback(pause const&)           { /*std::cout << "player::pause_playback\n"; */}
+        void stop_and_open(open_close const&)       { /*std::cout << "player::stop_and_open\n";*/ }
+        void resume_playback(end_pause const&)      { /*std::cout << "player::resume_playback\n";*/ }
+    };
 
-struct Empty : sc::simple_state< Empty, player >
-{
-    Empty() { /*std::cout << "entering Empty" << std::endl;*/ } // entry
-    ~Empty() { /*std::cout << "leaving Empty" << std::endl;*/ } // exit
-    typedef mpl::list<
-        sc::transition< open_close, Open,
-        player, &player::open_drawer >,
-        sc::transition< cd_detected, Stopped,
-        player, &player::store_cd_info > > reactions;
+    struct Empty : sc::simple_state< Empty, player >
+    {
+        Empty() { /*std::cout << "entering Empty" << std::endl;*/ } // entry
+        ~Empty() { /*std::cout << "leaving Empty" << std::endl;*/ } // exit
+        typedef mpl::list<
+            sc::transition< open_close, Open,
+            player, &player::open_drawer >,
+            sc::transition< cd_detected, Stopped,
+            player, &player::store_cd_info > > reactions;
 
-};
-struct Open : sc::simple_state< Open, player >
-{
-    Open() { /*std::cout << "entering Open" << std::endl;*/ } // entry
-    ~Open() { /*std::cout << "leaving Open" << std::endl;*/ } // exit
-    typedef sc::transition< open_close, Empty,
-        player, &player::close_drawer > reactions;
+    };
+    struct Open : sc::simple_state< Open, player >
+    {
+        Open() { /*std::cout << "entering Open" << std::endl;*/ } // entry
+        ~Open() { /*std::cout << "leaving Open" << std::endl;*/ } // exit
+        typedef sc::transition< open_close, Empty,
+            player, &player::close_drawer > reactions;
 
-};
-struct Stopped : sc::simple_state< Stopped, player >
-{
-    Stopped() { /*std::cout << "entering Stopped" << std::endl;*/ } // entry
-    ~Stopped() { /*std::cout << "leaving Stopped" << std::endl;*/ } // exit
-    typedef mpl::list<
-        sc::transition< play, Playing,
-        player, &player::start_playback >,
-        sc::transition< open_close, Open,
-        player, &player::open_drawer >, 
-        sc::transition< stop, Stopped,
-        player, &player::stopped_again > > reactions;
+    };
+    struct Stopped : sc::simple_state< Stopped, player >
+    {
+        Stopped() { /*std::cout << "entering Stopped" << std::endl;*/ } // entry
+        ~Stopped() { /*std::cout << "leaving Stopped" << std::endl;*/ } // exit
+        typedef mpl::list<
+            sc::transition< play, Playing,
+            player, &player::start_playback >,
+            sc::transition< open_close, Open,
+            player, &player::open_drawer >, 
+            sc::transition< stop, Stopped,
+            player, &player::stopped_again > > reactions;
 
-};
-struct Playing : sc::simple_state< Playing, player >
-{
-    Playing() { /*std::cout << "entering Playing" << std::endl;*/ } // entry
-    ~Playing() { /*std::cout << "leaving Playing" << std::endl;*/ } // exit
-    typedef mpl::list<
-        sc::transition< stop, Stopped,
-        player, &player::stop_playback >,
-        sc::transition< pause, Paused,
-        player, &player::pause_playback >, 
-        sc::transition< open_close, Open,
-        player, &player::stop_and_open > > reactions;
-};
-struct Paused : sc::simple_state< Paused, player >
-{
-    Paused() { /*std::cout << "entering Paused" << std::endl;*/ } // entry
-    ~Paused() { /*std::cout << "leaving Paused" << std::endl;*/ } // exit
-    typedef mpl::list<
-        sc::transition< end_pause, Playing,
-        player, &player::resume_playback >,
-        sc::transition< stop, Stopped,
-        player, &player::stop_playback >, 
-        sc::transition< open_close, Open,
-        player, &player::stop_and_open > > reactions;
-};
+    };
+    struct Playing : sc::simple_state< Playing, player >
+    {
+        Playing() { /*std::cout << "entering Playing" << std::endl;*/ } // entry
+        ~Playing() { /*std::cout << "leaving Playing" << std::endl;*/ } // exit
+        typedef mpl::list<
+            sc::transition< stop, Stopped,
+            player, &player::stop_playback >,
+            sc::transition< pause, Paused,
+            player, &player::pause_playback >, 
+            sc::transition< open_close, Open,
+            player, &player::stop_and_open > > reactions;
+    };
+    struct Paused : sc::simple_state< Paused, player >
+    {
+        Paused() { /*std::cout << "entering Paused" << std::endl;*/ } // entry
+        ~Paused() { /*std::cout << "leaving Paused" << std::endl;*/ } // exit
+        typedef mpl::list<
+            sc::transition< end_pause, Playing,
+            player, &player::resume_playback >,
+            sc::transition< stop, Stopped,
+            player, &player::stop_playback >, 
+            sc::transition< open_close, Open,
+            player, &player::stop_and_open > > reactions;
+    };
 }
 
 //FSM
@@ -128,16 +128,16 @@ namespace test_fsm // Concrete FSM implementation
         struct Empty : public state<> 
         {
             // optional entry/exit methods
-			template <class Event>
+            template <class Event>
             void on_entry(Event const& ) {/*std::cout << "entering: Empty" << std::endl;*/}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {/*std::cout << "leaving: Empty" << std::endl;*/}
         };
         struct Open : public state<> 
         {	 
             template <class Event>
             void on_entry(Event const& ) {/*std::cout << "entering: Open" << std::endl;*/}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {/*std::cout << "leaving: Open" << std::endl;*/}
         };
 
@@ -146,7 +146,7 @@ namespace test_fsm // Concrete FSM implementation
             // when stopped, the CD is loaded
             template <class Event>
             void on_entry(Event const& ) {/*std::cout << "entering: Stopped" << std::endl;*/}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {/*std::cout << "leaving: Stopped" << std::endl;*/}
         };
 
@@ -154,16 +154,16 @@ namespace test_fsm // Concrete FSM implementation
         {
             template <class Event>
             void on_entry(Event const& ) {/*std::cout << "entering: Playing" << std::endl;*/}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {/*std::cout << "leaving: Playing" << std::endl;*/}
         };
 
         // state not defining any entry or exit
         struct Paused : public state<>
         {
-			template <class Event>
+            template <class Event>
             void on_entry(Event const& ) {/*std::cout << "entering: Paused" << std::endl;*/}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {/*std::cout << "leaving: Paused" << std::endl;*/}
         };
 
@@ -184,7 +184,7 @@ namespace test_fsm // Concrete FSM implementation
         void stop_and_open(open_close const&)  {  }
         void stopped_again(stop const&)	{}
         // guard conditions
-        
+
 #ifdef __MWERKS__
     private:
 #endif 
@@ -320,6 +320,6 @@ int main()
 #else
     std::cout << "msm took in us:" <<  mtime(tv1,tv2) <<"\n" <<std::endl;
 #endif
-	return 0;
+    return 0;
 }
 

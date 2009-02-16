@@ -44,7 +44,7 @@ namespace  // Concrete FSM implementation
             // every (optional) entry/exit methods get the event passed.
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Empty" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Empty" << std::endl;}
         };
         struct Open : public state<> 
@@ -52,7 +52,7 @@ namespace  // Concrete FSM implementation
             typedef mpl::vector1<CDLoaded>		flag_list;
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Open" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Open" << std::endl;}
         };
 
@@ -62,7 +62,7 @@ namespace  // Concrete FSM implementation
             typedef mpl::vector1<CDLoaded>		flag_list;
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Stopped" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Stopped" << std::endl;}
         };
 
@@ -76,7 +76,7 @@ namespace  // Concrete FSM implementation
 
             template <class Event>
             void on_entry(Event const& ) {std::cout << "entering: Playing" << std::endl;}
-			template <class Event>
+            template <class Event>
             void on_exit(Event const& ) {std::cout << "leaving: Playing" << std::endl;}
 
             // The list of FSM states
@@ -84,24 +84,24 @@ namespace  // Concrete FSM implementation
             {
                 typedef mpl::vector1<FirstSongPlaying>		flag_list;
                 template <class Event>
-				void on_entry(Event const& ) {std::cout << "starting: First song" << std::endl;}
-				template <class Event>
-				void on_exit(Event const& ) {std::cout << "finishing: First Song" << std::endl;}
+                void on_entry(Event const& ) {std::cout << "starting: First song" << std::endl;}
+                template <class Event>
+                void on_exit(Event const& ) {std::cout << "finishing: First Song" << std::endl;}
 
             };
             struct Song2 : public state<>
             {	 
                 template <class Event>
-				void on_entry(Event const& ) {std::cout << "starting: Second song" << std::endl;}
-				template <class Event>
-				void on_exit(Event const& ) {std::cout << "finishing: Second Song" << std::endl;}
+                void on_entry(Event const& ) {std::cout << "starting: Second song" << std::endl;}
+                template <class Event>
+                void on_exit(Event const& ) {std::cout << "finishing: Second Song" << std::endl;}
             };
             struct Song3 : public state<>
             {	 
                 template <class Event>
-				void on_entry(Event const& ) {std::cout << "starting: Third song" << std::endl;}
-				template <class Event>
-				void on_exit(Event const& ) {std::cout << "finishing: Third Song" << std::endl;}
+                void on_entry(Event const& ) {std::cout << "starting: Third song" << std::endl;}
+                template <class Event>
+                void on_exit(Event const& ) {std::cout << "finishing: Third Song" << std::endl;}
             };
             // the initial state. Must be defined
             typedef Song1 initial_state;
@@ -109,7 +109,7 @@ namespace  // Concrete FSM implementation
             void start_next_song(NextSong const&)       { std::cout << "Playing::start_next_song\n"; }
             void start_prev_song(PreviousSong const&)       { std::cout << "Playing::start_prev_song\n"; }
             // guard conditions
-            
+
             // friend definition needed.
             friend class state_machine<Playing>;
             typedef Playing pl; // makes transition table cleaner
@@ -117,10 +117,10 @@ namespace  // Concrete FSM implementation
             struct transition_table : mpl::vector4<
                 //    Start     Event         Next      Action				Guard
                 //  +---------+-------------+---------+---------------------+----------------------+
-              a_row < Song1   , NextSong    , Song2   , &pl::start_next_song                     >,
-              a_row < Song2   , PreviousSong, Song1   , &pl::start_prev_song                     >,
-              a_row < Song2   , NextSong    , Song3   , &pl::start_next_song                     >,
-              a_row < Song3   , PreviousSong, Song2   , &pl::start_prev_song                     >
+                a_row < Song1   , NextSong    , Song2   , &pl::start_next_song                     >,
+                a_row < Song2   , PreviousSong, Song1   , &pl::start_prev_song                     >,
+                a_row < Song2   , NextSong    , Song3   , &pl::start_next_song                     >,
+                a_row < Song3   , PreviousSong, Song2   , &pl::start_prev_song                     >
                 //  +---------+-------------+---------+---------------------+----------------------+
             > {};
             // Replaces the default no-transition response.
@@ -161,7 +161,7 @@ namespace  // Concrete FSM implementation
         void stop_and_open(open_close const&)  { std::cout << "player::stop_and_open\n"; }
         void stopped_again(stop const&)	{std::cout << "player::stopped_again\n";}
         // guard conditions
-        
+
 
 #ifdef __MWERKS__
     private:
@@ -174,22 +174,22 @@ namespace  // Concrete FSM implementation
         struct transition_table : mpl::vector<
             //    Start     Event         Next      Action				Guard
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Stopped , play        , Playing , &p::start_playback                       >,
-          a_row < Stopped , open_close  , Open    , &p::open_drawer                          >,
-          a_row < Stopped , stop        , Stopped , &p::stopped_again                        >,
+            a_row < Stopped , play        , Playing , &p::start_playback                       >,
+            a_row < Stopped , open_close  , Open    , &p::open_drawer                          >,
+            a_row < Stopped , stop        , Stopped , &p::stopped_again                        >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Open    , open_close  , Empty   , &p::close_drawer                         >,
+            a_row < Open    , open_close  , Empty   , &p::close_drawer                         >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Empty   , open_close  , Open    , &p::open_drawer                          >,
-          a_row < Empty   , cd_detected , Stopped , &p::store_cd_info                        >,
+            a_row < Empty   , open_close  , Open    , &p::open_drawer                          >,
+            a_row < Empty   , cd_detected , Stopped , &p::store_cd_info                        >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Playing , stop        , Stopped , &p::stop_playback                        >,
-          a_row < Playing , pause       , Paused  , &p::pause_playback                       >,
-          a_row < Playing , open_close  , Open    , &p::stop_and_open                        >,
+            a_row < Playing , stop        , Stopped , &p::stop_playback                        >,
+            a_row < Playing , pause       , Paused  , &p::pause_playback                       >,
+            a_row < Playing , open_close  , Open    , &p::stop_and_open                        >,
             //  +---------+-------------+---------+---------------------+----------------------+
-          a_row < Paused  , end_pause   , Playing , &p::resume_playback                      >,
-          a_row < Paused  , stop        , Stopped , &p::stop_playback                        >,
-          a_row < Paused  , open_close  , Open    , &p::stop_and_open                        >
+            a_row < Paused  , end_pause   , Playing , &p::resume_playback                      >,
+            a_row < Paused  , stop        , Stopped , &p::stop_playback                        >,
+            a_row < Paused  , open_close  , Open    , &p::stop_and_open                        >
             //  +---------+-------------+---------+---------------------+----------------------+
         > {};
 

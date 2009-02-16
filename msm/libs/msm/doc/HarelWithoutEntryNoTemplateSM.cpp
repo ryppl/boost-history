@@ -31,7 +31,7 @@ namespace {
             // g++ refuses to compile if the Alarm submachines are template
             struct AlarmImpl : public state_machine<AlarmImpl >
             {
-		        AlarmImpl(int index):Index(index){}
+                AlarmImpl(int index):Index(index){}
                 struct NoBeep : public state<> {};
                 struct Beeps : public state<> {};
                 // friend definition needed.
@@ -42,9 +42,9 @@ namespace {
                 // guard
                 bool check_beep(const P& evt)
                 {
-		            bool beep = ((evt.index & Index)!=0);
-		            if (beep)
-		    	        std::cout << "Beeping alarm:"<< Index  << std::endl;
+                    bool beep = ((evt.index & Index)!=0);
+                    if (beep)
+                        std::cout << "Beeping alarm:"<< Index  << std::endl;
                     // check if our bit is set in the event
                     return beep;
                 }
@@ -52,20 +52,20 @@ namespace {
                 struct transition_table : mpl::vector<
                     //    Start     Event         Next      Action				Guard
                     //  +---------+-------------+---------+------------------------+----------------------+
-                 g_row  < NoBeep  , P           , Beeps                            ,&A::check_beep        >
+                    g_row  < NoBeep  , P           , Beeps                            ,&A::check_beep        >
                     //  +---------+-------------+---------+------------------------+----------------------+
                 > {};
             private:
-		        int Index;
+                int Index;
             };
-	        struct Alarm1 : public AlarmImpl
-	        {
-		        Alarm1():AlarmImpl(1){}
-	        }; 
-	        struct Alarm2 : public AlarmImpl
-	        {
-		        Alarm2():AlarmImpl(2){}
-	        }; 
+            struct Alarm1 : public AlarmImpl
+            {
+                Alarm1():AlarmImpl(1){}
+            }; 
+            struct Alarm2 : public AlarmImpl
+            {
+                Alarm2():AlarmImpl(2){}
+            }; 
 
             // friend definition needed.
             friend class state_machine<AlarmBeeps>;
@@ -83,9 +83,9 @@ namespace {
         struct transition_table : mpl::vector<
             //    Start     Event         Next      Action				Guard
             //  +-----------+-------------+------------+------------------------+----------------------+
-          _row  < Displays  , P           , AlarmBeeps                                                 >,
-          _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
-          _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
+            _row  < Displays  , P           , AlarmBeeps                                                 >,
+            _row  < AlarmBeeps,AnyBtnPressed, Displays                                                   >,
+            _row  < AlarmBeeps,AlarmBeeps30s, Displays                                                   >
             //  +-----------+-------------+------------+------------------------+----------------------+
         > {};
     };
