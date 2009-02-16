@@ -12,6 +12,8 @@
 #define BOOST_SYNCHRO_POLY_LOCK_ADAPTER__HPP
 
 #include <boost/synchro/poly/lock.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
+
 namespace boost { namespace synchro { namespace poly {
 
 //////////////////////////////////////////////////////////////////////////////
@@ -28,6 +30,8 @@ class exclusive_lock_adapter
     typedef typename lifetime_tag<Lockable>::type lifetime;
     typedef typename naming_tag<Lockable>::type naming;
 
+    BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lock_adapter) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lock_adapter) /*< disable copy asignement >*/
     exclusive_lock_adapter(): lock_() {}
     ~exclusive_lock_adapter() {}
 

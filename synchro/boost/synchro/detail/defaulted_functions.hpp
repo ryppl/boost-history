@@ -20,7 +20,7 @@
     #define BOOST_DEFAULT_CONSTRUCTOR_DEFAULT(T)        \
       T()=default;                                      \
 
-    #define BOOST_COPY_ASSIGNEMENT_DELETE(T)            \
+    #define BOOST_COPY_ASSIGNEMENT_DEFAULT(T)            \
       T& operator=(const T& rhs)=default;               \
 
 #else // !defined(BOOST_HAS_DEFAULTED_FUNCTIONS)
@@ -28,7 +28,7 @@
     #define BOOST_DEFAULT_CONSTRUCTOR_DEFAULT(T)        \
       inline T(){};                                     \
 
-    #define BOOST_COPY_ASSIGNEMENT_DELETE(T)            \
+    #define BOOST_COPY_ASSIGNEMENT_DEFAULT(T)            \
       inline T& operator=(const T& rhs) {               \
         T tmp(rhs);                                     \
         swap(tmp);\
@@ -36,3 +36,4 @@
       }
 
 #endif // !defined(BOOST_HAS_DEFAULTED_FUNCTIONS)
+#endif 

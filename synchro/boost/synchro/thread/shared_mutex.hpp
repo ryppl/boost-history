@@ -16,6 +16,7 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
     
@@ -30,15 +31,13 @@ class thread_shared_mutex
     shared_mutex
 >
 {
-
-    //Non-copyable
-    thread_shared_mutex(const thread_shared_mutex &);
-    thread_shared_mutex &operator=(const thread_shared_mutex &);
-
 public:
     typedef boost::condition_variable_any  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
 
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(thread_shared_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(thread_shared_mutex) /*< disable copy asignement >*/
     thread_shared_mutex() {}
 
     bool try_lock_until(system_time const & abs_time)

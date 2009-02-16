@@ -15,6 +15,7 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 class named_mutex
@@ -28,16 +29,14 @@ class named_mutex
     named_tag
 >
 {
-
-    //Non-copyable
-    named_mutex(const named_mutex &);
-    named_mutex &operator=(const named_mutex &);
-    named_mutex();
-
 public:
-
     typedef boost::interprocess::interprocess_condition  best_condition_type;
     typedef boost::interprocess::interprocess_condition  best_condition_any_type;
+
+    BOOST_DEFAULT_CONSTRUCTOR_DELETE(named_mutex) /*< disable default construction >*/
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(named_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(named_mutex) /*< disable copy asignement >*/
 
     named_mutex(interprocess::create_only_t create_only, const char *name)
        : interprocess::named_mutex(create_only, name) {};

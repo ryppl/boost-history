@@ -15,6 +15,7 @@
 //!Describes null_mutex class
 #include <boost/synchro/null_mutex.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost {
 
@@ -23,13 +24,11 @@ namespace synchro {
 
 class null_condition
 {
-private:
-   /// @cond
+public:
    //Non-copyable
-   null_condition(const null_condition &);
-   null_condition &operator=(const null_condition &);
-   /// @endcond
-   public:
+    BOOST_COPY_CONSTRUCTOR_DELETE(null_condition) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(null_condition) /*< disable copy asignement >*/
+
    //!Constructs a null_condition. On error throws interprocess_exception.
    null_condition(){}
 

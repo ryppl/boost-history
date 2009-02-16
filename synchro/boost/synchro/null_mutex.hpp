@@ -14,6 +14,7 @@
 
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 //!\file
 //!Describes null_mutex classes
@@ -35,13 +36,12 @@ class null_mutex
     has_timed_interface_tag, void
 >
 {
-   /// @cond
-   null_mutex(const null_mutex&);
-   null_mutex &operator= (const null_mutex&);
-   /// @endcond
 public:
     typedef null_condition best_condition_type;
     typedef null_condition best_condition_any_type;
+
+    BOOST_COPY_CONSTRUCTOR_DELETE(null_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(null_mutex) /*< disable copy asignement >*/
 
    //!Constructor.
    //!Empty.

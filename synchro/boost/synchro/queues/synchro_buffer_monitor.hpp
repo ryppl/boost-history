@@ -12,6 +12,7 @@
 #define BOOST_SYNCHRO_CONC_BUFFER__HPP
 
 #include <boost/synchro/monitor.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -58,6 +59,8 @@ class sync_buffer : protected exclusive_monitor<>
         sync_buffer &that_;
     };
 public:
+    BOOST_COPY_CONSTRUCTOR_DELETE(sync_buffer) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(sync_buffer) /*< disable copy asignement >*/
     sync_buffer():in_(0), out_(0) {}
 
     bool full() { return out_==(in_+1)%(size+1); }

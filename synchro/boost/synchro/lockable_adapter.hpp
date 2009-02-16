@@ -31,14 +31,13 @@ public:
     typedef typename lifetime_tag<Lockable>::type lifetime;
     typedef typename naming_tag<Lockable>::type naming;
 
+    BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lockable_adapter) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lockable_adapter) /*< disable copy asignement >*/   
     exclusive_lockable_adapter() {}
     void lock() {lock_.lock();}
     void unlock() {lock_.unlock();}
     bool try_lock() { return lock_.try_lock();}
 
-    BOOST_COPY_CONSTRUCTOR_DELETE(exclusive_lockable_adapter) /*< disable copy construction >*/
-    BOOST_COPY_ASSIGNEMENT_DELETE(exclusive_lockable_adapter) /*< disable copy asignement >*/
-    
 protected:
     lockable_type* mutex() const { return &lock_; }
     mutable Lockable lock_;

@@ -15,6 +15,7 @@
 #include <boost/interprocess/sync/sharable_lock.hpp>
 #include <boost/interprocess/sync/upgradable_lock.hpp>
 #include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -40,10 +41,15 @@ namespace boost { namespace synchro {
         typedef multi_process_tag scope_tag_type;
         typedef typename unique_lock_type<Mutex>::type base_type;
         unique_locker(unique_locker&);
-        explicit unique_locker(unique_locker<Mutex, scope_tag_type>&);
-        unique_locker& operator=(unique_locker&);
-        unique_locker& operator=(unique_locker<Mutex, scope_tag_type>& other);
+    
+        //explicit unique_locker(unique_locker<Mutex, scope_tag_type>&);
+        //unique_locker& operator=(unique_locker&);
+        //unique_locker& operator=(unique_locker<Mutex, scope_tag_type>&);
     public:
+        //Non-copyable
+        BOOST_COPY_CONSTRUCTOR_DELETE(unique_locker) /*< disable copy construction >*/
+        BOOST_COPY_ASSIGNEMENT_DELETE(unique_locker) /*< disable copy asignement >*/
+        
         unique_locker(): base_type()
         {}
 
@@ -101,7 +107,7 @@ namespace boost { namespace synchro {
             return *this;
         }
 
-        unique_locker& operator=(upgrade_locker<Mutex>&& other)
+        unique_locker& operator=(upgrade_locker<Mutex, multi_process_tag>&& other)
         {
             unique_locker temp(other);
             swap(temp);
@@ -280,7 +286,7 @@ namespace boost { namespace synchro {
             return *this;
         }
 
-        try_unique_locker& operator=(upgrade_locker<Mutex>&& other)
+        try_unique_locker& operator=(upgrade_locker<Mutex, multi_process_tag>&& other)
         {
             try_unique_locker temp(other);
             swap(temp);
@@ -635,7 +641,7 @@ namespace boost { namespace synchro {
         explicit upgrade_to_unique_locker(upgrade_to_unique_locker&);
         upgrade_to_unique_locker& operator=(upgrade_to_unique_locker&);
     public:
-        explicit upgrade_to_unique_locker(upgrade_locker<Mutex>& m_): base_type(m_)
+        explicit upgrade_to_unique_locker(upgrade_locker<Mutex, multi_process_tag>& m_): base_type(m_)
         {}
         ~upgrade_to_unique_locker()
         {}

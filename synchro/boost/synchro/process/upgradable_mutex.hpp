@@ -15,6 +15,7 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -29,15 +30,13 @@ class interprocess_upgradable_mutex
     interprocess::interprocess_upgradable_mutex
 >
 {
-
-    //Non-copyable
-    interprocess_upgradable_mutex(const interprocess_upgradable_mutex &);
-    interprocess_upgradable_mutex &operator=(const interprocess_upgradable_mutex &);
-
 public:
-
     typedef boost::interprocess::interprocess_condition  condition_type;
     typedef boost::interprocess::interprocess_condition  condition_any_type;
+
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(interprocess_upgradable_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(interprocess_upgradable_mutex) /*< disable copy asignement >*/
 
     bool try_lock_until(system_time const & abs_time)
     {return timed_lock(abs_time);}

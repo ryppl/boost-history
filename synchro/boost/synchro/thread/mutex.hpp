@@ -18,6 +18,7 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 
 namespace boost { namespace synchro {
@@ -33,14 +34,14 @@ class thread_mutex
     mutex
 >
 {
-
-    //Non-copyable
-    thread_mutex(const thread_mutex &);
-    thread_mutex &operator=(const thread_mutex &);
-
 public:
+    // public types
     typedef boost::condition_variable  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
+
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(thread_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(thread_mutex) /*< disable copy asignement >*/
 
     thread_mutex() {}
 };
@@ -123,32 +124,31 @@ class thread_timed_mutex
     process_lifetime_tag,
     anonymous_tag,
     timed_mutex
->
-{
-
-    //Non-copyable
-    thread_timed_mutex(const thread_mutex &);
-    thread_timed_mutex &operator=(const thread_mutex &);
-
+> {
 public:
-    
     typedef boost::condition_variable_any  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
 
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(thread_timed_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(thread_timed_mutex) /*< disable copy asignement >*/
     thread_timed_mutex () {}
         
-    bool try_lock_until(system_time const & abs_time)
-    {return timed_lock(abs_time);}
+    bool try_lock_until(system_time const & abs_time) {
+        return timed_lock(abs_time);
+    }
     template<typename TimeDuration>
-    bool try_lock_for(TimeDuration const & relative_time)
-    {return timed_lock(relative_time);}
+    bool try_lock_for(TimeDuration const & relative_time) {
+        return timed_lock(relative_time);
+    }
 
-    void lock_until(system_time const & abs_time)
-    {if(!timed_lock(abs_time)) throw timeout_exception();}
+    void lock_until(system_time const & abs_time) {
+        if(!timed_lock(abs_time)) throw timeout_exception();
+    }
     template<typename TimeDuration>
-    void lock_for(TimeDuration const & relative_time)
-    {if(!timed_lock(relative_time)) throw timeout_exception();}
-    
+    void lock_for(TimeDuration const & relative_time) {
+        if(!timed_lock(relative_time)) throw timeout_exception();
+    }
 };    
 
 #if 0

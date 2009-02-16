@@ -33,23 +33,7 @@ struct scope_traits<multi_threaded_tag>
     static const defer_lock_t& defer_lock() {return boost::defer_lock;}
     static const adopt_lock_t& adopt_lock() {return boost::adopt_lock;}
     static const try_to_lock_t& try_to_lock() {return boost::try_to_lock;}
-
-#if 0
-    static const defer_lock_t defer_lock;
-    static const adopt_lock_t adopt_lock;
-    static const try_to_lock_t try_to_lock;
-#endif
-
 };
-
-#if 0
-template<>
-const boost::defer_lock_t lockable_scope_traits<multi_threaded_tag>::defer_lock={};
-template<typename Lockable>
-const boost::adopt_lock_t lockable_scope_traits<multi_threaded_tag>::adopt_lock={};
-template<typename Lockable>
-const boost::try_to_lock_t lockable_scope_traits<multi_threaded_tag>::try_to_lock={};
-#endif
 
 template<typename Lockable>
 struct lockable_scope_traits<multi_threaded_tag, Lockable> : scope_traits<multi_threaded_tag>

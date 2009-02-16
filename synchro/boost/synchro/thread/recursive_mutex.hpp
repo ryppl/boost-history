@@ -16,6 +16,7 @@
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -31,15 +32,13 @@ class thread_recursive_mutex
     recursive_mutex
 >
 {
-
-    //Non-copyable
-    thread_recursive_mutex(const thread_recursive_mutex &);
-    thread_recursive_mutex &operator=(const thread_recursive_mutex &);
-
 public:
-
     typedef boost::condition_variable_any  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
+
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(thread_recursive_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(thread_recursive_mutex) /*< disable copy asignement >*/
     thread_recursive_mutex() {}
 };    
 #if 0    
@@ -98,15 +97,14 @@ class thread_recursive_timed_mutex
 >
 {
 
-    //Non-copyable
-    thread_recursive_timed_mutex(const thread_recursive_timed_mutex &);
-    thread_recursive_timed_mutex &operator=(const thread_recursive_timed_mutex &);
-
 public:
-    thread_recursive_timed_mutex() {}
-        
     typedef boost::condition_variable_any  best_condition_type;
     typedef boost::condition_variable_any  best_condition_any_type;
+
+    //Non-copyable
+    BOOST_COPY_CONSTRUCTOR_DELETE(thread_recursive_timed_mutex) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(thread_recursive_timed_mutex) /*< disable copy asignement >*/
+    thread_recursive_timed_mutex() {}
 
     bool try_lock_until(system_time const & abs_time)
     {return this->timed_lock(abs_time);}

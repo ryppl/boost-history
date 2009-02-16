@@ -51,22 +51,6 @@ struct lockable_scope_traits<multi_process_tag, Lockable> : scope_traits<multi_p
     typedef boost::interprocess::upgradable_lock<lockable_type> upgrade_lock;
 
 };
-//template<typename Lockable>
-//lockable_scope_traits<multi_process_tag, Lockable>::defer_lock_t
-////boost::interprocess::detail::defer_lock_type
-//lockable_scope_traits<multi_process_tag, Lockable>::defer_lock ={};
-////(lockable_scope_traits<multi_process_tag, Lockable>::defer_lock_type());
-//
-//template<typename Lockable>
-//const lockable_scope_traits<multi_process_tag, Lockable>::adopt_lock_t
-//lockable_scope_traits<multi_process_tag, Lockable>::adopt_lock
-//={};
-//
-//template<typename Lockable>
-//const lockable_scope_traits<multi_process_tag, Lockable>::try_to_lock_t
-//lockable_scope_traits<multi_process_tag, Lockable>::try_to_lock
-//={};
-
 
 }
 }

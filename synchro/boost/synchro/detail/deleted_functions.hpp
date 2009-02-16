@@ -26,8 +26,14 @@
 #define BOOST_COPY_CONSTRUCTOR_DELETE(T)            \
   T(const T&)=delete;
 
+#define BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(T)            \
+  T(T&)=delete;
+
 #define BOOST_COPY_ASSIGNEMENT_DELETE(T)            \
-  const T& operator=(const T&)=delete;
+  T& operator=(const T&)=delete;
+
+#define BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(T)            \
+  const T& operator=(T&)=delete;
 
 #define BOOST_SEQUENCE_DELETE(T)                    \
   T operator,(T)=delete;
@@ -79,9 +85,19 @@ private:                                            \
   T(const T&);                                      \
 public:
 
+#define BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(T)            \
+private:                                            \
+  T(T&);                                            \
+public:
+
 #define BOOST_COPY_ASSIGNEMENT_DELETE(T)            \
 private:                                            \
-  const T& operator=(const T&);                     \
+  T& operator=(const T&);                     \
+public:
+
+#define BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(T)            \
+private:                                            \
+  T& operator=(T&);                           \
 public:
 
 #define BOOST_SEQUENCE_DELETE(T)                    \

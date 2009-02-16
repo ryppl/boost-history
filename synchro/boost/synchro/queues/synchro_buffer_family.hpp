@@ -11,11 +11,9 @@
 #ifndef BOOST_SYNCHRO_QUEUES_SYNCHRO_BUFFER__HPP
 #define BOOST_SYNCHRO_QUEUES_SYNCHRO_BUFFER__HPP
 
-//#include <boost/thread/locks.hpp>
-//#include <boost/thread/mutex.hpp>
-//#include <boost/thread/condition_variable.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/lockers.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
 #if 0
@@ -81,6 +79,8 @@ class sync_buffer
     unsigned in_, out_;
 
 public:
+    BOOST_COPY_CONSTRUCTOR_DELETE(sync_buffer) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(sync_buffer) /*< disable copy asignement >*/
     sync_buffer():in_(0), out_(0) {}
 
     bool full() { return out_==(in_+1)%(size+1); }

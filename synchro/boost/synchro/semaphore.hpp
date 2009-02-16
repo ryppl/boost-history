@@ -15,6 +15,7 @@
 
 #include <boost/synchro/thread_synchronization_family.hpp>
 #include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
 
 //!\file
 //!Describes a semaphore class for inter-process synchronization
@@ -33,12 +34,9 @@ class basic_semaphore
     typedef typename unique_lock_type<lockable_type>::type scoped_lock;
     typedef basic_semaphore this_type;
 
-    /// @cond
-    //Non-copyable
-    basic_semaphore(const this_type &);
-    this_type& operator=(const this_type &);
-    /// @endcond
 public:
+    BOOST_COPY_CONSTRUCTOR_DELETE(basic_semaphore) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(basic_semaphore) /*< disable copy asignement >*/
 
     //!Creates a semaphore with the given initial count.
     //!exception if there is an error.*/

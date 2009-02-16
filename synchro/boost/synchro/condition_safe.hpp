@@ -14,6 +14,8 @@
 #include <boost/synchro/lockable_concepts.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/synchro/thread/mutex.hpp>
+#include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/synchro/detail/defaulted_functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -29,10 +31,16 @@ class condition_safe {
 public:
     typedef Condition condition;
     typedef condition_backdoor<Condition> backdoor;
+
+    BOOST_DEFAULT_CONSTRUCTOR_DEFAULT(condition_safe) /*< reestablish default construction >*/
+    BOOST_COPY_CONSTRUCTOR_DELETE(condition_safe) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(condition_safe) /*< disable copy asignement >*/
+
     void notify_one() { cond_.notify_one(); }
     void notify_all() { cond_.notify_all(); }
 private:
     friend class condition_backdoor<Condition>;
+    
     template <typename Locker, typename Predicate>
     void wait_when(Locker& lock, Predicate pred) {
         cond_.wait(lock, pred);
