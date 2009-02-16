@@ -164,8 +164,6 @@ namespace  // Concrete FSM implementation
                 void turn_light_off(ThreeSec const&)       { std::cout << "3s off::turn light off\n"; }
                 // guard conditions
 
-                // friend definition needed.
-                friend class state_machine<Song1>;
                 typedef Song1 s; // makes transition table cleaner
                 // Transition table for Song1
                 struct transition_table : mpl::vector1<
@@ -205,8 +203,6 @@ namespace  // Concrete FSM implementation
             void start_prev_song(PreviousSong const&)       { std::cout << "Playing::start_prev_song\n"; }
             // guard conditions
 
-            // friend definition needed.
-            friend class state_machine<Playing>;
             typedef Playing pl; // makes transition table cleaner
             // Transition table for Playing
             struct transition_table : mpl::vector4<
@@ -258,8 +254,6 @@ namespace  // Concrete FSM implementation
             void stop_blinking(TenSec const&)       { std::cout << "Paused::stop_blinking\n"; }
             // guard conditions
 
-            // friend definition needed.
-            friend class state_machine<Paused>;
             typedef Paused pa; // makes transition table cleaner
             // Transition table
             struct transition_table : mpl::vector2<
@@ -327,8 +321,6 @@ namespace  // Concrete FSM implementation
 #ifdef __MWERKS__
     private:
 #endif 
-        // friend definition needed.
-        friend class state_machine<player>;
         typedef player p; // makes transition table cleaner
 
         // Transition table for player

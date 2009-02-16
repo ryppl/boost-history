@@ -34,8 +34,6 @@ namespace {
                 AlarmImpl(int index):Index(index){}
                 struct NoBeep : public state<> {};
                 struct Beeps : public state<> {};
-                // friend definition needed.
-                friend class state_machine<AlarmImpl>;
                 typedef AlarmImpl A; // makes transition table cleaner
                 // the initial state of the AlarmBeeps SM. Must be defined
                 typedef NoBeep initial_state;
@@ -67,16 +65,12 @@ namespace {
                 Alarm2():AlarmImpl(2){}
             }; 
 
-            // friend definition needed.
-            friend class state_machine<AlarmBeeps>;
             // the initial state of the AlarmBeeps SM. Must be defined
             typedef mpl::vector<Alarm1,Alarm2 > initial_state;
 
             // Transition table for AlarmBeeps. Can be empty as no transition defined
             struct transition_table : mpl::vector<> {};
         };
-        // friend definition needed.
-        friend class state_machine<Clock>;
         // the initial state of the Clock SM. Must be defined
         typedef Displays initial_state;
         // Transition table for Clock

@@ -100,8 +100,6 @@ namespace  // Concrete FSM implementation
             void start_prev_song(PreviousSong const&)       { std::cout << "Playing::start_prev_song\n"; }
             // guard conditions
 
-            // friend definition needed.
-            friend class state_machine<Playing>;
             typedef Playing pl; // makes transition table cleaner
             // Transition table for Playing
             struct transition_table : mpl::vector4<
@@ -155,8 +153,6 @@ namespace  // Concrete FSM implementation
 #ifdef __MWERKS__
     private:
 #endif 
-        // friend definition needed.
-        friend class state_machine<player>;
         typedef player p; // makes transition table cleaner
 
         // Transition table for player

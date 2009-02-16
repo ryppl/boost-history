@@ -42,8 +42,6 @@ namespace {
                     template <class Event>
                     void on_entry(Event const& ) {std::cout << "Beeping alarm:"<< Index << std::endl;}
                 };
-                // friend definition needed.
-                friend class state_machine<Alarm<Index> >;
                 typedef Alarm<Index> A; // makes transition table cleaner
                 // the initial state of the AlarmBeeps SM. Must be defined
                 typedef NoBeep initial_state;
@@ -62,16 +60,12 @@ namespace {
                 > {};
             };
 
-            // friend definition needed.
-            friend class state_machine<AlarmBeeps>;
             // the initial state of the AlarmBeeps SM. Must be defined
             typedef mpl::vector<Alarm<1>,Alarm<2> > initial_state;
 
             // Transition table for AlarmBeeps. Can be empty as no transition defined
             struct transition_table : mpl::vector<> {};
         };
-        // friend definition needed.
-        friend class state_machine<Clock>;
         // the initial state of the Clock SM. Must be defined
         typedef Displays initial_state;
         // Transition table for Clock

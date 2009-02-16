@@ -6,11 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090216;22481600">
+	<META NAME="CHANGED" CONTENT="20090217;12000">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
@@ -873,20 +874,6 @@ transition.</FONT></FONT></FONT></CODE></P>
 </FONT></CODE><CODE><FONT COLOR="#c5000b"><FONT SIZE=2>good_disk_format</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>(</FONT></FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>cd_detected
 const&amp;</FONT></FONT></CODE><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>evt)
 {...}</FONT></FONT></CODE></P>
-<P><BR><BR>
-</P>
-<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>A
-bit of syntactical noise is unfortunately unavoidable:</FONT></FONT></FONT></CODE></P>
-<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#008000"><FONT SIZE=2>//
-friend definition needed.</FONT></FONT></CODE></P>
-<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>friend</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
-</FONT></CODE><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>class</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
-</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>state_machine</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&lt;</FONT></FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>&gt;;</FONT></FONT></CODE></P>
-<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#0000ff"><FONT SIZE=2>typedef</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
-</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>player</FONT></FONT></CODE><CODE><FONT COLOR="#000000">
-</FONT></CODE><CODE><FONT COLOR="#030003"><FONT SIZE=2>p</FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=2>;
-</FONT></FONT></CODE><CODE><FONT COLOR="#008000"><FONT SIZE=2>//
-makes transition table cleaner</FONT></FONT></CODE></P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
 <P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>By
@@ -979,8 +966,7 @@ following diagram shows:</P>
 <P>And that's it! You can even define the Playing state machine in
 another file and compile separately. Inside, you just need to define
 a (public defined) transition table (the heart of the whole system)
-and the same action / guard / friend definitions, exactly like you
-did for player.</P>
+and the same action / guard, exactly like you did for player.</P>
 <P><BR><BR>
 </P>
 <P>And keep in mind: <U>no change to </U><CODE><U>player</U></CODE>

@@ -121,8 +121,6 @@ namespace  // Concrete FSM implementation
 #ifdef __MWERKS__
     private:
 #endif 
-        // friend definition needed.
-        friend class state_machine<player>;
         typedef player p; // makes transition table cleaner
 
         // Transition table for player

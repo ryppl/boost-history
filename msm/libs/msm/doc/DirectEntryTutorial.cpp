@@ -111,8 +111,6 @@ namespace  // Concrete FSM implementation
             typedef mpl::vector<SubState1,SubState1b> initial_state;
 
             typedef mpl::vector<SubState2b> explicit_creation;
-            // friend definition needed.
-            friend class state_machine<SubFsm2>;
 
             // Transition table for SubFsm2
             //TODO should not be necessary
@@ -146,8 +144,6 @@ namespace  // Concrete FSM implementation
 #ifdef __MWERKS__
     private:
 #endif 
-        // friend definition needed.
-        friend class state_machine<Fsm>;
 
         // Transition table for Fsm
         struct transition_table : mpl::vector<

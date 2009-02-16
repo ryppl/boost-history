@@ -51,7 +51,17 @@ struct state_base : USERBASE
     template <class Event>
     void on_exit(Event const& ){}
 };
-
+struct no_sm_ptr 
+{
+    // tags
+    typedef ::boost::mpl::bool_<false>   needs_sm;
+};
+struct sm_ptr 
+{
+    // tags
+    typedef ::boost::mpl::bool_<true>    needs_sm;
+};
+// kept for backward compatibility
 struct NoSMPtr 
 {
     // tags
@@ -65,7 +75,7 @@ struct SMPtr
 
 // provides the typedefs and interface. Concrete states derive from it.
 // template argument: pointer-to-fsm policy
-template<class BASE = default_base_state,class SMPtrPolicy = NoSMPtr>
+template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct state :  public state_base<BASE>, SMPtrPolicy
 {
     // tags
@@ -83,7 +93,7 @@ struct EndInterruptFlag {};
 
 // terminate state simply defines the TerminateFlag flag
 // template argument: pointer-to-fsm policy
-template<class BASE = default_base_state,class SMPtrPolicy = NoSMPtr>
+template<class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct terminate_state : public state_base<BASE>, SMPtrPolicy
 {
     // tags
@@ -95,7 +105,7 @@ struct terminate_state : public state_base<BASE>, SMPtrPolicy
 // terminate state simply defines the InterruptedFlag and EndInterruptFlag<EndInterruptEvent> flags
 // template argument: event which ends the interrupt
 // template argument: pointer-to-fsm policy
-template <class EndInterruptEvent,class BASE = default_base_state,class SMPtrPolicy = NoSMPtr>
+template <class EndInterruptEvent,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct interrupt_state : public state_base<BASE>, SMPtrPolicy
 {
     // tags
@@ -128,7 +138,7 @@ struct explicit_entry
 // template argument: containing composite
 // template argument: zone index of this state
 // template argument: pointer-to-fsm policy
-template<class Composite,int ZoneIndex=-1,class BASE = default_base_state,class SMPtrPolicy = NoSMPtr>
+template<class Composite,int ZoneIndex=-1,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct entry_pseudo_state
     :  public state_base<BASE>, explicit_entry<Composite,ZoneIndex> ,SMPtrPolicy
 {
@@ -144,7 +154,7 @@ struct entry_pseudo_state
 // template argument: containing composite
 // template argument: event to forward
 // template argument: pointer-to-fsm policy
-template<class Composite,class Event,class BASE = default_base_state,class SMPtrPolicy = NoSMPtr>
+template<class Composite,class Event,class BASE = default_base_state,class SMPtrPolicy = no_sm_ptr>
 struct exit_pseudo_state : public state_base<BASE> , SMPtrPolicy
 {
     // tags

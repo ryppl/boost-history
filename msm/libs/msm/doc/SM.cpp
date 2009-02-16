@@ -152,8 +152,6 @@ namespace  // Concrete FSM implementation
                 void turn_light_off(ThreeSec const&)       { std::cout << "3s off::turn light off\n"; }
                 // guard conditions
 
-                // friend definition needed.
-                friend class state_machine<Song1>;
                 typedef Song1 s; // makes transition table cleaner
                 // Transition table for Song1
                 struct transition_table : mpl::vector1<
@@ -193,8 +191,6 @@ namespace  // Concrete FSM implementation
             void start_prev_song(PreviousSong const&)       { std::cout << "Playing::start_prev_song\n"; }
             // guard conditions
 
-            // friend definition needed.
-            friend class state_machine<Playing>;
             typedef Playing pl; // makes transition table cleaner
             // Transition table for Playing
             struct transition_table : mpl::vector4<
@@ -246,8 +242,6 @@ namespace  // Concrete FSM implementation
             void stop_blinking(TenSec const&)       { std::cout << "Paused::stop_blinking\n"; }
             // guard conditions
 
-            // friend definition needed.
-            friend class state_machine<Paused>;
             typedef Paused pa; // makes transition table cleaner
             // Transition table
             struct transition_table : mpl::vector2<
@@ -315,8 +309,6 @@ namespace  // Concrete FSM implementation
 #ifdef __MWERKS__
     private:
 #endif 
-        // friend definition needed.
-        friend class state_machine<player>;
         typedef player p; // makes transition table cleaner
 
         // Transition table for player
@@ -466,6 +458,31 @@ namespace  // Concrete FSM implementation
 
         std::cout << "Simulate error. Event play is not valid" << std::endl;
         p.process_event(play()); pstate(p);
+
+        // the states and events of the higher level FSM (player)
+        typedef player::transition_table stt;
+        typedef generate_state_set<stt>::type simple_states;
+
+        std::cout << "the state list:" << std::endl;
+        mpl::for_each<simple_states,boost::msm::wrap<mpl::placeholders::_1> >(display_type ());
+
+        std::cout << "the event list:" << std::endl;
+        typedef generate_event_set<stt>::type event_list;
+        mpl::for_each<event_list,boost::msm::wrap<mpl::placeholders::_1> >(display_type ());
+        std::cout << std::endl;
+
+        // the states and events recursively searched
+        typedef recursive_get_transition_table<player>::type recursive_stt;
+
+        std::cout << "the state list (including sub-SMs):" << std::endl;
+
+        typedef generate_state_set<recursive_stt>::type all_states;
+        mpl::for_each<all_states,boost::msm::wrap<mpl::placeholders::_1> >(display_type ());
+
+        std::cout << "the event list (including sub-SMs):" << std::endl;
+        typedef generate_event_set<recursive_stt>::type all_events;
+        mpl::for_each<all_events,boost::msm::wrap<mpl::placeholders::_1> >(display_type ());
+
     }
 }
 

@@ -47,8 +47,6 @@ namespace {
                 void on_exit(Event const& ) {std::cout << "Leaving BothBeep"<< std::endl;}
             };
 
-            // friend definition needed.
-            friend class state_machine<AlarmBeeps>;
             // the initial state of the AlarmBeeps SM. Must be defined. Will not be used as we use only explicit entries
             typedef mpl::vector< Alarm1Beeps > initial_state;
             // as we have no transition table, we need to create the states explicitly
@@ -57,8 +55,6 @@ namespace {
             // Transition table for AlarmBeeps. Can be empty as no transition defined
             struct transition_table : mpl::vector<> {};
         };
-        // friend definition needed.
-        friend class state_machine<Clock>;
         // the initial state of the Clock SM. Must be defined
         typedef Displays initial_state;
         // Transition table for Clock
