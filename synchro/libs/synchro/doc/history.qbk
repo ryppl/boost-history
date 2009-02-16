@@ -7,12 +7,36 @@
 
 [section:history Appendix A: History]
 
-[variablelist
-[
-    [Mars 23, 2008]
-    [Synchro is born.
-     ]
-]
-]
+[section [*Version 0.1.0, Febraury 16, 2009] ['Announcement of Synchro]]
 
+[*Features:]
+
+* A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on lockables(mutexes) concepts and locker(guards) concepts.
+
+    * lockables traits and lock generators, 
+    * lock adapters of the Boost.Thread and Boost.Interprocess lockable models,
+    * locker adapters of the Boost.Thread and Boost.Interprocess lockers models,
+    * complete them with the corresponding models for single-threaded programms: `null_mutex` and `null_condition` classes,
+    * locking families,
+    * `semaphore`, 
+    * `condition_lockable` lock put toghether a lock and its associated conditions.
+
+* A coherent way exception based timed lock functions and constructor,
+
+* A rich palete of lockers as
+
+    * `strict_locker`, `nested_strict_locker`,
+    * `condition_locker`,
+    * `reverse_locker`, `nested_reverse_locker`,
+    * `locking_ptr`, `on_derreference_locking_ptr`,
+    * `externally_locked`,
+    
+* A polymorphic lockable hierarchy.
+
+* High-level abstractions for handling more complicated synchronization problems, including
+    * `monitor` for guaranteeing exclusive access to an object, and
+    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
+
+
+[endsect]
 [endsect]

@@ -11,24 +11,6 @@
 [section:poly_adaptive_lock_hpp Header `<boost/synchro/poly/adaptive_lock.hpp>`]
 [/==========================================================================================]
 
-[section Class `lock_adapter`]
-[*Synopsis]
-
-[*Description]
-
-More usefully for primitives, which are best left as
-non-polymorphic, an adaptor class can be used to provide the interface - run-time
-polymorphism - on behalf of anything supporting the correctly named functions -
-sometimes known as compile time polymorphism. It easier to take a nonpolymorphic
-class and adapt it to be polymorphic, than it is do it the other way
-around: the overhead and semantics of polymorphism can only introduced to a class,
-not removed.
-
-[*`lock_adapter` public member functions]
-
-# `;`
-
-[endsect]
 [section Class `adaptive_lock`]
 An adaptive general locking class that defers the decision of lockable type to run time.
 

@@ -22,11 +22,11 @@
         struct process_synchronization_family {
            typedef boost::synchro::interprocess_mutex              mutex_type;
            typedef boost::synchro::interprocess_recursive_mutex    recursive_mutex_type;
-           typedef boost::synchro::interprocess_mutex                 timed_mutex_type;
+           typedef boost::synchro::interprocess_mutex              timed_mutex_type;
            typedef boost::synchro::interprocess_recursive_mutex    recursive_timed_mutex_type;
-           typedef boost::synchro::interprocess_upgradable_mutex    shared_mutex_type;
-           typedef boost::interprocess::interprocess_condition             condition_type;
-           typedef boost::interprocess::interprocess_condition             condition_any_type;
+           typedef boost::synchro::interprocess_upgradable_mutex   shared_mutex_type;
+           typedef boost::interprocess::interprocess_condition     condition_type;
+           typedef boost::interprocess::interprocess_condition     condition_any_type;
         };
 
 

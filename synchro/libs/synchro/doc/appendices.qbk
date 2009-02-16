@@ -25,6 +25,10 @@
 
 [heading Tasks to do before review]
 
+* `array_locker` and `tuple_locker` locker ocntainers.
+* A complement to the already present in Boost.Thread `lock`, `try_lock` free functions:
+    * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`
+
 [heading For later releases]
 
 [endsect]

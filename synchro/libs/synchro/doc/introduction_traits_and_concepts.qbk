@@ -6,11 +6,11 @@
  /]
 
 
-[section:uniform Using thread, Interprocess and null synchronization mechanisms  uniformly]
+[section:uniform Using Thread, Interprocess and Null synchronization mechanisms uniformly]
 
 One of the problems when doing multi threaded application with Boost.Thread and Boost.Interprocess is that the synchronization mechanism of these two libraries even if they are very close since the release 1.35, there are some minor differences that make quite difficult to design a class that can work independently with synchronization mechanisms of both libraries.
 
-This library proposes some classes that allows to write code that can be used indistinguishably with thread or interprocess synchronization mechanisms. It is inspired on the work from [*C++ Threading - A Generic-Programming Approach] - Kevlin Henney and [*An OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit] Douglas C. Schmidt.
+This library proposes some classes that allows to write code that can be used indistinguishably with thread or interprocess synchronization mechanisms. This section is inspired on the work from [*C++ Threading - A Generic-Programming Approach] - Kevlin Henney.
 
 
 [*Lock substitutability]

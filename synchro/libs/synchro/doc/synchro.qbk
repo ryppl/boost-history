@@ -53,6 +53,7 @@ In addition to the expressions defined in [concept], the following expressions m
 [import ../../../boost/synchro/lockable_concepts.hpp]
 [import ../../../boost/synchro/lockable_adapter.hpp]
 [import ../../../boost/synchro/monitor.hpp]
+[import ../../../boost/synchro/lockers.hpp]
 [import ../../../boost/synchro/thread_synchronization_family.hpp]
 
 [import ../../../boost/synchro/conc/concurrent_component.hpp]

@@ -31,8 +31,9 @@ compiler include path.
 [heading Requirements]
 [/=========================]
 
-[*Boost.Synchro] depends on Boost. You must use either Boost version 1.35.x
-or the version in SVN trunk. In particular, [*Boost.Synchro] depends on:
+[*Boost.Synchro] depends on Boost. You must use either Boost version 1.38.x
+or the version in SVN trunk (even if Boost version 1.35.x should works also). 
+In particular, [*Boost.Synchro] depends on:
 
 
 [variablelist
@@ -62,7 +63,7 @@ the underlying parameters provide it.
 [heading Thread safety]
 [/====================]
 
-All functions in the library are exception-safe except:
+All functions in the library are thread-unsafe except when noted explicitly.
 
 
 [/=======================]
@@ -72,7 +73,7 @@ Currently, [*Boost.Synchro] has been tested in the following compilers/platforms
 
 *  GCC 3.4.4 Cygwin
 *  GCC 3.4.6 Linux
-*  GCC 4.3.2 Cygwin
+[/*  GCC 4.3.2 Cygwin]
 *  GCC 4.1.2 Linux
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]

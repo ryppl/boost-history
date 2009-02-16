@@ -39,7 +39,7 @@ LockableConcept object supports the basic features required to delimit a critica
             l.unlock();
             l.try_lock();
         }
-        Lockable l;
+        Lockable& l;
     };
 
 [endsect]
@@ -52,10 +52,12 @@ TimedLockableConcept object extends ExclusiveLockConcept with the timed_lock fun
         BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
         BOOST_CONCEPT_USAGE(TimedLockableConcept) {
-            l.timed_lock(t);
-    //        l.timed_lock(1);
+            l.lock_until(t);
+            l.lock_for(boost::posix_time::seconds(1));
+            l.try_lock_until(t);
+            l.try_lock_for(boost::posix_time::seconds(1));
         }
-        Lockable l;
+        Lockable& l;
         system_time t;
     };
 
@@ -70,11 +72,14 @@ ShareLockableConcept object extends ExclusiveTimedLockConcept with the lock_shar
 
         BOOST_CONCEPT_USAGE(ShareLockableConcept) {
             l.lock_shared();
-            l.timed_lock_shared(t);
+            l.lock_shared_until(t);
+            l.lock_shared_for(boost::posix_time::seconds(1));
             l.try_lock_shared();
+            l.try_lock_shared_until(t);
+            l.try_lock_shared_for(boost::posix_time::seconds(1));
             l.unlock_shared();
         }
-        Lockable l;
+        Lockable& l;
         system_time t;
     };
 
@@ -91,13 +96,17 @@ UpgradeLockableConcept object extends SharableLockableConcept with the lock_upgr
 
         BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
             l.lock_upgrade();
-            l.timed_lock_upgrade(t);
+            l.lock_upgrade_until(t);
+            l.lock_upgrade_for(boost::posix_time::seconds(1));
+            l.try_lock_upgrade();
+            l.try_lock_upgrade_until(t);
+            l.try_lock_upgrade_for(boost::posix_time::seconds(1));
             l.unlock_upgrade_and_lock();
             l.unlock_and_lock_upgrade();
             l.unlock_and_lock_shared();
             l.unlock_upgrade_and_lock_shared();
         }
-        Lockable l;
+        Lockable& l;
         system_time t;
     };
 

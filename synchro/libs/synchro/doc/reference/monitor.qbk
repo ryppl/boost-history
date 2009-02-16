@@ -11,98 +11,81 @@
 
     namespace boost { namespace synchro {
         template <
-            typename Lockable,
-            class Condition,
-            class ConditionBoosted
+              typename Lockable=thread_mutex
+            , class Condition=condition_safe<typename best_condition<Lockable>::type >
+            , typename ScopeTag=typename scope_tag<Lockable>::type
         >
         class exclusive_monitor;
+
+        template <
+              typename Lockable=thread_shared_mutex,
+            , class Condition=condition_safe<typename best_condition_any<Lockable>::type >
+            , typename ScopeTag=typename scope_tag<Lockable>::type
+        >
+        class shared_monitor;
+
+        template <
+              typename Lockable=thread_mutex
+            , typename lock_tag=typename category_tag<Lockable>::type
+            , typename ScopeTag=typename scope_tag<Lockable>::type
+        > 
+        struct monitor;
     }}
 
 
-[section Template Class `exclusive_lockable_adapter<>`]
+[section Template Class `exclusive_monitor<>`]
 
-The boost::mutex and boost:interprocess mutex family classes are a non-polymorphic classes that encapsulates a system primitive and portion of C API. Clearly, many of the synchronisation
-primitives support common operations, and hence a Concept.
-The ExclusiveLockable class can be used with the Boost.ConceptCheck in templates that work with a exclusive synchronisation.
-
-LockableConcept object supports the basic features required to delimit a critical region. Supports the basic lock, unlock and try_lock functions and defines the lock traits
-
-    template <typename Lockable>
-    struct LockableConcept {
-        typedef typename category_tag<Lockable>::type category;
-        typedef typename timed_interface_tag<Lockable>::type timed_interface;
-        typedef typename reentrancy_tag<Lockable>::type reentrancy;
-        typedef typename scope_tag<Lockable>::type  scope;
-        typedef typename lifetime_tag<Lockable>::type  lifetime;
-        typedef typename naming_tag<Lockable>::type  naming;
-
-        BOOST_CONCEPT_USAGE(LockableConcept) {
-            l.lock();
-            l.unlock();
-            l.try_lock();
-        }
-        Lockable l;
-    };
+        template <
+            typename Lockable=thread_mutex
+        ,   class Condition=condition_safe<typename best_condition<Lockable>::type >
+        ,   typename ScopeTag=typename scope_tag<Lockable>::type
+        >
+        class exclusive_monitor : protected lockable_adapter<Lockable> {
+            BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+        protected:
+            typedef Condition condition;
+            typedef condition_unique_locker<Lockable, Condition, ScopeTag> synchronizer;
+        };
 
 [endsect]
-[section Template Class `timed_lockable_adapter<>`]
+[section Template Class `shared_monitor<>`]
 
-TimedLockableConcept object extends ExclusiveLockConcept with the timed_lock function
-
-    template <typename Lockable>
-    struct TimedLockableConcept {
-        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-
-        BOOST_CONCEPT_USAGE(TimedLockableConcept) {
-            l.timed_lock(t);
-    //        l.timed_lock(1);
-        }
-        Lockable l;
-        system_time t;
-    };
-
-[endsect]
-[section Template Class `shared_lockable_adapter<>`]
-
-ShareLockableConcept object extends ExclusiveTimedLockConcept with the lock_shared, timed_lock_shared, try_lock_shared and unlock_shared functions
-
-    template <typename Lockable>
-    struct ShareLockableConcept {
-        BOOST_CONCEPT_ASSERT((TimedLockableConcept<Lockable>));
-
-        BOOST_CONCEPT_USAGE(ShareLockableConcept) {
-            l.lock_shared();
-            l.timed_lock_shared(t);
-            l.try_lock_shared();
-            l.unlock_shared();
-        }
-        Lockable l;
-        system_time t;
-    };
-
+        template <
+            typename Lockable=thread_shared_mutex,
+        ,   class Condition=condition_safe<typename best_condition_any<Lockable>::type >
+        ,   typename ScopeTag=typename scope_tag<Lockable>::type
+        >
+        class shared_monitor : protected lockable_adapter<Lockable> {
+            BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+        protected:
+            typedef Condition condition;
+            typedef condition_unique_locker<Lockable, Condition, ScopeTag> synchronizer;
+            typedef condition_shared_locker<Lockable, Condition, ScopeTag> shared_synchronizer;
+        };
 
 [endsect]
-[section Template Class `upgrade_lockable_adapter<>`]
+[section Template Class `monitor<>`]
 
-UpgradeLockableConcept object extends SharableLockableConcept with the lock_upgrade, timed_lock_upgrade, unlock_upgrade_and_lock, unlock_and_lock_shared and unlock_upgrade_and_lock_shared functions.
+        template <
+              typename Lockable=thread_mutex
+            , typename lock_tag=typename category_tag<Lockable>::type
+            , typename ScopeTag=typename scope_tag<Lockable>::type
+        > struct monitor;
 
+        template <typename Lockable, typename ScopeTag>
+        struct monitor<Lockable, exclusive_lock_tag, ScopeTag>
+            : protected exclusive_monitor<Lockable, ScopeTag>
+        {};
 
-    template <typename Lockable>
-    struct UpgradeLockableConcept {
-        BOOST_CONCEPT_ASSERT((ShareLockableConcept<Lockable>));
+        template <typename Lockable, typename ScopeTag>
+        struct monitor<Lockable, sharable_lock_tag, ScopeTag>
+            : protected shared_monitor<Lockable, ScopeTag>
+        {};
 
-        BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
-            l.lock_upgrade();
-            l.timed_lock_upgrade(t);
-            l.unlock_upgrade_and_lock();
-            l.unlock_and_lock_upgrade();
-            l.unlock_and_lock_shared();
-            l.unlock_upgrade_and_lock_shared();
-        }
-        Lockable l;
-        system_time t;
-    };
-
+        template <typename Lockable, typename ScopeTag>
+        struct monitor<Lockable, upgradable_lock_tag, ScopeTag>
+            : protected shared_monitor<Lockable, ScopeTag>
+        {};
 
 
 [endsect]

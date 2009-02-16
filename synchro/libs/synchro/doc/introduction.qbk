@@ -12,11 +12,51 @@
 
 [section Mapping the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts]
 
+The mapping from the current mutexes and scoped guards (Boost.Thread and Boost/Interprocess) to common concepts has been done by adapting the required signatures to the underlying models. For example thread_timed_mutex is defied as:
+
+    class thread_timed_mutex
+    : public lock_traits_base<
+        multi_threaded_tag,
+        exclusive_lock_tag,
+        non_recursive_tag,
+        has_timed_interface_tag,
+        process_lifetime_tag,
+        anonymous_tag,
+        timed_mutex
+    > {
+    public:
+        typedef boost::condition_variable_any  best_condition_type;
+        typedef boost::condition_variable_any  best_condition_any_type;
+
+        //Non-copyable
+        BOOST_COPY_CONSTRUCTOR_DELETE(thread_mutex) /*< disable copy construction >*/
+        BOOST_COPY_ASSIGNEMENT_DELETE(thread_mutex) /*< disable copy asignement >*/
+        thread_timed_mutex () {}
+            
+        bool try_lock_until(system_time const & abs_time) {
+            return timed_lock(abs_time);
+        }
+        template<typename TimeDuration>
+        bool try_lock_for(TimeDuration const & relative_time) {
+            return timed_lock(relative_time);
+        }
+
+        void lock_until(system_time const & abs_time) {
+            if(!timed_lock(abs_time)) throw timeout_exception();
+        }
+        template<typename TimeDuration>
+        void lock_for(TimeDuration const & relative_time) {
+            if(!timed_lock(relative_time)) throw timeout_exception();
+        }
+    };    
+
+Note that only the functions for which the interface change are defined. The others are inherited.
+
 [endsect]
 
 [section  Condition lockable]
 
-The library provides condition lockable, which allows a condition variable to be associated with a Lockable. 
+Based on the idead of Kevlin Henney, the library provides condition lockable, which allows a condition variable to be associated with a Lockable. 
 
 Treating condition locking as a property of Lockable rather than viceversa has the benefit of making clear how something is locked and accessed, as it were emphasising it in the first person.
 
@@ -24,12 +64,12 @@ Treating condition locking as a property of Lockable rather than viceversa has t
     public:
         ...
         product *pull() {
-            guard.lock();
+            mtx.lock();
             while(queue.empty())
                 guard.relock_on(not_empty);
             product *pulled = queue.front();
             queue.pop();
-            guard.unlock();
+            mtx.unlock();
             return pulled;
         }
         ...
@@ -41,10 +81,10 @@ Requiring the user of a condition variable to implement a while loop to verify a
     public:
         ...
         product *pull() {
-            guard.lock_when(not_empty, has_products(queue));
+            mtx.lock_when(not_empty, has_products(queue));
             product *pulled = queue.front();
             queue.pop();
-            guard.unlock();
+            mtx.unlock();
             return pulled;
         }
         ...
@@ -52,12 +92,13 @@ Requiring the user of a condition variable to implement a while loop to verify a
 
 [endsect]
 
-[section  Timeouts]
+[section Exception-based Timed Locks]
 
-The library supports timeout exception for all the locking functions having a time or duration parameter.
-* A lock with a timeout parameter throws a timed_out exception on expiry
-* A try_lock with a timeout simply returns false on expiry
-* Any of the conditional locks throw a timed_out exception on expiry
+Based on the idead of Kevlin Henney, the library supports timeout exception for all the locking functions having a time or duration parameter.
+* A lock with a timeout i.e. a time or a duration, parameter throws a `timeout_exception` on expiry
+* A `try_lock` with a timeout simply returns false on expiry
+* Any of the conditional locks throw a `timeout_exception` on expiry
+* all the locker constructors with the first parameter a timeout.
 
 Use of timeouts can create more robust programs, by not blocking forever, but at the same time one needs to avoid annoyingly arbitrary limits.
 
@@ -68,7 +109,7 @@ Use of timeouts can create more robust programs, by not blocking forever, but at
 
 Typically, object-oriented programs use object-level locking by associating a synchronization object (mutex) with each object that is susceptible to be shared between threads. Then, code that manipulates the state of the object can synchronize by locking that object. Inside a synchronized section, the mutex associated with the object is locked, and consequently that object's fields can be accessed safely.
 
-In C++, this fundamental idiom is typically implemented with a helper Locker object.
+In C++, this fundamental idiom is typically implemented with a helper Locker object or lock guard.
 
 A locker is any object or function responsible for coordinating the use of lockable objects.
 
@@ -93,13 +134,9 @@ The library defines some locker adapters which take care of naming differences a
 
         boost::synchro::unique_locker<Lockable> scoped(guard);
 
-        boost::synchro::unique_deferred_locker<Lockable> scoped(guard);
-        boost::synchro::unique_adopt_locker<Lockable> scoped(guard);
-        boost::synchro::unique_try_locker<Lockable> scoped(guard);
-
 [*Strict lockers]
 
-A strict locker is a scoped lock guard ensuring the mutex is locked on the scope of the lock, by locking the mutex on construction and unlocking it on destruction.
+Strict lockers were first introduced by Andrei Alexandrescu. A strict locker is a scoped lock guard ensuring the mutex is locked on the scope of the lock, by locking the mutex on construction and unlocking it on destruction.
 
 `boost::lock_guard` could be seen as a strict_locker if the following constructor didn't exists
 
@@ -107,16 +144,28 @@ A strict locker is a scoped lock guard ensuring the mutex is locked on the scope
 
 We can say that lock_guard is a strict locker "sur parolle".
 
-
 There is a const function that is very useful when working with strict lockers and external locking which check is the strict locker is locking an instace of a lockable.
 
     bool is_locking(lockable_type* l) const;
 
 The library provides three strict lockers
 
-* `strict_locker`: is the basic strict locker
+* `strict_locker`: is the basic strict locker, special use when doing external locking.
 * `neested_strict_locker`: is a strict_locker of another locker as a unique_lock.
-* `conditional_locker` : is a strict locker with the condition_lockable interface
+* `conditional_unique_locker` and `conditional_shared_locker` : are strict lockers with the condition_lockable interface. These are the synchronizer of the monitor class.
+
+    class product_queue {
+    public:
+        ...
+        product *pull() {
+            conditional_unique_locker<> _(mtx, not_empty, has_products(queue));
+            product *pulled = queue.front();
+            queue.pop();
+            mtx.unlock();
+            return pulled;
+        }
+        ...
+    };
 
 and a meta function `is_strict_locker` which states if a locker is a strict locker
 
@@ -124,27 +173,19 @@ So as strict lockers do not provide lock/unlock functions they are not models of
 
 [*Try lockers]
 
-Most of the lockers defined in Boost.Thread and Boost.Interprocess are TryLockers, i.e. them allows to be initialize is a such way that instead of locking on the constructor with lock() they can try to lock with try_lock().
+A Try Locker is a Locker that initialize it in a such way that instead of locking on the constructor with lock() they can try to lock with try_lock(). Most of the lockers defined in Boost.Thread and Boost.Interprocess could be cosidered as TryLockers, i.e. them initialize in this way when boost::try_to_lock is given as parameter.
 
 The following code shows one way to use the TryLocker:
 
     product *product_queue::try_pull() {
         product *pulled = 0;
-        boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
-        if(scoped && !queue.empty()) {
+        boost::unique_lock<boost::mutex> locker(mtx, boost::try_to_lock);
+        if(locker && !queue.empty()) {
             pulled = queue.front();
             queue.pop();
         }
         return pulled;
     }
-
-If we use interprocess mutexes the following line
-
-        boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
-
-need to be changed by
-
-        boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> scoped(guard, boost::interprocess::try_to_lock);
 
 All of them use a safe strategy for a Boolean conversion which use a member pointer rather than a bool, which is typically too permissive:
 
@@ -153,24 +194,127 @@ All of them use a safe strategy for a Boolean conversion which use a member poin
         return locked ? &try_locker::locked : 0;
     }
 
-Two mechanisms can allow a try_locker to be used directly in a condition: a variable can be declared in a condition if its type is convertible to bool and temporaries are scope bound to references to const. The common usage will be captured and the mechanism further generalised for convenience, but the model and code above demonstrates the essential concepts.
+If we use interprocess mutexes we nee to replace the following line
 
-    typedef const a_try_locker<mutex> &locked;
-    product *product_queue::try_pull() {
-        product *pulled = 0;
-        if(locked scoped = guard) {
-            if(!queue.empty()) {
-                pulled = queue.front();
-                queue.pop();
-            }
-        }
-        return pulled;
+        boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
+
+by
+
+        boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> scoped(guard, boost::interprocess::try_to_lock);
+
+There are other TryLockers in Boost.Thread defined as a member typedef scoped_try_lock. The semantics of each constructor and member function are identical to those of boost::unique_lock<Lockable> for the same Lockable, except that the constructor that takes a single reference to a mutex will call m.try_lock() rather than m.lock()
+
+        boost::mutex::scoped_try_lock locker(mtx);
+
+The library defines in a generic way a try_unique_locker adapter which takes care of naming differences and that can be used like
+
+        boost::synchro::unique_try_locker<Lockable> locker(mtx);
+
+for any model of Lockable.
+
+[*Exception-based Timed Lockers]
+
+In addition to supporting timeout exception for Lock, the library supports them also for Lockers on the same locking functions as for Locks but also for all the locker constructors.
+
+The use of the parameter throw_lock_t could be cumberscome for applications expecting a exception-based timed locks rather than checking if the lock is owned by the locker. For this use case the library provides a special kind of Lokers, ExceptionBaseTimedLockers. The semantics of each constructor and member function are identical to those of boost::unique_locker<Lockable> for the same Lockable, except that the constructor that takes a time or a duration as first parameter in a addition to the reference to a mutex will call m.lock_until(t) or m.lock_for(d) rather than m.try_lock_until(t) or m.try_lock_for(d) and so a timeout_exception is possible on the constructor.
+
+When the application needs to lock several locks at the same time the natural and exception safe is 
+
+    while (polling) {
+        t=now()+100;
+        boost::unique_lock<boost::mutex> l1(m1, t);
+        boost::unique_lock<boost::mutex> l2(m2, t);
+        boost::unique_lock<boost::mutex> l3(m3, t);
+        if (l1.has_lock() && l2.has_lock() && l3.has_lock() {
+            foo();
+            polling = false;
+        } else execute_on_failed(); 
     }
 
-The library defines a try_locker adapter which take care of naming differences and that can be used like
+The single problem with this code is that we will lock `m2` even if `l1` do not owns the lock `m1`. When we try to optimize this
 
-        boost::synchro::unique_try_locker<Lockable> scoped(guard);
+    while (polling) {
+        t=now()+100;
+        boost::unique_lock<boost::mutex> l1(m1, t);
+        if (l1.has_lock() {
+            boost::unique_lock<boost::mutex> l2(m2, t);
+            if (l2.has_lock() {
+                boost::unique_lock<boost::mutex> l3(m3, t);
+                if (l2.has_lock() {
+                    foo();
+                    polling = false;
+                } else execute_on_failed(); 
+            } else execute_on_failed(); 
+        } else execute_on_failed(); 
+    }
 
+We found that this starts to be unmaintenable. What is event wrost is that as the preceding one is subject to deadlock if another thread acquire the locks in a different order. 
+
+[*try_lock_until and try_lock_for free functions]
+
+To avoid this we can request the acquisition of all the locks toghether (letting the function to try any order), as it does the function try_lock of Boost.Threads, but adding this time a expiration period.
+
+    while (polling) {
+        if (boost::try_lock_for(100, m1, m2, m3)) {
+            foo();
+            polling = false;
+        } else execute_on_failed(); 
+    }
+
+While this soleve the deadlock problem, this code is that it is not exception safe. With exception based lockers we can do the following
+(note that the time is given as first aregument to the locker constructor)
+
+    while (polling)
+        try {
+            t=now()+100;
+            boost::unique_locker<boost::mutex> l1(t, m1);
+            boost::unique_locker<boost::mutex> l2(t, m2);
+            boost::unique_locker<boost::mutex> l3(t, m3);
+            foo();
+            polling = false;
+        } catch (timeout_exception& ex) {execute_on_failed(); }
+
+[*`locker_tuples` or `locker_array` of Locker containers]
+
+While this code is exception safe and do not locks m2 if m1 id not acquire is subject to deadlock.
+We can go a step ahead and mix the advantage of taking all the locks at once and making the acquisition block scoped. In order to do that we need either a array_locker or a tuple_locker depending on wether the locks are homogeneus or not. The library provides both of them. These locker containers follows the same rules as the element wise lockers. If the time comes after the locks no exception is thrown on timeout and if given as the first parameter a exception will be thown when the time will expire.
+
+So the preceding code becomes without timeout exceptions
+
+    while (polling) {
+        boost::synchro::array_locker<boost::mutex, 3> lk(m1, m2, m3, 100);
+        if (lk.owns_lock()) {
+            foo();
+            polling = false;
+        } else execute_on_failed(); 
+    }
+or with timeout exception
+
+    while (polling) 
+    try { boost::synchro::array_locker<boost::mutex, 3> lk(100, m1, m2, m3);
+        foo();
+        polling = false;
+    } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
+
+When the Locks locked by an `array_locker` are not homogeneus we need some kind of tuple.
+
+    while (polling) 
+    try { boost::synchro::tuple_locker<T1, T2, T1> lk(100, m1, m2, m3);
+        foo();
+        polling = false;
+    } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
+
+
+[*`lock_until` and `lock_for` free functions]
+
+For completude the exception based timed multi lock functions `lock_until` and `lock_for` are also provided.
+
+    while (polling)
+        try {
+            boost::lock_for(100, m1, m2, m3);
+            foo();
+            polling = false;
+        } catch (timeout_exception& ex) {execute_on_failed(); }
 
 
 [*External lockers]
@@ -194,6 +338,58 @@ Where only external locking is used, a safe approach is needed for calling singl
 [endsect]
 
 [section:poly  Polymorphic lockable]
+
+The locks classes introduced previously are a non-polymorphic classes. Clearly, many of the synchronisation primitives support common operations, and hence interfaces. In some cases a more general interface is useful.
+
+The synchronised interface class may be used explicitly as a base class for a class supporting synchronisation. 
+
+    struct exclusive_lock {
+        virtual ~exclusive_lock()=0;
+        virtual void lock()=0;
+        virtual void unlock()=0;
+        virtual bool try_lock()=0;
+    };
+
+More usefully for primitives, which are best left as non-polymorphic, an adaptor class is used to provide the interface -- run-time polymorphism -- on behalf of anything supporting the correctly named functions - compile time polymorphism. It easier to take a nonpolymorphic class and adapt it to be polymorphic, than it is do it the other way around: the overhead and semantics of polymorphism can only be introduced to a class, not removed.
+
+template <typename Lockable>
+class exclusive_lock_adapter : public virtual exclusive_lock
+{
+    exclusive_lock_adapter(): lock_() {}
+    virtual ~exclusive_lock_adapter() {}
+
+    virtual void lock() {lock_.lock();}
+    virtual void unlock() {lock_.unlock();}
+    virtual bool try_lock() { return lock_.try_lock();}
+protected:
+    Lockable lock_;
+};
+
+
+
+[endsect]
+
+[section  Synchronized Block - language-like]
+
+
+mutual exclusion with automatic objects.
+
+    {
+    scoped_guard<boost_mutex> lock(l);
+    return foo(); // lock released
+    }
+
+language-like mutual exclusion.
+
+    synchronized(l) return foo(); // lock released
+
+    #define BOOST_SYNCHRONIZED_VAR(VARS_DECLARATION) if (bool stop_ = false) {} else \
+    for (VARS_DECLARATION; !stop_; stop_ = true)
+
+    #define BOOST_SYNCHRONIZED(MUTEX) BOOST_SYNCHRONIZED_VAR(boost::scoped_guard<boost::mutex> __lock(MUTEX))
+
+With this macro the user can define 
+    #define synchronized(MUTEX) BOOST_SYNCHRONIZED(MUTEX)
 
 [endsect]
 

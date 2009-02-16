@@ -6,25 +6,15 @@
  /]
 
 [section:ext_references References]
-
 [variablelist
 [
-    [[@http://www.ddj.com/cpp/184403766
-    [*volatile - Multithreaded Programmer's Best Friend]]]
-    [Andrei Alexandrescu.
-    ]
+    [ [*Toward Simplified Parallel Support in C++]]
+    [Justin E. Gottschlich & Paul J. Rogers, 2009 - Not yet published]
 ]
-
 [
-    [[@http://www.informit.com/articles/article.aspx?p=25298
-    [*Multithreading and the C++ Type System]]]
-    [Andrei Alexandrescu.]
-]
-
-[
-    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/C++Threading.pdf
-    [*C++ Threading - A Generic-Programming Approach]]]
-    [Kevlin Henney]
+    [[@http:/www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf 
+    [*N1833 - Preliminary Threading Library Proposal for TR2]]]
+    [Kevlin Henney, 2005]
 ]
 
 [
@@ -33,9 +23,30 @@
     [Kevlin Henney]
 ]
 [
+    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/C++Threading.pdf
+    [*C++ Threading - A Generic-Programming Approach]]]
+    [Kevlin Henney, April 16, 2004]
+]
+
+[
+    [[@http://www.informit.com/articles/article.aspx?p=25298
+    [*Multithreading and the C++ Type System]]]
+    [Andrei Alexandrescu, Febraury 8, 2002]
+]
+[
+    [[@http://www.ddj.com/cpp/184403766 [*volatile - Multithreaded Programmer's Best Friend]]]
+    [Andrei Alexandrescu, Febraury 1, 2001]
+]
+
+[
+    [[@http://www.two-sdg.demon.co.uk/curbralan/papers/AsynchronousC++.pdf
+    [*Asynchronous C++]]]
+    [Kevlin Henney, September 9, 1996.]
+    
+]
+[
     [[@http://www.cs.wustl.edu/~schmidt/PDF/ACE-concurrency.pdf
-    [*An OO Encapsulation of Lightweight OS
-Concurrency Mechanisms in the ACE Toolkit]]]
+    [*An OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit]]]
     [Douglas C. Schmidt]
 ]
 
@@ -45,6 +56,7 @@ Concurrency Mechanisms in the ACE Toolkit]]]
     [Douglas C. Schmidt]
 ]
 
+  
 ]
 
 [endsect]

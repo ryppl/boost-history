@@ -25,39 +25,39 @@ Allows a condition variable to be associated with a Lockable. Treating condition
 
 Requiring the user of a condition variable to implement a while loop to verify a condition's predicate is potentially error prone. It can be better encapsulated by passing the predicate as a function object to the locking function.
 
-template <
-    typename Lockable=thread_mutex,
-    class Condition=condition_safe<typename best_condition<Lockable>::type >
->
-class condition_lockable {
-    : public Lockable {
-    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-public:
-    typedef Lockable lockable_type;
-    typedef Condition condition;
+    template <
+        typename Lockable=thread_mutex,
+        class Condition=condition_safe<typename best_condition<Lockable>::type >
+    >
+    class condition_lockable {
+        : public Lockable {
+        BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
+    public:
+        typedef Lockable lockable_type;
+        typedef Condition condition;
 
-    condition_lockable();
-    ~condition_lockable();
-  
-    void relock_on(condition & cond);
-    void relock_on_until(condition & cond, boost::system_time const& abs_time);
-    template<typename duration_type>
-    void relock_on_for(condition & cond, duration_type const& rel_time);
+        condition_lockable();
+        ~condition_lockable();
+      
+        void relock_on(condition & cond);
+        void relock_on_until(condition & cond, boost::system_time const& abs_time);
+        template<typename duration_type>
+        void relock_on_for(condition & cond, duration_type const& rel_time);
 
-    template<typename Predicate>
-    void relock_when(condition &cond, Predicate pred);
-    template<typename Predicate>
-    void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time);
-    template<typename Predicate, typename duration_type>
-    void relock_when_for(condition &cond, Predicate pred,
-            duration_type const& rel_time);
+        template<typename Predicate>
+        void relock_when(condition &cond, Predicate pred);
+        template<typename Predicate>
+        void relock_when_until(condition &cond, Predicate pred,
+                boost::system_time const& abs_time);
+        template<typename Predicate, typename duration_type>
+        void relock_when_for(condition &cond, Predicate pred,
+                duration_type const& rel_time);
 
-private:
-    friend class boost::condition_variable;
-    friend class boost::condition_variable_any;
-    friend class boost::interprocess::condition;
-};
+    private:
+        friend class boost::condition_variable;
+        friend class boost::condition_variable_any;
+        friend class boost::interprocess::condition;
+    };
 
 [endsect]
 

@@ -15,33 +15,50 @@
 
 To date, C++ multi threaded programs that need to be efficient use the same mutexes, semaphores, and events that Dijkstra described 40 years ago. This unfortunate state of affairs makes multi threaded programs difficult to design, debug, ensure correct, optimize, maintain, and analyze formally. Consequently, building tools that automate detection of race conditions and deadlocks is highly desirable.
 
-This can not be done if the basic lock and lockers take a different form depending of the library provider. We need to states the bases through concepts. Specific mapping to these concepts is needed for the current Boost locks and lockers. This mapping can be done by the owner of the candidate model or using some explicit adapters.
+I believe that most of the synchronization mechanisms applied to multi-threaded programs works as well for multi-process programs. This can not be done if the basic facilities mutexes and condition variables are not based on common concepts and take a different form depending of the library provider. We need to states these bases through concepts. 
+
+The main sources of inspiration of this library were 
+
+* the papers of Kevlin Henney about asynchronous C++ [@http://www.two-sdg.demon.co.uk/curbralan/papers/accu/MoreC++Threading.pdf More C++ Threading - From Procedural to Generic, by Example] and its C++0x proposal [[@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]]. 
+* the papers of Andrei Alexandrescu on multi-threading programming [@http://www.ddj.com/cpp/184403766 volatile - Multithreaded Programmer's Best Friend]
+* the ACE framework of Douglas C. Schmidt [@http://www.cs.wustl.edu/~schmidt/PDF/ACE-concurrency.pdf An OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit].
+
+This library is a compilation of what I have found in the literature not yet present in Boost. My main concen has been to boostify all these ideas in a coherent way.
 
 [*Boost.Synchro] provides:
 
-* A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on some lock(mutexes) concepts, lock traits, locker(guards) concepts and locking families.
-    * add lock adapters to the Boost.Thread and Boost.Interprocess lockable models
-    * add locker adapters to the Boost.Thread and Boost.Interprocess lockers models
-    * `semaphore`, `null_mutex` and `null_condition` classes
-    * add lock functions throwing a timeout exception when the the operation is not achieved before a given time is reached or a duration elapsed.
-    * add a condition_lockable lock
+* A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on lockables(mutexes) concepts and locker(guards) concepts.
 
-* Some additional lockers are also provided as
-    * `strict_locker`,
-    * `nested_strict_locker`,
+    * lockables traits and lock generators, 
+    * lock adapters of the Boost.Thread and Boost.Interprocess lockable models,
+    * locker adapters of the Boost.Thread and Boost.Interprocess lockers models,
+    * complete them with the corresponding models for single-threaded programms: `null_mutex` and `null_condition` classes,
+    * locking families,
+    * `semaphore`, 
+    * `condition_lockable` lock which put toghether a lock and its associated conditions.
+
+* A coherent way exception based timed lock approach for functions and constructors,
+
+* A rich palete of lockers as
+
+    * `strict_locker`, `nested_strict_locker`,
     * `condition_locker`,
-    * `locking_ptr`,
+    * `reverse_locker`, `nested_reverse_locker`,
+    * `locking_ptr`, `on_derreference_locking_ptr`,
     * `externally_locked`,
-    * `reverse_locker` and
-    * `nested_reverse_locker`.
+    
+* `array_locker` and `tuple_locker` locker ocntainers.
 
-* Introduce high-level abstractions for handling more complicated synchronization problems, including
+* A complement to the already present in Boost.Thread `lock`, `try_lock` free functions:
+
+    * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`
+
+* A polymorphic lockable hierarchy.
+
+* High-level abstractions for handling more complicated synchronization problems, including
     * `monitor` for guaranteeing exclusive access to an object, and
-    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol.
+    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
 
-* In addition a polymorph lockable hierarchy is also included.
-
-This library is much more a compilation of what I have found in the literature that is not yet present in Boost.
 
 [/====================================]
 [heading How to Use This Documentation]

@@ -11,14 +11,14 @@
 [section:poly_lock_hpp Header `<boost/synchro/poly/lock.hpp>`]
 [/==========================================================================================]
 
-namespace boost { namespace synchro {
-    namespace poly {
-        struct exclusive_lock;
-        struct timed_lock;
-        struct sharable_lock;
-        struct upgradable_lock;
-    }
-}}
+    namespace boost { namespace synchro {
+        namespace poly {
+            struct exclusive_lock;
+            struct timed_lock;
+            struct sharable_lock;
+            struct upgradable_lock;
+        }
+    }}
 
 [section Abstract Class `exclusive_lock`]
 
