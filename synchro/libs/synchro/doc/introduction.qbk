@@ -95,6 +95,7 @@ Requiring the user of a condition variable to implement a while loop to verify a
 [section Exception-based Timed Locks]
 
 Based on the idead of Kevlin Henney, the library supports timeout exception for all the locking functions having a time or duration parameter.
+
 * A lock with a timeout i.e. a time or a duration, parameter throws a `timeout_exception` on expiry
 * A `try_lock` with a timeout simply returns false on expiry
 * Any of the conditional locks throw a `timeout_exception` on expiry
@@ -173,7 +174,7 @@ So as strict lockers do not provide lock/unlock functions they are not models of
 
 [*Try lockers]
 
-A Try Locker is a Locker that initialize it in a such way that instead of locking on the constructor with lock() they can try to lock with try_lock(). Most of the lockers defined in Boost.Thread and Boost.Interprocess could be cosidered as TryLockers, i.e. them initialize in this way when boost::try_to_lock is given as parameter.
+A Try Locker is a Locker that initialize it in a such way that instead of locking on the constructor with `lock()` they can try to lock with `try_lock()`. Most of the lockers defined in Boost.Thread and Boost.Interprocess could be cosidered as `TryLockers`, i.e. them initialize in this way when `boost::try_to_lock` is given as parameter.
 
 The following code shows one way to use the TryLocker:
 
@@ -187,14 +188,14 @@ The following code shows one way to use the TryLocker:
         return pulled;
     }
 
-All of them use a safe strategy for a Boolean conversion which use a member pointer rather than a bool, which is typically too permissive:
+All of them use a safe strategy for a Boolean conversion which use a member pointer rather than a `bool`, which is typically too permissive:
 
     typedef bool try_locker::*is_locked;
     operator is_locked() const {
         return locked ? &try_locker::locked : 0;
     }
 
-If we use interprocess mutexes we nee to replace the following line
+If we use interprocess mutexes we need to replace the following line
 
         boost::unique_lock<boost::mutex> scoped(guard, boost::try_to_lock);
 
@@ -202,7 +203,7 @@ by
 
         boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> scoped(guard, boost::interprocess::try_to_lock);
 
-There are other TryLockers in Boost.Thread defined as a member typedef scoped_try_lock. The semantics of each constructor and member function are identical to those of boost::unique_lock<Lockable> for the same Lockable, except that the constructor that takes a single reference to a mutex will call m.try_lock() rather than m.lock()
+There are other `TryLockers` in Boost.Thread defined as a member typedef `scoped_try_lock`. The semantics of each constructor and member function are identical to those of `boost::unique_lock<Lockable>` for the same Lockable, except that the constructor that takes a single reference to a mutex will call `m.try_lock()` rather than `m.lock()`.
 
         boost::mutex::scoped_try_lock locker(mtx);
 
@@ -214,11 +215,9 @@ for any model of Lockable.
 
 [*Exception-based Timed Lockers]
 
-In addition to supporting timeout exception for Lock, the library supports them also for Lockers on the same locking functions as for Locks but also for all the locker constructors.
+In addition to supporting timeout exception for Lock, the library supports them also for ExceptionBaseTimedLockers. The semantics of each constructor and member function are identical to those of boost::unique_locker<Lockable> for the same Lockable, except that the constructor that takes a time or a duration as first parameter in a addition to the reference to a mutex will call `m.lock_until(t)` or `m.lock_for(d)` rather than `m.try_lock_until(t)` or `m.try_lock_for(d)` and so a `timeout_exception` is possible on the constructor.
 
-The use of the parameter throw_lock_t could be cumberscome for applications expecting a exception-based timed locks rather than checking if the lock is owned by the locker. For this use case the library provides a special kind of Lokers, ExceptionBaseTimedLockers. The semantics of each constructor and member function are identical to those of boost::unique_locker<Lockable> for the same Lockable, except that the constructor that takes a time or a duration as first parameter in a addition to the reference to a mutex will call m.lock_until(t) or m.lock_for(d) rather than m.try_lock_until(t) or m.try_lock_for(d) and so a timeout_exception is possible on the constructor.
-
-When the application needs to lock several locks at the same time the natural and exception safe is 
+Let me satrt with an example of an application needing to lock several locks at the same time. Once all the locks are locked something must be done. Other wise the application do womething else and reiterate the lock requests. The natural and exception safe way to do that is
 
     while (polling) {
         t=now()+100;
@@ -231,7 +230,7 @@ When the application needs to lock several locks at the same time the natural an
         } else execute_on_failed(); 
     }
 
-The single problem with this code is that we will lock `m2` even if `l1` do not owns the lock `m1`. When we try to optimize this
+The problem with this code is that it locks `m2` even if `l1` do not owns the lock `m1`. The advertised reader could argument that if the lock m1 has not been locked by a timeout the as all share the same time constraint the failing lock of m2 will not be expensive. Well the problem is that the locking of m1 can fail because m1 is already locked. When we try to optimize this
 
     while (polling) {
         t=now()+100;
@@ -248,11 +247,11 @@ The single problem with this code is that we will lock `m2` even if `l1` do not 
         } else execute_on_failed(); 
     }
 
-We found that this starts to be unmaintenable. What is event wrost is that as the preceding one is subject to deadlock if another thread acquire the locks in a different order. 
+we found that this starts to be unmaintenable. What is event wrost is that as the preceding one is subject to deadlock if another thread acquire the locks in a different order. 
 
 [*try_lock_until and try_lock_for free functions]
 
-To avoid this we can request the acquisition of all the locks toghether (letting the function to try any order), as it does the function try_lock of Boost.Threads, but adding this time a expiration period.
+To avoid this we can request the acquisition of all the locks toghether (letting the function to try any order), as it does the function try_lock of Boost.Threads, but adding this time a expiration period parameter
 
     while (polling) {
         if (boost::try_lock_for(100, m1, m2, m3)) {
@@ -261,8 +260,7 @@ To avoid this we can request the acquisition of all the locks toghether (letting
         } else execute_on_failed(); 
     }
 
-While this soleve the deadlock problem, this code is that it is not exception safe. With exception based lockers we can do the following
-(note that the time is given as first aregument to the locker constructor)
+While this solve the deadlock problem, this code is not exception safe. With exception based lockers we can do the following (note that the time is given as first aregument to the locker constructor)
 
     while (polling)
         try {
@@ -276,8 +274,8 @@ While this soleve the deadlock problem, this code is that it is not exception sa
 
 [*`locker_tuples` or `locker_array` of Locker containers]
 
-While this code is exception safe and do not locks m2 if m1 id not acquire is subject to deadlock.
-We can go a step ahead and mix the advantage of taking all the locks at once and making the acquisition block scoped. In order to do that we need either a array_locker or a tuple_locker depending on wether the locks are homogeneus or not. The library provides both of them. These locker containers follows the same rules as the element wise lockers. If the time comes after the locks no exception is thrown on timeout and if given as the first parameter a exception will be thown when the time will expire.
+While this code is exception safe and do not locks `m2` if `m1` is not acquired, it is subject to deadlock.
+We can go a step ahead and mix the advantage of taking all the locks at once and making the acquisition block scoped. In order to do that we need either a array_locker or a tuple_locker depending on whether the locks are homogeneus or not. The library provides both of them. These locker containers follows the same rules as the element wise lockers. If the time comes after the locks no exception is thrown on timeout and if given as the first parameter a exception will be thown when the time will expire.
 
 So the preceding code becomes without timeout exceptions
 
@@ -288,7 +286,8 @@ So the preceding code becomes without timeout exceptions
             polling = false;
         } else execute_on_failed(); 
     }
-or with timeout exception
+
+which is not exception safe or with exception based timed locks (Note that the time is given before the locks)
 
     while (polling) 
     try { boost::synchro::array_locker<boost::mutex, 3> lk(100, m1, m2, m3);
@@ -352,44 +351,50 @@ The synchronised interface class may be used explicitly as a base class for a cl
 
 More usefully for primitives, which are best left as non-polymorphic, an adaptor class is used to provide the interface -- run-time polymorphism -- on behalf of anything supporting the correctly named functions - compile time polymorphism. It easier to take a nonpolymorphic class and adapt it to be polymorphic, than it is do it the other way around: the overhead and semantics of polymorphism can only be introduced to a class, not removed.
 
-template <typename Lockable>
-class exclusive_lock_adapter : public virtual exclusive_lock
-{
-    exclusive_lock_adapter(): lock_() {}
-    virtual ~exclusive_lock_adapter() {}
+    template <typename Lockable>
+    class exclusive_lock_adapter : public virtual exclusive_lock
+    {
+        exclusive_lock_adapter(): lock_() {}
+        virtual ~exclusive_lock_adapter() {}
 
-    virtual void lock() {lock_.lock();}
-    virtual void unlock() {lock_.unlock();}
-    virtual bool try_lock() { return lock_.try_lock();}
-protected:
-    Lockable lock_;
-};
-
+        virtual void lock() {lock_.lock();}
+        virtual void unlock() {lock_.unlock();}
+        virtual bool try_lock() { return lock_.try_lock();}
+    protected:
+        Lockable lock_;
+    };
 
 
 [endsect]
 
-[section  Synchronized Block - language-like]
+[section Language-like Synchronized Block ]
 
-
-mutual exclusion with automatic objects.
+Nest follows an example of mutual exclusion with automatic objects.
 
     {
-    scoped_guard<boost_mutex> lock(l);
-    return foo(); // lock released
+        scoped_guard<boost_mutex> lock(l);
+        foo();
+        return bar(); // lock released
     }
 
-language-like mutual exclusion.
+With language-like mutual exclusion this results in:
 
-    synchronized(l) return foo(); // lock released
+    synchronized(l) 
+    {
+        foo();
+        return bar(); 
+    } // lock released
+
+This is achieved through macros. If the user wants to use synchronized this way he needs to include a specific file which defines
+
+    #define synchronized(MUTEX) BOOST_SYNCHRONIZED(MUTEX)
+
+The library do not provides this directly because this can broke some user code. The library provideds other safer macros, using the BOOST prefix.
 
     #define BOOST_SYNCHRONIZED_VAR(VARS_DECLARATION) if (bool stop_ = false) {} else \
     for (VARS_DECLARATION; !stop_; stop_ = true)
 
     #define BOOST_SYNCHRONIZED(MUTEX) BOOST_SYNCHRONIZED_VAR(boost::scoped_guard<boost::mutex> __lock(MUTEX))
-
-With this macro the user can define 
-    #define synchronized(MUTEX) BOOST_SYNCHRONIZED(MUTEX)
 
 [endsect]
 
