@@ -164,9 +164,11 @@ private:
     // start the state machine (calls entry of the initial state)
     void start()
     {
-		typedef typename get_initial_states<typename Derived::initial_state>::type init_states;
-		::boost::mpl::for_each<init_states, boost::msm::wrap<mpl::placeholders::_1> >
-                                    (call_init<InitEvent>(&m_state_list[0],InitEvent()));
+        // call on_entry on this SM
+        (static_cast<Derived*>(this))->on_entry(InitEvent());
+        typedef typename get_initial_states<typename Derived::initial_state>::type init_states;
+        ::boost::mpl::for_each<init_states, boost::msm::wrap<mpl::placeholders::_1> >
+            (call_init<InitEvent>(&m_state_list[0],InitEvent()));
     }
 
     // Main function used by clients of the derived FSM to make
