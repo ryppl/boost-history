@@ -1,0 +1,283 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:thread_locks_hpp Header `<boost/synchro/thread/locks.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        class thread_recursive_mutex;
+       
+        class thread_timed_mutex;
+    }}
+    
+[section Template Class `unique_locker<>`]
+
+    template <typename T>
+    struct lockable_type<boost::unique_lock<T> > {
+        typedef T type;
+    };
+    template <typename T>
+    struct lockable_type<boost::shared_lock<T> > {
+        typedef T type;
+    };
+    template <typename T>
+    struct lockable_type<boost::upgrade_lock<T> > {
+        typedef T type;
+    };
+
+    template <typename T>
+    struct lockable_type<boost::upgrade_to_unique_lock<T> > {
+        typedef T type;
+    };
+
+    template<typename Mutex>
+    class unique_locker<Mutex,multi_threaded_tag>:  public unique_lock_type<Mutex>::type {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    private:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef typename unique_lock_type<Mutex>::type base_type;
+    
+    public:
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(unique_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(unique_locker) /*< disable copy asignement >*/
+        unique_locker();
+
+        explicit unique_locker(Mutex& m_);
+        unique_locker(Mutex& m_,adopt_lock_t);
+        unique_locker(Mutex& m_,defer_lock_t);
+        unique_locker(Mutex& m_,try_to_lock_t);
+        template<typename TimeDuration>
+        unique_locker(Mutex& m_,TimeDuration const& target_time);
+        unique_locker(Mutex& m_,system_time const& target_time);
+        template<typename TimeDuration>
+        unique_locker(Mutex& m_,TimeDuration const& target_time, throw_lock_t);
+        unique_locker(Mutex& m_,system_time const& target_time, throw_lock_t);
+        template<typename TimeDuration>
+        unique_locker(TimeDuration const& target_time, Mutex& m_);
+        unique_locker(system_time const& target_time, Mutex& m_);
+
+    #ifdef BOOST_HAS_RVALUE_REFS
+        unique_locker(unique_locker&& other);
+        explicit unique_locker(upgrade_locker<Mutex,scope_tag_type>&& other);
+
+        unique_locker<Mutex, scope_tag_type>&& move();
+
+
+        unique_locker& operator=(unique_locker<Mutex, scope_tag_type>&& other);
+        unique_locker& operator=(upgrade_locker<Mutex, multi_threaded_tag>&& other);
+        
+        void swap(unique_locker&& other);
+    #else
+        unique_locker(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+        unique_locker(detail::thread_move_t<upgrade_locker<Mutex,scope_tag_type> > other);
+
+        operator detail::thread_move_t<unique_locker<Mutex, scope_tag_type> >();
+        detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > move();
+
+        unique_locker& operator=(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+        unique_locker& operator=(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+        void swap(unique_locker& other);
+        void swap(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+    #endif
+
+        ~unique_locker() {}
+
+        Mutex* mutex() const;
+        bool is_locking(lockable_type* l) const;
+
+        template<typename TimeDuration>
+        bool try_lock_for(TimeDuration const& relative_time);
+        bool try_lock_until(::boost::system_time const& absolute_time);
+
+        template<typename TimeDuration>
+        void lock_for(TimeDuration const& relative_time);
+        void lock_until(::boost::system_time const& absolute_time);
+    };
+    
+[endsect]
+[section Template Class `try_unique_locker<>`]
+
+    template<typename Mutex>
+    class try_unique_locker<Mutex,multi_threaded_tag>:  public unique_locker<Mutex,multi_threaded_tag> {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    private:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef unique_locker<Mutex,multi_threaded_tag> base_type;
+    public:
+        try_unique_locker();
+
+        explicit try_unique_locker(Mutex& m_);
+        try_unique_locker(Mutex& m_,force_lock_t);
+        try_unique_locker(Mutex& m_,adopt_lock_t);
+        try_unique_locker(Mutex& m_,defer_lock_t);
+        try_unique_locker(Mutex& m_,try_to_lock_t);
+        template<typename TimeDuration>
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time);
+        try_unique_locker(Mutex& m_,system_time const& target_time);
+        template<typename TimeDuration>
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time, throw_lock_t);
+        try_unique_locker(Mutex& m_,system_time const& target_time, throw_lock_t);
+        template<typename TimeDuration>
+        try_unique_locker(TimeDuration const& target_time, Mutex& m_);
+        try_unique_locker(system_time const& target_time, Mutex& m_);
+        
+    #ifdef BOOST_HAS_RVALUE_REFS
+        try_unique_locker(try_unique_locker&& other);
+        explicit try_unique_locker(upgrade_locker<Mutex,scope_tag_type>&& other);
+
+        try_unique_locker<Mutex, scope_tag_type>&& move();
+        try_unique_locker& operator=(try_unique_locker<Mutex, scope_tag_type>&& other);
+        try_unique_locker& operator=(upgrade_locker<Mutex, multi_threaded_tag>&& other);
+        void swap(try_unique_locker&& other);
+    #else
+        try_unique_locker(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other);
+        try_unique_locker(detail::thread_move_t<upgrade_locker<Mutex,scope_tag_type> > other);
+
+        operator detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> >();
+        detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > move();
+
+        try_unique_locker& operator=(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other);
+        try_unique_locker& operator=(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+        
+        void swap(try_unique_locker& other);
+        void swap(detail::thread_move_t<try_unique_locker<Mutex, scope_tag_type> > other);
+    #endif
+
+        ~try_unique_locker() {}
+    };
+
+[endsect]
+[section Template Class `shared_locker<>`]
+
+    template<typename Mutex>
+    class shared_locker<Mutex,multi_threaded_tag>:  public shared_lock_type<Mutex>::type {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    public:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef typename shared_lock_type<Mutex>::type base_type;
+        
+        shared_locker();
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(shared_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(shared_locker) /*< disable copy asignement >*/
+
+        explicit shared_locker(Mutex& m_)
+        shared_locker(Mutex& m_,adopt_lock_t);
+        shared_locker(Mutex& m_,defer_lock_t);
+        shared_locker(Mutex& m_,try_to_lock_t);
+        shared_locker(Mutex& m_,system_time const& target_time);
+        template<typename TimeDuration>
+        shared_locker(Mutex& m_,TimeDuration const& target_time);
+        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t);
+        template<typename TimeDuration>
+        shared_locker(Mutex& m_,TimeDuration const& target_time,throw_lock_t);
+        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t);
+        template<typename TimeDuration>
+        shared_locker(TimeDuration const& target_time, Mutex& m_);
+        shared_locker(system_time const& target_time, Mutex& m_);
+
+        shared_locker(detail::thread_move_t<shared_locker<Mutex, scope_tag_type> > other);
+        shared_locker(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+        shared_locker(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+
+        operator detail::thread_move_t<shared_locker<Mutex,scope_tag_type> >();
+        detail::thread_move_t<shared_locker<Mutex, scope_tag_type> > move();
+
+        shared_locker& operator=(detail::thread_move_t<shared_locker<Mutex, scope_tag_type> > other);
+        shared_locker& operator=(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+        shared_locker& operator=(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+
+    #ifdef BOOST_HAS_RVALUE_REFS
+        void swap(shared_locker&& other);
+    #else
+        void swap(shared_locker& other);
+        void swap(boost::detail::thread_move_t<shared_locker<Mutex, scope_tag_type> > other);
+    #endif
+
+        Mutex* mutex() const;
+        bool is_locking(lockable_type* l) const;
+        
+        bool try_lock_until(boost::system_time const& absolute_time);
+        template<typename Duration>
+        bool try_lock_for(Duration const& relative_time);
+
+        template<typename TimeDuration>
+        void lock_for(TimeDuration const& relative_time);
+        void lock_until(::boost::system_time const& absolute_time);
+    };
+
+[endsect]
+[section Template Class `upgrade_locker<>`]
+
+    template<typename Mutex>
+    class upgrade_locker<Mutex,multi_threaded_tag>:  public upgrade_lock_type<Mutex>::type {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    public:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef typename upgrade_lock_type<Mutex>::type base_type;
+
+        upgrade_locker();
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(upgrade_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(upgrade_locker) /*< disable copy asignement >*/
+
+        explicit upgrade_locker(Mutex& m_);
+        upgrade_locker(Mutex& m_,adopt_lock_t);
+        upgrade_locker(Mutex& m_,defer_lock_t);
+        upgrade_locker(Mutex& m_,try_to_lock_t);
+
+        upgrade_locker(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+        upgrade_locker(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+
+        operator detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> >();
+        detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > move();
+
+        upgrade_locker& operator=(detail::thread_move_t<upgrade_locker<Mutex, scope_tag_type> > other);
+        upgrade_locker& operator=(detail::thread_move_t<unique_locker<Mutex, scope_tag_type> > other);
+
+        void swap(upgrade_locker& other);
+
+        ~upgrade_locker();
+        Mutex* mutex() const;
+
+        bool is_locking(lockable_type* l) const;
+    };
+
+[endsect]
+[section Template Class `upgrade_to_unique_locker<>`]
+
+    template<typename Mutex>
+    class upgrade_to_unique_locker<Mutex,multi_threaded_tag>:  public upgrade_to_unique_locker_type<Mutex>::type {
+        //typename scope_tag<Mutex>::type == multi_threaded_tag
+    public:
+        typedef Mutex lockable_type;
+        typedef multi_threaded_tag scope_tag_type;
+        typedef typename upgrade_to_unique_locker_type<Mutex>::type base_type;
+    public:
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(upgrade_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(upgrade_locker) /*< disable copy asignement >*/
+        
+        explicit upgrade_to_unique_locker(upgrade_locker<Mutex,multi_threaded_tag>& m_);
+        ~upgrade_to_unique_locker();
+
+        upgrade_to_unique_locker(detail::thread_move_t<upgrade_to_unique_locker<Mutex, scope_tag_type> > other);
+
+        upgrade_to_unique_locker& operator=(detail::thread_move_t<upgrade_to_unique_locker<Mutex, scope_tag_type> > other);
+        void swap(upgrade_to_unique_locker& other);
+
+        Mutex* mutex() const;
+        bool is_locking(lockable_type* l) const;
+    };
+
+
+[endsect]
+[endsect]

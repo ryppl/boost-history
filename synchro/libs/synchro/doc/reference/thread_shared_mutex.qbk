@@ -1,0 +1,65 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:thread_shared_mutex_hpp Header `<boost/synchro/thread/shared_mutex.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace synchro {
+        class thread_recursive_mutex;
+       
+        class thread_timed_mutex;
+    }}
+    
+[section Class `thread_shared_mutex`]
+
+[*Synopsis]
+
+    class thread_shared_mutex : public lock_traits_base<
+            multi_threaded_tag,
+            upgradable_lock_tag,
+            non_recursive_tag,
+            has_timed_interface_tag,
+            process_lifetime_tag,
+            anonymous_tag,
+            shared_mutex
+        > {
+    public:
+        typedef boost::condition_variable_any  best_condition_type;
+        typedef boost::condition_variable_any  best_condition_any_type;
+
+        //Non-copyable
+        BOOST_COPY_CONSTRUCTOR_DELETE(thread_shared_mutex) /*< disable copy construction >*/
+        BOOST_COPY_ASSIGNEMENT_DELETE(thread_shared_mutex) /*< disable copy asignement >*/
+        thread_shared_mutex();
+
+        bool try_lock_until(system_time const & abs_time);
+        template<typename TimeDuration>
+        bool try_lock_for(TimeDuration const & relative_time);
+
+        void lock_until(system_time const & abs_time);
+        template<typename TimeDuration>
+        void lock_for(TimeDuration const & relative_time);
+        
+        bool try_lock_shared_until(system_time const& abs_time);
+        template<typename TimeDuration>
+        bool try_lock_shared_for(TimeDuration const& rel_time);
+
+        void lock_shared_until(system_time const& abs_time);
+        template<typename TimeDuration>
+        void lock_shared_for(TimeDuration const& abs_time);
+        
+    };    
+
+
+
+
+[endsect]
+
+[endsect]
