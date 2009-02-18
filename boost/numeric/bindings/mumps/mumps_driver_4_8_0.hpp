@@ -6,8 +6,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_6_4_HPP
-#define BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_6_4_HPP
+#ifndef BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_8_0_HPP
+#define BOOST_NUMERIC_BINDINGS_MUMPS_MUMPS_DRIVER_4_8_0_HPP
 
 #include <smumps_c.h>
 #include <cmumps_c.h>
@@ -251,7 +251,7 @@ namespace boost { namespace numeric { namespace bindings { namespace mumps {
     assert( data.job>=1 ? data.irn!=0 : true ) ;
     assert( data.job>=1 ? data.jcn!=0 : true ) ;
     assert( data.job>=2 ? data.a!=0 : true ) ;
-    assert( data.job>=3 ? data.rhs!=0 : true ) ;
+    assert( data.job==3 || data.job==5 ? data.rhs!=0 : true ) ;
     detail::mumps_call<typename M::value_type>() ( static_cast<typename mumps<M>::c_struct_type&>( data ) ) ;
     return data.info[0] ;
   } // driver()
