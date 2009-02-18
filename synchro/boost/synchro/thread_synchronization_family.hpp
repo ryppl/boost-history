@@ -16,6 +16,7 @@
 #include <boost/synchro/thread/shared_mutex.hpp>
 #include <boost/synchro/thread/locks.hpp>
 #include <boost/thread/condition_variable.hpp>
+#include <boost/synchro/synchronization_family.hpp>
 
 namespace boost {
 namespace synchro {
@@ -24,8 +25,8 @@ namespace synchro {
 //!Describes thread synchronization family to use with Sync framework
 //!based on boost synchronization objects.
 //[thread_synchronization_family
-struct thread_synchronization_family
-{
+template <>
+struct synchronization_family<multi_threaded_tag> {
    typedef thread_mutex                     mutex_type;
    typedef thread_recursive_mutex           recursive_mutex_type;
    typedef thread_timed_mutex               timed_mutex_type;
@@ -35,6 +36,7 @@ struct thread_synchronization_family
    typedef boost::condition_variable_any    condition_type_any;
 };
 //]
+typedef synchronization_family<multi_threaded_tag> thread_synchronization_family;
 
 
 }

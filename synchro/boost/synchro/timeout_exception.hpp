@@ -21,10 +21,12 @@ namespace boost { namespace synchro {
         timeout_exception() : std::logic_error("timeout exception") {}
     };
 
+    #if 0
     struct throw_timeout_t {};
     struct nothrow_timeout_t {};
     const throw_timeout_t throw_timeout ={};
     const nothrow_timeout_t no_throw_timeout ={};
+        #endif
 
 }
 }

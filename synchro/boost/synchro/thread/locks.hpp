@@ -42,20 +42,14 @@ namespace boost { namespace synchro {
     template<typename Mutex>
     class unique_locker<Mutex,multi_threaded_tag>:  public unique_lock_type<Mutex>::type {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
-    private:
+    public:
         typedef Mutex lockable_type;
         typedef multi_threaded_tag scope_tag_type;
         typedef typename unique_lock_type<Mutex>::type base_type;
-        //unique_locker(unique_locker&);
-        //explicit unique_locker(unique_locker<Mutex, scope_tag_type>&);
-        //unique_locker& operator=(unique_locker&);
-        //unique_locker& operator=(unique_locker<Mutex, scope_tag_type>& other);
-    
-    public:
+
         BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(unique_locker) /*< disable copy construction >*/
         BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(unique_locker) /*< disable copy asignement >*/
-        unique_locker(): base_type()
-        {}
+        unique_locker(): base_type() {}
 
         explicit unique_locker(Mutex& m_): base_type(m_)
         {}
@@ -65,22 +59,34 @@ namespace boost { namespace synchro {
         {}
         unique_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
-        template<typename TimeDuration>
-        unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
-        {}
+
         unique_locker(Mutex& m_,system_time const& target_time): base_type(m_, target_time)
         {}
         template<typename TimeDuration>
-        unique_locker(Mutex& m_,TimeDuration const& target_time, throw_lock_t)
-            : base_type(m_, defer_lock)
-        {
-            lock_for(target_time);
-        }
-        unique_locker(Mutex& m_,system_time const& target_time, throw_lock_t)
+        unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
+        {}
+
+        unique_locker(nothrow_timeout_t&, system_time const& target_time, Mutex& m_)
+            : base_type(m_, target_time)
+        {}
+        template<typename TimeDuration>
+        unique_locker(nothrow_timeout_t&, TimeDuration const& target_time, Mutex& m_)
+            : base_type(m_, target_time)
+        {}
+
+        unique_locker(Mutex& m_,system_time const& target_time, throw_timeout_t)
             : base_type(m_, defer_lock)
         {
             lock_until(target_time);
         }
+        template<typename TimeDuration>
+        unique_locker(Mutex& m_,TimeDuration const& target_time, throw_timeout_t)
+            : base_type(m_, defer_lock)
+        {
+            lock_for(target_time);
+        }
+
+
         template<typename TimeDuration>
         unique_locker(TimeDuration const& target_time, Mutex& m_)
             : base_type(m_, defer_lock)
@@ -168,8 +174,8 @@ namespace boost { namespace synchro {
         {
             return static_cast<Mutex*>(this->base_type.mutex());
         }
-        bool is_locking(lockable_type* l) const { 
-            return l==mutex(); 
+        bool is_locking(lockable_type* l) const {
+            return l==mutex();
         } /*< strict lockers specific function >*/
 
         template<typename TimeDuration>
@@ -197,21 +203,18 @@ namespace boost { namespace synchro {
         friend class shared_locker<Mutex,scope_tag_type>;
         friend class upgrade_locker<Mutex,scope_tag_type>;
     };
-    
+
     template<typename Mutex>
     class try_unique_locker<Mutex,multi_threaded_tag>:  public unique_locker<Mutex,multi_threaded_tag> {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
-    private:
+    public:
         typedef Mutex lockable_type;
         typedef multi_threaded_tag scope_tag_type;
         typedef unique_locker<Mutex,multi_threaded_tag> base_type;
-        //try_unique_locker(try_unique_locker&);
-        explicit try_unique_locker(try_unique_locker<Mutex, scope_tag_type>&);
-        //try_unique_locker& operator=(try_unique_locker&);
-        try_unique_locker& operator=(try_unique_locker<Mutex, scope_tag_type>& other);
-    public:
-        try_unique_locker(): base_type()
-        {}
+
+        try_unique_locker(): base_type() {}
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(try_unique_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(try_unique_locker) /*< disable copy asignement >*/
 
         explicit try_unique_locker(Mutex& m_): base_type(m_, boost::defer_lock)
         { this->try_lock(); }
@@ -223,18 +226,35 @@ namespace boost { namespace synchro {
         {}
         try_unique_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
-        template<typename TimeDuration>
-        try_unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
-        {}
+            
         try_unique_locker(Mutex& m_,system_time const& target_time): base_type(m_, target_time)
         {}
         template<typename TimeDuration>
-        try_unique_locker(Mutex& m_,TimeDuration const& target_time, throw_lock_t)
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
+        {}
+            
+        try_unique_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
+            : base_type(m_, target_time)
+        {}
+        template<typename TimeDuration>
+        try_unique_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
+            : base_type(m_, target_time)
+        {}
+
+
+        try_unique_locker(Mutex& m_,system_time const& target_time, throw_timeout_t)
+            : base_type(m_, defer_lock)
+        {
+            this->lock_until(target_time);
+        }
+        template<typename TimeDuration>
+        try_unique_locker(Mutex& m_,TimeDuration const& target_time, throw_timeout_t)
             : base_type(m_, defer_lock)
         {
             this->lock_for(target_time);
         }
-        try_unique_locker(Mutex& m_,system_time const& target_time, throw_lock_t)
+        
+        try_unique_locker(system_time const& target_time, Mutex& m_)
             : base_type(m_, defer_lock)
         {
             this->lock_until(target_time);
@@ -245,11 +265,7 @@ namespace boost { namespace synchro {
         {
             this->lock_for(target_time);
         }
-        try_unique_locker(system_time const& target_time, Mutex& m_)
-            : base_type(m_, defer_lock)
-        {
-            this->lock_until(target_time);
-        }
+
 #ifdef BOOST_HAS_RVALUE_REFS
         try_unique_locker(try_unique_locker&& other): base_type(other)
         {}
@@ -325,7 +341,7 @@ namespace boost { namespace synchro {
         friend class shared_locker<Mutex,scope_tag_type>;
         friend class upgrade_locker<Mutex,scope_tag_type>;
     };
-    
+
     template<typename Mutex>
     class shared_locker<Mutex,multi_threaded_tag>:  public shared_lock_type<Mutex>::type {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
@@ -334,12 +350,9 @@ namespace boost { namespace synchro {
         typedef multi_threaded_tag scope_tag_type;
         typedef typename shared_lock_type<Mutex>::type base_type;
 
-    private:
-        explicit shared_locker(shared_locker&);
-        shared_locker& operator=(shared_locker&);
-    public:
-        shared_locker(): base_type()
-        {}
+        shared_locker(): base_type() {}
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(shared_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(shared_locker) /*< disable copy asignement >*/
 
         explicit shared_locker(Mutex& m_): base_type(m_)
         {}
@@ -349,27 +362,36 @@ namespace boost { namespace synchro {
         {}
         shared_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
-        shared_locker(Mutex& m_,system_time const& target_time):  base_type(m_, target_time)
+            
+        shared_locker(Mutex& m_,system_time const& target_time)
+            : base_type(m_, target_time)
         {}
         template<typename TimeDuration>
-        shared_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, boost::get_system_time()+target_time)
+        shared_locker(Mutex& m_,TimeDuration const& target_time)
+            : base_type(m_, target_time)
         {}
-        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t)
+            
+        shared_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
+            : base_type(m_, target_time)
+        {}
+        template<typename TimeDuration>
+        shared_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
+        {
+            lock_for(target_time);
+        }
+            
+        shared_locker(Mutex& m_,system_time const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_until(target_time);
         }
         template<typename TimeDuration>
-        shared_locker(Mutex& m_,TimeDuration const& target_time,throw_lock_t)
+        shared_locker(Mutex& m_,TimeDuration const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_for(target_time);
         }
-        shared_locker(Mutex& m_,system_time const& target_time,throw_lock_t)
-            : base_type(m_, boost::defer_lock)
-        {
-            lock_until(target_time);
-        }
+        
         template<typename TimeDuration>
         shared_locker(TimeDuration const& target_time, Mutex& m_)
         {
@@ -446,10 +468,10 @@ namespace boost { namespace synchro {
             return static_cast<Mutex*>(this->base_type.mutex());
         }
 
-        bool is_locking(lockable_type* l) const { 
-            return l==mutex(); 
+        bool is_locking(lockable_type* l) const {
+            return l==mutex();
         } /*< strict lockers specific function >*/
-        
+
         bool try_lock_until(boost::system_time const& absolute_time)
         {
             return this->timed_lock(absolute_time);
@@ -495,12 +517,10 @@ namespace boost { namespace synchro {
         typedef Mutex lockable_type;
         typedef multi_threaded_tag scope_tag_type;
         typedef typename upgrade_lock_type<Mutex>::type base_type;
-    private:
-        explicit upgrade_locker(upgrade_locker&);
-        upgrade_locker& operator=(upgrade_locker&);
-    public:
-        upgrade_locker(): base_type()
-        {}
+
+        upgrade_locker(): base_type() {}
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(upgrade_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(upgrade_locker) /*< disable copy asignement >*/
 
         explicit upgrade_locker(Mutex& m_): base_type(m_)
         {
@@ -557,8 +577,8 @@ namespace boost { namespace synchro {
             return static_cast<Mutex*>(this->base_type.mutex());
         }
 
-        bool is_locking(lockable_type* l) const { 
-            return l==mutex(); 
+        bool is_locking(lockable_type* l) const {
+            return l==mutex();
         } /*< strict lockers specific function >*/
 
         friend class shared_locker<Mutex, scope_tag_type>;
@@ -573,10 +593,10 @@ namespace boost { namespace synchro {
         typedef Mutex lockable_type;
         typedef multi_threaded_tag scope_tag_type;
         typedef typename upgrade_to_unique_locker_type<Mutex>::type base_type;
-    private:
-        explicit upgrade_to_unique_locker(upgrade_to_unique_locker&);
-        upgrade_to_unique_locker& operator=(upgrade_to_unique_locker&);
-    public:
+
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(upgrade_to_unique_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(upgrade_to_unique_locker) /*< disable copy asignement >*/
+        
         explicit upgrade_to_unique_locker(upgrade_locker<Mutex, multi_threaded_tag>& m_): base_type(m_)
         {}
         ~upgrade_to_unique_locker()
@@ -601,8 +621,8 @@ namespace boost { namespace synchro {
             return static_cast<Mutex*>(this->base_type.mutex());
         }
 
-        bool is_locking(lockable_type* l) const { 
-            return l==mutex(); 
+        bool is_locking(lockable_type* l) const {
+            return l==mutex();
         } /*< strict lockers specific function >*/
     };
 

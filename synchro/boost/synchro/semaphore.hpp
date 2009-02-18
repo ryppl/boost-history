@@ -26,9 +26,10 @@ namespace synchro {
 
 //!Wraps a semaphore that can be placed in shared memory and can be
 //!shared between processes. Allows timed lock tries
-template <typename Sync=thread_synchronization_family>
+template <typename ScopeTag=multi_threaded_tag>
 class basic_semaphore
 {
+    typedef synchronization_family<ScopeTag> Sync;
     typedef typename Sync::mutex_type lockable_type;
     typedef typename Sync::condition_type condition_variable;
     typedef typename unique_lock_type<lockable_type>::type scoped_lock;
@@ -66,29 +67,41 @@ public:
     //!to the posted or the timeout expires. If the timeout expires, the
     //!function returns false. If the semaphore is posted the function
     //!returns true. If there is an error throws sem_exception
-    inline bool wait_until(const system_time &abs_time);
+    inline bool try_wait_until(const system_time &abs_time);
+    
     template<typename TimeDuration>
-    inline bool wait_for(const TimeDuration &rel_time);
+    inline bool try_wait_for(const TimeDuration &rel_time) {
+        return try_wait_until(get_system_time()+rel_time);
+    }
+    
+    inline void wait_until(const system_time &abs_time) {
+        if (!try_wait_until(abs_time)) throw timeout_exception();
+    }
+    
+    template<typename TimeDuration>
+    inline void wait_for(const TimeDuration &rel_time) {
+        if (!try_wait_until(rel_time)) throw timeout_exception();
+    }        
 
     /// @cond
-private:
+protected:
     lockable_type       m_mut;
     condition_variable  m_cond;
     int                 m_count;
     /// @endcond
 };
 
-template <typename Sync>
-inline basic_semaphore<Sync>::~basic_semaphore()
+template <typename ScopeTag>
+inline basic_semaphore<ScopeTag>::~basic_semaphore()
 {}
 
-template <typename Sync>
-inline basic_semaphore<Sync>::basic_semaphore(int initialCount)
+template <typename ScopeTag>
+inline basic_semaphore<ScopeTag>::basic_semaphore(int initialCount)
    :  m_mut(), m_cond(), m_count(initialCount)
 {}
 
-template <typename Sync>
-inline void basic_semaphore<Sync>::post()
+template <typename ScopeTag>
+inline void basic_semaphore<ScopeTag>::post()
 {
    scoped_lock lock(m_mut);
    if(m_count == 0){
@@ -97,8 +110,8 @@ inline void basic_semaphore<Sync>::post()
    ++m_count;
 }
 
-template <typename Sync>
-inline void basic_semaphore<Sync>::wait()
+template <typename ScopeTag>
+inline void basic_semaphore<ScopeTag>::wait()
 {
    scoped_lock lock(m_mut);
    while(m_count == 0){
@@ -107,8 +120,8 @@ inline void basic_semaphore<Sync>::wait()
    --m_count;
 }
 
-template <typename Sync>
-inline bool basic_semaphore<Sync>::try_wait()
+template <typename ScopeTag>
+inline bool basic_semaphore<ScopeTag>::try_wait()
 {
    scoped_lock lock(m_mut);
    if(m_count == 0){
@@ -118,8 +131,8 @@ inline bool basic_semaphore<Sync>::try_wait()
    return true;
 }
 
-template <typename Sync>
-inline bool basic_semaphore<Sync>::wait_until(const system_time &abs_time)
+template <typename ScopeTag>
+inline bool basic_semaphore<ScopeTag>::try_wait_until(const system_time &abs_time)
 {
    scoped_lock lock(m_mut);
    while(m_count == 0){
@@ -131,6 +144,31 @@ inline bool basic_semaphore<Sync>::wait_until(const system_time &abs_time)
 }
 
 typedef basic_semaphore<> semaphore;
+
+template <typename ScopeTag=multi_threaded_tag>
+class basic_binary_semaphore: public basic_semaphore<ScopeTag>
+{
+    typedef synchronization_family<ScopeTag> Sync;
+    typedef typename Sync::mutex_type lockable_type;
+    typedef typename Sync::condition_type condition_variable;
+    typedef typename unique_lock_type<lockable_type>::type scoped_lock;
+public:
+    BOOST_COPY_CONSTRUCTOR_DELETE(basic_binary_semaphore) /*< disable copy construction >*/
+    BOOST_COPY_ASSIGNEMENT_DELETE(basic_binary_semaphore) /*< disable copy asignement >*/
+
+    //!Creates a semaphore with the given initial count.
+    //!exception if there is an error.*/
+    inline basic_binary_semaphore(int initialCount):basic_semaphore<ScopeTag>(initialCount>0?1:0) {};
+    inline void post()
+    {
+        scoped_lock lock(this->m_mut);
+        if(this->m_count == 0){
+            this->m_cond.notify_one();
+            ++(this->m_count);
+        }
+    }
+};
+typedef basic_binary_semaphore<> binary_semaphore;
 
 }
 }

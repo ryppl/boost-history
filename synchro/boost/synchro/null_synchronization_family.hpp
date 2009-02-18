@@ -13,14 +13,15 @@
 
 #include <boost/synchro/null_mutex.hpp>
 #include <boost/synchro/null_condition.hpp>
+#include <boost/synchro/synchronization_family.hpp>
 
 namespace boost {
 namespace synchro {
 
 //!Describes interprocess_mutex family to use with Sync frameworks
 //!based on null operation synchronization objects.
-struct null_synchronization_family
-{
+template <>
+struct synchronization_family<mono_threaded_tag> {
    typedef boost::synchro::null_mutex  mutex_type;
    typedef boost::synchro::null_mutex  recursive_mutex_type;
    typedef boost::synchro::null_mutex    timed_mutex_type;
@@ -29,6 +30,8 @@ struct null_synchronization_family
    typedef boost::synchro::null_condition   condition_type;
    typedef boost::synchro::null_condition   condition_any_type;
 };
+
+typedef synchronization_family<mono_threaded_tag> null_synchronization_family;
 
 }
 }

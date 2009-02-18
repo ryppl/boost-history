@@ -67,17 +67,7 @@ private:
 };
 }
 
-//template <typename Lockable=boost::mutex>
 class concurrent_component : public concurrent_component_base {
-#if 0
-    In file included from ..\example\Histogram.cpp:11:
-    ../../../boost/synchro/conc/concurrent_component.hpp:32:
-    error: '*' cannot appear in a constant-expression
-
-    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-#endif
-public:
-
 protected:
 //[port
     struct port {
@@ -133,8 +123,8 @@ protected:
             p.accept(abs_time);
         }
 #endif
-        semaphore accept_call_;
-        semaphore until_end_;
+        binary_semaphore accept_call_;
+        binary_semaphore until_end_;
     };
     static void accept(port& p) {
 //            accept_call_.common_.post(1);
@@ -179,8 +169,8 @@ protected:
             accept_call_.post();
             until_end_.wait();
         }
-        semaphore accept_call_;
-        semaphore until_end_;
+        binary_semaphore accept_call_;
+        binary_semaphore until_end_;
         const concurrent_component_base* sender_;
     };
     static void accept(object_port& that, const concurrent_component_base* snd) {
@@ -216,8 +206,8 @@ protected:
 //        static void accept(object_port& that, const concurrent_component_base* snd) {
 //            that.accept(snd);
 //        }
-        semaphore accept_call_;
-        semaphore until_end_;
+        binary_semaphore accept_call_;
+        binary_semaphore until_end_;
 //        const std::type_info* type_;
     };
     template <typename TYPE>

@@ -25,7 +25,9 @@ namespace boost { namespace synchro {
     {};
     struct adopt_lock_t
     {};
-    struct throw_lock_t
+    struct throw_timeout_t
+    {};
+    struct nothrow_timeout_t
     {};
 
 
@@ -34,7 +36,8 @@ namespace boost { namespace synchro {
     const defer_lock_t defer_lock={};
     const try_to_lock_t try_to_lock={};
     const adopt_lock_t adopt_lock={};
-    const throw_lock_t throw_lock={};
+    const throw_timeout_t throw_timeout={};
+    const nothrow_timeout_t nothrow_timeout={};
 
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class unique_locker;

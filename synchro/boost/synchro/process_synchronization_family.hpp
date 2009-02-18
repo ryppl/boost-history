@@ -16,15 +16,16 @@
 #include <boost/synchro/process/upgradable_mutex.hpp>
 #include <boost/synchro/process/locks.hpp>
 #include <boost/interprocess/sync/interprocess_condition.hpp>
+#include <boost/synchro/synchronization_family.hpp>
 
 namespace boost {
 namespace synchro {
 
-
 //!Describes interprocess_mutex family to use with Sync framework
 //!based on boost::interprocess synchronization objects.
-struct process_synchronization_family
-{
+//[process_synchronization_family
+template <>
+struct synchronization_family<multi_process_tag> {
    typedef boost::synchro::interprocess_mutex              mutex_type;
    typedef boost::synchro::interprocess_recursive_mutex    recursive_mutex_type;
    typedef boost::synchro::interprocess_mutex                 timed_mutex_type;
@@ -34,7 +35,8 @@ struct process_synchronization_family
    typedef boost::interprocess::interprocess_condition             condition_any_type;
 };
 
+typedef synchronization_family<multi_process_tag> process_synchronization_family;
+//]
 }
 }
-
 #endif
