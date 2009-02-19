@@ -1,0 +1,72 @@
+#
+# Boost.Synchro
+# Build script for tests.
+#
+# Copyright (c) 2008-2009 Vicente J. Botet Escriba]
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using testing ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+# bjam -V2 threading=multi target-os=cygwin threadapi=pthread variant=debug
+
+project :
+    : requirements
+        <include>$(BOOST_ROOT)
+        <include>../../..
+        <include>../../../../interthreads
+        
+        <threading>multi
+#        <target-os>cygwin
+        <threading>multi
+        #<threadapi>pthread
+        <variant>debug
+
+        #<library>/boost/test//boost_unit_test_framework/<link>static
+        #<library>/boost/thread//boost_thread/<link>static
+        
+        <library>../../../../../boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
+        <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
+      
+;
+
+#exe helpers
+#    : ../example/IL_BancAccount.cpp
+#    : <define>BOOST_SYNCHRO_DO_NOT_COMPILE
+#    ;
+
+
+     
+test-suite sync_lock_traits :
+     [ run thread_count.cpp ]
+     [ compile lockable_traits_test.cpp ]
+     [ compile lockable_concepts_test.cpp ]
+     [ compile locker_concepts_test.cpp ]
+     [ run sync_buffer_family_test.cpp ]
+##     [ run sync_buffer_monitor_test.cpp ]
+     [ run nested_reverse_locker_test.cpp ]
+    ; 
+
+test-suite "compile_fail_test"  :
+    [ compile-fail ../example/IL_BancAccount.cpp : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
+    ;
+    
+test-suite "examples" :
+    [ run     ../example/BankAccount.cpp  ]
+    [ run     ../example/SingleBuf.cpp  ]
+    [ run     ../example/Master_Slave.cpp  ]
+##    [ run     ../example/HotelReservation.cpp  ]
+    [ link     ../example/QualifiedSingleBuf.cpp  ]
+    [ run     ../example/Histogram.cpp  ]
+    [ run     ../example/IL_BancAccount.cpp  ]
+    [ run-fail     ../example/IL_Lockable_BancAccount.cpp  ]
+    [ run     ../example/IL_Rec_Lockable_BancAccount.cpp  ]
+    [ run     ../example/IEL_Rec_Lockable_BancAccount.cpp  ]
+    [ run     ../example/EL_BancAccount.cpp  ]
+    ;
+    
