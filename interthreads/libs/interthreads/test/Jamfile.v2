@@ -32,8 +32,8 @@ project
         <include>../../..
         <include>../../../../../boost_1_38_0
         <threading>multi
-        <target-os>cygwin
-        <interthreadapi>pthread
+#        <target-os>cygwin
+#        <interthreadapi>pthread
         <variant>debug
 #       <define>BOOST_THREAD_HAS_THREAD_ATTR
 
