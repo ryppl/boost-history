@@ -21,6 +21,10 @@
 #ifndef BOOST_SVG_SVG_STYLE_HPP
 #define BOOST_SVG_SVG_STYLE_HPP
 
+#ifdef _MSC_VER
+#  pragma warning (disable : 4512) // assignment operator could not be generated.
+#endif
+
 #include "svg_color.hpp"
 #include "detail/svg_style_detail.hpp"
 
@@ -128,11 +132,9 @@ public:
 
   void write(std::ostream& os); // Output to file or stream.
 
-  // operators useful for testing at least.
-  // TODO add operator << ?
+  // comparison operators (useful for testing at least).
   bool operator==(svg_style& s);
   bool operator!=(svg_style& s);
-
 }; // class svg_style
 
 // class svg Definitions.
@@ -183,48 +185,48 @@ public:
   }
 
   bool svg_style::stroke_on() const
-  {
+  { //! \return true if SVG stroke is on.
     return stroke_on_;
   }
 
   svg_style& svg_style::stroke_on(bool is)
-  {
+  { //! Set true if SVG stroke is wanted.
     stroke_on_ = is;
     return *this; //! \return svg_style& to make chainable.
   }
 
   bool svg_style::width_on() const
-  {
+  { //! \return true if to use SVG stroke width.
     return width_on_;
   }
 
   svg_style& svg_style::width_on(bool is)
-  {
+  { //! Set true to use SVG stroke width.
     width_on_ = is;
     return *this; //! \return svg_style& to make chainable.
   }
 
   // Set svg_style member functions to set fill, stroke & width.
   svg_style& svg_style::stroke_color(const svg_color& col)
-  {
-      stroke_ = col;
-      stroke_on_ = true; // Assume want a stroke if color is set.
-      return *this;  //! \return svg_style& to make chainable.
-}
+  { //! Set stroke color (and set stroke on).
+    stroke_ = col;
+    stroke_on_ = true; // Assume want a stroke if color is set.
+    return *this;  //! \return svg_style& to make chainable.
+  }
 
   svg_style& svg_style::fill_color(const svg_color& col)
-  {
-      fill_ = col;
-      fill_on_ = ! col.is_blank; // If blank fill is off or "none".
-      return *this; //! \return svg_style& to make chainable.
-}
+  { //! Set fill color (and set fill on).
+    fill_ = col;
+    fill_on_ = ! col.is_blank; // If blank fill is off or "none".
+    return *this; //! \return svg_style& to make chainable.
+  }
 
   svg_style& svg_style::stroke_width(double width)
-  {
+  { //! Set stroke width (and set width on).
       width_ = width;
       width_on_ = ((width > 0) ? true : false);
       return *this; //! \return svg_style& to make chainable.
-}
+  }
 
   bool svg_style::operator==(svg_style& s)
   { //! Compare styles.
@@ -247,7 +249,10 @@ public:
    }
 
   std::ostream& operator<< (std::ostream& os, svg_style& s)
-  {  //! \brief Output a string description of a svg_style.
+  {  /*! Output a string description of a svg_style.
+         Usage: svg_style my_svg_style; cout << my_svg_style << endl;
+         Outputs:  svg_style(RGB(0,0,0), RGB(0,0,0), 0, no fill, no stroke, no width)
+     */
       os << "svg_style("
          << s.fill_ << ", "
          << s.stroke_ << ", "
@@ -255,14 +260,11 @@ public:
          << ((s.fill_on_) ? "fill, " : "no fill, ")
          << ((s.stroke_on_) ? "stroke, " : "no stroke, ")
          << ((s.fill_on_) ? "width)" : "no width)");
-    /*! \details Usage: svg_style my_svg_style; cout << my_svg_style << endl;
-      Outputs:  svg_style(RGB(0,0,0), RGB(0,0,0), 0, no fill, no stroke, no width)
-    */
     return os;
   } // std::ostream& operator<<
 
   void svg_style::write(std::ostream& os)
-  { //! Write any stroke, fill colors and/or width info (start with space) to svg XML document.
+  { //! Write any stroke, fill colors and/or width info (start with space) to SVG XML document.
     if(stroke_on_)
     {
         os << " stroke=\"";
@@ -393,17 +395,17 @@ public:
 
   const std::string& text_style::font_style() const
   { //! \return  font style.
-    /*! \details font-style: normal | bold | italic | oblique.
+    /*! font-style: normal | bold | italic | oblique.
        Example "normal" is default.
      */
     return style_;
  }
 
   text_style& text_style::font_style(const std::string& s)
-  { //! Set font style.
-    /*! Examples: my_text_style.font_style("italic");\n
-    See also browser conformance tests:\n
-      http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+  { /*! Set font style.
+        Examples: my_text_style.font_style("italic");\n
+       See also browser conformance tests:\n
+       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     */
     style_ = s;
     return *this; //! \return reference to text_style to make chainable.
@@ -442,8 +444,8 @@ public:
   }
 
   text_style& text_style::font_decoration(const std::string& s)
-  { //! Set font decoration.
-    /*! Examples: "underline" | "overline" | "line-through"
+  { /*! Set font decoration.
+      Examples: "underline" | "overline" | "line-through"
       http://www.croczilla.com/~alex/conformance_suite/svg/text-deco-01-b.svg
       tests line-through and underline.
       But implementation varies.
@@ -691,7 +693,7 @@ public:
   }
 
   int plot_point_style::size()
-  { //!< Get size of shape or symbol used to mark data value plot point(s).
+  { //! Get size of shape or symbol used to mark data value plot point(s).
     return size_;
   }
 

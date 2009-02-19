@@ -312,7 +312,7 @@ Output:
 
 //[demo_Hoaglin_output
 
-Autorun "j:\Cpp\SVG\debug\demo_Hoaglin.exe"
+``Autorun "j:\Cpp\SVG\debug\demo_Hoaglin.exe"
 Hoaglin definition #4, q1 70.25, q2 83.5, q3 90.5, IQR 20.25
 Hoaglin definition #5, q1 76.5, q2 85, q3 93.5, IQR 17
 Hoaglin definition #6, q1 75, q2 85, q3 95, IQR 20
@@ -321,7 +321,7 @@ Hoaglin definition #8, q1 76, q2 85, q3 94, IQR 18
 Default boxplot.quartile_definition() = 8
 boxplot.quartile_definition() = 8
 boxplot_series.quartile_definition() = 4
-
+``
 //] [demo_Hoaglin_output]
 
 

@@ -1615,7 +1615,9 @@ public:
       poly_points.push_back(new poly_path_point(x, y));
     }
 
-    polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, bool f = true) : fill(f)
+    polygon_element (double x1, double y1, double x2, double y2, double x3, double y3, bool f = true)
+      :
+      fill(f)
     { //! Constructor - Absolute (x, y) only. Used by triangle.
       poly_points.push_back(new poly_path_point(x1, y1));
       poly_points.push_back(new poly_path_point(x2, y2));

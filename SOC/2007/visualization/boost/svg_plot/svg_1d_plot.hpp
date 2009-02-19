@@ -31,6 +31,8 @@
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp" // Code shared with 2D.
 #include "detail/functors.hpp"
+#include "detail/numeric_limits_handling.hpp"
+using boost::svg::detail::limit_NaN;
 
 #include <boost/svg_plot/detail/auto_axes.hpp> // provides:
 //void scale_axis(double min_value, double max_value, // Input range
@@ -115,7 +117,8 @@ svg_1d_plot_series::svg_1d_plot_series(T begin, T end, const std::string& title)
 : // Constructor.
 title_(title),
 point_style_(black, blank, 5, vertical_line), // Default point style.
-limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
+limit_point_style_(lightgrey, red, 10, cone), // Default limit (inf or NaN) point style.
+//limit_point_style_(lightgrey, whitesmoke, 10, cone), // Default limit (inf or NaN) point style.
 line_style_(black, blank, 2, true, false) // Default line style, black, no fill, width, line_on, bezier_on false
 // Meaning of line style for 1-D as yet undefined?
 {
@@ -594,7 +597,7 @@ public:
   } // void calculate_transform()
 
   void draw_axes()
-  { // For 1-D, there is, of course, only the X-axis!
+  { // For 1-D, there is, of course, only the horizontal X-axis!
     double x(0.);
     double y1(0.);
     double y2(image.y_size());
@@ -646,8 +649,13 @@ public:
     {
       draw_x_label();
     }
-    double y(0.); // All 1-D points are plotted are on the y = 0 axis.
+    double y(0.); // All 1-D points are plotted are on the horizontal X axis (y = 0) axis.
     transform_y(y);
+    if ((y < plot_top_) || (y > plot_bottom_))
+    { // Should never happen!
+      throw std::runtime_error("transform_y(y=0) outside plot window!");
+    }
+
     for(unsigned int i = 0; i < series.size(); ++i)
     { // For each of the data series.
       g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
@@ -655,31 +663,73 @@ public:
       g_ptr.style().fill_color(series[i].point_style_.fill_color_);
 
       for(unsigned int j = 0; j < series[i].series.size(); ++j)
-      { // Draw jth points for ith series.
+      { // Draw jth point for ith series.
         double x = series[i].series[j];
         // TODO symbols are offset downwards
         // because the origin of the point is the top left of the glyph.
         // Need to offset by the height and width of the font size.
-        double value = x;
+        double vx = x; // Note the true x value.
         transform_x(x);
-        if( // Check point is inside plot_window (otherwise ignore it).
-          // May need a margin here to avoid points just over the window not being shown.  TODO
-             (x >= plot_left_)
-          && (x <= plot_right_)
-          && (y >= plot_top_)
-          && (y <= plot_bottom_) )
+        if((x >= plot_left_) && (x <= plot_right_)) // Check point is inside plot_window.
+        // May need a margin here to avoid points just over the window not being shown.
         {
           draw_plot_point(x, y, g_ptr, series[i].point_style_); // Marker.
           if (x_values_on_)
           { // Show the value of the data point too.
             g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
-            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, series[i].point_style_, value);
+            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, series[i].point_style_, vx);
             // TODO separate X and Y colors?
           }
+          else
+          { // don't plot anything?  Might leave a marker to show an 'off the scale' value?
+          }
+        } // if in window
+      } // for j
+    } // for i all normal
 
+    // Draw all the 'bad' or at_limit points.
+    for(unsigned int i = 0; i < series.size(); ++i)
+    {
+      g_element& g_ptr = image.g(detail::PLOT_LIMIT_POINTS);
+
+      for (unsigned int j = 0; j != series[i].series_limits.size(); ++j)
+      {
+        double x = series[i].series_limits[j];
+        if (limit_NaN(x))
+        { // is NaN rather than too big or too small.
+          double x = 0.;
+          transform_x(x);
+          // If include zero, OK, else plot on left or right as appropriate.
+          if (x < plot_left_)
+          { 
+            x = plot_left_;
+          }
+          else if (x > plot_right_)
+          { 
+            x = plot_right_;
+          }
+          //else X axis includes zero, so x is OK.
+          draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+        }
+        else
+        { // Not NaN
+          transform_x(x);
+          if (x < plot_left_)
+          {
+            x = plot_left_;
+          }
+          else if (x > plot_right_)
+          {
+            x = plot_right_;
+          }
+          // else is inside plot window, so draw a limit point marker.
+          // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
+          draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
         }
       } // for j
-    } // for
+    } // for i limits point
+
+
   } //   void update_image()
 
   // ------------------------------------------------------------------------
@@ -702,7 +752,6 @@ public:
   template <class T, class U>
   svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert);
 }; // end svg_1d_plot::
-
 
 // svg_1d_plot Member functions definitions.
 

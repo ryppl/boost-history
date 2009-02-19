@@ -22,7 +22,6 @@
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
 
-
 //[auto_1d_plot_1
 
 /*`First we need a few includes to use Boost.Plot
@@ -69,7 +68,7 @@
 
 void scale_axis(double min_value, double max_value, // input
                double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, // updated.
-               bool origin, double tight, int min_ticks, int steps); 
+               bool origin, double tight, int min_ticks, int steps);
 
 double tol100eps = 1000 * numeric_limits<double>::epsilon(); // suitable tight value.
 
@@ -80,8 +79,8 @@ int main()
   Autoscaling must inspect the container in order to find axis ranges that will be suitable.
   First we create a container and fill with some fictional data.
   */
-	vector<double> my_data;
-	// Initialize my_data with some entirely fictional data.
+  vector<double> my_data;
+  // Initialize my_data with some entirely fictional data.
   my_data.push_back(0.2);
   my_data.push_back(1.1); // [1]
   my_data.push_back(4.2); // [2]
@@ -107,7 +106,7 @@ int main()
     my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
 
     /*`It may be useful to display that range chosen by autoscaling. */
-    cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 
+    cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range()
   }
   catch(const std::exception& e)
   { // Error, warning and information messages are displayed by the catch block.
@@ -123,7 +122,7 @@ int main()
   { // Ensure error, warning and information messages are displayed by the catch block.
 
   multiset<double> my_set;
-	// Initialize my_set with some entirely fictional data.
+  // Initialize my_set with some entirely fictional data.
   my_set.insert(1.2);
   my_set.insert(2.3);
   my_set.insert(3.4);
@@ -218,7 +217,7 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
     true, false, tol100eps, 6); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
-  
+
   // Scaling using whole STL set container,
   // scale_axis does finding min and max.
   scale_axis(my_set, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
@@ -226,25 +225,27 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
 
-  /*`However there may be trouble if the data could contain values that are outside normal limits.
-  Infinity (+ and -), and maximum value, and  NotaNumbers, are separated by the plot program to allow them to be shown,
-  but separate from 'normal' values.  These values similarly can distort automatic scaling:
-  a single infinity would result in useless scaling!
-  When the plot range is set, the maximum and minimum values are checked,
-  and if not normal then an exception will be thrown, and no plot will be produced.
-  However, when autoscaling, it is more useful to ignore 'limit' values.
-  But this means checking all values individually.  If it known that all values are normal,
-  for example because they come from some measuring equipment that is known only to produce normal values,
-  it will be much quicker to use std::min_max_element which can take advantange of knowledge of the container.
+  /*`
+However autoscaling may go wrong if the data could contain values that are outside normal limits.
+Infinity (+ and -), and maximum value, and NaN (Not A Number),
+are separated by the plot program to allow them to be shown,
+but separate from 'normal' values.  These values similarly can distort automatic scaling:
+a single infinity would result in useless scaling!
+When the plot range is set, the maximum and minimum values are checked,
+and if not normal then an exception will be thrown, and no plot will be produced.
+However, when autoscaling, it is more useful to ignore 'limit' values.
+But this means checking all values individually.  If it known that all values are normal,
+for example because they come from some measuring equipment that is known only to produce normal values,
+it will be much quicker to use 'std::min_max_element' which can take advantange of knowledge of the container.
 
-  The function `autoscale_check_limits(bool)` is provided to control this. 
-  If set true, all values will be checked, and those at 'limits' will be ignored in autoscaling.
-  The default is true, to check all values.
+The function 'autoscale_check_limits(bool)' is provided to control this.
+If set true, all values will be checked, and those at 'limits' will be ignored in autoscaling.
+The default is true, to check all values.
 
-  If we had many very known normal values to plot and want to autoscale,
-  we might instead opt to ignore these checks, and write:
+If we had many very known normal values to plot and want to autoscale,
+we might instead opt to ignore these checks, and write:
   */
-	svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
+  svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
   //my_1d_plot.autoscale_check_limits(false);
   // This *will throw an exception* if checks are avoided and any values are at 'limits'.
@@ -273,7 +274,7 @@ aesthetically pleasing ranges. One can:
   // Show the flags just set.
   cout << (my_1d_plot.x_with_zero() ? "x_with_zero, " : "not x_with_zero, ")
     << my_1d_plot.x_min_ticks() << " x_min_ticks, "
-    << my_1d_plot.x_steps() << " x_steps, " 
+    << my_1d_plot.x_steps() << " x_steps, "
     << my_1d_plot.x_tight() << " tightness." << endl;
 
 /*`Finally here are some examples of using autoscaling using all or part of containers.
@@ -281,22 +282,22 @@ aesthetically pleasing ranges. One can:
 
   my_1d_plot.x_autoscale(my_data);  // Use all my_data to autoscale.
   cout << "Autoscaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 0, max 6.5, interval 0.5
 
   my_1d_plot.x_autoscale(my_data.begin(), my_data.end());  // Use all my_data to autoscale.
 
   cout << "Autoscaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 0, max 6.5, interval 0.5
 
   my_1d_plot.x_autoscale(my_data[1], my_data[4]);  // Use only part of my_data to autoscale.
 
   cout << "Autoscaled " // Show the results of autoscale:
-    "min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    "min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 1, max 5.5, interval 0.5
 
   //my_1d_plot.x_autoscale(true);  // Ensure autoscale values are used for the plot.
@@ -307,8 +308,8 @@ aesthetically pleasing ranges. One can:
 */
   my_1d_plot.plot(my_data, "Auto 1D"); // Add the one data series.
   cout << "Autoscaled " // Show the results of autoscale:
-    " min " << my_1d_plot.x_auto_min_value() 
-    << ", max "<< my_1d_plot.x_auto_max_value() 
+    " min " << my_1d_plot.x_auto_min_value()
+    << ", max "<< my_1d_plot.x_auto_max_value()
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 1, max 5.5, interval 0.5
 
   my_1d_plot.plot(my_set.begin(), my_set.end(), "Auto 1D"); // Add another data series from my_set.
@@ -317,7 +318,7 @@ aesthetically pleasing ranges. One can:
   //my_1d_plot.plot(&my_set[1], &my_set[4], "Auto 1D"); // operator[] is not defined for set container!
 
   my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
-  
+
   using boost::svg::detail::operator<<;
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 1, 5.5
   show_1d_plot_settings(my_1d_plot);
@@ -331,10 +332,10 @@ aesthetically pleasing ranges. One can:
 /*`If necessary, one can obtain a complete listing of all the settings used.
 This is often useful when the plot does not meet expectations.
 */
- 
+
 //] [auto_1d_plot_3]
 
-	return 0;
+  return 0;
 } // int main()
 
 /*
@@ -345,8 +346,8 @@ Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\auto_1d_plot.exe"
 limit value: 1.#INF
 6 good values, 1 limit values.
-7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF 
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 0.2 1.1 4.2 3.3 5.4 6.5 : 6 values used.
 1.1 4.2 3.3 5.4 : 4 values used.
 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF : 7 values used.

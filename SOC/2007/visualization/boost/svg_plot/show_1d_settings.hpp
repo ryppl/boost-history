@@ -205,6 +205,10 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   //cout << "legend_font_width " << plot.legend_font_width() << endl;
   cout << "legend_width " << plot.legend_width() << endl;
   cout << "legend_lines " << plot.legend_lines() << endl;
+
+  cout << "limit points stroke color " << plot.limit_color() << endl;
+  cout << "limit points fill color " << plot.limit_fill_color() << endl;
+
   cout << "license_on " << plot.license_on() << endl;
   cout << "license_reproduction " << plot.license_reproduction() << endl;
   cout << "license_distribution " << plot.license_distribution() << endl;

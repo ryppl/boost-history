@@ -2,7 +2,7 @@
     [quickbook 1.4]
     [id SVG_plot]
     [authors [Voytko, Jake], [Bristow, Paul A.]]
-    [copyright 2007, 2008, 2009 Jake Voytko and Paul A. Bristow]
+    [copyright 2007 to 2009 Jake Voytko and Paul A. Bristow]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
@@ -65,7 +65,6 @@
 
 [/Include the index]
 '''
-
    <index type="class_name">
      <title>Class Index</title>
    </index>

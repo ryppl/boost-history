@@ -50,12 +50,17 @@
         preclude a method that extracts appropriate data from the CSS file and calls
         the appropriate functions. For example, if the user provides the following:
       </p>
+<p>
+        
+</p>
 <pre class="programlisting"><span class="preprocessor">#Background</span>
 <span class="special">{</span>
   <span class="identifier">fill</span> <span class="special">:</span> <span class="preprocessor">#FFF</span><span class="special">;</span>
-  <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">041010</span> <span class="special">;</span> 
+  <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">041010</span> <span class="special">;</span>
 <span class="special">}</span>
 </pre>
+<p>
+      </p>
 <p>
         why shouldn't
       </p>
@@ -79,34 +84,29 @@
           and only</strong></span> identifier on the line. The following is not accepted:
         </p>
 <p>
-          rect, circle { fill : #00FF00; stroke : #000000; }
-        </p>
-<p>
-          But the following is:
-        </p>
-<p>
-          
-</p>
-<pre class="programlisting"><span class="identifier">rect</span>
-<span class="special">{</span>
-  <span class="identifier">fill</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
-  <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
-<span class="special">}</span>
-
-<span class="identifier">circle</span>
-<span class="special">{</span>
-  <span class="identifier">fill</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
-  <span class="identifier">stroke</span> <span class="special">:</span> #<span class="number">00FF</span><span class="number">00</span><span class="special">;</span>
-<span class="special">}</span>
-</pre>
-<p>
-        </p>
-<p>
-          None of the power of CSS is compromised (I believe), but it becomes more
-          verbose.
+          [pre rect, circle { fill : #00FF00; stroke : #000000; }
         </p>
 </td></tr>
 </table></div>
+<p>
+        But the following is:
+      </p>
+<pre class="programlisting">rect
+  {
+    fill : #00FF00;
+    stroke : #00FF00;
+  }
+
+  circle
+  {
+    fill : #00FF00;
+    stroke : #00FF00;
+  }
+</pre>
+<p>
+        None of the power of CSS is compromised (I believe), but it becomes more
+        verbose. ]
+      </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

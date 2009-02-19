@@ -160,6 +160,8 @@ int main()
   .x_minor_grid_on(true)
   .x_minor_grid_width(1)
   .x_minor_grid_color(pink)
+  .limit_color(red)
+  .limit_fill_color(green)
   .x_ticks_on_window_or_axis(0) // -1 bottom, 0 on axis, +1 top
 
   .x_range(-1., 7.); // Display range.

@@ -67,9 +67,11 @@ int main()
   //legend settings
   my_plot.legend_title_font_size(15);
 
+  my_plot.limit_color(red).limit_fill_color(green); // But no limit values show??
+
   my_plot.plot(data1, "1 / x").shape(square).size (5).line_on(false);
 
-    my_plot.write("./2d_limit.svg");
+  my_plot.write("./2d_limit.svg");
 
   return 0;
 } // int main()

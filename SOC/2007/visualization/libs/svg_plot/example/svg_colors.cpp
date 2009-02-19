@@ -20,6 +20,10 @@
 
 // Need completion to all colors, not just one!
 
+#ifdef _MSC_VER_
+#  pragam warning (disable : 4512) //  assignment operator could not be generated.
+#endif
+
 #include <boost/svg_plot/svg.hpp>
 // using boost::svg::rect;
 
@@ -33,8 +37,19 @@ int main()
   my_image.x_size(100);
   my_image.y_size(200);
 
-  my_image.g().style().stroke_color(red);
-  my_image.rect(20, 20, 0, 0);
+  my_image.g(); // Add first (zeroth) new element,
+  g_element& g0 = my_image.g(0); // so index is zero.
+  g0.push_back(new rect_element(0, 0, my_image.x_size(),  my_image.y_size() ) ); // border to all image.
+
+  // Create a small test rectangle.
+  g0.style().fill_color(azure); 
+  g0.style().fill_on(true); 
+  g0.style().stroke_color(yellow);
+  g0.push_back(new rect_element(20, 20, 10, 10) ); // border to rectangle.
+  g0.text(490, 100, "my color", no_style, right_align); // SVG name of color to the right.
+ 
+  // The need to repeat down the page for all the colors.  TODO
+  // Need a 'reverse lookup' of the enum colors as "azure" :-((
 
   my_image.write("./svg_colors.svg");
   return 0;

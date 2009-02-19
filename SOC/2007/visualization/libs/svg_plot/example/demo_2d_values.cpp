@@ -49,9 +49,9 @@ int main()
 //[demo_2d_values_2
 /*`Some fictional data is pushed into an STL container, here map:*/
 
-    /*`This example uses a single map to demonstrate autoscaling.
+/*`This example uses a single map to demonstrate autoscaling.
   We create a map to hold our data series.
-  */
+*/
 	map<const double, double> my_data;
   /*`
   Inserting some fictional values also sorts the data.
@@ -70,7 +70,7 @@ int main()
       .x_range(-5, 10) // Add a range for the X-axis.
       .x_label("length (m)"); // Add a label for the X-axis.
 
-/*`Add the one data series, `my_data` and a description, and how the data points are to marked,
+/*`Add the one data series, `my_data` and a description, and how the data points are to be marked,
 here a circle with a diameter of 5 pixels.
 */
     my_2d_plot.plot(my_data, "2d Values").shape(round).size(5).line_on(false);

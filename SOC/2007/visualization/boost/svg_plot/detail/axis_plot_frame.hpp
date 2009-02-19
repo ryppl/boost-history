@@ -3,7 +3,6 @@
   \details Functions are derived from base class axis_plot_frame.
   \date 11 Feb 2009
   \author Jacob Voytko and Paul A. Bristow
-
 */
 
 // Copyright Jacob Voytko 2007
@@ -991,9 +990,11 @@ namespace boost
               //
               break;
             case cone: // Pointing down triangle.
-              g_ptr.triangle(x - half_size, y - size, x + half_size, y - size, x, y, false);
-              // Last point puts the bottom tip of the triangle on the X-axis.
-              // This may not be wanted for 2-D.
+              {
+                bool fill = (sty.fill_color() != blank);
+                g_ptr.triangle(x - half_size, y - size, x + half_size, y - size, x, y, fill);
+              // Last point puts the bottom tip of the triangle on the X-axis (may not be wanted for 2-D).
+              }
               break;
             case cross:
               g_ptr.line(x, y + size, x , y - size); // line up & down from axis,
@@ -1588,6 +1589,10 @@ namespace boost
           double x_auto_max_value();
           double x_auto_tick_interval();
           int x_auto_ticks();
+          Derived& limit_color(const svg_color&);
+          svg_color limit_color();
+          Derived& limit_fill_color(const svg_color&);
+          svg_color limit_fill_color();
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -3482,6 +3487,36 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         { //! \return  the X-axis number of major ticks computed by autoscale.
          return derived().x_auto_ticks_;
         }
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::limit_color(const svg_color& col)
+        { //! Set the color for 'at limit' point stroke color.
+          //derived().plot_window_border_.stroke_ = col;
+          derived().image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color(col);
+          return derived();
+        }
+
+        template <class Derived>
+        svg_color axis_plot_frame<Derived>::limit_color()
+        { //! \return  the color for the 'at limit' point stroke color.
+          return derived().image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color();
+        }
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::limit_fill_color(const svg_color& col)
+        { //! Set the color for 'at limit' point fill color.
+          derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_on(true);
+          derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color(col);
+          return derived();
+        }
+
+        template <class Derived>
+        svg_color axis_plot_frame<Derived>::limit_fill_color()
+        { //! \return  the color for the 'at limit' point fill color.
+          return derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
+        }
+
+    // image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
 
       } // detail
     } // svg

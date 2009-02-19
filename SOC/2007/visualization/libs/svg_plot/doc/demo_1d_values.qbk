@@ -8,6 +8,16 @@
 [demo_1d_values_2]
 [demo_1d_values_output]
 
+[h4 Showing 1D Data 'at limit' Values Examples]
+
+[import ..\example\demo_1d_limits.cpp]
+
+[demo_1d_limits_1]
+[demo_1d_limits_2]
+[demo_1d_limits_output]
+
+
+
 [endsect] [/section:demo_1d_values 1-D Data Values Examples]
 
 [/ demo_1d_values.qbk

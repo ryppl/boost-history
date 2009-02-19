@@ -32,6 +32,9 @@
 #include "detail/numeric_limits_handling.hpp"
 #include "detail/functors.hpp"
 #include "detail/auto_axes.hpp"
+#include "detail/numeric_limits_handling.hpp"
+using boost::svg::detail::limit_NaN;
+
 
 #include "svg.hpp"
 
@@ -1477,7 +1480,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       } // draw_plot_lines
 
       void draw_plot_points()
-      { //! Draw normal 'good' non-limit points and then any 'at limits' points.
+      { //! Draw normal 'good' non-limit points, and then any 'at limits' points.
         double x(0.);
         double y(0.);
         for(unsigned int i = 0; i < series.size(); ++i)
@@ -1496,13 +1499,13 @@ my_plot.background_color(ghostwhite) // Whole image.
             y = j->second;
             double vy = y; // Note the true y value.
             transform_point(x, y);
-            if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
+            if((x > plot_left_) && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               draw_plot_point(x, y, g_ptr, series[i].point_style_);
               g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
               if (x_values_on_)
               { // Show the value of the X data point too.
-// void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
+                // void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
 
                 draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, series[i].point_style_, vx);
               }
@@ -1516,12 +1519,11 @@ my_plot.background_color(ghostwhite) // Whole image.
               { // show the values of the X & Y data as a pair.
                 draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, vx, vy);
               }
-
-            }
-          } // for
+            } // if in side window
+          } // for j
         } // for normal points
 
-        // Draw all the 'bad' at_limit points.
+        // Draw all the abnormal 'at_limit' points.
         for(unsigned int i = 0; i < series.size(); ++i)
         {
           g_element& g_ptr = image.g(detail::PLOT_LIMIT_POINTS);
@@ -1531,10 +1533,69 @@ my_plot.background_color(ghostwhite) // Whole image.
           {
             x = j->first;
             y = j->second;
-            transform_point(x, y);
-            if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
+            if (limit_NaN(x))
+            { // x is NaN rather than too big or too small.
+              x = 0.;
+              transform_x(x);
+              // If include zero, OK, else plot on left or right as appropriate.
+              if (x < plot_left_)
+              { 
+                x = plot_left_;
+              }
+              else if (x > plot_right_)
+              { 
+                x = plot_right_;
+              }
+              //else X axis includes zero, so x is OK.
+            }
+            else
+            { // x Not NaN
+              transform_x(x);
+              if (x < plot_left_)
+              {
+                x = plot_left_;
+              }
+              else if (x > plot_right_)
+              {
+                x = plot_right_;
+              }
+              // else is inside X axis plot window.
+            }
+            if (limit_NaN(y))
+            { // y is NaN rather than too big or too small.
+              y = 0.;
+              transform_y(y);
+              // If include zero, OK, else plot on left or right as appropriate.
+              if (y < plot_top_)
+              { // Note y SVG coordinate increase downwards.
+                y = plot_top_;
+              }
+              else if (y > plot_bottom_)
+              { 
+                y = plot_bottom_;
+              }
+              //else y axis includes zero, so y is OK.
+            }
+            else
+            { // y Not NaN.
+              transform_y(y);
+              if (y < plot_top_)
+              {
+                y = plot_top_;
+              }
+              else if (y > plot_bottom_)
+              {
+                y = plot_bottom_;
+              }
+              // else is inside plot window, so draw a limit point marker.
+              // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
+            }
+
+            draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+
+            if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
-             // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
+              // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
               draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
             }
           }

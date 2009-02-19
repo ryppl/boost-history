@@ -728,7 +728,8 @@ public:
     return document.polygon(x, y, f);
   }
 
-  //JVTODO: Replace with template version
+  //JVTODO: Replace with STL container template version.
+
   polygon_element& polygon(std::vector<poly_path_point>& v, bool f = true)
   { //! push_back a complete many-sided polygon to the document with vertices specified as a vector of path_points.
     return document.polygon(v, f);
