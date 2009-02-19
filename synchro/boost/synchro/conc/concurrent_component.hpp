@@ -123,8 +123,8 @@ protected:
             p.accept(abs_time);
         }
 #endif
-        binary_semaphore accept_call_;
-        binary_semaphore until_end_;
+        semaphore accept_call_;
+        semaphore until_end_;
     };
     static void accept(port& p) {
 //            accept_call_.common_.post(1);
@@ -169,8 +169,8 @@ protected:
             accept_call_.post();
             until_end_.wait();
         }
-        binary_semaphore accept_call_;
-        binary_semaphore until_end_;
+        semaphore accept_call_;
+        semaphore until_end_;
         const concurrent_component_base* sender_;
     };
     static void accept(object_port& that, const concurrent_component_base* snd) {
@@ -206,8 +206,8 @@ protected:
 //        static void accept(object_port& that, const concurrent_component_base* snd) {
 //            that.accept(snd);
 //        }
-        binary_semaphore accept_call_;
-        binary_semaphore until_end_;
+        semaphore accept_call_;
+        semaphore until_end_;
 //        const std::type_info* type_;
     };
     template <typename TYPE>
