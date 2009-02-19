@@ -22,6 +22,7 @@ template <typename Lockable>
 class exclusive_lock_adapter
     : public exclusive_lock
 {
+public:
     typedef Lockable lockable_type;
     typedef typename scope_tag<Lockable>::type scope;
     typedef typename category_tag<Lockable>::type category;
@@ -63,7 +64,7 @@ public:
     bool lock_for(DurationType const& rel_time)
     {return lock_for(rel_time);}
 private:
-    TimeLockable& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
+    TimeLockable& the_lock() {return *static_cast<TimeLockable*>(&this->lock_);}
 };
 
 
@@ -123,6 +124,8 @@ public:
     void unlock_upgrade_and_lock_shared()
     {the_lock().unlock_upgrade_and_lock_shared();}
 
+    bool try_lock_upgrade()   
+    {return the_lock().try_lock_upgrade();}
     bool try_lock_upgrade_until(system_time const&t)   
     {return the_lock().try_lock_upgrade_until(t);}
     template<typename TimeDuration>   

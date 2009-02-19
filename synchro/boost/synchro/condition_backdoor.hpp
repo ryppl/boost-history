@@ -32,18 +32,22 @@ struct condition_backdoor {
         that_.wait(lock);
     }
     template <typename Locker>
-    bool wait_until(Locker& lock, boost::system_time  const&  abs_time) {
-        return that_.wait_until(lock, abs_time);
+    void wait_until(Locker& lock, boost::system_time  const&  abs_time) {
+        that_.wait_until(lock, abs_time);
     }
 
     template<typename Locker, typename duration_type>
-    bool wait_for(Locker& lock, duration_type const& rel_time) {
-        return that_.wait_for(lock, rel_time);
+    void wait_for(Locker& lock, duration_type const& rel_time) {
+        that_.wait_for(lock, rel_time);
     }
 
     template<typename Locker, typename predicate_type>
-    bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
-        return that_.timed_wait(lock, pred, abs_time);
+    void wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
+        that_.wait_when_until(lock, pred, abs_time);
+    }
+    template<typename Locker, typename predicate_type, typename duration_type>
+    void wait_when_for(Locker& lock, predicate_type pred, duration_type const& abs_time) {
+        that_.wait_when_for(lock, pred, abs_time);
     }
     template <typename Locker>
     void notify_one(Locker& lock) {

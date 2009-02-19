@@ -14,31 +14,9 @@
 
 #include <boost/thread/locks.hpp>
 #include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/locker_options.hpp>
 
 namespace boost { namespace synchro {
-
-    struct force_lock_t
-    {};
-    struct defer_lock_t
-    {};
-    struct try_to_lock_t
-    {};
-    struct adopt_lock_t
-    {};
-    struct throw_timeout_t
-    {};
-    struct nothrow_timeout_t
-    {};
-
-
-
-    const force_lock_t force_lock={};
-    const defer_lock_t defer_lock={};
-    const try_to_lock_t try_to_lock={};
-    const adopt_lock_t adopt_lock={};
-    const throw_timeout_t throw_timeout={};
-    const nothrow_timeout_t nothrow_timeout={};
-
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class unique_locker;
 

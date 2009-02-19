@@ -26,17 +26,17 @@ struct exclusive_lock {
 
 struct timed_lock : exclusive_lock {
     virtual ~timed_lock()=0;
-    bool try_lock_until(boost::system_time  const&  abs_time)=0;
+    virtual bool try_lock_until(boost::system_time  const&  abs_time)=0;
     template<typename DurationType>
     bool try_lock_for(DurationType const& rel_time)
     {
-        return try_lock_until(get_system_time()+abs_time);
+        return try_lock_until(get_system_time()+rel_time);
     }
-    bool lock_until(boost::system_time  const&  abs_time)=0;
+    virtual bool lock_until(boost::system_time  const&  abs_time)=0;
     template<typename DurationType>
     bool lock_for(DurationType const& rel_time)
     {
-        return lock_until(get_system_time()+abs_time);
+        return lock_until(get_system_time()+rel_time);
     }
 };
 
@@ -51,13 +51,13 @@ struct sharable_lock : timed_lock {
     template<typename DurationType>
     bool try_lock_shared_for(DurationType const& rel_time)
     {
-        return try_lock_shared_until(get_system_time()+abs_time);
+        return try_lock_shared_until(get_system_time()+rel_time);
     }
-    virtual bool lock_shared_until(boost::system_time  const&  abs_time)=0;
+    virtual void lock_shared_until(boost::system_time  const&  abs_time)=0;
     template<typename DurationType>
-    bool lock_shared_for(DurationType const& rel_time)
+    void lock_shared_for(DurationType const& rel_time)
     {
-        return lock_shared_until(get_system_time()+abs_time);
+        lock_shared_until(get_system_time()+rel_time);
     }
     virtual void unlock_shared()=0;
 };
@@ -77,7 +77,7 @@ struct upgradable_lock : sharable_lock {
     
     virtual void lock_upgrade_until(system_time const&t)=0;
     template<typename TimeDuration>   
-    virtual void lock_upgrade_for(TimeDuration const&t)
+    void lock_upgrade_for(TimeDuration const&t)
     {
         lock_upgrade_for(t);
     }

@@ -75,11 +75,9 @@ template <
 >
 class condition_unique_locker
     : protected unique_locker<Lockable, ScopeTag>
-//    : protected unique_lock_type<Lockable>::type
 {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
     typedef unique_locker<Lockable, ScopeTag> super_type;
-    //typedef typename unique_lock_type<Lockable>::type super_type;
 public:
     typedef Lockable lockable_type;
     typedef Condition condition;
@@ -88,16 +86,33 @@ public:
     explicit condition_unique_locker(lockable_type& obj)
         : super_type(obj) { } /*< locks on construction >*/
 
+    template<typename TimeDuration>
+    condition_unique_locker(TimeDuration const& target_time, lockable_type& m_)
+        : super_type(target_time, m_)
+    {}
+    condition_unique_locker(system_time const& target_time, lockable_type& m_)
+        : super_type(target_time, m_)
+    {}
+
     condition_unique_locker(lockable_type& obj, condition &cond)
         : super_type(obj) {
             typename condition::backdoor(cond).wait(*static_cast<super_type*>(this)); /*< relock on condition >*/
-            //typename condition::backdoor(cond).wait(*this); /*< relock on condition >*/
         }
     //condition_unique_locker(lockable_type& obj, condition_boosted &cond)
     //    : super_type(obj) {
     //        typename condition::backdoor(cond).wait(*static_cast<unique_lock<Lockable>*>(this)); /*< relock on condition >*/
     //    }
 
+    template<typename TimeDuration>
+    condition_unique_locker(TimeDuration const& target_time, lockable_type& obj, condition &cond)
+        : super_type(obj) {
+            typename condition::backdoor(cond).wait_for(target_time, *static_cast<super_type*>(this)); /*< relock on condition >*/
+        }
+    condition_unique_locker(system_time const& target_time, lockable_type& obj, condition &cond)
+        : super_type(obj) {
+            typename condition::backdoor(cond).wait_until(target_time, *static_cast<super_type*>(this)); /*< relock on condition >*/
+        }
+        
     template <typename Predicate>
     condition_unique_locker(lockable_type& obj, condition &cond, Predicate pred)
         : super_type(obj) {
@@ -109,6 +124,18 @@ public:
     //    : super_type(obj) {
     //        typename condition::backdoor(cond).wait_when(*static_cast<unique_lock<Lockable>*>(this), pred); /*< relock condition when predicate satisfaied>*/
     //    }
+    template <typename TimeDuration, typename Predicate>
+    condition_unique_locker(TimeDuration const& target_time, lockable_type& obj, condition &cond, Predicate pred)
+        : super_type(obj) {
+            typename condition::backdoor(cond).wait_when_for(*static_cast<super_type*>(this), pred, target_time); /*< relock condition when predicate satisfaied>*/
+            //typename condition::backdoor(cond).wait_when(*this, pred); /*< relock condition when predicate satisfaied>*/
+        }
+    template <typename Predicate>
+    condition_unique_locker(system_time const& target_time, lockable_type& obj, condition &cond, Predicate pred)
+        : super_type(obj) {
+            typename condition::backdoor(cond).wait_when_until(*static_cast<super_type*>(this), pred, target_time); /*< relock condition when predicate satisfaied>*/
+            //typename condition::backdoor(cond).wait_when(*this, pred); /*< relock condition when predicate satisfaied>*/
+        }
 
     ~condition_unique_locker() { } /*< unlocks on destruction >*/
 
@@ -303,72 +330,6 @@ private:
 //]
 
 
-#if 0
-//[condition_lockable
-template <
-    typename Lockable,
-    class Condition=condition_safe<typename best_condition<Lockable>::type >
->
-class condition_lockable
-    : public Lockable
-{
-    BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
-    typedef Lockable super_type;
-public:
-    typedef Lockable lockable_type;
-    typedef Condition condition;
-
-    condition_lockable()
-        : super_type() { }
-
-    ~condition_lockable() { }
-
-    //void lock();
-    //void unlock();
-    //bool try_lock();
-    //bool try_lock_until(system_time const & abs_time)
-    //{return the_lock().timed_lock(abs_time);}
-    //template<typename TimeDuration>
-    //bool try_lock_for(TimeDuration const & relative_time)
-    //{return the_lock().timed_lock(relative_time);}
-    
-    void relock_on(condition & cond) {
-        typename condition::backdoor(cond).wait(*this);
-    }
-
-    void relock_until(condition & cond, boost::system_time const& abs_time) {
-           typename condition::backdoor(cond).wait_until(*this, abs_time);
-    }
-
-    template<typename duration_type>
-    void relock_on_for(condition & cond, duration_type const& rel_time) {
-        typename condition::backdoor(cond).wait_for(*this, rel_time);
-    }
-
-    template<typename Predicate>
-    void relock_when(condition &cond, Predicate pred){
-        typename condition::backdoor(cond).wait_when(*this, pred);
-    }
-
-    template<typename Predicate>
-    void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time){
-        typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
-    }
-
-    template<typename Predicate, typename duration_type>
-    void relock_when_for(condition &cond, Predicate pred,
-            duration_type const& rel_time){
-        typename condition::backdoor(cond).wait_when_for(*this, pred, rel_time);
-    }
-
-
-private:
-    friend class boost::condition_variable;
-    friend class boost::condition_variable_any;
-};
-//]
-#endif
 }
 }
 #endif

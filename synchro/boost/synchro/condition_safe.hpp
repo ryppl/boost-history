@@ -51,13 +51,13 @@ private:
     }
 
     template <typename Locker>
-    bool wait_until(Locker& lock, boost::system_time  const&  abs_time) {
-        return cond_.timed_wait(lock);;
+    void wait_until(Locker& lock, boost::system_time  const&  abs_time) {
+        if (!cond_.timed_wait(lock)) throw timeout_exception();
     }
 
     template<typename Locker, typename duration_type>
-    bool wait_for(Locker& lock,duration_type const& rel_time) {
-        return cond_.timed_wait(lock);
+    void wait_for(Locker& lock,duration_type const& rel_time) {
+        if (!cond_.timed_wait(lock)) throw timeout_exception();
     }
 
 //    template<typename Locker, typename predicate_type>
@@ -65,12 +65,12 @@ private:
 //        return cond_.wait(lock, pred);
 //    }
     template<typename Locker, typename predicate_type>
-    bool wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
-        return cond_.timed_wait(lock, pred, abs_time);
+    void wait_when_until(Locker& lock, predicate_type pred, boost::system_time const& abs_time) {
+        if (!cond_.timed_wait(lock, pred, abs_time)) throw timeout_exception();
     }
     template<typename Locker, typename duration_type, typename predicate_type>
-    bool wait_when_for(Locker& lock, predicate_type pred, duration_type const& rel_time) {
-        return cond_.timed_wait(lock, pred, rel_time);
+    void wait_when_for(Locker& lock, predicate_type pred, duration_type const& rel_time) {
+        if (!cond_.timed_wait(lock, pred, rel_time)) throw timeout_exception();
     }
 private:
     Condition cond_;

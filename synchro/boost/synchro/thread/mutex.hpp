@@ -60,7 +60,6 @@ template <>
 struct upgrade_lock_type<thread_mutex> {
     typedef boost::upgrade_lock<boost::mutex> type;
 };
-
 template <>
 struct upgrade_to_unique_locker_type<thread_mutex> {
     typedef boost::upgrade_to_unique_lock<boost::mutex> type;

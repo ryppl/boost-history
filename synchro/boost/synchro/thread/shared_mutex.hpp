@@ -19,6 +19,7 @@
 #include <boost/synchro/detail/deleted_functions.hpp>
 
 namespace boost { namespace synchro {
+
     
 class thread_shared_mutex
 : public lock_traits_base<
@@ -107,6 +108,28 @@ struct best_condition_any<boost::shared_mutex> {
     typedef boost::condition_variable_any type;
 };
 #endif
+
+template <>
+struct unique_lock_type<thread_shared_mutex> {
+    typedef boost::unique_lock<boost::shared_mutex> type;
+};
+template <>
+struct shared_lock_type<thread_shared_mutex> {
+    typedef boost::shared_lock<boost::shared_mutex> type;
+};
+
+
+template <>
+struct upgrade_lock_type<thread_shared_mutex> {
+    typedef boost::upgrade_lock<boost::shared_mutex> type;
+};
+
+
+template <>
+struct upgrade_to_unique_locker_type<thread_shared_mutex> {
+    typedef boost::upgrade_to_unique_lock<boost::shared_mutex> type;
+};
+
 }
 }
 

@@ -53,7 +53,7 @@ struct LockerConcept {
         l2.lock();
         if (l2.try_lock()) return;
         l2.unlock();
-        l2.release();
+        //l2.release();
     }
     lockable_type mtx_;
     system_time t;
@@ -65,11 +65,14 @@ struct TimedLockerConcept {
     typedef typename lockable_type<Locker>::type lockable_type;
 
     BOOST_CONCEPT_USAGE(TimedLockerConcept) {
-        const Locker l1(mtx_);
-        Locker l5(mtx_, t);
-        Locker l6(mtx_, boost::posix_time::seconds(1));
-        Locker l7(t, mtx_);
-        Locker l8(boost::posix_time::seconds(1), mtx_);
+        Locker l1(mtx_, t);
+        Locker l2(mtx_, boost::posix_time::seconds(1));
+        Locker l3(mtx_, t, throw_timeout);
+        Locker l4(mtx_, boost::posix_time::seconds(1), throw_timeout);
+        Locker l5(t, mtx_);
+        Locker l6(boost::posix_time::seconds(1), mtx_);
+        Locker l7(nothrow_timeout, t, mtx_);
+        Locker l8(nothrow_timeout, boost::posix_time::seconds(1), mtx_);
         l5.lock_until(t);
         l5.lock_for(boost::posix_time::seconds(1));
         if (l5.try_lock_until(t)) return;
