@@ -1,3 +1,11 @@
+/*=================================---------------------------------------------
+Copyright 2009 Stjepan Rajko, Torba Andrey
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
+
 #ifndef BOOST__GUIGL__GL__LIGHT_HPP
 #define BOOST__GUIGL__GL__LIGHT_HPP
 
@@ -185,70 +193,70 @@ namespace boost{ namespace guigl { namespace gl {
 
     //////////////////////////////////////////////////////////////////////////
     template<class T>
-    inline light_setup& light_setup::position(T x, T y, T z, T w)
+    inline light_setup const& light_setup::position(T x, T y, T z, T w) const
     {
         light_position(m_light, x, y, z, w);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::constant_attenuation(T value)
+    inline light_setup const& light_setup::constant_attenuation(T value) const
     {
         light_constant_attenuation(m_light, value);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::linear_attenuation(T value)
+    inline light_setup const& light_setup::linear_attenuation(T value) const
     {
         light_linear_attenuation(m_light, value);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::quadratic_attenuation(T value)
+    inline light_setup const& light_setup::quadratic_attenuation(T value) const
     {
         light_quadratic_attenuation(m_light, value);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::spot_cutoff(T value)
+    inline light_setup const& light_setup::spot_cutoff(T value) const
     {
         light_spot_cutoff(m_light, value);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::spot_exponent(T value)
+    inline light_setup const& light_setup::spot_exponent(T value) const
     {
         light_spot_exponent(m_light, value);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::spot_direction(T x, T y, T z)
+    inline light_setup const& light_setup::spot_direction(T x, T y, T z) const
     {
         light_spot_direction(m_light, x, y, z);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::specular(T r, T g, T b, T a)
+    inline light_setup const& light_setup::specular(T r, T g, T b, T a) const
     {
         light_specular(m_light, r, g, b, a);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::diffuse(T r, T g, T b, T a)
+    inline light_setup const& light_setup::diffuse(T r, T g, T b, T a) const
     {
         light_diffuse(m_light, r, g, b, a);
         return *this;
     }
 
     template<class T>
-    inline light_setup& light_setup::ambient(T r, T g, T b, T a)
+    inline light_setup const& light_setup::ambient(T r, T g, T b, T a) const
     {
         light_ambient(m_light, r, g, b, a);
         return *this;

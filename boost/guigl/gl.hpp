@@ -1,3 +1,11 @@
+/*=================================---------------------------------------------
+Copyright 2009 Stjepan Rajko, Torba Andrey
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
+
 #ifndef BOOST__GUIGL__GL_HPP
 #define BOOST__GUIGL__GL_HPP
 
@@ -153,7 +161,7 @@ namespace boost{ namespace guigl { namespace gl {
     void light_ambient(GLenum i_light, T r, T g, T b, T a);
 
     //////////////////////////////////////////////////////////////////////////
-    class light_setup : boost::noncopyable
+    class light_setup
     {
     private:
         GLenum m_light;
@@ -163,34 +171,34 @@ namespace boost{ namespace guigl { namespace gl {
 
     public:
         template<class T>
-        light_setup& position(T x, T y, T z, T w);
+        light_setup const& position(T x, T y, T z, T w) const;
 
         template<class T>
-        light_setup& constant_attenuation(T value);
+        light_setup const& constant_attenuation(T value) const;
 
         template<class T>
-        light_setup& linear_attenuation(T value);
+        light_setup const& linear_attenuation(T value) const;
 
         template<class T>
-        light_setup& quadratic_attenuation(T value);
+        light_setup const& quadratic_attenuation(T value) const;
 
         template<class T>
-        light_setup& spot_cutoff(T value);
+        light_setup const& spot_cutoff(T value) const;
 
         template<class T>
-        light_setup& spot_exponent(T value);
+        light_setup const& spot_exponent(T value) const;
 
         template<class T>
-        light_setup& spot_direction(T x, T y, T z);
+        light_setup const& spot_direction(T x, T y, T z) const;
 
         template<class T>
-        light_setup& specular(T r, T g, T b, T a);
+        light_setup const& specular(T r, T g, T b, T a) const;
 
         template<class T>
-        light_setup& diffuse(T r, T g, T b, T a);
+        light_setup const& diffuse(T r, T g, T b, T a) const;
 
         template<class T>
-        light_setup& ambient(T r, T g, T b, T a);
+        light_setup const& ambient(T r, T g, T b, T a) const;
     };
 
     light_setup light(GLenum i_light);
@@ -203,16 +211,46 @@ namespace boost{ namespace guigl { namespace gl {
     void material(GLenum face, GLenum pname, T const* param);
 
     template<class T>
-    void material_shininess(GLenum face, T value);
-
-    template<class T>
-    void material_specular(GLenum face, T r, T g, T b, T a);
+    void material_ambient(GLenum face, T r, T g, T b, T a);
 
     template<class T>
     void material_diffuse(GLenum face, T r, T g, T b, T a);
 
     template<class T>
-    void material_ambient(GLenum face, T r, T g, T b, T a);
+    void material_specular(GLenum face, T r, T g, T b, T a);
+
+    template<class T>
+    void material_shininess(GLenum face, T value);
+
+    template<class T>
+    void material_emission(GLenum face, T r, T g, T b, T a);
+
+    class material_setup
+    {
+    private:
+        GLenum m_face;
+        material_setup(GLenum face):m_face(face){};
+
+        friend material_setup material(GLenum i_light);
+
+    public:
+        template<class T>
+        material_setup const& ambient(T r, T g, T b, T a) const;
+
+        template<class T>
+        material_setup const& diffuse(T r, T g, T b, T a) const;
+
+        template<class T>
+        material_setup const& specular(T r, T g, T b, T a) const;
+
+        template<class T>
+        material_setup const& shininess(T value) const;
+
+        template<class T>
+        material_setup const& emission(T r, T g, T b, T a) const;
+    };
+
+    material_setup material(GLenum face);
 
     //////////////////////////////////////////////////////////////////////////
     void wired_cube(GLdouble size);
