@@ -851,9 +851,9 @@ namespace detail {
 		}
 
 		// offset getter
-		inline static ptrdiff_t offset_zero_based(void)
+		inline static ptrdiff_t offset_of(void)
 		{
-			return meta_attributes::offset_zero_based(position());
+			return meta_attributes::offset_of(position());
 		}
 
 		// value getter

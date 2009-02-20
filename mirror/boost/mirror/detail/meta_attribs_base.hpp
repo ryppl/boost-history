@@ -312,9 +312,9 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME position \
 	){return NULL;} \
-	static inline type_of_##NAME* address_zero_based( \
+	static inline ptrdiff_t offset_of( \
 		position_of_##NAME position \
-	){return NULL;} \
+	){return ptrdiff_t(-1);} \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
 		TYPE_SELECTOR, \
 		NAME, \
@@ -384,9 +384,13 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME position \
 	){return &instance.NAME;} \
-	static inline type_of_##NAME* address_zero_based( \
+	static inline ptrdiff_t offset_of(\
 		position_of_##NAME position \
-	){return &(((Class*)0)->NAME);} \
+	){ \
+		unsigned char arena[sizeof(Class)]; \
+		unsigned char* attr((unsigned char*)&(((Class*)arena)->NAME));\
+		return attr - arena; \
+	} \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
 		TYPE_SELECTOR, \
 		NAME, \
@@ -572,15 +576,6 @@ public:
 		return calculate_offset(
 			(const unsigned char*)&instance,
 			(const unsigned char*)base_class::address(instance, pos)
-		);
-	}
-
-	template <int I>
-	static inline ptrdiff_t	offset_zero_based(mpl::int_<I> pos)
-	{
-		return calculate_offset(
-			(const unsigned char*)0,
-			(const unsigned char*)base_class::address_zero_based(pos)
 		);
 	}
 };
