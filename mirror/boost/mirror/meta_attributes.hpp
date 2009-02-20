@@ -850,6 +850,12 @@ namespace detail {
 			return meta_attributes::offset(instance, position());
 		}
 
+		// offset getter
+		inline static ptrdiff_t offset_zero_based(void)
+		{
+			return meta_attributes::offset_zero_based(position());
+		}
+
 		// value getter
 		inline static typename result_of_get::type get(
 			const owner_class& instance

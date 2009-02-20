@@ -48,8 +48,8 @@ public:
 						cts::bcout() <<
                                 " " <<
                                 ma.base_name() <<
-								" [offset: " <<
-								ma.offset(inst) <<
+				" [offset: " <<
+				ma.offset(inst) <<
                                 "] = " <<
                                 ma.get(inst) <<
                                 endl;
