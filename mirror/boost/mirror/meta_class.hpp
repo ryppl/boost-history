@@ -124,7 +124,7 @@ struct meta_class<
  *  with private or protected members, that should be refleccted
  */
 #define BOOST_MIRROR_FRIENDLY_CLASS(CLASS_NAME) \
-		friend struct ::boost::mirror::meta_class_attributes<CLASS_NAME>;
+		friend struct ::boost::mirror::meta_class_attributes_base<CLASS_NAME>;
 
 
 

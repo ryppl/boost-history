@@ -40,15 +40,14 @@ Type detect_class_member_attrib_type(Type*);
 
 } // namespace detail
 
-/** Forward declaration of the meta_class_attributes<> template
- */
 template <class Class, class VariantTag = detail::default_meta_class_variant>
-struct meta_class_attributes;
+struct meta_class_attributes_base;
+
 
 /** Defaut (empty) list of base attributes of a meta class
  */
 template <class Class, class VariantTag>
-struct meta_class_attributes
+struct meta_class_attributes_base
 {
 	typedef mpl::vector0<> type_list;
 	typedef ::boost::mirror::meta_class<Class, VariantTag>
@@ -117,7 +116,7 @@ struct meta_class_attribute_traits<
  *  of the given class
  */
 #define BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(THE_CLASS) \
-	template <> struct meta_class_attributes< \
+	template <> struct meta_class_attributes_base< \
 		THE_CLASS , \
 		detail::default_meta_class_variant \
 	> \
@@ -136,7 +135,7 @@ struct meta_class_attribute_traits<
 	TEMPL_ARG_COUNT \
 ) \
 	template < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, typename T) >  \
-	struct meta_class_attributes< \
+	struct meta_class_attributes_base< \
 		THE_TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >, \
 		detail::default_meta_class_variant \
 	> \
@@ -540,6 +539,38 @@ struct meta_class_attribute_traits<
 		{instance.NAME = value;}, \
 		BOOST_PP_EMPTY() \
 	)
+
+/** Declaration of the meta_class_attributes<> template
+ */
+template <class Class, class VariantTag = detail::default_meta_class_variant>
+struct meta_class_attributes
+ : public meta_class_attributes_base<Class, VariantTag>
+{
+private:
+	typedef meta_class_attributes_base<Class, VariantTag> base_class;
+	static inline ptrdiff_t calculate_offset(
+		const unsigned char* base_ptr, 
+		const unsigned char* attr_ptr
+	)
+	{
+		// we are unable to calculate the offset
+		if(attr_ptr == 0) return -1;
+		else return attr_ptr - base_ptr;
+	}
+public:
+	/** Gets the byte-offset of the I-th member 
+	 */
+	template <class Class, int I>
+	static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
+	{
+		return calculate_offset(
+			(const unsigned char*)&instance,
+			(const unsigned char*)base_class::address(instance, pos)
+		);
+	}
+};
+
+		
 
 } // namespace mirror
 } // namespace boost
