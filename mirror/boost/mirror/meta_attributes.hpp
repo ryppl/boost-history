@@ -713,9 +713,9 @@ namespace detail {
 	>
 	{
 	private:
-		typedef detail::meta_class_attributes_offset_calculator<
-         	       Class,
-                	meta_class_all_attributes_base<Class, VariantTag>
+		typedef ::boost::mirror::detail::meta_class_attributes_offset_calculator<
+					Class,
+					meta_class_all_attributes_base<Class, VariantTag>
 	        > offs_calc;
 	public:
 	        template <int I>

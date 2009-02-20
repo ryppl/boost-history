@@ -575,11 +575,8 @@ protected:
 	template <int I>
 	static inline bool attrib_is_static(mpl::int_<I> position)
 	{
-		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-			detail_traits,
-			base_class::get_traits(position)
-		)
-		typedef typename detail_traits::type traits;
+		typedef BOOST_TYPEOF(base_class::get_traits(position))
+			traits;
 		return traits::is_static::value;
 	}
 
