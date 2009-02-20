@@ -309,7 +309,7 @@ struct meta_class_attribute_traits<
 		SETTER_BODY, \
 		TYPENAME_KW \
 	) \
-	inline type_of_##NAME* address( \
+	static inline type_of_##NAME* address( \
 		Class& instance, \
 		position_of_##NAME position \
 	){return NULL;} \
@@ -378,7 +378,7 @@ struct meta_class_attribute_traits<
 		{instance.NAME = value;}, \
 		TYPENAME_KW \
 	) \
-	inline type_of_##NAME* address( \
+	static inline type_of_##NAME* address( \
 		Class& instance, \
 		position_of_##NAME position \
 	){return &instance.NAME;} \

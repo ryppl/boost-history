@@ -909,11 +909,6 @@ namespace detail {
 
 	};
 
-/** This macro returns the meta-attribute for the ATTRIBUTE 
- *  of the CLASS. 
- *  Note that this requires mirror::at<> meta-function to be 
- *  defined.
- */
 
 } // namespace mirror
 } // namespace boost
