@@ -560,8 +560,8 @@ private:
 public:
 	/** Gets the byte-offset of the I-th member 
 	 */
-	template <class Class, int I>
-	static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
+	template <class Owner, int I>
+	static inline ptrdiff_t	offset(Owner& instance, mpl::int_<I> pos)
 	{
 		return calculate_offset(
 			(const unsigned char*)&instance,
