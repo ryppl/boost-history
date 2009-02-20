@@ -73,7 +73,7 @@ BOOST_MIRROR_REG_TEMPLATE_ATTRIBS_BEGIN(::boost::tuples::tuple, 10)
 	{
 		return &::boost::tuples::get<I>(a_tuple);
 	}
-	
+
 	// member attrib value get
 	template <int I> 
 	static typename att_val_pass<I>::type

@@ -49,7 +49,7 @@ public:
                                 " " <<
                                 ma.base_name() <<
 				" [offset: " <<
-				ma.offset(inst) <<
+				ma.offset_of() <<
                                 "] = " <<
                                 ma.get(inst) <<
                                 endl;
@@ -132,20 +132,20 @@ int main(void)
 	bcout << "The type name is: "<< meta_X::base_name() << endl;
 	bcout << "The class has "<< size<meta_X::all_attributes>::value << " members" << endl;
 	bcout << "---------------------------------------------------" << endl;
-	for_each<meta_X::all_attributes>(p);
+	for_each<meta_X::attributes>(p);
 	bcout << "---------------------------------------------------" << endl;
-	reverse_for_each<meta_X::all_attributes>(p);
+	reverse_for_each<meta_X::attributes>(p);
 	bcout << "---------------------------------------------------" << endl;
-	for_each<meta_X::all_attributes>(cref(select_base_name()), cref(str_printer()));
+	for_each<meta_X::attributes>(cref(select_base_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	for_each<
-		begin<meta_X::all_attributes>::type,
-		end<meta_X::all_attributes>::type
+		begin<meta_X::attributes>::type,
+		end<meta_X::attributes>::type
 	>(cref(select_full_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	reverse_for_each<
-		begin<meta_X::all_attributes>::type,
-		end<meta_X::all_attributes>::type
+		begin<meta_X::attributes>::type,
+		end<meta_X::attributes>::type
 	>(cref(select_base_name()), cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "Finished" << endl;

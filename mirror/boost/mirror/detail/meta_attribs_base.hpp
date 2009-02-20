@@ -312,9 +312,6 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME position \
 	){return NULL;} \
-	static inline ptrdiff_t offset_of( \
-		position_of_##NAME position \
-	){return ptrdiff_t(-1);} \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
 		TYPE_SELECTOR, \
 		NAME, \
@@ -384,13 +381,6 @@ struct meta_class_attribute_traits<
 		Class& instance, \
 		position_of_##NAME position \
 	){return &instance.NAME;} \
-	static inline ptrdiff_t offset_of(\
-		position_of_##NAME position \
-	){ \
-		unsigned char arena[sizeof(Class)]; \
-		unsigned char* attr((unsigned char*)&(((Class*)arena)->NAME));\
-		return attr - arena; \
-	} \
 	BOOST_MIRROR_REG_TEMPLATE_OR_CLASS_ATTRIB_EPILOGUE( \
 		TYPE_SELECTOR, \
 		NAME, \
@@ -550,34 +540,117 @@ struct meta_class_attribute_traits<
 		BOOST_PP_EMPTY() \
 	)
 
+namespace detail {
+
+template <class Class, class MetaAttribsBase>
+struct meta_class_attributes_offset_calculator : public MetaAttribsBase
+{
+protected:
+	typedef unsigned char byte;	
+	typedef const byte* byte_ptr;	
+
+	static inline ptrdiff_t invalid_offset(void)
+	{
+		return -1;
+	}
+
+	typedef MetaAttribsBase base_class;
+	static inline ptrdiff_t calculate_offset(
+		byte_ptr base_ptr, 
+		byte_ptr attr_ptr
+	)
+	{
+		// we are unable to calculate the offset
+		if(attr_ptr == 0) return invalid_offset();
+		else return attr_ptr - base_ptr;
+	}
+
+	template <int I>
+	static inline ptrdiff_t& get_offset_storage(mpl::int_<I> pos)
+	{
+		static ptrdiff_t offs = invalid_offset();
+		return offs;
+	}
+
+	template <int I>
+	static inline bool attrib_is_static(mpl::int_<I> position)
+	{
+		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+			detail_traits,
+			base_class::get_traits(position)
+		)
+		typedef typename detail_traits::type traits;
+		return traits::is_static::value;
+	}
+
+	template <class T, int I>
+        static inline ptrdiff_t get_offset_of(
+		mpl::int_<I> pos,
+		T* __dummy,
+		T instance = T()
+	)
+        { 
+		return offset(instance, pos);
+	}
+
+	template <class T, int I>
+        static inline ptrdiff_t get_offset_of(mpl::int_<I> pos, ...)
+	{
+		return get_offset_storage(pos);
+	}
+
+public:
+	/** Gets the byte-offset of the I-th member 
+	 */
+	template <int I>
+	static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
+	{
+		if(attrib_is_static(pos)) return invalid_offset();
+		ptrdiff_t& result = get_offset_storage(pos);
+		if(result == invalid_offset())
+		{
+			result = calculate_offset(
+				(byte_ptr)&instance,
+				(byte_ptr)base_class::address(instance, pos)
+			);
+		}
+		return result;
+	}
+};
+
+} // namespace detail
+
 /** Declaration of the meta_class_attributes<> template
  */
 template <class Class, class VariantTag = detail::default_meta_class_variant>
 struct meta_class_attributes
- : public meta_class_attributes_base<Class, VariantTag>
+ : public detail::meta_class_attributes_offset_calculator<
+	Class,
+	meta_class_attributes_base<Class, VariantTag>
+>
 {
 private:
-	typedef meta_class_attributes_base<Class, VariantTag> base_class;
-	static inline ptrdiff_t calculate_offset(
-		const unsigned char* base_ptr, 
-		const unsigned char* attr_ptr
-	)
-	{
-		// we are unable to calculate the offset
-		if(attr_ptr == 0) return -1;
-		else return attr_ptr - base_ptr;
-	}
+	typedef detail::meta_class_attributes_offset_calculator<
+	        Class,
+	        meta_class_attributes_base<Class, VariantTag>
+	> offs_calc;
+	typedef typename offs_calc::byte byte;
+	typedef typename offs_calc::byte_ptr byte_ptr;
 public:
-	/** Gets the byte-offset of the I-th member 
-	 */
-	template <class Owner, int I>
-	static inline ptrdiff_t	offset(Owner& instance, mpl::int_<I> pos)
-	{
+	template <int I>
+        static inline ptrdiff_t offset_of(mpl::int_<I> pos)
+        { 
+		if(attrib_is_static(pos)) 
+			return offs_calc::invalid_offset();
+		//byte arena[sizeof(Class)*2];
+		//::std::allocator<Class> alloc;
+		//Class* ptr((Class*)alloc.allocate(1, arena));
+		Class* ptr(0);
 		return calculate_offset(
-			(const unsigned char*)&instance,
-			(const unsigned char*)base_class::address(instance, pos)
+			(byte_ptr)ptr,
+			(byte_ptr)offs_calc::address(*ptr, pos)
 		);
-	}
+        } 
 };
 
 		

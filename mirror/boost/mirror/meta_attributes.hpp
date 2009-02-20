@@ -52,7 +52,7 @@ namespace detail {
 		class ReflectedType, 
 		class VariantTag
 	>
-	struct meta_class_all_attributes
+	struct meta_class_all_attributes_base
 	{
 		// the scope of the MetaAttributeSequence
 		typedef boost::mirror::meta_class<ReflectedType, VariantTag> 
@@ -650,29 +650,6 @@ namespace detail {
 				is_inherited(pos)
 			);
 		}
-	private:
-		static inline ptrdiff_t calculate_offset(
-			const unsigned char* base_ptr, 
-			const unsigned char* attr_ptr
-		)
-		{
-			// we are unable to calculate the offset
-			if(attr_ptr == 0) return -1;
-			else return attr_ptr - base_ptr;
-		}
-	public:
-
-		/** Gets the byte-offset of the I-th member (including 
-		 *  the inherited ones)
-		 */
-		template <class Class, int I>
-		static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
-		{
-			return calculate_offset(
-				(const unsigned char*)&instance,
-				(const unsigned char*)address(instance, pos)
-			);
-		}
 
 		/** Gets the value of the I-th member (including 
 		 *  the inherited ones)
@@ -726,7 +703,28 @@ namespace detail {
 			typename result_of_is_inherited<I>::type
 		>::type get_traits(mpl::int_<I>);
 
-	}; // all_attributes
+	}; // all_attributes_base
+
+	template < class Class, class VariantTag >
+	struct meta_class_all_attributes
+	 : public detail::meta_class_attributes_offset_calculator<
+	        Class,
+	        meta_class_all_attributes_base<Class, VariantTag>
+	>
+	{
+	private:
+		typedef detail::meta_class_attributes_offset_calculator<
+         	       Class,
+                	meta_class_all_attributes_base<Class, VariantTag>
+	        > offs_calc;
+	public:
+	        template <int I>
+	        static inline ptrdiff_t offset_of(mpl::int_<I> pos)
+	        {
+	                return offs_calc::get_offset_of(pos, (Class*)0);
+	        }
+
+	};
 
 	/** Instances of this template are used to store information 
 	 *  about single class' member attribute and are used mainly
