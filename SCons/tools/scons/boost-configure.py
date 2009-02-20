@@ -10,7 +10,7 @@ class DependencyChecker:
     def __call__(self, env):
         if not self.checked:
             conf_env = env.Clone()
-            build_dir = "#/bin.SCons/"
+            build_dir = "$BOOST_BUILD_DIR/"
             self.conf = conf_env.Configure(conf_dir = build_dir + "sconf_temp", log_file = build_dir + "config.log")
             self.Check(conf_env)
             self.conf.Finish()

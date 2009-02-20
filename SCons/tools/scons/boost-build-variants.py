@@ -50,6 +50,11 @@ def exists():
     return True
 
 def generate(env):
-    env["CXXFLAGS"] = Split("-ftemplate-depth-128 -Wall")
     env.AddMethod(SetProperty)
     env.AddMethod(_AppendFeatureFlag)
+
+    env.Replace(
+        CXXFLAGS = Split("-ftemplate-depth-128 -Wall"),
+        BOOST_BUILD_DIR = "#/bin.SCons"
+    )
+

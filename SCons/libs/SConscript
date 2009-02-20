@@ -23,7 +23,7 @@ for variant in env["variant"]:
         for threading in env["threading"]:
             env.SetProperty(threading = threading)
 
-            target_dir = "#/bin.SCons/libs/" + variant + "/" + linking + "/threading-" + threading
+            target_dir = env["BOOST_BUILD_DIR"] + "/libs/" + variant + "/" + linking + "/threading-" + threading
             VariantDir(src_dir = ".", variant_dir = target_dir, duplicate = False)
             for sconscript in sconscripts:
                 lib = str(sconscript.get_dir().up())

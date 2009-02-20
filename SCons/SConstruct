@@ -1,6 +1,5 @@
 # vi: syntax=python:et:ts=4
 EnsureSConsVersion(0, 98, 3)
-SConsignFile("bin.SCons/sconsign.dblite")
 
 vars = Variables("build-config.py")
 vars.AddVariables(
@@ -8,7 +7,7 @@ vars.AddVariables(
     ListVariable("link", "Library linking", "all", ["static", "dynamic"]),
     ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"])
 )
-env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure"], variables = vars)
+env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure"], variables = vars, config_log = "$BOOST_BUILD_DIR/config.log")
 vars.Save("build-config.py", env)
 Export("env")
 
@@ -22,5 +21,7 @@ Variables are saved in build-config.py and persist between scons invocations.
 
 if(GetOption("help")):
     Return()
+
+SConsignFile(File(env.subst("$BOOST_BUILD_DIR/sconsign.dblite")).path)
 
 SConscript("libs/SConscript")
