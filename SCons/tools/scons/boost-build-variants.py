@@ -46,6 +46,15 @@ def SetProperty(env, **kw):
         getattr(features, prop, lambda x, y : None)(env, value)
         env[prop.upper()] = value
 
+def boost_suffix(env):
+    suffix = str()
+    if env["THREADING"] == "multi":
+        suffix += "-mt"
+    if env["DEBUG"]:
+        suffix += "-d"
+
+    return suffix
+
 def exists():
     return True
 
@@ -53,8 +62,10 @@ def generate(env):
     env.AddMethod(SetProperty)
     env.AddMethod(_AppendFeatureFlag)
 
+    env["boost_suffix"] = boost_suffix
     env.Replace(
         CXXFLAGS = Split("-ftemplate-depth-128 -Wall"),
-        BOOST_BUILD_DIR = "#/bin.SCons"
+        BOOST_BUILD_DIR = "#/bin.SCons",
+        BOOST_SUFFIX = "${boost_suffix(__env__)}"
     )
 

@@ -6,9 +6,8 @@ if not env.CheckMPI():
 
 env.Append(
     CPPDEFINES = "BOOST_MPI_SOURCE=1",
-    LIBPATH = Dir("#/" + Dir(".").path.replace("/mpi/", "/serialization/")),
-    LIBS = "boost_serialization"
     )
+env.BoostUseLib("serialization")
 env.BoostLibrary(
     "mpi",
     Split("""
@@ -40,9 +39,9 @@ if not env.CheckPython():
 env = env.Clone()
 env.Append(
     CPPDEFINES = "BOOST_MPI_PYTHON_SOURCE=1",
-    LIBPATH = [Dir("."), Dir("#/" + Dir(".").path.replace("/mpi/", "/python/"))],
-    LIBS = ["boost_mpi", "boost_python"]
     )
+env.BoostUseLib("python")
+env.BoostUseLib("mpi")
 if env["LINK_DYNAMIC"]:
     env.Append(CPPDEFINES = ["BOOST_MPI_PYTHON_DYN_LINK=1", "BOOST_PYTHON_DYN_LINK=1"])
 env.BoostLibrary(
@@ -66,5 +65,5 @@ env.PythonExtension(
     python/status.cpp
     python/py_timer.cpp
     """),
-    LIBS = env["LIBS"] + ["boost_mpi_python"]
+    LIBS = env["LIBS"] + ["boost_mpi_python" + env["BOOST_SUFFIX"]]
     )
