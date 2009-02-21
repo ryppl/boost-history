@@ -50,4 +50,4 @@ private:
 
 }}}
 
-#endif // BOOST__GUIGL__VIEW__CUSTOM_DRAW_HPP
+#endif // BOOST__GUIGL__VIEW__CUSTOM_DRAWABLE_HPP

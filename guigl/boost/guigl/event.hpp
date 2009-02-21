@@ -82,7 +82,13 @@ struct button_event
     direction::enum_type direction;
 };
 
-typedef boost::variant<button_event, movement_event, entry_exit_event> event_type;
+struct keyboard_event
+{
+    position_type position;
+    unsigned char key;
+};
+
+typedef boost::variant<button_event, movement_event, entry_exit_event, keyboard_event> event_type;
 
 }}
 

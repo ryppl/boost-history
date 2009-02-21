@@ -164,6 +164,10 @@ public:
     {
         view.m_button_focus_child = &child;
     }
+    bool operator()(const keyboard_event &event_info) const
+    {
+        return false;
+    }
     bool operator()(const button_event &event_info) const
     {
         if(view.m_button_focus_child && event_info.direction == direction::up)

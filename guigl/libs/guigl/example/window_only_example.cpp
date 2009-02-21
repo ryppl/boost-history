@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2007,2008 Stjepan Rajko
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -7,28 +7,24 @@
 -----------------------------------------------===============================*/
 
 
+//[ window_only_example_includes
 #include <boost/guigl/application.hpp>
 #include <boost/guigl/window.hpp>
-#include <boost/guigl/widget/custom.hpp>
+//]
 
-#include <boost/guigl/platform/opengl.hpp>
+//[ window_only_example_using
+    using namespace boost::guigl;
+//]
 
-using namespace boost::guigl;
+//[ window_only_example_window
+window test_window1(( _label = "window example 1", _size=size_type(300,300) ));
+//]
 
-void draw_stuff()
-{
-    glColor3d(1.0, 0.0, 0.0);
-    glRectd(0.0, 0.0, 50.0, 50.0);
-}
-
+//[ window_only_example_application
 int main()
 {
-    window test_window1(( _label = "custom example", _size=size_type(300,300) ));
-    
-    test_window1 << new widget::custom((
-        _size=size_type(300,300),
-        _draw_prologue=draw_stuff
-    ));
-
     application::run();
+
+    return 0;
 }
+//]

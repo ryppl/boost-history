@@ -44,6 +44,7 @@ public:
         glutPassiveMotionFunc(movement);
         glutMotionFunc(movement);
         glutEntryFunc(entry);
+        glutKeyboardFunc(keyboard);
                 
         return id;
     }
@@ -58,6 +59,7 @@ private:
     static void mouse(int button, int state, int x, int y);
     static void movement(int x, int y);
     static void entry(int state);
+    static void keyboard(unsigned char key, int x, int y);
     std::map<int, window::impl *> m_windows;
 };
 
@@ -111,6 +113,13 @@ public:
         entry_exit_event event_info;
         event_info.region = state == GLUT_ENTERED ? region::entry : region::exit;
         m_window->on_event(event_info);
+    }
+    void keyboard(unsigned char key, int x, int y)
+    {
+        keyboard_event event_info;
+        event_info.position = position_type(x, y);
+        event_info.key = key;
+        m_window->on_event(event_info);        
     }
     ~impl()
     {
@@ -180,5 +189,13 @@ void glut::entry(int state)
     window::impl::s_glut->m_windows[id]->entry_exit(state);
 }
 
+void glut::keyboard(unsigned char key, int x, int y)
+{
+    int id = glutGetWindow();
+    if(window::impl::s_glut->m_windows.find(id)==window::impl::s_glut->m_windows.end())
+        return;
+    window::impl::s_glut->m_windows[id]->keyboard(key, x, y);
 
+}
+    
 } }

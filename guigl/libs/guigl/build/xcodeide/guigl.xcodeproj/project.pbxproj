@@ -149,6 +149,7 @@
 		089D83740E5A35D800325868 /* parameters.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = parameters.hpp; sourceTree = "<group>"; };
 		089D83780E5A3AA900325868 /* test_parameter_map_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_parameter_map_compilation.cpp; sourceTree = "<group>"; };
 		089D83800E5A3C0B00325868 /* test_parameter_map_compilation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = test_parameter_map_compilation.hpp; sourceTree = "<group>"; };
+		089DF5BC0F3CE2A600908438 /* custom_event_processing.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = custom_event_processing.hpp; sourceTree = "<group>"; };
 		089E06FB0E5D0F3500C425FE /* button.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = button.hpp; sourceTree = "<group>"; };
 		089E34A60E5BB90900D9AD51 /* typed_keyword.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_keyword.hpp; sourceTree = "<group>"; };
 		089E34AB0E5C865400D9AD51 /* typed_name.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_name.hpp; sourceTree = "<group>"; };
@@ -158,6 +159,8 @@
 		08A048C40E77A1B70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
 		08A048CF0E77A2E70034FD11 /* navigable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = navigable.hpp; sourceTree = "<group>"; };
 		08A13C090E535040008C8A10 /* field_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = field_map.hpp; sourceTree = "<group>"; };
+		08A19AE10F3F728F0003AC68 /* usage.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = usage.qbk; sourceTree = "<group>"; };
+		08A19B410F3F7D930003AC68 /* window_only_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window_only_example.cpp; sourceTree = "<group>"; };
 		08A61CEE0F37B50300F2DF50 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A6D3950E7B99C700BF2671 /* two_buttons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = two_buttons.hpp; sourceTree = "<group>"; };
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
@@ -226,6 +229,7 @@
 				08A6D3950E7B99C700BF2671 /* two_buttons.hpp */,
 				089C81F20E7D949400CE0901 /* two_buttons.cpp */,
 				089D7E0E0F3B75C800590295 /* custom_example.cpp */,
+				08A19B410F3F7D930003AC68 /* window_only_example.cpp */,
 			);
 			name = example;
 			path = ../../example;
@@ -252,6 +256,7 @@
 				08ADC1F90E7B62BD00D8CB9D /* static_compound.hpp */,
 				089F14D60E7DC87700B91674 /* periodic.hpp */,
 				089C8CFE0F3AC3650062EFEC /* custom_drawable.hpp */,
+				089DF5BC0F3CE2A600908438 /* custom_event_processing.hpp */,
 			);
 			path = view;
 			sourceTree = "<group>";
@@ -446,6 +451,7 @@
 			children = (
 				088513240E689E650089DAD3 /* Jamfile */,
 				0885132B0E68AEC70089DAD3 /* guigl.qbk */,
+				08A19AE10F3F728F0003AC68 /* usage.qbk */,
 			);
 			name = doc;
 			path = ../../doc;

@@ -10,16 +10,19 @@
 #define BOOST__GUIGL__WIDGET__WINDOW_HPP
 
 #include <boost/guigl/export_symbols.hpp>
+#include <boost/guigl/view/custom_event_processing.hpp>
 #include <boost/guigl/view/compound.hpp>
 #include <boost/guigl/view/mouse_tracking.hpp>
 #include <boost/guigl/view/window.hpp>
+#include <boost/function.hpp>
 
 namespace boost { namespace guigl { namespace widget {
 
-typedef view::compound<
-            view::mouse_tracking<
-                view::window<>
-        >   > window_base_type;
+typedef view::custom_event_processing<boost::function<bool(const event_type &)>,
+            view::compound<
+                view::mouse_tracking<
+                    view::window<>
+        >   >   > window_base_type;
 
 class window
     : public window_base_type

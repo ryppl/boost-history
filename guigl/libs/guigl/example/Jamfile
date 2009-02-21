@@ -16,13 +16,19 @@ exe window_example
         window_example.cpp two_spheres.cpp two_buttons.cpp
     ;
 
-exe custom_example
+exe window_example_static
     :
-        custom_example.cpp
+        window_example.cpp two_spheres.cpp two_buttons.cpp
+    :
+       <link>static
     ;
 
-install window_example_stage : window_example custom_example
-           : <install-dependencies>on <install-type>EXE
-             <install-type>LIB <location>$(TOP)/bin/stage/window_example
-           ;
+exe custom_example : custom_example.cpp ;
+exe window_only_example : window_only_example.cpp ;
+
+install window_example_stage
+    : window_example custom_example window_only_example
+    : <install-dependencies>on <install-type>EXE
+      <install-type>LIB <location>$(TOP)/bin/stage/window_example
+    ;
  

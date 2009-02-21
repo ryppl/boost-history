@@ -14,6 +14,8 @@
 [template guigl[] [^guigl]]
 [template boost[] [@http://www.boost.org boost]]
 
+[import ../example/window_only_example.cpp]
+
 [section Introduction]
 
 [guigl] is a modular GUI library tbat uses OpenGL.  It's development was
@@ -25,18 +27,19 @@ of guigl are:
 * To maximally use the [boost] libraries for anything not directly reated to
   GUI functionality.
 
-In [guigl], GUI elements are referred to as /views/.  /views/ are
-implemented through a simple chaining of /behaviors/, where each behavior can
-change the way the view looks and/or change the way in which the view responds
+[guigl] provides a number of widgets and related functionality that can be used
+to create a user interface.  New widgets can be created by reusing and extending
+the functionality provided by atomic /view behaviors/.  Each /view behavior/ can
+change the way the widget looks and/or change the way in which the widget responds
 to user interaction.  Behaviors can also add member functions and variables
-to the view, which can be used by other view code or user code.
+to the widget, which can be used by other view behavior code or user code.
 
-[/For example, the [classref guigl::view::button button] widget is implemented
-by combining.]
-
-
+Currently, [guigl] uses OpenGL for drawing and GLUT (or any library that
+provides a GLUT compatibility layer) as its window manager.
 
 [endsect]
+
+[include usage.qbk]
 
 [section:license License]
 
