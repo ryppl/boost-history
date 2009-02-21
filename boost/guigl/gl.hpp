@@ -115,6 +115,9 @@ namespace boost{ namespace guigl { namespace gl {
     void translate(T x, T y, T z);
 
     template<class T>
+    void translate(T x, T y);
+
+    template<class T>
     void translate_x(T x);
 
     template<class T>

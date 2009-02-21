@@ -89,19 +89,10 @@ int main()
     
     window test_window_3d(( _depth = true, _label="3D", _color=make_grey(1) ));
 
-    widget::labeled_slider *sl = new widget::labeled_slider((
-        _label="Slider",
-        _size=size_type(100,30),
-        _position=position_type(0,0),
-        _background=color_type(0.5,0.5,0.5),
-        _active_color=color_type(0,1,0),
-        _min=0.1,_max=0.9,_value=0.5,
-        _step=0.01 ));
     two_spheres *two = new two_spheres(_period = 0.01);
 
     test_window_3d
         << two
-        << sl
         ;
     
     application::on_idle().connect(&idle);

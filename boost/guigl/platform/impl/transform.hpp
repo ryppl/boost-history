@@ -144,6 +144,18 @@ namespace boost{ namespace guigl { namespace gl {
     }
 
     template<>
+    inline void translate<GLdouble>(GLdouble x, GLdouble y)
+    {
+        translate(x, y, 0.0);
+    }
+
+    template<>
+    inline void translate<GLfloat>(GLfloat x, GLfloat y)
+    {
+        translate(x, y, 0.0f);
+    }
+
+    template<>
     inline void translate_x<GLdouble>(GLdouble x)
     {
         translate(x, 0.0, 0.0);
