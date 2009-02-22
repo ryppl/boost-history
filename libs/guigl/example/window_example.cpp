@@ -6,10 +6,9 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-
 #include <boost/guigl/application.hpp>
-#include <boost/guigl/layout/grid.hpp>
 #include <boost/guigl/window.hpp>
+#include <boost/guigl/layout/grid.hpp>
 #include <boost/guigl/widget/button.hpp>
 #include <boost/guigl/widget/label.hpp>
 #include <boost/guigl/widget/labeled_button.hpp>
@@ -39,6 +38,13 @@ void idle()
 void timer()
 {
     std::cout << "5 seconds have elapsed." << std::endl;
+}
+
+bool keyboard(const event_type &event_info)
+{
+    if(const keyboard_event *event = boost::get<const keyboard_event>(&event_info))
+        std::cout << "key pressed: " << event->key << std::endl;
+    return false;
 }
 
 int main()
@@ -83,6 +89,8 @@ int main()
             _size=size_type(100,50),
             _position=position_type(50, 5) ));
     
+    test_window2.event_handler() = keyboard;
+
     layout::grid grid_layout(( _grid_size=test_window3.size(), _horizontal=3, _vertical=3 ));
     for(int i=1; i<=9; i++)
         test_window3 << grid_layout.create<widget::button>(( _background=color_type(1.0f/i,1.0f/i,1.0f/i) ));

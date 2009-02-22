@@ -156,67 +156,75 @@
 				Name="view"
 				>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/active_colored.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\active_colored.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/base.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\base.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/clickable.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\clickable.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/colored.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\colored.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/compound.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\compound.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/draggable.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\custom_drawable.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/labeled.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\custom_event_processing.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/mouse_tracking.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\draggable.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/navigable.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\labeled.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/periodic.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\mouse_tracking.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/positioned.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\navigable.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/solid_background.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\periodic.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/static_base.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\positioned.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/static_compound.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\solid_background.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/three_dimensional.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\static_base.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\../boost/guigl/view/window.hpp"
+					RelativePath="..\..\..\..\boost\guigl\view\static_compound.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\guigl\view\three_dimensional.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\guigl\view\window.hpp"
 					>
 				</File>
 				<Filter

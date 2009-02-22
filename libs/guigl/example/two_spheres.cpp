@@ -95,7 +95,8 @@ void two_spheres::draw_prologue()
             rotate_z(drag_origin().x);
             rotate_x(drag_origin().y);
 
-            material(GL_FRONT)
+            // polished gold
+            material(GL_FRONT) 
                 .ambient(0.24725f, 0.1995f, 0.0745f, 1.0f)
                 .diffuse(0.75164f, 0.60648f, 0.22648f, 1.0f)
                 .specular(0.628281f, 0.555802f, 0.366065f, 1.0f)

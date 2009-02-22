@@ -59,27 +59,35 @@
 	</References>
 	<Files>
 		<File
-			RelativePath="..\../example/Jamfile"
+			RelativePath="..\..\example\custom_example.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\../example/two_buttons.cpp"
+			RelativePath="..\..\example\Jamfile"
 			>
 		</File>
 		<File
-			RelativePath="..\../example/two_buttons.hpp"
+			RelativePath="..\..\example\two_buttons.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\../example/two_spheres.cpp"
+			RelativePath="..\..\example\two_buttons.hpp"
 			>
 		</File>
 		<File
-			RelativePath="..\../example/two_spheres.hpp"
+			RelativePath="..\..\example\two_spheres.cpp"
 			>
 		</File>
 		<File
-			RelativePath="..\../example/window_example.cpp"
+			RelativePath="..\..\example\two_spheres.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\window_example.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\window_only_example.cpp"
 			>
 		</File>
 	</Files>

@@ -1,0 +1,32 @@
+[section:usage Usage Tutorial]
+
+[section Creating a window and running the application]
+
+The first thing you will need to construct a GUI is a window.
+You will need the following include files to access a window, and later give
+control to the GUI:
+
+[window_only_example_includes]
+
+All [guigl] functionality is in the namespace `boost::guigl`.  This example
+uses the following `using` statement:
+
+[window_only_example_using]
+
+We can now instantiate a window.  We will pass a window label and size to the
+constructor as follows:
+
+[window_only_example_window]
+
+[guigl] objects use named parameters based on a tweaked version of the
+Boost.Parameter library.  When specifying more than one named parameter
+in the constructor, [guigl] currently requires you to use double parenthesis.
+
+With the window in place, we can give control to [guigl]:
+
+[window_only_example_application]
+
+
+[endsect]
+
+[endsect]
