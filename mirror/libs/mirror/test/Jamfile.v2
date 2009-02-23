@@ -19,6 +19,7 @@ test-suite "mirror"
          [ compile namespaces_ct_02.cpp ]
          [ compile namespaces_ct_03.cpp ]
          [ compile namespaces_ct_04.cpp ]
+         [ compile namespaces_ct_05.cpp ]
          [ compile-fail namespaces_cf_01.cpp ]
          [ compile types_ct_01.cpp ]
          [ compile types_ct_02.cpp ]
@@ -46,5 +47,7 @@ test-suite "mirror"
          [ compile concepts_ct_01.cpp ]
          [ compile concepts_ct_02.cpp ]
          [ compile concepts_ct_03.cpp ]
+         [ run other_rt_01.cpp ]
+         [ run other_rt_02.cpp ]
     ;
 

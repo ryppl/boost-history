@@ -36,7 +36,7 @@ namespace detail {
 		>::type_list type;
 	};
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of get_type_list_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
 	template <class Class, class VariantTag>
@@ -48,7 +48,7 @@ namespace detail {
 		>::type_list type;
 	};
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of get_type_list_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
 	template <class MetaInheritance>

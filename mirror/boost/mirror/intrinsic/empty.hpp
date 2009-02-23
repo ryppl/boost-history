@@ -19,13 +19,13 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-	/** Declaration of the default at_impl
+	/** Declaration of the default empty_impl
 	 *  helper template.
 	 */
 	template <class MetaObjectSequence>
 	struct empty_impl { };
 
-	/** Specialization of at_impl<MetaObjectSequence>
+	/** Specialization of empty_impl<MetaObjectSequence>
 	 *  for meta_class_attributes<>
 	 */
 	template <class Class, class VariantTag>
@@ -37,7 +37,7 @@ namespace detail {
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of empty_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
 	template <class Class, class VariantTag>
@@ -49,7 +49,7 @@ namespace detail {
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of empty_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
 	template <class Class, class VariantTag>
@@ -59,6 +59,18 @@ namespace detail {
 				Class, 
 				VariantTag
 			>::list
+	>{ };
+
+	/** Specialization of empty_impl<MetaObjectSequence>
+	 *  for global_list<>
+	 */
+	template <class Selector, class Counter>
+	struct empty_impl<counter::global_list<Selector, Counter> >
+	: mpl::empty<
+			typename counter::global_list<
+				Selector, 
+				Counter	
+			>::type_list
 	>{ };
 
 } // namespace detail

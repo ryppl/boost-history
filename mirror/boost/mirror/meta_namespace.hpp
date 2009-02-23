@@ -33,6 +33,10 @@
 // full name builder
 #include <boost/mirror/detail/full_name_builder.hpp>
 
+// global lists
+#include <boost/mirror/detail/global_list.hpp>
+
+
 
 namespace boost {
 namespace mirror {
@@ -73,11 +77,18 @@ struct meta_namespace
 		typename NamespacePlaceholder::parent_placeholder
 	> scope;
 
-	//
+	// the list of ancestors of this namespace
 	typedef typename ::boost::mpl::push_back<
 		typename scope::ancestors,
 		scope
 	>::type ancestors;
+
+	// a meta object sequence of members of this namespace
+	typedef BOOST_MIRROR_GET_GLOBAL_LIST_BASE_WRAPPER(
+		NamespacePlaceholder,
+		BOOST_MIRROR_COUNTER_LUID,
+		typename
+	) members;
 };
 
 /** The declaration of the namespace placeholder for the 
@@ -136,7 +147,7 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 	typedef meta_namespace< namespace_ :: _ > scope;
 	typedef mpl::vector0<> ancestors;
 };
-
+BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( ::boost::mirror::namespace_::_)
 
 // helper macro expanded multiple times during the namespace registration
 #define BOOST_MIRROR_REG_NAMESPACE_PROLOGUE_HELPER(R, DATA, NAMESPACE_NAME) \
@@ -175,7 +186,14 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
  *  } // namespace bar
  *  } // namespace foo
  *  } // namespace test
- *  } // -9-
+ *  } // namespace namespace_ -9-
+ *  BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR(
+ *      ::boost::mirror::namespace_::test::foo::bar::baz::_
+ *  ) -10-
+ *  BOOST_MIRROR_ADD_TO_GLOBAL_LIST(
+ *      ::boost::mirror::namespace_::test::foo::bar::_
+ *      ::boost::mirror::namespace_::test::foo::bar::baz::_
+ *  ) -11-
  */
 #define BOOST_MIRROR_REG_NAMESPACE(NAME_SEQUENCE) \
 	namespace namespace_ { /* -1- */ \
@@ -184,45 +202,69 @@ struct meta_namespace< namespace_ :: _ > : namespace_ :: _
 		_, \
 		NAME_SEQUENCE \
 	) /* -2- */ \
-		struct _ /* -3- */ \
-		{ \
-			typedef ::boost::mirror::namespace_ \
-			BOOST_PP_SEQ_FOR_EACH( \
-				BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
-				_, \
-				BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
-			) :: _ parent_placeholder; /* -4- */ \
-			static inline const ::std::string& get_name( \
-				mpl::false_, \
-				::std::char_traits<char> \
-			) \
-			{ \
-				static ::std::string s_name(BOOST_PP_STRINGIZE( \
-					BOOST_PP_SEQ_HEAD( \
-						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
-					) \
-				)); \
-				return s_name; \
-			} \
-			static inline const ::std::wstring& get_name( \
-				mpl::false_, \
-				::std::char_traits<wchar_t> \
-			) \
-			{ \
-				static ::std::wstring s_name(BOOST_PP_WSTRINGIZE( \
-					BOOST_PP_SEQ_HEAD( \
-						BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
-					) \
-				)); \
-				return s_name; \
-			} /* -5- */ \
-		}; \
-		} \
+	struct _ /* -3- */ \
+	{ \
+		typedef ::boost::mirror::namespace_ \
 		BOOST_PP_SEQ_FOR_EACH( \
-			BOOST_MIRROR_REG_NAMESPACE_EPILOGUE_HELPER, \
+			BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
 			_, \
-			NAME_SEQUENCE \
-		) /* -9- */ 
+			BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
+		) :: _ parent_placeholder; /* -4- */ \
+		static inline const ::std::string& get_name( \
+			mpl::false_, \
+			::std::char_traits<char> \
+		) \
+		{ \
+			static ::std::string s_name(BOOST_PP_STRINGIZE( \
+				BOOST_PP_SEQ_HEAD( \
+					BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+				) \
+			)); \
+			return s_name; \
+		} \
+		static inline const ::std::wstring& get_name( \
+			mpl::false_, \
+			::std::char_traits<wchar_t> \
+		) \
+		{ \
+			static ::std::wstring s_name(BOOST_PP_WSTRINGIZE( \
+				BOOST_PP_SEQ_HEAD( \
+					BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+				) \
+			)); \
+			return s_name; \
+		} /* -5- */ \
+	}; \
+	} \
+	BOOST_PP_SEQ_FOR_EACH( \
+		BOOST_MIRROR_REG_NAMESPACE_EPILOGUE_HELPER, \
+		_, \
+		NAME_SEQUENCE \
+	) /* -9- */ \
+	BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( \
+		::boost::mirror::namespace_ \
+		BOOST_PP_SEQ_FOR_EACH( \
+                        BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
+                        _, \
+                        NAME_SEQUENCE \
+                ) :: _ \
+	) /* -10- */ \
+	BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
+		::boost::mirror::namespace_ \
+		BOOST_PP_SEQ_FOR_EACH( \
+                        BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
+                        _, \
+			BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
+                ) :: _, \
+		BOOST_MIRRORED_NAMESPACE( \
+	                BOOST_PP_SEQ_FOR_EACH( \
+	                        BOOST_MIRROR_REG_NAMESPACE_ENUM_HELPER, \
+	                        _, \
+	                        NAME_SEQUENCE \
+	                ) \
+		) \
+	) /* -11- */
+
 
 
 /** Register some of the common namespaces

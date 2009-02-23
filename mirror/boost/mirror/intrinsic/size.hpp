@@ -14,6 +14,7 @@
 
 #include <boost/mirror/meta_attributes.hpp>
 #include <boost/mirror/meta_inheritance.hpp>
+#include <boost/mirror/detail/global_list.hpp>
 
 namespace boost {
 namespace mirror {
@@ -25,7 +26,7 @@ namespace detail {
 	template <class MetaObjectSequence>
 	struct size_impl { };
 
-	/** Specialization of at_impl<MetaObjectSequence>
+	/** Specialization of size_impl<MetaObjectSequence>
 	 *  for meta_class_attributes<>
 	 */
 	template <class Class, class VariantTag>
@@ -37,7 +38,7 @@ namespace detail {
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of size_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
 	template <class Class, class VariantTag>
@@ -49,7 +50,7 @@ namespace detail {
 			>::type_list
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of size_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
 	template <class Class, class VariantTag>
@@ -59,6 +60,18 @@ namespace detail {
 				Class, 
 				VariantTag
 			>::list
+	>{ };
+
+	/** Specialization of size_impl<MetaObjectSequence>
+	 *  for counter::global_list
+	 */
+	template <class Selector, class Counter>
+	struct size_impl<counter::global_list<Selector, Counter> >
+	: mpl::size<
+			typename counter::global_list<
+				Selector, 
+				Counter
+			>::type
 	>{ };
 
 } // namespace detail

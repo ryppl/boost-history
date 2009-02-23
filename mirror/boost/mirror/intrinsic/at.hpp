@@ -12,6 +12,8 @@
 
 #include <boost/mirror/intrinsic/detail/attribute_at.hpp>
 #include <boost/mirror/intrinsic/detail/base_class_at.hpp>
+#include <boost/mirror/detail/global_list.hpp>
+#include <boost/mpl/at.hpp>
 
 namespace boost {
 namespace mirror {
@@ -34,7 +36,7 @@ namespace detail {
 		Position
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for meta_class_all_attributes<>
 	 */
 	template <class Class, class VariantTag, class Position>
@@ -45,13 +47,23 @@ namespace detail {
 		Position
 	>{ };
 
-	/** Specialization of for_each_impl<MetaObjectSequence>
+	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for meta_base_classes<>
 	 */
 	template <class Class, class VariantTag, class Position>
 	struct at_impl<meta_base_classes<Class, VariantTag>, Position >
 	: meta_inheritance_at<
 		meta_base_classes<Class, VariantTag>,
+		Position
+	>{ };
+
+	/** Specialization of at_impl<MetaObjectSequence>
+	 *  for global_list<>
+	 */
+	template <class Selector, class Counter, class Position>
+	struct at_impl<counter::global_list<Selector, Counter>, Position >
+	: mpl::at<
+		typename counter::global_list<Selector, Counter>::type,
 		Position
 	>{ };
 
