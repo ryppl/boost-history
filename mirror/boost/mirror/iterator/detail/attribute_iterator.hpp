@@ -12,6 +12,7 @@
 
 #include <boost/mirror/iterator/detail/common_iterator.hpp>
 #include <boost/mirror/meta_attributes.hpp>
+#include <boost/mirror/intrinsic/at.hpp>
 
 namespace boost {
 namespace mirror {
@@ -20,20 +21,16 @@ namespace detail {
 	struct attribute_iterator_pointee_selector
 	{
 		template <
-			class ReflectedType, 
-			class VariantTag,
 			class MetaAttributes,
 			class AttribPos,
 			class UnaryPredicate
 		>
 		struct apply
 		{
-			typedef meta_class_attribute<
-				ReflectedType, 
-				VariantTag,
+			typedef typename at<
 				MetaAttributes,
 				AttribPos
-			> type;
+			>::type type;
 		};
 	};
 

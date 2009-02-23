@@ -20,16 +20,12 @@ namespace mirror {
 namespace detail {
 
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position
 	>
 	struct meta_object_sequence_point_to
 	{
 		typedef typename get_meta_object_iterator<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			Position,
 			mpl::always<mpl::true_>

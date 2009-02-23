@@ -19,16 +19,12 @@ namespace mirror {
 namespace detail {
 
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Predicate
 	>
 	struct meta_object_reverse_find_if
 	{
 		typedef typename get_meta_object_reverse_iterator<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			mpl::int_<size<MetaObjectSequence>::value - 1>,
 			Predicate

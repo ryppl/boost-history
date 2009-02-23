@@ -44,8 +44,6 @@ namespace detail {
 	 *  and a meta-object selector
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
 		class BeginPos,
@@ -59,8 +57,6 @@ namespace detail {
 	/** This allows to get the initial or the next iterator.
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class CurrentPosition,
 		class BeginPos,
@@ -74,8 +70,6 @@ namespace detail {
 	struct meta_object_iterator_base_templ_get_ioni_apply
 	{
 		typedef meta_object_iterator_base_templ<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			typename mpl::int_<mpl::plus<
 				CurrentPosition,
@@ -109,8 +103,6 @@ namespace detail {
 
 
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class BeginPos,
 		class BeforeEndPos,
@@ -121,8 +113,6 @@ namespace detail {
 		int I
 	>
 	struct meta_object_iterator_base_templ_get_ioni_apply<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		BeforeEndPos,
 		BeginPos,
@@ -139,8 +129,6 @@ namespace detail {
 		 *  next iterator.
 		 */
 		typedef meta_object_iterator_base_templ<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			typename mpl::int_<mpl::plus<
 				BeforeEndPos,
@@ -158,8 +146,6 @@ namespace detail {
 	};
 
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class BeginPos,
 		class BeforeEndPos,
@@ -170,8 +156,6 @@ namespace detail {
 		int I
 	>
 	struct meta_object_iterator_base_templ_get_ioni_apply<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		EndPos,
 		BeginPos,
@@ -184,8 +168,6 @@ namespace detail {
 	>
 	{
 		typedef meta_object_iterator_base_templ<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			EndPos,
 			BeginPos,
@@ -205,8 +187,6 @@ namespace detail {
 	 *  iterators
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
 		class BeginPos,
@@ -230,8 +210,6 @@ namespace detail {
 			// the type meta_class_attribute
 			// that this iterator points to
 			typedef typename Selector::template apply<
-				ReflectedType, 
-				VariantTag,
 				MetaObjectSequence,
 				Position,
 				UnaryPredicate
@@ -245,8 +223,6 @@ namespace detail {
 			struct apply
 			{
 				typedef meta_object_iterator_base_templ<
-					ReflectedType, 
-					VariantTag,
 					MetaObjectSequence,
 					CurrentPosition,
 					BeginPos,
@@ -265,8 +241,6 @@ namespace detail {
 			struct apply
 			{
 				typedef meta_object_iterator_base_templ<
-					ReflectedType, 
-					VariantTag,
 					MetaObjectSequence,
 					typename mpl::int_<mpl::minus<
 						CurrentPosition,
@@ -302,8 +276,6 @@ namespace detail {
 
 			template <typename CurrentPosition>
 			struct apply : meta_object_iterator_base_templ_get_ioni_apply<
-				ReflectedType, 
-				VariantTag,
 				MetaObjectSequence,
 				CurrentPosition,
 				BeginPos,
@@ -325,8 +297,6 @@ namespace detail {
 	/** Forward iterator base template
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
 		class UnaryPredicate,
@@ -334,8 +304,6 @@ namespace detail {
 	>
 	struct meta_object_iterator_base
 	: meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position,
 		mpl::int_<0>,
@@ -348,8 +316,6 @@ namespace detail {
 	/** Reverse iterator base class
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
 		class UnaryPredicate,
@@ -357,8 +323,6 @@ namespace detail {
 	>
 	struct meta_object_reverse_iterator_base
 	: meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position,
 		mpl::int_<size<MetaObjectSequence>::value -1 >,

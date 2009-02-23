@@ -21,8 +21,6 @@ namespace detail {
 	 *  and unary predicate.
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Position,
 		class UnaryPredicate
@@ -31,8 +29,6 @@ namespace detail {
 	{
 			typedef typename mpl::apply<
 			typename meta_object_reverse_iterator_base<
-				ReflectedType, 
-				VariantTag,
 				MetaObjectSequence,
 				Position,
 				UnaryPredicate,
@@ -41,8 +37,6 @@ namespace detail {
 			Position
 		>::type type;
 	};
-
-
 
 } // namespace detail
 } // namespace mirror

@@ -47,8 +47,6 @@ struct compare_iterators;
  *  I2 = meta_object_iterator_base_templ<...>
  */
 template <
-	class ReflectedType, 
-	class VariantTag,
 	class MetaObjectSequence,
 	class Position1,
 	class Position2,
@@ -62,8 +60,6 @@ template <
 >
 struct compare_iterators<
 	meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position1,
 		BeginPos,
@@ -73,8 +69,6 @@ struct compare_iterators<
 		Selector
 	>,
 	meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position2,
 		BeginPos,
@@ -97,9 +91,7 @@ struct compare_iterators<
  *  I2 = meta_object_iterator_base_templ<...>
  */
 template <
-	template <class, class, class, class, class, class> class Iterator,
-	class ReflectedType, 
-	class VariantTag,
+	template <class, class, class, class> class Iterator,
 	class MetaObjectSequence,
 	class Position1,
 	class Position2,
@@ -113,16 +105,12 @@ template <
 >
 struct compare_iterators<
 	Iterator<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position1,
 		UnaryPredicate1,
 		Selector
 	>,
 	meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position2,
 		BeginPos,
@@ -144,9 +132,7 @@ struct compare_iterators<
  *  I2 = a concrete Iterator
  */
 template <
-	template <class, class, class, class, class, class> class Iterator,
-	class ReflectedType, 
-	class VariantTag,
+	template <class, class, class, class> class Iterator,
 	class MetaObjectSequence,
 	class Position1,
 	class Position2,
@@ -160,8 +146,6 @@ template <
 >
 struct compare_iterators<
 	meta_object_iterator_base_templ<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position1,
 		BeginPos,
@@ -171,8 +155,6 @@ struct compare_iterators<
 		Selector
 	>,
 	Iterator<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position2,
 		UnaryPredicate2,
@@ -191,9 +173,7 @@ struct compare_iterators<
  *  I2 = a concrete Iterator
  */
 template <
-	template <class, class, class, class, class, class> class Iterator,
-	class ReflectedType, 
-	class VariantTag,
+	template <class, class, class, class> class Iterator,
 	class MetaObjectSequence,
 	class Position1,
 	class Position2,
@@ -204,16 +184,12 @@ template <
 >
 struct compare_iterators<
 	Iterator<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position1,
 		UnaryPredicate1,
 		Selector
 	>,
 	Iterator<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position2,
 		UnaryPredicate2,
@@ -224,8 +200,6 @@ struct compare_iterators<
 	Position1, 
 	Position2, 
 	typename Iterator<
-		ReflectedType, 
-		VariantTag,
 		MetaObjectSequence,
 		Position1,
 		UnaryPredicate1,

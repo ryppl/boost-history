@@ -25,7 +25,7 @@ namespace detail {
 	template <
 		class MetaObjectSequence, 
 		class Arg1, 
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct position_getter_impl_1 { };
 
@@ -36,7 +36,7 @@ namespace detail {
 		class Class, 
 		class VariantTag, 
 		class Arg1,
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct position_getter_impl_1<
 		meta_class_attributes<Class, VariantTag>,
@@ -44,7 +44,6 @@ namespace detail {
 		Implementation 
 	>
 	: Implementation<
-		Class, VariantTag,
 		meta_class_attributes<Class, VariantTag>,
 		Arg1
 	>{ };
@@ -56,7 +55,7 @@ namespace detail {
 		class Class, 
 		class VariantTag, 
 		class Arg1,
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct position_getter_impl_1<
 		meta_class_all_attributes<Class, VariantTag>,
@@ -64,7 +63,6 @@ namespace detail {
 		Implementation 
 	>
 	: Implementation<
-		Class, VariantTag,
 		meta_class_all_attributes<Class, VariantTag>,
 		Arg1
 	>{ };
@@ -76,7 +74,7 @@ namespace detail {
 		class Class, 
 		class VariantTag,
 		class Arg1,
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct position_getter_impl_1<
 		meta_base_classes<Class, VariantTag>, 
@@ -84,7 +82,6 @@ namespace detail {
 		Implementation 
 	>
 	: Implementation<
-		Class, VariantTag,
 		meta_base_classes<Class, VariantTag>,
 		Arg1
 	>{ };
@@ -94,7 +91,7 @@ namespace detail {
 	 */
 	template <
 		class MetaObjectSequence, 
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct position_getter_impl
 	: position_getter_impl_1<MetaObjectSequence, void, Implementation>
@@ -106,7 +103,7 @@ namespace detail {
 	template <
 		class MetaObjectSequence, 
 		class Position,
-		template <class, class, class, class> class Implementation
+		template <class, class> class Implementation
 	>
 	struct explicit_position_getter_impl
 	: position_getter_impl_1<MetaObjectSequence, Position, Implementation>

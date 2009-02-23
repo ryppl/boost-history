@@ -19,16 +19,12 @@ namespace mirror {
 namespace detail {
 
 	template <
-		class ReflectedType, 
-		class VariantTag,
 		class MetaObjectSequence,
 		class Dummy
 	>
 	struct meta_object_sequence_end
 	{
 		typedef typename get_meta_object_iterator<
-			ReflectedType, 
-			VariantTag,
 			MetaObjectSequence,
 			mpl::int_<size<MetaObjectSequence>::value>,
 			mpl::always<mpl::true_>

@@ -21,16 +21,14 @@ namespace detail {
 	/** Iterator for iterating through meta_base_classes
 	 */
 	template <
-		class _ReflectedType, 
-		class _VariantTag
+		class ReflectedType, 
+		class VariantTag
 	>
 	struct iterator_pointee_selector<
-		meta_base_classes<_ReflectedType, _VariantTag>
+		meta_base_classes<ReflectedType, VariantTag>
 	>
 	{
 		template <
-			class ReflectedType, 
-			class VariantTag,
 			class MetaBaseClasses,
 			class BaseClassPos,
 			class UnaryPredicate
