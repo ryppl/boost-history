@@ -569,9 +569,9 @@ namespace boost
           { // legend_on_ == true
             // Work out the size the legend box needs to be to hold the
             // header, markers, lines & text.
-            size_t num_series = derived().series.size(); // How many data series.
+            size_t num_series = derived().serieses_.size(); // How many data series.
             int font_size = derived().legend_header_.style().font_size();
-            int point_size =  derived().series[0].point_style_.size();
+            int point_size =  derived().serieses_[0].point_style_.size();
             // Use height of whichever is the biggest of point marker and font.
             double spacing = (std::max)(font_size, point_size);
             // std::cout << spacing <<  ' ' << font_size << ' ' << point_size << std::endl;
@@ -584,7 +584,7 @@ namespace boost
             // Don't plan to write on either side border, or on the 'forbidden' margins of the box.
             for(size_t i = 0; i < num_series; ++i)
             { // Find the longest text (if longer than header) in all the data series.
-              std::string s = derived().series[i].title_;
+              std::string s = derived().serieses_[i].title_;
               double siz = string_svg_length(s, derived().legend_style_);
               if (siz > longest)
               {
@@ -603,9 +603,9 @@ namespace boost
             { // Add for colored line marker in legend.
               derived().legend_width_ += spacing * 1.5;
             }
-            if(derived().series[0].point_style_.shape() != none)
+            if(derived().serieses_[0].point_style_.shape() != none)
             { // Add for any colored data point marker, cross, round... & space.
-              derived().legend_width_ += 1.5 * derived().series[0].point_style_.size();
+              derived().legend_width_ += 1.5 * derived().serieses_[0].point_style_.size();
             }
             // else no point marker.
 
@@ -745,7 +745,7 @@ namespace boost
             //cout << derived().legend_box_.width() <<  ' ' << derived().legend_box_.margin() << endl;
 
             int font_size = derived().legend_header_.style().font_size();
-            int point_size =  derived().series[0].point_style_.size();
+            int point_size =  derived().serieses_[0].point_style_.size();
             // Use whichever is the biggest of point marker and font.
             double spacing = (std::max)(font_size, point_size);
             // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
@@ -777,23 +777,23 @@ namespace boost
             g_element* g_inner_ptr = g_ptr;
             g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
 
-            for(unsigned int i = 0; i < derived().series.size(); ++i)
+            for(unsigned int i = 0; i < derived().serieses_.size(); ++i)
             { // Show point marker, perhaps line, & text info for all the data series.
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker and/or line & text.
               g_inner_ptr = &(g_ptr->g());
               // Use both stroke & fill colors from the point's style.
-              g_inner_ptr->style().stroke_color(derived().series[i].point_style_.stroke_color_);
-              g_inner_ptr->style().fill_color(derived().series[i].point_style_.fill_color_);
-              g_inner_ptr->style().stroke_width(derived().series[i].line_style_.width_); // Applies to shape AND line.
+              g_inner_ptr->style().stroke_color(derived().serieses_[i].point_style_.stroke_color_);
+              g_inner_ptr->style().fill_color(derived().serieses_[i].point_style_.fill_color_);
+              g_inner_ptr->style().stroke_width(derived().serieses_[i].line_style_.width_); // Applies to shape AND line.
 
-              if(derived().series[i].point_style_.shape_ != none)
+              if(derived().serieses_[i].point_style_.shape_ != none)
               { // Is a data marker shape to show.
                 draw_plot_point( // Plot point like circle, square...
                   legend_x_pos,
                   legend_y_pos,
                   *g_inner_ptr,
-                  derived().series[i].point_style_);
+                  derived().serieses_[i].point_style_);
                 legend_x_pos += 1.5 * spacing;
               }
 
@@ -801,7 +801,7 @@ namespace boost
               if (derived().legend_lines_)
               { // Need to draw a short line to show color for that data series.
                 g_inner_ptr->style() // Use stroke colors from line style.
-                  .stroke_color(derived().series[i].line_style_.stroke_color_);
+                  .stroke_color(derived().serieses_[i].line_style_.stroke_color_);
                // Use stroke colors from line style.
                // == image.g(PLOT_DATA_LINES).style().stroke_width(width);
                 // but this sets width for BOTH point and line :-(
@@ -818,7 +818,7 @@ namespace boost
               g_inner_ptr->push_back(new text_element(
                 legend_x_pos, // allow space for the marker.
                 legend_y_pos,
-                derived().series[i].title_, // Text for this data series.
+                derived().serieses_[i].title_, // Text for this data series.
                 derived().legend_header_.style(),
                 left_align));
               legend_y_pos += 2 * spacing;
