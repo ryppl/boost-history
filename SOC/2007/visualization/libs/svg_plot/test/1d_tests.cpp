@@ -82,7 +82,7 @@ BOOST_AUTO_TEST_CASE( test1 )
   text.text("X");
   BOOST_CHECK_EQUAL(text.text(), "X");
 
-  BOOST_CHECK_EQUAL(text.style().font_size(), 20);
+  BOOST_CHECK_EQUAL(text.style().font_size(), 12);
   text.style().font_size(10);
   BOOST_CHECK_EQUAL(text.style().font_size(), 10);
 

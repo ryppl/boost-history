@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="../../../../../../../../boost_trunk/doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
 <link rel="home" href="index.html" title="SVG Plot">
-<link rel="next" href="svg_plot/howtouse.html" title="How To Use This Documentation">
+<link rel="next" href="SVG_plot/preface.html" title="Preface">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../../../../../../../boost_trunk/more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="svg_plot/howtouse.html"><img src="../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="SVG_plot/preface.html"><img src="../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a></div>
 <div class="article" lang="en">
 <div class="titlepage">
 <div>
@@ -33,7 +33,7 @@
 </div></div>
 <div><p class="copyright">Copyright © 2007 to 2009 Jake Voytko and Paul A. Bristow</p></div>
 <div><div class="legalnotice">
-<a name="id771078"></a><p>
+<a name="id773512"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -44,9 +44,9 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
+<dt><span class="section"><a href="SVG_plot/preface.html"> Preface</a></span></dt>
 <dt><span class="section"><a href="svg_plot/howtouse.html"> How To Use This Documentation</a></span></dt>
 <dt><span class="section"><a href="svg_plot/color.html"> Colors</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_tutorial.html"> SVG tutorial</a></span></dt>
 <dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html"> Tutorials: 1D</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/tutorial_code_1d_example.html">
@@ -76,6 +76,8 @@
       Fuller Layout Example</a></span></dt>
 <dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/2d_special.html"> Tutorial:
       2D Special Features</a></span></dt>
+<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/demo_2d_values.html"> 2-D
+      Data Values Examples</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial.html"> Tutorial: Boxplot</a></span></dt>
 <dd><dl>
@@ -86,6 +88,7 @@
 <dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_quartiles.html">
       Definitions of the Quartiles</a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="svg_plot/svg_tutorial.html"> SVG tutorial</a></span></dt>
 <dt><span class="section"><a href="svg_plot/behavior_limits.html"> Showing data values at Numerical
     Limits</a></span></dt>
 <dt><span class="section"><a href="svg_plot/plot_defaults.html"> Plot Defaults</a></span></dt>
@@ -104,7 +107,7 @@
 <dt><span class="section"><a href="svg_plot/interface/svg_boxplot_interface.html"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a></span></dt>
 <dt><span class="section"><a href="svg_plot/interface/settings.html"> Show settings Public Interface</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="index/s10.html">Reference</a></span></dt>
+<dt><span class="section"><a href="index/s11.html">Reference</a></span></dt>
 <dd><dl>
 <dt><span class="section"><a href="header/boost/svg_plot/detail/auto_axes_hpp.html">Header &lt;boost/svg_plot/detail/auto_axes.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="header/boost/svg_plot/detail/axis_plot_frame_hpp.html">Header &lt;boost/svg_plot/detail/axis_plot_frame.hpp&gt;</a></span></dt>
@@ -130,11 +133,11 @@
 <dt><span class="section"><a href="svg_plot/implementation.html"> Implementation &amp; Rationale</a></span></dt>
 <dt><span class="section"><a href="svg_plot/todo.html"> To Do List</a></span></dt>
 <dt><span class="section"><a href="svg_plot/acknowledgements.html"> Acknowledgements</a></span></dt>
-<dt><span class="section"><a href="index/s14.html">Class Index</a></span></dt>
-<dt><span class="section"><a href="index/s15.html">Typedef Index</a></span></dt>
-<dt><span class="section"><a href="index/s16.html">Function Index</a></span></dt>
-<dt><span class="section"><a href="index/s17.html">Macro Index</a></span></dt>
-<dt><span class="section"><a href="index/s18.html">Index</a></span></dt>
+<dt><span class="section"><a href="index/s15.html">Class Index</a></span></dt>
+<dt><span class="section"><a href="index/s16.html">Typedef Index</a></span></dt>
+<dt><span class="section"><a href="index/s17.html">Function Index</a></span></dt>
+<dt><span class="section"><a href="index/s18.html">Macro Index</a></span></dt>
+<dt><span class="section"><a href="index/s19.html">Index</a></span></dt>
 </dl>
 </div>
 <div class="important"><table border="0" summary="Important">
@@ -145,16 +148,26 @@
 <tr><td align="left" valign="top"><p>
       This is not (yet) an official Boost library. It was a <a href="http://code.google.com/soc/2007/boost/about.html" target="_top">Google
       Summer of Code project (2007)</a> whose mentor organization was Boost.
-      It remains a library under construction, the code is functional, but interfaces,
-      library structure, and names may still be changed without notice.
+      It remains a library under construction, the code is quite functional, but
+      interfaces, library structure, and names may still be changed without notice.
+    </p></td></tr>
+</table></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../boost_trunk/doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+      Comments and suggestions (even bugs) to Paul.A.Bristow (at) gmail (dot) com
+      or Jake Voytko at jakevoytko (at) gmail (dot) com
     </p></td></tr>
 </table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: February 18, 2009 at 16:02:44 GMT</small></p></td>
+<td align="left"><p><small>Last revised: February 20, 2009 at 18:41:52 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="svg_plot/howtouse.html"><img src="../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="SVG_plot/preface.html"><img src="../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>

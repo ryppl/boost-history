@@ -1,5 +1,13 @@
 [section:svg_tutorial SVG tutorial]
-TODO
+
+The SVG interface is only documented in the reference section.
+
+Most users will want to use the plot interfaces.
+
+A few very rudimentary examples of use (mainly historically used to testbed various features used in the plot interfaces) can be seen at
+
+[@\..\example\demo_svg.cpp]
+
 [endsect]
 
 [/ svg_tutorial.qbk

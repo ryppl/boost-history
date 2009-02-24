@@ -101,6 +101,7 @@ namespace boost
       svg_2d_plot_series& bar_width(double wid_);
       svg_2d_plot_series& bar_color(const svg_color& col);
       svg_2d_plot_series& bar_area_fill(const svg_color& col);
+      svg_2d_plot_series& histogram(histogram_option opt_);
 
       // Get functions for the plot series.
       plot_line_style line_style();
@@ -115,7 +116,9 @@ namespace boost
       double bar_width();
       svg_color& bar_color();
       svg_color& bar_area_fill();
-      svg_2d_plot_series& histogram(histogram_option opt_);
+      int svg_2d_plot_series::values_count(); // number of normal values in data series.
+      int svg_2d_plot_series::limits_count(); // number of values 'at limit' in data series.
+
    }; // class svg_2d_plot_series
 
    // svg_2d_plot_series Member Functions Definitions.
@@ -131,8 +134,8 @@ namespace boost
     // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
     // int size = 10, point_shape shape = round, const std::string& symbols = "X")
     point_style_(black, blank, 10, round), // Default point style.
-    limit_point_style_(grey, blank, 10, cone), // Default limit (inf or NaN) point style.
-    line_style_(black, blank, 2, true, false), // Default line style, no fill, width 2, line_on, bezier off.
+    limit_point_style_(grey, blank, 10, cone), // Default limit (infinity or NaN) point style.
+    line_style_(black, blank, 2, false, false), // Default line style, no fill, width 2, no line_on, no bezier.
     bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
     // -2 block to Y-axis, -1 stick to Y-axis, no_bar,  +1 stick to x_axis, -2 block to X-axis.
     histogram_style_(no_histogram)
@@ -298,6 +301,17 @@ namespace boost
     histogram_style_.histogram_option_ = opt_;
     return *this; //! \return reference to svg_2d_plot_series to make chainable.
   }
+
+  int svg_2d_plot_series::values_count()
+  { //! \return number of normal values in data series.
+    return series.size(); 
+  }
+
+  int svg_2d_plot_series::limits_count()
+  {  //! \return number of values 'at limit' in data series.
+    return series_limits.size();
+  }
+
   // end svg_2d_plot_series Member Functions Definitions.
 
     class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
@@ -352,8 +366,8 @@ namespace boost
       text_element y_label_value_; //!< Y axis value text, for example: "1.2" or "1.2e+001"
 
       text_style value_style_; //!< Style used for data point value label.
-      value_style x_values_style_; //!< Data point X value marking.
-      value_style y_values_style_; //!< Data point Y value marking.
+      value_style x_values_style_; //!< Data point X value marking, font, size etc.
+      value_style y_values_style_; //!< Data point Y value marking, font, size etc.
       bool x_plusminus_on_; //!<  http://en.wikipedia.org/wiki/Plus-minus_sign Unicode \&\#0xB1; HTML \&plusmn;
 
       rotate_style y_value_label_rotation_; //!< Direction point Y value labels written (default horizontal).
@@ -462,13 +476,11 @@ my_plot.background_color(ghostwhite) // Whole image.
         title_style_(18, "Verdana", "", ""),  // last "bold" ?
         legend_style_(14, "Verdana", "", ""), // 2nd "italic"?
         x_axis_label_style_(14, "Verdana", "", ""),
-        x_value_label_style_(14, "Verdana", "", ""),
+        x_value_label_style_(12, "Verdana", "", ""), // X-axis tick labels.
         // Separate x and y to allow axes to have different styles.
         y_axis_label_style_(14, "Verdana", "", ""),
-        y_value_label_style_(12, "Verdana", "", ""),
+        y_value_label_style_(12, "Verdana", "", ""), // Y-axis tick labels.
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
-        //x_values_style_(10, "Verdana", "", ""), // Used for data point X values.
-        //y_values_style_(10, "Verdana", "", ""), // Used for data point Y values.
         title_info_(0, 0, "", title_style_, center_align, horizontal),
         x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal),
         x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
@@ -481,7 +493,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "", y_axis_label_style_, center_align, upward),
         y_units_info_(0, 0, "", y_axis_label_style_, center_align, upward),
-        y_label_value_(0, 0, "", y_value_label_style_, center_align, upward),
+        y_label_value_(0, 0, "", y_value_label_style_, center_align, upward), // 
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
         plot_window_border_(lightslategray, svg_color(255, 255, 255), 2, 3, true, false),
@@ -497,12 +509,12 @@ my_plot.background_color(ghostwhite) // Whole image.
         plot_window_clip_("plot_window"), // for <clipPath id="plot_window" ...
         title_on_(true),
         plot_window_on_(true),
-        // Can have both X and Y value shown.
+        // Can have either or both X and Y value shown.
         x_values_on_(false), // If X values of data are shown.
         y_values_on_(false), // If Y values of data are shown.
         xy_values_on_(false), // If X & Y values of data are shown as a pair.
         x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
-        y_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
+        y_values_style_(downward, 3, std::ios::dec, true, value_style_, black, black, false, false),
 
         // Autoscaling defaults.
         autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
@@ -587,7 +599,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       { //! document ids for use in <g id = "PLOT_TITLE".../>
         for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
         { // Order determines the painting order.
-          image.g(i).id(detail::document_ids[i]);
+          image.g(i).id(detail::document_ids_[i]);
         }
       } //  void set_ids()
 
@@ -1516,7 +1528,7 @@ my_plot.background_color(ghostwhite) // Whole image.
               }
 
               if (xy_values_on_)
-              { // show the values of the X & Y data as a pair.
+              { // Show the values of the X & Y data as a pair.
                 draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, vx, vy);
               }
             } // if in side window
@@ -1534,7 +1546,7 @@ my_plot.background_color(ghostwhite) // Whole image.
             x = j->first;
             y = j->second;
             if (limit_NaN(x))
-            { // x is NaN rather than too big or too small.
+            { // x is NaN (rather than too big or too small).
               x = 0.;
               transform_x(x);
               // If include zero, OK, else plot on left or right as appropriate.
@@ -1562,12 +1574,12 @@ my_plot.background_color(ghostwhite) // Whole image.
               // else is inside X axis plot window.
             }
             if (limit_NaN(y))
-            { // y is NaN rather than too big or too small.
+            { // y is NaN (rather than too big or too small).
               y = 0.;
               transform_y(y);
               // If include zero, OK, else plot on left or right as appropriate.
               if (y < plot_top_)
-              { // Note y SVG coordinate increase downwards.
+              { // Note Y SVG coordinate increase downwards.
                 y = plot_top_;
               }
               else if (y > plot_bottom_)

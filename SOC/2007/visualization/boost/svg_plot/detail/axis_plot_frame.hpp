@@ -1118,7 +1118,9 @@ namespace boost
           } // std::string sv(double v, const value_style& sty)
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
-          { //! Write the \b pair of data point's values as a string.
+          { //! Write the \b pair of data point's X and Y values as a string, for example: "1.23, 3.45".
+            using std::string;
+            using std::stringstream;
             std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
             std::string label_yv = sv(vy, y_sty);
             std::string label_xu;
@@ -1190,10 +1192,19 @@ namespace boost
              break;
             } // switch
 
+            // If would be simpler to prepare a single string like "1.23 +- -0.3, 3.45 +- -0.1(10)"
+            // but this would not allow change of font size, type and color
+            // something that proves to be very effective at visually separating
+            // value and uncertainty, and degrees of freedom estimate.
+            // So the coding complexity is judged with it (even if it may not always work right yet ;-)
+
+            string prefix = "[";
+            string separator = ""; // or = ", "; // between x and y, if any (none if only X or only Y, or Y below X)
+            string suffix = "]";
 
             // Unclear how to get this uncertainty information into this function,
             // so these are purely imaginary for now.
-            // Migh template so can use an uncertain type instead of double?
+            // Might template so can use an uncertain type instead of double?
             double ux = 0.0123;
             double uy = 0.00321;
             double dfx = 23;
@@ -1202,13 +1213,12 @@ namespace boost
             // Tasteless colors and font changes are purely proof of concept.
 
              int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
-           // X value, & optional uncertainty & df.
-            text_element& t = x_g_ptr.text(x, y,
-              label_xv, x_sty.values_text_style_, al, rot);
+           // X value (and optional uncertainty & df).
+            text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
            // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
            // TODO comma separator ? might want inside brackets [], or another separator?
 
-            std::string pm = "&#x00A0;&#x00B1;"; // Unicode space plusminus glyph.
+            string pm = "&#x00A0;&#x00B1;"; // Unicode space plusminus glyph.
             // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
             // Layout seems to vary with font Times New Roman leaves no space after.
             if (x_sty.plusminus_on_)
@@ -1219,17 +1229,26 @@ namespace boost
             }
             if (x_sty.df_on_)
             { // Degrees of freedom or number of values-1 used for this estimate of value.
-              std::stringstream label;
+              stringstream label;
               label.precision(4);
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
               label_xdf = label.str();
-              t.tspan(label_xdf + ',').fill_color(brown).font_size(fx);
+              t.tspan(label_xdf + separator).fill_color(brown).font_size(fx);
+            }
+            // if there is a separator, put values on the same line, else as below put below the marker.
+            double line = 0.0;
+            if (separator == "")
+            {
+              line = y_sty.values_text_style_.font_size() * 2.2; // Put Y value on 'newline' below point marker.
+            }
+            else
+            {
+              t.tspan(separator).fill_color(brown).font_size(fx);
             }
 
-            // Put Y value on the line below using font_size.
-            // Problem here if orientation is changed!
-            text_element& ty = y_g_ptr.text(x, y + y_sty.values_text_style_.font_size() * 1.2,
+            // Problem here if orientation is changed?
+            text_element& ty = y_g_ptr.text(x, y + line,
               label_yv, y_sty.values_text_style_, al, rot);
 
             int fy = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
@@ -1920,7 +1939,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title(const std::string title)
-          { /*! 
+          { /*!
               Set a title for plot.
               The string may include Unicode for greek letter and symbols.
               For example a title that includes a greek omega:
@@ -2486,7 +2505,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_ticks_on_window_or_axis(int cmd)
-          { /*!  Set  X ticks on window or axis 
+          { /*!  Set  X ticks on window or axis
               \arg cmd -1 bottom of plot window,
               \arg cmd 0 on X axis.
               \arg cmd +1 top of plot window.

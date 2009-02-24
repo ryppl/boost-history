@@ -43,7 +43,7 @@ svg_color my_color = red;
 ``
 does not have the desired effect, and nor does
 `cout << red << endl;`
-output the expected "RGB(255,0,0)" but instead "119", the value of the enum!]
+output the expected "RGB(255,0,0)" but instead outputs "119", the value of the enum!]
 
 [h4 `svg_color` interface]
 
@@ -62,7 +62,7 @@ You can define a `svg_color` using two different constructors:
 
   BOOST_ASSERT(my_white == my_const_white);
 
-[note You will find it convenient to use the namespace boost::svg,
+[note You will find it convenient to use the namespace boost::svg
 (perhaps only at local scope)
 to avoid having to fully qualify *every* color that you want to use,
 for example, to avoid writing: `using boost::svg::azure;`
@@ -82,7 +82,7 @@ that a `svg_color` can be used, a `svg_color_constant` can be used, as the
 conversion is implicit.
 
 All color information is stored in RGB format as three 'unsigned char' in a `svg_color` struct.
-The  rationale for storing information in RGB format is because it is precise,
+The  rationale for storing information in RGB format is that it is precise,
 and is always representable the exactly the same way.
 Storing as a floating-point percent or fraction
 would introduce the possibility of undesirable rounding error.

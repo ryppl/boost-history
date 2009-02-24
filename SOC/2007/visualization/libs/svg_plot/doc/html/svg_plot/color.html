@@ -7,7 +7,7 @@
 <link rel="home" href="../index.html" title="SVG Plot">
 <link rel="up" href="../index.html" title="SVG Plot">
 <link rel="prev" href="howtouse.html" title="How To Use This Documentation">
-<link rel="next" href="svg_tutorial.html" title="SVG tutorial">
+<link rel="next" href="tutorial_code_1d_simple.html" title="Tutorials: 1D">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="howtouse.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="howtouse.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial_code_1d_simple.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -33,7 +33,7 @@
       by the SVG standard</a>.
     </p>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h4>
-<a name="id771388"></a>
+<a name="id773832"></a>
       <a class="link" href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color_constant__phrase___code_"><code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h4>
 <p>
@@ -63,7 +63,7 @@
       for defining defaults for functions, for example.
     </p>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_"></a><h5>
-<a name="id771465"></a>
+<a name="id773909"></a>
       <a class="link" href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color_constant__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color_constant</span></code></a>
     </h5>
@@ -96,12 +96,12 @@
         does not have the desired effect, and nor does <code class="computeroutput"><span class="identifier">cout</span>
         <span class="special">&lt;&lt;</span> <span class="identifier">red</span>
         <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span></code> output the expected "RGB(255,0,0)"
-        but instead "119", the value of the enum!
+        but instead outputs "119", the value of the enum!
       </p>
 </td></tr>
 </table></div>
 <a name="svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"></a><h5>
-<a name="id771740"></a>
+<a name="id774184"></a>
       <a class="link" href="color.html#svg_plot.color._code__phrase_role__identifier__svg_color__phrase___code__interface"><code class="computeroutput"><span class="identifier">svg_color</span></code> interface</a>
     </h5>
 <p>
@@ -113,7 +113,7 @@
 <span class="identifier">svg_color</span><span class="special">(</span><span class="identifier">svg_color_constant</span><span class="special">);</span> <span class="comment">// Use a pre-existing color constant.
 </span></pre>
 <a name="svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_"></a><h5>
-<a name="id771830"></a>
+<a name="id774274"></a>
       <a class="link" href="color.html#svg_plot.color.example_of_using__code__phrase_role__identifier__svg_color__phrase___code_">Example
       of using <code class="computeroutput"><span class="identifier">svg_color</span></code></a>
     </h5>
@@ -130,7 +130,7 @@
 <th align="left">Note</th>
 </tr>
 <tr><td align="left" valign="top"><p>
-        You will find it convenient to use the namespace boost::svg, (perhaps only
+        You will find it convenient to use the namespace boost::svg (perhaps only
         at local scope) to avoid having to fully qualify <span class="bold"><strong>every</strong></span>
         color that you want to use, for example, to avoid writing: <code class="computeroutput"><span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">svg</span><span class="special">::</span><span class="identifier">azure</span><span class="special">;</span></code>
       </p></td></tr>
@@ -149,7 +149,7 @@
       </p></td></tr>
 </table></div>
 <a name="svg_plot.color.colors_internals_and_rationale"></a><h4>
-<a name="id780187"></a>
+<a name="id781769"></a>
       <a class="link" href="color.html#svg_plot.color.colors_internals_and_rationale">Colors Internals
       and Rationale</a>
     </h4>
@@ -164,7 +164,7 @@
 <p>
       All color information is stored in RGB format as three 'unsigned char' in a
       <code class="computeroutput"><span class="identifier">svg_color</span></code> struct. The rationale
-      for storing information in RGB format is because it is precise, and is always
+      for storing information in RGB format is that it is precise, and is always
       representable the exactly the same way. Storing as a floating-point percent
       or fraction would introduce the possibility of undesirable rounding error.
     </p>
@@ -179,7 +179,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="howtouse.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="svg_tutorial.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="howtouse.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial_code_1d_simple.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

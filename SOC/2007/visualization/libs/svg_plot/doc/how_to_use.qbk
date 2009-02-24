@@ -18,8 +18,8 @@ is in error, please check the __todo page first, as well
 as the __rationale section.
 
 If you do not find your idea/complaint, please reach me either through the Boost
-development list, or email me at
-jakevoytko (at) gmail (dot) com or pbristow (at) hetp (dot) u-net (dot) com
+development list, or email me direct at pbristow (at) hetp (dot) u-net (dot) com
+or jakevoytko (at) gmail (dot) com.
 
 [heading Admonishments]
 
@@ -35,60 +35,5 @@ Read all of these you find.]
 [warning It is imperative that you follow these. Failure to do so will lead to
 incorrect, and very likely undesired, results in the plot.]
 
-[heading Preface]
-Humans have a fantastic capacity for visual understanding, and merely looking
-at data organized in one, two, or three dimensions allows us to see relations
-not otherwise visible in a list of numbers. Computers, however, deal with
-information numerically, and C++ and the
-[@http://en.wikipedia.org/wiki/Standard_Template_Library Standard Template Library (STL)]
-does not currently offer a way to bridge the gap.
-This library helps the user to easily plot data stored in STL containers.
-
-This project is focused on using STL containers in order to graph data on a
-one-dimensional and two-dimensional (and in future, perhaps, 3D) plot. The plot
-will currently be written to a
-[@http://en.wikipedia.org/wiki/Scalable_Vector_Graphics Scalable Vector Graphic image].
-
-[@http://www.w3.org/TR/SVG11/ Scalable Vector Graphics (SVG)] is an
-[@http://www.w3.org/TR/REC-xml/#sec-comments XML specification]
-and file format for describing two-dimensional vector graphics.
-
-SVG files (.svg) can be viewed with an Internet Browser:
-
-* [@http://www.mozilla.com/firefox/ Mozilla Firefox (version 3 and later)]
-
-* [@http://www.adobe.com/products/illustrator Adobe Illustrator].
-
-* [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
-but the quality of rendering is often not as good as other browsers.
-
-* Microsoft Internet Explorer, provided a suitable
-[@http://www.adobe.com/svg/ Adobe SVG Viewer plug-in for SVG files] is installed,
-(note that Adobe have stopped offering this (as they warned years ago)
-but the download software can still be obtained elsewhere, for example from
-[@http://adobe-svg-viewer.software.informer.com/download/ software.informer].
-Shamefully, even IE8 Beta does not yet offer SVG rendering.
-Information about limitations of IE with Vista and the Adobe add-in are given on the
-[@http://www.adobe.com/svg/viewer/install/main.html Adobe End of Line FAQ]).
-
-* [@http://www.inkscape.org/ Inkscape], a fine Open Source SVG editor and viewer
-with excellent rendering, full scaling and other editing features.
-
-* Many other graphics programs, for example see
-[@http://svg.software.informer.com/software/ Most popular SVG software].
-
-The goals of the project are:
-
-* To let users produce simple plots with minimal intervention by using sane defaults.
-* To allow users to easily customize plots.
-* To allow the user to talk to the plot classes using coordinate units
-rather than pixels or other arbitrary units.
-* To create the backbone of a `svg` class that can be extended to fully support
-the standard.
-* Compliance with the
-[@http://www.w3.org/TR/SVG11/ W3C Scalable Vector Graph standard].
-
-[note Comments and suggestions to Jake Voytko at jakevoytko (at) gmail (dot) com
-or Paul.A.Bristow (at) gmail (dot) com]
 
 [endsect] [/section:howtouse How To Use This Documentation]

@@ -33,8 +33,6 @@
   // using std::numeric_limits;
 #include <cmath> // Why?
 
-// Allows NaNs to be displayed differently from just too big or too small values.
-
 namespace boost
 {
 namespace svg
@@ -42,33 +40,33 @@ namespace svg
 namespace detail
 {
   // Provide checks on data values to be plotted.
-  // Test if at max or +infinity, or min or - infinity, or NaN.
+  // Test if at max or +infinity, or -max or - infinity, or NaN.
 
-  // Not clear why min or denorm min are not just ignored as almost zero (which is an OK value).
+// std::numeric_limits<double>::min() or denorm min() are just ignored as almost zero (which is an OK value).
+
+const double margin = 4.;  //!< Consider values close to std::numeric_limits<double>::max() as maximum to try to take account of computation errors.
 
 inline bool limit_max(double a)
-{ //! At max value or _infinity.
-    return (a ==(std::numeric_limits<int>::max)() // Avoid macro max trap!
-         || a == std::numeric_limits<double>::infinity());
+{ //! At (or near) max value or +infinity, most positive values.
+    return ((a > std::numeric_limits<double>::max() / margin) // Avoid macro max trap!
+         || (a == std::numeric_limits<double>::infinity()));
 }
 
 inline bool limit_min(double a)
-{ //! At min value, denorm_min or -infinity.
-
+{ //! At (or near) -max or -infinity, most negative values.
   return (
-    (a == -(std::numeric_limits<int>::max)()) // Avoid macro min trap!
+    (a < -(std::numeric_limits<double>::max() /margin)) // Avoid macro max trap!
     || (a == -std::numeric_limits<double>::infinity())
     );
-    //return (a == (std::numeric_limits<int>::min)() // Avoid macro min trap!
-    //    || a == -std::numeric_limits<double>::infinity()
-    //    || a == std::numeric_limits<double>::denorm_min()); // Too small to be useful.
 }
+
+// Allow NaNs to be displayed differently from just too big or too small values.
 
 inline bool limit_NaN(double a)
 { //! Separate test for NaNs.
 #if defined (BOOST_MSVC)
     return _isnan(a) ? true : false;
-  // Ternary operator used to remove warning of casting int to bool.
+  // Ternary operator used to remove warning about casting int to bool.
 #else
     return (std::fpclassify(a) == FP_NAN);
 #endif
@@ -88,7 +86,6 @@ inline bool pair_is_limit(std::pair<double, double> a)
 } // namespace detail
 } // namespace svg
 } // namespace boost
-
 
 // Defines :
 bool boost::svg::detail::limit_max(double); // true if max or +infinity.

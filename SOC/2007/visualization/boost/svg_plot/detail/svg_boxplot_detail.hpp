@@ -28,7 +28,7 @@ namespace boxplot
 {
   enum boxplot_doc_structure
   { //! \enum boxplot_doc_structure groups that form the boxplot svg document structure.  Order controls the painting order, later ones overwriting earlier layers.
-    PLOT_BACKGROUND = 0, //!< the whole svg image. (Must be zero to index array document_ids[])
+    PLOT_BACKGROUND = 0, //!< the whole svg image. (Must be zero to index array document_ids_[])
     PLOT_WINDOW_BACKGROUND, //!< the smaller plot window (if used).
     X_AXIS, //!< X axis group element.
     Y_AXIS, //!< Y axis group element.
@@ -52,7 +52,7 @@ namespace boxplot
     BOXPLOT_DOC_CHILDREN
   };
 
-  std::string document_ids[] = // TODO change to document_ids_ because private member data.
+  std::string document_ids_[] = 
   { //! String descriptors used in SVG XML (matching enum boxplot_doc_structure).
       "imageBackground", // the whole svg image.
       "plotBackground", // the smaller plot window (if used).
@@ -68,8 +68,7 @@ namespace boxplot
       "title",  // of the whole plot.
       "plotNotes", // Free text and shapes to annotate diagram.
       "boxplotDocChildren" // This last string is not used.
-  }; //  std::string document_ids
-
+  }; //  std::string document_ids_
 
 } // namespace boxplot
 } // namespace svg

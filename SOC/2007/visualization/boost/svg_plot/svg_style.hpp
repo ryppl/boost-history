@@ -308,7 +308,7 @@ private:
 
 public:
   text_style(
-    int size = 20,
+    int size = 12,
     const std::string& font = "", // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
     const std::string& style = "", // font-style: normal | bold | italic | oblique
     const std::string& weight = "", // Examples: "bold", "normal"

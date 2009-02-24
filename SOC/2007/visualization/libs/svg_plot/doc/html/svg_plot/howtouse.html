@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
 <link rel="home" href="../index.html" title="SVG Plot">
 <link rel="up" href="../index.html" title="SVG Plot">
-<link rel="prev" href="../index.html" title="SVG Plot">
+<link rel="prev" href="../SVG_plot/preface.html" title="Preface">
 <link rel="next" href="color.html" title="Colors">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="color.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../SVG_plot/preface.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="color.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -58,11 +58,11 @@
 </ul></div>
 <p>
       If you do not find your idea/complaint, please reach me either through the
-      Boost development list, or email me at jakevoytko (at) gmail (dot) com or pbristow
-      (at) hetp (dot) u-net (dot) com
+      Boost development list, or email me direct at pbristow (at) hetp (dot) u-net
+      (dot) com or jakevoytko (at) gmail (dot) com.
     </p>
 <a name="svg_plot.howtouse.admonishments"></a><h4>
-<a name="id771159"></a>
+<a name="id773765"></a>
       <a class="link" href="howtouse.html#svg_plot.howtouse.admonishments">Admonishments</a>
     </h4>
 <div class="note"><table border="0" summary="Note">
@@ -104,96 +104,6 @@
         and very likely undesired, results in the plot.
       </p></td></tr>
 </table></div>
-<a name="svg_plot.howtouse.preface"></a><h4>
-<a name="id771201"></a>
-      <a class="link" href="howtouse.html#svg_plot.howtouse.preface">Preface</a>
-    </h4>
-<p>
-      Humans have a fantastic capacity for visual understanding, and merely looking
-      at data organized in one, two, or three dimensions allows us to see relations
-      not otherwise visible in a list of numbers. Computers, however, deal with information
-      numerically, and C++ and the <a href="http://en.wikipedia.org/wiki/Standard_Template_Library" target="_top">Standard
-      Template Library (STL)</a> does not currently offer a way to bridge the
-      gap. This library helps the user to easily plot data stored in STL containers.
-    </p>
-<p>
-      This project is focused on using STL containers in order to graph data on a
-      one-dimensional and two-dimensional (and in future, perhaps, 3D) plot. The
-      plot will currently be written to a <a href="http://en.wikipedia.org/wiki/Scalable_Vector_Graphics" target="_top">Scalable
-      Vector Graphic image</a>.
-    </p>
-<p>
-      <a href="http://www.w3.org/TR/SVG11/" target="_top">Scalable Vector Graphics (SVG)</a>
-      is an <a href="http://www.w3.org/TR/REC-xml/#sec-comments" target="_top">XML specification</a>
-      and file format for describing two-dimensional vector graphics.
-    </p>
-<p>
-      SVG files (.svg) can be viewed with an Internet Browser:
-    </p>
-<div class="itemizedlist"><ul type="disc">
-<li><a href="http://www.mozilla.com/firefox/" target="_top">Mozilla Firefox (version 3 and
-        later)</a></li>
-<li>
-<a href="http://www.adobe.com/products/illustrator" target="_top">Adobe Illustrator</a>.
-      </li>
-<li>
-<a href="../www.opera.com" target="_top">Opera</a> has <a href="http://www.opera.com/docs/specs/svg/" target="_top">svg
-        support</a> but the quality of rendering is often not as good as other
-        browsers.
-      </li>
-<li>
-        Microsoft Internet Explorer, provided a suitable <a href="http://www.adobe.com/svg/" target="_top">Adobe
-        SVG Viewer plug-in for SVG files</a> is installed, (note that Adobe have
-        stopped offering this (as they warned years ago) but the download software
-        can still be obtained elsewhere, for example from <a href="http://adobe-svg-viewer.software.informer.com/download/" target="_top">software.informer</a>.
-        Shamefully, even IE8 Beta does not yet offer SVG rendering. Information about
-        limitations of IE with Vista and the Adobe add-in are given on the <a href="http://www.adobe.com/svg/viewer/install/main.html" target="_top">Adobe End of Line
-        FAQ</a>).
-      </li>
-<li>
-<a href="http://www.inkscape.org/" target="_top">Inkscape</a>, a fine Open Source
-        SVG editor and viewer with excellent rendering, full scaling and other editing
-        features.
-      </li>
-<li>
-        Many other graphics programs, for example see <a href="http://svg.software.informer.com/software/" target="_top">Most
-        popular SVG software</a>.
-      </li>
-</ul></div>
-<p>
-      The goals of the project are:
-    </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-        To let users produce simple plots with minimal intervention by using sane
-        defaults.
-      </li>
-<li>
-        To allow users to easily customize plots.
-      </li>
-<li>
-        To allow the user to talk to the plot classes using coordinate units rather
-        than pixels or other arbitrary units.
-      </li>
-<li>
-        To create the backbone of a <code class="computeroutput"><span class="identifier">svg</span></code>
-        class that can be extended to fully support the standard.
-      </li>
-<li>
-        Compliance with the <a href="http://www.w3.org/TR/SVG11/" target="_top">W3C Scalable
-        Vector Graph standard</a>.
-      </li>
-</ul></div>
-<div class="note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../../../../boost_trunk/doc/html/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-        Comments and suggestions to Jake Voytko at jakevoytko (at) gmail (dot) com
-        or Paul.A.Bristow (at) gmail (dot) com
-      </p></td></tr>
-</table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -205,7 +115,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="color.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../SVG_plot/preface.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="color.html"><img src="../../../../../../../../../boost_trunk/doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -99,8 +99,8 @@ BOOST_AUTO_TEST_CASE(test_styles)
 
   BOOST_CHECK_EQUAL(detail::PLOT_BACKGROUND, 0);
   // 1st MUST be zero because indexing an array.
-  BOOST_CHECK_EQUAL(detail::document_ids[0], "imageBackground");
-  BOOST_CHECK_EQUAL(detail::document_ids[detail::SVG_PLOT_DOC_CHILDREN], "plotDocChildren");
+  BOOST_CHECK_EQUAL(detail::document_ids_[0], "imageBackground");
+  BOOST_CHECK_EQUAL(detail::document_ids_[detail::SVG_PLOT_DOC_CHILDREN], "plotDocChildren");
   // This will change if any new document elements are added.
 
   // svg_style.hpp

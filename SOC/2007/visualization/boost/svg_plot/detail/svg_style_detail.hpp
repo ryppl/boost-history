@@ -20,7 +20,7 @@
 // using std::string;
 
 // This module provides an id string from named parameter
-// so, for example, document_ids[PLOT_BACKGROUND] == "background".
+// so, for example, document_ids_[PLOT_BACKGROUND] == "background".
 // to be used as a SVG group is thus: <g id="background" ... /g>
 
 namespace boost
@@ -36,7 +36,7 @@ namespace detail
 
 enum plot_doc_structure
 { //! \enum plot_doc_structure Plot document structure whose order controls the painting order, later ones overwriting earlier layers.
-  PLOT_BACKGROUND = 0, //! Must be zero to index array document_ids[]
+  PLOT_BACKGROUND = 0, //! Must be zero to index array document_ids_[]
     PLOT_WINDOW_BACKGROUND, //! the smaller plot window (if used).
     PLOT_Y_MINOR_GRID, //! Y minor grid.
     PLOT_Y_MAJOR_GRID, //! Y major grid.
@@ -65,7 +65,7 @@ enum plot_doc_structure
     SVG_PLOT_DOC_CHILDREN //! Last enum value used as count of children (22).
 };
 
-std::string document_ids[]= // TODO change to document_ids_ because private member data.
+std::string document_ids_[]= //!< Strings used describe and identify SVG layers in .svg files (matching enum plot_doc_structure).
 { // Care: must match enum plot_doc_structure.
     "imageBackground", // the whole svg image.
     "plotBackground", // the smaller plot window (if used).
@@ -93,7 +93,7 @@ std::string document_ids[]= // TODO change to document_ids_ because private memb
     "plotFunctions", // Lines and curves, often to show a fit to the data.
     "plotNotes", // Free text and shapes to annotate diagram.
     "plotDocChildren" // This last string is not used.
-}; //  std::string document_ids
+}; //  std::string document_ids_
 
 } // namespace detail
 } // namespace svg

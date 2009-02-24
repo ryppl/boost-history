@@ -818,7 +818,7 @@ public:
    // document ids for use in <g id = "PLOT_TITLE".../>
     for(int i = 0; i < boxplot::BOXPLOT_DOC_CHILDREN; ++i)
     { // Order determines the painting order.
-      image.g(i).id(boxplot::document_ids[i]);
+      image.g(i).id(boxplot::document_ids_[i]);
     }
 
     // Set boxplot color defaults.

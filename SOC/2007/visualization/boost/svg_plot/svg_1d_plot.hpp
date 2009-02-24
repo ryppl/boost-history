@@ -451,7 +451,7 @@ public:
   { // document ids for use in <g id = "PLOT_TITLE".../>
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
-      image.g(i).id(detail::document_ids[i]);
+      image.g(i).id(detail::document_ids_[i]);
     }
   } //  void set_ids()
 
