@@ -54,7 +54,10 @@ namespace interthreads {
     wait(ACT& act) {
         return partial_specialization_workaround::wait<ACT>::apply(act);
     }
-
+    template <typename ACT>
+    void wait_act(ACT& act) {
+        return partial_specialization_workaround::wait<ACT>::apply(act);
+    }
     template <typename ACT>
     typename boost::enable_if<has_future_if<ACT>,
         typename result_of::template wait<ACT>::type
