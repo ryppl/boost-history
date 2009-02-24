@@ -48,10 +48,18 @@ def SetProperty(env, **kw):
 
 def boost_suffix(env):
     suffix = str()
+
+    if env["layout"] == "versioned":
+        if "gcc" in env["TOOLS"]:
+            suffix += "-gcc" + "".join(env["CCVERSION"].split(".")[0:2])
+
     if env["THREADING"] == "multi":
         suffix += "-mt"
     if env["DEBUG"]:
         suffix += "-d"
+
+    if env["layout"] == "versioned":
+        suffix += "-" + "_".join(env["BOOST_VERSION"].split("."))
 
     return suffix
 

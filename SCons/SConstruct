@@ -5,7 +5,8 @@ vars = Variables("build-config.py")
 vars.AddVariables(
     ListVariable("variant", "Build configuration", "release", ["release", "debug", "profile"]),
     ListVariable("link", "Library linking", "all", ["static", "dynamic"]),
-    ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"])
+    ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"]),
+    EnumVariable("layout", "Layout of library names and header locations", "versioned", ["versioned", "system"])
 )
 env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure"], variables = vars, config_log = "$BOOST_BUILD_DIR/config.log")
 vars.Save("build-config.py", env)
@@ -21,6 +22,8 @@ Variables are saved in build-config.py and persist between scons invocations.
 
 if(GetOption("help")):
     Return()
+
+env["BOOST_VERSION"] = "1.38"
 
 SConsignFile(File(env.subst("$BOOST_BUILD_DIR/sconsign.dblite")).path)
 
