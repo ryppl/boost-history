@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+
 Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_separate_interval_set_h_JOFA_080608__
 #define __itl_separate_interval_set_h_JOFA_080608__
 
@@ -15,55 +15,7 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-/// Implements a set as a set of intervals - leaving adjoining intervals separate
-/**    
-    Template-class <b>split_interval_set</b> 
-    implements a set as a set of intervals - bordering interval bounds are not merged
-
-    Template parameter <b>DomainT</b>: The set's domain-type. Type of the 
-    set's elements.
-    
-    Suitable as domain types are all datatypes that posess a partial order.
-    In particular all discrete atomic datatypes like <tt>int, short, long</tt> and
-    atomic pseudo-continuous datatypes <tt>float, double</tt> may be instantiated.
-    
-      Template parameter <b>Interval=itl::interval</b>: Type of interval used
-    to implement the set. The default <b>itl::interval</b> uses the
-    interval class template that comes with this library. Own implementation of interval
-    classes are possible (but not trivial).
-
-    <b>split_interval_set</b> implements a set <tt>set<DomainT></tt> as a set of intervals
-    <tt>set<interval<DomainT>></tt>. Intervals will not be <b>not</b> merged on 
-    insertion, if they border each other or overlap. The inserted intervalls will be
-    be preserved. 
-  
-    interval_base_set<DomainT> can thus be used like a set. As it is known from mathematics
-    the union over a set of intervls is a set itself.
-
-    <b>Class <tt>interval_set</tt> yields the following benefits: </b>
-  
-    <ul>
-        <li> 
-            A set of intervals is conceived as a set. The complexity involved with
-            operations on intervals and sets of intervals is encapsulated.
-            The user of the class who
-            wants to perform set operations on sets of intervals is no more concerned
-            with questions of overlapping, joining and bordering intervals.
-        <li>
-            <b>interval_set</b> gives an efficient implementation of sets consisting
-            of larger contiguous chunks. Very large, even uncountably infinite sets of
-            elements can be represented in a compact way and handled efficiently.
-    </ul>
-
-    <b>Restrictions: </b>
-    
-    A small number of functions can only be used for <b>discrete</b> domain datatypes 
-    (<tt>short, int, Date</tt> etc.) that implement operators <tt>++</tt> and <tt>--</tt>.
-    These functions are tagged in the documentation.
-
-    @author  Joachim Faulhaber
-
-*/
+/** Implements a set as a set of intervals - leaving adjoining intervals separate */
 template 
 <
     typename                         DomainT, 
