@@ -8,7 +8,7 @@
 
 [section Semantics]
 
-In the *itl* we follow the notion, that the semantics of a ['*concept*] or an
+In the *itl* we follow the notion, that the semantics of a ['*concept*] or
 ['*abstract data type*] can be expressed by ['*laws*]. We formulate
 laws over interval containers that can be evaluated for a given
 instantiation of the variables contained in the law. The following
@@ -25,8 +25,7 @@ The laws that describe the semantics of the *itl's* class templates
 were validated using the Law based Test Automaton ['*LaBatea*],
 a tool that generates instances for the law's variables and then
 tests it's validity.  
-
-Since the *itl* deals with sets, maps and orderings, that are
+Since the *itl* deals with sets, maps and relations, that are
 well known objects from mathematics, the laws that we are
 using are mostly /recycled/ ones. Also some of those laws are grouped
 in notions like e.g. /orderings/ or /algebras/.
@@ -37,11 +36,11 @@ in notions like e.g. /orderings/ or /algebras/.
 
 On all set and map containers of the itl, there is an `operator <`
 that implements a
-[@http://www.sgi.com/tech/stl/StrictWeakOrdering.html strict weak ordering]
-(see also [@http://en.wikipedia.org/wiki/Strict_weak_ordering here]).
+[@http://www.sgi.com/tech/stl/StrictWeakOrdering.html strict weak ordering].
+[/ (see also [@http://en.wikipedia.org/wiki/Strict_weak_ordering here]).]
 The semantics of `operator <` is the same as for an stl's
 [@http://www.sgi.com/tech/stl/SortedAssociativeContainer.html SortedAssociativeContainer], 
-especially 
+specifically
 [@http://www.sgi.com/tech/stl/set.html stl::set] 
 and 
 [@http://www.sgi.com/tech/stl/map.html stl::map]:
@@ -83,7 +82,6 @@ On the __conceptual__ aspect only membeship of elements
 matters, not their sequence. So there are functions
 `contained_in` and `element_equal` that implement
 the subset relation and the equality on elements.
-
 Yet, `contained_in` and `is_element_equal` functions are not
 really working on the level of elements. They also
 work on the basis of the containers templates
@@ -100,7 +98,7 @@ is_element_equal(w1,w2);         //true:  Same elements contained
 ``   
 
 For a constant `Compare` order on key elements,
-memberfunktion `contained_in` that is defined for all 
+member function `contained_in` that is defined for all 
 itl::containers implements a
 [@http://en.wikipedia.org/wiki/Partially_ordered_set partial order]
 on itl::containers.
@@ -132,7 +130,7 @@ were successfully checked via LaBatea. The next tables
 are giving an overview over the checked laws ordered by
 operations. If possible, the laws are formulated with
 the stronger lexicographical equality (`operator ==`)
-which implies the the laws validity for the weaker
+which implies the law's validity for the weaker
 element equality `is_element_equal`. Throughout this
 chapter we will denote element equality as `=e=` instead
 of `is_element_equal` where a short notation is advantageous.
@@ -141,7 +139,7 @@ of `is_element_equal` where a short notation is advantageous.
 
 For the operation ['*set union*] available as 
 `operator +, +=, |, |=` and the neutral element
-`neutron<S>::value()` which is the empty set `T()`
+`neutron<S>::value()` which is the empty set `S()`
 these laws hold:
 ``
 Associativity<S,+,== >: S a,b,c; a+(b+c) == (a+b)+c
@@ -159,9 +157,10 @@ Associativity<S,&,== >: S a,b,c; a&(b&c) == (a&b)&c
 Commutativity<S,&,== >: S a,b;       a&b == b&a
 ``
 
+[/ JODO
 Neutrality has *not* been validated to avoid 
 additional requirements on the sets template
-parameters. 
+parameters.] 
 
 [h5 Laws on set difference]
 
@@ -183,7 +182,7 @@ of the table.
 ``
                  +    &   -
 Associativity    ==   == 
-Neutrality       ==   ==  ==
+Neutrality       ==       ==
 Commutativity    ==   ==
 Inversion                 ==
 ``
@@ -257,7 +256,7 @@ complement operation `~` is used. `~(a+b) == ~a * ~b`. The version
 below is an adaption for the binary set difference `-`, which is 
 also called ['*relative complement*].
 ``
-DeMorgan<S,+,&,=v= > : S a,b,c; a - (b + c) =v= (a - b) * (a - c)
+DeMorgan<S,+,&,=v= > : S a,b,c; a - (b + c) =v= (a - b) & (a - c)
 DeMorgan<S,&,+,=v= > : S a,b,c; a - (b & c) =v= (a - b) + (a - c)
 ``
 
@@ -275,10 +274,10 @@ the interval sets are non joining.
 [h5 Symmetric Difference]
 
 ``
-SymmetricDifference<S,== > : S a,b,c; (a + b) - (a * b) == (a - b) + (b - a)
+SymmetricDifference<S,== > : S a,b,c; (a + b) - (a & b) == (a - b) + (b - a)
 ``
 
-Finally Symmetrical Difference holds for all of itl set types and
+Finally Symmetric Difference holds for all of itl set types and
 lexicographical equality.
 
 [/ pushout laws]
@@ -292,7 +291,6 @@ obey the same laws that are valid for sets. Yet
 the semantics of the *itl's* maps may be a different one, because
 of it's aggregating facilities, where the aggregating combiner
 operations are passed to combine the map's associated values.
-
 It turnes out, that the aggregation on overlap principle
 induces semantical properties to itl maps in such a way,
 that the set of equations that are valid will depend on
@@ -340,18 +338,14 @@ From a practical point of view we can think
 of numbers as counting or quantifying the key values 
 of the map.
 
-
-[h4 Summary of Collector and Quantifier Semantics]
-
-Itl `Maps of Sets` of `Collectors`
-are models of a concept `Set` which implies that all laws that have been
+Itl ['*Maps of Sets*] or ['*Collectors*]
+are models of concept `Set`. This implies that all laws that have been
 stated as a semantics for `itl::Sets` in the previous chapter also hold for
 `Maps of Sets`.
-
-Itl `Maps of Numbers` of `Quantifiers` on the contrary are not models of concept `Set`.
+Itl ['*Maps of Numbers*] or ['*Quantifiers*] on the contrary are not models 
+of concept `Set`.
 But there is a substantial intersection of laws that apply both for
-`Collectors` and `Quantifiers`. `Maps of Numbers` appear to be a models
-of a concept `InfiniteVector` instead.
+`Collectors` and `Quantifiers`.
 
 [table
 [[Kind of Map]    [Alias]     [Behavior]                             ]
@@ -359,21 +353,23 @@ of a concept `InfiniteVector` instead.
 [[Maps of Numbers][Quantifier][Counts or quantifies *the* key values]]
 ]
 
-In the next two sections the law based semantics of `Maps of Sets` (Collectors)
-and `Maps of Numbers` (Quantifiers) will be described in more detail.
+In the next two sections the law based semantics of ['*Collectors*]
+and ['*Quantifiers*] will be described in more detail.
 
 [endsect][/ Maps]
 
 [section Collectors: Maps of Sets]
 
-`Itl Maps of Sets` or `Collectors`, behave like `Sets`. 
+Itl `Collectors`, behave like `Sets`. 
 This can be understood easily, if we consider, that
-ervery map of sets can be transformed to an equivalent
+every map of sets can be transformed to an equivalent
 set of pairs.
-For instance 
+For instance in the pseudocode below map `m`
 ``
-//Pseudocode:
-itl::map<int,set<int> >  m = {(1->{1,2}), (2->{1})}; //is equivalent to 
+itl::map<int,set<int> >  m = {(1->{1,2}), (2->{1})}; 
+``
+is equivalent to set `s`
+``
 itl::set<pair<int,int> > s = {(1,1),(1,2),   //representing 1->{1,2}
                               (2,1)       }; //representing 2->{1}
 `` 
@@ -403,17 +399,17 @@ This problem can be dealt with in two ways.
 # Deleting value pairs form the Collector, if it's associated value 
   becomes a neutral value or `neutron`.
 # Using a different equality, called protonic equality in the laws
-  to validate. Protonic equality `is_protonic_equal` or `=p=` only 
+  to validate. Protonic equality only 
   accounts for value pairs that that carry values unequal to the `neutron` value. 
 
 Solution (1) led to the introduction of map traits, particularly trait
-partial_absorber trait which is the default setting in all itl's map
+['*partial_absorber*], which is the default setting in all itl's map
 templates.
 
 Solution (2), is applied to check the semantics of itl::Maps for the
 partial_enricher trait that does not delete value pairs that carry
 neutrons. Protonic equality is implemented by a non member function
-called `is_protonic_equal`. Througout this chapter
+called `is_protonic_equal`. Throughout this chapter
 protonic equality in pseudocode and law denotations is denoted
 as `=p=` operator.
 
@@ -524,7 +520,7 @@ If type `some_number` is `unsigned` a /set difference/ kind of
 subtraction make sense 
 ``
 itl::map<int,some_number> q = {(1->1)};
-q -= (2->1);   // key 2 is not not in the map so  
+q -= (2->1);   // key 2 is not in the map so  
 q == {(1->1)}; // q is unchanged by 'aggregate on collision'
 `` 
 If `some_number` is a `signed` numerical type
@@ -535,7 +531,7 @@ q -= (2->1);             // subtracting works like
 q == {(1->1), (2-> -1)}; // adding the inverse element
 `` 
 As commented in the example, subtraction of a key value
-pair `(k,v)` can obviously defined as adding the ['*inverse element*]
+pair `(k,v)` can obviously be defined as adding the ['*inverse element*]
 for that key `(k,-v)`, if the key is not yet stored in the map.
 
 [h4 Partial and Total Quantifiers and Infinite Vectors]
@@ -553,7 +549,6 @@ the map's `Trait` parameter to the value __tabsorber__.
 The __tabsorber__ trait fits specifically well with
 a `Quantifier` if it's `CodomainT` has an inverse 
 element, like all signed numerical type have.
-
 As we can see later in this section this kind of 
 a total `Quantifier` has the basic properties that
 elements of a 
@@ -600,7 +595,7 @@ p   = {[min   1)[1      3)[3         max]};
           ->0      ->1         ->0
 q   = {[min        2)[2      4)[4    max]};
             ->0         ->1       ->0
-p*q =={[min   1)[1  2)[2 3)[3 4)[4   max]};
+p&q =={[min   1)[1  2)[2 3)[3 4)[4   max]};
           ->0    ->1   ->2  ->1    ->0
 ``
 
@@ -610,7 +605,7 @@ The semantics of itl Maps of Numbers is different
 for unsigned or signed numbers. So the sets of
 laws that are valid for Quantifiers will be different
 depending on the instantiation of an unsigned or
-a signed number type as CodomainT parameter.
+a signed number type as `CodomainT` parameter.
 
 Again, we are presenting the investigated sets of laws, this time for
 `Quantifier` types `Q` which are
@@ -716,7 +711,7 @@ By now `signed Quantifiers` `Q` are
 commutative monoids 
 with respect to the
 `operator +` and the neutral element `Q()`. 
-If the Quantifiers `CodomainT` type has an /inverse element/ 
+If the Quantifier's `CodomainT` type has an /inverse element/ 
 like e.g. `signed numbers` do,
 the `CodomainT` type is a 
 ['*commutative*] or ['*abelian group*].

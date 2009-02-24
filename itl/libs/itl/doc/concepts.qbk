@@ -86,9 +86,9 @@ operations and obey the associated laws on `Sets`. See e.g.
 An __itv__ is considered to be a set of elements as well. 
 With respect to the `Set` concept
 presented above __itv__ implements the concept only partially. The reason for
-that is that addition `operator +=` and subtraction `operator -=` can not
+that is that addition and subtraction can not
 be defined on __itvs__. Two intervals `[1,2]` and `[4,5]` are not addable to
-a single new __itv__. In other words __itvs__ are incomplete w.r.t. union and
+a ['*single*] new __itv__. In other words __itvs__ are incomplete w.r.t. union and
 difference. __Itv_sets__ can be defined as the ['*completion*] of intervals
 for the union and difference operations.
 
@@ -113,20 +113,12 @@ to the `Set` concept above.
 ]
 
 As one can see, on the abstract kernel the signatures of the itl's `Set` and `Map`
-concepts are identical, except for the typename. This is not a trivial 
-signature since the major
-operations that are used in fundamental axioms that make up the semantics
-of the concepts are given. While signatures are identical
-The sets of valid laws are different, which will be discussed in more detail 
-in section JODO.
-
-[/ This is due to the fact, that Map::operator+= is not just adding and
-Map::operator-= is not only removing ... liegt and der implementierung von 
-add und subtract.] 
-
-[/ Auf dem Kern sind die Signaturen (fast) gleich. Unterschiede Semantik.
-vor allem +=, -= und erst recht *=]
-
+concepts are identical, except for the typename. 
+While signatures are identical
+The sets of valid laws are different, which will be described in more detail 
+in the sections on the
+[link boost_itl.semantics.sets semantics of itl Sets] and 
+[link boost_itl.semantics.maps Maps].
 These semantical differences are mainly based on the implementation
 of the pivotal memberfunctions `add` and `subtract` for elements 
 and intervals that again serve for implementing 
@@ -135,18 +127,18 @@ and intervals that again serve for implementing
 
 [section Addability, Subtractability and Aggregate on Overlap]
 
-While addition and subtraction on `Sets` implement set union and
-set difference, for `Maps` we want to implement ['*aggregation*] on
+While ['*addition*] and ['*subtraction*] on `Sets` 
+are implemented as ['*set union*] and ['*set difference], 
+for `Maps` we want to implement ['*aggregation*] on
 the associated values for the case of collision (of key elements)
 or overlap (of key intervals), which has been refered to as 
 ['*aggregate on overlap*] or ['*aggrovering*] above.
-
 This kind of `Addability` and `Subtractability` allows to compute
 a lot of useful aggregation results on an __itv_map_s__ associated
 values, just by adding and subtracting value pairs. 
 Various examples of ['*aggrovering*] are given in 
 [link boost_itl.examples section examples].
-In addition this concept of `Addability` and `Subtractability`
+In addition, this concept of `Addability` and `Subtractability`
 contains the classical `Insertability` and `Erasability` of
 key value pairs as a special case so it provides a broader
 new semantics without loss of the /classical/ one.
@@ -164,6 +156,7 @@ For `Combine` functors, the Itl provides an __inverse__ functor.
 [table
 [[`Combine<T>`]        [`inverse<Combine<T> >::type`]]
 [[__ip_plus__`<T>`]    [__ip_minus__`<T>`]  ]
+[[__ip_et__`<T>`]      [__ip_caret__`<T>`]    ]
 [[__ip_star__`<T>`]    [__ip_slash__`<T>`]    ]
 [[__ip_max__`<T>`]     [__ip_min__`<T>`]    ]
 [[__ip_identity__`<T>`][__ip_erasure__`<T>`]]
@@ -312,7 +305,7 @@ in a variety of applications at Cortex Software GmbH
 with an implementaion that resembled the default trait.
 Only the deeper analysis of the itl's ['*aggregating Map's
 concept*] in the course of preparation of the library for boost 
-led to the introduction of map Trais.
+led to the introduction of map Traits.
 
 [h5 Add-Subtract Antinomy in Aggregating Maps]
 
@@ -362,7 +355,7 @@ according to her needs.
 
 [h5 Partial and Total Maps]
 
-The idea of a neutron absorbing map is
+The idea of a neutron absorbing map is,
 that an ['*associated neutron*] value of a pair `(k,0)` 
 ['*codes non-existence*] for it's key `k`.
 So the pair `(k,0)` immediately tunnels from

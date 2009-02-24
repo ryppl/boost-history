@@ -122,9 +122,10 @@ these have to be instantiated as templates, like e.g.
 interval_set<string, german_compare>      sections; // 2nd parameter is a template
 std::set<string, german_compare<string> > words;    // 2nd parameter is a type
 ``
-This choice has been made, because template parameters have to be 
+
+[/ This choice has been made, because template parameters have to be 
 instantiated with different types inside itl class templates. This problem
-is described in detail in section JODO.
+is described in detail in section JODO.]
 
 [endsect][/ Class templates]
 
@@ -142,7 +143,7 @@ be grouped with respect to those requirements.
 [[Codomain aggregation][`Maps`]              [`typename`]  [`CodomainT`][]                             [For the type `CodomainT` of associated values `...`]]
 [[]                    []                    [`template`]  [`Combine`]  [`Combine<CodomainT>`]         [`...` there is a binary functor `Combine<CodomainT>()` to combine them ] ]
 [[]                    []                    []            []           [`Inverse<Combine<CodomainT>>`][`...` and implicity an `Inverse` functor to inversely combine them.  ] ]
-[[]                    []                    [`template`]  [`Section`]  [`Section<CodomainT>`]         [For a intersection operation intersection is propagated to CodomainT values via functor `Section<CodomainT>()`] ]
+[[]                    []                    [`template`]  [`Section`]  [`Section<CodomainT>`]         [Intersection is propagated to CodomainT values via functor `Section<CodomainT>()`] ]
 [[Memory allocation]   [`Sets, Maps`]        [`template`]  [`Alloc`]    [`Alloc<`/various/`>`]         [An allocator can be chosen for memory allocation.]]
 ]
 
@@ -292,7 +293,7 @@ cout << "cat_map: " << cat_map << endl;
 //cat_map: {([1,3)->Hello)([3,5)->Hello world)([5,7)-> world)}
 ``
 
-For ['complete aggregation functionality] and inverse aggregation functor on 
+For ['complete aggregation functionality] an inverse aggregation functor on 
 a `Map`'s `CodomainT` is needed. The itl provides a 
 metafunction [classref boost::itl::inverse inverse] 
 for that purpose. Using the default
@@ -305,7 +306,7 @@ as inverse functor, that requries `operator -=` on type `CodomainT`.
 In the itl's design we make the assumption,
 in particular for the default setting of parameters
 `Combine = `[classref boost::itl::inplace_minus inplace_plus],
-type `CodomainT` has a neutral element or `neutron` 
+that type `CodomainT` has a neutral element or `neutron` 
 with respect to the `Combine` functor.
 
 
@@ -315,7 +316,7 @@ with respect to the `Combine` functor.
 [section Associated Types]
 
 In order to give an overview over ['*associated types*] the *itl* works
-with we will again work with abbreviations that were introduced in the
+with, we will apply abbreviations again that were introduced in the
 presentaiton of itl class templates,
 
 [pre
@@ -343,12 +344,12 @@ Ad := class Alloc = std::allocator<DomainT>
 Av := class Alloc = std::allocator<std::pair<DomainT,CodomainT> >
 a  := template<class>class Alloc = std::allocator
 ``
-with some additions,
+With some additions,
 ``
-sz := template<class D>size
-df := template<class D>difference
+sz := template<class D>class size
+df := template<class D>class difference
 Xl := class ExclusiveLess = exclusive_less<Interval<DomainT,Compare> >
-inv:= template<class Combiner>inverse
+inv:= template<class Combiner>class inverse
 (T,U) := std::pair<T,U> for typnames T,U
 ``
 
@@ -394,26 +395,26 @@ Associated are the corresponding functions of the *stl* for easy
 comparison. In order to achieve a concise representation, a series
 of ['*placeholders*] are used throughout the function matrix.
 
-The ['*placeholder's*] purpose is to express the polymorhic
+The ['*placeholder's*] purpose is to express the polymorphic
 usage of the functions. The ['*first column*] of the function matrix
 contains the signatures of the functions. Within these
 signatures `T` denotes a container type and `I,J` and `P`
 polymorphic argument and result types.
 
 Within the body of the matrix, sets of *boldface* placeholders denote
-the sets of possible instantiations for a polymorhic
+the sets of possible instantiations for a polymorphic
 placeholder `P`. For instance __eiS denotes that for the
 argument type `P`, an element __e, an interval __i or an interval_set __S
 can be instantiated. 
 
-If the polymorhism can not be described in this way, only the ['*number*] of
+If the polymorphism can not be described in this way, only the ['*number*] of
 overloaded implementations for the function of that row is shown.
 
 [table 
 [[Placeholder]                  [Argument types]          [Description]]
 [[`T`                         ] []                        [a container type]]             
-[[`P`                         ] []                        [polymorhical container argument type]]             
-[[`I,J`                       ] []                        [polymorhical iterator type]]
+[[`P`                         ] []                        [polymorphical container argument type]]             
+[[`I,J`                       ] []                        [polymorphical iterator type]]
 [[`V`                         ] []                        [various types `V`, that do dot fall in the categories above]]             
 [[1,2,...                     ] []                        [number of implementations for this function]]             
 [[A                           ] []                        [implementation generated by compilers]]             

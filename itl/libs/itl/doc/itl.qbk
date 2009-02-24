@@ -68,6 +68,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __ip_divide__    [classref boost::itl::inplace_divide   inplace_divide]]
 [def __ip_pipe__      [classref boost::itl::inplace_pipe     inplace_pipe]]
 [def __ip_et__        [classref boost::itl::inplace_et       inplace_et]]
+[def __ip_caret__     [classref boost::itl::inplace_caret    inplace_caret]]
 [def __ip_min__       [classref boost::itl::inplace_min      inplace_min]]
 [def __ip_max__       [classref boost::itl::inplace_max      inplace_max]]
 [def __ip_identity__  [classref boost::itl::inplace_identity inplace_identity]]
