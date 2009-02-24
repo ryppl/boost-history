@@ -56,8 +56,8 @@ namespace svg
   // Forward declarations.
   const std::string strip_e0s(std::string s); // Strip unnecessary zeros and e and sign.
 
-  class svg_1d_plot; // 1D Plot.
-  class svg_1d_plot_series; // 1D Plot data series.
+  class svg_1d_plot; // 1D Plot (that may include one or more data series).
+  class svg_1d_plot_series; // 1D Plot a data series.
 
 // ------------------------------------------------------------------
 // This allows us to store plot state locally in svg_plot.
@@ -67,14 +67,14 @@ namespace svg
 // ------------------------------------------------------------------
 class svg_1d_plot_series
 { /*! \class boost::svg::svg_1d_plot_series
-   \brief Holds series of data values (points) to be plotted.
-  \details Scan each data point sorting them into the appropriate
+   \brief Holds a series of data values (points) to be plotted.
+   \details Scan each data point sorting them into the appropriate
    std::vectors, normal or not (NaN or infinite).
 */
 
 public:
-  std::vector<double> series; //<! Normal 'OK to plot' data values.
-  std::vector<double> series_limits; //!< 'limit' values: too big, too small or NaN.
+  std::vector<double> series_; //<! Normal 'OK to plot' data values.
+  std::vector<double> series_limits_; //!< 'limit' values: too big, too small or NaN.
 
   std::string title_; //!< title of data series (to show on legend).
   plot_point_style point_style_; //!< circle, square...
@@ -129,11 +129,11 @@ line_style_(black, blank, 2, true, false) // Default line style, black, no fill,
     double temp = *i;
     if(detail::is_limit(temp))
     {
-      series_limits.push_back(temp); // 'limit' values: too big, too small or NaN.
+      series_limits_.push_back(temp); // 'limit' values: too big, too small or NaN.
     }
     else
     {
-      series.push_back(temp); // Normal 'OK to plot' data values.
+      series_.push_back(temp); // Normal 'OK to plot' data values.
     }
   }
 } // svg_plot_series constructor.
@@ -228,12 +228,12 @@ bool svg_1d_plot_series::bezier_on()
 
 size_t svg_1d_plot_series::series_count()
 { //! Number of normal 'OK to plot' data values in data series.
-  return series.size();
+  return series_.size();
 }
 
 size_t svg_1d_plot_series::series_limits_count()
 { //!  Number of  'at limit' values: too big, too small or NaN data values in data series.
-  return series_limits.size();
+  return series_limits_.size();
 }
 
 // End Definitions of svg_plot_series Public Member Functions.
@@ -348,8 +348,8 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   // is allowed to show through but everything on the outside is masked out.
   // So the plot_window_clip_ limits display to a plot_window rectangle.
 
-  // Where we will be storing the data points for transformation.
-  std::vector<svg_1d_plot_series> series;
+  // Storing the (perhaps several) series of data points for transformation.
+  std::vector<svg_1d_plot_series> serieses_;
   // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
 
 public:
@@ -668,15 +668,15 @@ public:
       throw std::runtime_error("transform_y(y=0) outside plot window!");
     }
 
-    for(unsigned int i = 0; i < series.size(); ++i)
+    for(unsigned int i = 0; i < serieses_.size(); ++i)
     { // For each of the data series.
       g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
-      g_ptr.style().stroke_color(series[i].point_style_.stroke_color_);
-      g_ptr.style().fill_color(series[i].point_style_.fill_color_);
+      g_ptr.style().stroke_color(serieses_[i].point_style_.stroke_color_);
+      g_ptr.style().fill_color(serieses_[i].point_style_.fill_color_);
 
-      for(unsigned int j = 0; j < series[i].series.size(); ++j)
+      for(unsigned int j = 0; j < serieses_[i].series_.size(); ++j)
       { // Draw jth point for ith series.
-        double x = series[i].series[j];
+        double x = serieses_[i].series_[j];
         // TODO symbols are offset downwards
         // because the origin of the point is the top left of the glyph.
         // Need to offset by the height and width of the font size.
@@ -685,11 +685,11 @@ public:
         if((x >= plot_left_) && (x <= plot_right_)) // Check point is inside plot_window.
         // May need a margin here to avoid points just over the window not being shown.
         {
-          draw_plot_point(x, y, g_ptr, series[i].point_style_); // Marker.
+          draw_plot_point(x, y, g_ptr, serieses_[i].point_style_); // Marker.
           if (x_values_on_)
           { // Show the value of the data point too.
             g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
-            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, series[i].point_style_, vx);
+            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, serieses_[i].point_style_, vx);
             // TODO separate X and Y colors?
           }
           else
@@ -700,13 +700,13 @@ public:
     } // for i all normal
 
     // Draw all the 'bad' or at_limit points.
-    for(unsigned int i = 0; i < series.size(); ++i)
+    for(unsigned int i = 0; i < serieses_.size(); ++i)
     {
       g_element& g_ptr = image.g(detail::PLOT_LIMIT_POINTS);
 
-      for (unsigned int j = 0; j != series[i].series_limits.size(); ++j)
+      for (unsigned int j = 0; j != serieses_[i].series_limits_.size(); ++j)
       {
-        double x = series[i].series_limits[j];
+        double x = serieses_[i].series_limits_[j];
         if (limit_NaN(x))
         { // is NaN rather than too big or too small.
           double x = 0.;
@@ -721,7 +721,7 @@ public:
             x = plot_right_;
           }
           //else X axis includes zero, so x is OK.
-          draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
         }
         else
         { // Not NaN
@@ -736,7 +736,7 @@ public:
           }
           // else is inside plot window, so draw a limit point marker.
           // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
-          draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
         }
       } // for j
     } // for i limits point
@@ -811,7 +811,7 @@ public:
   { //! Add a data series to the plot (by default, converting to doubles), with optional title.
     /*! Note that this version assumes that *ALL* the data values in the container are used.
     */
-    series.push_back(
+    serieses_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
       boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
@@ -826,7 +826,7 @@ my_data.pushback(4.f);
 my_1d_plot.plot(my_data, "All my container"); // Plot all data.
      \endcode
    */
-    return series[series.size() - 1]; // Reference to data series just added.
+    return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   }
 
   template <class T>
@@ -836,7 +836,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     Note that this version permits a partial range, begin to end, of the container to be used.
     Returns a reference to data series just added.
     */
-    series.push_back(
+    series_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(begin, detail::boost_default_convert()),
       boost::make_transform_iterator(end, detail::boost_default_convert()),
@@ -854,13 +854,13 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
       Note that this version permits a partial range, begin to end, of the container to be used.
       Returns a reference to data series just added.
     */
-    series.push_back(
+    series_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; // Reference to data series just added.
+    return serieses_[series_.size() - 1]; // Reference to data series just added.
   } // plot
 
   template <class T, class U>
@@ -870,13 +870,13 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     This version of plot includes a functor, allowing other than just convert data values to double(the default).
     Returns a reference to data series just added.
   */
-    series.push_back(
+    series_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; // Reference to data series just added.
+    return serieses_[series_.size() - 1]; // Reference to data series just added.
   } // plot
 
 // End svg_1d_plot Member functions definitions.
