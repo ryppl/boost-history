@@ -1119,10 +1119,16 @@ namespace boost
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
           { //! Write the \b pair of data point's X and Y values as a string, for example: "1.23, 3.45".
+            //! X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
+            // draw_plot_point_values is only when both x and Y pairs are wanted.
             using std::string;
             using std::stringstream;
             std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
             std::string label_yv = sv(vy, y_sty);
+            if (x_sty.prefix_ != "")
+            { // Want a prefix like "["
+              label_xv = x_sty.prefix_ + label_xv;
+            }
             std::string label_xu;
             std::string label_yu;
             std::string label_xdf;
@@ -1198,10 +1204,6 @@ namespace boost
             // value and uncertainty, and degrees of freedom estimate.
             // So the coding complexity is judged with it (even if it may not always work right yet ;-)
 
-            string prefix = "[";
-            string separator = ""; // or = ", "; // between x and y, if any (none if only X or only Y, or Y below X)
-            string suffix = "]";
-
             // Unclear how to get this uncertainty information into this function,
             // so these are purely imaginary for now.
             // Might template so can use an uncertain type instead of double?
@@ -1212,15 +1214,14 @@ namespace boost
 
             // Tasteless colors and font changes are purely proof of concept.
 
-             int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
            // X value (and optional uncertainty & df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
            // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
-           // TODO comma separator ? might want inside brackets [], or another separator?
 
-            string pm = "&#x00A0;&#x00B1;"; // Unicode space plusminus glyph.
+            string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
             // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
-            // Layout seems to vary with font Times New Roman leaves no space after.
+            // Layout seems to vary with font - Times New Roman leaves no space after.
             if (x_sty.plusminus_on_)
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
               label_xu = sv(ux, x_sty, true);
@@ -1234,17 +1235,17 @@ namespace boost
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
               label_xdf = label.str();
-              t.tspan(label_xdf + separator).fill_color(brown).font_size(fx);
+              t.tspan(label_xdf).fill_color(brown).font_size(fx);
             }
-            // if there is a separator, put values on the same line, else as below put below the marker.
+            // If there is a separator, put values on the same line, else as below put below the marker.
             double line = 0.0;
-            if (separator == "")
+            if (x_sty.separator_ == "")
             {
               line = y_sty.values_text_style_.font_size() * 2.2; // Put Y value on 'newline' below point marker.
             }
             else
             {
-              t.tspan(separator).fill_color(brown).font_size(fx);
+              t.tspan(x_sty.separator_).fill_color(brown).font_size(fx);
             }
 
             // Problem here if orientation is changed?
@@ -1268,6 +1269,11 @@ namespace boost
               label_ydf = label.str();
               ty.tspan(label_ydf).fill_color(lime).font_size(fy);
             }
+            if (y_sty.prefix_ != "")
+            { // Want a suffix like "]"
+              ty.tspan(y_sty.suffix_).fill_color(lime).font_size(fy);
+            }
+
           } // void draw_plot_point_values(double x, double y, g_element& g_ptr, double value)
 
           void clear_all()

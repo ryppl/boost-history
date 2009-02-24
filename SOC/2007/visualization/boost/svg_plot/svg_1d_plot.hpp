@@ -73,13 +73,13 @@ class svg_1d_plot_series
 */
 
 public:
-  std::vector<double> series; // Normal 'OK to plot' data values.
-  std::vector<double> series_limits; // 'limit' values: too big, too small or NaN.
+  std::vector<double> series; //<! Normal 'OK to plot' data values.
+  std::vector<double> series_limits; //!< 'limit' values: too big, too small or NaN.
 
-  std::string title_; // title of data series (to show on legend).
-  plot_point_style point_style_; // circle, square...
-  plot_point_style limit_point_style_; // Default is cone pointing down.
-  plot_line_style line_style_; // No line style for 1-D, only for 2-D.
+  std::string title_; //!< title of data series (to show on legend).
+  plot_point_style point_style_; //!< circle, square...
+  plot_point_style limit_point_style_; //!< Default is cone pointing down.
+  plot_line_style line_style_; //!< No line style for 1-D, only for 2-D.
 
   // Constructor svg_1d_plot_series.
   template <class T> // T an STL container: array, vector<double>, set, map ...
@@ -108,6 +108,8 @@ public:
   double line_width();
   bool line_on();
   bool bezier_on();
+  size_t series_count();
+  size_t series_limits_count();
 
 }; // class svg_1d_plot_series
 
@@ -222,6 +224,16 @@ svg_1d_plot_series& svg_1d_plot_series::bezier_on(bool on_)
 bool svg_1d_plot_series::bezier_on()
 { //! \return  to draw bezier curved line joining plot points (if true).
   return line_style_.bezier_on_;
+}
+
+size_t svg_1d_plot_series::series_count()
+{ //! Number of normal 'OK to plot' data values in data series.
+  return series.size();
+}
+
+size_t svg_1d_plot_series::series_limits_count()
+{ //!  Number of  'at limit' values: too big, too small or NaN data values in data series.
+  return series_limits.size();
 }
 
 // End Definitions of svg_plot_series Public Member Functions.

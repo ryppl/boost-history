@@ -528,6 +528,11 @@ class value_style
      \brief Data series point value label information, text, color, orientation, (uncertainty & df).
      \details For example, to output: 5.123 +- 0.01 (19).
      Uncertainty and degrees of freedom estimate not yet implemented.
+     Prefix, separator and suffix allow X and Y values to be together on one line like
+     [1.23+- 0.01 (3), 4.56 +-0.2 (10)]
+     Used in draw_plot_point_values (note plural) where X value_style is used
+     to provide the prefix and separator, and Y value_style to provide the suffix.
+     Prefix, separator and suffix are ignored when X or Y are shown separately using draw_plot_point_value.
   */
 public:
   //private:  // ??
@@ -544,11 +549,16 @@ public:
       http://en.wikipedia.org/wiki/Plus-minus_sign
     */
   bool df_on_; //!< If a degrees of freedom estimate is to be appended.
+  std::string prefix_; //!< Prefix to data point value, default none, but typically "[".
+  std::string separator_; //!< Separator between x and y values, if both on same line (none if only X or only Y, or Y below X).
+  std::string suffix_; //!< Suffix to data point value, default none, but typically "]".
+
   public:
     value_style(); //!< Default style for a data point value label.
     value_style( //!< Set style for a data point value label.
       rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
-      text_style ts, const svg_color& scol /* = black */, svg_color fcol, bool pm /*= false*/, bool df /*= false*/);
+      text_style ts, const svg_color& scol /* = black */, svg_color fcol, bool pm /*= false*/, bool df /*= false*/,
+      std::string pre /* = "" */, std::string sep /* = ", " */, std::string suf /* = "" */);
 
 }; // class value_style
 
@@ -572,10 +582,12 @@ value_style::value_style() //! Default data point value label style.
     }
 
     value_style::value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
-      text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false)
+      text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
+      std::string pre = "", std::string sep  = ", ", std::string suf  = "")
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
-    values_text_style_(ts), stroke_color_(scol), fill_color_(fcol), plusminus_on_(pm), df_on_(df)
+    values_text_style_(ts), stroke_color_(scol), fill_color_(fcol), plusminus_on_(pm), df_on_(df),
+    prefix_(pre), separator_(sep), suffix_(suf)
     { // Constructor.
     }
 
