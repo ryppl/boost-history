@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE itl::interval_set unit test
 #include <string>
 #include <boost/mpl/list.hpp>
@@ -930,15 +930,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_basic_intersect2_4_bic
 
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 
-	split_interval_map<T,U> left, right;
-	left. add(IDv(0,2,2));
-	right.add(IDv(0,2,2));
+    split_interval_map<T,U> left, right;
+    left. add(IDv(0,2,2));
+    right.add(IDv(0,2,2));
     BOOST_CHECK_EQUAL( is_element_equal(left, right), true );
 
-	split_interval_set<T> left2, right2;
-	left2. add(I_D(0,2));
-	right2.add(I_D(0,1));
-	is_element_equal(left2, right2);
+    split_interval_set<T> left2, right2;
+    left2. add(I_D(0,2));
+    right2.add(I_D(0,1));
+    is_element_equal(left2, right2);
     BOOST_CHECK_EQUAL( is_element_equal(left2, right2), false );
 }
 
@@ -1207,7 +1207,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_if_4_integral_ty
     split_A.add(I0_3D_1).add(I4_4I_1).add(I6_6I_1);
     split_B.add(I4_4I_1).add(I6_6I_1);
 
-	split_A.erase_if(size_greater_1<typename SplitIntervalMapT::value_type>());
+    split_A.erase_if(size_greater_1<typename SplitIntervalMapT::value_type>());
 
     BOOST_CHECK_EQUAL( split_A, split_B );
 }
@@ -1215,61 +1215,61 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_if_4_integral_ty
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_plus_overload_4_bicremental_types, T, bicremental_types)
 {
     typedef int U;
-	typedef interval_map<T,U>  IntervalMapT;
-	interval_map<T,U>          join_a;
-	split_interval_map<T,U>    split_a;
+    typedef interval_map<T,U>  IntervalMapT;
+    interval_map<T,U>          join_a;
+    split_interval_map<T,U>    split_a;
 
-	join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
+    BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_pipe_overload_4_bicremental_types, T, bicremental_types)
 {
     typedef int U;
-	typedef interval_map<T,U>  IntervalMapT;
-	interval_map<T,U>          join_a;
-	split_interval_map<T,U>    split_a;
+    typedef interval_map<T,U>  IntervalMapT;
+    interval_map<T,U>          join_a;
+    split_interval_map<T,U>    split_a;
 
-	join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(split_a | join_a, join_a | split_a);
+    BOOST_CHECK_EQUAL(split_a | join_a, join_a | split_a);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_minus_overload_4_bicremental_types, T, bicremental_types)
 {
     typedef int U;
-	typedef interval_map<T,U>  IntervalMapT;
-	interval_map<T,U>          join_a, join_b;
-	split_interval_map<T,U>    split_a, split_b;
+    typedef interval_map<T,U>  IntervalMapT;
+    interval_map<T,U>          join_a, join_b;
+    split_interval_map<T,U>    split_a, split_b;
 
-	join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(split_a - join_a, (split_b = split_a) -= join_a);
-	BOOST_CHECK_EQUAL(split_a - join_a, split_b);
+    BOOST_CHECK_EQUAL(split_a - join_a, (split_b = split_a) -= join_a);
+    BOOST_CHECK_EQUAL(split_a - join_a, split_b);
 
-	BOOST_CHECK_EQUAL(join_a - split_a, (join_b = join_a) -= split_a);
-	BOOST_CHECK_EQUAL(join_a - split_a, join_b);
+    BOOST_CHECK_EQUAL(join_a - split_a, (join_b = join_a) -= split_a);
+    BOOST_CHECK_EQUAL(join_a - split_a, join_b);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_et_overload_4_bicremental_types, T, bicremental_types)
 {
     typedef int U;
-	typedef interval_map<T,U>  IntervalMapT;
-	interval_map<T,U>          join_a, join_b;
-	split_interval_map<T,U>    split_a, split_b;
+    typedef interval_map<T,U>  IntervalMapT;
+    interval_map<T,U>          join_a, join_b;
+    split_interval_map<T,U>    split_a, split_b;
 
-	join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(split_a & join_a, join_a & split_a);
-	BOOST_CHECK_EQUAL(split_a & join_a, (split_b = split_a) &= join_a);
-	BOOST_CHECK_EQUAL(split_a & join_a, split_b);
+    BOOST_CHECK_EQUAL(split_a & join_a, join_a & split_a);
+    BOOST_CHECK_EQUAL(split_a & join_a, (split_b = split_a) &= join_a);
+    BOOST_CHECK_EQUAL(split_a & join_a, split_b);
 
-	BOOST_CHECK_EQUAL(join_a & split_a, (split_b = split_a) &= join_a);
-	BOOST_CHECK_EQUAL(join_a & split_a, split_b);
+    BOOST_CHECK_EQUAL(join_a & split_a, (split_b = split_a) &= join_a);
+    BOOST_CHECK_EQUAL(join_a & split_a, split_b);
 }
 

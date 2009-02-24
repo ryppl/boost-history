@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <iostream>
@@ -104,9 +104,9 @@ namespace boost{namespace itl
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
         }
 
-		void reportFrequencies(const std::string& filename)
+        void reportFrequencies(const std::string& filename)
         {
-			FILE* fp = fopen(filename.c_str(), "w");
+            FILE* fp = fopen(filename.c_str(), "w");
             int valid_count = 1;
             FORALL(ValidationCounterT, it, _frequencies)
             {
@@ -123,7 +123,7 @@ namespace boost{namespace itl
                 << chooser.asString();
         }
 
-	protected:
+    protected:
         void setValid(bool truth) { _isValid = truth; }
 
         void setRootTypeNames()

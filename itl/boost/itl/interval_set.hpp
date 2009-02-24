@@ -35,7 +35,7 @@ public:
                               DomainT,Compare,Interval,Alloc> base_type;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> type;
-	typedef type overloadable_type;
+    typedef type overloadable_type;
 
     typedef type joint_type;
 
@@ -83,12 +83,12 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_iterator const_iterator;
 
-	enum { fineness = 1 };
+    enum { fineness = 1 };
 
 public:
-	//==========================================================================
-	//= Construct, copy, destruct
-	//==========================================================================
+    //==========================================================================
+    //= Construct, copy, destruct
+    //==========================================================================
     /// Default constructor for the empty object
     interval_set(): base_type() {}
     /// Copy constructor
@@ -126,8 +126,8 @@ public:
     }
 
 private:
-	friend class 
-		interval_base_set<interval_set<DomainT,Compare,Interval,Alloc>,
+    friend class 
+        interval_base_set<interval_set<DomainT,Compare,Interval,Alloc>,
                                        DomainT,Compare,Interval,Alloc>;
 
     /// Does the set contain the interval  <tt>x</tt>?
@@ -296,7 +296,7 @@ template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class I
 inline bool is_element_equal(const interval_set<DomainT,Compare,Interval,Alloc>& lhs,
                              const interval_set<DomainT,Compare,Interval,Alloc>& rhs)
 {
-	// Since both are joining interval sets we can use the simpler Set::lexicographical_equal
+    // Since both are joining interval sets we can use the simpler Set::lexicographical_equal
     return &lhs == &rhs || Set::lexicographical_equal(lhs, rhs);
 }
 
@@ -306,15 +306,15 @@ inline bool is_element_equal(const interval_set<DomainT,Compare,Interval,Alloc>&
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
-	static const bool value = true; 
+    typedef is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
+    static const bool value = true; 
 };
 
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
-	static const bool value = true; 
+    typedef is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
+    static const bool value = true; 
 };
 
 

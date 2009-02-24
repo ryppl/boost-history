@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2007-2008: Joachim Faulhaber
+Copyright (c) 2007-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -34,7 +34,7 @@ public:
                               DomainT,Compare,Interval,Alloc> base_type;
 
     typedef separate_interval_set<DomainT,Compare,Interval,Alloc> type;
-	typedef type overloadable_type;
+    typedef type overloadable_type;
 
     typedef interval_set<DomainT,Compare,Interval,Alloc> joint_type;
 
@@ -83,12 +83,12 @@ public:
     typedef typename ImplSetT::const_iterator const_iterator;
 
 
-	enum { fineness = 2 };
+    enum { fineness = 2 };
 
 public:
-	//==========================================================================
-	//= Construct, copy, destruct
-	//==========================================================================
+    //==========================================================================
+    //= Construct, copy, destruct
+    //==========================================================================
     /// Default constructor for the empty object
     separate_interval_set(): base_type() {}
     /// Copy constructor
@@ -123,8 +123,8 @@ public:
     }
 
 private:
-	friend class 
-		interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>,
+    friend class 
+        interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>,
                                                 DomainT,Compare,Interval,Alloc>;
 
     /// Does the set contain the interval  <tt>x</tt>?
@@ -215,22 +215,22 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
-	static const bool value = true; 
+    typedef is_set<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    static const bool value = true; 
 };
 
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_interval_container<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_interval_container<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
-	static const bool value = true; 
+    typedef is_interval_container<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    static const bool value = true; 
 };
 
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_interval_separator<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> >
 { 
-	typedef is_interval_separator<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
-	static const bool value = true; 
+    typedef is_interval_separator<itl::separate_interval_set<DomainT,Compare,Interval,Alloc> > type;
+    static const bool value = true; 
 };
 
 //-----------------------------------------------------------------------------

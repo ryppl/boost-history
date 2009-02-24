@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_set_laws_h_JOFA_071124__
 #define __itl_set_laws_h_JOFA_071124__
 
@@ -126,7 +126,7 @@ namespace boost{namespace itl
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** a - (b + c) == (a - b) & (a - c)
-		    a - (b(1)c) == (a - b)(2)(a - c)
+            a - (b(1)c) == (a - b)(2)(a - c)
         computed using inplace operators +=, += and &=
         Input  = (a := inVal1, b := inVal2, c := inVal3)
         Output = (lhs_result, rhs_result)
@@ -207,7 +207,7 @@ namespace boost{namespace itl
             return "RightDistributivity<"+type_to_string<Type>::apply()+","
                                          +unary_template_to_string<Operator1>::apply()+","
                                          +unary_template_to_string<Operator2>::apply()+","
-			                             +unary_template_to_string<Equality>::apply() +">";
+                                         +unary_template_to_string<Equality>::apply() +">";
         }
 
     public:

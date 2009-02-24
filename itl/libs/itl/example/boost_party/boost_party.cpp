@@ -1,7 +1,7 @@
 /*-----------------------------------------------------------------------------+
 Interval Template Library
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
+Copyright (c) 2007-2009: Joachim Faulhaber
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
@@ -116,8 +116,8 @@ void boost_party()
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
           180)
-	  //, inplace_max<int>()
-	);
+      //, inplace_max<int>()
+    );
 
     tallest_guest.add(
       make_pair( 
@@ -125,8 +125,8 @@ void boost_party()
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
           170)
-	  //, inplace_max<int>()
-	);
+      //, inplace_max<int>()
+    );
 
     tallest_guest.add(
       make_pair( 
@@ -134,8 +134,8 @@ void boost_party()
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
           200)
-	  //, inplace_max<int>()
-	);
+      //, inplace_max<int>()
+    );
 
 
     BoostPartyAttendenceHistoryT::iterator it = party.begin();

@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/itl/functors.hpp>
@@ -34,7 +34,7 @@ public:
         inplacePlusCommutativity,
         inplaceEtAssociativity,
         inplaceEtCommutativity,
-		inplaceNaturalInversion,
+        inplaceNaturalInversion,
         inplaceSymmetricDifference,
         inplaceFlip,
         inplacePlusDistributivity,
@@ -50,15 +50,15 @@ public:
 
     void setProfile()
     {
-		const int sum_of_shares = 100;
+        const int sum_of_shares = 100;
         _lawChoice.setSize(Laws_size);
         _lawChoice.setMaxWeights(sum_of_shares);
 
-		int rest_shares = sum_of_shares, item_index = 0;
+        int rest_shares = sum_of_shares, item_index = 0;
         _lawChoice[inplacePlusAssociativity]   = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplacePlusNeutrality]      = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplacePlusCommutativity]   = share(Laws_size, item_index, rest_shares);
-		_lawChoice[inplaceEtAssociativity]     = share(Laws_size, item_index, rest_shares);
+        _lawChoice[inplaceEtAssociativity]     = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplaceEtCommutativity]     = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplaceNaturalInversion]    = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplaceSymmetricDifference] = share(Laws_size, item_index, rest_shares);
@@ -86,18 +86,18 @@ public:
         case inplaceFlip:               return new LawValidater<InplaceFlip<Type>,   RandomGentor>;
         case inplaceEtDistributivity:  
             if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
-					                    return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal>, RandomGentor>;
-			else                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, element_equal>, RandomGentor>;
+            else                        return new LawValidater<InplaceDistributivity<Type, inplace_et, inplace_plus, std_equal>, RandomGentor>;
         case inplacePlusDashRightDistrib:
             if(itl::is_interval_splitter<Type>::value && absorbs_neutrons<Type>::value && !is_total<Type>::value)
-			                            return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal>, RandomGentor>;
-			else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal>, RandomGentor>;
-        case inplaceEtDashRightDistrib:	return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus>, RandomGentor>;
-        case inplacePlusDeMorgan:     	return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, element_equal>, RandomGentor>;
+            else                        return new LawValidater<InplaceRightDistributivity<Type, inplace_plus, inplace_minus, std_equal>, RandomGentor>;
+        case inplaceEtDashRightDistrib:    return new LawValidater<InplaceRightDistributivity<Type, inplace_et, inplace_minus>, RandomGentor>;
+        case inplacePlusDeMorgan:         return new LawValidater<InplaceDeMorgan<Type, inplace_plus, inplace_et, itl::std_equal>, RandomGentor>;
         case inplaceEtDeMorgan:        
             if(itl::is_interval_splitter<Type>::value || itl::is_interval_separator<Type>::value)
-				                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal>, RandomGentor>;
-			else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::std_equal>, RandomGentor>;
+                                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::element_equal>, RandomGentor>;
+            else                        return new LawValidater<InplaceDeMorgan<Type, inplace_et, inplace_plus, itl::std_equal>, RandomGentor>;
 
         default: return NULL;
         }

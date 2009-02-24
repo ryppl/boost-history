@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
+Copyright (c) 2008-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -36,7 +36,7 @@ bool is_element_equal
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
 )
 {
-	return Interval_Set::is_element_equal(left, right);
+    return Interval_Set::is_element_equal(left, right);
 }
 
 template 
@@ -51,7 +51,7 @@ bool is_element_less
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
 )
 {
-	return Interval_Set::is_element_less(left, right);
+    return Interval_Set::is_element_less(left, right);
 }
 
 template 
@@ -66,7 +66,7 @@ bool is_element_greater
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
 )
 {
-	return Interval_Set::is_element_greater(left, right);
+    return Interval_Set::is_element_greater(left, right);
 }
 
 //-----------------------------------------------------------------------------
@@ -74,7 +74,7 @@ bool is_element_greater
 //-----------------------------------------------------------------------------
 template 
 <
-	class ObjectT,
+    class ObjectT,
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
@@ -97,7 +97,7 @@ ObjectT& operator +=
 template 
 <
     class ObjectT, 
-	class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 ObjectT& operator -=
@@ -116,13 +116,13 @@ ObjectT& operator -=
 template 
 <
     class ObjectT, 
-	class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
 ObjectT& operator ^=
-	(ObjectT& object, const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
+    (ObjectT& object, const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
 { 
-	return object.flip(operand); 
+    return object.flip(operand); 
 }
 
 

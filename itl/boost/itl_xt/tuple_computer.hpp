@@ -1,8 +1,8 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
-+-----------------------------------------------------------------------------+
++------------------------------------------------------------------------------+
 Boost Software License - Version 1.0 - August 17th, 2003
 
 Permission is hereby granted, free of charge, to any person or organization
@@ -26,7 +26,7 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __tuple_computer_JOFA_040614_H__
 #define __tuple_computer_JOFA_040614_H__
 

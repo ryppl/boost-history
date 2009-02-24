@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/mpl/bool.hpp> 
@@ -22,7 +22,7 @@ namespace boost{namespace itl
 {
     typedef WeightedNumberGentor<int> ChoiceT;
 
-	template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
+    template <typename Type, template<class>class Relation, template<class>class Equality = itl::std_equal>
     class partial_order_validater : public algebra_validater
     {
     public:

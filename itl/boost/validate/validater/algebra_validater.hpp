@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/itl/type_traits/is_continuous.hpp>
@@ -31,18 +31,18 @@ namespace boost{namespace itl
 
         virtual bool hasValidProfile()const{ return true; }
 
-		static int share(int total, int& index, int& rest_shares);
+        static int share(int total, int& index, int& rest_shares);
     };
 
-	inline int algebra_validater::share(int total, int& index, int& rest_shares)
-	{
-		BOOST_ASSERT(index_ == index);
-		int count = total - index;
-		int share = rest_shares / count;
-		rest_shares -= share;
-		++index;
-		return share;
-	}
+    inline int algebra_validater::share(int total, int& index, int& rest_shares)
+    {
+        BOOST_ASSERT(index_ == index);
+        int count = total - index;
+        int share = rest_shares / count;
+        rest_shares -= share;
+        ++index;
+        return share;
+    }
 
 }} // namespace itl boost
 

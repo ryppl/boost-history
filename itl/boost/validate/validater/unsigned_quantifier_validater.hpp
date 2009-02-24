@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/itl/functors.hpp>
@@ -36,7 +36,7 @@ public:
         inplaceEtAssociativity,
         inplaceEtCommutativity,
         inplaceNaturalInversion,
-		sectionAbsorbtion,
+        sectionAbsorbtion,
         Laws_size 
     };
 
@@ -44,17 +44,17 @@ public:
 
     void setProfile()
     {
-		const int sum_of_shares = 100;
-		const int law_share  = sum_of_shares / Laws_size;
+        const int sum_of_shares = 100;
+        const int law_share  = sum_of_shares / Laws_size;
 
         _lawChoice.setSize(Laws_size);
         _lawChoice.setMaxWeights(sum_of_shares);
 
-		int rest_shares = sum_of_shares, item_index = 0;
+        int rest_shares = sum_of_shares, item_index = 0;
         _lawChoice[inplacePlusAssociativity] = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplacePlusNeutrality]    = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplacePlusCommutativity] = share(Laws_size, item_index, rest_shares);
-		_lawChoice[inplaceEtAssociativity]   = share(Laws_size, item_index, rest_shares);
+        _lawChoice[inplaceEtAssociativity]   = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplaceEtCommutativity]   = share(Laws_size, item_index, rest_shares);
         _lawChoice[inplaceNaturalInversion]  = share(Laws_size, item_index, rest_shares);
         _lawChoice[sectionAbsorbtion]        = share(Laws_size, item_index, rest_shares);
@@ -72,13 +72,13 @@ public:
         case inplaceEtAssociativity:    return new LawValidater<InplaceAssociativity<Type, inplace_et>,   RandomGentor>;
         case inplaceEtCommutativity:    return new LawValidater<InplaceCommutativity<Type, inplace_et>,   RandomGentor>;
         case inplaceNaturalInversion:
-			if(absorbs_neutrons<Type>::value)
-			                            return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal>,      RandomGentor>;
-			else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal>, RandomGentor>;
+            if(absorbs_neutrons<Type>::value)
+                                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, std_equal>,      RandomGentor>;
+            else                        return new LawValidater<InplaceNaturalInversion<Type, inplace_plus, protonic_equal>, RandomGentor>;
         case sectionAbsorbtion:            
-			if(absorbs_neutrons<Type>::value)
+            if(absorbs_neutrons<Type>::value)
                                         return new LawValidater<SectionAbsorbtion<Type,std_equal>, RandomGentor>;
-			else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal>, RandomGentor>;
+            else                        return new LawValidater<SectionAbsorbtion<Type,protonic_equal>, RandomGentor>;
         default: return NULL;
         }
     }

@@ -1,16 +1,16 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __test_itl_interval_set_shared_h_JOFA_080920__
 #define __test_itl_interval_set_shared_h_JOFA_080920__
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -141,7 +141,7 @@ void interval_set_fundamentals_4_ordered_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -192,7 +192,7 @@ void interval_set_ctor_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -233,7 +233,7 @@ void interval_set_add_sub_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -260,7 +260,7 @@ void interval_set_distinct_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -302,7 +302,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -346,52 +346,52 @@ void interval_set_isolate_4_bicremental_continuous_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_element_compare_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	typedef IntervalSet<T> ISet;
+    typedef IntervalSet<T> IntervalSetT;
+    typedef IntervalSet<T> ISet;
 
-    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet()),         true );	
-    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet(I_D(0,1))), false );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet()),         true );    
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(),         ISet(I_D(0,1))), false );    
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)), ISet()),         false );
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)), ISet(I_D(0,1))), true );
 
-    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,5)), ISet(I_D(3,8))), false );	
-    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(3,8)), ISet(I_D(0,5))), false );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,5)), ISet(I_D(3,8))), false );    
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(3,8)), ISet(I_D(0,5))), false );    
 
-    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)),          ISet(I_D(0,1))          ), true  );	
+    BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)),          ISet(I_D(0,1))          ), true  );    
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,1)),          ISet(I_D(0,1))+I_D(1,2) ), false );
     BOOST_CHECK_EQUAL( is_element_equal( I_D(1,2)+ISet(I_D(0,1)), ISet(I_D(0,1))          ), false );
     BOOST_CHECK_EQUAL( is_element_equal( I_D(1,2)+ISet(I_D(0,1)), ISet(I_D(0,1))+I_D(1,2) ), true  );
 
-	//[0   1)[1   2)
-	//[0          2)
+    //[0   1)[1   2)
+    //[0          2)
     BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(1,2)), ISet(I_D(0,2))          ), true );
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,2)),          ISet(I_D(0,1))+I_D(1,2) ), true );
 
-	//[0   1)  [2   3)
-	//[0            3)
+    //[0   1)  [2   3)
+    //[0            3)
     BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(2,3)), ISet(I_D(0,3))          ), false );
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(0,3)),          ISet(I_D(0,1))+I_D(2,3) ), false );
 
-	//[0   2)[2       4)
-	//  [1            4)
+    //[0   2)[2       4)
+    //  [1            4)
     BOOST_CHECK_EQUAL( is_element_equal( I_D(0,2)+ISet(I_D(2,4)), ISet(I_D(1,4))          ), false );
     BOOST_CHECK_EQUAL( is_element_equal( ISet(I_D(1,4)),          ISet(I_D(0,2))+I_D(2,4) ), false );
 
-	//[0     2)[2       4)
-	//[0 1)[1     3)[3  4)
+    //[0     2)[2       4)
+    //[0 1)[1     3)[3  4)
     BOOST_CHECK_EQUAL( is_element_equal( I_D(0,2)+ISet(I_D(2,4)), I_D(0,1)+ISet(I_D(1,4))+I_D(3,4) ), true );
     BOOST_CHECK_EQUAL( is_element_equal( I_D(0,1)+ISet(I_D(1,4))+I_D(3,4), I_D(0,2)+ISet(I_D(2,4)) ), true );
 }
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -430,7 +430,7 @@ void interval_set_contains_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -474,7 +474,7 @@ void interval_set_operators_4_bicremental_types()
 // Test for nontrivial intersection of interval sets with intervals and values
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
@@ -548,167 +548,167 @@ void interval_set_base_intersect_4_bicremental_types()
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_flip_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	typedef IntervalSetT ISet;
+    typedef IntervalSet<T> IntervalSetT;
+    typedef IntervalSetT ISet;
 
-	IntervalSetT set_a, set_b, lhs, rhs;
-	//[0     2)
-	//    [1     3)
-	//[0 1)   [2 3) : {[0 2)} ^= [2 3)
-	BOOST_CHECK_EQUAL(ISet(I_D(0,2)) ^= I_D(1,3), ISet(I_D(0,1)) + I_D(2,3));
+    IntervalSetT set_a, set_b, lhs, rhs;
+    //[0     2)
+    //    [1     3)
+    //[0 1)   [2 3) : {[0 2)} ^= [2 3)
+    BOOST_CHECK_EQUAL(ISet(I_D(0,2)) ^= I_D(1,3), ISet(I_D(0,1)) + I_D(2,3));
 
-	//    [1     3)
-	//[0     2)    
-	//[0 1)   [2 3) : {[1 3)} ^= [0 2)
-	BOOST_CHECK_EQUAL(ISet(I_D(1,3)) ^= I_D(0,2), ISet(I_D(0,1)) + I_D(2,3));
+    //    [1     3)
+    //[0     2)    
+    //[0 1)   [2 3) : {[1 3)} ^= [0 2)
+    BOOST_CHECK_EQUAL(ISet(I_D(1,3)) ^= I_D(0,2), ISet(I_D(0,1)) + I_D(2,3));
 
-	//[0     2)      (3  5]
-	//    [1      3)
-	//[0 1)   [2  3) (3  5] : a ^= b
-	set_a.add(I_D(0,2)).add(C_I(3,5));
-	set_b.add(I_D(1,3));
-	lhs = set_a;
-	lhs ^= set_b;
-	rhs.add(I_D(0,1)).add(I_D(2,3)).add(C_I(3,5));
-	BOOST_CHECK_EQUAL(lhs, rhs);
+    //[0     2)      (3  5]
+    //    [1      3)
+    //[0 1)   [2  3) (3  5] : a ^= b
+    set_a.add(I_D(0,2)).add(C_I(3,5));
+    set_b.add(I_D(1,3));
+    lhs = set_a;
+    lhs ^= set_b;
+    rhs.add(I_D(0,1)).add(I_D(2,3)).add(C_I(3,5));
+    BOOST_CHECK_EQUAL(lhs, rhs);
 }
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_infix_plus_overload_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a, set_b;
-	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
-	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+    IntervalSetT set_a, set_b;
+    set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+    set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
-	BOOST_CHECK_EQUAL(set_a + set_b, set_b + set_a);
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(set_a + itv, itv + set_a);
-	BOOST_CHECK_EQUAL(set_b + MK_v(4), MK_v(4) + set_b);
+    BOOST_CHECK_EQUAL(set_a + set_b, set_b + set_a);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(set_a + itv, itv + set_a);
+    BOOST_CHECK_EQUAL(set_b + MK_v(4), MK_v(4) + set_b);
 }
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_infix_pipe_overload_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a, set_b;
-	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
-	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+    IntervalSetT set_a, set_b;
+    set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+    set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
-	BOOST_CHECK_EQUAL(set_a | set_b, set_b | set_a);
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(set_a | itv, itv | set_a);
-	BOOST_CHECK_EQUAL(set_b | MK_v(4), MK_v(4) | set_b);
+    BOOST_CHECK_EQUAL(set_a | set_b, set_b | set_a);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(set_a | itv, itv | set_a);
+    BOOST_CHECK_EQUAL(set_b | MK_v(4), MK_v(4) | set_b);
 }
 
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_infix_minus_overload_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a, set_b;
-	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
-	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+    IntervalSetT set_a, set_b;
+    set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+    set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
-	BOOST_CHECK_EQUAL(set_a - set_b, (set_b + set_a) - set_b);
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(set_a - itv, (itv + set_a)  - itv);
-	BOOST_CHECK_EQUAL(set_b - MK_v(4), (MK_v(4) + set_b) - MK_v(4));
+    BOOST_CHECK_EQUAL(set_a - set_b, (set_b + set_a) - set_b);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(set_a - itv, (itv + set_a)  - itv);
+    BOOST_CHECK_EQUAL(set_b - MK_v(4), (MK_v(4) + set_b) - MK_v(4));
 }
 
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_infix_et_overload_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a, set_b;
-	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
-	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+    IntervalSetT set_a, set_b;
+    set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+    set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
-	BOOST_CHECK_EQUAL(set_a & set_b, set_b & set_a);
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(set_a & itv, itv & set_a);
-	BOOST_CHECK_EQUAL(set_b & MK_v(4), MK_v(4) & set_b);
+    BOOST_CHECK_EQUAL(set_a & set_b, set_b & set_a);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(set_a & itv, itv & set_a);
+    BOOST_CHECK_EQUAL(set_b & MK_v(4), MK_v(4) & set_b);
 }
 
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_infix_caret_overload_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a, set_b;
-	set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
-	set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
+    IntervalSetT set_a, set_b;
+    set_a.add(C_D(1,3)).add(I_D(8,9)).add(I_I(6,11));
+    set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
-	BOOST_CHECK_EQUAL(set_a ^ set_b, set_b ^ set_a);
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(set_a ^ itv, itv ^ set_a);
-	BOOST_CHECK_EQUAL(set_b ^ MK_v(4), MK_v(4) ^ set_b);
+    BOOST_CHECK_EQUAL(set_a ^ set_b, set_b ^ set_a);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(set_a ^ itv, itv ^ set_a);
+    BOOST_CHECK_EQUAL(set_b ^ MK_v(4), MK_v(4) ^ set_b);
 }
 
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
-					template<class,ITL_COMPARE>class Interval = interval,
+                    template<class,ITL_COMPARE>class Interval = interval,
                     ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet, 
           class T>
 void interval_set_find_4_bicremental_types()
 {
-	typedef IntervalSet<T> IntervalSetT;
-	itl::interval<T> itv = I_D(3,5);
+    typedef IntervalSet<T> IntervalSetT;
+    itl::interval<T> itv = I_D(3,5);
 
-	IntervalSetT set_a;
-	set_a.add(C_D(1,3)).add(I_I(6,11));
+    IntervalSetT set_a;
+    set_a.add(C_D(1,3)).add(I_I(6,11));
 
-	IntervalSetT::const_iterator found = set_a.find(MK_v(6));
+    IntervalSetT::const_iterator found = set_a.find(MK_v(6));
 
-	BOOST_CHECK_EQUAL( *found, I_I(6,11) );
+    BOOST_CHECK_EQUAL( *found, I_I(6,11) );
 
-	found = set_a.find(MK_v(5));
+    found = set_a.find(MK_v(5));
 
-	BOOST_CHECK_EQUAL( found == set_a.end(), true );
+    BOOST_CHECK_EQUAL( found == set_a.end(), true );
 }
 
 #endif // __test_itl_interval_set_shared_h_JOFA_080920__

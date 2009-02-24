@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __test_itl_interval_map_shared_h_JOFA_081005__
 #define __test_itl_interval_map_shared_h_JOFA_081005__
 
@@ -594,7 +594,7 @@ void interval_map_base_intersect_4_bicremental_types()
     map_AB = map_A;
     map_AB &= v1;
     map_ab.clear();
-	map_ab.add(mapping_pair<T,U>(v1,u1));
+    map_ab.add(mapping_pair<T,U>(v1,u1));
 
     BOOST_CHECK_EQUAL( map_AB, map_ab );
 }
@@ -801,17 +801,17 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_flip_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
-	typedef IntervalMapT IMap;
+    typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMapT IMap;
 
-	IntervalMapT set_a, set_b, lhs, rhs;
-	//[0     2)
-	//    1
-	//    [1     3)
-	//        1
-	//[0 1)   [2 3) : {[0 2)->1} ^= ([2 3)->1)
-	//  1       1
-	BOOST_CHECK_EQUAL(IMap(IDv(0,2,1)) ^= (IDv(1,3,1)), IMap(IDv(0,1,1)) + IDv(2,3,1));
+    IntervalMapT set_a, set_b, lhs, rhs;
+    //[0     2)
+    //    1
+    //    [1     3)
+    //        1
+    //[0 1)   [2 3) : {[0 2)->1} ^= ([2 3)->1)
+    //  1       1
+    BOOST_CHECK_EQUAL(IMap(IDv(0,2,1)) ^= (IDv(1,3,1)), IMap(IDv(0,1,1)) + IDv(2,3,1));
 }
 
 template <template<class T, class U,
@@ -825,20 +825,20 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_infix_plus_overload_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typedef IntervalMap<T,U> IntervalMapT;
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	IntervalMapT map_a, map_b;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    IntervalMapT map_a, map_b;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(map_a + map_b, map_b + map_a);
-	//This checks all cases of is_interval_map_derivative<T>
-	BOOST_CHECK_EQUAL(map_a + val_pair1, val_pair1 + map_a);
-	BOOST_CHECK_EQUAL(map_b + val_pair2, val_pair2 + map_b);
-	BOOST_CHECK_EQUAL(map_b + map_pair, map_pair + map_b);
+    BOOST_CHECK_EQUAL(map_a + map_b, map_b + map_a);
+    //This checks all cases of is_interval_map_derivative<T>
+    BOOST_CHECK_EQUAL(map_a + val_pair1, val_pair1 + map_a);
+    BOOST_CHECK_EQUAL(map_b + val_pair2, val_pair2 + map_b);
+    BOOST_CHECK_EQUAL(map_b + map_pair, map_pair + map_b);
 }
 
 template <template<class T, class U,
@@ -852,20 +852,20 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_infix_pipe_overload_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typedef IntervalMap<T,U> IntervalMapT;
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	IntervalMapT map_a, map_b;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    IntervalMapT map_a, map_b;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	BOOST_CHECK_EQUAL(map_a | map_b, map_b | map_a);
-	//This checks all cases of is_interval_map_derivative<T>
-	BOOST_CHECK_EQUAL(map_a | val_pair1, val_pair1 | map_a);
-	BOOST_CHECK_EQUAL(map_b | val_pair2, val_pair2 | map_b);
-	BOOST_CHECK_EQUAL(map_b | map_pair, map_pair | map_b);
+    BOOST_CHECK_EQUAL(map_a | map_b, map_b | map_a);
+    //This checks all cases of is_interval_map_derivative<T>
+    BOOST_CHECK_EQUAL(map_a | val_pair1, val_pair1 | map_a);
+    BOOST_CHECK_EQUAL(map_b | val_pair2, val_pair2 | map_b);
+    BOOST_CHECK_EQUAL(map_b | map_pair, map_pair | map_b);
 }
 
 
@@ -881,44 +881,44 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_infix_minus_overload_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMap<T,U> IntervalMapT;
 
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	itl::interval<T> itv = C_D(4,11);
-	typename IntervalMapT::interval_mapping_type itv_v = CDv(4,11,3);
+    itl::interval<T> itv = C_D(4,11);
+    typename IntervalMapT::interval_mapping_type itv_v = CDv(4,11,3);
 
-	IntervalMapT map_a, map_b, map_c;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
-	map_c = map_a;
+    IntervalMapT map_a, map_b, map_c;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    map_c = map_a;
 
-	interval_set<T>          join_set_a;
-	separate_interval_set<T> sep_set_a;
-	split_interval_set<T>    split_set_a;
-	join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
-	sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
-	split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
-	
-	//Happy day overloading
-	BOOST_CHECK_EQUAL(map_a - map_b, (map_c = map_a) -= map_b);
-	BOOST_CHECK_EQUAL(map_a - map_b, map_c);
+    interval_set<T>          join_set_a;
+    separate_interval_set<T> sep_set_a;
+    split_interval_set<T>    split_set_a;
+    join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
+    sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
+    split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    
+    //Happy day overloading
+    BOOST_CHECK_EQUAL(map_a - map_b, (map_c = map_a) -= map_b);
+    BOOST_CHECK_EQUAL(map_a - map_b, map_c);
 
-	//This checks all cases of is_interval_map_derivative<T>
-	BOOST_CHECK_EQUAL((map_a - val_pair1) + val_pair1, (map_a + val_pair1) - val_pair1);
-	BOOST_CHECK_EQUAL((map_b - val_pair2) + val_pair2, (map_b + val_pair2) - val_pair2);
-	BOOST_CHECK_EQUAL((map_b - map_pair)  + map_pair,  (map_b + map_pair)  - map_pair);
+    //This checks all cases of is_interval_map_derivative<T>
+    BOOST_CHECK_EQUAL((map_a - val_pair1) + val_pair1, (map_a + val_pair1) - val_pair1);
+    BOOST_CHECK_EQUAL((map_b - val_pair2) + val_pair2, (map_b + val_pair2) - val_pair2);
+    BOOST_CHECK_EQUAL((map_b - map_pair)  + map_pair,  (map_b + map_pair)  - map_pair);
 
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(map_a - itv,     (map_a + itv_v) - itv);
-	BOOST_CHECK_EQUAL(map_b - MK_v(8), (IIv(8,8,3) + map_b) - MK_v(8));
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(map_a - itv,     (map_a + itv_v) - itv);
+    BOOST_CHECK_EQUAL(map_b - MK_v(8), (IIv(8,8,3) + map_b) - MK_v(8));
 
-	//This checks all cases of is_interval_set_companion<T>
-	BOOST_CHECK_EQUAL(map_a - split_set_a, ((split_set_a & map_a) + map_a) - split_set_a);
-	BOOST_CHECK_EQUAL(map_a - sep_set_a,   ((sep_set_a   & map_a) + map_a) - sep_set_a);
-	BOOST_CHECK_EQUAL(map_a - join_set_a,  ((join_set_a  & map_a) + map_a) - join_set_a);
+    //This checks all cases of is_interval_set_companion<T>
+    BOOST_CHECK_EQUAL(map_a - split_set_a, ((split_set_a & map_a) + map_a) - split_set_a);
+    BOOST_CHECK_EQUAL(map_a - sep_set_a,   ((sep_set_a   & map_a) + map_a) - sep_set_a);
+    BOOST_CHECK_EQUAL(map_a - join_set_a,  ((join_set_a  & map_a) + map_a) - join_set_a);
 }
 
 
@@ -933,41 +933,41 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_infix_et_overload_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMap<T,U> IntervalMapT;
 
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	itl::interval<T> itv = C_D(4,11);
+    itl::interval<T> itv = C_D(4,11);
 
-	IntervalMapT map_a, map_b;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    IntervalMapT map_a, map_b;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	interval_set<T>          join_set_a;
-	separate_interval_set<T> sep_set_a;
-	split_interval_set<T>    split_set_a;
-	join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
-	sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
-	split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
-	
-	//Happy day overloading
-	BOOST_CHECK_EQUAL(map_a & map_b, map_b & map_a);
+    interval_set<T>          join_set_a;
+    separate_interval_set<T> sep_set_a;
+    split_interval_set<T>    split_set_a;
+    join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
+    sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
+    split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    
+    //Happy day overloading
+    BOOST_CHECK_EQUAL(map_a & map_b, map_b & map_a);
 
-	//This checks all cases of is_interval_map_derivative<T>
-	BOOST_CHECK_EQUAL(map_a & val_pair1, val_pair1 & map_a);
-	BOOST_CHECK_EQUAL(map_b & val_pair2, val_pair2 & map_b);
-	BOOST_CHECK_EQUAL(map_b & map_pair, map_pair & map_b);
+    //This checks all cases of is_interval_map_derivative<T>
+    BOOST_CHECK_EQUAL(map_a & val_pair1, val_pair1 & map_a);
+    BOOST_CHECK_EQUAL(map_b & val_pair2, val_pair2 & map_b);
+    BOOST_CHECK_EQUAL(map_b & map_pair, map_pair & map_b);
 
-	//This checks all cases of is_interval_set_derivative<T>
-	BOOST_CHECK_EQUAL(map_a & itv, itv & map_a);
-	BOOST_CHECK_EQUAL(map_b & MK_v(8), MK_v(8) & map_b);
+    //This checks all cases of is_interval_set_derivative<T>
+    BOOST_CHECK_EQUAL(map_a & itv, itv & map_a);
+    BOOST_CHECK_EQUAL(map_b & MK_v(8), MK_v(8) & map_b);
 
-	//This checks all cases of is_interval_set_companion<T>
-	BOOST_CHECK_EQUAL(map_a & split_set_a, split_set_a & map_a);
-	BOOST_CHECK_EQUAL(map_a & sep_set_a,   sep_set_a   & map_a);
-	BOOST_CHECK_EQUAL(map_a & join_set_a,  join_set_a  & map_a);
+    //This checks all cases of is_interval_set_companion<T>
+    BOOST_CHECK_EQUAL(map_a & split_set_a, split_set_a & map_a);
+    BOOST_CHECK_EQUAL(map_a & sep_set_a,   sep_set_a   & map_a);
+    BOOST_CHECK_EQUAL(map_a & join_set_a,  join_set_a  & map_a);
 }
 
 
@@ -982,32 +982,32 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_infix_caret_overload_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMap<T,U> IntervalMapT;
 
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	itl::interval<T> itv = C_D(4,11);
+    itl::interval<T> itv = C_D(4,11);
 
-	IntervalMapT map_a, map_b;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
-	map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
+    IntervalMapT map_a, map_b;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
-	interval_set<T>          join_set_a;
-	separate_interval_set<T> sep_set_a;
-	split_interval_set<T>    split_set_a;
-	join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
-	sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
-	split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
-	
-	//Happy day overloading
-	BOOST_CHECK_EQUAL(map_a ^ map_b, map_b ^ map_a);
+    interval_set<T>          join_set_a;
+    separate_interval_set<T> sep_set_a;
+    split_interval_set<T>    split_set_a;
+    join_set_a .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,9));
+    sep_set_a  .add(I_D(0,4)).add(I_I(4,6)).add(I_D(5,11));
+    split_set_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    
+    //Happy day overloading
+    BOOST_CHECK_EQUAL(map_a ^ map_b, map_b ^ map_a);
 
-	//This checks all cases of is_interval_map_derivative<T>
-	BOOST_CHECK_EQUAL(map_a ^ val_pair1, val_pair1 ^ map_a);
-	BOOST_CHECK_EQUAL(map_b ^ val_pair2, val_pair2 ^ map_b);
-	BOOST_CHECK_EQUAL(map_b ^ map_pair,  map_pair ^ map_b);
+    //This checks all cases of is_interval_map_derivative<T>
+    BOOST_CHECK_EQUAL(map_a ^ val_pair1, val_pair1 ^ map_a);
+    BOOST_CHECK_EQUAL(map_b ^ val_pair2, val_pair2 ^ map_b);
+    BOOST_CHECK_EQUAL(map_b ^ map_pair,  map_pair ^ map_b);
 }
 
 template <template<class T, class U,
@@ -1021,24 +1021,24 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_find_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMap<T,U> IntervalMapT;
 
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	IntervalMapT map_a;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    IntervalMapT map_a;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
 
-	IntervalMapT::const_iterator found = map_a.find(MK_v(6));
+    IntervalMapT::const_iterator found = map_a.find(MK_v(6));
 
-	BOOST_CHECK_EQUAL( found->CONT_VALUE, MK_u(3) );
-	BOOST_CHECK_EQUAL( map_a(MK_v(6)), MK_u(3) );
+    BOOST_CHECK_EQUAL( found->CONT_VALUE, MK_u(3) );
+    BOOST_CHECK_EQUAL( map_a(MK_v(6)), MK_u(3) );
 
-	found = map_a.find(MK_v(5));
+    found = map_a.find(MK_v(5));
 
-	BOOST_CHECK_EQUAL( found == map_a.end(), true );
-	BOOST_CHECK_EQUAL( map_a(MK_v(5)), MK_u(0) );
+    BOOST_CHECK_EQUAL( found == map_a.end(), true );
+    BOOST_CHECK_EQUAL( map_a(MK_v(5)), MK_u(0) );
 }
 
 
@@ -1053,18 +1053,18 @@ template <template<class T, class U,
           class T, class U>
 void interval_map_set_4_bicremental_types()
 {
-	typedef IntervalMap<T,U> IntervalMapT;
+    typedef IntervalMap<T,U> IntervalMapT;
 
-	typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
-	std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
-	mapping_pair<T,U> map_pair = K_v(4,3);
+    typename IntervalMapT::interval_mapping_type val_pair1 = IDv(6,9,1);
+    std::pair<const interval<T>, U> val_pair2 = IDv(3,5,3);
+    mapping_pair<T,U> map_pair = K_v(4,3);
 
-	IntervalMapT map_a;
-	map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
+    IntervalMapT map_a;
+    map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
 
-	BOOST_CHECK_EQUAL( map_a.set(CDv(2,10,4)).contains(CDv(2,10,4)), true );
-	BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).contains(K_v(4,5)), true );
-	BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).set(CDv(3,5,6)).contains(CDv(3,5,6)), true );
+    BOOST_CHECK_EQUAL( map_a.set(CDv(2,10,4)).contains(CDv(2,10,4)), true );
+    BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).contains(K_v(4,5)), true );
+    BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).set(CDv(3,5,6)).contains(CDv(3,5,6)), true );
 }
 
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__

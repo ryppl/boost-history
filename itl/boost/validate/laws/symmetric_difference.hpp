@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_symmetric_difference_hpp_JOFA_071124__
 #define __itl_symmetric_difference_hpp_JOFA_071124__
 
@@ -40,7 +40,7 @@ namespace boost{namespace itl
 
     public:
 
-		bool holds() 
+        bool holds() 
         {
             // --- left hand side ------------------------
             Type a_plus_b = this->template getInputValue<operand_a>();
@@ -137,7 +137,7 @@ namespace boost{namespace itl
 
     public:
 
-		bool holds() 
+        bool holds() 
         {
             // --- left hand side ------------------------
             Type lhs = this->template getInputValue<operand_a>();

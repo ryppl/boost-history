@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE itl::interval unit test
 #include <string>
 #include <boost/mpl/list.hpp>
@@ -169,11 +169,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integr
     T v7 = make<T>(7);
     T v8 = make<T>(8);
     BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v7,v3), false);
-	BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v7), false);
-	BOOST_CHECK_EQUAL(interval<T>::leftopen(v3,v3) < interval<T>::closed(v7,v3), false);
+    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v7), false);
+    BOOST_CHECK_EQUAL(interval<T>::leftopen(v3,v3) < interval<T>::closed(v7,v3), false);
 
     BOOST_CHECK_EQUAL(interval<T>() < interval<T>(v3,v3), true);
-	BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v8), true);
+    BOOST_CHECK_EQUAL(interval<T>::open(v2,v3) < interval<T>::rightopen(v7,v8), true);
 
     //I: (I)nside  = closed bound
     //C: left open bound
@@ -190,7 +190,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integr
     BOOST_CHECK_EQUAL(  I3_7I < C2__7I  , false);    
     BOOST_CHECK_EQUAL(  I3_7I < C2___8D , false);    
 
-	BOOST_CHECK_EQUAL(  I3_7I <  I4_7I  , true);    
+    BOOST_CHECK_EQUAL(  I3_7I <  I4_7I  , true);    
 
 
     BOOST_CHECK_EQUAL(  I3__8D<  I3__8D , false);    
@@ -383,30 +383,30 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     interval<T> I6_7D = interval<T>::rightopen(v6,v7);
     interval<T> I2_4D = interval<T>::rightopen(v2,v4);
 
-	I2_6D.right_subtract(diff_1,I4_7D);
+    I2_6D.right_subtract(diff_1,I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I2_4D );
 
-	diff_2 = I2_6D;
-	diff_2.right_subtract(I4_7D);
+    diff_2 = I2_6D;
+    diff_2.right_subtract(I4_7D);
     BOOST_CHECK_EQUAL( diff_2, I2_4D );
 
-	diff_1.clear();
-	I0_3D.right_subtract(diff_1, I4_7D);
+    diff_1.clear();
+    I0_3D.right_subtract(diff_1, I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I0_3D );
-	
-	// ---------------------------------
-	I4_7D.left_subtract(diff_1, I2_6D);
+    
+    // ---------------------------------
+    I4_7D.left_subtract(diff_1, I2_6D);
     BOOST_CHECK_EQUAL( diff_1, I6_7D );
 
-	diff_2 = I4_7D;
-	diff_2.left_subtract(I2_6D);
+    diff_2 = I4_7D;
+    diff_2.left_subtract(I2_6D);
     BOOST_CHECK_EQUAL( diff_2, I6_7D );
 
-	diff_1.clear();
-	I4_7D.left_subtract(diff_1, I0_3D);
+    diff_1.clear();
+    I4_7D.left_subtract(diff_1, I0_3D);
     BOOST_CHECK_EQUAL( diff_1, I4_7D );
 
-	diff_2 = I4_7D;
-	diff_2.left_subtract(I0_3D);
+    diff_2 = I4_7D;
+    diff_2.left_subtract(I0_3D);
     BOOST_CHECK_EQUAL( diff_2, I4_7D );
 }

@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/itl/functors.hpp>
@@ -36,7 +36,7 @@ namespace boost{namespace itl
 
         void setProfile()
         {
-			const int volume = 100;
+            const int volume = 100;
             _lawChoice.setSize(Laws_size);
             _lawChoice.setMaxWeights(volume);
             _lawChoice[atomize_subset]          = 33;

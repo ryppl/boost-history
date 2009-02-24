@@ -196,7 +196,7 @@ bool is_disjoint
                       Traits,Compare,Combine,Section,Interval,Alloc>&  right
 )
 {
-	return is_disjoint(right, left);
+    return is_disjoint(right, left);
 }
 
 
@@ -341,7 +341,7 @@ bool is_protonic_equal
     const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
-	return Map::lexicographical_protonic_equal(left, right);
+    return Map::lexicographical_protonic_equal(left, right);
 }
 
 //-----------------------------------------------------------------------------
@@ -349,7 +349,7 @@ bool is_protonic_equal
 //-----------------------------------------------------------------------------
 template 
 <
-	class ObjectT,
+    class ObjectT,
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
@@ -378,7 +378,7 @@ ObjectT& operator +=
 //-----------------------------------------------------------------------------
 template 
 <
-	class ObjectT,
+    class ObjectT,
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
@@ -407,7 +407,7 @@ ObjectT& operator -=
 //-----------------------------------------------------------------------------
 template 
 <
-	class ObjectT,
+    class ObjectT,
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template
@@ -432,7 +432,7 @@ ObjectT& operator ^=
 template 
 <
     class ObjectT, 
-	class DomainT, class CodomainT, class Traits,
+    class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >

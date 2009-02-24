@@ -18,14 +18,14 @@ namespace boost{namespace itl
     template <typename Type> struct neutron_based_inplace_combine 
         : public std::binary_function<Type&, const Type&, void>
     {
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
     template <typename Type> struct unon_based_inplace_combine 
         : public std::binary_function<Type&, const Type&, void>
     {
-		static Type neutron() { return boost::itl::unon<Type>::value(); }
+        static Type neutron() { return boost::itl::unon<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
@@ -33,7 +33,7 @@ namespace boost{namespace itl
         : public neutron_based_inplace_combine<Type>
     {
         void operator()(Type& object, const Type& operand)const{}
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -49,7 +49,7 @@ namespace boost{namespace itl
             if(object == operand)
                 object = Type();
         }
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -77,7 +77,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object -= operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -104,7 +104,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object &= ~operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -131,7 +131,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     // ------------------------------------------------------------------------
@@ -155,7 +155,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object ^= operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -168,7 +168,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { insert(object,operand); }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -181,7 +181,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { erase(object,operand); }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -194,7 +194,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object *= operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -207,7 +207,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object /= operand; }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -223,7 +223,7 @@ namespace boost{namespace itl
                 object = operand;
         }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
@@ -239,63 +239,63 @@ namespace boost{namespace itl
                 object = operand;
         }
 
-		static Type neutron() { return boost::itl::neutron<Type>::value(); }
+        static Type neutron() { return boost::itl::neutron<Type>::value(); }
     };
 
     template<>
     inline std::string unary_template_to_string<inplace_min>::apply() { return "min="; }
 
-	//--------------------------------------------------------------------------
-	// Inverse functor
-	template<class Functor> struct inverse;
+    //--------------------------------------------------------------------------
+    // Inverse functor
+    template<class Functor> struct inverse;
 
-	template<class Type> 
-	struct inverse<itl::inplace_plus<Type> >
-	{ typedef itl::inplace_minus<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_plus<Type> >
+    { typedef itl::inplace_minus<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_minus<Type> >
-	{ typedef itl::inplace_plus<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_minus<Type> >
+    { typedef itl::inplace_plus<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_bit_add<Type> >
-	{ typedef itl::inplace_bit_subtract<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_bit_add<Type> >
+    { typedef itl::inplace_bit_subtract<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_bit_subtract<Type> >
-	{ typedef itl::inplace_bit_add<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_bit_subtract<Type> >
+    { typedef itl::inplace_bit_add<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_et<Type> >
-	{ typedef itl::inplace_caret<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_et<Type> >
+    { typedef itl::inplace_caret<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_caret<Type> >
-	{ typedef itl::inplace_et<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_caret<Type> >
+    { typedef itl::inplace_et<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_bit_and<Type> >
-	{ typedef itl::inplace_bit_xor<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_bit_and<Type> >
+    { typedef itl::inplace_bit_xor<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_bit_xor<Type> >
-	{ typedef itl::inplace_bit_and<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_bit_xor<Type> >
+    { typedef itl::inplace_bit_and<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_star<Type> >
-	{ typedef itl::inplace_slash<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_star<Type> >
+    { typedef itl::inplace_slash<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_slash<Type> >
-	{ typedef itl::inplace_star<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_slash<Type> >
+    { typedef itl::inplace_star<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_max<Type> >
-	{ typedef itl::inplace_min<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_max<Type> >
+    { typedef itl::inplace_min<Type> type; };
 
-	template<class Type> 
-	struct inverse<itl::inplace_min<Type> >
-	{ typedef itl::inplace_max<Type> type; };
+    template<class Type> 
+    struct inverse<itl::inplace_min<Type> >
+    { typedef itl::inplace_max<Type> type; };
 
 
 }} // namespace itl boost

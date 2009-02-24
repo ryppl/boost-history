@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
 
@@ -57,43 +57,43 @@ void test_Validater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-	//typedef InplaceSymmetricDifference<interval_map<int, itl::set<int>, total_enricher >, std_equal> TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
-	//test_law.run();
+    //typedef InplaceSymmetricDifference<interval_map<int, itl::set<int>, total_enricher >, std_equal> TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+    //test_law.setTrialsCount(1000);
+    //test_law.run();
 
-	//typedef InplaceDistributivity
-	//	<split_interval_map<int, itl::set<int>, partial_absorber >, 
-	//	inplace_et, inplace_plus, itl::std_equal>  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
+    //typedef InplaceDistributivity
+    //    <split_interval_map<int, itl::set<int>, partial_absorber >, 
+    //    inplace_et, inplace_plus, itl::std_equal>  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+    //test_law.setTrialsCount(1000);
 
-	typedef InplaceNaturalInversion 
-		<split_interval_map<int, itl::set<int>, total_absorber >, 
-		itl::inplace_plus, itl::protonic_equal>  TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
-	test_law.setTrialsCount(1000);
+    typedef InplaceNaturalInversion 
+        <split_interval_map<int, itl::set<int>, total_absorber >, 
+        itl::inplace_plus, itl::protonic_equal>  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
+    test_law.setTrialsCount(1000);
 
-	//typedef InplaceAssociativity
-	//   <interval_map<int, int, partial_absorber >, inplace_plus>  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
+    //typedef InplaceAssociativity
+    //   <interval_map<int, int, partial_absorber >, inplace_plus>  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+    //test_law.setTrialsCount(1000);
 
-	//typedef InplaceCommutativity
-	//   <split_interval_map<int, int, total_absorber>, inplace_plus>  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
+    //typedef InplaceCommutativity
+    //   <split_interval_map<int, int, total_absorber>, inplace_plus>  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+    //test_law.setTrialsCount(1000);
 
-	//typedef ProtonicEquality
-	//   <split_interval_map<int, int, partial_enricher > >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
-	//test_law.setTrialsCount(1000);
+    //typedef ProtonicEquality
+    //   <split_interval_map<int, int, partial_enricher > >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+    //test_law.setTrialsCount(1000);
 
-	std::cout << "Start\n";
-	ptime start(microsec_clock::local_time());
-	test_law.run();
-	ptime stop(microsec_clock::local_time());
-	std::cout << "Stop. Time elapsed: " << stop - start << endl;
+    std::cout << "Start\n";
+    ptime start(microsec_clock::local_time());
+    test_law.run();
+    ptime stop(microsec_clock::local_time());
+    std::cout << "Stop. Time elapsed: " << stop - start << endl;
 }
 
 void test_realmvalidater()

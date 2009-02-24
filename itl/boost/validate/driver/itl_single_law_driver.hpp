@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <iostream>
@@ -20,8 +20,8 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 namespace boost{namespace itl
 {
     
-	template<class Law>
-	class itl_single_law_driver : public itl_driver
+    template<class Law>
+    class itl_single_law_driver : public itl_driver
     {
     public:
         itl_single_law_driver() { setProfile(); }
@@ -125,38 +125,38 @@ namespace boost{namespace itl
                 }
             case RootType::split_interval_map: {
                     switch(domainChoice) {
-						case DomainType::Int: 
-							switch(neutronizerChoice) {
-								case NeutronHandlerType::partial_absorber: 
-									return new itl_induced_relations_validater<split_interval_map<int,int,partial_absorber> >;
-								case NeutronHandlerType::partial_enricher: 
-									return new itl_induced_relations_validater<split_interval_map<int,int,partial_enricher> >;
-								case NeutronHandlerType::total_absorber: 
-									return new itl_induced_relations_validater<split_interval_map<int,int,total_absorber> >;
-								case NeutronHandlerType::total_enricher: 
-									return new itl_induced_relations_validater<split_interval_map<int,int,total_enricher> >;
-								default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
+                        case DomainType::Int: 
+                            switch(neutronizerChoice) {
+                                case NeutronHandlerType::partial_absorber: 
+                                    return new itl_induced_relations_validater<split_interval_map<int,int,partial_absorber> >;
+                                case NeutronHandlerType::partial_enricher: 
+                                    return new itl_induced_relations_validater<split_interval_map<int,int,partial_enricher> >;
+                                case NeutronHandlerType::total_absorber: 
+                                    return new itl_induced_relations_validater<split_interval_map<int,int,total_absorber> >;
+                                case NeutronHandlerType::total_enricher: 
+                                    return new itl_induced_relations_validater<split_interval_map<int,int,total_enricher> >;
+                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
                                                 neutronizerChoice, _neutronizerChoice);
-							}
+                            }
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }
                 }
             case RootType::interval_map: {
                     switch(domainChoice) {
-						case DomainType::Int: 
-							switch(neutronizerChoice) {
-								case NeutronHandlerType::partial_absorber: 
-									return new itl_induced_relations_validater<interval_map<int,int,partial_absorber> >;
-								case NeutronHandlerType::partial_enricher: 
-									return new itl_induced_relations_validater<interval_map<int,int,partial_enricher> >;
-								case NeutronHandlerType::total_absorber: 
-									return new itl_induced_relations_validater<interval_map<int,int,total_absorber> >;
-								case NeutronHandlerType::total_enricher: 
-									return new itl_induced_relations_validater<interval_map<int,int,total_enricher> >;
-								default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
+                        case DomainType::Int: 
+                            switch(neutronizerChoice) {
+                                case NeutronHandlerType::partial_absorber: 
+                                    return new itl_induced_relations_validater<interval_map<int,int,partial_absorber> >;
+                                case NeutronHandlerType::partial_enricher: 
+                                    return new itl_induced_relations_validater<interval_map<int,int,partial_enricher> >;
+                                case NeutronHandlerType::total_absorber: 
+                                    return new itl_induced_relations_validater<interval_map<int,int,total_absorber> >;
+                                case NeutronHandlerType::total_enricher: 
+                                    return new itl_induced_relations_validater<interval_map<int,int,total_enricher> >;
+                                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
                                                 neutronizerChoice, _neutronizerChoice);
-							}
+                            }
                     default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                                 domainChoice, _domainChoice);
                     }

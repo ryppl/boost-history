@@ -59,7 +59,7 @@ typedef unsigned char bound_type;
 /** A class template for intervals */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
 #ifdef USE_CONCEPTS
-	requires std::LessThanComparable<DomainT>
+    requires std::LessThanComparable<DomainT>
 #endif
 class interval
 {
@@ -72,14 +72,14 @@ public:
     typedef DomainT element_type;
     typedef type    segment_type;
 
-	typedef DomainT key_type;
-	typedef DomainT data_type;
-	typedef DomainT value_type;
+    typedef DomainT key_type;
+    typedef DomainT data_type;
+    typedef DomainT value_type;
     typedef type    interval_type;
 
-	/// Compare order on the data
+    /// Compare order on the data
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
-	typedef domain_compare key_compare;
+    typedef domain_compare key_compare;
 
     /// The difference type of an interval which is sometimes different form the domain_type
     typedef typename itl::difference<DomainT>::type difference_type;
@@ -88,51 +88,51 @@ public:
     typedef typename itl::size<DomainT>::type size_type;
 
 public:
-	//==========================================================================
-	//= Construct, copy, destruct
-	//==========================================================================
+    //==========================================================================
+    //= Construct, copy, destruct
+    //==========================================================================
     /** Default constructor; yields an empty interval <tt>[1,0]</tt> */
     interval() : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()), 
-		         _boundtype(itl::closed_bounded) {}
+                 _boundtype(itl::closed_bounded) {}
 
     //NOTE: Compiler generated copy constructor is used
 
     /** Constructor for a closed singleton interval <tt>[val,val]</tt> */
     explicit interval(const DomainT& val) : 
-		_lwb(val), _upb(val), _boundtype(itl::closed_bounded) {}
+        _lwb(val), _upb(val), _boundtype(itl::closed_bounded) {}
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
-	interval(const DomainT& low, const DomainT& up, itl::bound_type bounds = itl::closed_bounded) : 
+    interval(const DomainT& low, const DomainT& up, itl::bound_type bounds = itl::closed_bounded) : 
         _lwb(low), _upb(up), _boundtype(bounds) {}
 
-	/** Closed interval <tt>[low,up]</tt> */
-	static interval closed(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, itl::closed_bounded); }
+    /** Closed interval <tt>[low,up]</tt> */
+    static interval closed(const DomainT& low, const DomainT& up)
+    { return interval(low, up, itl::closed_bounded); }
 
-	/** Rightopen interval <tt>[low,up)</tt> */
-	static interval rightopen(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, right_open); }
+    /** Rightopen interval <tt>[low,up)</tt> */
+    static interval rightopen(const DomainT& low, const DomainT& up)
+    { return interval(low, up, right_open); }
 
-	/** Leftopen interval <tt>(low,up]</tt> */
-	static interval leftopen(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, left_open); }
+    /** Leftopen interval <tt>(low,up]</tt> */
+    static interval leftopen(const DomainT& low, const DomainT& up)
+    { return interval(low, up, left_open); }
 
-	/** Open interval <tt>(low,up)</tt> */
-	static interval open(const DomainT& low, const DomainT& up)
-	{ return interval(low, up, itl::open_bounded); }
+    /** Open interval <tt>(low,up)</tt> */
+    static interval open(const DomainT& low, const DomainT& up)
+    { return interval(low, up, itl::open_bounded); }
 
     //NOTE: Compiler generated assignment operator = used
 
-	//==========================================================================
-	//= Emptieness, containment
-	//==========================================================================
+    //==========================================================================
+    //= Emptieness, containment
+    //==========================================================================
     /** Is the interval empty? */
     bool empty()const;
 
     /** Set the interval empty */
     void clear()
-	{ set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); 
-	  _boundtype=itl::closed_bounded; }
+    { set_lwb(unon<DomainT>::value()); set_upb(neutron<DomainT>::value()); 
+      _boundtype=itl::closed_bounded; }
 
     /** Does the interval contain <tt>x</tt>? */
     bool contains(const DomainT& x)const;
@@ -146,9 +146,9 @@ public:
     bool is_disjoint(const interval& x2)const
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
 
-	//==========================================================================
-	//= Size
-	//==========================================================================
+    //==========================================================================
+    //= Size
+    //==========================================================================
     /** Cardinality of the interval: The number of elements */
     size_type cardinality()const;
 
@@ -158,9 +158,9 @@ public:
     /** Size of the interval */
     size_type size()const { return cardinality(); }
 
-	//==========================================================================
-	//= Range
-	//==========================================================================
+    //==========================================================================
+    //= Range
+    //==========================================================================
     /** Lower bound of the interval */
     DomainT lower()const { return _lwb; }
     /** Upper bound of the interval */
@@ -171,23 +171,23 @@ public:
     /** Last (largest) element of the interval */
     DomainT last()const;
 
-	//==========================================================================
-	//= Selection
-	//==========================================================================
+    //==========================================================================
+    //= Selection
+    //==========================================================================
 
     /** Typ of interval bounds */
     bound_type boundtype()const { return _boundtype; }
 
-	//==========================================================================
-	//= Addition
-	//==========================================================================
+    //==========================================================================
+    //= Addition
+    //==========================================================================
 
     /** Extend <tt>*this</tt> to <tt>x2</tt> yielding an interval from the 
-	    minimum of lower bounds to the 
-		maximum of upper bounds */
+        minimum of lower bounds to the 
+        maximum of upper bounds */
     interval& extend(const interval& x2);
 
-	/** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
+    /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
         Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
     interval span(const interval& rhs)const
     {
@@ -198,30 +198,30 @@ public:
     }
 
 
-	//==========================================================================
-	//= Subtraction
-	//==========================================================================
+    //==========================================================================
+    //= Subtraction
+    //==========================================================================
 
     /** subtract \c x2 from \c *this interval on it's left side. Assign the difference 
-		to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
+        to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
 \code
 right_over = x1 - x2; //on the left.
 ...      d) : x1
 ... c)      : x2; x1.left_subtract(right_over, x2);
      [c  d) : right_over
 \endcode
-	*/
+    */
     void left_subtract(interval& right_over, const interval& x2)const;
 
     /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
-		to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
+        to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
 \code
 left_over = x1 - x2; //on the right side.
 [a      ...  : x1
      [b ...  : x2; x1.right_subtract(left_over, x2);
 [a  b)       : left_over
 \endcode
-	*/
+    */
     void right_subtract(interval& left_over, const interval& x2)const;
 
     /** subtract \c x2 from \c *this interval on it's left side.
@@ -231,8 +231,8 @@ left_over = x1 - x2; //on the right side.
 ... c)      : x2;
      [c  d) : *this
 \endcode
-	*/
-	interval& left_subtract(const interval& x2);
+    */
+    interval& left_subtract(const interval& x2);
 
     /** subtract \c x2 from \c *this interval on it's right side. 
 \code
@@ -241,70 +241,70 @@ left_over = x1 - x2; //on the right side.
      [b ...  : x2;
 [a  b)       : *this
 \endcode
-	*/
-	interval& right_subtract(const interval& x2);
+    */
+    interval& right_subtract(const interval& x2);
 
-	//==========================================================================
-	//= Intersection
-	//==========================================================================
+    //==========================================================================
+    //= Intersection
+    //==========================================================================
 
-	/** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
+    /** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
  //   void intersect(interval& isec, const interval& x2)const
-	//{
-	//	isec = *this;
-	//	isec &= x2;
-	//}
+    //{
+    //    isec = *this;
+    //    isec &= x2;
+    //}
 
-	interval& operator &= (const interval& sectant)
-	{
-		set_lwb(lwb_max(sectant));
-		set_upb(upb_min(sectant));
-		return *this;
-	}
+    interval& operator &= (const interval& sectant)
+    {
+        set_lwb(lwb_max(sectant));
+        set_upb(upb_min(sectant));
+        return *this;
+    }
 
 
-	
-	//==========================================================================
-	//= Representation
-	//==========================================================================
-	
-	/** Object as string */
+    
+    //==========================================================================
+    //= Representation
+    //==========================================================================
+    
+    /** Object as string */
     const std::string as_string()const;
 
 
-	/** What type is the interval?
+    /** What type is the interval?
 \code
 interval.is(closed_bounded); //[x, y] a closed interval
 interval.is(right_open);     //[x, y) a right-open interval (also left-closed interval)
 interval.is(left_open);      //(x, y] a left-open interval  (also right-closed interval)
 interval.is(open_bounded);   //(x, y) an open interval
 \endcode
-	*/
+    */
     bool is(bound_type bounded)const { return _boundtype == bounded; }
 
-	/** What bound type is the left interval border? 	
+    /** What bound type is the left interval border?     
 \code
 interval.is_left(closed_bounded); //[x, y] or [x, y)
 interval.is_left(open_bounded);   //(x, y] or (x, y)
 \endcode
-	*/
-	bool is_left(bound_type bounded)const
-	{
-		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
-		return ((_boundtype & right_open)>>1) == (bounded>>1); 
-	}
+    */
+    bool is_left(bound_type bounded)const
+    {
+        BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
+        return ((_boundtype & right_open)>>1) == (bounded>>1); 
+    }
 
-	/** What bound type is the right interval border? 	
+    /** What bound type is the right interval border?     
 \code
 interval.is_right(closed_bounded); //[x, y] or (x, y]
 interval.is_right(open_bounded);   //[x, y) or (x, y)
 \endcode
-	*/
-	bool is_right(bound_type bounded)const
-	{
-		BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
-		return ((_boundtype & left_open) == (bounded>>1)); 
-	}
+    */
+    bool is_right(bound_type bounded)const
+    {
+        BOOST_ASSERT(bounded == itl::open_bounded || bounded == itl::closed_bounded);
+        return ((_boundtype & left_open) == (bounded>>1)); 
+    }
 
 
     /** There is no gap between <tt>*this</tt> and <tt>x2</tt> but they have no element in common */
@@ -313,7 +313,7 @@ interval.is_right(open_bounded);   //[x, y) or (x, y)
     /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
     bool exclusive_less(const interval& x2)const;
 
-	/** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
+    /** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
     interval& set(const DomainT& low, const DomainT& up, bound_type bounds) 
     { _lwb=low; _upb=up; _boundtype=bounds; return *this; }
 
@@ -325,42 +325,42 @@ interval.as(right_open).is(right_open) &&
 interval.as(left_open).is(left_open) &&
 interval.as(open_bounded).is(open_bounded)
 \endcode
-	*/
+    */
     interval& as(bound_type bounded);
 
-	/** An interval that covers the complete range of it's domain_type */
+    /** An interval that covers the complete range of it's domain_type */
     static interval whole()
     { return interval<DomainT>::closed(std::numeric_limits<DomainT>::min(), 
                                        std::numeric_limits<DomainT>::max()); }
 
 
-	/** First element of \c *this is less than first element of \c x2 */
+    /** First element of \c *this is less than first element of \c x2 */
     bool lower_less(const interval& x2)const;
-	/** Last element of \c *this is less than last element of \c x2 */
+    /** Last element of \c *this is less than last element of \c x2 */
     bool upper_less(const interval& x2)const;
-	/** First element of \c *this is less than or equal to the first element of \c x2 */
+    /** First element of \c *this is less than or equal to the first element of \c x2 */
     bool lower_less_equal(const interval& x2)const;
-	/** Last element of \c *this is less than or equal to the last element of \c x2 */
+    /** Last element of \c *this is less than or equal to the last element of \c x2 */
     bool upper_less_equal(const interval& x2)const;
-	/** First element of \c *this is equal to the first element of \c x2 */
+    /** First element of \c *this is equal to the first element of \c x2 */
     bool lower_equal(const interval& x2)const;
-	/** Last element of \c *this is equal to the last element of \c x2 */
+    /** Last element of \c *this is equal to the last element of \c x2 */
     bool upper_equal(const interval& x2)const;
 
 public:
     typedef typename boost::call_traits<DomainT>::param_type DomainP;
 
-	/** Less compare of interval elements. */
-	inline static bool domain_less(DomainP left, DomainP right)       
-	{return domain_compare()(left, right) ;}
+    /** Less compare of interval elements. */
+    inline static bool domain_less(DomainP left, DomainP right)       
+    {return domain_compare()(left, right) ;}
 
-	/** Less or equal compare of interval elements. */
-	inline static bool domain_less_equal(DomainP left, DomainP right) 
-	{return !domain_compare()(right, left );}
+    /** Less or equal compare of interval elements. */
+    inline static bool domain_less_equal(DomainP left, DomainP right) 
+    {return !domain_compare()(right, left );}
 
-	/** Equality compare of interval elements. */
-	inline static bool domain_equal(DomainP left, DomainP right)
-	{return !domain_compare()(left, right) && !domain_compare()(right, left);}
+    /** Equality compare of interval elements. */
+    inline static bool domain_equal(DomainP left, DomainP right)
+    {return !domain_compare()(left, right) && !domain_compare()(right, left);}
 
 private:
     typedef std::pair<DomainT, bound_type> BoundT;
@@ -401,35 +401,35 @@ private:
 template <class DomainT, ITL_COMPARE Compare>
 bound_type interval<DomainT,Compare>::succession_bounds()const
 {
-	if(_boundtype==itl::right_open)     return itl::right_open;
+    if(_boundtype==itl::right_open)     return itl::right_open;
     if(_boundtype==itl::left_open)      return itl::left_open;
     if(_boundtype==itl::closed_bounded) return itl::open_bounded;
-	return itl::closed_bounded;
+    return itl::closed_bounded;
 }
 
 
 template<class IntervalT> 
 struct continuous_type
 {
-	typedef typename IntervalT::domain_type domain_type;
+    typedef typename IntervalT::domain_type domain_type;
     typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
-	static bool open_bound_less_equal(DomainP x, DomainP y) 
-	{ return IntervalT::domain_less_equal(x,y); } //{ return x <= y; }
+    static bool open_bound_less_equal(DomainP x, DomainP y) 
+    { return IntervalT::domain_less_equal(x,y); } //{ return x <= y; }
     static bool open_bound_less      (DomainP x, DomainP y) 
-	{ return IntervalT::domain_less(x,y); } //{ return x < y; }
+    { return IntervalT::domain_less(x,y); } //{ return x < y; }
 };
 
 template<class IntervalT> 
 struct discrete_type
 {
-	typedef typename IntervalT::domain_type domain_type;
+    typedef typename IntervalT::domain_type domain_type;
     typedef typename boost::call_traits<domain_type>::param_type DomainP;
 
     static bool open_bound_less_equal(DomainP x, DomainP y) 
-	{ return IntervalT::domain_less_equal(x, succ(y)); } //{ return      x  <= succ(y); }
+    { return IntervalT::domain_less_equal(x, succ(y)); } //{ return      x  <= succ(y); }
     static bool open_bound_less      (DomainP x, DomainP y) 
-	{ return IntervalT::domain_less(succ(x),y); }        //{ return succ(x) <       y ; }
+    { return IntervalT::domain_less(succ(x),y); }        //{ return succ(x) <       y ; }
 };
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -456,21 +456,21 @@ struct continuous_interval
 {
     static typename IntervalT::size_type cardinality(const IntervalT& x) 
     {
-		typedef typename IntervalT::size_type SizeT;
-		if(x.empty()) 
-			return itl::neutron<SizeT>::value();
+        typedef typename IntervalT::size_type SizeT;
+        if(x.empty()) 
+            return itl::neutron<SizeT>::value();
         else if(x.is(itl::closed_bounded) && IntervalT::domain_equal(x.lower(), x.upper()))
             return itl::unon<SizeT>::value();
         else 
             return std::numeric_limits<SizeT>::infinity();
-	}
+    }
 
     static typename IntervalT::difference_type 
         length(const IntervalT& x) 
     {
-		return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
-			             : x.upper() - x.lower();
-	}
+        return x.empty() ? itl::neutron<typename IntervalT::difference_type>::value() 
+                         : x.upper() - x.lower();
+    }
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
     { return false; }
@@ -485,26 +485,26 @@ struct continuous_interval
 template<class IntervalT> 
 struct discrete_interval
 {
-	typedef typename IntervalT::domain_type domain_type;
+    typedef typename IntervalT::domain_type domain_type;
 
     static typename IntervalT::size_type 
         cardinality(const IntervalT& x) 
     { 
-		return x.empty()? itl::neutron<typename IntervalT::size_type>::value() 
-			            : succ(x.last()-x.first());
-	}
+        return x.empty()? itl::neutron<typename IntervalT::size_type>::value() 
+                        : succ(x.last()-x.first());
+    }
 
     static typename IntervalT::difference_type length(const IntervalT& x) 
     {
-		return x.empty() ? 
+        return x.empty() ? 
             itl::neutron<typename IntervalT::difference_type>::value() : 
             succ(x.last() - x.first()); 
-	}
+    }
 
     static bool unaligned_lwb_equal(const IntervalT& x1, const IntervalT& x2)
     { 
         if(x1.is_left(open_bounded) &&  x2.is_left(closed_bounded)) 
-			 return IntervalT::domain_equal(succ(x1.lower()),     x2.lower() );
+             return IntervalT::domain_equal(succ(x1.lower()),     x2.lower() );
         else return IntervalT::domain_equal(     x1.lower(), succ(x2.lower()));
     }
 
@@ -520,7 +520,7 @@ struct discrete_interval
         if(x1.is_right(closed_bounded) && x2.is_left(closed_bounded)) 
             return IntervalT::domain_equal(succ(x1.upper()), x2.lower());
         if(x1.is_right(open_bounded)  && x2.is_left(open_bounded) ) 
-			return IntervalT::domain_equal(x1.upper(), succ(x2.lower()));
+            return IntervalT::domain_equal(x1.upper(), succ(x2.lower()));
         return false;    
     }
 
@@ -766,16 +766,16 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<Doma
 template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare>& interval<DomainT,Compare>::left_subtract(const interval& x2)
 {
-	if(!x2.exclusive_less(*this))
-		set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
+    if(!x2.exclusive_less(*this))
+        set_lwb( BoundT(x2._upb, x2.succession_bounds()) );
     return *this; 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_subtract(const interval& x2)
 {
-	if(!exclusive_less(x2))
-		set_upb( BoundT(x2._lwb, x2.succession_bounds()) );
+    if(!exclusive_less(x2))
+        set_upb( BoundT(x2._lwb, x2.succession_bounds()) );
     return *this; 
 }
 
@@ -784,9 +784,9 @@ void interval<DomainT,Compare>::right_subtract(interval<DomainT,Compare>& lsur, 
 {
     if(lower_less(x2)) {
         lsur.set_lwb( BoundT(_lwb,boundtype()) );
-		if(exclusive_less(x2))
-			lsur.set_upb( BoundT(_upb,boundtype()) );
-		else
+        if(exclusive_less(x2))
+            lsur.set_upb( BoundT(_upb,boundtype()) );
+        else
             lsur.set_upb( upb_leftOf(x2) );
     }
     else lsur.clear();
@@ -796,9 +796,9 @@ template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::left_subtract(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
 {
     if(x2.upper_less(*this)) {
-		if(x2.exclusive_less(*this))
+        if(x2.exclusive_less(*this))
             rsur.set_lwb( BoundT(_lwb,boundtype()) ); 
-		else
+        else
             rsur.set_lwb(lwb_rightOf(x2)); 
         rsur.set_upb( BoundT(_upb,boundtype()) );
     }
@@ -864,12 +864,12 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::as(bound_type bounded)
 { 
     switch(bounded)
     {
-	case itl::closed_bounded: set(first(), last(), bounded);              break;
+    case itl::closed_bounded: set(first(), last(), bounded);              break;
     case itl::right_open    : set(first(), succ(last()), bounded);        break;
     case itl::left_open     : set(pred(first()), last(), bounded);        break;
     case itl::open_bounded  : set(pred(first()), succ(last()), bounded);  break;
     }
-	return *this;
+    return *this;
 }
 
 //==============================================================================
@@ -879,7 +879,7 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::as(bound_type bounded)
 template <class DomainT, ITL_COMPARE Compare>
 inline bool operator == (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 {
-	return (lhs.empty() && rhs.empty()) || (lhs.lower_equal(rhs) && lhs.upper_equal(rhs));
+    return (lhs.empty() && rhs.empty()) || (lhs.lower_equal(rhs) && lhs.upper_equal(rhs));
 }
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -890,8 +890,8 @@ inline bool operator != (const interval<DomainT,Compare>& lhs, const interval<Do
 template <class DomainT, ITL_COMPARE Compare>
 inline bool operator < (const interval<DomainT,Compare>& lhs, const interval<DomainT,Compare>& rhs)
 {
-	if(lhs.empty()) return !rhs.empty();
-	else return lhs.lower_less(rhs) || (lhs.lower_equal(rhs) && lhs.upper_less(rhs)); 
+    if(lhs.empty()) return !rhs.empty();
+    else return lhs.lower_less(rhs) || (lhs.lower_equal(rhs) && lhs.upper_less(rhs)); 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -923,7 +923,7 @@ template <class DomainT, ITL_COMPARE Compare>
 inline itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
                                            const itl::interval<DomainT,Compare>& right)
 {
-	return itl::interval<DomainT,Compare>(left) &= right;
+    return itl::interval<DomainT,Compare>(left) &= right;
 }
 
 template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>

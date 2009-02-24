@@ -102,7 +102,7 @@ operator &= (ObjectT& object, const OperandT& operand)
 {
     ObjectT intersection;
     object.add_intersection(intersection, operand);
-	object.swap(intersection);
+    object.swap(intersection);
     return object;
 }
 

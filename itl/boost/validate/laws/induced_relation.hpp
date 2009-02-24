@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_induced_relation_hpp_JOFA_090204__
 #define __itl_induced_relation_hpp_JOFA_090204__
 
@@ -16,12 +16,12 @@ Copyright (c) 2007-2008: Joachim Faulhaber
 namespace boost{namespace itl
 {
     // An InducedRelation can be represented as a triangular commuting diagram
-	// where f is a unary function and R a binary predicate or relation
+    // where f is a unary function and R a binary predicate or relation
     // ---------------------------------------------------------------------------
     //  (a,b)--f-->(a',b')
-	//     \        /
-	//    R \  ==  / R
-	//       \    /
+    //     \        /
+    //    R \  ==  / R
+    //       \    /
     //        V  V
     //    {true,false}
     // ---------------------------------------------------------------------------
@@ -58,12 +58,12 @@ namespace boost{namespace itl
             // lhs := a rel b
             SourceT a = this->template getInputValue<operand_a>();
             SourceT b = this->template getInputValue<operand_b>();
-			bool lhs = RelationT<SourceT>()(a,b);
+            bool lhs = RelationT<SourceT>()(a,b);
             // --- right hand side -----------------------
-			TargetT f_a, f_b;
-			FunctionT<TargetT,SourceT>()(f_a, a);
-			FunctionT<TargetT,SourceT>()(f_b, b);
-			bool rhs = RelationT<TargetT>()(f_a, f_b);
+            TargetT f_a, f_b;
+            FunctionT<TargetT,SourceT>()(f_a, a);
+            FunctionT<TargetT,SourceT>()(f_b, b);
+            bool rhs = RelationT<TargetT>()(f_a, f_b);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -80,7 +80,7 @@ namespace boost{namespace itl
 
         bool debug_holds()
         {
-			return holds();
+            return holds();
         }
 
     }; //class InducedRelation

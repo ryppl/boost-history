@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_element_order_hpp_JOFA_090202__
 #define __itl_element_order_hpp_JOFA_090202__
 
@@ -42,36 +42,36 @@ namespace boost{namespace itl
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_equal(a, b);
-			bool rhs = (a_atomic == b_atomic);
+            bool lhs = is_element_equal(a, b);
+            bool rhs = (a_atomic == b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
         bool debug_holds()
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_equal(a, b);
-			bool rhs = (a_atomic == b_atomic);
+            bool lhs = is_element_equal(a, b);
+            bool rhs = (a_atomic == b_atomic);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
         size_t size()const 
@@ -106,36 +106,36 @@ namespace boost{namespace itl
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_less(a, b);
-			bool rhs = a_atomic < b_atomic;
+            bool lhs = is_element_less(a, b);
+            bool rhs = a_atomic < b_atomic;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
         bool debug_holds()
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_less(a, b);
-			bool rhs = a_atomic < b_atomic;
+            bool lhs = is_element_less(a, b);
+            bool rhs = a_atomic < b_atomic;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
 
@@ -172,36 +172,36 @@ namespace boost{namespace itl
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_greater(a, b);
-			bool rhs = a_atomic > b_atomic;
+            bool lhs = is_element_greater(a, b);
+            bool rhs = a_atomic > b_atomic;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
         bool debug_holds()
         {
             Type a = this->template getInputValue<operand_a>();
             Type b = this->template getInputValue<operand_b>();
-			typename Type::atomized_type a_atomic;
-			typename Type::atomized_type b_atomic;
-			Interval::atomize(a_atomic, a);
-			Interval::atomize(b_atomic, b);
+            typename Type::atomized_type a_atomic;
+            typename Type::atomized_type b_atomic;
+            Interval::atomize(a_atomic, a);
+            Interval::atomize(b_atomic, b);
 
-			bool lhs = is_element_greater(a, b);
-			bool rhs = a_atomic > b_atomic;
+            bool lhs = is_element_greater(a, b);
+            bool rhs = a_atomic > b_atomic;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
-			return lhs == rhs;
+            return lhs == rhs;
         }
 
 

@@ -62,7 +62,7 @@ namespace boost{namespace itl
                 {
                     result.insert(*x1_);
                     if(is_set<typename MapType::codomain_type>::value)
-						result.template add<MapType::codomain_intersect>(*x2_); //MEMO template cast for gcc
+                        result.template add<MapType::codomain_intersect>(*x2_); //MEMO template cast for gcc
                     else
                         result.template add<MapType::codomain_combine>(*x2_);
                 }
@@ -112,82 +112,82 @@ namespace boost{namespace itl
         }
 
         //----------------------------------------------------------------------
-		// flip
+        // flip
         //----------------------------------------------------------------------
         template<class MapType>
         void flip(MapType& result, const MapType& x2)
         {
-			if(is_total<MapType>::value && absorbs_neutrons<MapType>::value)
-			{
-				result.clear();
-				return;
-			}
+            if(is_total<MapType>::value && absorbs_neutrons<MapType>::value)
+            {
+                result.clear();
+                return;
+            }
 
             typename MapType::const_iterator x2_ = x2.begin(), cur_x2_, x1_;
             while(x2_ != x2.end()) 
-			{
-				cur_x2_ = x2_;
-				std::pair<typename MapType::iterator,bool> insertion 
-					= result.insert(*x2_++);
-				if(!insertion.WAS_SUCCESSFUL)
-				{
-					//result.erase(insertion.ITERATOR);
-					if(is_set<typename MapType::codomain_type>::value)
-					{
-						typename MapType::iterator res_ = insertion.ITERATOR;
-						typename MapType::codomain_type common_value = res_->CONT_VALUE;
-						MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
-						result.subtract(*res_);
-						result.add(MapType::value_type(res_->KEY_VALUE, common_value));
-					}
+            {
+                cur_x2_ = x2_;
+                std::pair<typename MapType::iterator,bool> insertion 
+                    = result.insert(*x2_++);
+                if(!insertion.WAS_SUCCESSFUL)
+                {
+                    //result.erase(insertion.ITERATOR);
+                    if(is_set<typename MapType::codomain_type>::value)
+                    {
+                        typename MapType::iterator res_ = insertion.ITERATOR;
+                        typename MapType::codomain_type common_value = res_->CONT_VALUE;
+                        MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
+                        result.subtract(*res_);
+                        result.add(MapType::value_type(res_->KEY_VALUE, common_value));
+                    }
                     else
                         result.subtract(*insertion.ITERATOR);
-				}
-			}
+                }
+            }
 
-			if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)
-				FORALL(typename MapType, it_, result)
-					it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
+            if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)
+                FORALL(typename MapType, it_, result)
+                    it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
         }
 
 
 
-		template<class MapType>
-		typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)
-		{
-			while(   iter_ != object.end() 
-				  && iter_->CONT_VALUE == neutron<typename MapType::codomain_type>::value())
-				++iter_;
+        template<class MapType>
+        typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)
+        {
+            while(   iter_ != object.end() 
+                  && iter_->CONT_VALUE == neutron<typename MapType::codomain_type>::value())
+                ++iter_;
 
-			return iter_;
-		}
+            return iter_;
+        }
 
-		/** Function template <tt>lexicographical_equal</tt> implements 
+        /** Function template <tt>lexicographical_equal</tt> implements 
         lexicographical equality except for neutronic content values. */
         template<class MapType>
-		bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
+        bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
         {
             if(&left == &right)        
-				return true;
+                return true;
 
             typename MapType::const_iterator left_  = left.begin();
             typename MapType::const_iterator right_ = right.begin();
 
-			left_  = next_proton(left_,  left);
-			right_ = next_proton(right_, right);
+            left_  = next_proton(left_,  left);
+            right_ = next_proton(right_, right);
 
             while(left_ != left.end() && right_ != right.end())
             {
                 if(!(left_->KEY_VALUE == right_->KEY_VALUE && left_->CONT_VALUE == right_->CONT_VALUE))
                     return false;
 
-				++left_;
-				++right_;
-				left_  = next_proton(left_,  left);
-				right_ = next_proton(right_, right);
+                ++left_;
+                ++right_;
+                left_  = next_proton(left_,  left);
+                right_ = next_proton(right_, right);
             }
 
-			return left_ == left.end() && right_ == right.end();
+            return left_ == left.end() && right_ == right.end();
         }
 
 

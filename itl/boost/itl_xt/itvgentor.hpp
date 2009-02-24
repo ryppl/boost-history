@@ -1,6 +1,6 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
-+-----------------------------------------------------------------------------+
++------------------------------------------------------------------------------+
 Boost Software License - Version 1.0 - August 17th, 2003
 
 Permission is hereby granted, free of charge, to any person or organization
@@ -24,7 +24,7 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 /* ------------------------------------------------------------------
 class ItvGentorT
 --------------------------------------------------------------------*/
@@ -65,7 +65,7 @@ void ItvGentorT<ItvDomTV,ItvTV>::some(ItvTV& x)
 {
     NumberGentorT<unsigned> NATGentor;
     ItvDomTV x1   = m_ItvDomTVGentor(m_valueRange);
-	itl::bound_type bndTypes = NATGentor(4);
+    itl::bound_type bndTypes = NATGentor(4);
     unsigned upOrDown = NATGentor(1);
     unsigned decideEmpty = NATGentor(2);
 

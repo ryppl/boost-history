@@ -1,17 +1,17 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_pushouts_h_JOFA_071124__
 #define __itl_pushouts_h_JOFA_071124__
 
 #include <boost/itl/type_traits/value_size.hpp>
-#include <boost/validate/law.h>
+#include <boost/validate/laws/law.hpp>
 
 namespace boost{namespace itl
 {

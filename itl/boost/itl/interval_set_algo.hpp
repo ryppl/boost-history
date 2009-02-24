@@ -29,7 +29,7 @@ typename IntervalContainerT::size_type continuous_cardinality(const IntervalCont
     size_type interval_size;
     const_FORALL(typename IntervalContainerT, it, object)
     {
-		interval_size = continuous_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
+        interval_size = continuous_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
         if(interval_size == std::numeric_limits<size_type>::infinity())
             return interval_size;
         else
@@ -46,7 +46,7 @@ typename IntervalContainerT::size_type discrete_cardinality(const IntervalContai
 
     size_type size = neutron<size_type>::value();
     const_FORALL(typename IntervalContainerT, it, object)
-		size += discrete_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
+        size += discrete_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
     return size;
 }
 
@@ -77,34 +77,34 @@ namespace Interval_Set
 template<class LeftT, class RightT>
 bool is_element_equal(const LeftT& left, const RightT& right)
 {
-	return subset_compare
-		    (
-				left, right, 
-				left.begin(), left.end(), 
-				right.begin(), right.end()
-			) == inclusion::equal;
+    return subset_compare
+            (
+                left, right, 
+                left.begin(), left.end(), 
+                right.begin(), right.end()
+            ) == inclusion::equal;
 }
 
 template<class LeftT, class RightT>
 bool is_element_less(const LeftT& left, const RightT& right)
 {
-	return element_compare
-		    (
-				left, right, 
-				left.begin(), left.end(), 
-				right.begin(), right.end()
-			)  == comparison::less;
+    return element_compare
+            (
+                left, right, 
+                left.begin(), left.end(), 
+                right.begin(), right.end()
+            )  == comparison::less;
 }
 
 template<class LeftT, class RightT>
 bool is_element_greater(const LeftT& left, const RightT& right)
 {
-	return element_compare
-		    (
-				left, right, 
-				left.begin(), left.end(), 
-				right.begin(), right.end()
-			)  == comparison::greater;
+    return element_compare
+            (
+                left, right, 
+                left.begin(), left.end(), 
+                right.begin(), right.end()
+            )  == comparison::greater;
 }
 
 //------------------------------------------------------------------------------
@@ -114,38 +114,38 @@ bool is_element_greater(const LeftT& left, const RightT& right)
 template<class LeftT, class RightT>
 bool is_inclusion_equal(const LeftT& left, const RightT& right)
 {
-	return subset_compare
-		    (
-				left, right, 
-				left.begin(), left.end(), 
-				right.begin(), right.end()
-			) == inclusion::equal;
+    return subset_compare
+            (
+                left, right, 
+                left.begin(), left.end(), 
+                right.begin(), right.end()
+            ) == inclusion::equal;
 }
 
 template<class LeftT, class RightT>
 bool is_contained_in(const LeftT& left, const RightT& right)
 {
-	int result =
-		subset_compare
-	    (
-			left, right, 
-			left.begin(), left.end(), 
-			right.begin(), right.end()
-		);
-	return result == inclusion::subset || result == inclusion::equal;
+    int result =
+        subset_compare
+        (
+            left, right, 
+            left.begin(), left.end(), 
+            right.begin(), right.end()
+        );
+    return result == inclusion::subset || result == inclusion::equal;
 }
 
 template<class LeftT, class RightT>
 bool contains(const LeftT& left, const RightT& right)
 {
-	int result =
-		subset_compare
-	    (
-			left, right, 
-			left.begin(), left.end(), 
-			right.begin(), right.end()
-		);
-	return result == inclusion::superset || result == inclusion::equal;
+    int result =
+        subset_compare
+        (
+            left, right, 
+            left.begin(), left.end(), 
+            right.begin(), right.end()
+        );
+    return result == inclusion::superset || result == inclusion::equal;
 }
 
 } // namespace Interval_Set

@@ -1,5 +1,5 @@
 /*-----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
+Copyright (c) 2008-2009: Joachim Faulhaber
 +------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
@@ -11,10 +11,10 @@ Copyright (c) 2008-2008: Joachim Faulhaber
 namespace boost{ namespace itl
 {
     template <class Type> struct absorbs_neutrons
-	{
-		typedef absorbs_neutrons<Type> type;
-		static const bool value = false; 
-	};
+    {
+        typedef absorbs_neutrons<Type> type;
+        static const bool value = false; 
+    };
 
 }} // namespace boost itl
 

@@ -193,16 +193,16 @@ namespace boost{namespace itl
         }
 
 
-		template<class SetType>
+        template<class SetType>
         void flip(SetType& result, const SetType& x2)
         {
             typename SetType::const_iterator x2_ = x2.begin(), x1_;
             while(x2_ != x2.end()) 
-			{
-				std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
-				if(!insertion.WAS_SUCCESSFUL)
-					result.erase(insertion.ITERATOR);
-			}
+            {
+                std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
+                if(!insertion.WAS_SUCCESSFUL)
+                    result.erase(insertion.ITERATOR);
+            }
         }
 
 

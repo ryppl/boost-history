@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <iostream>
@@ -108,26 +108,26 @@ public:
         //-----------------------------------------------------------------
         case RootType::split_interval_map: {
             switch(domainChoice) {
-			case DomainType::Int: 
-				switch(neutronizerChoice) {
-				NEURONIZER_CASES(interval_morphic_validater, split_interval_map, int, int)
-				default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
+            case DomainType::Int: 
+                switch(neutronizerChoice) {
+                NEURONIZER_CASES(interval_morphic_validater, split_interval_map, int, int)
+                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
                                             neutronizerChoice, _neutronizerChoice);
-				}
+                }
             default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                          domainChoice, _domainChoice);
             }
         }
         case RootType::interval_map: {
             switch(domainChoice) {
-			case DomainType::Int: 
-				switch(neutronizerChoice) {
-				NEURONIZER_CASES(interval_morphic_validater, interval_map, int, int)
+            case DomainType::Int: 
+                switch(neutronizerChoice) {
+                NEURONIZER_CASES(interval_morphic_validater, interval_map, int, int)
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
                                             domainChoice, _domainChoice);
                 }
             }
-		}
+        }
         default: return choiceError(ITL_LOCATION("rootChoice:\n"), rootChoice, _rootChoice);
         } //switch(rootChoice)
 

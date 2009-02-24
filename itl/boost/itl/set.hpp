@@ -63,23 +63,23 @@ public:
     typedef typename base_type::reverse_iterator       reverse_iterator;
     typedef typename base_type::const_reverse_iterator const_reverse_iterator;
 
-	enum { fineness = 4 };
+    enum { fineness = 4 };
 
 public:
-	//==========================================================================
-	//= Construct, copy, destruct
-	//==========================================================================
+    //==========================================================================
+    //= Construct, copy, destruct
+    //==========================================================================
     set(){}
     set(const domain_compare& comp): 
         std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
     template <class InputIterator>
     set(InputIterator first, InputIterator last): 
-		std::set<InputIterator>(first,last) {}
+        std::set<InputIterator>(first,last) {}
 
     template <class InputIterator>
     set(InputIterator first, InputIterator last, const key_compare& comp): 
-		std::set<InputIterator>(first, last, comp) {}
+        std::set<InputIterator>(first, last, comp) {}
 
     set(const set& src): base_type::set(src){}
 
@@ -93,7 +93,7 @@ public:
     template<class Predicate>
     set& assign_if(const set& src, const Predicate&);
 
-	//==========================================================================
+    //==========================================================================
     using base_type::empty;
     using base_type::clear;
 
@@ -118,75 +118,75 @@ public:
     using base_type::equal_range;
 
 public:
-	//==========================================================================
-	//= Emptieness, containment
-	//==========================================================================
+    //==========================================================================
+    //= Emptieness, containment
+    //==========================================================================
 
     /// Checks if the element \c value is in the set
     bool contains(const element_type& value)const 
-	{ return !(find(value) == end()); }
+    { return !(find(value) == end()); }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const set& super)const 
-	{ return Set::contained_in(*this, super); }
+    { return Set::contained_in(*this, super); }
 
     /** Does <tt>*this</tt> contain <tt>sub</tt>? */
     bool contains(const set& sub)const { return Set::contained_in(sub, *this); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
-	bool disjoint(const set& x2)const { return Set::disjoint(*this, x2); }
+    bool disjoint(const set& x2)const { return Set::disjoint(*this, x2); }
 
-	//==========================================================================
-	//= Size
-	//==========================================================================
+    //==========================================================================
+    //= Size
+    //==========================================================================
     /** \c iterative_size() yields the number of elements that is visited
         throu complete iteration. For interval sets \c iterative_size() is
         different from \c size(). */
     size_t iterative_size()const { return size(); }
 
-	size_t cardinality()const { return size(); }
+    size_t cardinality()const { return size(); }
 
-	//==========================================================================
-	//= Addition, subtraction
-	//==========================================================================
-	/** Add an element \c value to the set. */
+    //==========================================================================
+    //= Addition, subtraction
+    //==========================================================================
+    /** Add an element \c value to the set. */
     set& add(const element_type& value) { insert(value); return *this; } 
 
-	/** Subtract an element \c value from the set. */
+    /** Subtract an element \c value from the set. */
     set& subtract(const element_type& value);
 
-	//==========================================================================
-	//= Insertion, erasure
-	//==========================================================================
+    //==========================================================================
+    //= Insertion, erasure
+    //==========================================================================
     /** Erase the elements in *this set to which property \c hasProperty applies. 
         Keep all the rest. */
     template<class Predicate>
     set& erase_if(const Predicate&);
 
-	//==========================================================================
-	//= Intersection, symmetric difference
-	//==========================================================================
+    //==========================================================================
+    //= Intersection, symmetric difference
+    //==========================================================================
 
-	/** The intersection of \c key in \c *this set is added to \c section. */
-	void add_intersection(set& section, const element_type& key)const;
+    /** The intersection of \c key in \c *this set is added to \c section. */
+    void add_intersection(set& section, const element_type& key)const;
 
-	/** The intersection of set \c sectant with \c *this set is added 
-	    to \c section. */
-	void add_intersection(set& section, const set& sectant)const;
+    /** The intersection of set \c sectant with \c *this set is added 
+        to \c section. */
+    void add_intersection(set& section, const set& sectant)const;
 
-	/** If \c *this set contains \c value it is erased, otherwise it is added. */
+    /** If \c *this set contains \c value it is erased, otherwise it is added. */
     set& flip(const element_type& value);
 
-	//==========================================================================
-	//= Representation
-	//==========================================================================
+    //==========================================================================
+    //= Representation
+    //==========================================================================
 
     /** Represent this set as a string */
     std::string as_string(const char* sep = " ")const;
 
-	//==========================================================================
-	//= Algorithm unifiers
-	//==========================================================================
+    //==========================================================================
+    //= Algorithm unifiers
+    //==========================================================================
 
     /** \c key_value allows for a uniform access to \c key_values which is
         is used for common algorithms on sets and maps. */
@@ -226,36 +226,36 @@ set<DomainT,Compare,Alloc>&
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void set<DomainT,Compare,Alloc>
-	::add_intersection(set& section, const element_type&sectant)const
+    ::add_intersection(set& section, const element_type&sectant)const
 {
-	const_iterator it_ = find(sectant);
-	if(it_ != end()) 
-		section.add(*it_);
+    const_iterator it_ = find(sectant);
+    if(it_ != end()) 
+        section.add(*it_);
 }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 void set<DomainT,Compare,Alloc>
-	::add_intersection(set& section, const set& sectant)const
+    ::add_intersection(set& section, const set& sectant)const
 {
     const_iterator common_lwb_;
     const_iterator common_upb_;
-	if(!Set::common_range(common_lwb_, common_upb_, sectant, *this))
+    if(!Set::common_range(common_lwb_, common_upb_, sectant, *this))
         return;
 
-	const_iterator sec_ = common_lwb_;
-	while(sec_ != common_upb_)
-		add_intersection(section, *sec_++);
+    const_iterator sec_ = common_lwb_;
+    while(sec_ != common_upb_)
+        add_intersection(section, *sec_++);
 }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 set<DomainT,Compare,Alloc>::flip(const element_type& operand)
 {
-	std::pair<iterator,bool> insertion = insert(operand);
-	if(!insertion.WAS_SUCCESSFUL)
-		erase(insertion.ITERATOR);
+    std::pair<iterator,bool> insertion = insert(operand);
+    if(!insertion.WAS_SUCCESSFUL)
+        erase(insertion.ITERATOR);
 
-	return *this;
+    return *this;
 } 
 
 
@@ -447,10 +447,10 @@ inline itl::set<DomainT,Compare,Alloc>&
 operator &= (      itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 {
-	itl::set<DomainT,Compare,Alloc> section;
-	object.add_intersection(section, operand);
-	object.swap(section);
-	return object; 
+    itl::set<DomainT,Compare,Alloc> section;
+    object.add_intersection(section, operand);
+    object.swap(section);
+    return object; 
 } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -468,10 +468,10 @@ inline itl::set<DomainT,Compare,Alloc>&
 operator &= (      itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
 {
-	itl::set<DomainT,Compare,Alloc> section;
-	object.add_intersection(section, operand);
-	object.swap(section);
-	return object; 
+    itl::set<DomainT,Compare,Alloc> section;
+    object.add_intersection(section, operand);
+    object.swap(section);
+    return object; 
 } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -488,7 +488,7 @@ inline itl::set<DomainT,Compare,Alloc>&
 operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 {
-	return object.flip(operand);
+    return object.flip(operand);
 } 
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -496,7 +496,7 @@ itl::set<DomainT,Compare,Alloc>
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { 
-	return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+    return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
 }
 
 
@@ -508,7 +508,7 @@ inline itl::set<DomainT,Compare,Alloc>&
 operator ^= (      itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
 { 
-	Set::flip(object, operand); return object; 
+    Set::flip(object, operand); return object; 
 }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -516,7 +516,7 @@ itl::set<DomainT,Compare,Alloc>
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
 { 
-	return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+    return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
 }
 
 
@@ -536,17 +536,17 @@ set<DomainT,Compare,Alloc>&
 
 //---------------------------------------------------------------------------------
 template<class CharType, class CharTraits, 
-	class DomainT, ITL_COMPARE Compare,	ITL_ALLOC Alloc>
+    class DomainT, ITL_COMPARE Compare,    ITL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, 
   const itl::set<DomainT,Compare,Alloc>& object)
 {
-	typedef itl::set<DomainT,Compare,Alloc> ObjectT;
-	stream << "{";
-	const_FORALL(typename ObjectT, it, object)
-		stream << *it;
+    typedef itl::set<DomainT,Compare,Alloc> ObjectT;
+    stream << "{";
+    const_FORALL(typename ObjectT, it, object)
+        stream << *it;
 
-	return stream << "}";
+    return stream << "}";
 }
 
 
@@ -554,15 +554,15 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 template <class Type>
 struct is_set<itl::set<Type> >
 { 
-	typedef is_set<itl::set<Type> > type;
-	static const bool value = true; 
+    typedef is_set<itl::set<Type> > type;
+    static const bool value = true; 
 };
 
 template <class Type>
 struct is_interval_container<itl::set<Type> >
 { 
-	typedef is_interval_container<itl::set<Type> > type;
-	enum{value = true}; 
+    typedef is_interval_container<itl::set<Type> > type;
+    enum{value = true}; 
 };
 
 template <class Type>

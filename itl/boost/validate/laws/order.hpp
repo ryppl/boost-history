@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_order_h_JOFA_071129__
 #define __itl_order_h_JOFA_071129__
 
@@ -83,8 +83,8 @@ namespace boost{namespace itl
 
     // ---------------------------------------------------------------------------
     template <typename Type, 
-		      template<class>class Relation,
-			  template<class>class Equality = itl::std_equal>
+              template<class>class Relation,
+              template<class>class Equality = itl::std_equal>
     class Antisymmetry 
         : public Law<Antisymmetry<Type,Relation,Equality>, 
                      LOKI_TYPELIST_2(Type,Type), Loki::NullType> 

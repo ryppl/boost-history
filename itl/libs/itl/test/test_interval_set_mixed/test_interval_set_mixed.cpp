@@ -1,10 +1,10 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2008-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #define BOOST_TEST_MODULE itl::interval_set unit test
 #include <string>
 #include <boost/mpl/list.hpp>
@@ -238,18 +238,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_equal_4_bicremental_ty
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_contains_4_bicremental_types, T, bicremental_types)
 {
-	split_interval_set<T> split_set;
-	split_set.add(I_D(0,4)).add(I_D(4,8));
+    split_interval_set<T> split_set;
+    split_set.add(I_D(0,4)).add(I_D(4,8));
     BOOST_CHECK_EQUAL( split_set.contains(MK_v(4)), true );
     BOOST_CHECK_EQUAL( split_set.contains(C_D(2,5)), true );
 
-	interval_set<T> join_set_gap4(split_set.erase(MK_v(4)));
+    interval_set<T> join_set_gap4(split_set.erase(MK_v(4)));
     BOOST_CHECK_EQUAL( join_set_gap4.contains(MK_v(4)), false );
     BOOST_CHECK_EQUAL( join_set_gap4.contains(C_D(2,5)), false );
 
     BOOST_CHECK_EQUAL( split_set.contains(split_set), true );
     BOOST_CHECK_EQUAL( split_set.contains(join_set_gap4), true );
-	
+    
 }
 
 
@@ -761,79 +761,79 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_disjoint_4_bicremental
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_plus_overload_4_bicremental_types, T, bicremental_types)
 {
-	interval_set<T>          join_a;
-	separate_interval_set<T> sep_a;
-	split_interval_set<T>    split_a;
+    interval_set<T>          join_a;
+    separate_interval_set<T> sep_a;
+    split_interval_set<T>    split_a;
 
-	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
-	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
-	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+    sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+    split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 
-	BOOST_CHECK_EQUAL(split_a + sep_a,  sep_a  + split_a );
-	BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
-	BOOST_CHECK_EQUAL(sep_a   + join_a, join_a + sep_a  );
+    BOOST_CHECK_EQUAL(split_a + sep_a,  sep_a  + split_a );
+    BOOST_CHECK_EQUAL(split_a + join_a, join_a + split_a);
+    BOOST_CHECK_EQUAL(sep_a   + join_a, join_a + sep_a  );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_pipe_overload_4_bicremental_types, T, bicremental_types)
 {
-	interval_set<T>          join_a;
-	separate_interval_set<T> sep_a;
-	split_interval_set<T>    split_a;
+    interval_set<T>          join_a;
+    separate_interval_set<T> sep_a;
+    split_interval_set<T>    split_a;
 
-	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
-	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
-	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+    sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+    split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 
-	BOOST_CHECK_EQUAL(split_a | sep_a,  sep_a  | split_a );
-	BOOST_CHECK_EQUAL(split_a | join_a, join_a | split_a);
-	BOOST_CHECK_EQUAL(sep_a   | join_a, join_a | sep_a  );
+    BOOST_CHECK_EQUAL(split_a | sep_a,  sep_a  | split_a );
+    BOOST_CHECK_EQUAL(split_a | join_a, join_a | split_a);
+    BOOST_CHECK_EQUAL(sep_a   | join_a, join_a | sep_a  );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_minus_overload_4_bicremental_types, T, bicremental_types)
 {
-	interval_set<T>          join_a,  join_b;
-	separate_interval_set<T> sep_a,   sep_b;
-	split_interval_set<T>    split_a, split_b;
+    interval_set<T>          join_a,  join_b;
+    separate_interval_set<T> sep_a,   sep_b;
+    split_interval_set<T>    split_a, split_b;
 
-	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
-	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
-	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+    sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+    split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 
-	BOOST_CHECK_EQUAL(split_a - sep_a,   (split_b = split_a) -= sep_a  );
-	BOOST_CHECK_EQUAL(split_a - join_a,  (split_b = split_a) -= join_a );
-	BOOST_CHECK_EQUAL(sep_a   - join_a,  (sep_b   = sep_a)   -= join_a );
+    BOOST_CHECK_EQUAL(split_a - sep_a,   (split_b = split_a) -= sep_a  );
+    BOOST_CHECK_EQUAL(split_a - join_a,  (split_b = split_a) -= join_a );
+    BOOST_CHECK_EQUAL(sep_a   - join_a,  (sep_b   = sep_a)   -= join_a );
 
-	BOOST_CHECK_EQUAL(sep_a   - split_a, (sep_b  = sep_a)    -= split_a);
-	BOOST_CHECK_EQUAL(join_a  - split_a, (join_b = join_a)   -= split_a);
-	BOOST_CHECK_EQUAL(join_a  - sep_a,   (join_b = join_a)   -= sep_a  );
+    BOOST_CHECK_EQUAL(sep_a   - split_a, (sep_b  = sep_a)    -= split_a);
+    BOOST_CHECK_EQUAL(join_a  - split_a, (join_b = join_a)   -= split_a);
+    BOOST_CHECK_EQUAL(join_a  - sep_a,   (join_b = join_a)   -= sep_a  );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_et_overload_4_bicremental_types, T, bicremental_types)
 {
-	interval_set<T>          join_a;
-	separate_interval_set<T> sep_a;
-	split_interval_set<T>    split_a;
+    interval_set<T>          join_a;
+    separate_interval_set<T> sep_a;
+    split_interval_set<T>    split_a;
 
-	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
-	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
-	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+    sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+    split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 
-	BOOST_CHECK_EQUAL(split_a & sep_a,  sep_a  & split_a );
-	BOOST_CHECK_EQUAL(split_a & join_a, join_a & split_a);
-	BOOST_CHECK_EQUAL(sep_a   & join_a, join_a & sep_a  );
+    BOOST_CHECK_EQUAL(split_a & sep_a,  sep_a  & split_a );
+    BOOST_CHECK_EQUAL(split_a & join_a, join_a & split_a);
+    BOOST_CHECK_EQUAL(sep_a   & join_a, join_a & sep_a  );
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_infix_caret_overload_4_bicremental_types, T, bicremental_types)
 {
-	interval_set<T>          join_a;
-	separate_interval_set<T> sep_a;
-	split_interval_set<T>    split_a;
+    interval_set<T>          join_a;
+    separate_interval_set<T> sep_a;
+    split_interval_set<T>    split_a;
 
-	join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
-	sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
-	split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
+    join_a.add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,9));
+    sep_a .add(I_D(0,4)) .add(I_I(4,6)).add(I_D(5,11));
+    split_a.add(I_I(0,0)).add(I_D(8,7)).add(I_I(6,11));
 
-	BOOST_CHECK_EQUAL(split_a ^ sep_a,  sep_a  ^ split_a );
-	BOOST_CHECK_EQUAL(split_a ^ join_a, join_a ^ split_a);
-	BOOST_CHECK_EQUAL(sep_a   ^ join_a, join_a ^ sep_a  );
+    BOOST_CHECK_EQUAL(split_a ^ sep_a,  sep_a  ^ split_a );
+    BOOST_CHECK_EQUAL(split_a ^ join_a, join_a ^ split_a);
+    BOOST_CHECK_EQUAL(sep_a   ^ join_a, join_a ^ sep_a  );
 }

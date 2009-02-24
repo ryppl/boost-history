@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #pragma once
 
 #include <boost/mpl/bool.hpp> 
@@ -28,7 +28,7 @@ namespace boost{namespace itl
     public:
         typedef strict_weak_order_validater<Type, std::less> LessValidaterT;
         typedef partial_order_validater<Type, std::less_equal> LessEqualValidaterT;
-		typedef partial_order_validater<Type, itl::sub_super_set, itl::element_equal> ContainedInValidaterT;
+        typedef partial_order_validater<Type, itl::sub_super_set, itl::element_equal> ContainedInValidaterT;
 
         enum Laws 
         { 
@@ -42,7 +42,7 @@ namespace boost{namespace itl
 
         void setProfile()
         {
-			const int sum_of_weights = 100;
+            const int sum_of_weights = 100;
             _lawChoice.setSize(sum_of_weights);
             _lawChoice.setMaxWeights(sum_of_weights);
             _lawChoice[strictWeakStdOrder]         = 33;

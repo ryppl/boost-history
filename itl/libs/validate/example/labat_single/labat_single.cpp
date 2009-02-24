@@ -1,12 +1,12 @@
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 A Law Based Test Automaton 'LaBatea'
 Author: Joachim Faulhaber
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
    Distributed under the Boost Software License, Version 1.0.
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #include <iostream>
 #include <stdio.h>
 
@@ -43,37 +43,37 @@ void test_LawValidater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-	//typedef InplaceFlip
-	//	<interval_map<int, nat> >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef InplaceFlip
+    //    <interval_map<int, nat> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef InplaceAssociativity
-	//	<itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef InplaceAssociativity
+    //    <itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef InducedRelation
-		<itl::interval_map<int, int, partial_enricher>, 
-		typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
-		Interval::Atomize, protonic_equal> TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
+    typedef InducedRelation
+        <itl::interval_map<int, int, partial_enricher>, 
+        typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
+        Interval::Atomize, protonic_equal> TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
-	//-----------------------------------------------------------------------------
-	int test_count = 10000;
-	ptime start, stop;
+    //-----------------------------------------------------------------------------
+    int test_count = 10000;
+    ptime start, stop;
 
-	test_law.setTrialsCount(test_count);
+    test_law.setTrialsCount(test_count);
 
-	std::cout << "Start\n";
-	start = ptime(microsec_clock::local_time());
-	test_law.run();
-	stop = ptime(microsec_clock::local_time());
-	std::cout << "Stop. Time elapsed: " << stop - start << endl;
+    std::cout << "Start\n";
+    start = ptime(microsec_clock::local_time());
+    test_law.run();
+    stop = ptime(microsec_clock::local_time());
+    std::cout << "Stop. Time elapsed: " << stop - start << endl;
 }
 
 
 
 int main()
 {
-	test_LawValidater();
-	return 0;
+    test_LawValidater();
+    return 0;
 }

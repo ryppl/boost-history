@@ -1,8 +1,8 @@
-/*----------------------------------------------------------------------------+
-Copyright (c) 2007-2008: Joachim Faulhaber
-+-----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2007-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
 Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
-+-----------------------------------------------------------------------------+
++------------------------------------------------------------------------------+
 Boost Software License - Version 1.0 - August 17th, 2003
 
 Permission is hereby granted, free of charge, to any person or organization
@@ -26,7 +26,7 @@ SHALL THE COPYRIGHT HOLDERS OR ANYONE DISTRIBUTING THE SOFTWARE BE LIABLE
 FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #ifndef __itl_episode_set_hpp_JOFA_011015_H__
 #define __itl_episode_set_hpp_JOFA_011015_H__
 
@@ -69,15 +69,15 @@ namespace boost{namespace itl
 template <class TimeT, class TypeDomain>
 class episode_set : public itl::set<typed_episode<TimeT, TypeDomain>*, 
 #ifdef ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-	                                Less_TypedEpisodeATP 
+                                    Less_TypedEpisodeATP 
 #else
-	                                Less_TypedEpisodeATP<typed_episode<TimeT, TypeDomain>*> 
+                                    Less_TypedEpisodeATP<typed_episode<TimeT, TypeDomain>*> 
 #endif
                                    > 
 {
     // all elements must have the same type from TypeDomain
 public:
-	typedef typed_episode<TimeT, TypeDomain>* episode_type; 
+    typedef typed_episode<TimeT, TypeDomain>* episode_type; 
     typedef itl::set<typed_episode<TimeT, TypeDomain>*, 
                      ITL_COMPARE_INSTANCE(Less_TypedEpisodeATP,episode_type)> base_type;
     typedef typename base_type::iterator iterator;

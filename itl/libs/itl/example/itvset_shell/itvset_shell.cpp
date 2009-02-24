@@ -8,10 +8,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-/*----------------------------------------------------------------------------+
+/*-----------------------------------------------------------------------------+    
 itvset_shell.cpp provides  a simple test shells for interval sets.
 The shell also gives you a good idea how interval container are working.
-+----------------------------------------------------------------------------*/
++-----------------------------------------------------------------------------*/
 #include <iostream>
 
 #include <boost/itl/split_interval_set.hpp>
