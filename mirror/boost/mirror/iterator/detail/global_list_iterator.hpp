@@ -1,5 +1,5 @@
 /**
- * \file boost/mirror/iterator/detail/base_class_iterator.hpp
+ * \file boost/mirror/iterator/detail/global_list_iterator.hpp
  * Iterators for iterating through meta-object sequences
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
@@ -7,11 +7,11 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_ITERATOR_DETAIL_BASE_CLASS_ITERATOR_HPP
-#define BOOST_MIRROR_ITERATOR_DETAIL_BASE_CLASS_ITERATOR_HPP
+#ifndef BOOST_MIRROR_ITERATOR_DETAIL_GLOBAL_LIST_ITERATOR_HPP
+#define BOOST_MIRROR_ITERATOR_DETAIL_GLOBAL_LIST_ITERATOR_HPP
 
 #include <boost/mirror/iterator/detail/common_iterator.hpp>
-#include <boost/mirror/meta_inheritance.hpp>
+#include <boost/mirror/detail/global_list.hpp>
 #include <boost/mirror/intrinsic/at.hpp>
 
 
@@ -19,26 +19,27 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-	/** Iterator for iterating through meta_base_classes
+	/** Iterator for iterating through the items
+	 *  in a global_list
 	 */
 	template <
-		class ReflectedType, 
-		class VariantTag
+		class Selector, 
+		class Counter
 	>
 	struct iterator_pointee_selector<
-		meta_base_classes<ReflectedType, VariantTag>
+		counter::global_list<Selector, Counter>
 	>
 	{
 		template <
-			class MetaBaseClasses,
-			class BaseClassPos,
+			class GlobalList,
+			class ItemPos,
 			class UnaryPredicate
 		>
 		struct apply
 		{
 			typedef typename at<
-				MetaBaseClasses,
-				BaseClassPos
+				GlobalList,
+				ItemPos
 			>::type type;
 		};
 	};

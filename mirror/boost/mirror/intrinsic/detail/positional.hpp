@@ -27,62 +27,8 @@ namespace detail {
 		class Arg1, 
 		template <class, class> class Implementation
 	>
-	struct position_getter_impl_1 { };
-
-	/** Specialization of position_getter_impl_1<MetaObjectSequence>
-	 *  for meta_class_attributes<>
-	 */
-	template <
-		class Class, 
-		class VariantTag, 
-		class Arg1,
-		template <class, class> class Implementation
-	>
-	struct position_getter_impl_1<
-		meta_class_attributes<Class, VariantTag>,
-		Arg1,
-		Implementation 
-	>
-	: Implementation<
-		meta_class_attributes<Class, VariantTag>,
-		Arg1
-	>{ };
-
-	/** Specialization of for_each_impl_1<MetaObjectSequence>
-	 *  for meta_class_all_attributes<>
-	 */
-	template <
-		class Class, 
-		class VariantTag, 
-		class Arg1,
-		template <class, class> class Implementation
-	>
-	struct position_getter_impl_1<
-		meta_class_all_attributes<Class, VariantTag>,
-		Arg1,
-		Implementation 
-	>
-	: Implementation<
-		meta_class_all_attributes<Class, VariantTag>,
-		Arg1
-	>{ };
-
-	/** Specialization of position_getter_impl_1<MetaObjectSequence>
-	 *  for meta_base_classes<>
-	 */
-	template <
-		class Class, 
-		class VariantTag,
-		class Arg1,
-		template <class, class> class Implementation
-	>
-	struct position_getter_impl_1<
-		meta_base_classes<Class, VariantTag>, 
-		Arg1,
-		Implementation 
-	>
-	: Implementation<
-		meta_base_classes<Class, VariantTag>,
+	struct position_getter_impl_1 : Implementation<
+		MetaObjectSequence,
 		Arg1
 	>{ };
 

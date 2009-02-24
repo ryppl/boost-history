@@ -12,6 +12,7 @@
 
 #include <boost/mirror/iterator/detail/attribute_iterator.hpp>
 #include <boost/mirror/iterator/detail/base_class_iterator.hpp>
+#include <boost/mirror/iterator/detail/global_list_iterator.hpp>
 
 namespace boost {
 namespace mirror {

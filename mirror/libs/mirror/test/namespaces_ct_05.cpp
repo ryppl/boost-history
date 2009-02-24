@@ -19,12 +19,20 @@
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/back.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/lambda.hpp>
 // namespace registering 
 #include <boost/mirror/meta_namespace.hpp>
-// intrinsic meta-functions
+// intrinsic meta-functions, iterators and algorithms
 #include <boost/mirror/intrinsic/size.hpp>
 #include <boost/mirror/intrinsic/at.hpp>
 #include <boost/mirror/intrinsic/empty.hpp>
+#include <boost/mirror/intrinsic/begin.hpp>
+#include <boost/mirror/intrinsic/end.hpp>
+#include <boost/mirror/iterators.hpp>
+#include <boost/mirror/algorithm/find_if.hpp>
+//
+#include <boost/mirror/traits/reflects_global_scope.hpp>
+#include <boost/mirror/traits/reflects_namespace.hpp>
 //
 #include "./test.hpp"
 
@@ -57,9 +65,9 @@ BOOST_MIRROR_REG_NAMESPACE((test)(h))
 } // namespace mirror
 } // namespace boost
 
+
 void test_main()
 {
-	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
@@ -67,8 +75,33 @@ void test_main()
 	typedef BOOST_MIRRORED_NAMESPACE(::test) meta_test;
 	//
 #ifdef BOOST_MIRROR_NO_GLOBAL_LISTS
+	// if the global lists are not available, then mirror does not
+	// reflect namespace members
+	//
 	BOOST_MPL_ASSERT( empty< meta_test::members > );
 	BOOST_MPL_ASSERT_RELATION( size< meta_test::members >::value, ==, 0);
+        BOOST_MPL_ASSERT((iterator_equal<
+                begin<meta_test::members>::type,
+                end<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT_NOT((iterator_not_equal<
+                begin<meta_test::members>::type,
+                end<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT((iterator_equal<
+                find_if<
+			meta_test::members, 
+			mpl::lambda<reflects_namespace<mpl::_1> >::type
+		>::type,
+                end<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT((iterator_equal<
+                find_if<
+			meta_test::members, 
+			mpl::lambda<reflects_global_scope<mpl::_1> >::type
+		>::type,
+                end<meta_test::members>::type
+        >));
 #else
 	typedef mpl::vector<
 		mpl::vector2<BOOST_MIRRORED_NAMESPACE(::test::a), mpl::int_<0> >,
@@ -107,6 +140,30 @@ void test_main()
 			>
 		>
 	));
+	//
+        BOOST_MPL_ASSERT((iterator_not_equal<
+                begin<meta_test::members>::type,
+                end<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT_NOT((iterator_equal<
+                begin<meta_test::members>::type,
+                end<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT((iterator_equal<
+                find_if<
+			meta_test::members, 
+			mpl::lambda<reflects_namespace<mpl::_1> >::type
+		>::type,
+                begin<meta_test::members>::type
+        >));
+        BOOST_MPL_ASSERT((iterator_equal<
+                find_if<
+			meta_test::members, 
+			mpl::lambda<reflects_global_scope<mpl::_1> >::type
+		>::type,
+                end<meta_test::members>::type
+        >));
+ 
 #endif
 }
 
