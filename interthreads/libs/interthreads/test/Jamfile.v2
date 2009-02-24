@@ -68,6 +68,7 @@ rule interthreads-run ( sources * )
           [ interthreads-run ../example/basic_keep_alive.cpp ../example/async_ostream.cpp ]
           [ interthreads-run ../example/multiple_algorithms.cpp ]
           [ interthreads-run ../example/parallel_sort.cpp ]
+          [ interthreads-run ../example/parallel_sort2.cpp ]
 
 
     ;
