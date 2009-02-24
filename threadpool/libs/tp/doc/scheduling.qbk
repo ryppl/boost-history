@@ -1,0 +1,84 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:scheduling Scheduling]
+The scheduling policy determines how __actions__ are scheduled inside the __channel__.
+
+[heading fifo]
+
+    struct fifo
+
+First inserted pending __action__ get taken first.
+
+
+[heading lifo]
+
+    struct lifo
+
+Last inserted pending __action__ get taken first.
+
+
+[heading priority]
+
+    template< typename Attr, typename Ord = std::less< Attr > > struct priority
+
+Each pending task is associated with a priority attribute which is used for ordering __actions__.
+
+
+[heading smart]
+
+    template< typename Attr, typename Ord, typename Enq, typename Deq > struct smart
+
+Each pending __actions__ is associated with an attribute. The scheduler gets an put- and take-policy
+as template arguments. The corresponding policy get applied for each insertion and removal.
+
+__boost_threadpool__ provides ['boost::tp::replace_oldest] as put policy and ['boost::tp::take_oldest] as take
+policy. Both policies allow the replacement of old __actions__ in the scheduler by new ones.
+
+    // creates a pool with unbounded channel
+    // tasks are processed depending on the associated attributed
+    // oldest tasks with the same attributed pending in the channel
+    // will be replaced by the new task
+    // this example would execute add( 1, 2) and add( 5, 6)
+    // add( 2, 3) is removed (if pending when add( 5, 6) is submitted)
+    boost::tp::pool<
+      boost::tp::unbounded_channel<
+        boost::tp::smart<
+          int,
+          std::less< int >,
+          boost::tp::replace_oldest,
+          boost::tp::take_oldest
+        >
+      >
+    > pool( boost::tp::poolsize( 1) );
+
+    pool.submit(
+      boost::bind(
+        add_fn,
+        1,
+        2),
+        0);
+
+    // replaced by later task with same attribute
+    // if still pending in pool
+    pool.submit(
+      boost::bind(
+        add_fn,
+        3,
+        4),
+        1);
+
+    // will replace previous pending action
+    pool.submit(
+      boost::bind(
+        add_fn,
+        5,
+        6),
+        1);
+
+
+[endsect]

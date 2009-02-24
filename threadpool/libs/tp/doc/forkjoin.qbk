@@ -1,0 +1,83 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:forkjoin Fork/Join]
+Fork/Join algorithms are recursive divide-and-conquer algorithms which repeatedly splitt __sub_actions__ until they become small enough to solve using simple, short sequential methods, so that they run in parallel on multiple cores.
+
+The fork operation creates a new __sub_action__ (which can run in parallel) in the pool. The current __actions__ is not proceeded in the join operation until the forked __sub_actions__ have completed. In the meantime the __worker_thread__ executes other __actions__ from its local __worker_queue__.
+
+    // defines the threadpool type
+    typedef boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool_type;
+
+    class fibo
+    {
+    private:
+      pool_type &  pool_;
+      int          cutoff_;
+
+      int seq_( int n)
+      {
+        if ( n <= 1) return n;
+        else return seq_( n - 2) + seq_( n - 1);
+      }
+
+      int par_( int n)
+      {
+        if ( n <= cutoff_) return seq_( n);
+        else
+        {
+          // fork a new sub-action t1 in pool
+          boost::tp::task< int > t1(
+            pool_.submit(
+              boost::bind(
+                & fibo::par_,
+                boost::ref( * this),
+                n - 1) ) );
+
+           // fork a new sub-action t2 in pool
+          boost::tp::task< int > t1(
+            pool_.submit(
+              boost::bind(
+                & fibo::par_,
+                boost::ref( * this),
+                n - 2) ) );
+
+          // joining the result of sub-action t1 and t2
+          return t1.get() + t2.get();
+        }
+      }
+    public:
+      fibo( pool_type & pool, int cutoff)
+      : pool_( pool), cutoff_( cutoff)
+      {}
+
+      int execute( int n)
+      {
+        int result( par_( n) );
+        return result;
+      }
+    };
+
+    // creates a threadpool with two worker-threads
+    pool_type pool( boost::tp::poolsize( 2) );
+
+    fibo fib( pool, 1);
+
+    // submit an action
+    // which calculates the fibonacci number of 10
+    boost::tp::task< int > t(
+      pool.submit(
+        boost::bind(
+          & fibo::execute,
+          boost::ref( fib),
+          10) ) );
+
+    std::cout << t.get() << std::endl; // prints 55
+
+[endsect]
