@@ -211,7 +211,7 @@ svg_1d_plot_series& svg_1d_plot_series::line_on(bool on_)
 }
 
 bool svg_1d_plot_series::line_on()
-{ //! \return  if to draw a line joining plot points (if true).
+{ //! \return if to draw a line joining plot points (if true).
   return line_style_.bezier_on_;
 }
 
@@ -836,7 +836,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     Note that this version permits a partial range, begin to end, of the container to be used.
     Returns a reference to data series just added.
     */
-    series_.push_back(
+    serieses_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(begin, detail::boost_default_convert()),
       boost::make_transform_iterator(end, detail::boost_default_convert()),
@@ -845,7 +845,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     //! For example:  my_1d_plot.plot(my_data.begin(), my_data.end(), "My container");
     //! my_1d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
     //! Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
-    return series[series.size() - 1]; // Reference to data series just added.
+    return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   } // plot
 
   template <class T, class U>
@@ -854,13 +854,13 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
       Note that this version permits a partial range, begin to end, of the container to be used.
       Returns a reference to data series just added.
     */
-    series_.push_back(
+    serieses_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return serieses_[series_.size() - 1]; // Reference to data series just added.
+    return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   } // plot
 
   template <class T, class U>
@@ -870,13 +870,13 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     This version of plot includes a functor, allowing other than just convert data values to double(the default).
     Returns a reference to data series just added.
   */
-    series_.push_back(
+    serieses_.push_back(
       svg_1d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return serieses_[series_.size() - 1]; // Reference to data series just added.
+    return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   } // plot
 
 // End svg_1d_plot Member functions definitions.

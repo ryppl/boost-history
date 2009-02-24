@@ -71,8 +71,8 @@ namespace boost
 
     public:
       // 2-D Data series points to plot.
-      std::multimap<double, double> series; //!< Normal 'OK to plot' data values.
-      std::multimap<double, double> series_limits; //!< 'limit' values: too big or small, or NaN.
+      std::multimap<double, double> series_; //!< Normal 'OK to plot' data values.
+      std::multimap<double, double> series_limits_; //!< 'limit' values: too big or small, or NaN.
 
       std::string title_; //!< Title of data series (to show on legend using legend style).
       plot_point_style point_style_; //!< Data point marker like circle, square...
@@ -144,11 +144,11 @@ namespace boost
     { // Sort data points into normal and limited series.
       if(detail::pair_is_limit(*i))
       { // Either x and/or y is at limit.
-        series_limits.insert(*i);
+        series_limits_.insert(*i);
       }
       else
       { // Normal data values for both x and y.
-        series.insert(*i);
+        series_.insert(*i);
       }
     }
   } // svg_2d_plot_series
@@ -304,12 +304,12 @@ namespace boost
 
   int svg_2d_plot_series::values_count()
   { //! \return number of normal values in data series.
-    return series.size(); 
+    return series_.size(); 
   }
 
   int svg_2d_plot_series::limits_count()
   {  //! \return number of values 'at limit' in data series.
-    return series_limits.size();
+    return series_limits_.size();
   }
 
   // end svg_2d_plot_series Member Functions Definitions.
@@ -442,7 +442,7 @@ namespace boost
       double y_auto_tick_interval_; //!< tick major interval (calculated by Y autoscale).
       int y_auto_ticks_; //!< Number of ticks (calculated by Y autoscale).
 
-      std::vector<svg_2d_plot_series> series; //!< Store of data points (series) for transformation.
+      std::vector<svg_2d_plot_series> serieses_; //!< Store of several series of data points for transformation.
 
       std::string plot_window_clip_; /*!< = "clip_plot_window" id for clippath
         http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction clipping paths,\n
@@ -1331,7 +1331,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       } // void draw_y_minor_tick
 
       void draw_straight_lines(const svg_2d_plot_series& series)
-      { //! Add straight line between data points (rather than a Bezier curve).
+      { //! Add straight line between series of data points (rather than a Bezier curve).
         double prev_x; // Previous data points.
         double prev_y;
         double temp_x(0.);
@@ -1348,9 +1348,9 @@ my_plot.background_color(ghostwhite) // Whole image.
         bool is_fill = !series.line_style_.area_fill_.is_blank;
         path.style().fill_on(is_fill); // Ensure includes a fill="none" if no fill.
 
-        if(series.series.size() > 1)
+        if(series.series_.size() > 1)
         { // Need at least two points for a line ;-)
-          std::multimap<double, double>::const_iterator j = series.series.begin();
+          std::multimap<double, double>::const_iterator j = series.series_.begin();
 
           // If we have to fill the area under the plot,
           // we first have to move from the X-axis (y = 0) to the first point,
@@ -1375,7 +1375,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           }
           ++j; // so now refers to 2nd point to plot.
 
-          for(; j != series.series.end(); ++j)
+          for(; j != series.series_.end(); ++j)
           {
             temp_x = (*j).first;
             temp_y = (*j).second;
@@ -1420,9 +1420,9 @@ my_plot.background_color(ghostwhite) // Whole image.
           path.style().fill_color(series.line_style_.area_fill_);
         }
 
-        if(series.series.size() > 2)
+        if(series.series_.size() > 2)
         { // Need >= 3 for a cubic curve (start point, 2 control points, and end point).
-          std::multimap<double, double>::const_iterator iter = series.series.begin();
+          std::multimap<double, double>::const_iterator iter = series.series_.begin();
           n_minus_1 = *(iter++);  // begin()
           transform_pair(n_minus_1);
           n = *(iter++); // middle
@@ -1439,7 +1439,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           // Experiment suggests that 0.2 gives distorsions with exp curves.
           // 0.05 is just visually OK with 50 points, but 100 are better.
 
-          for(; iter != series.series.end(); ++iter)
+          for(; iter != series.series_.end(); ++iter)
           {
             n_minus_2 = n_minus_1;
             n_minus_1 = n;
@@ -1475,15 +1475,15 @@ my_plot.background_color(ghostwhite) // Whole image.
 
       void draw_plot_lines()
       { //! Draw line through data series, Bezier curved or straight, or none.
-        for(unsigned int i = 0; i < series.size(); ++i)
+        for(unsigned int i = 0; i < serieses_.size(); ++i)
         {
-          if(series[i].line_style_.bezier_on_)
+          if(serieses_[i].line_style_.bezier_on_)
           { // curved.
-            draw_bezier_lines(series[i]);
+            draw_bezier_lines(serieses_[i]);
           }
-          else if(series[i].line_style_.line_on_)
+          else if(serieses_[i].line_style_.line_on_)
           {
-            draw_straight_lines(series[i]);
+            draw_straight_lines(serieses_[i]);
           }
           else
           { // No line joining points.
@@ -1495,16 +1495,16 @@ my_plot.background_color(ghostwhite) // Whole image.
       { //! Draw normal 'good' non-limit points, and then any 'at limits' points.
         double x(0.);
         double y(0.);
-        for(unsigned int i = 0; i < series.size(); ++i)
+        for(unsigned int i = 0; i < serieses_.size(); ++i)
         {
           g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
 
           g_ptr.style()
-            .fill_color(series[i].point_style_.fill_color_)
-            .stroke_color(series[i].point_style_.stroke_color_);
+            .fill_color(serieses_[i].point_style_.fill_color_)
+            .stroke_color(serieses_[i].point_style_.stroke_color_);
 
-          for(std::multimap<double, double>::const_iterator j = series[i].series.begin();
-            j != series[i].series.end(); ++j)
+          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
+            j != serieses_[i].series_.end(); ++j)
           {
             x = j->first;
             double vx = x; // Note the true x value.
@@ -1513,18 +1513,18 @@ my_plot.background_color(ghostwhite) // Whole image.
             transform_point(x, y);
             if((x > plot_left_) && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
-              draw_plot_point(x, y, g_ptr, series[i].point_style_);
+              draw_plot_point(x, y, g_ptr, serieses_[i].point_style_);
               g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
               if (x_values_on_)
               { // Show the value of the X data point too.
                 // void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
 
-                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, series[i].point_style_, vx);
+                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, serieses_[i].point_style_, vx);
               }
               g_element& g_ptr_vy = image.g(detail::PLOT_Y_POINT_VALUES).g();
               if (y_values_on_)
               { // show the value of the Y data point too.
-                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,series[i].point_style_, vy);
+                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,serieses_[i].point_style_, vy);
               }
 
               if (xy_values_on_)
@@ -1536,12 +1536,12 @@ my_plot.background_color(ghostwhite) // Whole image.
         } // for normal points
 
         // Draw all the abnormal 'at_limit' points.
-        for(unsigned int i = 0; i < series.size(); ++i)
+        for(unsigned int i = 0; i < serieses_.size(); ++i)
         {
           g_element& g_ptr = image.g(detail::PLOT_LIMIT_POINTS);
 
-          for(std::multimap<double,double>::const_iterator j = series[i].series_limits.begin();
-            j!=series[i].series_limits.end(); ++j)
+          for(std::multimap<double,double>::const_iterator j = serieses_[i].series_limits_.begin();
+            j!=serieses_[i].series_limits_.end(); ++j)
           {
             x = j->first;
             y = j->second;
@@ -1603,12 +1603,12 @@ my_plot.background_color(ghostwhite) // Whole image.
               // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
             }
 
-            draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+            draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
 
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
-              draw_plot_point(x, y, g_ptr, series[i].limit_point_style_);
+              draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
             }
           }
         } // limits point
@@ -1623,54 +1623,54 @@ my_plot.background_color(ghostwhite) // Whole image.
         double y0(.0); // X-axis line.
         transform_y(y0); // SVG coordinate of horizontal X-axis line.
         transform_x(x0); // SVG coordinate of vertical Y-axis line.
-        for(unsigned int i = 0; i < series.size(); ++i)
+        for(unsigned int i = 0; i < serieses_.size(); ++i)
         {
-          if (series[i].bar_style_.bar_option_ == no_bar)
+          if (serieses_[i].bar_style_.bar_option_ == no_bar)
           { // No bars wanted for this series.
             continue;
           }
-          g_ptr.style().stroke_color(series[i].bar_style_.color_); // stroke color of stick or rectangle block.
+          g_ptr.style().stroke_color(serieses_[i].bar_style_.color_); // stroke color of stick or rectangle block.
             //.fill_color(series[i].bar_style_.area_fill_); // Only used for rectangle stroke.
             //.stroke_width(series[i].bar_style_.width_) // Used for width of stick and rectangle block.
           path_element& path = g_ptr.path();
           //path.fill(series[i].bar_style_.area_fill_ != blank);
           path.fill_on(false);
 
-          double h_w = series[i].bar_style_.width_; // For block bar chart.
+          double h_w = serieses_[i].bar_style_.width_; // For block bar chart.
           //double h_h = 0.;
-          for(std::multimap<double, double>::const_iterator j = series[i].series.begin();
-            j != series[i].series.end(); ++j)
+          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
+            j != serieses_[i].series_.end(); ++j)
           { // All the 'good' data points.
             x = j->first;
             y = j->second;
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
             { // Is inside plot window, so some bar to draw.
-              switch(series[i].bar_style_.bar_option_)
+              switch(serieses_[i].bar_style_.bar_option_)
               { // -2 block to Y-axis,-1 stick to Y-axis, none, +1 stick to X-axis, -2 block to X-axis.
               case y_block: // Draw a rectangle centered on the data point horizontally to Y-axis.
                  {
-                   g_ptr.style().stroke_width(series[i].line_style_.width_) // line_width used for rectangle line width.
-                     .fill_color(series[i].bar_style_.area_fill_);
+                   g_ptr.style().stroke_width(serieses_[i].line_style_.width_) // line_width used for rectangle line width.
+                     .fill_color(serieses_[i].bar_style_.area_fill_);
                    double h_left = x;
                    double h_top = y - h_w / 2; // Start a half-width above the data point center.
                    path.M(h_left, h_top).L(h_left, h_top + h_w).L(x0, h_top + h_w).L(x0, h_top).z();
                  }
                  break;
               case y_stick:
-                 path.style().stroke_width(series[i].bar_style_.width_); // bar_width used for stick line width.
+                 path.style().stroke_width(serieses_[i].bar_style_.width_); // bar_width used for stick line width.
                  path.M(x, y).L(x0, y); // Draw a line from point horizontally to Y-axis.
                  break;
               case none:
                  break; // Already handled above, so should not get here.
               case x_stick:
-                 path.style().stroke_width(series[i].bar_style_.width_); // bar_width used for stick line width.
+                 path.style().stroke_width(serieses_[i].bar_style_.width_); // bar_width used for stick line width.
                  path.M(x, y).L(x, y0); // Draw a line from point vertically to X-axis.
                  break;
               case x_block: // Draw a rectangle centered on the data point vertically to X-axis.
                {
-                 g_ptr.style().stroke_width(series[i].line_style_.width_) // line_width used for rectangle line width.
-                   .fill_color(series[i].bar_style_.area_fill_);
+                 g_ptr.style().stroke_width(serieses_[i].line_style_.width_) // line_width used for rectangle line width.
+                   .fill_color(serieses_[i].bar_style_.area_fill_);
                  double h_left = x - h_w / 2; // Start a half width left of the data point center.
                  double h_top = y;
                  path.M(h_left, h_top).L(h_left + h_w, h_top).L(h_left + h_w, y0).L(h_left, y0).z();
@@ -1705,36 +1705,36 @@ my_plot.background_color(ghostwhite) // Whole image.
         */
 
         g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g(); // Moved up out of loop.
-        for(unsigned int i = 0; i < series.size(); ++i)
+        for(unsigned int i = 0; i < serieses_.size(); ++i)
         { // for each data series.
-          if (series[i].histogram_style_.histogram_option_ == no_histogram)
+          if (serieses_[i].histogram_style_.histogram_option_ == no_histogram)
           { // No histogram wanted for this series.
             continue;
           }
           // Get the color scheme.
-          g_ptr.style().stroke_color(series[i].line_style_.stroke_color_); // stroke color around bin blocks.
-          g_ptr.style().fill_color(series[i].line_style_.area_fill_);
-          g_ptr.style().stroke_width(series[i].line_style_.width_); // line_width used for stick line width.
+          g_ptr.style().stroke_color(serieses_[i].line_style_.stroke_color_); // stroke color around bin blocks.
+          g_ptr.style().fill_color(serieses_[i].line_style_.area_fill_);
+          g_ptr.style().stroke_width(serieses_[i].line_style_.width_); // line_width used for stick line width.
 
           path_element& path = g_ptr.path();
-          path.fill_on(series[i].line_style_.area_fill_ != blank);
+          path.fill_on(serieses_[i].line_style_.area_fill_ != blank);
           if (path.fill_on() == true)
           {
-            path.style().fill_color(series[i].line_style_.area_fill_);
+            path.style().fill_color(serieses_[i].line_style_.area_fill_);
           }
           else
           {
             path.style().fill_color(blank);
           }
 
-          std::multimap<double, double>::const_iterator last = series[i].series.end();
+          std::multimap<double, double>::const_iterator last = serieses_[i].series_.end();
           last--; // Final pair with first the last bin end, and value zero or NaN.
           if (last->second != 0)
           {
             std::cout << "Last bin end " << last->first << " should have zero value! but is "  << last->second << std::endl;
             // Or Throw? or skip this series?
           }
-          for(std::multimap<double, double>::const_iterator j = series[i].series.begin();
+          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
             j != last; ++j)
           { // All the 'good' 'real' data points.
             double x = j->first;
@@ -2689,13 +2689,13 @@ my_plot.plot(data1, "Sqrt(x)");
       \endcode
       Version converting to double with \c boost_default_2d_convert.
     */
-    series.push_back(
+    serieses_.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
       boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
       title)
     );
-    return series[series.size()-1]; //! \return Reference to data series just added to make chainable.
+    return serieses_[serieses_.size()-1]; //! \return Reference to data series just added to make chainable.
   }
 
   template <class T, class U>
@@ -2703,13 +2703,13 @@ my_plot.plot(data1, "Sqrt(x)");
   { /*! This version permits a custom functor (rather than default conversion to double).\n
        Note that this version assumes that *ALL* the data value in the container is used.
     */
-    series.push_back(
+    serieses_.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size()-1]; //! \return Reference to data series just added to make chainable.
+    return serieses_[series_.size()-1]; //! \return Reference to data series just added to make chainable.
   }
 
   template <class T>
@@ -2724,13 +2724,13 @@ my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
 my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data series.
       \endcode
    */
-    series.push_back(
+    serieses_.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(begin, detail::boost_default_convert()),
       boost::make_transform_iterator(end, detail::boost_default_convert()),
       title)
     );
-    return series[series.size() - 1]; //! \return Reference to data series just added to make chainable.
+    return serieses_[series_.size() - 1]; //! \return Reference to data series just added to make chainable.
   } // plot(const T& begin, const T& end, const std::string& title = "")
 
   template <class T, class U>
@@ -2739,13 +2739,13 @@ my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data 
       This version permits part of the container to be used, a partial range, using iterators begin to end.\n
       Version with custom functor, rather than automatically converting to double).
     */
-    series.push_back(
+    serieses_.push_back(
       svg_2d_plot_series(
       boost::make_transform_iterator(container.begin(), functor),
       boost::make_transform_iterator(container.end(),   functor),
       title)
     );
-    return series[series.size() - 1]; //! \return Reference to data series just added to make chainable.
+    return serieses_[series_.size() - 1]; //! \return Reference to data series just added to make chainable.
   }
 
    svg_2d_plot& svg_2d_plot::write(std::ostream& s_out)

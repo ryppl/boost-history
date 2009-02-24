@@ -1134,7 +1134,7 @@ namespace boost
             std::string label_xdf;
             std::string label_ydf;
 
-            int marker_size = derived().series[0].point_style_.size_;
+            int marker_size = derived().serieses_[0].point_style_.size_;
             int label_size = x_sty.values_text_style_.font_size();
             // Offset of value labels from point must be related mainly to
             // size of the data marker, less the value label font size.
