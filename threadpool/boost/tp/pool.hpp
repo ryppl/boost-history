@@ -348,7 +348,7 @@ private:
 	}
 
 	template< typename R >
-	void wait_callback_( jss::shared_future< R > const& f)
+	void re_schedule_until_( jss::shared_future< R > const& f)
 	{
 		worker * w( tss_worker_.get() );
 		BOOST_ASSERT( w);
@@ -684,7 +684,7 @@ public:
 		{
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool< Channel >::*)( jss::shared_future< R > const&) ) & pool< Channel >::wait_callback_,
+					( void ( pool< Channel >::*)( jss::shared_future< R > const&) ) & pool< Channel >::re_schedule_until_,
 					this,
 					fut) );
 			w->put( detail::callable( move( tsk) ), intr);
@@ -721,7 +721,7 @@ public:
 		{
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool< Channel >::*)( jss::shared_future< R > const&) ) & pool< Channel >::wait_callback_,
+					( void ( pool< Channel >::*)( jss::shared_future< R > const&) ) & pool< Channel >::re_schedule_until_,
 					this,
 					fut) );
 			w->put( detail::callable( move( tsk) ), intr);
