@@ -89,7 +89,12 @@ struct meta_type
 		typedef BASE_NAME reflected_type; \
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	}; \
-	} // namespace detail
+	} /* namespace detail */ \
+	BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
+		BOOST_MIRRORED_GLOBAL_SCOPE()::_placeholder, \
+		meta_type< BASE_NAME > \
+	)
+		
 
 /** 'Shorthand' for BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE macro 
  */
@@ -107,7 +112,11 @@ struct meta_type
 		typedef NAMESPACE::BASE_NAME reflected_type; \
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
 	}; \
-	} // namespace detail
+	} /* namespace detail */ \
+        BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
+		BOOST_MIRRORED_NAMESPACE(NAMESPACE)::_placeholder, \
+                meta_type< NAMESPACE::BASE_NAME > \
+        )
 
 
 /** All typedefined types are registered in this namespace
@@ -181,7 +190,14 @@ namespace typedef_ {
 		typedef ::TYPEDEFD_NAME reflected_type; \
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
 	}; \
-	} // namespace detail
+	} /* namespace detail */ \
+        BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
+                BOOST_MIRRORED_GLOBAL_SCOPE()::_placeholder, \
+                meta_type< BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR_GS( \
+			TYPEDEFD_NAME \
+		) > \
+        )
+
 
 #define BOOST_MIRROR_REG_TYPEDEF_GS(TYPEDEFD_NAME) \
 	BOOST_MIRROR_REG_TYPEDEF_GLOBAL_SCOPE(TYPEDEFD_NAME) 
@@ -207,7 +223,15 @@ namespace typedef_ {
 		typedef NAMESPACE::TYPEDEFD_NAME reflected_type; \
 		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
 	}; \
-	} // namespace detail
+	} /* namespace detail */ \
+        BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
+                BOOST_MIRRORED_NAMESPACE(NAMESPACE)::_placeholder, \
+                meta_type< BOOST_MIRROR_GET_TYPEDEFD_TYPE_SELECTOR( \
+			NAMESPACE, \
+			TYPEDEFD_NAME \
+		) > \
+        )
+
 
 /** Declaration of meta types for types in declared inside
  *  of a class.

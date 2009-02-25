@@ -23,6 +23,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/push_back.hpp>
+#include <boost/mpl/always.hpp>
 
 // forward declarations and common mirror defs
 #include <boost/mirror/common_defs.hpp>
@@ -50,11 +51,18 @@ struct meta_namespace
 	NamespacePlaceholder
 >
 {
+	// helper typedef
 	typedef  detail::full_name_builder<
         	meta_namespace<typename NamespacePlaceholder::parent_placeholder>,
         	NamespacePlaceholder
 	> base_class;
 
+	/* NOTE: this is an implementation detail and should not
+	 * be used outside of mirror
+	 */
+	typedef NamespacePlaceholder _placeholder;
+
+	// base_name getter
 	inline static const cts::bstring& base_name(void)
 	{
 		return base_class::get_name(
@@ -63,6 +71,7 @@ struct meta_namespace
 		);
 	}
 
+	// full name getter
 	inline static const cts::bstring& full_name(void)
 	{
 		return base_class::get_name(
@@ -83,12 +92,17 @@ struct meta_namespace
 		scope
 	>::type ancestors;
 
-	// a meta object sequence of members of this namespace
-	typedef BOOST_MIRROR_GET_GLOBAL_LIST_BASE_WRAPPER(
-		NamespacePlaceholder,
-		BOOST_MIRROR_COUNTER_LUID,
-		typename
-	) members;
+	// alows to get a filterred list of members of this namespace
+	template <class UnaryPredicate = mpl::always<mpl::true_> >
+	struct members
+	{
+		typedef BOOST_MIRROR_GET_FILTERED_GLOBAL_LIST_BASE_WRAPPER(
+	                NamespacePlaceholder,
+	                BOOST_MIRROR_COUNTER_LUID,
+	                typename,
+			UnaryPredicate
+        	) type;
+	};
 };
 
 /** The declaration of the namespace placeholder for the 
@@ -144,7 +158,12 @@ namespace namespace_ {
 template < >
 struct meta_namespace< namespace_ :: _ > : namespace_ :: _ 
 { 
+	// this is an implementation detail 
+	typedef namespace_::_ _placeholder;
+
+	// the scope of the global scope
 	typedef meta_namespace< namespace_ :: _ > scope;
+	// no ancestors
 	typedef mpl::vector0<> ancestors;
 };
 BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( ::boost::mirror::namespace_::_)
@@ -192,7 +211,7 @@ BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( ::boost::mirror::namespace_::_)
  *  ) -10-
  *  BOOST_MIRROR_ADD_TO_GLOBAL_LIST(
  *      ::boost::mirror::namespace_::test::foo::bar::_
- *      ::boost::mirror::namespace_::test::foo::bar::baz::_
+ *      BOOST_MIRRORED_NAMESPACE(::test::foo::bar::baz::_)
  *  ) -11-
  */
 #define BOOST_MIRROR_REG_NAMESPACE(NAME_SEQUENCE) \

@@ -63,14 +63,15 @@ namespace detail {
 	>{ };
 
 	/** Specialization of size_impl<MetaObjectSequence>
-	 *  for counter::global_list
+	 *  for counter::filtered_global_list
 	 */
-	template <class Selector, class Counter>
-	struct size_impl<counter::global_list<Selector, Counter> >
+	template <class Selector, class Counter, class Filter>
+	struct size_impl<counter::filtered_global_list<Selector, Counter, Filter> >
 	: mpl::size<
-			typename counter::global_list<
+			typename counter::filtered_global_list<
 				Selector, 
-				Counter
+				Counter,
+				Filter
 			>::type
 	>{ };
 

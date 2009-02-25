@@ -60,10 +60,10 @@ namespace detail {
 	/** Specialization of at_impl<MetaObjectSequence>
 	 *  for global_list<>
 	 */
-	template <class Selector, class Counter, class Position>
-	struct at_impl<counter::global_list<Selector, Counter>, Position >
+	template <class Selector, class Counter, class Filter, class Position>
+	struct at_impl<counter::filtered_global_list<Selector, Counter, Filter>, Position >
 	: mpl::at<
-		typename counter::global_list<Selector, Counter>::type,
+		typename counter::filtered_global_list<Selector, Counter, Filter>::type,
 		Position
 	>{ };
 

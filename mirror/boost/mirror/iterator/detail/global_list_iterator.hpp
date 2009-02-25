@@ -24,10 +24,11 @@ namespace detail {
 	 */
 	template <
 		class Selector, 
-		class Counter
+		class Counter,
+		class Filter
 	>
 	struct iterator_pointee_selector<
-		counter::global_list<Selector, Counter>
+		counter::filtered_global_list<Selector, Counter, Filter>
 	>
 	{
 		template <

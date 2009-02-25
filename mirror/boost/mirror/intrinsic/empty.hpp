@@ -64,13 +64,14 @@ namespace detail {
 	/** Specialization of empty_impl<MetaObjectSequence>
 	 *  for global_list<>
 	 */
-	template <class Selector, class Counter>
-	struct empty_impl<counter::global_list<Selector, Counter> >
+	template <class Selector, class Counter, class Filter>
+	struct empty_impl<counter::filtered_global_list<Selector, Counter, Filter> >
 	: mpl::empty<
-			typename counter::global_list<
+			typename counter::filtered_global_list<
 				Selector, 
-				Counter	
-			>::type_list
+				Counter,
+				Filter
+			>::type
 	>{ };
 
 } // namespace detail
