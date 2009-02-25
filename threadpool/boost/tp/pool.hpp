@@ -356,7 +356,7 @@ private:
 		BOOST_ASSERT( thrd);
 		detail::interrupter intr;
 		detail::callable ca;
-		while ( ! shutdown_( * w) && ! f.is_ready() )
+		while ( ! f.is_ready() )
 		{
 			next_callable_( * w, ca, intr);
 			if( ! ca.empty() )

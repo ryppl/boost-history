@@ -262,39 +262,39 @@ template<
 void wait_for_all( T1 & t1, T2 & t2, T3 & t3, T4 & t4, T5 & t5)
 { jss::wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); };
 
-// template<
-// 	typename T1,
-// 	typename T2
-// >
-// void wait_for_any( T1 & t1, T2 & t2)
-// { jss::wait_for_any( t1.fut_, t2.fut_); };
-// 
-// template<
-// 	typename T1,
-// 	typename T2,
-// 	typename T3
-// >
-// void wait_for_any( T1 & t1, T2 & t2, T3 & t3)
-// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_); };
-// 
-// template<
-// 	typename T1,
-// 	typename T2,
-// 	typename T3,
-// 	typename T4
-// >
-// void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4)
-// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_); };
-// 
-// template<
-// 	typename T1,
-// 	typename T2,
-// 	typename T3,
-// 	typename T4,
-// 	typename T5
-// >
-// void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4, T5 & t5)
-// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); };
+template<
+	typename T1,
+	typename T2
+>
+void wait_for_any( T1 & t1, T2 & t2)
+{ jss::wait_for_any( t1.fut_, t2.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3
+>
+void wait_for_any( T1 & t1, T2 & t2, T3 & t3)
+{ jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3,
+	typename T4
+>
+void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4)
+{ jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3,
+	typename T4,
+	typename T5
+>
+void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4, T5 & t5)
+{ jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); };
 } }
 
 #endif // BOOST_TP_TASK_H
