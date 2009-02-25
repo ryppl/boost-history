@@ -16,6 +16,59 @@ template< typename R >
 class task
 {
 private:
+	template<
+		typename T1,
+		typename T2
+	>
+	friend void wait_for_any( T1 &, T2 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &, T4 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4,
+		typename T5
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &, T4 &, T5 &);
+	template<
+		typename T1,
+		typename T2
+	>
+	friend void wait_for_all( T1 &, T2 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &, T4 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4,
+		typename T5
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &, T4 &, T5 &);
+	
 	jss::shared_future< R >	fut_;
 	detail::interrupter		intr_;
 
@@ -71,6 +124,59 @@ template<>
 class task< void >
 {
 private:
+	template<
+		typename T1,
+		typename T2
+	>
+	friend void wait_for_any( T1 &, T2 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &, T4 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4,
+		typename T5
+	>
+	friend void wait_for_any( T1 &, T2 &, T3 &, T4 &, T5 &);
+	template<
+		typename T1,
+		typename T2
+	>
+	friend void wait_for_all( T1 &, T2 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &, T4 &);
+	template<
+		typename T1,
+		typename T2,
+		typename T3,
+		typename T4,
+		typename T5
+	>
+	friend void wait_for_all( T1 &, T2 &, T3 &, T4 &, T5 &);
+	
 	jss::shared_future< void >	fut_;
 	detail::interrupter			intr_;
 
@@ -121,6 +227,74 @@ public:
     bool timed_wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
 };
+
+template<
+	typename T1,
+	typename T2
+>
+void wait_for_all( T1 & t1, T2 & t2)
+{ jss::wait_for_all( t1.fut_, t2.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3
+>
+void wait_for_all( T1 & t1, T2 & t2, T3 & t3)
+{ jss::wait_for_all( t1.fut_, t2.fut_, t3.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3,
+	typename T4
+>
+void wait_for_all( T1 & t1, T2 & t2, T3 & t3, T4 & t4)
+{ jss::wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_); };
+
+template<
+	typename T1,
+	typename T2,
+	typename T3,
+	typename T4,
+	typename T5
+>
+void wait_for_all( T1 & t1, T2 & t2, T3 & t3, T4 & t4, T5 & t5)
+{ jss::wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); };
+
+// template<
+// 	typename T1,
+// 	typename T2
+// >
+// void wait_for_any( T1 & t1, T2 & t2)
+// { jss::wait_for_any( t1.fut_, t2.fut_); };
+// 
+// template<
+// 	typename T1,
+// 	typename T2,
+// 	typename T3
+// >
+// void wait_for_any( T1 & t1, T2 & t2, T3 & t3)
+// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_); };
+// 
+// template<
+// 	typename T1,
+// 	typename T2,
+// 	typename T3,
+// 	typename T4
+// >
+// void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4)
+// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_); };
+// 
+// template<
+// 	typename T1,
+// 	typename T2,
+// 	typename T3,
+// 	typename T4,
+// 	typename T5
+// >
+// void wait_for_any( T1 & t1, T2 & t2, T3 & t3, T4 & t4, T5 & t5)
+// { jss::wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); };
 } }
 
 #endif // BOOST_TP_TASK_H
