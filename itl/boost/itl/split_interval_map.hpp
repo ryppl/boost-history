@@ -454,8 +454,10 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
         CodomainT cmb_val = cur_val ;
         Combiner()(cmb_val, x_val);
 
+        // I have to compute intersec here, because reference cur_itv will be invalid after erase(it);
+        interval_type interSec = cur_itv & x_itv;
         this->_map.erase(it);
-        fill(value_type(cur_itv & x_itv, cmb_val));
+        fill(value_type(interSec, cmb_val));
         fill(value_type(rightResid, cur_val));
     }
 }

@@ -249,12 +249,6 @@ left_over = x1 - x2; //on the right side.
     //==========================================================================
 
     /** Intersection with the interval  <tt>x2</tt>; assign result to <tt>isec</tt> */
- //   void intersect(interval& isec, const interval& x2)const
-    //{
-    //    isec = *this;
-    //    isec &= x2;
-    //}
-
     interval& operator &= (const interval& sectant)
     {
         set_lwb(lwb_max(sectant));

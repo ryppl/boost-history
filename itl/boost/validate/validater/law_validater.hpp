@@ -49,7 +49,12 @@ namespace boost{namespace itl
         typedef typename Loki::tuple<gentor_types> input_gentor;
 
     public:
-        LawValidater(){ setTrialsCount(250); } //1000(std)//JODO config at only ONE location
+#ifdef _DEBUG
+        static const int default_trials_count = 20;
+#else
+        static const int default_trials_count = 250;
+#endif
+        LawValidater(){ setTrialsCount(default_trials_count); }
 
         void setTrialsCount(int trials) 
         {

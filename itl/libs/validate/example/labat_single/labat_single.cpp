@@ -16,6 +16,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_morphism.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
+#include <boost/validate/laws/symmetric_difference.hpp>
+#include <boost/validate/laws/pushouts.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 #include <boost/validate/gentor/rangegentor.hpp>
@@ -31,11 +33,9 @@ using namespace boost::posix_time;
 
 void test_LawValidater()
 {
-    //typedef BinaryPushout<itl::split_interval_map<int,double>, itl::map<int,double>, Interval::Atomize, inplace_plus>
-    //    Map_Atomize_Union_DiagramT;
-    //LawValidater<Map_Atomize_Union_DiagramT, RandomGentor> map_atomize_plus_pushout;
-    //map_atomize_plus_pushout.setTrialsCount(1000);
-    //map_atomize_plus_pushout.run();
+    //typedef BinaryPushout<itl::split_interval_map<int,int,partial_enricher>, itl::map<int,int,partial_enricher>, Interval::Atomize, inplace_caret>
+    //    TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef BinaryPushout<itl::map<int,double>, itl::split_interval_map<int,double>, Interval::Cluster, inplace_et>
     //    Map_Cluster_Intersect_DiagramT;
@@ -43,22 +43,22 @@ void test_LawValidater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-    //typedef InplaceFlip
-    //    <interval_map<int, nat> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
+    typedef InplaceFlip
+        <itl::interval_map<int, int, partial_enricher > >  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef InplaceAssociativity
     //    <itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef InducedRelation
-        <itl::interval_map<int, int, partial_enricher>, 
-        typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
-        Interval::Atomize, protonic_equal> TestLawT;
-    LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef InducedRelation
+    //    <itl::interval_map<int, int, partial_enricher>, 
+    //    typename itl::interval_map<int, int, partial_enricher>::atomized_type, 
+    //    Interval::Atomize, protonic_equal> TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 10000;
+    int test_count = 5000;
     ptime start, stop;
 
     test_law.setTrialsCount(test_count);

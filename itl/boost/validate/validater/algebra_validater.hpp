@@ -36,7 +36,6 @@ namespace boost{namespace itl
 
     inline int algebra_validater::share(int total, int& index, int& rest_shares)
     {
-        BOOST_ASSERT(index_ == index);
         int count = total - index;
         int share = rest_shares / count;
         rest_shares -= share;

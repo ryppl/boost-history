@@ -40,6 +40,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/bigobj"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
@@ -195,10 +196,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\..\boost\validate\unsigned_quantifier_validater.hpp"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\..\boost\validate\law.h"
 				>
 			</File>
@@ -228,6 +225,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\..\boost\validate\typevalidater.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\..\boost\validate\unsigned_quantifier_validater.hpp"
 				>
 			</File>
 		</Filter>

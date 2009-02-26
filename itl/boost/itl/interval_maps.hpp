@@ -373,6 +373,26 @@ ObjectT& operator +=
     return object; 
 }
 
+template 
+<
+    class ObjectT,
+    class SubType, class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+ObjectT& operator +=
+(
+          ObjectT& object,
+    const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
+)
+{
+    typedef interval_base_map<SubType,DomainT,CodomainT,
+                              Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
+    const_FORALL(typename operand_type, elem_, operand) 
+        object.add(*elem_); 
+
+    return object; 
+}
+
 //-----------------------------------------------------------------------------
 // subtraction -=
 //-----------------------------------------------------------------------------

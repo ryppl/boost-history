@@ -828,6 +828,10 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     interval_type covered, left_over, common_interval;
     const codomain_type& x_value = interval_value_pair.CONT_VALUE;
     typename ImplMapT::const_iterator it = fst_it;
+
+    interval_set<DomainT,Compare,Interval,Alloc> eraser;
+    interval_base_map intersection;
+
     while(it != end_it) 
     {
         const codomain_type& co_value = it->CONT_VALUE;
@@ -842,15 +846,16 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         if(!common_interval.empty())
         {
             // ... shall be subtracted
+            eraser.add(common_interval);
+
             if(is_set<codomain_type>::value)
             {
                 codomain_type common_value = x_value;
                 inverse_codomain_intersect()(common_value, co_value);
-                erase(common_interval);
-                add(value_type(common_interval, common_value));
+                intersection.add(value_type(common_interval, common_value));
             }
             else
-                subtract(value_type(common_interval, co_value));
+                intersection.add(value_type(common_interval, neutron<codomain_type>::value()));
         }
 
         add(value_type(left_over, x_value)); //That which is not shall be added
@@ -865,9 +870,9 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     //If span is not empty here, it is not in the set so it shall be added
     add(value_type(span, x_value));
 
-    if(Traits::is_total && !Traits::absorbs_neutrons)
-        FORALL(typename ImplMapT, it_, _map)
-            it_->CONT_VALUE = neutron<codomain_type>::value();
+    //finally rewrite the common segments
+    erase(eraser);
+    (*this) += intersection;
 
     return *that();
 }
@@ -924,7 +929,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     // All elements of operand left of the common range are added
     while(it != common_lwb)
         add(*it++);
-    // All elements of operand in the common range are symmertrically subtracted
+    // All elements of operand in the common range are symmetrically subtracted
     while(it != common_upb)
         flip(*it++);
     // All elements of operand right of the common range are added
@@ -967,7 +972,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
             it++; nxt++;
             while(     nxt != _map.end()
                     && (*it).KEY_VALUE.touches((*nxt).KEY_VALUE)
-                    && (*it).CONT_VALUE == (*nxt).CONT_VALUE     ) //CodomainT::OP ==
+                    && (*it).CONT_VALUE == (*nxt).CONT_VALUE     )
             { it++; nxt++; }
 
             // finally we arrive at the end of a sequence of joinable intervals

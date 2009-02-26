@@ -40,6 +40,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/bigobj"
 				Optimization="0"
 				AdditionalIncludeDirectories="../../../../; ../../../../boost_1_35_0"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"

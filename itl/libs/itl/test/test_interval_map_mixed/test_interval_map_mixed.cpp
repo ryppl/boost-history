@@ -1248,6 +1248,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_minus_overload_4
     join_a .add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
     split_a.add(IDv(0,9,2)).add(IIv(3,6,1)).add(IDv(5,7,1));
 
+    join_b .add(CDv(1,3,1)).add(IIv(6,11,3));
+    split_b.add(IDv(0,9,2)).add(IIv(3,6,1));
+
     BOOST_CHECK_EQUAL(split_a - join_a, (split_b = split_a) -= join_a);
     BOOST_CHECK_EQUAL(split_a - join_a, split_b);
 
