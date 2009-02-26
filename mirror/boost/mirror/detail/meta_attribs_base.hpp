@@ -556,31 +556,19 @@ protected:
 	typedef unsigned char byte;	
 	typedef const byte* byte_ptr;	
 
-	template <class T>
 	struct dummy_instance
 	{
-		inline T* ptr(void) const
+		inline Class* ptr(void) const
 		{
-			return reinterpret_cast<T*>(
-				::boost::alignment_of<T>::value
+			return reinterpret_cast<Class*>(
+				::boost::alignment_of<Class>::value
 			);
 		}
 
-		inline operator T& (void) const
+		inline Class& ref(void) const
 		{
-			T* pointer(ptr());
+			Class* pointer(ptr());
 			return *pointer;
-		}
-
-		inline operator const T& (void) const
-		{
-			const T* pointer(ptr());
-			return *pointer;
-		}
-
-		inline T* operator & (void) const
-		{
-			return ptr();
 		}
 	};
 
@@ -627,7 +615,7 @@ protected:
 		// this can be a problem with pod-types
 		// meta-types of which have custom implementation
 		// of address(...) expecting a valid instance 
-		dummy_instance<T> instance;
+		dummy_instance instance;
 		//
 		// otherwise something like the following will 
 		// be necessary:
@@ -636,7 +624,7 @@ protected:
 		//T* pointer((T*)alloc.allocate(1));
 		// ...
 		// alloc.deallocate(pointer, 1);
-                return offset(instance, pos);
+                return offset(instance.ref(), pos);
         }
 
 	template <class T, int I>
