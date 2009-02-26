@@ -192,7 +192,7 @@ class nary_tree {
         if (pos.m_node->operator[](pos.m_pos) == node_type::nil())
             static_cast<node_pointer>(pos.m_node)->operator[](pos.m_pos) = p_node;
         else 
-        if (static_cast<node_pointer>(pos.m_node)->empty()) {
+        if (static_cast<node_pointer>(pos.m_node)->is_leaf()) {
             static_cast<node_pointer>(pos.m_node)->push_back(p_node);
             pos.m_pos = 0;
         } else
@@ -210,7 +210,7 @@ class nary_tree {
       */
      void clear(cursor c) 
      {
-         if (!c.empty()) {
+         if (!c.is_leaf()) {
          
              // delete the value this c points to    
              m_value_alloc.destroy(c.node()->data());
@@ -238,7 +238,7 @@ class nary_tree {
         m_header[1] = &m_header;
      }
 
-    bool empty() const
+    bool is_leaf() const
     {
         return m_header.m_parent == &m_header;
     }

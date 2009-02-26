@@ -29,7 +29,7 @@ public:
     descendingCursor_archetype begin() const { return *this; }
     descendingCursor_archetype end() const { return *this; }
     
-    bool empty() const { return true; }
+    bool is_leaf() const { return true; }
 };
 
 class ascendingCursor_archetype
@@ -89,7 +89,7 @@ public:
     self_type begin() const { return *this; }
     self_type end() const { return *this; }
     
-    bool empty() const { return true; }
+    bool is_leaf() const { return true; }
 };
 
 template <

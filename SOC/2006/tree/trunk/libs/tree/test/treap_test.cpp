@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE( treap_test )
     for (treap_t::iterator ci = my_balancer.begin(); ci != my_balancer.end(); ++ci) {
         treap_t::hierarchy_type::cursor c = ci.base().base();
 //        int priority = c->metadata().get_priority(); // FIXME: Segfaults!
-//        if (!c.empty()) {
+//        if (!c.is_leaf()) {
 //            BOOST_CHECK(priority
 //                      > c.begin()->metadata().get_priority());
 //        }

@@ -43,13 +43,13 @@ BOOST_CONCEPT_REQUIRES(
 successor(preorder, Cursor& c)
 {
     // If we have a left child, go there.
-    if (!c.empty()) {
+    if (!c.is_leaf()) {
         c.to_begin();
         return;
     }
     
     // No left child. So if we have a right child, go there.
-    if (!(++c).empty()) {
+    if (!(++c).is_leaf()) {
         c.to_begin();
         return;
     }
@@ -62,7 +62,7 @@ successor(preorder, Cursor& c)
     while (!c.is_root()) { // Doesn't work with subtrees!    
         c.to_parent();
         if (!c.is_root() && !index(c)) {
-            if (!(++c).empty()) {
+            if (!(++c).is_leaf()) {
                 c.to_begin();
                 return;
             }
@@ -95,8 +95,8 @@ predecessor(preorder, Cursor& c)
     }
     
     // Same for root (=end) and right children:
-    while (!c.empty())
-        if (!c.end().empty())
+    while (!c.is_leaf())
+        if (!c.end().is_leaf())
             c.to_end();
         else
             c.to_begin();

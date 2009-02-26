@@ -23,7 +23,7 @@ BOOST_AUTO_TEST_SUITE( basic_binary_tree_test )
 BOOST_AUTO_TEST_CASE( constructors_test )
 {
     binary_tree<int> bt0;
-    BOOST_CHECK(bt0.root().empty());
+    BOOST_CHECK(bt0.root().is_leaf());
     //BOOST_CHECK(bt0.root().begin() == bt0.root().end()); //FIXME
     // test with allocator? 
 }
@@ -31,31 +31,31 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 BOOST_AUTO_TEST_CASE( insert_value_test )
 {
     binary_tree<int> bt0;
-    BOOST_CHECK(bt0.root().empty());
+    BOOST_CHECK(bt0.root().is_leaf());
     
     binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8); //FIXME   
     c.to_begin();
 
     BOOST_CHECK(c == bt0.root().begin());
     BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
-    BOOST_CHECK(!bt0.root().empty());
+    BOOST_CHECK(!bt0.root().is_leaf());
     BOOST_CHECK_EQUAL(*bt0.root().begin(), 8);
-    BOOST_CHECK(bt0.root().begin().empty());
+    BOOST_CHECK(bt0.root().begin().is_leaf());
     
     c = bt0.insert(c, 3);
     c.to_begin();
     
     // The 8 valued cursor still ok?
     BOOST_CHECK(bt0.root().begin().parent() == bt0.root());
-    BOOST_CHECK(!bt0.root().empty());
+    BOOST_CHECK(!bt0.root().is_leaf());
     BOOST_CHECK_EQUAL(*bt0.root().begin(), 8);
     
     // The 3 valued cursor.
     BOOST_CHECK(c == bt0.root().begin().begin());
     BOOST_CHECK(bt0.root().begin().begin().parent() == bt0.root().begin());
-    BOOST_CHECK(!bt0.root().begin().empty());
+    BOOST_CHECK(!bt0.root().begin().is_leaf());
     BOOST_CHECK_EQUAL(*bt0.root().begin().begin(), 3);
-    BOOST_CHECK(bt0.root().begin().begin().empty());
+    BOOST_CHECK(bt0.root().begin().begin().is_leaf());
     
     BOOST_CHECK(++c == bt0.root().begin().end());
 }
@@ -98,22 +98,22 @@ void create_test_dataset2_tree(Tree& mytree)
     
     c = mytree.root();
 
-    BOOST_CHECK(c.empty());
+    BOOST_CHECK(c.is_leaf());
     
     c1 = mytree.insert(c, 1);
     c1.to_begin();
 
     BOOST_CHECK_EQUAL(*c1, 1);
     
-    BOOST_CHECK(!c.empty());
+    BOOST_CHECK(!c.is_leaf());
     
     BOOST_CHECK(c1.parent() == c);
     
     c2 = mytree.insert(c1, 2);
     c2.to_begin();
 
-    BOOST_CHECK(!c.empty());
-    BOOST_CHECK(c2.empty());
+    BOOST_CHECK(!c.is_leaf());
+    BOOST_CHECK(c2.is_leaf());
     BOOST_CHECK_EQUAL(*c1, 1);
     BOOST_CHECK_EQUAL(*c2, 2);
     *c1 = 14;
@@ -143,11 +143,11 @@ void create_test_dataset2_tree(Tree& mytree)
     --c4;
     BOOST_CHECK_EQUAL(*c4, 2);
     BOOST_CHECK(c4.parent() == c1);
-    BOOST_CHECK(c4.empty());
+    BOOST_CHECK(c4.is_leaf());
 
     BOOST_CHECK_EQUAL(*c1, 14);
     
-    BOOST_CHECK(c1.begin().empty() || c1.end().empty());
+    BOOST_CHECK(c1.begin().is_leaf() || c1.end().is_leaf());
     
     //c1 = mytree.erase(c1);
     //BOOST_CHECK_EQUAL(*c1, 2);
@@ -158,7 +158,7 @@ void validate_test_dataset2_tree(Cursor cur)
 {
     Cursor c = cur;
 
-    BOOST_CHECK(!c.empty());
+    BOOST_CHECK(!c.is_leaf());
     
     c.to_begin();
     BOOST_CHECK(c.parent() == cur);
@@ -182,8 +182,8 @@ void inorder_erase_test_dataset1_tree(Tree& mytree)
     
     c = c.parent().parent();
     BOOST_CHECK_EQUAL(*(c.begin()), 10);
-    BOOST_CHECK(c.begin().empty());
-    BOOST_CHECK(!c.end().empty());
+    BOOST_CHECK(c.begin().is_leaf());
+    BOOST_CHECK(!c.end().is_leaf());
     BOOST_CHECK_EQUAL(*c.end().begin(), 14);
     c = c.begin();
     
@@ -193,8 +193,8 @@ void inorder_erase_test_dataset1_tree(Tree& mytree)
 
     ++c;
     BOOST_CHECK_EQUAL(*c.begin(), 12);
-    BOOST_CHECK(c.begin().empty());
-    BOOST_CHECK(c.end().empty());
+    BOOST_CHECK(c.begin().is_leaf());
+    BOOST_CHECK(c.end().is_leaf());
     c = c.begin();
     
     // Both children empty

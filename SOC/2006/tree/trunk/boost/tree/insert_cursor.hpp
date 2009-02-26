@@ -90,7 +90,7 @@ private:
 
     void left()
     {
-        if (this->base_reference().empty())
+        if (this->base_reference().is_leaf())
 //            this->base_reference() = 
                 tree.insert(this->base_reference(), typename Tr::value_type());
         this->base_reference().to_begin();

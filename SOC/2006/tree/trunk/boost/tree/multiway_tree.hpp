@@ -79,9 +79,9 @@ class multiway_tree {
     explicit multiway_tree(Hierarchy const& hier = Hierarchy()) : h(hier)
     { }
     
-    bool empty()
+    bool is_leaf()
     {
-        return h.empty();
+        return h.is_leaf();
     }
     
     size_type size() const
@@ -124,7 +124,7 @@ class multiway_tree {
         //h.insert(bc, val);
         //if (bc == h.root())
         //    bc =
-        if (bc->empty()) {
+        if (bc->is_leaf()) {
             bc->push_back(val);
             bc.m_pos = 0;
         } 

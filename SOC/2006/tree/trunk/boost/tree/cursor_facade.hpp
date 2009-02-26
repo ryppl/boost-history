@@ -138,7 +138,7 @@ public:
         //>::type
         vertical_traversal; 
 
-    bool const empty() const
+    bool const is_leaf() const
     {
         return cursor_core_access::empty_(this->derived());
     }

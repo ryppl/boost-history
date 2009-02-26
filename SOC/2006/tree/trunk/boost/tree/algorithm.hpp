@@ -103,7 +103,7 @@ BOOST_CONCEPT_REQUIRES(
 to_forest_end(BinaryCursor& c)
 {
     c.to_begin();
-    while (!c.empty())
+    while (!c.is_leaf())
         c.to_end();
 }
 

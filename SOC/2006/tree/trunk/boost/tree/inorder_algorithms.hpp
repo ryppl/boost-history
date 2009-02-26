@@ -45,8 +45,8 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 successor(inorder, MultiwayCursor& c)
 {
-    if (!(++c).empty()) {
-        while (!c.to_begin().empty());
+    if (!(++c).is_leaf()) {
+        while (!c.to_begin().is_leaf());
         return;
     }
     
@@ -67,8 +67,8 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 predecessor(inorder, MultiwayCursor& c)
 {
-    if (!c.empty()) {
-        while (!c.to_end().empty());
+    if (!c.is_leaf()) {
+        while (!c.to_end().is_leaf());
         --c;
         return;
     }
@@ -91,7 +91,7 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_first(inorder, Cursor& c)
 {
-    while (!c.empty())
+    while (!c.is_leaf())
         c.to_begin();
 }
 
@@ -128,7 +128,7 @@ lower_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.empty()) {
+    while (!x.is_leaf()) {
         x = std::lower_bound(x.begin(), x.end(), val);
         if (x.index() == 0)
             y = x;
@@ -157,7 +157,7 @@ lower_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.empty()) {
+    while (!x.is_leaf()) {
         x = std::lower_bound(x.begin(), x.end(), val, cmp);
         if (index(x) == 0)
             y = x;
@@ -184,7 +184,7 @@ upper_bound(MultiwayCursor x, T const& val)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.empty()) {
+    while (!x.is_leaf()) {
         x = std::upper_bound(x.begin(), x.end(), val);
         if (index(x) == 0)
             y = x;
@@ -213,7 +213,7 @@ upper_bound(MultiwayCursor x, T const& val, Cmp cmp)
 //]
 {
     MultiwayCursor y = x;
-    while (!x.empty()) {
+    while (!x.is_leaf()) {
         x = std::upper_bound(x.begin(), x.end(), val, cmp);
         if (index(x) == 0)
             y = x;

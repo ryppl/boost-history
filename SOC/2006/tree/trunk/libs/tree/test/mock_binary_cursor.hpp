@@ -102,6 +102,11 @@ private:
     {
         return (m_pos + 1) % 2;
     }
+    
+    bool is_root_() const
+    {
+        return true;
+    }
 };
 
 #endif // LIBS_TREE_TEST_MOCK_BINARY_CURSOR_HPP

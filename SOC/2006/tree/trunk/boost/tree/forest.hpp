@@ -5,12 +5,12 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file forest_tree.hpp
+ * @file forest.hpp
  * Binary tree based forest implementation
  */
 
-#ifndef BOOST_TREE_FOREST_TREE_HPP
-#define BOOST_TREE_FOREST_TREE_HPP
+#ifndef BOOST_TREE_forest_HPP
+#define BOOST_TREE_forest_HPP
 
 #include <boost/tree/detail/forest_cursor.hpp>
 
@@ -27,14 +27,14 @@ using detail::forest_cursor;
 using namespace boost_concepts;
 
 /** 
- * @brief A %forest_tree.
+ * @brief A %forest.
  * This class models the hierarchy concept. It is a (binary) tree adaptor,
  * and a (forest) tree of its own right.
  * TODO: complete this..
  *
 */
 template <class T, class Hierarchy = binary_tree<T> >
-class forest_tree {
+class forest {
 
 BOOST_CONCEPT_ASSERT((DefaultConstructible<T>));
 BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::cursor >));
@@ -42,7 +42,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
 //BOOST_CONCEPT_ASSERT((SameType<T, typename Hierarchy::value_type>)); 
 // Is there a SameType concept in BCCL?
 
-    typedef forest_tree<T, Hierarchy> self_type;
+    typedef forest<T, Hierarchy> self_type;
 
  public:
     typedef T value_type;
@@ -63,7 +63,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
      *  @brief    The default constructor creates one element at the root.
      *  @param    val   The value the root will be assigned. 
      */
-//    forest_tree(/*value_type const& val = value_type()*/) : h(Hierarchy())
+//    forest(/*value_type const& val = value_type()*/) : h(Hierarchy())
 //    {
 //        //h.insert(h.root(), val);
 //    }
@@ -71,16 +71,16 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     /**
      *  @brief    The default constructor creates no elements.
      *  @param    hier    A hierarchy object that will be used as a base to
-     *                    construct this forest_tree.
+     *                    construct this forest.
      */
-    explicit forest_tree(Hierarchy const& hier = Hierarchy()) : h(hier)
+    explicit forest(Hierarchy const& hier = Hierarchy()) : h(hier)
     {
-//        if (h.empty())
+//        if (h.is_leaf())
 //            h.insert(h.root(), value_type());
     }
 
     /**
-     * Returns true if the %forest_tree is empty.
+     * Returns true if the %forest is empty.
      */
     bool empty()
     {
@@ -88,7 +88,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     }
     
     /**
-     * Returns a read/write ("mutable") cursor to the %forest_tree's 
+     * Returns a read/write ("mutable") cursor to the %forest's 
      * first element.
      */     
     cursor begin()
@@ -98,7 +98,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     }
 
     /**
-     * Returns a read-only const_cursor to the %forest_tree's
+     * Returns a read-only const_cursor to the %forest's
      * first element.
      */     
     const_cursor begin() const
@@ -107,7 +107,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     }
     
     /**
-     * Returns a read-only const_cursor to the %forest_tree's
+     * Returns a read-only const_cursor to the %forest's
      * first element.
      */     
     const_cursor cbegin() const
@@ -119,19 +119,19 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     // TODO: end.
 
     /**
-     * Returns a read/write ("mutable") cursor past the %forest_tree's
+     * Returns a read/write ("mutable") cursor past the %forest's
      * last element.
      */     
     cursor end()
     {
         base_cursor b(h.root());
-        while (!b.empty())
+        while (!b.is_leaf())
             b.to_end();
         return cursor(b);
     }
 
     /**
-     * Returns a read-only const_cursor past the %forest_tree's
+     * Returns a read-only const_cursor past the %forest's
      * last element.
      */     
     const_cursor end() const
@@ -140,20 +140,20 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     }
     
     /**
-     * Returns a read-only const_cursor past the %forest_tree's
+     * Returns a read-only const_cursor past the %forest's
      * last element.
      */     
     const_cursor cend() const
     {
         base_const_cursor b(h.croot());
-        while (!b.empty())
+        while (!b.is_leaf())
             b.to_end();
         return const_cursor(b);
     }
 
     /**
      * @brief       Inserts val in front of @a pos.
-     * @param pos   The %forest_tree cursor in front of which to insert.
+     * @param pos   The %forest cursor in front of which to insert.
      * @param val   The value to insert.
      * @return      A cursor that points to the inserted data.
      */
@@ -176,7 +176,7 @@ protected:
 
 
 // TODO: template <class Cursor> -> template <class T, class Hierarchy>
-// forest_cursor<Cursor> -> forest_tree<T, Hierarchy>::cursor
+// forest_cursor<Cursor> -> forest<T, Hierarchy>::cursor
 // const_cursor?
 template <class Cursor>
 typename forest_cursor<Cursor>::size_type
@@ -185,7 +185,7 @@ index(forest_cursor<Cursor> const& cur)
     return cur.index();
 }
 
-/// Use natural forest_tree-binary_tree correspondence:
+/// Use natural forest-binary_tree correspondence:
 /// Preoder - preorder
 
 template <class Cursor, class Op>
@@ -229,4 +229,4 @@ OutCursor copy (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_FOREST_TREE_HPP
+#endif // BOOST_TREE_forest_HPP

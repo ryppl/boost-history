@@ -181,7 +181,7 @@ private:
      
     bool const empty_() const
     {
-        return m_cursor.empty();
+        return m_cursor.is_leaf();
     }
 
     bool const is_root_() const

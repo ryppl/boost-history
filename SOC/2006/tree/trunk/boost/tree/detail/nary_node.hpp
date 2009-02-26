@@ -89,9 +89,9 @@ public:
 //    }
 //
 //    // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-//    bool const empty() const
+//    bool const is_leaf() const
 //    {
-//        return ((this == nil()) || this->base_type::empty());
+//        return ((this == nil()) || this->base_type::is_leaf());
 //    }
 //
 //    // O(n); n is number of parent's children
@@ -154,7 +154,7 @@ public:
 //    }
 
     // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-//    bool const empty() const
+//    bool const is_leaf() const
 //    {
 //        return (this == nil());
 //    }

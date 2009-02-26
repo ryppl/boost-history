@@ -147,7 +147,7 @@ private:
     // Container specific
     bool const empty_() const
     {
-        return m_s.top().empty();
+        return m_s.top().is_leaf();
     }
     
     size_type size_()

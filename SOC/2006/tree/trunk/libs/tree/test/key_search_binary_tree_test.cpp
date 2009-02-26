@@ -33,7 +33,7 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     BOOST_CHECK_EQUAL(c, my_tree.begin());
     
 //    searcher_t::cursor cur = searcher_t::cursor(c);
-//    BOOST_CHECK(cur.empty());
+//    BOOST_CHECK(cur.is_leaf());
 //    BOOST_CHECK_EQUAL(cur, searcher_t::cursor(my_tree.end()));
         
     c1 = my_tree.insert(c, 8);
@@ -44,7 +44,7 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
     BOOST_CHECK(c1 != my_tree.end());
     
 //    cur = searcher_t::cursor(c1);
-//    BOOST_CHECK((++cur).empty());
+//    BOOST_CHECK((++cur).is_leaf());
 //    BOOST_CHECK(cur.index());
 //    
 //    cur = cur.parent(); //header-cursor(,1) (root)
@@ -66,7 +66,7 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 //    
 //    BOOST_CHECK_EQUAL(*cur, 8);
 //    
-//    BOOST_CHECK((++cur).empty());
+//    BOOST_CHECK((++cur).is_leaf());
 //    BOOST_CHECK(!(--cur).parent().index()); // root's index...
 //
 //    BOOST_CHECK_EQUAL(*(searcher_t::cursor(c).begin()), 8);
@@ -114,8 +114,8 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 //    searcher_t::cursor tree_cur = boost::tree::lower_bound(the_tree.root(), 
 //        39, std::less<int>());
 //
-//    BOOST_CHECK(tree_cur.empty());
-//    BOOST_CHECK((++tree_cur).empty());
+//    BOOST_CHECK(tree_cur.is_leaf());
+//    BOOST_CHECK((++tree_cur).is_leaf());
 //    --tree_cur;
 //    BOOST_CHECK_EQUAL(*tree_cur, 39);
 //    
@@ -123,8 +123,8 @@ BOOST_AUTO_TEST_CASE( key_search_binary_tree_test )
 //    BOOST_CHECK_EQUAL(*tree_cur, 18);
 //    
 //    tree_cur = boost::tree::lower_bound(the_tree.root(), 30);    
-//    BOOST_CHECK(tree_cur.empty());
-//    BOOST_CHECK(!(++tree_cur).empty());
+//    BOOST_CHECK(tree_cur.is_leaf());
+//    BOOST_CHECK(!(++tree_cur).is_leaf());
 //    --tree_cur;
 //    BOOST_CHECK_EQUAL(*tree_cur, 31);
 //    

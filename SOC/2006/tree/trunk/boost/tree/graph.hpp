@@ -191,7 +191,7 @@ private:
 template <class Tree>
 bool empty_cursor(typename Tree::cursor u, Tree)
 {
-    return u.empty();
+    return u.is_leaf();
 }
 
 } // namespace boost

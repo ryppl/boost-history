@@ -30,7 +30,7 @@ class unbalanced {
     static typename Tree::cursor remove(Tree& t, typename Tree::cursor& x)
     {
         //typename Tree::cursor y = x;
-        if (x.begin().empty() || x.end().empty())
+        if (x.begin().is_leaf() || x.end().is_leaf())
              return x;
          //successor(inorder, x);
          return next(inorder(), x);

@@ -5,13 +5,13 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 /** 
- * @file balanced_tree.hpp
+ * @file balance.hpp
  * Balanced tree implementation
  */
 
 
-#ifndef BOOST_TREE_BALANCED_TREE_HPP
-#define BOOST_TREE_BALANCED_TREE_HPP
+#ifndef BOOST_TREE_balance_HPP
+#define BOOST_TREE_balance_HPP
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/iterator.hpp>
@@ -150,13 +150,13 @@ index(is_on_top_cursor<Cursor> const& cur)
 }
 
 template <class Cursor>
-class balanced_tree_iterator
+class balance_iterator
 : public iterator<inorder, is_on_top_cursor<Cursor> > {
 public:
-    balanced_tree_iterator()
+    balance_iterator()
     : iterator<inorder, is_on_top_cursor<Cursor> >() {}
     
-    explicit balanced_tree_iterator(Cursor p)
+    explicit balance_iterator(Cursor p)
     : iterator<inorder, is_on_top_cursor<Cursor> >(p) {}
     
     operator Cursor()
@@ -166,13 +166,13 @@ public:
 }; 
 
 /** 
- * @brief A %balanced_tree.
+ * @brief A %balance.
  * This class models the hierarchy concept, the container concept and the
  * sequence concept. TODO: complete this...
  *
 */
 template <class Hierarchy, class Balance>
-class balanced_tree {
+class balance {
  public:
     typedef typename Hierarchy::value_type value_type;
     typedef Balance balancer_type;
@@ -187,14 +187,14 @@ class balanced_tree {
     hierarchy_type h;
 
  private:
-    typedef balanced_tree<Hierarchy, Balance> self_type;
+    typedef balance<Hierarchy, Balance> self_type;
     
     typedef typename hierarchy_type::cursor cursor;
     typedef typename hierarchy_type::const_cursor const_cursor;
 
  public:    
-    typedef augmented_iterator<balanced_tree_iterator<cursor>, typename data_type::extract_data, bidirectional_traversal_tag> iterator;
-    typedef augmented_iterator<balanced_tree_iterator<const_cursor>, typename data_type::extract_data, bidirectional_traversal_tag> const_iterator;
+    typedef augmented_iterator<balance_iterator<cursor>, typename data_type::extract_data, bidirectional_traversal_tag> iterator;
+    typedef augmented_iterator<balance_iterator<const_cursor>, typename data_type::extract_data, bidirectional_traversal_tag> const_iterator;
     
     typedef std::reverse_iterator<iterator> reverse_iterator;
     typedef std::reverse_iterator<const_iterator> const_reverse_iterator;
@@ -205,18 +205,18 @@ class balanced_tree {
     typedef typename allocator_type::size_type size_type;
     typedef typename allocator_type::difference_type difference_type;
 
-    explicit balanced_tree (hierarchy_type const& hier = hierarchy_type())
+    explicit balance (hierarchy_type const& hier = hierarchy_type())
     : h(hier)
     {}
     
     // TODO: 3rd arg...?
-    explicit balanced_tree (size_type n, value_type const& value = value_type(), 
+    explicit balance (size_type n, value_type const& value = value_type(), 
         hierarchy_type const& hier = hierarchy_type())
     : h(hier)
     {}
 
     template <class InputIterator>
-        balanced_tree (InputIterator first, InputIterator last, 
+        balance (InputIterator first, InputIterator last, 
             hierarchy_type const& hier = hierarchy_type())
             : h(hier)
     {
@@ -224,7 +224,7 @@ class balanced_tree {
             this->insert(this->end(), *first);
     }
     
-    balanced_tree (self_type const& other)
+    balance (self_type const& other)
     : h(other.h)
     {}
     
@@ -265,7 +265,7 @@ class balanced_tree {
 
     /**
      * Returns a read/write ("mutable") inorder iterator to the position one 
-     * past the last (inorder) value in the %balanced_tree.  
+     * past the last (inorder) value in the %balance.  
      */
     iterator end()
     {
@@ -274,7 +274,7 @@ class balanced_tree {
 
     /**
      * Returns a read-only inorder const_iterator to the position one past the 
-     * last (inorder) value in the %balanced_tree.
+     * last (inorder) value in the %balance.
      */    
     const_iterator end() const
     {
@@ -283,7 +283,7 @@ class balanced_tree {
     
     /**
      * Returns a read-only inorder const_iterator to the position one past the 
-     * last (inorder) value in the %balanced_tree. 
+     * last (inorder) value in the %balance. 
      */    
     const_iterator cend() const
     {
@@ -291,12 +291,12 @@ class balanced_tree {
     }
 
     /**
-     * @brief        Finds the first position in the @balanced_tree in which @a k
+     * @brief        Finds the first position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using <
      *                 (less than) for comparisons.
      * @param k        The search term
      * @return        An iterator pointing to the first element not less than 
-     *                @a k, or end() if every element in the @balanced_tree is
+     *                @a k, or end() if every element in the @balance is
      *                 less than @a k.
      */
      iterator lower_bound(value_type const& k)
@@ -305,12 +305,12 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the first position in the @balanced_tree in which @a k
+     * @brief        Finds the first position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using <
      *                 (less than) for comparisons.
      * @param k        The search term
      * @return        A const_iterator pointing to the first element not less than 
-     *                @a k, or end() if every element in the @balanced_tree is
+     *                @a k, or end() if every element in the @balance is
      *                 less than @a k.
      */
      const_iterator lower_bound(value_type const& k) const
@@ -319,13 +319,13 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the first position in the @balanced_tree in which @a k
+     * @brief        Finds the first position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using cmp
      *                 for comparisons.
      * @param k        The search term
      * @param cmp    The comparison functor
      * @return        An iterator pointing to the first element not less than 
-     *                @a k, or end() if every element in the @balanced_tree is
+     *                @a k, or end() if every element in the @balance is
      *                 less than @a k.
      */
      template <class Cmp>
@@ -336,13 +336,13 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the first position in the @balanced_tree in which @a k
+     * @brief        Finds the first position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using cmp
      *                 for comparisons.
      * @param k        The search term
      * @param cmp    The comparison functor
      * @return        A const_iterator pointing to the first element not less than 
-     *                @a k, or end() if every element in the @balanced_tree is
+     *                @a k, or end() if every element in the @balance is
      *                 less than @a k.
      */
      template <class Cmp>
@@ -353,12 +353,12 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the last position in the @balanced_tree in which @a k
+     * @brief        Finds the last position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using <
      *                 (less than) for comparisons.
      * @param k        The search term
      * @return        An iterator pointing to the first element greater than 
-     *                @a k, or end() if no element in the @balanced_tree is
+     *                @a k, or end() if no element in the @balance is
      *                 greater than @a k.
      */
      iterator upper_bound(value_type const& k)
@@ -367,12 +367,12 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the last position in the @balanced_tree in which @a k
+     * @brief        Finds the last position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using <
      *                 (less than) for comparisons.
      * @param k        The search term
      * @return        A const_iterator pointing to the first element greater than 
-     *                @a k, or end() if no element in the @balanced_tree is
+     *                @a k, or end() if no element in the @balance is
      *                 greater than @a k.
      */
      const_iterator upper_bound(value_type const& k) const
@@ -381,13 +381,13 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the last position in the @balanced_tree in which @a k
+     * @brief        Finds the last position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using cmp
      *                 for comparisons.
      * @param k        The search term
      * @param cmp    The comparison functor
      * @return        An iterator pointing to the first element greater than 
-     *                @a k, or end() if no element in the @balanced_tree is
+     *                @a k, or end() if no element in the @balance is
      *                 greater than @a k.
      */
      template <class Cmp>
@@ -398,13 +398,13 @@ class balanced_tree {
      }
 
     /**
-     * @brief        Finds the last position in the @balanced_tree in which @a k
+     * @brief        Finds the last position in the @balance in which @a k
      *                 could be inserted without changing the ordering, using cmp
      *                 for comparisons.
      * @param k        The search term
      * @param cmp    The comparison functor
      * @return        A const_iterator pointing to the first element greater than 
-     *                @a k, or end() if no element in the @balanced_tree is
+     *                @a k, or end() if no element in the @balance is
      *                 greater than @a k.
      */
      template <class Cmp>
@@ -415,12 +415,12 @@ class balanced_tree {
      }
           
     /**
-     * @brief  Add data to the front of the %balanced_tree.
+     * @brief  Add data to the front of the %balance.
      * @param  x  Data to be added.
      * 
      * This is a typical stack operation.  The function creates an
-     * element at the front of the %balanced_tree and assigns the given data to
-     * it.  Due to the nature of a %balanced_tree this operation can be done
+     * element at the front of the %balance and assigns the given data to
+     * it.  Due to the nature of a %balance this operation can be done
      * in constant time, and does not invalidate iterators and references.
      */
     void push_front(value_type const& x)
@@ -432,7 +432,7 @@ class balanced_tree {
      * @brief  Removes first element.
      * 
      * This is a typical stack operation.  It shrinks the %balance_tree by
-     * one.  Due to the nature of a %balanced_tree this operation can be done
+     * one.  Due to the nature of a %balance this operation can be done
      * in constant time, and only invalidates iterators/references to
      * the element being removed.
      * 
@@ -445,12 +445,12 @@ class balanced_tree {
     }
 
     /**
-     * @brief  Add data to the end of the %balanced_tree.
+     * @brief  Add data to the end of the %balance.
      * @param  x  Data to be added.
      * 
      * This is a typical stack operation.  The function creates an
-     * element at the end of the %balanced_tree and assigns the given data to
-     * it.  Due to the nature of a %balanced_tree this operation can be done
+     * element at the end of the %balance and assigns the given data to
+     * it.  Due to the nature of a %balance this operation can be done
      * in constant time, and does not invalidate iterators and references.
      */
     void push_back(value_type const& x)
@@ -462,7 +462,7 @@ class balanced_tree {
      * @brief  Removes last element.
      * 
      * This is a typical stack operation.  It shrinks the %balance_tree by
-     * one.  Due to the nature of a %balanced_tree this operation can be done
+     * one.  Due to the nature of a %balance this operation can be done
      * in constant time, and only invalidates iterators/references to
      * the element being removed.
      * 
@@ -475,7 +475,7 @@ class balanced_tree {
       
     /**
      * @brief        Inserts val in front of @a pos.
-     * @param pos    The %balanced_tree iterator in front of which to insert.
+     * @param pos    The %balance iterator in front of which to insert.
      * @param val    The value to insert.
      * @return        An inorder iterator that points to the inserted data.
      */
@@ -493,7 +493,7 @@ class balanced_tree {
         // If yes, we could just insert at pos.
         
         cursor c = pos.base().base();
-        while (!c.empty())
+        while (!c.is_leaf())
             c = c.end();
         
         c = h.insert(c, data_type(val));
@@ -508,9 +508,9 @@ class balanced_tree {
      * @return  An iterator pointing to the next element (or end()).
      * 
      * This function will erase the element at the given position and thus
-     * shorten the %balanced_tree by one.
+     * shorten the %balance by one.
      * 
-     * Due to the nature of a %balanced_tree this operation can be done in
+     * Due to the nature of a %balance this operation can be done in
      * constant time, and only invalidates iterators/references to
      * the element being removed.  The user is also cautioned that
      * this function only erases the element, and that if the element
@@ -535,8 +535,8 @@ class balanced_tree {
      *          prior to erasing (or end()).
      * 
      * This function will erase the elements in the range @a
-     * [first,last) and shorten the %balanced_tree accordingly.
-     * Due to the nature of a %balanced_tree this operation can be done in
+     * [first,last) and shorten the %balance accordingly.
+     * Due to the nature of a %balance this operation can be done in
      * constant time, and only invalidates iterators/references to
      * the elements being removed.  The user is also cautioned that
      * this function only erases the elements, and that if the
@@ -557,12 +557,12 @@ class balanced_tree {
      }
 
     /**
-     * Returns true if the %balanced_tree is empty.  (Thus begin() would
+     * Returns true if the %balance is empty.  (Thus begin() would
      * equal end().)
      */
-    bool empty() const
+    bool is_leaf() const
     {
-        return h.empty();
+        return h.is_leaf();
     }
     
     void rotate(iterator& i)
@@ -576,4 +576,4 @@ class balanced_tree {
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_BALANCED_TREE_HPP
+#endif // BOOST_TREE_balance_HPP

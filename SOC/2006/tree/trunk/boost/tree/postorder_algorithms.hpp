@@ -54,9 +54,9 @@ successor(postorder, Cursor& c)
         
     // Left child.
     ++c;
-    while (!c.empty()) {
+    while (!c.is_leaf()) {
         c.to_begin();
-        if (c.empty())
+        if (c.is_leaf())
             ++c;
     }
     if (index(c))
@@ -81,11 +81,11 @@ predecessor(postorder, Cursor& c)
         return;
     }
     
-    if (!(++c).empty()) { // Right
+    if (!(++c).is_leaf()) { // Right
         c.to_begin();
         return;
     }
-    if (!(--c).empty()) { // Left
+    if (!(--c).is_leaf()) { // Left
         c.to_begin();
         return;
     }
@@ -95,7 +95,7 @@ predecessor(postorder, Cursor& c)
     while (!c.is_root()) {
         c.to_parent();
         if (index(c))
-            if (!(--c).empty()) {
+            if (!(--c).is_leaf()) {
                 c.to_begin();
                 return;
             }
@@ -115,9 +115,9 @@ BOOST_CONCEPT_REQUIRES(
 to_first(postorder, Cursor& c)
 {
     while (true)
-        if (!c.empty())
+        if (!c.is_leaf())
             c.to_begin();
-        else if (!(++c).empty())
+        else if (!(++c).is_leaf())
             c.to_begin();
         else {
             --c;

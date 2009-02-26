@@ -90,7 +90,7 @@ private:
 
     bool empty_() const
     {
-        return this->base().begin().empty() && this->base().end().empty();
+        return this->base().begin().is_leaf() && this->base().end().is_leaf();
     }
 
     typename forest_cursor::cursor_adaptor_::reference dereference() const

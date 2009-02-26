@@ -176,7 +176,7 @@ public:
      */
     bool empty() const
     {
-        return root().empty(); //m_header.m_children[1] == &m_header;
+        return root().is_leaf(); //m_header.m_children[1] == &m_header;
     }
     
     // Hierarchy-specific
@@ -229,9 +229,9 @@ public:
 
         subtree.to_begin();
         insert(pos, *subtree);
-        if (!subtree.empty())
+        if (!subtree.is_leaf())
             insert(pos.begin(), subtree);
-        if (!(++subtree).empty())
+        if (!(++subtree).is_leaf())
             insert(pos.end(), subtree);
         return pos;
     }
@@ -264,7 +264,7 @@ public:
      
 //     static void destroy_node(cursor position)
 //     {
-//        if (!position.empty()) {
+//        if (!position.is_leaf()) {
 //             node_pointer pos_node = 
 //                 static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
 //             // delete the value position points to    
@@ -294,7 +294,7 @@ public:
 //                , destroy_node
 //                , descending_vertical_traversal_tag()));
 
-         if (!position.empty()) {
+         if (!position.is_leaf()) {
              node_pointer pos_node = 
                  static_cast<node_pointer>(position.base_node()->m_children[position.m_pos]);
              
@@ -414,7 +414,7 @@ public:
     void splice(cursor position, binary_tree& x, 
                 cursor root, cursor inorder_first)
     {
-        if (!x.empty()) {
+        if (!x.is_leaf()) {
             if (inorder_first == x.inorder_first())
                 x.m_header.m_children[1] = inorder_first.base_node();
             if (position == inorder_first()) // Readjust inorder_first to x's
@@ -474,7 +474,7 @@ public:
         node_pointer p_node = static_cast<node_pointer>(position.base_node());
         ++position;
         
-        if (position.empty()) {                        
+        if (position.is_leaf()) {                        
             (*p_node)[0]->m_parent = p_node->m_parent;
             static_cast<node_base_pointer>(p_node->m_parent)
                 ->node_base_type::operator[](0) = (*p_node)[0];
@@ -487,7 +487,7 @@ public:
             static_cast<node_base_pointer>(p_node->m_parent)
                 ->node_base_type::operator[](1) = position.base_node();
             
-            while (!position.empty())
+            while (!position.is_leaf())
                 position = position.begin();
         }
         
@@ -505,7 +505,7 @@ public:
         node_pointer p_node = static_cast<node_pointer>(descendant.base_node());
         ++descendant;
         
-        if (descendant.empty()) {                        
+        if (descendant.is_leaf()) {                        
             (*p_node)[0]->m_parent = p_node->m_parent;
             static_cast<node_base_pointer>(p_node->m_parent)
                 ->node_base_type::operator[](0) = (*p_node)[0];

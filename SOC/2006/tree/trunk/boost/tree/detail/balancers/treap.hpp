@@ -64,7 +64,7 @@ class treap {
         typename Tree::cursor q;
         while((q = ((p.begin()->metadata().get_priority()
                      > p.end()->metadata().get_priority())
-                     ? p.begin() : p.end())).empty())
+                     ? p.begin() : p.end())).is_leaf())
             t.rotate(q);
         p = q;
         return p;

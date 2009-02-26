@@ -49,7 +49,7 @@ bool equal(InCursor1 c1, InCursor2 c2)
     if (!(*c1 == *c2))
         return false;
     do {
-        if (!c1.empty())
+        if (!c1.is_leaf())
             if (!equal(c1, c2))
                 return false;
         ++c2;
@@ -80,7 +80,7 @@ bool equal(InCursor1 c1, InCursor2 c2, BinPred p)
     if (!p(*c1,*c2))
         return false;
     do {
-        if (!c1.empty())
+        if (!c1.is_leaf())
             if (!equal(c1, c2))
                 return false;
         ++c2;
@@ -103,7 +103,7 @@ void size(InCursor c, typename InCursor::subtree_size_type& s)
     c.to_begin();
     ++s;
     do
-        if (!c.empty())
+        if (!c.is_leaf())
             size(c, s);
     while (c++ != d);
 }
@@ -123,7 +123,7 @@ typename InCursor::subtree_size_type size(InCursor c)
     c.to_begin();
     ++s;
     do
-        if (!c.empty())
+        if (!c.is_leaf())
             size(c, s);
     while (c++ != d);
     

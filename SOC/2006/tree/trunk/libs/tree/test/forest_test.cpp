@@ -31,6 +31,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
     forest<int> ft0;
     //BOOST_CHECK_EQUAL(*ft0.root(), 0);
     BOOST_CHECK(ft0.empty());
+    BOOST_CHECK(ft0.begin() == ft0.end());
 }
 
 //BOOST_AUTO_TEST_CASE( insert_value_test )
@@ -63,8 +64,8 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    BOOST_CHECK(c == ft0.begin());
 //    BOOST_CHECK(++c == ft0.end());
 ////    BOOST_CHECK(ft0.begin().parent() == ft0.root());
-//    BOOST_CHECK(!ft0.empty());
-//    BOOST_CHECK(ft0.begin().empty());
+//    BOOST_CHECK(!ft0.is_leaf());
+//    BOOST_CHECK(ft0.begin().is_leaf());
 //    
 //    c = ft0.insert(ft0.end(), 6);
 //    BOOST_CHECK_EQUAL(*c, 6);
@@ -72,7 +73,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    BOOST_CHECK(c != ft0.end());
 ////    BOOST_CHECK(c.base() == ft0.begin().end());
 ////    BOOST_CHECK(c.parent() == ft0.root());
-//    BOOST_CHECK(!ft0.empty());
+//    BOOST_CHECK(!ft0.is_leaf());
 //    BOOST_CHECK(++c == ft0.end()); 
 //    ----c;
 //    BOOST_CHECK(c == ft0.begin());
@@ -81,7 +82,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    c = ft0.insert(ft0.end(), 7);  
 //    BOOST_CHECK_EQUAL(*c, 7);
 ////    BOOST_CHECK(c.parent() == ft0.root());
-//    BOOST_CHECK(!ft0.empty());
+//    BOOST_CHECK(!ft0.is_leaf());
 //    BOOST_CHECK(++c == ft0.end());
 //    ----c;
 //    BOOST_CHECK_EQUAL(*c, 6);
@@ -111,7 +112,7 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 //    BOOST_CHECK_EQUAL(*c, 8);
 //    BOOST_CHECK_EQUAL(*c.to_begin(), 3);
 //    BOOST_CHECK_EQUAL(*c.to_begin(), 1);
-//    BOOST_CHECK(c.empty());
+//    BOOST_CHECK(c.is_leaf());
 //    
 //    //validate_corresponding_forest(ft0);
 //}

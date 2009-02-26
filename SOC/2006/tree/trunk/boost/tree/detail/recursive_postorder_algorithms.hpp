@@ -38,11 +38,11 @@ for_each_recursive(postorder, Cursor s, Op& f)
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
-        if (!s.empty())
+        if (!s.is_leaf())
             for_each_recursive(postorder(), s, f);
 
     // Multiway cursor
-    if (!s.empty())
+    if (!s.is_leaf())
         for_each_recursive(postorder(), s, f);
 
     f(*t.to_begin());
@@ -66,11 +66,11 @@ for_each(postorder, Cursor s, Op f, descending_vertical_traversal_tag)
 {
     Cursor t = s;
     for (s.to_begin(); s != t.end(); ++s)
-        if (!s.empty())
+        if (!s.is_leaf())
             for_each_recursive(postorder(), s, f);
 
     // Multiway cursor
-    if (!s.empty())
+    if (!s.is_leaf())
         for_each_recursive(postorder(), s, f);
 
     f(*t.to_begin());
@@ -104,11 +104,11 @@ transform(postorder, InCursor s, OutCursor t, Op op, descending_vertical_travers
     OutCursor t2 = t;
     
     for (; s != r.end(); ++s, ++t)
-        if (!s.empty())
+        if (!s.is_leaf())
             transform(postorder(), s, t, op, descending_vertical_traversal_tag());
 
     // Multiway cursor
-    if (!s.empty())
+    if (!s.is_leaf())
         transform(postorder(), s, t, op, descending_vertical_traversal_tag());
     
     *t2 = op(*r.to_begin());

@@ -40,7 +40,7 @@ public:
         
         X e = d.end();
 
-        bool m = b.empty();
+        bool m = b.is_leaf();
         m = false;      // Avoid compiler warning about unused variable
     }
     
