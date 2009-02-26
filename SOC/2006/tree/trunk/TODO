@@ -208,6 +208,8 @@ Implementation:
 
 Documentation:
 
+* Add images - there's quite a lot of public domain tree related stuff on Wikipedia!
+  (acknowledge their authors).
 * algorithms.qbk is rather pointless right now. Better use doygen for
   an algorithm group.
 * Add a rationale for binary tree cursor semantics.
