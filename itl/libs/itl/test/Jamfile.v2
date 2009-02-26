@@ -16,12 +16,28 @@ project
 
 test-suite "itl"
     : 
+      # interval
       [ run test_itl_interval/test_itl_interval.cpp ]
+      
+      # sets
       [ run test_interval_set/test_interval_set.cpp ]
       [ run test_separate_interval_set/test_separate_interval_set.cpp ]
-      [ run test_split_interval_set/test_split_interval_set.cpp ]
+      [ run test_split_interval_set/test_split_interval_set.cpp ]      
       [ run test_interval_set_mixed/test_interval_set_mixed.cpp ]
+      
+      # maps
       [ run test_interval_map/test_interval_map.cpp ]
       [ run test_split_interval_map/test_split_interval_map.cpp ]
       [ run test_interval_map_mixed/test_interval_map_mixed.cpp ]
+      [ run test_itl_map/test_itl_map.cpp ]
+
+      # handcoded tests using laws (not LaBatea) -------------------------------
+      # Concept Set
+      [ run test_set_inerval_set/test_set_interval_set.cpp ]
+      [ run test_set_itl_set/test_set_itl_set.cpp ]
+      
+      # Concept Map 
+      [ run test_quantifier_itl_map/test_quantifier_itl_map.cpp ]
+      # too fat /bigobj [ run test_quantifier_map/test_quantifier_map.cpp ]
+            
     ;
