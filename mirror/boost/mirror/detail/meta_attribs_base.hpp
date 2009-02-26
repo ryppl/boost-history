@@ -23,6 +23,7 @@
 // necessary type traits
 #include <boost/call_traits.hpp>
 #include <boost/type_traits/is_pod.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 // enable if
 #include <boost/utility/enable_if.hpp>
 //
@@ -555,6 +556,34 @@ protected:
 	typedef unsigned char byte;	
 	typedef const byte* byte_ptr;	
 
+	template <class T>
+	struct dummy_instance
+	{
+		inline T* ptr(void) const
+		{
+			return reinterpret_cast<T*>(
+				::boost::alignment_of<T>::value
+			);
+		}
+
+		inline operator T& (void) const
+		{
+			T* pointer(ptr());
+			return *pointer;
+		}
+
+		inline operator const T& (void) const
+		{
+			const T* pointer(ptr());
+			return *pointer;
+		}
+
+		inline T* operator & (void) const
+		{
+			return ptr();
+		}
+	};
+
 	static inline ptrdiff_t invalid_offset(void)
 	{
 		return -1;
@@ -598,7 +627,7 @@ protected:
 		// this can be a problem with pod-types
 		// meta-types of which have custom implementation
 		// of address(...) expecting a valid instance 
-		T* pointer(0);
+		dummy_instance<T> instance;
 		//
 		// otherwise something like the following will 
 		// be necessary:
@@ -607,7 +636,7 @@ protected:
 		//T* pointer((T*)alloc.allocate(1));
 		// ...
 		// alloc.deallocate(pointer, 1);
-                return offset(*pointer, pos);
+                return offset(instance, pos);
         }
 
 	template <class T, int I>
@@ -668,8 +697,7 @@ public:
 	template <int I>
         static inline ptrdiff_t offset_of(mpl::int_<I> pos)
         { 
-		Class* ptr(0);
-		return get_offset_of(pos, ptr);
+		return get_offset_of(pos, (Class*)0);
         } 
 };
 
