@@ -183,7 +183,7 @@ void instantiate(RealType)
    (boost::math::isfinite)(v1);
    (boost::math::isnormal)(v1);
    (boost::math::isnan)(v1);
-   boost::math::isinf(v1);
+   (boost::math::isinf)(v1);
    boost::math::log1p(v1);
    boost::math::expm1(v1);
    boost::math::cbrt(v1);
@@ -260,6 +260,7 @@ void instantiate(RealType)
    boost::math::float_next(v1);
    boost::math::float_prior(v1);
    boost::math::float_distance(v1, v1);
+#ifndef BOOST_MATH_INSTANTIATE_MINIMUM
    //
    // All over again, with a policy this time:
    //
@@ -505,6 +506,7 @@ void instantiate(RealType)
    test::float_next(v1);
    test::float_prior(v1);
    test::float_distance(v1, v1);
+#endif
 }
 
 template <class RealType>

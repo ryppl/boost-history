@@ -531,22 +531,22 @@ namespace boost
 
    // inverse hyperbolics:
    template<typename T>
-   typename tools::promote_args<T>::type asinh(const T x);
+   typename tools::promote_args<T>::type asinh(T x);
 
    template<typename T, class Policy>
-   typename tools::promote_args<T>::type asinh(const T x, const Policy&);
+   typename tools::promote_args<T>::type asinh(T x, const Policy&);
 
    template<typename T>
-   typename tools::promote_args<T>::type acosh(const T x);
+   typename tools::promote_args<T>::type acosh(T x);
 
    template<typename T, class Policy>
-   typename tools::promote_args<T>::type acosh(const T x, const Policy&);
+   typename tools::promote_args<T>::type acosh(T x, const Policy&);
 
    template<typename T>
-   typename tools::promote_args<T>::type atanh(const T x);
+   typename tools::promote_args<T>::type atanh(T x);
 
    template<typename T, class Policy>
-   typename tools::promote_args<T>::type atanh(const T x, const Policy&);
+   typename tools::promote_args<T>::type atanh(T x, const Policy&);
 
    namespace detail{
 
@@ -704,13 +704,13 @@ namespace boost
 #define BOOST_MATH_DETAIL_LL_FUNC(Policy)\
    \
    template <class T>\
-   inline T modf(const T& v, long long* ipart){ using boost::math::modf; return modf(v, ipart, Policy()); }\
+   inline T modf(const T& v, boost::long_long_type* ipart){ using boost::math::modf; return modf(v, ipart, Policy()); }\
    \
    template <class T>\
-   inline long long lltrunc(const T& v){ using boost::math::lltrunc; return lltrunc(v, Policy()); }\
+   inline boost::long_long_type lltrunc(const T& v){ using boost::math::lltrunc; return lltrunc(v, Policy()); }\
    \
    template <class T>\
-   inline long long llround(const T& v){ using boost::math::llround; return llround(v, Policy()); }\
+   inline boost::long_long_type llround(const T& v){ using boost::math::llround; return llround(v, Policy()); }\
 
 #else
 #define BOOST_MATH_DETAIL_LL_FUNC(Policy)
@@ -1043,6 +1043,7 @@ namespace boost
    \
    template <int N, class T>\
    inline typename boost::math::tools::promote_args<T>::type pow(T v){ return boost::math::pow<N>(v, Policy()); }\
+   \
    template <class T> T nextafter(const T& a, const T& b){ return boost::math::nextafter(a, b, Policy()); }\
    template <class T> T float_next(const T& a){ return boost::math::float_next(a, Policy()); }\
    template <class T> T float_prior(const T& a){ return boost::math::float_prior(a, Policy()); }\
@@ -1050,4 +1051,5 @@ namespace boost
 
 
 #endif // BOOST_MATH_SPECIAL_MATH_FWD_HPP
+
 

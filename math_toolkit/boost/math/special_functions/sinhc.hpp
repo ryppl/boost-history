@@ -23,7 +23,6 @@
 #include <string>
 #include <stdexcept>
 
-
 #include <boost/config.hpp>
 
 
@@ -113,8 +112,8 @@ namespace boost
         inline U<T>    sinhc_pi(const U<T> x)
         {
 #if defined(BOOST_FUNCTION_SCOPE_USING_DECLARATION_BREAKS_ADL) || defined(__GNUC__)
-            BOOST_MATH_STD_USING
-#elif    defined(BOOST_NO_STDC_NAMESPACE)
+            using namespace std;
+#elif    defined(BOOST_NO_STDC_NAMESPACE) && !defined(__SUNPRO_CC)
             using    ::abs;
             using    ::sinh;
             using    ::sqrt;

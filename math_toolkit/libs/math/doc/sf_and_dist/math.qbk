@@ -1,13 +1,13 @@
 [article Math Toolkit
     [quickbook 1.4]
-    [copyright 2006, 2007, 2008, 2009 John Maddock, Paul A. Bristow, Hubert Holin, Xiaogang Zhang, Bruno Lalande, Gautam Sewani and Thijs van den Berg]
+    [copyright 2006, 2007, 2008, 2009 John Maddock, Paul A. Bristow, Hubert Holin, Xiaogang Zhang, Bruno Lalande, Johan R&#xE5;de, Gautam Sewani and Thijs van den Berg]
     [purpose ISBN 0-9504833-2-X  978-0-9504833-2-0, Classification 519.2-dc22]
     [license
         Distributed under the Boost Software License, Version 1.0.
         (See accompanying file LICENSE_1_0.txt or copy at
         [@http://www.boost.org/LICENSE_1_0.txt])
     ]
-    [authors [Maddock, John], [Bristow, Paul A.], [Holin, Hubert], [Zhang, Xiaogang], [Lalande, Bruno], [Sewani, Gautam], [van den Berg, Thijs]]
+    [authors [Maddock, John], [Bristow, Paul A.], [Holin, Hubert], [Zhang, Xiaogang], [Lalande, Bruno], [R&#xE5;de, Johan], [Sewani, Gautam], [van den Berg, Thijs]]
     [category math]
     [purpose mathematics]
     [/last-revision $Date$]
@@ -200,6 +200,7 @@ and use the function's name as the link text]
 [def __expint [link math_toolkit.special.expint.expint_i expint]]
 [def __spherical_harmonic [link math_toolkit.special.sf_poly.sph_harm spherical_harmonic]]
 
+
 [/ distribution non-members]
 [def __cdf [link math.dist.cdf Cumulative Distribution Function]]
 [def __pdf [link math.dist.pdf Probability Density Function]]
@@ -233,9 +234,10 @@ and use the function's name as the link text]
 [def __logistic_distrib [link math_toolkit.dist.dist_ref.dists.logistic_dist Logistic Distribution]]
 [def __lognormal_distrib [link math_toolkit.dist.dist_ref.dists.lognormal_dist Log-normal Distribution]]
 [def __negative_binomial_distrib [link math_toolkit.dist.dist_ref.dists.negative_binomial_dist Negative Binomial Distribution]]
-[def __non_central_chi_squared_distrib [link math_toolkit.dist.dist_ref.dists.nc_chi_squared_dist Non Central Chi Squared]]
-[def __non_central_beta_distrib [link math_toolkit.dist.dist_ref.dists.nc_beta_dist noncentral beta distribution]]
-[def __non_central_F_distrib [link math_toolkit.dist.dist_ref.dists.nc_f_dist noncentral F distribution]]
+[def __non_central_chi_squared_distrib [link math_toolkit.dist.dist_ref.dists.nc_chi_squared_dist Noncentral Chi Squared Distribution]]
+[def __non_central_beta_distrib [link math_toolkit.dist.dist_ref.dists.nc_beta_dist Noncentral Beta Distribution]]
+[def __non_central_F_distrib [link math_toolkit.dist.dist_ref.dists.nc_f_dist Noncentral F Distribution]]
+[def __non_central_T_distrib [link math_toolkit.dist.dist_ref.dists.nc_t_dist Noncentral T Distribution]]
 [def __non_central_t_distrib [link math_toolkit.dist.dist_ref.dists.nc_t_dist noncentral T distribution]]
 [def __normal_distrib [link math_toolkit.dist.dist_ref.dists.normal_dist Normal Distribution]]
 [def __poisson_distrib [link math_toolkit.dist.dist_ref.dists.poisson_dist Poisson Distribution]]
@@ -310,8 +312,8 @@ for these distributions.
 ] [/ caution]
 ] [/ template discrete_quantile_warning]
 
-This manual is also available in
-[@http://svn.boost.org/svn/boost/sandbox/pdf/math/release/math.pdf
+This manual is also available in 
+[@http://svn.boost.org/svn/boost/sandbox/pdf/math/release/math.pdf 
 printer friendly PDF format].
 
 [section:main_overview Overview]

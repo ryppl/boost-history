@@ -13,6 +13,7 @@
 #include <boost/math/policies/error_handling.hpp>
 #include <boost/math/special_functions/fpclassify.hpp>
 #include <boost/math/special_functions/sign.hpp>
+#include <boost/math/special_functions/trunc.hpp>
 
 #ifdef BOOST_MSVC
 #include <float.h>

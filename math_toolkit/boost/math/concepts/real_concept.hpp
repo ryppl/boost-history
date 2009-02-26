@@ -20,6 +20,9 @@
 // but note minor additions are needed - see ntl.diff and documentation
 // "Using With NTL - a High-Precision Floating-Point Library".
 
+#ifndef BOOST_MATH_REAL_CONCEPT_HPP
+#define BOOST_MATH_REAL_CONCEPT_HPP
+
 #include <boost/config.hpp>
 #include <boost/limits.hpp>
 #include <boost/math/special_functions/round.hpp>
@@ -35,8 +38,9 @@
 #include <boost/config/no_tr1/cmath.hpp>
 #include <math.h> // fmodl
 
-#ifndef BOOST_MATH_REAL_CONCEPT_HPP
-#define BOOST_MATH_REAL_CONCEPT_HPP
+#if defined(__SGI_STL_PORT) || defined(_RWSTD_VER) || defined(__LIBCOMO__)
+#  include <cstdio>
+#endif
 
 namespace boost{ namespace math{
 
@@ -70,8 +74,8 @@ public:
    real_concept(unsigned long long c) : m_value(static_cast<real_concept_base_type>(c)){}
    real_concept(long long c) : m_value(static_cast<real_concept_base_type>(c)){}
 #elif defined(BOOST_HAS_LONG_LONG)
-   real_concept(unsigned long long c) : m_value(static_cast<real_concept_base_type>(c)){}
-   real_concept(long long c) : m_value(static_cast<real_concept_base_type>(c)){}
+   real_concept(boost::ulong_long_type c) : m_value(static_cast<real_concept_base_type>(c)){}
+   real_concept(boost::long_long_type c) : m_value(static_cast<real_concept_base_type>(c)){}
 #elif defined(BOOST_HAS_MS_INT64)
    real_concept(unsigned __int64 c) : m_value(static_cast<real_concept_base_type>(c)){}
    real_concept(__int64 c) : m_value(static_cast<real_concept_base_type>(c)){}
@@ -94,8 +98,8 @@ public:
    real_concept& operator=(long c) { m_value = c; return *this; }
    real_concept& operator=(unsigned long c) { m_value = c; return *this; }
 #ifdef BOOST_HAS_LONG_LONG
-   real_concept& operator=(long long c) { m_value = static_cast<real_concept_base_type>(c); return *this; }
-   real_concept& operator=(unsigned long long c) { m_value = static_cast<real_concept_base_type>(c); return *this; }
+   real_concept& operator=(boost::long_long_type c) { m_value = static_cast<real_concept_base_type>(c); return *this; }
+   real_concept& operator=(boost::ulong_long_type c) { m_value = static_cast<real_concept_base_type>(c); return *this; }
 #endif
    real_concept& operator=(float c) { m_value = c; return *this; }
    real_concept& operator=(double c) { m_value = c; return *this; }
@@ -256,9 +260,9 @@ inline long lround(const concepts::real_concept& v)
 
 #ifdef BOOST_HAS_LONG_LONG
 template <class Policy>
-inline long long llround(const concepts::real_concept& v, const Policy& pol)
+inline boost::long_long_type llround(const concepts::real_concept& v, const Policy& pol)
 { return boost::math::llround(v.value(), pol); }
-inline long long llround(const concepts::real_concept& v)
+inline boost::long_long_type llround(const concepts::real_concept& v)
 { return boost::math::llround(v.value(), policies::policy<>()); }
 #endif
 
@@ -275,9 +279,9 @@ inline long ltrunc(const concepts::real_concept& v)
 
 #ifdef BOOST_HAS_LONG_LONG
 template <class Policy>
-inline long long lltrunc(const concepts::real_concept& v, const Policy& pol)
+inline boost::long_long_type lltrunc(const concepts::real_concept& v, const Policy& pol)
 { return boost::math::lltrunc(v.value(), pol); }
-inline long long lltrunc(const concepts::real_concept& v)
+inline boost::long_long_type lltrunc(const concepts::real_concept& v)
 { return boost::math::lltrunc(v.value(), policies::policy<>()); }
 #endif
 
@@ -416,6 +420,16 @@ inline long double real_cast<long double, concepts::real_concept>(concepts::real
 }
 
 } // STLPort
+
+#endif
+
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1310)
+//
+// For some strange reason ADL sometimes fails to find the 
+// correct overloads, unless we bring these declarations into scope:
+//
+using concepts::itrunc;
+using concepts::iround;
 
 #endif
 

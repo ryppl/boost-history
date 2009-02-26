@@ -193,7 +193,7 @@ void test_spots(RealType)
 {
    RealType tolerance = (std::max)(
       boost::math::tools::epsilon<RealType>(),
-      (RealType)boost::math::tools::epsilon<double>() * 5) * 100;
+      (RealType)boost::math::tools::epsilon<double>() * 5) * 150;
    //
    // At float precision we need to up the tolerance, since 
    // the input values are rounded off to inexact quantities
@@ -547,4 +547,5 @@ int test_main(int, char* [])
 #endif
    return 0;
 } // int test_main(int, char* [])
+
 

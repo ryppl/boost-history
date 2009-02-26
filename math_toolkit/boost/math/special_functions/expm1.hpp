@@ -76,12 +76,20 @@ T expm1_imp(T x, const mpl::int_<0>&, const Policy& pol)
 
    T a = fabs(x);
    if(a > T(0.5f))
+   {
+      if(a >= tools::log_max_value<T>())
+      {
+         if(x > 0)
+            return policies::raise_overflow_error<T>("boost::math::expm1<%1%>(%1%)", 0, pol);
+         return -1;
+      }
       return exp(x) - T(1);
+   }
    if(a < tools::epsilon<T>())
       return x;
    detail::expm1_series<T> s(x);
    boost::uintmax_t max_iter = policies::get_max_series_iterations<Policy>();
-#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
+#if !BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582)) && !BOOST_WORKAROUND(__EDG_VERSION__, <= 245)
    T result = tools::sum_series(s, policies::digits<T, Policy>(), max_iter);
 #else
    T zero = 0;
@@ -92,13 +100,21 @@ T expm1_imp(T x, const mpl::int_<0>&, const Policy& pol)
 }
 
 template <class T, class P>
-T expm1_imp(T x, const mpl::int_<53>&, const P&)
+T expm1_imp(T x, const mpl::int_<53>&, const P& pol)
 {
    BOOST_MATH_STD_USING
 
    T a = fabs(x);
    if(a > T(0.5L))
+   {
+      if(a >= tools::log_max_value<T>())
+      {
+         if(x > 0)
+            return policies::raise_overflow_error<T>("boost::math::expm1<%1%>(%1%)", 0, pol);
+         return -1;
+      }
       return exp(x) - T(1);
+   }
    if(a < tools::epsilon<T>())
       return x;
 
@@ -111,13 +127,21 @@ T expm1_imp(T x, const mpl::int_<53>&, const P&)
 }
 
 template <class T, class P>
-T expm1_imp(T x, const mpl::int_<64>&, const P&)
+T expm1_imp(T x, const mpl::int_<64>&, const P& pol)
 {
    BOOST_MATH_STD_USING
 
    T a = fabs(x);
    if(a > T(0.5L))
+   {
+      if(a >= tools::log_max_value<T>())
+      {
+         if(x > 0)
+            return policies::raise_overflow_error<T>("boost::math::expm1<%1%>(%1%)", 0, pol);
+         return -1;
+      }
       return exp(x) - T(1);
+   }
    if(a < tools::epsilon<T>())
       return x;
 
@@ -146,13 +170,21 @@ T expm1_imp(T x, const mpl::int_<64>&, const P&)
 }
 
 template <class T, class P>
-T expm1_imp(T x, const mpl::int_<113>&, const P&)
+T expm1_imp(T x, const mpl::int_<113>&, const P& pol)
 {
    BOOST_MATH_STD_USING
 
    T a = fabs(x);
    if(a > T(0.5L))
+   {
+      if(a >= tools::log_max_value<T>())
+      {
+         if(x > 0)
+            return policies::raise_overflow_error<T>("boost::math::expm1<%1%>(%1%)", 0, pol);
+         return -1;
+      }
       return exp(x) - T(1);
+   }
    if(a < tools::epsilon<T>())
       return x;
 
@@ -232,8 +264,8 @@ inline typename tools::promote_args<T>::type expm1(T x, const Policy& /* pol */)
 #  undef expm1
 #endif
 
-#ifdef BOOST_HAS_EXPM1
-#  if defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901)
+#if defined(BOOST_HAS_EXPM1) && !(defined(__osf__) && defined(__DECCXX_VER))
+#  ifdef BOOST_MATH_USE_C99
 inline float expm1(float x, const policies::policy<>&){ return ::expm1f(x); }
 inline long double expm1(long double x, const policies::policy<>&){ return ::expm1l(x); }
 #else
@@ -269,6 +301,7 @@ inline long double expm1(long double z)
 } // namespace boost
 
 #endif // BOOST_MATH_HYPOT_INCLUDED
+
 
 
 

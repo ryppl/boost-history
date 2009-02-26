@@ -1194,7 +1194,7 @@ inline typename tools::promote_args<T>::type
 
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type
-   tgamma(T1 a, T2 z, const Policy& pol, const mpl::false_)
+   tgamma(T1 a, T2 z, const Policy&, const mpl::false_)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T1, T2>::type result_type;
@@ -1230,7 +1230,7 @@ inline typename tools::promote_args<T>::type
 
 template <class T, class Policy>
 inline typename tools::promote_args<T>::type 
-   lgamma(T z, int* sign, const Policy& pol)
+   lgamma(T z, int* sign, const Policy&)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T>::type result_type;
@@ -1316,7 +1316,7 @@ inline typename tools::promote_args<T1, T2>::type
 //
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type
-   tgamma_lower(T1 a, T2 z, const Policy& pol)
+   tgamma_lower(T1 a, T2 z, const Policy&)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T1, T2>::type result_type;
@@ -1374,7 +1374,7 @@ inline typename tools::promote_args<T1, T2>::type
 //
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type
-   gamma_p(T1 a, T2 z, const Policy& pol)
+   gamma_p(T1 a, T2 z, const Policy&)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T1, T2>::type result_type;
@@ -1424,7 +1424,7 @@ inline typename tools::promote_args<T1, T2>::type
 }
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type 
-   tgamma_ratio(T1 a, T2 b, const Policy& pol)
+   tgamma_ratio(T1 a, T2 b, const Policy&)
 {
    typedef typename tools::promote_args<T1, T2>::type result_type;
    typedef typename policies::evaluation<result_type, Policy>::type value_type;
@@ -1446,7 +1446,7 @@ inline typename tools::promote_args<T1, T2>::type
 
 template <class T1, class T2, class Policy>
 inline typename tools::promote_args<T1, T2>::type 
-   gamma_p_derivative(T1 a, T2 x, const Policy& pol)
+   gamma_p_derivative(T1 a, T2 x, const Policy&)
 {
    BOOST_FPU_EXCEPTION_GUARD
    typedef typename tools::promote_args<T1, T2>::type result_type;

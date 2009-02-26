@@ -23,7 +23,8 @@
 #include <boost/math/tools/user.hpp>
 #include <boost/math/special_functions/detail/round_fwd.hpp>
 
-#if defined(__CYGWIN__) || defined(__FreeBSD__) || defined(__hppa)
+#if defined(__CYGWIN__) || defined(__FreeBSD__) || defined(__NetBSD__) \
+   || defined(__hppa) || defined(__NO_LONG_DOUBLE_MATH)
 #  define BOOST_MATH_NO_LONG_DOUBLE_MATH_FUNCTIONS
 #endif
 #if BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x582))
@@ -67,6 +68,24 @@
 
 #ifdef __IBMCPP__
 #  define BOOST_MATH_NO_DEDUCED_FUNCTION_POINTERS
+#endif
+
+#if (defined(__STDC_VERSION__) && (__STDC_VERSION__ >= 199901))
+#  define BOOST_MATH_USE_C99
+#endif
+
+#if (defined(__hpux) && !defined(__hppa))
+#  define BOOST_MATH_USE_C99
+#endif
+
+#if defined(__GNUC__) && defined(_GLIBCXX_USE_C99)
+#  define BOOST_MATH_USE_C99
+#endif
+
+#if defined(__CYGWIN__) || defined(__HP_aCC) || defined(BOOST_INTEL) \
+  || defined(BOOST_NO_NATIVE_LONG_DOUBLE_FP_CLASSIFY) \
+  || (defined(__GNUC__) && !defined(BOOST_MATH_USE_C99))
+#  define BOOST_MATH_NO_NATIVE_LONG_DOUBLE_FP_CLASSIFY
 #endif
 
 #if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590)
@@ -134,6 +153,12 @@
 #  define BOOST_MATH_POLY_METHOD 3
 #  define BOOST_MATH_RATIONAL_METHOD 3
 #  define BOOST_MATH_INT_TABLE_TYPE(RT, IT) RT
+#  define BOOST_MATH_INT_VALUE_SUFFIX(RV, SUF) RV##.0L
+#endif
+
+#if defined(BOOST_NO_LONG_LONG) && !defined(BOOST_MATH_INT_TABLE_TYPE)
+#  define BOOST_MATH_INT_TABLE_TYPE(RT, IT) RT
+#  define BOOST_MATH_INT_VALUE_SUFFIX(RV, SUF) RV##.0L
 #endif
 
 //
@@ -158,6 +183,10 @@
 #ifndef BOOST_MATH_INT_TABLE_TYPE
 #  define BOOST_MATH_INT_TABLE_TYPE(RT, IT) IT
 #endif
+#ifndef BOOST_MATH_INT_VALUE_SUFFIX
+#  define BOOST_MATH_INT_VALUE_SUFFIX(RV, SUF) RV##SUF
+#endif
+
 //
 // Helper macro for controlling the FP behaviour:
 //
@@ -218,7 +247,7 @@ inline T max BOOST_PREVENT_MACRO_SUBSTITUTION(T a, T b, T c, T d)
 } // namespace tools
 }} // namespace boost namespace math
 
-#ifdef __linux__
+#if (defined(__linux__) && !defined(__UCLIBC__)) || defined(__QNX__) || defined(__IBMCPP__)
 
    #include <fenv.h>
 

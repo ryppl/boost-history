@@ -557,12 +557,12 @@ generated HTML: this needs further investigation.
 [h4 Producing Graphs]
 
 Graphs were produced in SVG format and then converted to PNG's using the same
-process as the equations.
+process as the equations.  
 
-The programs
+The programs 
 /libs/math/doc/sf_and_dist/graphs/dist_graphs.cpp
 and /libs/math/doc/sf_and_dist/graphs/sf_graphs.cpp
-generate the SVG's directly using the
+generate the SVG's directly using the 
 [@http://code.google.com/soc/2007/boost/about.html Google Summer of Code 2007]
 project of Jacob Voytko (whose work so far is at .\boost-sandbox\SOC\2007\visualization).
 
