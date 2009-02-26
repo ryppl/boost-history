@@ -22,6 +22,12 @@
 // 
 // necessary type traits
 #include <boost/call_traits.hpp>
+#include <boost/type_traits/is_pod.hpp>
+// enable if
+#include <boost/utility/enable_if.hpp>
+//
+// std::allocator
+//#include <memory>
 
 namespace boost {
 namespace mirror {
@@ -580,10 +586,35 @@ protected:
 		return traits::is_static::value;
 	}
 
+
+        template <class T, int I>
+        static inline ptrdiff_t get_offset_of(
+                mpl::int_<I> pos,
+		const T* _dummy_ptr,
+		typename enable_if<is_pod<T> >::type* _dummy = 0
+        )
+        {
+		// TODO: check whether dereferencing of null_ptr is safe
+		// this can be a problem with pod-types
+		// meta-types of which have custom implementation
+		// of address(...) expecting a valid instance 
+		T* pointer(0);
+		//
+		// otherwise something like the following will 
+		// be necessary:
+		// 
+		//::std::allocator<T> alloc; // this needs #include <memory>
+		//T* pointer((T*)alloc.allocate(1));
+		// ...
+		// alloc.deallocate(pointer, 1);
+                return offset(*pointer, pos);
+        }
+
 	template <class T, int I>
         static inline ptrdiff_t get_offset_of(
 		mpl::int_<I> pos,
-		T* __dummy,
+		const T* _dummy_ptr,
+		typename disable_if<is_pod<T> >::type* _dummy = 0,
 		T instance = T()
 	)
         { 
@@ -602,16 +633,16 @@ public:
 	template <int I>
 	static inline ptrdiff_t	offset(Class& instance, mpl::int_<I> pos)
 	{
-		if(attrib_is_static(pos)) return invalid_offset();
-		ptrdiff_t& result = get_offset_storage(pos);
-		if(result == invalid_offset())
-		{
-			result = calculate_offset(
-				(byte_ptr)&instance,
-				(byte_ptr)base_class::address(instance, pos)
-			);
-		}
-		return result;
+                if(attrib_is_static(pos)) return invalid_offset();
+                ptrdiff_t& result = get_offset_storage(pos);
+                if(result == invalid_offset())
+                {
+                        result = calculate_offset(
+                                (byte_ptr)&instance,
+                                (byte_ptr)base_class::address(instance, pos)
+                        );
+                }
+                return result;
 	}
 };
 
@@ -637,16 +668,8 @@ public:
 	template <int I>
         static inline ptrdiff_t offset_of(mpl::int_<I> pos)
         { 
-		if(attrib_is_static(pos)) 
-			return offs_calc::invalid_offset();
-		//byte arena[sizeof(Class)*2];
-		//::std::allocator<Class> alloc;
-		//Class* ptr((Class*)alloc.allocate(1, arena));
 		Class* ptr(0);
-		return calculate_offset(
-			(byte_ptr)ptr,
-			(byte_ptr)offs_calc::address(*ptr, pos)
-		);
+		return get_offset_of(pos, ptr);
         } 
 };
 
