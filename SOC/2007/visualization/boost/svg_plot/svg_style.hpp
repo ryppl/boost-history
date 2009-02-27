@@ -379,15 +379,14 @@ public:
 
   text_style& text_style::font_family(const std::string& s)
   { //! Set font family, for example: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
-    /*! \verbatim
+    /*!
     \details Default for browser is sans with Firefox & IE but serif with Opera.\n
-    See also browser conformance test at\n
+      See also browser conformance test at\n
       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-01-t.svg\n
       which tests three styles of font, serif, sans-serif and mono-spaced.\n
       <text font-family="Georgia, 'Minion Web', 'Times New Roman', Times, 'MS PMincho', Heisei-Mincho, serif " x="20" y="80">A serifed face</text>\n
       <text font-family="Arial, 'Arial Unicode', 'Myriad Web', Geneva, 'Lucida Sans Unicode', 'MS PGothic', Osaka, sans-serif " x="20" y="160">A sans-serif face</text>\n
       <text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
-      \endverbatim
     */
     font_family_ = s;
     return *this; //! \return reference to text_style to make chainable.
@@ -583,7 +582,9 @@ value_style::value_style() //! Default data point value label style.
 
     value_style::value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
       text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
-      std::string pre = "", std::string sep  = ", ", std::string suf  = "")
+      std::string pre = "[",
+      std::string sep  = ",&#x00A0;", // If put ", " the trailing space seems to be ignored, so add explicit space.
+      std::string suf  = "]")
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
     values_text_style_(ts), stroke_color_(scol), fill_color_(fcol), plusminus_on_(pm), df_on_(df),

@@ -116,8 +116,8 @@ namespace boost
       double bar_width();
       svg_color& bar_color();
       svg_color& bar_area_fill();
-      int svg_2d_plot_series::values_count(); // number of normal values in data series.
-      int svg_2d_plot_series::limits_count(); // number of values 'at limit' in data series.
+      int values_count(); // number of normal values in data series.
+      int limits_count(); // number of values 'at limit' in data series.
 
    }; // class svg_2d_plot_series
 
@@ -303,12 +303,12 @@ namespace boost
   }
 
   int svg_2d_plot_series::values_count()
-  { //! \return number of normal values in data series.
+  { //! \return number of normal values in a data series.
     return series_.size(); 
   }
 
   int svg_2d_plot_series::limits_count()
-  {  //! \return number of values 'at limit' in data series.
+  {  //! \return number of values 'at limit' in a data series.
     return series_limits_.size();
   }
 

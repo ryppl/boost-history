@@ -180,7 +180,7 @@ namespace svg
    */
 
 //!  Class to output Scalable Vector Graph XML graph elements: point, path, line, circle, rect, polygon and text.
-  // and handle plot stylesheets.
+  // and handle plot stylesheets (not implemented yet).
 class svg;
 // See svg_fwd.hpp for forward declarations.
 // Public member functions:
@@ -221,7 +221,11 @@ class svg;
 class svg
 { /*! \class boost::svg::svg
   \brief Class to output Scalable Vector Graph XML graph elements: point, path, line, circle, rect, polygon and text.
-  \details (and handle plot stylesheets - but not implemented yet).
+  \details  Class to add basic Scalable Vector Graph XML graph elements:
+  point, path, line, circle, rect, polygon and text to SVG images,
+  including metadata like author, copyright and license,
+  and to output the final image as SVG XML to stream or file.
+  (Also to handle plot stylesheets - but not implemented yet).
 */
 protected:
   unsigned int x_size_; //!< SVG image X-axis size (in SVG units (default pixels).
@@ -426,7 +430,7 @@ public:
   }
 
   void write(std::ostream& s_out)
-  { //! Write whole .svg 'file' contents to stream (perhaps a file).
+  { //!< Write whole .svg 'file' contents to stream (perhaps a file).
     write_header(s_out); // "<?xml version=...
     // write svg document, begin <svg tag.
     // <svg xml:space="preserve" width="5.5in" height=".5in">

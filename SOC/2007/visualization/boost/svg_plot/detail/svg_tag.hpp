@@ -508,17 +508,16 @@ private:
   double x_;  //!< Absolute X position.
   double y_;  //!< Absolute Y position.
   double dx_; //!< Relative X position of a 1st single character of text.
-  double dy_;//!< Relative Y position of a 1st single character of text.
+  double dy_; //!< Relative Y position of a 1st single character of text.
   int rotate_; //!< Rotation of a 1st single character of text.
   // A list of shifts or rotations for several characters is not yet implemented.
   double text_length_;  //!< Allows the author to provide exact alignment.
   //! dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
-  //! but see http://www.w3.org/TR/SVG/text.html#TSpanElement for ancestor rules.
+  //! but see [@http://www.w3.org/TR/SVG/text.html#TSpanElement] for ancestor rules.
   //! but x_, y_, and text_length need a flag.
-  bool use_x_;
-  bool use_y_;
+  bool use_x_; //!> If true then use X absolute position.
+  bool use_y_; //!> If true then use Y absolute position.
   bool use_text_length_;
-
   text_style style_; //!< font variants.
   bool use_style_;
 
@@ -553,6 +552,8 @@ public:
   //tspan_element& x(double x);
   //tspan_element& y(double y);
   //tspan_element& text_length(double text_length);
+  //  tspan_element& text_style(const text_style& style)
+
 
   tspan_element& text(const std::string& text)
   {
@@ -594,7 +595,7 @@ public:
   }
 
   tspan_element& text_length(double text_length)
-  {
+  { //! Set user estimate of text length (see http://www.w3.org/TR/SVG/text.html#TSpanElement TSPAN SVG Specification).
     text_length_ = text_length;
     use_text_length_ = true;
     return *this; //! \return tspan_element& to make chainable.
@@ -633,9 +634,16 @@ public:
   }
 
   tspan_element& fill_color(const svg_color& color)
-  {
+  { //! Set fill color for a tspan element.
     style_info_.fill_color(color);
     style_info_.fill_on(true);
+    use_style_ = true;
+    return *this; //! \return tspan_element& to make chainable.
+  }
+
+  tspan_element& textstyle(const text_style& style)
+  { //! Set text style for a tspan element.
+    style_ = style;
     use_style_ = true;
     return *this; //! \return tspan_element& to make chainable.
   }
@@ -650,48 +658,88 @@ public:
   //int rotation();
   //double text_length();
   //text_style& font_style();
-  //const text_style& font_style() const;
+  //const text_style& text_style() const;
 
-  std::string text(){ return text_; }
-  double x() { return x_; }
-  double y() { return y_; }
-  double dx() { return dx_; }
-  double dy() { return dy_; }
-  int rotation() { return rotate_; }
-  double text_length() { return text_length_; }
-
-  unsigned int font_size()
-  {
-    return style_.font_size();
-  }
-
-  const std::string& font_family()
-  {
-    return style_.font_family();
-  }
-
-  const std::string& font_weight() const
-  {
-    return style_.font_weight();
-  }
-
-  text_style& font_style()
+  const text_style& textstyle()
   { // Access to font family, size ...
     return style_;
   }
 
-  const text_style& font_style() const
-  { // Access to font family, size ... const version.
+  const text_style& textstyle() const
+  {// const version of access to font family, size ...
     return style_;
   }
 
+  std::string text()
+  { //! Get text from a tspan element.
+    return text_;
+  }
+  double x()
+  { //! Get absolute X position for tspan element.
+    return x_;
+  }
+
+  double y()
+  { //! Get absolute Y position for tspan element.
+    return y_;
+  }
+  double dx()
+  { //! Get relative X position for tspan element.
+    return dx_;
+  }
+
+  double dy()
+  { //! Get relative Y position for tspan element.
+    return dy_;
+  }
+
+  int rotation()
+  {  //! Get rotation for the next character for tspan element.
+    return rotate_;
+  }
+
+  double text_length()
+  { //! Get user estimated length for a text string.
+    return text_length_;
+  }
+
+  bool use_style()
+  { //! Get true if to use the estimated text string length.
+    return use_text_length_;
+  }
+
+  unsigned int font_size()
+  { //! Get the font size for tspan element (from its text_style).
+    return style_.font_size();
+  }
+
+  const std::string& font_family()
+  { //! Get the font family for tspan element (from its text_style).
+    return style_.font_family();
+  }
+
+  const std::string& font_weight() const
+  { //! Get the font weight for tspan element (from its text_style).
+    return style_.font_weight();
+  }
+
+  const std::string&  font_style()
+  { //! Get the font style for tspan element (from its text_style).
+    return style_.font_style();
+  }
+
+  const std::string&  font_style() const
+  { //! Get the font style for tspan element (from its text_style). const version.
+    return style_.font_style();
+  }
+
   svg_color fill_color()
-  {
+  { //! Get the fill color for tspan element . 
     return style_info_.fill_color();
   }
 
   bool fill_on()
-  {
+  { //! Get true if to use fill color for tspan element .
     return style_info_.fill_on();
   }
 
@@ -830,18 +878,18 @@ public:
   //double x() const;
   //double y() const;
 
-  text_style& style()
-  { // Access to font family, size ...
+  text_style& textstyle()
+  { //! Get text style for font size, family, decoration ...
     return style_;
   }
 
-  const text_style& style() const
-  {
+  const text_style& textstyle() const
+  { //! Get text style for font size, family, decoration ...
     return style_;
   }
 
-  text_element& style(text_style& ts)
-  {
+  text_element& textstyle(text_style& ts)
+  { //! Set text style for font size, family, decoration ...
     style_ = ts;
     return *this; //! \return text_element& to make chainable.
   }
@@ -895,13 +943,19 @@ public:
   }
 
   void text(const std::string& t)
-  { //! text string to write.
+  { //! Get tspan text string to write.
     data_.push_back(new text_element_text(t));
   }
 
   tspan_element& tspan(const std::string& t)
-  {
+  { //! Add text span element.
     data_.push_back(new tspan_element(t, style_));
+    return *(static_cast<tspan_element*>(&data_[data_.size()-1]));
+  }
+
+  tspan_element& tspan(const std::string& t, const text_style& style)
+  { //! Add text span element (with specified text style).
+    data_.push_back(new tspan_element(t, style));
     return *(static_cast<tspan_element*>(&data_[data_.size()-1]));
   }
 

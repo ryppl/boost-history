@@ -2,7 +2,6 @@
     \brief Example of 1 D plot of 3 different STL container types using several layout features.
     \details creates file 1d_complex.svg
     \author Jacob Voytko
-
     \date 2007
 */
 

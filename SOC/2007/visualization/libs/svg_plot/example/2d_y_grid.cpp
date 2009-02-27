@@ -1,13 +1,12 @@
 /*! \file 2d_y_grid.cpp
-
   \brief 2D plot with Y axis grids.
-
+  \details Shows an example of adding a Y horizontal grid to a 2D plot.
   \author Jacob Voytko
-
   \date 2007
 */
 
 // Copyright Jacob Voytko 2007
+
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 

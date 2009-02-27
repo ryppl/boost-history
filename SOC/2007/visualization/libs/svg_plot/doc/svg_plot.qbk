@@ -1,4 +1,4 @@
-[article SVG Plot
+[article Plotting graphs in SVG format
     [quickbook 1.4]
     [id SVG_plot]
     [authors [Voytko, Jake], [Bristow, Paul A.]]
@@ -21,6 +21,9 @@
 [def :-)            [$images/smiley.png]]
 [def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
 [def __docbook__    [@http://www.docbook.org/ DocBook]]
+[def __Boost_Assign [@$(BOOST_ROOT)/libs/assign/doc/index.html Boost.Assign]]
+
+[/def __Boost_Assign [@http://www.boost.org/doc/libs/1_38_0/libs/assign/doc/index.html Boost.Assign]]
 
 [/ Links   ]
 [/ By Eric's convention prefix *and* suffix _ means a defined value.  But Use JM and SW double underscore prefix convention.]
@@ -128,17 +131,9 @@ the standard.
      <title>Class Index</title>
    </index>
 
-   <index type="typedef_name">
-     <title>Typedef Index</title>
-    </index>
-
     <index type="function_name">
      <title>Function Index</title>
     </index>
-
-   <index type="macro_name">
-     <title>Macro Index</title>
-   </index>
 
    <index/>
 

@@ -1,8 +1,12 @@
 /*! \file demo_2d_simple.cpp
     \brief Demonstration of some simple 2D plot features.
     \details Uses some simple math functions to generate curves.
+    This demonstrates plotting some simple math functions with most of the 2-D defaults,
+    just changing a few typical details.
     The detailed output shows the plot settings for each plot.
-
+    See default_2d_plot.cpp for using *all* defaults.
+    See also demo_2d_plot.cpp for use of some of the very many options.
+    \date Feb 2009
     \author Jacob Voytko and Paul A. Bristow 
 */
 
@@ -13,11 +17,6 @@
 // Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
-
-// This demonstrates plotting some simple math functions with most of the 2-D defaults,
-// just changing a few typical details.
-// See default_2d_plot.cpp for using *all* defaults.
-// See also demo_2d_plot.cpp for use of some of the very many options.
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
   using boost::svg::svg_2d_plot;
@@ -45,9 +44,7 @@
   using boost::svg::blue;
   // and other enum options used:
   using boost::svg::square;
-
-
-// for every color used.
+  // for every color used.
 
 double f(double x)
 {
@@ -89,8 +86,7 @@ int main()
     my_plot.title("demo_2d_simple");
     my_plot.title(" title");
     cout << " my_plot.title() " << my_plot.title() << endl;
-    my_plot.x_label("X-axis");
-    my_plot.y_label("Y-axis");
+    my_plot.x_label("X-axis").y_label("Y-axis"); // Note chaining.
 
     std::string s = my_plot.title();
 

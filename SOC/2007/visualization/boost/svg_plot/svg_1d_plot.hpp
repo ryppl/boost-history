@@ -69,11 +69,14 @@ class svg_1d_plot_series
 { /*! \class boost::svg::svg_1d_plot_series
    \brief Holds a series of data values (points) to be plotted.
    \details Scan each data point sorting them into the appropriate
-   std::vectors, normal or not (NaN or infinite).
+   std::vectors, normal or not (NaN or infinite).\n
+   Member functions allow control of data points markers and lines joining them,
+   and their appearance, shape, color and size.\n
+   Each data series can have a title that can be shown on a legend box with identifying symbols.
 */
 
 public:
-  std::vector<double> series_; //<! Normal 'OK to plot' data values.
+  std::vector<double> series_; //!< Normal 'OK to plot' data values.
   std::vector<double> series_limits_; //!< 'limit' values: too big, too small or NaN.
 
   std::string title_; //!< title of data series (to show on legend).
@@ -82,35 +85,34 @@ public:
   plot_line_style line_style_; //!< No line style for 1-D, only for 2-D.
 
   // Constructor svg_1d_plot_series.
-  template <class T> // T an STL container: array, vector<double>, set, map ...
-  svg_1d_plot_series(T begin, T end, const std::string& title = "");
   //! Scan each data point between the iterators that are passed,
   //! sorting them into the appropriate std::vectors, normal or not (NaN or infinite).
+  template <class T> // \tparam T an STL container: array, vector<double>, set, map ...
+  svg_1d_plot_series(T begin, T end, const std::string& title = "");
 
   // Declarations of Set functions for the plot series.
 
-  svg_1d_plot_series& fill_color(const svg_color& col_);
-  svg_1d_plot_series& stroke_color(const svg_color& col_);
-  svg_1d_plot_series& shape(point_shape shape_);
-  svg_1d_plot_series& symbols(const std::string s);
-  svg_1d_plot_series& size(int size_);
-  svg_1d_plot_series& line_color(const svg_color& col_);
-  svg_1d_plot_series& line_width(double wid_);
-  svg_1d_plot_series& line_on(bool on_);
-  svg_1d_plot_series& bezier_on(bool on_);
+  svg_1d_plot_series& fill_color(const svg_color& col_); //!< Set fill color for plot point marker(s) (chainable).
+  svg_1d_plot_series& stroke_color(const svg_color& col_); //!< Set stroke color for plot point marker(s) (chainable).
+  svg_1d_plot_series& shape(point_shape shape_); //!< Set shape for plot point marker(s) (chainable).
+  svg_1d_plot_series& symbols(const std::string s); //!< Set symbol(s) for plot point marker(s) (chainable).
+  svg_1d_plot_series& size(int size_); //!< Set font size for plot point marker(s) (chainable).
+  svg_1d_plot_series& line_color(const svg_color& col_); //!< Set color for line joining data points (chainable).
+  svg_1d_plot_series& line_width(double wid_); //!< Set line width for plot point marker(s) (chainable).
+  svg_1d_plot_series& line_on(bool on_); //!< Set true for line joining points for plot point marker(s) (chainable).
+  svg_1d_plot_series& bezier_on(bool on_); //!< Set true for curve joining points for plot point marker(s) (chainable).
 
   // Get functions for the plot series.
-  svg_color fill_color();
-  svg_color stroke_color();
-  int size();
-  point_shape shape();
-  const std::string symbols();
-  double line_width();
-  bool line_on();
-  bool bezier_on();
-  size_t series_count();
-  size_t series_limits_count();
-
+  svg_color fill_color(); //!< Get fill color for plot point marker(s).
+  svg_color stroke_color(); //!< Get stroke color for plot point marker(s).
+  int size(); //!< Get size for plot point marker(s).
+  point_shape shape(); //!< Get shape for plot point marker(s).
+  const std::string symbols(); //!< Get sumbols for plot point marker(s).
+  double line_width(); //!< Get line width for plot point marker(s).
+  bool line_on(); //!< Get true if line is to join data points.
+  bool bezier_on(); //!< Get true if curve if to join data points.
+  size_t series_count(); //!< Get number of normal data points in this data series.
+  size_t series_limits_count();//!< Get number of 'at limits' data points in this data series.
 }; // class svg_1d_plot_series
 
 // class svg_1d_plot_series Constructor
@@ -205,24 +207,24 @@ double svg_1d_plot_series::line_width()
 }
 
 svg_1d_plot_series& svg_1d_plot_series::line_on(bool on_)
-{ //! Set to draw a line joining plot points (if true).
+{ //! Set true if to draw a line joining plot points.
   line_style_.line_on_ = on_;
   return *this; // Make chainable.
 }
 
 bool svg_1d_plot_series::line_on()
-{ //! \return if to draw a line joining plot points (if true).
+{ //! \return true if to draw a line joining plot points.
   return line_style_.bezier_on_;
 }
 
 svg_1d_plot_series& svg_1d_plot_series::bezier_on(bool on_)
-{ //! Set if to draw bezier curved line joining plot points (if true).
+{ //! Set true if to draw bezier curved line joining plot points.
   line_style_.bezier_on_ = on_;
   return *this; // Make chainable.
 }
 
 bool svg_1d_plot_series::bezier_on()
-{ //! \return  to draw bezier curved line joining plot points (if true).
+{ //! \return true if to draw bezier curved line joining plot points.
   return line_style_.bezier_on_;
 }
 
@@ -241,7 +243,7 @@ size_t svg_1d_plot_series::series_limits_count()
 class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
 { /*! \class boost::svg::svg_1d_plot
      \brief Hold all data about a plot, and functions to get and set.
-     \details
+     \details All data about a plot, and functions to get and set appearance.
       axis_plot_frame.hpp contains functions common to 1 and 2-D.
      See also svg_2d_plot.hpp for 2-D version.
     */
@@ -468,7 +470,9 @@ public:
   } //  void set_ids()
 
   void calculate_plot_window()
-  { // For 1-D
+  { //! Calculate the size and position of the plot window,
+    //! taking account of the length and font size of axes labels, axis ticks, title and legend box.
+    // This version is only for 1-D.
     // All calculation use svg units, pixels by default.
 
     // Start by assuming we can use all the svg image,
@@ -600,7 +604,7 @@ public:
   } //  void calculate_plot_window()
 
   void calculate_transform()
-  { // Calculate scale and shift factors for transform from Cartesian to plot.
+  { //! Calculate scale and shift factors for transform from Cartesian to plot.
     // SVG image is 0, 0 at top left, Cartesian at bottom left.
     x_scale_ = (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
     x_shift_ = plot_left_ - (x_axis_.min_ * (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_));
@@ -609,7 +613,8 @@ public:
   } // void calculate_transform()
 
   void draw_axes()
-  { // For 1-D, there is, of course, only the horizontal X-axis!
+  { // Add information to the plot image for X axis lines.
+    // For 1-D, there is, of course, only the horizontal X-axis!
     double x(0.);
     double y1(0.);
     double y2(image.y_size());
@@ -621,11 +626,11 @@ public:
       { // Use whole image.
         if(title_on_)
         { // Allow space for title, taking account of font size.
-          y1 += title_info_.style().font_size() * text_margin_;
+          y1 += title_info_.textstyle().font_size() * text_margin_;
         }
         if(x_axis_.label_on_)
         {// Allow space for x tick values, taking account of font size.
-          y2 -= x_label_info_.style().font_size() * text_margin_;
+          y2 -= x_label_info_.textstyle().font_size() * text_margin_;
         }
       }
       else
@@ -639,7 +644,8 @@ public:
   } //  draw_axes()
 
   void update_image()
-  {
+  { //! Calls functions to add all plot information to the image, including
+    //plot window, axes, ticks, labels, grids, legend, and finally all the data series.
     clear_all(); // Removes all elements that will show up in a subsequent draw.
 
     // Draw plot background.
@@ -763,7 +769,7 @@ public:
   svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_convert);
   template <class T, class U>
   svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert);
-}; // end svg_1d_plot::
+}; // class svg_1d_plot 
 
 // svg_1d_plot Member functions definitions.
 
@@ -808,8 +814,8 @@ public:
 
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /*= "" */)
-  { //! Add a data series to the plot (by default, converting to doubles), with optional title.
-    /*! Note that this version assumes that *ALL* the data values in the container are used.
+  { /*! Add a data series to the plot (by default, converting to doubles), with optional title.
+     Note that this version assumes that *ALL* the data values in the container are used.
     */
     serieses_.push_back(
       svg_1d_plot_series(

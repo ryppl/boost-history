@@ -37,7 +37,7 @@ int main()
     doc.size(400, 400);
 
     text_element& t = doc.text(100, 100, "This ", no_style, center_align, uphill);
-    tspan_element ts = t.tspan("text").dx(10).dy(20.).font_size(40).font_family("Arial").font_weight("bold").fill_color(pink);
+    tspan_element ts = t.tspan("text").dx(10.).dy(20.).font_size(40).font_family("Arial").font_weight("bold").fill_color(pink);
     cout << "dx " << ts.dx() << endl;
     cout << "dy " << ts.dy() << endl;
     cout << "tspan text is " << ts.text() << endl;
@@ -54,7 +54,7 @@ int main()
     //  </tspan>
     //</text>
 
-    // shows expected This text with positiona nd color as expected,
+    // shows expected This text with position and color as expected,
     // BUT doesn't echo fill color????
 
     // These lines below have no effect on the output svg tspan!
@@ -80,6 +80,11 @@ int main()
     // NO offset and style info added to ts
     // NO tspan text for  "green 30 Arial"
 
+    text_style my_ts;
+    my_ts.font_family("serif").font_style("bold").font_size(20);
+    tspan_element ts2 = t.tspan("text2", my_ts).dx(50).dy(50); // Use constructor to set text_style.
+    ts2.textstyle(my_ts); // Use set function to set text_style.
+    text_style tst2 = ts2.textstyle(); // Use get function.
     doc.write("demo_svg_tspan.svg");
 
     return 0;

@@ -2,46 +2,37 @@
 
 [h4 Y-Axis Grid Lines]
 
-If you would like horizontal grid lines that go across the graph,
+If you would like horizontal Y grid lines that go across the graph,
 you can make the following call to `svg_2d_plot`:
 
   my_plot.y_major_grid_on(true)
          .y_minor_grid_on(true);
 
 To style it, you could use the following calls:
-  
+
   my_plot.y_major_grid_color(lightgray) // Darker color for major grid.
          .y_minor_grid_color(whitesmoke); // Lighter color for minor grid.
-         
-      
 
-This will produce the following image:
+This will produce the following plot image:
 
-[$images/2d_y_grid.png]
+[$images/2d_y_grid.svg]
+
+The source of this examples is at [@..\..\example\2d_y_grid.cpp]
 
 Similarly you can have horizontal and/or vertical lines:
 
-  my_plot.x_major_grid_on(true)  
+  my_plot.x_major_grid_on(true)
          .x_minor_grid_on(true);
-         
-and color it similarly for faint blues like old fashioned graph paper:         
-         
+
+and color it similarly for faint blues like old fashioned graph paper:
+
   my_plot.y_major_grid_color(svg_color(200, 220, 255)) // Darker color for major grid.
          .y_minor_grid_color(svg_color(240, 240, 255); // lighter color for minor grid.
-         
+
 and to make the major grid much wider than the minor grid:
 
   my_plot.y_major_grid_width(4)
          .y_minor_grid_width(1)
-         
-[heading External Y Axis Style]
-
-For an alternate way to display a regular axis, you can use an external style:
-
-  my_plot.y_external_style_on(true);
-
-[important If the axis is turned off, `y_external_style_on(true)` will not 
-turn the axis back on. To do that, you must call `axis_on(true)`]
 
 [heading Fill the area between the plot and the axis]
 
@@ -54,7 +45,9 @@ When there is a call to the plot() method, define `area_fill_color`
 
 This produces the following image:
 
-[$images/2d_area_fill.png]
+[$images/2d_area_fill.svg]
+
+from source at [@..\..\example\2d_area_fill.cpp]
 
 [h4 Curve Interpolation]
 
@@ -66,7 +59,7 @@ simply use the following command:
 
 This produces something like the following images:
 
-[$images/2d_bezier.png]
+[$images/2d_bezier.svg]
 
 [warning The `_bezier_curve` feature still displays undesired behavior in extreme circumstances.
 Do not use this feature with curves that have a numeric_limit value (`-NaN`, for example),
@@ -75,7 +68,7 @@ or with data that has high irregularity in X-Axis spacing
 with the next one at 100 on the X axis.)
 In general, curves must be reasonably well-behaved to be smoothable.
 In general, using more data points will make smoothing work better,
-but wil increase svg file sizes.
+but will increase svg file sizes.
 ]
 
 [endsect] [/2d_special Tutorial: 2D Special Features]

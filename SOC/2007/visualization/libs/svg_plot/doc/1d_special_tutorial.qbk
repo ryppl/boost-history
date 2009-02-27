@@ -1,40 +1,34 @@
 [section:1d_special Tutorial: 1D Special Features]
 
-[heading X-Axis Grid Lines]
+[import ..\example\demo_1d_x_external.cpp]
+
+[h4 X-Axis Grid Lines]
 
 If you would like vertical grid lines that go on the graph,
 you can make the following call to `svg_1d_plot`:
 
-  my_plot.x_major_grid_on(true) 
+  my_plot.x_major_grid_on(true)
          .x_minor_grid_on(true);
 
 To color style it, you might add the following calls:
-  
+
   my_plot.x_major_grid_color(lightgray) // Darker color for major grid.
          .x_minor_grid_color(whitesmoke); // Lighter color for minor grid.
 
 This will produce the following image:
 
-[$images/1d_x_grid.png]
+[$images/1d_x_grid.svg]
 
-[h4 X-Axis External Style]
+[h4 X-Axis ticks and value label position]
 
-TODO this has ben changed to x_up_ticks and x_down_ticks and y_left_ticks and y_right_ticks.
+[demo_1d_x_external_1]
 
-By default the 'ticks' face into the plot area.
-Alternatively, you can use an 'external' style,
-so that the ticks face out from the X- and/or Y-axes.
+producing this plot
 
-  my_plot.x_external_style_on(true);
-  my_plot.y_external_style_on(true);
+[$images/demo_1d_x_external.svg]
 
-The axis is still otherwise styled using the normal methods.
-The following is an example of the style that you can produce with this:
-
-[$images/1d_x_external.png]
-
-[important If the axis is turned off, `x_external_style_on(true)` will not 
-turn the axis back on. To do that, you must call `axis_on(true)`]
+See [@../../example/demo_1d_x_external.cpp demo_1d_x_external.cpp]
+for full source code.
 
 [endsect] [/1d_special Tutorial: 1D Special Features]
 

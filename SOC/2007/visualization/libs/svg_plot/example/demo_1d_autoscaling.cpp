@@ -8,7 +8,7 @@
     \date Feb 2009
 */
 // Copyright Jacob Voytko 2007
-// Copyright Paul A Bristow 2008
+// Copyright Paul A Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -18,7 +18,6 @@
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
 // also be added here as comment or included or pasted in elsewhere.
-
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
 
@@ -158,7 +157,7 @@ int main()
   */
    my_1d_plot.plot(++my_set.begin(),--my_set.end(), "Auto 1D my_set"); // Add whole data series from my_set.
  //my_1d_plot.plot(my_set, "Auto 1D my_set"); // Add whole data series from my_set.
-  my_1d_plot.write("demo_1d_autoscaling_s.svg"); // Write the plot to file.
+  my_1d_plot.write("demo_1d_autoscaling.svg"); // Write the plot to file.
   
   /*`If we want, we can check the autoscale range used, noting that zero *is* included because we demanded it.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 8
@@ -173,7 +172,7 @@ int main()
   }
   } // // Autoscaling with my_set
 
- //] [/demo_1d_autoscaling_4]
+ //] [/demo_1d_autoscaling_3]
 
 	return 0;
 } // int main()

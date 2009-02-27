@@ -37,15 +37,16 @@ doxygen autodoc
   :
     <doxygen:param>EXTRACT_ALL=YES
     #<doxygen:param>"PREDEFINED=\"BOOST_DEDUCED_TYPENAME=typename\" "
-    #<doxygen:param>HIDE_UNDOC_MEMBERS=NO
-    #<doxygen:param>EXTRACT_PRIVATE=NO
-    #<doxygen:param>ENABLE_PREPROCESSING=YES
-    #<doxygen:param>MACRO_EXPANSION=YES
-    #<doxygen:param>EXPAND_ONLY_PREDEF=YES
-    #<doxygen:param>SEARCH_INCLUDES=YES
-    #<doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+    <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+    <doxygen:param>SORT_MEMBER_DOCS=YES
+    <doxygen:param>EXTRACT_PRIVATE=YES
+    <doxygen:param>ENABLE_PREPROCESSING=YES
+    <doxygen:param>MACRO_EXPANSION=YES
+    <doxygen:param>EXPAND_ONLY_PREDEF=YES
+    <doxygen:param>SEARCH_INCLUDES=YES
+    <doxygen:param>SHOW_INCLUDE_FILES=NO
+    <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
 ;
-
 
 # import boostbook : boostbook ;
 

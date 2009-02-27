@@ -2,13 +2,12 @@
     \brief An example to demonstrate simple 1D settings, including auto-scaling.
     \details See auto_1d_containers.cpp for an example autoscaling with multiple data series.
     See also demo_1d_plot.cpp for a wider range of use.
-
     \author Paul A Bristow
     \date Feb 2009
 */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A Bristow 2008
+// Copyright Paul A Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -18,7 +17,6 @@
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
 // also be added here as comment or included or pasted in elsewhere.
-
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
 
@@ -74,7 +72,7 @@ double tol100eps = 1000 * numeric_limits<double>::epsilon(); // suitable tight v
 
 int main()
 {
-  //[auto_1d_plot_2
+//[auto_1d_plot_2
   /*`This example uses containers to demonstrate autoscaling.
   Autoscaling must inspect the container in order to find axis ranges that will be suitable.
   First we create a container and fill with some fictional data.
@@ -113,9 +111,9 @@ int main()
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-  //] [/auto_1d_plot_2]
+//] [/auto_1d_plot_2]
 
-  //[auto_1d_plot_3
+//[auto_1d_plot_3
 /*`Other STL containers can also be used, for example set, or multiset (allowing duplicates):*/
 
   try
@@ -244,7 +242,7 @@ The default is true, to check all values.
 
 If we had many very known normal values to plot and want to autoscale,
 we might instead opt to ignore these checks, and write:
-  */
+*/
   svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
   //my_1d_plot.autoscale_check_limits(false);
@@ -262,7 +260,8 @@ aesthetically pleasing ranges. One can:
 * enforce the inclusion of zero on the plot.
 * Specify a minimum number of major ticks.
 * Specify the steps between major ticks, default 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-* Avoid values that are a tiny amount over the minimum or maximum from causing an apparently empty tick at the minimum or maximum.
+* Avoid values that are a tiny amount over the minimum or maximum from causing
+  an apparently unnecessary tick at the minimum or maximum.
 */
 
   // Set some autoscaling parameters:
@@ -301,8 +300,7 @@ aesthetically pleasing ranges. One can:
     << ", interval " << my_1d_plot.x_auto_tick_interval() << endl; // Autoscaled min 1, max 5.5, interval 0.5
 
   //my_1d_plot.x_autoscale(true);  // Ensure autoscale values are used for the plot.
-  // This is also automatically set true by any call of `x_autoscale(some_data);`
-
+  // This is also automatically set true by any call of `x_autoscale(some_data);
 
 /*`The actual addition of data values to the plot is, of course, quite separate from any autoscaling.
 */
@@ -339,15 +337,21 @@ This is often useful when the plot does not meet expectations.
 } // int main()
 
 /*
+//[auto_1d_plot_output
 
+------ Rebuild All started: Project: auto_1d_plot, Configuration: Debug Win32 ------
+Deleting intermediate and output files for project 'auto_1d_plot', configuration 'Debug|Win32'
+Compiling...
 auto_1d_plot.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\auto_1d_plot.exe"
 limit value: 1.#INF
 6 good values, 1 limit values.
-7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
+limit value: 1.#INF
+x_range() 0, 7
+7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF 
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
 0.2 1.1 4.2 3.3 5.4 6.5 : 6 values used.
 1.1 4.2 3.3 5.4 : 4 values used.
 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF : 7 values used.
@@ -372,7 +376,104 @@ Autoscaled min 0, max 6.5, interval 0.5
 Autoscaled min 1, max 5.5, interval 0.5
 Autoscaled  min 1, max 5.5, interval 0.5
 x_range() 1, 5.5
-Build Time 0:03
+
+axes_on false
+background_border_width 1
+background_border_color RGB(255,255,0)
+background_color RGB(255,255,255)
+image_border_margin() 10
+image_border_width() 1
+coord_precision 3
+copyright_date  
+copyright_holder 
+description 
+document_title 
+image_x_size 500
+image_y_size 200
+legend_on false
+legend_place 2
+legend_top_left -1, -1, legend_bottom_right -1, -1
+legend_background_color blank
+legend_border_color RGB(255,255,0)
+legend_color blank
+legend_title 
+legend_title_font_size 14
+legend_width 0
+legend_lines true
+limit points stroke color RGB(119,136,153)
+limit points fill color RGB(250,235,215)
+license_on false
+license_reproduction permits
+license_distribution permits
+license_attribution requires
+license_commercialuse permits
+plot_background_color RGB(255,255,255)
+plot_border_color RGB(255,255,0)
+plot_border_width 1
+plot_window_on true
+plot_window_x 11, 489
+plot_window_x_left 11
+plot_window_x_right 489
+plot_window_y 56, 139
+plot_window_y_top 56
+plot_window_y_bottom 139.2
+title_on true
+title ""
+title_color blank
+title_font_alignment 2
+title_font_decoration 
+title_font_family Verdana
+title_font_rotation 0
+title_font_size 18
+title_font_stretch 
+title_font_style 
+x_value_precision 3
+x_value_ioflags 200 IOS format flags (0x200) dec.
+x_max 5.5
+x_min 1
+x_axis_on true
+x_axis_color() RGB(0,0,0)
+x_axis_label_color RGB(0,0,0)
+x_axis_value_color RGB(0,0,0)
+x_axis_width 1
+x_label_on true
+x_label 
+x_label_color blank
+x_label_font_family Verdana
+x_label_font_size 14
+x_label_units 
+x_label_units_on false
+x_major_labels_side left
+x_values_font_size 10
+x_values_color blank
+x_values_precision 3
+x_values_ioflags 512
+x_major_label_rotation 0
+x_major_grid_color RGB(200,220,255)
+x_major_grid_on false
+x_major_grid_width 1
+x_major_interval 0.5
+x_major_tick 0.5
+x_major_tick_color RGB(0,0,0)
+x_major_tick_length 5
+x_major_tick_width 2
+x_minor_interval 0
+x_minor_tick_color RGB(0,0,0)
+x_minor_tick_length 2
+x_minor_tick_width 1
+x_minor_grid_on false
+x_minor_grid_color RGB(200,220,255)
+x_minor_grid_width 0.5
+x_range() 1, 5.5
+x_num_minor_ticks 4
+x_ticks_down_on true
+x_ticks_up_on false
+x_ticks_on_window_or_axis bottom
+x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+x_autoscale true
+x_autoscale_check_limits true
+data lines width 0
+//] [auto_1d_plot_output]
 
 
 */

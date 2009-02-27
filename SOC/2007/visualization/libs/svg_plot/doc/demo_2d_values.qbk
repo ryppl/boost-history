@@ -8,6 +8,9 @@
 [demo_2d_values_2]
 [demo_2d_values_output]
 
+And the plot:
+[$mage\demo_2d_values.svg]
+
 [h4 Showing 2d Data 'at limit' Values Examples]
 
 [import ..\example\demo_2d_limits.cpp]

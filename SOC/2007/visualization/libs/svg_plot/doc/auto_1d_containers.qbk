@@ -7,12 +7,10 @@
 The output is:
 [auto_1d_containers_output]
 
-You can view the svg file, for example: [@..\images\auto_1d_containers.svg auto_1d_containers.svg]
+You can view the svg file, for example: [@\images\auto_1d_containers.svg auto_1d_containers.svg]
 with most internet browsers, and other programs too.
-[/ image as .png of svg?]
-[/$images/2d_simple.png]
 
-See [@../../example/auto_1d_containers.cpp auto_1d_containers..cpp]
+See [@../../example/auto_1d_containers.cpp auto_1d_containers.cpp]
 for full source code.
 
 [endsect] [/section:auto_1d_containers_tutorial 1-D Auto Multiple Containers Examples]

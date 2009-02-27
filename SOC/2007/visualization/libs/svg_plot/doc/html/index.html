@@ -1,10 +1,10 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>SVG Plot</title>
+<title>Plotting graphs in SVG format</title>
 <link rel="stylesheet" href="../../../../../../../../boost_trunk/doc/html/boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
-<link rel="home" href="index.html" title="SVG Plot">
+<link rel="home" href="index.html" title="Plotting graphs in SVG format">
 <link rel="next" href="SVG_plot/preface.html" title="Preface">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -22,7 +22,7 @@
 <div class="titlepage">
 <div>
 <div><h2 class="title">
-<a name="SVG_plot"></a>SVG Plot</h2></div>
+<a name="SVG_plot"></a>Plotting graphs in SVG format</h2></div>
 <div><div class="authorgroup">
 <div class="author"><h3 class="author">
 <span class="firstname">Jake</span> <span class="surname">Voytko</span>
@@ -33,7 +33,7 @@
 </div></div>
 <div><p class="copyright">Copyright © 2007 to 2009 Jake Voytko and Paul A. Bristow</p></div>
 <div><div class="legalnotice">
-<a name="id773512"></a><p>
+<a name="id775159"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -45,67 +45,74 @@
 <p><b>Table of Contents</b></p>
 <dl>
 <dt><span class="section"><a href="SVG_plot/preface.html"> Preface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/howtouse.html"> How To Use This Documentation</a></span></dt>
-<dt><span class="section"><a href="svg_plot/color.html"> Colors</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple.html"> Tutorials: 1D</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/howtouse.html"> How To Use This
+    Documentation</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/color.html"> Colors</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d.html"> 1D Tutorials</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/tutorial_code_1d_example.html">
-      Simple 1D Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/1d_vector_tutorial.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/1d_vector_tutorial.html">
       1-D Vector Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/demo_1d_containers_tutorial.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/demo_1d_containers_tutorial.html">
       1-D Containers Examples</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/auto_1d_containers_tutorial.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/auto_1d_containers_tutorial.html">
       1-D Auto Multiple Containers Examples</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/full_1d_layout.html"> Tutorial:
-      1D Full Layout Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/1d_special.html"> Tutorial:
-      1D Special Features</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/demo_1d_axis_scaling.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/full_1d_layout.html">
+      Tutorial: 1D More Layout Examples</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/1d_special.html">
+      Tutorial: 1D Special Features</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/demo_1d_axis_scaling.html">
       1-D Axis Scaling</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/demo_1d_autoscaling.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/auto_1d_plot.html">
+      1-D Auto scaling Examples</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/demo_1d_autoscaling.html">
       1-D Autoscaling Various Containers Examples</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_code_1d_simple/demo_1d_values.html"> 1-D
-      Data Values Examples</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_1d/demo_1d_values.html">
+      1-D Data Values Examples</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple.html"> Tutorial: 2D</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_2d_code_simple.html">
+    Tutorial: 2D</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/2d_simple_code_example.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_2d_code_simple/2d_simple_code_example.html">
       Simple Code Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/full_2d_layout.html"> Tutorial:
-      Fuller Layout Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/2d_special.html"> Tutorial:
-      2D Special Features</a></span></dt>
-<dt><span class="section"><a href="svg_plot/tutorial_2d_code_simple/demo_2d_values.html"> 2-D
-      Data Values Examples</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_2d_code_simple/full_2d_layout.html">
+      Tutorial: Fuller Layout Example</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_2d_code_simple/2d_special.html">
+      Tutorial: 2D Special Features</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/tutorial_2d_code_simple/demo_2d_values.html">
+      2-D Data Values Examples</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial.html"> Tutorial: Boxplot</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/svg_boxplot_tutorial.html"> Tutorial:
+    Boxplot</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_tutorial_simple.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/svg_boxplot_tutorial/svg_boxplot_tutorial_simple.html">
       Simple Example</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_tutorial_full.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/svg_boxplot_tutorial/svg_boxplot_tutorial_full.html">
       Full Boxplot Layout</a></span></dt>
-<dt><span class="section"><a href="svg_plot/svg_boxplot_tutorial/svg_boxplot_quartiles.html">
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/svg_boxplot_tutorial/svg_boxplot_quartiles.html">
       Definitions of the Quartiles</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/svg_tutorial.html"> SVG tutorial</a></span></dt>
-<dt><span class="section"><a href="svg_plot/behavior_limits.html"> Showing data values at Numerical
-    Limits</a></span></dt>
-<dt><span class="section"><a href="svg_plot/plot_defaults.html"> Plot Defaults</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/svg_tutorial.html"> SVG tutorial</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/behavior_limits.html"> Showing
+    data values at Numerical Limits</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/plot_defaults.html"> Plot Defaults</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/plot_defaults/1d_defaults.html"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code>
-      Defaults</a></span></dt>
-<dt><span class="section"><a href="svg_plot/plot_defaults/2d_defaults.html"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code>
-      Defaults</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/plot_defaults/1d_defaults.html">
+      <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Defaults</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/plot_defaults/2d_defaults.html">
+      <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Defaults</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/interface.html"> Public Interfaces</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface.html"> Public Interfaces</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="svg_plot/interface/svg_interface.html"> <code class="computeroutput"><span class="identifier">svg</span></code>
-      Public Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/interface/svg_1d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/interface/svg_2d_plot_interface.html"> <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/interface/svg_boxplot_interface.html"> <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a></span></dt>
-<dt><span class="section"><a href="svg_plot/interface/settings.html"> Show settings Public Interface</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface/svg_interface.html">
+      <code class="computeroutput"><span class="identifier">svg</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface/svg_1d_plot_interface.html">
+      <code class="computeroutput"><span class="identifier">svg_1d_plot</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface/svg_2d_plot_interface.html">
+      <code class="computeroutput"><span class="identifier">svg_2d_plot</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface/svg_boxplot_interface.html">
+      <code class="computeroutput"><span class="identifier">svg_boxplot</span></code> Public Interface</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/interface/settings.html"> Show
+      settings Public Interface</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="index/s11.html">Reference</a></span></dt>
 <dd><dl>
@@ -130,14 +137,13 @@
 <dt><span class="section"><a href="header/boost/svg_plot/svg_fwd_hpp.html">Header &lt;boost/svg_plot/svg_fwd.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="header/boost/svg_plot/svg_style_hpp.html">Header &lt;boost/svg_plot/svg_style.hpp&gt;</a></span></dt>
 </dl></dd>
-<dt><span class="section"><a href="svg_plot/implementation.html"> Implementation &amp; Rationale</a></span></dt>
-<dt><span class="section"><a href="svg_plot/todo.html"> To Do List</a></span></dt>
-<dt><span class="section"><a href="svg_plot/acknowledgements.html"> Acknowledgements</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/implementation.html"> Implementation
+    &amp; Rationale</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/todo.html"> To Do List</a></span></dt>
+<dt><span class="section"><a href="plotting_graphs_in_svg_format/acknowledgements.html"> Acknowledgements</a></span></dt>
 <dt><span class="section"><a href="index/s15.html">Class Index</a></span></dt>
-<dt><span class="section"><a href="index/s16.html">Typedef Index</a></span></dt>
-<dt><span class="section"><a href="index/s17.html">Function Index</a></span></dt>
-<dt><span class="section"><a href="index/s18.html">Macro Index</a></span></dt>
-<dt><span class="section"><a href="index/s19.html">Index</a></span></dt>
+<dt><span class="section"><a href="index/s16.html">Function Index</a></span></dt>
+<dt><span class="section"><a href="index/s17.html">Index</a></span></dt>
 </dl>
 </div>
 <div class="important"><table border="0" summary="Important">
@@ -164,7 +170,7 @@
 </table></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: February 20, 2009 at 18:41:52 GMT</small></p></td>
+<td align="left"><p><small>Last revised: February 27, 2009 at 15:09:53 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

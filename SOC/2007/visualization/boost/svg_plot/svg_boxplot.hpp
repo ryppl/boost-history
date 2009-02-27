@@ -907,7 +907,7 @@ public:
     }
     if(title_on_)
     { // Allow space for plot title (at top).
-      plot_top_ += title_info_.style().font_size() * (text_margin_ + 0.5);
+      plot_top_ += title_info_.textstyle().font_size() * (text_margin_ + 0.5);
     }
     // Assume that axis labels are always at bottom and left.
     if(x_axis_.label_on_)
@@ -1164,7 +1164,7 @@ public:
       because the browser render engine does the centering.
       \endverbatim
     */
-    double y = title_info_.style().font_size() * text_margin_; // Leave a linespace above.
+    double y = title_info_.textstyle().font_size() * text_margin_; // Leave a linespace above.
     title_info_.y(y); // Vertical position.
     image.g(boxplot::PLOT_TITLE).push_back(new text_element(title_info_));
   } // void draw_title()
@@ -1264,7 +1264,7 @@ public:
     if(x_axis_.label_on_) //    use_x_major_labels)
     {
       series_info.x(x_left); // Horizontal position.
-      double y = y_bottom + series_info.style().font_size() * (text_margin_ * 0.7); // Leave a linespace above.
+      double y = y_bottom + series_info.textstyle().font_size() * (text_margin_ * 0.7); // Leave a linespace above.
       series_info.y(y); // Vertical position.
       image.g(boxplot::VALUE_LABELS).push_back(new text_element(series_info));
     }
@@ -1579,7 +1579,7 @@ public:
       plot_right_ + plot_left_) / 2,  // x coordinate - middle.
       y, // Down from plot window.
       label,
-      x_label_info_.style(),
+      x_label_info_.textstyle(),
       center_align, horizontal)
       );
   } // void draw_x_label()
@@ -2227,7 +2227,7 @@ public:
   }
   svg_boxplot& svg_boxplot::title_size(unsigned int size)
   { //! Set font size for title text.
-    y_label_info_.style().font_size(size);
+    y_label_info_.textstyle().font_size(size);
     return *this; //! \return reference to svg_boxplot to make chainable.
   }
 
@@ -2272,7 +2272,7 @@ public:
 
   svg_boxplot& svg_boxplot::x_label_size(unsigned int size)
   { //! Set the font size for the X axis label.
-    x_label_info_.style().font_size(size);
+    x_label_info_.textstyle().font_size(size);
     return *this; //! \return reference to svg_boxplot to make chainable.
   }
 

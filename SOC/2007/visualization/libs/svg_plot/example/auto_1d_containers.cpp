@@ -34,7 +34,7 @@
   // Note neither of these check for 'limits' (infinite, NaN) values.
 
 #include <boost/svg_plot/detail/pair.hpp>
-  using boost::svg::detail::operator<<; // Output pair as 1.23, 4.56
+  using boost::svg::detail::operator<<; // Output pair as, for example: 1.23, 4.56
 
 //#include <boost/svg_plot/show_1d_settings.hpp>
 // Only needed for showing which settings in use.
@@ -58,7 +58,6 @@
 
 #include <utility>
   using std::pair;
-  using boost::svg::detail::operator<<; // Output pair as, for example: 1.23, 4.56
 
 #include <algorithm>
   using std::multiplies;
@@ -136,13 +135,14 @@ int main()
 
   /*`Finally, we add the data series containers to the plot, and write the SVG out to file.*/
   my_1d_plot.plot(my_data_1, "data_1");
-  my_1d_plot.plot(my_data_2, "data_2");
+  my_1d_plot.plot(my_data_2, "data_2").stroke_color(red);
 
   my_1d_plot.write("auto_1d_containers.svg"); // Write the plot to file.
 
-  /*`If we want, we can check the autoscale range used, or even all the plot settings.*/
+  /*`If we want, we can check the autoscale range used.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 15
-  //show_1d_plot_settings(my_1d_plot); // If required.
+  /*`And even all the (hundreds of) plot settings (useful for diagnosis why your plot doesn't meet your expectations).*/
+  //show_1d_plot_settings(my_1d_plot); 
 
 //] [/auto_1d_containers_2]
 
@@ -152,7 +152,6 @@ int main()
 /*
 
 //[auto_1d_containers_output
-
 Compiling...
 auto_1d_containers.cpp
 Linking...
@@ -165,9 +164,7 @@ Autorun "j:\Cpp\SVG\debug\auto_1d_containers.exe"
 Data range: 0.2, 14.9
 x_range() 0, 15
 Build Time 0:03
-
 //] [/auto_1d_containers_output]
-
 
 */
 

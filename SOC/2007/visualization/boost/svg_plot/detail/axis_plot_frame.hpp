@@ -144,11 +144,11 @@ namespace boost
               // Make space for title and X-axis labels.
               if(derived().title_on_)
               { // Allow text_margin_ * font_size around text (pixels).
-                y_bottom += derived().title_info_.style().font_size() * derived().text_margin_;
+                y_bottom += derived().title_info_.textstyle().font_size() * derived().text_margin_;
               }
               if(derived().x_axis_.label_on_)
               {
-                y_top -= derived().x_label_info_.style().font_size() * derived().text_margin_;
+                y_top -= derived().x_label_info_.textstyle().font_size() * derived().text_margin_;
               }
             }
             else
@@ -229,11 +229,11 @@ namespace boost
             { // Allow a modest margin around text of title and X-axis labels, if in use.
               if(derived().title_on_)
               {
-                y_up += derived().title_info_.style().font_size() * derived().text_margin_;
+                y_up += derived().title_info_.textstyle().font_size() * derived().text_margin_;
               }
               if(derived().x_ticks_.major_value_labels_side_ != 0)
               { // Value may be shown either side the major tick.
-                y_down -= derived().x_label_info_.style().font_size() * derived().text_margin_;
+                y_down -= derived().x_label_info_.textstyle().font_size() * derived().text_margin_;
               }
             }
             else
@@ -548,7 +548,7 @@ namespace boost
           */
           derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
           double y;
-          y = derived().title_info_.style().font_size() * derived().text_margin_; // Leave a linespace above.
+          y = derived().title_info_.textstyle().font_size() * derived().text_margin_; // Leave a linespace above.
           derived().title_info_.y(y);
           derived().image.g(PLOT_TITLE).push_back(new text_element(derived().title_info_));
         } // void draw_title()
@@ -570,7 +570,7 @@ namespace boost
             // Work out the size the legend box needs to be to hold the
             // header, markers, lines & text.
             size_t num_series = derived().serieses_.size(); // How many data series.
-            int font_size = derived().legend_header_.style().font_size();
+            int font_size = derived().legend_header_.textstyle().font_size();
             int point_size =  derived().serieses_[0].point_style_.size();
             // Use height of whichever is the biggest of point marker and font.
             double spacing = (std::max)(font_size, point_size);
@@ -744,7 +744,7 @@ namespace boost
             // size_t num_points = derived().series.size();
             //cout << derived().legend_box_.width() <<  ' ' << derived().legend_box_.margin() << endl;
 
-            int font_size = derived().legend_header_.style().font_size();
+            int font_size = derived().legend_header_.textstyle().font_size();
             int point_size =  derived().serieses_[0].point_style_.size();
             // Use whichever is the biggest of point marker and font.
             double spacing = (std::max)(font_size, point_size);
@@ -819,7 +819,7 @@ namespace boost
                 legend_x_pos, // allow space for the marker.
                 legend_y_pos,
                 derived().serieses_[i].title_, // Text for this data series.
-                derived().legend_header_.style(),
+                derived().legend_header_.textstyle(),
                 left_align));
               legend_y_pos += 2 * spacing;
             } // for
@@ -857,7 +857,7 @@ namespace boost
               derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
               y, // Down from plot window.
               label,
-              derived().x_label_info_.style(),
+              derived().x_label_info_.textstyle(),
               center_align, horizontal)
               );
           } // void draw_x_label()
@@ -1118,7 +1118,8 @@ namespace boost
           } // std::string sv(double v, const value_style& sty)
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
-          { //! Write the \b pair of data point's X and Y values as a string, for example: "1.23, 3.45".
+          { //! Write the \b pair of data point's X and Y values as a string,.
+            //! If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
             //! X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
             // draw_plot_point_values is only when both x and Y pairs are wanted.
             using std::string;
@@ -1234,46 +1235,66 @@ namespace boost
               label.precision(4);
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
+              // Explicit space "&#x00A0;" seems necessary.
               label_xdf = label.str();
               t.tspan(label_xdf).fill_color(brown).font_size(fx);
             }
-            // If there is a separator, put values on the same line, else as below put below the marker.
-            double line = 0.0;
-            if (x_sty.separator_ == "")
-            {
-              line = y_sty.values_text_style_.font_size() * 2.2; // Put Y value on 'newline' below point marker.
+            int fy = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+           // If there is a separator, put values on the same line, else as below put below the marker.
+            bool sameline = (x_sty.separator_ != ""); // Might add to value_style? to allow 1.2, with 3.4 on line below.
+            if (sameline)
+            { // On same line so no change in y.
+              t.tspan(x_sty.separator_).fill_color(brown).font_size(fx); // Separator like comma and leading space ", ".
+              t.tspan(label_yv, y_sty.values_text_style_); // Color?
+              if (y_sty.plusminus_on_)
+              {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+                 // Precision of uncertainty is usually less than value,
+                label_yu = "&#x00A0;" + sv(uy, y_sty, true);
+                t.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
+                t.tspan(label_yu).fill_color(green).font_size(fy);
+              }
+              if (y_sty.df_on_)
+              { // degrees of freedom or number of values -1 used for this estimate.
+                std::stringstream label;
+                label.precision(4);
+                //label.flags(sty.value_ioflags_); // Leave at default.
+                label <<"&#x00A0;(" << dfy << ")"; // "123.5"
+                label_ydf = label.str();
+                t.tspan(label_ydf).fill_color(lime).font_size(fy);
+              }
+              if (y_sty.prefix_ != "")
+              { // Want a suffix like "]" - with the Y values font size, not reduced for uncertainty info.
+                t.tspan(y_sty.suffix_).fill_color(black).font_size(y_sty.values_text_style_.font_size());
+              }
             }
             else
-            {
-              t.tspan(x_sty.separator_).fill_color(brown).font_size(fx);
-            }
+            {  // Move ready to put Y value on 'newline' below point marker.
+              // Problem here if orientation is changed?
+              // Need to start a new text_element here because tspan rotation doesn't apply to whole string. ???
+              double dy = y_sty.values_text_style_.font_size() * 2.2; // "newline"
+              text_element& ty = y_g_ptr.text(x, y + dy, label_yv, y_sty.values_text_style_, al, rot);
 
-            // Problem here if orientation is changed?
-            text_element& ty = y_g_ptr.text(x, y + line,
-              label_yv, y_sty.values_text_style_, al, rot);
-
-            int fy = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
-            if (y_sty.plusminus_on_)
-            {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
-               // Precision of uncertainty is usually less than value,
-              label_yu = "&#x00A0;" + sv(uy, y_sty, true);
-              ty.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
-              ty.tspan(label_yu).fill_color(green).font_size(fy);
+              if (y_sty.plusminus_on_)
+              {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+                 // Precision of uncertainty is usually less than value,
+                label_yu = "&#x00A0;" + sv(uy, y_sty, true);
+                ty.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
+                ty.tspan(label_yu).fill_color(green).font_size(fy);
+              }
+              if (y_sty.df_on_)
+              { // degrees of freedom or number of values -1 used for this estimate.
+                std::stringstream label;
+                label.precision(4);
+                //label.flags(sty.value_ioflags_); // Leave at default.
+                label <<"&#x00A0;(" << dfy << ")"; // "123.5"
+                label_ydf = label.str();
+                ty.tspan(label_ydf).fill_color(lime).font_size(fy);
+              }
+              if (y_sty.prefix_ != "")
+              { // Want a suffix like "]"
+                ty.tspan(y_sty.suffix_).fill_color(lime).font_size(fy);
+              }
             }
-            if (y_sty.df_on_)
-            { // degrees of freedom or number of values -1 used for this estimate.
-              std::stringstream label;
-              label.precision(4);
-              //label.flags(sty.value_ioflags_); // Leave at default.
-              label <<"&#x00A0;(" << dfy << ")"; // "123.5"
-              label_ydf = label.str();
-              ty.tspan(label_ydf).fill_color(lime).font_size(fy);
-            }
-            if (y_sty.prefix_ != "")
-            { // Want a suffix like "]"
-              ty.tspan(y_sty.suffix_).fill_color(lime).font_size(fy);
-            }
-
           } // void draw_plot_point_values(double x, double y, g_element& g_ptr, double value)
 
           void clear_all()
@@ -1971,79 +1992,79 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_size(unsigned int i)
           { //! Sets the font size for the title (svg units, default pixels).
-            derived().title_info_.style().font_size(i);
+            derived().title_info_.textstyle().font_size(i);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::title_font_size()
           { //! \return  the font size for the title (svg units, default pixels).
-            return derived().title_info_.style().font_size();
+            return derived().title_info_.textstyle().font_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_family(const std::string& family)
           { //! Set the font family for the title (for example: .title_font_family("Lucida Sans Unicode");
-            derived().title_info_.style().font_family(family);
+            derived().title_info_.textstyle().font_family(family);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_family()
           { //! \return  the font family for the title
-            return derived().title_info_.style().font_family();
+            return derived().title_info_.textstyle().font_family();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_style(const std::string& style)
           { //! Set the font style for the title (default normal).
-            derived().title_info_.style().font_style(style);
+            derived().title_info_.textstyle().font_style(style);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_style()
           { //! \return  the font style for the title (default normal).
-            return derived().title_info_.style().font_style();
+            return derived().title_info_.textstyle().font_style();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_weight(const std::string& weight)
           { //! Set the font weight for the title (default normal).
-            derived().title_info_.style().font_weight(weight);
+            derived().title_info_.textstyle().font_weight(weight);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_weight()
           {//! \return  the font weight for the title.
-            return derived().title_info_.style().font_weight();
+            return derived().title_info_.textstyle().font_weight();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_stretch(const std::string& stretch)
           { //! Set the font stretch for the title (default normal), wider or narrow.
-            derived().title_info_.style().font_stretch(stretch);
+            derived().title_info_.textstyle().font_stretch(stretch);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::title_font_stretch()
           { //! \return  the font stretch for the title.
-            return derived().title_info_.style().font_stretch();
+            return derived().title_info_.textstyle().font_stretch();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::title_font_decoration(const std::string& decoration)
           { //! Set the font decoration for the title (default normal, or underline, overline or strike-thru).
-            derived().title_info_.style().font_decoration(decoration);
+            derived().title_info_.textstyle().font_decoration(decoration);
             return derived();
           }
 
            template <class Derived>
          const std::string& axis_plot_frame<Derived>::title_font_decoration()
           { //! \return  the font decoration for the title (default normal, or underline, overline or strike-thru).
-            return derived().title_info_.style().font_decoration();
+            return derived().title_info_.textstyle().font_decoration();
           }
 
           template <class Derived>
@@ -2103,40 +2124,40 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_font_weight(const std::string& weight)
           { //! Set the font weight for the legend title.
-            derived().legend_header_.style().font_weight(weight);
+            derived().legend_header_.textstyle().font_weight(weight);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::legend_font_weight()
           { //! \return  the font weight for the legend title.
-            return derived().legend_header_.style().font_weight();
+            return derived().legend_header_.textstyle().font_weight();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_font_family(const std::string& family)
           { //! Set the font family for the legend title.
-            derived().legend_header_.style().font_family(family);
+            derived().legend_header_.textstyle().font_family(family);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::legend_font_family()
           { //! \return  the font family for the legend title.
-            return derived().legend_header_.style().font_family();
+            return derived().legend_header_.textstyle().font_family();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_title_font_size(unsigned int size)
           { //! Set the font size for the legend title (svg units, default pixels).
-            derived().legend_header_.style().font_size(size);
+            derived().legend_header_.textstyle().font_size(size);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::legend_title_font_size()
           { //! \return  the font size for the legend title (svg units, default pixels).
-            return derived().legend_header_.style().font_size();
+            return derived().legend_header_.textstyle().font_size();
           }
 
           template <class Derived>
@@ -2220,14 +2241,14 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_header_font_size(int size)
           { //! Set legend header font size (svg units, default pixels).
-            derived().legend_header_.style().font_size(size);
+            derived().legend_header_.textstyle().font_size(size);
             return *this;
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::legend_header_font_size()
           { //! \return  legend header font size (svg units, default pixels).
-            return derived().legend_header_.style().font_size();
+            return derived().legend_header_.textstyle().font_size();
           }
 
           template <class Derived>
@@ -2441,40 +2462,40 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_font_size(unsigned int i)
           { //! Set X axis label font size (svg units, default pixels).
-            derived().x_label_info_.style().font_size(i);
+            derived().x_label_info_.textstyle().font_size(i);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_label_font_size()
           { //! \return  X axis label font size (svg units, default pixels).
-            return derived().x_label_info_.style().font_size();
+            return derived().x_label_info_.textstyle().font_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_value_font_size(unsigned int i)
           { //! Set X tick value label font size (svg units, default pixels).
-            derived().x_value_value.style().font_size(i);
+            derived().x_value_value.textstyle().font_size(i);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_value_font_size()
           { //! \return  X tick value label font size (svg units, default pixels).
-            return derived().x_value_value.style().font_size();
+            return derived().x_value_value.textstyle().font_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_font_family(const std::string& family)
           { //! Set X tick value label font family.
-            derived().x_label_info_.style().font_family(family);
+            derived().x_label_info_.textstyle().font_family(family);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::x_label_font_family()
           { //! \return  X tick value label font family.
-            return derived().x_label_info_.style().font_family();
+            return derived().x_label_info_.textstyle().font_family();
           }
 
           template <class Derived>

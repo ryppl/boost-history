@@ -1,9 +1,6 @@
 /*! \file demo_1d_containers.cpp
-
-  \brief An example to demonstrate simple 1D settings, with a range of different STL containers.
-
+  \brief An example to demonstrate simple 1D plotting using a range of different STL containers.
   \author Paul A Bristow
-
   \date Feb 2009
 */
 
@@ -15,13 +12,9 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// An example to demonstrate simple 1D settings,
-// with a range of different STL containers.
-
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
 // also be added here as comment or included or pasted in elsewhere.
-
 // Caution: this file contains Quickbook markup as well as code
 // and comments: don't change any of the special comment markups!
 
@@ -83,7 +76,7 @@ and plot adds a (unamed) data series (naming isn't very useful if there is only 
 
   {
 //[demo_1d_containers_3
-/*`If the container is static array, then it must be filled by assignment:*/
+/*`If the container is a static array, then it must be filled by assignment:*/
   array<long double, 4> values = {3.1L,-5.5L, 8.7L, 0.5L};
 
   svg_1d_plot my_plot;
@@ -157,8 +150,5 @@ Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_1d_containers.exe"
 Build Time 0:03
-
-
-
 //] [/demo_1d_containers_output]
 */

@@ -82,29 +82,29 @@ BOOST_AUTO_TEST_CASE( test1 )
   text.text("X");
   BOOST_CHECK_EQUAL(text.text(), "X");
 
-  BOOST_CHECK_EQUAL(text.style().font_size(), 12);
-  text.style().font_size(10);
-  BOOST_CHECK_EQUAL(text.style().font_size(), 10);
+  BOOST_CHECK_EQUAL(text.textstyle().font_size(), 12);
+  text.textstyle().font_size(10);
+  BOOST_CHECK_EQUAL(text.textstyle().font_size(), 10);
 
-  BOOST_CHECK_EQUAL(text.style().font_family(), "");
-  text.style().font_family("Lucida Sans Unicode");
-  BOOST_CHECK_EQUAL(text.style().font_family(), "Lucida Sans Unicode");
+  BOOST_CHECK_EQUAL(text.textstyle().font_family(), "");
+  text.textstyle().font_family("Lucida Sans Unicode");
+  BOOST_CHECK_EQUAL(text.textstyle().font_family(), "Lucida Sans Unicode");
 
-  BOOST_CHECK_EQUAL(text.style().font_style(), "");
-  text.style().font_style("X");
-  BOOST_CHECK_EQUAL(text.style().font_style(), "X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_style(), "");
+  text.textstyle().font_style("X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_style(), "X");
 
-  BOOST_CHECK_EQUAL(text.style().font_weight(), "");
-  text.style().font_weight("X");
-  BOOST_CHECK_EQUAL(text.style().font_weight(), "X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_weight(), "");
+  text.textstyle().font_weight("X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_weight(), "X");
 
-  BOOST_CHECK_EQUAL(text.style().font_stretch(), "");
-  text.style().font_stretch("X");
-  BOOST_CHECK_EQUAL(text.style().font_stretch(), "X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_stretch(), "");
+  text.textstyle().font_stretch("X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_stretch(), "X");
 
-  BOOST_CHECK_EQUAL(text.style().font_decoration(), "");
-  text.style().font_decoration("X");
-  BOOST_CHECK_EQUAL(text.style().font_decoration(), "X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_decoration(), "");
+  text.textstyle().font_decoration("X");
+  BOOST_CHECK_EQUAL(text.textstyle().font_decoration(), "X");
 
   double string_svg_length(const std::string& s, const text_style& style);
 

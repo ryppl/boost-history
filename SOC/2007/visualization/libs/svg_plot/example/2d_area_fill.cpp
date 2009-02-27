@@ -98,7 +98,7 @@ int main()
 	svg_2d_plot_series& s_sin = my_plot.plot(data_sin, "sin(x)").area_fill(red);
   std::cout << "s_sin.area_fill() " << s_sin.area_fill() << std::endl;
 	//svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
-	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blank).shape(square);
+	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
   // Note that svg_color(blank) or svg_color(false) returns a non-color blank, so no fill.
   std::cout << "s_cos.area_fill() " << s_cos.area_fill() << std::endl;
 	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone).line_on(false);
@@ -108,7 +108,6 @@ int main()
   my_plot.write("./2d_area_fill_1.svg");
   std::cout << my_plot.title() << std::endl;
 
-  // 
   //my_plot.title("Plot 2 of 50 * sin(x), cos(x) and tan(x)");
 	my_plot.plot(data_cos, "cos(x)").area_fill(green).shape(square).fill_color(red);
   my_plot.write("./2d_area_fill_2.svg");
