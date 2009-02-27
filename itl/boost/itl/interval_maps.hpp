@@ -410,28 +410,6 @@ erase
 //-----------------------------------------------------------------------------
 template 
 <
-    class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
->
-typename IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::interval_type 
-enclosure(const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object)
-{
-    typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> IntervalMapT;
-    typedef typename IntervalMapT::interval_type interval_type;
-    return 
-        object.empty() ? neutron<interval_type>::value()
-        : (object.begin()->KEY_VALUE)
-            .span(object.rbegin()->KEY_VALUE);
-}
-
-template 
-<
     class SubType, class DomainT, class CodomainT, class Traits, 
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >

@@ -26,14 +26,13 @@ class interval_set;
 //------------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class LeftIntervalSet, class RightIntervalSet
 >
 bool is_element_equal
 (
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+    const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
+    const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_equal(left, right);
@@ -41,14 +40,13 @@ bool is_element_equal
 
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class LeftIntervalSet, class RightIntervalSet
 >
 bool is_element_less
 (
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+    const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
+    const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_less(left, right);
@@ -56,14 +54,13 @@ bool is_element_less
 
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class LeftIntervalSet, class RightIntervalSet
 >
 bool is_element_greater
 (
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& left,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& right
+    const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
+    const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_greater(left, right);
@@ -135,18 +132,17 @@ ObjectT& operator ^=
 //-----------------------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    class LeftIntervalSet, class RightIntervalSet
 >
 bool is_disjoint
 (
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
+    const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& object,
+    const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> object_type;
-    typedef IntervalSet              <DomainT,Compare,Interval,Alloc> operand_type;
+    typedef interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc> object_type;
+    typedef interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -213,22 +209,6 @@ erase
 //-----------------------------------------------------------------------------
 template 
 <
-    class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-typename IntervalSet<DomainT,Compare,Interval,Alloc>::interval_type 
-enclosure(const IntervalSet<DomainT,Compare,Interval,Alloc>& object)
-{
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> IntervalSetT;
-    typedef typename IntervalSetT::interval_type interval_type;
-    return 
-        object.empty() ? neutron<interval_type>::value()
-        : (*object.begin()).span(*object.rbegin());
-}
-
-template 
-<
     class SubType, class DomainT, 
     ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
@@ -241,7 +221,6 @@ enclosure(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& objec
         object.empty() ? neutron<interval_type>::value()
         : (*object.begin()).span(*object.rbegin());
 }
-
 
 
 }} // namespace itl boost
