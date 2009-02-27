@@ -30,25 +30,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool is_contained_in
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_contained_in(left, right);
@@ -58,25 +48,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool contains
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::contains(left, right);
@@ -89,27 +69,23 @@ bool contains
 //--- IntervalMap -------------------------------------------------------------
 template 
 <
-    class SubType, class DomainT, class CodomainT, class Traits,
+    class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
-    class IntervalMap
+    class LeftIntervalMap,
+    class RightIntervalMap
 >
 bool is_disjoint
 (
-          interval_base_map<SubType,DomainT,CodomainT,
+          interval_base_map<LeftIntervalMap,DomainT,CodomainT,
                             Traits,Compare,Combine,Section,Interval,Alloc>& object,
-    const IntervalMap<DomainT,CodomainT,
-                      Traits,Compare,Combine,Section,Interval,Alloc>& operand
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& operand
 )
 {
-    typedef interval_base_map<SubType,DomainT,CodomainT,
+    typedef interval_base_map<LeftIntervalMap,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc> object_type;
-    typedef IntervalMap<DomainT,CodomainT,
-                        Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
+    typedef interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                              Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -137,24 +113,19 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class IntervalMap,
-    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class IntervalSet
 >
 bool is_disjoint
 (
-    const IntervalMap<DomainT,CodomainT,
-                      Traits,Compare,Combine,Section,Interval,Alloc>&  object,
-    const IntervalSet<DomainT,Compare,Interval,Alloc>& operand
+    const interval_base_map<IntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>&  object,
+    const interval_base_set<IntervalSet,DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef IntervalMap<DomainT,CodomainT,
+    typedef interval_base_map<IntervalMap,DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> object_type;
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+    typedef interval_base_set<IntervalSet,DomainT,Compare,Interval,Alloc> operand_type;
     object_type intersection;
 
     if(operand.empty())
@@ -181,19 +152,14 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class IntervalMap,
-    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class IntervalSet
 >
 bool is_disjoint
 (
-    const IntervalSet<DomainT,Compare,Interval,Alloc>& left,
-    const IntervalMap<DomainT,CodomainT,
-                      Traits,Compare,Combine,Section,Interval,Alloc>&  right
+    const interval_base_set<IntervalSet,DomainT,Compare,Interval,Alloc>& left,
+    const interval_base_map<IntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return is_disjoint(right, left);
@@ -210,25 +176,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool is_element_equal
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_equal(left, right);
@@ -238,25 +194,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool is_element_less
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_less(left, right);
@@ -266,25 +212,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool is_element_greater
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_element_greater(left, right);
@@ -297,25 +233,15 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class LeftIntervalMap,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class RightIntervalMap
 >
 bool is_inclusion_equal
 (
-    const LeftIntervalMap <DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const RightIntervalMap<DomainT,CodomainT,
-                           Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<LeftIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<RightIntervalMap,DomainT,CodomainT,
+                            Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Interval_Set::is_inclusion_equal(left, right);
@@ -328,17 +254,12 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template
-    <    
-        class, class, class, 
-        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
-    >
     class IntervalMap
 >
 bool is_protonic_equal
 (
-    const IntervalMap <DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const interval_base_map<IntervalMap,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const interval_base_map<IntervalMap,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Map::lexicographical_protonic_equal(left, right);
