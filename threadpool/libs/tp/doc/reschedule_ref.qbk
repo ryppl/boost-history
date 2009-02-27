@@ -1,0 +1,20 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:reschedule_until Non-member function `reschedule_until`]
+
+    #include <boost/tp/pool.hpp>
+
+	void reschedule_until( function< bool() > const& cond);
+
+[variablelist
+[[Effects:] [Re-schedules current task until specified condition becomes true.]]
+[[Throws:] [Any exceptions that might be thrown by the condition.]]
+[[Note:] [This function resides in namespace `boost::this_task`.]]
+]
+
+[endsect]

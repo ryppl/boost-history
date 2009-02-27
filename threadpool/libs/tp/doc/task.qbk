@@ -78,7 +78,7 @@ A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >
 
 [heading Waiting for multiple tasks]
 It is possible to wait for multiple tasks - `boost::tp::wait_for_all(tsk1,...,tskn)` blocks until all n tasks are ready and
-`boost::tp::wait_for_any(tsk1,...,tskn)` blocks until at least one of the task becomes ready.. 
+`boost::tp::wait_for_any(tsk1,...,tskn)` blocks until at least one of the tasks becomes ready.
 
 [heading Exceptions in tasks]
 Exceptions thrown inside an __action__ are transported by the associated task object.

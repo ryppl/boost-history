@@ -11,7 +11,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
-#include <boost/future/future.hpp>
+#include <boost/future.hpp>
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
@@ -66,49 +66,8 @@ public:
 		BOOST_CHECK_EQUAL( f.get(), 55);
 	}
 
-	// check timed_submit
-	void test_case_3()
-	{
-		tp::pool<
-			tp::bounded_channel< tp::priority< int > >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 1),
-			tp::low_watermark( 1) );
-		boost::barrier b( 3);
-		boost::function< int() > fn(
-		boost::bind(
-			fibonacci_fn,
-			10) );
-		pool.submit(
-			boost::bind(
-				( int ( *)( boost::function< int() > const&, boost::barrier &) ) barrier_fn,
-				fn,
-				boost::ref( b) ),
-			0);
-		pool.submit(
-			boost::bind(
-				( int ( *)( boost::function< int() > const&, boost::barrier &) ) barrier_fn,
-				fn,
-				boost::ref( b) ),
-			0);
-		bool thrown( false);
-		try
-		{
-			pool.timed_submit(
-				boost::bind(
-					fibonacci_fn,
-					10),
-				0,
-				pt::millisec( 1) );
-		}
-		catch ( tp::task_rejected const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
-	}
-
 	// check shutdown
-	void test_case_4()
+	void test_case_3()
 	{
 		tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -128,7 +87,7 @@ public:
 	}
 
 	// check runtime_error throw inside task
-	void test_case_5()
+	void test_case_4()
 	{
 		tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -151,7 +110,7 @@ public:
 	}
 
 	// check shutdown with task_rejected exception
-	void test_case_6()
+	void test_case_5()
 	{
 		tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -176,7 +135,7 @@ public:
 	}
 
 	// check shutdown_now with thread_interrupted exception
-	void test_case_7()
+	void test_case_6()
 	{
 		tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -213,7 +172,7 @@ public:
 	}
 
 	// check pending
-	void test_case_8()
+	void test_case_7()
 	{
 		typedef tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -250,7 +209,7 @@ public:
 	}
 
 	// check priority scheduling
-	void test_case_9()
+	void test_case_8()
 	{
 		typedef tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -292,7 +251,7 @@ public:
 	}
 
 	// check cancelation
-	void test_case_10()
+	void test_case_9()
 	{
 		typedef tp::pool<
 			tp::bounded_channel< tp::priority< int > >
@@ -354,7 +313,6 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_priority::test_case_7, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_priority::test_case_8, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_priority::test_case_9, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_priority::test_case_10, instance) );
 
 	return test;
 }

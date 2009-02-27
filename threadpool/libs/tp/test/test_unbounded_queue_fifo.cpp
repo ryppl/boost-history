@@ -11,7 +11,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
-#include <boost/future/future.hpp>
+#include <boost/future.hpp>
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>

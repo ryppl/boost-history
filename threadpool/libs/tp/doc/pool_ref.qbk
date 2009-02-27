@@ -64,17 +64,6 @@
       task< typename result_of< Act() >::type > submit(
         Act const& act,
         Attr const& attr);
-
-      template< typename Act >
-      task< typename result_of< Act() >::type > timed_submit(
-        Act const& act,
-        system_time const& abs_time);
-
-      template< typename Act, typename Attr >
-      task< typename result_of< Act() >::type > timed_submit(
-        Act const& act,
-        Attr const& attr,
-        system_time const& abs_time);
     };
 
 
