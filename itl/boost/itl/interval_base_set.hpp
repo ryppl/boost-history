@@ -320,13 +320,8 @@ public:
 
     /** The intersection of \c *this and \c operand is erased from \c *this. 
         The complemenary elements are added to \c *this. */
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp, 
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-    SubType& flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand);
+    template<class SubType2>
+    SubType& flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand);
 
     //==========================================================================
     //= Iterator related
@@ -581,15 +576,11 @@ template
     class SubType, 
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp, template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
+    template<class SubType2>
 SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::flip(const IntervalSet<DomainT,Compare,Interval,Alloc>& operand)
+    ::flip(const interval_base_set<SubType2,DomainT,Compare,Interval,Alloc>& operand)
 {
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> operand_type;
+    typedef interval_base_set<SubType2,DomainT,Compare,Interval,Alloc> operand_type;
 
     if(operand.empty())
         return *that();
