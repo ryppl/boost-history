@@ -1,5 +1,6 @@
 # vi: syntax=python:et:ts=4
 import distutils.sysconfig
+from SCons.Script import AddOption
 
 def BoostLibrary(env, lib, sources):
     if env["LINK_DYNAMIC"]:
@@ -7,7 +8,9 @@ def BoostLibrary(env, lib, sources):
     else:
         lib_node = env.StaticLibrary("boost_" + lib + env["BOOST_SUFFIX"], sources)
 
-    env.Alias(lib, lib_node)
+    if env.GetOption("stage"):
+        env.Alias(lib, env.Install(env.Dir("$stagedir", "#"), lib_node))
+    env.Default(env.Alias(lib, lib_node))
     return lib_node
 
 def BoostUseLib(env, lib):
@@ -29,3 +32,5 @@ def generate(env):
     env.AddMethod(BoostLibrary)
     env.AddMethod(BoostUseLib)
     env.AddMethod(PythonExtension)
+
+    AddOption('--stage', dest='stage', action="store_true")

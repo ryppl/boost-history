@@ -6,7 +6,8 @@ vars.AddVariables(
     ListVariable("variant", "Build configuration", "release", ["release", "debug", "profile"]),
     ListVariable("link", "Library linking", "all", ["static", "dynamic"]),
     ListVariable("threading", "Multi-threading support", "multi", ["single", "multi"]),
-    EnumVariable("layout", "Layout of library names and header locations", "versioned", ["versioned", "system"])
+    EnumVariable("layout", "Layout of library names and header locations", "versioned", ["versioned", "system"]),
+    PathVariable("stagedir", "If --stage is passed install only compiled library files in this location", "stage", PathVariable.PathAccept)
 )
 env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure"], variables = vars, config_log = "$BOOST_BUILD_DIR/config.log")
 vars.Save("build-config.py", env)
