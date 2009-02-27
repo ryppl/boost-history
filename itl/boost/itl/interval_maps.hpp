@@ -254,12 +254,17 @@ template
 <
     class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
     class IntervalMap
 >
 bool is_protonic_equal
 (
-    const interval_base_map<IntervalMap,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
-    const interval_base_map<IntervalMap,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
 )
 {
     return Map::lexicographical_protonic_equal(left, right);
