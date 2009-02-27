@@ -506,17 +506,8 @@ public:
 
     /** The intersection of \c *this and \c operand is erased from \c *this. 
         The complemenary value pairs are added to \c *this. */
-    template
-    <
-        template
-        <    
-            class DomT, class CodomT, class Trts, 
-            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
-            template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc
-        >
-        class IntervalMap
-    >
-    SubType& flip(const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand);
+    template<class SubType2>
+    SubType& flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand);
 
 
     //==========================================================================
@@ -886,20 +877,11 @@ template
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, 
     template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-    template
-    <
-        template
-        <    
-            class DomT, class CodomT, class Trts, 
-            ITL_COMPARE Comp, ITL_COMBINE Combi, ITL_SECTION Sect,
-            template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc
-        >
-        class IntervalMap
-    >
+    template<class SubType2>
 SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::flip(const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand)
+    ::flip(const interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand)
 {
-    typedef IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
+    typedef interval_base_map<SubType2,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
 
     if(Traits::is_total && Traits::absorbs_neutrons)
     {
