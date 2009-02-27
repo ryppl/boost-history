@@ -7,6 +7,7 @@
 #ifndef N2561_FUTURE_HPP
 #define N2561_FUTURE_HPP
 #include <stdexcept>
+#include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/exception_ptr.hpp>

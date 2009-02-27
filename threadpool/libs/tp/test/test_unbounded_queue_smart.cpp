@@ -91,7 +91,7 @@ public:
 		bool thrown( false);
 		try
 		{ tsk.get(); }
-		catch ( std::runtime_error const&)
+		catch ( std::exception const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
@@ -147,7 +147,7 @@ public:
 		bool thrown( false);
 		try
 		{ tsk.get(); }
-		catch ( boost::thread_interrupted const&)
+		catch ( std::exception const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
@@ -271,7 +271,7 @@ public:
 		bool thrown( false);
 		try
 		{ tsk.get(); }
-		catch ( boost::thread_interrupted const&)
+		catch ( std::exception const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
