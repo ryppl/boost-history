@@ -19,8 +19,7 @@ typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
 class fibo
 {
 private:
-	pool_type					&	pool_;
-	int								offset_;
+	int		offset_;
 
 	int seq_( int n)
 	{
@@ -34,13 +33,13 @@ private:
 		else
 		{
 			tp::task< int > t1(
-				pool_.submit(
+				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
 						& fibo::par_,
 						boost::ref( * this),
 						n - 1) ) );
 			tp::task< int > t2(
-				pool_.submit(
+				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
 						& fibo::par_,
 						boost::ref( * this),
@@ -50,12 +49,8 @@ private:
 	}
 
 public:
-	fibo(
-		pool_type & pool,
-		int offset)
-	:
-	pool_( pool),
-	offset_( offset)
+	fibo( int offset)
+	: offset_( offset)
 	{}
 
 	int execute( int n)
@@ -71,7 +66,7 @@ int main( int argc, char *argv[])
 	{
 		// ! BOOST_BIND_WORKER_TO_PROCESSORS must be defined !
 		pool_type pool;
-		fibo fib( pool, 5);
+		fibo fib( 5);
 		std::vector< tp::task< int > > results;
 		results.reserve( 40);
 

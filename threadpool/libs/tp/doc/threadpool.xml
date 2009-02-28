@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <library id="boost_threadpool" name="Boost.Threadpool" dirname="boost_threadpool"
-last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XInclude">
+last-revision="$Date: 2009/02/28 14:27:32 $" xmlns:xi="http://www.w3.org/2001/XInclude">
   <libraryinfo>
     <authorgroup>
     <author>
@@ -471,6 +471,24 @@ last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XI
 <phrase role="comment">// throws boost::thread_interrupted exception
 </phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 </programlisting>
+    <anchor id="boost_threadpool.task.waiting_for_multiple_tasks"/>
+    <bridgehead renderas="sect3">
+      <link linkend="boost_threadpool.task.waiting_for_multiple_tasks">Waiting for
+      multiple tasks</link>
+    </bridgehead>
+    <para>
+      It is possible to wait for multiple tasks - <code><phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">wait_for_all</phrase><phrase role="special">(</phrase><phrase
+      role="identifier">tsk1</phrase><phrase role="special">,...,</phrase><phrase
+      role="identifier">tskn</phrase><phrase role="special">)</phrase></code> blocks
+      until all n tasks are ready and <code><phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">wait_for_any</phrase><phrase role="special">(</phrase><phrase
+      role="identifier">tsk1</phrase><phrase role="special">,...,</phrase><phrase
+      role="identifier">tskn</phrase><phrase role="special">)</phrase></code> blocks
+      until at least one of the tasks becomes ready.
+    </para>
     <anchor id="boost_threadpool.task.exceptions_in_tasks"/>
     <bridgehead renderas="sect3">
       <link linkend="boost_threadpool.task.exceptions_in_tasks">Exceptions in tasks</link>
@@ -599,6 +617,17 @@ last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XI
 
 <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// will rethrow an std::runtime_error
 </phrase></programlisting>
+  </section>
+  <section id="boost_threadpool.this_task">
+    <title><link linkend="boost_threadpool.this_task"> Namespace this_task</link></title>
+    <para>
+      The pool can be accessed via <code><phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase
+      role="special">&lt;</phrase> <phrase role="identifier">Pool</phrase> <phrase
+      role="special">&gt;()</phrase></code> ifthe calling code is executed by a worker
+      thread.
+    </para>
   </section>
   <section id="boost_threadpool.channel">
     <title><link linkend="boost_threadpool.channel"> Channel</link></title>
@@ -828,6 +857,13 @@ last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XI
 <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// prints 55
 </phrase></programlisting>
   </section>
+  <section id="boost_threadpool.acknowledgement">
+    <title><link linkend="boost_threadpool.acknowledgement"> Acknowledgements</link></title>
+    <para>
+      I'd like to thank Vincente Botet for his comments on the implementation details
+      of the code and Anthony Williams and Braddock Gaskill for their future libraries.
+    </para>
+  </section>
   <section id="boost_threadpool.reference">
     <title><link linkend="boost_threadpool.reference"> Reference</link></title>
     <section id="boost_threadpool.reference.pool">
@@ -890,17 +926,6 @@ last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XI
   <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
     <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">,</phrase>
     <phrase role="identifier">Attr</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">attr</phrase><phrase role="special">);</phrase>
-
-  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase> <phrase role="special">&gt;</phrase>
-  <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">timed_submit</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">system_time</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">abs_time</phrase><phrase role="special">);</phrase>
-
-  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Attr</phrase> <phrase role="special">&gt;</phrase>
-  <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">timed_submit</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">Attr</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">attr</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">system_time</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">abs_time</phrase><phrase role="special">);</phrase>
 <phrase role="special">};</phrase>
 </programlisting>
       <section id="boost_threadpool.reference.pool.constructor_unbounded_channel_hw">
@@ -1892,6 +1917,111 @@ last-revision="$Date: 2009/02/23 19:42:35 $" xmlns:xi="http://www.w3.org/2001/XI
           </varlistentry>
         </variablelist>
       </section>
+    </section>
+    <section id="boost_threadpool.reference.wait_for_all">
+      <title><link linkend="boost_threadpool.reference.wait_for_all"> Non-member
+      function <code><phrase role="identifier">wait_for_all</phrase></code></link></title>
+      
+<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">task</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+</programlisting>
+      <variablelist>
+        <title></title> <varlistentry><term>Effects:</term>
+        <listitem>
+          <para>
+            Waits until all specified tasks are ready.
+          </para>
+        </listitem>
+        </varlistentry> <varlistentry><term>Throws:</term>
+        <listitem>
+          <para>
+            Any exceptions that might be thrown by the actions.
+          </para>
+        </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section id="boost_threadpool.reference.wait_for_any">
+      <title><link linkend="boost_threadpool.reference.wait_for_any"> Non-member
+      function <code><phrase role="identifier">wait_for_any</phrase></code></link></title>
+      
+<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">task</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
+</programlisting>
+      <variablelist>
+        <title></title> <varlistentry><term>Effects:</term>
+        <listitem>
+          <para>
+            Waits until at leaste one of specified tasks is ready.
+          </para>
+        </listitem>
+        </varlistentry> <varlistentry><term>Throws:</term>
+        <listitem>
+          <para>
+            Any exceptions that might be thrown by the actions.
+          </para>
+        </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section id="boost_threadpool.reference.get_thread_pool">
+      <title><link linkend="boost_threadpool.reference.get_thread_pool"> Non-member
+      function <code><phrase role="identifier">get_thread_pool</phrase></code></link></title>
+      
+<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="identifier">Pool</phrase> <phrase role="special">&amp;</phrase> <phrase role="identifier">get_thread_pool</phrase><phrase role="special">();</phrase>
+</programlisting>
+      <variablelist>
+        <title></title> <varlistentry><term>Effects:</term>
+        <listitem>
+          <para>
+            Returns reference to the thread pool where the current worker thread
+            is running.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            [Throws:
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Nothing.
+          </para>
+        </listitem>
+        </varlistentry> <varlistentry><term>Note:</term>
+        <listitem>
+          <para>
+            This function resides in namespace <code><phrase role="identifier">boost</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">this_task</phrase></code>.
+          </para>
+        </listitem>
+        </varlistentry>
+      </variablelist>
     </section>
     <section id="boost_threadpool.reference.poolsize">
       <title><link linkend="boost_threadpool.reference.poolsize"> Class <code><phrase

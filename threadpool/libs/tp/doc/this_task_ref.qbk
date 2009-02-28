@@ -5,15 +5,16 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:reschedule_until Non-member function `reschedule_until`]
+[section:get_thread_pool Non-member function `get_thread_pool`]
 
     #include <boost/tp/pool.hpp>
 
-	void reschedule_until( function< bool() > const& cond);
+	template< typename Pool >
+	Pool & get_thread_pool();
 
 [variablelist
-[[Effects:] [Re-schedules current task until specified condition becomes true.]]
-[[Throws:] [Any exceptions that might be thrown by the condition.]]
+[[Effects:] [Returns reference to the thread pool where the current worker thread is running.] 
+[[Throws:] [Nothing.]]
 [[Note:] [This function resides in namespace `boost::this_task`.]]
 ]
 

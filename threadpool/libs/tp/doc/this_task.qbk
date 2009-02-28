@@ -6,8 +6,6 @@
 ]
 
 [section:this_task Namespace this_task]
-In the function `boost::this_task::reschedule_until( boost::function< bool() > const&)` allows to synchronize the task with other
-asynchronous events without blocking the __worker_threads__. The function accepts a function object
-which returning true if the synchronization happend. The task will be rescheduled until the condition becomes true.
+The pool can be accessed via `boost::this_task::get_thread_pool< Pool >()` ifthe calling code is executed by a __worker_thread__.
 
 [endsect]

@@ -40,8 +40,6 @@
 #ifdef BOOST_BIND_WORKER_TO_PROCESSORS
 #include <boost/tp/detail/bind_processor.hpp>
 #endif
-#include <boost/tp/detail/pool_base.hpp>
-#include <boost/tp/detail/worker_base.hpp>
 #include <boost/tp/detail/wsq.hpp>
 #include <boost/tp/exceptions.hpp>
 #include <boost/tp/poolsize.hpp>
@@ -60,13 +58,27 @@ namespace boost
 }
 
 namespace boost {
+
+namespace this_task
+{
+template< typename Pool >
+Pool & get_thread_pool()
+{
+	typename Pool::worker * w( Pool::tss_worker_.get() );
+	BOOST_ASSERT( w);
+	return w->get_thread_pool();
+}
+}
+
 namespace tp
 {
 template< typename Channel >
-class pool : private noncopyable,
-             private detail::pool_base
+class pool : private noncopyable
 {
 private:
+	template< typename Pool >
+	friend Pool & this_task::get_thread_pool();
+
 	typedef Channel						channel;
 	typedef typename channel::item		channel_item;
 
@@ -77,7 +89,7 @@ private:
 		terminated_state
 	};
 
-	class worker : public detail::worker_base
+	class worker
 	{
 	private:
 		class wimpl : private noncopyable
@@ -176,15 +188,15 @@ private:
 
 			std::size_t scanns() const
 			{ return scns_; }
-	
+
 			void increment_scanns()
 			{ ++scns_; }
-	
+
 			void reset_scanns()
 			{ scns_ = 0; }
 
-			void reschedule_until( function< bool() > const& cond)
-			{ pool_ptr_->reschedule_until_( cond); }
+			pool & get_thread_pool()
+			{ return * pool_ptr_; }
 		};
 
 		shared_ptr< wimpl >	impl_;
@@ -247,8 +259,8 @@ private:
 		void reset_scanns()
 		{ impl_->reset_scanns(); }
 
-		void reschedule_until( function< bool() > const& cond)
-		{ impl_->reschedule_until( cond); }
+		pool & get_thread_pool()
+		{ return impl_->get_thread_pool(); }
 	};
 
 	struct id_idx_tag {};
@@ -293,6 +305,7 @@ private:
 		{ return die_(); }
 	};
 
+	static thread_specific_ptr< worker >		tss_worker_;
 	static thread_specific_ptr< random_idx >	tss_rnd_idx_;
 
 	worker_list								worker_;
@@ -324,10 +337,10 @@ private:
 		BOOST_ASSERT( ca.empty() );
 	}
 
-	void next_callable_( detail::worker_base * w, detail::callable & ca, detail::interrupter & intr)
+	void next_callable_( worker & w, detail::callable & ca, detail::interrupter & intr)
 	{
 		rnd_idx & ridx( worker_.get< rnd_idx_tag >() );
-		if ( ! w->try_take( ca, intr) )
+		if ( ! w.try_take( ca, intr) )
 		{
 			if ( ! channel_.try_take( ca, intr) )
 			{
@@ -344,14 +357,14 @@ private:
 				{
 					detail::guard grd( idle_worker_);
 					if ( shutdown_( w) ) return;
-					w->increment_scanns();
-					if ( w->scanns() >= scns_)
+					w.increment_scanns();
+					if ( w.scanns() >= scns_)
 					{
 						if ( size_() == idle_worker_)
 							channel_.take( ca, intr, asleep_);
 						else
 							this_thread::sleep( asleep_);
-						w->reset_scanns();
+						w.reset_scanns();
 					}
 					else
 						this_thread::yield();
@@ -362,7 +375,7 @@ private:
 
 	void reschedule_until_( function< bool() > const& cond)
 	{
-		detail::worker_base * w( pool_base::tss_worker_.get() );
+		worker * w( tss_worker_.get() );
 		BOOST_ASSERT( w);
 		shared_ptr< thread > thrd( w->thrd() );
 		BOOST_ASSERT( thrd);
@@ -370,7 +383,7 @@ private:
 		detail::callable ca;
 		while ( ! cond() )
 		{
-			next_callable_( w, ca, intr);
+			next_callable_( * w, ca, intr);
 			if( ! ca.empty() )
 			{
 				execute_( ca, intr, thrd);
@@ -389,7 +402,7 @@ private:
 
 		worker w( * i);
 		BOOST_ASSERT( w.get_id() == this_thread::get_id() );
-		pool_base::tss_worker_.reset( new worker( w) );
+		tss_worker_.reset( new worker( w) );
 		shared_ptr< thread > thrd( w.thrd() );
 		BOOST_ASSERT( thrd);
 		detail::callable ca;
@@ -399,9 +412,9 @@ private:
 
 		detail::guard grd( running_worker_);
 
-		while ( ! shutdown_( & w) )
+		while ( ! shutdown_( w) )
 		{
-			next_callable_( & w, ca, intr);
+			next_callable_( w, ca, intr);
 			if( ! ca.empty() )
 			{
 				execute_( ca, intr, thrd);
@@ -457,11 +470,11 @@ private:
 	bool terminateing_() const
 	{ return state_ == terminateing_state; }
 
-	bool shutdown_( detail::worker_base * w)
+	bool shutdown_( worker & w)
 	{
-		if ( w->shutdown() && channel_.empty() )
+		if ( w.shutdown() && channel_.empty() )
 			return true;
-		else if ( w->shutdown_now() )
+		else if ( w.shutdown_now() )
 			return true;
 		return false;
 	}
@@ -685,7 +698,7 @@ public:
 		detail::interrupter intr;
 		jss::packaged_task< R > tsk( act);
 		jss::shared_future< R > fut( tsk.get_future() );
-		detail::worker_base * w( pool_base::tss_worker_.get() );
+		worker * w( tss_worker_.get() );
 		if ( w)
 		{
 			function< bool() > cond(
@@ -726,7 +739,7 @@ public:
 		detail::interrupter intr;
 		jss::packaged_task< R > tsk( act);
 		jss::shared_future< R > fut( tsk.get_future() );
-		detail::worker_base * w( pool_base::tss_worker_.get() );
+		worker * w( tss_worker_.get() );
 		if ( w)
 		{
 			function< bool() > cond(
@@ -757,23 +770,14 @@ public:
 };
 
 template< typename Channel >
+thread_specific_ptr< typename pool< Channel >::worker >
+pool< Channel >::tss_worker_;
+
+template< typename Channel >
 thread_specific_ptr< typename pool< Channel >::random_idx >
 pool< Channel >::tss_rnd_idx_;
 
-}
-
-namespace this_task
-{
-	inline
-	void reschedule_until( function< bool() > const& cond)
-	{
-		tp::detail::worker_base * w( tp::detail::pool_base::tss_worker_.get() );
-		BOOST_ASSERT ( w);
-		w->reschedule_until( cond);
-	}
-}
-
-}
+}}
 
 #endif // BOOST_TP_POOL_H
 

@@ -10,7 +10,7 @@
 [include pool_ref.qbk]
 [include task_ref.qbk]
 [include wait_ref.qbk]
-[include reschedule_ref.qbk]
+[include this_task_ref.qbk]
 [include poolsize_ref.qbk]
 [include scanns_ref.qbk]
 [include watermark_ref.qbk]

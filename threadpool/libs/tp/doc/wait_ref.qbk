@@ -9,17 +9,17 @@
 
     #include <boost/tp/task.hpp>
 
-	template< typename Tsk1, typename Tsk2 >
-	void wait_for_all( Tsk1 &, Tsk2 &);
+	template< typename T1, typename T2 >
+	void wait_for_all( task< T1 > &, task< T2 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3 >
-	void wait_for_all( Tsk1 &, Tsk2 &, Tsk3 &);
+	template< typename T1, typename T2, typename T3 >
+	void wait_for_all( task< T1 > &, task< T2 > &, task< T3 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3, typename Tsk4 >
-	void wait_for_all( Tsk1 &, Tsk2 &, Tsk3 &, Tsk4 &);
+	template< typename T1, typename T2, typename T3, typename T4 >
+	void wait_for_all( task< T1 > &, task< T2 > &, task< T3 > &, task< T4 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3, typename Tsk4, typename Tsk5 >
-	void wait_for_all( Tsk1 &, Tsk2 &, Tsk3 &, Tsk4 &, Tsk5 &);
+	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
+	void wait_for_all( task< T1 > &, task< T2 > &, task< T3 > &, task< T4 > &, task< T5 > &);
 
 [variablelist
 [[Effects:] [Waits until all specified tasks are ready.]]
@@ -33,17 +33,17 @@
 
     #include <boost/tp/task.hpp>
 
-	template< typename Tsk1, typename Tsk2 >
-	void wait_for_any( Tsk1 &, Tsk2 &);
+	template< typename T1, typename T2 >
+	void wait_for_any( task< T1 > &, task< T2 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3 >
-	void wait_for_any( Tsk1 &, Tsk2 &, Tsk3 &);
+	template< typename T1, typename T2, typename T3 >
+	void wait_for_any( task< T1 > &, task< T2 > &, task< T3 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3, typename Tsk4 >
-	void wait_for_any( Tsk1 &, Tsk2 &, Tsk3 &, Tsk4 &);
+	template< typename T1, typename T2, typename T3, typename T4 >
+	void wait_for_any( task< T1 > &, task< T2 > &, task< T3 > &, task< T4 > &);
 
-	template< typename Tsk1, typename Tsk2, typename Tsk3, typename Tsk4, typename Tsk5 >
-	void wait_for_any( Tsk1 &, Tsk2 &, Tsk3 &, Tsk4 &, Tsk5 &);
+	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
+	void wait_for_any( task< T1 > &, task< T2 > &, task< T3 > &, task< T4 > &, task< T5 > &);
 
 [variablelist
 [[Effects:] [Waits until at leaste one of specified tasks is ready.]]

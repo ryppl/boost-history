@@ -1,0 +1,125 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Fork/Join</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Threadpool">
+<link rel="prev" href="scheduling.html" title="Scheduling">
+<link rel="next" href="acknowledgement.html" title="Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="scheduling.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgement.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_threadpool.forkjoin"></a><a class="link" href="forkjoin.html" title="Fork/Join"> Fork/Join</a>
+</h2></div></div></div>
+<p>
+      Fork/Join algorithms are recursive divide-and-conquer algorithms which repeatedly
+      splitt sub_actions until they become small enough to solve using simple, short
+      sequential methods, so that they run in parallel on multiple cores.
+    </p>
+<p>
+      The fork operation creates a new sub_action (which can run in parallel) in
+      the pool. The current actions is not proceeded in the join operation until
+      the forked sub_actions have completed. In the meantime the worker thread executes
+      other actions from its local <a class="link" href="pool.html#boost_threadpool.pool.work_stealing"><span class="emphasis"><em>worker
+      queue</em></span></a>.
+    </p>
+<pre class="programlisting"><span class="comment">// defines the threadpool type
+</span><span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span>
+  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span> <span class="identifier">pool_type</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">fibo</span>
+<span class="special">{</span>
+<span class="keyword">private</span><span class="special">:</span>
+  <span class="identifier">pool_type</span> <span class="special">&amp;</span>  <span class="identifier">pool_</span><span class="special">;</span>
+  <span class="keyword">int</span>          <span class="identifier">cutoff_</span><span class="special">;</span>
+
+  <span class="keyword">int</span> <span class="identifier">seq_</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">&lt;=</span> <span class="number">1</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">n</span><span class="special">;</span>
+    <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">seq_</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">-</span> <span class="number">2</span><span class="special">)</span> <span class="special">+</span> <span class="identifier">seq_</span><span class="special">(</span> <span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">);</span>
+  <span class="special">}</span>
+
+  <span class="keyword">int</span> <span class="identifier">par_</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">&lt;=</span> <span class="identifier">cutoff_</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">seq_</span><span class="special">(</span> <span class="identifier">n</span><span class="special">);</span>
+    <span class="keyword">else</span>
+    <span class="special">{</span>
+      <span class="comment">// fork a new sub-action t1 in pool
+</span>      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">(</span>
+        <span class="identifier">pool_</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+          <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+            <span class="special">&amp;</span> <span class="identifier">fibo</span><span class="special">::</span><span class="identifier">par_</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="special">*</span> <span class="keyword">this</span><span class="special">),</span>
+            <span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+       <span class="comment">// fork a new sub-action t2 in pool
+</span>      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t1</span><span class="special">(</span>
+        <span class="identifier">pool_</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+          <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+            <span class="special">&amp;</span> <span class="identifier">fibo</span><span class="special">::</span><span class="identifier">par_</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="special">*</span> <span class="keyword">this</span><span class="special">),</span>
+            <span class="identifier">n</span> <span class="special">-</span> <span class="number">2</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+      <span class="comment">// joining the result of sub-action t1 and t2
+</span>      <span class="keyword">return</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
+    <span class="special">}</span>
+  <span class="special">}</span>
+<span class="keyword">public</span><span class="special">:</span>
+  <span class="identifier">fibo</span><span class="special">(</span> <span class="identifier">pool_type</span> <span class="special">&amp;</span> <span class="identifier">pool</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">cutoff</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">pool_</span><span class="special">(</span> <span class="identifier">pool</span><span class="special">),</span> <span class="identifier">cutoff_</span><span class="special">(</span> <span class="identifier">cutoff</span><span class="special">)</span>
+  <span class="special">{}</span>
+
+  <span class="keyword">int</span> <span class="identifier">execute</span><span class="special">(</span> <span class="keyword">int</span> <span class="identifier">n</span><span class="special">)</span>
+  <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">result</span><span class="special">(</span> <span class="identifier">par_</span><span class="special">(</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">result</span><span class="special">;</span>
+  <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="comment">// creates a threadpool with two worker-threads
+</span><span class="identifier">pool_type</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">2</span><span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">fibo</span> <span class="identifier">fib</span><span class="special">(</span> <span class="identifier">pool</span><span class="special">,</span> <span class="number">1</span><span class="special">);</span>
+
+<span class="comment">// submit an action
+</span><span class="comment">// which calculates the fibonacci number of 10
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">int</span> <span class="special">&gt;</span> <span class="identifier">t</span><span class="special">(</span>
+  <span class="identifier">pool</span><span class="special">.</span><span class="identifier">submit</span><span class="special">(</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
+      <span class="special">&amp;</span> <span class="identifier">fibo</span><span class="special">::</span><span class="identifier">execute</span><span class="special">,</span>
+      <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span> <span class="identifier">fib</span><span class="special">),</span>
+      <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// prints 55
+</span></pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="scheduling.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgement.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

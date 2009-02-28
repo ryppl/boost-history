@@ -101,7 +101,7 @@ public:
 		bool thrown( false);
 		try
 		{ f.get(); }
-		catch ( std::exception const&)
+		catch ( std::runtime_error const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
@@ -159,7 +159,7 @@ public:
 		bool thrown( false);
 		try
 		{ f.get(); }
-		catch ( std::exception const&)
+		catch ( boost::thread_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
@@ -279,7 +279,7 @@ public:
 		bool thrown( false);
 		try
 		{ f.get(); }
-		catch ( std::exception const&)
+		catch ( boost::thread_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
 	}
