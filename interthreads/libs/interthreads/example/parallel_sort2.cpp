@@ -35,6 +35,19 @@
 #include <assert.h>
 
 #define BOOST_PARTS 2
+#define NN 400000
+
+class scoped_timer {
+    boost::posix_time::ptime start_;
+public:    
+    scoped_timer() 
+		: start_(boost::posix_time::microsec_clock::universal_time())
+    {}
+    ~scoped_timer() {
+		boost::posix_time::ptime stop( boost::posix_time::microsec_clock::universal_time() );
+		std::cout << " " << ( stop - start_).total_milliseconds() << " milli seconds" << std::endl;
+    }
+};
 
 template <typename Range>
 class partition
@@ -87,14 +100,14 @@ template <
         unsigned cutoff )
   {
     unsigned size = boost::size(range);
-    //std::cout << "<<par_ " << size << std::endl;  
+    //std::cout << "<<par_ " << size;  
     if ( size <= cutoff) DirectSolver()(range);
     else {
         partition<Range> parts(range, BOOST_PARTS);
         std::list<task_type> tasks;
-        #if 1 // this code do not compiles with gcc 3.4.4 cygwin
+        #if 0 // this code do not compiles with gcc 3.4.4 cygwin
         boost::transform(parts, boost::begin(tasks), 
-                          boost::bind(AE::submit, boost::ref(ae),
+                          boost::bind(&AE::submit, boost::ref(ae),
                           //boost::bind(&boost::interthreads::fork<AE>, boost::ref(ae),
                                       boost::bind(&inplace_solve<DirectSolver,Composer,AE,Range>, boost::ref(ae),_1,cutoff)));
         #else
@@ -137,10 +150,8 @@ template <typename AE, typename Range>
 void parallel_sort(AE& ae, Range& range, unsigned cutoff=10000) {
     boost::iterator_range<typename boost::range_iterator<Range>::type> rng(range);
     inplace_solve<sort_fct,inplace_merge_fct,pool_type,Range>( ae, rng, cutoff);
-    //std::cout << "parallel_sort " << ">>"<< std::endl;  
 }
 
-#define NN 100000
 int sorted[NN];
 int values1[NN];
 int values2[NN];
@@ -154,58 +165,99 @@ int main() {
    
     for (unsigned i=0; i<NN; ++i) values1[i]=NN-i-1;
     {
-    std::cout << "std::sort: reverse 0.." << NN << std::endl;
-    boost::progress_timer t;  // start timing
+    std::cout << "std::sort: reverse 0.." << NN;
+    scoped_timer t;  // start timing
     std::sort(boost::begin(values1), boost::end(values1));
     }
     assert(boost::equal(values1, sorted));
+    {
+    std::cout << "std::sort: 0.." << NN;
+    scoped_timer t;  // start timing
+    std::sort(boost::begin(values1), boost::end(values1));
+    }
     
     for (unsigned i=0; i<NN; ++i) values2[i]=NN-i-1;
     {
-    std::cout << "boost::sort: reverse 0.."<<NN << std::endl;
-    boost::progress_timer t;  // start timing
+    std::cout << "boost::sort: reverse 0.."<<NN;
+    scoped_timer t;  // start timing
     boost::sort(values2);
     }
     assert(boost::equal(values2, sorted));
+    {
+    std::cout << "boost::sort: 0.."<<NN;
+    scoped_timer t;  // start timing
+    boost::sort(values2);
+    }
 
     // creates a threadpool with two worker-threads
     pool_type pool( boost::tp::poolsize( 2) );
 
-
-    for (unsigned i=0; i<NN; ++i) values3[i]=NN-i-1;
-    std::cout << "parallel_sort "<<NN/16<<":  reverse 0.."<<NN << std::endl;
-    {
-    boost::progress_timer tmr;  // start timing
-    parallel_sort(pool, values3, NN/16);
-    }   
-    assert(boost::equal(values3, sorted));
-
-    for (unsigned i=0; i<NN; ++i) values4[i]=NN-i-1;
-    {
-    std::cout << "std::sort: reverse 0.." << NN << std::endl;
-    boost::progress_timer t;  // start timing
-    std::sort(boost::begin(values4), boost::end(values4));
-    }
-    assert(boost::equal(values4, sorted));
-    
     for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
-    std::cout << "parallel_sort "<<NN/16<<":  reverse 0.."<<NN << std::endl;
     {
-    boost::progress_timer tmr;  // start timing
+    std::cout << "parallel_sort "<<NN/2<<":  reverse 0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/2);
+    }   
+    assert(boost::equal(values5, sorted));
+    {
+    std::cout << "parallel_sort "<<NN/2<<":  0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/2);
+    }   
+
+    for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
+    {
+    std::cout << "parallel_sort "<<NN/4<<":  reverse 0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/4);
+    }   
+    assert(boost::equal(values5, sorted));
+    {
+    std::cout << "parallel_sort "<<NN/4<<":  0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/4);
+    }   
+
+    for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
+    {
+    std::cout << "parallel_sort "<<NN/8<<":  reverse 0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/8);
+    }   
+    assert(boost::equal(values5, sorted));
+    {
+    std::cout << "parallel_sort "<<NN/8<<":  0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/8);
+    }   
+
+    for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
+    {
+    std::cout << "parallel_sort "<<NN/16<<":  reverse 0.."<<NN;
+    scoped_timer tmr;  // start timing
     parallel_sort(pool, values5, NN/16);
     }   
-    //for (unsigned i=0; i<NN; ++i) std::cout << sorted[i] << " " <<values3[i] << std::endl;
     assert(boost::equal(values5, sorted));
-
-#if 0    
-    for (unsigned i=0; i<NN; ++i) values6[i]=NN-i-1;
-    std::cout << "parallel_sort "<<NN/16<<":  reverse 0.."<<NN << std::endl;
     {
-    boost::progress_timer tmr;  // start timing
-    parallel_sort(pool, values6, NN/16);
-    }
-    assert(boost::equal(values6, sorted));
-#endif
+    std::cout << "parallel_sort "<<NN/16<<":  0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/16);
+    }   
+
+    for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
+    {
+    std::cout << "parallel_sort "<<NN/32<<":  reverse 0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/32);
+    }   
+    assert(boost::equal(values5, sorted));
+    {
+    std::cout << "parallel_sort "<<NN/32<<":  0.."<<NN;
+    scoped_timer tmr;  // start timing
+    parallel_sort(pool, values5, NN/32);
+    }   
+
+    
     std::cout << "shutdown"<< std::endl;
     pool.shutdown();
     std::cout << "end"<< std::endl;

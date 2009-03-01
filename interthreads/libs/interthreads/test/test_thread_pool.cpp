@@ -37,6 +37,7 @@ typedef boost::tp::pool<
 > pool_type;
 #endif
 
+#if 0
 void do_test_member_fork_detach() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_member_fork_detach(ae);
@@ -51,12 +52,13 @@ void do_test_member_fork_bind() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_member_fork_bind(ae);
 }
+#endif
 void do_test_fork() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_fork(ae);
 }
 
-void do_test_fork_1() {
+void do_test_fork_1() {   
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_fork_1(ae);
 }
@@ -162,7 +164,7 @@ void do_test_wait_for_all() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_wait_for_all(ae);
 }
-#if 0
+#if 1
 void do_test_fork_after_wait() {
     pool_type ae(boost::tp::poolsize(2));
     aetst::do_test_fork_after_wait(ae);
@@ -177,11 +179,11 @@ test_suite* init_unit_test_suite(int, char*[])
 {
     test_suite* test = BOOST_TEST_SUITE("scheduler");
 
-#if 0     // DO NOT WORK YET
+#if 0     // DO NOT WORK UNTIL tp::task has a fork member
     test->add(BOOST_TEST_CASE(&do_test_member_fork_detach));
-#endif
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
+#endif
     test->add(BOOST_TEST_CASE(&do_test_fork));
     test->add(BOOST_TEST_CASE(&do_test_fork_1));
     test->add(BOOST_TEST_CASE(&do_test_thread_interrupts_at_interruption_point));
@@ -209,7 +211,7 @@ test_suite* init_unit_test_suite(int, char*[])
 
     test->add(BOOST_TEST_CASE(&do_test_wait_for_all));
 
-#if 0     // DO NOT WORK YET
+#if 1     // DO NOT WORK YET
     test->add(BOOST_TEST_CASE(&do_test_wait_for_any));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_wait));
     test->add(BOOST_TEST_CASE(&do_test_fork_after_get));

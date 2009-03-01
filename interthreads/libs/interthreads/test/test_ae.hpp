@@ -196,7 +196,7 @@ void do_test_fork_thr(AE& ae) {
 template <typename AE>
 void do_test_fork_1(AE& ae) {
     test_value=0;
-    BOOST_AUTO(act, bith::fork(ae, simple_thread_1, 2));
+    BOOST_AUTO(act, bith::fork<AE>(ae, simple_thread_1, 2));
     int res_value = bith::get(act);
     BOOST_CHECK_EQUAL(test_value, 2);
     BOOST_CHECK_EQUAL(res_value, 2);
@@ -500,7 +500,7 @@ void do_test_thread_interrupts_at_interruption_point_m(AE& ae) {
     boost::mutex::scoped_lock lk(m);
     BOOST_AUTO(act,bith::fork(ae, interruption_point_thread, &m,&failed));
     act.interrupt();
-    BOOST_CHECK_EQUAL(act.interruption_requested(), true);
+    BOOST_CHECK_EQUAL(bith::interruption_requested(act), true);
     lk.unlock();
     bith::wait(act);
     BOOST_CHECK(!failed);
