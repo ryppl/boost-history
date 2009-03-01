@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for updates, documentation, and revision history.
-#ifndef BOOST_ARCHIVE_IMPL_XML_IARCHIVE_IMPL_IPP_INCLUDED
-#define BOOST_ARCHIVE_IMPL_XML_IARCHIVE_IMPL_IPP_INCLUDED
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_BINARY_IARCHIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_BINARY_IARCHIVE_IPP_INCLUDED
 #include <string>
 #include <cassert>
 #include <algorithm>
