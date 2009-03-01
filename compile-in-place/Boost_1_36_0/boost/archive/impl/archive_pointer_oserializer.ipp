@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_ARCHIVE_POINTER_OSERIALIZER_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_ARCHIVE_POINTER_OSERIALIZER_IPP_INCLUDED
 #include <utility>
 #include <cassert>
 
@@ -80,3 +82,4 @@ archive_pointer_oserializer<Archive>::~archive_pointer_oserializer(){
 } // namespace detail
 } // namespace archive
 } // namespace boost
+#endif

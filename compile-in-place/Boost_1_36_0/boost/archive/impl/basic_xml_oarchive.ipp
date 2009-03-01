@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_OARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_OARCHIVE_IMPL_IPP_INCLUDED
 #include <algorithm>
 #include <cstddef> // NULL
 #include <cstring>
@@ -273,3 +275,4 @@ basic_xml_oarchive<Archive>::~basic_xml_oarchive(){
 
 } // namespace archive
 } // namespace boost
+#endif

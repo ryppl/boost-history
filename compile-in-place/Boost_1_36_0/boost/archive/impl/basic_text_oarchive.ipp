@@ -7,6 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org for updates, documentation, and revision history.
+#ifndef BOOST_ARCHIVE_IMPL_TEXT_OARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_TEXT_OARCHIVE_IMPL_IPP_INCLUDED
 #include <string>
 #include <cassert>
 #include <cstring>
@@ -60,3 +62,4 @@ basic_text_oarchive<Archive>::init(){
 
 } // namespace archive
 } // namespace boost
+#endif

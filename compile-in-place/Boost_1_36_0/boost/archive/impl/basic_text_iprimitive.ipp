@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_TEXT_IPRIMITIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_TEXT_IPRIMITIVE_IPP_INCLUDED
 #include <cstddef> // size_t
 #include <cstddef> // NULL
 
@@ -129,3 +131,4 @@ basic_text_iprimitive<IStream>::~basic_text_iprimitive(){
 
 } // namespace archive
 } // namespace boost
+#endif

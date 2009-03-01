@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_BASIC_TEXT_OPRIMITIVE_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_BASIC_TEXT_OPRIMITIVE_IPP_INCLUDED
 #include <cstddef> // NULL
 #include <boost/pfto.hpp>
 
@@ -109,3 +111,4 @@ basic_text_oprimitive<OStream>::~basic_text_oprimitive(){
 
 } //namespace boost 
 } //namespace archive 
+#endif
