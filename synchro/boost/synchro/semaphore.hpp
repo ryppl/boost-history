@@ -148,17 +148,13 @@ typedef basic_semaphore<> semaphore;
 template <typename ScopeTag=multi_threaded_tag>
 class basic_binary_semaphore: public basic_semaphore<ScopeTag>
 {
-    typedef synchronization_family<ScopeTag> Sync;
-    typedef typename Sync::mutex_type lockable_type;
-    typedef typename Sync::condition_type condition_variable;
-    typedef typename unique_lock_type<lockable_type>::type scoped_lock;
 public:
     BOOST_COPY_CONSTRUCTOR_DELETE(basic_binary_semaphore) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(basic_binary_semaphore) /*< disable copy asignement >*/
 
     //!Creates a semaphore with the given initial count.
     //!exception if there is an error.*/
-    inline basic_binary_semaphore(int initialCount):basic_semaphore<ScopeTag>(initialCount>0?1:0) {};
+    inline explict basic_binary_semaphore(int initialCount):basic_semaphore<ScopeTag>(initialCount>0?1:0) {};
     inline void post()
     {
         scoped_lock lock(this->m_mut);
