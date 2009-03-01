@@ -27,10 +27,13 @@
 <a name="boost_threadpool.this_task"></a><a class="link" href="this_task.html" title="Namespace this_task"> Namespace this_task</a>
 </h2></div></div></div>
 <p>
-      The __thread<span class="underline">pool</span>_ can be accessed via
-      <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span><span class="special">::</span><span class="identifier">get_thread_pool</span><span class="special">&lt;</span>
+      In the function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span><span class="special">::</span><span class="identifier">reschedule_until</span><span class="special">(</span>
+      <span class="identifier">jss</span><span class="special">::</span><span class="identifier">future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;)</span></code> allows to synchronize the task with other
+      asynchronous events without blocking the worker threads. The current task will
+      be rescheduled until the passed future becomes ready. The pool can be accessed
+      via <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span><span class="special">::</span><span class="identifier">get_thread_pool</span><span class="special">&lt;</span>
       <span class="identifier">Pool</span> <span class="special">&gt;()</span></code>
-      ifthe calling code is executed by a worker thread.
+      if the calling code is executed by a worker thread.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

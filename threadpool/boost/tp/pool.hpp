@@ -61,6 +61,17 @@ namespace boost {
 
 namespace this_task
 {
+template<
+	typename Pool,
+	typename R
+>
+void reschedule_until( jss::shared_future< R > const& f)
+{
+	typename Pool::worker * w( Pool::tss_worker_.get() );
+	BOOST_ASSERT( w);
+	w->reschedule_until( f);
+}
+
 template< typename Pool >
 Pool & get_thread_pool()
 {
@@ -76,6 +87,12 @@ template< typename Channel >
 class pool : private noncopyable
 {
 private:
+	template<
+		typename Pool,
+		typename R
+	>
+	friend void this_task::reschedule_until( jss::shared_future< R > const&);
+
 	template< typename Pool >
 	friend Pool & this_task::get_thread_pool();
 
@@ -195,6 +212,10 @@ private:
 			void reset_scanns()
 			{ scns_ = 0; }
 
+			template< typename R >
+			void reschedule_until( jss::shared_future< R > const& f)
+			{ pool_ptr_->reschedule_until_( f); }
+
 			pool & get_thread_pool()
 			{ return * pool_ptr_; }
 		};
@@ -258,6 +279,10 @@ private:
 
 		void reset_scanns()
 		{ impl_->reset_scanns(); }
+
+		template< typename R >
+		void reschedule_until( jss::shared_future< R > const& f)
+		{ return impl_->reschedule_until( f); }
 
 		pool & get_thread_pool()
 		{ return impl_->get_thread_pool(); }
@@ -373,7 +398,8 @@ private:
 		}
 	}
 
-	void reschedule_until_( function< bool() > const& cond)
+	template< typename R >
+	void reschedule_until_( jss::shared_future< R > const& f)
 	{
 		worker * w( tss_worker_.get() );
 		BOOST_ASSERT( w);
@@ -381,7 +407,7 @@ private:
 		BOOST_ASSERT( thrd);
 		detail::interrupter intr;
 		detail::callable ca;
-		while ( ! cond() )
+		while ( ! f.is_ready() )
 		{
 			next_callable_( * w, ca, intr);
 			if( ! ca.empty() )
@@ -697,21 +723,17 @@ public:
 		typedef typename result_of< Act() >::type R;
 		detail::interrupter intr;
 		jss::packaged_task< R > tsk( act);
-		jss::shared_future< R > fut( tsk.get_future() );
+		jss::shared_future< R > f( tsk.get_future() );
 		worker * w( tss_worker_.get() );
 		if ( w)
 		{
-			function< bool() > cond(
-				bind(
-					& jss::shared_future< R >::is_ready,
-					fut) );
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool< Channel >::*)( function< bool() > const&) ) & pool< Channel >::reschedule_until_,
+					( void ( pool::*)( jss::shared_future< R > const&) ) & pool::reschedule_until_,
 					this,
-					cond) );
+					f) );
 			w->put( detail::callable( move( tsk) ), intr);
-			return task< R >( fut, intr);
+			return task< R >( f, intr);
 		}
 		else
 		{
@@ -723,7 +745,7 @@ public:
 
 			channel_item itm( detail::callable( move( tsk) ), intr);
 			channel_.put( itm);
-			return task< R >( fut, intr);
+			return task< R >( f, intr);
 		}
 	}
 
@@ -738,21 +760,17 @@ public:
 		typedef typename result_of< Act() >::type R;
 		detail::interrupter intr;
 		jss::packaged_task< R > tsk( act);
-		jss::shared_future< R > fut( tsk.get_future() );
+		jss::shared_future< R > f( tsk.get_future() );
 		worker * w( tss_worker_.get() );
 		if ( w)
 		{
-			function< bool() > cond(
-				bind(
-					& jss::shared_future< R >::is_ready,
-					fut) );
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool< Channel >::*)( function< bool() > const&) ) & pool< Channel >::reschedule_until_,
+					( void ( pool::*)( jss::shared_future< R > const&) ) & pool::reschedule_until_,
 					this,
-					cond) );
+					f) );
 			w->put( detail::callable( move( tsk) ), intr);
-			return task< R >( fut, intr);
+			return task< R >( f, intr);
 		}
 		else
 		{
@@ -764,7 +782,7 @@ public:
 
 			channel_item itm( detail::callable( move( tsk) ), attr, intr);
 			channel_.put( itm);
-			return task< R >( fut, intr);
+			return task< R >( f, intr);
 		}
 	}
 };

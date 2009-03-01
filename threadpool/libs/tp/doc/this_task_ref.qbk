@@ -5,6 +5,21 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
+[section:reschedule_until Non-member function `reschedule_until`]
+
+    #include <boost/tp/pool.hpp>
+
+	template< typename Pool, typename R >
+	void reschedule_until( jss::future< R > const&);
+
+[variablelist
+[[Effects:] [Reschedules current task until passed future becomes ready.] 
+[[Throws:] [Nothing.]]
+[[Note:] [This function resides in namespace `boost::this_task`.]]
+]
+
+[endsect]
+
 [section:get_thread_pool Non-member function `get_thread_pool`]
 
     #include <boost/tp/pool.hpp>

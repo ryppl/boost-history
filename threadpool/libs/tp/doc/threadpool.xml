@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <library id="boost_threadpool" name="Boost.Threadpool" dirname="boost_threadpool"
-last-revision="$Date: 2009/02/28 14:27:32 $" xmlns:xi="http://www.w3.org/2001/XInclude">
+last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XInclude">
   <libraryinfo>
     <authorgroup>
     <author>
@@ -621,12 +621,20 @@ last-revision="$Date: 2009/02/28 14:27:32 $" xmlns:xi="http://www.w3.org/2001/XI
   <section id="boost_threadpool.this_task">
     <title><link linkend="boost_threadpool.this_task"> Namespace this_task</link></title>
     <para>
-      The pool can be accessed via <code><phrase role="identifier">boost</phrase><phrase
-      role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase
-      role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase
-      role="special">&lt;</phrase> <phrase role="identifier">Pool</phrase> <phrase
-      role="special">&gt;()</phrase></code> ifthe calling code is executed by a worker
-      thread.
+      In the function <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">reschedule_until</phrase><phrase role="special">(</phrase>
+      <phrase role="identifier">jss</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase
+      role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase
+      role="special">&amp;)</phrase></code> allows to synchronize the task with other
+      asynchronous events without blocking the worker threads. The current task will
+      be rescheduled until the passed future becomes ready. The pool can be accessed
+      via <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase>
+      <phrase role="identifier">Pool</phrase> <phrase role="special">&gt;()</phrase></code>
+      if the calling code is executed by a worker thread.
     </para>
   </section>
   <section id="boost_threadpool.channel">
@@ -786,76 +794,736 @@ last-revision="$Date: 2009/02/28 14:27:32 $" xmlns:xi="http://www.w3.org/2001/XI
       queue</emphasis></link>.
     </para>
     
-<programlisting><phrase role="comment">// defines the threadpool type
-</phrase><phrase role="keyword">typedef</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">pool</phrase><phrase role="special">&lt;</phrase>
-  <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">unbounded_channel</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="special">&gt;</phrase> <phrase role="identifier">pool_type</phrase><phrase role="special">;</phrase>
+<programlisting>   <phrase role="comment">// defines the threadpool type
+</phrase>   <phrase role="keyword">namespace</phrase> <phrase role="identifier">pt</phrase> <phrase role="special">=</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">posix_time</phrase><phrase role="special">;</phrase>
+<phrase role="keyword">namespace</phrase> <phrase role="identifier">tp</phrase> <phrase role="special">=</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">;</phrase>
+
+<phrase role="keyword">typedef</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">unbounded_channel</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">pool_type</phrase><phrase role="special">;</phrase>
 
 <phrase role="keyword">class</phrase> <phrase role="identifier">fibo</phrase>
 <phrase role="special">{</phrase>
 <phrase role="keyword">private</phrase><phrase role="special">:</phrase>
-  <phrase role="identifier">pool_type</phrase> <phrase role="special">&amp;</phrase>  <phrase role="identifier">pool_</phrase><phrase role="special">;</phrase>
-  <phrase role="keyword">int</phrase>          <phrase role="identifier">cutoff_</phrase><phrase role="special">;</phrase>
+	<phrase role="keyword">int</phrase>		<phrase role="identifier">offset_</phrase><phrase role="special">;</phrase>
 
-  <phrase role="keyword">int</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
-  <phrase role="special">{</phrase>
-    <phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">n</phrase><phrase role="special">;</phrase>
-    <phrase role="keyword">else</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">+</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
-  <phrase role="special">}</phrase>
+	<phrase role="keyword">int</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">n</phrase><phrase role="special">;</phrase>
+		<phrase role="keyword">else</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">+</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
+	<phrase role="special">}</phrase>
+	
+	<phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
+		<phrase role="keyword">else</phrase>
+		<phrase role="special">{</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+		<phrase role="special">}</phrase>
+	<phrase role="special">}</phrase>
 
-  <phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
-  <phrase role="special">{</phrase>
-    <phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">cutoff_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
-    <phrase role="keyword">else</phrase>
-    <phrase role="special">{</phrase>
-      <phrase role="comment">// fork a new sub-action t1 in pool
-</phrase>      <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
-        <phrase role="identifier">pool_</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
-          <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
-            <phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
-            <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
-            <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-
-       <phrase role="comment">// fork a new sub-action t2 in pool
-</phrase>      <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
-        <phrase role="identifier">pool_</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
-          <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
-            <phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
-            <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
-            <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-
-      <phrase role="comment">// joining the result of sub-action t1 and t2
-</phrase>      <phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
-    <phrase role="special">}</phrase>
-  <phrase role="special">}</phrase>
 <phrase role="keyword">public</phrase><phrase role="special">:</phrase>
-  <phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&amp;</phrase> <phrase role="identifier">pool</phrase><phrase role="special">,</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">cutoff</phrase><phrase role="special">)</phrase>
-  <phrase role="special">:</phrase> <phrase role="identifier">pool_</phrase><phrase role="special">(</phrase> <phrase role="identifier">pool</phrase><phrase role="special">),</phrase> <phrase role="identifier">cutoff_</phrase><phrase role="special">(</phrase> <phrase role="identifier">cutoff</phrase><phrase role="special">)</phrase>
-  <phrase role="special">{}</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
 
-  <phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
-  <phrase role="special">{</phrase>
-    <phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
-    <phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
-  <phrase role="special">}</phrase>
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
 <phrase role="special">};</phrase>
 
-<phrase role="comment">// creates a threadpool with two worker-threads
-</phrase><phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
 
-<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="identifier">pool</phrase><phrase role="special">,</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 
-<phrase role="comment">// submit an action
-</phrase><phrase role="comment">// which calculates the fibonacci number of 10
-</phrase><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">(</phrase>
-  <phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
-      <phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
-      <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
-      <phrase role="number">10</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// prints 55
-</phrase></programlisting>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      // defines the threadpool type namespace pt = boost::posix_time; namespace
+      tp = boost::tp;
+    </para>
+    
+<programlisting><phrase role="keyword">typedef</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">unbounded_channel</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">pool_type</phrase><phrase role="special">;</phrase>
+
+<phrase role="keyword">class</phrase> <phrase role="identifier">fibo</phrase>
+<phrase role="special">{</phrase>
+<phrase role="keyword">private</phrase><phrase role="special">:</phrase>
+	<phrase role="keyword">int</phrase>		<phrase role="identifier">offset_</phrase><phrase role="special">;</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">n</phrase><phrase role="special">;</phrase>
+		<phrase role="keyword">else</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">+</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
+	<phrase role="special">}</phrase>
+	
+	<phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
+		<phrase role="keyword">else</phrase>
+		<phrase role="special">{</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+		<phrase role="special">}</phrase>
+	<phrase role="special">}</phrase>
+
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      typedef tp::pool&lt; tp::unbounded_channel&lt; tp::fifo &gt; &gt; pool_type;
+    </para>
+    
+<programlisting><phrase role="keyword">class</phrase> <phrase role="identifier">fibo</phrase>
+<phrase role="special">{</phrase>
+<phrase role="keyword">private</phrase><phrase role="special">:</phrase>
+	<phrase role="keyword">int</phrase>		<phrase role="identifier">offset_</phrase><phrase role="special">;</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">n</phrase><phrase role="special">;</phrase>
+		<phrase role="keyword">else</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">+</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
+	<phrase role="special">}</phrase>
+	
+	<phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
+		<phrase role="keyword">else</phrase>
+		<phrase role="special">{</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+		<phrase role="special">}</phrase>
+	<phrase role="special">}</phrase>
+
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      class fibo { private: int offset_;
+    </para>
+    
+<programlisting>	<phrase role="keyword">int</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">n</phrase><phrase role="special">;</phrase>
+		<phrase role="keyword">else</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">+</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">);</phrase>
+	<phrase role="special">}</phrase>
+	
+	<phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
+		<phrase role="keyword">else</phrase>
+		<phrase role="special">{</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+		<phrase role="special">}</phrase>
+	<phrase role="special">}</phrase>
+
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      int seq<emphasis role="underline">( int n) { if ( n &lt;= 1) return n; else
+      return seq</emphasis>( n - 2) + seq_( n - 1); }
+    </para>
+    
+<programlisting>	<phrase role="keyword">int</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">if</phrase> <phrase role="special">(</phrase> <phrase role="identifier">n</phrase> <phrase role="special">&lt;=</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">)</phrase> <phrase role="keyword">return</phrase> <phrase role="identifier">seq_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">);</phrase>
+		<phrase role="keyword">else</phrase>
+		<phrase role="special">{</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">1</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">pool_type</phrase> <phrase role="special">&gt;().</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+		<phrase role="special">}</phrase>
+	<phrase role="special">}</phrase>
+
+<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      int par<emphasis role="underline">( int n) { if ( n &lt;= offset</emphasis>)
+      return seq_( n); else { tp::task&lt; int &gt; t1( boost::this_task::get_thread_pool&lt;
+      pool<emphasis role="underline">type &gt;().submit( boost::bind( &amp; fibo::par</emphasis>,
+      boost::ref( * this), n - 1) ) ); tp::task&lt; int &gt; t2( boost::this_task::get_thread_pool&lt;
+      pool<emphasis role="underline">type &gt;().submit( boost::bind( &amp; fibo::par</emphasis>,
+      boost::ref( * this), n - 2) ) ); return t1.get() + t2.get(); } }
+    </para>
+    
+<programlisting><phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+	<phrase role="identifier">fibo</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">:</phrase> <phrase role="identifier">offset_</phrase><phrase role="special">(</phrase> <phrase role="identifier">offset</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{}</phrase>
+
+	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      public: fibo( int offset) : offset_( offset) {}
+    </para>
+    
+<programlisting>	<phrase role="keyword">int</phrase> <phrase role="identifier">execute</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="keyword">int</phrase> <phrase role="identifier">result</phrase><phrase role="special">(</phrase> <phrase role="identifier">par_</phrase><phrase role="special">(</phrase> <phrase role="identifier">n</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">return</phrase> <phrase role="identifier">result</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+<phrase role="special">};</phrase>
+
+<phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      int execute( int n) { int result( par_( n) ); return result; } };
+    </para>
+    
+<programlisting><phrase role="keyword">int</phrase> <phrase role="identifier">main</phrase><phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">argc</phrase><phrase role="special">,</phrase> <phrase role="keyword">char</phrase> <phrase role="special">*</phrase><phrase role="identifier">argv</phrase><phrase role="special">[])</phrase>
+<phrase role="special">{</phrase>
+	<phrase role="keyword">try</phrase>
+	<phrase role="special">{</phrase>
+		<phrase role="identifier">pool_type</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">poolsize</phrase><phrase role="special">(</phrase> <phrase role="number">3</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">fibo</phrase> <phrase role="identifier">fib</phrase><phrase role="special">(</phrase> <phrase role="number">5</phrase><phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">results</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">reserve</phrase><phrase role="special">(</phrase> <phrase role="number">40</phrase><phrase role="special">);</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      int main( int argc, char *argv[]) { try { pool_type pool( tp::poolsize( 3)
+      ); fibo fib( 5); std::vector&lt; tp::task&lt; int &gt; &gt; results; results.reserve(
+      40);
+    </para>
+    
+<programlisting>		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">start</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      pt::ptime start( pt::microsec_clock::universal_time() );
+    </para>
+    
+<programlisting>		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase> <phrase role="keyword">int</phrase> <phrase role="identifier">i</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase> <phrase role="identifier">i</phrase> <phrase role="special">&lt;</phrase> <phrase role="number">32</phrase><phrase role="special">;</phrase> <phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">push_back</phrase><phrase role="special">(</phrase>
+				<phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+					<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
+						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">execute</phrase><phrase role="special">,</phrase>
+						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="identifier">fib</phrase><phrase role="special">),</phrase>
+						<phrase role="identifier">i</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
+
+		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      for ( int i = 0; i &lt; 32; ++i) results.push_back( pool.submit( boost::bind(
+      &amp; fibo::execute, boost::ref( fib), i) ) );
+    </para>
+    
+<programlisting>		<phrase role="keyword">int</phrase> <phrase role="identifier">k</phrase> <phrase role="special">=</phrase> <phrase role="number">0</phrase><phrase role="special">;</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">e</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">end</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="keyword">for</phrase> <phrase role="special">(</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
+			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      int k = 0; std::vector&lt; tp::task&lt; int &gt; &gt;::iterator e( results.end()
+      ); for ( std::vector&lt; tp::task&lt; int &gt; &gt;::iterator i( results.begin()
+      ); i != e; ++i) std::cout &lt;&lt; &quot;fibonacci &quot; &lt;&lt; k++ &lt;&lt;
+      &quot; == &quot; &lt;&lt; i-&gt;get() &lt;&lt; std::endl;
+    </para>
+    
+<programlisting>		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
+		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+
+		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      pt::ptime stop( pt::microsec_clock::universal_time() ); std::cout &lt;&lt;
+      ( stop - start).total_milliseconds() &lt;&lt; &quot; milli seconds&quot; &lt;&lt;
+      std::endl;
+    </para>
+    
+<programlisting>		<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_SUCCESS</phrase><phrase role="special">;</phrase>
+	<phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">exception</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">e</phrase><phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;exception: &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">e</phrase><phrase role="special">.</phrase><phrase role="identifier">what</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+	<phrase role="keyword">catch</phrase> <phrase role="special">(</phrase> <phrase role="special">...</phrase> <phrase role="special">)</phrase>
+	<phrase role="special">{</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cerr</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;unhandled&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="special">}</phrase>
+
+	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      return EXIT_SUCCESS; } catch ( std::exception const&amp; e) { std::cerr &lt;&lt;
+      &quot;exception: &quot; &lt;&lt; e.what() &lt;&lt; std::endl; } catch ( ...
+      ) { std::cerr &lt;&lt; &quot;unhandled&quot; &lt;&lt; std::endl; }
+    </para>
+    
+<programlisting>	<phrase role="keyword">return</phrase> <phrase role="identifier">EXIT_FAILURE</phrase><phrase role="special">;</phrase>
+<phrase role="special">}</phrase>
+</programlisting>
+    <para>
+      return EXIT_FAILURE; }
+    </para>
   </section>
   <section id="boost_threadpool.acknowledgement">
     <title><link linkend="boost_threadpool.acknowledgement"> Acknowledgements</link></title>
@@ -1981,6 +2649,42 @@ last-revision="$Date: 2009/02/28 14:27:32 $" xmlns:xi="http://www.w3.org/2001/XI
         <listitem>
           <para>
             Any exceptions that might be thrown by the actions.
+          </para>
+        </listitem>
+        </varlistentry>
+      </variablelist>
+    </section>
+    <section id="boost_threadpool.reference.reschedule_until">
+      <title><link linkend="boost_threadpool.reference.reschedule_until"> Non-member
+      function <code><phrase role="identifier">reschedule_until</phrase></code></link></title>
+      
+<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">reschedule_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">jss</phrase><phrase role="special">::</phrase><phrase role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;);</phrase>
+</programlisting>
+      <variablelist>
+        <title></title> <varlistentry><term>Effects:</term>
+        <listitem>
+          <para>
+            Reschedules current task until passed future becomes ready.
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            [Throws:
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            Nothing.
+          </para>
+        </listitem>
+        </varlistentry> <varlistentry><term>Note:</term>
+        <listitem>
+          <para>
+            This function resides in namespace <code><phrase role="identifier">boost</phrase><phrase
+            role="special">::</phrase><phrase role="identifier">this_task</phrase></code>.
           </para>
         </listitem>
         </varlistentry>
