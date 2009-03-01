@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_TEXT_WOARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_TEXT_WOARCHIVE_IMPL_IPP_INCLUDED
 #include <boost/config.hpp>
 #ifndef BOOST_NO_STD_WSTREAMBUF
 
@@ -83,3 +85,4 @@ text_woarchive_impl<Archive>::save(const std::wstring &ws)
 
 #endif
 
+#endif

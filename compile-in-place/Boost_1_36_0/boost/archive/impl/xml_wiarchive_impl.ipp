@@ -1,5 +1,5 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
-// xml_wiprimitive.cpp:
+// xml_wiarchive_impl.ipp:
 
 // (C) Copyright 2002 Robert Ramey - http://www.rrsd.com .
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -8,6 +8,8 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
+#ifndef BOOST_ARCHIVE_IMPL_XML_WIARCHIVE_IMPL_IPP_INCLUDED
+#define BOOST_ARCHIVE_IMPL_XML_WIARCHIVE_IMPL_IPP_INCLUDED
 #include <boost/config.hpp> // for BOOST_DEDUCED_TYPENAME
 
 #include <cstring>
@@ -202,3 +204,4 @@ xml_wiarchive_impl<Archive>::~xml_wiarchive_impl(){
 } // namespace boost
 
 #endif  // BOOST_NO_STD_WSTREAMBUF
+#endif
