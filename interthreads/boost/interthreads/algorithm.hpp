@@ -12,6 +12,8 @@
 #define BOOST_INTERTHREADS_ALGORITHM__HPP
 
 #include <boost/interthreads/fork.hpp>
+#include <boost/interthreads/scoped_act.hpp>
+
 //#include <boost/interthreads/lazy_fork.hpp>
 #include <boost/interthreads/fork_after.hpp>
 #include <boost/interthreads/fork_all.hpp>

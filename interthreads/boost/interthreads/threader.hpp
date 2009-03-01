@@ -26,12 +26,22 @@
 
 #include <boost/interthreads/fork.hpp>
 #include <boost/interthreads/launcher.hpp>
+#include <cstdlib>
 
 #include <boost/config/abi_prefix.hpp>
 
 
 namespace boost {
 namespace interthreads {
+
+namespace on_destruction {
+    enum type {
+        do_terminate,
+        do_join,
+        do_detach
+    };
+}
+            
 
 template <typename ResultType>
 class unique_joiner;
@@ -49,22 +59,35 @@ private:
     struct unique_joiner_data {
         unique_future< result_type > fut_;
         thread th_;
+        on_destruction::type on_destruction_;
 
-        unique_joiner_data() {}
+        unique_joiner_data(on_destruction::type on_destruction_do= on_destruction::do_join) 
+            : on_destruction_(on_destruction_do) 
+        {}
         ~unique_joiner_data() {
-            //if (th_.joinable()) th_.join();
+            if (th_.joinable()) {
+                if (on_destruction_== on_destruction::do_terminate) {
+                    std::terminate();
+                } else if (on_destruction_== on_destruction::do_join) {
+                    th_.join();
+                }
+            }
         }
 
         template <typename Nullary>
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        unique_joiner_data(thread::native_handle_attr_type& attr, Nullary f) {
+        unique_joiner_data(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do)
+            : on_destruction_(on_destruction_do) 
+        {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
             thread th(attr, boost::move(tsk));
             th_ = boost::move(th);
         }
 #else
-        unique_joiner_data(Nullary f) {
+        unique_joiner_data(Nullary f, on_destruction::type on_destruction_do)
+            : on_destruction_(on_destruction_do) 
+        {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
 #if 0
@@ -81,8 +104,8 @@ private:
     typedef unique_joiner_data this_impl_type;
     typedef unique_joiner this_type;
 
-    unique_joiner(unique_joiner& other);
-    this_type& operator=(unique_joiner& other);
+    unique_joiner(unique_joiner<ResultType>& other);
+    unique_joiner& operator=(unique_joiner<ResultType>& other);
 //protected:
 public:
     friend class unique_threader;
@@ -90,11 +113,11 @@ public:
     template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-    unique_joiner(thread::native_handle_attr_type& attr, Nullary f)
-    : data_(new this_impl_type(attr, f))
+    unique_joiner(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    : data_(new this_impl_type(attr, f,on_destruction_do))
 #else
-    unique_joiner(Nullary f)
-    : data_(new this_impl_type(f))
+    unique_joiner(Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    : data_(new this_impl_type(f,on_destruction_do))
 #endif
     {}
 
@@ -273,19 +296,35 @@ private:
     struct shared_joiner_data {
         shared_future< result_type > fut_;
         thread th_;
+        on_destruction::type on_destruction_;
 
-        shared_joiner_data() {}
+        shared_joiner_data(on_destruction::type on_destruction_do= on_destruction::do_join) 
+            : on_destruction_(on_destruction_do) 
+        {}
+        ~shared_joiner_data() {
+            if (th_.joinable()) {
+                if (on_destruction_== on_destruction::do_terminate) {
+                    std::terminate();
+                } else if (on_destruction_== on_destruction::do_join) {
+                    th_.join();
+                }
+            }
+        }
 
         template <typename Nullary>
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        shared_joiner_data(thread::native_handle_attr_type& attr, Nullary f) {
+        shared_joiner_data(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do) {
+            : on_destruction(on_destruction_do) 
+        {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
             thread th(attr, boost::move(tsk));
             th_ = boost::move(th);
         }
 #else
-        shared_joiner_data(Nullary f) {
+        shared_joiner_data(Nullary f, on_destruction::type on_destruction_do)
+            : on_destruction_(on_destruction_do) 
+        {
             packaged_task<result_type> tsk(f);
             fut_ = tsk.get_future();
 #if 0
@@ -308,11 +347,11 @@ public:
     template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-    shared_joiner(thread::native_handle_attr_type& attr, Nullary f)
-    : data_(new this_impl_type(attr, f))
+    shared_joiner(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    : data_(new this_impl_type(attr, f,on_destruction_do))
 #else
-    shared_joiner(Nullary f)
-    : data_(new this_impl_type(f))
+    shared_joiner(Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    : data_(new this_impl_type(f,on_destruction_do))
 #endif
     {
     }

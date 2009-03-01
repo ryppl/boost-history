@@ -55,25 +55,25 @@ fork( AE& ae, F fn ) {
 template< typename AE, typename F, typename A1 >
 typename asynchronous_completion_token<AE, typename boost::result_of<F(A1)>::type >::type
 fork( AE& ae, F fn, A1 a1 ) {
-    return ae.fork( bind( fn, a1 ) );
+    return interthreads::fork(ae, bind( fn, a1 ) );
 }
 
 template< typename AE, typename F, typename A1, typename A2 >
 typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2)>::type >::type
 fork( AE& ae, F fn, A1 a1, A2 a2 ) {
-    return ae.fork( bind( fn, a1, a2 ) );
+    return interthreads::fork(ae, bind( fn, a1, a2 ) );
 }
 
 template< typename AE, typename F, typename A1, typename A2, typename A3 >
 typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3)>::type >::type
 fork( AE& ae, F fn, A1 a1, A2 a2, A3 a3 ) {
-    return ae.fork( bind( fn, a1, a2, a3 ) );
+    return interthreads::fork( ae, bind( fn, a1, a2, a3 ) );
 }
 
 template< typename AE, typename F, typename A1, typename A2, typename A3, typename A4 >
 typename  asynchronous_completion_token<AE, typename boost::result_of<F(A1,A2,A3,A4)>::type >::type
 fork( AE& ae, F fn, A1 a1, A2 a2, A3 a3, A4 a4 ) {
-    return ae.fork( bind( fn, a1, a2, a3, a4 ) );
+    return interthreads::fork( ae, bind( fn, a1, a2, a3, a4 ) );
 }
 
 }

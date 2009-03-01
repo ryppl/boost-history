@@ -106,7 +106,7 @@ template< typename AE, typename F1>
 typename result_of::fork_all<AE, fusion::tuple<F1> >::type
 fork_all( AE& ae, F1 f1 ) {
     typedef typename result_of::fork_all<AE, fusion::tuple<F1> >::type type;
-    typename result_of::fork<AE, F1>::type j1 =ae.fork(f1);
+    typename result_of::fork<AE, F1>::type j1 = interthreads::fork(ae, f1);
     return type(j1);
 }
 
@@ -114,8 +114,8 @@ template< typename AE, typename F1, typename F2>
 typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type
 fork_all( AE& ae, F1 f1, F2 f2 ) {
     typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type type;
-    typename result_of::fork<AE, F1>::type j1 =ae.fork(f1);
-    typename result_of::fork<AE, F2>::type j2 =ae.fork(f2);
+    typename result_of::fork<AE, F1>::type j1 =interthreads::fork(ae, f1);
+    typename result_of::fork<AE, F2>::type j2 =interthreads::fork(ae, f2);
     return type(j1,j2);
 }
 
@@ -143,14 +143,14 @@ template< typename AE, typename F1, typename F2, typename F3>
 typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type
 fork_all( AE& ae, F1 f1, F2 f2, F3 f3 ) {
     typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type type;
-    return type(ae.fork(f1),ae.fork(f2),ae.fork(f3));
+    return type(interthreads::fork(ae, f1),interthreads::fork(ae, f2),interthreads::fork(ae, f3));
 }
 
 template< typename AE, typename F1, typename F2, typename F3, typename F4>
 typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3,F4> >::type
 fork_all( AE& ae, F1 f1, F2 f2, F3 f3, F4 f4 ) {
     typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3,F4> >::type type;
-    return type(ae.fork(f1),ae.fork(f2),ae.fork(f3),ae.fork(f4));
+    return type(interthreads::fork(ae, f1),interthreads::fork(ae, f2),interthreads::fork(ae, f3),interthreads::fork(ae, f4));
 }
 
 }
