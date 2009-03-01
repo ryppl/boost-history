@@ -16,41 +16,82 @@ This section do includes complete examples using the library.
 [section Parallel sort]
 [/==================================]
 
+Next follows a generic algorithm based on partitioning od a given problem in smaler problems, and compose a solution from the solution of the smaller problems. 
+
     template <
         typename DirectSolver,
         typename Composer,
-        typename AsynchronousExecutor,
-        typename Input>
-    void inplace_solve(AsynchronousExecutor& ae, Input& input) {
-        //  if (problem is small)
-        if (size(range) < concurrency_threshold) {
-        // directly solve problem
-            DirectSolver()(input);
-        } else {
-            // split problem into independent parts
-            BOOST_AUTO(partition, partition_view(input));
-            // evaluates asynchronously inplace_solve on each element of the partition
-            // using the asynchronous executor as scheduler
-            wait_for_all(ae, inplace_solve, partition);
-            // compose the result in place from subresults
-            Composer()(partition);
+        typename AE,
+        typename Range
+    >
+      void inplace_solve( AE & ae, 
+            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
+            unsigned cutoff );
+            
+    template <
+        typename DirectSolver,
+        typename Composer,
+        typename AE,
+        typename Range
+    >
+      void inplace_solve( AE & ae, 
+            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
+            unsigned cutoff )
+      {
+        unsigned size = boost::size(range);
+        //std::cout << "<<par_ " << size;  
+        if ( size <= cutoff) DirectSolver()(range);
+        else {
+            partition<Range> parts(range, BOOST_PARTS);
+            
+            // wait_for_all_in_sequence(ae, &inplace_solve<DirectSolver,Composer,AE,Range>, parts);
+            std::list<task_type> tasks;
+            for (unsigned i=0;i < BOOST_PARTS-1; ++i) {
+                task_type tmp(ae.submit(
+                    boost::bind(
+                        &inplace_solve<DirectSolver,Composer,AE,Range>,
+                        boost::ref(ae),
+                        parts[i],
+                        cutoff
+                )));
+                tasks.push_back(tmp);
+            }
+            inplace_solve<DirectSolver,Composer,AE,Range>(ae, parts[BOOST_PARTS-1], cutoff);
+            boost::for_each(tasks, &boost::interthreads::wait_act<task_type>);
+            // wait_for_all_in_sequence
+            
+            Composer()(range);
         }
-    }
+      }
+
 
 So parallel sort could be
 
-    template <typename Range>
-    void parallel_sort(range& range) {
-        boost::tp::pool<> ae;
-        parallel::inplace_solve<sort, merge>(ae, input);
-    }
+    struct sort_fct {
+        template<class RandomAccessRange>
+        RandomAccessRange& operator()(RandomAccessRange rng) {
+            return boost::sort(rng);
+        }
+    };
 
+    struct inplace_merge_fct {
+        template<class BidirectionalRange>
+        BidirectionalRange&
+        operator()( BidirectionalRange rng) {
+            return boost::inplace_merge(rng, boost::begin(rng)+(boost::size(rng)/2));
+        }
+    };
+    template <typename AE, typename Range>
+    void parallel_sort(AE& ae, Range& range, unsigned cutoff=10000) {
+        boost::iterator_range<typename boost::range_iterator<Range>::type> rng(range);
+        inplace_solve<sort_fct,inplace_merge_fct,pool_type,Range>( ae, rng, cutoff);
+    }
 
 
 [endsect]
 
 [/==================================]
-[section From a single to a multi threaded appliation]
+[section From a single to a multi threaded application]
 [/==================================]
 
 
@@ -61,7 +102,7 @@ So parallel sort could be
 [section Thread safe deferred traces]
 [/==================================]
 
-When executing on a multi thread environment, the outputs lines on
+When executing on a multi thread environment, the output lines on
 std::cout  could interleave. We can synchronize these outputs with a
 global mutex
 
@@ -86,10 +127,10 @@ This mutex could be the bottleneck of the system. Only one mutex resource for al
 
 [/$../images/star.png]
 
-Another approach could be to use a queue of output stream buffers for each thread.
-Each buffer is timestamped with the creation date and there is a concentrator that takes one by one the elements ordered by the timestamp.
-Only the current thread can push on this queue because is specific to the thread.
-There is a single thread, the concentrator that pops from these queue.
+Another approach could be using a queue of output stream buffers for each thread.
+Each buffer is timestamped with the creation date and there is a concentrator that takes one by one the elements ordered by their timestamp.
+Only the current thread can push on this queue because it is specific to the thread.
+There is a single thread, the concentrator, that pops from these queue.
 In this context we can ensure thread safety without locking as far as
 the queue has at least two messages.
 
@@ -144,8 +185,8 @@ Here it is.
         };
     }
 
-This class declares the just minimum in order to model a sink. In addition as in order to mask the implementation the PImpl idiom is used.
-The implementation of these function is straiforward:
+This class declares the just minimum in order to model a sink. In addition, in order to mask the implementation, the Pimpl idiom is used.
+The implementation of these functions is straigtforward:
 
     async_ostream::async_ostream(std::ostream& os)
         : base_type(os) {}
@@ -225,8 +266,8 @@ Comming back to the sink implementation,
         , thread_(boost::bind(loop, this))
         {}
 
-The terminate cleanup function is used to ensure  that the queue is empty before the thread finish.
-To avoid optimizations a non const call inc is done while waitig the queue empties.
+The terminate cleanup function is used to ensure  that the queue is empty before the thread finishes.
+To avoid optimizations a non const call inc is done while waiting the queue empties.
 
         void async_ostream_sink::impl::terminate(shared_ptr<async_ostream_thread_ctx> that) {
             while (!that->empty()) {
@@ -235,13 +276,13 @@ To avoid optimizations a non const call inc is done while waitig the queue empti
         }
 
 The central sink function is write. Here instead to lock a mutex the function forwards to
-the thread specific shared pointer. We will see above the how `async_ostream_thread_ctx` handles this call.
+the thread specific shared pointer. We will see below how `async_ostream_thread_ctx` handles this call.
 
         std::streamsize write(const char* s, std::streamsize n) {
             return tsss_->write(s, n);
         }
 
-It is time to analyze the thread specific context before seen how the concentrator is implemented.
+It is time to analyze the thread specific context before seeing how the concentrator is implemented.
 
     struct async_ostream_thread_ctx {
         async_ostream_thread_ctx();
@@ -265,7 +306,7 @@ Each thread has a pointer to the current timestamped stringstream wich is used f
             return n;
         }
 
-Once the user do a flush the current element is enqueued on the queue. The `sec_` integer is used as monotonic sequence in conjuntion with the timestamp.
+Once the user does a flush, the current element is pushed on the queue. The `sec_` integer is used as monotonic sequence in conjuntion with the timestamp.
 
         void flush() {
             current_->reset_date(seq_);
@@ -279,9 +320,10 @@ Once the user do a flush the current element is enqueued on the queue. The `sec_
             current_ = new element_type();
         }
 
-As stated in the introduction, we don't need to lock the mutex if the number of elements in the queue are enough.
+As stated in the introduction, we don't need to lock the mutex if the number of elements in the queue is enough.
 
 These queue elements will be read by the concentrator using the get function.
+
         element_type* get() {
             if (queue_.size()>1) {
                 return get_i();
@@ -334,19 +376,19 @@ The concentrator loop looks like:
 [section:stm STM]
 [/========================]
 
-This section do not includes a complete example using the library, but a case study that could use in some way the library. I'm curently working on this.
+This section does not include a complete example using the library, but only a case study that could use the library in some way. I'm curently working on this.
 
 Transactional memory (TM) is a recent parallel programming concept which reduces challenges found in parallel programming.
 TM offers numerous advantages over other synchronization mechanisms.
 
-This case study contains some thoughts on how I see a boostified version of DracoSTM, a software transactional memory (STM) system.
+This case study contains some thoughts on how I see a "boostified" version of DracoSTM, a software transactional memory (STM) system.
 DracoSTM is a high performance lock-based C++ STM research library.
 DracoSTM uses only native object-oriented language semantics, increasing its intuitiveness for developers while maintaining
 high programmability via automatic handling of composition, locks and transaction termination.
 
-The example will show only the part concerning how the different context are stored.
+The example will show only the part concerning how the different contexts are stored.
 
-Let me start of a typical use of this library with the Hello World! of transactional concurrent programming, Banck accounts and transfer.
+Let me start of with a typical use of this library with the Hello World! of transactional concurrent programming, Bank accounts and transfers.
 Let BankAccount be a simple account.
 
     class BankAccount {
@@ -369,12 +411,12 @@ Let BankAccount be a simple account.
         }
     };
 
-And here a little programm that emulates an employer and two employeeds behabior
-The employee has requested to its employer to transfer its salary to its checking account every month its salary.
-The employer do the transfer the 28th of each month.
-Employee do some withdrawals and query its accounts from an ATM.
-Some people has requested to the Back automatic periodic transfers from its checking account to its saving account.
-The transfer is done 3th of each month.
+And here a little programm that emulates an employer and two employees behaviors.
+The employees have requested the employer to transfer their salaries to their checking accounts every month.
+The employer does the transfer on the 28th of each month.
+The employees perform withdrawals and queries from their accounts using an ATM.
+Some people have requested the Bank for automatic periodic transfers from their checking accounts to their saving accounts.
+The transfer is done on the 3rd of each month.
 
 
     BankAccount *emp;
@@ -428,7 +470,7 @@ To access this in the current transaction we use `stm::make_transactional_ptr(th
 If nothing is said the transaction will be aborted at `_` destruction.
 When everything is ok we need to do a `_.commit()`.
 
-When there are a lot of uses of this we can write instead
+If there is a large use of make_transactional_ptr we can write instead
 
         {
             stm::this_tread::atomic _;
@@ -448,7 +490,7 @@ or even shorter with the suggar syntax
         }
 
 The other `BankAccount` functions are coded as expected. Here is the code introducing a `using stm::this_tread;`
-which make it mush more readable.
+which makes it much more readable.
 
     class BankAccount {
         int balance_;
@@ -483,7 +525,7 @@ The transfer from accounts is done like:
     }
 
 The core of all this stuff is `stm::this_tread::atomic` and `stm::transactional_ptr<>`.
-`stm::make_transactional_ptr()` and `stm::this_tread::atomic_ptr<>` are defined in terms of them.
+`stm::make_transactional_ptr()` and `stm::this_tread::atomic_ptr<>` are defined in terms of `stm::this_tread::atomic` and `stm::transactional_ptr<>`.
 
 Next follows the interface of the atomic class.
 
@@ -499,7 +541,7 @@ Next follows the interface of the atomic class.
     } // stm
 
 The atomic constructor will construct a
-transaction on the current thread and pust it to the stack of nested transactions.
+transaction on the current thread and push it to the stack of nested transactions.
 The atomic destructor will rollback the transaction if not commited and pop the stack of nested transactions.
 We will see later the transaction class.
 
@@ -534,13 +576,13 @@ The transactional_ptr<> smart pointer interface follows:
 	    void delete_ptr();
     };
 
-Let me start with the simpler constructor:
+Let me start with the simple constructor:
 
         transactional_ptr(T* p);
 
 This creates a smart pointer pointing to a specific transaction memory of the current transaction.
 
-It contains the clasic functions of a smart pointer overloaded with `const` or non `const`.
+It contains the classic functions of a smart pointer overloaded with `const` or non `const`.
 
 	    const T* operator->() const;
 	    const T& operator*() const;
@@ -555,7 +597,7 @@ the pointers points to a upgraded write cache specific to the transaction. In th
 
             this_ptr->balance_ += amount;
 
-The use of `this_ptr->balance_on` the left hand side of the assignement operator requires a non const access,
+the use of `this_ptr->balance_` on the left hand side of the assignement operator requires a non const access,
 so the upgrade to writable is done.
 
 When we know a priori that the pointer contents will be modified we can create it as follows:
@@ -567,18 +609,18 @@ When we know a priori that the pointer contents will be modified we can create i
             _.commit();
         }
 
-Every `new`/`delete` operation on a transaction must be in some way be signaled to the transaction service.
-The new created objects would be wrapper by a `transactional_ptr<>` initialized like that;
+Every `new`/`delete` operation on a transaction must be in some way signaled to the transaction service.
+The new created objects would be wrapped by a `transactional_ptr<>` initialized like that;
 
     transactional_ptr<BankAccount> this_ptr(new BackAccount(), is_new);
 
-When we want ot delete a pointer in a transaction we use `transactional_ptr::delete_ptr`
+When we want to delete a pointer in a transaction we use `transactional_ptr::delete_ptr`
 
     transactional_ptr<BankAccount> p_ptr(p, writable);
     // ...
     p_ptr.delete_ptr();
 
-Before to finish with the `transaction` class le me show you the
+Before finishing with the `transaction` class let me show you the
 `transactional_object_cache<T>` and its base class `transactional_object_cache_base`.
 
     class transaction {

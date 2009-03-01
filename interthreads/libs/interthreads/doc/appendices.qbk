@@ -11,9 +11,9 @@
 
 [include changes.qbk]
 
-[/include rationale.qbk]
+[include rationale.qbk]
 
-[/include implementation.qbk]
+[include implementation.qbk]
 
 [include acknowledgements.qbk]
 
@@ -27,7 +27,7 @@
 [section Tasks to do before review]
 
 
-[heading Add an overloading for wait_for_all(ae, f, seq)]
+[heading Add an overloading for wait_for_all_in_sequence(ae, f, seq)]
 
 This will be quite useful on recursive algorithms evaluating asynchronously the same function on different parts.
 
@@ -46,51 +46,11 @@ This will be quite useful on recursive algorithms evaluating asynchronously the 
             BOOST_AUTO(partition, partition_view(input));
             // evaluates asynchronously inplace_solve on each element of the partition
             // using the asynchronous executor as scheduler
-            wait_for_all(ae, inplace_solve, partition);
+            wait_for_all_in_sequence(ae, inplace_solve, partition);
             // compose the result in place from subresults
             Composer()(partition);
         }
     }
-
-
-[heading Scoped forking]
-
-In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802: A plea to reconsider detach-on-destruction for thread objects]
-Hans-J. Boehm explain why is detaching on destruction so dangerous and gives two solutions: 1) replace the call to detach by a join, 2) replace by a terminate call
-
-The library could provide
-
-* a RAII scoped_join which will join the assocaited act on the destructor if not already joined,
-
-    basic_threader ae;
-    BOOST_AUTO(act,bith::fork(ae, simple_thread));
-    scoped_join<BOOST_TYPEOF(act)> j(act);
-
-* a RAII scoped_terminate which will call to teminate on the destructor if not already joined,
-
-    basic_threader ae;
-    BOOST_AUTO(act,bith::fork(ae, simple_thread));
-    scoped_terminate<BOOST_TYPEOF(act)> j(act);
-
-* a RAII scoped_fork_join which will fork on construction and join the assocaited act on the destructor if not already joined,
-
-    basic_threader ae;
-    scoped_fork_join<BOOST_TYPEOF(bith::fork(ae, simple_thread)) > act(ae, simple_thread);
-
-* a RAII scoped_fork_terminate which will fork on construction and call to teminate on the destructor if not already joined,
-
-    basic_threader ae;
-    scoped_fork_terminate<BOOST_TYPEOF(bith::fork(ae, simple_thread) > act(ae, simple_thread);
-
-* an __AE__ adapter  which will return an __ACT__ that will join the assocaited act on the destructor if not already joined.
-
-    ae_scoped_fork_join<basic_threader> ae;
-    BOOST_AUTO(act,bith::fork(ae, simple_thread));
-
-* an __AE__ adapter ae_scoped_fork_terminate which will return an__ACT__ that will join the assocaited act on the destructor if not already joined.
-
-    ae_scoped_fork_terminate<basic_threader> ae;
-    BOOST_AUTO(act,bith::fork(ae, simple_thread));
 
 
 [heading Add polymorphic act and adapters]

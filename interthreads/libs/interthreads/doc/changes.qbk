@@ -7,7 +7,60 @@
 
 [section:changes  Appendix A: History]
 
-[section [*Version 0.4, January 31, 2009] bug fixes]
+[section [*Version 0.4.1, Mars 1, 2009] Adaptation to the Boost.ThreadPoold Version 0.21 + Scoped forking + Parallel sort]
+
+[*New Features:]
+
+* Adaptation to the Boost.ThreadPoold Version 0.21
+
+* Scoped forking: In [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802: A plea to reconsider detach-on-destruction for thread objects]
+Hans-J. Boehm explain why is detaching on destruction so dangerous and gives two solutions: 1) replace the call to detach by a join, 2) replace by a terminate call. The library provides the following classes
+
+* a RAII scoped_join which will join the assocaited act on the destructor if not already joined,
+
+    basic_threader ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+    scoped_join<BOOST_TYPEOF(act)> j(act);
+
+* a RAII scoped_terminate which will call to teminate on the destructor if not already joined,
+
+    basic_threader ae;
+    BOOST_AUTO(act,bith::fork(ae, simple_thread));
+    scoped_terminate<BOOST_TYPEOF(act)> j(act);
+
+* a RAII scoped_fork_join which will fork on construction and join the assocaited act on the destructor if not already joined,
+
+    basic_threader ae;
+    scoped_fork_join<BOOST_TYPEOF(bith::fork(ae, simple_thread)) > act(ae, simple_thread);
+
+* a RAII scoped_fork_terminate which will fork on construction and call to teminate on the destructor if not already joined,
+
+    basic_threader ae;
+    scoped_fork_terminate<BOOST_TYPEOF(bith::fork(ae, simple_thread) > act(ae, simple_thread);
+
+In addition unique_joiner/shared_joiner have a on_destruction parameter allowing to parameterize this behavior.
+
+
+[/*Tests:
+
+Add tests for move only __ACT__ basic_threader, unique_threader and unique_launcher)
+Change the implementation of the queue on the async_ostream.
+]
+[*Examples:]
+
+* Parallel sort
+
+[/*Documentation:
+
+* Complete ae/act framework.
+]
+[/*Fixed Bugs:]
+
+*]
+
+[endsect]
+
+[section [*Version 0.4.0, February 8, 2009] Improvements + bug fixes]
 
 [*New Features:]
 
@@ -29,7 +82,7 @@ See the tutorial and the mono_thread_id example.
 
 [*v0.2#1: `ae::get_all` do not work yet.]
 `get_all()` do not work because fusion transform sequence function can not take non const sequences.
-I have emulated it using `set_all()` and a transformation for a tuple of __ACT_ to a tuple of result_type.
+I have emulated it using `set_all()` and a transformation for a tuple of __ACT__ to a tuple of result_type.
 
 [*v0.3.1#1: keep alive mechanism crash when setting `set_on_dead_thread()` before enabling the mechanism.]
 This was due to the fact that there were no default data for the backup.
@@ -66,7 +119,7 @@ Four issues.
 
 [endsect]
 
-[section [*Version 0.3, January 19, 2009] fork after dependant act completes]
+[section [*Version 0.3.0, January 19, 2009] fork after dependant act completes]
 
 [*New Features:]
 
@@ -75,7 +128,7 @@ Four issues.
 
 [endsect]
 
-[section [*Version 0.2, January 14, 2009] Asynchronous execution and test on more toolsets]
+[section [*Version 0.2.0, January 14, 2009] Asynchronous execution and test on more toolsets]
 
 [*New Features:]
 
@@ -104,7 +157,7 @@ Four issues.
 
 [endsect]
 
-[section [*Version 0.1, November 30, 2008] ['Announcement of Interthreads]]
+[section [*Version 0.1.0, November 30, 2008] ['Announcement of Interthreads]]
 
 [*Features:]
 

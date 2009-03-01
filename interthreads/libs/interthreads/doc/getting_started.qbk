@@ -46,7 +46,7 @@ This is a little bit more than a Hello World! example. It will also say Bye, Bye
     }
 
 When `th` is created with the `bith::thread_decorator` wrapper, it will initialize all the decorations before calling `my_thread`.
-This `my_cleanup` will be registered with the `boost:this_thread::at_thread_exit` if the `my_setup` function succeeds i.e. do not throws.
+This `my_cleanup` will be registered with the `boost:this_thread::at_thread_exit` if the `my_setup` function succeeds i.e. does not throw.
 Then the thread function `my_thread` is called. At the thread exit, the `my_cleanup` function is called. This results on the following output
 
 [pre
@@ -74,9 +74,9 @@ This example use thread decorator and thread specific pointers to implement a mo
 
 The monotonic thread identifier is managed by the mono_thread_id class.
 There is a mutex protecting the access to the monotonic counter.
-The main difference between a thread_specific_shared_ptr and thread_specific_ptr is that we can get the specific pointer of another thread (*)
-Whith the help of bith::thread_decoration the setting of the thread specific shared pointer is done transparently as far as the thread
-is created using a thread decorator. This setup function reset the specific pointer with the value of the monotonic counter which will be self increased.
+The main difference between a thread_specific_shared_ptr and a thread_specific_ptr is that we can get the specific pointer of another thread (*)
+With the help of bith::thread_decoration, the setting of the thread specific shared pointer is done transparently, as far as the thread
+is created using a thread decorator. This setup function resets the specific pointer with the value of the monotonic counter which will be self increased.
 
     #include <boost/interthreads/thread_decorator.hpp>
     #include <boost/interthreads/thread_specific_shared_ptr.hpp>
