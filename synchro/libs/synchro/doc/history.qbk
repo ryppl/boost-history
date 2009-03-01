@@ -7,6 +7,25 @@
 
 [section:history Appendix A: History]
 
+[section [*Version 0.2.0, Mars 1, 2009] ['Work ongoing]]
+
+[*New Features:]
+
+* `binary_semaphore` emulation with mutex
+* `array_locker` locker containers.
+ 
+
+[*Tests:]
+
+[*Examples:]
+
+
+[*Documentation:]
+
+[*Fixed Bugs:]
+
+
+[endsect]
 [section [*Version 0.1.0, Febraury 16, 2009] ['Announcement of Synchro]]
 
 [*Features:]
@@ -21,7 +40,7 @@
     * `semaphore`, 
     * `condition_lockable` lock put toghether a lock and its associated conditions.
 
-* A coherent way exception based timed lock functions and constructor,
+* Exception based timed lockables and lockers,
 
 * A rich palete of lockers as
 

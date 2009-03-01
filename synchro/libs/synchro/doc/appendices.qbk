@@ -18,6 +18,10 @@
 
 [include acknowledgements.qbk]
 
+[include tests.qbk]
+
+[include tickets.qbk]
+
 
 [/=====================================]
 [section:todo  Appendix E: Future plans]
@@ -25,9 +29,9 @@
 
 [heading Tasks to do before review]
 
-* `array_locker` and `tuple_locker` locker ocntainers.
+* `array_locker` and `tuple_locker` locker containers.
 * A complement to the already present in Boost.Thread `lock`, `try_lock` free functions:
-    * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`
+    * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`, `unlock`
 
 [heading For later releases]
 

@@ -1,0 +1,53 @@
+[/
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section  Appendix E: Tests]
+
+
+[section Lockables]
+[table
+    [[Name]                     [kind]          [Description]                                           [Result] [Ticket]]
+    [[lockable_traits]          [compile]       [static assertion on lockables traits]                  [Pass]   [#]]
+    [[lockable_concepts]        [compile]       [static assertion on lockables concepts]                [Pass]   [#]]
+]
+[endsect]
+
+[section Lockers]
+[table
+    [[Name]                     [kind]          [Description]                                           [Result] [Ticket]]
+    [[locker_concepts]          [compile]       [static assertion on lockers concepts]                  [Pass]   [#]]
+    [[nested_reverse_locker]    [run]           [nested_reverse_locker tests]                           [Pass]   [#]]
+]
+[endsect]
+
+[section Others]
+[table
+    [[Name]                     [kind]          [Description]                                           [Result] [Ticket]]
+    [[sync_buffer_family]       [run]           [synchronous buffer with synchronization family tests]  [Pass]   [#]]
+    [[sync_buffer_monitor]      [run]           [monitor synchronous buffer tests]                      [Fail]   [v0.2#1]]
+]
+[endsect]
+
+[section Examples]
+[table
+    [[Name]                         [Kind]      [Description]   [Result] [Ticket]]
+    [[BankAccount]                  [run]       [ tests]        [Pass]   [#]]
+    [[SingleBuf]                    [run]       [ tests]        [Pass]   [#]]
+    [[Master_Slave]                 [run]       [ tests]        [Pass]   [#]]
+    [[HotelReservation]             [run]       [ tests]        [Fail]   [v0.2#2]]
+    [[QualifiedSingleBuf]           [link]      [ tests]        [Pass]   [#]]
+    [[Histogram]                    [run]       [ tests]        [Pass]   [#]]
+    [[IL_BancAccount]               [run]       [ tests]        [Pass]   [#]]
+    [[IL_Lockable_BancAccount]      [run-fail]  [ tests]        [Pass]   [#]]
+    [[IL_Rec_Lockable_BancAccount]  [run]       [ tests]        [Pass]   [#]]
+    [[IEL_Rec_Lockable_BancAccount] [run]       [ tests]        [Pass]   [#]]
+    [[EL_BancAccount]               [run]       [ tests]        [Pass]   [#]]
+]
+
+[endsect]
+
+[endsect]
