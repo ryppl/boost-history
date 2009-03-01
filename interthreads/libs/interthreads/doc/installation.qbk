@@ -33,7 +33,7 @@ __Boost_InterThreads__ is not a header only library. You need to compile it befo
 [/=========================]
 
 
-[*Boost.InterThreads] depends on Boost. You must use either Boost version 1.37.x
+[*Boost.InterThreads] depends on Boost. You must use either Boost version 1.38.x
 or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
 
 [variablelist
@@ -110,7 +110,7 @@ the underlying parameters provide it.
 [heading Thread safety]
 [/====================]
 
-All functions in the library are thread-unsafe except when notes explicitly.
+All functions in the library are thread-unsafe except when noted explicitly.
 
 [/=======================]
 [heading Tested compilers]
@@ -120,7 +120,7 @@ Currently, __Boost_InterThreads__ has been tested in the following compilers/pla
 
 *  GCC 3.4.4 Cygwin
 *  GCC 3.4.6 Linux
-*  GCC 4.3.2 Cygwin
+[/*  GCC 4.3.2 Cygwin]
 *  GCC 4.1.2 Linux
 
 [note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]

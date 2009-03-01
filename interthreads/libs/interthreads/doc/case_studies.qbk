@@ -21,7 +21,7 @@ This section do includes complete examples using the library.
         typename Composer,
         typename AsynchronousExecutor,
         typename Input>
-    void inplace_solve(AsynchronousExecutor& ae, Problem& input) {
+    void inplace_solve(AsynchronousExecutor& ae, Input& input) {
         //  if (problem is small)
         if (size(range) < concurrency_threshold) {
         // directly solve problem
@@ -50,7 +50,7 @@ So parallel sort could be
 [endsect]
 
 [/==================================]
-[section Transforming a sequential scheduler on a concurrent one]
+[section From a single to a multi threaded appliation]
 [/==================================]
 
 
@@ -84,7 +84,7 @@ This mutex could be the bottleneck of the system. Only one mutex resource for al
 ]
 
 
-[/$images/star.png]
+[/$../images/star.png]
 
 Another approach could be to use a queue of output stream buffers for each thread.
 Each buffer is timestamped with the creation date and there is a concentrator that takes one by one the elements ordered by the timestamp.
@@ -93,7 +93,7 @@ There is a single thread, the concentrator that pops from these queue.
 In this context we can ensure thread safety without locking as far as
 the queue has at least two messages.
 
-[/$images/fourche.png]
+[/$../images/fourche.png]
 
 [pre
 

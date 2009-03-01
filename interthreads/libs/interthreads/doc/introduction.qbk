@@ -32,7 +32,7 @@ which evaluate a function asynchronously and returns a `task` handle.
 Behind all these proposal there is a concept of asynchronous executor, fork-like function and
 the asynchronous completion token handle.
 
-[table fork Parameters
+[table AE/ACT/fork-like relationship
     [
         [[*Proposal]]       [[*executor]]   [[*fork-like]]              [[*ACT handle]]
     ]

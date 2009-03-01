@@ -70,10 +70,12 @@
 [def __IAE__ `IntrinsicAsynchronousExecutor`]
 
 [def __ACT__ `AsynchronousCompletionToken`]
+[def __ACTs__ `AsynchronousCompletionToken`s]
 [def __FutureBasedACT__ `FutureBasedACT`]
 [def __ThreadBasedACT__ `ThreadBasedACT`]
 
 [def __Future__ inherits from `unique_future|shared_future`]
+[def __Sequence__ `Sequence`]
 [def __Nullary__ `Nullary`]
 [def __Movable__ `Movable`]
 [def __CopyConstructible__ `CopyConstructible`]
@@ -86,7 +88,7 @@
 [template fork_link[link_text] [link interthreads.reference.ae_act_framework_reference.ae_operations.fork_hpp.non_member_function [link_text]]]
 
 [def __forkss__ [link interthreads.reference.ae_act_framework_reference.ae_operations.fork_hpp.non_member_function `fork`]
-[def __fork__ [fork_link `fork`]]
+[def __fork__ `fork`]
 [def __fork_after__ `fork_after`]
 
 [def __get__ `get`]

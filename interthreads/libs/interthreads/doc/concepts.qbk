@@ -169,7 +169,7 @@ the following expressions are valid:
     [[`b = has_value(cact)`]       [Is true only if `cact` contains a value]]
 ]
 
-[heading Member Function `get(act)`]
+[heading Expression `v=get(act)`]
 [/==========================================================================================]
 
 
