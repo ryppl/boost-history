@@ -1,0 +1,72 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:join_until_hpp Header `<boost/interthreads/algorithm/join_until.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __join_until__ which join until the  __ACT__ passed as parameter is ready or the given time is reached.
+The default implementation applies the __join_until__ member function to the __ACT__. A user adapting another __ACT__ could need 
+to specialize the __join_until__ free function if the __ACT__ do not provides a join_until function with the same prototype.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly to the __join_until__ 
+member function, __join_until__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__. 
+So the user can specialize partially this class.
+
+Defines a free function __join_for__ which join until the  __ACT__ passed as parameter is ready or the given time is elapsed.
+The default implementation applies the __join_for__ member function to the __ACT__. A user adapting another __ACT__ could need 
+to specialize the __join_for__ free function if the __ACT__ do not provides a __join_for__ function with the same prototype.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly to the __join_until__ 
+member function, __join_for__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__. 
+So the user can specialize partially this class.
+
+The template parameter ACT must be a model of __ThreadBasedACT__.
+
+
+    namespace boost { namespace interthreads {
+        namespace result_of {
+            template <typename ACT> struct join_until {
+                typedef bool type;
+            };
+        }
+        namespace result_of {
+            template <typename ACT, typename Duration> struct join_for {
+                typedef bool type;
+            };
+        }
+
+        namespace partial_specialization_workaround {
+            template< typename ACT >
+            struct join_until {
+                static typename result_of::template join_until<ACT>::type apply( ACT& act, const system_time& abs_time );
+            };
+            template< typename ACT, typename Duration>
+            struct join_for {
+                static typename result_of::template join_for<ACT,Duration>::type apply( ACT& act, Duration abs_time );
+            };
+        }
+
+        template <typename ACT>
+        typename boost::enable_if<has_thread_if<ACT>,
+            typename result_of::template join_until<ACT>::type
+        >::type
+        join_until(ACT& act, const system_time& abs_time) {
+            return partial_specialization_workaround::join_until<ACT>::apply(act, abs_time);
+        }
+
+        template <typename ACT, typename Duration>
+        typename boost::enable_if<has_thread_if<ACT>,
+            typename result_of::template join_for<ACT,Duration>::type
+        >::type
+        join_for(ACT& act, const Duration& rel_time) {
+            return partial_specialization_workaround::join_for<ACT,Duration>::apply(act, rel_time);
+        }
+    }}
+
+[endsect]
+

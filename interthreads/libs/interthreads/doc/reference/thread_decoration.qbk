@@ -1,0 +1,93 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/==========================================================================================]
+[section:thread_decoration_hpp Header `<boost/interthreads/thread_decoration.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        class thread_decoration;
+    }
+    }
+
+[/==================================================]
+[section:thread_decoration Class `thread_decoration`] 
+[/==========================================================================================]
+
+`thread_decoration` defines a couple of setup/cleanup functions chained to the last constructed decoration, i.e. decorations are chained between them.
+
+    class thread_decoration {
+    public:
+        template<typename Callable1>
+        thread_decoration(Callable1 setup);
+        
+        template<typename Callable1,typename Callable2>
+        thread_decoration(Callable1 setup, Callable2 cleanup);
+        
+        ~thread_decoration() {
+    };
+
+[section:thread_decoration_class_constructor_setup Constructor with setup]
+[/==========================================================================================]
+
+    template<typename Callable>
+    thread_decoration(Callable func);
+
+[variablelist
+
+[[Requires:] [`Callable` is `CopyConstructible`. Copying `setup` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [`setup` is copied into storage managed internally by the library, and that copy is invoked by the 
+__thread_decorator_decorate__ function.]]
+
+[[Postconditions:] [`*this` refers to a decoration.]]
+
+[[Throws:] [Nothing]]
+
+[[Thread safety:][unsafe]]
+
+]
+
+[note The library do not ensures any order of decorations.]
+
+[endsect]
+
+[section Constructor with setup & cleanup]
+[/==========================================================================================]
+
+    template<typename Callable1,typename Callable2>
+    thread_decoration(Callable1 setup, Callable2 cleanup);
+
+
+[variablelist
+
+[[Requires:] [`Callable1` & `Callable1` are `CopyConstructible`. Copying `setup`  or `cleanup` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [`setup` and `cleanup` are copied into storage managed internally by the library, and the `setup` copy is invoked by the 
+__thread_decorator_decorate__ function. If successful the cleanup function is registered to the to the thread exit handler.]]
+
+[[Postconditions:] [`*this` refers to a decoration.]]
+
+[[Throws:] [Nothing]]
+
+[[Thread safety:][unsafe]]
+
+]
+
+[note The library do not ensures any order of setup decorations neither of cleanup decorations.]
+
+[endsect]
+[endsect]
+
+[endsect]
+
+
+

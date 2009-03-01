@@ -1,0 +1,117 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:fork_all_hpp Header `<boost/interthreads/fork_all.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace interthreads {
+        namespace result_of {
+            template <typename AE, typename T>
+            struct fork_all;
+            template <typename AE, typename F1, ..., typename Fn>
+            struct fork_all <AE,fusion::tuple<F1, ..., Fn> >{
+                typedef  fusion::tuple<
+                    typename result_of::fork<AE,F1>::type,
+                    ...
+                    typename result_of::fork<AE,Fn>::type
+                > type;
+            };
+        }
+
+        template< typename AE, typename F1, ...,  typename Fn> 
+        typename result_of::fork_all<AE, mpl::tuple<F1, ..., Fn> >::type
+        fork_all( AE& ae, F1 f1, ..., Fn fn );
+
+        template< typename F1, ...,  typename Fn> 
+        typename result_of::fork_all<default_asynchronous_executor, F1, ..., Fn>::type
+        fork_all( F1 f1, ..., Fn fn );
+    }}
+
+[section Metafunction `result_of::fork_all<AE,F1, ..., Fn> `] 
+[/==========================================================================================]
+
+A metafunction returning the result type of applying fork_all to an asynchronous executor and n Nullary functors.
+
+        namespace result_of {
+            template <typename AE, typename T>
+            struct fork_all;
+            template <typename AE, typename F1, ..., typename Fn>
+            struct fork_all <AE,fusion::tuple<F1, ..., Fn> >{
+                typedef  fusion::tuple<
+                    typename result_of::fork<AE,F1>::type,
+                    ...
+                    typename result_of::fork<AE,Fn>::type
+                > type;
+            };
+        }
+
+[table fork_all Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of `AsynchrousExecutor`]
+        [Operation's argument ]
+    ]
+    [
+        [`Fk`]
+        [A model of nullary function]
+        [Operation's argument ]
+    ]
+]
+
+[variablelist
+[[Expression:] [`result_of::fork_all<AE,F1,...,Fn>::type`]]
+[[Return type:] [a fusion tuple of the result of forking each `Fk` by the `AE`]]
+]
+
+[endsect]
+
+[section Non member function `fork_all()`] 
+[/==========================================================================================]
+
+        template< typename AE, typename F1, ...,  typename Fn> 
+        typename result_of::fork_all<AE, mpl::tuple<F1, ..., Fn> >::type
+        fork_all( AE& ae, F1 f1, ..., Fn fn );
+
+        template< typename F1, ...,  typename Fn> 
+        typename result_of::fork_all<default_asynchronous_executor, F1, ..., Fn>::type
+        fork_all( F1 f1, ..., Fn fn );
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of `AsynchrousExecutor`]
+        [Operation's argument ]
+    ]
+    [
+        [`Fk`]
+        [A model of nullary function]
+        [Operation's argument ]
+    ]
+]
+
+[variablelist
+[[Returns:] [a fusion tuple of the result of forking each `fk` by the `ae`]]
+[[Efect:] [Request the `AE` to creates a n thread of execution one for the function `fk`.]]
+]
+
+[endsect]
+
+
+[endsect]
+
+

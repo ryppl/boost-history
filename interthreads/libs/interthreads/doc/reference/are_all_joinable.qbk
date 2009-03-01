@@ -1,0 +1,36 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:are_all_joinable_hpp Header `<boost/interthreads/algorithm/are_all_joinable.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __are_all_joinable__ which states if all the __ACT__ in a sequence of __ACT__ are __joinable__.
+
+    namespace boost { namespace interthreads {
+        namespace fct {
+            struct joinable {
+                typedef bool result_type;
+
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct are_all_joinable {
+                typedef typename fusion::result_of::all<Sequence, fct::joinable>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        bool are_all_joinable(Sequence& t);
+    }}
+
+[endsect]
+

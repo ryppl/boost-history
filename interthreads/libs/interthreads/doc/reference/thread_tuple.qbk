@@ -1,0 +1,300 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:thread_tuple_hpp Header `<boost/interthreads/thread_tuple.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <std::size_t  N>
+        class thread_tuple;
+
+        template<typename F0, ..., typename Fn-1>
+        thread_tuple<n> make_thread_tuple(F0 f0, ..., Fn fn-1);
+
+    }
+    }
+
+
+[section:thread_tuple_class Template Class `thread_tuple<>`]
+[/==========================================================================================]
+
+`thread_tuple<>` defines a thread groupe where the number of threads is know statically and the threads are 
+created at construction time. 
+
+    template <std::size_t  n>
+    class thread_tuple {
+    public:
+        template<typename F0, ..., typename Fn-1>
+        thread_tuple(F0 f0, ..., Fn-1 fn-1);
+        
+        template <class F>
+        thread_tuple(boost::move_t<F> f);
+        ~thread_tuple();
+
+        // move support
+        thread_tuple(boost::move_t<thread_tuple<n>> x);
+        thread_tuple& operator=(boost::move_t<thread_tuple<n>> x);
+        operator boost::move_t<thread_tuple<n>>();
+        boost::move_t<thread_tuple<n>> move();
+
+        void swap(thread_tuple<n>& x);
+
+        bool joinable() const;
+        void join_all();
+        bool join_all_until(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool join_all_for(TimeDuration const& rel_time);
+
+        void detach();
+        void detach_all();
+
+        void interrupt();
+        void interrupt_all();
+        bool interruption_requested() const;
+
+        size_t size();
+        
+        const thread& operator[](std::size_t i);
+    };    
+    }
+    }
+
+
+The __thread_tuple__ class is responsible for launching and managing a static collection of threads that are related in some fashion. 
+No new threads can be added to the tuple once constructed.
+
+[section Template parameters]
+[/==========================================================================================]
+
+`thread_tuple<>` is instantiated with the following value:
+
+* n is the size of the tuple.
+
+[endsect]
+
+[section:thread_tuple_callable_constructor Constructor]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple(F0 func_0, ..., Fn-1 func_n-1);
+
+[variablelist
+
+[[Preconditions:] [`Fk` must by copyable.]]
+
+[[Effects:] [`func_k` is copied into storage managed internally by the library, and that copy is invoked on a newly-created
+thread of execution. If this invocation results in an exception being propagated into the internals of the library that is
+not of type __thread_interrupted__, then `std::terminate()` will be called.]]
+
+[[Postconditions:] [`*this` refers to the newly created tuple of threads of execution.]]
+
+[[Throws:] [__thread_resource_error__ if an error occurs.]]
+
+[[Note:] [Currently up to ten arguments `func_0` to `funct_9` can be specified.]]
+
+]
+
+[endsect]
+
+
+[section:thread_tuple_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_tuple();
+
+[variablelist
+
+[[Effects:] [If *this  have associateds thread of execution, calls detach() on them. Destroys *this.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_joinable Member function `joinable()`]
+[/==========================================================================================]
+
+    bool joinable() const;
+
+[variablelist
+
+[[Returns:] [`true` if `*this` refers to threads of execution, `false` otherwise.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_join Member function `join_all()`]
+[/==========================================================================================]
+
+    void join();
+    void join_all();
+
+[variablelist
+
+[[Effects:] [Call `join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_tuple<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section Member function `join_all_until()`]
+[/==========================================================================================]
+
+    bool join_all_until(const system_time& wait_until);
+
+[variablelist
+
+[[Effects:] [Call `timed_join()` on each __thread__ object in the tuple.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple<>::join_all_until()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section Member function `join_all_for()`]
+[/==========================================================================================]
+
+    template<typename TimeDuration>
+    bool join_for(TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [As `join_all_until(now()+rel_time)`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_tuple<>::join_all_for()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:join_first_then_interrupt Member function `join_any()`]
+[/==========================================================================================]
+
+    std::size_t conc_join_any();
+
+[variablelist
+
+[[Effects:] [Call `join_any()` on a temporary thread_tuple and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `join_any()` is one of the predefined interruption points, `conc_join_any()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section Member function `join_any_until()`]
+[/==========================================================================================]
+
+    std::pair<bool,std::size_t> conc_join_any_until(
+            const system_time& wait_until);
+    template<typename TimeDuration>
+    std::pair<bool,std::size_t> join_any_for(
+            TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `join_any_until()` on a temporary thread_tuple and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the tuple has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `join_any_until()` is one of the predefined interruption points, `conc_join_any_until()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:detach_all Member function `detach_all()`]
+[/==========================================================================================]
+
+    void detach_all();
+
+[variablelist
+
+[[Effects:] [Call `detach()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_interrupt_all Member function `interrupt_all()`]
+[/==========================================================================================]
+
+    void interrupt_all();
+
+[variablelist
+
+[[Effects:] [Call `thread::interrupt()` on each __thread__ object in the tuple.]]
+
+]
+
+[endsect]
+
+[section:thread_tuple_size Member function `size()`]
+[/==========================================================================================]
+
+    int size();
+
+[variablelist
+
+[[Returns:] [The number of threads in the tuple.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_tuple_make_thread_tuple Non Member Function `make_thread_tuple()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_tuple make_thread_tuple(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [makes a new thread_tuple<>.]]
+[[Returns:] [the created thread tuple.]]
+
+
+]
+
+[endsect]
+
+[endsect]

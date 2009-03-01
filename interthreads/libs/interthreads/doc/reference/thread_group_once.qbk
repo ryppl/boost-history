@@ -1,0 +1,266 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:thread_group_once_hpp Header `<boost/interthreads/thread_group_once.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template <std::size_t  N>
+        class thread_group;
+
+    }
+    }
+
+
+[section:thread_group_once_class Template Class `thread_group_once<>`]
+[/==========================================================================================]
+
+`thread_group_once<>` is an extension of the boost::thread_group which allows to join the thread finishing 
+the first, using for that the set_once synchronizer.
+
+    template <std::size_t  n>
+    class thread_group_once {
+    public:
+        thread_group_once();
+        ~thread_group_once();
+        
+        template<typename F>
+        thread* create_thread(F threadfunc);
+        void remove_thread(thread* thrd);
+
+        // move support
+        thread_group_once(boost::move_t<thread_group_once<n>> x);
+        thread_group_once& operator=(boost::move_t<thread_group_once<n>> x);
+        operator boost::move_t<thread_group_once<n>>();
+        boost::move_t<thread_group_once<n>> move();
+
+        void swap(thread_group_once<n>& x);
+
+        bool joinables() const;
+        
+        void join_all();
+        bool join_all_until(const system_time& wait_until);
+        template<typename TimeDuration>
+        bool join_all_for(TimeDuration const& rel_time);
+
+        std::size_t join_any();
+        std::pair<bool,std::size_t> join_any_until(
+            const system_time& wait_until);
+        template<typename TimeDuration>
+        std::pair<bool,std::size_t> join_any_for(
+            TimeDuration const& rel_time);
+
+        void detach_all();
+
+        void interrupt_all();
+        bool interruption_requested() const;
+
+        size_t size();
+        
+        const thread& operator[](std::size_t i);
+    };    
+    }
+    }
+
+
+[section:thread_group_once_callable_constructor Constructor]
+[/==========================================================================================]
+
+    thread_group_once();
+
+[variablelist
+
+
+[[Effects:] [creates a thread group.]]
+
+[[Postconditions:] [`*this` refers to the newly created group of threads of execution.]]
+
+[[Throws:] [__thread_resource_error__ if an error occurs.]]
+
+]
+
+[endsect]
+
+
+[section:thread_group_once_destructor Destructor]
+[/==========================================================================================]
+
+    ~thread_group_once();
+
+[variablelist
+
+[[Effects:] [If *this  have associateds thread of execution, calls detach() on them. Destroys *this.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_joinable Member function `joinables()`]
+[/==========================================================================================]
+
+    bool joinables() const;
+
+[variablelist
+
+[[Returns:] [`true` if `*this` refers to threads of execution, `false` otherwise.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_join Member function `join_all()`]
+[/==========================================================================================]
+
+    void join_all();
+
+[variablelist
+
+[[Effects:] [Call `join()` on each __thread__ object in the group.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::join` is one of the predefined interruption points, `thread_group_once<>::join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_timed_join Member function `join_all_until()`]
+[/==========================================================================================]
+
+    bool join_all_until(const system_time& wait_until);
+    template<typename TimeDuration>
+    bool join_all_for(TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `timed_join()` on each __thread__ object in the group.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_group_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:join_first_then_interrupt Member function `join_any()`]
+[/==========================================================================================]
+
+    std::size_t join_any();
+
+[variablelist
+
+[[Effects:] [Call `join_any()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `join_any` is one of the predefined interruption points, `thread_group_once<>::join_any()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:timed_join_first_then_interrupt Member function `join_any_until()`]
+[/==========================================================================================]
+
+    std::pair<bool,std::size_t> join_any_until(
+            const system_time& wait_until);
+    template<typename TimeDuration>
+    std::pair<bool,std::size_t> join_any_for(
+            TimeDuration const& rel_time);
+
+[variablelist
+
+[[Effects:] [Call `get_until()` and the `interrup_all()`.]]
+
+[[Postcondition:] [Every thread in the group has terminated.]]
+
+[[Returns:] [true if joined.]]
+
+[[Throws:] [Nothing]]
+
+[[Note:] [Since `boost::thread::timed_join` is one of the predefined interruption points, `thread_group_once<>::timed_join_all()` is also an interruption point.]]
+
+]
+
+[endsect]
+
+[section:detach_all Member function `detach_all()`]
+[/==========================================================================================]
+
+    void detach_all();
+
+[variablelist
+
+[[Effects:] [Call `detach()` on each __thread__ object in the group.]]
+
+]
+
+[endsect]
+
+[section Member function `interrupt_all()`]
+[/==========================================================================================]
+
+    void interrupt_all();
+
+[variablelist
+
+[[Effects:] [Call `thread::interrupt()` on each __thread__ object in the group.]]
+
+]
+
+[endsect]
+
+[section:thread_group_once_size Member function `size()`]
+[/==========================================================================================]
+
+    int size();
+
+[variablelist
+
+[[Returns:] [The number of threads in the group.]]
+
+[[Throws:] [Nothing.]]
+
+]
+
+[endsect]
+
+[endsect]
+
+[section:thread_group_once_make_thread_group_once Non Member Function `make_thread_group_once()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    thread_group_once make_thread_group_once(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [makes a new thread_group_once<>.]]
+[[Returns:] [the created thread group.]]
+
+
+]
+
+[endsect]
+
+[endsect]
+
+

@@ -1,0 +1,53 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:set_once_hpp Header `<boost/interthreads/set_once.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        template <typename T>
+        class set_once;
+    }    
+    }
+
+
+[section:set_onceclass Template Class `set_once<>`]
+[/==========================================================================================]
+
+`set_once<>` is a synchonizer that allows to set a variable only once, notifying 
+to the variable value to whatever is waiting for that.
+
+
+    template <typename T>
+    class set_once {
+    public:
+        typedef T value_type;
+        
+        set_once();
+        void wait();
+        bool wait_until(const system_time& abs_time);
+        template<typename TimeDuration>
+        bool wait_for(const TimeDuration& rel_time);
+        
+        value_type get();       
+        std::pair<bool,value_type> get_until(const system_time& abs_time);
+        template<typename TimeDuration>
+        std::pair<bool,value_type> get_for(const TimeDuration& rel_time);
+
+        bool set_if_unassigned(value_type id);
+        
+        template<typename F>
+        static void decorator(this_type& once, T value, F fct);
+        template<typename F>
+        static boost::detail::thread_move_t<thread> make_thread(this_type& once, T value, F fct);
+    };
+
+[endsect]
+
+[endsect]
+

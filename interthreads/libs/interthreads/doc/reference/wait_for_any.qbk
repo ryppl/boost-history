@@ -1,0 +1,84 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:wait_for_any_hpp Header `<boost/interthreads/wait_for_any.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace interthreads {
+        namespace result_of {
+            template <typename AE, typename F1, ..., typename Fn>
+            struct wait_for_any {
+                // requires typename result_of<F1()>::type == typename result_of<Fk()>::type
+                typedef  std::pair<unsigned,typename result_of<F1()>::type> type;
+            };
+        }
+
+        template< typename AE, typename F1, ...,  typename Fn>
+        typename result_of::wait_for_any<AE, F1, ..., Fn>::type
+        wait_for_any( AE& ae, F1 f1, ..., Fn fn );
+    }}
+
+[section Metafunction `result_of::wait_for_all<AE,F1, ..., Fn> `]
+[/==========================================================================================]
+
+A metafunction returning the a pair: the index of the first function executed by the AE and the result type
+of applying get on an asynchronous executor handles.
+
+        namespace result_of {
+            template <typename AE, typename F1, ..., typename Fn>
+            struct wait_for_any {
+                // requires typename result_of<F1()>::type == typename result_of<Fk()>::type
+                typedef  std::pair<unsigned,typename result_of<F1()>::type> type;
+            };
+        }
+
+[table wait_for_all Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of `AsynchrousExecutor`]
+        [Operation's argument ]
+    ]
+    [
+        [`Fk`]
+        [A model of nullary function]
+        [Operation's argument ]
+    ]
+]
+
+[variablelist
+[[Expression:] [`result_of::wait_for_any<AE, F1, ..., Fn>::type`]]
+[[Return type:] [a pair: the index of the first function executed by the AE and the result type
+of applying get on an asynchronous executor handles created by `ae` to fork each `fk`]]
+]
+
+[endsect]
+
+[section Non member function `wait_for_any`]
+[/==========================================================================================]
+
+        template< typename AE, typename F1, ...,  typename Fn>
+        typename result_of::wait_for_any<AE, F1, ..., Fn>::type
+        wait_for_any( AE& ae, F1 f1, ..., Fn fn );
+
+
+[variablelist
+[[Returns:] [a fusion tuple of the result of applying get to each one of the asynchronous executors handles resulting of forking each function `fk` by `ae`.]]
+[[Effect:] [Request the `AE` to creates a n thread of execution one for the function `fk` and
+blocks until all the AE handles are ready.]]
+
+]
+
+[endsect]
+
+[endsect]
+

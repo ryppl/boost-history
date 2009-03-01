@@ -1,0 +1,53 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/==========================================================================================]
+[section:asynchronous_adapter_hpp Header `<boost/interthreads/asynchronous_adapter.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace interthreads {
+        template <typename AE, template <class> class Decorator>
+        struct asynchronous_executor_decorator : AE {
+            template <typename T>
+            struct handle {
+                typedef typename AE::template handle<T>::type type;
+            };
+
+            template <typename F>
+            typename AE::template handle< typename boost::result_of<F()>::type >::type
+            fork( F fn );
+
+            asynchronous_executor_decorator();
+
+            template <typename Nullary>
+            asynchronous_executor_decorator(thread::native_handle_attr_type& attr, Nullary f);
+            asynchronous_executor_decorator(Nullary f);
+
+            asynchronous_executor_decorator(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+
+            asynchronous_executor_decorator& operator=(boost::detail::thread_move_t<asynchronous_executor_decorator> x);
+
+            operator boost::detail::thread_move_t<asynchronous_executor_decorator>();
+
+            boost::detail::thread_move_t<asynchronous_executor_decorator> move();
+        };
+
+        template <typename AE, template <class> class Decorator>
+        struct get_future<asynchronous_executor_decorator<AE, Decorator> > {
+            template <typename T>
+            struct future_type {
+                typedef typename AE::template get_future<AE>::type type;
+            };
+            template <typename T>
+            typename future_type<T>::type& operator()(typename AE::template handle<T>::type & j);
+        };
+    }}
+
+
+[endsect]
+

@@ -1,0 +1,235 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:launcher_hpp Header `<boost/interthreads/launcher.hpp>`]
+[/==========================================================================================]
+
+A launcher is an __AE__ with a future as __FutureBasedACT__ so we can get the value associated to it.
+
+The library defines two kind of launchers:
+unique_launcher and shared_launcher that respectively have a unique_future and a shared_future as __ACT__
+
+    #include <boost/interthreads/fork.hpp>
+    namespace boost { namespace interthreads {
+        class launcher;
+        class shared_launcher;
+
+        namespace partial_specialization_workaround {
+            template <typename R> struct join<unique_future<R> > {
+                static typename result_of::template join<unique_future<R> >::type 
+                apply( unique_future<R>& act) {
+                    return act.wait();
+                }
+            };
+            template <typename R> struct join<shared_future<R> > {
+                static typename result_of::template join<shared_future<R> >::type 
+                apply( shared_future<R>& act) {
+                    return act.wait();
+                }
+            };
+            template <typename R> struct join_until<unique_future<R> > {
+                static typename result_of::template join_until<unique_future<R> >::type 
+                apply( unique_future<R>& act, const system_time& abs_time ) {
+                    return act.timed_wait_until(abs_time);
+                }
+            };
+            template <typename R> struct join_until<shared_future<R> > {
+                static typename result_of::template join_until<shared_future<R> >::type 
+                apply( shared_future<R>& act, const system_time& abs_time ) {
+                    return act.timed_wait_until(abs_time);
+                }
+            };
+            template <typename R, typename Duration> struct join_for<unique_future<R>, Duration> {
+                static typename result_of::template join_for<unique_future<R>,Duration>::type 
+                apply( unique_future<R>& act, Duration rel_time ) {
+                    return act.timed_wait(rel_time);
+                }
+            };
+            template <typename R, typename Duration> struct join_for<shared_future<R>, Duration> {
+                static typename result_of::template join_for<shared_future<R>,Duration>::type 
+                apply( shared_future<R>& act, Duration rel_time ) {
+                    return act.timed_wait(rel_time);
+                }
+            };
+            template <typename R> struct wait_until<unique_future<R> > {
+                static typename result_of::template wait_until<unique_future<R> >::type 
+                apply( unique_future<R>& act, const system_time& abs_time ) {
+                    return act.timed_wait_until(abs_time);
+                }
+            };
+            template <typename R> struct wait_until<shared_future<R> > {
+                static typename result_of::template wait_until<shared_future<R> >::type 
+                apply( shared_future<R>& act, const system_time& abs_time ) {
+                    return act.timed_wait_until(abs_time);
+                }
+            };
+            template <typename R, typename Duration> struct wait_for<unique_future<R>, Duration> {
+                static typename result_of::template wait_for<unique_future<R>,Duration>::type 
+                apply( unique_future<R>& act, Duration rel_time ) {
+                    return act.timed_wait(rel_time);
+                }
+            };
+            template <typename R, typename Duration> struct wait_for<shared_future<R>, Duration> {
+                static typename result_of::template wait_for<shared_future<R>,Duration>::type 
+                apply( shared_future<R>& act, Duration rel_time ) {
+                    return act.timed_wait(rel_time);
+                }
+            };
+        }
+
+    }}
+
+[section Class `launcher `]
+[/==========================================================================================]
+
+Thread launcher using a common configuration managed with the thread attributes and
+returning on the fork operation a unique_future to the resulting type of the call to the threaded function.
+
+    class launcher {
+    public:
+        thread::native_handle_attr_type& attr();
+
+        template <typename T>
+        struct handle {
+            typedef unique_future<T> > type;
+        };
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type>
+        fork(F f);
+    };
+
+[section Member function `launcher::attributes`]
+[/==========================================================================================]
+
+Reference to the thread attributes accesor.
+
+        thread::native_handle_attr_type& attributes();
+
+[variablelist
+[[Returns:] [A reference to the thread attributes.]]
+[[Complexity:] [constant.]]
+]
+
+
+[endsect]
+[section Metafunction `launcher::handle<>`]
+[/==========================================================================================]
+
+Metafunction that returns the result type of the fork function applied to a launcher and the value type.
+
+    template <typename T>
+    struct handle {
+        typedef unique_future<T> > type;
+    };
+
+[variablelist
+[[Expression:] [L::handle<T>::type]]
+[[Return type:] [A unique_future<T>.]]
+[[Complexity:] [constant.]]
+
+]
+
+[endsect]
+
+[section Member function `lancher::fork`]
+[/==========================================================================================]
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type>
+        fork(F f);
+
+[variablelist
+[[Returns:] [A unique_future to the result of calling a function F.]]
+[[Effects:] [create a thread executing the function f.
+         The result of the function will be stored on the resulting future.]]
+
+]
+
+
+[endsect]
+
+
+[endsect]
+
+[section Class `shared_launcher `]
+[/==========================================================================================]
+
+Thread shared_launcher using a common configuration managed with the thread attributes and
+returning on the fork operation a unique_future to the resulting type of the call to the threaded function.
+
+    class shared_launcher {
+    public:
+        thread::native_handle_attr_type& attr();
+
+        template <typename T>
+        struct handle {
+            typedef unique_future<T> > type;
+        };
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type>
+        fork(F f);
+    };
+
+[section Member function `shared_launcher::attributes`]
+[/==========================================================================================]
+
+Reference to the thread attributes accesor.
+
+        thread::native_handle_attr_type& attributes();
+
+[variablelist
+[[Returns:] [A reference to the thread attributes.]]
+[[Complexity:] [constant.]]
+]
+
+
+[endsect]
+[section Metafunction `shared_launcher::handle<>`]
+[/==========================================================================================]
+
+Metafunction that returns the result type of the fork function applied to a shared_launcher and the value type.
+
+    template <typename T>
+    struct handle {
+        typedef unique_future<T> > type;
+    };
+
+[variablelist
+[[Expression:] [L::handle<T>::type]]
+[[Return type:] [A unique_future<T>.]]
+[[Complexity:] [constant.]]
+
+]
+
+[endsect]
+
+[section Member function `lancher::fork`]
+[/==========================================================================================]
+
+        template <typename F>
+        unique_future<typename result_of<F()>::type>
+        fork(F f);
+
+[variablelist
+[[Returns:] [A unique_future to the result of calling a function F.]]
+[[Effects:] [create a thread executing the function f.
+         The result of the function will be stored on the resulting future.]]
+
+]
+
+
+[endsect]
+
+
+[endsect]
+
+
+[endsect]
+

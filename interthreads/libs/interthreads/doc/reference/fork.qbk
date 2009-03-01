@@ -1,0 +1,118 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:fork_hpp Header `<boost/interthreads/fork.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace interthreads {
+        namespace result_of {
+            template <typename AE, typename F, typename A1, ..., typename An>
+            struct fork;
+                typedef typename AE::handle<typename result_of<F(A1, ..., An)> >::type type;
+            };
+        }
+
+        template< typename AE, typename F, typename A1, ..., typename An >
+        typename  asynchronous_completion_token<AE, 
+            typename boost::result_of<F(A1,..., An)>::type >::type
+        fork( AE& ae, F fn, A1 a1, ..., An an );
+
+
+        template< typename F, typename A1, ..., typename An >
+        typename  asynchronous_completion_token<default_asynchronous_executor, 
+            typename boost::result_of<F(A1,..., An)>::type >::type
+        fork( F fn, A1 a1, ..., An an );
+    }}
+
+[section Metafunction `result_of::fork<AE,F> `]
+[/==========================================================================================]
+
+A metafunction returning the result type of applying __fork__ to an asynchronous executor and a Nullary functor.
+
+        namespace result_of {
+            template <typename AE, typename F, typename A1, ..., typename An>
+            struct fork;
+                typedef typename AE::handle<typename result_of<F(A1, ..., An)> >::type type;
+            };
+        }
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of __AsynchronousExecutor__]
+        [Operation's argument ]
+    ]
+    [
+        [`F`]
+        [A model of n-ary function]
+        [Operation's argument ]
+    ]
+    [
+        [`Ak`]
+        [A model of n-ary function]
+        [n-ary function argument type for argument k]
+    ]
+]
+
+[variablelist
+[[Expression:] [result_of::fork<AE,F,A1,...,An>::type]]
+[[Return type:] [AE::handle<typename result_of<F(A1,...,An)> >::type]]
+]
+
+[endsect]
+
+[section Non member function `fork()`]
+[/==========================================================================================]
+
+        template< typename AE, typename F, typename A1 , ... typename An >
+        typename result_of::fork<AE,F, A1, An> >::type> >::type
+        fork( AE& ae, F fn, A1 a1 , ..., An an );
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of __AsynchronousExecutor__]
+        [Operation's argument ]
+    ]
+    [
+        [`F`]
+        [A model of n-ary function]
+        [Operation's argument ]
+    ]
+    [
+        [`Ak`]
+        [A model of n-ary function]
+        [n-ary function argument type for argument k]
+    ]
+]
+
+[variablelist
+[[Requires:] [The expression fn(a1, ..., an) must be valid and
+have a type convertible to R, where R is typename result_of<F(A1, ..., An)>::type..]]
+
+[[Efect:] [Request the `AE` to creates a thread of execution for the function `fn`
+Request the asynchronous evaluation the expression `fn(a1, ..., an)` with respect to the calling thread to the
+asynchronous executor `ae` and
+places its result in an object h of type AE::handle<R>::type as if by using h.set_value( fn(a1, ..., an) ).
+If the expression fn() throws an exception e, places e into h as if by using
+h.set_exception( current_exception() ).]]
+
+[[Returns:] [the AE handle h.]]
+]
+[endsect]
+[endsect]

@@ -1,0 +1,40 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:wait_all_hpp Header `<boost/interthreads/algorithm/wait_all.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __wait_all__ which waits the  completion of all the __ACT__ in the sequence passed as parameter.
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct wait {
+                typedef void result_type;
+                template<typename ACT>
+                void operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct wait_all {
+                typedef typename fusion::result_of::for_each<Sequence, fct::wait>::type type;
+            };
+        }
+
+        template <typename Sequence>
+        typename result_of::wait_all<Sequence>::type
+        wait_all(Sequence& t);
+
+    }    
+    }   // namespace boost
+
+
+[endsect]

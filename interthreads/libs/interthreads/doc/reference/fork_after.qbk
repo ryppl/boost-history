@@ -1,0 +1,265 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:fork_after_hpp Header `<boost/interthreads/fork_after.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __fork_after__ which request the asynchronous evaluation a function with respect to 
+the calling thread to the asynchronous executor `ae` after the completion of some __ACT__. The result is an __ACT__ wrapping the __ACT__ associated to the __AE__.
+
+The default implementation forks a helper task which waits the completion of the __ACT__ 's only then evaluates the function.
+A user adapting another __AE__ could want to specialize the __fork_after__ free function.
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly to the __fork_after__ 
+member function __fork_after__ calls to the static operation __apply__ on a class with the same name in the namespace __partial_specialization_workaround__. 
+So the user can specialize partially this class.
+
+    namespace boost { namespace interthreads {
+        template <typename ACT>
+        struct act_traits<act_wrapper<ACT> >;
+
+        template <typename ACT>
+        struct is_movable<act_wrapper<ACT> > : is_movable<ACT>{};
+
+        template <typename ACT>
+        struct has_future_if<act_wrapper<ACT> > : has_future_if<ACT> {};
+
+        template <typename ACT>
+        struct has_thread_if<act_wrapper<ACT> > : has_thread_if<ACT>{};
+
+        template <typename ACT>
+        struct act_wrapper;
+
+        namespace result_of {
+            template <typename AE,typename F>
+            struct fork_after {
+                typedef act_wrapper<typename asynchronous_completion_token<AE, typename boost::result_of<F()>::type>::type> type;
+            };
+        }
+
+        namespace partial_specialization_workaround {
+            template< typename AE, typename F, typename D >
+            struct fork_after {
+                static typename result_of::fork_after<AE,F>::type
+                apply(AE& ae, F fn, D& d);
+            };
+        }
+        
+        template< typename AE, typename F, typename D>
+        typename result_of::fork_after<AE,F>::type
+        fork_after( AE& ae, F fn, D& d);
+
+        template< typename AE, typename D, typename F, typename A1, ..., typename An  >
+        act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F(A1,..., An)>::type >::type >
+        after_completion_fork( AE& ae, D& d, F fn, A1 a1, ..., An an );
+
+
+    }}
+
+[/==================================================]
+[section Partial Specialization Template Class `act_traits<act_wrapper<ACT>>`]
+[/==========================================================================================]
+
+act_wrapper inherits the traits of its wrapped __ACT__.
+
+        template <typename ACT>
+        struct act_traits<act_wrapper<ACT> > : act_traits<ACT>{};
+
+[endsect]
+
+[/==================================================]
+[section Partial Specialization Template Class `is_movable<act_wrapper<ACT> >`]
+[/==========================================================================================]
+
+act_wrapper inherits the traits of its wrapped __ACT__.
+
+        template <typename ACT>
+        struct is_movable<act_wrapper<ACT> > : is_movable<ACT>{};
+
+[endsect]
+
+[/==================================================]
+[section Template Class `act_wrapper<>`]
+[/==========================================================================================]
+
+        template <typename ACT>
+        struct act_wrapper {
+            typedef typename act_traits<act_wrapper<ACT> >::move_dest_type move_dest_type;
+            act_wrapper();
+            void wait_initialized();
+            void set(ACT& other);
+            void set(boost::detail::thread_move_t<ACT> other);
+            
+            void wait();
+            bool wait_until(const system_time& abs_time);
+            template <typename Duration>
+            bool wait_for(ACT& act, Duration rel_time);          
+            move_dest_type get();
+            bool is_ready();
+            bool has_value();
+            bool has_exception();
+
+            void detach();
+            bool joinable();
+            void join();
+            bool join_until(const system_time& abs_time);
+            template <typename Duration>
+            bool join_for(ACT& act, Duration rel_time);
+            void interrupt();
+            bool interruption_requested();
+        };
+
+
+[endsect]
+
+[section Metafunction `result_of::fork<AE,F> `]
+[/==========================================================================================]
+
+A metafunction returning the result type of applying __fork_after__ to an asynchronous executor and a Nullary functor.
+
+        namespace result_of {
+            template <typename AE,typename F>
+            struct fork_after {
+                typedef act_wrapper<typename asynchronous_completion_token<AE, typename boost::result_of<F()>::type>::type> type;
+            };
+        }
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of __AsynchronousExecutor__]
+        [Operation's argument ]
+    ]
+    [
+        [`F`]
+        [A model of n-ary function]
+        [Operation's argument ]
+    ]
+]
+
+[variablelist
+[[Expression:] [result_of::fork_after<AE,F>::type]]
+[[Return type:] [act_wrapper<typename asynchronous_completion_token<AE, typename boost::result_of<F()>::type>::type>]]
+]
+
+[endsect]
+
+[section Static Member Function `partial_specialization_workaround::fork_after<>::apply()`]
+[/==========================================================================================]
+
+        namespace partial_specialization_workaround {
+            template< typename AE, typename F, typename D >
+            struct fork_after {
+                static typename result_of::fork_after<AE,F>::type
+                apply(AE& ae, F fn, D& d);
+            };
+        }
+
+[endsect]
+
+[section Non member function `fork_after()`]
+[/==========================================================================================]
+
+        template< typename AE, typename F, typename D>
+        typename result_of::fork_after<AE,F,D>::type
+        fork_after( AE& ae, F fn, D& d);
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of __AsynchronousExecutor__]
+        [Operation's argument ]
+    ]
+    [
+        [`F`]
+        [A model of n-ary function]
+        [Operation's argument ]
+    ]
+    [
+        [`D`]
+        [A model of a fusion __Sequence__ of __ACT__]
+        [Dependent __ACT__ ]
+    ]
+]
+
+[variablelist
+[[Requires:] [The expression fn() must be valid and
+have a type convertible to R, where R is typename result_of<F()>::type..]]
+
+[[Efect:] [Request the asynchronous evaluation the expression `fn()` with respect to the calling thread to the
+asynchronous executor `ae` after the completion of all the __ACT__ in `d` and
+places its result in an object h of type AE::handle<R>::type as if by using h.set_value( fn() ).
+If the expression fn() throws an exception e, places e into h as if by using
+h.set_exception( current_exception() ).]]
+
+[[Returns:] [the AE handle h.]]
+]
+
+[endsect]
+
+[section Non member function `after_completion_fork()`]
+[/==========================================================================================]
+
+        template< typename AE, typename D, typename F, typename A1, ..., typename An  >
+        act_wrapper< typename asynchronous_completion_token<AE, typename boost::result_of<F(A1,..., An)>::type >::type >
+        after_completion_fork( AE& ae, D& d, F fn, A1 a1, ..., An an );
+
+[table fork Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`AE`]
+        [A model of __AsynchronousExecutor__]
+        [Operation's argument ]
+    ]
+    [
+        [`D`]
+        [A model of a fusion __Sequence__ of __ACT__]
+        [Dependent __ACT__ ]
+    ]
+    [
+        [`F`]
+        [A model of n-ary function]
+        [Operation's argument ]
+    ]
+    [
+        [`Ak`]
+        [A model of n-ary function]
+        [n-ary function argument type for argument k]
+    ]
+]
+
+[variablelist
+[[Requires:] [The expression fn(a1, ..., an) must be valid and
+have a type convertible to R, where R is typename result_of<Fn()>::type..]]
+
+[[Efect:] [Request the `AE` to creates a thread of execution for the function `fn`
+Request the asynchronous evaluation the expression `fn(a1, ..., an)` with respect to the calling thread to the
+asynchronous executor `ae` after the completion of all the __ACT__ in `d` and
+places its result in an object h of type AE::handle<R>::type as if by using h.set_value( fn(a1, ..., an) ).
+If the expression fn() throws an exception e, places e into h as if by using
+h.set_exception( current_exception() ).]]
+
+[[Returns:] [the AE handle h.]]
+]
+
+[endsect]
+[endsect]
+

@@ -1,0 +1,150 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:keep_alive_file_hpp Header `<boost/interthreads/thread_keep_alive.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        namespace this_thread {
+            class enable_keep_alive;
+            class disable_keep_alive;
+
+            void keep_alive_check_point();
+            bool keep_alive_enabled();
+            typedef void (*on_dead_thread_type)(thread::id);
+            void set_on_dead_thread(on_dead_thread_type fct);
+        }
+    }
+    }
+
+[section:enable_keep_alive class `enable_keep_alive`]
+[/==========================================================================================]
+
+    class enable_keep_alive : private noncopyable{
+    public:
+        enable_keep_alive(std::size_t threshold=2, std::size_t tap=1);
+        ~enable_keep_alive();
+    };
+
+[section:keep_alive_enable_keep_alive_Constructor Constructor]
+[/==========================================================================================]
+
+        enable_keep_alive(std::size_t threshold=2, std::size_t tap=1);
+
+[variablelist
+
+[[Effects:] [Enable the keep alive mechanism on this thread of execution.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_enable_keep_alive_Destructor Destructor]
+[/==========================================================================================]
+
+        ~enable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Restore the keep alive mechanism as it was before the constructor.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:keep_alive_disable_keep_alive class `disable_keep_alive`]
+[/==========================================================================================]
+
+    class disable_keep_alive private noncopyable {
+    public:
+        disable_keep_alive();
+        ~disable_keep_alive();
+    };
+
+[section:keep_alive_disable_keep_alive_Constructor Constructor]
+[/==========================================================================================]
+
+    disable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Disable the keep alive mechanism on this thread of execution.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_disable_keep_alive_Destructor Destructor]
+[/==========================================================================================]
+
+    ~disable_keep_alive();
+
+[variablelist
+
+[[Effects:] [Restore the keep alive mechanism as it was before the constructor.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:keep_alive_keep_alive_check_point Non Member Function `keep_alive_check_point()`]
+[/==========================================================================================]
+
+    void keep_alive_check_point();
+
+[variablelist
+
+[[Effects:] [States that the current thread is alive.]]
+[[Postconditions:] [The thread is alive.]]
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_keep_alive_enabled Non Member Function `keep_alive_enabled()`]
+[/==========================================================================================]
+
+    bool keep_alive_enabled();
+
+[variablelist
+
+[[Effects:] [States if the keep alive mechanism is enabled on this thread.]]
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[section:keep_alive_keep_alive_set_on_dead_thread Non Member Function `set_on_dead_thread()`]
+[/==========================================================================================]
+
+    void set_on_dead_thread(on_dead_thread_type fct);
+
+[variablelist
+
+[[Effects:] [Modifies the action to be done when a this thread is declared dead.]]
+
+[[Throws:] [Nothing]]
+
+]
+
+[endsect]
+
+[endsect]
+

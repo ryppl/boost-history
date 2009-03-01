@@ -1,0 +1,269 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:thread_decorator_hpp Header `<boost/interthreads/thread_decorator.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+        class thread_decorator;
+        void decorate();
+    }
+    }
+
+
+[section:thread_decorator Class `thread_decorator`]
+[/==========================================================================================]
+
+`thread_decorator` is a functor wrapping a function with the setup and the cleanup of chained decorations which will be called only once by thread: 
+decoration's setup are called before the thread function and decoration's cleanup at thread exit. 
+
+    class thread_decorator {
+    public:    
+
+        template <class Callable>
+        explicit thread_decorator(Callable&& f);
+        template <class Callable>
+        explicit thread_decorator(detail::thread_move_t<Callable> f):
+        template<typename Callable>
+        thread_decorator(Callable f, 
+            typename disable_if<boost::is_convertible<F&,detail::thread_move_t<F> >
+                               , detail::dummy* >::type=0);        
+
+        template <typename Callable, typename A1, typename A2, ...>
+        thread_decorator(Callable f, A1 a1, A2 a2, ...)
+
+        thread_decorator(thread_decorator&& other);
+        
+        thread_decorator& operator=(thread_decorator&& other);
+
+        thread_decorator&& move();
+        
+        void swap(thread_decorator& x);
+
+        void operator ()();
+
+    };
+
+Functor wrapping the user function thread to ensure that all the decorations are called.
+
+Objects of type `thread_decorator` are movable, so they can be stored in move-aware containers, and returned from functions. 
+This allows the details of thread decoration to be wrapped in a function.
+
+thread_decorator make_decorator();
+
+void f()
+{
+    boot::thread some_thread(make_decorator());
+    some_thread.join();
+}
+
+[note On compilers that support rvalue references, `thread_decorator` provides a proper move constructor and move-assignment operator, 
+and therefore meets the C++0x `MoveConstructible` and `MoveAssignable` concepts. With such compilers, `thread_decorator` can therefore 
+be used with containers that support those concepts.
+
+For other compilers, move support is provided with a move emulation layer, so containers must explicitly detect that move emulation 
+layer. See `<boost/thread/detail/move.hpp>` for details.] 
+
+[section:decorator_thread_decoration_decorate_constructor Constructor]
+[/==========================================================================================]
+
+        template <class Callable>
+        thread_decorator(Callable&& func);
+        template<typename Callable>
+        thread_decorator(Callable func);        
+        
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_decorate_constructorn Constructor]
+[/==========================================================================================]
+
+        template <typename Callable, typename A1, typename A2, ...>
+        thread_decorator(Callable func, A1 a1, A2 a2, ...)
+
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_decorate_copy_move_constructor Copy Move Constructor]
+[/==========================================================================================]
+
+        thread_decorator(thread_decorator&& other);
+        thread_decorator(detail::thread_move_t<thread_decorator> other) {
+
+[variablelist
+
+[[Template parameters:] [`Callable` must by `CopyConstructible`.]]
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Throws:] [`std::bad_alloc` when resources unavailable.]]
+
+[[Thread safety:][safe]]
+
+]
+
+[endsect]
+
+
+[section:decorator_thread_decoration_decorate_copy_constructor Assign Move Constructor]
+[/==========================================================================================]
+
+        thread_decorator& operator=(thread_decorator&& other);
+        thread_decorator& operator=(detail::thread_move_t<thread_decorator> x) {
+        
+
+[variablelist
+
+[[Requires:] [`Callable` must by `CopyConstructible`.]]
+
+
+[[Effects:] [`func` is copied into storage managed internally by the library, and that copy will be invoked after the operator() function when the decorate is used as Callable of a newly-created
+thread of execution.]]
+
+[[Returns:] [a reference to `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_conversion Member Function `operator detail::thread_move_t<thread_decorator>()`]
+[/==========================================================================================]
+
+        operator detail::thread_move_t<thread_decorator>();
+
+
+[variablelist
+
+[[Effects:] [helper for move semantics emulation.]]
+
+[[Returns:] [the move form `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_move Member Function `move()`]
+[/==========================================================================================]
+
+        detail::thread_move_t<thread_decorator> move() {
+        thread_decorator&& move();
+
+
+[variablelist
+
+[[Effects:] [Move *this to the caller.]]
+
+[[Returns:] [the move form `*this`.]]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_swap Member Function `swap()`]
+[/==========================================================================================]
+
+        void swap(thread_decorator& x);
+
+
+[variablelist
+
+[[Effects:] []]
+
+[[Throws:] [Nothing.]]
+
+[[Thread safety:][neutral]]
+
+]
+
+[endsect]
+
+[section:decorator_thread_decoration_operator_f Member Function `operator()()`]
+[/==========================================================================================]
+
+    void operator()();
+
+
+[variablelist
+
+[[Effects:] [Functor operator]]
+
+[[Throws:] [Any exception thrown by the decorations or the user function.]]
+
+[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+
+]
+
+[endsect]
+[endsect]
+
+[section:decorate Non Member Function `decorate()`]
+[/==========================================================================================]
+
+    void decorate();
+
+
+[variablelist
+
+[[Requires:] [`Callable` is `CopyConstructible`. Copying `f` shall have no side effects, and the effect of calling the copy shall
+be equivalent to calling the original. ]]
+
+[[Effects:] [Calls every declared decoration using the thread_decoration class. 
+]]
+
+[[Postconditions:] [All the decorations have been called.]]
+
+[[Throws:] [Any exception thrown by the decorations.]]
+
+[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+
+]
+
+[endsect]
+
+
+[endsect]
+
+

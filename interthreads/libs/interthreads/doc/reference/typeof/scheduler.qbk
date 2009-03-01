@@ -1,0 +1,24 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:typeof_scheduler_hpp Header `<boost/interthreads/typeof/scheduler.hpp>`]
+[/==========================================================================================]
+
+Include this files instead of `<boost/interthreads/scheduler.hpp>` if you want TypeOf support.
+
+    #include <boost/interthreads/scheduler.hpp>
+    #include <boost/typeof/typeof.hpp>
+
+    #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
+
+    BOOST_TYPEOF_REGISTER_TEMPLATE(boost::tp::task, 1)
+
+[endsect]
+
+
+

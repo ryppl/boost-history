@@ -1,0 +1,101 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:get_all_hpp Header `<boost/interthreads/algorithm/get_all.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __get_all__ which waits the completion of all the __ACT__ in the sequence passed as parameter, and returns a tuple with the value stores in each one of the __ACT__.
+
+    namespace boost { namespace interthreads {
+        namespace fct {
+            struct get {
+                template<typename T>
+                typename T::result_type operator()(T& t);
+            };
+        }
+        namespace result_of {
+            template <typename Sequence>
+            struct get_all {
+                typedef typename result_of::transform<Sequence, fct::get>::type type;
+            };
+        }
+        template <typename Sequence>
+        typename result_of::get_all<Sequence>::type
+        get_all(Sequence& mt);
+    }}
+
+[section Functor `fct::get<>`]
+[/==========================================================================================]
+
+        namespace fct {
+            struct get {
+               template<typename AE>
+               typename AE::result_type operator()(AE& ae);
+            };
+        }
+
+
+[variablelist
+[[Returns:] [The result of the AE::get().]]
+[[Throws:] [if AE::get() throws.]]
+]
+
+[endsect]
+
+[section Metafunction `result_of::get_all<AE,F1, ..., Fn> `]
+[/==========================================================================================]
+
+A metafunction returning the result type of applying get_all to a Sequence of __ACT__.
+
+        namespace result_of {
+            template <typename Sequence>
+            struct get_all {
+                typedef typename result_of::transform<Sequence, fct::get>::type type;
+            };
+        }
+
+[table fork_all Parameters
+    [
+        [[*Parameter]]
+        [[*Requirement]]
+        [[*Description]]
+    ]
+    [
+        [`Sequence`]
+        [A sequence of of __ACTs__]
+        [Operation's argument ]
+    ]
+]
+
+[variablelist
+[[Expression:] [`result_of::get_all<S>::type`]]
+[[Return type:] [a fusion tuple of the result of applying get to each one of the asynchronous executors in the sequence]]
+]
+
+[endsect]
+
+[section Non member function `get_all`]
+[/==========================================================================================]
+
+        namespace algo {
+            template <typename Sequence>
+            typename result_of::get_all<Sequence>::type
+            get_all(Sequence& mt);
+        }
+
+
+[variablelist
+[[Returns:] [a fusion tuple of the result of applying `get` to each one of the asynchronous completion token handles in the sequence.]]
+[[Effect:] [Blocks until all the ACT  handles in the Sequence are ready.]]
+[[Throws:] [if some of the  ACT::get operation throws]]
+]
+
+[endsect]
+
+[endsect]
+

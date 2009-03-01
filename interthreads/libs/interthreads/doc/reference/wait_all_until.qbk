@@ -1,0 +1,54 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:wait_all_until_hpp Header `<boost/interthreads/algorithm/wait_all_until.hpp>`]
+[/==========================================================================================]
+
+Defines two free function __wait_all_until__ and __wait_all_for__ which waits the completion of all the __ACT__ in the sequence passed as parameter or a given time is reached or elapsed respectively.
+
+    namespace boost {
+    namespace interthreads {
+
+        namespace fct {
+            struct wait_until {
+                wait_until(const system_time& abs_time);
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+
+            struct wait_for {
+                template <typename Duration>
+                wait_for(const Duration& rel_time);
+                template<typename ACT>
+                bool operator()(ACT& act) const;
+        }
+
+        namespace result_of {
+            template <typename Sequence>
+            struct wait_all_until {
+                typedef bool type;
+            };
+
+            template <typename Sequence>
+            struct wait_all_for {
+                typedef bool type;
+            };
+        }
+        
+        template <typename Sequence>
+        typename result_of::wait_all_until<Sequence const> 
+        wait_all_until(Sequence const& t, const system_time& abs_time);
+
+        template <typename Sequence, typename Duration>
+        typename result_of::wait_all_for<Sequence> 
+        wait_all_for(Sequence& t, const Duration& rel_time);
+
+    }    
+    }
+
+[endsect]
+

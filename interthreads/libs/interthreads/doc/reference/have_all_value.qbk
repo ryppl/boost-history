@@ -1,0 +1,33 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:have_all_value_hpp Header `<boost/interthreads/algorithm/have_all_value.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __have_all_value__ which states if all the __ACT__ in a sequence of __ACT__ have a value.
+The current implementation applies the __has_value__ free function for each __ACT__.
+
+    namespace boost { namespace interthreads {
+        namespace fct {
+            struct has_value {
+                typedef bool result_type;
+                template<typename ACT> bool operator()(ACT& act) const;
+            };
+        }
+
+        namespace result_of {
+            template <typename Sequence> struct have_all_value {
+                typedef typename fusion::result_of::all<Sequence, fct::has_value>::type type;
+            };
+        }
+
+        template <typename Sequence> bool have_all_value(Sequence& t);
+    }}
+
+[endsect]
+

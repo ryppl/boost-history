@@ -1,0 +1,136 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:thread_and_join_hpp Header `<boost/interthreads/thread_and_join.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {
+    namespace interthreads {
+
+        template<typename F0, ..., typename Fn-1>
+        void conc_join_all(F0 f0, ..., Fn fn-1);
+        template<typename F0, ..., typename Fn-1>
+        bool conc_join_all_until(const system_time& wait_until, F0 f0, ..., Fn fn-1);
+        template<typename TimeDuration, typename F0, ..., typename Fn-1>
+        bool conc_join_all_for(TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+        template<typename F0, ..., typename Fn-1>
+        std::size_t conc_join_any(F0 f0, ..., Fn fn-1);
+        template<typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> conc_join_any_until(
+                const system_time& wait_until, F0 f0, ..., Fn fn-1);
+        template<typename TimeDuration, typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> conc_join_all_for(
+                TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+    }
+    }
+
+
+
+[section:conc_join_all Non Member Function `conc_join_all()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    void conc_join_all(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution and join all.]]
+
+]
+
+[endsect]
+
+[section:conc_join_all_until Non Member Function `conc_join_all_until()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    bool conc_join_all_until(const system_time& wait_until, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch each function on a thread of execution and join all until a given time or duration if not interrup all.]]
+[[Returns:] [true if joined.]]
+
+]
+
+[endsect]
+
+[section:conc_join_all_for Non Member Function `conc_join_all_for()`]
+[/==========================================================================================]
+
+    template<typename TimeDuration, typename F0, ..., typename Fn-1>
+    bool conc_join_all_for(TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch each function on a thread of execution and join all until a given time or duration if not interrup all.]]
+[[Returns:] [true if joined.]]
+
+]
+
+[endsect]
+
+        template<typename F0, ..., typename Fn-1>
+        std::size_t conc_join_any(F0 f0, ..., Fn fn-1);
+        template<typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> conc_join_any_until(
+                const system_time& wait_until, F0 f0, ..., Fn fn-1);
+        template<typename TimeDuration, typename F0, ..., typename Fn-1>
+        std::pair<bool,std::size_t> conc_join_all_for(
+                TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+[section:conc_join_any Non Member Function `conc_join_any()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    std::size_t conc_join_any(F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution, join the first and then interrupt the others.]]
+[[Returns:] [the index on the tuple of the first thread joined.]]
+
+]
+
+[endsect]
+
+[section:conc_join_any_until Non Member Function `conc_join_any_until()`]
+[/==========================================================================================]
+
+    template<typename F0, ..., typename Fn-1>
+    std::pair<bool,std::size_t> conc_join_any_until(
+            const system_time& wait_until, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution, join the first and then interrupt the others or interrup all.]]
+[[Returns:] [a pair consisting of a boolean stating if the a thread has been joined before the given time and the index on the tuple of the first thread joined.]]
+
+]
+
+[endsect]
+
+[section:conc_join_any_for Non Member Function `conc_join_any_for()`]
+[/==========================================================================================]
+
+    template<typename TimeDuration, typename F0, ..., typename Fn-1>
+    std::pair<bool,std::size_t> conc_join_any_for(
+            TimeDuration wait_for, F0 f0, ..., Fn fn-1);
+
+[variablelist
+
+[[Effects:] [launch in each function on a thread of execution, join the first and then interrupt the others or interrup all.]]
+[[Returns:] [a pair consisting of a boolean stating if the a thread has been joined before the given time and the index on the tuple of the first thread joined.]]
+
+]
+
+[endsect]
+
+
+[endsect]
+
