@@ -25,9 +25,9 @@ private:
 	struct impl_wrapper
 	: public impl
 	{
-		jss::packaged_task< T > tsk;
+		packaged_task< T > tsk;
 
-		impl_wrapper( boost::detail::thread_move_t< jss::packaged_task< T > > const& t)
+		impl_wrapper( boost::detail::thread_move_t< packaged_task< T > > const& t)
 		: tsk( t)
 		{}
 
@@ -43,7 +43,7 @@ public:
 	{}
 
 	template< typename T >
-	callable( boost::detail::thread_move_t< jss::packaged_task< T > > const& t)
+	callable( boost::detail::thread_move_t< packaged_task< T > > const& t)
 	: impl_( new impl_wrapper<  T >( t) )
 	{}
 

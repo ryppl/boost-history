@@ -4,8 +4,8 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef N2561_FUTURE_HPP
-#define N2561_FUTURE_HPP
+#ifndef BOOST_FUTURE_HPP
+#define BOOST_FUTURE_HPP
 #include <stdexcept>
 #include <boost/exception.hpp>
 #include <boost/thread.hpp>
@@ -31,7 +31,7 @@
 catch ( Exception const& e)						\
 { throw boost::enable_current_exception( e); }
 
-namespace jss
+namespace boost
 {
     class future_uninitialized:
         public std::logic_error
@@ -1182,7 +1182,7 @@ namespace jss
                 if(!started)
                 {
                     started=true;
-                    this->mark_exceptional_finish_internal(boost::copy_exception(jss::broken_promise()));
+                    this->mark_exceptional_finish_internal(boost::copy_exception(boost::broken_promise()));
                 }
             }
             

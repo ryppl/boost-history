@@ -19,8 +19,7 @@ In order to use the classes and functions described here, you can either include
 which includes all the other headers in turn.
 
 [note
-__boost_threadpool__ uses the futures library, N2561 C++0x proposal, from Anthony Williams ([@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html]) as an implementation detail until boost has
-an official future library.]
+__boost_threadpool__ uses a modified version of the futures library, N2561 C++0x proposal, from Anthony Williams ([@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html]).]
 
 [heading Tested Platforms]
 __boost_threadpool__ has been tested on the following compilers/platforms:

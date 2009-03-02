@@ -28,10 +28,6 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool"> Class template <code class="computeroutput"><span class="identifier">pool</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.wait_for_all"> Non-member
-      function <code class="computeroutput"><span class="identifier">wait_for_all</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.wait_for_any"> Non-member
-      function <code class="computeroutput"><span class="identifier">wait_for_any</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.reschedule_until"> Non-member
       function <code class="computeroutput"><span class="identifier">reschedule_until</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.get_thread_pool"> Non-member
@@ -762,20 +758,8 @@
         function <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.interrupt_and_wait">
         Member function <code class="computeroutput"><span class="identifier">interrupt_and_wait</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.get"> Member function
-        <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.is_read"> Member function
-        <code class="computeroutput"><span class="identifier">is_ready</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.has_value"> Member
-        function <code class="computeroutput"><span class="identifier">has_value</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.has_exception"> Member
-        function <code class="computeroutput"><span class="identifier">has_exception</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.wait"> Member function
-        <code class="computeroutput"><span class="identifier">wait</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.timed_wait"> Member
-        function <code class="computeroutput"><span class="identifier">timed_wait</span><span class="special">()</span></code></a></span></dt>
-<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.timed_wait_until">
-        Member function <code class="computeroutput"><span class="identifier">timed_wait_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.task.result"> Member function
+        <code class="computeroutput"><span class="identifier">result</span><span class="special">()</span></code></a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -786,7 +770,7 @@
   <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
   <span class="identifier">task</span><span class="special">(</span>
     <span class="identifier">Pool</span> <span class="special">*</span> <span class="identifier">pool</span><span class="special">,</span>
-    <span class="identifier">future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
+    <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
     <span class="identifier">detail</span><span class="special">::</span><span class="identifier">interrupter</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">intr</span><span class="special">);</span>
 
   <span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
@@ -796,16 +780,7 @@
   <span class="keyword">void</span> <span class="identifier">interrupt_and_wait</span><span class="special">(</span> <span class="identifier">Duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
   <span class="keyword">bool</span> <span class="identifier">interrupt_requested</span><span class="special">();</span>
 
-  <span class="identifier">R</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-
-  <span class="keyword">bool</span> <span class="identifier">is_ready</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">bool</span> <span class="identifier">has_value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">bool</span> <span class="identifier">has_exception</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-
-  <span class="keyword">void</span> <span class="identifier">wait</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span> 
-  <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
-  <span class="keyword">bool</span> <span class="identifier">timed_wait</span><span class="special">(</span> <span class="identifier">Duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
-  <span class="keyword">bool</span> <span class="identifier">timed_wait_until</span><span class="special">(</span> <span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span> 
+  <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="identifier">result</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
 <div class="section" lang="en">
@@ -815,7 +790,7 @@
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span> <span class="special">&gt;</span>
 <span class="identifier">task</span><span class="special">(</span>
   <span class="identifier">Pool</span> <span class="special">*</span> <span class="identifier">pool</span><span class="special">,</span>
-  <span class="identifier">future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
+  <span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">fut</span><span class="special">,</span>
   <span class="identifier">detail</span><span class="special">::</span><span class="identifier">interrupter</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">intr</span><span class="special">);</span>
 </pre>
 <div class="variablelist">
@@ -892,17 +867,17 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.get"></a><a class="link" href="reference.html#boost_threadpool.reference.task.get" title="Member function get()"> Member function
-        <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code></a>
+<a name="boost_threadpool.reference.task.result"></a><a class="link" href="reference.html#boost_threadpool.reference.task.result" title="Member function result()"> Member function
+        <code class="computeroutput"><span class="identifier">result</span><span class="special">()</span></code></a>
 </h4></div></div></div>
-<pre class="programlisting"><span class="identifier">R</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="identifier">result</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
 <dt><span class="term">Effects:</span></dt>
 <dd><p>
-              Returns fulfilled value or throws fulfilled exception.
+              Returns fulfilled value or throws fulfilled exception via a shared_future.
             </p></dd>
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
@@ -910,204 +885,6 @@
             </p></dd>
 </dl>
 </div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.is_read"></a><a class="link" href="reference.html#boost_threadpool.reference.task.is_read" title="Member function is_ready()"> Member function
-        <code class="computeroutput"><span class="identifier">is_ready</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">is_ready</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Queries if the action has been fulfilled.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Nothing
-            </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.has_value"></a><a class="link" href="reference.html#boost_threadpool.reference.task.has_value" title="Member function has_value()"> Member
-        function <code class="computeroutput"><span class="identifier">has_value</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">has_value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Queries if the action has been fulfilled (is ready) and has a value.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Nothing
-            </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.has_exception"></a><a class="link" href="reference.html#boost_threadpool.reference.task.has_exception" title="Member function has_exception()"> Member
-        function <code class="computeroutput"><span class="identifier">has_exception</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">has_exception</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Queries if the action has been fulfilled (is ready) and has an exception.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Nothing
-            </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.wait"></a><a class="link" href="reference.html#boost_threadpool.reference.task.wait" title="Member function wait()"> Member function
-        <code class="computeroutput"><span class="identifier">wait</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">wait</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Waits until the result is ready.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.timed_wait"></a><a class="link" href="reference.html#boost_threadpool.reference.task.timed_wait" title="Member function timed_wait()"> Member
-        function <code class="computeroutput"><span class="identifier">timed_wait</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
-<span class="keyword">bool</span> <span class="identifier">timed_wait</span><span class="special">(</span> <span class="identifier">Duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">wait_duration</span><span class="special">);</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Waits until the result is ready, or returns false if the time specified
-              by wait_duration has elapsed.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h4 class="title">
-<a name="boost_threadpool.reference.task.timed_wait_until"></a><a class="link" href="reference.html#boost_threadpool.reference.task.timed_wait_until" title="Member function timed_wait_until()">
-        Member function <code class="computeroutput"><span class="identifier">timed_wait_until</span><span class="special">()</span></code></a>
-</h4></div></div></div>
-<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">timed_wait_until</span><span class="special">(</span> <span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">wait_timeout</span><span class="special">);</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-              Waits until the result is ready, or returns false if the time point
-              specified by wait_timeout has passed.
-            </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </p></dd>
-</dl>
-</div>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_threadpool.reference.wait_for_all"></a><a class="link" href="reference.html#boost_threadpool.reference.wait_for_all" title="Non-member function wait_for_all"> Non-member
-      function <code class="computeroutput"><span class="identifier">wait_for_all</span></code></a>
-</h3></div></div></div>
-<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_all</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_all</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_all</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T4</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T5</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_all</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T4</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T5</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-            Waits until all specified tasks are ready.
-          </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-            Any exceptions that might be thrown by the actions.
-          </p></dd>
-</dl>
-</div>
-</div>
-<div class="section" lang="en">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="boost_threadpool.reference.wait_for_any"></a><a class="link" href="reference.html#boost_threadpool.reference.wait_for_any" title="Non-member function wait_for_any"> Non-member
-      function <code class="computeroutput"><span class="identifier">wait_for_any</span></code></a>
-</h3></div></div></div>
-<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_any</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_any</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_any</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T4</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T5</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">wait_for_any</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T1</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T2</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T3</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T4</span> <span class="special">&gt;</span> <span class="special">&amp;,</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">T5</span> <span class="special">&gt;</span> <span class="special">&amp;);</span>
-</pre>
-<div class="variablelist">
-<p class="title"><b></b></p>
-<dl>
-<dt><span class="term">Effects:</span></dt>
-<dd><p>
-            Waits until at leaste one of specified tasks is ready.
-          </p></dd>
-<dt><span class="term">Throws:</span></dt>
-<dd><p>
-            Any exceptions that might be thrown by the actions.
-          </p></dd>
-</dl>
 </div>
 </div>
 <div class="section" lang="en">
@@ -1118,7 +895,10 @@
 <pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
 <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">jss</span><span class="special">::</span><span class="identifier">future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>

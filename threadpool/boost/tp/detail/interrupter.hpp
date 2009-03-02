@@ -23,16 +23,16 @@ private:
 	: private noncopyable
 	{
 	private:
-		bool					interrupt_requested_;
+		bool					interruption_requested_;
 		condition_variable		cond_;
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
 
 		void interrupt_()
 		{
-			if ( ! interrupt_requested_)
+			if ( ! interruption_requested_)
 			{
-				interrupt_requested_ = true;
+				interruption_requested_ = true;
 				if ( thrd_) thrd_->interrupt();
 			}
 		}
@@ -40,7 +40,7 @@ private:
 	public:
 		impl()
 		:
-		interrupt_requested_( false),
+		interruption_requested_( false),
 		cond_(),
 		mtx_(),
 		thrd_()
@@ -52,7 +52,7 @@ private:
 			unique_lock< mutex > lk( mtx_);
 			thrd_ = thrd;
 			BOOST_ASSERT( thrd_);
-			if ( interrupt_requested_) thrd_->interrupt();
+			if ( interruption_requested_) thrd_->interrupt();
 		}
 
 		void reset()
@@ -96,10 +96,10 @@ private:
 			cond_.timed_wait( lk, rel_time);
 		}
 
-		bool interrupt_requested()
+		bool interruption_requested()
 		{
 			unique_lock< mutex > lk( mtx_);
-			return interrupt_requested_;
+			return interruption_requested_;
 		}
 	};
 
@@ -129,8 +129,8 @@ public:
 	void interrupt_and_wait( DurationType const& rel_time)
 	{ impl_->interrupt_and_wait( rel_time); }
 
-	bool interrupt_requested()
-	{ return impl_->interrupt_requested(); }
+	bool interruption_requested()
+	{ return impl_->interruption_requested(); }
 };
 }
 } }

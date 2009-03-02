@@ -200,11 +200,11 @@
 
 <span class="identifier">pool</span><span class="special">.</span><span class="identifier">shutdown</span><span class="special">();</span>
 
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t1</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
 </span></pre>
 <a name="boost_threadpool.pool.shutdown_immediatly"></a><h4>
-<a name="id368828"></a>
+<a name="id368845"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.shutdown_immediatly">Shutdown immediatly</a>
     </h4>
 <p>
@@ -225,7 +225,7 @@
       </p></td></tr>
 </table></div>
 <a name="boost_threadpool.pool.meta_functions"></a><h4>
-<a name="id368961"></a>
+<a name="id368978"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.meta_functions">Meta functions</a>
     </h4>
 <p>
@@ -249,7 +249,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_fibers</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <a name="boost_threadpool.pool.processor_binding"></a><h4>
-<a name="id369535"></a>
+<a name="id369552"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.processor_binding">Processor binding</a>
     </h4>
 <p>

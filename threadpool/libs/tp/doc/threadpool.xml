@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <library id="boost_threadpool" name="Boost.Threadpool" dirname="boost_threadpool"
-last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XInclude">
+last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XInclude">
   <libraryinfo>
     <authorgroup>
     <author>
@@ -56,9 +56,9 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
     </para>
     <note>
       <para>
-        <emphasis role="bold">Boost.Threadpool</emphasis> uses the futures library,
-        N2561 C++0x proposal, from Anthony Williams (<ulink url="http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html">http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html</ulink>)
-        as an implementation detail until boost has an official future library.
+        <emphasis role="bold">Boost.Threadpool</emphasis> uses a modified version
+        of the futures library, N2561 C++0x proposal, from Anthony Williams (<ulink
+        url="http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html">http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html</ulink>).
       </para>
     </note>
     <anchor id="boost_threadpool.introduction.tested_platforms"/>
@@ -262,8 +262,8 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 
 <phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">shutdown</phrase><phrase role="special">();</phrase>
 
-<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
-</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
+</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
 </phrase></programlisting>
     <anchor id="boost_threadpool.pool.shutdown_immediatly"/>
     <bridgehead renderas="sect3">
@@ -365,7 +365,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
   <phrase role="identifier">fibonacci_fn</phrase><phrase role="special">,</phrase>
   <phrase role="number">10</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// 55
 </phrase></programlisting>
     <anchor id="boost_threadpool.task.interruption"/>
     <bridgehead renderas="sect3">
@@ -451,7 +451,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 </phrase><phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">interrupt</phrase><phrase role="special">();</phrase>
 
 <phrase role="comment">// throws boost::thread_interrupted exception
-</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 </programlisting>
     </para>
     
@@ -469,26 +469,8 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 </phrase><phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">interrupt_and_wait</phrase><phrase role="special">();</phrase>
 
 <phrase role="comment">// throws boost::thread_interrupted exception
-</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+</phrase><phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 </programlisting>
-    <anchor id="boost_threadpool.task.waiting_for_multiple_tasks"/>
-    <bridgehead renderas="sect3">
-      <link linkend="boost_threadpool.task.waiting_for_multiple_tasks">Waiting for
-      multiple tasks</link>
-    </bridgehead>
-    <para>
-      It is possible to wait for multiple tasks - <code><phrase role="identifier">boost</phrase><phrase
-      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
-      role="identifier">wait_for_all</phrase><phrase role="special">(</phrase><phrase
-      role="identifier">tsk1</phrase><phrase role="special">,...,</phrase><phrase
-      role="identifier">tskn</phrase><phrase role="special">)</phrase></code> blocks
-      until all n tasks are ready and <code><phrase role="identifier">boost</phrase><phrase
-      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
-      role="identifier">wait_for_any</phrase><phrase role="special">(</phrase><phrase
-      role="identifier">tsk1</phrase><phrase role="special">,...,</phrase><phrase
-      role="identifier">tskn</phrase><phrase role="special">)</phrase></code> blocks
-      until at least one of the tasks becomes ready.
-    </para>
     <anchor id="boost_threadpool.task.exceptions_in_tasks"/>
     <bridgehead renderas="sect3">
       <link linkend="boost_threadpool.task.exceptions_in_tasks">Exceptions in tasks</link>
@@ -615,7 +597,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
     <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">bind</phrase><phrase role="special">(</phrase>
       <phrase role="identifier">throwing_fn</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// will rethrow an std::runtime_error
+<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">t</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase> <phrase role="comment">// will rethrow an std::runtime_error
 </phrase></programlisting>
   </section>
   <section id="boost_threadpool.this_task">
@@ -624,17 +606,18 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
       In the function <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
       role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase
       role="identifier">reschedule_until</phrase><phrase role="special">(</phrase>
-      <phrase role="identifier">jss</phrase><phrase role="special">::</phrase><phrase
-      role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase
-      role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase
-      role="special">&amp;)</phrase></code> allows to synchronize the task with other
-      asynchronous events without blocking the worker threads. The current task will
-      be rescheduled until the passed future becomes ready. The pool can be accessed
-      via <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
-      role="identifier">this_task</phrase><phrase role="special">::</phrase><phrase
-      role="identifier">get_thread_pool</phrase><phrase role="special">&lt;</phrase>
-      <phrase role="identifier">Pool</phrase> <phrase role="special">&gt;()</phrase></code>
-      if the calling code is executed by a worker thread.
+      <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase>
+      <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase>
+      <phrase role="keyword">const</phrase><phrase role="special">&amp;)</phrase></code>
+      allows to synchronize the task with other asynchronous events without blocking
+      the worker threads. The current task will be rescheduled until the passed future
+      becomes ready. The pool can be accessed via <code><phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">this_task</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">get_thread_pool</phrase><phrase
+      role="special">&lt;</phrase> <phrase role="identifier">Pool</phrase> <phrase
+      role="special">&gt;()</phrase></code> if the calling code is executed by a
+      worker thread.
     </para>
   </section>
   <section id="boost_threadpool.channel">
@@ -828,7 +811,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
 						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
 						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
 		<phrase role="special">}</phrase>
 	<phrase role="special">}</phrase>
 
@@ -869,7 +852,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -919,7 +902,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
 						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
 						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
 		<phrase role="special">}</phrase>
 	<phrase role="special">}</phrase>
 
@@ -960,7 +943,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1007,7 +990,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
 						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
 						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
 		<phrase role="special">}</phrase>
 	<phrase role="special">}</phrase>
 
@@ -1048,7 +1031,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1090,7 +1073,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
 						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
 						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
 		<phrase role="special">}</phrase>
 	<phrase role="special">}</phrase>
 
@@ -1131,7 +1114,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1168,7 +1151,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 						<phrase role="special">&amp;</phrase> <phrase role="identifier">fibo</phrase><phrase role="special">::</phrase><phrase role="identifier">par_</phrase><phrase role="special">,</phrase>
 						<phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">ref</phrase><phrase role="special">(</phrase> <phrase role="special">*</phrase> <phrase role="keyword">this</phrase><phrase role="special">),</phrase>
 						<phrase role="identifier">n</phrase> <phrase role="special">-</phrase> <phrase role="number">2</phrase><phrase role="special">)</phrase> <phrase role="special">)</phrase> <phrase role="special">);</phrase>
-			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
+			<phrase role="keyword">return</phrase> <phrase role="identifier">t1</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">+</phrase> <phrase role="identifier">t2</phrase><phrase role="special">.</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">();</phrase>
 		<phrase role="special">}</phrase>
 	<phrase role="special">}</phrase>
 
@@ -1209,7 +1192,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1230,7 +1213,8 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
       pool<emphasis role="underline">type &gt;().submit( boost::bind( &amp; fibo::par</emphasis>,
       boost::ref( * this), n - 1) ) ); tp::task&lt; int &gt; t2( boost::this_task::get_thread_pool&lt;
       pool<emphasis role="underline">type &gt;().submit( boost::bind( &amp; fibo::par</emphasis>,
-      boost::ref( * this), n - 2) ) ); return t1.get() + t2.get(); } }
+      boost::ref( * this), n - 2) ) ); return t1.result().get() + t2.result().get();
+      } }
     </para>
     
 <programlisting><phrase role="keyword">public</phrase><phrase role="special">:</phrase>
@@ -1270,7 +1254,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1321,7 +1305,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1365,7 +1349,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1402,7 +1386,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1435,7 +1419,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1461,7 +1445,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">int</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">iterator</phrase> <phrase role="identifier">i</phrase><phrase role="special">(</phrase> <phrase role="identifier">results</phrase><phrase role="special">.</phrase><phrase role="identifier">begin</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 			<phrase role="identifier">i</phrase> <phrase role="special">!=</phrase> <phrase role="identifier">e</phrase><phrase role="special">;</phrase>
 			<phrase role="special">++</phrase><phrase role="identifier">i</phrase><phrase role="special">)</phrase>
-			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
+			<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot;fibonacci &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">k</phrase><phrase role="special">++</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; == &quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">i</phrase><phrase role="special">-&gt;</phrase><phrase role="identifier">result</phrase><phrase role="special">().</phrase><phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
 
 		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
 		<phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">cout</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="special">(</phrase> <phrase role="identifier">stop</phrase> <phrase role="special">-</phrase> <phrase role="identifier">start</phrase><phrase role="special">).</phrase><phrase role="identifier">total_milliseconds</phrase><phrase role="special">()</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="string">&quot; milli seconds&quot;</phrase> <phrase role="special">&lt;&lt;</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">endl</phrase><phrase role="special">;</phrase>
@@ -1480,7 +1464,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
       int k = 0; std::vector&lt; tp::task&lt; int &gt; &gt;::iterator e( results.end()
       ); for ( std::vector&lt; tp::task&lt; int &gt; &gt;::iterator i( results.begin()
       ); i != e; ++i) std::cout &lt;&lt; &quot;fibonacci &quot; &lt;&lt; k++ &lt;&lt;
-      &quot; == &quot; &lt;&lt; i-&gt;get() &lt;&lt; std::endl;
+      &quot; == &quot; &lt;&lt; i-&gt;result().get() &lt;&lt; std::endl;
     </para>
     
 <programlisting>		<phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">ptime</phrase> <phrase role="identifier">stop</phrase><phrase role="special">(</phrase> <phrase role="identifier">pt</phrase><phrase role="special">::</phrase><phrase role="identifier">microsec_clock</phrase><phrase role="special">::</phrase><phrase role="identifier">universal_time</phrase><phrase role="special">()</phrase> <phrase role="special">);</phrase>
@@ -2310,7 +2294,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
   <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase> <phrase role="special">&gt;</phrase>
   <phrase role="identifier">task</phrase><phrase role="special">(</phrase>
     <phrase role="identifier">Pool</phrase> <phrase role="special">*</phrase> <phrase role="identifier">pool</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">fut</phrase><phrase role="special">,</phrase>
+    <phrase role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">fut</phrase><phrase role="special">,</phrase>
     <phrase role="identifier">detail</phrase><phrase role="special">::</phrase><phrase role="identifier">interrupter</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">intr</phrase><phrase role="special">);</phrase>
 
   <phrase role="keyword">void</phrase> <phrase role="identifier">interrupt</phrase><phrase role="special">();</phrase>
@@ -2320,16 +2304,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
   <phrase role="keyword">void</phrase> <phrase role="identifier">interrupt_and_wait</phrase><phrase role="special">(</phrase> <phrase role="identifier">Duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">rel_time</phrase><phrase role="special">);</phrase>
   <phrase role="keyword">bool</phrase> <phrase role="identifier">interrupt_requested</phrase><phrase role="special">();</phrase>
 
-  <phrase role="identifier">R</phrase> <phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">is_ready</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">has_value</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">has_exception</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-
-  <phrase role="keyword">void</phrase> <phrase role="identifier">wait</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase> 
-  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Duration</phrase> <phrase role="special">&gt;</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">timed_wait</phrase><phrase role="special">(</phrase> <phrase role="identifier">Duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">rel_time</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">timed_wait_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">system_time</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">abs_time</phrase><phrase role="special">)</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase> 
+  <phrase role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">result</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
 <phrase role="special">};</phrase>
 </programlisting>
       <section id="boost_threadpool.reference.task.constructor">
@@ -2338,7 +2313,7 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 <programlisting><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase> <phrase role="special">&gt;</phrase>
 <phrase role="identifier">task</phrase><phrase role="special">(</phrase>
   <phrase role="identifier">Pool</phrase> <phrase role="special">*</phrase> <phrase role="identifier">pool</phrase><phrase role="special">,</phrase>
-  <phrase role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">fut</phrase><phrase role="special">,</phrase>
+  <phrase role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">fut</phrase><phrase role="special">,</phrase>
   <phrase role="identifier">detail</phrase><phrase role="special">::</phrase><phrase role="identifier">interrupter</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">intr</phrase><phrase role="special">);</phrase>
 </programlisting>
         <variablelist>
@@ -2423,17 +2398,17 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
           </varlistentry>
         </variablelist>
       </section>
-      <section id="boost_threadpool.reference.task.get">
-        <title><link linkend="boost_threadpool.reference.task.get"> Member function
-        <code><phrase role="identifier">get</phrase><phrase role="special">()</phrase></code></link></title>
+      <section id="boost_threadpool.reference.task.result">
+        <title><link linkend="boost_threadpool.reference.task.result"> Member function
+        <code><phrase role="identifier">result</phrase><phrase role="special">()</phrase></code></link></title>
         
-<programlisting><phrase role="identifier">R</phrase> <phrase role="identifier">get</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
+<programlisting><phrase role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">result</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
 </programlisting>
         <variablelist>
           <title></title> <varlistentry><term>Effects:</term>
           <listitem>
             <para>
-              Returns fulfilled value or throws fulfilled exception.
+              Returns fulfilled value or throws fulfilled exception via a shared_future.
             </para>
           </listitem>
           </varlistentry> <varlistentry><term>Throws:</term>
@@ -2447,212 +2422,6 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
           </varlistentry>
         </variablelist>
       </section>
-      <section id="boost_threadpool.reference.task.is_read">
-        <title><link linkend="boost_threadpool.reference.task.is_read"> Member function
-        <code><phrase role="identifier">is_ready</phrase><phrase role="special">()</phrase></code></link></title>
-        
-<programlisting><phrase role="keyword">bool</phrase> <phrase role="identifier">is_ready</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Queries if the action has been fulfilled.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Nothing
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-      <section id="boost_threadpool.reference.task.has_value">
-        <title><link linkend="boost_threadpool.reference.task.has_value"> Member
-        function <code><phrase role="identifier">has_value</phrase><phrase role="special">()</phrase></code></link></title>
-        
-<programlisting><phrase role="keyword">bool</phrase> <phrase role="identifier">has_value</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Queries if the action has been fulfilled (is ready) and has a value.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Nothing
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-      <section id="boost_threadpool.reference.task.has_exception">
-        <title><link linkend="boost_threadpool.reference.task.has_exception"> Member
-        function <code><phrase role="identifier">has_exception</phrase><phrase role="special">()</phrase></code></link></title>
-        
-<programlisting><phrase role="keyword">bool</phrase> <phrase role="identifier">has_exception</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Queries if the action has been fulfilled (is ready) and has an exception.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Nothing
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-      <section id="boost_threadpool.reference.task.wait">
-        <title><link linkend="boost_threadpool.reference.task.wait"> Member function
-        <code><phrase role="identifier">wait</phrase><phrase role="special">()</phrase></code></link></title>
-        
-<programlisting><phrase role="keyword">void</phrase> <phrase role="identifier">wait</phrase><phrase role="special">()</phrase> <phrase role="keyword">const</phrase><phrase role="special">;</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Waits until the result is ready.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-      <section id="boost_threadpool.reference.task.timed_wait">
-        <title><link linkend="boost_threadpool.reference.task.timed_wait"> Member
-        function <code><phrase role="identifier">timed_wait</phrase><phrase role="special">()</phrase></code></link></title>
-        
-<programlisting><phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Duration</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">bool</phrase> <phrase role="identifier">timed_wait</phrase><phrase role="special">(</phrase> <phrase role="identifier">Duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">wait_duration</phrase><phrase role="special">);</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Waits until the result is ready, or returns false if the time specified
-              by wait_duration has elapsed.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-      <section id="boost_threadpool.reference.task.timed_wait_until">
-        <title><link linkend="boost_threadpool.reference.task.timed_wait_until">
-        Member function <code><phrase role="identifier">timed_wait_until</phrase><phrase
-        role="special">()</phrase></code></link></title> 
-<programlisting><phrase role="keyword">bool</phrase> <phrase role="identifier">timed_wait_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">system_time</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">wait_timeout</phrase><phrase role="special">);</phrase>
-</programlisting>
-        <variablelist>
-          <title></title> <varlistentry><term>Effects:</term>
-          <listitem>
-            <para>
-              Waits until the result is ready, or returns false if the time point
-              specified by wait_timeout has passed.
-            </para>
-          </listitem>
-          </varlistentry> <varlistentry><term>Throws:</term>
-          <listitem>
-            <para>
-              Throws thread_interrupted if the result is not ready at the point of
-              the call, and the current thread is interrupted.
-            </para>
-          </listitem>
-          </varlistentry>
-        </variablelist>
-      </section>
-    </section>
-    <section id="boost_threadpool.reference.wait_for_all">
-      <title><link linkend="boost_threadpool.reference.wait_for_all"> Non-member
-      function <code><phrase role="identifier">wait_for_all</phrase></code></link></title>
-      
-<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">task</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_all</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-</programlisting>
-      <variablelist>
-        <title></title> <varlistentry><term>Effects:</term>
-        <listitem>
-          <para>
-            Waits until all specified tasks are ready.
-          </para>
-        </listitem>
-        </varlistentry> <varlistentry><term>Throws:</term>
-        <listitem>
-          <para>
-            Any exceptions that might be thrown by the actions.
-          </para>
-        </listitem>
-        </varlistentry>
-      </variablelist>
-    </section>
-    <section id="boost_threadpool.reference.wait_for_any">
-      <title><link linkend="boost_threadpool.reference.wait_for_any"> Non-member
-      function <code><phrase role="identifier">wait_for_any</phrase></code></link></title>
-      
-<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">task</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T1</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T2</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T3</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T4</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">wait_for_any</phrase><phrase role="special">(</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T1</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T2</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T3</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T4</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;,</phrase> <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">T5</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;);</phrase>
-</programlisting>
-      <variablelist>
-        <title></title> <varlistentry><term>Effects:</term>
-        <listitem>
-          <para>
-            Waits until at leaste one of specified tasks is ready.
-          </para>
-        </listitem>
-        </varlistentry> <varlistentry><term>Throws:</term>
-        <listitem>
-          <para>
-            Any exceptions that might be thrown by the actions.
-          </para>
-        </listitem>
-        </varlistentry>
-      </variablelist>
     </section>
     <section id="boost_threadpool.reference.reschedule_until">
       <title><link linkend="boost_threadpool.reference.reschedule_until"> Non-member
@@ -2661,7 +2430,10 @@ last-revision="$Date: 2009/03/01 08:18:28 $" xmlns:xi="http://www.w3.org/2001/XI
 <programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
 
 <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">void</phrase> <phrase role="identifier">reschedule_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">jss</phrase><phrase role="special">::</phrase><phrase role="identifier">future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;);</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">reschedule_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">unique_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;);</phrase>
+
+<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Pool</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase>
+<phrase role="keyword">void</phrase> <phrase role="identifier">reschedule_until</phrase><phrase role="special">(</phrase> <phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">shared_future</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">R</phrase> <phrase role="special">&gt;</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;);</phrase>
 </programlisting>
       <variablelist>
         <title></title> <varlistentry><term>Effects:</term>

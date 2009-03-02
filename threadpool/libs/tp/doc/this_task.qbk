@@ -6,7 +6,7 @@
 ]
 
 [section:this_task Namespace this_task]
-In the function `boost::this_task::reschedule_until( jss::future< R > const&)` allows to synchronize the task with other
+In the function `boost::this_task::reschedule_until( boost::shared_future< R > const&)` allows to synchronize the task with other
 asynchronous events without blocking the __worker_threads__. The current task will be rescheduled until the passed future
 becomes ready.
 The pool can be accessed via `boost::this_task::get_thread_pool< Pool >()` if the calling code is executed by a __worker_thread__.

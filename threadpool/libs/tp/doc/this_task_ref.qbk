@@ -10,7 +10,10 @@
     #include <boost/tp/pool.hpp>
 
 	template< typename Pool, typename R >
-	void reschedule_until( jss::future< R > const&);
+	void reschedule_until( boost::unique_future< R > const&);
+
+	template< typename Pool, typename R >
+	void reschedule_until( boost::shared_future< R > const&);
 
 [variablelist
 [[Effects:] [Reschedules current task until passed future becomes ready.] 

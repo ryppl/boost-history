@@ -44,7 +44,7 @@ The fork operation creates a new __sub_action__ (which can run in parallel) in t
 							& fibo::par_,
 							boost::ref( * this),
 							n - 2) ) );
-				return t1.get() + t2.get();
+				return t1.result().get() + t2.result().get();
 			}
 		}
 	
@@ -85,7 +85,7 @@ The fork operation creates a new __sub_action__ (which can run in parallel) in t
 				std::vector< tp::task< int > >::iterator i( results.begin() );
 				i != e;
 				++i)
-				std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
+				std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
 	
 			pt::ptime stop( pt::microsec_clock::universal_time() );
 			std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;

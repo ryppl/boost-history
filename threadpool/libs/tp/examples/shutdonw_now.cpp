@@ -47,7 +47,7 @@ int main( int argc, char *argv[])
 					10) ) );
 		boost::this_thread::sleep( pt::milliseconds( 250) );
 		pool.shutdown_now();
-		std::cout << t.get() << std::endl;
+		std::cout << t.result().get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

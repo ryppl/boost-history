@@ -21,7 +21,7 @@ The __task__ object acts as a proxy for a result that is initially not known and
       fibonacci_fn,
       10) ) );
 
-    std::cout << t.get() << std::endl; // 55
+    std::cout << t.result().get() << std::endl; // 55
 
 
 [heading Interruption]
@@ -57,7 +57,7 @@ A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >
     t.interrupt();
 
     // throws boost::thread_interrupted exception
-    std::cout << t.get() << std::endl;
+    std::cout << t.result().get() << std::endl;
 ``
 
     boost::tp::pool<
@@ -74,11 +74,7 @@ A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >
     t.interrupt_and_wait();
 
     // throws boost::thread_interrupted exception
-    std::cout << t.get() << std::endl;
-
-[heading Waiting for multiple tasks]
-It is possible to wait for multiple tasks - `boost::tp::wait_for_all(tsk1,...,tskn)` blocks until all n tasks are ready and
-`boost::tp::wait_for_any(tsk1,...,tskn)` blocks until at least one of the tasks becomes ready.
+    std::cout << t.result().get() << std::endl;
 
 [heading Exceptions in tasks]
 Exceptions thrown inside an __action__ are transported by the associated task object.
@@ -121,6 +117,6 @@ Exceptions derived from `std::exception` will be rethrown as `std::runtime_error
         boost::bind(
           throwing_fn) ) );
 
-    std::cout << t.get() << std::endl; // will rethrow an std::runtime_error
+    std::cout << t.result().get() << std::endl; // will rethrow an std::runtime_error
 
 [endsect]

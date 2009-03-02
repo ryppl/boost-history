@@ -45,10 +45,10 @@
   <span class="identifier">fibonacci_fn</span><span class="special">,</span>
   <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
 
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
 </span></pre>
 <a name="boost_threadpool.task.interruption"></a><h4>
-<a name="id370001"></a>
+<a name="id370026"></a>
       <a class="link" href="task.html#boost_threadpool.task.interruption">Interruption</a>
     </h4>
 <p>
@@ -97,7 +97,7 @@
 </span><span class="identifier">t</span><span class="special">.</span><span class="identifier">interrupt</span><span class="special">();</span>
 
 <span class="comment">// throws boost::thread_interrupted exception
-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <p>
     </p>
@@ -115,20 +115,10 @@
 </span><span class="identifier">t</span><span class="special">.</span><span class="identifier">interrupt_and_wait</span><span class="special">();</span>
 
 <span class="comment">// throws boost::thread_interrupted exception
-</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
-<a name="boost_threadpool.task.waiting_for_multiple_tasks"></a><h4>
-<a name="id371039"></a>
-      <a class="link" href="task.html#boost_threadpool.task.waiting_for_multiple_tasks">Waiting for
-      multiple tasks</a>
-    </h4>
-<p>
-      It is possible to wait for multiple tasks - <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">wait_for_all</span><span class="special">(</span><span class="identifier">tsk1</span><span class="special">,...,</span><span class="identifier">tskn</span><span class="special">)</span></code> blocks
-      until all n tasks are ready and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">wait_for_any</span><span class="special">(</span><span class="identifier">tsk1</span><span class="special">,...,</span><span class="identifier">tskn</span><span class="special">)</span></code> blocks
-      until at least one of the tasks becomes ready.
-    </p>
 <a name="boost_threadpool.task.exceptions_in_tasks"></a><h4>
-<a name="id371148"></a>
+<a name="id371080"></a>
       <a class="link" href="task.html#boost_threadpool.task.exceptions_in_tasks">Exceptions in tasks</a>
     </h4>
 <p>
@@ -176,7 +166,7 @@
     <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span>
       <span class="identifier">throwing_fn</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
 
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// will rethrow an std::runtime_error
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// will rethrow an std::runtime_error
 </span></pre>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

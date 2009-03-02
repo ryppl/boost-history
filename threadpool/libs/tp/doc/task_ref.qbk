@@ -16,7 +16,7 @@
       template< typename Pool >
       task(
         Pool * pool,
-        future< R > const& fut,
+        shared_future< R > const& fut,
         detail::interrupter const& intr);
 
       void interrupt();
@@ -26,16 +26,7 @@
       void interrupt_and_wait( Duration const& rel_time);
       bool interrupt_requested();
 
-      R get() const;
-
-      bool is_ready() const;
-      bool has_value() const;
-      bool has_exception() const;
-
-      void wait() const; 
-      template< typename Duration >
-      bool timed_wait( Duration const& rel_time) const;
-      bool timed_wait_until( system_time const& abs_time) const; 
+      shared_future< R > result() const;
     };
 
 [section:constructor Constructor]
@@ -43,7 +34,7 @@
     template< typename Pool >
     task(
       Pool * pool,
-      future< R > const& fut,
+      shared_future< R > const& fut,
       detail::interrupter const& intr);
 
 [variablelist
@@ -81,80 +72,13 @@
 [endsect]
 
 
-[section:get Member function `get()`]
+[section:result Member function `result()`]
 
-    R get() const;
+    shared_future< R > result() const;
 
 [variablelist
-[[Effects:] [Returns fulfilled value or throws fulfilled exception.]]
+[[Effects:] [Returns fulfilled value or throws fulfilled exception via a shared_future.]]
 [[Throws:] [`boost::future::broken_promise`]]
-]
-[endsect]
-
-
-[section:is_read Member function `is_ready()`]
-
-    bool is_ready() const;
-
-[variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled.]]
-[[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:has_value Member function `has_value()`]
-
-    bool has_value() const;
-
-[variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled (is ready) and has a value.]]
-[[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:has_exception Member function `has_exception()`]
-
-    bool has_exception() const;
-
-[variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled (is ready) and has an exception.]]
-[[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:wait Member function `wait()`]
-
-    void wait() const;
-
-[variablelist
-[[Effects:] [Waits until the result is ready.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
-]
-[endsect]
-
-
-[section:timed_wait Member function `timed_wait()`]
-
-    template< typename Duration >
-    bool timed_wait( Duration const& wait_duration);
-
-[variablelist
-[[Effects:] [Waits until the result is ready, or returns false if the time specified by wait_duration has elapsed.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
-]
-[endsect]
-
-
-[section:timed_wait_until Member function `timed_wait_until()`]
-
-    bool timed_wait_until( system_time const& wait_timeout);
-
-[variablelist
-[[Effects:] [Waits until the result is ready, or returns false if the time point specified by wait_timeout has passed.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
 ]
 [endsect]
 

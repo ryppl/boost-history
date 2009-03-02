@@ -5,6 +5,8 @@
 
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/interprocess/sync/interprocess_semaphore.hpp>
+#include <boost/thread.hpp>
 
 #include "boost/tp/fifo.hpp"
 #include "boost/tp/pool.hpp"
@@ -19,7 +21,8 @@ typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
 class fibo
 {
 private:
-	int		offset_;
+	jss::shared_future< void >		f_;
+	int								offset_;
 
 	int seq_( int n)
 	{
@@ -32,25 +35,33 @@ private:
 		if ( n <= offset_) return seq_( n);
 		else
 		{
+			if ( n == 7)
+				boost::this_task::reschedule_until< pool_type >( f_);
+
+			boost::function< int() > fn1 = boost::bind(
+						& fibo::par_,
+						* this,
+						n - 1);
 			tp::task< int > t1(
 				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
+					fn1) );
+			boost::function< int() > fn2 = boost::bind(
 						& fibo::par_,
-						boost::ref( * this),
-						n - 1) ) );
+						* this,
+						n - 2);
 			tp::task< int > t2(
 				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fibo::par_,
-						boost::ref( * this),
-						n - 2) ) );
-			return t1.result().get() + t2.result().get();
+					fn2) );
+
+			return t1.get() + t2.get();
 		}
 	}
 
 public:
-	fibo( int offset)
-	: offset_( offset)
+	fibo(
+		jss::shared_future< void > f,
+		int offset)
+	:  f_( f), offset_( offset)
 	{}
 
 	int execute( int n)
@@ -60,18 +71,22 @@ public:
 	}
 };
 
+void f() {}
+
 int main( int argc, char *argv[])
 {
 	try
 	{
-		pool_type pool( tp::poolsize( 3) );
-		fibo fib( 5);
+		pool_type pool( tp::poolsize( 1) );
+		jss::packaged_task< void > tsk( boost::bind( f) );
+		jss::shared_future< void > f( tsk.get_future() );
+		fibo fib( f, 3);
 		std::vector< tp::task< int > > results;
 		results.reserve( 40);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 32; ++i)
+		for ( int i = 0; i < 10; ++i)
 			results.push_back(
 				pool.submit(
 					boost::bind(
@@ -79,13 +94,16 @@ int main( int argc, char *argv[])
 						boost::ref( fib),
 						i) ) );
 
+		::sleep( 1);
+		tsk();
+
 		int k = 0;
 		std::vector< tp::task< int > >::iterator e( results.end() );
 		for (
 			std::vector< tp::task< int > >::iterator i( results.begin() );
 			i != e;
 			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
+			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
 
 		pt::ptime stop( pt::microsec_clock::universal_time() );
 		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;

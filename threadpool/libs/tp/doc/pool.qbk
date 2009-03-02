@@ -78,8 +78,8 @@ If `boost::tp::pool< Channel >::shutdown()` is called - the the status of the po
 
     pool.shutdown();
 
-    std::cout << t1.get() << std::endl; // 55
-    std::cout << t2.get() << std::endl; // 55
+    std::cout << t1.result().get() << std::endl; // 55
+    std::cout << t2.result().get() << std::endl; // 55
 
 [heading Shutdown immediatly]
 The function `boost::tp::pool< Channel >::shutdown_now()` sets the pool status to ['terminating] interrupts and then joins all __worker_threads__. After the __worker_threads__ are joined the status of the pool is set to ['terminated] and all pending (unprocessed) __actions__ will be returned.
@@ -112,3 +112,4 @@ __worker_threads__ as processors (== __hardware_concurrency__) are available and
 The code above will create a pool with two __worker_threads__ on a dual core system (each bound to one core).
 
 [endsect]
+
