@@ -36,10 +36,10 @@ cp -r $TMPDIR/$LIBXML/* $OUTPUT_DIR/
 cp -r $TMPDIR/$ZLIB/* $OUTPUT_DIR/
 
 mkdir -p $OUTPUT_DIR/share/xsl/docbook/
-cp -r $TMPDIR/$DOCBOOK_XSL/* $OUTPUT_DIR/xsl/docbook/
+cp -r $TMPDIR/$DOCBOOK_XSL/* $OUTPUT_DIR/share/xsl/docbook/
 
-mkdir -p $OUTPUT_DIR/xml/docbook/$DOCBOOK_XML_VER/
-unzip -q -d $OUTPUT_DIR/xml/docbook/$DOCBOOK_XML_VER/ $FILES/docbook-xml-$DOCBOOK_XML_VER.zip
+mkdir -p $OUTPUT_DIR/share/xml/docbook/$DOCBOOK_XML_VER/
+unzip -q -d $OUTPUT_DIR/share/xml/docbook/$DOCBOOK_XML_VER/ $FILES/docbook-xml-$DOCBOOK_XML_VER.zip
 
 sed "s/DIRNAME/$OUTPUT_NAME/g" docs/user-config.jam > $OUTPUT_DIR/user-config.jam
 sed "s/DIRNAME/$OUTPUT_NAME/g" docs/README.txt > $OUTPUT_DIR/README.txt
