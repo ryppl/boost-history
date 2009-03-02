@@ -776,7 +776,10 @@ std::ostream& operator<< (std::ostream& os, plot_point_style p)
      << p.stroke_color_ << ", "
      << p.fill_color_ << ", "
      << p.size_ << ", "
-     << p.symbols_
+     << p.symbols_ << ", "
+     << p.symbols_style_ << ", "
+     << p.show_x_value_ << ", "
+     << p.show_y_value_ 
 //     << ", symbols style: " << p.symbols_style_  // TODO check this works and alter example.
      << ")";
 /*! \details Example: plot_point_style p;  cout << p << endl;
@@ -789,7 +792,7 @@ plot_point_style default_plot_point_style(); // Uses all the defaults.
 
 class plot_line_style
 { //! \class boost::svg::plot_line_style Style of line joining data series values.
-  // TODO dotted and dashed line style would be useful for B&W.
+  // TODO dotted and dashed line style would be useful for monochrome plots.
 public:
   svg_color stroke_color_; //!< Stroke color of line. (no fill color for lines)
   svg_color area_fill_; //!< Fill color from line to axis. == false means color.is_blank = true, or = blank.

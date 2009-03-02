@@ -123,8 +123,7 @@ title_(title),
 point_style_(black, blank, 5, vertical_line), // Default point style.
 limit_point_style_(lightgrey, red, 10, cone), // Default limit (inf or NaN) point style.
 //limit_point_style_(lightgrey, whitesmoke, 10, cone), // Default limit (inf or NaN) point style.
-line_style_(black, blank, 2, true, false) // Default line style, black, no fill, width, line_on, bezier_on false
-// Meaning of line style for 1-D as yet undefined?
+line_style_(black, blank, 2, false, false) // Default line style, black, no fill, width, line_on, bezier_on false
 {
   for(T i = begin; i != end; ++i)
   {  // No defaults for begin and end?
@@ -322,7 +321,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   bool title_on_; // Provide a title for the whole plot.
   bool legend_on_; // Provide a legend box.
   bool outside_legend_on_; // Legend box outside the plot window.
-  bool legend_lines_; // get/set by legend_lines(bool); data colored line type in legend box.
+  bool legend_lines_; // Data colored line type in legend box.
   bool plot_window_on_; // Use a separate plot window (not whole image).
   bool x_ticks_on_; // TODO check these are really useful.
   bool x_values_on_; // values of data are shown by markers.
@@ -391,6 +390,7 @@ public:
     legend_on_(false),
     legend_longest_(0),
     outside_legend_on_(true),
+    legend_lines_(false), // Not very useful for 1 D as already showing data point marker shapes.
     plot_window_clip_("plot_window"), // for <clipPath id="plot_window" ...
     title_on_(true),
     plot_window_on_(true),
@@ -462,7 +462,7 @@ public:
   } // svg_1d_plot() Default constructor.
 
   void set_ids()
-  { // document ids for use in <g id = "PLOT_TITLE".../>
+  { //! Document ids for use in identifying group elements, for example: <g id = "PLOT_TITLE".../g>
     for(int i = 0; i < detail::SVG_PLOT_DOC_CHILDREN; ++i)
     {
       image.g(i).id(detail::document_ids_[i]);

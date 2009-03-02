@@ -63,6 +63,8 @@ the order of data values is not important.
     .title("Race Times")
     .x_range(-1, 11);
 
+  my_plot.legend_lines(true);
+
 /*`The syntax `my_plot.title("Hello").legend_on(true)...` may appear unfamiliar,
 but is a convenient way of specifying many parameters in any order. It is equivalent to:
 ``
@@ -84,8 +86,9 @@ and add optional (but very helpful) data series titles
 if we want them to show on the legend.
 */
 
-  my_plot.plot(dan_times, "Dan").shape(round).stroke_color(red).fill_color(red);
-  my_plot.plot(elaine_times, "Elaine").shape(cross).stroke_color(blue).fill_color(blue);
+  my_plot.plot(dan_times, "Dan").shape(round).size(10).stroke_color(red).fill_color(green);
+  my_plot.plot(elaine_times, "Elaine").shape(vertical_line).stroke_color(blue);
+
 
 /*`Finally, we can write the SVG to a file of our choice.
 */

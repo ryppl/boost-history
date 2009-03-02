@@ -48,14 +48,14 @@ const double margin = 4.;  //!< Consider values close to std::numeric_limits<dou
 
 inline bool limit_max(double a)
 { //! At (or near) max value or +infinity, most positive values.
-    return ((a > std::numeric_limits<double>::max() / margin) // Avoid macro max trap!
+    return ((a > (std::numeric_limits<double>::max)() / margin) // Avoid macro max trap!
          || (a == std::numeric_limits<double>::infinity()));
 }
 
 inline bool limit_min(double a)
 { //! At (or near) -max or -infinity, most negative values.
   return (
-    (a < -(std::numeric_limits<double>::max() /margin)) // Avoid macro max trap!
+    (a < -(std::numeric_limits<double>::max)() /margin) // Avoid macro max trap!
     || (a == -std::numeric_limits<double>::infinity())
     );
 }

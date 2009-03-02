@@ -1,14 +1,16 @@
 /*! \file 2d_area_fill.cpp
-  \brief Demo of area fill below a curve.
+  \brief Demonstration of area fill below curves.
   \date 2007
-  \author Jacob Voytko 
+  \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2009
 
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
   using namespace boost::svg; // Needed to get svg colors and others.
@@ -17,9 +19,9 @@
 #include <map> 
   using std::map;
 #include <cmath>
-  using ::sin;
-  using ::cos;
-  using ::tan;
+  using std::sin;
+  using std::cos;
+  using std::tan;
 
 double my_sin(double x)
 {
@@ -30,7 +32,6 @@ double my_cos(double x)
 {
 	return 50. * cos(x);
 }
-
 
 double my_tan(double x)
 {
@@ -95,21 +96,27 @@ int main()
 	       .y_major_interval(25)
 	       .y_num_minor_ticks(5);		
 	
-	svg_2d_plot_series& s_sin = my_plot.plot(data_sin, "sin(x)").area_fill(red);
-  std::cout << "s_sin.area_fill() " << s_sin.area_fill() << std::endl;
-	//svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
-	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").area_fill(blue).shape(square);
+	svg_2d_plot_series& s_sin = my_plot.plot(data_sin, "sin(x)").line_on(true).area_fill(red);
+  std::cout << "s_sin.area_fill() " << s_sin.area_fill() << std::endl; // s_sin.area_fill() RGB(255,0,0)
+
+	svg_2d_plot_series& s_cos = my_plot.plot(data_cos, "cos(x)").line_on(true).area_fill(blue).shape(square);
+  std::cout << "s_cos.area_fill() " << s_cos.area_fill() << std::endl; // s_cos.area_fill() RGB(0,0,255)
+
+	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone).line_on(true).area_fill(blank);
   // Note that svg_color(blank) or svg_color(false) returns a non-color blank, so no fill.
-  std::cout << "s_cos.area_fill() " << s_cos.area_fill() << std::endl;
-	svg_2d_plot_series& s_tan = my_plot.plot(data_tan, "tan(x)").shape(cone).line_on(false);
-  std::cout << "s_tan.area_fill() " << s_tan.area_fill() << std::endl;
-  std::cout << my_plot.title() << std::endl;
+  std::cout << "s_tan.area_fill() " << s_tan.area_fill() << std::endl; // s_tan.area_fill() blank
+
+  std::cout << my_plot.title() << std::endl; // "Plot of 50 * sin(x), cos(x) and tan(x)"
 
   my_plot.write("./2d_area_fill_1.svg");
-  std::cout << my_plot.title() << std::endl;
 
-  //my_plot.title("Plot 2 of 50 * sin(x), cos(x) and tan(x)");
-	my_plot.plot(data_cos, "cos(x)").area_fill(green).shape(square).fill_color(red);
+	my_plot.plot(data_sin, "sin(x)").line_on(true).area_fill(green).shape(square).fill_color(red);
+  // Note how this overwrites the previously cos fill and tan line.
+  // (It also needs a new title).
+
+  my_plot.title("sin overwriting cos and tan");
+  std::cout << my_plot.title() << std::endl; // "sin overwriting cos and tan"
+
   my_plot.write("./2d_area_fill_2.svg");
 
    return 0;
@@ -124,7 +131,8 @@ Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\2d_area_fill.exe"
 s_sin.area_fill() RGB(255,0,0)
-s_cos.area_fill() blank
+s_cos.area_fill() RGB(0,0,255)
 s_tan.area_fill() blank
+Plot of 50 * sin(x), cos(x) and tan(x)
 
 */

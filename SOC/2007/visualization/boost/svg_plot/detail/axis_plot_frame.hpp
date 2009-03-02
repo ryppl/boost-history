@@ -30,7 +30,9 @@
 // using std::string;
 
 #include <iostream> // for testing only.
-// using std::cerr and std::endl
+ using std::cerr;
+ using std::cout;
+ using std::endl;
 
 #include <utility>
 // using std::pair
@@ -534,16 +536,13 @@ namespace boost
           }
         } // void draw_x_axis()
 
-        // --------------------------------------------------------------------
-        // Draw legend & title (if wanted).
-        // --------------------------------------------------------------------
-
         void draw_title()
         { /*! Draw title (for the whole plot).
             Update title_info_ with position.
-            Assumes align = center_align.
-            and center_align will ensure that will center correctly
-            (even if original string is made much longer because it contains Unicode)
+            Assumes align = center_align
+            Using center_align will ensure that will title center correctly
+            (even if original string is made much longer because it contains Unicode,
+            for example Greek, taking about 6 characters per symbol)
             because the render engine does the centering.
           */
           derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
@@ -599,6 +598,7 @@ namespace boost
               derived().legend_width_ += spacing * 2.5;
 
             // & trailing space before box margin.
+            // if (derived().serieses_[i].line_style_.line_on_) // line joining points.
             if (derived().legend_lines_)
             { // Add for colored line marker in legend.
               derived().legend_width_ += spacing * 1.5;
@@ -740,7 +740,7 @@ namespace boost
           } //  void calculate_legend_box()
 
           void draw_legend()
-          { //! Draw the legend border, text and marker lines and/or shapes.
+          { //! Draw the legend border, text header (if any) and marker lines and/or shapes.
             // size_t num_points = derived().series.size();
             //cout << derived().legend_box_.width() <<  ' ' << derived().legend_box_.margin() << endl;
 
@@ -751,7 +751,7 @@ namespace boost
             // std::cerr << spacing <<  ' ' << font_size << ' ' << point_size << endl;
             bool is_header = (derived().legend_header_.text() != "");
 
-           // Assume legend box position has already been sized by calculate_legend_box.
+           // Assume legend box position has already been sized and positioned by function calculate_legend_box.
             double legend_x_start = derived().legend_left_; // Saved box location.
             double legend_width = derived().legend_width_;
             double legend_y_start = derived().legend_top_;
@@ -767,9 +767,9 @@ namespace boost
             if (is_header)
             { // Draw the legend header text for example: "My Plot Legend".
               derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
+              // Might be better to use center_align here because will fail if legend contains symbols in Unicode.
               derived().legend_header_.y(legend_y_pos);
-              derived().image.g(PLOT_LEGEND_TEXT).push_back(new
-                text_element(derived().legend_header_));
+              derived().image.g(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header_));
               legend_y_pos += 2 * spacing; // Might be 1.5? - useful if many series makes the box too tall.
             }
 
@@ -779,17 +779,24 @@ namespace boost
 
             for(unsigned int i = 0; i < derived().serieses_.size(); ++i)
             { // Show point marker, perhaps line, & text info for all the data series.
+
+              //cout << "Series " << i << endl;
+              //cout << derived().serieses_[i].point_style_ << endl;
+              cout << derived().serieses_[i].line_style_ << endl;
+
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker and/or line & text.
               g_inner_ptr = &(g_ptr->g());
-              // Use both stroke & fill colors from the point's style.
+              // Use both stroke & fill colors from the points' style.
+              // Applies to both shape AND line.
               g_inner_ptr->style().stroke_color(derived().serieses_[i].point_style_.stroke_color_);
               g_inner_ptr->style().fill_color(derived().serieses_[i].point_style_.fill_color_);
-              g_inner_ptr->style().stroke_width(derived().serieses_[i].line_style_.width_); // Applies to shape AND line.
+              g_inner_ptr->style().stroke_width(derived().serieses_[i].line_style_.width_);
 
+              //cout << "g_inner_ptr.style().stroke_color() " << g_inner_ptr->style() << endl;
               if(derived().serieses_[i].point_style_.shape_ != none)
-              { // Is a data marker shape to show.
-                draw_plot_point( // Plot point like circle, square...
+              { // Is some data marker shape to show.
+                draw_plot_point( // Plot point like circle, square, vertical bar...
                   legend_x_pos,
                   legend_y_pos,
                   *g_inner_ptr,
@@ -797,20 +804,26 @@ namespace boost
                 legend_x_pos += 1.5 * spacing;
               }
 
-              // Line markers  - only really applicable to 2-D sets plot_line_style,
+              // Line markers are only really useful for 2-D lines and curves showing functions.
               if (derived().legend_lines_)
               { // Need to draw a short line to show color for that data series.
-                g_inner_ptr->style() // Use stroke colors from line style.
-                  .stroke_color(derived().serieses_[i].line_style_.stroke_color_);
-               // Use stroke colors from line style.
-               // == image.g(PLOT_DATA_LINES).style().stroke_width(width);
-                // but this sets width for BOTH point and line :-(
-                g_inner_ptr->push_back(new line_element(
-                  legend_x_pos,
-                  legend_y_pos,
-                  legend_x_pos + spacing, // line sample is one char long.
-                  legend_y_pos));
-                legend_x_pos += 1.5 * spacing; // short line & a space.
+                  // Line joining points option is true.
+                  if (derived().serieses_[i].line_style_.line_on_ || derived().serieses_[i].line_style_.bezier_on_)
+                  { // Use stroke color from line style.
+                     g_inner_ptr->style().stroke_color(derived().serieses_[i].line_style_.stroke_color_);
+                  }
+                  else
+                  { // Use point stroke color instead.
+                    g_inner_ptr->style() .stroke_color(derived().serieses_[i].point_style_.stroke_color_); // OK with 1D
+                  }
+                  //std::cout << "line g_inner_ptr->style().stroke_color() " << g_inner_ptr->style().stroke_color() << std::endl;
+
+                  g_inner_ptr->push_back(new line_element( // Draw horizontal lines with appropriate color.
+                    legend_x_pos,
+                    legend_y_pos,
+                    legend_x_pos + spacing, // Line sample is one char long.
+                    legend_y_pos));
+                  legend_x_pos += 1.5 * spacing; // Total is short line & a space.
               } // legend_lines_
 
               // Legend text for each Data Series added to the plot.
@@ -898,7 +911,7 @@ namespace boost
           void draw_plot_point(double x, double y, // SVG coordinates.
             g_element& g_ptr,
             plot_point_style& sty)
-          { //! Draw a plot data point marker shape whose size and color are specified in plot_point_style.
+          { //! Draw a plot data point marker shape whose size and stroke and fill colors are specified in plot_point_style.
             /*
               For 1-D plots, the points do not *need* to be centered on the X-axis,
               and putting them just above, or sitting on, the X-axis is much clearer.
@@ -914,6 +927,14 @@ namespace boost
             int size = sty.size_;
             double half_size = size / 2.;
 
+
+            //cout << "point style() "<< sty.style() << endl;
+            // Whatever shape, text or line, want to use the point style.
+            g_ptr.style().stroke_color(sty.stroke_color_);
+            g_ptr.style().fill_color(sty.fill_color_);
+
+            //cout << "g_ptr.style() " << g_ptr.style() << endl;
+
             switch(sty.shape_) // from enum point_shape none, round, square, point, egg
             {
             case round:
@@ -926,12 +947,7 @@ namespace boost
               g_ptr.ellipse(x, y, half_size, size * 2.); // Tall thin egg!
               break;
 
-              // Offset from center is not an issue with vertical or horizontal ticks.
-              // TODO stroke color of line seems to be FILL color, not the stroke color.
-              // This is OK-ish, but I'm not sure why.
-
-              //svg_color sc = sty.stroke_color;
-              //svg_color fc = sty.fill_color;
+             // Offset from center is not an issue with vertical or horizontal ticks.
 
             case vertical_tick: // Especially neat for 1-D points.
               g_ptr.line(x, y, x , y - size); // tick up from axis.
@@ -996,7 +1012,7 @@ namespace boost
               // Last point puts the bottom tip of the triangle on the X-axis (may not be wanted for 2-D).
               }
               break;
-            case cross:
+            case cross: // Not X.
               g_ptr.line(x, y + size, x , y - size); // line up & down from axis,
               g_ptr.line(x, y - size, x + size, y ); // & line left & right from axis.
               // Cross is pretty useless for 1-D because the horizontal line is on the X-axis.

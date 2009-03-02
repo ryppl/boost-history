@@ -16,7 +16,6 @@
 using namespace boost::svg;
 #include <boost/array.hpp>
   using boost::array;
-
 #include <vector>
   using std::vector;
 #include <deque>
@@ -57,18 +56,18 @@ int main()
 
   // Size/scale settings.
   my_plot.size(500, 350)
-         .x_range(-3, 10);
+     .x_range(-3, 10);
 
   // Text settings.
-  my_plot.title("Oh My!")
-         .title_font_size(29)
-         .x_label("Time in Months");
+  my_plot.title("Animal Lives")
+    .title_font_size(29)
+    .x_label("Time in Months");
 
   // Commands.
   my_plot.legend_on(true)
-         .plot_window_on(true)
-         .x_label_on(true)
-         .x_major_labels_side(true);
+     .plot_window_on(true)
+     .x_label_on(true)
+     .x_major_labels_side(true);
 
   // Color settings.
   my_plot.background_color(svg_color(67, 111, 69))
@@ -86,7 +85,11 @@ int main()
          .x_num_minor_ticks(3);
 
   // Legend settings.
-  my_plot.legend_title_font_size(15);
+  my_plot.legend_title("Animals")
+    .legend_title_font_size(15)
+    ;
+
+
 
   my_plot.plot(data1, "Lions").stroke_color(blue);
   my_plot.plot(data2, "Tigers").stroke_color(orange);

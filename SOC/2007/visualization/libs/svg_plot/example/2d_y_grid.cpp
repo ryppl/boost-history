@@ -1,14 +1,17 @@
 /*! \file 2d_y_grid.cpp
   \brief 2D plot with Y axis grids.
   \details Shows an example of adding a Y horizontal grid to a 2D plot.
-  \author Jacob Voytko
+  \author Jacob Voytko and Paul A. Bristow 
   \date 2007
 */
 
 // Copyright Jacob Voytko 2007
+// Copyright Paul A. Bristow 2009
 
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
 #include <vector>
@@ -35,17 +38,15 @@ int main()
          .legend_on(true)
          .x_range(-1, 11)
          .background_border_color(black)
-           .plot_window_on(true);
+         .plot_window_on(true);
 
     my_plot.y_major_grid_on(true)
-       .y_minor_grid_on(true);
-
-    my_plot.y_major_grid_color(black)
+       .y_minor_grid_on(true)
+       .y_major_grid_color(blue)
        .y_minor_grid_color(lightgray);
 
-
-    my_plot.plot(map1, "Series 1").stroke_color(blue);
-    my_plot.plot(map2, "Series 2").stroke_color(orange);
+    my_plot.plot(map1, "Series 1").stroke_color(blue).fill_color(red);
+    my_plot.plot(map2, "Series 2").stroke_color(orange); // Fill white by default.
 
     my_plot.write("./2d_y_grid.svg");
   return 0;

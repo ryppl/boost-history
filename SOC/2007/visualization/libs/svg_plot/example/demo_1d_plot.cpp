@@ -134,7 +134,7 @@ int main()
   .legend_font_family("arial") // "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana"
   .legend_font_weight("bold")
   .legend_color(darkgreen)
-  .legend_lines(false) // Horizontal sample color line not needed if showing values with colored shapes?
+  .legend_lines(false) // Horizontal sample color line not useful if already showing values with colored shapes.
   .x_label_on(true) // show x-axis text label.
   .x_label("volume") // Care: this doesn't show unless .x_label_on() == true!
   .x_axis_color(blue)

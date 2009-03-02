@@ -1,19 +1,25 @@
 /*! \file 2d_bezier.cpp
   \brief Simple 2D plot using bezier curves.
-  \author Jacob Voytko
+  \author Jacob Voytko and Paul A. Bristow
   \date 2007
 */
 
 // Copyright (C) Jacob Voytko 2007
-// Distributed under the Boost Software License, Version 1.0.
-// For more information, see http://www.boost.org
+// Copyright Paul A. Bristow 2009
+
+// Use, modification and distribution are subject to the
+// Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt
+// or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
 using namespace boost::svg;
 
 #include <map>
+  using std::map;
 #include <cmath>
-using std::map;
+  using std::sin;
+  using std::cos;
 
 double f(double x)
 {
@@ -44,9 +50,8 @@ int main()
     .x_range(-.5, 10.5)
     .y_range(-1.1, 1.1);
 
-
   // Text settings.
-  my_plot.title("Plot of trig functions")
+  my_plot.title("Plot of sin and cos functions")
     .title_font_size(29)
     .x_label("X Axis Units")
     .y_major_labels_side(-1)
@@ -73,18 +78,22 @@ int main()
     .x_minor_tick_width(1)
     .x_num_minor_ticks(3)
 
-    // Y axis settings.
+  // Y axis settings.
     .y_major_interval(25)
     .y_num_minor_ticks(5);
 
-  // legend settings
+  // legend settings.
   my_plot.legend_title_font_size(15);
 
-  my_plot.plot(data1, "Sin(x)").shape(round)
-    .bezier_on(true).size(5).fill_color(yellow);
+  my_plot.plot(data1, "Sin(x)").line_on(true)
+    .shape(round).size(5).fill_color(yellow);
 
-  my_plot.plot(data2, "Cos(x)").shape(square)
-    .bezier_on(true).size(5).fill_color(red);
+  my_plot.plot(data2, "Cos(x)")
+    .line_color(blue)
+    .bezier_on(true)
+    .shape(square).size(5).fill_color(red);
+
+  // Note the slightly smoother curve for the bezier_on comapred to the line_on options.
 
   my_plot.write("./2d_bezier.svg");
 

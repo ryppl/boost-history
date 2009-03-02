@@ -35,7 +35,6 @@
 #include "detail/numeric_limits_handling.hpp"
 using boost::svg::detail::limit_NaN;
 
-
 #include "svg.hpp"
 
 #include <map> // for map & multimap
@@ -133,7 +132,7 @@ namespace boost
     title_(title), //!< Title of a series of data values.
     // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
     // int size = 10, point_shape shape = round, const std::string& symbols = "X")
-    point_style_(black, blank, 10, round), // Default point style.
+    point_style_(black, white, 10, round), // Default point style (default fill white).
     limit_point_style_(grey, blank, 10, cone), // Default limit (infinity or NaN) point style.
     line_style_(black, blank, 2, false, false), // Default line style, no fill, width 2, no line_on, no bezier.
     bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
