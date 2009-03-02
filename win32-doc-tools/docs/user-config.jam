@@ -1,0 +1,20 @@
+# Adjust this path to the location you unzipped boost-doc-tools to...
+BOOST_DOC_TOOLS_DIR = "c:/DIRNAME" ;
+
+using xsltproc
+    : $(BOOST_DOC_TOOLS_DIR)/bin/xsltproc.exe
+    ;
+
+using boostbook
+    : $(BOOST_DOC_TOOLS_DIR)/share/xsl/docbook
+    : $(BOOST_DOC_TOOLS_DIR)/share/xml/docbook/4.2
+    ;
+
+using quickbook
+    : $(BOOST_DOC_TOOLS_DIR)/bin/quickbook.exe
+    ;
+
+# If you want to auto-build quickbook from the boost repository replace
+# the previous directive with:
+
+# using quickbook ;
