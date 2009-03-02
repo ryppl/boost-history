@@ -8,8 +8,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/detail/spinlock.hpp>
-#include <boost/detail/lightweight_test.hpp>
+#include <boost/smart_ptr/detail/spinlock.hpp>
 
 // Sanity check only
 
@@ -18,29 +17,15 @@ static boost::detail::spinlock sp2 = BOOST_DETAIL_SPINLOCK_INIT;
 
 int main()
 {
-    BOOST_TEST( sp.try_lock() );
-    BOOST_TEST( !sp.try_lock() );
-    BOOST_TEST( sp2.try_lock() );
-    BOOST_TEST( !sp.try_lock() );
-    BOOST_TEST( !sp2.try_lock() );
-    sp.unlock();
-    sp2.unlock();
-
     sp.lock();
-    BOOST_TEST( !sp.try_lock() );
     sp2.lock();
-    BOOST_TEST( !sp.try_lock() );
-    BOOST_TEST( !sp2.try_lock() );
     sp.unlock();
     sp2.unlock();
 
     {
         boost::detail::spinlock::scoped_lock lock( sp );
-        BOOST_TEST( !sp.try_lock() );
         boost::detail::spinlock::scoped_lock lock2( sp2 );
-        BOOST_TEST( !sp.try_lock() );
-        BOOST_TEST( !sp2.try_lock() );
     }
 
-    return boost::report_errors();
+    return 0;
 }
