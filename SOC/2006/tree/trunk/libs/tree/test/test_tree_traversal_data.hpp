@@ -101,67 +101,6 @@ struct test_binary_tree_fixture {
     boost::tree::binary_tree<T> bt, bt2;
 };
 
-template <class Forest>
-static void create_test_dataset1_forest(Forest& f)
-{
-    // For augmented trees. (Why is this necessary? Nothing here is explicit!)
-    typedef typename Forest::value_type value_type; 
-    
-    typename Forest::cursor cur = f.insert(f.end(), value_type(8));
-    cur = f.insert(f.end(), value_type(10));
-    cur = f.insert(f.end(), value_type(14));
-
-    cur = f.begin().begin();
-    cur = f.insert(cur, value_type(3));
-    cur = f.insert(++cur, value_type(7));
-    cur = f.insert(cur, value_type(6));
-
-    cur = f.begin().begin().begin();
-    cur = f.insert(cur, value_type(1));
-
-    cur = f.begin().begin();
-    cur = f.insert((++cur).to_begin(), value_type(4));
-
-    cur = f.begin();
-    cur = f.insert((++++cur).to_begin(), value_type(13));
-    cur = f.insert(cur.to_begin(), value_type(11));
-    cur = f.insert(++cur, value_type(12));
-}
-
-template <class Cursor>
-static void validate_test_dataset1_forest(Cursor cur, Cursor e)
-{
-    Cursor c = cur;
-    BOOST_CHECK_EQUAL(*c, 8);
-    BOOST_CHECK_EQUAL(*c.to_begin(), 3);
-    BOOST_CHECK_EQUAL(*++c, 6);
-    BOOST_CHECK_EQUAL(*++c, 7);
-    BOOST_CHECK(++c == cur.end());
-    
-    c = cur.begin();
-    BOOST_CHECK_EQUAL(*c.to_begin(), 1);
-    BOOST_CHECK(++c == cur.begin().end());
-
-    c = cur.begin();
-    ++c;
-    Cursor d = c; 
-    BOOST_CHECK_EQUAL(*c.to_begin(), 4);
-    BOOST_CHECK(++c == d.end());
-    
-    c = cur;
-    BOOST_CHECK_EQUAL(*++c, 10);
-    BOOST_CHECK_EQUAL(*++c, 14);
-    d = c;
-    BOOST_CHECK(++c == e);
-    c = d;
-    BOOST_CHECK_EQUAL(*c.to_begin(), 13);
-    BOOST_CHECK(++c == d.end());
-    c = d.to_begin();
-    BOOST_CHECK_EQUAL(*c.to_begin(), 11);
-    BOOST_CHECK_EQUAL(*++c, 12);
-    BOOST_CHECK(++c == d.end());
-}
-
 template <class Container>
 void generate_mock_cursor_data(boost::tree::preorder, Container& data)
 {
