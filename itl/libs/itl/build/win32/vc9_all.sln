@@ -61,8 +61,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_set", "..\..\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_morphic", "..\..\..\validate\example\labat_itl_morphic\vc9_labat_itl_morphic.vcproj", "{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_quantifier_itl_map", "..\..\test\test_quantifier_itl_map\vc9_test_quantifier_itl_map.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE3528}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_set_interval_set", "..\..\test\test_set_inerval_set\vc9_test_set_interval_set.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_set_itl_set", "..\..\test\test_set_itl_set\vc9_test_set_itl_set.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE352A}"
@@ -207,10 +205,6 @@ Global
 		{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}.Debug|Win32.Build.0 = Debug|Win32
 		{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}.Release|Win32.ActiveCfg = Release|Win32
 		{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}.Release|Win32.Build.0 = Release|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3528}.Debug|Win32.ActiveCfg = Debug|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3528}.Debug|Win32.Build.0 = Debug|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3528}.Release|Win32.ActiveCfg = Release|Win32
-		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3528}.Release|Win32.Build.0 = Release|Win32
 		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}.Debug|Win32.ActiveCfg = Debug|Win32
 		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}.Debug|Win32.Build.0 = Debug|Win32
 		{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}.Release|Win32.ActiveCfg = Release|Win32
