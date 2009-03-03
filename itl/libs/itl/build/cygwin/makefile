@@ -141,7 +141,7 @@ interval_container_TARGET  = $(BIN_PATH)/interval_container$(EXE_TAG)
 interval_container:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(interval_container_SOURCES) $(LOAD_FLAGS) -o $(interval_container_TARGET)
 
-#--- project overlap_counter --------------------------------------------------
+#--- project overlap_counter ---------------------------------------------------
 overlap_counter_PATH = $(ITL_EXAMPLE_PATH)/overlap_counter
 overlap_counter_MAIN = $(overlap_counter_PATH)/overlap_counter.cpp
 overlap_counter_SOURCES = $(overlap_counter_MAIN)
@@ -150,7 +150,7 @@ overlap_counter_TARGET  = $(BIN_PATH)/overlap_counter$(EXE_TAG)
 overlap_counter:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(overlap_counter_SOURCES) $(LOAD_FLAGS) -o $(overlap_counter_TARGET)
 
-#--- project history --------------------------------------------------
+#--- project history -----------------------------------------------------------
 history_PATH = $(ITL_XT_EXAMPLE_PATH)/history
 history_MAIN = $(history_PATH)/history.cpp
 history_SOURCES = $(history_MAIN)
@@ -264,7 +264,7 @@ template_match_TARGET  = $(BIN_PATH)/template_match$(EXE_TAG)
 template_match:
 	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(template_match_SOURCES) $(LOAD_FLAGS) -o $(template_match_TARGET)
 
-
+#-------------------------------------------------------------------------------
 show_temps:
 	find $(ITL_LIBS_PATH) -name \*.pdb; \
 	find $(ITL_LIBS_PATH) -name \*.exe; \

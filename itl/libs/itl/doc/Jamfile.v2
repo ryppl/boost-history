@@ -5,7 +5,7 @@
 #
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
-# http:\\www.boost.org\LICENSE_1_0.txt)
+# http://www.boost.org/LICENSE_1_0.txt)
 
 import doxygen ;
 import quickbook ;
@@ -16,7 +16,7 @@ import quickbook ;
 
 doxygen itldoc
     :
-        [ glob ..\..\..\boost\itl\*.hpp ]
+        [ glob ../../../boost/itl/*.hpp ]
     :
         <doxygen:param>EXTRACT_ALL=YES
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
@@ -44,8 +44,8 @@ boostbook standalone
     :
         itl
     :
-        <xsl:param>boost.root=..\..\..\..
-        <xsl:param>boost.libraries=..\..\..\libraries.htm
+        <xsl:param>boost.root=../../../..
+        <xsl:param>boost.libraries=../../../libraries.htm
         <xsl:param>toc.max.depth=2
         <xsl:param>toc.section.depth=2
         <xsl:param>chunk.section.depth=1
