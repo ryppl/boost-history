@@ -28,7 +28,7 @@ using namespace boost::itl;
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_ctor_4_ordered_types, T, ordered_types)
 {         
     T v0 = neutron<T>::value();
-    T v1 = unon<T>::value();
+    
 
     split_interval_set<T>    split_set(v0);
     separate_interval_set<T> sep_set(split_set);
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_ctor_4_ordered_types, 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_equal_4_ordered_types, T, ordered_types)
 {         
     T v0 = neutron<T>::value();
-    T v1 = unon<T>::value();
+    
 
     split_interval_set<T>    split_empty, split_single(v0);
     separate_interval_set<T> sep_empty, sep_single(v0);
@@ -132,7 +132,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_assign_4_ordered_types
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_ctor_4_bicremental_types, T, bicremental_types)
 {         
-    T v0 = make<T>(0);
+    
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -163,7 +163,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_ctor_4_bicremental_typ
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_assign_4_bicremental_types, T, bicremental_types)
 {         
-    T v0 = make<T>(0);
+    
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -198,7 +198,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_assign_4_bicremental_t
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_equal_4_bicremental_types, T, bicremental_types)
 {         
-    T v0 = make<T>(0);
+    
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_contains_4_bicremental
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_add_4_bicremental_types, T, bicremental_types)
 {         
-    T v0 = make<T>(0);
+    
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -520,8 +520,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_basic_intersect_4_bicr
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
-    T v4 = make<T>(4);
-    T v5 = make<T>(5);
+    
+    
     T v6 = make<T>(6);
     T v7 = make<T>(7);
     T v8 = make<T>(8);
@@ -591,7 +591,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
     T v4 = make<T>(4);
     T v5 = make<T>(5);
     T v6 = make<T>(6);
-    T v7 = make<T>(7);
+    
     T v8 = make<T>(8);
     T v9 = make<T>(9);
 
@@ -718,15 +718,15 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_intersect_4_bicrementa
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_set_mixed_disjoint_4_bicremental_types, T, bicremental_types)
 {         
     T v0 = make<T>(0);
-    T v1 = make<T>(1);
+    
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
-    T v5 = make<T>(5);
+    
     T v6 = make<T>(6);
-    T v7 = make<T>(7);
-    T v8 = make<T>(8);
-    T v9 = make<T>(9);
+    
+    
+    
 
     interval<T> I0_2D = interval<T>::rightopen(v0,v2);
     interval<T> I2_3D = interval<T>::rightopen(v2,v3);

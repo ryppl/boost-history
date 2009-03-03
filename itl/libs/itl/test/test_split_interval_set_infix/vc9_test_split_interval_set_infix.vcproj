@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="vc9_test_interval_set_laws"
-	ProjectGUID="{EE61B7EF-EC45-4165-8B49-FD5B7D2A9FA0}"
-	RootNamespace="Test_interval_set_laws"
+	Name="vc9_test_split_interval_set_infix"
+	ProjectGUID="{A731623C-94BC-4666-A419-35D3623E950E}"
+	RootNamespace="test_split_interval_set_infix"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="131072"
 	>
@@ -180,7 +180,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\test_interval_set_laws.cpp"
+				RelativePath=".\test_split_interval_set_infix.cpp"
 				>
 			</File>
 		</Filter>
@@ -190,7 +190,7 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\test_interval_set_laws_shared.hpp"
+				RelativePath="..\test_split_interval_set_infix_shared.hpp"
 				>
 			</File>
 			<File

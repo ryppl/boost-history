@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-
+#pragma once
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_itl_map_find_4_bicremental_types, T, discrete_types)
-{         itl_map_find_4_bicremental_types<T, int, partial_absorber, interval_map>();}
+{         itl_map_find_4_bicremental_types<T, int, partial_absorber, INTERVAL_MAP>();}
 

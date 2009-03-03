@@ -804,14 +804,16 @@ void interval_map_flip_4_bicremental_types()
     typedef IntervalMap<T,U> IntervalMapT;
     typedef IntervalMapT IMap;
 
-    IntervalMapT set_a, set_b, lhs, rhs;
+    IntervalMapT set_a;
     //[0     2)
     //    1
     //    [1     3)
     //        1
     //[0 1)   [2 3) : {[0 2)->1} ^= ([2 3)->1)
     //  1       1
-    BOOST_CHECK_EQUAL(IMap(IDv(0,2,1)) ^= (IDv(1,3,1)), IMap(IDv(0,1,1)) + IDv(2,3,1));
+    //BOOST_CHECK_EQUAL(IMap(IDv(0,2,1)) ^= (IDv(1,3,1)), IMap(IDv(0,1,1)) + IDv(2,3,1));
+    set_a = IMap(IDv(0,2,1));
+    BOOST_CHECK_EQUAL(set_a ^= IDv(1,3,1), IMap(IDv(0,1,1)) + IDv(2,3,1));
 }
 
 template <template<class T, class U,
@@ -1030,7 +1032,7 @@ void interval_map_find_4_bicremental_types()
     IntervalMapT map_a;
     map_a.add(CDv(1,3,1)).add(IDv(8,9,1)).add(IIv(6,11,3));
 
-    IntervalMapT::const_iterator found = map_a.find(MK_v(6));
+    typename IntervalMapT::const_iterator found = map_a.find(MK_v(6));
 
     BOOST_CHECK_EQUAL( found->CONT_VALUE, MK_u(3) );
     BOOST_CHECK_EQUAL( map_a(MK_v(6)), MK_u(3) );

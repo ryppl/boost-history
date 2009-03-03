@@ -27,9 +27,7 @@ using namespace boost::itl;
 // interval_sets: interval_set, separate_interval_set and split_interval_set.
 #include "../test_interval_set_shared.hpp"
 
-// Due to limited expressiveness of the testing framework, the testcode in files
-// test_interval_set{,_separate,split}_shared.cpp is generated through code
-// replication. 
-#include "test_interval_set_shared.cpp"
+#define INTERVAL_SET interval_set
+#include "../test_interval_set_cases.hpp"
 
 

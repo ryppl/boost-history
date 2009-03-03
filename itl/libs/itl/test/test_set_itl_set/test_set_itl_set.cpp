@@ -31,9 +31,6 @@ using namespace boost::itl;
 // interval_sets: interval_set, separate_interval_set and split_interval_set.
 #include "../test_set_itl_set.hpp"
 
-// Due to limited expressiveness of the testing framework, the testcode in files
-// test_interval_map{,_split}_shared.cpp is generated through code
-// replication. 
-#include "test_set_itl_set_shared.cpp"
+#include "test_set_itl_set_cases.hpp"
 
 

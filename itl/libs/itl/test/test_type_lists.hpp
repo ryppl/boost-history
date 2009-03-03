@@ -29,8 +29,8 @@ typedef ::boost::mpl::list<
 
 //DBG short list for debugging
 typedef ::boost::mpl::list<
-    float
-> debug_type_list;
+    int
+> debug_types;
 
 typedef ::boost::mpl::list<
     float, double

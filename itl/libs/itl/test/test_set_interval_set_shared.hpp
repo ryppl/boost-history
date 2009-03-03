@@ -37,10 +37,7 @@ void interval_set_check_monoid_plus_4_bicremental_types()
 
 template <class T,
           template<class T,
-                   class Traits = Trt,
                    ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
-                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
-                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
                    template<class,ITL_COMPARE>class Interval = interval,
                    ITL_ALLOC   Alloc   = std::allocator
                   >class IntervalSet

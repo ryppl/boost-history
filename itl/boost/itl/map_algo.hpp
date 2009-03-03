@@ -137,9 +137,9 @@ namespace boost{namespace itl
                         typename MapType::iterator res_ = insertion.ITERATOR;
                         typename MapType::codomain_type common_value = res_->CONT_VALUE;
                         typename MapType::key_type key_value = res_->KEY_VALUE;
-                        MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
+                        typename MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
                         result.subtract(*res_);
-                        result.add(MapType::value_type(key_value, common_value));
+                        result.add(typename MapType::value_type(key_value, common_value));
                     }
                     else
                         result.subtract(*insertion.ITERATOR);

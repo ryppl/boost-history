@@ -27,17 +27,28 @@ operator += (ObjectT& object, const OperandT& operand)
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) += operand; }
+//NOTE: Prefered implementation using return value optimization does not compile with gcc
+//{ return ObjectT(object) += operand; }
+{
+    ObjectT result(object); 
+    return result += operand; 
+}
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) += operand; }
+{
+    ObjectT result(object); 
+    return result += operand; 
+}
 
 
 template<class ObjectT>
 ObjectT operator + (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) += operand; }
+{
+    ObjectT tmp(object);
+    return tmp += operand; 
+}
 
 
 //------------------------------------------------------------------------------
@@ -53,17 +64,26 @@ operator |= (ObjectT& object, const OperandT& operand)
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) += operand; }
+{
+    ObjectT result(object); 
+    return result += operand; 
+}
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) += operand; }
+{
+    ObjectT result(object); 
+    return result += operand; 
+}
 
 
 template<class ObjectT>
 ObjectT operator | (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) += operand; }
+{
+    ObjectT result(object); 
+    return result += operand; 
+}
 
 
 //------------------------------------------------------------------------------
@@ -85,13 +105,10 @@ operator -= (ObjectT& object, const OperandT& operand)
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator - (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) -= operand; }
-
-
-template<class ObjectT>
-ObjectT operator - (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) -= operand; }
-
+{
+    ObjectT result(object); 
+    return result -= operand; 
+}
 
 //------------------------------------------------------------------------------
 // Intersection &=, &
@@ -109,41 +126,59 @@ operator &= (ObjectT& object, const OperandT& operand)
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) &= operand; }
+{
+    ObjectT result(object); 
+    return result &= operand; 
+}
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
 operator & (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) &= operand; }
+{
+    ObjectT result(object); 
+    return result &= operand; 
+}
 
 template<class ObjectT>
 ObjectT operator & (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) &= operand; }
+{
+    ObjectT result(object); 
+    return result &= operand; 
+}
 
 //------------------------------------------------------------------------------
 // Symmetric difference ^=, ^
 //------------------------------------------------------------------------------
+
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { return object.flip(operand); }
 
-
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator ^ (const ObjectT& object, const OperandT& operand)
-{ return ObjectT(object) ^= operand; }
+{
+    ObjectT result(object); 
+    return result ^= operand; 
+}
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator ^ (const OperandT& operand, const ObjectT& object)
-{ return ObjectT(object) ^= operand; }
+{
+    ObjectT result(object); 
+    return result ^= operand; 
+}
 
 
 template<class ObjectT>
 ObjectT operator ^ (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
-{ return ObjectT(object) ^= operand; }
+{
+    ObjectT result(object); 
+    return result ^= operand; 
+}
 
 
 }} // namespace itl boost

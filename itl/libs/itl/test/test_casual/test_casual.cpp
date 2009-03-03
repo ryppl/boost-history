@@ -63,11 +63,13 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef itl::map<int,int>  ItlMapT;
     typedef interval_map<int,int,partial_enricher>  IntervalMapT;
     typedef split_interval_map<int,int>  SplitIntervalMapT;
+    typedef interval_set<int>  IntervalSetT;
     
-    IntervalMapT left, right;
+    //IntervalMapT left, right, result;
+    //left .add(IIv(0,0,1)).add(IIv(1,1,2));
+    //right.add(IIv(0,0,-1));
 
-    left .add(IIv(0,0,1)).add(IIv(1,1,2));
-    right.add(IIv(0,0,-1));
+    IntervalSetT left, right, result; 
 
-    left ^= right;
+    result = left + right;
 }

@@ -30,9 +30,6 @@ using namespace boost::itl;
 // interval_sets: interval_set, separate_interval_set and split_interval_set.
 #include "../test_quantifier_itl_map.hpp"
 
-// Due to limited expressiveness of the testing framework, the testcode in files
-// test_interval_map{,_split}_shared.cpp is generated through code
-// replication. 
 #include "test_quantifier_itl_map_shared.cpp"
 
 

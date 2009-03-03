@@ -615,18 +615,28 @@ inline bool operator >= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
-    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand)
 { return object.add(operand); }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 operator + ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
-    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
+    const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand)
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) += operand; 
+    ObjectT result(object);
+    return result += operand; 
 }
 
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator + (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand,
+                     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object               )
+{
+    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+    ObjectT result(object);
+    return result += operand; 
+}
 
 /** Add a map \c operand to map \c object. If an element of \c operand already exists
     in \c object, add up the contents. */
@@ -643,7 +653,8 @@ operator +  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) += operand; 
+    ObjectT result(object);
+    return result += operand; 
 }
 
 //--------------------------------------------------------------------------
@@ -660,9 +671,20 @@ operator | ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) |= operand; 
+    ObjectT result(object);
+    return result |= operand; 
 }
 
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator | (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand,
+                     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object               )
+{
+    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+    ObjectT result(object);
+    return result |= operand; 
+}
 
 /** Add a map \c operand to map \c object. If an element of \c operand already exists
     in \c object, add up the contents. */
@@ -679,7 +701,8 @@ operator |  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) |= operand; 
+    ObjectT result(object);
+    return result |= operand; 
 }
 
 //--------------------------------------------------------------------------
@@ -704,7 +727,8 @@ operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) -= operand; 
+    ObjectT result(object);
+    return result -= operand; 
 }
 
 /** Subtract a set \c x2 from this map. Every element of \c this map that
@@ -722,7 +746,8 @@ operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) -= operand; 
+    ObjectT result(object);
+    return result -= operand; 
 }
 
 
@@ -750,7 +775,8 @@ operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) &= operand; 
+    ObjectT result(object);
+    return result &= operand; 
 }
 
 /** Intersect set \c x2 and \c *this.
@@ -768,8 +794,20 @@ operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) &= operand; 
+    ObjectT result(object);
+    return result &= operand; 
 }
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator & (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand,
+                     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object               )
+{
+    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
+    ObjectT result(object);
+    return result &= operand; 
+}
+
 
 
 /** Symmetric subtract map \c x2 and \c *this.
@@ -789,7 +827,8 @@ operator ^  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    return ObjectT(object) ^= operand; 
+    ObjectT result(object);
+    return result ^= operand; 
 }
 
 

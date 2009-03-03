@@ -33,7 +33,7 @@ void itl_map_find_4_bicremental_types()
     MapT map_a;
     Interval::atomize(map_a, itv_map_a);
 
-    MapT::const_iterator found = map_a.find(MK_v(6));
+    typename MapT::const_iterator found = map_a.find(MK_v(6));
 
     BOOST_CHECK_EQUAL( found->CONT_VALUE, MK_u(3) );
     BOOST_CHECK_EQUAL( map_a(MK_v(6)), MK_u(3) );

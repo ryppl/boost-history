@@ -26,7 +26,6 @@ struct is_overloadable
         is_same<Type, typename Type::overloadable_type>::value;
 };
 
-
 template<class Type>
 struct is_interval_map
 {
@@ -43,7 +42,6 @@ struct is_interval_set
         is_interval_container<Type>::value && !is_interval_map<Type>::value; 
 };
 
-
 //------------------------------------------------------------------------------
 // is_interval_set_derivative
 //------------------------------------------------------------------------------
@@ -53,17 +51,22 @@ struct is_interval_set_derivative;
 template<class Type>
 struct is_interval_set_derivative<Type, typename Type::domain_type>
 { 
+    typedef is_interval_set_derivative<Type, typename Type::domain_type> type;
     static const bool value = is_interval_container<Type>::value; 
 };
 
 template<class Type>
 struct is_interval_set_derivative<Type, typename Type::interval_type>
-{ enum{ value = is_interval_container<Type>::value }; };
+{ 
+    typedef is_interval_set_derivative<Type, typename Type::interval_type> type;
+    static const bool value = is_interval_container<Type>::value; 
+};
 
 template<class Type, class AssociateT>
 struct is_interval_set_derivative
 {
-    enum{ value = false };
+    typedef is_interval_set_derivative<Type, AssociateT> type;
+    static const bool value = false;
 };
 
 //------------------------------------------------------------------------------
@@ -107,11 +110,14 @@ template<class Type, class AssociateT>
 struct is_intra_derivative
 {
     typedef is_intra_derivative<Type, AssociateT> type;
-    static const bool value = 
-            (   is_interval_set<Type>::value 
-            &&  is_interval_set_derivative<Type, AssociateT>::value)
-        ||  (   is_interval_map<Type>::value
-            &&  is_interval_map_derivative<Type, AssociateT>::value);
+    static const bool value =
+        mpl::or_
+        <     
+            mpl::and_<is_interval_set<Type>, 
+                      is_interval_set_derivative<Type, AssociateT> >
+          , mpl::and_<is_interval_map<Type>, 
+                      is_interval_map_derivative<Type, AssociateT> >
+        >::value;
 };
 
 template<class Type, class AssociateT>

@@ -70,7 +70,7 @@ public:
     //= Construct, copy, destruct
     //==========================================================================
     set(){}
-    set(const domain_compare& comp): 
+    explicit set(const domain_compare& comp): 
         std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
     template <class InputIterator>
@@ -369,7 +369,19 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator +  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) += operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result += operand; 
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+itl::set<DomainT,Compare,Alloc> 
+operator +  (const typename itl::set<DomainT,Compare,Alloc>::element_type& operand,
+                      const itl::set<DomainT,Compare,Alloc>& object)
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result += operand; 
+}
 
 /// Add a set \c operand to this set \object.
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -382,7 +394,10 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator +  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) += operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result += operand; 
+}
 
 //--------------------------------------------------------------------------
 
@@ -396,7 +411,19 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator |  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) |= operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result |= operand; 
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+itl::set<DomainT,Compare,Alloc> 
+operator |  (const typename itl::set<DomainT,Compare,Alloc>::element_type& operand,
+                      const itl::set<DomainT,Compare,Alloc>& object)
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result |= operand; 
+}
 
 /// Add a set \c operand to this set \object.
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -409,7 +436,10 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator |  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) |= operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result |= operand; 
+}
 
 //--------------------------------------------------------------------------
 
@@ -423,8 +453,10 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator -  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) -= operand; }
-
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result -= operand; 
+}
 
 /// Subtract a set \c x2 from this set.
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
@@ -437,7 +469,10 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator -  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) -= operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result -= operand; 
+}
 
 //--------------------------------------------------------------------------
 // itl::set::intersection operators &=, &
@@ -457,7 +492,19 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator &  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result &= operand; 
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+itl::set<DomainT,Compare,Alloc> 
+operator &  (const typename itl::set<DomainT,Compare,Alloc>::element_type& operand,
+                      const itl::set<DomainT,Compare,Alloc>& object)
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result &= operand; 
+}
 
 
 
@@ -478,7 +525,10 @@ template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 itl::set<DomainT,Compare,Alloc> 
 operator &  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
-{ return itl::set<DomainT,Compare,Alloc>(object) &= operand; }
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result &= operand; 
+}
 
 //--------------------------------------------------------------------------
 // itl::set::symmetric_difference operators ^=, ^
@@ -496,9 +546,18 @@ itl::set<DomainT,Compare,Alloc>
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
     const typename itl::set<DomainT,Compare,Alloc>::element_type& operand)
 { 
-    return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result ^= operand; 
 }
 
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+itl::set<DomainT,Compare,Alloc> 
+operator ^  (const typename itl::set<DomainT,Compare,Alloc>::element_type& operand,
+                      const itl::set<DomainT,Compare,Alloc>& object)
+{
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result ^= operand; 
+}
 
 
 /** Intersect set \c object with \c operand. 
@@ -516,7 +575,8 @@ itl::set<DomainT,Compare,Alloc>
 operator ^  (const itl::set<DomainT,Compare,Alloc>& object,
              const itl::set<DomainT,Compare,Alloc>& operand)
 { 
-    return itl::set<DomainT,Compare,Alloc>(object) ^= operand; 
+    itl::set<DomainT,Compare,Alloc> result(object);
+    return result ^= operand; 
 }
 
 

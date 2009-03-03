@@ -452,38 +452,6 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 }
 
 
-/*CL
-template<class SubType, 
-         class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-    template
-    <
-        template<class DomT, ITL_COMPARE Comp,
-                 template<class DomT2,ITL_COMPARE>class Interv, ITL_ALLOC Allc>
-        class IntervalSet
-    >
-bool interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
-    ::contained_in(const IntervalSet<DomainT,Compare,Interval,Alloc>& x2)const
-{
-    // The empty set is subset of every set
-    if(empty())
-        return true;
-    else if (x2.empty())
-        return false;
-    else if(upper() < x2.lower())
-        return false;
-    else if(x2.upper() < lower())
-        return false;
-    else
-    {
-        // x2 should be larger than *this; so every element in this should be in x2
-        const_FOR_IMPL(it) 
-            if(!x2.contains(*it)) 
-                return false;
-        return true;
-    }
-}
-*/
-
 template<class SubType,
          class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection(interval_base_set& section, const segment_type& inter_val)const

@@ -21,8 +21,14 @@ test-suite "itl"
       
       # sets
       [ run test_interval_set/test_interval_set.cpp ]
+      [ run test_interval_set_infix/test_interval_set_infix.cpp ]
+      
       [ run test_separate_interval_set/test_separate_interval_set.cpp ]
-      [ run test_split_interval_set/test_split_interval_set.cpp ]      
+      [ run test_separate_interval_set_infix/test_separate_interval_set_infix.cpp ]
+      
+      [ run test_split_interval_set/test_split_interval_set.cpp ]
+      [ run test_split_interval_set_infix/test_split_interval_set_infix.cpp ]
+            
       [ run test_interval_set_mixed/test_interval_set_mixed.cpp ]
       
       # maps
@@ -37,7 +43,6 @@ test-suite "itl"
       [ run test_set_itl_set/test_set_itl_set.cpp ]
       
       # Concept Map 
-      [ run test_quantifier_itl_map/test_quantifier_itl_map.cpp ]
-      # too fat /bigobj [ run test_quantifier_map/test_quantifier_map.cpp ]
-            
+      [ run test_partial_interval_quantifier/test_partial_interval_quantifier.cpp ]
+      [ run test_total_interval_quantifier/test_total_interval_quantifier.cpp ]            
     ;

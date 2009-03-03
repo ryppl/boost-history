@@ -8,6 +8,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef __test_itl_interval_set_shared_h_JOFA_080920__
 #define __test_itl_interval_set_shared_h_JOFA_080920__
 
+
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
                     template<class,ITL_COMPARE>class Interval = interval,
@@ -246,7 +247,7 @@ void interval_set_distinct_4_bicremental_types()
     T v5 = make<T>(5);
 
     size_T s3 = make<size_T>(3);
-    diff_T d0 = make<diff_T>(0);
+    
 
     IntervalSet<T> is_1_3_5;
     is_1_3_5.add(v1).add(v3).add(v5);
@@ -269,14 +270,12 @@ void interval_set_distinct_4_bicremental_continuous_types()
     typedef typename IntervalSet<T>::size_type       size_T;
     typedef typename IntervalSet<T>::difference_type diff_T;
     T v1 = make<T>(1);
-    T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v5 = make<T>(5);
 
     size_T s3 = make<size_T>(3);
     diff_T d0 = make<diff_T>(0);
     diff_T d2 = make<diff_T>(2);
-    diff_T d3 = make<diff_T>(3);
 
     IntervalSet<T> is_1_3_5;
     is_1_3_5.add(v1).add(v3).add(v5);
@@ -287,8 +286,7 @@ void interval_set_distinct_4_bicremental_continuous_types()
     BOOST_CHECK_EQUAL( is_1_3_5.interval_count(),   3 );
     BOOST_CHECK_EQUAL( is_1_3_5.iterative_size(),   3 );
 
-    size_T s4 = make<size_T>(4);
-    diff_T d4 = make<diff_T>(4);
+    
 
     IntervalSet<T> is_123_5;
     is_123_5 = is_1_3_5;
@@ -484,8 +482,6 @@ void interval_set_base_intersect_4_bicremental_types()
     T v1 = make<T>(1);
     T v2 = make<T>(2);
     T v3 = make<T>(3);
-    T v4 = make<T>(4);
-    T v5 = make<T>(5);
     T v6 = make<T>(6);
     T v7 = make<T>(7);
     T v8 = make<T>(8);
@@ -546,6 +542,7 @@ void interval_set_base_intersect_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_element_equal(split_AB, split_ab2), true );
 }
 
+
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
                     template<class,ITL_COMPARE>class Interval = interval,
@@ -561,16 +558,21 @@ void interval_set_flip_4_bicremental_types()
     //[0     2)
     //    [1     3)
     //[0 1)   [2 3) : {[0 2)} ^= [2 3)
-    BOOST_CHECK_EQUAL(ISet(I_D(0,2)) ^= I_D(1,3), ISet(I_D(0,1)) + I_D(2,3));
+    //gcc seed ambiguities with std::_Ios_Iostate& std::operator^= here:
+    // BOOST_CHECK_EQUAL(ISet(I_D(0,2)) ^= I_D(1,3), ISet(I_D(0,1)) + I_D(2,3));
+    set_a = ISet(I_D(0,2));
+    BOOST_CHECK_EQUAL(set_a ^= I_D(1,3), ISet(I_D(0,1)) + I_D(2,3));
 
     //    [1     3)
     //[0     2)    
     //[0 1)   [2 3) : {[1 3)} ^= [0 2)
-    BOOST_CHECK_EQUAL(ISet(I_D(1,3)) ^= I_D(0,2), ISet(I_D(0,1)) + I_D(2,3));
+    set_a = ISet(I_D(1,3));
+    BOOST_CHECK_EQUAL(set_a ^= I_D(0,2), ISet(I_D(0,1)) + I_D(2,3));
 
     //[0     2)      (3  5]
     //    [1      3)
     //[0 1)   [2  3) (3  5] : a ^= b
+    set_a.clear();
     set_a.add(I_D(0,2)).add(C_I(3,5));
     set_b.add(I_D(1,3));
     lhs = set_a;
@@ -578,6 +580,7 @@ void interval_set_flip_4_bicremental_types()
     rhs.add(I_D(0,1)).add(I_D(2,3)).add(C_I(3,5));
     BOOST_CHECK_EQUAL(lhs, rhs);
 }
+
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
@@ -595,10 +598,11 @@ void interval_set_infix_plus_overload_4_bicremental_types()
     set_b.add(I_D(0,9)).add(I_I(3,6)).add(I_D(5,7));
 
     BOOST_CHECK_EQUAL(set_a + set_b, set_b + set_a);
-    //This checks all cases of is_interval_set_derivative<T>
+    // This checks all cases of is_interval_set_derivative<T>
     BOOST_CHECK_EQUAL(set_a + itv, itv + set_a);
     BOOST_CHECK_EQUAL(set_b + MK_v(4), MK_v(4) + set_b);
 }
+
 
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
@@ -620,6 +624,7 @@ void interval_set_infix_pipe_overload_4_bicremental_types()
     BOOST_CHECK_EQUAL(set_a | itv, itv | set_a);
     BOOST_CHECK_EQUAL(set_b | MK_v(4), MK_v(4) | set_b);
 }
+
 
 
 template <template< class T, 
@@ -666,6 +671,7 @@ void interval_set_infix_et_overload_4_bicremental_types()
 }
 
 
+
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
                     template<class,ITL_COMPARE>class Interval = interval,
@@ -688,6 +694,7 @@ void interval_set_infix_caret_overload_4_bicremental_types()
 }
 
 
+
 template <template< class T, 
                     ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, T),
                     template<class,ITL_COMPARE>class Interval = interval,
@@ -702,7 +709,7 @@ void interval_set_find_4_bicremental_types()
     IntervalSetT set_a;
     set_a.add(C_D(1,3)).add(I_I(6,11));
 
-    IntervalSetT::const_iterator found = set_a.find(MK_v(6));
+    typename IntervalSetT::const_iterator found = set_a.find(MK_v(6));
 
     BOOST_CHECK_EQUAL( *found, I_I(6,11) );
 
