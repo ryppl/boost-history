@@ -781,8 +781,8 @@ namespace boost
             { // Show point marker, perhaps line, & text info for all the data series.
 
               //cout << "Series " << i << endl;
-              //cout << derived().serieses_[i].point_style_ << endl;
-              cout << derived().serieses_[i].line_style_ << endl;
+              // derived().serieses_[i].point_style_ << endl;
+              // cout << derived().serieses_[i].line_style_ << endl;
 
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker and/or line & text.
@@ -1023,7 +1023,9 @@ namespace boost
 
           void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
           { //! Write the data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
-            //! Unecessary e, +, & leading exponent zeros may be stripped, and the position and rotation controlled.
+            //! Unecessary e, +, & leading exponent zeros may optionally be stripped, and the position and rotation controlled.
+            //! Uncertainty estimate ('plus or minus') may be optionally be appended.
+            //! Degrees of freedom estimate (number of replicates) may optionally be appended.
             std::stringstream label;
             label.precision(val_style.value_precision_);
             label.flags(val_style.value_ioflags_);
@@ -1114,7 +1116,37 @@ namespace boost
              break;
             } // switch
 
-            g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);
+            text_element& t = g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);  // X or Y value "1.23"
+            int f = static_cast<int>(val_style.values_text_style_.font_size() * 0.8); // Make uncertainty and df a bit smaller to distringuish from value.
+
+            double u = 0.0123;// Uncertainty or plusminus value.
+            double df = 23; // Degrees of freedom estimate value.
+            std::string label_u; // Uncertainty or plusminus.
+            std::string label_df; // Degrees of freedom estimate.
+            std::string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
+            // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
+            // Layout seems to vary with font - Times New Roman leaves no space after.
+            //text_element& t = g_ptr.text(x, y, label_v, val_style.values_text_style_, al, rot);
+           // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
+
+            if (val_style.plusminus_on_)
+            {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+              label_u = sv(u, val_style, true); // stripped.
+              t.tspan(pm).fill_color(darkcyan);
+              t.tspan(label_u).fill_color(purple).font_size(f);
+              // TODO Colors should not be hard coded.
+            }
+            if (val_style.df_on_)
+            { // Degrees of freedom or number of values-1 used for this estimate of value.
+              std::stringstream label;
+              label.precision(4);
+              //label.flags(sty.value_ioflags_); // Leave at default.
+              label << "&#x00A0;(" << df << ")"; // "123"
+              // Explicit space "&#x00A0;" seems necessary.
+              label_df = label.str();
+              t.tspan(label_df).fill_color(brown).font_size(f);
+            }
+
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
 
           std::string sv(double v, const value_style& sty, bool unc = false)
@@ -1231,7 +1263,7 @@ namespace boost
 
             // Tasteless colors and font changes are purely proof of concept.
 
-            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);  // Make uncertainty and df a bit smaller to distringuish from value.
            // X value (and optional uncertainty & df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
            // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
