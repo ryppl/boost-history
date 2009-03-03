@@ -18,12 +18,9 @@ private:
 	std::size_t	value_;
 
 public:
-	explicit scanns( std::size_t value)
-	: value_( value)
-	{ if ( value < 0) throw invalid_scanns("scanns must be greater than or equal to zero"); }
+	explicit scanns( std::size_t value);
 
-	operator std::size_t () const
-	{ return value_; }
+	operator std::size_t () const;
 };
 } }
 

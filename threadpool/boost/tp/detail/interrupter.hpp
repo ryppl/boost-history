@@ -28,65 +28,20 @@ private:
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
 
-		void interrupt_()
-		{
-			if ( ! interruption_requested_)
-			{
-				interruption_requested_ = true;
-				if ( thrd_) thrd_->interrupt();
-			}
-		}
+		void interrupt_();
 
 	public:
-		impl()
-		:
-		interruption_requested_( false),
-		cond_(),
-		mtx_(),
-		thrd_()
-		{}
+		impl();
 
-		void set( shared_ptr< thread > const& thrd)
-		{
-			BOOST_ASSERT( thrd);
-			unique_lock< mutex > lk( mtx_);
-			thrd_ = thrd;
-			BOOST_ASSERT( thrd_);
-			if ( interruption_requested_) thrd_->interrupt();
-		}
+		void set( shared_ptr< thread > const& thrd);
 
-		void reset()
-		{
-			unique_lock< mutex > lk( mtx_);
-			thrd_.reset();
-			BOOST_ASSERT( ! thrd_);
-			try
-			{ this_thread::interruption_point(); }
-			catch ( thread_interrupted const&)
-			{}
-			BOOST_ASSERT( ! this_thread::interruption_requested() );
-			cond_.notify_all();
-		}
+		void reset();
 
-		void interrupt()
-		{
-			unique_lock< mutex > lk( mtx_);
-			interrupt_();
-		}
+		void interrupt();
 
-		void interrupt_and_wait()
-		{
-			unique_lock< mutex > lk( mtx_);
-			interrupt_();
-			cond_.wait( lk);
-		}
+		void interrupt_and_wait();
 
-		void interrupt_and_wait( system_time const& abs_time)
-		{
-			unique_lock< mutex > lk( mtx_);
-			interrupt_();
-			cond_.timed_wait( lk, abs_time);
-		}
+		void interrupt_and_wait( system_time const& abs_time);
 
 		template< typename DurationType >
 		void interrupt_and_wait( DurationType const& rel_time)
@@ -96,41 +51,29 @@ private:
 			cond_.timed_wait( lk, rel_time);
 		}
 
-		bool interruption_requested()
-		{
-			unique_lock< mutex > lk( mtx_);
-			return interruption_requested_;
-		}
+		bool interruption_requested();
 	};
 
 	shared_ptr< impl >	impl_;
 
 public:
-	interrupter()
-	: impl_( new impl() )
-	{}
+	interrupter();
 
-	void set( shared_ptr< thread > const& thrd)
-	{ impl_->set( thrd); }
+	void set( shared_ptr< thread > const& thrd);
 
-	void reset()
-	{ impl_->reset();  }
+	void reset();
 
-	void interrupt()
-	{ impl_->interrupt(); }
+	void interrupt();
 
-	void interrupt_and_wait()
-	{ impl_->interrupt_and_wait(); }
+	void interrupt_and_wait();
 
-	void interrupt_and_wait( system_time const& abs_time)
-	{ impl_->interrupt_and_wait( abs_time); }
+	void interrupt_and_wait( system_time const& abs_time);
 
 	template< typename DurationType >
 	void interrupt_and_wait( DurationType const& rel_time)
 	{ impl_->interrupt_and_wait( rel_time); }
 
-	bool interruption_requested()
-	{ return impl_->interruption_requested(); }
+	bool interruption_requested();
 };
 }
 } }

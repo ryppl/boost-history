@@ -66,6 +66,7 @@
         Attr const& attr);
     };
 
+	pool< unbounded_channel< fifo > > & get_default_pool();
 
 [section:constructor_unbounded_channel_hw Constructor (unbounded channel)]
 
@@ -331,6 +332,16 @@
 [[Preconditions:] [has_priority< pool >::value == true && ! ( pool.terminating() || pool.terminated() )]]
 [[Effects:] [Submits an __action__ to the pool and returns a __task__ object. __Action__ is scheduled by the attribute.]]
 [[Throws:] [`boost::tp::task_rejected`]]
+]
+[endsect]
+
+
+[section:get_default_pool Non-member function `get_default_pool()`]
+
+	pool< unbounded_channel< fifo > > & get_default_pool();
+
+[variablelist
+[[Effects:] [Get access to default thread pool (static).]]
 ]
 [endsect]
 

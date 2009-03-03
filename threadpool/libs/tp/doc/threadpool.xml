@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN" "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <library id="boost_threadpool" name="Boost.Threadpool" dirname="boost_threadpool"
-last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XInclude">
+last-revision="$Date: 2009/03/03 21:18:36 $" xmlns:xi="http://www.w3.org/2001/XInclude">
   <libraryinfo>
     <authorgroup>
     <author>
@@ -61,31 +61,6 @@ last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XI
         url="http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html">http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html</ulink>).
       </para>
     </note>
-    <anchor id="boost_threadpool.introduction.tested_platforms"/>
-    <bridgehead renderas="sect3">
-      <link linkend="boost_threadpool.introduction.tested_platforms">Tested Platforms</link>
-    </bridgehead>
-    <para>
-      <emphasis role="bold">Boost.Threadpool</emphasis> has been tested on the following
-      compilers/platforms:
-    </para>
-    <itemizedlist>
-      <listitem>
-        FreeBSD 7.0 (amd64), GCC 4.2.1
-      </listitem>
-      <listitem>
-        Linux 2.6.26 (amd64), GCC 4.3.1
-      </listitem>
-      <listitem>
-        Linux 2.6.23.9 (i386), GCC 4.2.4
-      </listitem>
-      <listitem>
-        OpenSolaris/Nexenta 1.0.1 (amd64), GCC 4.2.1
-      </listitem>
-      <listitem>
-        Windows XP Professional (i386), MSVC 9.0
-      </listitem>
-    </itemizedlist>
   </section>
   <section id="boost_threadpool.pool">
     <title><link linkend="boost_threadpool.pool"> Pool</link></title>
@@ -290,6 +265,28 @@ last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XI
         was called.
       </para>
     </important>
+    <anchor id="boost_threadpool.pool.default_pool"/>
+    <bridgehead renderas="sect3">
+      <link linkend="boost_threadpool.pool.default_pool">Default pool</link>
+    </bridgehead>
+    <para>
+      The free function <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">tp</phrase><phrase role="special">::</phrase><phrase role="identifier">get_default_pool</phrase><phrase
+      role="special">()</phrase></code> returns a reference to the default thread
+      pool instance. The default thread pool is of type <code><phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">pool</phrase><phrase role="special">&lt;</phrase> <phrase
+      role="identifier">boost</phrase><phrase role="special">::</phrase><phrase role="identifier">tp</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">unbounded_channel</phrase><phrase
+      role="special">&lt;</phrase> <phrase role="identifier">boost</phrase><phrase
+      role="special">::</phrase><phrase role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase> <phrase
+      role="special">&gt;</phrase></code> and will contain as many worker threads
+      as <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">thread</phrase><phrase role="special">::</phrase><phrase
+      role="identifier">hardware_concurrency</phrase><phrase role="special">()</phrase></code>
+      returns.
+    </para>
     <anchor id="boost_threadpool.pool.meta_functions"/>
     <bridgehead renderas="sect3">
       <link linkend="boost_threadpool.pool.meta_functions">Meta functions</link>
@@ -1512,8 +1509,9 @@ last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XI
   <section id="boost_threadpool.acknowledgement">
     <title><link linkend="boost_threadpool.acknowledgement"> Acknowledgements</link></title>
     <para>
-      I'd like to thank Vincente Botet for his comments on the implementation details
-      of the code and Anthony Williams and Braddock Gaskill for their future libraries.
+      I'd like to thank Vincente Botet Escriba for his comments on the implementation
+      details of the code and Anthony Williams and Braddock Gaskill for their future
+      libraries.
     </para>
   </section>
   <section id="boost_threadpool.reference">
@@ -1521,64 +1519,66 @@ last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XI
     <section id="boost_threadpool.reference.pool">
       <title><link linkend="boost_threadpool.reference.pool"> Class template <code><phrase
       role="identifier">pool</phrase></code></link></title> 
-<programlisting><phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
+<programlisting>   <phrase role="preprocessor">#include</phrase> <phrase role="special">&lt;</phrase><phrase role="identifier">boost</phrase><phrase role="special">/</phrase><phrase role="identifier">tp</phrase><phrase role="special">/</phrase><phrase role="identifier">pool</phrase><phrase role="special">.</phrase><phrase role="identifier">hpp</phrase><phrase role="special">&gt;</phrase>
 
-<phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Channel</phrase> <phrase role="special">&gt;</phrase>
-<phrase role="keyword">class</phrase> <phrase role="identifier">pool</phrase>
-<phrase role="special">:</phrase> <phrase role="keyword">private</phrase> <phrase role="identifier">noncopyable</phrase>
-<phrase role="special">{</phrase>
-<phrase role="keyword">public</phrase><phrase role="special">:</phrase>
-  <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">poolsize</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">psize</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">microseconds</phrase><phrase role="special">(</phrase> <phrase role="number">10</phrase><phrase role="special">),</phrase>
-    <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+   <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Channel</phrase> <phrase role="special">&gt;</phrase>
+   <phrase role="keyword">class</phrase> <phrase role="identifier">pool</phrase>
+   <phrase role="special">:</phrase> <phrase role="keyword">private</phrase> <phrase role="identifier">noncopyable</phrase>
+   <phrase role="special">{</phrase>
+   <phrase role="keyword">public</phrase><phrase role="special">:</phrase>
+     <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
+       <phrase role="identifier">poolsize</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">psize</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">microseconds</phrase><phrase role="special">(</phrase> <phrase role="number">10</phrase><phrase role="special">),</phrase>
+       <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-  <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">poolsize</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">psize</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">milliseconds</phrase><phrase role="special">(</phrase> <phrase role="number">100</phrase><phrase role="special">),</phrase>
-    <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+     <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
+       <phrase role="identifier">poolsize</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">psize</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">milliseconds</phrase><phrase role="special">(</phrase> <phrase role="number">100</phrase><phrase role="special">),</phrase>
+       <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
 
-  <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">microseconds</phrase><phrase role="special">(</phrase> <phrase role="number">10</phrase><phrase role="special">),</phrase>
-    <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+     <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
+       <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">microseconds</phrase><phrase role="special">(</phrase> <phrase role="number">10</phrase><phrase role="special">),</phrase>
+       <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-  <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">milliseconds</phrase><phrase role="special">(</phrase> <phrase role="number">100</phrase><phrase role="special">),</phrase>
-    <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
+     <phrase role="keyword">explicit</phrase> <phrase role="identifier">pool</phrase><phrase role="special">(</phrase>
+       <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">time_duration</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">asleep</phrase> <phrase role="special">=</phrase> <phrase role="identifier">posix_time</phrase><phrase role="special">::</phrase><phrase role="identifier">milliseconds</phrase><phrase role="special">(</phrase> <phrase role="number">100</phrase><phrase role="special">),</phrase>
+       <phrase role="identifier">scanns</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">scns</phrase> <phrase role="special">=</phrase> <phrase role="identifier">scanns</phrase><phrase role="special">(</phrase> <phrase role="number">20</phrase><phrase role="special">)</phrase> <phrase role="special">);</phrase>
 
-  <phrase role="special">~</phrase><phrase role="identifier">pool</phrase><phrase role="special">();</phrase>
+     <phrase role="special">~</phrase><phrase role="identifier">pool</phrase><phrase role="special">();</phrase>
 
-  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">size</phrase><phrase role="special">();</phrase>
-  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">active</phrase><phrase role="special">();</phrase>
-  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">idle</phrase><phrase role="special">();</phrase>
+     <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">size</phrase><phrase role="special">();</phrase>
+     <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">active</phrase><phrase role="special">();</phrase>
+     <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">idle</phrase><phrase role="special">();</phrase>
 
-  <phrase role="keyword">void</phrase> <phrase role="identifier">shutdown</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">callable</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">shutdown_now</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">void</phrase> <phrase role="identifier">shutdown</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">vector</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">callable</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">shutdown_now</phrase><phrase role="special">();</phrase>
 
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">terminated</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">terminateing</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">void</phrase> <phrase role="identifier">clear</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">bool</phrase> <phrase role="identifier">empty</phrase><phrase role="special">();</phrase>
-  <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">pending</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">bool</phrase> <phrase role="identifier">terminated</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">bool</phrase> <phrase role="identifier">terminateing</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">void</phrase> <phrase role="identifier">clear</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">bool</phrase> <phrase role="identifier">empty</phrase><phrase role="special">();</phrase>
+     <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">pending</phrase><phrase role="special">();</phrase>
 
-  <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">upper_bound</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">void</phrase> <phrase role="identifier">upper_bound</phrase><phrase role="special">(</phrase> <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">);</phrase>
-  <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">lower_bound</phrase><phrase role="special">();</phrase>
-  <phrase role="keyword">void</phrase> <phrase role="identifier">lower_bound</phrase><phrase role="special">(</phrase> <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">);</phrase>
+     <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">upper_bound</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">void</phrase> <phrase role="identifier">upper_bound</phrase><phrase role="special">(</phrase> <phrase role="identifier">high_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">hwm</phrase><phrase role="special">);</phrase>
+     <phrase role="keyword">const</phrase> <phrase role="identifier">std</phrase><phrase role="special">::</phrase><phrase role="identifier">size_t</phrase> <phrase role="identifier">lower_bound</phrase><phrase role="special">();</phrase>
+     <phrase role="keyword">void</phrase> <phrase role="identifier">lower_bound</phrase><phrase role="special">(</phrase> <phrase role="identifier">low_watermark</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">lwm</phrase><phrase role="special">);</phrase>
 
-  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase> <phrase role="special">&gt;</phrase>
-  <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">submit</phrase><phrase role="special">(</phrase> <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">);</phrase>
+     <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase> <phrase role="special">&gt;</phrase>
+     <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">submit</phrase><phrase role="special">(</phrase> <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">);</phrase>
 
-  <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Attr</phrase> <phrase role="special">&gt;</phrase>
-  <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
-    <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">,</phrase>
-    <phrase role="identifier">Attr</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">attr</phrase><phrase role="special">);</phrase>
-<phrase role="special">};</phrase>
+     <phrase role="keyword">template</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Act</phrase><phrase role="special">,</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">Attr</phrase> <phrase role="special">&gt;</phrase>
+     <phrase role="identifier">task</phrase><phrase role="special">&lt;</phrase> <phrase role="keyword">typename</phrase> <phrase role="identifier">result_of</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">Act</phrase><phrase role="special">()</phrase> <phrase role="special">&gt;::</phrase><phrase role="identifier">type</phrase> <phrase role="special">&gt;</phrase> <phrase role="identifier">submit</phrase><phrase role="special">(</phrase>
+       <phrase role="identifier">Act</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">act</phrase><phrase role="special">,</phrase>
+       <phrase role="identifier">Attr</phrase> <phrase role="keyword">const</phrase><phrase role="special">&amp;</phrase> <phrase role="identifier">attr</phrase><phrase role="special">);</phrase>
+   <phrase role="special">};</phrase>
+
+<phrase role="identifier">pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">unbounded_channel</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> <phrase role="identifier">get_default_pool</phrase><phrase role="special">();</phrase>
 </programlisting>
       <section id="boost_threadpool.reference.pool.constructor_unbounded_channel_hw">
         <title><link linkend="boost_threadpool.reference.pool.constructor_unbounded_channel_hw">
@@ -2276,6 +2276,22 @@ last-revision="$Date: 2009/03/02 20:05:53 $" xmlns:xi="http://www.w3.org/2001/XI
               <code><phrase role="identifier">boost</phrase><phrase role="special">::</phrase><phrase
               role="identifier">tp</phrase><phrase role="special">::</phrase><phrase
               role="identifier">task_rejected</phrase></code>
+            </para>
+          </listitem>
+          </varlistentry>
+        </variablelist>
+      </section>
+      <section id="boost_threadpool.reference.pool.get_default_pool">
+        <title><link linkend="boost_threadpool.reference.pool.get_default_pool">
+        Non-member function <code><phrase role="identifier">get_default_pool</phrase><phrase
+        role="special">()</phrase></code></link></title> 
+<programlisting><phrase role="identifier">pool</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">unbounded_channel</phrase><phrase role="special">&lt;</phrase> <phrase role="identifier">fifo</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&gt;</phrase> <phrase role="special">&amp;</phrase> <phrase role="identifier">get_default_pool</phrase><phrase role="special">();</phrase>
+</programlisting>
+        <variablelist>
+          <title></title> <varlistentry><term>Effects:</term>
+          <listitem>
+            <para>
+              Get access to default thread pool (static).
             </para>
           </listitem>
           </varlistentry>

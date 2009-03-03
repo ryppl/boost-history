@@ -38,7 +38,7 @@
       later by a worker thread.
     </p>
 <a name="boost_threadpool.pool.work_stealing"></a><h4>
-<a name="id326471"></a>
+<a name="id326427"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.work_stealing">Work-Stealing</a>
     </h4>
 <p>
@@ -128,7 +128,7 @@
       </p></td></tr>
 </table></div>
 <a name="boost_threadpool.pool.creation"></a><h4>
-<a name="id367698"></a>
+<a name="id367654"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.creation">Creation</a>
     </h4>
 <p>
@@ -163,7 +163,7 @@
       queue</em></span></a> without blocking the inserting thread.
     </p>
 <a name="boost_threadpool.pool.shutdown"></a><h4>
-<a name="id368199"></a>
+<a name="id368155"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.shutdown">Shutdown</a>
     </h4>
 <p>
@@ -204,7 +204,7 @@
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
 </span></pre>
 <a name="boost_threadpool.pool.shutdown_immediatly"></a><h4>
-<a name="id368845"></a>
+<a name="id368800"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.shutdown_immediatly">Shutdown immediatly</a>
     </h4>
 <p>
@@ -224,8 +224,18 @@
         was called.
       </p></td></tr>
 </table></div>
+<a name="boost_threadpool.pool.default_pool"></a><h4>
+<a name="id368934"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.default_pool">Default pool</a>
+    </h4>
+<p>
+      The free function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">get_default_pool</span><span class="special">()</span></code> returns a reference to the default thread
+      pool instance. The default thread pool is of type <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span></code> and will contain as many worker threads
+      as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">hardware_concurrency</span><span class="special">()</span></code>
+      returns.
+    </p>
 <a name="boost_threadpool.pool.meta_functions"></a><h4>
-<a name="id368978"></a>
+<a name="id369097"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.meta_functions">Meta functions</a>
     </h4>
 <p>
@@ -249,7 +259,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_fibers</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <a name="boost_threadpool.pool.processor_binding"></a><h4>
-<a name="id369552"></a>
+<a name="id369670"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.processor_binding">Processor binding</a>
     </h4>
 <p>

@@ -47,16 +47,6 @@
 #include <boost/tp/task.hpp>
 #include <boost/tp/watermark.hpp>
 
-// workaround until boost::move is fixed by Anthony Williams
-namespace boost
-{
-	template< typename T >
-	detail::thread_move_t< packaged_task< T > > move( packaged_task< T > & t)
-	{
-		return detail::thread_move_t< packaged_task< T > >( t);
-	}
-}
-
 namespace boost {
 
 namespace this_task

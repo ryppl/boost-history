@@ -19,18 +19,9 @@ private:
 	volatile uint32_t	&	active_worker_;
 
 public:
-	guard( volatile uint32_t & active_worker)
-	: active_worker_( active_worker)
-	{
-		BOOST_ASSERT( active_worker_ >= 0);
-		interprocess::detail::atomic_inc32( & active_worker_);
-	}
+	guard( volatile uint32_t & active_worker);
 
-	~guard()
-	{
-		interprocess::detail::atomic_dec32( & active_worker_);
-		BOOST_ASSERT( active_worker_ >= 0);
-	}
+	~guard();
 };
 } } }
 

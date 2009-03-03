@@ -21,13 +21,4 @@ which includes all the other headers in turn.
 [note
 __boost_threadpool__ uses a modified version of the futures library, N2561 C++0x proposal, from Anthony Williams ([@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html]).]
 
-[heading Tested Platforms]
-__boost_threadpool__ has been tested on the following compilers/platforms:
-
-*  FreeBSD 7.0 (amd64), GCC 4.2.1
-*  Linux 2.6.26 (amd64), GCC 4.3.1
-*  Linux 2.6.23.9 (i386), GCC 4.2.4
-*  OpenSolaris/Nexenta 1.0.1 (amd64), GCC 4.2.1
-*  Windows XP Professional (i386), MSVC 9.0
-
 [endsect]

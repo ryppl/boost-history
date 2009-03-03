@@ -17,15 +17,9 @@ private:
 	std::size_t	value_;
 
 public:
-	explicit high_watermark( std::size_t value)
-	: value_( value)
-	{
-		if ( value <= 0)
-			throw invalid_watermark("high watermark must be greater than zero");
-	}
+	explicit high_watermark( std::size_t value);
 
-	operator std::size_t () const
-	{ return value_; }
+	operator std::size_t () const;
 };
 
 class low_watermark
@@ -34,15 +28,9 @@ private:
 	std::size_t	value_;
 
 public:
-	explicit low_watermark( std::size_t value)
-	: value_( value)
-	{
-		if ( value < 0)
-			throw invalid_watermark("low watermark must be greater than or equal to zero");
-	}
+	explicit low_watermark( std::size_t value);
 
-	operator std::size_t () const
-	{ return value_; }
+	operator std::size_t () const;
 };
 } }
 

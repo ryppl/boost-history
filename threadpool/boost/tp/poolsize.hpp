@@ -17,12 +17,9 @@ private:
 	std::size_t	value_;
 
 public:
-	explicit poolsize( std::size_t value)
-	: value_( value)
-	{ if ( value <= 0) throw invalid_poolsize("core poolsize must be greater than zero"); }
+	explicit poolsize( std::size_t value);
 
-	operator std::size_t () const
-	{ return value_; }
+	operator std::size_t () const;
 };
 } }
 

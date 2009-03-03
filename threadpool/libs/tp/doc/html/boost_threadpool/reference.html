@@ -99,65 +99,69 @@
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.submit_attr"> Member
         function <code class="computeroutput"><span class="identifier">submit</span><span class="special">(</span>
         <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span> <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool.get_default_pool">
+        Non-member function <code class="computeroutput"><span class="identifier">get_default_pool</span><span class="special">()</span></code></a></span></dt>
 </dl></div>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Channel</span> <span class="special">&gt;</span>
-<span class="keyword">class</span> <span class="identifier">pool</span>
-<span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
-<span class="special">{</span>
-<span class="keyword">public</span><span class="special">:</span>
-  <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
-    <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
-    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
-    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+   <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Channel</span> <span class="special">&gt;</span>
+   <span class="keyword">class</span> <span class="identifier">pool</span>
+   <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">noncopyable</span>
+   <span class="special">{</span>
+   <span class="keyword">public</span><span class="special">:</span>
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
 
-  <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
-    <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
-    <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
-    <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
-    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
-    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">poolsize</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">psize</span><span class="special">,</span>
+       <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+       <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
 
 
-  <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
-    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
-    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">microseconds</span><span class="special">(</span> <span class="number">10</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
 
-  <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
-    <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
-    <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
-    <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
-    <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
+     <span class="keyword">explicit</span> <span class="identifier">pool</span><span class="special">(</span>
+       <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">,</span>
+       <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">,</span>
+       <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">asleep</span> <span class="special">=</span> <span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span> <span class="number">100</span><span class="special">),</span>
+       <span class="identifier">scanns</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">scns</span> <span class="special">=</span> <span class="identifier">scanns</span><span class="special">(</span> <span class="number">20</span><span class="special">)</span> <span class="special">);</span>
 
-  <span class="special">~</span><span class="identifier">pool</span><span class="special">();</span>
+     <span class="special">~</span><span class="identifier">pool</span><span class="special">();</span>
 
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">active</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">idle</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">active</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">idle</span><span class="special">();</span>
 
-  <span class="keyword">void</span> <span class="identifier">shutdown</span><span class="special">();</span>
-  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">callable</span> <span class="special">&gt;</span> <span class="identifier">shutdown_now</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">shutdown</span><span class="special">();</span>
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span> <span class="identifier">callable</span> <span class="special">&gt;</span> <span class="identifier">shutdown_now</span><span class="special">();</span>
 
-  <span class="keyword">bool</span> <span class="identifier">terminated</span><span class="special">();</span>
-  <span class="keyword">bool</span> <span class="identifier">terminateing</span><span class="special">();</span>
-  <span class="keyword">void</span> <span class="identifier">clear</span><span class="special">();</span>
-  <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">();</span>
-  <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">pending</span><span class="special">();</span>
+     <span class="keyword">bool</span> <span class="identifier">terminated</span><span class="special">();</span>
+     <span class="keyword">bool</span> <span class="identifier">terminateing</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">clear</span><span class="special">();</span>
+     <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">();</span>
+     <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">pending</span><span class="special">();</span>
 
-  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">upper_bound</span><span class="special">();</span>
-  <span class="keyword">void</span> <span class="identifier">upper_bound</span><span class="special">(</span> <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">);</span>
-  <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">lower_bound</span><span class="special">();</span>
-  <span class="keyword">void</span> <span class="identifier">lower_bound</span><span class="special">(</span> <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">);</span>
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">upper_bound</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">upper_bound</span><span class="special">(</span> <span class="identifier">high_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">hwm</span><span class="special">);</span>
+     <span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">lower_bound</span><span class="special">();</span>
+     <span class="keyword">void</span> <span class="identifier">lower_bound</span><span class="special">(</span> <span class="identifier">low_watermark</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">lwm</span><span class="special">);</span>
 
-  <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span> <span class="special">&gt;</span>
-  <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">);</span>
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span> <span class="special">&gt;</span>
+     <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">);</span>
 
-  <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Attr</span> <span class="special">&gt;</span>
-  <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span>
-    <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span>
-    <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">);</span>
-<span class="special">};</span>
+     <span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Act</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Attr</span> <span class="special">&gt;</span>
+     <span class="identifier">task</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">&lt;</span> <span class="identifier">Act</span><span class="special">()</span> <span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span> <span class="identifier">submit</span><span class="special">(</span>
+       <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">,</span>
+       <span class="identifier">Attr</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">attr</span><span class="special">);</span>
+   <span class="special">};</span>
+
+<span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">get_default_pool</span><span class="special">();</span>
 </pre>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -743,6 +747,23 @@
 <dt><span class="term">Throws:</span></dt>
 <dd><p>
               <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">task_rejected</span></code>
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_threadpool.reference.pool.get_default_pool"></a><a class="link" href="reference.html#boost_threadpool.reference.pool.get_default_pool" title="Non-member function get_default_pool()">
+        Non-member function <code class="computeroutput"><span class="identifier">get_default_pool</span><span class="special">()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">unbounded_channel</span><span class="special">&lt;</span> <span class="identifier">fifo</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">get_default_pool</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd><p>
+              Get access to default thread pool (static).
             </p></dd>
 </dl>
 </div>

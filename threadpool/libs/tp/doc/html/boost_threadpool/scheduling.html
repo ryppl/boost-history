@@ -30,7 +30,7 @@
       The scheduling policy determines how actions are scheduled inside the <a class="link" href="channel.html" title="Channel"><span class="emphasis"><em>channel</em></span></a>.
     </p>
 <a name="boost_threadpool.scheduling.fifo"></a><h4>
-<a name="id372290"></a>
+<a name="id372404"></a>
       <a class="link" href="scheduling.html#boost_threadpool.scheduling.fifo">fifo</a>
     </h4>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">fifo</span>
@@ -39,7 +39,7 @@
       First inserted pending action get taken first.
     </p>
 <a name="boost_threadpool.scheduling.lifo"></a><h4>
-<a name="id372323"></a>
+<a name="id372437"></a>
       <a class="link" href="scheduling.html#boost_threadpool.scheduling.lifo">lifo</a>
     </h4>
 <pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">lifo</span>
@@ -48,7 +48,7 @@
       Last inserted pending action get taken first.
     </p>
 <a name="boost_threadpool.scheduling.priority"></a><h4>
-<a name="id372356"></a>
+<a name="id372470"></a>
       <a class="link" href="scheduling.html#boost_threadpool.scheduling.priority">priority</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Attr</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ord</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">less</span><span class="special">&lt;</span> <span class="identifier">Attr</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">priority</span>
@@ -58,7 +58,7 @@
       ordering actions.
     </p>
 <a name="boost_threadpool.scheduling.smart"></a><h4>
-<a name="id372462"></a>
+<a name="id372576"></a>
       <a class="link" href="scheduling.html#boost_threadpool.scheduling.smart">smart</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Attr</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Ord</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Enq</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Deq</span> <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">smart</span>

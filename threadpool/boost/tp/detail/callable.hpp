@@ -38,23 +38,18 @@ private:
 	boost::shared_ptr< impl >	impl_;
 
 public:
-	callable()
-	: impl_()
-	{}
+	callable();
 
 	template< typename T >
 	callable( boost::detail::thread_move_t< packaged_task< T > > const& t)
 	: impl_( new impl_wrapper<  T >( t) )
 	{}
 
-	void operator()()
-	{ impl_->run(); }
+	void operator()();
 
-	bool empty() const
-	{ return ! impl_; }
+	bool empty() const;
 
-	void clear()
-	{ impl_.reset(); }
+	void clear();
 };
 } } }
 

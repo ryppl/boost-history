@@ -1406,7 +1406,10 @@ namespace boost
         }
         
     };
-
+	
+	template< typename T >
+	detail::thread_move_t< packaged_task< T > > move( packaged_task< T > & t)
+	{ return detail::thread_move_t< packaged_task< T > >( t); }
 }
 
 #undef CATCH_ENABLE_CURRENT_EXCEPTION
