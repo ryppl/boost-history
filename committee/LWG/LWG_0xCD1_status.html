@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->03 Mar 2009 01:38:25 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42143" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->03 Mar 2009 05:41:54 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42396" --></p>
 
 <table border="1" bordercolor="#000000" cellpadding="7"
   cellspacing="0" style="border-collapse: collapse">
@@ -3806,6 +3806,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
+    [meta.trans.other]
+
     Agree that aligned_union is not completely redundant. We are investigating 
     whether the need for aligned_union is compelling enough to reinstate.<tr valign="top">
       <td>
@@ -4533,6 +4535,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
+    [default.allocator]
+
     Agree as stated. A future paper will address additional related issues.<tr valign="top">
       <td>
         <p>UK<br>
@@ -4832,7 +4836,7 @@ Status of CD1 National Body Comments</h1>
 
     <tr valign="top">
       <td>
-        <p align="left">US 74
+        <p align="left">US 74.1
 
       <td>
         <p align="left">20.8
@@ -4906,7 +4910,7 @@ Status of CD1 National Body Comments</h1>
 
     <tr valign="top">
       <td>
-        <p>US 74(2)
+        <p>US 74.2
 
       <td>
         <p>20.8.2.2
@@ -5126,7 +5130,10 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">[unique.ptr], [util.smartptr.shared] We look forward to 
+        a paper on this topic. We recommend no action until a paper is 
+        available. We believe that the shared pointer must use the default 
+        deleter for the conversion to succeed.<br>
 
     <tr valign="top">
       <td>
@@ -5168,7 +5175,9 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">[unique.ptr.single.ctor] Agree. The unique_ptr(pointer 
+        p) <em>Requires</em> clause should be the same as the unique_ptr() <em>
+        Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.<br>
 
     <tr valign="top">
       <td>
@@ -5199,7 +5208,9 @@ Status of CD1 National Body Comments</h1>
         a null pionter" at the requires.
 
       <td>
-        <p align="left"><br>
+        <p align="left">[util.smartptr.shared.atomic] Agree. All of the 
+        functions need a requirement that p (or v) is a pointer to a valid 
+        object.<br>
 
     <tr valign="top">
       <td>
@@ -5238,7 +5249,9 @@ Status of CD1 National Body Comments</h1>
         30.
 
       <td>
-        <p align="left"><br>
+        <p align="left">[time] We agree that this section needs concepts. We 
+        look forward to a paper on this topic. We recommend no action until a 
+        paper is available.<br>
 
     <tr valign="top">
       <td>
@@ -5270,7 +5283,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    20.8.2.1 [time.traits.is_fp] Agree. The section name and the section label 
+    ([time.traits.is_fp]) are wrong. Forward to project editor.<tr valign="top">
       <td>
         <p align="left">US 81
 
@@ -5385,7 +5399,9 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">[time.duration] Agree except that there is a typo in the 
+        proposed resolution. The member operators should be operator%=. This is 
+        also LWG issue 934.<br>
 
     <tr valign="top">
       <td>
@@ -5410,7 +5426,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [time.clock.hires] Agree. Forward to project editor.<tr valign="top">
       <td>
         <p>UK<br>
         216
@@ -7431,7 +7447,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [container.requirements] Agree in principle. We suggest proposed wording:<tr valign="top">
       <td>
         <p>JP 55
 
@@ -7492,7 +7508,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [container.requirements.general] Agree. Proposed wording will be presented 
+    in N2829 or D2840.<tr valign="top">
       <td>
         <p>UK<br>
         224
@@ -7522,7 +7539,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [container.requirements.general] Agree except with moving array to clause 
+    20. Proposed wording will be presented in D2840.<tr valign="top">
       <td>
         <p>UK<br>
         225
@@ -7587,7 +7605,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [container.requirements.general] Agree. The proposed resolution is 
+    incomplete. Further work required.<tr valign="top">
       <td>
         <p>UK<br>
         227
@@ -7705,7 +7724,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    [container.requirements.dataraces] After considerable discussion and 
+    consideration, we do not feel this is a defect given the reference to [res.on.data.races].<tr valign="top">
       <td>
         <p>JP 56
 
@@ -8517,7 +8537,7 @@ Status of CD1 National Body Comments</h1>
         default value for postincrement_result
 
       <td>
-        <p align="left"><br>
+        <p align="left">Howard will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -8553,7 +8573,7 @@ Status of CD1 National Body Comments</h1>
         ForwardIterator concept
 
       <td>
-        <p align="left"><br>
+        <p align="left">Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -8639,7 +8659,7 @@ Status of CD1 National Body Comments</h1>
         definition as an axiom
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred until we know whether we have axioms.<br>
 
     <tr valign="top">
       <td>
@@ -8667,7 +8687,7 @@ Status of CD1 National Body Comments</h1>
         definition as an axiom
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred until we know whether we have axioms.<br>
 
     <tr valign="top">
       <td>
@@ -8695,7 +8715,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred until we know whether we have axioms.<br>
 
     <tr valign="top">
       <td>
@@ -8725,7 +8745,7 @@ Status of CD1 National Body Comments</h1>
         postincrement_result = X;
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, postdecrement_result is deduced.<br>
 
     <tr valign="top">
       <td>
@@ -8754,7 +8774,7 @@ Status of CD1 National Body Comments</h1>
         default value for postincrement_result
 
       <td>
-        <p align="left"><br>
+        <p align="left">Howard will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -8785,7 +8805,7 @@ Status of CD1 National Body Comments</h1>
         postdecrement_result &gt;;
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD unless Alisdair comes back with more motivation.<br>
 
     <tr valign="top">
       <td>
@@ -8816,7 +8836,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred for axiom decision.<br>
 
     <tr valign="top">
       <td>
@@ -8847,7 +8867,7 @@ Status of CD1 National Body Comments</h1>
         implementaiton.
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, violates complexity requirements.<br>
 
     <tr valign="top">
       <td>
@@ -8874,7 +8894,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left">typename subscript_reference = reference;
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, subscript reference isn’t used.<br>
 
     <tr valign="top">
       <td>
@@ -8904,7 +8924,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">default implementation already in Standard; axiom part 
+        deferred.<br>
 
     <tr valign="top">
       <td>
@@ -8934,7 +8955,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">Alisdair will open an issue, axiom part deferred.<br>
 
     <tr valign="top">
       <td>
@@ -8962,7 +8983,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred/axiom.<br>
 
     <tr valign="top">
       <td>
@@ -8990,7 +9011,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left">Strike the Effects clause
 
       <td>
-        <p align="left"><br>
+        <p align="left">Doug will open issue…strike effect, returns n.<br>
 
     <tr valign="top">
       <td>
@@ -9019,7 +9040,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">default definition is not implementable; axiom part 
+        deferred.<br>
 
     <tr valign="top">
       <td>
@@ -9047,7 +9069,7 @@ Status of CD1 National Body Comments</h1>
         the RandomAccessIterator concept
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred/axiom.<br>
 
     <tr valign="top">
       <td>
@@ -9272,7 +9294,8 @@ Status of CD1 National Body Comments</h1>
         and RandomAccessRange.
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, beyond the scope of the Standard because we are not 
+        supplying range-based algorithms.<br>
 
     <tr valign="top">
       <td>
@@ -9328,7 +9351,7 @@ Status of CD1 National Body Comments</h1>
         either direction for RandomAccessIterator
 
       <td>
-        <p align="left"><br>
+        <p align="left">Howard will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -9358,7 +9381,7 @@ Status of CD1 National Body Comments</h1>
         FOrwardIterator in next and prev function templates.
 
       <td>
-        <p align="left"><br>
+        <p align="left">Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -9399,7 +9422,7 @@ Status of CD1 National Body Comments</h1>
         move_iterator specification.
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, no consensus.<br>
 
     <tr valign="top">
       <td>
@@ -9465,7 +9488,7 @@ Status of CD1 National Body Comments</h1>
         taking a single Iterator argument should be explicit.
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, withdrawn by submitter.<br>
 
     <tr valign="top">
       <td>
@@ -9494,7 +9517,7 @@ Status of CD1 National Body Comments</h1>
         difference_type argument non-member operators
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, not editorial, withdrawn by submitter.<br>
 
     <tr valign="top">
       <td>
@@ -9532,7 +9555,7 @@ Status of CD1 National Body Comments</h1>
         nature of a value-initialized reserve iterator.
 
       <td>
-        <p align="left"><br>
+        <p align="left">agree with option i, Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -12429,7 +12452,8 @@ Status of CD1 National Body Comments</h1>
 
       <td>
         <p align="left">Create an issue. Assigned to Lawrence. Resolution 
-        requires proposed wording.<br>
+        requires proposed wording.<p align="left">Later: Mark as Not A Defect. 
+        We can not see the issue being suggested by the comment.<br>
 
     <tr valign="top">
       <td>
@@ -12860,7 +12884,9 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    Create an issue. To be discussed in full library group.<tr valign="top">
+    Create an issue. To be discussed in full library group.<p>
+
+    Later: straw poll 10-0, put N2802 Alternative 2 on formal motions page.<tr valign="top">
       <td>
         <p align="left">US 98
 
@@ -13788,7 +13814,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    DE 23: Create issue, share with DE 25. See N2826. Attention: core group.<tr valign="top">
       <td>
         <p>DE-24
 
@@ -13813,7 +13839,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    Create issue, proposed resolution as in comment. Attention: LWG subgroup 2. 
+    Note the section in N2800 is actually 20.6.12.1.4 [func.bind.place].<tr valign="top">
       <td>
         <p>DE-25
 
@@ -13844,7 +13871,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    DE 25: Create issue, share with DE 23. Attention: core group.<tr valign="top">
       <td>
         <p>FR 38
 
@@ -13907,7 +13934,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    <tr valign="top">
+    Deals with deprecation, needs to be discussed in general group. Attention: 
+    Bill Plaugher<tr valign="top">
       <td>
         <p>FR 39
 
