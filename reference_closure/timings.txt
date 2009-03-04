@@ -96,3 +96,30 @@ sys	0m0.052s
 
 t(std::function<>) / t(reference_closure): 2.1
 
+=== Add move semantics for std::function ===
+
+execute refclosure
+real	0m15.236s
+user	0m14.778s
+sys	0m0.033s
+
+execute stdfunction
+real	0m29.287s
+user	0m28.277s
+sys	0m0.066s
+
+t(std::function<>) / t(reference_closure): 1.9
+
+=== Same thing with no work: measures only overhead ===
+
+execute refclosure
+real	0m12.445s
+user	0m12.399s
+sys	0m0.022s
+
+execute stdfunction
+real	0m23.270s
+user	0m23.185s
+sys	0m0.050s
+
+t(std::function<>) / t(reference_closure): 1.9

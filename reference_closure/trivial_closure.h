@@ -1,6 +1,8 @@
 #ifndef TRIVIAL_CLOSURE2_DWA200933_H
 # define TRIVIAL_CLOSURE2_DWA200933_H
 
+#include "move.h"
+
 struct frame { double a, b, c; };
 
 inline void work( frame* f )
