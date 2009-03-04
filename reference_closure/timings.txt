@@ -12,20 +12,6 @@ sys	0m0.476s
 
 t(std::function<>) / t(reference_closure): 25.9
 
-=== Original Result (10x fewer loops) ===
-
-execute trivial_nested
-real	0m1.167s
-user	0m1.156s
-sys	0m0.004s
-
-execute trivial_function
-real	0m26.411s
-user	0m26.292s
-sys	0m0.056s
-
-t(std::function<>) / t(reference_closure): 22.7
-
 === Removed unrealistic indirection from lambda case ===
 
 execute trivial_nested
@@ -54,20 +40,6 @@ sys	0m0.085s
 
 t(std::function<>) / t(reference_closure): 3.7
 
-=== Lambdas would be known to be trivially copiable ===
-
-execute trivial_nested
-real	0m1.175s
-user	0m1.166s
-sys	0m0.004s
-
-execute trivial_function
-real	0m4.871s
-user	0m4.836s
-sys	0m0.013s
-
-t(std::function<>) / t(reference_closure): 4.1
-
 === Separate Translation Unit for Parallel Lib (full loops) ===
 
 execute refclosure
@@ -81,48 +53,6 @@ user	0m44.608s
 sys	0m0.010s
 
 t(std::function<>) / t(reference_closure): 3.5
-
-=== Separate Translation Unit for Parallel Lib ===
-
-execute refclosure
-real	0m1.267s
-user	0m1.243s
-sys	0m0.005s
-
-execute stdfunction
-real	0m5.153s
-user	0m5.103s
-sys	0m0.014s
-
-t(std::function<>) / t(reference_closure): 4.1
-
-=== Do Some Work in the Callback ===
-
-execute refclosure
-real	0m1.467s
-user	0m1.463s
-sys	0m0.003s
-
-execute stdfunction
-real	0m4.710s
-user	0m4.700s
-sys	0m0.008s
-
-t(std::function<>) / t(reference_closure): 3.2
-
-=== Multiply Iterations by 10 Again ===
-
-execute refclosure
-real	0m16.620s
-user	0m16.489s
-sys	0m0.053s
-
-execute stdfunction
-real	0m51.779s
-user	0m51.640s
-sys	0m0.059s
-
-t(std::function<>) / t(reference_closure): 3.1
 
 === Eliminate Indirect Call in copy c'tor of std::function<...> (no work) ===
 
@@ -138,35 +68,7 @@ sys	0m0.052s
 
 t(std::function<>) / t(reference_closure): 2.3
 
-=== Eliminate Indirect Call in copy c'tor of std::function<...> ===
-
-execute refclosure
-real	0m16.174s
-user	0m16.034s
-sys	0m0.044s
-
-execute stdfunction
-real	0m33.195s
-user	0m33.047s
-sys	0m0.052s
-
-t(std::function<>) / t(reference_closure): 2.1
-
 === Add move semantics for std::function ===
-
-execute refclosure
-real	0m15.236s
-user	0m14.778s
-sys	0m0.033s
-
-execute stdfunction
-real	0m29.287s
-user	0m28.277s
-sys	0m0.066s
-
-t(std::function<>) / t(reference_closure): 1.9
-
-=== Same thing with no work: measures only overhead ===
 
 execute refclosure
 real	0m12.445s
