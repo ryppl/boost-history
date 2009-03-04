@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->04 Mar 2009 01:40:40 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42233" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->04 Mar 2009 05:42:11 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42359" --></p>
 
 <table border="1" bordercolor="#000000" cellpadding="7"
   cellspacing="0" style="border-collapse: collapse">
@@ -3479,7 +3479,15 @@ Status of CD1 National Body Comments</h1>
     avoid the need users to constantly choose between them. At a minimum, 
     Predicate should refine MoveConstructible. However, upon review of existing 
     library components, CopyConstructible or even SemiRegular might be more 
-    appropriate for Predicate.<tr valign="top">
+    appropriate for Predicate.<p>
+
+    Later: UK245 with additional comments on UK200 in clause 20: After further 
+    discussion of UK200, we do not think adding constraints to predicates is a 
+    good idea. Straw poll on UK200: status quo, 5 pro - 2 con; remove 
+    copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
+    3 con; no consensus for moving away from the status quo. Straw poll on 
+    UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
+    consensus for moving away from the status quo.<tr valign="top">
       <td>
         <p>UK<br>
         201
@@ -8313,6 +8321,14 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
+    UK245 with additional comments on UK200 in clause 20: After further 
+    discussion of UK200, we do not think adding constraints to predicates is a 
+    good idea. Straw poll on UK200: status quo, 5 pro - 2 con; remove 
+    copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
+    3 con; no consensus for moving away from the status quo. Straw poll on 
+    UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
+    consensus for moving away from the status quo.
+
     <tr valign="top">
       <td>
         <p>JP 58
@@ -9605,7 +9621,8 @@ Status of CD1 National Body Comments</h1>
         &amp; parameter to pass-by-value
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, we don’t believe that copy elision is a 
+        sufficiently high priority for iterator types.<br>
 
     <tr valign="top">
       <td>
@@ -9638,7 +9655,8 @@ Status of CD1 National Body Comments</h1>
         decltype or the Iter concept map
 
       <td>
-        <p align="left"><br>
+        <p align="left">under discussion. This is a general question about all 
+        iterator adapters.<br>
 
     <tr valign="top">
       <td>
@@ -9700,7 +9718,8 @@ Status of CD1 National Body Comments</h1>
         this-&gt;tmp.operator-&gt;
 
       <td>
-        <p align="left"><br>
+        <p align="left">study group formed to come up with a suggested 
+        resolution.<br>
 
     <tr valign="top">
       <td>
@@ -9732,7 +9751,7 @@ Status of CD1 National Body Comments</h1>
         =delete.
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred to discussion of N2831.<br>
 
     <tr valign="top">
       <td>
@@ -9913,7 +9932,7 @@ Status of CD1 National Body Comments</h1>
         value if the stream is empty
 
       <td>
-        <p align="left"><br>
+        <p align="left">Martin will address with existing LWG issue 788.<br>
 
     <tr valign="top">
       <td>
@@ -10003,7 +10022,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left">Replace char * with const charT *
 
       <td>
-        <p align="left"><br>
+        <p align="left">We agree and believe it to be editorial.<br>
 
     <tr valign="top">
       <td>
@@ -10031,7 +10050,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left">ostream_iterator operator++(int);
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD. This is compatible with C++03; and we lack a 
+        consensus for change.<br>
 
     <tr valign="top">
       <td>
@@ -10157,7 +10177,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD. This could potentially [break] C++03-conforming 
+        programs.<br>
 
     <tr valign="top">
       <td>
@@ -10187,7 +10208,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left">Adopt n2743, or an update of that paper.
 
       <td>
-        <p align="left"><br>
+        <p align="left">NAD, this change would break code that takes the address 
+        of an algorithm.<br>
 
     <tr valign="top">
       <td>
@@ -10227,7 +10249,7 @@ Status of CD1 National Body Comments</h1>
         Change "is_heap" to "heap_bound"
 
       <td>
-        <p align="left"><br>
+        <p align="left">no consensus to make the change.<br>
 
     <tr valign="top">
       <td>
@@ -10256,7 +10278,7 @@ Status of CD1 National Body Comments</h1>
         EquivalnceRelation to Predicate
 
       <td>
-        <p align="left"><br>
+        <p align="left">no consensus to make the change.<br>
 
     <tr valign="top">
       <td>
@@ -10285,7 +10307,7 @@ Status of CD1 National Body Comments</h1>
         middle, copy(middle, last, result));
 
       <td>
-        <p align="left"><br>
+        <p align="left">Editor requests guidance: we agree that it is editorial.<br>
 
     <tr valign="top">
       <td>
@@ -10310,7 +10332,8 @@ Status of CD1 National Body Comments</h1>
         != false;
 
       <td>
-        <p align="left"><br>
+        <p align="left">We agree with the suggested change and believe that it 
+        is editorial.<br>
 
     <tr valign="top">
       <td>
@@ -10379,7 +10402,7 @@ Status of CD1 National Body Comments</h1>
         for finding swap.
 
       <td>
-        <p align="left"><br>
+        <p align="left">no consensus to make the change.<br>
 
     <tr valign="top">
       <td>
@@ -10411,7 +10434,7 @@ Status of CD1 National Body Comments</h1>
         Iter::reference&gt; from replace and replace_if
 
       <td>
-        <p align="left"><br>
+        <p align="left">agreed. Howard will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -10520,7 +10543,8 @@ Status of CD1 National Body Comments</h1>
         constraint on min/max/minmax algorithms
 
       <td>
-        <p align="left"><br>
+        <p align="left">agreed. We request that someone from the UK open an 
+        issue.<br>
 
     <tr valign="top">
       <td>
@@ -11669,7 +11693,8 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">US86, UK309, UK310: We believe that an issue can be 
+        opened and we await a volunteer.<br>
 
     <tr valign="top">
       <td>
@@ -11696,7 +11721,8 @@ Status of CD1 National Body Comments</h1>
         expression library, clause 28
 
       <td>
-        <p align="left"><br>
+        <p align="left">US86, UK309, UK310: We believe that an issue can be 
+        opened and we await a volunteer.<br>
 
     <tr valign="top">
       <td>
@@ -11722,9 +11748,8 @@ Status of CD1 National Body Comments</h1>
         arguments throughout.
 
       <td>
-        <p align="left"><br>
-
-    <tr valign="top">
+        <p align="left">US86, UK309, UK310: We believe that an issue can be 
+        opened and we await a volunteer.<tr valign="top">
       <td>
         <p>UK<br>
         314
@@ -11755,7 +11780,7 @@ Status of CD1 National Body Comments</h1>
         overload with two r-value references
 
       <td>
-        <p align="left"><br>
+        <p align="left">deferred to discussion of N2831.<br>
 
     <tr valign="top">
       <td>
@@ -11785,7 +11810,7 @@ Status of CD1 National Body Comments</h1>
         iterator dereferences
 
       <td>
-        <p align="left"><br>
+        <p align="left">We believe that this is editorial.<br>
 
     <tr valign="top">
       <td>
@@ -11812,7 +11837,7 @@ Status of CD1 National Body Comments</h1>
         regex classes.
 
       <td>
-        <p align="left"><br>
+        <p align="left">We agree and await assistance from the UK.<br>
 
     <tr valign="top">
       <td>
@@ -11845,7 +11870,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">UK317, JP74: Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -11874,7 +11899,7 @@ Status of CD1 National Body Comments</h1>
         basic_regx &amp; operator= (initializer_list&lt;T&gt;);
 
       <td>
-        <p align="left"><br>
+        <p align="left">UK317, JP74: Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -11954,7 +11979,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">We agree. Alisdair will open an issue.<br>
 
     <tr valign="top">
       <td>
@@ -13841,7 +13866,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    DE 23: Create issue, share with DE 25. See N2826. Attention: core group.<tr valign="top">
+    Create issue, share with DE 25. See N2826. Attention: core group.<tr valign="top">
       <td>
         <p>DE-24
 
@@ -13898,7 +13923,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    DE 25: Create issue, share with DE 23. Attention: core group.<tr valign="top">
+    Create issue, share with DE 23. Attention: core group.<tr valign="top">
       <td>
         <p>FR 38
 
