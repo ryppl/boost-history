@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->03 Mar 2009 05:41:54 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42396" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->04 Mar 2009 07:09:12 AM -0500<!--webbot bot="Timestamp" endspan i-checksum="41446" --></p>
 
 <table border="1" bordercolor="#000000" cellpadding="7"
   cellspacing="0" style="border-collapse: collapse">
@@ -1893,10 +1893,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    Alisdair to open issue. We prefer
-    <std>only. </std>
-
-    <tr valign="top">
+    Alisdair to open issue. We prefer &lt;std&gt; only.<tr valign="top">
       <td>
         <p>UK<br>
         171
@@ -3698,7 +3695,8 @@ Status of CD1 National Body Comments</h1>
         <p>20.2.12
 
       <td>
-        <p>IntegralLike
+        <p>Integral<br>
+        Like
 
       <td>
         <p>te/ed
@@ -3785,7 +3783,8 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p align="justify">20.5
 
-      <td>
+    [meta.<br>
+        trans.other]<td>
         <p align="justify">Table 41
 
       <td>
@@ -3806,10 +3805,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    [meta.trans.other]
-
-    Agree that aligned_union is not completely redundant. We are investigating 
-    whether the need for aligned_union is compelling enough to reinstate.<tr valign="top">
+    &nbsp;Agree. The need for aligned_union is compelling enough to reinstate.<tr valign="top">
       <td>
         <p>US 69
 
@@ -4004,9 +4000,7 @@ Status of CD1 National Body Comments</h1>
         <p>US 70
 
       <td>
-        <p>20.6
-
-      <td>
+        <p>20.5 [meta]<td>
         <p>
 
       <td>
@@ -4039,9 +4033,8 @@ Status of CD1 National Body Comments</h1>
         <p>US 71
 
       <td>
-        <p>20.6.7
-
-      <td>
+        <p>20.6.7 [meta.<br>
+        trans.other]<td>
         <p>Table 51, last row, column 3
 
       <td>
@@ -4058,20 +4051,75 @@ Status of CD1 National Body Comments</h1>
         <p>
 
     (The correct reference is section 20.5.7, table 41, last row). Agree: 
-    Forward to project editor. There are several ways to fix the grammar.<tr valign="top">
+    Forward to project editor. There are several ways to fix the grammar.<tr>
       <td>
-        <p>JP 38
+        <p>DE-20
 
       <td>
-        <p align="left">20.6.12.1.3
+        <p>20.6.12 [bind]
+
+      <td>
+        <p>
+
+      <td>
+        <p>ed
+
+      <td>
+        <p>DE-20 The section heading and the first sentence use the term 
+        &quot;template function&quot;, which is undefined.
+
+      <td>
+        <p style=
+        "margin-top: 0.04in; margin-bottom: 0.04in">Replace &quot;template function&quot; 
+        by &quot;function template&quot;.
+
+        <p>
+
+      <td>
+        <p>
+
+    Agree. Forward to the project editor.</tr>
+    <tr>
+      <td>
+        <p align="left">US 72
+
+      <td>
+        <p align="left">20.6.12 [func.bind.<br>
+        bind]<td>
+        <p align="left"><br>
+
+      <td>
+        <p align="left">te
+
+      <td>
+        <p align="left">
+        bind should support move-only functors and bound arguments.
+
+        <p align="left"><br>
 
       <td>
         <p align="left"><br>
 
       <td>
+        <p align="left">We look forward to a paper on this topic. We recommend 
+        no action until a paper is available. We do think that bind would 
+        require further overloads to support move semantics, if indeed move 
+        semantics are possible.<br>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p>JP 38
+
+      <td valign="top">
+        <p align="left">20.6.12.1.3 [func.bind.<br>
+        bind]<td valign="top">
+        <p align="left"><br>
+
+      <td valign="top">
         <p>te
 
-      <td>
+      <td valign="top">
         <p align="left" style=
         "margin-left: 0.19in; text-indent: -0.19in; margin-bottom: 0in">
         add the move requirement for bind's return type.<br>
@@ -4105,7 +4153,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left" style="margin-top: 0.04in">
         <br>
 
-      <td>
+      <td valign="top">
         <p align="left">Add
         the following requirements.<br>
         "<font color="#000000">it has a public move constructor
@@ -4114,7 +4162,7 @@ Status of CD1 National Body Comments</h1>
         <p align="left" style="margin-top: 0.04in">Add
         the MoveConstructible.
 
-      <td>
+      <td valign="top">
         <p>
 
     We were not clear about what the submitter really intended. Requiring that 
@@ -4123,6 +4171,183 @@ Status of CD1 National Body Comments</h1>
     might be a start, but we would like to communicate with the submitter. 
     [NOTE: We would like to see a clarification of the wording for Returnable<t> 
     that makes it clear that move-only types can be Returnable.] </t>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p>DE-21
+
+      <td valign="top">
+        <p>20.6.12.1.3 [func.bind.<br>
+        bind]<td valign="top">
+        <p>
+
+      <td valign="top">
+        <p>te
+
+      <td valign="top">
+        <p>DE-21 The specification for bind claims twice that &quot;the values and 
+        types for the bound arguments v1, v2, ..., vN are determined as 
+        specified below&quot;. No such specification appears to exist.
+
+      <td valign="top">
+        <p>Add the missing specification in the same section, or add a 
+        cross-reference indicating the section where the specification appears.
+
+      <td valign="top">
+        <p align="left">Agree. There are several differences (omissions) between 
+        N2691 [func.bind.bind] and N2800 [func.bind.bind]. Ask the project 
+        editor to review the changes.<br>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p>UK<br>
+        211
+
+      <td valign="top">
+        <p align="justify">20.6.12.2.3 [unique.ptr.<br>
+        single.asgn]<td valign="top">
+        <p align="justify">11
+
+      <td valign="top">
+        <p align="justify">Te
+
+      <td valign="top">
+        <p align="left">The nullptr_t type was introduced to resolve the null 
+        pointer literal problem. It should be used for the assignemnt operator, 
+        as with the constructor and elsewhere through the library.
+
+        <p align="left"><br>
+
+      <td valign="top">
+        <p align="left">Change signature here and in the synopsis to: unique_ptr&amp; 
+        operator=(nullptr_t); Strike the sentance an note before the Effects 
+        clause.
+
+      <td valign="top">
+        <p align="left">Agree.<br>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p>UK<br>
+        212
+
+      <td valign="top">
+        <p align="justify">20.6.13.7 [util.<br>
+        dynamic.<br>
+        safety]<td valign="top">
+        <p align="justify"><br>
+
+      <td valign="top">
+        <p align="justify">Te
+
+      <td valign="top">
+        <p align="left">The pointer-safety API is nothing to do with smart 
+        pointers, so does not belong in 20.7.13. In fact it is a set of language 
+        support features are really belongs in clause 18, with the contents 
+        declared in a header that deals with language-support of memory 
+        management.
+
+        <p align="left"><br>
+
+      <td valign="top">
+        <p align="left">Move this specification to 18.5. Move the declarations 
+        into the header &lt;new&gt;.
+
+      <td valign="top">
+        <p align="left">Agree in principle, but not with the proposed 
+        resolution. We believe it belongs either a subsection of either 20 
+        [utilities] or 20.7 [memory] as part of the general reorganization of 
+        20. The declaration should stay in
+        <memory>. </memory>
+        <br>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p>DE-22
+
+      <td valign="top">
+        <p>20.6.16.2 [func.wrap.<br>
+        func]<td valign="top">
+        <p>
+
+      <td valign="top">
+        <p>te
+
+      <td valign="top">
+        <p>DE-22 The conditions for deriving from std::unary_function and 
+        std::binary_function are unclear: The condition would also be satisfied 
+        if ArgTypes were std::vector&lt;T1&gt;, because it (arguably) &quot;contains&quot; T1.
+
+      <td valign="top">
+        <p>Consider stating the conditions in normative prose instead of in 
+        comments in the class definition. Use &quot;consists of&quot; instead of 
+        &quot;contains&quot;. Consider using &quot;if and only if&quot; instead of &quot;iff&quot;.
+
+      <td valign="top">
+        <p align="left">Agree. std::reference_wrapper has the same structure, 
+        and we suggest that std::function be presented in the same way as 
+        std::reference_wrapper.<br>
+
+    </tr>
+    <tr>
+      <td valign="top">
+        <p align="left">US 73
+
+      <td valign="top">
+        <p align="left">20.6.18<br>
+        [expr.prim.<br>
+        lambda], [func.<br>
+        reference<br>
+        closure]
+
+      <td valign="top">
+        <p align="left"><br>
+
+      <td valign="top">
+        <p align="left">te
+
+      <td valign="top">
+        <p align="left">The std::reference_closure template is redundant with 
+        std::function and should be removed.
+
+        <p align="left"><br>
+
+        <p align="left">
+        std::reference_closure is a premature optimization that provides a 
+        limited subset of the functionality of std::function intended to improve 
+        performance in a narrow use case. However, the “parallel application 
+        performance” benchmark used to motivate the inclusion of 
+        std::reference_closure was flawed in several ways:
+
+        <ol start="3">
+          <li>
+            <p align="left">it failed to enable a common optimization in 
+            std::function (implemented by all vendors), exacting a large and 
+            unrealistic penalty for copying std::function instances, and
+
+          <li>
+            <p align="left">it failed to account for parallel scheduler overhead 
+            or realistically-sized work units, both of which would dominate the 
+            costs measured by the benchmark in any realistic application.
+          </ol>
+
+        <p align="left" style="margin-left: 0.25in"><br>
+
+      <td valign="top">
+        <p align="left">Remove 20.7.18 [func.referenceclosure].
+
+        <p align="left"><br>
+
+        <p align="left">Remove 5.1.1 paragraph 12.
+
+      <td valign="top">
+        <p align="left">This requires attention from CWG and/or EWG.<br>
+
+    </tr>
 
     <tr valign="top">
       <td>
@@ -4596,243 +4821,41 @@ Status of CD1 National Body Comments</h1>
         <p>
 
     We look forward to a paper on this topic. We recommend no action until a 
-    paper is available.<tr valign="top">
+    paper is available.<tr>
       <td>
-        <p>DE-20
+        <p>JP 44
 
       <td>
-        <p>20.7.12
-
-      <td>
-        <p>
-
-      <td>
-        <p>ed
-
-      <td>
-        <p>DE-20 The section heading and the first sentence use the
-        term "template function", which is undefined.
-
-      <td>
-        <p style=
-        "margin-top: 0.04in; margin-bottom: 0.04in">Replace
-        "template function" by "function template".
-
-        <p>
-
-      <td>
-        <p>
-
-    [bind] Agree. Forward to the project editor.<tr valign="top">
-      <td>
-        <p align="left">US 72
-
-      <td>
-        <p align="left">20.7.12
-
-      <td>
+        <p align="left">20.7.13.6 [util.<br>
+        smartptr.<br>
+        shared.<br>
+        atomic]<td>
         <p align="left"><br>
-
-      <td>
-        <p align="left">te
-
-      <td>
-        <p align="left">
-        bind should support move-only functors and bound arguments.
-
-        <p align="left"><br>
-
-      <td>
-        <p align="left"><br>
-
-      <td>
-        <p align="left">[func.bind.bind] We look forward to a paper on this 
-        topic. We recommend no action until a paper is available. We do think 
-        that bind would require further overloads to support move semantics, if 
-        indeed move semantics are possible.<br>
-
-    <tr valign="top">
-      <td>
-        <p>DE-21
-
-      <td>
-        <p>20.7.12.1.3
-
-      <td>
-        <p>
 
       <td>
         <p>te
 
       <td>
-        <p>DE-21 The specification for bind claims twice that "the
-        values and types for the bound arguments v1, v2, ..., vN
-        are determined as specified below". No such specification
-        appears to exist.
-
-      <td>
-        <p>Add the missing specification in the same section, or
-        add a cross-reference indicating the section where the
-        specification appears.
-
-      <td>
-        <p align="left">[func.bind.bind] Agree. There are several differences 
-        (omissions) between N2691 [func.bind.bind] and N2800 [func.bind.bind]. 
-        Ask the project editor to review the changes.<br>
-
-    <tr valign="top">
-      <td>
-        <p>UK<br>
-        211
-
-      <td>
-        <p align="justify">20.7.12.2.3
-
-      <td>
-        <p align="justify">11
-
-      <td>
-        <p align="justify">Te
-
-      <td>
-        <p align="left">The nullptr_t
-        type was introduced to resolve the null pointer literal
-        problem. It should be used for the assignemnt operator, as
-        with the constructor and elsewhere through the library.
-
-        <p align="left"><br>
-
-      <td>
-        <p align="left">Change signature here and in the synopsis
-        to: unique_ptr&amp; operator=(nullptr_t); Strike the
-        sentance an note before the Effects clause.
-
-      <td>
-        <p align="left">[unique.ptr.single.asgn] Agree.<br>
-
-    <tr valign="top">
-      <td>
-        <p>UK<br>
-        212
-
-      <td>
-        <p align="justify">20.7.13.7
-
-      <td>
-        <p align="justify"><br>
-
-      <td>
-        <p align="justify">Te
-
-      <td>
         <p align="left">The
-        pointer-safety API is nothing to do with smart pointers, so
-        does not belong in 20.7.13. In fact it is a set of language
-        support features are really belongs in clause 18, with the
-        contents declared in a header that deals with
-        language-support of memory management.
+        1st parameter p and 2nd parameter v is now
+        shared_ptr&lt;T&gt; *.
 
-        <p align="left"><br>
-
-      <td>
-        <p align="left">Move this specification to 18.5. Move the
-        declarations into the header &lt;new&gt;.
+        <p align="left" style="margin-top: 0.04in">It
+        should be shared_ptr&lt;T&gt;&amp;, or if these are
+        shared_ptr&lt;T&gt;* then add the "p shall not be a null
+        pointer" at the requires.
 
       <td>
-        <p align="left">[util.dynamic.safety] Agree in principle, but not with 
-        the proposed resolution. We believe it belongs either a subsection of 
-        either 20 [utilities] or 20.7 [memory] as part of the general 
-        reorganization of 20. The declaration should stay in
-        <memory>. </memory>
-        <br>
-
-    <tr valign="top">
-      <td>
-        <p>DE-22
+        <p align="left" style="margin-top: 0.04in">
+        Change shared_ptr&lt;T&gt;&amp; or add the "p shall not be
+        a null pionter" at the requires.
 
       <td>
-        <p>20.7.16.2
+        <p align="left">Agree. All of the 
+        functions need a requirement that p (or v) is a pointer to a valid 
+        object.<br>
 
-      <td>
-        <p>
-
-      <td>
-        <p>te
-
-      <td>
-        <p>DE-22 The conditions for deriving from
-        std::unary_function and std::binary_function are unclear:
-        The condition would also be satisfied if ArgTypes were
-        std::vector&lt;T1&gt;, because it (arguably) "contains" T1.
-
-      <td>
-        <p>Consider stating the conditions in normative prose
-        instead of in comments in the class definition. Use
-        "consists of" instead of "contains". Consider using "if and
-        only if" instead of "iff".
-
-      <td>
-        <p align="left">[func.wrap.func] Agree. std::reference_wrapper has the 
-        same structure, and we suggest that std::function be presented in the 
-        same way as std::reference_wrapper.<br>
-
-    <tr valign="top">
-      <td>
-        <p align="left">US 73
-
-      <td>
-        <p align="left">20.7.18
-
-      <td>
-        <p align="left"><br>
-
-      <td>
-        <p align="left">te
-
-      <td>
-        <p align="left">The
-        std::reference_closure template is redundant with
-        std::function and should be removed.
-
-        <p align="left"><br>
-
-        <p align="left">
-        std::reference_closure is a premature optimization that
-        provides a limited subset of the functionality of
-        std::function intended to improve performance in a narrow
-        use case. However, the &#8220;parallel application
-        performance&#8221; benchmark used to motivate the inclusion
-        of std::reference_closure was flawed in several ways:
-
-        <ol start="3">
-          <li>
-            <p align="left">it failed to
-            enable a common optimization in std::function
-            (implemented by all vendors), exacting a large and
-            unrealistic penalty for copying std::function
-            instances, and
-
-          <li>
-            <p align="left">it failed to
-            account for parallel scheduler overhead or
-            realistically-sized work units, both of which would
-            dominate the costs measured by the benchmark in any
-            realistic application.
-          </ol>
-
-        <p align="left" style="margin-left: 0.25in"><br>
-
-      <td>
-        <p align="left">Remove 20.7.18
-        [func.referenceclosure].
-
-        <p align="left"><br>
-
-        <p align="left">Remove 5.1.1 paragraph 12.
-
-      <td>
-        <p align="left">[expr.prim.lambda], [func.referenceclosure] This 
-        requires attention from CWG and/or EWG.<br>
+    </tr>
 
     <tr valign="top">
       <td>
@@ -4908,15 +4931,46 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p align="left"><br>
 
+    <tr>
+      <td>
+        <p>US 80
+
+      <td>
+        <p>20.8.2.1 [time.traits.<br>
+        is_fp]<td>
+        <p>Heading
+
+      <td>
+        <p>ed
+
+      <td>
+        <p>The section heading does not describe the contents.
+
+      <td>
+        <p style=
+        "margin-top: 0.04in; margin-bottom: 0.04in">Change the
+        heading &#8220;<span lang=
+        "en-US">is_floating_point</span>&#8221; to
+        &#8220;<span lang=
+        "en-US">treat_as_floating_point</span>&#8221;. Optionally
+        adjust the section&#8217;s label similarly.
+
+        <p>
+
+      <td>
+        <p>
+
+    Agree. The section name and the section label 
+    ([time.traits.is_fp]) are wrong. Forward to project editor.</tr>
+
     <tr valign="top">
       <td>
         <p>US 74.2
 
       <td>
-        <p>20.8.2.2
-
-      <td>
-        <p>(a) synopsis (b) after &#182; 14
+        <p>20.8.2.2 [allocator.<br>
+        concepts]<td>
+        <p>(a) syn-opsis (b) after &#182; 14
 
       <td>
         <p>te/ed
@@ -4931,7 +4985,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    US 74 (2): [allocator.concepts] Agree. Forward to project editor.<tr valign="top">
+    Agree. Forward to project editor.<tr valign="top">
       <td>
         <p>US 75
 
@@ -4964,7 +5018,9 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p align="left">20.8.3
 
-      <td>
+    [allocator.<br>
+        element.<br>
+        concepts]<td>
         <p align="left"><br>
 
       <td>
@@ -5020,13 +5076,17 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    [allocator.element.concepts] Agree. Forward to project editor.<tr valign="top">
+    Agree. Forward to project editor.<tr valign="top">
       <td>
         <p>UK<br>
         215
 
       <td>
         <p align="justify">20.8.3.3
+
+    [time.<br>
+        duration.<br>
+        arithmetic]
 
       <td>
         <p align="justify">6,8
@@ -5047,7 +5107,7 @@ Status of CD1 National Body Comments</h1>
       <td>
         <p>
 
-    [time.duration.arithmetic] Agree. Forward to project editor.<tr valign="top">
+    Agree. Forward to project editor.<tr valign="top">
       <td>
         <p align="left">US 77
 
@@ -5105,9 +5165,9 @@ Status of CD1 National Body Comments</h1>
 
       <td>
         <p align="left">20.8.12,<br>
-        20.8.13.2
-
-      <td>
+        20.8.13.2 [unique.ptr], [util.<br>
+        smartptr.<br>
+        shared]<td>
         <p align="left"><br>
 
       <td>
@@ -5130,19 +5190,17 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left">[unique.ptr], [util.smartptr.shared] We look forward to 
+        <p align="left">We look forward to 
         a paper on this topic. We recommend no action until a paper is 
-        available. We believe that the shared pointer must use the default 
-        deleter for the conversion to succeed.<br>
+        available. We believe that the shared pointer must use the default deleter for the conversion to succeed.<br>
 
     <tr valign="top">
       <td>
         <p align="left">US 79
 
       <td>
-        <p align="left">20.8.12.2.1
-
-      <td>
+        <p align="left">20.8.12.2.1 [unique.ptr.<br>
+        single.ctor]<td>
         <p align="left"><br>
 
       <td>
@@ -5175,51 +5233,16 @@ Status of CD1 National Body Comments</h1>
         <p align="left"><br>
 
       <td>
-        <p align="left">[unique.ptr.single.ctor] Agree. The unique_ptr(pointer 
+        <p align="left">Agree. The unique_ptr(pointer 
         p) <em>Requires</em> clause should be the same as the unique_ptr() <em>
         Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.<br>
-
-    <tr valign="top">
-      <td>
-        <p>JP 44
-
-      <td>
-        <p align="left">20.8.13.6
-
-      <td>
-        <p align="left"><br>
-
-      <td>
-        <p>te
-
-      <td>
-        <p align="left">The
-        1st parameter p and 2nd parameter v is now
-        shared_ptr&lt;T&gt; *.
-
-        <p align="left" style="margin-top: 0.04in">It
-        should be shared_ptr&lt;T&gt;&amp;, or if these are
-        shared_ptr&lt;T&gt;* then add the "p shall not be a null
-        pointer" at the requires.
-
-      <td>
-        <p align="left" style="margin-top: 0.04in">
-        Change shared_ptr&lt;T&gt;&amp; or add the "p shall not be
-        a null pionter" at the requires.
-
-      <td>
-        <p align="left">[util.smartptr.shared.atomic] Agree. All of the 
-        functions need a requirement that p (or v) is a pointer to a valid 
-        object.<br>
 
     <tr valign="top">
       <td>
         <p>JP 45
 
       <td>
-        <p align="left">20.9
-
-      <td>
+        <p align="left">20.9 [time]<td>
         <p align="left"><br>
 
       <td>
@@ -5249,42 +5272,11 @@ Status of CD1 National Body Comments</h1>
         30.
 
       <td>
-        <p align="left">[time] We agree that this section needs concepts. We 
+        <p align="left">We agree that this section needs concepts. We 
         look forward to a paper on this topic. We recommend no action until a 
         paper is available.<br>
 
     <tr valign="top">
-      <td>
-        <p>US 80
-
-      <td>
-        <p>20.9.2.1
-
-      <td>
-        <p>Heading
-
-      <td>
-        <p>ed
-
-      <td>
-        <p>The section heading does not describe the contents.
-
-      <td>
-        <p style=
-        "margin-top: 0.04in; margin-bottom: 0.04in">Change the
-        heading &#8220;<span lang=
-        "en-US">is_floating_point</span>&#8221; to
-        &#8220;<span lang=
-        "en-US">treat_as_floating_point</span>&#8221;. Optionally
-        adjust the section&#8217;s label similarly.
-
-        <p>
-
-      <td>
-        <p>
-
-    20.8.2.1 [time.traits.is_fp] Agree. The section name and the section label 
-    ([time.traits.is_fp]) are wrong. Forward to project editor.<tr valign="top">
       <td>
         <p align="left">US 81
 
