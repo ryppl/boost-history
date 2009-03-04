@@ -54,3 +54,18 @@ sys	0m0.014s
 
 t(std::function<>) / t(reference_closure): 4.1
 
+=== Do Some Work in the Callback ===
+
+execute refclosure
+real	0m1.467s
+user	0m1.463s
+sys	0m0.003s
+
+execute stdfunction
+real	0m4.710s
+user	0m4.700s
+sys	0m0.008s
+
+t(std::function<>) / t(reference_closure): 3.2
+
+

@@ -1,10 +1,11 @@
 #ifndef TRIVIAL_CLOSURE2_DWA200933_H
 # define TRIVIAL_CLOSURE2_DWA200933_H
 
-struct frame { };
+struct frame { double a, b, c; };
 
-inline void work( frame* )
+inline void work( frame* f )
 {
+    f->a += f->b * f->c;
 }
 
 #if REFERENCE_CLOSURE
