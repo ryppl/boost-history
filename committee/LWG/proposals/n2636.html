@@ -43,7 +43,7 @@ h1 { font-size: 16pt }
 
 blockquote {padding: 10px; border: 1px #DDD dashed }
 
-a img {border: 0}
+a img {border: 0px none; }
 
 div.google_header, div.google_footer {
   position: relative;
@@ -249,8 +249,10 @@ Specification for Chapter 30
     — <i id=o17025>Remarks:</i> additional semantic constraints on the function<br id=o17026>
     <br id=o17027>
     </font> <font color=#009a9a id=o17028 size=3>— <i id=o17029>Error
-    conditions:</i> the default error conditions for error codes reported by the
-    function.</font><font id=lwna4 size=3><br id=zcuo2>
+    conditions:</i> the error condition constants corresponding to error codes reported by the
+    function. </font>
+    <font color=#009a9a id=o17045 size=3>Correspondence is established by the 
+    system error support comparison operators ([syserr.compare]).</font><font id=lwna4 size=3><br id=zcuo2>
     </font>
   </p>
   <p id=o17030>
@@ -286,16 +288,6 @@ Specification for Chapter 30
     conditions where a function may fail. The conditions are listed, together
     with a suitable explanation, as the <code id=o17036>enum class errc</code> constants ([syserr]) that could be
     used as an argument to function <code id=o17037>make_error_condition</code>([syserr.errcondition.nonmember<wbr id=o17038>s]).<br id=hx9c0>
-    </font>
-  </p>
-  <p id=o17033>
-    <font color=#009a9a id=o17034 size=3>[<i id=o17039>Note:</i> the class&nbsp;
-    <code id=o17040>error_condition</code> ([syserr.errcondition.overview<wbr id=o17041>]) object is reported via
-    the <code id=o17042>default_error_condition</code> function ([syserr.errcode.observers])&nbsp; of the class <code id=o17043>error_code</code>
-    object representing the error. <i id=o17044>--end note.</i></font>
-  </p>
-  <p id=o17033>
-    <font id=cnr60 size=3><br id=cnr61>
     </font>
   </p>
   <p id=o17033>

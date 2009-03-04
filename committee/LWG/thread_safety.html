@@ -13,7 +13,7 @@
 <p><span style="background-color: rgb(255, 255, 0)">Doc. no.&nbsp;&nbsp; 
 D2603=08-0113</span><br>
 Date:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-27<!--webbot bot="Timestamp" endspan i-checksum="12290" --><br>
+<!--webbot bot="Timestamp" s-type="EDITED" s-format="%Y-%m-%d" startspan -->2008-04-30<!--webbot bot="Timestamp" endspan i-checksum="12277" --><br>
 Project:&nbsp;&nbsp;&nbsp;&nbsp; Programming Language C++<br>
 Reply to:&nbsp;&nbsp; Beman Dawes &lt;bdawes at acm.org&gt;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -190,13 +190,12 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <blockquote>
   <p>Functions <code>asctime</code><span class="q">,
   </span><code>ctime</code><span class="q">, </span><code>gmtime</code><span class="q">, 
-  and </span><code>localtime</code> are not required to be thread-safe ([res.on.thread.safety]).</p>
+  and </span><code>localtime</code> are not required to avoid data races ([res.on.thread.safety]).</p>
   </blockquote>
   <p><i>To 21.4 Null-terminated sequence utilities [c.strings], add:</i></p>
   <blockquote>
     <p>Functions <code>
-    strerror</code> and <code>strtok</code> are not required to be 
-    thread-safe ([res.on.thread.safety]).</p>
+    strerror</code> and <code>strtok</code> are not required to avoid data races ([res.on.thread.safety]).</p>
   </blockquote>
   <p><i>To 22.1.1 Class locale [locale], add a new paragraph at the end:</i></p>
   <blockquote>
@@ -204,11 +203,11 @@ no visible side effects. <i>--end note]</i></u></font></p>
   entire program or one global locale object per thread is implementation 
   defined. Implementations are encouraged but not required to provide one global 
   locale object per thread. If there is a single global locale object for the 
-  entire program, it is not required to be thread-safe ([res.on.thread.safety]).</font></u></p>
+  entire program, it is not required to avoid data races ([res.on.thread.safety]).</font></u></p>
   </blockquote>
   <p><i>At a location in 23 to be determined by the project editor, add a new paragraph:</i></p>
   <blockquote>
-  <p><u><font color="#228822">For purposes of determining thread-safety requirements ([res.on.thread.safety[), 
+  <p><u><font color="#228822">For purposes of avoiding data races ([res.on.thread.safety[), 
   implementations shall consider the following functions to be const:<code> 
   begin</code>, <code>end</code>, <code>rbegin</code>, <code>rend</code>, <code>
   front</code>, <code>back</code>, <code>data</code>, <code>find</code>, <code>
@@ -232,10 +231,7 @@ no visible side effects. <i>--end note]</i></u></font></p>
     standard, except that the implementation may specify that particular library 
     functions may call <code>rand</code>.<font color="#228822"><u> </u></font>
     <u><font color="#228822">It is implementation defined whether or not the</font></u><font color="#228822"><u>
-    <code>rand</code> function is thread-safe ([res.on.thread.safety]).</u></font>
-    <font color="#228822"><u>Implementations of <code>rand</code> are encouraged 
-    but not required to provide such thread-safety. Calls to <code>rand</code> 
-    from other library functions shall not result in data races.</u></font></p>
+    <code>rand</code> function avoid data races ([res.on.thread.safety]).</u></font></p>
 </blockquote>
   <h2><a name="Revision-history">Revision history</a></h2>
   <p>N2603 - Revision 2:</p>
@@ -267,9 +263,13 @@ no visible side effects. <i>--end note]</i></u></font></p>
   <p>N2298 - Initial version.</p>
   <h2><a name="References">References</a></h2>
   <p>
-  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2334.htm">
-  N2334</a>, Concurrency memory model (revised again), Clark Nelson and Hans-J. 
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2429.htm">
+  N2429</a>, Concurrency memory model (final revision), Clark Nelson and Hans-J. 
   Boehm</p>
+  <p>
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2480.html">
+  N2480</a>, A Less Formal Explanation of the Proposed C++ Concurrency Memory 
+  Model, Hans-J. Boehm</p>
   <p>
   <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2519.html">
   N2519</a>, Library thread-safety 
