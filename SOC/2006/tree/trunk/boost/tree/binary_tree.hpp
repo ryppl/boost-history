@@ -196,9 +196,8 @@ public:
         node_pointer p_node = m_node_alloc.allocate(1, node_hint);
         //m_node_alloc.construct(p_node, val);
         *p_node = node_type(val);
-        p_node->init();
         
-        pos.attach(p_node);
+        pos.base_node()->attach(p_node, pos.m_pos);
 
         // Readjust begin
 //        if ((pos == this->inorder_first()))

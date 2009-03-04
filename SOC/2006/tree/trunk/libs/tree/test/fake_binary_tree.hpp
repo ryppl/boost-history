@@ -45,7 +45,7 @@ struct fake_binary_tree {
     typedef fake_root_tracking_binary_cursor<T> root_tracking_cursor;
     typedef fake_root_tracking_binary_cursor<T const> const_root_tracking_cursor;
         
-    fake_binary_tree(typename std::vector<T>::size_type s = 0) : m_data(s)
+    fake_binary_tree(size_type s = 0) : m_data(s)
     { }
     
     descending_cursor descending_root()
@@ -77,6 +77,23 @@ struct fake_binary_tree {
     {
         if (c.m_pos >= m_data.size())
             m_data.resize(c.m_pos + 1);
+        else {
+            value_type tmp;
+            size_type s = c.m_pos;
+            
+            while (m_data[s]) {
+                tmp = m_data[s];
+                s = 2*s + 1 + c.index();
+
+                if (s >= m_data.size()) {
+                    m_data.resize(s + 1);
+                    m_data[s] = tmp;
+                    break;
+                }
+                m_data[s] = tmp;
+            }
+        }
+        
         m_data[c.m_pos] = v;
         return c;
     }

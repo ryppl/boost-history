@@ -182,6 +182,18 @@ public:
         return qp;
         //return (c ? 0 : 1);
     }
+
+    void attach(base_pointer p_node, children_type::size_type m_pos)
+    {
+        p_node->m_parent = this;
+        
+        // Only relevant for non-leaf insertion:
+        if (m_children[m_pos] != 0)
+            m_children[m_pos]->m_parent = p_node;
+        p_node->m_children[m_pos] = m_children[m_pos];
+
+        m_children[m_pos] = p_node;
+    }
     
     base_pointer detach(children_type::size_type m_pos)
     {
@@ -189,7 +201,7 @@ public:
         m_children[m_pos] = 
             m_children[m_pos]
           ->m_children[((m_children[m_pos])
-          ->m_children[0] == 0 /*node_base::nil()*/ ? 1 : 0)];
+          ->m_children[0] == 0 ? 1 : 0)];
         m_children[m_pos]->m_parent = this;
         return q;
     }

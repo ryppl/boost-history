@@ -30,10 +30,12 @@ static void create_test_dataset1_forest(Forest& f)
     // For augmented trees. (Why is this necessary? Nothing here is explicit!)
     typedef typename Forest::value_type value_type; 
     
+    // Insert top level elements in their proper order.
     typename Forest::cursor cur = f.insert(f.end(), value_type(8));
     cur = f.insert(f.end(), value_type(10));
     cur = f.insert(f.end(), value_type(14));
 
+    // Insert 8's child elements in a more random order to test if this also works.
     cur = f.begin().begin();
     cur = f.insert(cur, value_type(3));
     cur = f.insert(++cur, value_type(7));

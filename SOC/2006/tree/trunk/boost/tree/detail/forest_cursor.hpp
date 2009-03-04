@@ -14,6 +14,7 @@
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_adaptor.hpp>
+//#include <boost/tree/inorder_algorithms.hpp>
 
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -83,6 +84,7 @@ public:
     {
         return forest_cursor::cursor_adaptor_::base();
     }
+
 private:
     
     friend class cursor_core_access;

@@ -49,9 +49,12 @@ struct test_binary_tree_fixture {
         ret.insert(++cur, value_type(7));
         cur = ret.insert(ret.root().end(), value_type(10));
         cur = ret.insert(ret.root().end().end(), value_type(14));
-        cur = ret.insert(cur.to_begin(), value_type(13));
+        //cur = ret.insert(cur.to_begin(), value_type(13));
+        // First insert 11 as left child of 14, 12 as child of 11
         cur = ret.insert(cur.to_begin(), value_type(11));
         cur = ret.insert(++cur.to_begin(), value_type(12));
+        // Now insert 13 as left child of 14, which makes it 11's parent
+        ret.insert(ret.root().end().end().begin(), value_type(13));
     }
     
     template <class Cursor>

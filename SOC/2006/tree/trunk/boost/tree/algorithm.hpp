@@ -107,6 +107,16 @@ to_forest_end(BinaryCursor& c)
         c.to_end();
 }
 
+//template <class BinaryCursor>
+//BOOST_CONCEPT_REQUIRES(
+//    ((AscendingCursor<BinaryCursor>)),
+//    (void)) // return type
+//to_forest_end(BinaryCursor& c)
+//{
+//    to_last(inorder(), c);
+//    predecessor(inorder(), c); // requires AscendingCursor
+//    ++c;
+//}
 
 template <class BinaryCursor>
 BOOST_CONCEPT_REQUIRES(

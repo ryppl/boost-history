@@ -214,18 +214,6 @@ public:
     {
         return this->base_reference();
     }
-    
-    // TODO: protect?
-    void attach(node_pointer p_node)
-    {
-        p_node->m_parent = this->base_reference();
-        
-        // Only forest-relevant:
-//        p_node->operator[](1) = this->base_reference()->operator[](m_pos);
-//        this->base_reference()->operator[](m_pos)->m_parent = p_node;
-        
-        this->base_reference()->m_children[m_pos] = p_node;
-    }
 
 //    /** 
 //     * Detaches the node this cursor points to and returns a pointer to it;
