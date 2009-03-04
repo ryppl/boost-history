@@ -10,3 +10,15 @@ real	0m26.411s
 user	0m26.292s
 sys	0m0.056s
 
+=== Removed unrealistic indirection from lambda case ===
+
+execute trivial_nested
+real	0m1.179s
+user	0m1.166s
+sys	0m0.004s
+
+execute trivial_function
+real	0m27.693s
+user	0m27.443s
+sys	0m0.080s
+
