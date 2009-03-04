@@ -2,16 +2,22 @@
 set -e
 CC=g++
 
-echo compile trivial_nested
-$CC -O2 -DREFERENCE_CLOSURE trivial_nested.cc -o trivial_nested
-echo compile trivial_function
-$CC -O2 -DSTD_FUNCTION trivial_function.cc -o trivial_function
+set -x
+$CC -O2 -DREFERENCE_CLOSURE parallel_lib.cc -c -o parallel_lib_refclosure.o
+$CC -O2 -DREFERENCE_CLOSURE main.cc -c -o main_refclosure.o
+$CC main_refclosure.o parallel_lib_refclosure.o -o refclosure
+
+$CC -O2 -DSTD_FUNCTION parallel_lib.cc -c -o parallel_lib_stdfunction.o
+$CC -O2 -DSTD_FUNCTION main.cc -c -o main_stdfunction.o
+$CC main_stdfunction.o parallel_lib_stdfunction.o -o stdfunction
+
+set +x
 
 echo
-echo -n execute trivial_nested
-time ./trivial_nested
+echo -n execute refclosure
+time ./refclosure
 
 echo
-echo -n execute trivial_function
-time ./trivial_function
+echo -n execute stdfunction
+time ./stdfunction
 

@@ -40,3 +40,17 @@ sys	0m0.013s
 
 t(std::function<>) / t(reference_closure): 4.1
 
+=== Separate Translation Unit for Parallel Lib ===
+
+execute refclosure
+real	0m1.267s
+user	0m1.243s
+sys	0m0.005s
+
+execute stdfunction
+real	0m5.153s
+user	0m5.103s
+sys	0m0.014s
+
+t(std::function<>) / t(reference_closure): 4.1
+

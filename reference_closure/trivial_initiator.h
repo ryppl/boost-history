@@ -1,3 +1,6 @@
+#include "trivial_closure.h"
+#include "parallel_lib.h"
+
 void initiator() {
     frame mine;
 

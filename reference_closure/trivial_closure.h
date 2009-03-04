@@ -1,3 +1,6 @@
+#ifndef TRIVIAL_CLOSURE2_DWA200933_H
+# define TRIVIAL_CLOSURE2_DWA200933_H
+
 struct frame { };
 
 inline void work( frame* )
@@ -6,7 +9,7 @@ inline void work( frame* )
 
 #if REFERENCE_CLOSURE
 
-void nested( frame* f ) { work(f); }
+inline void nested( frame* f ) { work(f); }
 
 struct closure {
     void (*func)( frame* );
@@ -37,3 +40,5 @@ namespace std
 }
 
 #endif
+
+#endif // TRIVIAL_CLOSURE2_DWA200933_H
