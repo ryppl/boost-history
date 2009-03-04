@@ -68,4 +68,31 @@ sys	0m0.008s
 
 t(std::function<>) / t(reference_closure): 3.2
 
+=== Multiply Iterations by 10 Again ===
+
+execute refclosure
+real	0m16.620s
+user	0m16.489s
+sys	0m0.053s
+
+execute stdfunction
+real	0m51.779s
+user	0m51.640s
+sys	0m0.059s
+
+t(std::function<>) / t(reference_closure): 3.1
+
+=== Eliminate Indirect Call in copy c'tor of std::function<...> ===
+
+execute refclosure
+real	0m16.174s
+user	0m16.034s
+sys	0m0.044s
+
+execute stdfunction
+real	0m33.195s
+user	0m33.047s
+sys	0m0.052s
+
+t(std::function<>) / t(reference_closure): 2.1
 

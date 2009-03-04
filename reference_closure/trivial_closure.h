@@ -5,7 +5,9 @@ struct frame { double a, b, c; };
 
 inline void work( frame* f )
 {
+# if !DISABLE_WORK
     f->a += f->b * f->c;
+# endif 
 }
 
 #if REFERENCE_CLOSURE

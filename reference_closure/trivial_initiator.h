@@ -2,7 +2,11 @@
 #include "parallel_lib.h"
 
 void initiator() {
-    frame mine = { 3, 4, 5 };
+    frame mine
+#if !DISABLE_WORK
+        = { 3, 4, 5 }
+#endif 
+    ;
 
 #if REFERENCE_CLOSURE
     
