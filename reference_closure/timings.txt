@@ -1,0 +1,23 @@
+=== Original Result (10x fewer loops) ===
+
+compile trivial_nested
+
+real	0m0.428s
+user	0m0.025s
+sys	0m0.016s
+execute trivial_nested
+
+real	0m1.167s
+user	0m1.156s
+sys	0m0.004s
+compile trivial_function
+
+real	0m0.759s
+user	0m0.659s
+sys	0m0.088s
+execute trivial_function
+
+real	0m26.411s
+user	0m26.292s
+sys	0m0.056s
+
