@@ -21,8 +21,22 @@ typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
 class fibo
 {
 private:
-	jss::shared_future< void >		f_;
+	boost::shared_future< void >		f_;
 	int								offset_;
+
+	class holder
+	{
+	private:
+		boost::shared_future< void >		f_;
+
+	public:
+		holder( boost::shared_future< void > const& f)
+		: f_( f)
+		{}
+
+		bool operator()()
+		{ return f_.is_ready(); }
+	};
 
 	int seq_( int n)
 	{
@@ -36,7 +50,10 @@ private:
 		else
 		{
 			if ( n == 7)
-				boost::this_task::reschedule_until< pool_type >( f_);
+			{
+				holder hldr( f_);
+				boost::this_task::reschedule_until( hldr);
+			}
 
 			boost::function< int() > fn1 = boost::bind(
 						& fibo::par_,
@@ -53,13 +70,13 @@ private:
 				boost::this_task::get_thread_pool< pool_type >().submit(
 					fn2) );
 
-			return t1.get() + t2.get();
+			return t1.result().get() + t2.result().get();
 		}
 	}
 
 public:
 	fibo(
-		jss::shared_future< void > f,
+		boost::shared_future< void > f,
 		int offset)
 	:  f_( f), offset_( offset)
 	{}
@@ -78,8 +95,8 @@ int main( int argc, char *argv[])
 	try
 	{
 		pool_type pool( tp::poolsize( 1) );
-		jss::packaged_task< void > tsk( boost::bind( f) );
-		jss::shared_future< void > f( tsk.get_future() );
+		boost::packaged_task< void > tsk( boost::bind( f) );
+		boost::shared_future< void > f( tsk.get_future() );
 		fibo fib( f, 3);
 		std::vector< tp::task< int > > results;
 		results.reserve( 40);
@@ -103,7 +120,7 @@ int main( int argc, char *argv[])
 			std::vector< tp::task< int > >::iterator i( results.begin() );
 			i != e;
 			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
+			std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
 
 		pt::ptime stop( pt::microsec_clock::universal_time() );
 		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;

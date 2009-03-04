@@ -14,7 +14,7 @@ project boost/tp
       <link>static:<define>BOOST_THREADPOOL_STATIC_LINK=1
     ;
 
-SOURCES = callable  default_pool  guard  interrupter  poolsize  scanns  watermark ;
+SOURCES = callable  default_pool  guard  interrupter  poolsize  scanns  watermark worker ;
 
 lib boost_threadpool
    : $(SOURCES).cpp
