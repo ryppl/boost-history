@@ -10,6 +10,8 @@ real	0m26.411s
 user	0m26.292s
 sys	0m0.056s
 
+t(std::function<>) / t(reference_closure): 22.7
+
 === Removed unrealistic indirection from lambda case ===
 
 execute trivial_nested
@@ -21,4 +23,20 @@ execute trivial_function
 real	0m27.693s
 user	0m27.443s
 sys	0m0.080s
+
+t(std::function<>) / t(reference_closure): 23.5
+
+=== Lambdas would be known to be trivially copiable ===
+
+execute trivial_nested
+real	0m1.175s
+user	0m1.166s
+sys	0m0.004s
+
+execute trivial_function
+real	0m4.871s
+user	0m4.836s
+sys	0m0.013s
+
+t(std::function<>) / t(reference_closure): 4.1
 

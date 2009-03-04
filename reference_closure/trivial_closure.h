@@ -22,4 +22,18 @@ struct lambda
   void operator()() { work( scope ); }
 };
 
+#include <tr1/functional>
+namespace std
+{ 
+  namespace tr1
+  {
+
+    template <>
+      struct __is_location_invariant<lambda>
+      : integral_constant<bool,true>
+      {};
+
+  }
+}
+
 #endif
