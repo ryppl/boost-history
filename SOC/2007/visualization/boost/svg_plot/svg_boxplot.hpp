@@ -17,10 +17,11 @@
   The American Statistician, Vol. 53, No. 4 (Nov., 1999), pp. 382-387
 
   \author Jacob Voytko & Paul A. Bristow
+  \date Mar 2009
  */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -46,6 +47,7 @@
 #include "detail/axis_plot_frame.hpp"
 #include "detail/auto_axes.hpp" //
 #include "quantile.hpp"
+#include "uncertain.hpp"
 
 #include <vector>
 #include <string>

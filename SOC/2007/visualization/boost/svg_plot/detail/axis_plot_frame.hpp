@@ -25,7 +25,10 @@
 // template <class T>bool isfinite (T);
 // template <class T>bool isinf (T);
 // template <class T> bool isnan (T);
+#include "uncertain.hpp"
+// using boost::svg::unc;
 
+#include <limits>
 #include <string>
 // using std::string;
 
@@ -1021,11 +1024,15 @@ namespace boost
             }
           } // void draw_plot_point
 
-          void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
-          { //! Write the data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
+          void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue)
+          { //! Write one data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
             //! Unecessary e, +, & leading exponent zeros may optionally be stripped, and the position and rotation controlled.
             //! Uncertainty estimate ('plus or minus') may be optionally be appended.
             //! Degrees of freedom estimate (number of replicates) may optionally be appended.
+            double value = uvalue.value(); // Most likely value.
+            double u = uvalue.uncertainty(); // Uncertainty or plusminus for value.
+            double df = uvalue.deg_free(); // Degrees of freedom estimate for value.
+
             std::stringstream label;
             label.precision(val_style.value_precision_);
             label.flags(val_style.value_ioflags_);
@@ -1119,27 +1126,34 @@ namespace boost
             text_element& t = g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);  // X or Y value "1.23"
             int f = static_cast<int>(val_style.values_text_style_.font_size() * 0.8); // Make uncertainty and df a bit smaller to distringuish from value.
 
-            double u = 0.0123;// Uncertainty or plusminus value.
-            double df = 23; // Degrees of freedom estimate value.
             std::string label_u; // Uncertainty or plusminus.
             std::string label_df; // Degrees of freedom estimate.
             std::string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
+            // Might also use ANSI symbol for plusminus 0xF1 == '\361' or char(241) 
+            // but seems to vary with different codepages
+            // LOCALE_SYSTEM_DEFAULT LOCALE_IDEFAULTANSICODEPAGE == 1252
+            // LOCALE_SYSTEM_DEFAULT  LOCALE_IDEFAULTCODEPAGE ==  850 for country 44 (UK)
+            // And seems to vary from console to printable files.
             // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
             // Layout seems to vary with font - Times New Roman leaves no space after.
             //text_element& t = g_ptr.text(x, y, label_v, val_style.values_text_style_, al, rot);
            // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
 
-            if (val_style.plusminus_on_)
+            if ((val_style.plusminus_on_ == true) // Is wanted.
+                && (u > 0.) // Is a valid uncertainty estimate.
+              )
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
               label_u = sv(u, val_style, true); // stripped.
               t.tspan(pm).fill_color(darkcyan);
               t.tspan(label_u).fill_color(purple).font_size(f);
               // TODO Colors should not be hard coded.
             }
-            if (val_style.df_on_)
+            if (val_style.df_on_ == true // Is wanted.
+                  && (df != (std::numeric_limits<unsigned short int>::max)()) // and deg_free is defined OK.
+                )
             { // Degrees of freedom or number of values-1 used for this estimate of value.
               std::stringstream label;
-              label.precision(4);
+              label.precision(4); // Might need 5 to show 65535?
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << df << ")"; // "123"
               // Explicit space "&#x00A0;" seems necessary.
@@ -1149,13 +1163,13 @@ namespace boost
 
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
 
-          std::string sv(double v, const value_style& sty, bool unc = false)
+          std::string sv(double v, const value_style& sty, bool precise = false)
           { //! Strip from double value any unecessary e, +, & leading exponent zeros, reducing "1.200000" to "1.2" or "3.4e1"...
             std::stringstream label;
             // Precision of uncertainty is usually less than precision of value,
             // label.precision((unc) ? ((sty.value_precision_ > 3) ?  sty.value_precision_-2 : 1) : sty.value_precision_);
             // Possible but simpler to fix at precision=2
-            label.precision((unc) ? 2 : sty.value_precision_);
+            label.precision((precise) ? 2 : sty.value_precision_);
             label.flags(sty.value_ioflags_);
             label << v; // "1.2" or "3.4e+001"...
             return  (sty.strip_e0s_) ?
@@ -1165,11 +1179,18 @@ namespace boost
               label.str();  // Leave unstripped.
           } // std::string sv(double v, const value_style& sty)
 
-          void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, double vx, double vy)
+          void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy)
           { //! Write the \b pair of data point's X and Y values as a string,.
             //! If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
             //! X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
             // draw_plot_point_values is only when both x and Y pairs are wanted.
+            double vx = uncx.value();
+            double vy = uncy.value();
+            double ux = uncx.uncertainty();
+            double uy = uncy.uncertainty();
+            double dfx = uncx.deg_free();
+            double dfy = uncy.deg_free();
+
             using std::string;
             using std::stringstream;
             std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
@@ -1253,20 +1274,14 @@ namespace boost
             // value and uncertainty, and degrees of freedom estimate.
             // So the coding complexity is judged with it (even if it may not always work right yet ;-)
 
-            // Unclear how to get this uncertainty information into this function,
-            // so these are purely imaginary for now.
-            // Might template so can use an uncertain type instead of double?
-            double ux = 0.0123;
-            double uy = 0.00321;
-            double dfx = 23;
-            double dfy = 6;
-
             // Tasteless colors and font changes are purely proof of concept.
 
-            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);  // Make uncertainty and df a bit smaller to distringuish from value.
-           // X value (and optional uncertainty & df).
+            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+            // Make uncertainty and df a bit smaller to distinguish from value by default (but make configurable).
+            // X value (and optional uncertainty & df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
-           // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012 (23)
+            // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012
+            // and also optionally show degrees of freedom (23).
 
             string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
             // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
@@ -1277,8 +1292,12 @@ namespace boost
               t.tspan(pm).fill_color(darkcyan);
               t.tspan(label_xu).fill_color(darkcyan).font_weight("bold").font_size(fx);
             }
-            if (x_sty.df_on_)
-            { // Degrees of freedom or number of values-1 used for this estimate of value.
+            if (
+                 (x_sty.df_on_ == true)  // Is wanted.
+                 &&
+                 (dfx != (std::numeric_limits<unsigned short int>::max)()) // and deg_free is defined OK.
+               )
+            { // Degrees of freedom (usually number of observations-1) used for this estimate of value.
               stringstream label;
               label.precision(4);
               //label.flags(sty.value_ioflags_); // Leave at default.
@@ -1294,14 +1313,19 @@ namespace boost
             { // On same line so no change in y.
               t.tspan(x_sty.separator_).fill_color(brown).font_size(fx); // Separator like comma and leading space ", ".
               t.tspan(label_yv, y_sty.values_text_style_); // Color?
-              if (y_sty.plusminus_on_)
+              if (
+                   (y_sty.plusminus_on_) // Is wanted.
+                   && (uy > 0.) // Is valid uncertainty estimate.
+                 )
               {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
                  // Precision of uncertainty is usually less than value,
                 label_yu = "&#x00A0;" + sv(uy, y_sty, true);
                 t.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
                 t.tspan(label_yu).fill_color(green).font_size(fy);
               }
-              if (y_sty.df_on_)
+              if ((y_sty.df_on_ == true)
+                && (dfy != (std::numeric_limits<unsigned short int>::max)())
+                )
               { // degrees of freedom or number of values -1 used for this estimate.
                 std::stringstream label;
                 label.precision(4);
@@ -1322,14 +1346,18 @@ namespace boost
               double dy = y_sty.values_text_style_.font_size() * 2.2; // "newline"
               text_element& ty = y_g_ptr.text(x, y + dy, label_yv, y_sty.values_text_style_, al, rot);
 
-              if (y_sty.plusminus_on_)
+              if ((y_sty.plusminus_on_ == true) // Is wanted.
+                  && (uy > 0.) // Is valid uncertainty estimate.
+                  )
               {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
                  // Precision of uncertainty is usually less than value,
                 label_yu = "&#x00A0;" + sv(uy, y_sty, true);
                 ty.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
                 ty.tspan(label_yu).fill_color(green).font_size(fy);
               }
-              if (y_sty.df_on_)
+              if ((y_sty.df_on_ == true)  // Is wanted.
+                    && (dfy != (std::numeric_limits<unsigned short int>::max)()) // and deg_free is defined OK.
+                    )
               { // degrees of freedom or number of values -1 used for this estimate.
                 std::stringstream label;
                 label.precision(4);

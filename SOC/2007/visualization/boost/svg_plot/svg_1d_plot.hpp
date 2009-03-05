@@ -4,11 +4,12 @@
   \details Provides svg_1d_plot data and function to create plots, and svg_1d_plot_series to allow data values to be added.
   Very many functions allow fine control of the appearance and layout of plots and data markers.
   Items common to 1D and 2D use axis_plot_frame.
+  \date Mar 2009
   \author Jacob Voytko & Paul A. Bristow
  */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -25,13 +26,17 @@
 #endif
 
 #include <boost/iterator/transform_iterator.hpp>
-// for using boost::make_transform_iterator;
+// using boost::make_transform_iterator;
 
 #include "svg.hpp"
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp" // Code shared with 2D.
-#include "detail/functors.hpp"
+#include <boost/svg_plot/detail/functors.hpp>
+using boost::svg::detail::unc_default_convert;
 #include "detail/numeric_limits_handling.hpp"
+#include <boost/svg_plot/uncertain.hpp>
+// using boost::svg::unc;
+
 using boost::svg::detail::limit_NaN;
 
 #include <boost/svg_plot/detail/auto_axes.hpp> // provides:
@@ -76,8 +81,9 @@ class svg_1d_plot_series
 */
 
 public:
-  std::vector<double> series_; //!< Normal 'OK to plot' data values.
+  std::vector<unc> series_; //!< Normal 'OK to plot' data values.
   std::vector<double> series_limits_; //!< 'limit' values: too big, too small or NaN.
+  // TODO should these be unc too?
 
   std::string title_; //!< title of data series (to show on legend).
   plot_point_style point_style_; //!< circle, square...
@@ -127,10 +133,10 @@ line_style_(black, blank, 2, false, false) // Default line style, black, no fill
 {
   for(T i = begin; i != end; ++i)
   {  // No defaults for begin and end?
-    double temp = *i;
-    if(detail::is_limit(temp))
+    unc temp = *i;
+    if(detail::is_limit(temp.value()))
     {
-      series_limits_.push_back(temp); // 'limit' values: too big, too small or NaN.
+      series_limits_.push_back(temp.value()); // 'limit' values: too big, too small or NaN.
     }
     else
     {
@@ -140,7 +146,6 @@ line_style_(black, blank, 2, false, false) // Default line style, black, no fill
 } // svg_plot_series constructor.
 
 // Definitions of svg_plot_series Member Functions.
-
 svg_1d_plot_series& svg_1d_plot_series::fill_color(const svg_color& col_)
 { //! Set fill color for plot point marker(s) (chainable).
   point_style_.fill_color_ = col_;
@@ -682,20 +687,20 @@ public:
 
       for(unsigned int j = 0; j < serieses_[i].series_.size(); ++j)
       { // Draw jth point for ith series.
-        double x = serieses_[i].series_[j];
-        // TODO symbols are offset downwards
-        // because the origin of the point is the top left of the glyph.
-        // Need to offset by the height and width of the font size.
-        double vx = x; // Note the true x value.
+        unc ux = serieses_[i].series_[j];
+        double x = ux.value();
+        // TODO symbols are offset downwards because 
+        // the origin of the point is the top left of the glyph.
+        // Need to offset by the height and width of the font size?
         transform_x(x);
         if((x >= plot_left_) && (x <= plot_right_)) // Check point is inside plot_window.
         // May need a margin here to avoid points just over the window not being shown.
         {
           draw_plot_point(x, y, g_ptr, serieses_[i].point_style_); // Marker.
           if (x_values_on_)
-          { // Show the value of the data point too.
+          { // Show the value (& perhaps uncertainty) of the data point too.
             g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
-            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, serieses_[i].point_style_, vx);
+            draw_plot_point_value(x, y, g_ptr_v, x_values_style_, serieses_[i].point_style_, ux);
             // TODO separate X and Y colors?
           }
           else
@@ -795,9 +800,8 @@ public:
   }
 
   svg_1d_plot& svg_1d_plot::write(std::ostream& s_out)
-  { //! Write SVG image to the specified std::ostream.
-    /*!
-      This function also is used by the write to file function.
+  { /*! Write SVG image to the specified std::ostream.
+       This function also is used by the write to file function.
     */
     update_image();
     /*!
@@ -810,7 +814,7 @@ public:
     */
     image.write(s_out);
     return (svg_1d_plot&)*this;
-  }
+  } // write
 
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /*= "" */)
@@ -819,8 +823,8 @@ public:
     */
     serieses_.push_back(
       svg_1d_plot_series(
-      boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
-      boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
+      boost::make_transform_iterator(container.begin(), detail::unc_default_convert()),
+      boost::make_transform_iterator(container.end(), detail::unc_default_convert()),
       title)
     );
    /*
@@ -832,15 +836,16 @@ my_data.pushback(4.f);
 my_1d_plot.plot(my_data, "All my container"); // Plot all data.
      \endcode
    */
-    return serieses_[serieses_.size() - 1]; // Reference to data series just added.
-  }
+    return serieses_[serieses_.size() - 1];
+    //! \return Reference to data series just added.
+  } // plot(const T& container, const std::string& title)
 
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title)
   { //! Add a data series to the plot (by default, converting to doubles), with optional title.
     /*!
     Note that this version permits a partial range, begin to end, of the container to be used.
-    Returns a reference to data series just added.
+    \return a reference to data series just added.
     */
     serieses_.push_back(
       svg_1d_plot_series(
@@ -858,13 +863,13 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
   svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title /* = ""*/, U functor /* = boost_default_convert */)
   { /*! Add a data series to the plot, with optional title. (Version with custom functor, rather than to double).
       Note that this version permits a partial range, begin to end, of the container to be used.
-      Returns a reference to data series just added.
+      \return a reference to data series just added.
     */
     serieses_.push_back(
       svg_1d_plot_series(
-      boost::make_transform_iterator(container.begin(), functor),
-      boost::make_transform_iterator(container.end(),   functor),
-      title)
+        boost::make_transform_iterator(container.begin(), functor),
+        boost::make_transform_iterator(container.end(),   functor),
+        title)
     );
     return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   } // plot
@@ -874,7 +879,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
   { //! Add a data series to the plot, with optional title.
   /*!
     This version of plot includes a functor, allowing other than just convert data values to double(the default).
-    Returns a reference to data series just added.
+    \return a reference to data series just added.
   */
     serieses_.push_back(
       svg_1d_plot_series(
