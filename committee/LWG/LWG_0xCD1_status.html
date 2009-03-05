@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->04 Mar 2009 05:42:11 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42359" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->05 Mar 2009 04:34:53 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42235" --></p>
 
 <p>Disposition [Being reviewed by Editor] has been applied all Type Ed comments 
 which do not have a specific response from a sub-group.</p>
@@ -82,6 +82,7 @@ which do not have a specific response from a sub-group.</p>
         <font color="#000080"><u><a href=
         "http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html">
         http://www.open-std.org/</a><br>
+        &nbsp;
         <a href=
         "http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html">
         jtc1/sc22/wg21/docs/lwg-active.html</a></u></font>
@@ -3356,7 +3357,14 @@ which do not have a specific response from a sub-group.</p>
         <p align="left">The statement made in the comment was already aired prior to the last vote. 
     Without further input, the committee cannot remove a feature that was voted 
     into the draft. We will look at this comment in the light of N2829, which 
-    attempts to make scoped allocators less intrusive.<br>
+    attempts to make scoped allocators less intrusive.<p align="left">Later: US 
+        65, remove scoped allocators: straw poll, 4 pro - 9 con - 3 abstain, no 
+        consensus for removing scoped allocators.<p align="left">D2840: straw 
+        poll, this is the direction we want to go: 11 pro - 0 con - 5 abstain, 
+        we have consensus. Straw poll, put on format motions page for this 
+        meeting (pro) or review and consider at next meeting (con): 7 pro - 1 
+        con - many abstain, consensus for moving as formal motion at this 
+        meeting.<br>
 
     <tr valign="top">
       <td>
@@ -4376,9 +4384,8 @@ which do not have a specific response from a sub-group.</p>
         <p>JP 39
 
       <td>
-        <p align="left">20.6.16.2
-
-      <td>
+        <p align="left">20.6.16.2 [func.<br>
+        wrap.func]<td>
         <p align="left"><br>
 
       <td>
@@ -4440,12 +4447,31 @@ which do not have a specific response from a sub-group.</p>
         <p align="left"><br>
 
       <td>
-        <p>
+        Agree with one correction: CopyConstructible should be 
+        ConstructibleWithAllocator. New proposed resolution:
+        <p>Correct as follows. </p>
+        <pre>  template&lt;class F, Allocator A&gt;
+    function(allocator_arg_t, const A&amp;, F);
+  template&lt;class F, Allocator A&gt;
+    function(allocator_arg_t, const A&amp;, F&amp;&amp;);
+</pre>
+        <p>should be </p>
+        <pre>  template&lt;class F, Allocator A&gt;
+    requires ConstructibleWithAllocator&lt;F, A&gt;
+      &amp;&amp; Callable&lt;F, ArgTypes...&gt;
+      &amp;&amp; Convertible&lt;Callable&lt;F, ArgTypes...&gt;
+         ::result_type, R&gt;
+      function(allocator_arg_t, const A&amp;, F);
 
-    Agree with one correction: <span class="twikiNewLink">CopyConstructible<a href="http://wiki.dinkumware.com/twiki/bin/edit/Wg21summit/CopyConstructible?topicparent=Wg21summit.LWGSubGroup2" rel="nofollow" title="Create this topic">?</a></span> 
-    should be <span class="twikiNewLink">ConstructibleWithAllocator<a href="http://wiki.dinkumware.com/twiki/bin/edit/Wg21summit/ConstructibleWithAllocator?topicparent=Wg21summit.LWGSubGroup2" rel="nofollow" title="Create this topic">?</a></span> 
-    . Pablo to supply wording. Also check with Howard that omission was not 
-    deliberate.<tr valign="top">
+  template&lt;class F, Allocator A&gt;
+    requires ConstructibleWithAllocator&lt;F,A&gt; 
+      &amp;&amp; Callable&lt;F, ArgTypes...&gt;
+      &amp;&amp; Convertible&lt;Callable&lt;F, ArgTypes...&gt;
+         ::result_type, R&gt;
+      function(allocator_arg_t, 
+               const A&amp;, F&amp;&amp;);
+</pre>
+    <tr valign="top">
       <td>
         <p>JP 40
 
@@ -5026,7 +5052,8 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p style=
         "margin-top: 0.04in; margin-bottom: 0.04in">See paper:
-        http://www.halpernwightsoftware.com/WG21/n2810_allocator_defects.pdf
+        <a href="http://www.halpernwightsoftware.com/">http://www.halpernwightsoftware.com/</a><br>
+&nbsp; WG21/n2810_allocator_defects.pdf
 
         <p>
 
@@ -8236,7 +8263,12 @@ which do not have a specific response from a sub-group.</p>
 
     Agree. The proposed wording is forthcoming from Martin. We feel that these 
     overloads of swap are more important for array than other containers because 
-    swap is not O(1) for array.<tr valign="top">
+    swap is not O(1) for array.<p>
+
+    <strong>HOWEVER</strong> in a later session discussing D2844, it was decided 
+    to remove all the r-value-ref <code>swap</code> overloads from containers. 
+    Therefore adding them to <code>array</code> has no benefit. So the final 
+    disposition is NAD.<tr valign="top">
       <td>
         <p>UK<br>
         244
@@ -12752,8 +12784,9 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p>
 
-    Create an issue, together with UK 322. Detlef will write the issue, but not 
-    proposed wording. Refer also to sections [time.clock.req] and [time.clock.monotonic].<tr valign="top">
+    There is a good definition. NAD. There are other problems here (see issue 
+    859). Create an issue, together with UK 322. Detlef will write the issue, 
+    but not proposed wording. Refer also to sections [time.clock.req] and [time.clock.monotonic].<tr valign="top">
       <td>
         <p>UK<br>
         322
