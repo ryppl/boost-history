@@ -20,6 +20,11 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/less.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
+#include <boost/function.hpp>
+
+#ifndef BOOST_MSM_VISITOR_ARG_SIZE
+#define BOOST_MSM_VISITOR_ARG_SIZE 2 // default max number of arguments
+#endif
 
 namespace boost { namespace msm
 {
@@ -57,3 +62,4 @@ BOOST_PP_REPEAT(BOOST_MSM_VISITOR_ARG_SIZE, MSM_VISITOR_ARGS, ~)
 }}
 
 #endif //BOOST_MSM_ARGS_H
+

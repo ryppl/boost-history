@@ -11,10 +11,6 @@
 #ifndef BOOST_MSM_STATEMACHINE_H
 #define BOOST_MSM_STATEMACHINE_H
 
-#ifndef BOOST_MSM_VISITOR_ARG_SIZE
-#define BOOST_MSM_VISITOR_ARG_SIZE 2 // default max number of arguments
-#endif
-
 #include <vector>
 #include <queue>
 #include <functional>
@@ -37,7 +33,6 @@
 #include <boost/type_traits.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/smart_ptr.hpp>
-#include <boost/tuple/tuple.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/bind/apply.hpp>
@@ -1409,3 +1404,4 @@ private:
 
 } } // boost::msm
 #endif //BOOST_MSM_STATEMACHINE_H
+

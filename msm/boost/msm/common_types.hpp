@@ -11,6 +11,10 @@
 #ifndef BOOST_MSM_COMMON_TYPES_H
 #define BOOST_MSM_COMMON_TYPES_H
 
+#include <vector>
+#include <boost/tuple/tuple.hpp>
+#include <boost/function.hpp>
+
 namespace boost { namespace msm
 {
 // used for disable_if
@@ -31,3 +35,4 @@ struct wrap{};
 }}
 
 #endif //BOOST_MSM_COMMON_TYPES_H
+
