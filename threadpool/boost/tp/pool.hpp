@@ -61,8 +61,16 @@ Pool & get_thread_pool()
 }
 
 inline
-bool is_valid()
+bool is_worker()
 { return tp::detail::worker::tss_get() != 0; }
+
+inline
+thread::id worker_id()
+{
+	tp::detail::worker * w( tp::detail::worker::tss_get() );
+	BOOST_ASSERT( w);
+	return w->get_id();
+}
 }
 
 namespace tp

@@ -5,25 +5,22 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:reschedule_until Non-member function `reschedule_until`]
+[section:reschedule_until Non-member function `reschedule_until()`]
 
     #include <boost/tp/pool.hpp>
 
-	template< typename Pool, typename R >
-	void reschedule_until( boost::unique_future< R > const&);
-
-	template< typename Pool, typename R >
-	void reschedule_until( boost::shared_future< R > const&);
+	template< typename Pred >
+	void reschedule_until( Pred const&);
 
 [variablelist
-[[Effects:] [Reschedules current task until passed future becomes ready.] 
+[[Effects:] [Reschedules current task until passed callable predicate becomes ready.] 
 [[Throws:] [Nothing.]]
 [[Note:] [This function resides in namespace `boost::this_task`.]]
 ]
 
 [endsect]
 
-[section:get_thread_pool Non-member function `get_thread_pool`]
+[section:get_thread_pool Non-member function `get_thread_pool()`]
 
     #include <boost/tp/pool.hpp>
 
@@ -32,6 +29,34 @@
 
 [variablelist
 [[Effects:] [Returns reference to the thread pool where the current worker thread is running.] 
+[[Throws:] [Nothing.]]
+[[Note:] [This function resides in namespace `boost::this_task`.]]
+]
+
+[endsect]
+
+[section:is_worker Non-member function `is_worker()`]
+
+    #include <boost/tp/pool.hpp>
+
+	bool is_worker();
+
+[variablelist
+[[Effects:] [Returns true if the current thread is a worker-thread form a pool.]
+[[Throws:] [Nothing.]]
+[[Note:] [This function resides in namespace `boost::this_task`.]]
+]
+
+[endsect]
+
+[section:worker_id Non-member function `worker_id()`]
+
+    #include <boost/tp/pool.hpp>
+
+	thread::id worker_id();
+
+[variablelist
+[[Effects:] [Returns returns the thread-id of the worker-thread.]
 [[Throws:] [Nothing.]]
 [[Note:] [This function resides in namespace `boost::this_task`.]]
 ]

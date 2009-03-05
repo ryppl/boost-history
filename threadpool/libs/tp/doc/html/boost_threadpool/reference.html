@@ -29,9 +29,13 @@
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.pool"> Class template <code class="computeroutput"><span class="identifier">pool</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.reschedule_until"> Non-member
-      function <code class="computeroutput"><span class="identifier">reschedule_until</span></code></a></span></dt>
+      function <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.get_thread_pool"> Non-member
-      function <code class="computeroutput"><span class="identifier">get_thread_pool</span></code></a></span></dt>
+      function <code class="computeroutput"><span class="identifier">get_thread_pool</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.is_worker"> Non-member function
+      <code class="computeroutput"><span class="identifier">is_worker</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="reference.html#boost_threadpool.reference.worker_id"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.poolsize"> Class <code class="computeroutput"><span class="identifier">poolsize</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.scanns"> Class <code class="computeroutput"><span class="identifier">scanns</span></code></a></span></dt>
 <dt><span class="section"><a href="reference.html#boost_threadpool.reference.high_watermark"> Class <code class="computeroutput"><span class="identifier">high_watermark</span></code></a></span></dt>
@@ -910,16 +914,13 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_threadpool.reference.reschedule_until"></a><a class="link" href="reference.html#boost_threadpool.reference.reschedule_until" title="Non-member function reschedule_until"> Non-member
-      function <code class="computeroutput"><span class="identifier">reschedule_until</span></code></a>
+<a name="boost_threadpool.reference.reschedule_until"></a><a class="link" href="reference.html#boost_threadpool.reference.reschedule_until" title="Non-member function reschedule_until()"> Non-member
+      function <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a>
 </h3></div></div></div>
 <pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
-
-<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pool</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">R</span> <span class="special">&gt;</span>
-<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_future</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;);</span>
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">Pred</span> <span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">reschedule_until</span><span class="special">(</span> <span class="identifier">Pred</span> <span class="keyword">const</span><span class="special">&amp;);</span>
 </pre>
 <div class="variablelist">
 <p class="title"><b></b></p>
@@ -927,7 +928,7 @@
 <dt><span class="term">Effects:</span></dt>
 <dd>
 <p>
-            Reschedules current task until passed future becomes ready.
+            Reschedules current task until passed callable predicate becomes ready.
           </p>
 <p>
             [Throws:
@@ -945,8 +946,8 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="boost_threadpool.reference.get_thread_pool"></a><a class="link" href="reference.html#boost_threadpool.reference.get_thread_pool" title="Non-member function get_thread_pool"> Non-member
-      function <code class="computeroutput"><span class="identifier">get_thread_pool</span></code></a>
+<a name="boost_threadpool.reference.get_thread_pool"></a><a class="link" href="reference.html#boost_threadpool.reference.get_thread_pool" title="Non-member function get_thread_pool()"> Non-member
+      function <code class="computeroutput"><span class="identifier">get_thread_pool</span><span class="special">()</span></code></a>
 </h3></div></div></div>
 <pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 
@@ -961,6 +962,68 @@
 <p>
             Returns reference to the thread pool where the current worker thread
             is running.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.is_worker"></a><a class="link" href="reference.html#boost_threadpool.reference.is_worker" title="Non-member function is_worker()"> Non-member function
+      <code class="computeroutput"><span class="identifier">is_worker</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="keyword">bool</span> <span class="identifier">is_worker</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Returns true if the current thread is a worker-thread form a pool.
+          </p>
+<p>
+            [Throws:
+          </p>
+<p>
+            Nothing.
+          </p>
+</dd>
+<dt><span class="term">Note:</span></dt>
+<dd><p>
+            This function resides in namespace <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span></code>.
+          </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_threadpool.reference.worker_id"></a><a class="link" href="reference.html#boost_threadpool.reference.worker_id" title="Non-member function worker_id()"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a>
+</h3></div></div></div>
+<pre class="programlisting">   <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">tp</span><span class="special">/</span><span class="identifier">pool</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">worker_id</span><span class="special">();</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Effects:</span></dt>
+<dd>
+<p>
+            Returns returns the thread-id of the worker-thread.
           </p>
 <p>
             [Throws:
