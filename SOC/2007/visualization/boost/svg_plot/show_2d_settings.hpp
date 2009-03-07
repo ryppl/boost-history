@@ -191,6 +191,9 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   //cout << "title_font_width " << plot.title_font_width() << endl;
   // Not useful at present, so not longer implemented.
   cout << "x_values_on "  << plot.x_values_on() << endl;
+  cout << "x_values_font_size "  << plot.x_values_font_size() << endl;
+  cout << "x_values_font_family "  << plot.x_values_font_family() << endl;
+
   cout << "x_value_precision " << plot.x_value_precision() << endl;
   cout << "x_value_ioflags " << hex << plot.x_value_ioflags() << dec << ' ';
   outFmtFlags(plot.x_value_ioflags(), cout,  ".\n");
@@ -243,7 +246,9 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_axis_position " << plot.y_axis_position() << endl;
   cout << "x_axis_position " << plot.x_axis_position() << endl;
   cout << "x_plusminus_on " << plot.x_plusminus_on() << endl;
+  cout << "x_plusminus_color " << plot.x_plusminus_color() << endl;
   cout << "x_df_on " << plot.x_df_on() << endl;
+  cout << "x_df_color " << plot.x_df_color() << endl;
   cout << "xy_values_on "  << plot.xy_values_on() << endl;
   cout << "y_label_on " << plot.y_label_on() << endl;
   cout << "y_label_axis " << plot.y_label_axis() << endl;
@@ -285,9 +290,11 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_ticks_on_window_or_axis " << l_or_r(plot.y_ticks_on_window_or_axis()) << endl;
   cout << "y_max " << plot.y_max() << endl;
   cout << "y_min " << plot.y_min() << endl;
-  cout << "y_values_on "  << plot.y_values_on() << endl;
+  //cout << "y_values_on "  << plot.y_values_on() << endl;
   cout << "y_plusminus_on " << plot.y_plusminus_on() << endl;
+  cout << "y_plusminus_color " << plot.y_plusminus_color() << endl;
   cout << "y_df_on " << plot.y_df_on() << endl;
+  cout << "y_df_color " << plot.y_df_color() << endl;
 
   cout << "data lines width " << plot.data_lines_width() << endl;
 

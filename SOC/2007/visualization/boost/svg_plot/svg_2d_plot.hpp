@@ -516,8 +516,8 @@ my_plot.background_color(ghostwhite) // Whole image.
         title_on_(true),
         plot_window_on_(true),
         // Can have either or both X and Y value shown.
-        x_values_on_(false), // If X values of data are shown.
-        y_values_on_(false), // If Y values of data are shown.
+        x_values_on_(false), // If X values of data points are shown.
+        y_values_on_(false), // If Y values of data points are shown.
         xy_values_on_(false), // If X & Y values of data are shown as a pair.
         x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
         y_values_style_(downward, 3, std::ios::dec, true, value_style_, black, black, false, false),
@@ -1903,8 +1903,13 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& xy_values_on(bool b);
       bool y_plusminus_on();
       svg_2d_plot& y_plusminus_on(bool b);
+      svg_2d_plot& y_plusminus_color(const svg_color& col);
+      const svg_color y_plusminus_color();
       bool y_df_on();
       svg_2d_plot& y_df_on(bool b);
+      svg_2d_plot& y_df_color(const svg_color& col);
+      const svg_color y_df_color();
+
       svg_2d_plot& y_autoscale(double first, double second);
       svg_2d_plot& y_autoscale(std::pair<double, double> p);
       template <class T> // T an STL container: array, vector ...
@@ -2277,24 +2282,39 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-      bool  svg_2d_plot::y_values_on()
-      { //! \return true if values of Y data points are shown (as 1.23).
+      bool svg_2d_plot::y_values_on()
+      { //! \return true if values of Y data points are shown (for example: 1.23).
+        //! (Will override xy_values_on that would otherwise cause overwriting).
+        //! So the last values_on setting will prevail.
         return y_values_on_;
       }
 
       svg_2d_plot&  svg_2d_plot::y_values_on(bool b)
-      { //! Set true if values of Y data points are shown (as 1.23).
+      { //! Set true if values of Y data points are shown (for example: 1.23).
+        if(xy_values_on() == true)
+        { // Would be overwritten by XY pair.
+          xy_values_on(false);
+        }
         y_values_on_ = b;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
-      bool  svg_2d_plot::xy_values_on()
-      { //! \return true if values of X and Y data points are shown (as 1.23).
+      bool svg_2d_plot::xy_values_on()
+      { //! \return true if values of X and Y data points are shown (for example: 1.23).
         return xy_values_on_;
       }
 
       svg_2d_plot&  svg_2d_plot::xy_values_on(bool b)
       { //! Set true if values of X and Y data points are shown (as 1.23).
+        //! (Will override x_values_on and/or y_values_on that would otherwise cause overwriting).
+        if(x_values_on())
+        { // Would be overwritten by XY pair.
+          x_values_on(false);
+        }
+        if(y_values_on())
+        { // Would be overwritten by XY pair.
+          y_values_on(false);
+        }
         xy_values_on_ = b;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -2310,6 +2330,17 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         return *this;
       } //! \return reference to svg_2d_plot to make chainable.
 
+      svg_2d_plot& svg_2d_plot::y_plusminus_color(const svg_color& col)
+      {  //! Set color of Y uncertainty of value.
+        y_values_style_.plusminus_color_ = col;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      const svg_color svg_2d_plot::y_plusminus_color()
+      { //! \return color of Y uncertainty of value.
+        return y_values_style_.plusminus_color_;
+      }
+
       bool svg_2d_plot::y_df_on()
       { //! \return true if values of Y data points are to include degrees of freedom estimates.
         return svg_2d_plot::y_values_style_.df_on_;
@@ -2319,6 +2350,17 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       { //! Set true if values of Y data points are to include degrees of freedom estimates.
         y_values_style_.df_on_ = b;
         return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      svg_2d_plot& svg_2d_plot::y_df_color(const svg_color& col)
+      {  //! Set color of Y degrees of freedom.
+        y_values_style_.df_color_ = col;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      const svg_color svg_2d_plot::y_df_color()
+      { //! \return color of Y degrees of freedom.
+        return y_values_style_.df_color_;
       }
 
       svg_2d_plot& svg_2d_plot::y_autoscale(double minimum, double maximum)

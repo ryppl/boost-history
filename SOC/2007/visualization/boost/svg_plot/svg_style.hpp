@@ -55,12 +55,14 @@ class bar_style;  // Style of bars.
 enum rotate_style
 { //! \enum rotate_style Rotation in degrees clockwise from horizontal.
   horizontal = 0, //!< normal horizontal left to right, centered.
-  uphill = -45, //!< slope up.
+  //uphill = -45, //!< slope up. seems bit steep
+  uphill = -30, //!< slope up.
   upward = -90, //!< vertical writing up.
   backup = -135, //!< slope up backwards - upside down!
   leftward= -180, //!< horizontal to left.
   rightward = 360, //!< horizontal to right.
-  downhill = 45, //!< slope down.
+  // downhill = 45, //!< slope down.
+  downhill = 30, //!< slope down.
   downward = 90,  //!< vertical writing down.
   backdown = 135, //!< slope down backwards.
   upsidedown = 180 //!< upside down!  (== -180)
@@ -308,7 +310,7 @@ private:
 
 public:
   text_style(
-    int size = 12,
+    int size = 12, // Default font size.
     const std::string& font = "", // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
     const std::string& style = "", // font-style: normal | bold | italic | oblique
     const std::string& weight = "", // Examples: "bold", "normal"
@@ -526,11 +528,11 @@ class value_style
 { /*! \class boost::svg::value_style
      \brief Data series point value label information, text, color, orientation, (uncertainty & df).
      \details For example, to output: 5.123 +- 0.01 (19).
-     Uncertainty and degrees of freedom estimate not yet implemented.
-     Prefix, separator and suffix allow X and Y values to be together on one line like
-     [1.23+- 0.01 (3), 4.56 +-0.2 (10)]
-     Used in draw_plot_point_values (note plural) where X value_style is used
-     to provide the prefix and separator, and Y value_style to provide the suffix.
+     Uncertainty and degrees of freedom estimate.
+     Prefix, separator and suffix allow X and Y values to be together on one line, for example\n
+     \t[1.23+- 0.01 (3), 4.56 +-0.2 (10)]\n
+     Used in draw_plot_point_values (note plural - not used in draw_plot_point_value)
+     where X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
      Prefix, separator and suffix are ignored when X or Y are shown separately using draw_plot_point_value.
   */
 public:
@@ -538,16 +540,18 @@ public:
   rotate_style value_label_rotation_; //< Direction point value labels written.
   int value_precision_; //!< Decimal digits of precision of value.
   std::ios_base::fmtflags value_ioflags_; //!< Control of scientific, fixed, hex etc.
-  bool strip_e0s_; //!< If true, then unnecessary zeros will be stripped to reduce length.
+  bool strip_e0s_; //!< If true, then unnecessary zeros and + sign will be stripped to reduce length.
   text_style values_text_style_; //!< Font etc used for data point value marking.
   // svg_style
-  svg_color fill_color_; //!< Fill color.
-  svg_color stroke_color_; //!< Stroke color.
+  svg_color fill_color_; //!< Fill color for value.
+  svg_color stroke_color_; //!< Stroke color for value.
   bool plusminus_on_; //!< If an uncertainty estimate is to be appended (as + or - value).
     /* \details See \n
       http://en.wikipedia.org/wiki/Plus-minus_sign
     */
+  svg_color plusminus_color_; //!< Color for uncertainty, for example: 0.02 in "1.23 +-0.02".
   bool df_on_; //!< If a degrees of freedom estimate is to be appended.
+  svg_color df_color_; //!< Color for degrees for freedom, for example: 99 in "1.23 +-0.02 (99)".
   std::string prefix_; //!< Prefix to data point value, default none, but typically "[".
   std::string separator_; //!< Separator between x and y values, if both on same line (none if only X or only Y, or Y below X).
   std::string suffix_; //!< Suffix to data point value, default none, but typically "]".
@@ -564,30 +568,36 @@ public:
 // class value_style Member Functions definitions.
 // Constructor.
 
-value_style::value_style() //! Default data point value label style.
+value_style::value_style() //! Data point value label style (provides default color and font).
     :
     value_label_rotation_(horizontal), //!< Label orientation, default horizontal.
-    value_precision_(3), //!< Reduced from default of 6 which is usually too long.
-    value_ioflags_(std::ios::dec), //!< Any std::ios::ioflags, for example hex, fixed, scientific.
+    value_precision_(4), //!< Reduced from default of 6 which is usually too long.
+    value_ioflags_(std::ios::dec), //!< Any std::ios::ioflags, for example, hex, fixed, scientific.
     strip_e0s_(true), //!< If true, then unnecessary zeros will be stripped to reduce length.
     values_text_style_(no_style),  //!< All defaults, black etc.
     stroke_color_(black), //!< == black.
     fill_color_(svg_color(0, 0, 0)), //!< no fill.
     // TODO should be
     //     fill_color_(false), //!< no fill.
-    plusminus_on_(false), //! If uncertainty estimate to be appended.
-    df_on_(false) //!< If a degrees of freedom estimate to be appended.
+    plusminus_on_(false), //!< If uncertainty estimate to be appended.
+    plusminus_color_(black), //! Default color for uncertainty of value.
+    df_on_(false), //!< If a degrees of freedom estimate to be appended.
+    df_color_(black) //!< Default color for degrees of freedom.
     { // Default constructor initialises all private data.
     }
 
     value_style::value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
       text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
-      std::string pre = "[",
-      std::string sep  = ",&#x00A0;", // If put ", " the trailing space seems to be ignored, so add explicit space.
+      // Separators [,] provide, for example: [1.23+-0.01 (3), 4.56 +-0.2 (10)]
+      // default color black.
+      // TODO provide access to these.
+      std::string pre = "[", 
+      std::string sep  = ",&#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
       std::string suf  = "]")
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
-    values_text_style_(ts), stroke_color_(scol), fill_color_(fcol), plusminus_on_(pm), df_on_(df),
+    values_text_style_(ts), stroke_color_(scol), fill_color_(fcol),
+    plusminus_on_(pm),plusminus_color_(blue), df_on_(df), df_color_(blue),
     prefix_(pre), separator_(sep), suffix_(suf)
     { // Constructor.
     }
@@ -638,7 +648,7 @@ class plot_point_style
   friend std::ostream& operator<< (std::ostream&, plot_point_style);
 
 public:
-  svg_color fill_color_; //!< Color of the centre of the shape.
+  svg_color fill_color_; //!< Fill color of the centre of the shape.
   svg_color stroke_color_; //!< Color of circumference of shape.
   int size_; //!< Diameter of circle, height of square, font_size  ...
   point_shape shape_; //!< shape: round, square, point...

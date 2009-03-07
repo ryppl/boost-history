@@ -48,6 +48,8 @@ namespace boost
     //    when they are in svg_2d_plot.hpp
 
     static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
+    static const double reducer = 0.9; // To make uncertainty and df a bit smaller to distinguish from value.
+          // 0.8 reduced from value 12, to 9 which is a bit too small.
 
     // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect
     enum x_axis_intersect
@@ -87,9 +89,8 @@ namespace boost
         */
         //protected:
       public:
-        // --------------------------------------------------------------------
         // We don't use the SVG coordinate transform because then text would
-        // be flipped. I'm considering using it to scale the image for resizes.
+        // be flipped. Might use it to scale the image for resizes.
 
         // protected member functions (defined below):
 
@@ -1125,10 +1126,9 @@ namespace boost
               rot = uphill;
              break;
             } // switch
-
-            text_element& t = g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);  // X or Y value "1.23"
-            int f = static_cast<int>(val_style.values_text_style_.font_size() * 0.8); // Make uncertainty and df a bit smaller to distinguish from value.
-
+            text_element& t = g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);  // X or Y value "1.23".
+            int udf_font = static_cast<int>(val_style.values_text_style_.font_size() * reducer);
+          
             std::string label_u; // Uncertainty or plusminus.
             std::string label_df; // Degrees of freedom estimate.
             std::string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
@@ -1147,8 +1147,8 @@ namespace boost
               )
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
               label_u = sv(u, val_style, true); // stripped.
-              t.tspan(pm).fill_color(darkcyan);
-              t.tspan(label_u).fill_color(purple).font_size(f);
+              t.tspan(pm).fill_color(val_style.plusminus_color_);
+              t.tspan(label_u).fill_color(val_style.plusminus_color_).font_size(udf_font);
               // TODO Colors should not be hard coded.
             }
             if (val_style.df_on_ == true // Is wanted.
@@ -1161,13 +1161,14 @@ namespace boost
               label << "&#x00A0;(" << df << ")"; // "123"
               // Explicit space "&#x00A0;" seems necessary.
               label_df = label.str();
-              t.tspan(label_df).fill_color(brown).font_size(f);
+              t.tspan(label_df).fill_color(val_style.df_color_).font_size(udf_font);
             }
 
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
 
           std::string sv(double v, const value_style& sty, bool precise = false)
           { //! Strip from double value any unecessary e, +, & leading exponent zeros, reducing "1.200000" to "1.2" or "3.4e1"...
+            // TODO rename fo strip_value?
             std::stringstream label;
             // Precision of uncertainty is usually less than precision of value,
             // label.precision((unc) ? ((sty.value_precision_ > 3) ?  sty.value_precision_-2 : 1) : sty.value_precision_);
@@ -1276,10 +1277,10 @@ namespace boost
             // something that proves to be very effective at visually separating
             // value and uncertainty, and degrees of freedom estimate.
             // So the coding complexity is judged with it (even if it may not always work right yet ;-)
-
+            // prefix, separator and suffix are  all black at present.
             // Tasteless colors and font changes are purely proof of concept.
 
-            int fx = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+            int fx = static_cast<int>(x_sty.values_text_style_.font_size() * reducer);
             // Make uncertainty and df a bit smaller to distinguish from value by default (but make configurable).
             // X value (and optional uncertainty & df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
@@ -1294,8 +1295,10 @@ namespace boost
                 )
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
               label_xu = sv(ux, x_sty, true);
-              t.tspan(pm).fill_color(darkcyan);
-              t.tspan(label_xu).fill_color(darkcyan).font_weight("bold").font_size(fx);
+              //t.tspan(pm).fill_color(darkcyan);
+              // Should this be stroke_color?
+              t.tspan(pm).fill_color(x_sty.plusminus_color_);
+              t.tspan(label_xu).fill_color(x_sty.plusminus_color_).font_size(fx); // .font_weight("bold")
             }
             if (
                  (x_sty.df_on_ == true)  // Is wanted.
@@ -1309,14 +1312,14 @@ namespace boost
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
               // Explicit space "&#x00A0;" seems necessary.
               label_xdf = label.str();
-              t.tspan(label_xdf).fill_color(brown).font_size(fx);
+              t.tspan(label_xdf).fill_color(x_sty.df_color_).font_size(fx);
             }
-            int fy = static_cast<int>(y_sty.values_text_style_.font_size() * 0.8);
+            int fy = static_cast<int>(y_sty.values_text_style_.font_size() * reducer);
            // If there is a separator, put values on the same line, else as below put below the marker.
             bool sameline = (x_sty.separator_ != ""); // Might add to value_style? to allow 1.2, with 3.4 on line below.
             if (sameline)
             { // On same line so no change in y.
-              t.tspan(x_sty.separator_).fill_color(brown).font_size(fx); // Separator like comma and leading space ", ".
+              t.tspan(x_sty.separator_).fill_color(black).font_size(fx); // Separator like comma and leading space ", ".
               t.tspan(label_yv, y_sty.values_text_style_); // Color?
               if (
                    (y_sty.plusminus_on_) // Is wanted.
@@ -1326,7 +1329,7 @@ namespace boost
                  // Precision of uncertainty is usually less than value,
                 label_yu = "&#x00A0;" + sv(uy, y_sty, true);
                 t.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
-                t.tspan(label_yu).fill_color(green).font_size(fy);
+                t.tspan(label_yu).fill_color(y_sty.plusminus_color_).font_size(fy);
               }
               if ((y_sty.df_on_ == true)
                 && (dfy != (std::numeric_limits<unsigned short int>::max)())
@@ -1337,7 +1340,7 @@ namespace boost
                 //label.flags(sty.value_ioflags_); // Leave at default.
                 label <<"&#x00A0;(" << dfy << ")"; // "123.5"
                 label_ydf = label.str();
-                t.tspan(label_ydf).fill_color(lime).font_size(fy);
+                t.tspan(label_ydf).fill_color(y_sty.df_color_).font_size(fy);
               }
               if (y_sty.prefix_ != "")
               { // Want a suffix like "]" - with the Y values font size, not reduced for uncertainty info.
@@ -1357,8 +1360,8 @@ namespace boost
               {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
                  // Precision of uncertainty is usually less than value,
                 label_yu = "&#x00A0;" + sv(uy, y_sty, true);
-                ty.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
-                ty.tspan(label_yu).fill_color(green).font_size(fy);
+                ty.tspan(pm).font_family("arial").font_size(fy).fill_color(y_sty.plusminus_color_);
+                ty.tspan(label_yu).fill_color(y_sty.plusminus_color_).font_size(fy);
               }
               if ((y_sty.df_on_ == true)  // Is wanted.
                     && (dfy != (std::numeric_limits<unsigned short int>::max)()) // and deg_free is defined OK.
@@ -1369,11 +1372,11 @@ namespace boost
                 //label.flags(sty.value_ioflags_); // Leave at default.
                 label <<"&#x00A0;(" << dfy << ")"; // "123.5"
                 label_ydf = label.str();
-                ty.tspan(label_ydf).fill_color(lime).font_size(fy);
+                ty.tspan(label_ydf).fill_color(y_sty.df_color_).font_size(fy);
               }
               if (y_sty.prefix_ != "")
               { // Want a suffix like "]"
-                ty.tspan(y_sty.suffix_).fill_color(lime).font_size(fy);
+                ty.tspan(y_sty.suffix_).fill_color(black).font_size(fy);
               }
             }
           } // void draw_plot_point_values(double x, double y, g_element& g_ptr, double value)
@@ -1658,6 +1661,7 @@ namespace boost
           Derived& x_values_font_family(const std::string& family);
           const std::string& x_values_font_family();
           Derived& x_major_interval(double inter);
+
           Derived& x_values_color(const svg_color& col);
           svg_color x_values_color();
           Derived& x_values_rotation(rotate_style rotate);
@@ -1668,8 +1672,12 @@ namespace boost
           std::ios_base::fmtflags x_values_ioflags();
           Derived& x_plusminus_on(bool b);
           bool x_plusminus_on();
+          Derived& x_plusminus_color(const svg_color& col);
+          svg_color x_plusminus_color();
           Derived& x_df_on(bool b);
           bool x_df_on();
+          Derived& x_df_color(const svg_color& col);
+          svg_color x_df_color();
           double x_major_interval();
           Derived& x_major_tick_length(double length);
           double x_major_tick_length();
@@ -3124,7 +3132,14 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_values_on(bool b)
-          { //! If set true, show data point values near data points markers.
+          { //! \return true if values of X data points are shown (for example: 1.23).
+            // (Want override xy_values_on that would otherwise cause overwriting).
+            // So the last values_on setting will prevail.
+            // But this is only defined in 2D
+            //if(derived().xy_values_on())
+            //{ // Would be overwritten by XY pair.
+            //  derived().xy_values_on(false);
+            //}
             derived().x_values_on_ = b;
             return derived();
           }
@@ -3178,10 +3193,12 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_values_color(const svg_color& col)
           { //! Set the color of data point X values near data points markers.
             // Function could set both fill (middle) and stroke (outside),
-            // but just setting fill if simplest,
+            // but just setting fill is simplest,
             // but does not allow separate inside & outside colors.
+            // Might be better to set in x_values_style
             derived().image.g(PLOT_X_POINT_VALUES).style().fill_color(col);
             //derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color(col);
+
             return derived();
           }
 
@@ -3251,8 +3268,21 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           }
 
           template <class Derived>
+          Derived& axis_plot_frame<Derived>::x_plusminus_color(const svg_color& col)
+          { //! Set the color of X uncertainty of value, for example, the color of 0.02 in "1.23 +-0.02 (9)".
+            derived().x_values_style_.plusminus_color_ = col;
+            return derived();
+          }
+
+          template <class Derived>
+          svg_color axis_plot_frame<Derived>::x_plusminus_color()
+          { //! Get the color of X uncertainty of value, for example, the color of 0.02 in "1.23 +-0.02 (9)".
+            return derived().x_values_style_.plusminus_color_;
+          }
+
+           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_df_on(bool b)
-          { //! Set if to append a degrees of freedom estimate to data point X values near data points markers.
+          { //! Set true if to append a degrees of freedom estimate to data point X values near data points markers.
             //! (May not be implemented yet).
             derived().x_values_style_.df_on_ = b;
             return derived();
@@ -3260,9 +3290,22 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           bool axis_plot_frame<Derived>::x_df_on()
-          { //! \return  if to append a degrees of freedom estimate to data point X values near data points markers.
+          { //! \return true if to append a degrees of freedom estimate to data point X values near data points markers.
             //! (May not be implemented yet).
             return derived().x_values_style_.df_on_;
+          }
+
+         template <class Derived>
+          Derived& axis_plot_frame<Derived>::x_df_color(const svg_color& col)
+          { //! Set the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
+            derived().x_values_style_.df_color_ = col;
+            return derived();
+          }
+
+          template <class Derived>
+          svg_color axis_plot_frame<Derived>::x_df_color()
+          { //! Get the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
+            return derived().x_values_style_.df_color_;
           }
 
           template <class Derived>
