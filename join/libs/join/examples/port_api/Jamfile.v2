@@ -1,0 +1,12 @@
+
+project
+  : requirements
+    <library>/boost/thread//boost_thread
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj buffer.obj : buffer.cpp ;
+exe buffer : buffer.obj ;
+obj bounded_buffer.obj : bounded_buffer.cpp ;
+exe bounded_buffer : bounded_buffer.obj ;

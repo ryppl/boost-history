@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h2>Sample 2: Simple GUI Events Handling By Connecting Two Local
+Channels</h2>
+<br>
+This sample is based on sample 1 with changes to demonstrate connecting
+two local channels.<br>
+<br>
+Also we use the following POD struct (defined in linear_id_trait.hpp)
+as message id/names:<br>
+&nbsp;&nbsp;&nbsp; struct struct_id {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; message_family family;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; int type;<br>
+&nbsp;&nbsp;&nbsp; &nbsp; ......<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+The changes are inside main() function:<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">int
+main(int, char **) {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span>First
+we create 2 channels<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+evt_chan chan1;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+evt_chan chan2;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+Then we connect these 2 channels<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+connect(chan1, chan2);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+Bind event source to channel 1<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+gui_window window(chan1);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span>create
+handler object and bind it to channel 1<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+window_handler hdlr(chan1); </span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+create more event sinks and bind the global function to channel 2.<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+evt_chan::in window_down_in(chan2, win_but_down_id, evt_handler);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+evt_chan::in window_up_in(chan2, win_but_up_id, evt_handler);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+evt_chan::in shut_down_in(chan2, win_close_id, evt_handler);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+Now we fire some event for testing.<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+window.up("..Hi there [mouse-left-up] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+window.down(".. a simple window test [mouse-right-down] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+window.close(".. simple window wiered [window-closed] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+Last exit<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+cout &lt;&lt; "... exit ...\n";</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+return 0;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">}</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<br>
+From testing, we should see events propagate to both channel 1 and
+channel 2 and events get printed out by callbacks at both channels.<br>
+<a href="gui_evt_chan2.cpp">Complete source
+listing...</a><br>
+<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<br>
+</body>
+</html>

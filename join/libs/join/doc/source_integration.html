@@ -1,0 +1,126 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Source Code Structures and Integration with Other Libraries</title>
+</head>
+<body>
+<h2>Source Code Structures and Integration with Other Libraries</h2>
+<h3>Souce code structures</h3>
+The Join library is implemented as three layers:<br>
+<ol>
+  <li>
+    <p>Base<br>
+    </p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">The following files under
+boost/join/base define the main logic of Join and also a port based
+API&nbsp; (passing&nbsp; singular argument) which is self complete:<br>
+<ul>
+  <li>port.hpp</li>
+</ul>
+<div style="margin-left: 40px;">includes the definitions of async and
+synch ports. For async ports there are two template specializations
+defined. For synch ports there are four template specializations
+defined.<br>
+</div>
+<ul>
+  <li>actor.hpp</li>
+</ul>
+<div style="margin-left: 40px;">include the definitions of chords and
+the logic for maintaining messaging / synchronization status, chord
+matching and firing.<br>
+</div>
+</div>
+<ol start="2">
+  <li>
+    <p>Functional wrapper</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">The file boost/join/base/port_sig.hpp
+provides a functional api wrapper over the above port based API, so
+that sending messages on async / synch ports becomes calling async /
+synch methods and the packing / unpacking of arguments are automatic
+and cleaner. The code follows the design of Douglas Gregor's
+Boost.Signals library, although in Signals most of the similar codes
+are macros, and here plain C++ code is used for easy desbugging.<br>
+</div>
+<ol start="3">
+  <li>
+    <p>Idioms</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">The files under boost/join/idioms
+define high level facilities for developing Join based asynchronous
+applications. These facilities could themselves be built with the basic
+/ core Join abstractions (async / synch methods, chords and actors).
+Currently one such facility is defined -&nbsp; a thread pool based
+executor.<br>
+</div>
+<br>
+The high level idioms / facilities are optional for Join based
+applications; for example when we use Join with another application
+framework and we want to dispatch tasks to the framework's execution
+service.<br>
+<h3>Integration with Other Libraries</h3>
+<ol>
+  <li>
+    <p>The fact that async methods are functional objects enable them
+to work with existing algorithms / libraries such as STL; and introduce
+asynchrony into these algorithms / libraries when appropriate. For
+example, STL's for_each algorithm applies a functor to a range of
+elements. We could use an async method as the functor so that calling
+std::for_each(...) will in fact spawn a group of tasks in thread pool
+and each task use an element in the range as input. Since async method
+is noncopyable, it could be used in either of the following ways: </p>
+  </li>
+  <ul>
+    <li>for_each(beg_iterator, end_iterator,
+boost::bind(boost::ref(async),_1)); or</li>
+    <li>for_each(beg_iterator, end_iterator,
+boost::function&lt;void(ArgT)&gt;(boost::ref(async)));</li>
+  </ul>
+</ol>
+<div style="margin-left: 40px;">Here is the <a
+ href="../../join/examples/func_api/with_stl.cpp">full
+source code</a> of a sample of this usage.<br>
+</div>
+<ol start="2">
+  <li>
+    <p>Different execution strategies</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">Join base asynchronous
+applications could be driven by
+executors with different execution strategies (thread-pool, a thread
+per request, etc) as long as the executors
+providing a functional / functor interface to spawn a task: <span
+ style="font-weight: bold;">void
+operator()(task t)</span>. <br>
+<p>When the Join library is used together with other frameworks, we
+could
+use "adapting" wrappers to dispatch asynchronous tasks into
+"hosting" frameworks' execution service,&nbsp;</p>
+<p>For example, if Join is used with <a
+ href="http://asio.sourceforge.net/">Boost.Asio</a> networking library,
+the
+following simple executor can be used to dispatch tasks to asio's main
+threads:</p>
+&nbsp;&nbsp;&nbsp; class asio_executor {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boost::asio::io_service&amp; io_service_;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+asio_executor(boost::asio::io_service&amp; io_service):
+io_service_(io_service) {}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; template &lt;typename task_type&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void operator()(task_type task) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+io_service_.post(task);&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+</div>
+</body>
+</html>

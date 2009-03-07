@@ -1,0 +1,242 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Active Object Tutorial</title>
+</head>
+<body>
+<h2>Join Active Object Tutorial</h2>
+<h4 style="font-weight: normal;" class="dtH4">This tutorial shows a
+simple demonstration of how to define
+active objects
+(agents). This sample also demonstrate how to define "interfaces" or
+"abstract classes" in
+Join.&nbsp;
+</h4>
+<span style="font-weight: normal;">Active objects have their own
+threads and communicate with each other thru asynchronous
+messages.<br>
+First we define an "abstract" base class which all active objects will
+inherit. <br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+ActiveObject : public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">protected:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; bool done;<br>
+</span></div>
+Here we declare a synch method without defining its chord (body). So
+this is a pure virtual method and this class is abstract. Child classes
+should "implement" it by providing chords (thus body and real
+functionality) for it.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;void()&gt; ProcessMessage;<br>
+</span></div>
+Next we define a async method to "activate" the active object -&nbsp;
+starting its own thread.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; Start;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+</div>
+In constructor, we initialize the parent actor with the
+executor and define a chord for the above async "Start" method. Since
+this chord has only async method, its body will run in a thread from
+executor's thread pool. At end of constructor, we call async method
+Start() to start the active object's thread.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+ActiveObject(executor *e) : actor(e), done(false) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(Start,
+&amp;ActiveObject::main_loop);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Start();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the main loop of active object's thread, just repeatedly call
+synch method ProcessMessage to do real job. Since ProcessMessage has no
+chord/body defined yet, it is a pure virtual method; So we are using
+the "template method" design pattern here.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void main_loop(async_o&lt;void()&gt; s) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.msg("Active
+object thread starts");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; while(!done)
+ProcessMessage();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}; </span><br
+ style="font-weight: bold;">
+</div>
+<br>
+In the following code, we use the active object class to
+implement a event distribution service.<br>
+<br>
+First we define a "interface" / "abstract" class for all event
+consumers / sinks, which delcares a async post() method without chord /
+body.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+EventSink {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(std::string)&gt;
+Post;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br>
+</div>
+The event Distributor is both an active object (having its own thread
+and do real job thru ProcessMessage method) and event sink (clients can
+submit event by calling its "Post" method).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Distributor : public ActiveObject, public EventSink {<br>
+</span></div>
+Here is Distributor's state: all subscribers and its name.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+std::vector&lt;EventSink*&gt; subscribers;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; std::string name;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+Here we define a async method for subscribers to subscribe (register to
+be notified).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(EventSink*)&gt;
+Subscribe;<br>
+</span></div>
+Here we define a async method for shutting down the distributor.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; Close;</span><br style="font-weight: bold;">
+</div>
+In constructor, we define multiple chords for ProcessMessage method,
+each of which will be activated when different async messages
+arrive/exist, ie when the distributor is in different states. So in
+fact we are declaratively defining a state-machine
+for Distributor here.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+Distributor(std::string n, executor *e) : ActiveObject(e), name(n) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(ProcessMessage, Subscribe, &amp;Distributor::sub_cb);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(ProcessMessage, Post, &amp;Distributor::post_cb);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(ProcessMessage, Close, &amp;Distributor::close_cb, 1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+</div>
+Here is the chord body for <span style="font-weight: bold;">ProcessMessage()
+&amp; Subscribe()</span>.<span style="font-weight: bold;"> </span>The
+event sink objects passed in thru <span style="font-weight: bold;">Subscribe()</span>
+are added to the vector of subscribers.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void
+sub_cb(synch_o&lt;void()&gt; P, async_o&lt;void(EventSink*)&gt; S) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subscribers.push_back(S.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the chord body for <span style="font-weight: bold;">ProcessMessage()
+&amp; Post(). </span>Messages passed in thru <span
+ style="font-weight: bold;">Post()</span> will be distributed to all
+subscribers.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void
+post_cb(synch_o&lt;void()&gt; P, async_o&lt;void(std::string)&gt; M) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(size_t i=0;
+i&lt;subscribers.size(); i++) </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+subscribers[i]-&gt;Post(name+" : "+M.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+The chord body of <span style="font-weight: bold;">ProcessMessage()
+&amp; Close(): </span>here we set done=true to notify actor's thread
+to exit.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void
+close_cb(synch_o&lt;void()&gt; P, async_o&lt;void()&gt; C) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; done = true;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+Class subscriber implements "interface" EventSink by defining a
+chord/body for async method Post(), inside&nbsp; which the distributed
+messages are printed out.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Subscriber : public EventSink,
+public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; std::string name;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Subscriber(std::string n,
+executor *e) : actor(e), name(n) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(Post,
+&amp;Subscriber::post_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+post_cb(async_o&lt;void(std::string)&gt; M) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; name &lt;&lt; " got message " &lt;&lt; M.arg1 &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+In main(), we create an executor with two threads. Then create a
+Distributor object "D" and a few subscribers with the executor. Let
+subscribers to subscribe to distributor. Post some messages to
+distributor and see them received and printed out at subscribers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">int
+main(int argc, char **argv) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; executor exec(2);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Distributor d("D",
+&amp;exec.execute);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Subscriber a("a",
+&amp;exec.execute);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Subscribe(&amp;a);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Post("First message");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Subscriber b("b",
+&amp;exec.execute);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Subscribe(&amp;b);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Post("Second message");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Subscriber c("c",
+&amp;exec.execute);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Subscribe(&amp;c);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Post("Third message");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; d.Close();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; log1.msg("Main thread waits for
+exit...");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; exec.shutdown();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}<br>
+<br>
+</span></div>
+</body>
+</html>

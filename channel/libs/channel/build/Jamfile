@@ -1,0 +1,67 @@
+# Boost.Channel Library 
+
+# Copyright Yigong Liu 2005-2007. Use, modification and
+# distribution is subject to the Boost Software License, Version
+# 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+# For more information, see http://www.boost.org
+
+# declare the location of this subproject relative to the root
+subproject libs/channel/build ;
+
+#
+# this template defines the options common to
+# all channel builds and tests:
+#
+template channel-options
+   : # sources
+   : # requirements
+	<define>BOOST_ALL_NO_LIB=1
+     <define>BOOST_CHANNEL_NO_LIB=1        
+     <sysinclude>$(BOOST_ROOT)
+   ;
+
+#
+# this template defines the options common to
+# all channel dll builds and tests:
+#
+template channel-dll-options
+   : <template>channel-options # sources
+    <lib>@boost/libs/regex/build/boost_regex
+   : # requirements
+	<define>BOOST_ALL_NO_LIB=1
+     <define>BOOST_CHANNEL_DYN_LINK=1      
+     <runtime-link>dynamic
+   ;
+
+SOURCES = name linear_id_trait hierarchical_id_trait assoc_id_trait ;
+       
+lib boost_channel : ../src/$(SOURCES).cpp <template>channel-options
+    :
+        [ common-names ]
+    : 
+        debug release
+    ;
+
+
+dll boost_channel : ../src/$(SOURCES).cpp <template>channel-dll-options
+    : 
+       [ common-names ]
+    : 
+        debug release
+    ;
+    
+stage stage/lib : <lib>boost_channel <dll>boost_channel
+    :
+        <locate>$(BOOST_ROOT)
+        [ common-names ]
+        <target>stage
+        <target>all
+    :
+        debug release
+    ;
+
+install channel lib
+    : <dll>boost_channel <lib>boost_channel
+    ;

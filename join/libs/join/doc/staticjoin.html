@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Static Class Based "Join" Programming (Cw Style)</title>
+</head>
+<body>
+<h2>Static Class Based "Join" Programming (C&#969; Style)</h2>
+<p>In Static/Cw style programming, we attempt to integrate Join's
+features (async&lt;&gt;/synch&lt;&gt;/chords) into OO
+programming language features:<br>
+</p>
+<ul>
+  <li>use async&lt;&gt; / synch&lt;&gt; as methods/functions, and
+asynchrony and buffering are introduced.<br>
+  </li>
+  <li>treat chords as defining method body, and a chord involves a
+joined set of function headers and synchronization among threads.</li>
+  <li>all "joined" classes should inherit class actor.</li>
+  <li>use inheritance for extension<br>
+  </li>
+</ul>
+<p> </p>
+<h2>
+</h2>
+<h3>Chord Definition</h3>
+<ol>
+</ol>
+<div style="margin-left: 40px;">In a normal function/method definition,
+there is 1-1 exact correspondence between a function header/signature
+and its body. In C&#969; and Join, a body can be associated with a set
+of (synchronous and/or asynchronous) methods/functions. Such a
+definition is
+called "chord". A particular async/synch method may appear in the
+header of several chords. The body of a chord can only execute when all
+the methods in its header have been called. <br>
+<br>
+In C&#969;, a thread-safe buffer can be
+defined as following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">public
+class Buffer {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; public async Put(string s);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; public string Get() &amp; Put(string s) { return s; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">} </span><br>
+</div>
+<br>
+In Join, it is defined as following: <br>
+</div>
+<div style="margin-left: 40px;">
+<div style="margin-left: 40px;">class buffer: public actor {<br>
+public:<br>
+<span style="font-weight: bold;">&nbsp; async&lt;void(string)&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;string(void)&gt; get;</span><br>
+&nbsp; buffer() {<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(get, put,
+&amp;buffer::chord_body);</span><br>
+&nbsp; }<br>
+<span style="font-weight: bold;">&nbsp; string
+chord_body(synch_o&lt;string(void)&gt; get, async_o&lt;void(string)&gt;
+put) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return put.arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br>
+};<br>
+</div>
+<br>
+</div>
+<div style="margin-left: 40px;">
+</div>
+<div style="margin-left: 40px;">In both C&#969; and Join, we declare
+a asynchronous method "<span style="font-weight: bold;">put</span>"
+with its signature. In Join, we also define a synchronous method "<span
+ style="font-weight: bold;">get</span>" with its signature, which is
+not necessary in C&#969; because in C&#969; normal methods will become
+"synchronous" ones when they participate in chords. <br>
+<p>Chord definitions are different in C&#969; and Join:</p>
+</div>
+<ul>
+  <ul>
+    <li><span style="font-weight: normal;">In C</span><span
+ style="font-weight: normal;">&#969;, a chord definition such as "</span><span
+ style="font-weight: bold;">public string Get() &amp; Put(string s) {
+return s; }" </span><span style="font-weight: normal;">defines the
+following information in one piece:</span></li>
+    <ul>
+      <li><span style="font-weight: normal;">async&lt;&gt; /
+synch&lt;&gt; methods involved in this chord, joined by "&amp;"
+operator, such as "<span style="font-weight: bold;">Put</span>" and "<span
+ style="font-weight: bold;">Get</span>"<br>
+        </span></li>
+      <li><span style="font-weight: normal;">all actual arguments
+passed in
+thru async / synch methods, such as "</span><span
+ style="font-weight: bold;">string s". </span><span
+ style="font-weight: normal;">The names of arguments must be unique
+across the chord.</span></li>
+      <li><span style="font-weight: normal;">the body of code to be
+executed when all methods in header have been called,&nbsp; </span><span
+ style="font-weight: bold;">{
+return s; }</span></li>
+    </ul>
+    <li>
+      <p>Since Join is implemented as a library without changing C++
+compiler, the chord is defined as 2 separate pieces<span
+ style="font-weight: normal;">:</span></p>
+    </li>
+    <ul>
+      <li><span style="font-weight: normal;">chord() method call
+identifies all involved async&lt;&gt; / synch&lt;&gt; methods and
+associate them with a chord "body" method / function, </span><span
+ style="font-weight: bold;">chord(get, put, &amp;buffer::chord_body);</span></li>
+      <li><span style="font-weight: normal;">The chord "body" method /
+function:<br>
+        </span></li>
+      <ul>
+        <li><span style="font-weight: normal;">The arguments of this
+"body" method are objects (async_o&lt;&gt; / synch_o&lt;&gt;)
+representing async / synch methods involved in this chord, each of
+which contains the arguments passed in thru corresponding async / synch
+calls. In
+class buffer, "<span style="font-weight: bold;">put</span>" method has
+only one argument, which can be accessed
+inside chord body by put.arg1. For methods with more than one
+arguments, their arguments can be accessed as method_o.arg1, </span><span
+ style="font-weight: normal;">method_o</span><span
+ style="font-weight: normal;">.arg2, </span><span
+ style="font-weight: normal;">method_o</span><span
+ style="font-weight: normal;">.arg3, etc.</span></li>
+        <li><span style="font-weight: normal;">the return type of this
+"body" method should be the same as the return type of the first method
+of this chord;&nbsp; So if the first method is an async, the return
+type of chord body should be "void"; if the first method is synch, the
+return type of chord body should be the same as the return type of this
+synch method, such as "<span style="font-weight: bold;">string</span>"
+in the above buffer sample.<br>
+          </span></li>
+        <li><span style="font-weight: normal;">The "body" method are
+code to run when all methods in chord header are called.</span></li>
+        <li><span style="font-weight: normal;">The chord body can be
+defined as object method (as shown above), class (static) method or
+normal functions.<br>
+          </span></li>
+      </ul>
+    </ul>
+  </ul>
+</ul>
+<div style="margin-left: 40px;">Please note that in both <span
+ style="font-weight: normal;">C</span><span style="font-weight: normal;">&#969;
+and Join, there are the following facts for synchronous methods:<br>
+</span>
+<ul>
+  <li><span style="font-weight: normal;">For any given chord, there are
+at most one synchronous method involved. If we do need to synchronize /
+coordinate multiple synchronous calls, we can encode "asymmetric"
+rendezvous as described in C</span>&#969; paper <a
+ href="http://research.microsoft.com/Comega/">[1]</a>.<br>
+  </li>
+  <li><span style="font-weight: normal;">If any, the synchronous method
+must be the first method in chord. <br>
+    </span></li>
+  <li><span style="font-weight: normal;">The return type of the chord
+body method</span><span style="font-weight: normal;"> must be the same
+as return type of synchronous method (such as "string" for the above
+synchronous <span style="font-weight: bold;">"get"</span>)</span><span
+ style="font-weight: normal;"></span><span style="font-weight: normal;">;
+and inside chord body</span><span style="font-weight: normal;">, for
+non-void return-type, </span><span style="font-weight: normal;"> <span
+ style="font-weight: bold;">return</span> statement must return a value
+of the same type.<br>
+    </span></li>
+  <li><span style="font-weight: normal;">If there is a synchronous
+method, the chord body runs in the thread associated with a call to
+that method, and the value is returned to that call.</span></li>
+</ul>
+</div>
+<div style="margin-left: 40px;">
+</div>
+<div style="margin-left: 40px;">
+</div>
+<h3>Runtime semantics</h3>
+<ol start="2">
+</ol>
+<p style="margin-left: 40px;">Quoted and modified from <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorials_concurrency_extensions.htm">C&#969;
+Concurrency Extensions Tutorials [2]</a>:</p>
+<p style="margin-left: 40px;">The body of a chord can only execute once
+<i>all</i> the methods in
+its header have been called. When a async&lt;&gt; / synch&lt;&gt;
+method
+is called there may be zero, one, or more chords which are enabled
+(ready to fire):</p>
+<ul style="margin-left: 40px;">
+  <li> If no chord is enabled then the method invocation is queued up.
+If the method is asynchronous, then this simply involves adding the
+arguments (the contents of the message) to a queue. If the method is
+synchronous, then the calling thread is blocked. </li>
+  <li> If there is a single enabled chord, then the arguments of the
+calls involved in the match are de-queued, any blocked thread involved
+in the match is awakened, and the body runs. </li>
+  <li> If there are several chords which are enabled then an
+unspecified one of them is chosen to run. </li>
+  <li> Similarly, if there are multiple calls to a particular method
+queued up, we do not specify which call will be de-queued when there is
+a match.</li>
+  <li>chord body execution:<br>
+  </li>
+  <ul>
+    <li> When a chord which involves only asynchronous methods runs,
+then it does so in a thread of executors' thread pool.</li>
+  </ul>
+  <ul>
+    <li>If a chord involves a single synch&lt;&gt; method, the chord
+body will execute in the thread which calls the synch&lt;&gt; method</li>
+  </ul>
+  <li><span style="font-weight: bold;">Exception handling</span>: if an
+exception is thrown inside a chord
+"body" method,</li>
+  <ul>
+    <li>if this chord only involves asynchronous methods, its body will
+run in a thread from executor's thread pool, and the exception thrown
+inside chord body will be caught and then simply dropped (in fact if
+executor's log is
+turned on, we'll see it in log), since the semantics of async calls are
+to return immediately with no result.<br>
+    </li>
+    <li>if this chord has a synchronous method, the chord body will
+execute in the calling thread of this synchronous method and this
+caller will also get the exception.<br>
+    </li>
+  </ul>
+</ul>
+<div style="margin-left: 40px;">In <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_buffer.htm">C&#969;
+buffer tutorial</a>,&nbsp; there is the following detailed description
+of the concurrent behaviour of buffer during runtime:<br>
+"...assume that producer and consumer threads wish to communicate via
+an instance <code class="ce">b</code> of the class <code class="ce">Buffer</code>.
+Producers make calls to <code class="ce">b.Put()</code>, which, since
+the method is asynchronous, never block. Consumers make calls to <code
+ class="ce">b.Get()</code>, which, since the method is synchronous,
+will block until or unless there is a matching call to <code class="ce">Put()</code>.
+Once <code class="ce">b</code> has received both a <code class="ce">Put()</code>
+and a <code class="ce">Get()</code>, the body runs and the argument to
+the <code class="ce">Put()</code> is returned as the result of the
+call to <code class="ce">Get()</code>. Multiple calls to <code
+ class="ce">Get()</code> may be pending before a <code class="ce">Put()</code>
+is received to reawaken one of them, and multiple calls to <code
+ class="ce">Put()</code> may be made before their arguments are
+consumed by subsequent <code class="ce">Get()</code>s. Note that:
+<ul>
+  <li>The body of the chord runs in the (reawakened) thread
+corresponding to the matched call to <code class="ce">Get()</code>.
+Hence no new threads are spawned in this example.</li>
+  <li>The
+code which is generated by the class definition above is completely
+thread safe... for example, the argument to a particular call of <code
+ class="ce">Put()</code> cannot be delivered to two distinct calls to <code
+ class="ce">Get()</code>.
+Furthermore (though it makes little difference in this small example),
+the locking is fine-grained and brief - async&lt;&gt; / synch&lt;&gt;
+methods do not lock
+the whole object and are not executed with ``monitor semantics''.</li>
+  <li>The
+reader may wonder how we know which of the methods involved in a chord
+gets the returned value. The answer is that it is always the
+synchronous one..."<br>
+  </li>
+</ul>
+</div>
+</body>
+</html>

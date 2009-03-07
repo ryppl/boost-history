@@ -1,0 +1,197 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 7.&nbsp; distributed chat thru a central server</h2>
+This sample shows simple chat client and server design. Clients connect
+to server to chat with each other in seperate chat groups identified by
+subject. The chat subject (a string) is the ids in name space. Clients
+can join/leave chat groups identified by subject ids and send messages
+to chat groups. If the chat group (subject) doesn't exist yet, the
+first member's "join" will make it created; so unlimited number of
+subjects (thus chat groups) can be added to the name space.<br>
+<br>
+Here are code for chat client (<a href="chat_cli.cpp">chat_cli.cpp</a>):<br>
+We first define the handler function for chat messages, simply print
+them out.<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">void msg_handler(id_type id, boost::shared_ptr&lt;void&gt; p)<br>{<br>  chat_msg *msg = (chat_msg *) p.get();<br>  cout &lt;&lt; msg-&gt;source_ &lt;&lt; " speak on [" &lt;&lt; chat_chan::id_trait::id_to_string(id) &lt;&lt; "]:\n";<br>  cout &lt;&lt; msg-&gt;data_  &lt;&lt; "\n";<br>}<br></pre>
+Chat clients start with 3 command line arguments: chatter's name,
+chat_server host name and port number:<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">int main(int argc, char **argv) {<br>  if (argc &lt; 4) {<br>    std::cout &lt;&lt; "Usage: chat_cli chatter_name srv_name srv_port\n";<br>    exit(0);<br>  }<br>  const char *my_name = argv[1];<br>  const char *srv_name = argv[2];<br>  const char *srv_port = argv[3];<br></pre>
+Next, we create ASIO io_service object; create a asio_executor object
+and create an asynchronous channel which will execute all its callbacks
+in asio_executor (in ASIO's main thread).<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">  try {<br>    boost::asio::io_service io_service;<br>    asio_executor asio_exec(io_service);<br>     chat_chan chan(&amp;asio_exec);<br></pre>
+Since chat messages will move from one client to server and to other
+subscribed clients, they need to be marshaled/demarshaled for
+transmission. Use channel's text_marshaler_registry which is based on
+Boost.Serialization. Since we only have one message data type, we can
+register its type as default (If we have more than one message data
+types, we can register the major one as default and register other with
+its corresponding ids.<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">    chat_chan::text_marshaler_registry mar_reg;<br>    mar_reg.register_default_msg_marshaler&lt;chat_msg&gt;();<br></pre>
+Connect chat channel to remote server as following and spawn a separate
+thread run ASIO's main loop:<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">    asio_connector connector(io_service);<br>    connector.async_connect(srv_name, srv_port, //remote channel address<br>	boost::bind(asio_bind_sock_chan&lt;chat_chan, chat_chan::text_marshaler_registry&gt;(), <br>		boost::ref(chan), boost::ref(mar_reg), _1, _2));<br>    boost::thread t(boost::bind(&amp;boost::asio::io_service::run, &amp;io_service));<br></pre>
+In main thread, we handle chat clients main activities: join/leave
+chat_groups(subjects) and send/receive messages<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">    chat_chan::publisher pub(chan);<br>    chat_chan::subscriber sub(chan, msg_handler);<br><br>    bool cont = true;<br>    char buf[1024];<br>    while (cont) {<br></pre>
+Clients can do 3 major things: join chat_group (subject), leave
+chat_group and send messages to chat_groups. If the chat group
+(subject) doesn't exist yet, the
+first member's "join" will make it created.
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">      cout &lt;&lt; "action : 1-join, 2-leave, 3-send, 4-exit:\n";<br>      int action;<br>      cin.getline(buf, 1024);<br>      action = atoi(buf);<br>      switch (action) {<br>      case 1:<br>      case 2:<br>      case 3:<br>	{<br>	cout &lt;&lt; "subject: ";<br>	cin.getline(buf, 1024);<br>	id_type id(buf);<br>	switch (action) {<br>	case 1:<br></pre>
+we join the chat_group by both publishing and subscribing the subject
+id:<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">	  pub.publish(id);<br>	  sub.subscribe(id);<br>	  break;<br>	case 2:<br></pre>
+we leave the chat_group by both unpublishing and unsubscribing the
+subject id:
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">	  pub.unpublish(id);<br>	  sub.unsubscribe(id);<br>	  break;<br>	case 3:<br></pre>
+clients send messages:<br>
+<pre
+ style="background-color: rgb(204, 204, 204); color: rgb(153, 0, 0);">	  cout &lt;&lt; "message: ";<br>	  cin.getline(buf, 1024);<br>	  pub.send(id, new chat_msg(my_name,buf));<br>	  break;<br>	default:<br>	  break;<br>	}<br></pre>
+<br>
+Next let's step thru the server code (<a href="chat_srv.cpp">chat_srv.cpp</a>).
+In
+normal chat server design based on basic socket, the chat server has 2
+main responsibilities: maintaining membership info (which clients are
+in which chat groups) and forwarding messages. Channel's facilities
+greatly simplifies the design and code of chat server.<br>
+First, channel has 4 internal system messages notifying about name
+space changes:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);">      id_type subscription_info_msg;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">      id_type unsubscription_info_msg;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">      id_type publication_info_msg;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">      id_type unpublication_info_msg;</span><br></pre>
+These internal system messages are defined inside id_trait class of
+channel type. Application code can bind to (or subscribe to) these
+system messages to get notified whenever name space changes (such as
+some peers join in and starts publishing and subscribing messages).<br>
+During chatting, whenever a client join a group (subject), it will
+publish/send messages on this subject and subscribe/receive messages on
+this subject. By subscribing to <span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">publication_info_msg, chat servers can
+know when a client joins a group and the subject of this group. In the
+following msg_handler function, chat server does the following to
+fullfill its 2 responsibilities:<br>
+</span></span>
+<ul>
+  <li>When server receives name space change message (<span
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);">publication_info_msg):</span></span></li>
+  <ul>
+    <li>server retrieves ids from publication_info_msg and subscribes
+to these ids, so all of the messages
+about this subject (or in this group) will be sent to server</li>
+    <li>server publishes these subject ids, so all the clients which
+are
+in this group will be connected to server to receive messages in this
+group</li>
+  </ul>
+  <li>When server receives chat messages, just forward them<br>
+  </li>
+</ul>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">void msg_handler(chat_chan::publisher &amp;pub,</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">		 chat_chan::subscriber &amp;sub,</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">		 id_type id, boost::shared_ptr&lt;void&gt; p, int sz, timeout_type * t)</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">{</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  typedef pubsub_info_msg_t&lt;id_type&gt; pubsub_info_msg_t;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  pubsub_info_msg_t *pubsub_info = NULL;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  if(id == chat_chan::publication_info_msg) {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">	//update name space based clients' publications and subscriptions</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">	//and forward chat msgs</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">    pubsub_info = (pubsub_info_msg_t *) p.get();</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    for(std::vector&lt;id_type&gt;::iterator iter = pubsub_info-&gt;msg_types.begin();</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">	iter != pubsub_info-&gt;msg_types.end(); iter++) {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">      pub.publish((*iter), chat_chan::in::scope_remote);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">      sub.subscribe((*iter), chat_chan::in::scope_remote);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    }</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  }</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  else { //chat subject ids</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    //forward chat msgs to subscribers</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    pub.send(id, p, sz, t);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  }</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">}<br></span></pre>
+Chat server's main function is simple, having port number as only
+argument:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">int main(int argc, char **argv) {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  if (argc &lt; 2) {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    std::cout &lt;&lt; "Usage: chat_srv srv_port\n";</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    exit(0);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  }</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  </span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  const char * srv_port = argv[1];</span><br
+ style="color: rgb(153, 0, 0);"></pre>
+Similar to chat client code,&nbsp; we create an asynchronous channel
+with asio_executor:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);">  try {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">    boost::asio::io_service io_service;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">    asio_executor asio_exec(io_service);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">    chat_chan chan(&amp;asio_exec);</span><br
+ style="color: rgb(153, 0, 0);"></pre>
+Next we create channel publisher and subscriber and bind message handler<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">    chat_chan::publisher pub(chan);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    chat_chan::subscriber sub(chan, boost::bind(msg_handler, boost::ref(pub), </span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">						boost::ref(sub), _1,_2));<br></span></pre>
+We subscribe to name space change message here then,<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"> </span><span
+ style="color: rgb(153, 0, 0);">    sub.subscribe(chat_chan::publication_info_msg, chat_chan::in::scope_remote);</span><br
+ style="color: rgb(153, 0, 0);"></pre>
+Then same as chat client, server create message marshaler,
+asio_connector and start waiting for remote clients connections:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);">    //register chat msg type for marshaling/demarshaling</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    chat_chan::text_marshaler_registry mar_reg;</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    mar_reg.register_default_msg_marshaler&lt;chat_msg&gt;();</span><br
+ style="color: rgb(153, 0, 0);"><br style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(153, 0, 0);">    //create asio connectors and connect to remote channel</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    asio_connector connector(io_service);</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    connector.async_accept(atoi(srv_port), // channel address</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">	boost::bind(asio_bind_sock_chan&lt;chat_chan, chat_chan::text_marshaler_registry&gt;(), </span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">		boost::ref(chan), boost::ref(mar_reg), _1, _2));</span><br
+ style="color: rgb(153, 0, 0);"><br style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(153, 0, 0);">    //main loop</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">    io_service.run();<br></span></pre>
+A sample scenario could be as following:<br>
+<ol>
+  <li>start chat server:&nbsp; ./chat_srv 4455<br>
+  </li>
+  <li>start 2 chat clients and connect to server: ./chat_cli steve
+localhost 4455 and ./chat_cli regean localhost 4455<br>
+  </li>
+  <li>join chat&nbsp; groups in clients</li>
+  <li>send messages to groups</li>
+</ol>
+Complete source code listing:<br>
+<a href="chat_defs.hpp">chat_defs.hpp</a><br>
+<a href="chat_cli.cpp">chat_cli.cpp</a><br>
+<a href="chat_srv.cpp">chat_srv.cpp</a><br>
+<br>
+</body>
+</html>

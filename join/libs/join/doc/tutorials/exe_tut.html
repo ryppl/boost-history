@@ -1,0 +1,266 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Executor Tutorial</title>
+</head>
+<body>
+<h2>Join Executor And Dynamic Chord Tutorial</h2>
+<div style="font-weight: bold;">
+<div style="font-weight: normal;">Executors are the "engine" of
+Join based applications - the body of all chords with only / pure
+async methods will run in the thread pool of executor. As the first
+application of Join, totally defined with async /
+synch methods and chords, class executor is also a good sample of using
+dynamically created chords.<br>
+<br>
+</div>
+<span style="font-weight: normal;">The general design of Executor is a
+pool of worker threads which serve / process "tasks" submited by
+clients thru one or many task queues.<br>
+</span>
+<div style="margin-left: 40px;">template &lt;size_t sz=32&gt;<br>
+</div>
+<div style="margin-left: 40px;">class Executor : public actor&lt;sz&gt;
+{<br>
+public:<br>
+&nbsp; typedef actor&lt;sz&gt; actor_type;<br>
+</div>
+<span style="font-weight: normal;">Here we define the type of tasks
+which can run in executor's thread pool. Its full type is <span
+ style="font-weight: bold;">boost::function&lt;void()&gt;</span>.</span><br>
+<div style="margin-left: 40px;">&nbsp; typedef actor_type::callable
+task;<br>
+</div>
+<span style="font-weight: normal;">Next we define a data structure to
+save the dynamically created task queues.</span><br>
+<div style="margin-left: 40px;">&nbsp; typedef std::map&lt;size_t,
+boost::shared_ptr&lt;async&lt;void(task)&gt; &gt; &gt;&nbsp;
+que_map_type;<br>
+<br>
+</div>
+<span style="font-weight: normal;">All task queues are implemented as
+async methods which takes task as argument, so clients can submit tasks
+by calling these async methods. Each executor has a default task queue
+- <span style="font-weight: bold;">execute() </span>which is a
+statically defined async method.</span><br>
+<div style="margin-left: 40px;">&nbsp; async&lt;void(task)&gt; execute;<br>
+</div>
+<span style="font-weight: normal;">Next we define a synch method </span>shutdown()
+<span style="font-weight: normal;">which main thread can call to notify
+and wait for all the threads in thread pool to exit.</span><br>
+<div style="margin-left: 40px;">&nbsp; synch&lt;void(void)&gt; shutdown;<br>
+<br>
+</div>
+<span style="font-weight: normal;">As described in </span><a
+ style="font-weight: normal;" href="prime_sieve_tut.html">Multi Task
+Queue and Round
+Robin Scheduling Tutorial</a><span style="font-weight: normal;">,
+executors support queue fairness by providing multiple dyanmically
+created task queues. All task queues are indexed by integers.</span><br>
+<div style="margin-left: 40px;">&nbsp; async&lt;void(task)&gt;
+*task_queue(size_t i=0) {<br>
+</div>
+<span style="font-weight: normal;">Since the executor is configured
+with size "sz", it means executor can only support up to "sz" async and
+synch methods. For internal implementation, Executor uses four async /
+synch methods, so it can provide at most (sz-5) dynamic task queues.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; if (i&gt;(sz-5)) i =
+i%(sz-5); <br>
+</div>
+<span style="font-weight: normal;">For index 0, we return the default
+task queue.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; if(i==0) return
+&amp;execute;<br>
+</div>
+<span style="font-weight: normal;">If clients try to retrieve task
+queues other than default, we'll have multiple task queues, so first
+make sure that the executor's actor is using scheduling policy : </span>fire_by_round_robin.
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp;
+if(this-&gt;dispatcher_ != actor_type::fire_by_round_robin) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this-&gt;log.msg(" throw
+executor_missing_rr_exception ......");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw executor_missing_rr_exception();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+</div>
+<span style="font-weight: normal;">Then we search thru the map of
+existing queues. If the required one exist, simply return it.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; typename
+que_map_type::iterator iter;<br>
+&nbsp;&nbsp;&nbsp; if ((iter=que_map_.find(i)) != que_map_.end())<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return iter-&gt;second.get();<br>
+&nbsp;&nbsp;&nbsp; else {<br>
+</div>
+<span style="font-weight: normal;">Otherwise, we create a new task
+queue (async method) and create a chord to dispatch tasks submited thru
+it.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+this-&gt;log.msg(" creating task_queue ......");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+boost::shared_ptr&lt;async&lt;void(task)&gt; &gt; nq(new
+async&lt;void(task)&gt;());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chord(*nq, run, &amp;Executor::exec_cb);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; que_map_[i] = nq;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return nq.get();&nbsp;&nbsp;&nbsp;
+&nbsp; <br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+</div>
+<span style="font-weight: normal;">In constructor, we define the number
+of threads to spawn in pool and the scheduling policy (for executor
+with multiple task queues we need use </span>fire_by_round_robin<span
+ style="font-weight: normal;">). We first initialize the parent actor
+class with the defined scheduling policy and then define four chords
+for executor's concurrent behaviour. At end of constructor, we
+transition executor to "started" state.</span><br>
+<div style="margin-left: 40px;">&nbsp; Executor(int num, const char
+*name = NULL, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; typename actor_type::dispatch_policy
+disp = actor_type::fire_as_soon_as_possible) : <br>
+&nbsp;&nbsp;&nbsp; actor_type(NULL, name, disp) {<br>
+</div>
+<span style="font-weight: normal;">Here is the chord defining the
+executor's behaviour when&nbsp; some of its threads are ready to run
+(sync method </span>run() <span style="font-weight: normal;">called
+by some threads) and clients submit tasks (async method </span>execute()
+<span style="font-weight: normal;">called) - ie. the submitted task
+will be executed in ready threads.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; chord(execute, run,
+&amp;Executor::exec_cb);<br>
+</div>
+<span style="font-weight: normal;">Here is the chord defining the
+executor's behaviour when</span> <span style="font-weight: normal;">
+some of its threads are ready to run (sync method </span>run() <span
+ style="font-weight: normal;">called by some threads) and there is
+request to stop the executor (async method <span
+ style="font-weight: bold;">stopped()</span> called). Please note that
+to make sure the executor to finish all tasks submitted, we set all the
+following chords related to "shutdown / stop" to a lower priority 1
+(default priority 0 is highest, the bigger the number, the lower the
+priority). Low priority chords will fire only after all higher priority
+chords have fired,<br>
+</span>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; chord(stopped, run,
+&amp;Executor::stop_cb, 1);<br>
+</div>
+<span style="font-weight: normal;">Here is the chord for shutting down
+executor; sync method <span style="font-weight: bold;">shutdown()</span>
+is called when executor is in "started" state (async method <span
+ style="font-weight: bold;">started()</span> called).</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; chord(shutdown,
+started, &amp;Executor::shutdown_cb,
+1);<br>
+</div>
+<span style="font-weight: normal;">Here is the chord for the case when <span
+ style="font-weight: bold;">shutdown()</span> is called again while
+executor already shut down.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; chord(shutdown,
+stopped, &amp;Executor::stopped_cb,
+1);<br>
+</div>
+<span style="font-weight: normal;">Next we spawn all the threads in
+executor's thread pool. All the threads main function is <span
+ style="font-weight: bold;">main_loop()</span> defined next,</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;num; i++)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+threads_.create_thread(boost::bind(&amp;Executor::main_loop, this));<br>
+</div>
+<span style="font-weight: normal;">At end of constructor, we transition
+executor to "started" state.</span><br>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp; started(); //init
+state<br>
+&nbsp; }<br>
+&nbsp; ~Executor() {<br>
+&nbsp;&nbsp;&nbsp; shutdown();<br>
+&nbsp; }<br>
+<br>
+private:<br>
+</div>
+<span style="font-weight: normal;">Threads in pool will use synch
+method <span style="font-weight: bold;">run()</span> to retrieve and
+execute tasks submited by clients.</span><br>
+<div style="margin-left: 40px;">&nbsp; synch&lt;bool(void)&gt; run;<br>
+</div>
+<span style="font-weight: normal;">Next we declare two async methods to
+represent executor's state: </span>started()<span
+ style="font-weight: normal;"> and </span>stopped().<br>
+<div style="margin-left: 40px;">&nbsp; async&lt;void(void)&gt; started;<br>
+&nbsp; async&lt;void(void)&gt; stopped;<br>
+</div>
+<span style="font-weight: normal;">Next are executor's private state:
+the thread group containing all worker threads in pool and a queueu map
+to maintain all active task queues.</span><br>
+<div style="margin-left: 40px;">&nbsp; boost::thread_group threads_;<br>
+&nbsp; que_map_type que_map_;<br>
+</div>
+<span style="font-weight: normal;">main_loop is the main function of
+all threads containing a loop calling<span style="font-weight: bold;">
+run()</span>.</span><br>
+<div style="margin-left: 40px;">&nbsp; void main_loop(void) {<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("a thread starts...");<br>
+&nbsp;&nbsp;&nbsp; while(run()) ;<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("a thread exits...");<br>
+&nbsp; }<br>
+</div>
+<span style="font-weight: normal;">Here is the chord body for executing
+tasks (when some threads are ready and called <span
+ style="font-weight: bold;">run()</span>). We execute the submitted
+task, catch exception and return true to <span
+ style="font-weight: bold;">run()</span> so that calling worker thread
+will continue working by calling <span style="font-weight: bold;">run()</span>
+again.</span><br>
+<div style="margin-left: 40px;">&nbsp; void
+exec_cb(async_o&lt;void(task)&gt; exec,
+synch_o&lt;bool(void)&gt; run) {<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("start one task...");<br>
+&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (exec.arg1)();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; catch (join_exception &amp;je) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this-&gt;log.msg(je.what());<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; catch (...) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; this-&gt;log.msg("UNKNOWN exceptions
+happen inside a executor thread, ignore.");<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("finish one task...");<br>
+&nbsp;&nbsp;&nbsp; run.reply(true); //worker thread continue<br>
+&nbsp; }<br>
+</div>
+<span style="font-weight: normal;">Here is the chord body for stopping
+executor's threads when <span style="font-weight: bold;">shutdown()</span>
+is called. By returning false to <span style="font-weight: bold;">run()</span>
+we are telling the thread to exit.</span><br>
+<div style="margin-left: 40px;">&nbsp; void
+stop_cb(async_o&lt;void(void)&gt; stopd,
+synch_o&lt;bool(void)&gt; run) {<br>
+&nbsp;&nbsp;&nbsp; stopped(); <br>
+&nbsp;&nbsp;&nbsp; run.reply(false); //worker thread exit<br>
+&nbsp; }<br>
+</div>
+<span style="font-weight: normal;">Here is the chord body for shutting
+down. We first call <span style="font-weight: bold;">stopped()</span>
+to tell worker threads to exit and then waiting for them to exit bu
+join_all().</span><br>
+<div style="margin-left: 40px;">&nbsp; void
+shutdown_cb(synch_o&lt;void(void)&gt; shdn,
+async_o&lt;void(void)&gt; started) {<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("shutdown...");<br>
+&nbsp;&nbsp;&nbsp; stopped();<br>
+&nbsp;&nbsp;&nbsp; //waiting for the threads to exit<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("wait...");<br>
+&nbsp;&nbsp;&nbsp; threads_.join_all();&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("all threads exit, done...");<br>
+&nbsp; }<br>
+&nbsp; void stopped_cb(synch_o&lt;void(void)&gt; shdn,
+async_o&lt;void(void)&gt; stopd) {<br>
+&nbsp;&nbsp;&nbsp; this-&gt;log.msg("stopped...");<br>
+&nbsp;&nbsp;&nbsp; stopped();<br>
+&nbsp; }<br>
+};<br>
+</div>
+<br>
+<br>
+</div>
+</body>
+</html>

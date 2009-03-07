@@ -1,0 +1,202 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Multi Task Queues and Round Robin Scheduling
+Tutorial</title>
+</head>
+<body>
+<h2>Join Multi Task Queues and Round Robin Scheduling Tutorial</h2>
+In concurrent applications, there are
+many event/message producers and consumers. Some producers produce much
+more events/messages than others and much faster. If the handling of
+all events/messages are dispatched to the same task queue, the fast
+producer will flood the task queue while the events/messages from slow
+producer wont get a fair chance to be processed. The executor of
+Join solve this problem with multiple task queues and round-robin
+scheduling which are implemented using dynamic ports and chords. <br>
+Prime_sieve.cpp is a simple application for finding prime numbers using
+a
+chain of concurrent tasks (prime_task). <a
+ href="http://swtch.com/%7Ersc/thread/">The
+original design</a> is based on CSP style channels. In this sample,
+each of tasks is assigned a separate task_queue and
+executor's thread pool
+round-robin through all task queues so that all tasks get a fair chance
+to run.<br>
+<br>
+Each prime_task will take a stream of integers as input and the first
+integer will be a prime. The prime_task will save the prime and filter
+all the remaining incoming integers: if the integer is multiples of the
+task's prime, the integer will be dropped; otherwise it will be
+forwarded to the next prime_task in chain.<br>
+The prime_task's body runs asynchronously in the executor's thread pool
+and multiple prime_tasks can be active simultaneously.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+prime_task : public actor {<br>
+</span></div>
+The task's private state includes its prime number, its position in
+chain, the pointer to the next task and the executor to dispatch the
+task.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+int my_prime_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; int my_no_;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; prime_task * next_;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; boost::join::executor *e_;</span><br
+ style="font-weight: bold;">
+</div>
+Next declare two asynchronous methods to describe the state of
+prime_task: <span style="font-weight: bold;">"init</span>" - the
+prime_task hasn't received its first integer (the prime number) yet; <span
+ style="font-weight: bold;">"ready"</span> - the first number (prime)
+has been received and saved and task is ready to "sieve" incoming
+numbers based on its prime.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; init;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; ready;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+"<span style="font-weight: bold;">sieve</span>" is the asynchronous
+method to input the stream of integers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(int)&gt; sieve;<br>
+</span></div>
+In constructor, we initialize the parent actor class with a
+dynamic task queue selected by its position in the chain, thus the
+bodies of this prime_task will be dispatched into its queue and queue
+fairness can be achieved.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+prime_task(boost::join::executor *e, int no) : </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; actor(e-&gt;task_queue(no)), my_prime_(-1),
+my_no_(no), next_(NULL), e_(e) {<br>
+</span></div>
+Two chords are created for task's behaviour in its two states: "init"
+and "ready". Because these two chords contain only async methods in
+their headers, their bodies will run asynchronously in executor's
+thread pool.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; chord(sieve, init, &amp;prime_task::sieve_init_body);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; chord(sieve, ready,
+&amp;prime_task::sieve_ready_body);<br>
+</span></div>
+At end of constructor, call async method <span
+ style="font-weight: bold;">init()</span> to initialize prime_task's
+state.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; init(); </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">
+&nbsp; }<br>
+</span></div>
+Here is the chord body of "init" chord (when prime_task is in init
+state). We save the first incoming integer to my_prime_ and spawn the
+next prime_task in chain. Then calling <span style="font-weight: bold;">ready()</span>
+transition the prime_task to "ready" state.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">
+&nbsp; void sieve_init_body(async_o&lt;void(int)&gt; value,
+async_o&lt;void()&gt; init) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; my_prime_ = value;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "------ prime_task ["
+&lt;&lt; my_no_ &lt;&lt; "] found prime = " &lt;&lt; my_prime_ &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; next_ = new
+prime_task(e_, my_no_+1); //create the
+next task</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the chord body of "ready" chord (when prime_task is in "ready"
+state). The task will "sieve" incoming integers: dropping integers
+which are multiples of its prime number and forwarding the others to
+the next prime_task in chain.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void sieve_ready_body(async_o&lt;void(int)&gt; value,
+async_o&lt;void()&gt; ready) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; int val = value;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready(); //allow
+processing the next incoming number
+as soon as possible</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; if (val %
+my_prime_) { //not my multiples</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+next_-&gt;sieve(val);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; } else { //my
+multiples</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "prime_task ["
+&lt;&lt; my_no_ &lt;&lt; "] drop " &lt;&lt; val &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;
+~prime_task() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; if (next_ != NULL)
+delete next_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br>
+</div>
+In main(), we set up the chain of prime_tasks and feed the stream of
+integers to it.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">int
+main(int argc, char **argv) {<br>
+</span></div>
+First we create an executor with some threads in pool. Note: since we
+are going to use multiple task queues of executor to dispatch jobs for
+queue fairness, we should use <span style="font-weight: bold;">fire_by_round_robin
+scheduling policy </span>to construct the executor.<span
+ style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+executor exec(4,NULL,executor::actor_type::fire_by_round_robin);<br>
+</span></div>
+Next decide the range of integers to be sieved : 2 - max_num.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+int max_num;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; if (argc &gt; 1)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; max_num =
+atoi(argv[1]); </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; else</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; max_num = 1000;<br>
+<br style="font-weight: bold;">
+</span></div>
+Then create the first task in chain (position = 0) which will create
+its next task and the other tasks in chain as "sieving" goes on.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+prime_task first_task(&amp;exec,0);</span><br style="font-weight: bold;">
+</div>
+We run a simple loop to feed the stream of integers into the head of
+task chain.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+for(int i=2; i&lt;=max_num; i++)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; first_task.sieve(i);</span><br
+ style="font-weight: bold;">
+</div>
+The main thread will wait here till all integers sieved and executor's
+threads exit.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+exec.shutdown();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; log1.msg("main thread
+shutdown...");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+</div>
+<br>
+</body>
+</html>

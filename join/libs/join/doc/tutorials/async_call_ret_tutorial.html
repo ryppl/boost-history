@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Asynchronous Call and Return Tutorial</title>
+</head>
+<body>
+<h2>Join Asynchronous Call and Return Tutorial</h2>
+<h4 style="font-weight: normal;" class="dtH4">This tutorial shows a
+simple demonstration of how to return
+values from
+asynchronous calls. This sample also demonstrate how to define
+"interfaces" or "abstract classes" in Join. <br>
+</h4>
+Class IService declares a async method "Service" and defines NO chords
+for it. So in IService, "Service" method only has its header or
+signature defined, without a body, similar to the way we define a pure
+virtual method in abstract class. So class IService is an "abstract"
+"active" (actor based) class. Since abstract classes are not fully
+defined (having methods without body defined), we should NOT allow
+creating an instance of&nbsp; them and use it. In C++, compilers will
+help catch it. However Join is implemented as a library,
+compilers will not prevent instantiating them. We'll get runtime
+execptions when we try to use them. In IService, "Service" method
+allows clients to submit requests (strings) to servers and pack up a
+callback method with the request, so that servers can return the
+results with callback.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+IService {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(string,
+async&lt;void(string)&gt;&amp;)&gt; Service;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+The following class MyService initializes the parent actor with
+the executor and "implements" the above "interface" class
+IService by creating a chord for "Service" method and bind it to its
+body method. Also because the chord has only one async method in
+header, its body will run in a thread from executor's thread pool. So
+this server
+handles requests concurrently (in thread pool) and asynchronously, just
+as many of today's network servers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+MyService : public actor, public IService {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; int n;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; MyService(int m, executor *e) :
+actor(e), n(m) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(Service,
+&amp;MyService::service_fun);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the body method. <span style="font-weight: bold;">Req.arg1</span>
+contains the request string and <span style="font-weight: bold;">req.arg2</span>
+is the callback. In body, we do some work first and then invoke the
+callback to return result.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void service_fun(async_o&lt;void(string,
+async&lt;void(string)&gt;&amp;)&gt; req) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;n; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; req.arg1 &lt;&lt; " is " &lt;&lt; i &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep((n%2)?1:2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; req.arg2(req.arg1+"
+is done");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+Class Join2 allows us wait on responses from two concurrent activities.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Join2 : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(string)&gt; first;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(string)&gt;
+second;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;void(string&amp;,
+string&amp;)&gt; Wait;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Join2() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(Wait, first,
+second, &amp;Join2::wait_body);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+wait_body(synch_o&lt;void(string&amp;,string&amp;)&gt; w, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;async_o&lt;void(string)&gt; f, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;async_o&lt;void(string)&gt; s) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; w.arg1 = f.arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; w.arg2 = s.arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+In main(), we set up the test scenario.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">int
+main(int argc, char **argv) {<br>
+</span></div>
+First we create an executor with two threads in pool.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+executor exec(2);<br>
+</span></div>
+Next we create two MyService servers and tell them use the above
+executor's thread pool to dispatch request processing work.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+MyService s1(5, &amp;exec.execute);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; MyService s2(10,
+&amp;exec.execute);<br>
+</span></div>
+Here we create a Join2 object to wait for the results (callbacks) from
+service requests to both servers<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+Join2 j;<br>
+</span></div>
+Next we make requests to both servers and pass in request strings and
+callbacks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+s1.Service("Service 1", j.first);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; s2.Service("Service 2",
+j.second);<br>
+</span></div>
+Then main thread does some of its own work.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+for(int i=0; i&lt;7; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "Main " &lt;&lt; i &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; thread_sleep(1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+string x,y;</span><br style="font-weight: bold;">
+</div>
+Next main thread waits/joins on the responses from both servers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp; j.Wait(x,y);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; log1.stream() &lt;&lt; "first
+result = " &lt;&lt; x &lt;&lt; ", second result = " &lt;&lt; y &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; exec.shutdown();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+</div>
+<br>
+<div style="font-weight: bold;">
+<span style="font-family: monospace;"></span>&nbsp;</div>
+</body>
+</html>

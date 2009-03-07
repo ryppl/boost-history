@@ -1,0 +1,206 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Extending by Aggregation and Delegation Tutorial</title>
+</head>
+<body>
+<h2>Join Extending by
+Aggregation and Delegation Tutorial</h2>
+This tutorial shows how Join supports aggregation and delegation
+based design. The design of Integrated Circuit (IC)
+is thru aggregation: composing smaller components into larger ones.
+Join support this kind of design in software. Two basic methods
+of aggregation are "aliasing" and "adapting". This logged_buffer sample
+demonstrates how to extend the "buffer" sample thru aggregation:<br>
+<ul>
+  <li>composing: logged_buffer maintains a inner actor: buffer<br>
+  </li>
+  <li>aliasing: the interface of inner actor buffer (put(), get()) is
+exposed <span style="font-weight: bold;">directly</span> at
+logged_buffer by C++ references to these methods of
+inner buffer.<br>
+  </li>
+  <li>adapting: a new async&lt;&gt; method logged_put() is defined by
+invoking inner buffer's put() with the addition of logging.</li>
+</ul>
+<span style="font-weight: bold;"></span>First we define a simple thread
+safe buffer class as presented in the first tutorial.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class buffer: public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(V)&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V()&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(put, get,
+&amp;buffer::chord_body);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+chord_body(async_o&lt;void(V)&gt; put, synch_o&lt;V()&gt;
+get) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; get.reply(put.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"><br>
+</span></div>
+Next we define a logged_buffer class which is implemented thru
+aggregating and extending the original buffer class.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class logged_buffer: public
+actor {<br>
+</span></div>
+Here logged_buffer instantiate an instance of the original buffer class
+and manage its life time.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+buffer&lt;V&gt; buf_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><span
+ style="font-weight: bold;"><br>
+</span></div>
+And define two C++ references to export the interface of internal
+buffer object (its put and get method).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(V)&gt; &amp;put;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V()&gt; &amp;get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span></div>
+And define a new async method <span style="font-weight: bold;">logged_put
+</span>which extends the original buffer's put method with logging
+capability.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(V)&gt; logged_put;<br>
+</span></div>
+In constructor, we initialize the parent actor class and inner
+buffer object.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+logged_buffer(executor *e) : actor(e), buf_(),
+<br>
+</span></div>
+And "aliasing"&nbsp; the inner buffer object's put and get method, so
+they are exposed at logged_buffer without any overhead.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; put(buf_.put), get(buf_.get) {<br>
+</span></div>
+And define a chord for the new async logged_put method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(logged_put, &amp;logged_buffer::chord_body);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the chord body for the new async logged_put method; basically
+we print out the arguments and forward it to the inner buffer's put
+method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void chord_body(async_o&lt;void(V)&gt; put) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "logged_put: " &lt;&lt;
+put.arg1 &lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; buf_.put(put.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+<br>
+Class Demo is a multithreaded test driver similar to the class Demo in
+tutorial 1. The only difference is that the producer will send even
+numbers to logger_buffer's put method which is an alias of inner
+buffer's put method and send odd numbers to logged_buffer's logged_put
+method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Demo : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+logged_buffer&lt;std::string&gt; buf_;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; producer;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; consumer;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Demo(executor *e) :
+actor(e), buf_(e) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(producer,
+&amp;Demo::producer_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(consumer,
+&amp;Demo::consumer_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+producer_cb(async_o&lt;void()&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; std::ostringstream
+ostr;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ostr
+&lt;&lt; i;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (i%2
+== 0)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+buf_.put(ostr.str());</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; else</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+buf_.logged_put(ostr.str());</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "producer sends
+[" &lt;&lt; i &lt;&lt; "]" &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ostr.str("");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+consumer_cb(async_o&lt;void()&gt; c) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "consumer recvs
+[" &lt;&lt; buf_.get() &lt;&lt; "]" &lt;&lt;
+logger::endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">int main(int argc, char **argv) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; executor exec(3);&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Demo demo(&amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.producer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.consumer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; exec.shutdown();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+</div>
+<br>
+</body>
+</html>

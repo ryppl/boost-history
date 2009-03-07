@@ -1,0 +1,1865 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h2 style="text-align: center;">Channel - A Name Space Based C++
+Framework For Asynchronous Distributed Message Passing and Event
+Dispatching</h2>
+<h2 style="text-align: center;">Yigong Liu (9/24/2006)</h2>
+<hr style="width: 100%; height: 2px;">
+<ul id="mozToc">
+<!--mozToc h3 1 h4 2--><li><a href="#mozTocId347090">1. Introduction</a></li>
+  <li><a href="#mozTocId587884">2. Build</a></li>
+  <li><a href="#mozTocId174795">3. Tutorials</a>
+    <ul>
+      <li><a href="#mozTocId270435">3.1 gui event handling</a></li>
+      <li><a href="#mozTocId147115">3.2 gui event handling with 2 local
+channels</a></li>
+      <li><a href="#mozTocId280170">3.3 distributed gui events</a></li>
+      <li><a href="#mozTocId886481">3.4 chat with direct connection</a></li>
+      <li><a href="#mozTocId680978">3.5 buffered channel with blocking
+active receiver (synchronous choice, join synchronization patterns)</a></li>
+      <li><a href="#mozTocId232384">3.6 buffered channel with async
+receivers (asynchronous choice, join synchronization patterns)</a></li>
+      <li><a href="#mozTocId836556">3.7 distributed chat thru a
+central server</a></li>
+      <li><a href="#mozTocId266315">3.8 channel
+connection thru shared memory</a></li>
+      <li><a href="#mozTocId300223">3.9 channel using regex name
+matching </a></li>
+      <li><a href="#mozTocId440147">3.10 channel using Linda-style
+associative lookup</a></li>
+      <li><a href="#mozTocId505601">3.11 channel name space management
+and security with filters
+and translators</a></li>
+      <li><a href="#sample_dispatcher">3.12 port and signal: unnamed
+point of tightly-coupled local interactions</a><br>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#mozTocId750399">4. Design</a>
+    <ul>
+      <li><a href="#mozTocId135917">4.0 Overall Design
+Idea</a></li>
+      <li><a href="#mozTocId540592">4.1 Name space</a></li>
+      <ul>
+        <li><a href="#mozTocId84795">4.1.1 What's in a name?</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId582741">4.1.2 Types of
+name space</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId182536">4.1.3 Name binding
+set and Name matching
+algorithm, binding rules </a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId891206">4.1.4 Name spaces
+merge and connections </a></li>
+      </ul>
+      <li><a href="#mozTocId210395">4.2 Dispatching</a></li>
+      <ul>
+        <li><a href="#mozTocId862080">4.2.1 How message
+data move: push/pull, buffering</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId629360">4.2.2 How operations
+are performed: synchronous/asynchronous</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId248159">4.2.3 Message passing
+coordination
+patterns </a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId995030">4.2.4 Messages
+handling</a></li>
+      </ul>
+      <li><a href="#mozTocId967906">4.3 Connection related</a></li>
+      <ul>
+        <li><a href="#mozTocId216417">4.3.1 Connections</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId162029">4.3.2 Peer</a></li>
+      </ul>
+      <li><a href="#unnamed_design">4.4 "Unnamed" binding of
+output/input or points of tightly-coupled
+local
+interactions</a></li>
+      <li><a href="#mozTocId970853">4.5 Application
+architecture and integration</a></li>
+    </ul>
+  </li>
+  <li><a href="#mozTocId39115">5. Classes</a>
+    <ul>
+      <li><a href="#mozTocId591675">5.1 name space related</a></li>
+      <ul>
+        <li><a href="#mozTocId899602">5.1.1 name spaces</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId828224"> 5.1.2 id_type and
+id_trait </a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId856863">5.1.3 name and name
+binding callback</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId915384">5.1.4 named_out and
+named_in; publisher and subscriber</a></li>
+        <li><a href="#unnamed_class">5.1.5 unnamed in/out: port and
+signal/slot</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId750531">5.1.6
+binder, filter and translator</a></li>
+      </ul>
+      <li><a href="#mozTocId985604">5.2 dispatching
+related</a></li>
+      <ul>
+        <li><a href="#mozTocId308124">5.2.1 dispatchers</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId187818">5.2.2 messages</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId953831">5.2.3 queues</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId573559">5.2.4 executors </a></li>
+      </ul>
+      <li><a href="#mozTocId872320">5.3 connection related</a></li>
+      <ul>
+        <li><a href="#mozTocId460401">5.3.1&nbsp; global
+functions for connecting channels </a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId964803">5.3.2 connection</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId581357">5.3.3 peer and
+interface</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId567580">5.3.4 streams</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId711260">5.3.5 marshaling
+registry</a></li>
+      </ul>
+      <li><a href="#mozTocId128213">5.4 platform
+abstraction policy and synchronization policy </a></li>
+      <ul>
+        <li><a href="#mozTocId345412">5.4.1 platform
+abstraction</a></li>
+      </ul>
+      <ul>
+        <li><a href="#mozTocId405486">5.4.2 synchronization
+policy</a></li>
+      </ul>
+    </ul>
+  </li>
+  <li><a href="#mozTocId283551">6. Class Concepts and
+How to extend
+Channel framework</a>
+    <ul>
+      <li><a href="#mozTocId162285">6.1 id_type and
+id_trait</a></li>
+      <li><a href="#mozTocId605583">6.2 name space</a></li>
+      <li><a href="#mozTocId379587">6.3 dispatcher</a></li>
+      <li><a href="#mozTocId872924">6.4 executor</a></li>
+      <li><a href="#mozTocId760775">6.5 queue</a></li>
+      <li><a href="#mozTocId441870">6.6
+streams/connectors (or integrate into new architecture)</a></li>
+    </ul>
+  </li>
+  <li><a href="#mozTocId631535">7. Compare Channel to
+others (plan9, STL)</a>
+    <ul>
+      <li><a href="#mozTocId547030">7.1 Compare
+Unix/Plan9/Inferno file-system name space and Channel's name space</a></li>
+      <li><a href="#mozTocId82643">7.2 compare STL and
+Channel</a></li>
+    </ul>
+  </li>
+  <li><a href="#mozTocId802804">8. Reference Links</a></li>
+</ul>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId347090"></a><small>1. Introduction</small></h3>
+In Unix and most OSes, file systems allow applications to identify,
+bind to and operate on system resources and entities (devices,
+files,...) using a "name" (path name) in a hierarchical name space
+(directory system) which is different&nbsp; from variables and pointers
+in flat address space. Many interprocess communication facilities (IPC)
+often depend on some kind of "names" to identify them too, such as the
+pathname of FIFO or named-pipe, pathname for unix domain socket,
+ip-address and port for tcp/udp socket , and keys for System V shared
+memory, message queue and semaphores. "The set of possible names for a
+given type of IPC is called its <span
+ style="font-style: italic; font-weight: bold;">name space</span>. The
+name space is important because for all forms of IPC other than plain
+pipes, the name is how the client and server&nbsp; "connect" to
+exchange messages." (quote from W. Richard Stevens "Unix Network
+Programming").<br>
+<br>
+Channel is a C++ template library to provide name spaces for
+asynchronous, distributed message passing and event dispatching.
+Message senders and receivers bind to names in name space; binding and
+matching rules decide which senders will bind to which receivers; then
+message passing and event dispatching could happen among bound senders
+and receivers.<br>
+Channel's signature:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; template &lt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename idtype,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename platform_type = boost_platform,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename synchpolicy = mt_synch&lt;platform_type&gt;,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename executor_type = abstract_executor, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename name_space =
+linear_name_space&lt;idtype,executor_type,synchpolicy&gt;,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename dispatcher =
+broadcast_dispatcher&lt;name_space,platform_type&gt; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; class
+channel;&nbsp;&nbsp; </span><br>
+Various name spaces (linear/hierarchical/associative) can be used for
+different applications. For example, we can use integer ids as names to
+send messages in linear name space, we can use string path name ids <a
+ id="intro">(such as
+"/sports/basketball")</a> to send
+messages in hierarchical name space<a id="intro"> and we can use regex
+patterns or
+Linda tuple-space style tuples to send messages in associative name
+space</a>; User can configure name space
+easily
+by setting a channel template parameter.<br>
+<br>
+Channel's other major components are dispatchers; which dispatch
+messages/events from senders to bounded receivers. Dispatcher is also a
+channel template parameter. The design of dispatchers can vary in
+several dimensions:<br>
+<ul>
+  <li>how msgs move: push or pull; </li>
+  <li>how callbacks executed: synchronous or asynchronous. </li>
+</ul>
+Sample dispatchers includes : synchronous broadcast dispatcher,
+buffered asynchronous dispatchers,...<br>
+<br>
+Name space and dispatchers are orthogonal; they can mix and match
+together freely; just as STL algorithms can be used with any STL
+containers by means of the iterator range concept, name space and
+dispatchers can be used together because of the name binding set
+concept. <br>
+<br>
+By combining different name space and dispatching policies, we can
+achieve various models:<br>
+<ul>
+  <li>synchronous event dispatching&nbsp;&nbsp;&nbsp; </li>
+  <li>associative name space based on matching/look-up rules similar to
+Linda tuple space</li>
+  <li>asynchronous messaging model similar to Microsoft CCR
+(Concurrency Coordination Runtime)<br>
+  </li>
+</ul>
+Similar to distributed files systems, distributed channels can be
+connected or "mounted" to allow transparent distributed message
+passing. Filters and translators are used to control name space changes.<br>
+<br>
+For tightly coupled single-address-space applications/modules,
+Channel's "unnamed" in/out
+objects : ports and signal/slots support fine grained and local message
+passing model without
+the hassle of setting up a name space and assigning names.<br>
+<br>
+Channel is built on top of Boost facilities: <br>
+<ul>
+  <li>Boost::shared_ptr for message/event data life-time management</li>
+  <li>Boost.Bind, Boost.Function for callback</li>
+  <li>Boost.Thread for synchronization</li>
+  <li>Boost.Serialization for message marshaling/demarshaling</li>
+  <li>Boost.Regex and Boost.Tuple for associative name-matching<br>
+  </li>
+  <li><big><small>Boost.Asio and Boost.Shmem are used to build
+transports among remote channels.</small></big></li>
+</ul>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId587884"></a>2. Build</h3>
+Channel is continuously being developed and tested in linux (Fedora
+Core 3 &amp;
+4) and Windows (WIndowsXP and Visual C++ 2005 express). The
+implementation is solely based on standard boost facilities plus
+Boost.Asio and
+Boost.Interprocess (shmem). <br>
+Download: <a href="http://channel.sourceforge.net">http://channel.sourceforge.net</a><br>
+<div style="text-align: left;">Build: <br>
+<div style="margin-left: 40px;"><a
+ href="http://www.boost.org/more/getting_started.html">checkout boost
+cvs source code</a><br>
+download latest boost_channel_x_x.tar.gz<br>
+tar xvzf boost_channel_x_x.tar.gz<br>
+cd &lt;top directory of channel&gt;<br>
+copy subdirectory boost/channel/ to &lt;boost
+root directory&gt;/boost/<br>
+copy subdirectory
+libs/channel/ to &lt;boost root directory&gt;/libs/<br>
+cd to &lt;boost root
+directory&gt;/libs/channel/exmaple/&lt;specific samples such as
+ping_pong&gt;<br>
+bjam<br>
+</div>
+</div>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId174795"></a>3. Tutorials</h3>
+<p>the following are a few samples showing how different name spaces
+and dispatchers can be used in various situations:</p>
+<h4><a name="mozTocId270435"></a>3.1 gui event handling</h4>
+<p>A simple sample shows that a gui window send (broadcast) simple
+events to callbacks (either free functions or object members).
+<a href="../example/gui_evt/sample1_text.html">details...</a></p>
+<h4><a name="mozTocId147115"></a>3.2 gui event handling with 2 local
+channels</h4>
+<p>This sample shows how 2 channels can be connected to allow gui
+events propagate from one channel to another. Also we use a POD struct
+as message id/name.&nbsp; <a
+ href="../example/gui_evt/sample2_text.html">details...</a></p>
+<h4><a name="mozTocId280170"></a>3.3 distributed gui events</h4>
+<p>A sample shows how events can be sent (broadcast) to callbacks in
+remote process by connecting local channel to remote channels thru
+Boost.Asio. <a href="../example/dist_evt_chan/sample3_text.html">details...</a></p>
+<h4><a name="mozTocId886481"></a>3.4 chat with direct connection</h4>
+<p>This sample shows the usage of hierarchical name space by defining
+chat subjects as string path names. For demo, chat peers directly
+connect to each other, subscribing to the subjects they are
+interested and send messages with each other. Since it a hierarchical
+name space, peers can subscribe to wildcard ids such as "all
+sports related subjects". <a
+ href="../example/chat_direct/sample4_text.html">details...</a></p>
+<h4><a name="mozTocId680978"></a>3.5 buffered channel with blocking
+active receiver (synchronous choice, join synchronization patterns)</h4>
+<p>A sample shows the usage of buffered channels implemented thru a
+synchronous pull dispatcher. In this channel
+configuration, messages are buffered inside channel at sender side.
+The receiver is active, a thread blocking waiting for the arrival of
+messages at synchronous join/choice arbiters and then processing the
+messages. <a href="../example/buffered_sync_sendrecv/sample5_text.html">details...</a></p>
+<h4><a name="mozTocId232384"></a>3.6 buffered channel with async
+receivers (asynchronous choice, join synchronization patterns)</h4>
+<p>This sample shows a buffered channel support asynchronous
+receivers using asynchronous coordination patterns: choice and join.
+The callback actions are dispatched thru a thread pool executor.
+<a href="../example/buffered_async_join/sample6_text.html">details...</a></p>
+<h4><a name="mozTocId836556"></a><b>3.7 distributed chat thru a
+central server</b></h4>
+<p>This sample shows simple chat client and server design. Clients
+connect to server to chat with each other in seperate chat groups
+identified by subject. The chat subject (a string) is the ids in name
+space. Clients can join/leave chat groups identified by subject ids
+and send messages to chat groups. If the chat group (subject) doesn't
+exist yet, the first member's "join" will make it created.
+<a href="../example/chat_thru_server/sample7_text.html">details...</a></p>
+<a href="sample7_text.html"></a>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span>
+<h4><a class="mozTocH4" name="mozTocId266315"></a>3.8 channel
+connection thru shared memory</h4>
+This sample shows that remote channels at 2 processes (chat1, chat2)
+can be connected thru shared memory message queues based on
+Boost.Interprocess. <a href="../example/chat_shmem/sample8_text.html">details...</a><br>
+<h4><a class="mozTocH4" name="mozTocId300223"></a>3.9 channel using
+regex name matching<br>
+</h4>
+This sample demos channels using regex pattern matching for
+name-matching and message dispatching. Peers can use regex patterns to
+bind/subscribe to names/ids. Boost.Regex is used for implementation. <a
+ href="../example/chat_regex/sample9_text.html">details...</a><br>
+<h4><a class="mozTocH4" name="mozTocId440147"></a>3.10 channel using
+Linda-style associative lookup<br>
+</h4>
+This sample demos channels using Linda-style associative name space.
+Tuples are used as names/ids and associative lookup is used for
+name-matching. Boost.Tuple is used for implementation. <a
+ href="../example/chat_assoc/sample10_text.html">details...</a><br>
+<h4><a class="mozTocH4" name="mozTocId505601"></a>3.11 channel name
+space management and security with filter and
+translator</h4>
+<h4></h4>
+This sample demos how we can use filters and translators to achieve
+name space management and security. <a
+ href="../example/filter_translator/sample11_text.html">details...</a><br>
+<h4><a name="sample_dispatcher"></a>3.12 port and signal: unnamed point
+of tightly-coupled local interactions
+</h4>
+This tutorial explains 3 samples based on port and signal. <a
+ href="../example/prime_sieve/sample12_text.html">details...</a><br>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId750399"></a>4. Design</h3>
+<h4><a class="mozTocH4" name="mozTocId135917"></a>4.0 Overall Design
+Idea</h4>
+"Names" play important role in distributed computing:<br>
+<ul>
+  <li>Name space plays a central role in plan9/inferno distributed OS
+as
+described in [1][2]. </li>
+</ul>
+<div style="margin-left: 40px;">quote: <br>
+"... a new kind of system, organized around communication and naming
+..."<br>
+"A single paradigm (writing to named places) unifies all kinds of
+control and interprocess signaling."<br>
+It can be briefly summerized as following:<br>
+<ul>
+  <li>Every resource, either local or remote, is represented as a
+hierarchical file system (name space).</li>
+  <li>Each process can assemble a private view of the system by
+constructing a local/private name space that connect these resources
+thru mount, bind and umount on demand.</li>
+  <li>The interface to named resources are file-oriented; they are
+accessed thru open/close/read/write calls.</li>
+</ul>
+</div>
+<ul>
+  <li>Robin Milner[3][4] gives a detailed discussion about what we can
+do
+with a name in asynchronous message passing, or the interactions thru
+"name":</li>
+</ul>
+<div style="text-align: left; margin-left: 40px;">The following
+operations on names are identified:<br>
+<ul>
+  <li>use name: call, co-calling (response)<br>
+  </li>
+</ul>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">call -
+vocative use of name by one agent</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">co-call/response - reaction by other</span><br>
+Synchronized action is the coming together (binding) of calling and
+co-calling (thru name).<br>
+The reason to distinquish between "calling" and "response" is that, in
+describing any agents ( processes/ threads/ ...), we define its
+potential
+behaviour (or capabilities) by what calls and responses it can make -
+this is the basic idea underlying the active objects or communicating
+processes based design which will be detailed in later section.<br>
+</div>
+<ul>
+  <li>mention name: quote/co-quote, match<br>
+  </li>
+</ul>
+<div style="margin-left: 40px; font-weight: bold;">quote, co-quote:</div>
+</div>
+<div style="text-align: left;">
+<div style="margin-left: 80px;">quote/co-quote is refering to the way
+we can pass names as/inside message content. We can simulate function
+call (call-and-return) by packing a "return" name/id inside message and
+waiting on this name for result (from remote).<br>
+</div>
+</div>
+<div style="text-align: left; margin-left: 40px;">
+<div style="margin-left: 40px; font-weight: bold;">match:</div>
+</div>
+<div style="text-align: left;">
+<div style="margin-left: 80px;">test a name for equality with another
+name. Name matching algorithms are mostly dependent on name space
+structure. In following sections, we will expand "matching" to include
+wildcards and regex matching<br>
+</div>
+<div style="margin-left: 40px;"><br>
+The design of Channel is based on the following integration of
+Plan9/Inferno's
+name space idea and Robin Milner's interaction thru names:<br>
+<ul>
+  <li>Channel provides process local private name_space which is
+customizable thru connecting to other channels.</li>
+  <li>The semantics of names are changed; names do not refer to named
+resources (which are relatively static entities), but to named "points
+of interaction" (which are mostly dynamic); thus file-oriented api and
+semantics are dropped and Robin Milner's operations/interactions on
+names are adopted as the api: calling/co-calling/matching.</li>
+</ul>
+</div>
+</div>
+<div style="text-align: left; margin-left: 40px;">
+<div style="margin-left: 80px;"></div>
+</div>
+<h4><a class="mozTocH3" name="mozTocId540592"></a>4.1 Name space</h4>
+<h4><a class="mozTocH4" name="mozTocId84795"></a>4.1.1 What's in a name?</h4>
+In Channel, to facilitate name-matching/binding operations, a name has
+the
+following attributes:<br>
+<ul>
+  <li>id_type<br>
+  </li>
+</ul>
+<div style="margin-left: 40px;">Id is the main content of names.
+Various types of ids can be used for different applications: integer,
+strings, POD structs etc can be used for linear name space;
+string
+path names can be used for hierarchical name spaces and regex patterns
+and Linda style tuples can be used for associative name space.<br>
+</div>
+<ul>
+  <li>id_trait and id-matching algorithms<br>
+  </li>
+</ul>
+<div style="margin-left: 40px;">Id_trait defines the attributes of an
+id type. A major feature of id_trait is the
+id-matching algorithm,
+which partially decides name-matching and thus which senders will bind
+which receivers and be
+able to send messages to them. For example, exact matching can be used
+for linear name space ids; prefix matching can be used for path
+name ids; while in associative name spaces, regex pattern matching and
+Linda style associative lookup can be used for id-matching.<br>
+</div>
+<ul>
+  <li>membership</li>
+</ul>
+<div style="margin-left: 40px;">A channel is a process local name space
+which can be connected to other
+local or remote channels. So we have 2 types of communicating peers:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>MEMBER_LOCAL (local peers): communication peers inside the same
+channel</li>
+  <li>MEMBER_REMOTE (remote peers): communication peers from different
+channels</li>
+</ul>
+<ul>
+  <li>sending and receiving scope</li>
+</ul>
+<div style="margin-left: 40px;">When sending/receiving messages, we can
+specify the scope of operations:<br>
+<ul>
+  <li>SCOPE_LOCAL: <br>
+  </li>
+  <ul>
+    <li>publish/send specified messages to local peers; <br>
+    </li>
+    <li>subscribe/receive specified messages from local peers</li>
+  </ul>
+  <li>SCOPE_REMOTE: <br>
+  </li>
+  <ul>
+    <li>publish/send specified messages to remote peers; <br>
+    </li>
+    <li>subscribe/receive specified messages from remote peers</li>
+  </ul>
+  <li>SCOPE_GLOBAL: <br>
+  </li>
+  <ul>
+    <li>publish/send specified messages to both local and
+remote peers; <br>
+    </li>
+    <li>subscribe/receive specified messages from both local and
+remote peers</li>
+  </ul>
+</ul>
+</div>
+<h4><a class="mozTocH4" name="mozTocId582741"></a>4.1.2 Types of
+name space</h4>
+There are 3 types of name spaces based on its id-matching algorithms
+and naming structures:<br>
+<ul>
+  <li>linear:</li>
+</ul>
+<div style="margin-left: 40px;">There are ordering relationship among
+ids, so they can be arranged in linear range. <span
+ style="font-weight: bold; font-style: italic;">Exact matching</span>
+is used
+for
+id-matching.<br>
+</div>
+<ul>
+  <li>hierarchical:</li>
+</ul>
+<div style="margin-left: 40px;">There are containment relationship
+among ids, so they can be arranged in tree/trie structures. <span
+ style="font-style: italic; font-weight: bold;">Prefix
+matching</span> is used for id-matching<br>
+</div>
+<ul>
+  <li>associative:</li>
+</ul>
+<div style="margin-left: 40px;">Id-matching is based on <span
+ style="font-style: italic; font-weight: bold;">associative
+lookup</span> similar to Linda's tuple space or regular expression
+matching
+algorithms<br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId182536"></a>4.1.3 Name binding
+set and Name matching
+algorithm, binding rules<br>
+</h4>
+No pure name exist; Names are ONLY created into name space when bound
+for sending/receiving msgs:<br>
+<ul>
+  <li>Named_Out: output/send interface bound with name</li>
+  <li>Named_In: input/receiv interface bound with name</li>
+</ul>
+Name binding sets:<br>
+<ul>
+  <li>for Named_Out, its binding_set is the set of bound Named_Ins to
+which to send messages</li>
+  <li>for Named_In, its binding_set is the set of bound Named_Outs from
+which to receive messages</li>
+</ul>
+There are 2 aspects to the name matching algorithms and binding rules
+to decide binding_sets:<br>
+<ul>
+  <li>id matching: the id of Named_Out must "match" the id of Named_In
+based on matching operation defined in id_trait<br>
+  </li>
+  <li>scope &amp; membership matching: the membership and scope of both
+Named_Out and Named_In must match. This doesn't mean they must be the
+same. For example, a local sender&nbsp; (MEMBER_LOCAL) with SCOPE_LOCAL
+can bind to receivers with &lt;MEMBER_LOCAL, SCOPE_LOCAL&gt; or
+&lt;MEMBER_LOCAL, SCOPE_GLOBAL&gt;. There is an internal table
+recording
+all such valid combinations.</li>
+</ul>
+Named_Out and Named_In don't bind to each other directly (as in most
+event dispatching systems). Instead, they bind to names in name
+space. Based on binding and matching rules, their binding set will
+be resolved which will contain the direct pointers to their
+counterpart. Actual message passing and dispatching happen on the
+binding set; never need to go thru name space again. So the actual
+message passing and dispatching behaviour and performance should be the
+same as&nbsp; we&nbsp; have registered the Named_In directly with
+Named_Out ( as we would have done in normal event dispatching systems ).<br>
+Based on name-matching, there are possibly the following 4 kinds of
+binding sets:<br>
+<ul>
+  <li>1 - 1:&nbsp; one named_out binds with exactly one named_in</li>
+  <li>1 - N: one named_out binds with a group of named_ins (e.g. when
+many subscribers subscribe to the same name)</li>
+  <li>N - 1: one named_in binds with a group of named_outs (e.g. when a
+subscriber subscribes using a wildcard name or regex pattern, it could
+receive from multiple sources)</li>
+  <li>N - M: both named_out and named_in bind with a group of
+counterparts.<br>
+  </li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId891206"></a>4.1.4 Name spaces
+merge and connections<br>
+</h4>
+When 2 channels (A &amp; B) are connected/mounted, their name spaces
+are
+merged as following:<br>
+<ul>
+  <li>names flowing from B-&gt;A:&nbsp; the intersection of A's set of
+Named_In with global/remote scope (global subscriptions) and B's set
+of&nbsp; Named_Out with global/remote scope (global
+publications) </li>
+  <li>names flowing from A-&gt;B:&nbsp; the intersection of B's set of
+Named_In with global/remote scope (global subscriptions) and A's set
+of&nbsp; Named_Out with global/remote scope (global
+publications) </li>
+  <li>newly created names/ids are automatically
+propogated to connected channels. So peers in channel A can communicate
+with peers in channel B transparently the same way as with the local
+peers. </li>
+</ul>
+Filter, translator can be specified at connections among channels to
+control name space merge:<br>
+<ul>
+  <li>filter: decide which ids are allowed to be exported/sent to
+(visible at) remote
+channels and which remote ids are allowed be imported to local name
+space<br>
+  </li>
+  <li>translator: allow translation of ids imported to local name space
+and ids exported to remote name space; so we can relocate the imported
+remote name space ids to a specific subspace in the local name space,
+similar to the way that in distributed file systems, a remote file
+system can be mounted to a specific point in local file system.</li>
+</ul>
+Based on applications name space management requirements, we may need
+to "relocate"/"mount" the names imported (from a connection to a remote
+name space) to a specific sub-region in name space. For example, if we
+have a name space in desktop computer and connect to a PDA and a
+laptop, we can set translators at connections so that names imported
+from PDA will appear under "/pda/" and names from laptop will appear
+under "/laptop/". Or if our application use integer as ids/names, we
+may want to relocate ids from the 1st connection to [1000-1999] and ids
+from next connection to [2000-2999] and so on. That is similar to the
+way how we mount remote file-systems to local file-system.<br>
+Based on security requirements, we may need to use filters to restrict
+the valid range of names allowed to pass in/out specific channel
+connections. For example, a server's name space connect to 2 clients
+and we want that these clients' name spaces and messaging are totally
+separate, so that one client is unware of anything happening inside the
+other client's name space such as new name-publications and message
+passing. That is also similar to the way we protect network by
+firewalls and NATs.
+<ul>
+</ul>
+<h4><a class="mozTocH3" name="mozTocId210395"></a>4.2 Dispatching</h4>
+Dispatchers or dispatching policies are operations or algorithms
+defined over name binding set. They define the semantics of
+"interactions
+thru names". Based on RobinMilner's separation of
+calling and co-calling, there are 2 parts defined for each
+dispatching algorithm:<br>
+<ul>
+  <li>sending (or sender) algorithm: corresponding to calling<br>
+  </li>
+  <ul>
+    <li>defined over the set of bound Named_In (receiver) objects</li>
+    <li>may contain message buffering mechanism inside channel
+(Named_Outs)<br>
+    </li>
+  </ul>
+  <li>receiving (or receiver) algorithm: corresponding to co-calling<br>
+  </li>
+  <ul>
+    <li>defined over the set of bound Named_Out (sender) objects</li>
+    <li>may support high level messaging coordination patterns (such as
+Choice and Join)</li>
+  </ul>
+</ul>
+The following are major design considerations for dispatchers.<br>
+<h4><a class="mozTocH4" name="mozTocId862080"></a>4.2.1 How message
+data move: push/pull, buffering</h4>
+There are 2 basic models of passing messages/events from senders to
+receivers:<br>
+<ul>
+  <li>push model: message data are pushed by senders to receivers</li>
+  <li>pull model: message data are pulled by receivers from senders</li>
+</ul>
+Since Channel is for asynchronous messaging, mostly the following 2
+dispatching categories are used:<br>
+<ul>
+  <li>push:&nbsp;</li>
+</ul>
+<div style="margin-left: 40px;">Dispatching variations can be:
+broadcast, round-robin,...<br>
+Execution variations can be: <br>
+<ul>
+  <li>synchronous: the sending threads will push messages all the way
+to
+receviers and invoke receiving callbacks directly</li>
+  <li>asynchronous: the sending threads will push messages to receivers
+and dispatch the receiving callbacks to some executors for later
+executions<br>
+  </li>
+</ul>
+</div>
+<ul>
+  <li>buffering+pull:</li>
+</ul>
+<div style="margin-left: 40px;">Messages are buffered inside channel at
+Named_Out side; receivers pull message data in two ways:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>sync/blocking receiver: in this model, receivers are active
+receiving threads block-waiting at Named_In, unblocked when message
+data are
+available and pull data from Named_Out</li>
+  <li>async receiver: async callback operations are registered to
+logical conditions of message arrivals (choice and join) and will be
+dispatched to executors depending on message arrivals.</li>
+</ul>
+<div style="margin-left: 40px;">Message coordination patterns (choice
+and join) are applied for both pull synchronous and asynchronous model
+to
+decide when a synchronous receiving thread can be unblocked or
+asynchronous callback can be fired based on the available messages.<br>
+<br>
+</div>
+For message buffering inside channel, we can have various design
+choices:<br>
+<ul>
+  <li>synchronized queues with flow control: low water mark and high
+water mark</li>
+  <li>timeouts for when messages will expire</li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId629360"></a>4.2.2 How operations
+are performed: synchronous/asynchronous</h4>
+When messages arrive, we have 2 choices for how dispatching operations
+and callbacks are performed:<br>
+<ul>
+  <li>synchronous: the sending thread will carry out dispatching and
+callbacks</li>
+  <li>asynchronous: dispatching or callbacks will be scheduled in an
+executor; and later executed by the executor in a different calling
+context or thread</li>
+</ul>
+There are various designs of executors. [7] provides detailed
+discussion about Java's executor design. <br>
+Different executors can run threads in different scheduling priorities
+and we can assign callbacks to run in propr executors according to
+applications' requirements<br>
+<h4><a class="mozTocH4" name="mozTocId248159"></a>4.2.3 Message passing
+coordination
+patterns<br>
+</h4>
+Join-calculus, Comega, and CCR [5][6] define a few messaging
+coordination
+patterns regarding to when and how messages will be consumed and
+callbacks be fired: <br>
+<ul>
+  <li>Choice: a combo registration of a group of &lt;name,
+callback&gt;; whenever any "name" has message delivered, its associated
+callback will be fired<br>
+  </li>
+  <li>Join: a callback is registered with a set of names; when messages
+become available on all names, the messages will be taken from all
+names "atomically" and the registered callback will be invoked.<br>
+  </li>
+</ul>
+In channel, both choice and join are applied in synchronous and
+asynchronous forms.<br>
+<h4><a class="mozTocH4" name="mozTocId995030"></a>4.2.4 Messages
+handling</h4>
+life-time management of messages:<br>
+<ul>
+  <li>avoid data copying, pass pointers to messages instead of
+duplicating message data</li>
+  <li>wrap message data pointer inside boost::shared_ptr so that
+message data's life time management is automatic<br>
+  </li>
+</ul>
+marshaling/demarshaling of messages:<br>
+<ul>
+  <li>use Boost.Serialization for marshaling/demarshaling</li>
+  <li>a channel could have multiple remote connections, each of them
+could use different transport (tcp/ip, soap, shared-memory) and on-wire
+message format
+(text/binary/xml). In Channel based applications, a marshaler_registry
+can be created for each specific transport type and format.
+By registering message data type with a marshaler_registry using ids as
+key, internal marshaling/demarshaling functions will be created for the
+registered message data types and invoked automatically when messages
+are sent-to and received-from remote channels. When a
+channel is connected to a remote channel thru "streams", we must
+specify
+which marshaler_registry to use for marshaling. <br>
+  </li>
+  <li>for each id/msg-type, we can have different settings of
+marshaling:</li>
+</ul>
+<ul style="margin-left: 40px;">
+  <li>explicitly register a message data type: internally a marshaler
+object will be created and registered with ids<br>
+  </li>
+  <li>use a globally registered default marshaler (if all ids use the
+same data structure)</li>
+</ul>
+<h4><a class="mozTocH3" name="mozTocId967906"></a>4.3 Connection related</h4>
+The following are design considerations related to channel connections.<br>
+<h4><a class="mozTocH4" name="mozTocId216417"></a>4.3.1 Connections</h4>
+there are 2 kinds of connections:<br>
+<ul>
+  <li>local connection:&nbsp; inside the same process, we can have
+multiple channels for different purposes; we can connect these local
+channels to facilitate the communication among their peers.<br>
+  </li>
+  <li>remote connection: we can connect channel to a remote channel
+inside a different process or different machines; the remote interface
+is represented as "streams": socket stream, pipe, or a message queue
+inside shared memory;</li>
+</ul>
+connection object is a simple object, just containing the two
+peers/ends of the connection.<br>
+ways to break a connection:<br>
+<ul>
+  <li>delete connection object; peers are deleted and channels
+disconnect</li>
+  <li>one peer channel is destroyed, the connection will be destroyed
+automatically and the other channel disconnect</li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId162029"></a>4.3.2 Peer</h4>
+&nbsp;&nbsp;&nbsp; the common interface for connection peers:
+interfaces and streams<br>
+<ul>
+  <li>interface:</li>
+</ul>
+<div style="margin-left: 40px;">proxy of peer channel<br>
+core of channel connection logic:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;. how remote
+binding/unbinding events will effect local name space<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;. how messages are
+propagated from and to remote channels<br>
+</div>
+<ul>
+  <li>stream:</li>
+</ul>
+<div style="margin-left: 40px;">Stream is used to wrap a remote
+transport connection (socket, pipe or message queue inside shared
+memory).<br>
+In earlier implementation of Channel on ACE[8], a Connector class is
+included as one of the core classes; which will connect local and
+remote channels. the disadvantage of this design is that Channel is
+tied to a specific architecture (such as thread per connection); making
+it difficult to integrate channel with other existing servers.<br>
+In plan9/inferno, when we mount a remote name space to local, the real
+function is to mount a descriptor (file, pipe, or socket connection) to
+a specific point in name space.<br>
+Following this style, remote channel connection is to connect/mount a
+"stream" to a local channel/name_space; the stream wraps a socket,
+pipe, or shared_memory message
+queue connecting a remote channel in another process or machine. thus
+avoid interfering with servers' internal design: such as
+threading; so that channel can work well with both single-thread async
+and multi-thread sync server design.<br>
+</div>
+<h4><a name="unnamed_design"></a>4.4 "Unnamed" binding of output/input
+or points of tightly-coupled
+local
+interactions</h4>
+&nbsp;&nbsp;&nbsp; As discussed in the "Overall Design Idea" section,
+message passing happens on the binding of calling(the sender of
+dispatcher) and co-calling(the receiver of dispatcher).<br>
+&nbsp;&nbsp;&nbsp; All the above discussions focus on setting up this
+binding thru name-matching in name spaces. "Binding thru names"
+provides a loosely coupled computing model. A agent or thread can
+perform or provide its functionality thru the "names" which it
+publishes and subscribs in application channel. It can be moved to
+another process or another machine and continue functioning as before
+as long as in its new enviroment there is a channel connected to the
+original channel and the moved agent attaches to the new channel with
+the same set of "names". However sometimes it may be too much
+burden/overhead than benefit to set up a name space and assign proper
+names, if all we want is performing "localized" computation based on
+message passing model.<br>
+&nbsp;&nbsp;&nbsp; In many message passing based
+systems,
+threads(or
+processes in CSP meaning) communicate thru "ports" or
+"channels" which are normal local objects with possible internal
+message queue.
+Choice/Join arbiters work directly with these local objects. Pointers
+to these objects can be passed inside messages to enable various
+message-passing based idioms. These provide a tightly coupled localized
+models inside the same address space.<br>
+&nbsp;&nbsp;&nbsp; From channel's design perspective, these localized
+communication primitives can be encoded as special kinds of binding set
+of senders (named_out) and
+receivers (named_in). They are "unnamed", not set up thru name matching
+in name space. For example in C++CSP, there are One2OneChannel,
+Any2OneChannel and One2AnyChannel. One2OneChannel can be encoded as the
+binding of one "unnamed_out" and one "unnamed_in"; Any2OneChannel can
+be encoded as the binding of a group of "unnamed_out" and a single
+"unnamed_in"; One2AnyChannel can be encoded as the binding of a single
+"unnamed_out" and a group of "unnamed_in" (please note that CSP
+requires synchronous rendezvous of sender and recevier which can be
+implemented thru a
+special dispatcher). There is a similar case with normal event
+dispatching systems
+where application code directly attaches event receivers (slots) to
+event sources (signals), not thru name-matching in name space.<br>
+&nbsp;&nbsp;&nbsp; Channel provides generic functions to set up
+and break binding among any pair of named_out and named_in:<br>
+<span style="font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+template &lt;typename name&gt; void bind(name *named_out, name
+*named_in);</span><br style="font-weight: bold; font-style: italic;">
+<span style="font-weight: bold; font-style: italic;">
+&nbsp;&nbsp;&nbsp; template &lt;typename name&gt; void unbind(name
+*named_out, name *named_in);</span><br>
+&nbsp;&nbsp;&nbsp; By means of these functions, we can setup any
+imaginable bindings (1-N, N-1, N-M) among named_out and named_in.<br>
+&nbsp;&nbsp;&nbsp; Various message passing systems use different idioms
+or patterns of binding sets. Channel provides the following
+sample tightly coupled idioms thru "unnamed" in/out objects (<a
+ href="../../../boost/channel/unnamed_in_out.hpp">unnamed_in_out.hpp</a>):
+<br>
+<ul>
+  <li>Ports are objects with internal message buffering. Applications
+can
+send messages thru ports. Choice/Join arbiters coordinate how messages
+are consumed from ports and how handlers are called. (similar to CCR's
+ports)<br>
+  </li>
+  <li>Signals and Slots objects provide direct support for "localized"
+event dispatching. Slots objects identify the bindings between&nbsp;
+event source (signal) and callbacks; Deletion of either signal or slots
+will remove these bindings automatically.<br>
+  </li>
+</ul>
+&nbsp;&nbsp;&nbsp; Ports and Signals are simple template specialization
+of
+Named_Out and Named_Ins with null_id (unnamed!) and proper dispatchers
+(pull dispatcher for Port and push dispatcher for Signal/Slot). They
+can be customized by template parameters just as normal
+channel entities, e.g. Port can be customized with different queue
+types and Signal/Slot can be customized with different dispatching
+algorithms (broadcast, round-robin ...). Ports and Signals are well
+integrated with "named" entities:<br>
+<ul>
+  <li>Ports can participate in the same Choice/Join arbiter as
+"ids/names"; so arbiters can coordinate both local and remote messages.
+Some important usage of this is to implement the timeout or exception
+exit of Choice/Join. A timer generate events into a timeout port which
+can be included in a Choice. Choice could receive timeout message and
+exit when it happens.</li>
+  <li>Ports and Signals can later be attached to names in name space;
+so they become normal "named" entities and can enjoy binding thru
+name-matching and remote message passing as usual.</li>
+</ul>
+<div style="margin-left: 40px;"></div>
+<h4><a class="mozTocH4" name="mozTocId970853"></a>4.5 Application
+architecture and integration</h4>
+Channel is intentionally designed to be indepedent of threading models
+and connection strategies. So channel can be helpful to implement
+various applications with different designs of threading and connection:<br>
+<ul>
+  <li>event dispatching/callbacks based applications: such as GUI
+frameworks where there is no explicit mentioning of thread (single
+threaded)</li>
+  <li>asynchronous I/O based server applications: such as servers based
+on Boot.Asio, eventlib or libasync; in these kind of servers, there may
+be single or a few "main" threads driving the reactive or proactive
+main event loop; all threads play equal role.</li>
+  <li>active objects or communicating processes based design: this is
+the original target applications of Channel; they are popular in large
+scale distributed embedded systems design. In these designs, the whole
+system is partitioned into many interacting processes/threads; each of
+which performs a specific functionality (defined mostly by its
+publishing/sending names-set and subscribing/receiving names-set),
+maintains/own a part of system
+state (finite state machines) and interacting with each other ONLY thru
+message passing. No one can directly change the system state owned by
+another process/thread; Change requests can only be sent to owner
+process/thread as messages and owner can reasonably reject them.</li>
+  <li>thread pool based server design: In these systems, servers' job
+can be partitioned into scheduling units - tasks, which are dispatched
+to a dedicated pool of threads for execution. There are two kind of
+threads in system: <br>
+  </li>
+  <ul>
+    <li>master threads: listening for incoming client requests and
+dispatch tasks to pool</li>
+    <li>worker threads: member of pool, waiting for tasks and execute
+them</li>
+  </ul>
+</ul>
+Channel's independence of threading and connection also makes it easy
+to integrate Channel with exising server applications of various
+designs. Basically we'll write wrapper classes to glue channel to
+existing server mechanisms:<br>
+<ul>
+  <li>"executors" wrappers to integrate channel's asynchronous
+operations execution into servers' threading model</li>
+  <li>"streams" wrappers to implement remote channel connection thru
+server existing connection strategies<br>
+  </li>
+</ul>
+<div style="margin-left: 40px;"></div>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId39115"></a>5. Classes</h3>
+<h4><a class="mozTocH4" name="mozTocId591675"></a>5.1 name space related</h4>
+<h4><a class="mozTocH4" name="mozTocId899602"></a>5.1.1 name spaces</h4>
+&nbsp;&nbsp;&nbsp; The major purpose of name space is to set up the
+bindings among named_outs and named_ins based on id-matching and
+scoping rules. There are 3 kinds of name spaces:<br>
+<ul>
+  <li><a href="../../../boost/channel/name_spaces/linear_name_space.hpp">linear
+name_space (with exact matching)<br>
+    </a></li>
+  <li><a
+ href="../../../boost/channel/name_spaces/hierarchical_name_space.hpp">hierarchical
+name_space (with prefix matching)</a><br>
+  </li>
+  <li>associative
+name_space (implemented as linear name space with associative matching)<br>
+  </li>
+</ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name space API are fixed, must support
+the following methods:<br>
+<div style="margin-left: 40px;">void bind_named_out(name *n);<br>
+void unbind_named_out(name *n);<br>
+void bind_named_in(name *n);<br>
+void unbind_named_in(name *n);<br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId828224"></a> 5.1.2 id_type and
+id_trait </h4>
+As described above, various id_types (integer, string, PODS, pathnames,
+tuples etc) can be used for different applications and name spaces. To
+support
+name binding operations, id_type should support the following
+operations:<br>
+<ul>
+  <li>id_types used for linear name space support operator&lt;() for
+linear "ordering" among ids</li>
+  <li>id_types used for hierarchical name space support "containment"
+operation to decide among 2 ids which will contain the other</li>
+  <li>all id_type should define "match" operation in its id_trait
+classes:</li>
+</ul>
+<ul>
+  <ul>
+    <li>For ids in linear name space, we define exact match in <a
+ href="../../../boost/channel/name_spaces/linear_id_trait.hpp">linear_id_trait</a><br>
+    </li>
+    <li>For ids in hierarchical name space, we define prefix match in <a
+ href="../../../boost/channel/name_spaces/hierarchical_id_trait.hpp">hierarchical_id_trait</a>
+(ie.
+"/sports/*" will match both "/sports/basketball" and
+"/sport/baseball")&nbsp; <br>
+    </li>
+    <li>For ids in associative name space, ids will be either regex or
+tuples
+containing
+multiple fields; for regex ids, regex pattern matching is used; for
+tuple ids, 2 ids will match if all their fields match or some
+fields are wildcards. regex ids and tuple ids are defined in <a
+ href="../../../boost/channel/name_spaces/assoc_id_trait.hpp">assoc_id_trait</a>.<br>
+    </li>
+  </ul>
+</ul>
+To be able to use primitive data types as name space ids, containment
+and matching operations are defined inside id_trait classes.<br>
+For channels to be connected with remote name spaces, non-primitive
+id_type should define serialize() methods to allow ids be marshaled and
+demarshaled using Boost.Serialization.<br>
+Id_trait classes also contain definitions of the following 8 system ids:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type channel_conn_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type channel_disconn_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type
+init_subscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type connection_ready_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type subscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type unsubscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type publication_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type unpublication_info_msg.<br>
+These ids are used internally for channel name space management.
+Applications can also subscribe to these system ids to receive
+notifications about name space changes and add application logic to
+react properly; for example:<br>
+<ul>
+  <li>start communication when remote channels connect in or remote
+peers join
+in.<br>
+  </li>
+  <li>perform special handlings when channel disconnect.<br>
+  </li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId856863"></a>5.1.3 name and name
+binding callback</h4>
+Class <a href="../../../boost/channel/name.hpp">name</a>
+is an internal class; application code will not use names
+directly however. Applications will instantiate <a
+ href="../../../boost/channel/named_in_out.hpp">named_out
+and named_in</a> to set up message passing logic.<br>
+Class <a href="../../../boost/channel/name.hpp">name</a>
+contains the most important information in name space: id,
+scope, membership and binding_set.<br>
+When Named_In and Named_Out are instantiated, a name binding callback
+can be specified to allow applications to be notify when peers bind
+to the name. Its signature :<br>
+<span style="font-weight: bold;">void binding_callback(name *n,
+typename name::binding_event e).</span><br>
+<h4><a class="mozTocH4" name="mozTocId915384"></a>5.1.4 named_out and
+named_in; publisher and subscriber</h4>
+Class <a href="../../../boost/channel/named_in_out.hpp">named_out
+and named_in</a> are where name space and dispatcher meets.
+In fact, they inherit from both class name and dispatcher.<br>
+Class <a href="../../../boost/channel/named_in_out.hpp">named_out_bundle
+and named_in_bundle</a> are helper classes to
+conveniently use a group of name bindings.<br>
+On top of named_out_bundle and named_in_bundle, class <a
+ href="../../../boost/channel/pub_sub.hpp">publisher
+and
+subscriber</a> provide direct support for publish/subscribe model.<br>
+<h4><a name="unnamed_class"></a>5.1.5 <a
+ href="../../../boost/channel/unnamed_in_out.hpp">unnamed in/out: port
+and signal/slot</a></h4>
+Class port provides direct support for localized tightly coupled
+message passing model. Port inherit pull_dispatcher's sender which
+inherit queue class. So port can be used directly as a message queue
+and application can put messages into it and get messages from it.
+However ports are mostly used with choice/join arbiters.<br>
+Class signal/slot support localized "unnamed" event dispatching model.<br>
+<h4><a class="mozTocH4" name="mozTocId750531"></a><a
+ href="../../../boost/channel/binder.hpp">5.1.6
+binder, filter and translator</a></h4>
+Filters and translators are defined to control name space changes
+during name space connection and binding. Binders contain both filters
+and translators and are specified in channel connection function calls.
+APIs and dummy operations of binders, filters and translators are
+defined <a href="../../../boost/channel/binder.hpp">here,</a><br>
+<h4><a class="mozTocH4" name="mozTocId985604"></a>5.2 dispatching
+related</h4>
+<h4><a class="mozTocH4" name="mozTocId308124"></a>5.2.1 dispatchers</h4>
+As we discussed above, dispatchers have 2 parts: sending and receiving
+algorithms.
+Dispatcher's API are not fixed, depending on whether it uses push or
+pull model and it is synchronous or asynchronous. The following sample
+dispatchers are provided:<br>
+<ul>
+  <li><a
+ href="../../../boost/channel/dispatchers/push_dispatcher_base.hpp">push
+dispatchers</a>:<br>
+  </li>
+  <ul>
+    <li><a
+ href="../../../boost/channel/dispatchers/broadcast_dispatcher.hpp">broadcast_dispatcher</a>:
+      <br>
+    </li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">senders/named_out broadcast
+messages/events to all bound receivers/named_in. This is the most
+common event dispatching semantics.<br>
+</div>
+<ul>
+  <ul>
+    <li><a
+ href="../../../boost/channel/dispatchers/round_robin_dispatcher.hpp">round_robin_dispatcher</a>:&nbsp;</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">senders/named_out send messages/events
+to bound receivers/named_in in round-robin manner. Simple server load
+balance can be achieved thru this.<br>
+</div>
+<ul>
+  <ul>
+    <li><a
+ href="../../../boost/channel/dispatchers/always_1st_dispatcher.hpp">always_latest_dispatcher</a>:</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">senders/named_out always send
+messages/events to the latest bound receivers/named_in. This is a
+dispatcher to simulate plan9's union directory (though most semantics
+is achieved thru nam space binding/connection). Suppose we use an id
+(such as "/dev/printer") represent a printer resource. To print
+something, we send a message to that id. On another machine there is
+another printer bound to the same id in their local channel.&nbsp; To
+be able to use the 2nd printer, we could connect or mount the remote
+channel to local channel. Then if always_latest_dispatcher is used, all
+following printouts (sent to&nbsp; /dev/printer) will come from the
+remote printer. The local printer will get
+print messages again after the channels disconnect.<br>
+</div>
+<ul>
+  <li><a
+ href="../../../boost/channel/dispatchers/pull_dispatcher_base.hpp">pull
+dispatcher</a>:</li>
+</ul>
+<div style="margin-left: 40px;">In pull dispatcher, messages/events are
+buffered inside channel at Named_Outs, high level messaging
+coordination patterns - "arbiters" are defined at Named_Ins to decide
+when and how messages are pulled from Named_Outs and consumed by
+receiving threads or callbacks.<br>
+</div>
+<ul>
+  <ul>
+    <li><a href="../../../boost/channel/dispatchers/arbiters_sync.hpp">synchronous
+arbiters (choice_sync, join_sync)</a>:</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">Both senders and
+receivers are active threads. Messages are buffered inside channel at
+sender/named_out side and sending thread returns right away. Receiving
+threads block waiting messages at synchronous arbiters. They unblock
+and process messages when messages are
+available at named_outs and their associated arbiters fired.<br>
+</div>
+<ul>
+  <ul>
+    <li><a href="../../../boost/channel/dispatchers/arbiters_async.hpp">asynchronous
+arbiters (choice_async, join_async)</a>:</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">Callbacks are registered with
+asynchronous arbiters. Messages are buffered inside channel at
+sender/named_out
+side and sending thread will notify receivers before return. Depending
+on arriving messages, asynchronous arbiters will decide which callbacks
+will fire; and schedule them to execute in an executor. Join arbiters
+will quarantee that
+related messages are consumed atomically.<br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId187818"></a>5.2.2 messages</h4>
+<ul>
+</ul>
+<div style="margin-left: 40px;">Application message/event data can be
+any data type : primitives, structs and classes.&nbsp; For remote
+message passing, proper serialization functions must be defined using
+Boost.Serialization:<br>
+<ul>
+  <li>free serialization functions for non-intrusive serialization<br>
+  </li>
+  <li>message struct and classes can define serialize() methods; and
+should
+define default construtor for serialization, otherwise
+save_construct/load_construct need to be overwritten.</li>
+</ul>
+Please refer to the tutorials for sample message definitions.<br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId953831"></a>5.2.3 queues</h4>
+Queues are used for inside channel message buffering. One of pull
+dispatcher's template parameter is queue type. Various applications can
+specify and use different queue types based on applications'
+requirements and queues' capability. Queues will support the following
+common interface:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+put(elem_type &amp; e);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+get(elem_type &amp; e);</span><br style="font-weight: bold;">
+<br>
+The following sample queue implementations are or will be provided:<br>
+<ul>
+  <li><a href="../../../boost/channel/queues/unbounded_queue.hpp">unbounded_queue</a>:
+a simple synchronized queue with unlimited buffer size, so senders are
+never blocked.<br>
+  </li>
+  <li><a href="../../../boost/channel/queues/bounded_queue.hpp">bounded_queue</a>:
+a synchronized queue bounded with a maximum number of buffered
+messages; when queue buffer is full, the senders will be blocked till
+some messages are removed from the queue.<br>
+  </li>
+  <li><a href="../../../boost/channel/queues/dropping_queue.hpp">dropping_queue</a>:
+a synchronized queue bounded with a maximum number of buffered
+messages; when queue buffer is full, newly added messages will force
+oldest messages to be dropped and senders will never be blocked.<br>
+  </li>
+  <li>flow_controlled_queue (coming): a flow controlled queue
+supporting priority based message enqueue and dequeue; modelled after
+ACE's message queue<br>
+  </li>
+  <li>timed_queue (coming): modelled after JavaSpace's "Lease on
+entries" mechanism; for each message inserted into queue, a time-out
+value will be specified; the message will be dropped if it is not
+consumed by receivers when its time-out expires.<br>
+  </li>
+</ul>
+<ul>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId573559"></a>5.2.4 executors<br>
+</h4>
+Executors allow us avoid explicitly spawning threads for asynchronous
+operations; thus avoiding thread life cycle overhead and resource
+consumption. &nbsp; Executors should support the following common
+interface to allow application register asynchronous operations to be
+executed later and cancel this registration:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename task_type&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+async_task_base * execute(task_type
+task);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bool
+cancel(async_task_base *task);</span><br style="font-weight: bold;">
+<br>
+The following sample executors are provided:<br>
+<ul>
+  <li><a href="../../../boost/channel/executors/in_place_executor.hpp">in_place_executor</a>:
+just run the asynchronous task in current
+thread and current calling context.<br>
+  </li>
+  <li><a href="../../../boost/channel/executors/delayed_executor.hpp">delayed_executor</a>:
+asynchronous task is queued and calling thread
+returns. The queued tasks can be executed later by calling run().<br>
+  </li>
+  <li><a href="../../../boost/channel/executors/asio_executor.hpp">asio_executor</a>:
+a wrapper over asio's io_service.post() method.
+asynchronous tasks will be dispatched to asio's main thread to execute.<br>
+  </li>
+  <li><a
+ href="../../../boost/channel/executors/thread_pool_executor.hpp">thread_pool_executor</a>:
+a dedicated pool of threads executing
+submited tasks.</li>
+  <li><a href="../../../boost/channel/executors/threadpool_executor.hpp">threadpool_executor</a>:
+a wrapper over Philipp Henkel's <a
+ href="http://threadpool.sourceforge.net">threadpool</a> library<br>
+  </li>
+</ul>
+There are two places to plugin executors in framework:<br>
+<ul>
+  <li>channel-wide.</li>
+</ul>
+<div style="margin-left: 40px;">specifying an executor when channel is
+created. By default, all asynchronous operations (event/message
+callbacks, name binding callbacks,...) will be scheduled and executed
+in this executor.<br>
+</div>
+<ul>
+  <li>where callbacks are bound.</li>
+</ul>
+<div style="margin-left: 40px;">For example, some applications may want
+to give different priorities to handling different event ids (or
+message types). We can create several
+executors with their threads running in different scheduling priority;
+and specify proper executors when named_in and named_out are created.<br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId872320"></a>5.3 connection related</h4>
+<h4><a class="mozTocH4" name="mozTocId460401"></a>5.3.1&nbsp; global
+functions for connecting channels </h4>
+There are 3 overloaded global functions for connecting channels:<br>
+<ul>
+  <li>one for connecting 2 local channels of the same type:</li>
+</ul>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename channel&gt;<br>
+typename channel::connection*
+connect(channel &amp;peer1, channel &amp;peer2,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typename channel::binder_type *binder1 = NULL, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typename channel::binder_type *binder2 = NULL)</span><br
+ style="font-weight: bold;">
+connecting 2 local channels so that peers at both channels can
+communicate to each other transparently. binders1 (containing filter
+and translator) defines how channel peer1's name space will be changed.
+<br>
+</div>
+<ul>
+  <li>&nbsp;one for connecting 2 local channels of different types:</li>
+</ul>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename channel1, typename channel2&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+typename channel1::connection* connect(channel1 &amp;peer1, channel2
+&amp;peer2,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typename channel1::binder_type *binder1 = NULL, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; typename channel2::binder_type *binder2 = NULL);</span><br>
+<ul>
+  <li>one for connecting local channel
+to remote channels (streams):</li>
+</ul>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename channel, typename stream_t&gt;<br>
+connection*
+connect(channel &amp;peer, </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;
+stream_t * stream, </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp; bool
+active,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;
+typename channel::binder_type *binder = NULL)<br>
+</span></div>
+<h4 style="margin-left: 40px;"><span class="mozTocH4"></span><span
+ class="mozTocH4"></span><span style="font-weight: normal;">Normally a
+connection to remote channel
+is represented as a "stream" objtect (tcp/ip socket connection or
+shared memory connection). This connect() function is used to connect a
+local channel to a remote channel represented by the stream.</span><br>
+</h4>
+<h4><a class="mozTocH4" name="mozTocId964803"></a>5.3.2 connection</h4>
+Class <a href="../../../boost/channel/connection.hpp">connection</a>
+represent the connection between 2 channels. Deleting a connection
+object will break the connection between 2 channels; and deleting any
+of the member channels will result in connection object being
+deleted.&nbsp; <br>
+<h4><a class="mozTocH4" name="mozTocId581357"></a>5.3.3 peer and
+interface</h4>
+Class <a href="../../../boost/channel/peer.hpp">peer</a> defines the
+common base class of connection proxies such as interface and streams.
+Normally application code will not need class peer, unless creating a
+new channel connection mechanism such as SOAP based streams.<br>
+Class <a href="../../../boost/channel/interface.hpp">interface</a> is
+the proxy between its owner channel and a peer channel. It contains all
+the logic for how remote name space will be "mounted" at local name
+space and how local name space change will propagate to the remote name
+space and vice versa. It is here that filters filt message ids and
+translators translate incoming and outgoing messages<br>
+<h4><a class="mozTocH4" name="mozTocId567580"></a>5.3.4 streams</h4>
+Streams are proxies for remote channels and wrap transport mechanisms.
+The following streams are and will be provided:<br>
+<ul>
+  <li><a href="../../../boost/channel/streams/asio_stream.hpp">asio_stream</a>:
+a stream class using Boost.Asio socket to connect to peer channels.<br>
+  </li>
+  <ul>
+    <li><a href="../../../boost/channel/streams/asio_connector.hpp">asio_connector</a>:
+a helper class providing 2 functions:</li>
+    <ul>
+      <li>publishing local channels at specific ports (so that remote
+peer channel can connect)</li>
+    </ul>
+  </ul>
+</ul>
+<div style="margin-left: 120px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename sock_conn_handler&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+async_accept(int port, sock_conn_handler hndl) ;</span><br>
+</div>
+<ul>
+  <ul>
+    <ul>
+      <li>connecting to remote channels at their publication addresses
+(host, port):</li>
+    </ul>
+  </ul>
+</ul>
+<div style="margin-left: 120px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename sock_conn_handler&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+sync_connect(std::string host, std::string port, sock_conn_handler
+hndl) ;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename sock_conn_handler&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+async_connect(std::string host, std::string port, sock_conn_handler
+hndl) ;</span><br>
+</div>
+<ul>
+  <li><a href="../../../boost/channel/streams/shmem_stream.hpp">shmem_stream</a>:
+a stream class using Boost.Interprocess shared memory message queues to
+connect to channels in a separate process inside the same node.<br>
+  </li>
+  <li>soap_stream (coming): use SOAP protocol to connect to remote
+channels<br>
+  </li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId711260"></a>5.3.5 marshaling
+registry</h4>
+<h4><a class="mozTocH4" name="mozTocId128213"></a>5.4 platform
+abstraction policy and synchronization policy<br>
+</h4>
+<h4><a class="mozTocH4" name="mozTocId345412"></a>5.4.1 platform
+abstraction</h4>
+Platform independence is one key factor for Channel's portability.
+Channel's internal implementation depends on some system facilities,
+such as
+mutex, condition, timers and logging. Various platforms have different
+levels of support and different APIs for these system facilities. Some
+boost libraries already provide nice wrappers over system facilities
+such as Boost.Thread and Boost.Date_Time. However for some system
+functions, boost doesn't have an approved library yet, such as logging.
+Class <a href="../../../boost/channel/platforms/boost_platform.hpp">boost_platform</a>
+is a platform policy class defined to support platform independence.
+All the system facilities Channel uses for internal implementation are
+either defined as nested classes wrapped inside it or its static
+methods. To port Channel to a different software/hardware platform, one
+major work is to reimplement the platform policy class using native
+functions (another is coping with compiler difference). Take logging
+for example, in future if we have a portable boost library for it, we
+could redefine boost_platform class to interface to it. Otherwise for a
+Windows specific application, we can implement platform class logging
+API using Windows event log facility; for linux based application, we
+can use syslog.<br>
+<h4><a class="mozTocH4" name="mozTocId405486"></a>5.4.2 synchronization
+policy</h4>
+Modeled after ACE's synchronization wrapper facades (ACE_Thread_Mutex,
+ACE_Null_Mutex, ACE_Null_Condition,...) and Null Object&nbsp; pattern,
+two "no-op" classes null_mutex and null_condition are defined. They
+follow the same interface as their counterparts in Boost.Thread and
+implement the methods as "no-op" inline functions, which can be
+optimized away by compilers. Also modeled after ACE's Synch_Strategy
+classes (MT_SYNCH, NULL_SYNCH) and Strategized Locking pattern, two
+synchronization policy classes are defined: <a
+ href="../../../boost/channel/platforms/synch_policy.hpp">mt_synch and
+null_synch</a>. mt_synch is for multithreaded applications which
+contains Boost.Thread's mutex/condition classes as nested types.
+null_synch is for single-threaded applications whose nested types are
+"null" types we mentioned above. synchronization policy class is one of
+channel template parameters which we can use either mt_synch for
+channel to be used in multithreaded application or use null_synch for
+single threaded application (such as event dispatching) without
+incurring overhead. The usage is different from the above mentioned
+platform independence, it is for application requirement and efficiency.<br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId283551"></a>6. Class Concepts and
+How to extend
+Channel framework</h3>
+One essential task of Generic Programming is to find the set of
+requirements for each class/type so that the template framework can
+compile and operate properly. These requirements are called "concepts"
+and include the following:<br>
+<ul>
+  <li>valid expressions</li>
+  <li>associated types</li>
+  <li>invariants</li>
+  <li>complexity guarantees</li>
+</ul>
+To extend Channel framework, new classes / types must satisfy the
+requirements of its "concept" so that code can compile and run.<br>
+In the following discussions, we classify 2 kinds of requirements:<br>
+<ul>
+  <li>Primary requirements: must be satisfied for the main framework
+design idea<br>
+  </li>
+  <li>Secondary requirements: should be satisfied per local
+implementations<br>
+  </li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId162285"></a>6.1 id_type and
+id_trait</h4>
+<ol>
+  <li>Primary requirements</li>
+</ol>
+<div style="margin-left: 40px;">For each id_type, a partially
+specialized template class id_trait should be defined with the
+following definitions:<br>
+<ul>
+  <li>nested/associated types: id_type</li>
+  <li>system internal message ids/names:</li>
+</ul>
+<div style="margin-left: 40px;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static
+id_type channel_conn_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type channel_disconn_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type
+init_subscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type connection_ready_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type subscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type unsubscription_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type publication_info_msg;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static id_type unpublication_info_msg<br>
+</div>
+<ul>
+  <li>match() method: define the id-matching algorithm</li>
+  <li>serialize() method: marshaling/demarshaling method for passing id
+to remote channel (only need for user defined class / structs as
+id_type) &nbsp;&nbsp; <br>
+  </li>
+  <li>for the code to work in Windows/VC++, the class definition should
+contain BOOST_CHANNEL_DECL. </li>
+</ul>
+</div>
+<ol start="2">
+  <li>Secondary requirements</li>
+</ol>
+<div style="margin-left: 40px;">Per implementations, there are the
+following secondary requirements:<br>
+<ul>
+  <li>linear name space</li>
+</ul>
+<div style="margin-left: 40px;">Since current implementation use
+std::map to implement linear name space, user defined id_type must
+define the following methods to satisfy the requirements of std::map :<br>
+bool operator&lt; (const struct_id &amp;id) const<br>
+bool operator== (const struct_id &amp;id) const<br>
+bool operator!= (const struct_id &amp;id) const<br>
+</div>
+<ul>
+  <li>hierarchical name space</li>
+</ul>
+<div style="margin-left: 40px;">Hierarchical name space is implemented
+using trie data structure; to support trie related operations, id_trait
+should add the following definitions:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static token_type
+root_token;&nbsp;&nbsp;&nbsp;&nbsp; //just a name for root trie node,
+not in name_space<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static token_type wildcard_token;<br>
+&nbsp;&nbsp;&nbsp; &nbsp; static bool id1contains2(id_type id1, id_type
+id2)<br>
+<br>
+</div>
+</div>
+<div style="margin-left: 40px;">Here is <a href="assoc_id_text.html">a
+detailed description of how to add id_type and id_trait for associative
+name_space based on Linda-style associative lookup</a>.<a
+ href="assoc_id_text.html"></a><br>
+</div>
+<h4><a class="mozTocH4" name="mozTocId605583"></a>6.2 name space</h4>
+<ol>
+  <li>Primary requirements</li>
+</ol>
+<div style="margin-left: 40px;">
+<ul>
+  <li>nested/associated types:</li>
+</ul>
+<div style="margin-left: 40px;">id_type;<br>
+id_trait;<br>
+synch_policy;<br>
+executor;<br>
+platform;<br>
+name;<br>
+</div>
+<ul>
+  <li>name space management methods:</li>
+</ul>
+<div style="margin-left: 40px;">void bind_named_out(name *n)<br>
+void unbind_named_out(name *n)<br>
+void bind_named_in(name *n)<br>
+void unbind_named_in(name *n)<br>
+</div>
+</div>
+<ol start="2">
+  <li>Secondary requirements<br>
+  </li>
+</ol>
+<div style="margin-left: 40px;">name space query related:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; template &lt;typename Predicate&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void bound_ids_for_in(Predicate p,
+std::vector&lt;id_type&gt; &amp;ids)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; template &lt;typename Predicate&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void bound_ids_for_out(Predicate p,
+std::vector&lt;id_type&gt; &amp;ids)<br>
+executor_type * get_exec(void)<br>
+<br>
+</div>
+Please refer to <a
+ href="../../../boost/channel/name_spaces/linear_name_space.hpp">linear_name_space.hpp</a>
+and
+<a href="../../../boost/channel/name_spaces/hierarchical_name_space.hpp">hierarchical_name_space.hpp</a>
+for detailed code.<br>
+<h4><a class="mozTocH4" name="mozTocId379587"></a>6.3 dispatcher</h4>
+Dispatchers are used as policy classes for channel template. As
+discussed above, each dispatcher contains 2 algorithms: sending and
+receiving.<br>
+Dispatchers' API are not fixed, depending on whether it uses push or
+pull model and it is synchronous or asynchronous. The API of provided
+dispatchers follow the general convention of providing various
+send() and recv().
+<ol>
+  <li>Primary requirements</li>
+</ol>
+<div style="margin-left: 40px;">Each dispatcher class should define 2
+nested types:<br>
+<ul>
+  <li>sender </li>
+  <li>recver</li>
+</ul>
+These nested types are the parent classes of named_in and named_out.<br>
+Inside dispatcher nested types (sender and receiver classes),
+dispatching algorithms retrieve name binding set from associated "name"
+object.<br>
+</div>
+<ol start="2">
+  <li>Secondary requirements</li>
+</ol>
+<div style="margin-left: 40px;">For dispatchers which are used in
+channel types with possible remote connections, the nested receiver
+classes will expect the callback function's signature as :<br>
+&nbsp;&nbsp;&nbsp; void callback(id_type id,
+boost::shared_ptr&lt;void&gt; msg).<br>
+This requirement is because of the implementation of "interface" class.<br>
+<br>
+</div>
+Here is a <a href="../example/sample_dispatcher/dispatcher_text.html">detailed
+description of a
+sample pull dispatcher</a>.<br>
+<div style="margin-left: 40px;"></div>
+<h4><a class="mozTocH4" name="mozTocId872924"></a>6.4 executor</h4>
+<h4><a class="mozTocH4" name="mozTocId760775"></a>6.5 queue</h4>
+<h4><a class="mozTocH4" name="mozTocId441870"></a>6.6
+streams/connectors (or integrate into new architecture)</h4>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId631535"></a>7. Compare Channel to
+others (plan9, STL)</h3>
+<h4><a class="mozTocH4" name="mozTocId547030"></a>7.1 Compare
+Unix/Plan9/Inferno file-system name space and Channel's name space</h4>
+In Unix and other OSes, file system provides the machine-wide
+hierarchical name space for most system resources. Applications
+use&nbsp; resources mostly by the standard file system calls:
+open/close/read/write. By mounting remote file-systems, remote name
+space (and resources) can be imported and accessed transparently by
+local applications.<br>
+Plan9/inferno push this idea further by 3 ideas: 1. all resources are
+represented as files. 2. each process has its own private name space
+which can be customized according to applications' requirements. 3. an
+uniform protocol - 9P is used for all remote message passings.[1][2]<br>
+<br>
+Channel provides a process local name space for asynchronous message
+passing and event dispatching. Compared to unix/plan9 name space:<br>
+<ul>
+  <li>Channel's name space is a light-weight user-space data structure;
+A process can create and use multiple name spaces for different
+purpose.
+Unix(plan9/inferno)'s name space is a more fundamental kernel feature
+well integrated with all system facilities (shell, window system,..).
+Each process has only one. </li>
+  <li>file-system name spaces are based on function-call (local or
+remote procedure call) or (request-response) semantics. Channel's name
+space is for asynchronous message passing or one way request.</li>
+  <li>file-system name spaces are based on normal client-server model:
+file servers purely serve; ie. clients will import names from servers,
+but servers never import names from clients. Channel is peer-peer
+model; connected channels will import names from each other for
+communication.</li>
+  <li>In file-system name spaces, names refer to assumely
+stable/permanent entites (either disk files or long-running servers);
+file name spaces are relatively static, ie, a specific name mostly
+refer to
+the same resource either local or from a specific server; operations on
+names with stale/empty binding will result in serious errors. Channel
+name spaces are purely dynamic. It is totally valid to have a Named_Out
+object in name space without bound Named_In object (since message
+subscribers may join in later). The binding of names (bound senders or
+receivers) can be different between this and next invocations. Just as
+RobinMilner has clarified [3]: &nbsp;&nbsp;&nbsp; <br>
+  </li>
+</ul>
+<div style="margin-left: 40px;">"... is built upon the idea that the
+respondent to (or referent of) a name<br>
+exists no more persistently than a caller of the name. In other words,
+the notions of<br>
+calling and responding are more basic than the notions of caller and
+respondent; every<br>
+activity contains calls and responses, but to have a persistent
+respondent to x &#8211; one that<br>
+responds similarly to every call on x &#8211; is a design choice that may be
+sensible but is<br>
+not forced."<br>
+</div>
+<ul>
+  <li>File-systems identify entities by string path names in a
+hierachical directories. Channel use different naming schemes in
+different applications:
+linear name space (such as integer ids), hierarchical name space (such
+as
+string path names), and associative name space (linda style)</li>
+  <li>in plan9, request dispatching is unicast - only one server get
+req and serve it. Channel can support various dispatching policies -
+broadcast, unicast, buffered,...</li>
+  <li>file-system api is stream oriented: byte-streams are read from
+file or write to file. channel's api is discrete message oriented.</li>
+</ul>
+<h4><a class="mozTocH4" name="mozTocId82643"></a>7.2 compare STL and
+Channel</h4>
+Some mapping between STL and Channel's concepts:<br>
+<ul>
+  <li>containers (sequence, assoc) &lt;=&gt; name spaces
+(linear/hier/assoc)</li>
+  <li>elements in container &lt;=&gt; names (unit/element in name space)</li>
+  <li>iterator_range (target of algorithms) &lt;=&gt; name binding set
+(sender-&gt;receiver(s), receiver-&gt;sender(s)) target of dispatchers</li>
+  <li>algorithms &lt;=&gt; dispatchers</li>
+</ul>
+Dispatchers are defined using named bindings of senders and receivers,
+which is provided by name space; similar to that STL algorithms are
+defined in iterator range of [begin_iterator, end_iterator), while
+iterator range is provided by containers.<br>
+<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a class="mozTocH3" name="mozTocId802804"></a>8. Reference Links</h3>
+[1] <a href="http://plan9.bell-labs.com/sys/man/preface.html">Preface
+to the Second (1995) Edition (Doug McIlroy)</a><br>
+[2] <a href="http://cm.bell-labs.com/sys/doc/names.html">The Use of
+Name Spaces in Plan 9 (Rob Pike,...)</a><br>
+[3] <a href="http://www.cl.cam.ac.uk/%7Erm135/wosname.pdf">What's in a
+name? (Robin Milner)</a><br>
+[4] <a href="http://www.cl.cam.ac.uk/%7Erm135/turing.pdf">Turing,
+Computing and Communication (Robin Milner)</a><br>
+[5] <a
+ href="http://research.microsoft.com/Users/luca/Papers/Polyphony%20%28TOPLAS%29.pdf">Comega</a><br>
+[6] <a
+ href="http://research.microsoft.com/%7Etharris/scool/papers/sing.pdf">CCR</a><br>
+[7] <a href="http://jcip.net/jcip-sample.pdf">Java's executor</a><br>
+[8] <a href="http://channel.sourceforge.net">http://channel.sourceforge.net</a><br>
+<br>
+<br>
+<br>
+<platform_type><idtype ,executor_type,synchpolicy=""><name_space
+ ,platform_type=""></name_space></idtype></platform_type>
+</body>
+</html>

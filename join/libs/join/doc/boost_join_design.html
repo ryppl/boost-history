@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Join Design</title>
+  <meta content="Yigong Liu" name="author">
+  <meta content="Join Design Doc" name="description">
+</head>
+<body>
+<h2 style="text-align: center;">Join - Asynchronous Message Based
+Concurrency
+Library
+Based on C&#969; and Join Calculus</h2>
+<div style="text-align: center;">
+<h2>Yigong Liu (2007-2008)</h2>
+<h4>yigongliu@gmail.com<br>
+</h4>
+<hr style="width: 100%; height: 2px;">
+<ol style="text-align: left;" id="mozToc">
+<!--mozToc h3 1--> <li><a href="#mozTocId387457">Introduction</a></li>
+  <li><a href="#mozTocId255758">License</a></li>
+  <li><a href="#mozTocId689036">Installation</a></li>
+  <li><a href="#ack">Acknowlegments</a><br>
+  </li>
+  <li><a href="./staticjoin.html">Join Programming Model 1: Static
+Class Based (C&#969;
+Style)</a></li>
+  <li><a href="./dynamicjoin.html">Join Programming Model 2: Dynamic
+Flow Based (JoCaml
+and
+CCR Style)</a></li>
+  <li><a href="./internals.html">Join Internals</a><br>
+  </li>
+  <li><a href="./tutorials.html">Tutorials</a></li>
+  <li><a href="synopsis_func.html">Synopsis of Join Classes (Function
+Based API)<br>
+    </a></li>
+  <li><a href="synopsis_port.html">Synopsis of Join Classes (Port Based
+API)<br>
+    </a></li>
+  <li><a href="source_integration.html">Source
+Code Structures and Integration with Other Libraries</a></li>
+  <li><a href="./concur_design.html">OO Concurrency Designs Based on
+"Join"</a></li>
+  <li><a href="support_shared_state.html">Support for Shared
+State Concurrency<br>
+    </a></li>
+  <li><a href="support_message_passing.html">Support for Message
+Passing Concurrency</a></li>
+  <li><a href="compare_future.html">Compare Join with Futures/Promises</a><br>
+  </li>
+  <li><a href="./compare.html">Compare Join with C&#969;,
+C#.Joins
+and CCR</a></li>
+  <li><a href="./references.html">References</a></li>
+</ol>
+<hr style="width: 100%; height: 2px;"></div>
+<h3><a class="mozTocH3" name="mozTocId387457"></a>Introduction</h3>
+Join is an asynchronous, message based concurrency library based
+on Join calculus. It is applicable both to multithreaded applications
+and
+to the orchestration of asynchronous, event-based applications.<br>
+<br>
+Join follows the design and implementation of C&#969;[1][2] with
+slight derivation.&nbsp; C&#969; is an experimental language based on C#
+with a new compiler to support Join abstractions. <br>
+<br>
+Join supports asynchronous concurrency design with a few simple
+abstractions:<br>
+<ol>
+  <li>
+    <h4>&nbsp;asynchronous and synchronous "methods"/"channels" </h4>
+  </li>
+</ol>
+<div style="text-align: left;">
+<div style="margin-left: 40px;">These are function objects with
+function
+signatures which can either be invoked as normal methods and functions,
+or used as channels of message flows. Their semantics are different
+from normal methods.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>&nbsp;&nbsp; <span style="font-weight: bold;">async&lt;void
+(T1, T2, ...)&gt;</span></li>
+</ul>
+<div style="margin-left: 80px;">A asynchronous function is one-way,
+no-result, non-blocking calls; essentially passing a message. A
+asynchronous call is guaranteed to return immediately; internally there
+could be a queue to buffer the arguments or message.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>&nbsp;&nbsp; <span style="font-weight: bold;">synch&lt;R
+(T1, T2, ...)&gt;</span></li>
+</ul>
+<div style="margin-left: 80px;">A synchronous call is similar to normal
+method call, in that the calling thread will block till result is
+returned. However a normal method call just
+involve the calling thread, a synch&lt;&gt; call could involves
+multiple threads and synchronization<br>
+</div>
+</div>
+<ol start="2">
+  <li>
+    <h4>chords or "joined" method body definition</h4>
+  </li>
+</ol>
+<div style="margin-left: 40px;">A chord defines a method body for a
+joined set of function headers; or define message processing
+logic handling multiple incoming message flows.<br>
+</div>
+&nbsp; &nbsp;<br>
+<div style="margin-left: 40px;">In C&#969;, a thread-safe buffer can be
+defined as following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">public
+class Buffer {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; public async Put(string s);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; public string Get() &amp; Put(string s) { return s; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">} </span><br>
+</div>
+Here a chord is defined with a synchronous Get and asynchronous Put;
+the calling of Get will block if no Put is called yet, otherwise the
+string sent by Put will be returned to Get.&nbsp; &nbsp;<br>
+<br>
+In Join, the class is defined as following:<br>
+<div style="margin-left: 40px;">class buffer: public actor {<br>
+public:<br>
+<span style="font-weight: bold;">&nbsp; async&lt;void(string)&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;string(void)&gt; get;</span><br>
+&nbsp; buffer() {<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(get, put,
+&amp;buffer::chord_body);</span><br>
+&nbsp; }<br>
+<span style="font-weight: bold;">&nbsp; string
+chord_body(synch_o&lt;string(void)&gt; get, async_o&lt;void(string)&gt;
+put) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return put.arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br>
+};<br>
+</div>
+</div>
+<div style="margin-left: 40px;">&nbsp;&nbsp; <br>
+</div>
+<div style="margin-left: 40px;">such a buffer can be safely used in
+multithread applications:<br>
+<div style="margin-left: 40px;">buffer
+b;<br>
+b.put("Hello");
+b.put("World");<br>
+cout &lt;&lt;
+b.get() &lt;&lt; b.get() &lt;&lt; endl;<br>
+</div>
+</div>
+<br>
+<div style="margin-left: 40px;">Difference of Join with C&#969; in
+Chord definitions:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>C&#969;'s chord defintion is "static", declared in class definition,
+cannot change during runtime, can be optimized by compiler.</li>
+  <li>Join's chord definition is "dynamic", created by chord()
+functions, can be changed during runtime.</li>
+</ul>
+<div style="margin-left: 40px;">Since Join's chords are dynamically
+created during runtime, it can support dynamic join programming similar
+to CCR[4].<br>
+</div>
+<ol start="3">
+  <li>
+    <h4>actor (or "joint")<br>
+    </h4>
+  </li>
+</ol>
+<div style="margin-left: 40px;">All application code which use
+async/synch methods and chords to define concurrent behaviours should
+either inherit class actor or use an actor object as a "joint" to join
+message flows together. Actor maintains the internal state
+about the
+message
+arrivals and synchronization, and firing chords when all of their
+messages are available.<br>
+<br>
+</div>
+In Join based applications, with the help of simple thread-pool based
+executors built on top of Join's primitives, we can develop concurrent
+applications without
+explicit usage of threads (thread creation and synchronization);
+concurrency are mostly defined and controlled by chords with only
+async&lt;&gt; methods in header. This make it much easier to write
+efficient and
+scalable applications for today's multicore machines.<br>
+<div style="margin-left: 40px;"></div>
+<h3><a class="mozTocH3" name="mozTocId255758"></a>License</h3>
+Join is licensed under the <a
+ href="http://www.boost.org/LICENSE_1_0.txt">Boost Software License</a>.<br>
+<h3><a class="mozTocH3" name="mozTocId689036"></a>Installation<br>
+</h3>
+Join is continuously being developed and tested in Linux (Fedora
+Core &amp; Ubuntu) and Windows (WindowsXP and Visual C++ 2005 express).
+The
+implementation is solely based on standard boost facilities
+(Boost.Bind, Boost.Function, Boost.Shared_Ptr, etc.) which will be part
+of next C++ standard. <br>
+Download: <a href="http://channel.sourceforge.net/">http://channel.sourceforge.net</a><br>
+Installation: <br>
+Join is a header only library. There is no need to build the
+library itself to use it. Please following these steps:<br>
+<div style="margin-left: 40px;"><a
+ href="http://www.boost.org/more/getting_started.html">download or
+checkout boost distribution</a><br>
+download latest boost_join_x_x.tar.gz<br>
+tar xvzf boost_join_x_x.tar.gz<br>
+add boost's directory and Join's directory to compilers' include
+path<br>
+cd to &lt;boost_join_directory&gt;/libs/join/exmaple<br>
+bjam<br>
+</div>
+<h3><a name="ack"></a>Acknowlegement<br>
+</h3>
+The original theory and systems of Join Calculus / Jocaml are developed
+by C&eacute;dric Fournet, Georges
+Gonthier, Jean-Jacques L&eacute;vy, Luc Maranget and Didier R&eacute;my
+and others at MOSCOVA INRIA.<br>
+At Microsoft Research, C&#969; is developed by Nick Benton, Luca Cardelli,
+C&eacute;dric Fournet and others. Claudio Russo developed the C# Joins
+library which is an efficient combinator library for C&#969;-style join
+patterns, implemented in C# 2.0 generics and accessible from multiple
+.Net languages.<br>
+An earlier version of the Join library described here is based on
+both C&#969; and Jocaml
+which supports multiple synchronous methods per chord (join-pattern)
+and propagation of exceptions to all synchronous callers. <br>
+The current version
+is mostly based on C&#969;, supporting only one synchronous method per chord
+for simplicity and better performance.<br>
+Thanks Dr. Claudio Russo at Microsoft Research for many insightful
+email
+discussions, clarifying many of my questions about C&#969; internals and
+semantics, and many helpful links to other Join based projects.<br>
+Thanks Dr. Luc Maranget at Moscova INRIA for many kind advices and
+links to papers, for pointing out the advantages (simplification and
+optimization) of the single-synch per chord design.<br>
+The functional signature API of async / synch methods is modeled after
+Douglas Gregor's <a href="http://www.boost.org/doc/html/signals.html">Boost.Signals</a>.<br>
+In the earlier version of this Join library which supports multiple
+synchronous methods and exception propagation,&nbsp; the scheme of
+catching
+exceptions in one thread, and rethrowing it in another thread is
+based on Christopher M. Kohlhoff's idea and sample code posted in boost
+email
+list discussions.<br>
+<br>
+<h3><a href="staticjoin.html">Join Programming Model 1: Static Class
+Based (C&#969;
+Style)</a></h3>
+<h3><a href="dynamicjoin.html">Join Programming Model 2: Dynamic Flow
+Based
+(JoCaml
+and
+CCR Style)</a></h3>
+<h3><a style="font-weight: bold;" href="internals.html">Join Internals</a></h3>
+<h3><a href="tutorials.html">Tutorials</a></h3>
+<h3><a href="synopsis_func.html">Synopsis of Join Classes (Function
+Based API)<br>
+</a></h3>
+<h3><a href="synopsis_port.html">Synopsis of Join Classes (Port Based
+API)<br>
+</a></h3>
+<h3><a href="source_integration.html">Source
+Code Structures and Integration with Other Libraries</a></h3>
+<h3><a href="concur_design.html">OO Concurrency Designs Based on
+Join</a></h3>
+<h3><a href="support_shared_state.html">Support for Shared
+State Concurrency</a></h3>
+<h3><a href="support_message_passing.html">Support for Message Passing
+Concurrency</a></h3>
+<h3><a href="compare_future.html">Compare Join with Futures/Promises</a></h3>
+<h3><span style="text-decoration: underline;"></span><a
+ href="compare.html">Compare Join with C&#969;,
+C#.Joins
+and CCR</a></h3>
+<h3><a href="references.html">References</a></h3>
+<br>
+<div style="margin-left: 40px;"></div>
+<span style="font-weight: bold;">
+</span>
+</body>
+</html>

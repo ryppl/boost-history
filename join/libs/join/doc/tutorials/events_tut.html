@@ -1,0 +1,451 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Thread Safe Events Tutorial</title>
+</head>
+<body>
+<h2>Join Thread Safe Events Tutorial</h2>
+Event dispatching is a common design in today's interactive
+applications. Although it is based on the "Observer" design pattern, it
+has been called with different names, such as signals/slots,
+subject/observers or distributors. The common use scenario is that we
+use events to represent "interesting" system changes and application
+code can subscribe to events by registering callback functions /
+methods,
+which will be invoked when events happen. <br>
+<p>The design and implementation of event dispatching or Observer is
+more challenging and involving than how it first looks, just as Andrei
+Alexandrescu has discussed in his two articles
+[http://www.erdani.org/publications/cuj-2005-04.pdf]
+[http://www.erdani.org/publications/cuj-2005-06.pdf]. Most event
+dispatching is single-threaded and callbacks are executed
+by
+the event distributing thread. Multithreaded event dispatching involves
+the following design
+dimensions:</p>
+<ul>
+  <li>Allow subscribing / unsubscribing events concurrently from
+different threads; Events data structures must be thread safe.</li>
+  <li>During the loop of dispatching an event to the list of registered
+callbacks functions / methods, callback code could invoke the event
+interface again, change / delete event subscription or post a new
+event. This is difficult to handle with the "synchronous" semantics of
+normal method calls. It could lead to dead-lock (we need recursive
+mutex for event data structures). The event dispatching loop could be
+corrupted if some subscriptions are deleted during some callbacks,
+since the loop iterators may become
+invalid.
+Join's async methods provide an alternative to solve these issues.<br>
+  </li>
+  <li>When applications run on multi-core machines, we may want the
+callbacks to execute concurrently for better performance.</li>
+</ul>
+Join allow us to experiment with some interesting thread safe
+events designs. In the following we explain three thread safe events
+design with different focus.<br>
+<p><a href="../../examples/func_api/thread_safe_events/event1.cpp">The
+first event design</a> targets thread safety and allows callback
+functions to invoke any events API methods including adding / deleting
+subscriptions and posting new events. We achieve this by exporting all
+of events API as async methods.</p>
+The event class is templated by the type of event<span
+ style="font-weight: bold;"></span> data.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class event: public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+Here we define the callback function / method type.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+typedef boost::function&lt;void(V)&gt; subscriber;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; struct subscription_data {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscriber
+callback_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subscription_data(subscriber cb) : callback_(cb) {}</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; };<br>
+</span></div>
+Here we define subscriptions which is returned when user code subscribe
+to a event by registering a callback. Subscription objects can be used
+to unsubscribe to events.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+typedef boost::shared_ptr&lt;subscription_data&gt; subscription;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">private:<br>
+</span></div>
+Here we define events' internal state: the list of subscriptions /
+callbacks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+std::vector&lt;subscription&gt; subs_;<br>
+</span></div>
+The thread safety and data integrity is maintained by async method
+"ready()" which is acting as lock.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; ready; <br>
+</span></div>
+Event subscriptions are submited thru the following async method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(subscription)&gt; subscribe_priv;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+Events are posted / submited thru async method "post()".<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(V)&gt; post;<br>
+</span></div>
+Application code will call subscribe() to attach a callback to event.
+Internally a subscription is created, submited to async method
+"subscribe_priv()" and returned to caller for later un-subscription.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+subscription subscribe(subscriber cb) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscription
+sub(new subscription_data(cb));</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscribe_priv(sub);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return sub;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Async method "unsubscribe()" is called to detach a subscription /&nbsp;
+callback from event.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(subscription)&gt; unsubscribe;<br>
+</span></div>
+operator() is define to allow posting event in similar way as function
+call: event_obj(data).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void operator()(V v) { post(v); }<br>
+</span></div>
+In constructor, we tell actor which executor to run the
+following three async chords bodies. The first chord is for posting and
+dispatching events; the second chord is for attaching callbacks to
+events and the third chord is for detaching callbacks. Please note that
+the third "unsubscribe" chord is defined with a lower priority so that
+all pending subscribing messages will always be processed before any
+pending un-subscribing messages. All three chords consist of pure async
+methods, so their chord bodies will be executed asynchronously as a
+task in executor's thread pool.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+event(executor *e) : actor(e) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(post, ready,
+&amp;event::post_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(subscribe_priv, ready, &amp;event::sub_cb);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; //set unsubscribe
+to lower priority so subscribe call will be processed first</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(unsubscribe,
+ready, &amp;event::unsub_cb,1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">private:<br>
+</span></div>
+In "posting" chord body, we broadcast the event to all callbacks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void post_cb(async_o&lt;void(V)&gt; post, async_o&lt;void()&gt; r) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(size_t i=0;
+i&lt;subs_.size(); i++)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+subs_[i]-&gt;callback_(post.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In "subscribing" chord body, we add the new subscriber to event's list
+of subscribers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void sub_cb(async_o&lt;void(subscription)&gt; sub,
+async_o&lt;void()&gt; r) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subs_.push_back(sub.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In "un-subscribing" chord body, we delete the subscription from list.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void unsub_cb(async_o&lt;void(subscription)&gt; unsub,
+async_o&lt;void()&gt; r) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; typename
+std::vector&lt;subscription&gt;::iterator iter;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; if((iter =
+std::find(subs_.begin(), subs_.end(), unsub.arg1)) != subs_.end()) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+subs_.erase(iter);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+<p><a href="../../examples/func_api/thread_safe_events/event2.cpp">The
+second event design</a> modifies the first design by letting all
+attached callbacks run concurrently as different tasks in executor's
+thread pool. The only changes are related to the API to post an event.
+We start these callback tasks as a chain: the first callback task is
+started by calling async method "post_priv(event_data,
+callback_task_index)" with the index = 0; the first callback task will
+call "post_priv()" with index=1 to spawn the second callback task and
+then run the first callback function; the second callback task will
+spawn the third callback task and then run its callback function, and
+so on.<br>
+</p>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class event: public actor {<br>
+&nbsp;&nbsp;&nbsp; ......<br style="font-weight: bold;">
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">private:<br>
+&nbsp;&nbsp;&nbsp; ......<br>
+</span></div>
+Here is the async method to spawn task to run the callback function
+indexed by the <span style="font-weight: bold;">int </span>argument.<span
+ style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp; async&lt;void(V,int)&gt; post_priv;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+&nbsp;&nbsp;&nbsp; ......<br>
+</span></div>
+Here are the API to post an event, internally we call async method
+"post_priv()" to spawn the first callback task.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp; void operator()(V v) { post(v); }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void post(V v) { post_priv(v,
+0); }</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; event(executor *e) :
+actor(e) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(post_priv,
+ready, &amp;event::post_cb);<br>
+&nbsp;&nbsp;&nbsp; ......<br style="font-weight: bold;">
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">private:<br>
+</span></div>
+Here is the "posting" chord body. <br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void post_cb(async_o&lt;void(V,int)&gt; post, async_o&lt;void()&gt; r) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscriber cb;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; bool callit = false;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+if((size_t)post.arg2 &lt; subs_.size()) {<br>
+</span></div>
+First we save the callback to be run in this task.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+callit = true;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cb =
+subs_[post.arg2]-&gt;callback_;<br>
+</span></div>
+Then we call async method "post_priv()" to spawn task to run the next
+callback.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+//start next callback in another task</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if(((size_t)post.arg2+1) &lt; subs_.size())</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+post_priv(post.arg1, (post.arg2+1));</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }<br>
+</span></div>
+Calling "ready()" allow other chords to run.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+ready();<br>
+</span></div>
+Finally invoke the callback of this task.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+if(callit)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cb(post.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; ......<br style="font-weight: bold;">
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">};</span><br>
+</div>
+<p><a href="../../examples/func_api/thread_safe_events/event3.cpp">The
+third event design</a> is different from the above two event designs.
+In some applications, we want all callbacks execute in the event
+dispatching thread (maybe the callbacks use some thread local data
+which is specified in the event dispatching thread); so event posting
+API must be synchronous. Also we may want a thread safe event design
+which doesn't involve asynchronous tasks (or executors) so we cannot
+use chords with pure async methods. However we still want the API for
+subscribing and unsubscribing to be asynchronous so that inside
+callbacks functions we can call them to change subscriptions. The third
+event design satisfy these requirements.<br>
+</p>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class event: public actor {<br>
+......<br style="font-weight: bold;">
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; std::vector&lt;subscription&gt;
+subs_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; ready; <br>
+</span></div>
+Here we define a async method to mark the state that no more
+subscribing / un-subscribing messages are pending to be processed.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; subscription_empty; <br>
+</span></div>
+Here is a synch method which calls itself recursively to process all
+pending subscribing / un-subscribing messages.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;void()&gt; process_subscription;<br>
+</span></div>
+Here we define async method to process "subscribing" message.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(subscription)&gt; subscribe_priv;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+Here is the synch method to dispatch events and invoke all callbacks in
+the caller thread.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;void(V)&gt; post;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; subscription
+subscribe(subscriber cb) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscription
+sub(new subscription_data(cb));</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; subscribe_priv(sub);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return sub;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the async method to process "unsubscribing" message.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(subscription)&gt; unsubscribe;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void operator()(V v) { post(v);
+}<br>
+</span></div>
+In constructor, we create four chords to define event's concurrent
+behaviour.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+event() {<br>
+</span></div>
+The first chord is for posting a event synchronously (in caller's
+thread).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(post, ready, &amp;event::post_cb);<br>
+</span></div>
+The second chord is for processing "subscribing" messages.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(subscribe_priv, process_subscription, &amp;event::sub_cb);<br>
+</span></div>
+The third chord is for processing "unsubscribing" messages and it is
+specified with a lower priority so that all pending "subscribing"
+messages will be processed before any "unsubscribing" messages.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+//set unsubscribe to lower priority so subscribe call will be processed
+first</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(unsubscribe,
+process_subscription, &amp;event::unsub_cb,1);<br>
+</span></div>
+The fourth chord is for stopping processing when no more subscription
+messages pending and it is assigned the lowest priority so that it will
+run when no more subscription / un-subscription messages pending.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+//create a lowest priority chord for stopping process_subscription
+recursion when all subs are processed</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(subscription_empty, process_subscription,
+&amp;event::sub_empty_cb,2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subscription_empty();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">private:<br>
+</span></div>
+In "posting" chord, we first call synch method "process_subscription()"
+which will call itself recursively and process all pending subscribing
+/ unsubscribing messages. Then we dispatch the event to all attached
+callbacks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void post_cb(synch_o&lt;void(V)&gt; post, async_o&lt;void()&gt; r) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+process_subscription();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(size_t i=0;
+i&lt;subs_.size(); i++)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+subs_[i]-&gt;callback_(post.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In "subscribing" chord, we first attach the pending subscriber and then
+call "process_subscription()" recursively.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void sub_cb(async_o&lt;void(subscription)&gt; sub,
+synch_o&lt;void()&gt; proc) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subs_.push_back(sub.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+process_subscription();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In "unsubscribing" chord, we first detach the subscriber and then call
+"process_subscription()" recursively.<br>
+<span style="font-weight: bold;"></span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void unsub_cb(async_o&lt;void(subscription)&gt; unsub,
+synch_o&lt;void()&gt; proc) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; typename
+std::vector&lt;subscription&gt;::iterator iter;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; if((iter =
+std::find(subs_.begin(), subs_.end(), unsub.arg1)) != subs_.end()) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+subs_.erase(iter);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+process_subscription();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Finally the simple "stopping" chord to stop the recursive call of
+"process_subscription()".<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void sub_empty_cb(async_o&lt;void()&gt; empty, synch_o&lt;void()&gt;
+proc) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+subscription_empty();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+</div>
+<p><br>
+</p>
+</body>
+</html>

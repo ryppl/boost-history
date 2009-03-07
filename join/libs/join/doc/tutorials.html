@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Join Tutorials</title>
+</head>
+<body>
+<h2>Tutorials</h2>
+<dl>
+  <dt>The following are some tutorials to demonstrate the usage of
+Join.&nbsp;</dt>
+</dl>
+<a href="#basic">Basic Concurrency Idioms</a><br>
+<a href="#difference">Tutorials Showing the Differences between
+Join and C&#969;</a><br>
+<a href="#extension">OO Concurrency Design and Extensions Tutorials</a><br>
+<a href="#application">Applications</a><br>
+<h3><a name="basic"></a>Basic Concurrency Idioms:</h3>
+<div style="margin-left: 40px;">Most of the following tutorials are
+adapted
+from <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorials_concurrency_extensions.htm">C&#969;
+Concurrency Extensions Tutorials[2]</a> to
+demonstrate
+how to encode common concurrency idioms using Join. <br>
+<br>
+Buffer
+Tutorial<br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration defining an
+thread-safe unbounded buffer. <br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_buffer.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="./tutorials/buffer_tutorial.html">Join buffer tutorial</a>,
+<a href="../examples/func_api/buffer.cpp">example translated using
+Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">One-Place
+Buffer Tutorial<br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of a one-place
+buffer.<br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_one_place_buffer.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="tutorials/one_place_buffer_tutorial.html">Join tutorial</a>,
+<a href="../examples/func_api/one_place_buffer.cpp">example
+translated using Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">Spawning
+Threads Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of spawning
+threads using asynchronous
+methods. <br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_spawning_threads.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="tutorials/spawn_tutorial.html">Join tutorial</a>, <a
+ href="../examples/func_api/spawner1.cpp">example translated using
+Join.</a><br>
+Another <a href="../examples/func_api/spawner2.cpp">simpler spawning
+sample</a> using Join executor directly.<br>
+<br>
+</div>
+<div style="margin-left: 40px;">Using
+Asynchronous Messages For State Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of using
+asynchronous messages to carry
+state across method calls. <br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_using_asynchronous_messages.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="tutorials/async_msg_state_tutorial.html">Join tutorial</a>,
+<a href="../examples/func_api/counter.cpp">example translated using
+Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">Reader-Writer
+Lock Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of how to
+program a
+Reader/Writer-lock. <br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_reader_writer_lock.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="../examples/func_api/rwlock.cpp">example translated using
+Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">Bounded
+Buffer Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple example of defining a bounded
+buffer.<br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_bounded_buffer.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="../examples/func_api/bounded_buffer.cpp">example translated
+using Join.</a><br>
+</div>
+<dl style="margin-left: 40px;">
+  <dt>
+    <p>The previous samples described how private asynchronous messages
+may be used to carry state. The following samples show how to
+orchestrate asynchronous messages between different objects: </p>
+  </dt>
+</dl>
+<div style="margin-left: 40px;">Semaphores
+Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of how to encode
+semaphores.<br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_semaphores.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="../examples/func_api/semaphore.cpp">example translated using
+Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">Asynchronous
+Call and Return Patterns Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of how to return
+values from
+asynchronous calls. This sample also demonstrate how to define
+"interfaces" in Join. Class IService defines an interface in that it
+defines an async&lt;&gt; method (Service) without chord, so this method
+has no body defined yet, same as the pure virtual method in C++
+abstract classes. Child implmentation classes (MyService) "implements"
+this interface by defining a chord (thus method body) for this method.<br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_asynchronous_call_and_return.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="tutorials/async_call_ret_tutorial.html">Join tutorial</a>,
+<a href="../examples/func_api/async_call_ret.cpp">example translated
+using Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;">Active
+Objects Tutorial <br>
+</div>
+<div style="margin-left: 80px;">a simple demonstration of how to define
+active objects
+(agents). This sample also demonstrate how to define "interfaces" in
+Join. Class EventSink defines an async&lt;&gt; method (Post) without
+chord and body. Class Distributor and class Subscriber "implement" this
+interface by defining chord and method_body for Post().<br>
+<a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_active_objects.htm">the
+original C&#969; tutorial page and example</a> and <a
+ href="tutorials/act_obj_tutorial.html">Join tutorial</a>, <a
+ href="../examples/func_api/active_object.cpp">example translated
+using Join.</a><br>
+<br>
+</div>
+<div style="margin-left: 40px;"><a href="tutorials/future_tut.html">Future
+Tutorial</a> and <a href="../examples/func_api/future.cpp">sample code</a><br>
+</div>
+<div style="margin-left: 80px;">Future is a abstraction
+representing the value of a concurrent computation. Creating a future
+initiates a concurrent computation in another thread (in the executor
+thread pool) and then initiating thread is
+free to perform other tasks. When initiator needs the value of
+computation, it can call the future's get() method to synchronize with
+the computing thread and wait until/unless the computation is done.
+This sample shows a simple implementation of future using Join;
+adapted from sample in the C#.Joins library [3].<br>
+</div>
+<div style="margin-left: 80px;">
+</div>
+<h3><a name="difference"></a><span style="font-weight: bold;">Tutorials
+Showing the Differences between Join and C&#969;:</span></h3>
+<div style="margin-left: 40px;"><a href="tutorials/dyn_chord_tut.html">Array
+of Asynchronous Channel Tutorial</a> and <a
+ href="../examples/func_api/join_many.cpp">sample
+code</a><br>
+</div>
+<div style="margin-left: 80px;">a sample of how to define an array of
+async channels (methods) and chords. The
+class join_many is a "merger" which merges the results from an array of
+input streams (async&lt;void(T)&gt;) and return as&nbsp; a whole. This
+sample is adapted from the C# Joins library.<br>
+<br>
+</div>
+<div style="margin-left: 40px;"><a href="tutorials/exe_tut.html">Executor
+And Dynamic Chord Tutorial</a>
+and <a href="../../../boost/join/idioms/rr_executor.hpp">code</a><br>
+</div>
+<div style="margin-left: 80px;">Executors are the "engine" of
+Join based applications - the body of all chords with only / pure
+async methods will run in the thread pool of executor. As the first
+application of Join, totally defined with async / synch methods
+and chords, class executor is also a good sample of using dynamically
+created async methods and chords.<br>
+</div>
+<div style="margin-left: 80px;"><br>
+</div>
+<div style="margin-left: 40px;"><a href="tutorials/prime_sieve_tut.html">Multi
+Task Queue and Round
+Robin Scheduling Tutorial</a> and <a
+ href="../examples/func_api/prime_sieve.cpp">sample code</a><br>
+</div>
+<div style="margin-left: 80px;">In concurrent applications, there are
+many event/message producers and consumers. Some producers produce much
+more events/messages than others and much faster. If the handling of
+all events/messages are dispatched to the same task queue, the fast
+producer will flood the task queue while the events/messages from slow
+producer wont get a fair chance to be processed. The executor of
+Join solve this problem with multiple task queues and round-robin
+scheduling which are implemented using dynamic async methods and
+chords. <br>
+Prime_sieve.cpp is a simple application for finding prime numbers using
+a
+chain of concurrent tasks. <a href="http://swtch.com/%7Ersc/thread/">The
+original design</a> is based on CSP style channels. In this sample,
+each of tasks is assigned a separate task_queue and
+executor's thread pool
+round-robin through all task queues so that all tasks get a fair chance
+to run.<br>
+</div>
+<h3><span style="font-weight: bold;">OO
+Concurrency Design and Extensions:</span></h3>
+<div style="margin-left: 40px;"><a href="tutorials/override_tut.html">Chord
+Overriding Tutorial</a> and
+<a href="../examples/func_api/chord_override.cpp">sample code</a><br>
+</div>
+<div style="margin-left: 80px;">Join supports two kinds of chord
+overriding: <br>
+<ul>
+  <li>static-overriding - the chord body method can be a C++ virtual
+method and overriden in child class to provide polymorphic behaviour.</li>
+  <li>dynamic-overriding - chord_override() method can be called with
+the set of async / synch methods of a existing chord and a new body
+method; the identified chord will replace its body with the new body
+method.</li>
+</ul>
+</div>
+<div style="margin-left: 40px;"><a href="tutorials/aggreg_tut.html">Extending
+by
+Aggregation and Delegation Tutorial</a> and <a
+ href="../examples/func_api/logged_buffer.cpp">sample code</a><br>
+<div style="margin-left: 40px;">The design of Integrated Circuit (IC)
+is thru aggregation: composing smaller components into larger ones.
+Join support this kind of design in software. Two basic methods
+of aggregation are "aliasing" and "adapting". This logged_buffer sample
+demonstrates how to extend the "buffer" sample thru aggregation:<br>
+</div>
+</div>
+<div style="margin-left: 40px;">
+<ul>
+  <ul>
+    <li>composing: logged_buffer maintains a inner actor: buffer<br>
+    </li>
+    <li>aliasing: the interface of inner actor buffer (put(), get()) is
+exposed <span style="font-weight: bold;">directly</span> at
+logged_buffer by C++ references to these methods of
+inner buffer.<br>
+    </li>
+    <li>adapting: a new async&lt;&gt; method logged_put() is defined by
+invoking inner buffer's put() with the addition of logging.</li>
+  </ul>
+</ul>
+</div>
+<h3><a name="application"></a><span style="font-weight: bold;">Applications:</span></h3>
+<div style="margin-left: 40px;"><a href="tutorials/events_tut.html">Thread
+Safe Events Tutorial</a><a
+ href="../examples/func_api/chord_override.cpp"></a><br>
+<div style="margin-left: 40px;">Join allow us to experiment with
+some interesting designs of thread safe
+events dispatching with the following design considerations:<br>
+<ul>
+  <li>Allow subscribing / unsubscribing to events concurrently from
+different threads; events data structures must be thread safe.</li>
+  <li>Allow callback code to invoke the event
+interface again, change / delete event subscription or post a new
+event during the process of event dispatching / handling. This is
+difficult to
+handle with the "synchronous" semantics of
+normal method calls.
+Join's async methods provide an alternative to solve these issues.<br>
+  </li>
+  <li>When applications run on multi-core machines, we may want the
+callbacks to execute concurrently for better performance.</li>
+</ul>
+</div>
+<a href="tutorials/parallel_tut.html">Data Parallel Programming Tutorial</a><br>
+<div style="margin-left: 40px;">How to harness the computing power of
+multi-core computers and make applications
+scalable for more CPUs is a challenging task. Data Parallel paradigm is
+particularly suitable for
+parallelizing computationally intensive work, allowing multiple tasks
+concurrently working on different parts of data. Data parallel
+programming scales well to larger number of processors by dividing the
+data collection into smaller pieces. Program performance increases as
+you add more processors.<br>
+<br>
+Join's toolset (async / synch methods and chords) provides a good
+foundation for data parallel programming. In this tutoral we discuss
+how to implement parallel loops and parallel map-reduce algorithm in
+Join.</div>
+<br>
+</div>
+</body>
+</html>

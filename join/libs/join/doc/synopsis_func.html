@@ -1,0 +1,658 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Synopsis of Join Classes</title>
+</head>
+<body>
+<h2>Synopsis of Join Classes (Function Based API)<br>
+</h2>
+In this API, the asynchronous and synchronous channels are modeled as
+functions/methods, which can take multiple arguments indentified by
+arg1,arg2, arg3,.... Function based API is built on top of <a
+ href="./synopsis_port.html">port based
+API</a>.<br>
+<ol>
+  <li>classes</li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">namespace
+boost {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; namespace join {<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template &lt;void (T1, T2,
+...)&gt;&nbsp; class async;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+template &lt;R (T1, T2,
+...)&gt;&nbsp; class synch;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+template &lt;void (T1, T2,
+...)&gt;&nbsp; class async_o;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+template &lt;R (T1, T2,
+...)&gt;&nbsp; class synch_o;</span><br style="font-weight: bold;">
+<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+template &lt;typename executor, size_t max_size&gt;
+class actor;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+class executor;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+</div>
+<ol start="2">
+  <li>Asynchronous methods<br>
+    <span style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename
+Signature&gt;&nbsp;&nbsp; //Signature : void
+(T1, T2, ...)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class async {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef
+T1 arg1_type;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef
+T2 arg2_type;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ......</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef
+async_o&lt;Signature&gt;
+var_type;</span><br style="font-weight: bold;">
+&nbsp;
+<span style="font-weight: bold;"></span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+async(size_t sz=0) : base_type(sz) {}</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+operator()(T1 a1, T2 a2, ...)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+<br>
+Asynchronous method objects are not copyable or assignable, since they
+contain state for on-going messaging. We can only pass around pointers
+and references to them.<br>
+<br>
+<span style="font-weight: bold;">async(size_t sz=0):<br>
+Effect: </span>initialize a asynchronous method with underlying
+argument / message queue.
+The queue size <span style="font-weight: bold;">sz</span> is specified
+for flow control; the default value 0 means
+unlimited queue size. Internally there are 2 implementations for this
+class. If the signature is async&lt;void(void)&gt;, there is no
+message/arguments to be passed, and template specialization will choose
+a proper implementation without a queue (and its overhead) while
+maintaining the
+same semantics.<span style="font-weight: bold;"><br>
+Throw:<br>
+<br>
+</span><span style="font-weight: bold;">void operator()(T1 a1, T2 a2,
+...): </span><br>
+<span style="font-weight: bold;">Effect:</span> the functional api to
+send asynchronous messages; calling threads will return immediately.
+Since async calls will return immediately, and arguments may be
+buffered in queues, the arguments cannot be references or pointers to
+variables on calling stacks which will be unwound when async calls
+return.<br>
+<span style="font-weight: bold;">Throws</span>: not_in_chord_exception,
+queue_overflow_exception, no_executor_exception<br>
+</div>
+<ol start="3">
+  <li>Synchronous methods<span style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename
+Signature&gt;&nbsp;&nbsp; //Signature : R
+(T1, T2, ...)<br>
+class synch {<br>
+public:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef R result_type;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef T1 arg1_type;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef T2 arg2_type;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ......<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef synch_o&lt;Signature&gt;
+var_type;<br>
+&nbsp;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; synch(size_t sz=0) : base_type(sz) {}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; R operator()(T1 a1, T2 a2, ...);<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+R operator()(T1 a1, T2 a2, ..., boost::xtime &amp;timeout);<br>
+</span><span style="font-weight: bold;">&nbsp;};<br>
+<br>
+</span>Synchronous method objects are not copyable or assignable, since
+they contain state for on-going messaging. We can only pass around
+pointers and references to them.<br>
+<br>
+<span style="font-weight: bold;">synch(size_t sz=0):<br>
+Effect: </span>initialize a synchronous method with underlying thread
+waiting queue.
+The queue size <span style="font-weight: bold;">sz</span> is specified
+for flow control; the default value 0 means
+unlimited queue size. Internally there are four implementations and
+template specialization help choose the most efficient one.<span
+ style="font-weight: bold;"><br>
+Throw:<br>
+<br>
+</span><span style="font-weight: bold;">R operator()(T1 a1, T2 a2, ...):</span><br>
+<span style="font-weight: bold;">Effect: </span>the functional
+interface to send a synchronous message;
+calling thread will block here till a reply is available. Since the
+call will block till a result is returned, the arguments can be
+anything just as normal function calls, including pointers or
+references to variables on stack.<br>
+<span style="font-weight: bold;">Throws: </span>not_in_chord_exception,
+queue_overflow_exception, missing_result_exception,&nbsp;
+application_specific_exceptions_raised_inside_chord_body<br>
+<br>
+<span style="font-weight: bold;">R operator()(</span><span
+ style="font-weight: bold;">T1 a1, T2 a2, ...</span><span
+ style="font-weight: bold;">, boost::xtime
+&amp;timeout):</span><br>
+<span style="font-weight: bold;">Effect: </span>this is a variant of
+the above interface with a timeout. The call will return either the
+result is available or return with a "synch_time_out_exception" when
+the timeout is reached.<br>
+<span style="font-weight: bold;">Throws:</span><span
+ style="font-weight: bold;"></span> not_in_chord_exception,
+queue_overflow_exception, synch_time_out_exception,&nbsp;
+application_specific_exceptions_raised_inside_chord_body<br>
+</div>
+<ol start="4">
+  <li>wrapper objects for asynchronous
+methods (used as arguments of chord body)<span
+ style="font-weight: bold;"><br>
+    </span><span style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template&lt;typename
+Signature&gt;&nbsp;&nbsp; //Signature : void
+(T1, T2, ...)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class async_o {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T1 arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T2 arg2;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+.......</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp; void
+operator()(T1 a1, T2 a2, ...)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //for async methods with single
+argument, the following are defined:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><span style="font-weight: bold;">operator
+T();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><span style="font-weight: bold;">T
+&amp;arg(void)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+async_o is a wrapper of asynchronous methods, used as the arguments of
+chord body functions. Its main purpose is to represent the
+arguments/message passed in by asynchronous methods, specifically the
+arguments or message at the top of queue.<br>
+<br>
+<span style="font-weight: bold;">arg1, arg2 ,...: </span>arguments of
+the associated asynchronous method<span style="font-weight: bold;"><br>
+<br>
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">void operator()(</span><span
+ style="font-weight: bold;">T1 a1, T2 a2, ...</span><span
+ style="font-weight: bold;">):</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>invoke the associated
+asynchronous method.<br style="font-weight: bold;">
+<span style="font-weight: bold;">Throws: </span>not_in_chord_exception,
+queue_overflow_exception, no_executor_exception<br>
+<br>
+The following two convenience methods are defined for async methods
+with single argument:<br>
+<span style="font-weight: bold;">operator T(): </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>a conversion function,
+so that async_o can be used as an argument of type T<br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Throws:</span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">T &amp;arg(void):</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>retrieve the
+argument/message explicitly. This is necessary in situation where the
+implicit conversion cannot be applied<br style="font-weight: bold;">
+<span style="font-weight: bold;">Throws:</span><br>
+<span style="font-weight: bold;"></span></div>
+<ol start="5">
+  <li>wrapper objects for synchronous
+methods (used as arguments of
+chord body)<span style="font-weight: bold;"></span><span
+ style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">template&lt;typename
+Signature&gt;&nbsp;&nbsp;&nbsp; //Signature : R
+(T1, T2, ...)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class synch_o {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T1 arg1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T2 arg2;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+.......<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp; R
+operator()(T1 a1, T2 a2, ...)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; //for synch methods with single argument</span><span
+ style="font-weight: bold;">, the following are defined</span><span
+ style="font-weight: bold;">:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><span style="font-weight: bold;">operator
+T();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; </span><span style="font-weight: bold;">T
+&amp;arg(void)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">};</span><br>
+synch_o is a wrapper of synchronous methods, used as the arguments of
+chord body functions. It serves two purposes:<br>
+<ul>
+  <li>representing
+the
+argument/message passed in by synchronous methods, specifically the
+arguments or message at the top of queue; <br>
+  </li>
+  <li>allowing replying to
+the synchronous methods.</li>
+</ul>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">arg1,
+arg2 ,...: </span>arguments of the associated synchronous method<br>
+<br>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">R
+operator()(T1 a1, T2 a2, ...)</span><span style="font-weight: bold;">:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>invoke the associated
+synchronous method.<br style="font-weight: bold;">
+<span style="font-weight: bold;">Throws: </span>not_in_chord_exception,
+queue_overflow_exception, missing_result_exception,&nbsp;
+application_specific_exceptions_raised_inside_chord_body<br>
+<span style="font-weight: bold;"><br>
+</span>The following two convenience methods are defined for synch
+methods
+with single argument:<br>
+<span style="font-weight: bold;">operator T(): </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>a conversion function,
+so that synch_o can be used as an argument of type T<br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Throws:</span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">T &amp;arg(void):</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect: </span>retrieve the
+argument/message explicitly. This is necessary in situation where the
+implicit conversion cannot be applied<br style="font-weight: bold;">
+<span style="font-weight: bold;">Throws:</span><br>
+</div>
+<ol start="6">
+  <li>actor</li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;</span><span style="font-weight: bold;">typename executor =</span><span
+ style="font-weight: bold;"> async&lt;task&gt;</span><span
+ style="font-weight: bold;">, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+template &lt;size_t&gt; scheduler = sched_first_match,<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; size_t
+max_size = 32&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+actor(executor *execute = NULL, const char
+*name = NULL);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2,
+......, typename CallT&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void chord(PortT1
+&amp;p1, PortT2 &amp;p2, ......, CallT c, int priority=0)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2, </span><span
+ style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">typename CallT&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+chord_override(PortT1 &amp;p1, PortT2 &amp;p2, </span><span
+ style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">CallT c</span><span
+ style="font-weight: bold;">, int priority=0</span><span
+ style="font-weight: bold;">)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2,
+......&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+chord_remove(PortT1
+&amp;p1, PortT2 &amp;p2, ......)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+......</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+Actor is the parent class of all classes which use
+async&lt;&gt; / synch&lt;&gt; methods and chords to define concurrent
+activities. Actor maintains the status of message arrival and
+synchronization. Actors are not copyable or assignable. We can only
+pass around pointers and references to them.<br>
+<br>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">typename
+executor:</span> <br>
+&nbsp;&nbsp;&nbsp; the type of execution service used to drive Join
+based asynchronous applications. It could be the async "execute" method
+of the following thread pool based executor, or it could be a adaptor
+to existing applications execution service, as long as it provides a
+functional / functor interface to spawn a task:<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">void
+operator()(task t);<br>
+<br>
+</span><span style="font-weight: bold;">max_size:</span> <br>
+&nbsp;&nbsp;&nbsp; defines the capacity
+of actor, ie. how many async&lt;&gt; / synch&lt;&gt; methods can be
+defined in this actor. When max_size &lt;= 32, integer bitmask is used
+to maintain status; while for "larger" actor, std::bitset&lt;&gt; is
+used for status.<br>
+<br>
+<span style="font-weight: bold;">scheduling_policy: </span><br>
+&nbsp;&nbsp;&nbsp; actor
+supports three kinds of scheduling policies that decide which chord
+will fire when multiple chords become ready at the same time:<br>
+<ul>
+  <li><span style="font-weight: bold;">sched_first_match</span>: fire
+the first chord which is ready to
+fire</li>
+  <li><span style="font-weight: bold;">sched_longest_match</span>: when
+multiple chords are ready to fire,
+fire the one defined with most async&lt;&gt; / synch&lt;&gt; methods.</li>
+  <li><span style="font-weight: bold;">sched_round_robin</span>:
+internally the last chord fired is
+remembered and chords are fired in round-robin style.</li>
+</ul>
+<span style="font-weight: bold;">actor(executor *execute =
+NULL, const char *name = NULL):<br>
+</span>&nbsp;&nbsp;&nbsp; an actor is constructed with the following
+two settings:<br>
+<ul>
+  <li>executor *execute: the asynchronous method to spawn a new task
+(from a function object <span style="font-weight: bold;">function&lt;void()&gt;</span>).
+It could be an adaptor to spawn tasks into existing applications main
+threads (and it must be non-blocking and returns immediately), or the
+execute method of the following executor (thread pool),
+ie.
+the task waiting queues. In Join based applications, there is no
+explicit usage of threads (creation / synchronization), concurrency are
+generated by
+chords with only async&lt;&gt; methods whose body will run as a task in
+executor thread pool.<br>
+  </li>
+  <li>const char *name: the name of actor; it is used as a flag to turn
+on/off debug messages, when it is set to a non-NULL value, debugging
+message will be printed out.<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">template
+&lt;typename PortT1, typename PortT2,
+......, typename CallT&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">void chord(PortT1 &amp;p1, PortT2
+&amp;p2, ......, CallT c, int priority=0)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">Effect:
+</span>overloaded chord()
+functions to create chords with different number of
+async&lt;&gt; / synch&lt;&gt; methods. By default actor has just eight
+overloaded chord() functions to create chords for one to eight
+async&lt;&gt; / synch&lt;&gt; methods,&nbsp; because any of these
+async&lt;&gt; methods can be a array&lt;async&lt;&gt;&gt;, so in fact
+chords can be created for unlimited number of
+async&lt;&gt; methods, while each chord can have at most one
+synchronous method:<br>
+<ul>
+  <li>PortT &amp;p, &amp;p1, ... &amp;pn: async&lt;&gt; / synch&lt;&gt;
+methods which are in the header of chord body; only one of them can be
+synchronous and if we do have one, it must the first method.<br>
+  </li>
+  <li>CallT c: a function, class-method, or object-method which can be
+used as the chord body</li>
+  <li>int priority: the scheduling priority of this chord; the
+default value 0 has the highest priority, the greater the number, the
+lower the priority. During scheduling, the chords with higher priority
+will be scanned and scheduled first.</li>
+</ul>
+<span style="font-weight: bold;">Throws: </span>hidden_chord_exception,
+too_many_ports_exception<br>
+<br>
+<span style="font-weight: bold;">template &lt;typename PortT1, typename
+PortT2, </span><span style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">typename CallT&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">void chord_override(PortT1 &amp;p1,
+PortT2 &amp;p2, </span><span style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">CallT c</span><span
+ style="font-weight: bold;">, int priority=0</span><span
+ style="font-weight: bold;">)</span><span style="font-weight: bold;"></span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect:&nbsp; </span>allow overriding
+an existing chord (the chord body is replaced with the new one).
+It is mostly used in child class to override a chord defined in parent
+class. The overridden chord is identified by the set of async&lt;&gt; /
+synch&lt;&gt; methods in its header. It uses the same arguments as
+normal chord() functions. <br>
+<span style="font-weight: bold;">Throws:&nbsp; </span>chord_override_exception
+(chord not found)<br>
+<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename PortT1, typename PortT2,
+......&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">void chord_remove(PortT1
+&amp;p1, PortT2 &amp;p2, ......)</span><br style="font-weight: bold;">
+</div>
+<div style="margin-left: 40px;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">Effect:&nbsp; </span>remove the chord
+identified by the set of async / synch methods. <br>
+<span style="font-weight: bold;">Throws:&nbsp; </span>chord_remove_exception
+(chord not found)<br>
+<span style="font-weight: bold;"></span></div>
+<ol start="7">
+  <li>executor</li>
+</ol>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;template &lt;size_t&gt; class scheduler=sched_first_match, size_t
+sz=32&gt;<br>
+class executor :
+public actor {<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+executor(int
+num_threads, const char *name = NULL);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async_p&lt;task&gt;
+execute;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+synch_p&lt;void,void&gt; shutdown;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">};</span><br>
+Chords with only
+async&lt;&gt; methods will run its body as an asynchronous task,
+either in a newly spawned thread, , or in the thread
+pool of executor, or in exisiting applications' execution services
+(such as Boost.Asio's
+main threads). So executor is the "engine" of Join based
+applications. Different execution strategies can be used, such as a
+thread per request or thread pool, as long as it provides a
+functional / functor interface to spawn a task: <span
+ style="font-weight: bold;">void
+operator()(task t). </span><br>
+Here the default executor class is thread
+pool based and defined using
+async&lt;&gt; / synch&lt;&gt; methods and chords,&nbsp; and is a good
+sample
+of
+Join.<br>
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">executor(int num_threads, const char
+*name = NULL)</span>: <br>
+<ul>
+  <li>int num_threads: number of worker threads in executor's thread
+pool</li>
+  <li>const char *name: name of executor, a flag to turn on/off
+debugging messages<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">async&lt;task&gt; execute</span>: an
+asynchronous method for applications to submit tasks; never block; it
+is the default <span style="font-weight: bold;">task queue</span> of
+executor.<br>
+<span style="font-weight: bold;">synch&lt;void()&gt; shutdown</span>:
+a synchronous method for application code to wait for executor to
+shutdown (and its threads to exit). All chords defined with <span
+ style="font-weight: bold;">shutdown</span> have a low priority (1)
+than normal (0), so shutdown will return when all submited tasks have
+been finished and all worker threads exit.<br>
+</div>
+<ol start="8">
+  <li>support of group/bundle of async&lt;&gt; methods:</li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">boost::array&lt;async&lt;</span><span
+ style="font-weight: bold;">void
+(T1, T2, ...)</span><span style="font-weight: bold;">&gt;, N&gt;<br>
+</span><span style="font-weight: bold;">boost::array</span><span
+ style="font-weight: bold;">&lt;async_o&lt;</span><span
+ style="font-weight: bold;">void
+(T1, T2, ...)</span><span style="font-weight: bold;">&gt;, N&gt;<br>
+</span><span style="font-weight: bold;"></span>In C&#969;&nbsp; the chords
+are defined with a&nbsp; few async/synch methods with distinct names.
+What if
+we want to
+define chords with a group / array of asynchronous message channels
+(methods) with the same signatures? Inspired by
+similar abstractions in CCR[4] and C#.Joins[3], Join allows the
+definition of an array of async methods and their participation
+in chord as a whole. Since there are at most one synch method per
+chord, so there is no support for array of synch methods. Also
+because async method functors are noncopyable and non-assignable, we
+cannot use STL containers (such as vectors) to contain them, we have to
+use boost::array. Correspondingly, their arguments are represented
+as an array of async_o. Please refer to the Group of Asynchronous
+Channel
+tutotail (join_many.cpp) for their usage. <span
+ style="font-weight: bold;"></span></div>
+<ol start="9">
+  <li>exceptions</li>
+</ol>
+<div style="margin-left: 40px;">
+<p>In C&#969; , many of the following errors related to the definitions of
+async/synch methods and chords will be found by the compiler. Since
+Join is implemented as a library, these errors can only be
+reported as the following exceptions during runtime:</p>
+<p><span style="font-weight: bold;">class
+join_exception : public
+std::exception</span></p>
+<p style="margin-left: 40px;"><span style="font-weight: bold;"></span>the
+base class of all Join related exceptions</p>
+<p><span style="font-weight: bold;">class not_in_chord_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When a async / synch method is declared
+and no chord include it, this method has no body defined similar
+to&nbsp; pure virtual method in C++ abstract classes (pure virtual
+methods have only signature / declaration, no body). When this class is
+instantiated and client code calls this method, not_in_chord_exception
+will be thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class double_association_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">Every async / synch method should only
+be associated with one actor. When attempting to use the method in the
+chords of more than one actors, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class
+queue_overflow_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">For basic flow control, async / synch
+method can be constructed with a limited queue size. When the buffered
+(unprocessed) messages exceed the queue size, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class no_executor_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When an actor contains chords with only
+async methods but without an executor associated, this exception is
+thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class hidden_chord_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When actor's scheduling policy is
+fire_as_soon_as_possible (default), if the definition of a new chord
+contains all the ports of another chord, or vice versa, this exception
+will be thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class too_many_ports_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When defining a new chord, the total
+number of async / synch methods (accumulated thru all the defined
+chords) exceeds the max_size of actor, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span></p>
+<p><span style="font-weight: bold;">class chord_override_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When chord_override() is called and no
+existing chord found with the same set of async / synch methods, this
+exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class chord_remove_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When chord_remove() is called and no
+existing chord found with the same set of async / synch methods, this
+exception is thrown.<br>
+<br>
+</div>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+synch_not_1st_exception : public join_exception </span><br
+ style="font-weight: bold;">
+</div>
+<p style="margin-left: 80px;">When chords are defined with synchronous
+method, however the synchronous method is not used as the first method
+of chord, this exception is thrown.<br>
+</p>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"> class
+single_synch_exception : public
+join_exception </span><br>
+</div>
+<p style="margin-left: 80px;">When chords are defined with more than
+one synchronous methods, this exception is thrown.<br>
+</p>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"> class
+synch_time_out_exception :
+public
+join_exception </span><br>
+<div style="margin-left: 40px;">The call of a synchronous port is timed
+out</div>
+</div>
+<div style="margin-left: 40px;"></div>
+</body>
+</html>

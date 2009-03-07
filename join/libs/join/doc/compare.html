@@ -1,0 +1,175 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Compare Join with C&#969; and CCR</title>
+</head>
+<body>
+<h2>Compare C&#969; and Join</h2>
+<ol>
+  <li>
+    <p>separation of synch&lt;&gt; methods from normal object methods</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">In C&#969;, there is no separate
+synch&lt;&gt; method. When normal object methods are used inside
+chords, they become synch&lt;&gt; methods.<br>
+</div>
+<ol start="2">
+  <li>dynamic Join programming<br>
+  </li>
+</ol>
+<div style="margin-left: 40px;">Join library described here supports
+dynamic flow based programming which C&#969;
+doesnt support<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>add new chords during runtime</li>
+  <li>override chord bodies during runtime</li>
+  <li>remove chords<br>
+  </li>
+  <li>reset all chords<br>
+  </li>
+</ul>
+<ol start="3">
+  <li>
+    <p>scheduling of chords-firing</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">In C&#969;, the scheduling policy of
+chords-firing is hidden from API and cannot be changed
+(default to as-soon-as-possible?). While in Join, three
+scheduling policies
+are supported, and can be configured when actors are constructed:<br>
+<ul>
+  <li>as-soon-as-possible (default)<br>
+  </li>
+  <li>round-robin</li>
+  <li>as-much-as-possible</li>
+</ul>
+</div>
+<div style="margin-left: 40px;">Chord priority: In Join, another
+way to control the scheduling of chords is by creating chords with
+proper priority. Chords with higher priorities (smaller numbers, 0 is
+the highest priority) will be checked and fired first.<br>
+</div>
+<ol start="4">
+  <li>chord override</li>
+</ol>
+<div style="margin-left: 40px;">C&#969; and Join have different rules
+for chord overriding.<br>
+</div>
+<ol start="5">
+  <li>
+    <p>separate executor from background</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">In C&#969;, the execution of chord body with
+only asynch&lt;&gt; methods are <span style="font-weight: bold;">defined</span>
+to execute in a separate thread (either newly spawned or from thread
+pool). But how it is done is hidden from API and thus hidden from user
+control. In Join, the execution strategy is exposed as a separate
+"executor" object (with which actors need to be associated) for the
+following reasons:<br>
+<ul>
+  <li>In many applications, we want to run application tasks in
+different OS scheduling priorities based on their real time response
+requirements. So we can create executors with different OS scheduling
+priorities and associate actors with proper executors based on their
+functionalities.</li>
+  <li>queue fairness: as mentioned in Prime Sieve Tutorial, there are
+many event/message producers and consumers in many applications. Some
+producers produce much
+more events/messages than others and much faster. To avoid the fast
+producers flooding the task queue and give slow producers a fair
+chance to run, one solution is to dispatch the jobs from different
+producers to different task queues and allow thread pool round-robin
+thru all task queues. Executors can wrap this solution easily.</li>
+  <li>easy support for different execution strategies, such as
+thread-per-request, thread-pool.<br>
+  </li>
+  <li>better integration with hosting / existing applications. We could
+define executors as thin "wrappers" to dispatch asynchronous tasks into
+existing applications' execution service, such as Boost.Asio networking
+libraries main event completion queues, run by the main threads.<br>
+  </li>
+</ul>
+</div>
+<ol start="6">
+  <li> error handling</li>
+</ol>
+<div style="margin-left: 40px;">
+<p>Since C&#969; is implemented as a new
+compiler, many errors related to the definitions of async&lt;&gt; /
+synch&lt;&gt; methods and chords can be caught during compilation, such
+as hidden_chord_exception (there is conflict between chord
+definitions), missing_result_exception (in chord body, failure to reply
+to one of synch method), multi_return_exception (in chord body, reply
+to the same synch method more than once).
+</p>
+<p>However since Join is implemented as a library, these
+errors can only be reported as exceptions and caught during runtime.</p>
+</div>
+<h3>Compare Join and CCR Style Abiters<br>
+</h3>
+The author has implemented simple CCR style arbiters in another
+framework (<a href="http://channel.sourceforge.net">Channel - Name
+Space Based C++
+Framework For Asynchronous, Distributed Message Passing and Event
+Dispatching</a>). Both synchronous and asynchronous arbiters have been
+implemented. We can have the following simple comparisons between Join
+and CCR style abiters:<br>
+<ol>
+  <li>In CCR, arbiters roughly correspond to chords in Join. However
+arbiters take more roles than chords:</li>
+  <ul>
+    <li>In Join, a chord simply defines one message synchronization
+pattern, while an actor (or joint) object is the unit of configuring
+join-patterns (adding chords), the unit of deciding how to dispatch
+async tasks (choose which executor to use) and very often the unit of
+life-time control of join-patterns (when the actor is out of scope or
+deleted, all join patterns destroyed).</li>
+    <li>In CCR, arbiters are recursive (some arbiters such as Choice
+can contain other arbiters). So simple Receiver and JoinedReceiver
+arbiters define one message synchronization pattern, while "containing"
+arbiters such as Choice and Interleave can contain other simple
+arbiters and often is the unit of configuration, the unit of dispatch
+and the unit of life-time control.<br>
+    </li>
+  </ul>
+  <li>In CCR, the decision about which arbiter (or chords in Join's
+term) will fire is done through a two-phase checking. When a port
+receive messages, it will invoke its registered receivers which in turn
+will invoke its parent arbiters; finally the top arbiter will come down
+and check if all involved ports have messages available. In Join, each
+actor (or joint) contains a bitmap about the message status of all
+involved async/synch&nbsp; methods or channels. So whenever a new
+messages arrive at a channel, a simple bitmap match can check which
+chord will be ready to fire.</li>
+  <li>In CCR, ports (the message channels) are totally independent from
+join-patterns or arbiters, instead arbiters are attached to ports.
+Ports can be used independently from arbiters as plain message queues.
+However in Join, the async&lt;&gt; / synch&lt;&gt; methods or channels
+must be attached to chords before they can be used (invoked), otherwise
+exceptions will be thrown. This is more consistent with original
+join-calculus and Jocaml.<br>
+  </li>
+</ol>
+<h3>Others Join based
+libraries</h3>
+Microsoft research also introduced another C# library to support Join
+abstractions:<br>
+<ul>
+  <li>C#.Joins[3] - a faithful implementation of C&#969;
+semantics in the form of C# lib.</li>
+</ul>
+<div style="margin-left: 40px;">The earlier versions of the Join
+library described here is more a follower of Jocaml and Cw, including
+support for multiple synchronous methods in a chord and attempt to
+implement "guards". The current version is more a C++
+counterpart of C#.Joins, with some additions to support flow based CCR
+style programming.<br>
+</div>
+</body>
+</html>

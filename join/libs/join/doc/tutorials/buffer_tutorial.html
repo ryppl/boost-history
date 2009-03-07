@@ -1,0 +1,294 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Buffer Tutorial</title>
+</head>
+<body>
+<h2>Join Buffer Tutorial</h2>
+This tutorial shows how to create and use a thread safe buffer in
+Join. Please refer to <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_buffer.htm">the
+C&#969; buffer tutorial</a> for comparison.<br>
+<br>
+First we include Join's header file and open namespace.<br>
+<div style="margin-left: 40px; font-weight: bold;">#include
+&lt;boost/join/join.hpp&gt;<br>
+using namespace boost::join;<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Then
+a logger object is created to output log messages. In Windows/VC++
+environment, plain iostream objects are not thread friendly. The output
+messages from concurrent threads are garbled and mixed. Class logger
+provides a simple thread friendly logging tool for outputing messages
+from multiple threads in both Windows and Linux.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">logger log1("log");<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+comes the topic of this tutorial, defining a thread safe buffer in
+Join.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;typename V&gt;<br>
+class buffer: public actor {<br>
+public:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">First
+we declare
+a asynchronous method to allow putting messages into buffer and
+returning immediately.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async&lt;void(V)&gt; put;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">and
+declare
+a sychronous method to allow waiting for message and getting it.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+synch&lt;V(void)&gt; get;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">The
+following chord() call and chord_body method define a chord with "put"
+and "get" methods and the chord will fire when both "put" and "get" are
+called. Inside chord body, the argument of "put" is returned to&nbsp;
+"get".</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; buffer() {<br>
+&nbsp;&nbsp;&nbsp; chord(get, put, &amp;buffer::chord_body);<br>
+&nbsp; }<br>
+&nbsp; V chord_body(synch_o&lt;V(void)&gt; get, async_o&lt;void(V)&gt;
+put) {<br>
+&nbsp;&nbsp;&nbsp; return put.arg1;<br>
+&nbsp; }<br>
+};<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Comparing
+with <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorial_buffer.htm">the
+buffer class in C&#969; tutorial</a>, the following differences are obvious:<br>
+</span>
+<ul>
+  <li><span style="font-weight: normal;">synchronous method -
+synch&lt;V(void)&gt;</span></li>
+</ul>
+<div style="margin-left: 40px;"><span style="font-weight: normal;">In
+C&#969;,
+there is no separate synch&lt;&gt; methods. When normal object methods
+are used in chords, they become synch&lt;&gt; methods. Since Join
+is implemented as a library instead of changing compiler, synch&lt;&gt;
+methods are presented as different from normal object methods. Objects'
+concurrent behaviour are solely defined by async&lt;&gt; /
+synch&lt;&gt; methods and chords.</span><br>
+<span style="font-weight: normal;"></span></div>
+<ul>
+  <li><span style="font-weight: normal;">chord definitions are
+different.</span></li>
+</ul>
+<ul>
+  <ul>
+    <li><span style="font-weight: normal;">In C</span><span
+ style="font-weight: normal;">&#969;, a chord definition such as "</span><span
+ style="font-weight: bold;">public string Get() &amp; Put(string s) {
+return s; }" </span><span style="font-weight: normal;">defines the
+following information in one piece:</span></li>
+    <ul>
+      <li><span style="font-weight: normal;">async&lt;&gt; /
+synch&lt;&gt; methods involved in this chord, joined by "&amp;"
+operator, such as "<span style="font-weight: bold;">Put</span>" and "<span
+ style="font-weight: bold;">Get</span>"<br>
+        </span></li>
+      <li><span style="font-weight: normal;">all arguments passed in
+thru involved async / synch methods, such as "</span><span
+ style="font-weight: bold;">string s". </span><span
+ style="font-weight: normal;">The names of arguments must be unique
+across the chord.</span></li>
+      <li><span style="font-weight: normal;">the body of code to be
+executed when all methods in header have been called</span></li>
+    </ul>
+    <li>
+      <p><span style="font-weight: normal;">In Join, a chord is
+defined as 2 separate pieces:</span></p>
+    </li>
+    <ul>
+      <li><span style="font-weight: normal;">chord() method call
+identifies all involved async&lt;&gt; / synch&lt;&gt; methods and
+associate them with a chord "body" method / function</span></li>
+      <li><span style="font-weight: normal;">The chord "body" method /
+function:<br>
+        </span></li>
+      <ul>
+        <li><span style="font-weight: normal;">The arguments of this
+"body" method are objects (async_o&lt;&gt; / synch_o&lt;&gt;)
+representing async / synch methods involved in this chord, each of
+which contains the arguments passed in thru corresponding async / synch
+method and which can be used to return result to synch method call. In
+class buffer, "put" method has only one argument, which can be accessed
+inside chord body by put.arg1. For methods with more than one
+arguments, their arguments can be accessed as async_o.arg1, </span><span
+ style="font-weight: normal;">async_o</span><span
+ style="font-weight: normal;">.arg2, </span><span
+ style="font-weight: normal;">async_o</span><span
+ style="font-weight: normal;">.arg3, etc.<br>
+          </span></li>
+        <li><span style="font-weight: normal;">The "body" method are
+code to be run when all methods in chord header are called.<br>
+          </span></li>
+      </ul>
+    </ul>
+  </ul>
+</ul>
+<ul>
+  <li><span style="font-weight: normal;">synchronous methods are
+handled differently</span></li>
+</ul>
+<div style="margin-left: 40px;">
+<ul>
+  <li><span style="font-weight: normal;">In C</span><span
+ style="font-weight: normal;"></span><span style="font-weight: normal;">&#969;,
+only the first method of chords (and at most one method) can be
+synchronous. So inside chord body, <span style="font-weight: bold;">return</span>
+statement returns the result to the caller of the synchronous method
+and release the blocked thread</span></li>
+  <li><span style="font-weight: normal;">In Join, there could be
+more than one synch methods in each chord. So in chord body, we have to
+use synch_o.reply(...) to return results to callers of synch methods
+and release their threads.</span></li>
+</ul>
+</div>
+<span style="font-weight: normal;">Next define a simple test function
+that puts simple strings into buffer and then get them from buffer and
+print out.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">void
+hello_world(buffer&lt;std::string&gt; &amp;b) {<br>
+&nbsp; b.put("hello");<br>
+&nbsp; b.put("world");<br>
+&nbsp; log1.msg(b.get()+" ");<br>
+&nbsp; log1.msg(b.get());<br>
+}<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">And
+define a convenience function to sleep calling thread for a few seconds.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">void
+thread_sleep(int sec) {<br>
+&nbsp;&nbsp;&nbsp; boost::xtime xt;<br>
+&nbsp;&nbsp;&nbsp; boost::xtime_get(&amp;xt, boost::TIME_UTC);<br>
+&nbsp;&nbsp;&nbsp; xt.sec += sec;<br>
+&nbsp;&nbsp;&nbsp; boost::thread::sleep(xt);<br>
+}<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Class
+Demo is a multithreaded test driver which use producer and consumer
+threads to test an instance of buffer. As further discussed in "</span><a
+ href="../concur_design.html">OO Concurrency Designs Based on
+Join</a>", <span style="font-weight: normal;">in Join
+based applications, there is no explicit thread creation and
+synchronization. Concurrent activities are spawned by chords with
+pure/only async&lt;&gt; methods whose chord body will be executed as a
+task in executor thread pool. Here we need 2 concurrent tasks: one for
+producing / putting messages into buffer and one for consuming /
+getting messages from buffer.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">class Demo : public
+actor {<br>
+public:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">First
+declare an instance of buffer to be tested.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+buffer&lt;std::string&gt; &amp;buf_;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">declare
+async producer method to create the producer task</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async&lt;void()&gt; producer;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">declare
+async consumer method to create the consumer task</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async&lt;void()&gt; consumer;<br>
+&nbsp; Demo(buffer&lt;std::string&gt; &amp;b, executor *e) :
+actor(e), buf_(b) {<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">The
+following two chords have only async methods and so their chord body
+will be executed in different threads in executor's thread pool.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(producer, &amp;Demo::producer_cb);<br>
+&nbsp;&nbsp;&nbsp; chord(consumer, &amp;Demo::consumer_cb);<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">The
+body of chord with producer, putting message into buffer and then sleep
+1 second.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+producer_cb(async_o&lt;void()&gt; p) {<br>
+&nbsp;&nbsp;&nbsp; std::ostringstream ostr;<br>
+&nbsp;&nbsp;&nbsp; for(int i=0; i&lt;5; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ostr &lt;&lt; i;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; buf_.put(ostr.str());<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; log1.stream() &lt;&lt; "producer sends
+[" &lt;&lt; i &lt;&lt; "]" &lt;&lt; logger::endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ostr.str("");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; thread_sleep(1);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">The
+body of chord with consumer, get message from buffer, print it and
+sleep 2 seconds.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+consumer_cb(async_o&lt;void()&gt; c) {<br>
+&nbsp;&nbsp;&nbsp; for(int i=0; i&lt;5; i++) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; log1.stream() &lt;&lt; "consumer recvs
+[" &lt;&lt; buf_.get() &lt;&lt; "]" &lt;&lt;
+logger::endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; thread_sleep(2);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+};<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Please
+notice that in above two "body" methods, their async methods pass in no
+arguments, so they are not used inside body, their existence only tell
+us that they have been called.<br>
+<br>
+In main(), we create an instance of buffer and invoke the simple test
+function (hello_world) to test buffer in main thread. Then an executor
+is created with 2 threads in pool. A demo object is created and
+associated with the executor, and its producer() and consumer() async
+methods are called, which will dispatch producing and consuming tasks
+into executor thread pool and test the buffer. Finally </span>exec.shutdown()<span
+ style="font-weight: normal;"> is called to wait for all threads of
+executor to exit.</span><br style="font-weight: normal;">
+</div>
+<div style="margin-left: 40px; font-weight: bold;">int main(int argc,
+char **argv) {<br>
+&nbsp; buffer&lt;std::string&gt; b;<br>
+&nbsp; hello_world(b);<br>
+<br>
+&nbsp; executor exec(2);&nbsp; //spawn 2 threads for executor thread
+pool<br>
+&nbsp; Demo demo(b, &amp;exec.execute);<br>
+&nbsp; demo.producer();<br>
+&nbsp; demo.consumer();<br>
+&nbsp; exec.shutdown();<br>
+&nbsp; return 0;<br>
+}<br>
+</div>
+<br>
+</body>
+</html>

@@ -1,0 +1,56 @@
+
+project
+  : requirements
+    <library>/boost/thread//boost_thread
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj buffer.obj : buffer.cpp ;
+exe buffer : buffer.obj ;
+obj spawner1.obj : spawner1.cpp ;
+exe spawner1 : spawner1.obj ;
+obj one_place_buffer.obj : one_place_buffer.cpp ;
+exe one_place_buffer : one_place_buffer.obj ;
+obj counter.obj : counter.cpp ;
+exe counter : counter.obj ;
+obj rwlock.obj : rwlock.cpp ;
+exe rwlock : rwlock.obj ;
+obj bounded_buffer.obj : bounded_buffer.cpp ;
+exe bounded_buffer : bounded_buffer.obj ;
+obj semaphore.obj : semaphore.cpp ;
+exe semaphore : semaphore.obj ;
+obj active_object.obj : active_object.cpp ;
+exe active_object : active_object.obj ;
+obj async_call_ret.obj : async_call_ret.cpp ;
+exe async_call_ret : async_call_ret.obj ;
+obj future.obj : future.cpp ;
+exe future : future.obj ;
+obj join_many.obj : join_many.cpp ;
+exe join_many : join_many.obj ;
+obj spawner2.obj : spawner2.cpp ;
+exe spawner2 : spawner2.obj ;
+obj prime_sieve.obj : prime_sieve.cpp ;
+exe prime_sieve : prime_sieve.obj ;
+obj logged_buffer.obj : logged_buffer.cpp ;
+exe logged_buffer : logged_buffer.obj ;
+obj chord_override.obj : chord_override.cpp ;
+exe chord_override : chord_override.obj ;
+obj buffer_func_pointer.obj : buffer_func_pointer.cpp ;
+exe buffer_func_pointer : buffer_func_pointer.obj ;
+obj event1.obj : thread_safe_events/event1.cpp ;
+exe event1 : event1.obj ;
+obj event2.obj : thread_safe_events/event2.cpp ;
+exe event2 : event2.obj ;
+obj event3.obj : thread_safe_events/event3.cpp ;
+exe event3 : event3.obj ;
+obj parallel.obj : parallel.cpp ;
+exe parallel : parallel.obj ;
+obj with_stl.obj : with_stl.cpp ;
+exe with_stl : with_stl.obj ;
+obj jocaml1.obj : jocaml1.cpp ;
+exe jocaml1 : jocaml1.obj ;
+obj ccr1.obj : ccr1.cpp ;
+exe ccr1 : ccr1.obj ;
+obj ccr2.obj : ccr2.cpp ;
+exe ccr2 : ccr2.obj ;

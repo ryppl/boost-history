@@ -1,0 +1,122 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Guard Tutorial</title>
+</head>
+<body>
+<h2>Join Guard Tutorial</h2>
+In its basic form, chords will fire as
+long as there are messages available at involved
+async / synch methods. Chord or synchronization is not concerned with
+the messages' content or how many messages are available. Passing in
+guard functors to chord() give us extra control over the enabling of
+chords based on the message content. The guard function is passed the
+messages / arguments of all the involved async / synch methods; what
+guard function returns (true or false) will further decide if the chord
+will
+fire or not. <br>
+In this simple sample (guard.cpp), request messages contain two parts:
+a integer sequence number and a string body. There are two chords to
+process requests, distinguished by their guards: one is to process
+even-numbered messages and the other is to process odd-numbers messages.<br>
+<br>
+Here we are defining a multithreaded (thread pool based) server which
+serves requests consisting of a sequence number (int) and
+content(string). Normal chord() method will check against overlap of
+the set of async / synch methods with the sets of existing chords and
+throw hidden_chord_exception when overlap is found. When guard functors
+are used, such checking is disabled.<br>
+<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+server: public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+First we declare the async method to allow clients to submit requests
+(containing a sequence number and string content).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(int, string)&gt; request; <br>
+</span></div>
+In constructor, we initialize the parent actor with the
+executor<span style="font-weight: bold;">.
+</span>And create two chords: one for processing even numbered requests
+and one for processing odd numbered requests.<span
+ style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+server(executor *e) : actor(e) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(request,
+&amp;server::req_proc_odd, 0,
+&amp;server::is_odd);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(request,
+&amp;server::req_proc_even, 0,
+&amp;server::is_even);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here are two chord body methods.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void req_proc_odd(async_o&lt;void(int, string)&gt; req) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "process a odd request:
+seq#[" &lt;&lt; req.arg1 </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp; &lt;&lt; "], req ["
+&lt;&lt; req.arg2 &lt;&lt; "]" &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+req_proc_even(async_o&lt;void(int, string)&gt; req) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "------------- process a even
+request: seq#[" &lt;&lt; req.arg1 </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp; &lt;&lt; "], req ["
+&lt;&lt; req.arg2 &lt;&lt; "]" &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here are two guard methods used in chord definitions.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+bool is_odd(async_o&lt;void(int, string)&gt; req) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return req.arg1 % 2
+!= 0;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; bool
+is_even(async_o&lt;void(int, string)&gt; req) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return (req.arg1 %
+2) == 0;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br>
+</div>
+In main(), we create an executor with two threads in pool and
+instantiate a server object with the executor. Then we run a loop and
+submit one hundred requests with both even and odd sequence numbers.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">int
+main(int argc, char **argv) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; executor exec(2);&nbsp; //spawn
+2 threads for executor thread
+pool</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; server srv(&amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; for(int i=0; i&lt;100; i++) </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; srv.request(i,
+(i%2)?"odd request":"even request");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; exec.shutdown();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+</div>
+<br>
+</body>
+</html>

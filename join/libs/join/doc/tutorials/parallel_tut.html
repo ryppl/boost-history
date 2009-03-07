@@ -1,0 +1,506 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Data Parallel Programming Tutorial</title>
+</head>
+<body>
+<h2>Join Data Parallel Programming Tutorial</h2>
+Computers are having more and more cores (CPUs). How to harness these
+great computing power and make applications scalable for more CPUs is a
+challenging task. Many vendors are providing libraries to support
+multi-core
+programming, such as Intel's Threading Building Block. Data Parallel
+paradigm is particularly suitable for parallelizing computationally
+intensive work, allowing multiple tasks concurrently working on
+different parts of data. Data parallel programming scales well to
+larger number of processors by dividing the data collection into
+smaller pieces. Program performance increases as you add more
+processors.<br>
+<br>
+Join's toolset (async / synch methods and chords) provides a good
+foundation for data parallel programming. In this tutoral we discuss
+how to implement parallel loops and parallel map-reduce algorithm in
+Join. Here is <a href="../../examples/func_api/parallel.cpp">the
+tutorial's full source code</a>.<br>
+<br>
+Since the basic model is to initiate multiple tasks working
+concurrently on different parts of data set, we define the following
+interface for the main (initiating) task to wait for and synchronize
+with worker tasks.<br>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;typename V&gt;<br>
+class future: public actor {<br>
+public:<br>
+</div>
+<div style="font-weight: bold; text-align: left;"><span
+ style="font-weight: normal;">Here we define synchronous methods (<span
+ style="font-weight: bold;">get()</span>, <span
+ style="font-weight: bold;">wait()</span>) to allow initiating task to
+wait for parallel worker tasks to finish; and return the final result
+if available. Please note that the synch method <span
+ style="font-weight: bold;">get()</span> has not been defined with any
+chord; it has no body defined and is a "pure virtual" method. So <span
+ style="font-weight: bold;">future</span> is an "abstract" concurrent
+class defining the interface to wait for concurrent computations.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+synch&lt;V()&gt; get;<br>
+&nbsp; V wait() { return get(); }<br>
+&nbsp; future(executor *e) : actor(e) {}<br>
+};<br>
+</div>
+<div style="font-weight: bold;">
+<p><span style="font-weight: normal;">The simplest form of parallelism
+is a loop of iterations that can each run simultaneously without
+interfering with each other. The interface will follow STL's <span
+ style="font-weight: bold;">for_each</span> algorithm, defining a
+sequence of data items and a unary function to be applied (as loop
+body) to each of data items. Since the unary function will run
+concurrently in different tasks, the class async_loop will inherit
+class future for user code to wait for all concurrent computations to
+finish. Also because no final result is returned, we use
+future&lt;void&gt; here. To return result from parallel computations,
+please use the next parallel map_reduce algorithm.<br>
+</span></p>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;typename InputIterator, typename UnaryFunction&gt;<br>
+class async_loop: public future&lt;void&gt; {<br>
+</div>
+<div style="text-align: left;">Here we save the data defining the
+parallel loop: the start and end of sequence (first_, last_) and the
+unary function to be applied to each of sequence.<br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; InputIterator
+first_;<br>
+&nbsp; InputIterator last_;<br>
+&nbsp; UnaryFunction f_;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Next
+we use a few async methods to define the "states" of async loop. <span
+ style="font-weight: bold;">done() </span>- all concurrent
+computations have finished. <span style="font-weight: bold;">total()</span>
+and <span style="font-weight: bold;">one_finish()</span> are used to
+record how many concurrent computation are still unfinished.<span
+ style="font-weight: bold;"> run_priv()</span> is an async method which
+forks off all concurrent computations.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async&lt;void()&gt; done;<br>
+&nbsp; async&lt;void(int)&gt; total; <br>
+&nbsp; async&lt;void()&gt; one_finish;<br>
+&nbsp; async&lt;void(InputIterator, int)&gt; run_priv;<br>
+public:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Users
+of async_loop will call run() to start parallel loop. If the
+data sequence is empty, no work is needed and <span
+ style="font-weight: bold;">done() </span>is called directly.
+Otherwise the first computation task is spawned.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void run() {<br>
+&nbsp;&nbsp;&nbsp; if (first_ == last_)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done();<br>
+&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; run_priv(first_, 0);<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">In
+constructor, we define three chords for forking concurrent
+computations, waiting for all computations tasks to finish. Please note
+that all these chords have only async methods. Their chord bodies will
+run asynchronously as concurrent tasks in executor's thread pool.</span><br>
+<br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async_loop(executor *e, InputIterator first, InputIterator last,
+UnaryFunction f) : <br>
+&nbsp;&nbsp;&nbsp; future&lt;void&gt;(e), first_(first), last_(last),
+f_(f) {<br>
+&nbsp;&nbsp;&nbsp; chord(run_priv, &amp;async_loop::run_cb);<br>
+&nbsp;&nbsp;&nbsp; chord(get, done, &amp;async_loop::get_cb);<br>
+&nbsp;&nbsp;&nbsp; chord(one_finish, total, &amp;async_loop::finish_cb);<br>
+&nbsp; }<br>
+private:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is the chord body for forking concurrent computations. The passed-in
+argument will contain the data item (in sequence) to be worked on and
+the position in the chain of concurrent tasks.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+run_cb(async_o&lt;void(InputIterator, int)&gt; r) {<br>
+&nbsp;&nbsp;&nbsp; InputIterator next = r.arg1;<br>
+&nbsp;&nbsp;&nbsp; next++;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">If
+this is the last data item in sequence, set the total number of
+concurrent computations and start the process of counting how many
+computations have finished.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+if (next == last_) {//all loop bodies started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total(r.arg2+1);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; else {<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Otherwise
+start the next concurrent loop-body.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+run_priv(next, r.arg2+1); //fire the
+next iteration<br>
+&nbsp;&nbsp;&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Then
+we do the concurrent computation: calling the unary function with data
+item. And finally <span style="font-weight: bold;">one_finished()</span>
+is called to notify one concurrent computation is done.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+f_(*r.arg1);<br>
+&nbsp;&nbsp;&nbsp; one_finish();<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is the chord body to count how many concurrent computations are still
+left to finish and when all of them is done, </span>done()<span
+ style="font-weight: normal;"> is called.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+finish_cb(async_o&lt;void()&gt; one,
+async_o&lt;void(int)&gt; tot) {<br>
+&nbsp;&nbsp;&nbsp; if (tot.arg1 &gt; 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tot(tot.arg1-1);<br>
+&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done();<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is a simple chord to unblock the calling thread of </span>get()<span
+ style="font-weight: normal;"> when all concurrent computations are
+finished.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+get_cb(synch_o&lt;void()&gt; get, async_o&lt;void()&gt;
+done) {}<br>
+};<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Class
+<span style="font-weight: bold;">map_reduce_async</span> catch the
+common idiom of forking multiple concurrent computations and then
+collecting and merging the results from all of them. It follows the
+functional programming style of map/reduce. The basic model of parallel
+map_reduce is to apply a function (map function) concurrently to a
+sequence of data items marked by the start/end iterators, and then
+collect and merge the results by applying the reduce function to
+results from map tasks. Since we need to return a result to initiator,
+class map_reduce_async inherit future&lt;ResultType&gt;.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;typename InputIterator, <br>
+&nbsp;&nbsp;&nbsp; &nbsp; typename ResultType, <br>
+&nbsp;&nbsp;&nbsp; &nbsp; typename MapFunction, <br>
+&nbsp;&nbsp;&nbsp; &nbsp; typename ReduceFunction&gt;<br>
+class map_reduce_async: public future&lt;ResultType&gt; {<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we save the data defining the concurrent computations.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; InputIterator
+first_;<br>
+&nbsp; InputIterator last_;<br>
+&nbsp; ResultType result_;<br>
+&nbsp; MapFunction map_fun_;<br>
+&nbsp; ReduceFunction reduce_fun_;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">We
+use the following async methods to define the "states" of concurrent
+map_reduce. <span style="font-weight: bold;">done()</span> - all the
+map and reduce tasks have finished and the result is ready to retrieve.
+<span style="font-weight: bold;">total()</span> - how many map tasks
+are not finished yet. <span style="font-weight: bold;">map_m()</span>
+- async method to fork all map tasks. <span style="font-weight: bold;">reduce_m()</span>
+- async method to reduce / merge the result from one completed map task.<br>
+</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+async&lt;void()&gt; done;<br>
+&nbsp; async&lt;void(int)&gt; total; <br>
+&nbsp; async&lt;void(InputIterator, int)&gt; map_m;<br>
+&nbsp; async&lt;void(ResultType)&gt; reduce_m;<br>
+<br>
+public:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">In
+constructor, we save the data defining the parallel map_reduce
+computation: the sequence of data items (first, last), the init-value
+of result to be merged, map function and reduce function. And create
+three chords for forking concurrent map tasks and reducing / merging
+results from them. Please note all chords have only async methods and
+their chord bodies will run asynchronously and concurrently as tasks in
+executor's thread pool.</span> </div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+map_reduce_async(typename future&lt;ResultType&gt;::executor *e,
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; InputIterator first, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; InputIterator last, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; ResultType init_val,
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; MapFunction mf, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ReduceFunction rf) : <br>
+&nbsp;&nbsp;&nbsp; future&lt;ResultType&gt;(e), first_(first),
+last_(last), result_(init_val),<br>
+&nbsp;&nbsp;&nbsp; map_fun_(mf), reduce_fun_(rf) {<br>
+&nbsp;&nbsp;&nbsp; chord(map_m, &amp;map_reduce_async::map_cb);<br>
+&nbsp;&nbsp;&nbsp; chord(reduce_m, total,
+&amp;map_reduce_async::reduce_cb);<br>
+&nbsp;&nbsp;&nbsp; chord(future&lt;ResultType&gt;::get, done,
+&amp;map_reduce_async::get_cb);<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;">
+<div style="font-weight: bold;"><span style="font-weight: normal;">Users
+of map_reduce_async will call run() to start concurrent computations.
+If the
+data sequence is empty, no work is needed and <span
+ style="font-weight: bold;">done() </span>is called directly.
+So the init-value will be returned when get()/wait() is called.
+Otherwise the first map task is spawned.</span></div>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">
+&nbsp; void run() {<br>
+&nbsp;&nbsp;&nbsp; if (first_ == last_)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done();<br>
+&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; map_m(first_, 0);<br>
+&nbsp; }<br>
+private:<br style="font-weight: normal;">
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we define the chord body to fork map tasks. Map tasks are spawned as a
+chain. </span><span style="font-weight: normal;">The passed-in
+argument will contain the data item (in sequence) to be worked on and
+the position in the chain of concurrent tasks.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+map_cb(async_o&lt;void(InputIterator, int)&gt; r) {<br>
+&nbsp;&nbsp;&nbsp; InputIterator next = r.arg1;<br>
+&nbsp;&nbsp;&nbsp; next++;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">If
+this is the last data item in sequence, </span><span
+ style="font-weight: normal;">set the total number of
+concurrent computations and start the reducing process to merge the
+results from all map tasks.<br>
+</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+if (next == last_) {//all loop bodies started<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; total(r.arg2+1);<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; else {<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Otherwise
+the next map task in chain is spawned.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+map_m(next, r.arg2+1); //fire the next
+iteration<br>
+&nbsp;&nbsp;&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we do the real job by calling map function with the current data item
+in sequence and pass the result to the async</span> reduce_m().<br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+reduce_m(map_fun_(*r.arg1));<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we define the chord body for reducing / merging the results from all
+map tasks. First we call the reduce function to merge the resutlt from
+one map task to result. Then we check if any map tasks are still
+pending, otherwise we are finished and <span style="font-weight: bold;">done()</span>
+is called.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+reduce_cb(async_o&lt;void(ResultType)&gt; reduce,
+async_o&lt;void(int)&gt; tot) {<br>
+&nbsp;&nbsp;&nbsp; result_ = reduce_fun_(result_, reduce.arg1);<br>
+&nbsp;&nbsp;&nbsp; if (tot.arg1 &gt; 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; tot(tot.arg1-1);<br>
+&nbsp;&nbsp;&nbsp; else<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; done();<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we define the chord body for returning the result to caller of</span>
+get() / wait() <span style="font-weight: normal;">when all map /
+reduce tasks are finished.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; void
+get_cb(synch_o&lt;ResultType()&gt; get,
+async_o&lt;void()&gt; done) {<br>
+&nbsp;&nbsp;&nbsp; get.reply(result_);<br>
+&nbsp; }<br>
+};<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Class
+parallel is a wrapper of the above parallel loop and map_reduce
+algorithms to provide a simple STL style functional interface to invoke
+these algorithms. Also class parallel specifies which executor's thread
+pool to run all the async tasks spawned from algorithms.</span> </div>
+<div style="margin-left: 40px; font-weight: bold;">class parallel {<br>
+&nbsp; actor::executor *exec_;<br>
+public:<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">In
+constructor, we pass in and save the executor.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+parallel(actor::executor *e) : exec_(e) {}<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is the method to invoke the parallel loop algorithm, following STL's <span
+ style="font-weight: bold;">for_each</span> algorithm. An async_loop
+object is created with the arguments passed in and is returned as a
+future&lt;void&gt; to caller. Caller can synchronize and wait for all
+parallel loop bodies using this future object.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; template
+&lt;typename InputIterator, typename UnaryFunction&gt;<br>
+&nbsp; future&lt;void&gt; *for_each(InputIterator first, InputIterator
+last, UnaryFunction f) {<br>
+&nbsp;&nbsp;&nbsp; async_loop&lt;InputIterator, UnaryFunction&gt;
+*aloop = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new async_loop&lt;InputIterator,
+UnaryFunction&gt;(exec_, first, last, f);<br>
+&nbsp;&nbsp;&nbsp; aloop-&gt;run();<br>
+&nbsp;&nbsp;&nbsp; return aloop;<br>
+&nbsp; }<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is the method to invoke parallel map_reduce algorithm. A
+map_reduce_async object is created with the arguments passed in and
+returned to caller as a future&lt;ResultType&gt; to caller. </span><span
+ style="font-weight: normal;">Caller can wait for all parallel map /
+reduce tasks and retrieve the final result using this future object.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; template
+&lt;typename InputIterator, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; typename ResultType, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; typename MapFunction, <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; typename ReduceFunction&gt;<br>
+&nbsp; future&lt;ResultType&gt; *map_reduce(InputIterator first,
+InputIterator last, ResultType init, MapFunction mf, ReduceFunction rf)
+{<br>
+&nbsp;&nbsp;&nbsp;
+map_reduce_async&lt;InputIterator,ResultType,MapFunction,ReduceFunction&gt;
+*mapred = <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new
+map_reduce_async&lt;InputIterator,ResultType,MapFunction,ReduceFunction&gt;(exec_,
+first, last, init, mf, rf);<br>
+&nbsp;&nbsp;&nbsp; mapred-&gt;run();<br>
+&nbsp;&nbsp;&nbsp; return mapred;<br>
+&nbsp; }<br>
+};<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">In
+the following, we define a simple data seqeunce of integers to
+demonstrate parallel algorithms.<br>
+</span></div>
+<div style="margin-left: 40px; font-weight: bold;">int data[] = {1, 2,
+3, 4, 5, 6, 7, 8, 9, 10};<br>
+int size = sizeof(data) / sizeof(int);<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we define a "square" function to be used as either the loop body of
+parallel loop or map function of parallel map / reduce.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">int sqr(int val) {<br>
+&nbsp; //do some work<br>
+&nbsp; for(int i=0; i&lt;3; i++) {<br>
+&nbsp;&nbsp;&nbsp; log1.stream() &lt;&lt; "one map task calculating: "
+&lt;&lt; val &lt;&lt; " * " &lt;&lt; val &lt;&lt; " ...[" &lt;&lt; i
+&lt;&lt; "]" &lt;&lt; logger::endl;<br>
+&nbsp;&nbsp;&nbsp; thread_sleep(2);<br>
+&nbsp; }<br>
+&nbsp; return val * val;<br>
+}<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+is a "plus" function we'll use as the reduce / merge function.</span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">int plus(int total,
+int one_more) {<br>
+&nbsp; log1.stream() &lt;&lt; "reduce task accumulates: " &lt;&lt;
+one_more &lt;&lt; logger::endl;<br>
+&nbsp; return total + one_more;<br>
+}<br>
+<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">In
+main() function, we set up a test of the above parallel algorithms. </span><br>
+</div>
+<div style="margin-left: 40px; font-weight: bold;">int main(int argc,
+char **argv) {<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">First
+we creates a thread pool with six threads to run the async tasks
+spawned from the parallel algorithms.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; executor
+exec(6);&nbsp; <br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Then
+we create a parallel object with the thread pool.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; parallel
+para(&amp;exec.execute);<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Next
+we invoke the parallel loop algorithm and asking function sqr() to be
+applied concurrently to each item of the data sequence.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+future&lt;void&gt; *f1 = para.for_each(data, data+size, sqr);<br>
+&nbsp; log1.msg("main thread waiting for parallel.for_each() ...");<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we wait for all tasks of parallel loop to finish.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; f1-&gt;wait();<br>
+&nbsp; log1.msg("parallel.for_each() is done, start
+parallel.map_reduce() ...");<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we invoke the parallel map_reduce algorithm on the data sequence using </span>sqr()<span
+ style="font-weight: normal;"> as map function and </span>plus()<span
+ style="font-weight: normal;"> as reduce function.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+future&lt;int&gt; *f2 = para.map_reduce(data, data+size, 0, sqr,
+plus);<br>
+&nbsp; log1.msg("main thread waiting for parallel.map_reduce() ...");<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Here
+we wait for all tasks of parallel map_reduce to finish and retrieve the
+final result.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; log1.stream()
+&lt;&lt; "parallel.map_reduce() returns: "
+&lt;&lt; f2-&gt;get() &lt;&lt; logger::endl;<br>
+</div>
+<div style="font-weight: bold;"><span style="font-weight: normal;">Finally
+we clean up by shutting down executor (wait for all its threads to
+exit) and delete two future objects.</span></div>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;
+exec.shutdown();<br>
+&nbsp; delete f1;<br>
+&nbsp; delete f2;<br>
+&nbsp; return 0;<br>
+}<br>
+</div>
+<br>
+</body>
+</html>

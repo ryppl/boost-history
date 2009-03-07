@@ -1,0 +1,380 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>assoc_id_text.html</title>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Design of Associative Name Space, Id and Id_Trait</h2>
+<br>
+There are 2 stimulis for the design of associative name space:<br>
+<ul>
+  <li>Control flow branching based on pattern matching. <br>
+  </li>
+</ul>
+<div style="margin-left: 40px;">Many shells (e.g. rc, bash) support the
+following control flow structure:<br>
+</div>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; case <span
+ style="font-style: italic; font-weight: bold;">expression</span> in<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span
+ style="font-weight: bold; font-style: italic;">pattern1</span> )<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; statements ;;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <span
+ style="font-weight: bold; font-style: italic;">pattern2</span> )<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; statements ;;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+......<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; esac<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; In shells, patterns are
+created by using wildcard characters (*,?...). Ruby provides a stronger
+"case" structure using regex to define patterns.<br>
+<ul>
+  <li>Linda Tuple Space. <br>
+  </li>
+</ul>
+<div style="margin-left: 40px;">In a brief summary, in a Linda system,
+distributed processes communicate thru shared associative "address
+space" - tuple space which consist of tuples. Each tuple consists of
+fields. Tuples are written
+("out") to tuple space, read and taken ("in", "read") from tuple space.
+Tuples are identified thru associative
+lookup: two tuples match if all their corresponding fields match while
+two fields match if they are of the same type and either of the same
+value or one of them is wildcard.<br>
+<br>
+</div>
+<div style="text-align: left;">Channel supports message passing and
+name-matching based on regex pattern matching and Linda associative
+lookup. Regex name-matching is implemented using Boost.Regex and the
+code is relative straightforward. Please refer to <a
+ href="sample9_text.html">sample 9</a>
+for the usage of regex based name-matching. Here we focus on the <a
+ href="../../../boost/channel/name_spaces/assoc_id_trait.hpp">detailed
+implemenation</a> of names-matching
+using Linda lookup. Please refer to <a href="sample10_text.html">sample
+10</a> for the usage of associative lookup based name-matching.<br>
+<br>
+In Linda style associative name space, a message names/ids is "a
+tuple" consisting of a set of fields. We use Boost.Tuple&nbsp; for
+defining these ids and names. To support associative lookup, we define
+field_trait template classes for each data type of the tuple fields.
+Each field_trait class will define wildcard and match operation for its
+data type. The following is a sample:<br>
+<div style="margin-left: 40px; background-color: rgb(255, 255, 255);"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+template &lt;&gt;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+class
+BOOST_CHANNEL_DECL field_trait&lt;int&gt; {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+public:</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef int field_type;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static int wildcard;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool wildcard_field(int f) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (f == wildcard) </span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;
+&nbsp;&nbsp;&nbsp; return true;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return false;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool match(int f1, int f2) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (f1 == wildcard || f2 == wildcard)</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;
+&nbsp;&nbsp;&nbsp; return true;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return f1 == f2;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+};</span><br>
+</div>
+In assoc_id_trait.hpp, we define the field_trait template classes for
+all the primitive data types. If user defined types (classes or
+structs) are to be used as tuple field type, user code should provide
+field_trait classes for these types.<br>
+<br>
+We define the following template class as associative name space id:<br>
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+template &lt;typename Tuple_Type&gt;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+class tuple_id {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ......<br>
+&nbsp;&nbsp;&nbsp; </span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">We need define copy constructor and
+standard relational operators for tuple_id to work with std::map
+container.</span><br style="color: rgb(153, 0, 0);">
+</span><span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; tuple_id(const tuple_id &amp;id) : type_(id.type_),
+tuple_(id.tuple_) {}</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp; bool operator&lt; (const tuple_id &amp;id) const {......}</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; bool operator== (const tuple_id &amp;id) const
+{......}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; bool operator!= (const tuple_id &amp;id) const
+{......}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; ......<br>
+&nbsp;&nbsp;&nbsp; </span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">Then we define serialize() method to
+marshal/demarshal tuple_id using Boost.Serialization</span><br
+ style="color: rgb(153, 0, 0);">
+</span><span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; template&lt;class Archive&gt;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; void serialize(Archive &amp; ar, const unsigned int
+version) {......}</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+};<br>
+<br>
+</span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">Next, we define id_trait class for
+tuple_id:<br>
+<br>
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template&lt;typename Tuple_Type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+class BOOST_CHANNEL_DECL id_trait&lt;tuple_id&lt;Tuple_Type&gt; &gt; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+public:</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+&nbsp;&nbsp;&nbsp; we define some associated types.<br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef Tuple_Type tuple_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef tuple_id&lt;tuple_type&gt; id_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+&nbsp;&nbsp;&nbsp; and define system internal messages<br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);"></span><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type channel_conn_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type channel_disconn_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type init_subscription_info_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type connection_ready_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type subscription_info_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type unsubscription_info_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type publication_info_msg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static id_type unpublication_info_msg;<br>
+&nbsp;&nbsp;&nbsp; </span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">Since internally Boost.Tuple is
+represented as recursive cons list, the following match operation is
+defined as recursive methods:</span></span><span
+ style="color: rgb(153, 0, 0); font-style: italic;"><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; static bool match_tuple(const
+boost::tuples::null_type&amp;, const boost::tuples::null_type&amp;)</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;"></span><span
+ style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return true;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename H, typename T&gt;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool match_tuple(const boost::tuples::cons&lt;H,T&gt; &amp;t1,
+const boost::tuples::cons&lt;H,T&gt; &amp;t2)</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if(!field_trait&lt;H&gt;::match(t1.get_head(),
+t2.get_head()))</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return false;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return match_tuple(t1.get_tail(), t2.get_tail());</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br>
+<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);"></span><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool match(id_type id1, id_type id2)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{ </span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (id1.type_ != id2.type_)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; return false;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (id1.type_ == id_type::app_type) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; if (wildcard_tuple(id1.tuple_) &amp;&amp;
+wildcard_tuple(id2.tuple_) &amp;&amp; (id1.tuple_ != id2.tuple_))</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return false;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; if (id1.tuple_ == id2.tuple_)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return true;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; return match_tuple(id1.tuple_, id2.tuple_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return true;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+Similarly, we define recursive methods to find if a tuple_id contains
+wildcard:<span style="font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool wildcard_tuple(const boost::tuples::null_type&amp;)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return false;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename H, typename T&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool wildcard_tuple(const boost::tuples::cons&lt;H,T&gt; &amp;t1)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+{</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+if(field_trait&lt;H&gt;::wildcard_field(t1.get_head()))</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; return true;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return wildcard_tuple(t1.get_tail());</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static bool wildcard_name(const id_type &amp;id) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (id.type_ != id_type::app_type)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; &nbsp;&nbsp;&nbsp; return false;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return wildcard_tuple(id.tuple_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+Finally we define a method to display id content as string for
+debugging purpose:<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+static std::string id_to_string(const id_type &amp;id) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; std::ostringstream os;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; os &lt;&lt; "tuple_id : type[" &lt;&lt; id.type_
+&lt;&lt; "] tuple[" &lt;&lt; id.tuple_ &lt;&lt; "]";</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return os.str();</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+};</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<br>
+Since the type of tuple (how many fields and what fields types) are
+decided by application code of Channel and can be different for
+different applications, the pre-defined system internal messages can
+only be defined thru the following macro. Application code should
+include this macro somewhere so that its system internal messages are
+defined:<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">#define
+DEFINE_ASSOC_SYS_IDS( tuple_type ) \</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">template
+&lt;&gt; boost::channel::tuple_id&lt;tuple_type&gt;
+boost::channel::id_trait&lt;boost::channel::tuple_id&lt;tuple_type&gt;
+&gt;::channel_conn_msg(boost::channel::tuple_id&lt;tuple_type&gt;::channel_conn_type);
+\<br>
+......<br style="font-style: italic; color: rgb(153, 0, 0);">
+</span><span style="font-style: italic; color: rgb(153, 0, 0);"></span><span
+ style="font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<br>
+</span></span><span style="color: rgb(153, 0, 0); font-style: italic;"></span></div>
+</body>
+</html>

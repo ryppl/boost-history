@@ -1,0 +1,317 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Internals</title>
+</head>
+<body>
+<h2 style="text-align: left;">Join Internals</h2>
+<h3>Architecture</h3>
+Join's internal design consists of 2 parts:<br>
+<ol>
+  <li>Low Level Resource Acquisition Core <br>
+  </li>
+</ol>
+<div style="margin-left: 40px;">The core of Join (and similarly
+JoCaml/Cw/C#.Joins) is a simple resource acquisiton (and contention
+management)
+manager which supports atomic acquisition of multiple resources:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>use a bitmap to represent
+(global) resource-availability status:</li>
+</ul>
+<div style="margin-left: 40px;">
+<ul>
+</ul>
+</div>
+<div style="margin-left: 80px;">
+<ul>
+  <li>each bit is used for
+status of one resource (available/unavailable) or message
+(arrival/missing)</li>
+  <li>bitmap -
+represent the status of multiple resources</li>
+  <li>each acquisition
+(behaviour/pattern) is also represented as a bitmap (chord)</li>
+</ul>
+<ul>
+</ul>
+</div>
+<ul style="margin-left: 40px;">
+  <li>one
+acquisition can try to acquire multiple resources (chord bitmap
+contains
+multiple "1" bits)</li>
+  <li>applications can use
+multiple concurrent / competing acquisition behaviours(patterns) whose
+bitmaps overlap or which
+compete for the same global resources</li>
+  <li>fast
+dispatching / scheduling:</li>
+</ul>
+<ul style="margin-left: 40px;">
+</ul>
+<div style="margin-left: 80px;">whenever a new resource becomes
+available, the global status
+bitmap is updated, and the new global status
+bitmap is compared with chords' bitmaps; if a chord's bitmap
+matches (covered by) the global
+status bitmap, this acquisition can be satisfied (or chord is fired):
+one item is removed from each resource marked by the bits of chord's
+bitmap, and the global status bitmap is updated to reflect new
+status of resource availability.<br>
+If more than one chord can be fired, we can apply
+various scheduling algorithms: round robin, priority based<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li><span style="font-weight: bold;">a single mutex</span> is used to
+protect all
+these bitmaps and comparing logic</li>
+  <li>multiple threads can try
+concurrent acquisitions and contention/conflicts are resolved
+atomically and thread-safely&nbsp;&nbsp;
+&nbsp;<br>
+  </li>
+</ul>
+<ol start="2">
+  <li>High Level Messaging Semantics</li>
+</ol>
+<div style="margin-left: 40px;">On top of Join's core
+resource-acquisition manager, Join
+(Jocaml/Cw/C#.Joins) adds the following high level messaging based
+semantics :<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>each bit of global resource bitmap is "set" by a
+method/channel (the passed-in arguments / messages are the resources to
+be
+consumed), so each chord/acquisition-pattern is defined
+by a set of method/channels</li>
+  <li>each chord/pattern is associated with a callback
+(chord-body) which defines how the resources/messages&nbsp; (acquired
+by
+this chord from methods/channels) are consumed</li>
+</ul>
+<div style="margin-left: 40px;">Two types of method/channel give
+different semantics :<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>asynchronous: when an asynchronous channel is invoked, if no
+acqusition bitmaps is satisfied (no chord can fire), arguments/messages
+are buffered,
+global
+resource bitmap is updated and calling thread returns without blocking</li>
+  <li>synchronous: when a synchronous channel is invoked, if no
+acqusition bitmap
+is satisfied (no chord can fire), arguments/messages are kept at stack,
+global
+resource bitmap is updated and calling thread is blocked (<span
+ style="font-weight: bold;">a condition variable </span>is
+used)</li>
+</ul>
+<div style="margin-left: 40px;">If there exist a chord (acquisition
+pattern) which
+can fire, depending on the types of acquisition pattern (chord), there
+are 2 behaviours:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>if the chord contains a synchronous
+method/channel, the blocked thread of synch-call is waked up and the
+chord-body
+callback is executed by/inside that thread</li>
+  <li>if the chord contains all async
+methods/channels, the chord-body callback is executed in
+"another/different"
+thread (which can be
+a new thread or from thread-pool), this is how "spawning" is done in
+Join</li>
+</ul>
+<h3>Some facts result from the architecture<br>
+</h3>
+<ol start="1">
+  <li>Join's usage of low level synchronization primitives<br>
+  </li>
+</ol>
+<div style="margin-left: 40px;">The rule to get the number of
+(mutex, condition variable)
+used by a
+Join class is simple: <br>
+<ul>
+  <li>each actor holds a mutex which is used to protect all
+code in async&lt;&gt;/synch&lt;&gt;/chord/actor, </li>
+  <li>each synch&lt;&gt; method holds a
+condition variable and </li>
+  <li>async&lt;&gt; methods hold no synchronization primitive<br>
+  </li>
+</ul>
+Although Join's primitives (async&lt;&gt; / synch&lt;&gt; / chord) are
+high level, the author's experience has shown that concurrent
+applications written with Join usually use almost the same number of
+low level synchronization primitives as manually crafted ones.<br>
+<br>
+</div>
+<div style="margin-left: 40px;">For example, a manually crafted thread
+safe message queue will use a mutex and a condition variable to provide
+an asynchronous send/push interface (send and go) and a synchronous
+receive/pop interface (blocking wait if no message available).<br>
+</div>
+<div style="margin-left: 40px;">In Join, a simple thread safe message
+queue can be defined as following:<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename msg_type&gt;</span><br>
+<span style="font-weight: bold;">class message_queue : public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+async&lt;void(msg_type)&gt; send;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+synch&lt;msg_type()&gt; recv;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+message_queue() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; chord(recv,
+send,
+&amp;message_queue::forward);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+msg_type
+forward(synch_o&lt;msg_type()&gt; r,
+async_o&lt;void(msg_type)&gt; s) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return s.arg1;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+Based on the above rule, since this message_queue class inherits from
+actor class and has one synch&lt;&gt; method, it will use one mutex and
+one condition variable, using exactly the same number of low level
+synchronization primitives as manually crafted. &nbsp;&nbsp;
+&nbsp;&nbsp; </div>
+<ol start="2">
+  <li>Join's expressiveness<br>
+  </li>
+  <ol>
+  </ol>
+</ol>
+<div style="margin-left: 40px;">Join provides a generic framework to
+compose asynchronous and synchronous behaviours in thread safe manner.
+Join's special internal design makes it
+very expressive in creating concurrent applications:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>Join is expressive in that it can be used to
+create most common concurrency / synchronization constructs with
+ease,&nbsp; such as monitor, read-write lock, or actors. See tutorials
+for detailed coding</li>
+  <ul>
+  </ul>
+  <li>Join is expressive in that it is common and easy to
+write
+concurrent (thread-safe) applications using solely Join's primitives
+(async/synch/chord) without using low level threads, mutex and
+condition variables. Again see tutorials for more samples. Please refer
+to this <a href="../../../boost/join/idioms/executor.hpp">Join based
+simple
+executor</a> implmented sole thru Join's primitives.<br>
+  </li>
+</ul>
+<ol start="2">
+  <ol>
+  </ol>
+</ol>
+<ol start="3">
+  <li>Since Join's core
+directly supports atomic acquisition of multiple resources, it helps
+nicely multithreaded applications which involve multiple resources:</li>
+</ol>
+<ul style="margin-left: 40px;">
+  <li>Multithreaded applications whose threads acquiring conflicting
+sets of multiple resources (or locks)&nbsp; are prone to
+dead-locks.&nbsp; The normal way to avoid dead-lock is by enforcing a
+consistent (global) order of acquiring resources (locks), as clearly
+explained in Herb Sutter's article <a
+ href="http://www.ddj.com/hpc-high-performance-computing/204801163">"Use
+Lock Hierarchies to Avoid Deadlock"</a>.</li>
+</ul>
+<div style="margin-left: 80px;">Join provides a natural solution to
+this issue. We can use async channels/methods to represent the
+availability status of resources. The existence of messages at these
+async channels represent that resources (locks) are available to be
+consumed. Each acquisition pattern is represented as a chord which has
+one synch channel/method and multiple async channels. For example, to
+resolve the conflicting acquisitions of resources from multiple
+threads, we can define the following resource manager:<br>
+<span style="font-weight: bold;">class resource_manager : actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;void()&gt;
+resource1;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;void()&gt;
+resource2;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;void()&gt;
+resource3;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;void()&gt;
+resource4;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ......</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; synch&lt;void()&gt;
+acquire1;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; synch&lt;void()&gt;
+acquire2;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; synch&lt;void()&gt;
+acquire3;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ......</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; resource_manager() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(acquire1, resource1, resource3, resource4,
+&amp;resource_manager::handle_acquire1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(acquire2, resource3, resource2, resource1,
+&amp;resource_manager::handle_acquire2);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(acquire3, resource2, resource4,
+&amp;resource_manager::handle_acquire3);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; ......<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; resource1();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; resource2();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; resource3();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; ......<br style="font-weight: bold;">
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+The above 3 chords define 3 different acquisition patterns competing
+for the same set of resources. Initially a message will be sent on each
+of these async channels to mark resource1,2,3 are available. Different
+threads will call acquire1() / acquire2() / acquire3(), block waiting
+until all of its required resources are available. When a chord is
+fired in one thread, that thread will remove a messages from each of
+async channels marked in the chord pattern, meaning it consumes these
+resources. When this thread is finished with using these resources, it
+will call these async methods to mark the resources available again.
+Please note that the order of these async channels (resources) defined
+in chords are not relevant anymore; since all required async channels
+(resources) are acquired atomically.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>In the Futures/Promises concurrency model, one common idiom
+(wait_for_all) is using a future to wait for results from multiple
+asynchronous computations. Join can also be used to implement Futures
+and its wait_for_any and wait_for_all idioms. Please refer to the
+following <a href="compare_future.html">section on futures/promises</a>
+for more detailed discussions.</li>
+</ul>
+&nbsp;<br>
+<br>
+</body>
+</html>

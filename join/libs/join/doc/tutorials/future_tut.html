@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Futures Tutorial</title>
+</head>
+<body>
+<h2>Join Futures Tutorial</h2>
+Future is a abstraction
+representing the value of a concurrent computation. Creating a future
+initiates a concurrent computation in another thread (in the executor
+thread pool) and then initiating thread is
+free to perform other tasks. When initiator needs the value of
+computation, it can call the future's get() method to synchronize with
+the computing thread and wait until/unless the computation is done.
+This sample shows a simple implementation of future using Join;
+adapted from sample in [3]. <br>
+<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename T&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class future : public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+First we define the type&nbsp; of computation to be carried out
+concurrently, a callable object (functions, methods, etc) taking no
+argument and returning value of type T.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+typedef boost::function&lt;T()&gt; Computation;<br>
+</span></div>
+And a synchronous "get" method which the initiating thread will call to
+wait and retrieve the result of concurrent computation.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;T()&gt; get;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Computation comp;<br>
+</span></div>
+We use two asynchronous methods to represent the state of concurrent
+computation: <span style="font-weight: bold;">compute</span> -
+computation is going on; <span style="font-weight: bold;">done</span>
+- computation is finished and result is ready to retrieve.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; compute;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; done;<br>
+</span></div>
+Next we define two member variables to save the result of concurrent
+computation: either the successfully computed result (value_) or an
+exception thrown during the computation (except_).<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+std::auto_ptr&lt;T&gt; value_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+std::auto_ptr&lt;std::runtime_error&gt; except_;</span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+In constructor, we tell the parent actor class which executor
+to dispatch tasks and create two chords.
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+future(Computation c, executor *e) : actor(e), comp(c) {<br>
+</span></div>
+The first chord (compute chord) is for async method <span
+ style="font-weight: bold;">compute</span>, which is<span
+ style="font-weight: bold;"> </span>for spawning a concurrent task in
+executor to do the real computation.
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(compute, &amp;future::compute_body);<br>
+</span></div>
+The second chord (get chord) is for the "joining" of async method <span
+ style="font-weight: bold;">done</span> and synch method <span
+ style="font-weight: bold;">get</span>; for the case when the
+computation is done, allowing initiator to retrieve the result.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(get, done, &amp;future::get_body);<br>
+</span></div>
+At end of constructor, we call async method <span
+ style="font-weight: bold;">compute()</span> to start the concurrent
+computation.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+compute();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the definition of compute chord body which will run in a thread
+from executor thread pool.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void compute_body(async_o&lt;void()&gt; c) {<br>
+</span></div>
+First we do the required computation, save the result in <span
+ style="font-weight: bold;">value_</span> or if exception is thrown,
+save exception in <span style="font-weight: bold;">except_</span>.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+try {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+value_.reset(new T(comp()));</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; catch (...) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //need
+more delicate way to catch
+application specific exceptions</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //such
+as Peter Dimov N2179 proposal</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //here
+for demo, simply change all
+exceptions to runtime_error</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+except_.reset(new
+std::runtime_error("exceptions happens inside future computation"));</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }<br>
+</span></div>
+And call async method <span style="font-weight: bold;">done() </span>to
+transition the state of this future object to "ready to be retrieved".<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+done();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the definition of get chord body, will run in the thread which
+calls the synch get method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void get_body(synch_o&lt;T()&gt; g, async_o&lt;void()&gt; d) {<br>
+</span></div>
+First we send another done() message so that other threads can also
+call get() to retrieve the result of computation.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+done(); //reissue done to allow multiple gets<br>
+</span></div>
+Next based on if the computation is done successfully or not, returning
+the result value to caller of <span style="font-weight: bold;">get() </span>or
+rethrow exception caught during computation in the thread calling<span
+ style="font-weight: bold;"> get().</span><br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+if(except_.get())</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw
+*except_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; g.reply(*value_);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+Next we define two simple "computations" to be carried out
+concurrently, each will take some time and return a string result.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">std::string
+task1() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; for(int i=0; i&lt;8; i++) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "task1 is running " &lt;&lt;
+i &lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; thread_sleep(1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return std::string("task1 is
+done");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">std::string task2() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; for(int i=0; i&lt;8; i++) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "task2 is running " &lt;&lt;
+i &lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; thread_sleep(1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; if(i==4) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; throw
+std::runtime_error("future
+exception test");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return std::string("task2 is
+done");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+</div>
+<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">int
+main(int argc, char **argv) {<br>
+</span></div>
+In main(), we first create an executor with two threads.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+executor exec(2);&nbsp; //add 2 threads in executor thread pool<br>
+</span></div>
+Then we create two future objects and pass in the computation to be
+done and which executor to use to spawn concurrent tasks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+future&lt;std::string&gt; fu1(task1, &amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; future&lt;std::string&gt;
+fu2(task2, &amp;exec.execute);<br>
+</span></div>
+First we let main thread wait and sleep for a while.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+for(int i=0; i&lt;4; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "Main " &lt;&lt; i &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; thread_sleep(1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; log1.msg("Main starts waiting
+on future");<br>
+</span></div>
+Here, the main thread is waiting to retrieve the result of concurrent
+computation. The first future object will return the result and the
+second future object will thrown an exception.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+try {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "future1 returns : " &lt;&lt;
+fu1.get() &lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; catch (...) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.msg("future1
+got exception");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; try {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "future2 returns : " &lt;&lt;
+fu2.get() &lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; catch (...) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.msg("future2
+got exception");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Finally waiting for executor threads to exit and test shutdown.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+exec.shutdown();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+</div>
+<br>
+</body>
+</html>

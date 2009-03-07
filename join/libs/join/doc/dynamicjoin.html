@@ -1,0 +1,281 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Dynamic Flow Based "Join" Programming (JoCaml and CCR Style)</title>
+</head>
+<body>
+<h2>Dynamic Flow Based "Join" Programming (JoCaml and CCR Style)</h2>
+<p>In the style of JoCaml and CCR, we attempt to use Join's features
+(async&lt;&gt; / synch&lt;&gt; / chords) to model the network of
+message flows:<br>
+</p>
+<ul>
+  <li>using async&lt;&gt; / synch&lt;&gt; to model the asynchronous and
+synchronous typed message channels.</li>
+  <li>using direct instantiation of class actor (which is also aliased
+"joint") to model the juncture
+points or "joints" where message flows meet.<br>
+  </li>
+  <li>using chords defined at "joints" to define the message processing
+logic.<br>
+  </li>
+</ul>
+Here the program composition is not based on class inheritance or
+compile time mechanisms; but direct composition of async&lt;&gt; /
+synch&lt;&gt; / chords.<br>
+<br>
+Take a simple example from JoCaml's manual:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; def apple() &amp;
+pie() = print_string "apple pie" ; 0</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+or raspberry() &amp; pie() = print_string "raspberry pie" ; 0</span><br
+ style="font-weight: bold;">
+Here three asynchronous channels are defined: apple(), raspberry() and
+pie(). The above definition contains two colocated (thru operator "or")
+join-patterns (chords) which defines what processing is done when
+messages arrive at these three channels.<br>
+<br>
+Using CCR, similar code can be expressed as following:<br>
+&nbsp;&nbsp;&nbsp;&nbsp; First we create dispatcher thread pool and
+queue:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Dispatcher dp = new
+Dispatcher(...);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; DispatcherQueue dq
+= new DispatcherQueue(dp);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; </span>Here we define three async message channels:<span
+ style="font-weight: bold;"><br style="font-weight: bold;">
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+Port&lt;String&gt; apple = new Port&lt;String&gt;();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Port&lt;String&gt;
+raspberry = new Port&lt;String&gt;();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Port&lt;String&gt;
+pie = new Port&lt;String&gt;();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ...<br>
+</span>&nbsp;&nbsp;&nbsp; Then arbiters are defined to synchronize
+and process messages in the above three channels. In
+CCR, join-patterns are expressed by "JoinedReceive" arbiters. The
+processing of the messages is done by 2
+delegates which are dispatched to the dispatcher thread pool:<br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+Arbiter.Activate(dq,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;
+&nbsp;&nbsp; Arbiter.JoinedReceive&lt;string,string&gt;(true, apple,
+pie,</span><span style="font-family: monospace; font-weight: bold;"> </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; delegate(string b, string d){ Console.WriteLine("got
+apple pie"); }),</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; Arbiter.JoinedReceive&lt;string,string&gt;(true,
+raspberry, pie,</span><span
+ style="font-family: monospace; font-weight: bold;"> </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; delegate(string b, string d){ Console.WriteLine("got
+raspberry pie"); })</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+);</span><br style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">...</span><br>
+&nbsp;&nbsp;&nbsp; Finally we send messages on channels:<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">apple.Post("red");
+raspberry.Post("blue"); pie.Post("large");</span><br>
+<br>
+Using the Join library described here, this example can be expressed as
+following:<br>
+<div style="margin-left: 40px;">First we create an executor with 2
+threads in
+pool:<br style="font-weight: bold;">
+<span style="font-weight: bold;">executor exec(2);&nbsp; </span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+Then define async message channels:<br style="font-weight: bold;">
+<span style="font-weight: bold;">async&lt;void(string)&gt; apple;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">async&lt;void(string)&gt; raspberry;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">async&lt;void()&gt; pie;</span><br
+ style="font-weight: bold;">
+<br>
+Then we create "joints" which defines how messages are synchronized and
+processed. Each chord defines a join-pattern and the colocation/choice
+of
+join-patterns are expressed by concatenation. Please note that the real
+message
+processing code are function objects which could be plain functions or
+object/class
+methods (apple_pie, raspberry_pie) defined somewhere else:<br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">actor joins(&amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">joins.chord(apple, pie, apple_pie)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(raspberry, pie, raspberry_pie);</span><br
+ style="font-weight: bold;">
+<br>
+Now we send a few messages on channels<br style="font-weight: bold;">
+<span style="font-weight: bold;">pie(); pie();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">raspberry("green");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">apple("red");</span><br>
+</div>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; Here are the message processing
+code:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">void
+apple_pie(async_o&lt;void(string)&gt; a, async_o&lt;void()&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; cout &lt;&lt; a.arg1 &lt;&lt; "
+apple pie" &lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">void
+raspberry_pie(async_o&lt;void(string)&gt; r, async_o&lt;void()&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; cout &lt;&lt; r.arg1 &lt;&lt; "
+raspberry pie" &lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}<br>
+<br>
+</span></div>
+The complete sample code can be found <a
+ href="../examples/func_api/jocaml1.cpp">here.</a><br>
+<br>
+The following is another CCR sample with the translation by Join
+library.<br>
+<br>
+A common design idiom in CCR ( as in other message passing based
+systems ) is to use message channels as the interface between
+components. This <a href="../examples/func_api/ccr_service.cs">CCR
+sample</a> shows the typical design of CCR based service/server.<br>
+The server exposes 3 channels to accept requests from clients, which is
+defined as <span style="font-weight: bold;">PortSet&lt;Stop,
+UpdateState, GetState&gt;</span>.<br>
+Each request will include 2 channels to allow server send responses
+back to clients. The responses are either the results of calculation or
+exceptions, which is defined as <span style="font-weight: bold;">PortSet&lt;string,
+Exception&gt;</span>.<br>
+In server's constructor, the following arbiters are defined to trigger
+processing code based on incoming requests:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Arbiter.Activate(_taskQueue,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Arbiter.Receive&lt;UpdateState&gt;(true, _mainPort, UpdateHandler),</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+Arbiter.Receive&lt;GetState&gt;(true, _mainPort, GetStateHandler)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+);</span><br style="font-weight: bold;">
+<br>
+In <a href="../examples/func_api/ccr2.cpp">Join's code for this sample</a>,
+the server's interface is defined as following class with 3
+asynchronous channels:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Service {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(Stop&amp;)&gt;
+stop;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+async&lt;void(UpdateState&amp;)&gt; update;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+async&lt;void(GetState&amp;)&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+</div>
+Each request class (Stop/UpdateState/GetState) will inherit the
+following class with 2 response channels:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+ServiceResponse {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(string)&gt;
+result;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(exception*)&gt;
+failure;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+</div>
+In server's constructor, the following chords are defined for
+processing requests from clients:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+chord(update, &amp;SimpleService::UpdateHandler);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+chord(get,
+&amp;SimpleService::GetStateHandler);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+chord(stop, &amp;SimpleService::StopHandler);<br>
+<br style="font-weight: bold;">
+</span>In main() function, we first create an executor with a pool of 2
+threads. Secondly a server instance is instantiated and its interface
+with 3 channels is returned.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+executor exec(2);&nbsp; </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; shared_ptr&lt;Service&gt;
+ssrv(SimpleService::Create(&amp;exec.execute));</span><br
+ style="font-weight: bold;">
+</div>
+Then 2 kinds of client designs are demonstrated. <br>
+In the first part, chords are setup to asynchronously process response
+messages from server:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+joins.chord(g.result, async_print_result)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(g.failure, async_print_failure)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(u.result, async_print_result)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(u.failure, async_print_failure);<br>
+<br>
+</span></div>
+In the second part, we first create a synchronous message channel:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">synch&lt;void()&gt;
+recv;</span><br>
+</div>
+Then a new set of chords are defined to synchronously process the
+response messages from server:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+joins.chord(recv, g.result, synch_print_result)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(recv, g.failure, synch_print_failure)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(recv, u.result, synch_print_result)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+.chord(recv, u.failure, synch_print_failure);</span><br>
+</div>
+Why is it synchronous? Because the main thread is blocked at
+synchronous channel<span style="font-weight: bold;"> recv() </span>waiting
+for<span style="font-weight: bold;"> </span>responses from server as
+the following code:<br>
+<div style="margin-left: 40px; font-weight: bold;">&nbsp; for(int i=0;
+i&lt;runs; i++)<br>
+&nbsp;&nbsp;&nbsp; recv();<br>
+</div>
+The synchronous recv and processing part is different from the pure
+asynchronous style of CCR.<br>
+<br>
+The complete samples are here:<br>
+<ul>
+  <li><a href="../examples/func_api/ccr_service.cs">CCR sample</a></li>
+  <li><a href="../examples/func_api/ccr2.cpp">Join's implementation</a></li>
+</ul>
+<br>
+<h2></h2>
+</body>
+</html>

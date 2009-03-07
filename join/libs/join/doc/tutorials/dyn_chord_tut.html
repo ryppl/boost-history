@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Dynamic Chord Tutorial</title>
+</head>
+<body>
+<h2>Array of Asynchronous Channel Tutorial</h2>
+This tutorial shows how to define an array of async channels (methods)
+and chords. The
+class join_many is a "merger" which merges the results from an array of
+input streams (async&lt;void(T)&gt;) and return as&nbsp; a whole.<br>
+<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename T, size_t N&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class join_many : public actor
+{</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+Here we declare an array of async&lt;&gt; methods, each of which takes
+an argument of type T as input.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+array&lt;async&lt;void(T)&gt;,
+N&gt; inputs;<br>
+</span></div>
+Next declare a synch&lt;&gt; method returning an array&lt;T&gt; which
+merges the arguments passed in thru all the above async&lt;&gt; methods.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;array&lt;T,N&gt;(void)&gt; output;<br>
+</span></div>
+In constructor, we initialize the parent class actor,
+and create a
+chord which binds "inputs" (the array of async methods) and "output"
+to the chord body method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+join_many(int n) :
+actor() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(output,
+inputs, &amp;join_many::chord_body);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In chord body method, we define what will be done when all the async
+methods of "inputs" and "output" have been called, which is simply that
+all arguments passed in thru async methods of "inputs" (in[i].arg1)
+will be packed into an array and returned to "output" as reault.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;</span><span
+ style="font-weight: bold;">array&lt;T,N&gt;</span><span
+ style="font-weight: bold;">
+chord_body(synch_o&lt;array&lt;T,N&gt;(void)&gt; out,
+array&lt;async_o&lt;void(T)&gt;, N&gt; in) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; array&lt;T,N&gt; vt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(size_t i=0;
+i&lt;N; i++)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+vt[i] = in[i].arg1;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return vt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+<br>
+Class Demo is a multithreaded test driver to test join_many class. In
+the test, we have several concurrent "input" tasks periodically calling
+one of the async "inputs" of join_many, thus creating multiple input
+streams. The main thread will call the "output" synch method, waiting
+and retrieve the data merged from inputs.<br style="font-weight: bold;">
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Demo : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; enum {&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; num_chan = 4,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; num_test = 5</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; };</span><br>
+</div>
+First we define a instance of join_many class to be tested - merger.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp; join_many&lt;int, num_chan&gt;
+merger;<br>
+</span></div>
+Next define an async method whose only purpose is to spawn
+multiple concurrent input tasks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(int)&gt; inputer;<br>
+</span></div>
+The main thread will call the following wait() method, inside which the
+synch method "output" of merger is called, thus waiting and retrieving
+the result merged from all inputs.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void wait(void) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; array&lt;int,
+num_chan&gt;
+results;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;num_test; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; results
+= merger.output();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "output" &lt;&lt; i &lt;&lt; " = " &lt;&lt;
+logger::end;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+for(size_t j=0;j&lt;results.size();j++) </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+log1.stream()
+&lt;&lt; results[j] &lt;&lt; " " &lt;&lt; logger::end;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+In constructor, we create a chord for async
+inputer and bind it to its chord body method. Since the chord has
+only a async method, calling it will spawn a task in executor thread
+pool. Also we tell the parent actor class which executor to use
+to spawn new tasks. At end of constructor, we call async "inputer"
+method several times (thus spawning several concurrent tasks) passing
+in a integer telling its position in the list of input
+streams.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+Demo(executor *e, int n) :
+actor(e) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(inputer, &amp;Demo::chord_body);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;n; i++)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+inputer(i);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the body of async inputer. First we calculate the range of
+numbers this input task/stream will generate based on its position in
+the list of streams. Then the task will run a loop: calling the async
+"input" method of merger based on its position and pass in numbers,
+then sleeping for a while.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void
+chord_body(async_o&lt;void(int)&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; int start =
+p.arg1*num_test;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; int end =
+start+num_test;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=start;
+i&lt;end; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "inputer[" &lt;&lt; p.arg1 &lt;&lt; "] sends ["
+&lt;&lt; i &lt;&lt; "] and wait..." &lt;&lt; logger::endl;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+merger.inputs[p.arg1](i);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep((p.arg1+1)%3);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+</div>
+<br>
+In main(), we set up the test.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;"></span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">int
+main(int argc, char **argv) {<br>
+</span></div>
+We plan to run the test with 4 concurrent inputting tasks. So create an
+executor with 4 threads.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+executor exec(4);&nbsp; //spawn 4 threads for executor thread
+pool<br>
+</span></div>
+We construct a Demo instance and tell it to use the executor just
+created and run 4 concurrent input tasks. From here, 4 concurrent tasks
+will be spawned into executor and start pumping data into the merger
+object.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+Demo demo(&amp;exec.execute,4);</span><br>
+<span style="font-weight: bold;">&nbsp; log1.msg("main thread starts
+waiting...");<br>
+</span></div>
+Then calling demo.wait() to retrieve the data merged from 4 concurrent
+input streams and print them out.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+demo.wait();</span><br>
+<span style="font-weight: bold;">&nbsp; log1.msg("main thread finish
+waiting...");<br>
+</span></div>
+Finally waiting for all threads of executor thread pool to exit and
+test shut down.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+exec.shutdown();</span><br>
+<span style="font-weight: bold;">&nbsp; return 0;</span><br>
+<span style="font-weight: bold;">}</span><br>
+<span style="font-weight: bold;"></span></div>
+<span style="font-weight: bold;">
+<br style="font-weight: bold;">
+</span><br>
+</body>
+</html>

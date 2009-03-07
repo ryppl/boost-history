@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Using Asynchronous Messages for State Tutorial</title>
+</head>
+<body>
+<h2>Join Using Asynchronous Messages For State Tutorial</h2>
+<h4 style="font-weight: normal;" class="dtH4">This tutorial shows how
+to use asynchronous message calls to carry state across method calls in
+Join.</h4>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+counter: public actor {<br>
+</span></div>
+We define an async method to represent the state of counter object:
+what value it contains.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void(long)&gt; mystate;</span><br>
+<span style="font-weight: bold;">public:<br>
+</span></div>
+The public API of this class are two synch methods: <span
+ style="font-weight: bold;">inc() </span>will increase the counter
+value by 1 and <span style="font-weight: bold;">value()</span> will
+return the value of counter.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;void()&gt; inc;</span><br>
+<span style="font-weight: bold;">&nbsp; synch&lt;long()&gt; value;</span><br>
+</div>
+In contructor, we define two chords: one for <span
+ style="font-weight: bold;">inc() &amp; mystate()</span> and one for <span
+ style="font-weight: bold;">value() &amp; mystate()</span>. Then we
+initialize the counter state to 0.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+counter() : actor() {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(inc, mystate,
+&amp;counter::inc_bdy);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(value,
+mystate, &amp;counter::val_bdy);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; mystate(0);</span><br>
+<span style="font-weight: bold;">&nbsp; }</span><br>
+</div>
+Here is the chord body for <span style="font-weight: bold;">inc()
+&amp; mystate()</span>, meaning that calling inc() will increase the
+counter's value by 1. The current counter value is normally retrieved
+by <span style="font-weight: bold;">mi.arg1</span>. However since
+mystate() only carries a single argument, the method object <span
+ style="font-weight: bold;">mi </span>can be used directly
+as (converted to) the argument it contains.<span
+ style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void inc_bdy(synch_o&lt;void()&gt; inc, async_o&lt;void(long)&gt; mi) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; mystate(mi+1);</span><br>
+<span style="font-weight: bold;">&nbsp; }</span><br>
+</div>
+The chord body of <span style="font-weight: bold;">value() &amp;
+mystate() </span>defines that the counter's value will be returned to
+caller of <span style="font-weight: bold;">value()</span>.<span
+ style="font-weight: bold;"> </span>And to allow more retrieval of
+counter value,<span style="font-weight: bold;"> mystate() </span>is
+called again with the same value.<span style="font-weight: bold;"><br>
+</span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void val_bdy(synch_o&lt;long()&gt; val, async_o&lt;void(long)&gt; mi) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; mystate(mi);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; val.reply(mi);</span><br>
+<span style="font-weight: bold;">&nbsp; }</span><br>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">};</span><span
+ style="font-weight: bold;"></span><br>
+</div>
+Class Demo is a multithreaded test driver which sets up two concurrent
+tasks: writer and reader. Writer keeps increasing the value of counter
+and Reader retrieving the counter.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Demo : public actor {</span><br>
+<span style="font-weight: bold;">public:</span><br>
+<span style="font-weight: bold;">&nbsp; counter c_;&nbsp; </span><br>
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; writer;</span><br>
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; reader;</span><br>
+<span style="font-weight: bold;">&nbsp; Demo(executor *e) :
+actor(e), c_() {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(writer,
+&amp;Demo::writer_bdy);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(reader,
+&amp;Demo::reader_bdy);</span><br>
+<span style="font-weight: bold;">&nbsp; }</span><br>
+<span style="font-weight: bold;">&nbsp; void
+writer_bdy(async_o&lt;void()&gt; w) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.msg("writer inc");</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+c_.inc();</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(1);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br>
+<span style="font-weight: bold;">&nbsp; }</span><br>
+<span style="font-weight: bold;">&nbsp; void
+reader_bdy(async_o&lt;void()&gt; r) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "reader reads [" &lt;&lt; c_.value() &lt;&lt;
+"]" &lt;&lt; logger::endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(2);</span><br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br>
+<span style="font-weight: bold;">&nbsp; } </span><br>
+<span style="font-weight: bold;">}; </span><br>
+<span style="font-weight: bold;"></span><br>
+<span style="font-weight: bold;">int main(int argc, char **argv) {</span><br>
+<span style="font-weight: bold;">&nbsp; executor exec(2);&nbsp; //spawn
+2 threads for executor thread pool</span><br>
+<span style="font-weight: bold;">&nbsp; Demo demo(&amp;exec.execute);</span><br>
+<span style="font-weight: bold;">&nbsp; demo.reader();</span><br>
+<span style="font-weight: bold;">&nbsp; demo.writer();</span><br>
+<span style="font-weight: bold;">&nbsp; exec.shutdown(); </span><br>
+<span style="font-weight: bold;">&nbsp; return 0;</span><br>
+<span style="font-weight: bold;">}</span><br>
+<span style="font-weight: bold;"></span></div>
+<br>
+<div style="font-weight: bold;"><span style="font-family: monospace;"></span><br>
+<span style="font-family: monospace;"></span>&nbsp;</div>
+</body>
+</html>

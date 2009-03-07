@@ -1,0 +1,367 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Support For Message Passing Concurrency</title>
+</head>
+<body>
+<h2>Support for Message Passing Concurrency<br>
+</h2>
+Join's async methods and chords provide strong support for
+asynchronous message based concurrency designs. <br>
+<h3>Compare to Erlang<br>
+</h3>
+Erlang's support for concurrency is based on a few primitives:<br>
+<ul>
+  <li>spawn - create very light weight process</li>
+  <li>Pid ! Message - send message to a process</li>
+  <li>receive ... end</li>
+</ul>
+A typical Erlang server contains a message processing main loop such as
+the following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">loop()
+-&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; receive</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+{rectangle, Width, Ht} -&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; io:format("Area of rectangle is ~p~n", [Width * Ht]),</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; loop();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+{circle, R} -&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; io:format("Area of circle is ~p~n", [3.14159 * R * R]),</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; loop();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; Other
+-&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; io:format("I dont know what the area of a ~p is ~n",
+[Other])</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; loop()</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; end.</span><br
+ style="font-weight: bold;">
+</div>
+<br>
+The same (synchronous) server code can be expressed in Join as
+following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Server : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;void()&gt;
+activate;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; synch&lt;void()&gt;
+process;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; //the server will
+serve 2 messages:</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+async&lt;void(float, float)&gt; rectangle;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+async&lt;void(float)&gt; circle;</span><br style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Server(executor
+*e): actor(e) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(activate, &amp;Server::main_loop);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(process, rectangle, &amp;Server::calc_rect_area);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(process, circle, &amp;Server::calc_circle_area);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+//start server thread</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+activate();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; //server main loop</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+main_loop(async_o&lt;void()&gt; act) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //all the next 2 message processing
+methods will run in this thread<br style="font-weight: bold;">
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+for(;;) </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; process();</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+calc_rect_area(synch_o&lt;void()&gt; p, async&lt;void(float, float)&gt;
+rect) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; cout
+&lt;&lt; "Area of rectangle is " &lt;&lt; rect.arg1 * rect.arg2
+&lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+calc_circle_area(synch_o&lt;void()&gt; p, async&lt;void(float)&gt;
+circ) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; cout
+&lt;&lt; "Area of circle is " &lt;&lt; 3.14159 * circ.arg1 * circ.arg1
+&lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+</div>
+&nbsp;&nbsp;&nbsp; <br>
+We can do a comparison of the above 2 code snippets:<br>
+<ul>
+  <li>Both above codes implement synchronous servers; server will own
+its own thread/process and block waiting for incoming requests. Erlang'
+server is running in Erlang's light weight process while Join's server
+is running in a thread from executor's thread pool. Erlang's process is
+much cheaper than normal OS thread, so we can have thousands of Erlang
+servers running without bringing the machine down. To achieve similar
+benefit with Join and OS thread, we have to implement an asynchronous
+server as following code.</li>
+  <li>Erlang check messages types by pattern matching during runtime,
+if Erlang server
+receives a unexpected message, "Other -&gt; ..." section is invoked. In
+the above Join based server, the message types are defined at interface
+and
+checked by compiler. Because sending a message to Join based server is
+to invoke its async methods, so compiler can prevent invoking
+unsupported methods.</li>
+</ul>
+A purely asynchronous Join based server can be expressed as following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Server : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; //the server will
+serve 2 messages:</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+async&lt;void(float, float)&gt; rectangle;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+async&lt;void(float)&gt; circle;</span><br style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; Server(executor
+*e): actor(e) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp; chord(rectangle, &amp;Server::calc_rect_area);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+chord(circle, &amp;Server::calc_circle_area);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+}</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">private:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+void calc_rect_area(async&lt;void(float, float)&gt; rect) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; cout
+&lt;&lt; "Area of rectangle is " &lt;&lt; rect.arg1 * rect.arg2
+&lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+calc_circle_area(async&lt;void(float)&gt; circ) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; cout
+&lt;&lt; "Area of circle is " &lt;&lt; 3.14159 * circ.arg1 * circ.arg1
+&lt;&lt; endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+</div>
+All these asynchronous servers do not have their own threads, instead
+they share the threads from executor's thread pool, ie. their message
+processing methods will be dispatched to thread pool to be executed. So
+if the executor's thread pool contain enough threads, we should be able
+to use thousands of these async active objects.<br>
+<br>
+Of course we can develop traditional style message passing system in
+Join as following.<br>
+<br>
+Normally we'll have a generic
+message container:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; class message {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+int type;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+char *data;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; class server :
+public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+synch&lt;shared_ptr&lt;message&gt;()&gt; receive;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+async&lt;void(shared_ptr&lt;message&gt;)&gt; send;</span><br
+ style="font-weight: bold;">
+<div><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; server() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chord(receive,
+send, &amp;server::forward);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; new
+thread(bind(&amp;server::main_loop, this);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br style="font-weight: bold;">
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; void main_loop() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;for(;;)
+{</span><br style="font-weight: bold;">
+<div style="margin-left: 40px; font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; shared_ptr&lt;message&gt;
+msg = receive();<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;switch(msg-&gt;type) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; case type1:
+... handle msg type 1; break;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; case type2:
+... handle msg type 2; break;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp;
+.......<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; default:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; cout &lt;&lt;
+"unknown msgs";<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; break;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp; }<br>
+</div>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; }</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+void forward(synch_o&lt;shared_ptr&lt;message&gt;()&gt; r,
+async_o&lt;void(shared_ptr</span><wbr style="font-weight: bold;"><span
+ style="font-weight: bold;">&lt;message&gt;)&gt;
+s) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&nbsp; return s.arg1;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; };</span><br>
+Here
+the message type resolution happens during runtime. Since C/C++ do not
+have pattern matching so we have to switch based on msg-&gt;type. The
+"default" case is similar to Erlang's "Other..." case and the 1st
+messages
+of message queue is always returned no matter what type it is, which is
+similar to
+Erlang's AnyMessage.<br>
+</div>
+<h3>Reactive Finite State Machines<br>
+</h3>
+One common asynchronous message based design is based on reactive
+finite state machine (FSM). Each entitiy in this design is an active
+object, communicating with each other thru asynchronous messages, and
+the behaviour of these entities are controlled by their state machines,
+normally encoded as a state transition table. One common encoding is a
+two dimensional table, some cells of it are valid and containing the
+following triplet:<br>
+<p>&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">&lt;state,
+message(event), action / next state&gt;<br>
+</span></p>
+<ul>
+  <li>state: the current state of entity</li>
+  <li>message (event): the message arrived or event happened when
+entity is in the above state</li>
+  <li>next state: the new state the entity will transition to when the
+event happened</li>
+  <li>action: the processing the entity will carry out during transition<br>
+  </li>
+</ul>
+With Join's async methods and chords, we can directly define the above
+state transition table in a declarative manner. The following rules are
+applied:<br>
+<ul>
+  <li>using async methods to represent states</li>
+  <li>using async methods to represent messages / events</li>
+  <li>using chords to define actions and valid transitions </li>
+</ul>
+For example, the state machine of a light can be encoded as the
+following Join based class:<br>
+<div style="margin-left: 40px; font-weight: bold;">class light : public
+actor {<br>
+public:<br>
+&nbsp;&nbsp;&nbsp; //using async methods to represent states<br>
+&nbsp;&nbsp;&nbsp; async&lt;void()&gt; on;<br>
+&nbsp;&nbsp;&nbsp; async&lt;void()&gt; off;<br>
+&nbsp;&nbsp;&nbsp; //using async methods to represent messages / events<br>
+&nbsp;&nbsp;&nbsp; async&lt;void()&gt; switch;<br>
+&nbsp;&nbsp;&nbsp; light(executor *e) : actor(e) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; //in constructor, using chords to
+define valid actions and transitions<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; chord(on, switch, &amp;light::dark);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; chord(off, switch, &amp;light::bright);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //initialize the state of light to
+"off"&nbsp; by
+calling async method<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; off();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; void dark(async_o&lt;void()&gt; on,
+async&lt;void()&gt; switch) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //do some transition actions here<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //then transition to the next state
+"off" by
+calling async method<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; off();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; void bright(async_o&lt;void()&gt; off,
+async&lt;void()&gt; switch) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //do some transition actions here<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; //then transition to the next state
+"on" by
+calling async method<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; on();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+};<br>
+</div>
+<br>
+Join really shines when more complicated state machines are handled.
+For example, the state transition is triggered by combination of events:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&lt;state,
+event1 &amp; event2 &amp; event3, action / next state&gt;</span></div>
+<br>
+Apart from the advantage of encoding the state machine declaratively,
+the above state machine is multi-thread safe and the transition actions
+executes asynchronously (and could concurrently if the logic allows) in
+executor's thread
+pool. If the executor is an adaptor to other framework's execution
+service (such as Boost.Asio's event completion queue), the transition
+actions will be executed there. Many entities and their FSMs can share
+the same thread pool.<br>
+By defining a synchronous <span style="font-weight: bold;">process() </span>method,
+and adding it to the above chords, we can easily define an "active"
+state machine with its own thread (or so called reactive iterative
+server), similar to the above synchronous Join server.<br>
+<font size="-1"><br>
+</font>
+</body>
+</html>

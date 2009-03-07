@@ -1,0 +1,30 @@
+##//////////////////////////////////////////////////////////////////////////////
+##// Copyright (c) 2005, 2007 Yigong Liu
+##// Permission to use, copy, modify, distribute and sell this software for any 
+##//     purpose is hereby granted without fee, provided that the above copyright 
+##//     notice appear in all copies and that both that copyright notice and this 
+##//     permission notice appear in supporting documentation.
+##// The author makes no representations about the 
+##//     suitability of this software for any purpose. It is provided "as is" 
+##//     without express or implied warranty.
+##////////////////////////////////////////////////////////////////////////////////
+# Copyright Douglas Gregor 2001-2003. Use, modification and
+# distribution is subject to the Boost Software License, Version
+# 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+project boost/channel 
+	: requirements
+    		<library>/boost/regex//boost_regex
+    		<define>BOOST_ALL_NO_LIB=1
+	: source-location ../src
+    	;
+
+# Base names of the source files for libboost_signals
+SOURCES = name linear_id_trait hierarchical_id_trait assoc_id_trait ;
+
+lib boost_channel : $(SOURCES).cpp 
+    :         
+        <define>BOOST_CHANNEL_NO_LIB=1
+        <link>shared:<define>BOOST_CHANNEL_DYN_LINK=1
+    ;

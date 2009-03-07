@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join One Place Buffer Tutorial</title>
+</head>
+<body>
+<h2>Join One Place Buffer Tutorial</h2>
+<h4 style="font-weight: normal;" class="dtH4">The previous tutorial
+showed how to define a buffer of unbounded size: any number of calls to
+<code class="ce">put()</code> could be queued up before matching a <code
+ class="ce">get()</code>.&nbsp;
+This tutorial defines a variant in which only a single data value may
+held in the buffer at any one time.</h4>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class one_place_buffer: public
+actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">private: </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span></div>
+First, we use two private asynchronous methods to represent the states
+of buffer: empty and contains exactly one item.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; empty;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(V)&gt; contains;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+The public API of this class are two synchronous methods; so <span
+ style="font-weight: bold;">put() </span>will block when buffer
+already contains one item and <span style="font-weight: bold;">get()</span>
+will block when buffer is empty.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+synch&lt;void(V)&gt; put;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V()&gt; get;</span><br
+ style="font-weight: bold;">
+</div>
+In contructor, we define two chords and call <span
+ style="font-weight: bold;">empty()</span> async method to "transition"
+buffer into empty state.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp; one_place_buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(put, empty,
+&amp;one_place_buffer::put_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(get,
+contains, &amp;one_place_buffer::get_cb);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; empty();&nbsp;
+//init state</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }<br>
+</span></div>
+Here is the chord body for <span style="font-weight: bold;">put()</span>
+and <span style="font-weight: bold;">empty()</span>. It means that
+when the buffer is empty (<span style="font-weight: bold;">empty()</span>
+async method called), calling <span style="font-weight: bold;">put()</span>
+will store the argument of <span style="font-weight: bold;">put()</span>
+inside buffer by calling <span style="font-weight: bold;">contains()</span>
+async method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void put_cb(synch_o&lt;void(V)&gt; put, async_o&lt;void()&gt; empty) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; contains(put.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+</div>
+The chord body of <span style="font-weight: bold;">get()</span> and <span
+ style="font-weight: bold;">contains()</span> says that when the buffer
+is not empty (<span style="font-weight: bold;">contains()</span> async
+method called), calling <span style="font-weight: bold;">get()</span>
+will return the value contained in buffer and transition buffer to
+empty state.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+void get_cb(synch_o&lt;V()&gt; get, async_o&lt;void(V)&gt; contains) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; empty();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+get.reply(contains.arg1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">};</span><br
+ style="font-weight: bold;">
+</div>
+Similar to the previous buffer tutorial, class Demo is a multithreaded
+test driver. It sets up two concurrent tasks : producer and consumer
+which communicate thru an instnace of one_place_buffer. The main()
+function creates a executor and run the test. Please note that the log
+printouts from this test are in order because the one_place_buffer will
+hold faster producer so that slower consumer task can catch up.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Demo : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+one_place_buffer&lt;std::string&gt; &amp;buf_;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; producer;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; consumer;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+Demo(one_place_buffer&lt;std::string&gt; &amp;b, executor *e) :
+actor(e), buf_(b) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(producer,
+&amp;Demo::producer_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(consumer,
+&amp;Demo::consumer_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+producer_cb(async_o&lt;void()&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; std::ostringstream
+ostr;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ostr
+&lt;&lt; i;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+buf_.put(ostr.str());</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "producer sends [" &lt;&lt; i &lt;&lt; "]"
+&lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ostr.str("");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+consumer_cb(async_o&lt;void()&gt; c) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "consumer recvs [" &lt;&lt; buf_.get() &lt;&lt;
+"]" &lt;&lt; logger::endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">int main(int argc, char **argv) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+one_place_buffer&lt;std::string&gt; b;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; executor exec(2);&nbsp; //spawn
+2 threads for executor thread pool</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Demo demo(b, &amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.producer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.consumer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;</span><br>
+</div>
+<br>
+<div style="font-weight: bold;"><span style="font-family: monospace;"></span><br>
+<span style="font-family: monospace;"></span>&nbsp;</div>
+</body>
+</html>

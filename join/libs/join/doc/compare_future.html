@@ -1,0 +1,283 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Compare Join with Futures/Promise</title>
+</head>
+<body>
+<h2><font size="+2"><b>Futures/Promises .vs. Join, is "future" a form
+of
+message passing?</b></font></h2>
+Futures (and Promises) is a simple and elegant tool for programming a
+specific class of concurrent applications: returning result from
+asynchronous operations or different threads. In Boost community, there
+are several proposals for Futures, among which <a
+ href="http://braddock.com/%7Ebraddock/future/">Braddock Gaskill's
+proposal</a> and <a
+ href="http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-2.html">Anthony
+Williams proposal </a>are the most complete and famous.<br>
+<br>
+Here are the definitions of "Futures" in Braddock's and Anthony's
+proposals:<br>
+&nbsp;&nbsp;
+1&gt; in terms of Braddock's proposal: a special variable with
+undefined value at
+creation, can be set later by another thread, any attempt to get
+future's value will be blocked if it is not set yet. "future uses a
+split interface: the <code>promise&lt;T&gt;</code> class interface is
+used for creating and setting a future value, and the <code>future&lt;T&gt;</code>
+interface is used for obtaining and using a future value."<br>
+&nbsp;&nbsp; 2&gt; in terms of Anthony's (N2561) proposal: "... a kind
+of return
+buffer that takes a value (or an exception) in one (sub-)thread and
+provides the value in another (controlling) thread. This buffer
+provides essentially two interfaces:<br>
+&nbsp;&nbsp;&nbsp; * an interface to assign a value as class promise and<br>
+&nbsp;&nbsp;&nbsp;
+* an interface to wait for, query and retrieve the value (or exception)
+from the buffer as classes unique_future and shared_future."<br>
+<br>
+From both documents, Future has 2 interfaces with diff behaviours:<br>
+&nbsp;&nbsp; * the promise&lt;T&gt; interface is "asynchronous": the
+thread which sets the future's value will not wait for future's reader;
+it just sets the value and go<br>
+&nbsp;&nbsp;
+* the future&lt;T&gt; interface is "synchronous": the thread which
+gets/reads the future's value will block wait if the future is not set
+yet<br>
+<br>
+We can define these 2 interfaces with Join as following:<br>
+&nbsp;&nbsp;&nbsp; template&lt;typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class promise_intf {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async&lt;void(T)&gt; set;<br>
+&nbsp;&nbsp;&nbsp; };<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class future_intf {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;T()&gt; get;<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<br>
+A Future class and its synchronization between promise_interface and
+future_interface can be defined as following:<br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class future :&nbsp; public promise_intf&lt;T&gt;, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; public future_intf&lt;T&gt;,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; public actor<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; future() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chord(get, set,
+&amp;future::get_result);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; T get_result(synch_o&lt;T()&gt; g,
+async_o&lt;void(T)&gt; s) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; return s.arg1;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; &nbsp; <br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+Manually
+crafted Future is normally implemented using one mutex and one
+condition var. The rule to get the number of (mutex, cond) used by a
+Join class is simple: each actor holds a mutex which is shared by all
+code in async/synch/actor, each synch&lt;&gt; method holds a
+conditional var and async&lt;&gt; methods hold nothing. So the above
+future class use exactly one mutex and one conditional var, the same as
+manually crafted.<br>
+<br>
+To transfer both result value and exception, we need use a result
+holder and a diff promise interface:<br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt; <br>
+&nbsp;&nbsp;&nbsp; class result {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+shared_ptr&lt;T&gt; value;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+exception_ptr except;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; };<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt; <br>
+&nbsp;&nbsp;&nbsp; class promise_intf {<br>
+&nbsp;&nbsp;&nbsp; protected:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+async&lt;void(result&lt;T&gt; r)&gt; set_result;<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; void set(T t) {
+set_result(result&lt;T&gt;(t)); }<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; void fail(exception_ptr e) {
+set_result(result&lt;T&gt;(e)); }<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+The future class will be modified as following:<br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class future : public promise_intf&lt;T&gt;, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public future_intf&lt;T&gt;,<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; public actor<br>
+&nbsp;&nbsp;&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; future() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; chord(get,
+set_result, &amp;future::get_result);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; T get_result(synch_o&lt;T()&gt; g,
+async_o&lt;void(result&lt;T&gt;)&gt; res) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; if(res.arg1.except)<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; rethrow_exception(res.arg1<wbr>.except);<br>
+&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp;&nbsp; return res.arg1.value;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }&nbsp;&nbsp;&nbsp; &nbsp; <br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+Again this class uses one mutex and one cond var.<br>
+<br>
+If
+we step back from the mental image of treating "future" as "a special
+kind of variable" for now, we can treat promise (future-setter)
+interface as message sending interface, and treat future_intf
+(future-reader) interface as message receiving interface. Then "future"
+becomes a message passing channel between the thread which produces and
+sets future's value and the thread which consumes future's value.
+Message sending and promise have the same behavior (async, send and
+go); and message recving and future_intf have the same behaviour
+(blocking wait).<br>
+<br>
+Also the above first Future definition is exactly the same as the
+simplest message queue defined in Join:<br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T&gt;<br>
+&nbsp;&nbsp;&nbsp; class queue {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async&lt;void(T)&gt; send;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;T()&gt; recv;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; queue() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; chord(recv, send,
+&amp;queue::forward);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; T forward(synch_o&lt;T()&gt; r,
+async_o&lt;void(T)&gt; s) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return s.arg1;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; };<br>
+<br>
+The following code is from Braddock's JobQueue:<br>
+&nbsp;&nbsp;&nbsp; template &lt;class T&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; future&lt;T&gt;
+schedule(boost::function&lt;T (void)&gt; const&amp; fn) {<br>
+&nbsp;&nbsp;&nbsp; boost::mutex::scoped_lock lck(mutex_);<br>
+&nbsp;&nbsp;&nbsp; promise&lt;T&gt; prom; // create promise<br>
+&nbsp;&nbsp;&nbsp; q_.push_back(future_wrapper&lt;T&gt;<wbr>(fn,
+prom)); //queue the job<br>
+&nbsp;&nbsp;&nbsp; condition_.notify_all(); // wake worker thread(s)<br>
+&nbsp;&nbsp;&nbsp; return future&lt;T&gt;(prom); // return a future
+created from the promise<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+This
+code presents a very interesting idiom: we first create Future (inside
+promise&lt;T&gt;'s constructor) - the message channel. Then we bundle
+the work item up with prom - the sending-interface of channel together,
+and pass this bundle to worker thread. (Asynchronously the worker
+thread will do the work and write the result to the sending-interface
+of channel). Finally we return future_intf - the receiving-interface of
+channel to the receiving thread. Here we have loose-coupling: worker
+thread don't care where the request come from and the receiver don't
+care who sends the result.<br>
+Bundling a response-channel with a request message is the normal way
+how function-call or RPC call are implemented in message passing
+systems. It also shows another intrinsic property of message passing:
+using channels to define interfaces between modules and threads to
+achieve loose-coupling.<br>
+<br>
+If we can wrap around our mind and think of "future" as a form of
+message passing, we can gain much freedom from traditional concept of
+"future", for example:<br>
+&nbsp;&nbsp; * we can simply bundle a
+reference to an async method (channel) with request; and worker thread
+will return result by invoking the async method when work item is done.<br>
+&nbsp;&nbsp; * the receiving thread can wait-for/handle the result
+differently:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; . we can block the thread at the
+"getting" point, same as the current "future" implementation; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+. Or if the system is already message passing based (we have a
+main-loop to receive and process messages), and the work item request
+is probably sent from a message handling function to worker threads,
+then we can simply create a new chord which adds the response channel
+(async method) to the set of channels handled by the main-loop and go
+back to blocking wait at and serve main-loop;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; . Or if the application is driven by
+thread-pool, we can create a chord to dispatch the result from response
+channel to thread-pool to handle it asynchronously.<br>
+<br>
+Treating Future as message passing also make it easier to implement
+wait_any_future and wait_all_future.<br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T1, T2, T3...&gt;<br>
+&nbsp;&nbsp;&nbsp; class wait_all_future : public actor {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T1)&gt; promise1;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T2)&gt; promise2;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T3)&gt; promise3;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+synch&lt;tuple&lt;T1,T2,T3,...&gt;()&gt; wait;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; wait_all_future() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; chord(wait, promise1, promise2,
+..., &amp;wait_all_future::proc);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; tuple&lt;T1,T2,T3,...&gt;
+proc(synch_o&lt;tuple&lt;T1,T2,T3,..<wbr>.&gt;()&gt; w,
+async_o&lt;void(T1)&gt; p1, async_o&lt;void(T2)&gt; p2, ...) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; return
+tuple&lt;T1,T2,..&gt;(p1.arg1, p2.arg1,...);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; };<br>
+Applications
+can instantiate one wait_all instance, bundle its async response
+channels (promise1,promise2,...) with diff requests to diff worker
+threads, and then call wait(), blocking wait untill all results come
+back. <br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; template &lt;typename T1, T2, T3...&gt;<br>
+&nbsp;&nbsp;&nbsp; class wait_any_future : public actor {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T1)&gt; promise1;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T2)&gt; promise2;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async(void(T3)&gt; promise3;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;void()&gt; wait;<br>
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; wait_any_future() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; chord(wait, promise1,
+&amp;wait_any_future::proc_future1<wbr>);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; chord(wait, promise2,
+&amp;wait_any_future::proc_future2<wbr>);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; void proc_future1(synch_o&lt;void()&gt;
+w, async_o&lt;void(T1)&gt; p1) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ... process p1.arg1 ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; void proc_future2(synch_o&lt;void()&gt;
+w, async_o&lt;void(T2)&gt; p2) {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ... process p2.arg1 ...<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; ...<br>
+&nbsp;&nbsp;&nbsp; };<br>
+Applications
+can instantiate one wait_any_future instance, bundle its async response
+channels (promise1,promise2,...) with diff requests to diff worker
+threads, and then call wait() in a loop, any results coming back will
+be processed in the order it arrives. <br>
+<font size="-1"><br>
+</font>
+</body>
+</html>

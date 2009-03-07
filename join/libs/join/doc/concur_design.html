@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>OO Concurrency Designs Based on Join</title>
+</head>
+<body>
+<h2>OO Concurrency Designs Based on Join</h2>
+<ol>
+  <li>
+    <p>Chords(or join pattern) are the core of concurrent designs based
+on Join:</p>
+  </li>
+</ol>
+<div style="margin-left: 40px;">Traditional multi-threaded systems
+focus on managing threads and their synchronization. However
+there are many issues with using threads directly as program
+structuring tools, especially on today's multi-core machines:<br>
+<ul>
+  <li>Threads are still expensive resources on most systems.</li>
+  <li>It is difficult to partition application functionalties directly
+into correct number of threads: <span style="font-style: italic;">Undersubscription
+    </span>happens when there are not enough running threads to keep
+CPUs busy. <span style="font-style: italic;">Oversubscription </span>happens
+when there are more running threads than physical CPUs, which results
+in time-sliced scheduling of threads with the overhead of context
+switching, cache cooling etc.</li>
+  <li>Scalability: because of the above factors, creating more threads
+doesnt guarantee better performance, up to certain point, more threads
+can even slow applications.</li>
+</ul>
+</div>
+<div style="margin-left: 40px;">Newer concurrency systems are switching
+to task based designs, such as Java's executor framework and Intel's
+Threading Building Blocks library:<br>
+<ul>
+  <li>a task is a much lighter weight (compare to thread) logical unit
+of work; partition application functionalities into tasks</li>
+  <li>manage threads centrally (as pools); for CPU bound applications,
+typically spawn a thread per CPU.<br>
+  </li>
+  <li>mapping / dispatching tasks to threads in pool to execute;
+amortize the cost of threads management across all tasks</li>
+  <li>as long as application work is broken into small enough tasks,
+load balancing is automatically achieved in thread pool</li>
+</ul>
+In Join based applications (C&#969; and Join), chords play the core
+role of concurrency design:<br>
+</div>
+<ol>
+  <ul>
+    <li>chords define synchronization:</li>
+  </ul>
+</ol>
+<div style="margin-left: 80px;">synchronization only apply to
+async&lt;&gt; / synch&lt;&gt; methods which participate in the chords
+of same actor.</div>
+<ol>
+  <ul>
+    <li>chords define concurrency:</li>
+  </ul>
+</ol>
+<div style="margin-left: 80px;">In
+Join based systems (Join or <span style="font-weight: normal;">C&#969;)
+there is no explicit thread creation and synchronization or even no
+explicit
+task creation and dispatching to executor thread pool. </span>Chords
+with only
+async&lt;&gt;
+methods will implicitly (automatically) create a task for its body and
+dispatch it to the thread pool of the executor
+associated with the actor. <span style="font-weight: normal;">All
+concurrency and
+asynchroncy are defined and created by async&lt;&gt; methods and chords.</span><br>
+</div>
+<span style="font-weight: normal;"></span>
+<ol start="2">
+  <li>Programming model : orchestration of asynchronous activities:</li>
+</ol>
+<ul style="margin-left: 40px;">
+  <li>new ways to maintain object state and its integrity<br>
+  </li>
+</ul>
+<div style="margin-left: 80px;">In normal concurrent applications,
+member variables are used to represent the state of objects and locks
+are used to coordinate the shared access by multiple threads. In Join
+based design, async&lt;&gt; methods are used to represent the states of
+active objects, and chords with these "state-describing" async&lt;&gt;
+methods
+can define what behaviour (synch&lt;&gt; / async&lt;&gt; methods) are
+valid in different object states. Partial specialization of
+async&lt;&gt; template class reduce the overhead of async&lt;&gt;
+methods to minimum.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>new usage of mutual exclusion</li>
+</ul>
+<div style="margin-left: 80px;">The synchronization design of Java and
+C# is based on monitor, where a object-wide lock is used to guarantee
+that only one of "synchronized" methods can be called at anytime and
+normally the lock is hold during the execution of the method body (a
+relatively long period).<br>
+In Join based systems, when a async&lt;&gt; / synch&lt;&gt; call or
+message arrives, a object-wide lock is only used to check if any chord
+is ready to fire (a really short while). More precisely, deciding
+whether any chord is enabled by a call and, if so, removing the other
+pending calls from the queues and scheduling the body for
+execution is an <span style="font-weight: bold;">atomic</span>
+operation. Apart
+from this atomicity guarantee, however, there is no monitor-like mutual
+exclusion between chord bodies. So when a chord
+does fire and
+during execution of chord body, there is no lock hold anymore. Any
+mutual exclusion that is required must be programmed explicitly in
+terms of synchronization conditions in <span style="font-weight: bold;">chord
+headers</span>.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>new control flow:</li>
+</ul>
+<div style="margin-left: 80px;">In shared-state model, control flow
+thru objects: objects are passive, calling
+thread invoke objects' methods and execute the method body.<br>
+In Join based model, active objects are active in that they are
+responsible for maintaining the integrity of their own state. With
+async&lt;&gt; methods defining interface, control flow stops at object
+boundary/interface and data flow thru objects. Using async&lt;&gt;
+methods to represent object states, chords (join pattern) of these
+"state-describing" async&lt;&gt; methods and other
+async&lt;&gt; / synch&lt;&gt; methods can define what behaviour
+(synch&lt;&gt; / async&lt;&gt; methods) are
+valid in different object states.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>new interface:</li>
+</ul>
+<div style="margin-left: 80px;">In shared-state model, the interface of
+concurrent behaviour is still normal objects methods (functions);
+synchronization among concurrent object behaviours (methods) is
+<span style="font-weight: bold;">indirectly programmed</span> using
+locks. In Join based model, the interface
+of concurrent behaviour consist of
+async&lt;&gt; / synch&lt;&gt; methods, and mostly async&lt;&gt; methods
+for a loosely coupled interface; and synchronization of concurrent
+object behaviours (methods) must be <span style="font-weight: bold;">explicitly
+specified</span> as join
+pattern in chord headers. Normal object methods are mostly used for
+internal implementation or non concurrency interface.<br>
+</div>
+<ol start="3">
+  <li>Inheritance based composition</li>
+</ol>
+<ul>
+  <ul>
+    <li>extension</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">In child class of "active" classes
+(classes with actor as base), the following extensions can be performed:<br>
+<ul>
+  <li>defining new async&lt;&gt; / synch&lt;&gt; methods</li>
+  <li>defining new chords with new or exisitng
+async&lt;&gt; / synch&lt;&gt; methods from different parent classes<br>
+  </li>
+</ul>
+</div>
+<ul>
+  <ul>
+    <li>interface / implementation, "abstract" active classes</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">Separating interface and implementation
+is a basic principle of OO design. In C++, interfaces are normally
+defined as abstract classes with pure virtual methods which have only
+headers/signatures and no body defined.<br>
+<p>In Join, an async&lt;&gt; / synch&lt;&gt; method is "pure
+virtual" (has no body) before chord() is called which associates it
+with a body. So in Join based OO concurrent designs, interfaces can be
+defined as "abstract" actor based classes which only define
+async&lt;&gt; / synch&lt;&gt; methods while the definitions
+of
+chords and bodies are deferred to children / implementation classes.<br>
+</p>
+<p>There is a difference in error handling: C++ compilers will prevent
+instantiations of abstract classes, and because Join is
+implemented as a library, compilers cannot prevent instantiation of
+"abstract active" classes, the only help are runtime "not_in_chord"
+exceptions which are thrown when such&nbsp; objects are used.</p>
+Please refer to "Active
+Objects Tutorial" and "
+Asynchronous
+Call and Return Patterns Tutorial" for examples of interface and
+extension.<br>
+</div>
+<ul>
+  <ul>
+    <li>overriding:</li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">In normal C++, a method can be declared
+"virtual" and can be overriden in child classes (the same header /
+signature are re-defined with a new body). <br>
+In Join, for async / synch methods, their bodies are chords which
+may be defined with multiple method headers. So in Join, we are talking
+about chord-overriding and when a chord is overriden, all its method
+headers are "overriden" in the sense of that they all exhibit new
+behaviour.<br>
+Join supports two kinds of overriding. The chords defined can be
+overriden
+with new bodies either thru "virtual" chord body methods or by calling
+chord_override():<br>
+<ul>
+  <li>static overriding</li>
+</ul>
+<div style="margin-left: 40px;">When we define async/synch methods and
+their chords, the chord "body" method can be declared "virtual". Then
+in child classes, this chord body can be overriden just as any other
+virtual methods. When an instance of this child class is used anywhere
+thru pointers or references to parent class (by calling its async/synch
+methods), the proper child class chord body method definition will be
+invoked.<br>
+</div>
+<ul>
+  <li>dynamic overriding</li>
+</ul>
+<div style="margin-left: 40px;">This refers to the capability that
+chord definitions can be changed by overriding or replacing chord body
+methods during runtime when code runs. For this purpose,
+chord_override() is called with the set of async / synch methods (same
+as the chord to be override) and the new chord body method. The
+identified chord will replace its chord body with the new method.
+</div>
+</div>
+<div style="margin-left: 40px;">
+<div style="margin-left: 40px;">
+<p>Please refer to "Chord Overriding Tutorial" for examples of both
+static and dynamic overriding.<br>
+</p>
+</div>
+</div>
+<ol start="4">
+  <li>Aggregation/delegation based composition</li>
+</ol>
+<div style="margin-left: 40px;">Aggregation and delegation promote a
+kind of software reuse design similar to circuit integration: creating
+large/outer/containing components (actors) by composing a network of
+smaller/inner components (actors). Outer/containing components / actors
+are defined thru the following ways:<br>
+<ul>
+  <li>"composing": create and manage the life time of inner components
+(actors) and set up the interactions among them.</li>
+  <li>"aliasing": expose interfaces of inner actors (their
+async&lt;&gt; / synch&lt;&gt; methods) <span style="font-weight: bold;">selectively</span>
+and <span style="font-weight: bold;">directly</span> to
+outside at outer/containing actors by C++ references (or pointers) to
+async&lt;&gt; / synch&lt;&gt; methods of inner actors.<br>
+  </li>
+  <li>"adapting": new interfaces (async&lt;&gt; / synch&lt;&gt;
+methods) can be defined at outer/containing actors which are
+implemented by invoking inner actors' methods.</li>
+</ul>
+Please refer to "Extending by Aggregation and Delegation Tutorial" for
+a sample.<br>
+<br>
+</div>
+</body>
+</html>

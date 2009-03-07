@@ -1,0 +1,42 @@
+#////////////////////////////////////////////////////////////////////////////////
+#// Copyright (c) 2005, 2007 Yigong Liu
+#// Permission to use, copy, modify, distribute and sell this software for any 
+#//     purpose is hereby granted without fee, provided that the above copyright 
+#//     notice appear in all copies and that both that copyright notice and this 
+#//     permission notice appear in supporting documentation.
+#// The author makes no representations about the 
+#//     suitability of this software for any purpose. It is provided "as is" 
+#//     without express or implied warranty.
+#////////////////////////////////////////////////////////////////////////////////
+
+subproject libs/channel/example/gui_evt ;
+
+project boost : $(BOOST_ROOT) ;
+
+if $(UNIX)
+{
+  switch $(JAMUNAME)
+  {
+  case SunOS* :
+    {
+      SOCKET_LIBS = <find-library>socket <find-library>nsl ;
+    }
+  }
+}
+
+template example_options
+  : <lib>@boost/libs/channel/build/boost_channel
+    <lib>@boost/libs/serialization/build/boost_serialization
+    <lib>@boost/libs/thread/build/boost_thread
+  : <include>$(BOOST_ROOT)
+    <include>../../../..
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+    <mingw><*><find-library>ws2_32
+    <mingw><*><find-library>mswsock
+    $(SOCKET_LIBS)
+  ;
+
+exe gui_evt_chan1 : <template>example_options gui_evt_chan1.cpp ;
+exe gui_evt_chan2 : <template>example_options gui_evt_chan2.cpp ;
+exe gui_evt3 : <template>example_options gui_evt3.cpp ;

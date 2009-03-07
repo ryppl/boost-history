@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Join Chord Override Tutorial</title>
+</head>
+<body>
+<h2>Join Chord Override Tutorial</h2>
+In Join, the chords defined can be overriden
+with new bodies either thru "virtual" chord body methods or by calling
+chord_override(). Join supports two kinds of overriding:<br>
+<ul>
+  <li>static overriding</li>
+</ul>
+<div style="margin-left: 40px;">When we define async/synch methods and
+their chords, the chord "body" method can be defined as C++ virtual
+method. Then
+in child classes, this chord body can be overriden just as any other
+virtual methods. When an instance of this child class is used anywhere
+thru pointers or references to parent class (by calling its async/synch
+methods), the proper child class chord body method definition will be
+invoked.<br>
+</div>
+<ul>
+  <li>dynamic overriding</li>
+</ul>
+<div style="margin-left: 40px;">This refers to the capability that
+chord definitions can be changed by overriding or replacing chord body
+methods during runtime when code runs. For this purpose,
+chord_override() is called with the set of async / synch methods (same
+as the chord to be overriden) and the new chord body method. The
+identified chord will replace its chord body with the new method.<br>
+</div>
+<br>
+The following is an example demontrating both kinds of overriding.<br>
+<br>
+For demonstrating "static overriding", we use the thread-safe buffer
+class of the first tutorial. The only change here is to define the
+chord body method as "virtual"<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class buffer: public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(V)&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V()&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(put, get,
+&amp;buffer::chord_body);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; //to be overriden, the chord
+body method has to be "virtual"</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; virtual void
+chord_body(async_o&lt;void(V)&gt; put, synch_o&lt;V()&gt; get) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; get.reply(put.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br style="font-weight: bold;">
+</div>
+To extend the original buffer's capability with "logging", we define a
+child class of class buffer and override the chord body method. With
+the chord body overriden, all its method headers (<span
+ style="font-weight: bold;">put()</span> and <span
+ style="font-weight: bold;">get()</span>) are "overriden" in the sense
+of that calling <span style="font-weight: bold;">put()</span> and <span
+ style="font-weight: bold;">get()</span> will exhibit the new behaviour.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class logged_buffer: public
+buffer&lt;V&gt; {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; //override chord body method</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+chord_body(async_o&lt;void(V)&gt; put, synch_o&lt;V()&gt; get) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; log1.stream()
+&lt;&lt; "logged_buffer transfer: " &lt;&lt; put.arg1 &lt;&lt;
+logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; get.reply(put.arg1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br>
+</div>
+For demonstrating dynamic overriding, we define the following
+transformer class which will transform the passed in strings by
+prefixing some simple text and forward the transformed strings to a
+buffer. At the end of each call to transform(), chord_override() is
+called to replace the chord with a new body. So consecutive calls to
+transform() will prefix different text to the incoming strings.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class transformer : public actor {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; buffer&lt;std::string&gt;
+&amp;buf_;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void(std::string)&gt;
+transform;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; ready;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;
+transformer(buffer&lt;std::string&gt; &amp;b, executor *e) :
+actor(e), buf_(b) {</span><br style="font-weight: bold;">
+</div>
+First we create the chord with a default chord body method.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(transform, ready, &amp;transformer::do_1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+do_1(async_o&lt;void(std::string)&gt; arg, async_o&lt;void()&gt; r) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; buf_.put("do_1: " +
+arg.arg1);<br>
+</span></div>
+Here we replace the chord with a new body by calling chord_override().<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord_override(transform, ready, &amp;transformer::do_2);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+do_2(async_o&lt;void(std::string)&gt; arg, async_o&lt;void()&gt; r) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; buf_.put("do_2: " +
+arg.arg1);</span><br style="font-weight: bold;">
+</div>
+Here we replace the chord with a new body by calling chord_override().<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord_override(transform, ready, &amp;transformer::do_1);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; ready();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br>
+</div>
+Class Demo sets up a test scenario for testing the above defined
+transformer class and logged_buffer class. An instance of transformer
+will be created and hooked to a instance of logged_buffer. Two
+concurrent tasks will be spawned. A producer task will continuously
+sending strings to the instance of transformer; the instance of
+transformer will transform the strings and forward them to the instance
+of logged_buffer. A consumer task will keep waiting and receiving from
+the logged_buffer.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+Demo : public actor {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">public:<br>
+</span></div>
+First we define the instances to classes to be tested.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+logged_buffer&lt;std::string&gt; buf_;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; transformer trans_;<br>
+</span></div>
+Second we define two async methods which will spawn "producer" and
+"consumer" concurrent tasks.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;
+async&lt;void()&gt; producer;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;void()&gt; consumer;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Demo(executor *e) :
+actor(e), trans_(buf_, e) {<br>
+</span></div>
+Since the following two chords contain only async methods, their bodies
+will execute in thread-pool concurrently.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+chord(producer, &amp;Demo::producer_cb);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(consumer,
+&amp;Demo::consumer_cb);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+producer_cb(async_o&lt;void()&gt; p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; std::ostringstream
+ostr;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ostr
+&lt;&lt; i;<br>
+</span></div>
+Here we input strings to transform.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+trans_.transform(ostr.str());</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "producer sends [" &lt;&lt; i &lt;&lt; "]"
+&lt;&lt; logger::endl;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ostr.str("");</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(1);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; void
+consumer_cb(async_o&lt;void()&gt; c) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; for(int i=0;
+i&lt;5; i++) {<br>
+</span></div>
+Here we retrieve strings from logged_buffer.<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+log1.stream() &lt;&lt; "consumer recvs [" &lt;&lt; buf_.get() &lt;&lt;
+"]" &lt;&lt; logger::endl;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+thread_sleep(2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br style="font-weight: bold;">
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">int main(int argc, char **argv) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; executor exec(3);&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; Demo demo(&amp;exec.execute);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.producer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; demo.consumer();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; exec.shutdown();</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return 0;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}<br>
+</span></div>
+<p>The log messages will show the following facts:</p>
+<ul>
+  <li>the overriding definition of chord body in class logged_buffer is
+invoked, althoug in class transformer, <span style="font-weight: bold;">put()
+    </span>is called thru reference to class buffer.</li>
+  <li>different text are prefixed to strings during consecutive calls
+to transformer.<span style="font-weight: bold;">transform()</span>.</li>
+</ul>
+</body>
+</html>

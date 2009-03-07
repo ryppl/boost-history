@@ -1,0 +1,205 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 12.&nbsp; port and signal: unnamed point
+of tightly-coupled local interactions&nbsp;<br>
+</h2>
+Channel's name space and binding thru name-matching provide a loosely
+coupled model for asynchronous distributed message passing. However
+setting up name space and designing name assignment scheme could be too
+much trouble for applications based on tightly coupled message passing
+inside a single address space. This tutorial explains 3 samples showing
+how Channel's port and signal classes can help build these kind of
+applications.<br>
+<br>
+The 1st sample is using a pipeline of asynchronous tasks to generate
+all primes
+less than a thousand. For the original design and considerations,
+please refer to Russ Cox's essay <a
+ href="http://swtch.com/%7Ersc/thread/">"Bell Labs and CSP Threads"</a>.&nbsp;
+The <a href="http://swtch.com/libtask/primes.c">original code</a> is
+based on tasks(coroutines) and synchronous
+communication channels. In this sample, the code is changed to&nbsp; be
+based on port and asynchronous tasks executed by thread pool executor.
+Here is the complete source code<span
+ style="text-decoration: underline;"> </span><a href="prime_sieve.cpp">prime_sieve.cpp.</a>&nbsp;
+Let's walk thru the code.<br>
+<br>
+First we define the type of thread pool executor to run the
+asynchronous tasks. Also we instantiate port template class to define
+port type and its related choice arbiter type. <br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">typedef
+port&lt;exec_type&gt; port_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">typedef
+port_type::choice_async choice_type;</span><br>
+</div>
+A port can be used as a message queue and allow applications put data
+into it and get data from it. However mostly ports are used with
+choice/join arbiters.<br>
+<br>
+Next we define a class for the asynchronous tasks which will do the
+real job of finding primes. A task consists of 3 main parts: &lt;1&gt;
+a port to receive messages; &lt;2&gt; a run() method to define task's
+functionality; &lt;3&gt; a executor to execute run() method. Please
+notice that in constructor the choice arbiter bind the port to run()
+method, so that each incoming message will create an asynchronous task
+which will execute run()'s code in a thread from thread pool.<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; void
+run(boost::shared_ptr&lt;void&gt; p)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+int val = *(int *)p.get();</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+if (my_prime_ == -1) { //first time</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+my_prime_ = val;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "------ prime_task [" &lt;&lt; my_no_ &lt;&lt; "] found
+prime = " &lt;&lt; val &lt;&lt; endl;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+next_ = new prime_task(exe_); //create the next task</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+} </span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+else {</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+if (val % my_prime_) { //not my multiples</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+next_-&gt;port_.send(p);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+} else { //my multiples</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "prime_task [" &lt;&lt; my_no_ &lt;&lt; "] drop "
+&lt;&lt; val &lt;&lt; endl;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; }</span><br>
+</div>
+The method run() takes a single argument of pointer to message data
+which it received from port. If it is the 1st time this task receives a
+message, the received integer will be a prime and it is saved, and the
+next asynchronous task will be created. If it is not the 1st message,
+it will be compared with the prime saved by this task and dropped if it
+is a multiple of the saved prime; otherwise the message is sent to the
+port of the next task.<br>
+<br>
+The main() function is simple. First we create the thread pool executor
+and create the 1st task. Then we start feeding integers (2-1000) to the
+port of the 1st task. Before exit, we'll wait for the graceful exit of
+all thread pool threads.<br>
+<br>
+The 2nd example demos the signal class and its associated slot type. It
+is a modification of tutorial 1. Instead of using channel, named_out
+and named_in, this sample uses signal and slot to set up event
+dispatching system without the hassle of choosing id and assigning
+names. Here is the complete source <a href="../gui_evt/gui_evt3.cpp">gui_evt3.cpp</a>
+.<br>
+<br>
+The 3rd sample demos how "unnamed" port can be used together with names
+/ ids in the same choice arbiter. Here is the complete source
+code&nbsp; <a href="../buffered_async_join/chat_join_timer.cpp">chat_join_timer.cpp</a>.&nbsp;
+This sample is based on sample 6 with the addition of a timer sending
+events to a port. Let's walk thru code.<br>
+<br>
+First port type is defined based on channel type.<br>
+&nbsp;&nbsp;&nbsp; <span
+ style="color: rgb(153, 0, 0); font-style: italic;">typedef
+chat_chan::port port_t;</span><br>
+<br>
+Next my_timer class is defined, which uses asio's deadline_timer and
+set timeout period to 5 seconds. When timeout happens, a null_event
+message is sent to a port.<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">class my_timer</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">{</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">public:</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+my_timer(boost::asio::io_service&amp; io, port_t &amp;p)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+: timer_(io, boost::posix_time::seconds(5)),</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+port_(p)</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+timer_.async_wait(boost::bind(&amp;my_timer::timeout, this));</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; void
+timeout()</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+port_.send(new null_event); //send timeout notifications</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+timer_.expires_at(timer_.expires_at() + boost::posix_time::seconds(5));</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+timer_.async_wait(boost::bind(&amp;my_timer::timeout, this));</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">private:</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+boost::asio::deadline_timer timer_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; port_t
+&amp;port_;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">};</span><br>
+</div>
+<br>
+In main(), most code is similar to sample 6, except the following code
+for timer and port.<br>
+First, timer and port are created and a new thread is spawn to run asio.<br>
+<div
+ style="margin-left: 40px; font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+boost::asio::io_service io;<br>
+&nbsp; port_t timeout_port;<br>
+&nbsp; my_timer(io,timeout_port);<br>
+&nbsp; //spawn a thread to run timer<br>
+&nbsp; boost::thread t(boost::bind(&amp;boost::asio::io_service::run,
+&amp;io));&nbsp; <br>
+</div>
+<br>
+Next, add the timeout_port to the choice arbiter and bind it with a
+timeout handler which simply prints a message.<br>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);">&nbsp;<span
+ style="font-style: italic;">choice.bind(timeout_port, timeout_hdlr);</span><br>
+</span></div>
+Notice the same choice arbiter handles both "names/ids" and the
+timeout_port objects.<br>
+<br>
+During testing, we should see the timeout message every 5 seconds.<br>
+<br>
+<br>
+</body>
+</html>

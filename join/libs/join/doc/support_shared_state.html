@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Support For Shared State Concurrency</title>
+</head>
+<body>
+<h2>Support for Shared State Concurrency<br>
+</h2>
+<font>Join's support for shared state concurrency is different from
+Java / C# monitor based model.<br>
+<br>
+Java/C#'s model is based
+on "monitor", the whole object state (all application data too) is the
+critical region protected by an object-wide lock, if a synchronized
+method is
+called, the lock is held during the execution of method body till the
+end of body or released explicitly in middle when using synchronized
+statement, the
+callings of all other synchronized methods will be blocked till the
+first calling returns.
+<br>
+</font>
+<p><font>In Join, the object-wide lock is only used to protect the
+synchronization state of the object, embedded in actor /
+async&lt;&gt; / synch&lt;&gt; members. When a async / synch method is
+invoked, the lock is only held for checking if
+any chords are ready to fire (all its messages have arrived) and </font><font>buffering
+messages and </font><font>then
+it is released. When chord bodies execute (either in calling thread of
+a synch&lt;&gt; method or a task in thread pool), this lock is not held
+anymore.
+</font></p>
+<font>We can explore the implications of this difference in the
+following
+directions:<br>
+</font>
+<ol>
+  <li><font>Join's object-wide lock is only held during checking
+internal synchronization status which is a very short period. Java's
+object-wide lock is held for executing application code which could be
+relatively long period if I/O is involved or other objects' methods are
+invoked.<br>
+    </font></li>
+</ol>
+<font></font>
+<ol start="2">
+  <li>
+    <p><font>Join's object-wide lock is not used to synchronize access
+to
+application code, instead this synchronization should be specified
+explicitly in chords or join-patterns. For example, if two methods may
+access / modify an internal data (data_A) concurrently, we could define
+an async method data_A_lock() to synchronize the access: </font></p>
+  </li>
+</ol>
+<div style="margin-left: 40px;"><font>&nbsp;&nbsp; chord(method1,
+data_A_lock, chord_body1);</font><br>
+<font>&nbsp;&nbsp; chord(method2, data_A_lock, chord_body2);</font><br>
+<font>By
+calling data_A_lock(), data_A is unlocked. Then the calling of
+method1/chord_body1 and method2/chord_body2 are synchronized regarding
+to data_A.
+</font><br>
+</div>
+<font></font>
+<ol start="3">
+  <li><font>Join's synchronization is more fine-grained. In Java/C#
+model, calling a synchronized method will lock the whole object. For
+some object, its synchronized methods could be divided into diff groups
+because they depends on diff resources or states. Theoretically, one
+method from each of these diff groups should be able to run
+concurrently without interfering. In Java we cannot do it since the
+whole object is locked. To do it we need to split the original object
+into smaller objects, one for each group, to use different locks. This
+issue can be easily resolved in Join (with one lock) by defining a
+separate async&lt;&gt; method for each group and diff methods can join
+with a proper async&lt;&gt; method to acquire the exclusive access to
+the resource it needs. </font></li>
+</ol>
+<font></font>
+<ol start="4">
+  <li><font>Join's model can be thought as a generic contention manager
+or synchronization framework which can be used to code any customized
+contention
+management / synchronization requirements (as shown in many tutorials)
+and avoid some
+important cases of
+dead-locks. For example, in some applications, actions need exclusive
+access to multiple resources.
+Traditionally we need first lock all these resources one by one and
+then perform the action. This is problematic design, since some other
+actions may need exclusive access to (some of) these resources too. We
+have to make sure all these resources / locks are acquired in the same
+order otherwise dead-lock will occur. </font></li>
+</ol>
+<div style="margin-left: 40px;"><font>In Join, we can resolve this
+issue by defining an
+async method (lock1(), lock2(),...)&nbsp; for each resource and
+defining chord to join the action method with the set of async methods
+represents the set of resources it requires:
+</font><br>
+<font>&nbsp;&nbsp; chord(action1, lock1, lock2, lock3,..., chord_body);</font><br>
+<font>Please note that when message arrive, Join will check the
+availablity
+of all resources (lock1, lock2, ...) in one "atomic" transaction, so
+the order of how lock1(), lock2(),... are called are not relevant or
+important anymore.</font><br>
+</div>
+<font size="-1"><br>
+</font>
+</body>
+</html>
