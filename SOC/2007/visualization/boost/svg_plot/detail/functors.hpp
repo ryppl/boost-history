@@ -34,9 +34,8 @@ namespace svg {
 namespace detail
 {
 
-  // TODO change name from boost_default_convert to double_default_convert.
-class boost_default_convert
-{ /*! \class boost::svg::detail::boost_default_convert
+class double_1d_convert
+{ /*! \class boost::svg::detail::double_1d_convert
       \brief This functor allows any 1D data convertible to doubles to be plotted.
 */
 public:
@@ -47,10 +46,10 @@ public:
     {
         return (double)val;
     }
-}; // class boost_default_convert
+}; // class double_1d_convert
 
-class boost_default_2d_convert
-{ /*! \class boost::svg::detail::boost_default_2d_convert
+class pair_double_2d_convert
+{ /*! \class boost::svg::detail::pair_double_2d_convert
       \brief This functor allows any 2 D data convertible to type std::pair<double, double> to be plotted.
 */
 public:
@@ -73,10 +72,10 @@ public:
     {
         return std::pair<double, double>(i++, (double)a);
     }
-}; // class boost_default_2d_convert
+}; // class pair_double_2d_convert
 
-class unc_default_2d_convert
-{ /*! \class boost::svg::detail::unc_default_2d_convert
+class pair_unc_2d_convert
+{ /*! \class boost::svg::detail::pair_unc_2d_convert
       \brief This functor allows any 2D data convertible to type std::pair<unc, unc> to be plotted.
 */
 public:
@@ -98,10 +97,10 @@ public:
     {
         return std::pair<unc, unc>(i++, (unc)a);
     }
-}; // class boost_default_2d_convert
+}; // class pair_unc_2d_convert
 
-class unc_default_convert
-{ /*! \class boost::svg::detail::unc_convert
+class unc_1d_convert
+{ /*! \class boost::svg::detail::unc_1d_convert
       \brief This functor allows any 1D data convertible to unc (uncertain doubles) to be plotted.
       \details Defaults provided by the unc class constructor ensure that
       uncertainty, degrees of freedom information, and type are set too.
@@ -117,7 +116,7 @@ public:
       // warning C4244: 'argument' : conversion from 'long double' to 'double', possible loss of data.
       // because unc only holds double precision.
     }
-}; // class default_convert
+}; // class default_1d_convert
 
 
 } // namespace detail

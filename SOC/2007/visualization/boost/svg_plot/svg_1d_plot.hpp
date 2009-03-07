@@ -32,7 +32,7 @@
 #include "svg_style.hpp"
 #include "detail/axis_plot_frame.hpp" // Code shared with 2D.
 #include <boost/svg_plot/detail/functors.hpp>
-using boost::svg::detail::unc_default_convert;
+using boost::svg::detail::unc_1d_convert;
 #include "detail/numeric_limits_handling.hpp"
 #include <boost/svg_plot/uncertain.hpp>
 // using boost::svg::unc;
@@ -771,9 +771,9 @@ public:
   template <class T>
   svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "");
   template <class T, class U>
-  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_convert);
+  svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = double_1d_convert);
   template <class T, class U>
-  svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_convert);
+  svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = double_1d_convert);
 }; // class svg_1d_plot 
 
 // svg_1d_plot Member functions definitions.
@@ -818,13 +818,13 @@ public:
 
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /*= "" */)
-  { /*! Add a data series to the plot (by default, converting to doubles), with optional title.
+  { /*! Add a data series to the plot (by default, converting to unc doubles), with optional title.
      Note that this version assumes that *ALL* the data values in the container are used.
     */
     serieses_.push_back(
       svg_1d_plot_series(
-      boost::make_transform_iterator(container.begin(), detail::unc_default_convert()),
-      boost::make_transform_iterator(container.end(), detail::unc_default_convert()),
+      boost::make_transform_iterator(container.begin(), detail::unc_1d_convert()),
+      boost::make_transform_iterator(container.end(), detail::unc_1d_convert()),
       title)
     );
    /*
@@ -842,15 +842,15 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
 
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title)
-  { //! Add a data series to the plot (by default, converting to doubles), with optional title.
+  { //! Add a data series to the plot (by default, converting to unc doubles), with optional title.
     /*!
     Note that this version permits a partial range, begin to end, of the container to be used.
     \return a reference to data series just added.
     */
     serieses_.push_back(
       svg_1d_plot_series(
-      boost::make_transform_iterator(begin, detail::boost_default_convert()),
-      boost::make_transform_iterator(end, detail::boost_default_convert()),
+      boost::make_transform_iterator(begin, detail::unc_1d_convert()),
+      boost::make_transform_iterator(end, detail::unc_1d_convert()),
       title)
     );
     //! For example:  my_1d_plot.plot(my_data.begin(), my_data.end(), "My container");
@@ -860,7 +860,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
   } // plot
 
   template <class T, class U>
-  svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title /* = ""*/, U functor /* = boost_default_convert */)
+  svg_1d_plot_series& svg_1d_plot::plot(const T& begin, const T& end, const std::string& title /* = ""*/, U functor /* = double_1d_convert */)
   { /*! Add a data series to the plot, with optional title. (Version with custom functor, rather than to double).
       Note that this version permits a partial range, begin to end, of the container to be used.
       \return a reference to data series just added.
@@ -875,7 +875,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
   } // plot
 
   template <class T, class U>
-  svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /* = "" */, U functor/*= boost_default_convert*/)
+  svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /* = "" */, U functor/*= double_1d_convert*/)
   { //! Add a data series to the plot, with optional title.
   /*!
     This version of plot includes a functor, allowing other than just convert data values to double(the default).

@@ -5,6 +5,7 @@
   Very many functions allow fine control of the appearance and layout of plots, data markers and lines.
   Items common to 1D and 2D use axis_plot_frame.
   \author Jacob Voytko & Paul A. Bristow
+  \date Mar 2009
  */
 
 // Copyright Jacob Voytko 2007
@@ -28,6 +29,8 @@
 //  using boost::make_transform_iterator;
 
 #include "svg_style.hpp"
+#include "uncertain.hpp"
+// using boost.svg::unc;
 #include "detail/axis_plot_frame.hpp"
 #include "detail/numeric_limits_handling.hpp"
 #include "detail/functors.hpp"
@@ -53,7 +56,7 @@ namespace boost
     // Forward declarations.
     const std::string strip_e0s(std::string s); // Strip unncessary zeros and e and sign.
     class svg_2d_plot; // Plot framework.
-    class svg_2d_plot_series; // plot data series.
+    class svg_2d_plot_series; // One series of data to plot.
 
     class svg_2d_plot_series
     { /*! \class boost::svg::svg_2d_plot_series
@@ -70,7 +73,7 @@ namespace boost
 
     public:
       // 2-D Data series points to plot.
-      std::multimap<double, double> series_; //!< Normal 'OK to plot' data values.
+      std::multimap<unc, unc> series_; //!< Normal 'OK to plot' data values.
       std::multimap<double, double> series_limits_; //!< 'limit' values: too big or small, or NaN.
 
       std::string title_; //!< Title of data series (to show on legend using legend style).
@@ -141,13 +144,17 @@ namespace boost
   { // Constructor.
     for(T i = begin; i != end; ++i)
     { // Sort data points into normal and limited series.
-      if(detail::pair_is_limit(*i))
+      std::pair<unc, unc> temp = *i;
+      unc ux = temp.first;
+      unc uy = temp.second;
+      std::pair<double, double> xy = std::make_pair<double, double>(ux.value(), uy.value());
+      if(detail::pair_is_limit(xy))
       { // Either x and/or y is at limit.
-        series_limits_.insert(*i);
+        series_limits_.insert(xy);
       }
       else
       { // Normal data values for both x and y.
-        series_.insert(*i);
+        series_.insert(temp);
       }
     }
   } // svg_2d_plot_series
@@ -1330,11 +1337,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       } // void draw_y_minor_tick
 
       void draw_straight_lines(const svg_2d_plot_series& series)
-      { //! Add straight line between series of data points (rather than a Bezier curve).
-        double prev_x; // Previous data points.
-        double prev_y;
-        double temp_x(0.);
-        double temp_y;
+      { //! Add line between series of data points (straight rather than a Bezier curve).
 
         g_element& g_ptr = image.g(detail::PLOT_DATA_LINES).g();
         g_ptr.clip_id(plot_window_clip_);
@@ -1347,14 +1350,17 @@ my_plot.background_color(ghostwhite) // Whole image.
         bool is_fill = !series.line_style_.area_fill_.is_blank;
         path.style().fill_on(is_fill); // Ensure includes a fill="none" if no fill.
 
+        double prev_x; // Previous data points.
+        double prev_y;
         if(series.series_.size() > 1)
-        { // Need at least two points for a line ;-)
-          std::multimap<double, double>::const_iterator j = series.series_.begin();
+        { // Need at least two points for a line.
+          std::multimap<unc, unc>::const_iterator j = series.series_.begin();
 
           // If we have to fill the area under the plot,
           // we first have to move from the X-axis (y = 0) to the first point,
           // and again at the end after the last point.
-          prev_x = (*j).first;
+          unc prev_ux = (*j).first;
+          prev_x = prev_ux.value();
           prev_y = 0.; // X-axis.
           transform_point(prev_x, prev_y);
           if(is_fill)
@@ -1362,7 +1368,9 @@ my_plot.background_color(ghostwhite) // Whole image.
             //path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
             path.M(prev_x, prev_y);
           }
-          transform_y(prev_y = (*j).second);
+          unc prev_uy = (*j).second;
+          prev_y = prev_uy.value();
+          transform_y(prev_y);
           if(is_fill)
           { // Area fill wanted.
             // path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
@@ -1374,23 +1382,23 @@ my_plot.background_color(ghostwhite) // Whole image.
           }
           ++j; // so now refers to 2nd point to plot.
 
+          double temp_x(0.);
+          double temp_y;
           for(; j != series.series_.end(); ++j)
           {
-            temp_x = (*j).first;
-            temp_y = (*j).second;
+            unc temp_ux = (*j).first;
+            temp_x = temp_ux.value();
+            unc temp_uy = (*j).second;
+            temp_y = temp_uy.value();
             transform_point(temp_x, temp_y);
             path.L(temp_x, temp_y); // Line to next point.
-            //if(is_fill) // This seems to stop area-fill and is not needed anyway.
-            //{
-            //  //path.M(temp_x, temp_y);
-            //}
             prev_x = temp_x;
             prev_y = temp_y;
           } // for j'th point
 
           if(is_fill)
           { // Area fill wanted.
-            transform_y(temp_y = 0.); // X-axis line coordinate.
+            transform_y(temp_y); // X-axis line coordinate.
             path.L(temp_x, temp_y).z(); // Draw line to X-axis & closepath with Z.
           }
         }
@@ -1405,7 +1413,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         std::pair<double, double> n; // current point.
         std::pair<double, double> n_minus_1; // penultimate.
-        std::pair<double, double> n_minus_2;
+        std::pair<double, double> n_minus_2; // 'pen-penultimate'.
         std::pair<double, double> fwd_vtr;
         std::pair<double, double> back_vtr;
 
@@ -1420,11 +1428,15 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
 
         if(series.series_.size() > 2)
-        { // Need >= 3 for a cubic curve (start point, 2 control points, and end point).
-          std::multimap<double, double>::const_iterator iter = series.series_.begin();
-          n_minus_1 = *(iter++);  // begin()
+        { // Need >= 3 points for a cubic curve (start point, 2 control points, and end point).
+          std::multimap<unc, unc>::const_iterator iter = series.series_.begin();
+          std::pair<unc, unc> un_minus_1 = *(iter++); // 1st unc X & Y data.
+          n_minus_1 = std::make_pair(un_minus_1.first.value(), un_minus_1.second.value()); // X and Y values.
+          //n_minus_1 = *(iter++);  // begin()
           transform_pair(n_minus_1);
-          n = *(iter++); // middle
+
+          std::pair<unc, unc> un = *(iter++); // middle
+          n = std::make_pair(un.first.value(), un.second.value()); // X and Y values.
           transform_pair(n);
           path.M(n_minus_1.first, n_minus_1.second); // move m_minus_1, the 1st data point.
 
@@ -1442,7 +1454,8 @@ my_plot.background_color(ghostwhite) // Whole image.
           {
             n_minus_2 = n_minus_1;
             n_minus_1 = n;
-            n = *iter;
+            std::pair<unc, unc> un = *iter; // middle
+            n = std::make_pair(un.first.value(), un.second.value()); // X and Y values.
             transform_pair(n);
 
             back_vtr.first = ((n_minus_1.first - n.first) + // (x diff - x previous diff) * control
@@ -1502,13 +1515,16 @@ my_plot.background_color(ghostwhite) // Whole image.
             .fill_color(serieses_[i].point_style_.fill_color_)
             .stroke_color(serieses_[i].point_style_.stroke_color_);
 
-          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
+          for(std::multimap<unc, unc>::const_iterator j = serieses_[i].series_.begin();
             j != serieses_[i].series_.end(); ++j)
           {
-            x = j->first;
-            double vx = x; // Note the true x value.
-            y = j->second;
-            double vy = y; // Note the true y value.
+            unc ux = j->first;
+            x = ux.value(); // Just the X value.
+            //double vx = x; // Note the true X value.
+            unc uy = j->first;
+            uy = j->second;
+            y = uy.value(); // Just the Y value
+            //double vy = y; // Note the true Y value.
             transform_point(x, y);
             if((x > plot_left_) && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
@@ -1518,17 +1534,17 @@ my_plot.background_color(ghostwhite) // Whole image.
               { // Show the value of the X data point too.
                 // void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, double value)
 
-                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, serieses_[i].point_style_, vx);
+                draw_plot_point_value(x, y, g_ptr_vx, x_values_style_, serieses_[i].point_style_, ux);
               }
               g_element& g_ptr_vy = image.g(detail::PLOT_Y_POINT_VALUES).g();
               if (y_values_on_)
               { // show the value of the Y data point too.
-                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,serieses_[i].point_style_, vy);
+                draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,serieses_[i].point_style_, uy);
               }
 
               if (xy_values_on_)
               { // Show the values of the X & Y data as a pair.
-                draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, vx, vy);
+                draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, ux, uy);
               }
             } // if in side window
           } // for j
@@ -1637,11 +1653,13 @@ my_plot.background_color(ghostwhite) // Whole image.
 
           double h_w = serieses_[i].bar_style_.width_; // For block bar chart.
           //double h_h = 0.;
-          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
+          for(std::multimap<unc, unc>::const_iterator j = serieses_[i].series_.begin();
             j != serieses_[i].series_.end(); ++j)
           { // All the 'good' data points.
-            x = j->first;
-            y = j->second;
+            unc ux = j->first;
+            x = ux.value();
+            unc uy = j->second;
+            y = uy.value();
             transform_point(x, y);
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_)  && (y < plot_bottom_))
             { // Is inside plot window, so some bar to draw.
@@ -1726,23 +1744,27 @@ my_plot.background_color(ghostwhite) // Whole image.
             path.style().fill_color(blank);
           }
 
-          std::multimap<double, double>::const_iterator last = serieses_[i].series_.end();
+          std::multimap<unc, unc>::const_iterator last = serieses_[i].series_.end();
           last--; // Final pair with first the last bin end, and value zero or NaN.
-          if (last->second != 0)
+          unc u = last->second;
+          if (u.value() != 0)
           {
             std::cout << "Last bin end " << last->first << " should have zero value! but is "  << last->second << std::endl;
             // Or Throw? or skip this series?
           }
-          for(std::multimap<double, double>::const_iterator j = serieses_[i].series_.begin();
+          for(std::multimap<unc, unc>::const_iterator j = serieses_[i].series_.begin();
             j != last; ++j)
           { // All the 'good' 'real' data points.
-            double x = j->first;
-            double y = j->second;
-            std::multimap<double, double>::const_iterator j_next = j;
+            unc ux = j->first;
+            double x = ux.value();
+            unc uy =  j->second;
+            double y = uy.value();
+            std::multimap<unc, unc>::const_iterator j_next = j;
             j_next++;
             if (j != last)
             { // Draw a column (perhaps filled) to show bin.
-              double x_next = j_next->first;
+              unc ux_next= j_next->first;
+              double x_next = ux_next.value();
               double w = x_next - x;
               double h = y / w;
               // std::cout << x << ' ' << y << ' ' << w << ' '  << h << std::endl;
@@ -1947,11 +1969,11 @@ my_plot.background_color(ghostwhite) // Whole image.
       template <class T>
       svg_2d_plot_series& plot(const T& container, const std::string& title = "");
       template <class T, class U>
-      svg_2d_plot_series& plot(const T& container, const std::string& title = "", U functor = boost_default_2d_convert);
+      svg_2d_plot_series& plot(const T& container, const std::string& title = "", U functor = pair_double_2d_convert);
       template <class T>
       svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "");
       template <class T, class U>
-      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = boost_default_2d_convert);
+      svg_2d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = pair_double_2d_convert);
 
  }; // class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
 
@@ -2679,26 +2701,26 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
     return *this; //! \return reference to svg_2d_plot to make chainable.
   } // write(file)
 
-  template <class T> //! \tparam T Type of data in series (must be convertible to double).
+  template <class T> //! \tparam T Type of data in series (must be convertible to unc double).
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
   { /*! Add a container of a data series to the plot.
       This version assumes that *ALL* the data value in the container is used.
       \code
 my_plot.plot(data1, "Sqrt(x)");
       \endcode
-      Version converting to double with \c boost_default_2d_convert.
+      Version converting to double with \c pair_double_2d_convert.
     */
     serieses_.push_back(
       svg_2d_plot_series(
-      boost::make_transform_iterator(container.begin(), detail::boost_default_2d_convert()),
-      boost::make_transform_iterator(container.end(), detail::boost_default_2d_convert()),
+      boost::make_transform_iterator(container.begin(), detail::pair_unc_2d_convert()),
+      boost::make_transform_iterator(container.end(), detail::pair_unc_2d_convert()),
       title)
     );
     return serieses_[serieses_.size()-1]; //! \return Reference to data series just added to make chainable.
   }
 
   template <class T, class U>
-  svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title /* = "" */, U functor /* = boost_default_2d_convert*/)
+  svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title /* = "" */, U functor /* = pair_double_2d_convert*/)
   { /*! This version permits a custom functor (rather than default conversion to double).\n
        Note that this version assumes that *ALL* the data value in the container is used.
     */
@@ -2713,7 +2735,7 @@ my_plot.plot(data1, "Sqrt(x)");
 
   template <class T>
   svg_2d_plot_series& svg_2d_plot::plot(const T& begin, const T& end, const std::string& title)
-  { /*! Add a data series to the plot (by default, converting automatically to doubles).\n
+  { /*! Add a data series to the plot (by default, converting automatically to unc doubles).\n
       This version permits part of the container to be used, a partial range, using iterators begin to end.\n
       For example:
       \code  
@@ -2725,8 +2747,8 @@ my_2d_plot.plot(&my_data[1], &my_data[], "my_data 1 to 3"); // Add part of data 
    */
     serieses_.push_back(
       svg_2d_plot_series(
-      boost::make_transform_iterator(begin, detail::boost_default_convert()),
-      boost::make_transform_iterator(end, detail::boost_default_convert()),
+      boost::make_transform_iterator(begin, detail::unc_1d_convert()),
+      boost::make_transform_iterator(end, detail::unc_1d_convert()),
       title)
     );
     return serieses_[series_.size() - 1]; //! \return Reference to data series just added to make chainable.

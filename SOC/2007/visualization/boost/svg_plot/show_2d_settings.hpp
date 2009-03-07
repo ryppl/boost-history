@@ -97,45 +97,6 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
   os.flags(flags);  // Restore.
 }  // outFmtFlags
 
-  namespace detail
-  {
-
-    //std::ostream& operator<< (std::ostream&, const std::pair<double, double>&);
-    //template<class T1, class T2> std::ostream& operator<< (std::ostream&, std::pair<T1, T1>&);
-
-    template<class T1, class T2>
-    std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p)
-    { // Output a pair of values.
-           os << p.first << ", " << p.second;
-        // Outputs:  1.2, 3.4
-        return os;
-    } // std::ostream& operator<<
-
-    std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p)
-    { // Output a pair of values.
-        int precision = os.precision(3); // Save & use rather than default precision(6)
-        os << p.first << ", " << p.second;
-        // Outputs:  1.2, 3.4
-        os.precision(precision); // Restore.
-        return os;
-    } // std::ostream& operator<<
-
-    // Maybe better as:
-    //template<typename charT, typename traits, typename T1, typename T2>
-    //inline std::basic_ostream<charT, traits>& operator<<(std::basic_ostream<charT, traits>& os, const std::pair<T1, T2>& p)
-    //{
-    //  return os << p.first << " " << p.second;
-    //}
-    //
-    //// Explicit double, double.
-    //template<typename charT, typename traits>
-    //inline std::basic_ostream<charT, traits>& operator<<(std::basic_ostream<charT, traits>& os, const std::pair<double, double>& p)
-    //{
-    //  return os << p.first << " " << p.second;
-    //}
-    // but OK for this purpose.
-  } // namespace detail
-
   const std::string l_or_r(int i)
   {
    return ((i < 0) ? "left" : ((i == 0) ? "none" : "right"));
@@ -229,6 +190,7 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "title_font_weight " << plot.title_font_weight() << endl;
   //cout << "title_font_width " << plot.title_font_width() << endl;
   // Not useful at present, so not longer implemented.
+  cout << "x_values_on "  << plot.x_values_on() << endl;
   cout << "x_value_precision " << plot.x_value_precision() << endl;
   cout << "x_value_ioflags " << hex << plot.x_value_ioflags() << dec << ' ';
   outFmtFlags(plot.x_value_ioflags(), cout,  ".\n");
@@ -242,7 +204,6 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_autoscale " << plot.y_autoscale() << endl;
   cout << "xy_autoscale " << plot.xy_autoscale() << endl;
   cout << "x_autoscale_check_limits " << plot.autoscale_check_limits() << endl;
-
   cout << "x_axis_on " << plot.x_axis_on() << endl;
   cout << "x_axis_color() " << plot.x_axis_color() << endl;
   cout << "x_axis_label_color " << plot.x_axis_label_color() << endl;
@@ -281,6 +242,9 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_ticks_on_window_or_axis " << t_or_b(plot.x_ticks_on_window_or_axis()) << endl;
   cout << "y_axis_position " << plot.y_axis_position() << endl;
   cout << "x_axis_position " << plot.x_axis_position() << endl;
+  cout << "x_plusminus_on " << plot.x_plusminus_on() << endl;
+  cout << "x_df_on " << plot.x_df_on() << endl;
+  cout << "xy_values_on "  << plot.xy_values_on() << endl;
   cout << "y_label_on " << plot.y_label_on() << endl;
   cout << "y_label_axis " << plot.y_label_axis() << endl;
   cout << "y_axis_color " << plot.y_axis_color() << endl;
@@ -321,6 +285,10 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_ticks_on_window_or_axis " << l_or_r(plot.y_ticks_on_window_or_axis()) << endl;
   cout << "y_max " << plot.y_max() << endl;
   cout << "y_min " << plot.y_min() << endl;
+  cout << "y_values_on "  << plot.y_values_on() << endl;
+  cout << "y_plusminus_on " << plot.y_plusminus_on() << endl;
+  cout << "y_df_on " << plot.y_df_on() << endl;
+
   cout << "data lines width " << plot.data_lines_width() << endl;
 
 

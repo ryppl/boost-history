@@ -1025,10 +1025,13 @@ namespace boost
           } // void draw_plot_point
 
           void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue)
-          { //! Write one data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
-            //! Unecessary e, +, & leading exponent zeros may optionally be stripped, and the position and rotation controlled.
-            //! Uncertainty estimate ('plus or minus') may be optionally be appended.
-            //! Degrees of freedom estimate (number of replicates) may optionally be appended.
+          { /*! Write one data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
+             Unecessary e, +, & leading exponent zeros may optionally be stripped, and the position and rotation controlled.
+             Uncertainty estimate ('plus or minus') may be optionally be appended.
+             Degrees of freedom estimate (number of replicates) may optionally be appended.
+             For example: "3.45 +-0.1(10)"\n
+             The precision and format (scientific, fixed), and color and font type and size can be controlled too.
+             */
             double value = uvalue.value(); // Most likely value.
             double u = uvalue.uncertainty(); // Uncertainty or plusminus for value.
             double df = uvalue.deg_free(); // Degrees of freedom estimate for value.
@@ -1124,12 +1127,12 @@ namespace boost
             } // switch
 
             text_element& t = g_ptr.text(x, y, stripped, val_style.values_text_style_, al, rot);  // X or Y value "1.23"
-            int f = static_cast<int>(val_style.values_text_style_.font_size() * 0.8); // Make uncertainty and df a bit smaller to distringuish from value.
+            int f = static_cast<int>(val_style.values_text_style_.font_size() * 0.8); // Make uncertainty and df a bit smaller to distinguish from value.
 
             std::string label_u; // Uncertainty or plusminus.
             std::string label_df; // Degrees of freedom estimate.
             std::string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
-            // Might also use ANSI symbol for plusminus 0xF1 == '\361' or char(241) 
+            // Might also use ANSI symbol for plusminus 0xF1 == '\361' or char(241)
             // but seems to vary with different codepages
             // LOCALE_SYSTEM_DEFAULT LOCALE_IDEFAULTANSICODEPAGE == 1252
             // LOCALE_SYSTEM_DEFAULT  LOCALE_IDEFAULTCODEPAGE ==  850 for country 44 (UK)
@@ -1286,7 +1289,9 @@ namespace boost
             string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
             // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
             // Layout seems to vary with font - Times New Roman leaves no space after.
-            if (x_sty.plusminus_on_)
+            if ((x_sty.plusminus_on_ == true)
+                  && (ux > 0.)
+                )
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
               label_xu = sv(ux, x_sty, true);
               t.tspan(pm).fill_color(darkcyan);
@@ -1299,7 +1304,7 @@ namespace boost
                )
             { // Degrees of freedom (usually number of observations-1) used for this estimate of value.
               stringstream label;
-              label.precision(4);
+              label.precision(4); // Might need 5 to show 65535?
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
               // Explicit space "&#x00A0;" seems necessary.

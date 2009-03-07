@@ -1981,8 +1981,8 @@ public:
   { //!< Add a data series (the whole container) to boxplot.
     series.push_back(
       svg_boxplot_series(
-        boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
-        boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
+        boost::make_transform_iterator(container.begin(), detail::double_1d_convert()),
+        boost::make_transform_iterator(container.end(), detail::double_1d_convert()),
         title, bw, bs, ms, as,
         wl, minws, maxws,
         os, extos, q_def, vs, ss
@@ -2002,8 +2002,8 @@ public:
     }
     series.push_back( // Add a new data series for a boxplot.
       svg_boxplot_series(
-        boost::make_transform_iterator(container.begin(), detail::boost_default_convert()),
-        boost::make_transform_iterator(container.end(), detail::boost_default_convert()),
+        boost::make_transform_iterator(container.begin(), detail::double_1d_convert()),
+        boost::make_transform_iterator(container.end(), detail::double_1d_convert()),
         title, box_width_, box_style_, median_style_, axis_style_,
         whisker_length_, min_whisker_style_, max_whisker_style_,
         mild_outlier_, ext_outlier_, quartile_definition_, values_style_, series_style_

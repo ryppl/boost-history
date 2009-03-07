@@ -8,14 +8,14 @@
    This is a simple model of uncertainties, designed to
    accompany an article published in C/C++ Users Journal March 1996.
    A fuller collection of even fancier classes also given in UReal.h.
-   And also on a extended version including uncertainty as standard deviation & its uncertainty 
+   And also based on a extended version including uncertainty as standard deviation & its uncertainty 
    as degrees of freedom, and other information about the value added Paul A Bristow from 31 Mar 98.
 
    \author Paul A. Bristow
    \date Mar 2009
 
 */
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -24,6 +24,8 @@
 
 #ifndef BOOST_SVG_UNCERTAIN_HPP
 #define BOOST_SVG_UNCERTAIN_HPP
+
+#include <boost/svg_plot/detail/pair.hpp>
 
 #include <iostream>
 using std::ostream;
@@ -43,6 +45,12 @@ public:
   unc(); // Default constructor.
   unc(double v, float u, short unsigned df, short unsigned ty);
   friend ostream& operator<< (ostream& os, const unc& u);
+  friend ostream& operator<< (ostream& os, const std::pair<unc, unc>& u);
+  bool operator<(const unc& rhs)const;
+  bool operator<(unc& rhs)const;
+  bool operator==(const unc& rhs) const;
+  unc& operator=(const unc& rhs);
+
   // Get and set member functions.
   double value(); //!< Get most likely value, typically the mean.
   float uncertainty(); //!< Get estimate of uncertainty, typically standard deviation.
@@ -79,27 +87,35 @@ unc::unc(double v, float u = -1.f, short unsigned df = (std::numeric_limits<unsi
 
 unc::unc()
 :
-  value_(0), uncertainty_(-1.F), deg_free_((std::numeric_limits<unsigned short int>::max)()), types_(0U)
-{ // Constructor.
-  // Note the defaults.
+  value_(0.), uncertainty_(-1.F), deg_free_((std::numeric_limits<unsigned short int>::max)()), types_(0U)
+{ // Default constructor.
+  // Note the defaults so that value is zero, but others have 'unknown' status.
 }
-ostream& operator<< (ostream& os, const unc& u)
+
+bool unc::operator<(const unc& rhs) const
 {
-  os << u.value_;
-    if (u.uncertainty_ > 0)
-    { // Uncertainty is defined, so show it.
-      //os << char(241)  //! 256 bit codepage plusminus symbol 0xF1.
-      os << '\361'  //! 256 bit codepage plusminus symbol 0xF1.
-        << u.uncertainty_; 
-      //os << " +or-" << u.uncertainty_; 
-      // os <<  "&#x00A0;&#x00B1;" //! Unicode space plusminus glyph.
-    };
-    if (u.deg_free_ != (std::numeric_limits<unsigned short int>::max)())
-    { // Degrees of freedom is defined, so show it.
-      os << " (" << u.deg_free_ << ") ";
-    };
-  return os;
+  return value_ <rhs.value_;
 }
+
+bool unc::operator<(unc& rhs) const
+{
+  return value_ <rhs.value_;
+}
+
+bool unc::operator ==(const unc& rhs) const
+{
+  return value_ == rhs.value_; // Might check ALL are equal?
+}
+
+unc& unc::operator=(const unc& rhs)
+{
+  value_ = rhs.value_;
+  uncertainty_ = rhs.uncertainty_;
+  deg_free_ = rhs.deg_free_;
+  types_ = rhs.types_ ; 
+  return *this; //! to make chainable.
+}
+
 
 double unc::value() //!< Get most likely value, typically the mean.
 {
@@ -139,6 +155,32 @@ void unc::types(short unsigned  t) //!< Set other information about the value.
 {
   types_ = t;
 }
+
+ostream& operator<< (ostream& os, const unc& u)
+{ //! Output an value with (if defined )uncertainty and degrees of freedom.
+  //! For example: "1.23 +/- 0.01 (13)".
+  os << u.value_;
+  if (u.uncertainty_ > 0)
+  { // Uncertainty is defined, so output it.
+    //os << char(241)  //! 256 bit codepage plusminus symbol 0xF1.
+    os << '\361'  //! 256 bit codepage plusminus symbol 0xF1.
+      << u.uncertainty_; 
+    //os << " +or-" << u.uncertainty_; 
+    // os <<  "&#x00A0;&#x00B1;" //! Unicode space plusminus glyph.
+  };
+  if (u.deg_free_ != (std::numeric_limits<unsigned short int>::max)())
+  { // Degrees of freedom is defined, so output it.
+    os << " (" << u.deg_free_ << ")";
+  };
+  return os;
+} // ostream& operator<< (ostream& os, const unc& u)
+
+ostream& operator<< (ostream& os, const std::pair<unc, unc>& u)
+{ //! Output a pair (X and Y) value with (if defined) uncertainty and degrees of freedom.
+  //! For example: "1.23 +/- 0.01 (13), 3.45 +/- 0.06 (78)".
+  os << u.first << ", " << u.second;
+  return os;
+} // ostream& operator<< (ostream& os, const pair<unc, unc>& u)
 
 } // namespace svg
 } // namespace boost
