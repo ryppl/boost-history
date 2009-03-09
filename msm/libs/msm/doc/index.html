@@ -6,11 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090309;12175000">
+	<META NAME="CHANGED" CONTENT="20090309;15363300">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
@@ -41,8 +42,8 @@
 </HEAD>
 <BODY LANG="en-US" DIR="LTR">
 <P STYLE="margin-top: 0.42cm; margin-bottom: 0.5cm; page-break-after: avoid">
-<FONT FACE="Albany, sans-serif"><FONT SIZE=4>The Boost.Msm (Meta
-State Machine) library v1.10</FONT></FONT></P>
+<FONT FACE="Albany, sans-serif"><FONT SIZE=4>The Msm (Meta State
+Machine) library v1.20</FONT></FONT></P>
 <P>Christophe Henry, 
 </P>
 <P>henry UNDERSCORE christophe AT hotmail DOT com</P>
@@ -146,6 +147,10 @@ Changes compared to previous version</H1>
 	default_base_state. No breaking change if no SMPtr policy chosen.</P>
 	<LI><P>Renamed SMPtr/NoSMPtr to sm_ptr / no_sm_ptr. Old names
 	deprecated by still supported.</P>
+	<LI><P>Added possibility to manually deactivate queuing of messages
+	and exception handling for more speed.</P>
+	<LI><P>Added automatic deactivation of terminate/interrupt state
+	checking and deferred events if not used.</P>
 </UL>
 <P>Changes from 1.0 to 1.10</P>
 <UL>
@@ -1381,11 +1386,10 @@ by UML:</P>
 </UL>
 <P><BR><BR>
 </P>
-<P>Boost.Msm (almost) fully supports these features. Almost because
-there is currently one limitation, that it is only possible to
-explicitly enter a sub- composite and not exit it &ldquo;upwards&rdquo;
-this way. To exit, Msm just supports the two previously described
-methods.</P>
+<P>Msm (almost) fully supports these features. Almost because there
+is currently one limitation, that it is only possible to explicitly
+enter a sub- composite and not exit it &ldquo;upwards&rdquo; this
+way. To exit, Msm just supports the two previously described methods.</P>
 <P>Sounds a bit complicated? Let's explain using an example were all
 of the previously named methods are used:</P>
 <P><BR><BR>
@@ -1944,8 +1948,9 @@ is offering many features at a high-speed, but sometimes, for example
 in embedded systems, you need more speed and are ready to give up
 some features in exchange.</FONT></FONT></FONT></CODE></P>
 <P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>A
-</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>
-is doing 5 different jobs:</FONT></FONT></FONT></CODE></P>
+</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>is
+doing 5 different jobs:</FONT></FONT></FONT></CODE></P>
 <UL>
 	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>checking
 	for terminate/interrupt states</FONT></FONT></FONT></CODE></P>
@@ -1972,36 +1977,35 @@ terminate/interrupt states and deferred events and deactivates them
 if not used. For the other two, if you want them out, you need to
 help by indicating in your implementation that you want them out.
 This is done with two simple typedefs, for example:</FONT></FONT></FONT></CODE></P>
-<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000">
-  </FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">//
-Concrete FSM implementation </SPAN></FONT></FONT></FONT></CODE>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>//
+Concrete FSM implementation </FONT></FONT></FONT></CODE>
 </P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">    </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">struct</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">player</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-: </SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">public</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">state_machine</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&lt;</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">player</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&gt;</SPAN></FONT></FONT></P>
-<P LANG="" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">    <FONT SIZE=3>{</FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
-no need for exception handling or message queue</SPAN></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">no_exception_thrown</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
-</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">no_message_queue</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></P>
-<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000">       
-</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">...</SPAN></FONT></FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">//
-rest of implementation</SPAN></FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">struct</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">player</FONT><FONT COLOR="#000000"> :
+</FONT><FONT COLOR="#0000ff">public</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">state_machine</FONT><FONT COLOR="#000000">&lt;</FONT><FONT COLOR="#030003">player</FONT><FONT COLOR="#000000">&gt;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT SIZE=3>{</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#008000"><FONT SIZE=3>//
+no need for exception handling or message queue</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">no_exception_thrown</FONT><FONT COLOR="#000000">;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT SIZE=3><FONT COLOR="#0000ff">typedef</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#0000ff">int</FONT><FONT COLOR="#000000">
+</FONT><FONT COLOR="#030003">no_message_queue</FONT><FONT COLOR="#000000">;</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"><FONT SIZE=3>...</FONT></FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>//
+rest of implementation</FONT></FONT></FONT></CODE></P>
 <P><BR><BR>
 </P>
-<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">What
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>What
 is the gain? It will depend on your compiler and target system, so
 please refer to the <A HREF="#9.Performance|outline">performance page</A>
 (where an example is also provided). If you use none of these
-nice-to-haves, a </SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">process_event</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">
-can execute up to 4 times faster. On my Q6600, an average transition
+nice-to-haves, a </FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000">
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>can
+execute up to 4 times faster. On my Q6600, an average transition
 execution lasts 45ns with a full state machine, 10ns in the minimal
-case.</SPAN></FONT></FONT></FONT></CODE></P>
+case.</FONT></FONT></FONT></CODE></P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
 <H1 CLASS="western"><A NAME="8.Customizing states|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif"><FONT SIZE=4 STYLE="font-size: 16pt"><SPAN STYLE="font-style: normal">Customizing
@@ -2304,9 +2308,9 @@ a_row where you wanted just a _row or the other way around.</P>
 </P>
 <P><U>Question</U>: Why do I get a very long compile error when I
 define more than 20 rows in the transition table?</P>
-<P><U>Answer</U>: Boost.Msm uses Boost.MPL behind the hood and this
-is the default maximum size. Please define the following 2 macros
-before including headers:</P>
+<P><U>Answer</U>: Msm uses Boost.MPL under the hood and this is the
+default maximum size. Please define the following 2 macros before
+including headers:</P>
 <DIV ID="limit-vector-size" DIR="LTR">
 	<P><BR><BR>
 	</P>
@@ -2328,7 +2332,7 @@ shown in the figure 8, is using the UML equivalent of what Harel uses
 in this chart, explicit entries, described in a <A HREF="#The many ways to enter a composite state|outline">previous
 tutorial.</A></P>
 <P>Please have a look at the <A HREF="HarelWithEntry.cpp">source code
-implementation with Boost.Msm</A>.</P>
+implementation with Msm</A>.</P>
 <P>The biggest advantage of using this method is that the code is
 very simple and easy to understand.</P>
 <P><BR><BR>
@@ -2483,7 +2487,7 @@ events can be fired. This way you could log the fired events and the
 states visited in the life of a concrete machine and be able to
 perform some coverage analysis, like &ldquo;fired 65% of all possible
 events and visited 80% of the states defined in the state machine&rdquo;.</P>
-<P>To achieve this, Boost.Msm provides a few useful tools:</P>
+<P>To achieve this, Msm provides a few useful tools:</P>
 <UL>
 	<LI><P><FONT FACE="Courier New, monospace">generate_state_set&lt;transition
 	table&gt;</FONT>: returns a mpl::set of all the states defined in
