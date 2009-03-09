@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->05 Mar 2009 04:34:53 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42235" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->09 Mar 2009 12:29:55 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42088" --></p>
 
 <p>Disposition [Being reviewed by Editor] has been applied all Type Ed comments 
 which do not have a specific response from a sub-group.</p>
@@ -52,9 +52,7 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p align="center" style=
         "margin-top: 0.07in; margin-bottom: 0.04in; page-break-inside: avoid">
-        <b>Disposition</b>
-
-        <p>
+        <b>Library Work Group Notes</b><p>
 
     <tr valign="top">
       <td>
@@ -3364,7 +3362,9 @@ which do not have a specific response from a sub-group.</p>
         we have consensus. Straw poll, put on format motions page for this 
         meeting (pro) or review and consider at next meeting (con): 7 pro - 1 
         con - many abstain, consensus for moving as formal motion at this 
-        meeting.<br>
+        meeting.<p align="left">D2840 was renamed
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+        N2840</a> and was accepted into the WP in Summit.<br>
 
     <tr valign="top">
       <td>
@@ -3410,8 +3410,7 @@ which do not have a specific response from a sub-group.</p>
         reference_closure] is fundamentally a language support
         feature and should move to clause 18, see separate comment
         [20.6.5 reference_wrapper] should be simplified and moved
-        into [2.2 utility components], see separate comment [20.6.4
-        result_of] should be reorganised as a type trait - see
+        into [2.2 utility components], see separate comment [20.6.4 result_of] should be reorganised as a type trait - see
         separate comment Tuples and pairs are closely related so
         merge tuple and pair into the same subclause - see more
         general comment on this
@@ -3485,20 +3484,13 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p>
 
-    We agree that adding constraints to predicate is a good idea. Predicate 
-    should be further constrained, rather than creating a new StdPredicate to 
-    avoid the need users to constantly choose between them. At a minimum, 
-    Predicate should refine MoveConstructible. However, upon review of existing 
-    library components, CopyConstructible or even SemiRegular might be more 
-    appropriate for Predicate.<p>
-
-    Later: UK245 with additional comments on UK200 in clause 20: After further 
+    After further 
     discussion of UK200, we do not think adding constraints to predicates is a 
     good idea. Straw poll on UK200: status quo, 5 pro - 2 con; remove 
     copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
-    3 con; no consensus for moving away from the status quo. Straw poll on 
-    UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
-    consensus for moving away from the status quo.<tr valign="top">
+    3 con; no consensus for moving away from the status quo. <p>
+
+    Also see UK245.<tr valign="top">
       <td>
         <p>UK<br>
         201
@@ -4977,7 +4969,10 @@ which do not have a specific response from a sub-group.</p>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">Resolved by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+        N2840</a>, accepted in New Jersey.<p align="left">See US 65 for detailed 
+        notes.<br>
 
     <tr>
       <td>
@@ -5060,7 +5055,23 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p>
 
-    <tr valign="top">
+        <p>
+
+        <p>
+
+        <p>
+
+    The referenced paper, N2810, was revised into
+    <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+    N2840</a> and accepted in New Jersey.<p>
+
+    Full LWG: Considered N2840 (a revision of N2829): straw poll, this is the 
+    direction we want to go: 11 pro - 0 con - 5 abstain, we have consensus. 
+    Straw poll, put on formal motions page for this meeting (pro) or review and 
+    consider at next meeting (con): 7 pro - 1 con - many abstain, consensus for 
+    moving as formal motion at this meeting. Also had strong support for 
+    proposals 1, 2 and 3 in N2834 (simplify pair). Pablo will submit a paper 
+    containing only those parts of N2834 in Frankfurt.<tr valign="top">
       <td>
         <p>JP 43
 
@@ -8358,9 +8369,7 @@ which do not have a specific response from a sub-group.</p>
 
     UK245 with additional comments on UK200 in clause 20: After further 
     discussion of UK200, we do not think adding constraints to predicates is a 
-    good idea. Straw poll on UK200: status quo, 5 pro - 2 con; remove 
-    copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
-    3 con; no consensus for moving away from the status quo. Straw poll on 
+    good idea. Straw poll on 
     UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
     consensus for moving away from the status quo.
 
@@ -8964,9 +8973,12 @@ which do not have a specific response from a sub-group.</p>
         <p align="left">typename subscript_reference = reference;
 
       <td>
-        <p align="left">NAD, subscript reference isn’t used.<br>
-
-    <tr valign="top">
+        <p align="left">NAD, subscript reference isn’t used.<p align="left">In 
+        c++std-lib-23104, <span class="gI">
+        <span email="daniel.kruegler@googlemail.com" class="gD">Daniel Krügler 
+        commented,</span><span email="daniel.kruegler@googlemail.com" class="gD" style="color: rgb(0, 104, 28);">
+        </span></span>this [proposed change] would disable &quot;auto-deduction&quot; of 
+        the return type of any operator[]as described by [concept.map.assoc]/4+5.<tr valign="top">
       <td>
         <p>UK<br>
         262
@@ -10604,7 +10616,10 @@ which do not have a specific response from a sub-group.</p>
         <p align="left"><br>
 
       <td>
-        <p align="left"><br>
+        <p align="left">Walter Brown recommends portions of this comment dealing 
+        with random numbers be treated as &quot;Resolved by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
+        N2836</a>, which was accepted in New Jersey.&quot;<br>
 
     <tr valign="top">
       <td>
@@ -10660,7 +10675,9 @@ which do not have a specific response from a sub-group.</p>
         library
 
       <td>
-        <p align="left"><br>
+        <p align="left">Resolved by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
+        N2836</a>, which was accepted in New Jersey.<br>
 
     <tr valign="top">
       <td>
@@ -10714,7 +10731,16 @@ which do not have a specific response from a sub-group.</p>
         <u>discrete_distribution(initializer_list&lt;result_type&gt;);</u>
 
       <td>
-        <p align="left"><br>
+        <p align="left">This is already covered by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#874">
+        issue 874</a>. [Suggested by <span class="gI">
+        <span email="daniel.kruegler@googlemail.com" class="gD">Daniel Krügler 
+        and confirmed by the submitter.]</span></span><p align="left">Also see
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
+        N2836</a>.<p align="left">Walter Brown recommends this comment be 
+        treated as &quot;Resolved by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
+        N2836</a>, which was accepted in New Jersey.&quot;<br>
 
     <tr valign="top">
       <td>
@@ -12014,7 +12040,12 @@ which do not have a specific response from a sub-group.</p>
         <p align="left"><br>
 
       <td>
-        <p align="left">We agree. Alisdair will open an issue.<br>
+        <p align="left">We agree. Alisdair will open an issue.<p align="left">In 
+        c++std-lib-23130, <span class="gI">
+        <span email="daniel.kruegler@googlemail.com" class="gD">Daniel Krügler 
+        pointed out that this comment is already covered by
+        <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#909">
+        issue 909</a>.</span></span><br>
 
     <tr valign="top">
       <td>
@@ -12785,7 +12816,7 @@ which do not have a specific response from a sub-group.</p>
         <p>
 
     There is a good definition. NAD. There are other problems here (see issue 
-    859). Create an issue, together with UK 322. Detlef will write the issue, 
+    <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#859">859</a>). Create an issue, together with UK 322. Detlef will write the issue, 
     but not proposed wording. Refer also to sections [time.clock.req] and [time.clock.monotonic].<tr valign="top">
       <td>
         <p>UK<br>
@@ -13197,8 +13228,19 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p>
 
-    Not a defect. This class of feature has been rejected by the committee as a 
-    whole multiple times.<tr valign="top">
+    The concurrency subgroup has revisited this issue and decided that it could 
+    be considered a defect according to the Kona compromise. A task group was 
+    formed lead by Lawrence Crowl &lt;crowl@google.com&gt; and Bjarne Stroustrup &lt;bs@cs.tamu.edu&gt; 
+    to write a paper for Frankfort proposing a simple asynchronous launch 
+    facility returning a future. It was agreed that the callable <strong>must</strong> 
+    be run on a separate thread from the caller, but not necessarily a brand-new 
+    thread. The proposal might or might not allow for an implementation that 
+    uses fixed-size or unlimited thread pools.<p>
+
+    Bjarne in c++std-lib-23121: I think that what we agreed was that to avoid 
+    deadlock async() would almost certainly be specified to &nbsp;launch in a 
+    different thread from the thread that executed async(), but I don't think it 
+    was a specific design constraint.<tr valign="top">
       <td>
         <p>UK<br>
         330
