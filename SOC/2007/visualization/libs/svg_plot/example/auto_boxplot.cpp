@@ -82,8 +82,8 @@ int main()
   Autoscaling must inspect the container in order to find axis ranges that will be suitable.
   First we create a container and fill with some fictional data.
   */
-	vector<double> my_data;
-	// Initialize my_data with some entirely fictional data.
+  vector<double> my_data;
+  // Initialize my_data with some entirely fictional data.
   my_data.push_back(0.2); // [0]
   my_data.push_back(1.1); // [1]
   my_data.push_back(4.2); // [2]
@@ -134,7 +134,7 @@ int main()
 
   //] [/auto_boxplot_2]
 
-	return 0;
+  return 0;
 } // int main()
 
 /*

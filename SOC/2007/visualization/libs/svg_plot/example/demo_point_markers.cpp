@@ -55,7 +55,7 @@ int main()
 
   try
   { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
-	  svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
+    svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
     my_1d_plot.title("Demo point markers Demo") // Add a string title of the plot.
       .x_label("length (m)"); // Add a label for the X-axis.
@@ -105,7 +105,7 @@ here a circle with a diameter of 5 pixels.
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-	return 0;
+  return 0;
 } // int main()
 
 /*

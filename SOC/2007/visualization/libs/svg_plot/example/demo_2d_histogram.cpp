@@ -35,34 +35,34 @@ int main()
   // http://en.wikipedia.org/wiki/Histogram
   // Histogram of travel time (min), US 2000 census.
 
-  // Interval(x) 	Quantity (y)	Width 	Quantity/width bin
+  // Interval(x)   Quantity (y)  Width   Quantity/width bin
   times[0]  =   4180.;   //     5         836     0 to 5 min
-  times[5]  =  13687.;   //     5       	2737     5 to 10 min
-  times[10] =  18618.;   //     5       	3723     10 to 15 min
-  times[15] =  19634.;   // 	   5        3926     15 to 20 min
-  times[20] =  17981.;   // 	   5        3596     20 to 25 min
+  times[5]  =  13687.;   //     5         2737     5 to 10 min
+  times[10] =  18618.;   //     5         3723     10 to 15 min
+  times[15] =  19634.;   //      5        3926     15 to 20 min
+  times[20] =  17981.;   //      5        3596     20 to 25 min
   times[25] =   7190.;   //     5        1438     25 to 30 min
-  times[30] =  16369.;   // 	   5        3273     30 to 35 min
-  times[35] =   3212.;   // 	   5         642     35 to 40 min
-  times[40] =   4122.;   // 	   5         824    40 to 45 min
-  times[45] =   9200.;   // 	   5         613    45 to 60 min
-  times[60] =   6461.;   // 	   5         215    60 to 90 min
-  times[90] =   3435.;   //     5        	57     90 to 150 min
+  times[30] =  16369.;   //      5        3273     30 to 35 min
+  times[35] =   3212.;   //      5         642     35 to 40 min
+  times[40] =   4122.;   //      5         824    40 to 45 min
+  times[45] =   9200.;   //      5         613    45 to 60 min
+  times[60] =   6461.;   //      5         215    60 to 90 min
+  times[90] =   3435.;   //     5          57     90 to 150 min
   times[150] =     0.;   // Final bin end (15) with zero value.
 
   map<double, double> time2s; // Guess (wild!) at 2050 data series.
   time2s[0]  =   2000.;   //     5         836     0 to 5 min
-  time2s[5]  =  5000.;   //     5       	2737     5 to 10 min
-  time2s[10] =  10000.;   //     5       	3723     10 to 15 min
-  time2s[15] =  11000.;   // 	   5        3926     15 to 20 min
-  time2s[20] =  12000.;   // 	   5        3596     20 to 25 min
+  time2s[5]  =  5000.;   //     5         2737     5 to 10 min
+  time2s[10] =  10000.;   //     5         3723     10 to 15 min
+  time2s[15] =  11000.;   //      5        3926     15 to 20 min
+  time2s[20] =  12000.;   //      5        3596     20 to 25 min
   time2s[25] =  13000.;   //     5        1438     25 to 30 min
-  time2s[30] =  15000.;   // 	   5        3273     30 to 35 min
-  time2s[35] =  16000.;   // 	   5         642     35 to 40 min
-  time2s[40] =  18000.;   // 	   5         824    40 to 45 min
-  time2s[45] =  12000.;   // 	   5         613    45 to 60 min
-  time2s[60] =  11000.;   // 	   5         215    60 to 90 min
-  time2s[90] =   10000.;   //     5        	57     90 to 150 min
+  time2s[30] =  15000.;   //      5        3273     30 to 35 min
+  time2s[35] =  16000.;   //      5         642     35 to 40 min
+  time2s[40] =  18000.;   //      5         824    40 to 45 min
+  time2s[45] =  12000.;   //      5         613    45 to 60 min
+  time2s[60] =  11000.;   //      5         215    60 to 90 min
+  time2s[90] =   10000.;   //     5          57     90 to 150 min
   time2s[150] =     0.;   // Final bin end (15) with zero value.
 
 

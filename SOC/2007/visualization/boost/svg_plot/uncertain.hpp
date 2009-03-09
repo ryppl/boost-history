@@ -13,7 +13,6 @@
 
    \author Paul A. Bristow
    \date Mar 2009
-
 */
 // Copyright Paul A. Bristow 2009
 
@@ -67,8 +66,8 @@ public:
   double value_; //!< Most likely value, typically the mean.
   float uncertainty_; //!< Estimate of uncertainty, typically standard deviation.
   //! Negative values mean that uncertainty is not defined.
-  short unsigned deg_free_;	//!< Degrees of freedom, usually = number of observations -1;
-	//! so for 2 observations, 1 degree of freedom.
+  short unsigned deg_free_;  //!< Degrees of freedom, usually = number of observations -1;
+  //! so for 2 observations, 1 degree of freedom.
   //! Range from 0 (1 observation) to 65534 = (std::numeric_limits<unsigned short int>::max)() - 1
   //! Highest value (std::numeric_limits<unsigned short int>::max)() == 0xFFFF == 65535
   //! is used to indicate deg_free_ is NOT meaningful.

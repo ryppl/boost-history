@@ -38,17 +38,17 @@ int main()
 and values are inserted using push_back.  Since this is a 1-D plot
 the order of data values is not important.
 */
-	vector<double> dan_times;
-	dan_times.push_back(3.1);
-	dan_times.push_back(4.2);
+  vector<double> dan_times;
+  dan_times.push_back(3.1);
+  dan_times.push_back(4.2);
 
-	vector<double> elaine_times;
-	elaine_times.push_back(2.1);
-	elaine_times.push_back(7.8);
+  vector<double> elaine_times;
+  elaine_times.push_back(2.1);
+  elaine_times.push_back(7.8);
 
 /*`The constructor initializes a new 1D plot, called `my_plot`, and also sets all the very many defaults for axes, width, colors, etc. 
 */
-	svg_1d_plot my_plot;
+  svg_1d_plot my_plot;
 
 /*`A few (member) functions that set are fairly self-explanatory:
 
@@ -58,7 +58,7 @@ the order of data values is not important.
 * `background_border_color(blue)` sets just one of the very many options.
 */
 
-	my_plot.background_border_color(blue)
+  my_plot.background_border_color(blue)
     .legend_on(true)
     .title("Race Times")
     .x_range(-1, 11);
@@ -96,7 +96,7 @@ if we want them to show on the legend.
   my_plot.write("./demo_1d_vector.svg");
 //] [/demo_1d_vector_2]
 
-	return 0;
+  return 0;
 } // int main()
 
 /*

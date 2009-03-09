@@ -513,7 +513,7 @@ private:
   // A list of shifts or rotations for several characters is not yet implemented.
   double text_length_;  //!< Allows the author to provide exact alignment.
   //! dx_, dy_, and rotate_ can all be omitted, usually meaning no shift or rotation,
-  //! but see [@http://www.w3.org/TR/SVG/text.html#TSpanElement] for ancestor rules.
+  //! but see http://www.w3.org/TR/SVG/text.html#TSpanElement for ancestor rules.
   //! but x_, y_, and text_length need a flag.
   bool use_x_; //!> If true then use X absolute position.
   bool use_y_; //!> If true then use Y absolute position.

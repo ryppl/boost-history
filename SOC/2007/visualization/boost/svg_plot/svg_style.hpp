@@ -386,9 +386,11 @@ public:
       See also browser conformance test at\n
       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-01-t.svg\n
       which tests three styles of font, serif, sans-serif and mono-spaced.\n
-      <text font-family="Georgia, 'Minion Web', 'Times New Roman', Times, 'MS PMincho', Heisei-Mincho, serif " x="20" y="80">A serifed face</text>\n
-      <text font-family="Arial, 'Arial Unicode', 'Myriad Web', Geneva, 'Lucida Sans Unicode', 'MS PGothic', Osaka, sans-serif " x="20" y="160">A sans-serif face</text>\n
-      <text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
+      \verbatim
+        <text font-family="Georgia, 'Minion Web', 'Times New Roman', Times, 'MS PMincho', Heisei-Mincho, serif " x="20" y="80">A serifed face</text>\n
+        <text font-family="Arial, 'Arial Unicode', 'Myriad Web', Geneva, 'Lucida Sans Unicode', 'MS PGothic', Osaka, sans-serif " x="20" y="160">A sans-serif face</text>\n
+        <text font-family="'Lucida Console', 'Courier New', Courier, Monaco, 'MS Gothic', Osaka-Mono, monospace" x="20" y="240">A mono (iW) face</text>
+      \endverbatim
     */
     font_family_ = s;
     return *this; //! \return reference to text_style to make chainable.
@@ -530,7 +532,7 @@ class value_style
      \details For example, to output: 5.123 +- 0.01 (19).
      Uncertainty and degrees of freedom estimate.
      Prefix, separator and suffix allow X and Y values to be together on one line, for example\n
-     \t[1.23+- 0.01 (3), 4.56 +-0.2 (10)]\n
+     [1.23+- 0.01 (3), 4.56 +-0.2 (10)]\n
      Used in draw_plot_point_values (note plural - not used in draw_plot_point_value)
      where X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
      Prefix, separator and suffix are ignored when X or Y are shown separately using draw_plot_point_value.

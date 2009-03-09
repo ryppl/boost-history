@@ -52,19 +52,19 @@ int main()
 /*`This example uses a single map to demonstrate autoscaling.
   We create a map to hold our data series.
 */
-	map<const double, double> my_data;
+  map<const double, double> my_data;
   /*`
   Inserting some fictional values also sorts the data.
   The index value in [] is the x value.
   */
-	//my_data[1.1] = 3.2;
-	//my_data[7.3] = 9.1;
-	my_data[2.12] = 2.4394;
-	my_data[5.47] = 5.3861;
+  //my_data[1.1] = 3.2;
+  //my_data[7.3] = 9.1;
+  my_data[2.12] = 2.4394;
+  my_data[5.47] = 5.3861;
 
   try
   { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
-	  svg_2d_plot my_2d_plot; // Construct a plot with all the default constructor values.
+    svg_2d_plot my_2d_plot; // Construct a plot with all the default constructor values.
 
     my_2d_plot.title("Default 2d Values Demo") // Add a string title of the plot.
       .x_range(-5, 10) // Add a range for the X-axis.
@@ -177,7 +177,7 @@ but for 2-D plots all writing orientations can be useful).
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-	return 0;
+  return 0;
 } // int main()
 
 /*

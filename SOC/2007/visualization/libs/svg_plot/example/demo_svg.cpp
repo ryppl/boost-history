@@ -73,7 +73,7 @@ void symb(array<const poly_path_point, 6> shape, const poly_path_point position,
 
 int main()
 {
-	svg	my_svg;
+  svg  my_svg;
   // Check default and change image size.
   cout << "my_svg.x_size() = " << my_svg.x_size() << ", my_svg.y_size() = " << my_svg.y_size() << endl;
   // my_svg.x_size() = 400, my_svg.y_size() = 400
@@ -280,12 +280,12 @@ int main()
 
   my_svg.write("demo_svg.svg");
 
-	return 0;
+  return 0;
 } // int main()
 
 /*
 
-	svg	my_svg;
+  svg  my_svg;
   my_svg .write("demo_svg.svg");
 
 ?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd">

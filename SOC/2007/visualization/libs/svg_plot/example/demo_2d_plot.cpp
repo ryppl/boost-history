@@ -138,12 +138,12 @@ void plot(const std::string& title, const std::string& file,
           .title_color(red)
           ;
   // Options for x and/or y num_minor_ticks.
-  // .y_num_minor_ticks(4)  // 0 major, 2,4,6,7,8 minor, 10 major ...	
-  // .y_num_minor_ticks(1) // 0 major, 5, minor, 10 major ...	
+  // .y_num_minor_ticks(4)  // 0 major, 2,4,6,7,8 minor, 10 major ...  
+  // .y_num_minor_ticks(1) // 0 major, 5, minor, 10 major ...  
   // .y_num_minor_ticks(2) // show half points.
   // .y_num_minor_ticks(3) // show half and quarter points.
-  // .y_num_minor_ticks(4) // 0 major, 2,4,6,7,8 minor, 10 major ...	
-  // .y_num_minor_ticks(9) // 0 major, 1,2,3,4,5,6,7,8,9 minor, 10 major ...		
+  // .y_num_minor_ticks(4) // 0 major, 2,4,6,7,8 minor, 10 major ...  
+  // .y_num_minor_ticks(9) // 0 major, 1,2,3,4,5,6,7,8,9 minor, 10 major ...    
 
   // X axis settings.
   my_plot.x_range(xmin, xmax)
@@ -220,9 +220,9 @@ void plot(const std::string& title, const std::string& file,
   my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
   //  my_plot.x_value_ioflags(ios::dec).x_value_precision(2);
 
-	my_plot.plot(data1, "Sqrt(x)").fill_color(red);
-	my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).bezier_on(true);
-	my_plot.plot(data3, "-1 + 2x").fill_color(yellow).line_color(blue).line_width(3).shape(square);
+  my_plot.plot(data1, "Sqrt(x)").fill_color(red);
+  my_plot.plot(data2, "-2 + x^2").fill_color(orange).size(5).bezier_on(true);
+  my_plot.plot(data3, "-1 + 2x").fill_color(yellow).line_color(blue).line_width(3).shape(square);
 
   cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " << file << endl;
   my_plot.write(file);

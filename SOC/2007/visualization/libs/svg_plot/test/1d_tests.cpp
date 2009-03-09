@@ -136,22 +136,22 @@ BOOST_AUTO_TEST_CASE( test1 )
 
   // Test the svg_element class.
 
-	svg_1d_plot my_plot;
+  svg_1d_plot my_plot;
   // Check the default image sizes:
-	BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
-	BOOST_CHECK_EQUAL(my_plot.image_y_size(), 200U);
+  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
+  BOOST_CHECK_EQUAL(my_plot.image_y_size(), 200U);
 
   my_plot.size(200U, 100U);
-	BOOST_CHECK_EQUAL(my_plot.image_x_size(), 200U);
+  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 200U);
   my_plot.size(500U, 100U); // update x
-	BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U); // & check
+  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U); // & check
   my_plot.size(500U, 300U); // update y
-	BOOST_CHECK_EQUAL(my_plot.image_y_size(), 300U); // & check
+  BOOST_CHECK_EQUAL(my_plot.image_y_size(), 300U); // & check
 
   // cout <<  my_plot.image_x_size() << endl; // 500
-	BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
+  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
  // Check that test really works by checking the wrong answer!
-//	BOOST_CHECK_EQUAL(my_plot.image_x_size(), 400U);
+//  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 400U);
  // // check my_plot.image_x_size() == 400U failed [500 != 400]
 
   std::pair<double, double> const def(-1., -1.); // needs operator<<
@@ -190,229 +190,229 @@ BOOST_AUTO_TEST_CASE( test1 )
 
   // Plot Title & font.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_family(), "Verdana");// Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_family(), "Verdana");// Check default.
   my_plot.title_font_family("Times New Roman"); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_family(),"Times New Roman"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_family(),"Times New Roman"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_style(), ""); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_style(), ""); // Check default.
   my_plot.title_font_style("bold"); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_style(), "bold"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_style(), "bold"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_weight(), ""); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_weight(), ""); // Check default.
   my_plot.title_font_weight("400"); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_weight(), "400"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_weight(), "400"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_stretch(), ""); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_stretch(), ""); // Check default.
   my_plot.title_font_stretch("wider"); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_stretch(), "wider"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_stretch(), "wider"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_decoration(), ""); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_decoration(), ""); // Check default.
   my_plot.title_font_decoration("underline"); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_decoration(), "underline"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_decoration(), "underline"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_rotation(), 0);// Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_rotation(), 0);// Check default.
   my_plot.title_font_rotation(uphill); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_rotation(), uphill); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_rotation(), uphill); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_font_alignment(), center_align);// Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_font_alignment(), center_align);// Check default.
   my_plot.title_font_alignment(left_align); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_font_alignment(), left_align); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_font_alignment(), left_align); // & check.
 
   // legend title & font
 
- 	BOOST_CHECK_EQUAL(my_plot.legend_on(), false); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.legend_on(), false); // Check default.
   my_plot.legend_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.legend_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.legend_on(), true); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.legend_title_font_size(), 14U);// Check default.
   my_plot.legend_title_font_size(15); // Set
- 	BOOST_CHECK_EQUAL(my_plot.legend_title_font_size(), 15U); // & check.
+   BOOST_CHECK_EQUAL(my_plot.legend_title_font_size(), 15U); // & check.
 
 
- 	BOOST_CHECK_EQUAL(my_plot.plot_window_on(), true); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.plot_window_on(), true); // Check default.
   my_plot.plot_window_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.plot_window_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.plot_window_on(), false); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // Check default. 
   my_plot.x_ticks_up_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), true); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), true); // Check default. 
   my_plot.x_ticks_down_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_on(), true); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_label_on(), true); // Check default.
   my_plot.x_label_on(false); // Set false // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), false); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), false); // Check default.
   my_plot.x_label_units_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_label_units_on(), true); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), left_side); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), left_side); // Check default.
   my_plot.x_major_labels_side(0); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), none); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), none); // & check.
   my_plot.x_major_labels_side(+1); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), right_side); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_labels_side(), right_side); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.title_on(), true); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.title_on(), true); // Check default.
   my_plot.title_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.title_on(), false); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.title_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_on(), false); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_on(), false); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_on(), false); // Check default.
   my_plot.x_major_grid_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_on(), true); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_on(), false); // Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_on(), false); // Check default.
   my_plot.x_minor_grid_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_on(), true); // & check.
 
   // Varies for 1D and 2D
   BOOST_CHECK_EQUAL(my_plot.axes_on(), false); // Check default (only x for 1d). 
   my_plot.axes_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.axes_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.axes_on(), true); // & check.
   my_plot.axes_on(false); // Set false revert to default. 
 
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_on(), false); // & check.
   my_plot.x_axis_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_on(), true); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.y_axis_on(), false); // Check default.
   my_plot.y_axis_on(true); // But leave false - as always should be for 1D?
- 	BOOST_CHECK_EQUAL(my_plot.y_axis_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_axis_on(), true); // & check.
   my_plot.y_axis_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.y_axis_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_axis_on(), false); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.axes_on(), false); //
+   BOOST_CHECK_EQUAL(my_plot.axes_on(), false); //
   my_plot.axes_on(true); // 
- 	BOOST_CHECK_EQUAL(my_plot.axes_on(), true); // Only x axis on
+   BOOST_CHECK_EQUAL(my_plot.axes_on(), true); // Only x axis on
   my_plot.axes_on(false); // Both on
- 	BOOST_CHECK_EQUAL(my_plot.axes_on(), false); //
+   BOOST_CHECK_EQUAL(my_plot.axes_on(), false); //
 
   // ticks left and right only for 2-D
 
   my_plot.y_axis_on(false); // But leave false - as always should be for 1D?
 
- 	BOOST_CHECK_EQUAL(svg_color(red), svg_color(red)); // OK
+   BOOST_CHECK_EQUAL(svg_color(red), svg_color(red)); // OK
   // But problem when try to check that svg_color is blank!
- 	//BOOST_CHECK_EQUAL(svg_color(blank), false); // check svg_color(blank) == false failed [blank != false]
- 	BOOST_CHECK_EQUAL(svg_color(blank), svg_color(255, 255, 255)); // but this is OK.
+   //BOOST_CHECK_EQUAL(svg_color(blank), false); // check svg_color(blank) == false failed [blank != false]
+   BOOST_CHECK_EQUAL(svg_color(blank), svg_color(255, 255, 255)); // but this is OK.
 
- 	//BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(blank)); //  Check default color is blank.
+   //BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(blank)); //  Check default color is blank.
   // check my_plot.title_color() == svg_color(blank) failed [blank != blank]
- 	BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(255, 255, 255)); //  Check default color is blank.
+   BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(255, 255, 255)); //  Check default color is blank.
   my_plot.title_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.title_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.background_color(), svg_color(255, 255, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.background_color(), svg_color(255, 255, 255)); //  Check default color.
   my_plot.background_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.background_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.background_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.legend_background_color(), svg_color(255, 255, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.legend_background_color(), svg_color(255, 255, 255)); //  Check default color.
   my_plot.legend_background_color( svg_color(red)); //
- 	BOOST_CHECK_EQUAL(my_plot.legend_background_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.legend_background_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.legend_border_color(), svg_color(255, 255, 0)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.legend_border_color(), svg_color(255, 255, 0)); //  Check default color.
   my_plot.legend_border_color( svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.legend_border_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.legend_border_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.background_border_color(), svg_color(255,255,0)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.background_border_color(), svg_color(255,255,0)); //  Check default color.
   my_plot.background_border_color( svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.background_border_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.background_border_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.plot_background_color(), svg_color(255, 255, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.plot_background_color(), svg_color(255, 255, 255)); //  Check default color.
   my_plot.plot_background_color( svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.plot_background_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.plot_background_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_color(), svg_color(black)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_color(), svg_color(black)); //  Check default color.
   my_plot.x_axis_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.y_axis_color(), svg_color(black)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.y_axis_color(), svg_color(black)); //  Check default color.
   my_plot.y_axis_color( svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.y_axis_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_axis_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(255, 255, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(255, 255, 255)); //  Check default color.
   my_plot.x_label_color( svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(255, 255, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(255, 255, 255)); //  Check default color.
   my_plot.y_label_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_color(), svg_color(black)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_color(), svg_color(black)); //  Check default color.
   my_plot.x_major_tick_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_tick_color(), svg_color(black)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_tick_color(), svg_color(black)); //  Check default color.
   my_plot.x_minor_tick_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_tick_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_tick_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_color(), svg_color(200, 220, 255)); //  Check default color.
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_color(), svg_color(200, 220, 255)); //  Check default color.
   my_plot.x_major_grid_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_width(), 1U); //  Check default width. 
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_width(), 1U); //  Check default width. 
   my_plot.x_major_grid_width(10U); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_grid_width(), 10U); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_grid_width(), 10U); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_width(), 0.5); //  Check default width.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_width(), 0.5); //  Check default width.
   my_plot.x_minor_grid_width(10); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_width(), 10); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_width(), 10); // & check.
 
   my_plot.x_minor_grid_color(svg_color(red)); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_color(), svg_color(red)); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_grid_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_color(), svg_color(red)); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_minor_grid_color(), svg_color(red)); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_width(), 1); //  Check default width.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_width(), 1); //  Check default width.
   my_plot.x_axis_width(2); // change
- 	BOOST_CHECK_EQUAL(my_plot.x_axis_width(), 2); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_axis_width(), 2); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label(), ""); //  Check NO default label.
+   BOOST_CHECK_EQUAL(my_plot.x_label(), ""); //  Check NO default label.
   my_plot.x_label("X Axis"); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_label(), "X Axis"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_label(), "X Axis"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_units(), ""); //  Check NO default label.
+   BOOST_CHECK_EQUAL(my_plot.x_label_units(), ""); //  Check NO default label.
   my_plot.x_label_units(" (meter)"); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_label_units()," (meter)"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_label_units()," (meter)"); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 2.); //  Check default.
+   BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 2.); //  Check default.
   my_plot.x_major_interval(1.); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 1.); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 1.); // & check.
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_length(), 5);
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_length(), 5);
   my_plot.x_major_tick_length(10); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_length(), 10);
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_length(), 10);
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_width(), 2);
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_width(), 2);
   my_plot.x_major_tick_width(5); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_tick_width(), 5);
+   BOOST_CHECK_EQUAL(my_plot.x_major_tick_width(), 5);
 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_tick_width(), 1);
+   BOOST_CHECK_EQUAL(my_plot.x_minor_tick_width(), 1);
   my_plot.x_minor_tick_width(5); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_minor_tick_width(), 5);
+   BOOST_CHECK_EQUAL(my_plot.x_minor_tick_width(), 5);
 
- 	BOOST_CHECK_EQUAL(my_plot.x_num_minor_ticks(), 4U);
+   BOOST_CHECK_EQUAL(my_plot.x_num_minor_ticks(), 4U);
   my_plot.x_num_minor_ticks(9U); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_num_minor_ticks(), 9U);
+   BOOST_CHECK_EQUAL(my_plot.x_num_minor_ticks(), 9U);
 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 1.);
+   BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 1.);
   my_plot.x_major_interval(2.); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 2.);
+   BOOST_CHECK_EQUAL(my_plot.x_major_interval(), 2.);
 
- 	BOOST_CHECK_EQUAL(my_plot.x_min(), -10.); //  Check default xmin.
- 	BOOST_CHECK_EQUAL(my_plot.x_max(), +10.); //  Check default xmax.
+   BOOST_CHECK_EQUAL(my_plot.x_min(), -10.); //  Check default xmin.
+   BOOST_CHECK_EQUAL(my_plot.x_max(), +10.); //  Check default xmax.
   my_plot.x_range(-1., +1.); // 
- 	BOOST_CHECK_EQUAL(my_plot.x_min(), -1.); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.x_max(), +1.); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_min(), -1.); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_max(), +1.); // & check.
 
   std::pair<double, double> r = my_plot.x_range();
- 	BOOST_CHECK_EQUAL(r.first, -1.); // & check.
- 	BOOST_CHECK_EQUAL(r.second, +1.); // & check.
+   BOOST_CHECK_EQUAL(r.first, -1.); // & check.
+   BOOST_CHECK_EQUAL(r.second, +1.); // & check.
 
   std::pair<double, double> xr = my_plot.x_range();
- 	BOOST_CHECK_EQUAL(xr.first, -1.); // & check.
- 	BOOST_CHECK_EQUAL(xr.second, +1.); // & check.
+   BOOST_CHECK_EQUAL(xr.first, -1.); // & check.
+   BOOST_CHECK_EQUAL(xr.second, +1.); // & check.
 
   const string style = "test_style.css";
   //my_plot.load_stylesheet(style); // TODO -  Error opening file test_style.css
@@ -420,72 +420,72 @@ BOOST_AUTO_TEST_CASE( test1 )
  
 
  // my_plot
-	//.background_border_color(svg_color(0, 0, 1))
-	//.background_color(svg_color(0, 0, 2))
-	//.legend_background_color(svg_color(0, 0, 3))
-	//.legend_border_color(svg_color(0, 0, 4))
-	//.plot_background_color(svg_color(0, 0, 5))
-	//.title_color(svg_color(0, 0, 6))
-	//.x_axis_color(svg_color(0, 0, 7))
-	//.x_label_color(svg_color(0, 0, 8))
-	//.x_major_grid_color(svg_color(0, 0, 9))
-	//.x_major_tick_color(svg_color(0, 0, 10))
-	//.x_minor_grid_color(svg_color(0, 0, 11))
-	//.x_minor_tick_color(svg_color(0, 0, 12));
+  //.background_border_color(svg_color(0, 0, 1))
+  //.background_color(svg_color(0, 0, 2))
+  //.legend_background_color(svg_color(0, 0, 3))
+  //.legend_border_color(svg_color(0, 0, 4))
+  //.plot_background_color(svg_color(0, 0, 5))
+  //.title_color(svg_color(0, 0, 6))
+  //.x_axis_color(svg_color(0, 0, 7))
+  //.x_label_color(svg_color(0, 0, 8))
+  //.x_major_grid_color(svg_color(0, 0, 9))
+  //.x_major_tick_color(svg_color(0, 0, 10))
+  //.x_minor_grid_color(svg_color(0, 0, 11))
+  //.x_minor_tick_color(svg_color(0, 0, 12));
 
-	//BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
-	//BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
-	//BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
-	//BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
-	//BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
-	//BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
-	//BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
-	//BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
-	////BOOST_CHECK_EQUAL(svg_color(1, 1, 1), svg_color(0, 0, 0));
+  //BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
+  //BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
+  //BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
+  //BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
+  //BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
+  //BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
+  //BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
+  //BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
+  ////BOOST_CHECK_EQUAL(svg_color(1, 1, 1), svg_color(0, 0, 0));
  // // check svg_color(1, 1, 1) == svg_color(0, 0, 0) failed [RGB(1,1,1) != RGB(0,0,0)]
 
-	//BOOST_CHECK_EQUAL(red, red);  // OK
-	//// BOOST_CHECK_EQUAL(white, black);
+  //BOOST_CHECK_EQUAL(red, red);  // OK
+  //// BOOST_CHECK_EQUAL(white, black);
  // // check white == black failed [143 != 7]
  // // Note that named colors are enums!
 
-	//BOOST_CHECK_EQUAL(svg_color(0, 0, 8), svg_color(0, 0, 8));
-	//BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(0, 0, 8));
+  //BOOST_CHECK_EQUAL(svg_color(0, 0, 8), svg_color(0, 0, 8));
+  //BOOST_CHECK_EQUAL(my_plot.x_label_color(), svg_color(0, 0, 8));
  // // using BOOST_CHECK_EQUAL is more convenient because it shows the difference!
  // // provided operator== and operator >> is provided.
 
-	//BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
-	//BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
-	//BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
-	//BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
+  //BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
+  //BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
+  //BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
+  //BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
 
  // // Repeat - intentional? - would different values be a better test?
-	//my_plot
-	//.x_minor_tick_color(svg_color(0, 0, 12))
-	//.x_minor_grid_color(svg_color(0, 0, 11))
-	//.x_major_tick_color(svg_color(0, 0, 10))
-	//.x_major_grid_color(svg_color(0, 0, 9))
-	//.x_label_color(svg_color(0, 0, 8))
-	//.x_axis_color(svg_color(0, 0, 7))
-	//.title_color(svg_color(0, 0, 6))
-	//.plot_background_color(svg_color(0, 0, 5))
-	//.legend_border_color(svg_color(0, 0, 4))
-	//.legend_background_color(svg_color(0, 0, 3))
-	//.background_color(svg_color(0, 0, 2))
-	//.background_border_color(svg_color(0, 0, 1));
+  //my_plot
+  //.x_minor_tick_color(svg_color(0, 0, 12))
+  //.x_minor_grid_color(svg_color(0, 0, 11))
+  //.x_major_tick_color(svg_color(0, 0, 10))
+  //.x_major_grid_color(svg_color(0, 0, 9))
+  //.x_label_color(svg_color(0, 0, 8))
+  //.x_axis_color(svg_color(0, 0, 7))
+  //.title_color(svg_color(0, 0, 6))
+  //.plot_background_color(svg_color(0, 0, 5))
+  //.legend_border_color(svg_color(0, 0, 4))
+  //.legend_background_color(svg_color(0, 0, 3))
+  //.background_color(svg_color(0, 0, 2))
+  //.background_border_color(svg_color(0, 0, 1));
 
-	//BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
-	//BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
-	//BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
-	//BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
-	//BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
-	//BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
-	//BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
-	//BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
-	//BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
-	//BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
-	//BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
-	//BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
+  //BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
+  //BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
+  //BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
+  //BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
+  //BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
+  //BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
+  //BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
+  //BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
+  //BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
+  //BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
+  //BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
+  //BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
 
 } // BOOST_AUTO_TEST_CASE( test1 )
 

@@ -52,30 +52,30 @@ int main()
 
   /*`Some fictional data is pushed into an STL container, here map:*/
 
-	map<double, double> my_data;
+  map<double, double> my_data;
   /*`
   Inserting some fictional values also sorts the data.
   The map index value in [] is the x value, so mydata[x] = y.
 
   First some normal valued points, not 'at limits'.
   */
-	my_data[1.1] = 3.2;
-	my_data[4.3] = 3.1;
-	my_data[0.25] = 1.4;
+  my_data[1.1] = 3.2;
+  my_data[4.3] = 3.1;
+  my_data[0.25] = 1.4;
 /*`
   Now some values including + and - infinity:
 */
-	my_data[3] = numeric_limits<double>::quiet_NaN(); // marker at x = 3, y = 0
-	my_data[0.] = numeric_limits<double>::quiet_NaN(); // Marker at 0,0
-	my_data[1.] = numeric_limits<double>::infinity(); // Marker at 1, top
-	my_data[-1] = -numeric_limits<double>::infinity(); // Marker at -1, bottom
-	my_data[+numeric_limits<double>::infinity()] = +1.; // Marker at right, 1
-	my_data[-numeric_limits<double>::infinity()] = -1.; // Marker at left, -1
-	my_data[+numeric_limits<double>::max()] = +2.;  // Marker at right, 2
-	my_data[-numeric_limits<double>::max()] = +2.; // Marker at left, 2
-	my_data[-numeric_limits<double>::max() /2] = +3.; // Value near to max, marker left, 3
-	my_data[numeric_limits<double>::infinity()] = numeric_limits<double>::infinity(); // Top right.
-	my_data[-numeric_limits<double>::infinity()] = -numeric_limits<double>::infinity(); // Bottom left.
+  my_data[3] = numeric_limits<double>::quiet_NaN(); // marker at x = 3, y = 0
+  my_data[0.] = numeric_limits<double>::quiet_NaN(); // Marker at 0,0
+  my_data[1.] = numeric_limits<double>::infinity(); // Marker at 1, top
+  my_data[-1] = -numeric_limits<double>::infinity(); // Marker at -1, bottom
+  my_data[+numeric_limits<double>::infinity()] = +1.; // Marker at right, 1
+  my_data[-numeric_limits<double>::infinity()] = -1.; // Marker at left, -1
+  my_data[+numeric_limits<double>::max()] = +2.;  // Marker at right, 2
+  my_data[-numeric_limits<double>::max()] = +2.; // Marker at left, 2
+  my_data[-numeric_limits<double>::max() /2] = +3.; // Value near to max, marker left, 3
+  my_data[numeric_limits<double>::infinity()] = numeric_limits<double>::infinity(); // Top right.
+  my_data[-numeric_limits<double>::infinity()] = -numeric_limits<double>::infinity(); // Bottom left.
 
 /*`
   [caution using map (rather than multimap that allows duplicates) some assignments values overwrite,

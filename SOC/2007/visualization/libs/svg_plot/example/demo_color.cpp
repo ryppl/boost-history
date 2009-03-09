@@ -41,17 +41,17 @@
 int main()
 {
 
-	svg_1d_plot my_colors;
+  svg_1d_plot my_colors;
 
-	my_colors.title("Demo SVG colors")
-	  .legend_on(true)
-	  .legend_title("Legend title")
+  my_colors.title("Demo SVG colors")
+    .legend_on(true)
+    .legend_title("Legend title")
     .x_label_on(true)
     .x_label("axis") // This doesn't show unless .x_label_on() == true!
     // x_label is far too far below the axis.
     .x_axis_color(blue)
     .x_label_color(magenta)
-	  .x_range(0., 7.);
+    .x_range(0., 7.);
 
   vector<double> my_data;
   my_data.push_back(1.);
@@ -135,9 +135,9 @@ int main()
   svg_color my_blank2(true);
   cout << "(my_blank == my_blank2) is "<<  (my_blank == my_blank2) << endl;
 
-	my_colors.write("demo_color.svg");
+  my_colors.write("demo_color.svg");
 
-	return 0;
+  return 0;
 } // int main()
 
 /*

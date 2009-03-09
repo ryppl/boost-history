@@ -34,7 +34,7 @@ using std::endl;
 
 BOOST_AUTO_TEST_CASE( test1 )
 {
-	svg_2d_plot my_plot;
+  svg_2d_plot my_plot;
 
   BOOST_CHECK_EQUAL(my_plot.title(), ""); // Default now null string.
   my_plot.title("Plot of my data");
@@ -49,111 +49,111 @@ BOOST_AUTO_TEST_CASE( test1 )
 
   BOOST_CHECK_EQUAL(my_plot.y_label(), ""); //  Check default label is null.
   my_plot.y_label("Y"); // 
- 	BOOST_CHECK_EQUAL(my_plot.y_label(), "Y"); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_label(), "Y"); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // Check default. 
   my_plot.x_ticks_up_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_up_on(), false); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), true); // Check default. 
   my_plot.x_ticks_down_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.x_ticks_down_on(), false); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), false); // Check default. 
   my_plot.y_ticks_right_on(true); // Set
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_ticks_right_on(), true); // & check.
 
   BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), true); // Check default. 
   my_plot.y_ticks_left_on(false); // Set
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), false); // & check.
- 	BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), false); // & check.
+   BOOST_CHECK_EQUAL(my_plot.y_ticks_left_on(), false); // & check.
 
-	my_plot
-	.background_border_color(svg_color(0, 0, 1))
-	.background_color(svg_color(0, 0, 2))
-	.legend_background_color(svg_color(0, 0, 3))
-	.legend_border_color(svg_color(0, 0, 4))
-	.plot_background_color(svg_color(0, 0, 5))
-	.title_color(svg_color(0, 0, 6))
-	.x_axis_color(svg_color(0, 0, 7))
-	.x_label_color(svg_color(0, 0, 8))
-	.x_major_grid_color(svg_color(0, 0, 9))
-	.x_major_tick_color(svg_color(0, 0, 10))
-	.x_minor_grid_color(svg_color(0, 0, 11))
-	.x_minor_tick_color(svg_color(0, 0, 12))
-	.y_axis_color(svg_color(0, 0, 13))
-	.y_label_color(svg_color(0, 0, 14))
-	.y_major_grid_color(svg_color(0, 0, 15))
-	.y_major_tick_color(svg_color(0, 0, 16))
-	.y_minor_grid_color(svg_color(0, 0, 17))
-	.y_minor_tick_color(svg_color(0, 0, 18));
+  my_plot
+  .background_border_color(svg_color(0, 0, 1))
+  .background_color(svg_color(0, 0, 2))
+  .legend_background_color(svg_color(0, 0, 3))
+  .legend_border_color(svg_color(0, 0, 4))
+  .plot_background_color(svg_color(0, 0, 5))
+  .title_color(svg_color(0, 0, 6))
+  .x_axis_color(svg_color(0, 0, 7))
+  .x_label_color(svg_color(0, 0, 8))
+  .x_major_grid_color(svg_color(0, 0, 9))
+  .x_major_tick_color(svg_color(0, 0, 10))
+  .x_minor_grid_color(svg_color(0, 0, 11))
+  .x_minor_tick_color(svg_color(0, 0, 12))
+  .y_axis_color(svg_color(0, 0, 13))
+  .y_label_color(svg_color(0, 0, 14))
+  .y_major_grid_color(svg_color(0, 0, 15))
+  .y_major_tick_color(svg_color(0, 0, 16))
+  .y_minor_grid_color(svg_color(0, 0, 17))
+  .y_minor_tick_color(svg_color(0, 0, 18));
 
-	BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
-	BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
-	BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
-	BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
-	BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
-	BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
-	BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
-	BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
-	BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
-	BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
-	BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
-	BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
-	//BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7)); // Seems to work???
+  BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
+  BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
+  BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
+  BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
+  BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
+  BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
+  BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
+  BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
+  BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
+  BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
+  BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
+  BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
+  //BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7)); // Seems to work???
   cout << svg_color(red) << endl;
   cout << my_plot.y_axis_color() << endl;
-	BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13));
+  BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13));
   //cout << my_plot.y_axis_color() << endl;
-	//BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13)); // fails " does not expect 0 arguments"
-	BOOST_CHECK(my_plot.y_label_color()  ==  svg_color(0, 0, 14));
-	BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(0, 0, 14));
-	//BOOST_CHECK(my_plot.y_major_grid_color() == svg_color(0, 0, 15));
-	//BOOST_CHECK(my_plot.y_major_tick_color() == svg_color(0, 0, 16));
-	//BOOST_CHECK(my_plot.y_minor_grid_color() == svg_color(0, 0, 17));
-	//BOOST_CHECK(my_plot.y_minor_tick_color() == svg_color(0, 0, 18));
+  //BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13)); // fails " does not expect 0 arguments"
+  BOOST_CHECK(my_plot.y_label_color()  ==  svg_color(0, 0, 14));
+  BOOST_CHECK_EQUAL(my_plot.y_label_color(), svg_color(0, 0, 14));
+  //BOOST_CHECK(my_plot.y_major_grid_color() == svg_color(0, 0, 15));
+  //BOOST_CHECK(my_plot.y_major_tick_color() == svg_color(0, 0, 16));
+  //BOOST_CHECK(my_plot.y_minor_grid_color() == svg_color(0, 0, 17));
+  //BOOST_CHECK(my_plot.y_minor_tick_color() == svg_color(0, 0, 18));
 
-	my_plot
-	.y_minor_tick_color(svg_color(0, 0, 18))
-	.y_minor_grid_color(svg_color(0, 0, 17))
-	.y_major_tick_color(svg_color(0, 0, 16))
-	.y_major_grid_color(svg_color(0, 0, 15))
-//	.y_label_color(svg_color(0, 0, 14))
-	.y_axis_color(svg_color(0, 0, 13))
-	.x_minor_tick_color(svg_color(0, 0, 12))
-	.x_minor_grid_color(svg_color(0, 0, 11))
-	.x_major_tick_color(svg_color(0, 0, 10))
-	.x_major_grid_color(svg_color(0, 0, 9))
-	.x_label_color(svg_color(0, 0, 8))
-	.x_axis_color(svg_color(0, 0, 7))
-	.title_color(svg_color(0, 0, 6))
-	.plot_background_color(svg_color(0, 0, 5))
-	.legend_border_color(svg_color(0, 0, 4))
-	.legend_background_color(svg_color(0, 0, 3))
-	.background_color(svg_color(0, 0, 2))
-	.background_border_color(svg_color(0, 0, 1));
+  my_plot
+  .y_minor_tick_color(svg_color(0, 0, 18))
+  .y_minor_grid_color(svg_color(0, 0, 17))
+  .y_major_tick_color(svg_color(0, 0, 16))
+  .y_major_grid_color(svg_color(0, 0, 15))
+//  .y_label_color(svg_color(0, 0, 14))
+  .y_axis_color(svg_color(0, 0, 13))
+  .x_minor_tick_color(svg_color(0, 0, 12))
+  .x_minor_grid_color(svg_color(0, 0, 11))
+  .x_major_tick_color(svg_color(0, 0, 10))
+  .x_major_grid_color(svg_color(0, 0, 9))
+  .x_label_color(svg_color(0, 0, 8))
+  .x_axis_color(svg_color(0, 0, 7))
+  .title_color(svg_color(0, 0, 6))
+  .plot_background_color(svg_color(0, 0, 5))
+  .legend_border_color(svg_color(0, 0, 4))
+  .legend_background_color(svg_color(0, 0, 3))
+  .background_color(svg_color(0, 0, 2))
+  .background_border_color(svg_color(0, 0, 1));
 
-//	BOOST_CHECK(my_plot.y_minor_tick_color() == svg_color(0, 0, 18));
-//	BOOST_CHECK(my_plot.y_minor_grid_color() == svg_color(0, 0, 17));
-//	BOOST_CHECK(my_plot.y_major_tick_color() == svg_color(0, 0, 16));
-//	BOOST_CHECK(my_plot.y_major_grid_color() == svg_color(0, 0, 15));
-////	BOOST_CHECK(my_plot.y_label_color() == svg_color(0, 0, 14));
-//	BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13));
-	BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
-	BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
-	BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
-	BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
-	BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
-	BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
-	BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
-	BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
-	BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
-	BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
-	BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
-	BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
+//  BOOST_CHECK(my_plot.y_minor_tick_color() == svg_color(0, 0, 18));
+//  BOOST_CHECK(my_plot.y_minor_grid_color() == svg_color(0, 0, 17));
+//  BOOST_CHECK(my_plot.y_major_tick_color() == svg_color(0, 0, 16));
+//  BOOST_CHECK(my_plot.y_major_grid_color() == svg_color(0, 0, 15));
+////  BOOST_CHECK(my_plot.y_label_color() == svg_color(0, 0, 14));
+//  BOOST_CHECK(my_plot.y_axis_color() == svg_color(0, 0, 13));
+  BOOST_CHECK(my_plot.x_minor_tick_color() == svg_color(0, 0, 12));
+  BOOST_CHECK(my_plot.x_minor_grid_color() == svg_color(0, 0, 11));
+  BOOST_CHECK(my_plot.x_major_tick_color() == svg_color(0, 0, 10));
+  BOOST_CHECK(my_plot.x_major_grid_color() == svg_color(0, 0, 9));
+  BOOST_CHECK(my_plot.x_label_color() == svg_color(0, 0, 8));
+  BOOST_CHECK(my_plot.x_axis_color() == svg_color(0, 0, 7));
+  BOOST_CHECK(my_plot.title_color() == svg_color(0, 0, 6));
+  BOOST_CHECK(my_plot.plot_background_color() == svg_color(0, 0, 5));
+  BOOST_CHECK(my_plot.legend_border_color() == svg_color(0, 0, 4));
+  BOOST_CHECK(my_plot.legend_background_color() == svg_color(0, 0, 3));
+  BOOST_CHECK(my_plot.background_color() == svg_color(0, 0, 2));
+  BOOST_CHECK(my_plot.background_border_color() == svg_color(0, 0, 1));
 
 } // BOOST_AUTO_TEST_CASE( test1 )
 

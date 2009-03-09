@@ -108,7 +108,7 @@ int main()
   /*`In a second example, we use a different type of container, a set,
   and use autoscale in a more advanced way.*/
   multiset<double> my_set;
-	// Initialize my_set with some entirely fictional data.
+  // Initialize my_set with some entirely fictional data.
   my_set.insert(1.2);
   my_set.insert(2.3);
   my_set.insert(3.4);
@@ -174,7 +174,7 @@ int main()
 
  //] [/demo_1d_autoscaling_3]
 
-	return 0;
+  return 0;
 } // int main()
 
 /*
