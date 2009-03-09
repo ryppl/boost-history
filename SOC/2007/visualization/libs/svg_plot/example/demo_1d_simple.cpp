@@ -1,4 +1,4 @@
-/*! \file 1d_simple.cpp
+/*! \file demo_1d_simple.cpp
     \brief Example of a simple 1D plot of two vectors of data.
     \details Creates file 1d_simple.svg
     \author Jacob Voytko and Paul A. Bristow
