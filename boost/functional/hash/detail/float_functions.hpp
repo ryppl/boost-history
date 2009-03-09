@@ -1,10 +1,10 @@
 
-// Copyright 2005-2008 Daniel James.
+// Copyright 2005-2009 Daniel James.
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#if !defined(BOOST_FUNCTIONAL_DETAIL_FLOAT_FUNCTIONS_HPP)
-#define BOOST_FUNCTIONAL_DETAIL_FLOAT_FUNCTIONS_HPP
+#if !defined(BOOST_FUNCTIONAL_HASH_DETAIL_FLOAT_FUNCTIONS_HPP)
+#define BOOST_FUNCTIONAL_HASH_DETAIL_FLOAT_FUNCTIONS_HPP
 
 #include <boost/config/no_tr1/cmath.hpp>
 
