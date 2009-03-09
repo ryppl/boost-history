@@ -157,6 +157,10 @@ namespace test_fsm // Concrete FSM implementation
     // Concrete FSM implementation 
     struct player : public state_machine<player>
     {
+        // no need for exception handling or message queue
+        typedef int no_exception_thrown;
+        typedef int no_message_queue;
+
         // The list of FSM states
         struct Empty : public state<> 
         {

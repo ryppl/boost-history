@@ -24,6 +24,7 @@
 BOOST_MPL_HAS_XXX_TRAIT_DEF(no_automatic_create)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(direct_entry)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_entry_state)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(non_forwarding_flag)
 
 namespace boost { namespace msm
 {
@@ -86,10 +87,21 @@ struct state :  public state_base<BASE>, SMPtrPolicy
 };
 
 // flags used internally to handle terminate / interrupt states
-struct TerminateFlag {};
-struct InterruptedFlag {};
+struct TerminateFlag 
+{
+    typedef int non_forwarding_flag;
+    typedef int event_blocking_flag;
+};
+struct InterruptedFlag
+{
+    typedef int non_forwarding_flag;
+    typedef int event_blocking_flag;
+};
 template <class EndEvent>
-struct EndInterruptFlag {};
+struct EndInterruptFlag
+{
+    typedef int non_forwarding_flag;
+};
 
 // terminate state simply defines the TerminateFlag flag
 // template argument: pointer-to-fsm policy
@@ -226,3 +238,4 @@ struct direct_entry_event
 }}
 
 #endif //BOOST_MSM_STATES_H
+

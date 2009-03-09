@@ -6,11 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090217;12000">
+	<META NAME="CHANGED" CONTENT="20090309;12175000">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
@@ -80,6 +81,7 @@ compared to previous version</U></A></P>
 	<LI><P><A HREF="#5.3.Copying|outline">Copying</A></P>
 	<LI><P><A HREF="#7.4.Exceptions|outline">Exceptions</A></P>
 	<LI><P><A HREF="#Helpers methods|outline">Helpers methods</A></P>
+	<LI><P><A HREF="#Getting more speed|outline">Getting more speed</A></P>
 </UL>
 <P><A HREF="#8.Customizing states|outline">Customizing states</A></P>
 <UL>
@@ -1935,6 +1937,73 @@ probably not:</FONT></FONT></FONT></CODE></P>
 </UL>
 <P><BR><BR>
 </P>
+<H2 CLASS="western"><A NAME="Getting more speed|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Albany, sans-serif"><FONT SIZE=4>Getting
+more speed</FONT></FONT></FONT></CODE></H2>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Msm
+is offering many features at a high-speed, but sometimes, for example
+in embedded systems, you need more speed and are ready to give up
+some features in exchange.</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>A
+</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3>process_event</FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>
+is doing 5 different jobs:</FONT></FONT></FONT></CODE></P>
+<UL>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>checking
+	for terminate/interrupt states</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	the message queue (for entry/exit/transition actions generating
+	themselves events)</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	deferred events</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>catching
+	exceptions</FONT></FONT></FONT></CODE></P>
+	<LI><P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>handling
+	the state switching and action calls</FONT></FONT></FONT></CODE></P>
+</UL>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Of
+these jobs, only the last is absolutely necessary to a state machine
+(its core job), the other ones are nice-to-haves which cost CPU time.
+In many cases, it is not so important, but in embedded systems, this
+can lead to ad-hoc state machine implementations.</FONT></FONT></FONT></CODE></P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Msm
+detects itself if a concrete state machine makes use of
+terminate/interrupt states and deferred events and deactivates them
+if not used. For the other two, if you want them out, you need to
+help by indicating in your implementation that you want them out.
+This is done with two simple typedefs, for example:</FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000"> </FONT></CODE><CODE><FONT COLOR="#000000">
+  </FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">//
+Concrete FSM implementation </SPAN></FONT></FONT></FONT></CODE>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">    </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">struct</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">player</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+: </SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">public</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">state_machine</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&lt;</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">player</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">&gt;</SPAN></FONT></FONT></P>
+<P LANG="" STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">    <FONT SIZE=3>{</FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#008000"><SPAN LANG="">//
+no need for exception handling or message queue</SPAN></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">no_exception_thrown</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000">        </FONT><FONT SIZE=3><FONT COLOR="#0000ff"><SPAN LANG="">typedef</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#0000ff"><SPAN LANG="">int</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">
+</SPAN></FONT><FONT COLOR="#030003"><SPAN LANG="">no_message_queue</SPAN></FONT><FONT COLOR="#000000"><SPAN LANG="">;</SPAN></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><CODE><FONT COLOR="#000000">       
+</FONT></CODE><CODE><FONT COLOR="#000000"><FONT SIZE=3><SPAN LANG="">...</SPAN></FONT></FONT></CODE><CODE><FONT COLOR="#008000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">//
+rest of implementation</SPAN></FONT></FONT></FONT></CODE></P>
+<P><BR><BR>
+</P>
+<P><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">What
+is the gain? It will depend on your compiler and target system, so
+please refer to the <A HREF="#9.Performance|outline">performance page</A>
+(where an example is also provided). If you use none of these
+nice-to-haves, a </SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Courier New, monospace"><FONT SIZE=3><SPAN LANG="">process_event</SPAN></FONT></FONT></FONT></CODE><CODE><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><SPAN LANG="">
+can execute up to 4 times faster. On my Q6600, an average transition
+execution lasts 45ns with a full state machine, 10ns in the minimal
+case.</SPAN></FONT></FONT></FONT></CODE></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
 <H1 CLASS="western"><A NAME="8.Customizing states|outline"></A><CODE><FONT COLOR="#000000"><FONT FACE="Arial, sans-serif"><FONT SIZE=4 STYLE="font-size: 16pt"><SPAN STYLE="font-style: normal">Customizing
 states</SPAN></FONT></FONT></FONT></CODE></H1>
 <P>By default, all states derive from msm::default_base_state, which
@@ -2109,29 +2178,53 @@ of the composite.</FONT></FONT></FONT></P>
 have a look at the example using accept <A HREF="SM-0arg.cpp">with 0
 argument</A>, <A HREF="SM-1arg.cpp">with 1</A>, and <A HREF="SM-3arg.cpp">with
 3</A>.</FONT></FONT></FONT></P>
-<H1 CLASS="western"><A NAME="8.Performance|outline"></A>Performance</H1>
+<H1 CLASS="western"><A NAME="9.Performance|outline"></A><A NAME="8.Performance|outline"></A>
+Performance</H1>
 <P>Tests were made on different PCs running either Windows XP and
 Vista and compiled with VC9 SP1 or Ubuntu and compiled with g++
 4.2.3.</P>
 <P>For these tests, the same player state machine was written using
 Boost.Statechart and Msm, as a <A HREF="SC%20Simple.cpp">state
 machine with only simple states</A> and as a <A HREF="SC%20Composite.cpp">state
-machine with a composite state</A>. 
-</P>
+machine with a composite state</A>. As these simple machines need no
+terminate/interrupt states, no message queue and have no-throw
+guarantee on their actions, the tests are made in full- and minimum-
+functionalities.</P>
+<P>Minimum (no exception handling, no message queue):</P>
 <P>VC9:</P>
 <UL>
-	<LI><P>the simple test completes 9-10 times faster with Msm than
-	with Boost.Statechart</P>
-	<LI><P>the composite test completes 3-3,5 times faster with Msm</P>
+	<LI><P>the simple test completes 38 times faster with Msm than with
+	Boost.Statechart</P>
+	<LI><P>the composite test completes 4 times faster with Msm</P>
 </UL>
 <P>gcc 4.2.3:</P>
 <UL>
-	<LI><P>the simple test completes 6 times faster with Msm</P>
-	<LI><P>the composite test completes 4-5 times faster with Msm</P>
+	<LI><P>the simple test completes 16 times faster with Msm</P>
+	<LI><P>the composite test completes 9 times faster with Msm</P>
 </UL>
 <P>gcc 3.3:</P>
 <UL>
-	<LI><P>the simple test completes 3 times faster with Msm</P>
+	<LI><P>the simple test completes 9-12 times faster with Msm</P>
+	<LI><P>the composite compile but does not work (events of composites
+	lead to no_transition)</P>
+</UL>
+<P><BR><BR>
+</P>
+<P>Full:</P>
+<P>VC9:</P>
+<UL>
+	<LI><P>the simple test completes 12 times faster with Msm than with
+	Boost.Statechart</P>
+	<LI><P>the composite test completes 3 times faster with Msm</P>
+</UL>
+<P>gcc 4.2.3:</P>
+<UL>
+	<LI><P>the simple test completes 10 times faster with Msm</P>
+	<LI><P>the composite test completes 9-10 times faster with Msm</P>
+</UL>
+<P>gcc 3.3:</P>
+<UL>
+	<LI><P>the simple test completes 9 times faster with Msm</P>
 	<LI><P>the composite compile but does not work (events of composites
 	lead to no_transition)</P>
 </UL>

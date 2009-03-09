@@ -122,13 +122,13 @@ struct dispatch_table
         // Cell initializer function object, used with mpl::for_each
         template <class Transition>
         typename ::boost::enable_if<typename has_not_real_row_tag<Transition>::type,void >::type
-        operator()(Transition const&) const
+        operator()(Transition const&,boost::msm::dummy<0> = 0) const
         {
             // version for not real rows. No problem because irrelevant for process_event
         }
         template <class Transition>
         typename ::boost::disable_if<typename has_not_real_row_tag<Transition>::type,void >::type
-        operator()(Transition const&) const
+        operator()(Transition const&,boost::msm::dummy<1> = 0) const
         {
             typedef typename create_stt<Fsm>::type stt; 
             BOOST_STATIC_CONSTANT(int, state_id = 
@@ -233,3 +233,4 @@ struct dispatch_table
 
 
 #endif //BOOST_MSM_DISPATCH_TABLE_H
+

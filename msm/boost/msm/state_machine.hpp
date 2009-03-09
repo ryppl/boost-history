@@ -47,6 +47,8 @@
 #include <boost/msm/states.hpp>
 
 BOOST_MPL_HAS_XXX_TRAIT_DEF(accept_sig)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(no_exception_thrown)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(no_message_queue)
 
 namespace boost { namespace msm
 {
@@ -177,79 +179,34 @@ private:
         typedef dispatch_table<Derived,HistoryPolicy,BaseState,CopyPolicy,complete_table,Event> table;
 
         HandledEnum ret_handled=HANDLED_FALSE;
-        // if the state machine is terminated, do not handle any event
-        if (is_flag_active< ::boost::msm::TerminateFlag>())
+        // if the state machine has terminate or interrupt flags, check them, otherwise skip
+        if (is_event_handling_blocked_helper<Derived,Event>())
             return ::boost::make_tuple(HANDLED_TRUE,&this->m_states);
-        // if the state machine is interrupted, do not handle any event
-        // unless the event is the end interrupt event
-        if ( is_flag_active< ::boost::msm::InterruptedFlag>() && 
-            !is_flag_active< ::boost::msm::EndInterruptFlag<Event> >())
-            return ::boost::make_tuple(HANDLED_TRUE,&this->m_states);
-
-        // if we are already processing an event
-        if (m_event_processing)
+        // if a message queue is needed and processing is on the way
+        if (!do_pre_msg_queue_helper<Derived,Event>(evt))
         {
-            // event has to be put into the queue
-            execute_return (state_machine<Derived,HistoryPolicy,BaseState,CopyPolicy>::*pf) (Event const& evt) = 
-                &state_machine<Derived,HistoryPolicy,BaseState,CopyPolicy>::process_event; 
-            transition_fct f = ::boost::bind(pf,this,evt);
-            m_events_queue.push(f);
+            // wait for the end of current processing
             return ::boost::make_tuple(HANDLED_TRUE,&this->m_states);
         }
         else
         {
             // event can be handled, processing
-            m_event_processing = true;
             // prepare the next deferred event for handling
-            deferred_fct next_deferred_event;
-            if (!m_deferred_events_queue.empty())
-            {
-                next_deferred_event = m_deferred_events_queue.front();
-                m_deferred_events_queue.pop();
-            }
-            typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
-            bool handled = false;
-            try
-            {
-                // dispatch the event to every region
-                for (int i=0; i<nr_regions::value;++i)
-                {	
-                    std::pair<int,HandledEnum> res =
-                        table::instance.entries[this->m_states[i]](
-                        *static_cast<Derived*>(this), this->m_states[i], &m_state_list[0],evt);
-                    this->m_states[i] = res.first;
-                    handled = (handled || res.second);
-                }
-                // if the event has not been handled and we have orthogonal zones, then
-                // generate an error on every active state 
-                // for state machine states contained in other state machines, do not handle
-                // but let the containing sm handle the error
-                if (!handled && !is_contained())
-                {
-                    for (int i=0; i<nr_regions::value;++i)
-                    {	
-                        (static_cast<Derived*>(this))->no_transition(this->m_states[i],evt);
-                    }
-                }
-            }
-            catch (std::exception& e)
-            {
-                // give a chance to the concrete state machine to handle
-                (static_cast<Derived*>(this))->exception_caught(e);
-            }
+            // if one defer is found in the SM, otherwise skip
+            handle_defer_helper<Derived> defer_helper(m_deferred_events_queue);
+            defer_helper.do_pre_handle_deferred();
+            // process event
+            bool handled = this->do_process_helper<Derived,Event>(evt);
             if (handled)
             {
                 ret_handled = HANDLED_TRUE;
             }
             // after handling, take care of the deferred events
-            if (next_deferred_event)
-            {
-                next_deferred_event();
-            }
-            m_event_processing = false;
+            defer_helper.do_post_handle_deferred();
+
             // now check if some events were generated in a transition and was not handled
             // because of another processing, and if yes, start handling them
-            process_message_queue();
+            do_post_msg_queue_helper<Derived>();
             return ::boost::make_tuple(ret_handled,&this->m_states);
         }       
     }
@@ -435,6 +392,169 @@ private:
             do_copy<mpl::bool_<CopyPolicy::shallow_copy::value> >(rhs);
         }
      }
+
+    // the following 2 functions handle the terminate/interrupt states handling
+    // if one of these states is found, the first one is used
+    template <class StateType,class Event>
+    typename ::boost::enable_if<typename has_fsm_blocking_states<StateType>::type,bool >::type
+        is_event_handling_blocked_helper( ::boost::msm::dummy<0> = 0)
+    {
+        // if the state machine is terminated, do not handle any event
+        if (is_flag_active< ::boost::msm::TerminateFlag>())
+            return true;
+        // if the state machine is interrupted, do not handle any event
+        // unless the event is the end interrupt event
+        if ( is_flag_active< ::boost::msm::InterruptedFlag>() && 
+            !is_flag_active< ::boost::msm::EndInterruptFlag<Event> >())
+            return true;
+        return false;
+    }
+    // otherwise simple handling, no flag => continue
+    template <class StateType,class Event>
+    typename ::boost::disable_if<typename has_fsm_blocking_states<StateType>::type,bool >::type
+        is_event_handling_blocked_helper( ::boost::msm::dummy<1> = 0)
+    {
+        // no terminate/interrupt states detected
+        return false;
+    }
+    // the following functions handle pre/post-process handling  of a message queue
+    template <class StateType,class EventType>
+    typename ::boost::enable_if<typename has_no_message_queue<StateType>::type,bool >::type
+        do_pre_msg_queue_helper(EventType const& evt, ::boost::msm::dummy<0> = 0)
+    {
+        // no message queue needed
+        return true;
+    }
+    template <class StateType,class EventType>
+    typename ::boost::disable_if<typename has_no_message_queue<StateType>::type,bool >::type
+        do_pre_msg_queue_helper(EventType const& evt, ::boost::msm::dummy<1> = 0)
+    {
+        execute_return (state_machine<Derived,HistoryPolicy,BaseState,CopyPolicy>::*pf) (EventType const& evt) = 
+            &state_machine<Derived,HistoryPolicy,BaseState,CopyPolicy>::process_event; 
+        // if we are already processing an event
+        if (m_event_processing)
+        {
+            // event has to be put into the queue
+            transition_fct f = ::boost::bind(pf,this,evt);
+            m_events_queue.push(f);
+            return false;
+        }
+        // event can be handled, processing
+        m_event_processing = true;
+        return true;
+    }
+    template <class StateType>
+    typename ::boost::enable_if<typename has_no_message_queue<StateType>::type,void >::type
+        do_post_msg_queue_helper( ::boost::msm::dummy<0> = 0)
+    {
+        // no message queue needed
+    }
+    template <class StateType>
+    typename ::boost::disable_if<typename has_no_message_queue<StateType>::type,void >::type
+        do_post_msg_queue_helper( ::boost::msm::dummy<1> = 0)
+    {
+        m_event_processing = false;
+        process_message_queue();
+    }
+    // the following 2 functions handle the processing either with a try/catch protection or without
+    template <class StateType,class EventType>
+    typename ::boost::enable_if<typename has_no_exception_thrown<StateType>::type,bool >::type
+        do_process_helper(EventType const& evt, ::boost::msm::dummy<0> = 0)
+    {
+        return this->do_process_event(evt);
+    }
+    template <class StateType,class EventType>
+    typename ::boost::disable_if<typename has_no_exception_thrown<StateType>::type,bool >::type
+        do_process_helper(EventType const& evt, ::boost::msm::dummy<1> = 0)
+    {
+        try
+        {
+            return this->do_process_event(evt);
+        }
+        catch (std::exception& e)
+        {
+            // give a chance to the concrete state machine to handle
+            (static_cast<Derived*>(this))->exception_caught(e);
+        } 
+        return false;
+    }
+    // handling of deferred events
+    // if none is found in the SM, take the following empty main version
+    template <class StateType, class Enable = void> 
+    struct handle_defer_helper
+    {
+        handle_defer_helper(deferred_events_queue_t& a_queue){}
+        void do_pre_handle_deferred()
+        {
+        }
+
+        void do_post_handle_deferred()
+        {
+        }
+    };
+    // otherwise the standard version handling the deferred events
+    template <class StateType>
+    struct handle_defer_helper
+        <StateType, typename enable_if< typename ::boost::msm::has_fsm_delayed_events<StateType>::type >::type>
+    {
+        handle_defer_helper(deferred_events_queue_t& a_queue):events_queue(a_queue),next_deferred_event(){}
+        void do_pre_handle_deferred()
+        {
+            if (!events_queue.empty())
+            {
+                next_deferred_event = events_queue.front();
+                events_queue.pop();
+            }
+        }
+
+        void do_post_handle_deferred()
+        {
+            if (next_deferred_event)
+            {
+                next_deferred_event();
+            }
+        }
+
+    private:
+        deferred_events_queue_t&    events_queue;
+        deferred_fct                next_deferred_event;
+    };
+
+    // minimum event processing without exceptions, queues, etc.
+    template<class Event>
+    bool do_process_event(Event const& evt)
+    {
+        // extend the table with tables from composite states
+        typedef typename extend_table<Derived>::type complete_table;
+        // use this table as if it came directly from the user
+        typedef dispatch_table<Derived,HistoryPolicy,BaseState,CopyPolicy,
+                               complete_table,Event> table;
+        typedef typename get_number_of_regions<typename Derived::initial_state>::type nr_regions;
+
+        bool handled = false;
+        // dispatch the event to every region
+        for (int i=0; i<nr_regions::value;++i)
+        {	
+            std::pair<int,HandledEnum> res =
+                table::instance.entries[this->m_states[i]](
+                *static_cast<Derived*>(this), this->m_states[i], &m_state_list[0],evt);
+            this->m_states[i] = res.first;
+            handled = (handled || res.second);
+        }
+        // if the event has not been handled and we have orthogonal zones, then
+        // generate an error on every active state 
+        // for state machine states contained in other state machines, do not handle
+        // but let the containing sm handle the error
+        if (!handled && !is_contained())
+        {
+            for (int i=0; i<nr_regions::value;++i)
+            {	
+                (static_cast<Derived*>(this))->no_transition(this->m_states[i],evt);
+            }
+        }
+        return handled;
+    }
+
     // default row arguments for the compilers which accept this
     template <class Event>
     bool no_guard(Event const&){return true;}
@@ -757,14 +877,24 @@ private:
     private:
         // helper function, helps hiding the forward function for non-state machines states.
         template <class T>
-        typename ::boost::enable_if<typename is_composite_state<T>::type,void >::type
+        typename ::boost::enable_if<
+            typename ::boost::mpl::and_<
+                    typename is_composite_state<T>::type,
+                    typename ::boost::mpl::not_<
+                            typename has_non_forwarding_flag<Flag>::type>::type >::type
+            ,void >::type
             helper (flag_handler* an_entry,int offset,boost::msm::dummy<0> = 0 )
         {
             // composite => forward
             an_entry[offset] = &FlagHandler<T,Flag>::forward;
         }
         template <class T>
-        typename ::boost::disable_if<typename is_composite_state<T>::type,void >::type
+        typename ::boost::disable_if<
+            typename ::boost::mpl::and_<
+                    typename is_composite_state<T>::type,
+                    typename ::boost::mpl::not_<
+                            typename has_non_forwarding_flag<Flag>::type>::type >::type
+            ,void >::type
             helper (flag_handler* an_entry,int offset,boost::msm::dummy<1> = 0 )
         {
             // default no flag

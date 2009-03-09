@@ -31,6 +31,7 @@ BOOST_MPL_HAS_XXX_TRAIT_DEF(pseudo_exit)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(concrete_exit_state)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(composite_tag)
 BOOST_MPL_HAS_XXX_TRAIT_DEF(not_real_row_tag)
+BOOST_MPL_HAS_XXX_TRAIT_DEF(event_blocking_flag)
 
 namespace boost { namespace msm
 {
@@ -251,6 +252,15 @@ struct has_state_delayed_event
 	    ::boost::mpl::bool_<false>,
 	    ::boost::mpl::bool_<true> >::type type;
 };
+// returns a mpl::bool_<true> if State has any delayed event
+template <class State>
+struct has_state_delayed_events  
+{
+    typedef typename ::boost::mpl::if_<
+        ::boost::mpl::empty<typename State::deferred_events>,
+        ::boost::mpl::bool_<false>,
+        ::boost::mpl::bool_<true> >::type type;
+};
 
 // Template used to create dummy entries for initial states not found in the stt.
 template< typename T1 >
@@ -338,6 +348,17 @@ struct recursive_get_transition_table
 
 };
 
+// metafunction used to say if a SM has pseudo exit states
+template <class Derived>
+struct has_fsm_delayed_events 
+{
+    typedef typename create_stt<Derived>::type Stt;
+    typedef typename generate_state_set<Stt>::type state_list;
+
+    typedef ::boost::mpl::bool_< ::boost::mpl::count_if<
+        state_list,has_state_delayed_events< ::boost::mpl::placeholders::_1 > >::value != 0> type;
+};
+
 template <class Transition>
 struct make_vector 
 {
@@ -406,6 +427,42 @@ struct has_exit_pseudo_states
         ::boost::mpl::bool_<false> >::type type;
 };
 
+template <class StateType>
+struct is_state_blocking 
+{
+    typedef typename ::boost::mpl::fold<
+        typename StateType::flag_list, ::boost::mpl::set<>,
+	    ::boost::mpl::if_<
+			     has_event_blocking_flag< ::boost::mpl::placeholders::_2>,
+			     ::boost::mpl::insert< ::boost::mpl::placeholders::_1, ::boost::mpl::placeholders::_2 >, 
+			     ::boost::mpl::placeholders::_1 >
+    >::type blocking_flags;
+
+    typedef typename ::boost::mpl::if_<
+        ::boost::mpl::empty<blocking_flags>,
+        ::boost::mpl::bool_<false>,
+        ::boost::mpl::bool_<true> >::type type;
+};
+// returns a mpl::bool_<true> if fsm has an event blocking flag in one of its substates
+template <class StateType>
+struct has_fsm_blocking_states  
+{
+    typedef typename create_stt<StateType>::type Stt;
+    typedef typename generate_state_set<Stt>::type state_list;
+
+    typedef typename ::boost::mpl::fold<
+        state_list, ::boost::mpl::set<>,
+	    ::boost::mpl::if_<
+			     is_state_blocking< ::boost::mpl::placeholders::_2>,
+			     ::boost::mpl::insert< ::boost::mpl::placeholders::_1, ::boost::mpl::placeholders::_2 >, 
+			     ::boost::mpl::placeholders::_1 >
+    >::type blocking_states;
+
+    typedef typename ::boost::mpl::if_<
+        ::boost::mpl::empty<blocking_states>,
+        ::boost::mpl::bool_<false>,
+        ::boost::mpl::bool_<true> >::type type;
+};
 
 // helper to find out if a SM has an active exit state and is therefore waiting for exiting
 template <class StateType,class OwnerFct,class FSM>
@@ -433,3 +490,4 @@ is_exit_state_active(FSM& fsm)
 } } //boost::msm
 
 #endif // BOOST_MSM_METAFUNCTIONS_H
+
