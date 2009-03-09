@@ -7,6 +7,13 @@
 
 [section:changes  Appendix A: History]
 
+[section [*Version 0.4.2, Mars 9, 2009] Adaptation to the Boost.ThreadPoold Version 0.23]
+
+[*New Features:]
+
+* Adaptation to the Boost.ThreadPoold Version 0.21
+
+[endsect]
 [section [*Version 0.4.1, Mars 1, 2009] Adaptation to the Boost.ThreadPoold Version 0.21 + Scoped forking + Parallel sort]
 
 [*New Features:]

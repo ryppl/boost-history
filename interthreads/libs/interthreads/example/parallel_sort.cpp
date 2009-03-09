@@ -103,7 +103,7 @@ template <
         }
         inplace_solve<DirectSolver,Composer,AE,Range>(ae, parts[BOOST_PARTS-1], cutoff);
         for (unsigned i=0;i < BOOST_PARTS-1; ++i) {
-            tasks[i].wait();
+            tasks[i].result().wait();
         };
         
         Composer()(range);

@@ -14,10 +14,12 @@
 
 #include <boost/interthreads/algorithm/interrupt_all.hpp>
 #include <boost/interthreads/algorithm/wait_all.hpp>
+#include <boost/interthreads/algorithm/get.hpp>
 #include <boost/interthreads/fork_all.hpp>
 #include <boost/fusion/include/tuple.hpp>
 #include <boost/futures/future.hpp>
 #include <boost/utility/result_of.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 #include <exception>
 
 #include <boost/config/abi_prefix.hpp>
@@ -53,9 +55,9 @@ namespace detail {
         static T get(unsigned r, H &handles) {
             switch (r) {
             case 0:
-                return fusion::at_c<0>(handles).get();
+                return interthreads::get(fusion::at_c<0>(handles));
             case 1:
-                return fusion::at_c<1>(handles).get();
+                return interthreads::get(fusion::at_c<1>(handles));
             default:
                 throw std::range_error("");
             }
@@ -73,11 +75,11 @@ namespace detail {
         static T get(unsigned r, H &handles) {
             switch (r) {
             case 0:
-                return fusion::at_c<0>(handles).get();
+                return interthreads::get(fusion::at_c<0>(handles));
             case 1:
-                return fusion::at_c<1>(handles).get();
+                return interthreads::get(fusion::at_c<1>(handles));
             case 2:
-                return fusion::at_c<2>(handles).get();
+                return interthreads::get(fusion::at_c<2>(handles));
             default:
                 throw std::range_error("");
             }
@@ -119,8 +121,20 @@ namespace result_of {
 template< typename AE, typename F1, typename F2>
 typename result_of::wait_for_any<AE, fusion::tuple<F1,F2> >::type
 wait_for_any( AE& ae, F1 f1, F2 f2 ) {
-    typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type handles=fork_all(ae, f1, f2);
-    unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)));
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type handles_type;
+    handles_type handles=fork_all(ae, f1, f2);
+    //unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,0>::type
+        >::type >::move_dest_type
+    >::type fut0= get_future<AE>()(fusion::at_c<0>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,1>::type
+        >::type >::move_dest_type
+    >::type fut1= get_future<AE>()(fusion::at_c<1>(handles));
+    unsigned r = boost::wait_for_any(fut0, fut1);
     //std::cout << "boost::wait_for_any=" << r << std::endl;
     typename result_of::wait_for_any<AE, fusion::tuple<F1,F2> >::type res =
         detail::partial<2,typename boost::result_of<F1()>::type >::make(r,handles);
@@ -133,8 +147,25 @@ wait_for_any( AE& ae, F1 f1, F2 f2 ) {
 template< typename AE, typename F1, typename F2, typename F3>
 typename result_of::wait_for_any<AE, fusion::tuple<F1,F2,F3> >::type
 wait_for_any( AE& ae, F1 f1, F2 f2 , F3 f3 ) {
-    typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles=fork_all(ae, f1, f2, f3);
-    unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)), get_future<AE>()(fusion::at_c<2>(handles)));
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles_type;
+    handles_type handles=fork_all(ae, f1, f2, f3);
+    //unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)), get_future<AE>()(fusion::at_c<2>(handles)));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,0>::type
+        >::type >::move_dest_type
+    >::type fut0= get_future<AE>()(fusion::at_c<0>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits<  typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,1>::type
+        >::type >::move_dest_type
+    >::type fut1= get_future<AE>()(fusion::at_c<1>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,2>::type
+        >::type >::move_dest_type
+    >::type fut2= get_future<AE>()(fusion::at_c<2>(handles));
+    unsigned r = boost::wait_for_any(fut0, fut1, fut2);
     typename result_of::wait_for_any<AE, fusion::tuple<F1,F2,F3> >::type res =
         detail::partial<3, typename boost::result_of<F1()>::type >::make(r,handles);
     //interrupt_all(handles);
@@ -144,8 +175,20 @@ wait_for_any( AE& ae, F1 f1, F2 f2 , F3 f3 ) {
 template< typename AE, typename F1, typename F2>
 typename result_of::wait_for_any<AE, fusion::tuple<F1,F2> >::type
 wait_for_any_and_interrupt( AE& ae, F1 f1, F2 f2 ) {
-    typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type handles=fork_all(ae, f1, f2);
-    unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)));
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2> >::type handles_type;
+    handles_type handles=fork_all(ae, f1, f2);
+    //unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,0>::type
+        >::type >::move_dest_type
+    >::type fut0= get_future<AE>()(fusion::at_c<0>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,1>::type
+        >::type >::move_dest_type
+    >::type fut1= get_future<AE>()(fusion::at_c<1>(handles));
+    unsigned r = boost::wait_for_any(fut0, fut1);
     std::cout << "boost::wait_for_any=" << r << std::endl;
     typename result_of::wait_for_any<AE, fusion::tuple<F1,F2> >::type res =
         detail::partial<2,typename boost::result_of<F1()>::type >::make(r,handles);
@@ -157,8 +200,25 @@ wait_for_any_and_interrupt( AE& ae, F1 f1, F2 f2 ) {
 template< typename AE, typename F1, typename F2, typename F3>
 typename result_of::wait_for_any<AE, fusion::tuple<F1,F2,F3> >::type
 wait_for_any_and_interrupt( AE& ae, F1 f1, F2 f2 , F3 f3 ) {
-    typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles=fork_all(ae, f1, f2, f3);
-    unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)), get_future<AE>()(fusion::at_c<2>(handles)));
+    typedef typename result_of::fork_all<AE, fusion::tuple<F1,F2,F3> >::type handles_type;
+    handles_type handles=fork_all(ae, f1, f2, f3);
+    //unsigned r = boost::wait_for_any(get_future<AE>()(fusion::at_c<0>(handles)), get_future<AE>()(fusion::at_c<1>(handles)), get_future<AE>()(fusion::at_c<2>(handles)));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,0>::type
+        >::type >::move_dest_type
+    >::type fut0= get_future<AE>()(fusion::at_c<0>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,1>::type
+        >::type >::move_dest_type
+    >::type fut1= get_future<AE>()(fusion::at_c<1>(handles));
+    typename get_future<AE>::template future_type<
+        typename act_traits< typename remove_reference<
+            typename fusion::result_of::at_c<handles_type,2>::type
+        >::type >::move_dest_type
+    >::type fut2= get_future<AE>()(fusion::at_c<2>(handles));
+    unsigned r = boost::wait_for_any(fut0, fut1, fut2);
     typename result_of::wait_for_any<AE, fusion::tuple<F1,F2,F3> >::type res =
         detail::partial<3, typename boost::result_of<F1()>::type >::make(r,handles);
     interrupt_all(handles);

@@ -38,11 +38,12 @@ import path ;
 
 project boost/interthreads
     : source-location ../src
-    : requirements <threading>multi
-#      <target-os>cygwin
-#      <interthreadapi>pthread
-      <variant>debug
-#      <define>BOOST_THREAD_HAS_THREAD_ATTR
+    : requirements 
+        <threading>multi
+#       <target-os>cygwin
+#       <interthreadapi>pthread
+        <variant>debug
+#       <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
       <include>../../../../../boost_1_38_0

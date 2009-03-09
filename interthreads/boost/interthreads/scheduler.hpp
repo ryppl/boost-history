@@ -112,14 +112,18 @@ namespace partial_specialization_workaround {
 template <typename C>
 struct get_future<tp::pool<C> > {
     template <typename T>
-    shared_future<T>& operator()(
+    struct future_type {
+        typedef shared_future<T> type;
+    };
+    template <typename T>
+    shared_future<T> operator()(
 #ifdef TASK_POOL
         //typename asynchronous_completion_token<tp::pool<C>,T>::type & act
         tp::task<tp::pool<C>, T>& act
 #else
         tp::task<T>& act
 #endif
-    ) { return act.get_future(); }
+    ) { return act.result(); }
 };
 
 #ifdef TASK_POOL
@@ -154,31 +158,33 @@ struct has_thread_if<tp::task<R> > : mpl::true_{};
 
 #ifdef TASK_POOL
 
+    
+    
     namespace partial_specialization_workaround {
         template <typename Pool, typename R, typename Duration>
         struct wait_until<tp::task<Pool, R> > {
             static typename result_of::template wait_until<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act, const system_time& abs_time ) {
-                return act.timed_wait_until(abs_time);
+                return act.result().timed_wait_until(abs_time);
             }
         };
         template <typename Pool, typename R, typename Duration>
         struct wait_for<tp::task<Pool, R>, Duration> {
             static typename result_of::template wait_for<tp::task<Pool, R>,Duration>::type 
             apply( tp::task<Pool, R>& act, Duration rel_time ) {
-                return act.timed_wait(rel_time);
+                return act.result().timed_wait(rel_time);
             }
         };
         
         template <typename Pool, typename R>
         struct join<tp::task<Pool, R> > {
             static typename result_of::template join<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act) {
-                return act.wait();
+                return act.result().wait();
             }
         };
         template <typename Pool, typename R>
         struct join_until<tp::task<Pool, R> > {
             static typename result_of::template join_until<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act, const system_time& abs_time ) {
-                return act.wait_until(abs_time);
+                return act.result().wait_until(abs_time);
             }
         };
         template <typename Pool, typename R, typename Duration>
@@ -190,16 +196,23 @@ struct has_thread_if<tp::task<R> > : mpl::true_{};
         template< typename Pool, typename R >
         struct interruption_requested<tp::task<Pool, R> > {
             static typename result_of::template interruption_requested<tp::task<Pool, R> >::type apply( tp::task<Pool, R>& act ) {
-                return act.interrupt_requested();
+                return act.interruption_requested();
             }
         };
     }
 #else
     namespace partial_specialization_workaround {
+        template< typename R >
+        struct wait<tp::task<R> > {
+            static typename result_of::template wait<tp::task<R> >::type apply( tp::task<R>& act ) {
+                return act.result().wait();
+            }
+        };
+
         template <typename R>
         struct wait_until<tp::task<R> > {
             static typename result_of::template wait_until<tp::task<R> >::type apply( tp::task<R>& act, const system_time& abs_time ) {
-                return act.timed_wait_until(abs_time);
+                return act.result().timed_wait_until(abs_time);
             }
         };
         template <typename R, typename Duration>
@@ -209,6 +222,13 @@ struct has_thread_if<tp::task<R> > : mpl::true_{};
             }
         };
         
+        template <typename R> 
+        struct get<tp::task<R> > {
+            static typename result_of::template get<tp::task<R> >::type apply( tp::task<R>& act ) {
+                return act.result().get();
+            }
+        };
+
         template <typename R>
         struct join<tp::task<R> > {
             static typename result_of::template join<tp::task<R> >::type apply( tp::task<R>& act) {
@@ -230,7 +250,7 @@ struct has_thread_if<tp::task<R> > : mpl::true_{};
         template< typename R >
         struct interruption_requested<tp::task<R> > {
             static typename result_of::template interruption_requested<tp::task<R> >::type apply( tp::task<R>& act ) {
-                return act.interrupt_requested();
+                return act.interruption_requested();
             }
         };
     }

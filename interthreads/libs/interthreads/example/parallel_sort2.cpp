@@ -34,6 +34,36 @@
 
 #include <assert.h>
 
+#include <boost/range/algorithm/count.hpp>
+
+#if 0
+
+struct A {
+    int x;
+    int y;
+};
+
+namespace boost {
+    //template <typename T>
+    unsigned count(A& t, const int& i) {
+        return 2;
+    }
+}
+
+
+unsigned xx() {
+    A a;
+    return boost::count(a, 1);
+}
+
+int main() {
+    std::cout << xx() << std::endl; 
+        
+}
+
+#else
+
+#define BOOST_NB_OF_THREADS 4
 #define BOOST_PARTS 2
 #define NN 400000
 
@@ -126,7 +156,21 @@ template <
         boost::for_each(tasks, &boost::interthreads::wait_act<task_type>);
         
         //std::cout << "par_inplace_merge_fct " << size << ">>"<< std::endl;  
+        #if BOOST_PARTS == 4
+        partition<Range> sorted(range, BOOST_PARTS/2);
+        Composer composer;
+        for (unsigned i=0;i < BOOST_PARTS-1; ++i) {
+            task_type tmp(ae.submit(
+                boost::bind(
+                    composer,
+                    parts[i]
+            )));
+            tasks.push_back(tmp);
+        }
+        boost::for_each(tasks, &boost::interthreads::wait_act<task_type>);
+        #endif
         Composer()(range);
+
         //std::cout << "par_ " << size << ">>"<< std::endl;  
         
     }
@@ -190,7 +234,7 @@ int main() {
     }
 
     // creates a threadpool with two worker-threads
-    pool_type pool( boost::tp::poolsize( 2) );
+    pool_type pool( boost::tp::poolsize(BOOST_NB_OF_THREADS) );
 
     for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
     {
@@ -244,6 +288,7 @@ int main() {
     parallel_sort(pool, values5, NN/16);
     }   
 
+#if 0
     for (unsigned i=0; i<NN; ++i) values5[i]=NN-i-1;
     {
     std::cout << "parallel_sort "<<NN/32<<":  reverse 0.."<<NN;
@@ -256,10 +301,11 @@ int main() {
     scoped_timer tmr;  // start timing
     parallel_sort(pool, values5, NN/32);
     }   
-
+#endif
     
-    std::cout << "shutdown"<< std::endl;
-    pool.shutdown();
+    //std::cout << "shutdown"<< std::endl;
+    //pool.shutdown();
     std::cout << "end"<< std::endl;
     return 0;
 }
+#endif

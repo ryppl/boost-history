@@ -23,17 +23,17 @@ project
     : requirements
 #       <library>/boost/test//boost_unit_test_framework/<link>static
 #       <library>/boost/thread//boost_thread/<link>static
-#       <library>$BOOST_ROOT/libs/test/build//boost_unit_test_framework/<link>static
         <library>../../../../../boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
         <library>../build//boost_interthreads/<link>static
+        <library>../../tp/build//boost_threadpool/<link>static
         <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
 
         <include>.
         <include>../../..
         <include>../../../../../boost_1_38_0
         <threading>multi
-#        <target-os>cygwin
-#        <interthreadapi>pthread
+#       <target-os>cygwin
+#       <interthreadapi>pthread
         <variant>debug
 #       <define>BOOST_THREAD_HAS_THREAD_ATTR
 
@@ -69,6 +69,7 @@ rule interthreads-run ( sources * )
           [ interthreads-run ../example/multiple_algorithms.cpp ]
           [ interthreads-run ../example/parallel_sort.cpp ]
           [ interthreads-run ../example/parallel_sort2.cpp ]
+#          [ interthreads-run parallel_sort.cpp ]
 
 
     ;
