@@ -54,15 +54,19 @@ class bar_style;  // Style of bars.
 
 enum rotate_style
 { //! \enum rotate_style Rotation in degrees clockwise from horizontal.
+  // Might include more steps for others too.
   horizontal = 0, //!< normal horizontal left to right, centered.
   //uphill = -45, //!< slope up. seems bit steep
-  uphill = -30, //!< slope up.
+  slopeup = -30, //!< slope up.
+  uphill = -45, //!< 45 up.
+  steepup = -60, //!< up near vertical.
   upward = -90, //!< vertical writing up.
   backup = -135, //!< slope up backwards - upside down!
   leftward= -180, //!< horizontal to left.
   rightward = 360, //!< horizontal to right.
-  // downhill = 45, //!< slope down.
-  downhill = 30, //!< slope down.
+  slopedownhill = 30, //!< 30 gentle slope down.
+  downhill = 45, //!< 45 down.
+  steepdown = 60, //!<  60 steeply down.
   downward = 90,  //!< vertical writing down.
   backdown = 135, //!< slope down backwards.
   upsidedown = 180 //!< upside down!  (== -180)
@@ -367,11 +371,6 @@ public:
     font_size_ = i;
     return *this; //! \return text_style& to make chainable.
     //! \return reference to text_style to make chainable.
-    // error C2663: 'boost::svg::text_style::font_size' : 2 overloads have no legal conversion for 'this' pointer
-    // label_style.font_size(20).font_family("sans");
-    // MS docs say:
-    // This error can be caused by invoking a non-const member function on a const object.
-    // So removed const from text_style& font_size(unsigned i) and all others below.
   }
 
   const std::string& text_style::font_family() const
@@ -592,10 +591,9 @@ value_style::value_style() //! Data point value label style (provides default co
       text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
       // Separators [,] provide, for example: [1.23+-0.01 (3), 4.56 +-0.2 (10)]
       // default color black.
-      // TODO provide access to these.
-      std::string pre = "[", 
-      std::string sep  = ",&#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
-      std::string suf  = "]")
+      std::string pre = "", // "[", 
+      std::string sep  = "", // ,\&#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
+      std::string suf  = "") // "]")
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
     values_text_style_(ts), stroke_color_(scol), fill_color_(fcol),

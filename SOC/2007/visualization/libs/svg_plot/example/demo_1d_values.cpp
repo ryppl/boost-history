@@ -33,6 +33,9 @@
   using namespace boost::svg;
   using boost::svg::svg_1d_plot;
 
+  #include <boost/svg_plot/show_1d_settings.hpp>
+// using boost::svg::show_1d_plot_settings - Only needed for showing which settings in use.
+
 #include <iostream>
   using std::cout;
   using std::endl;
@@ -113,7 +116,9 @@ This can be controlled in steps of 45 degrees, using an 'enum rotate_style`.
 placing the values below the horizontal Y-axis line,
 but for 2-D plots all writing orientations can be useful).
 */
-    my_1d_plot.x_values_rotation(upward); // Orientation for the X-axis value labels.
+   my_1d_plot.x_values_rotation(steepup); // Orientation for the X-axis value labels.
+
+   my_1d_plot.x_decor("[ x = ", ", y=", "]");
 
 /*`To use all these settings, finally write the plot to file.
 */
@@ -121,8 +126,10 @@ but for 2-D plots all writing orientations can be useful).
 
 /*`If chosen settings do not have the expected effect, is may be helpful to display them.
 
-(All settings can be displayed with `show_1d_plot_settings(my_1d_plot)`.)
+(All the myriad settings can be displayed with `show_1d_plot_settings(my_1d_plot)`.)
 */
+    show_1d_plot_settings(my_1d_plot);
+
     cout << "my_1d_plot.x_values_font_size() " << my_1d_plot.x_values_font_size() << endl;
     cout << "my_1d_plot.x_values_font_family() " << my_1d_plot.x_values_font_family() << endl;
     cout << "my_1d_plot.x_values_color() " << my_1d_plot.x_values_color() << endl;

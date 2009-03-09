@@ -1046,28 +1046,19 @@ namespace boost
               strip_e0s(label.str())  // "1.2" or "3.4e1"...
               :
               stripped = label.str();
-            //plot_point_style& sty)
-            //int size = sty.size_;
-            // was int marker_size = derived().series[0].point_style_.size_;
+            if (val_style.prefix_ != "")
+            { // Want a prefix like "[" or "time = ".
+              stripped = val_style.prefix_ + stripped;
+            }
             int marker_size = point_style.size_; // point marker size
             int label_size = val_style.values_text_style_.font_size();
             // Offset of value label from point must be related mainly to
             // size of the data marker, less the value label font size.
+            // May need to combine these two?
 
-            //enum rotate_style
-            //{ // Rotation in degrees from horizontal.
-            //  horizontal = 0, // normal left to right.
-            //  uphill = -45, // slope up.
-            //  upward = -90, // vertical writing up.
-            //  backup = -135, // slope up backwards - upside down!
-            //  downhill = 45, // slope down.
-            //  downward = 90,  // vertical writing down.
-            //  backdown = 135, // slope down backwards.
-            //  upsidedown = 180 // == -180
-            //};
             rotate_style rot = val_style.value_label_rotation_;
             // http://www.w3.org/TR/SVG/coords.html#RotationDefined
-            // transform="rotate(-45)"
+            // transform="rotate(-45)" == uphill
 
             align_style al; // = center_align;
             switch (rot)
@@ -1159,7 +1150,7 @@ namespace boost
               label.precision(4); // Might need 5 to show 65535?
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << df << ")"; // "123"
-              // Explicit space "&#x00A0;" seems necessary.
+              // Explicit space "\&#x00A0;" seems necessary.
               label_df = label.str();
               t.tspan(label_df).fill_color(val_style.df_color_).font_size(udf_font);
             }
@@ -1187,7 +1178,14 @@ namespace boost
           { //! Write the \b pair of data point's X and Y values as a string,.
             //! If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
             //! X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
+            //! For example, x_style prefix("[ X=", and separator ",\&#x00A0;Y= ", " and Y value_style = "]"
+            //! will produce a value label like "[X=-1.23, Y=4.56]"
+            //! Note the need to use a Unicode space \&#x00A0; for get space for all browsers.
+            //! For as long a string as this you may need to make the total image size bigger,
+            //! and to orient the value labels with care.
             // draw_plot_point_values is only when both x and Y pairs are wanted.
+            using std::string;
+            using std::stringstream;
             double vx = uncx.value();
             double vy = uncy.value();
             double ux = uncx.uncertainty();
@@ -1195,8 +1193,6 @@ namespace boost
             double dfx = uncx.deg_free();
             double dfy = uncy.deg_free();
 
-            using std::string;
-            using std::stringstream;
             std::string label_xv = sv(vx, x_sty); //! Also strip unnecessary e, + and leading exponent zeros, if required.
             std::string label_yv = sv(vy, y_sty);
             if (x_sty.prefix_ != "")
@@ -1288,7 +1284,7 @@ namespace boost
             // and also optionally show degrees of freedom (23).
 
             string pm = "&#x00A0;&#x00B1;"; //! Unicode space plusminus glyph.
-            // Spaces seem to get lost, so use 00A0 as an explicit space glyph.
+            // Spaces seem to get lost, so use \&x00A0 as an explicit space glyph.
             // Layout seems to vary with font - Times New Roman leaves no space after.
             if ((x_sty.plusminus_on_ == true)
                   && (ux > 0.)
@@ -1310,7 +1306,7 @@ namespace boost
               label.precision(4); // Might need 5 to show 65535?
               //label.flags(sty.value_ioflags_); // Leave at default.
               label << "&#x00A0;(" << dfx << ")"; // "123.5"
-              // Explicit space "&#x00A0;" seems necessary.
+              // Explicit space "\&#x00A0;" seems necessary.
               label_xdf = label.str();
               t.tspan(label_xdf).fill_color(x_sty.df_color_).font_size(fx);
             }
@@ -1678,6 +1674,11 @@ namespace boost
           bool x_df_on();
           Derived& x_df_color(const svg_color& col);
           svg_color x_df_color();
+          Derived& x_decor(const std::string& pre, const std::string& sep, const std::string& suf);
+          const std::string x_suffix();
+          const std::string x_separator();
+          const std::string x_prefix();
+
           double x_major_interval();
           Derived& x_major_tick_length(double length);
           double x_major_tick_length();
@@ -3280,7 +3281,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             return derived().x_values_style_.plusminus_color_;
           }
 
-           template <class Derived>
+          template <class Derived>
           Derived& axis_plot_frame<Derived>::x_df_on(bool b)
           { //! Set true if to append a degrees of freedom estimate to data point X values near data points markers.
             //! (May not be implemented yet).
@@ -3295,7 +3296,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             return derived().x_values_style_.df_on_;
           }
 
-         template <class Derived>
+          template <class Derived>
           Derived& axis_plot_frame<Derived>::x_df_color(const svg_color& col)
           { //! Set the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
             derived().x_values_style_.df_color_ = col;
@@ -3306,6 +3307,37 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::x_df_color()
           { //! Get the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
             return derived().x_values_style_.df_color_;
+          }
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::x_decor(const std::string& pre, const std::string& sep, const std::string& suf)
+          { //! Set prefix, separator and suffix for x_style
+            //! Note if you want a space, you must use a Unicode space "\&#x00A0;",
+            //! for example, ",\&#x00A0;" rather than ", ".
+            derived().x_values_style_.prefix_ = pre;
+            derived().x_values_style_.separator_ = sep;
+            derived().x_values_style_.suffix_ = suf;
+            return derived();
+          }
+
+          template <class Derived>
+          const std::string axis_plot_frame<Derived>::x_prefix()
+          { //! Get the prefix (only used if separator != "")
+            return derived().x_values_style_.prefix_;
+          }
+
+          template <class Derived>
+          const std::string axis_plot_frame<Derived>::x_suffix()
+          { //! Get the suffix (only used if separator != "")
+            return derived().x_values_style_.suffix_;
+          }
+
+          template <class Derived>
+          const std::string axis_plot_frame<Derived>::x_separator()
+          { //! Get separator (also controls use of the prefix & suffix - they are only used if separator != "").
+            //! Note For a space, you must use a Unicode space "\&#x00A0;",
+            //! for example, ",\&#x00A0;" rather than ", ".
+            return derived().x_values_style_.separator_;
           }
 
           template <class Derived>

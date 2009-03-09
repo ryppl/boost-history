@@ -240,6 +240,14 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_value_precision " << plot.x_value_precision() << endl;
   cout << "x_value_ioflags " << hex << plot.x_value_ioflags() << dec << ' ';
   outFmtFlags(plot.x_value_ioflags(), cout,  ".\n");
+  cout << "x_plusminus_on " << plot.x_plusminus_on() << endl;
+  cout << "x_plusminus_color " << plot.x_plusminus_color() << endl;
+  cout << "x_df_on " << plot.x_df_on() << endl;
+  cout << "x_df_color " << plot.x_df_color() << endl;
+  cout << "x_prefix " << plot.x_prefix() << endl;
+  cout << "x_separator " << plot.x_separator() << endl;
+  cout << "x_suffix " << plot.x_suffix() << endl;
+
   // Not applicable to 1D
   //cout << "y_value_precision " << plot.y_value_precision() << endl;
   //cout << "y_value_ioflags " << hex << plot.y_value_ioflags() << dec << ' ';

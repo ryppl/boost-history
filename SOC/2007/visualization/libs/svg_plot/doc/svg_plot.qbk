@@ -28,12 +28,6 @@
 [/ Links   ]
 [/ By Eric's convention prefix *and* suffix _ means a defined value.  But Use JM and SW double underscore prefix convention.]
 [def __boost [@http://www.boost.org Boost]]
-[/def __iterator             [@../../libs/iterator/doc/index.html Boost.Iterator]]
-[/def __basic_regex           [^[classref boost::xpressive::basic_regex basic_regex<>]]]
-[/ __basic_regex == file:///I:/boost_trunk/libs/xpressive/doc/html/boost/xpressive/basic_regex.html]
-[/def __regex_match           [^[funcref boost::xpressive::regex_match regex_match()]]]
-[/def __syntax_option_type    [^[enumref boost::xpressive::regex_constants::syntax_option_type syntax_option_type]]]
-[/def __regex_compile         [^[memberref boost::xpressive::basic_regex::compile basic_regex<>::compile()]]]
 
 [/ Generating docs for compound boost::svg::svg]
 [/ Generating XML output for class boost::svg::svg]

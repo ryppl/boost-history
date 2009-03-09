@@ -249,6 +249,10 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_plusminus_color " << plot.x_plusminus_color() << endl;
   cout << "x_df_on " << plot.x_df_on() << endl;
   cout << "x_df_color " << plot.x_df_color() << endl;
+  cout << "x_prefix " << plot.x_prefix() << endl;
+  cout << "x_separator " << plot.x_separator() << endl;
+  cout << "x_suffix " << plot.x_suffix() << endl;
+
   cout << "xy_values_on "  << plot.xy_values_on() << endl;
   cout << "y_label_on " << plot.y_label_on() << endl;
   cout << "y_label_axis " << plot.y_label_axis() << endl;
@@ -295,6 +299,9 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_plusminus_color " << plot.y_plusminus_color() << endl;
   cout << "y_df_on " << plot.y_df_on() << endl;
   cout << "y_df_color " << plot.y_df_color() << endl;
+  cout << "y_prefix " << plot.y_prefix() << endl;
+  cout << "y_separator " << plot.y_separator() << endl;
+  cout << "y_suffix " << plot.y_suffix() << endl;
 
   cout << "data lines width " << plot.data_lines_width() << endl;
 

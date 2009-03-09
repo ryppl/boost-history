@@ -1909,7 +1909,10 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& y_df_on(bool b);
       svg_2d_plot& y_df_color(const svg_color& col);
       const svg_color y_df_color();
-
+      svg_2d_plot& y_decor(const std::string& pre, const std::string& sep, const std::string& suf);
+      const std::string y_prefix();
+      const std::string y_suffix();
+      const std::string y_separator();
       svg_2d_plot& y_autoscale(double first, double second);
       svg_2d_plot& y_autoscale(std::pair<double, double> p);
       template <class T> // T an STL container: array, vector ...
@@ -2361,6 +2364,33 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       const svg_color svg_2d_plot::y_df_color()
       { //! \return color of Y degrees of freedom.
         return y_values_style_.df_color_;
+      }
+
+      svg_2d_plot& svg_2d_plot::y_decor(const std::string& pre, const std::string& sep, const std::string& suf)
+      { //! Set prefix, separator and suffix for   
+        //! Note if you want a space, you must use a Unicode space "\&#x00A0;",
+        //! for example, ",\&#x00A0;" rather than ", ".
+        y_values_style_.prefix_ = pre;
+        y_values_style_.separator_ = sep;
+        y_values_style_.suffix_ = suf;
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      const std::string svg_2d_plot::y_prefix()
+      { //! Get the prefix (only used if separator != "")
+        return y_values_style_.prefix_;
+      }
+
+      const std::string svg_2d_plot::y_suffix()
+      { //! Get the suffix (only used if separator != "")
+        return y_values_style_.suffix_;
+      }
+
+      const std::string svg_2d_plot::y_separator()
+      { //! Get separator (also controls use of the prefix & suffix - they are only used if separator != "").
+        //! Note For a space, you must use a Unicode space "\&#x00A0;",
+        //! for example, ",\&#x00A0;" rather than ", ".
+        return y_values_style_.separator_;
       }
 
       svg_2d_plot& svg_2d_plot::y_autoscale(double minimum, double maximum)
