@@ -21,7 +21,7 @@
 <h1>Library Working Group<br>
 Status of CD1 National Body Comments</h1>
 <p>Revised:
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->09 Mar 2009 02:59:59 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42488" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %b %Y %I:%M:%S %p %Z" startspan -->09 Mar 2009 08:41:27 PM -0500<!--webbot bot="Timestamp" endspan i-checksum="42516" --></p>
 
 <p>Disposition [Being reviewed by Editor] has been applied all Type Ed comments 
 which do not have a specific response from a sub-group.</p>
@@ -4098,33 +4098,30 @@ which do not have a specific response from a sub-group.</p>
 
     Agree. Forward to the project editor.</tr>
     <tr>
-      <td>
-        <p align="left">US 72
+      <td valign="top">
+        <p align="left"><a name="US72">US 72</a>
 
-      <td>
+      <td valign="top">
         <p align="left">20.6.12 [func.bind.<br>
-        bind]<td>
+        bind]<td valign="top">
         <p align="left"><br>
 
-      <td>
+      <td valign="top">
         <p align="left">te
 
-      <td>
+      <td valign="top">
         <p align="left">
         bind should support move-only functors and bound arguments.
 
-        <p align="left"><br>
-
-      <td>
-        <p align="left"><br>
-
-      <td>
+        <td valign="top">
+        <p align="left">&nbsp;<td valign="top">
         <p align="left">We look forward to a paper on this topic. We recommend 
         no action until a paper is available. We do think that bind would 
         require further overloads to support move semantics, if indeed move 
-        semantics are possible.<br>
-
-    </tr>
+        semantics are possible.<p align="left">Peter Dimov comments: I believe 
+        that what is meant here is that the CopyConstructible requirements on F 
+        and BoundArgs must be changed to MoveConstructible. I see no need for a 
+        paper.</tr>
     <tr>
       <td valign="top">
         <p>JP 38
@@ -4142,10 +4139,7 @@ which do not have a specific response from a sub-group.</p>
       <td valign="top">
         <p align="left" style=
         "margin-left: 0.19in; text-indent: -0.19in; margin-bottom: 0in">
-        add the move requirement for bind's return type.<br>
-        <br>
-
-        <p align="left" style=
+        add the move requirement for bind's return type.<p align="left" style=
         "margin-left: 0.19in; text-indent: -0.19in; margin-bottom: 0in">
         For example, assume following th1 and th2,
 
@@ -4192,7 +4186,12 @@ which do not have a specific response from a sub-group.</p>
     [NOTE: We would like to see a clarification of the wording for Returnable<t> 
     that makes it clear that move-only types can be Returnable.] </t>
 
-    </tr>
+        <p>
+
+    Peter Dimov comments: I believe that if <a href="#US72">US 72</a> is 
+    resolved as proposed by me above, the objects returned by bind will already 
+    be required to have a move constructor, otherwise bind would be unable to 
+    return them when F or a type in BoundArgs is move-only.</tr>
     <tr>
       <td valign="top">
         <p>DE-21
@@ -4727,9 +4726,7 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p align="left">std::hash should
         be implemented for much more of the standard library. In
-        particular for pair, tuple and all the standard containers.
-
-        <p align="left"><br>
+        particular for pair, tuple and all the standard containers. <br>
 
       <td>
         <p align="left">.
@@ -4768,7 +4765,13 @@ which do not have a specific response from a sub-group.</p>
         <p>
 
     We look forward to a paper on this topic. We recommend no action until a 
-    paper is available. We understand that a paper is forthcoming.<tr valign="top">
+    paper is available. We understand that a paper is forthcoming.<p>
+
+    Peter Dimov comments: shared_ptr&lt;T&gt; and weak_ptr&lt;T&gt; support all types T for 
+    which T* is valid. In other words, a possible (partial) resolution is to 
+    change class T to PointeeType T for shared_ptr, weak_ptr and possibly 
+    enable_shared_from_this.<br>
+&nbsp;<tr valign="top">
       <td>
         <p>UK<br>
         213
@@ -4790,9 +4793,7 @@ which do not have a specific response from a sub-group.</p>
         match. The Allocator concept allows for a wider variety of
         allocators that users may choose to supply if their
         allocation model does not require operator new, without
-        impacting the requirements of this template.
-
-        <p align="left"><br>
+        impacting the requirements of this template. <br>
 
       <td>
         <p align="left">The primary allocator template should be
@@ -4822,9 +4823,7 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p align="left">
         raw_storage_iterator needs constraining as an iterator
-        adaptor to be safely used in constrained templates
-
-        <p align="left"><br>
+        adaptor to be safely used in constrained templates <br>
 
       <td>
         <p align="left">Constrain the raw_storage_iterator template
@@ -4937,39 +4936,27 @@ which do not have a specific response from a sub-group.</p>
         large increase in the number of pair and tuple constructors
 
         <p align="left">23: confusing
-        &#8220;AllocatableElement&#8221; requirements throughout.
-
-        <p align="left"><br>
+        &#8220;AllocatableElement&#8221; requirements throughout. <br>
 
       <td>
         <p align="left">Remove support
         for scoped allocators from the working paper. This includes
-        at least the following changes:
-
-        <p align="left"><br>
+        at least the following changes: <br>
 
         <p align="left">Remove 20.8.3
-        [allocator.element.concepts]
-
-        <p align="left"><br>
+        [allocator.element.concepts] <br>
 
         <p align="left">Remove 20.8.7
-        [allocator.adaptor]
-
-        <p align="left"><br>
+        [allocator.adaptor] <br>
 
         <p align="left">Remove 20.8.10
-        [construct.element]
-
-        <p align="left"><br>
+        [construct.element] <br>
 
         <p align="left">In Clause 23:
         replace requirements naming the AllocatableElement concept
         with requirements naming CopyConstructible,
         MoveConstructible, DefaultConstructible, or Constructible,
-        as appropriate.
-
-        <p align="left"><br>
+        as appropriate.<br>
 
       <td>
         <p align="left">Resolved by
@@ -5099,8 +5086,6 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p align="left">
         Correct as follows.
-
-        <p align="left">
         <br>
 
         <p align="left">
@@ -5132,8 +5117,6 @@ which do not have a specific response from a sub-group.</p>
         <p align="left" style=
         "margin-top: 0.04in; margin-bottom: 0.04in">typename
         allocator_type = T::allocator_type;
-
-        <p align="left" style="margin-top: 0.04in">
         <br>
 
       <td>
@@ -5203,9 +5186,7 @@ which do not have a specific response from a sub-group.</p>
         traits (20.8.4), the complexity of copy and move operations
         can be constant or linear time. This level of customization
         greatly increases the complexity of standard containers,
-        and benefits only a tiny fraction of the C++ community.
-
-        <p align="left"><br>
+        and benefits only a tiny fraction of the C++ community. <br>
 
       <td>
         <p align="left">Remove 20.8.4.
@@ -5256,7 +5237,9 @@ which do not have a specific response from a sub-group.</p>
       <td>
         <p align="left">We look forward to 
         a paper on this topic. We recommend no action until a paper is 
-        available. We believe that the shared pointer must use the default deleter for the conversion to succeed.<br>
+        available. We believe that the shared pointer must use the default deleter for the conversion to succeed.<p align="left">
+        Peter Dimov comments: this is basically a request for shared_ptr&lt;&gt;::release 
+        in disguise, with all the associated problems. Not a good idea.<br>
 
     <tr valign="top">
       <td>
@@ -5289,9 +5272,7 @@ which do not have a specific response from a sub-group.</p>
 
         <p align="left">
         unique_ptr&lt;int, void(*)(void*)&gt;
-        p(malloc(sizeof(int)), free); &nbsp;// ok
-
-        <p align="left"><br>
+        p(malloc(sizeof(int)), free); &nbsp;// ok <br>
 
       <td>
         <p align="left"><br>
