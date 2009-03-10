@@ -11,22 +11,13 @@
 #endif
 
 #include <boost/partition_point/partition_point.hpp>
+#include <boost/algorithm/string/compare.hpp> // for boost::is_less
 #include <boost/ref.hpp> // for boost::cref
 #include <boost/bind.hpp> // for bind
 #include <functional> // for std::less
 #include <utility> // for std::pair
 
 namespace boost {
-
-	namespace detail { namespace partition_point {
-		struct generic_less {
-			template< class T1, class T2 >
-			bool operator()( T1 const& t1, T2 const& t2 ) const {
-				return t1 < t2;
-			}
-		};
-	}} // namespace detail::partition_point
-
 	namespace partition_algorithms_adl_barrier {
 
 		// std::bind1st/2nd require argument_type to be defined, at least in Dinkumware's implementation.
@@ -62,26 +53,26 @@ namespace boost {
 
 		// According to http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-defects.html#270
 		// the less-than comparison may be carried out on unequal types. Thus 
-		// we use our own implementation instead of std::less.
+		// we use boost::is_less instead of std::less.
 
 		template< typename It, typename Val >
 		It lower_bound(It itBegin,It itEnd,Val const& x) {
-			return boost::lower_bound( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
+			return boost::lower_bound( itBegin, itEnd, x, ::boost::is_less() );
 		}
 
 		template< typename It, typename Val >
 		It upper_bound(It itBegin,It itEnd,Val const& x) {
-			return boost::upper_bound( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
+			return boost::upper_bound( itBegin, itEnd, x, ::boost::is_less() );
 		}
 
 		template< typename It, typename Val >
 		bool binary_search(It itBegin,It itEnd,Val const& x) {
-			return boost::binary_search( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
+			return boost::binary_search( itBegin, itEnd, x, ::boost::is_less() );
 		}
 
 		template< typename It, typename Val >
 		std::pair<It,It> equal_range(It itBegin,It itEnd,Val const& x) {
-			return boost::equal_range( itBegin, itEnd, x, ::boost::detail::partition_point::generic_less() );
+			return boost::equal_range( itBegin, itEnd, x, ::boost::is_less() );
 		}
 	}
 
