@@ -56,9 +56,6 @@ namespace detail
       return os;
   } // std::ostream& operator<<
 
- 
-
-
 
   //std::pair<class T1, class T2>& operator=(const pair& rhs)
   //{

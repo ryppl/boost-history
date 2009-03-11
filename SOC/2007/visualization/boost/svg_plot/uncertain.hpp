@@ -51,10 +51,10 @@ public:
   unc& operator=(const unc& rhs);
 
   // Get and set member functions.
-  double value(); //!< Get most likely value, typically the mean.
-  float uncertainty(); //!< Get estimate of uncertainty, typically standard deviation.
-  short unsigned deg_free(); //!< Get degrees of freedom, usually = number of observations -1;
-  short unsigned types(); //!< Get other information about the value.
+  double value() const; //!< Get most likely value, typically the mean.
+  float uncertainty() const; //!< Get estimate of uncertainty, typically standard deviation.
+  short unsigned deg_free() const; //!< Get degrees of freedom, usually = number of observations -1;
+  short unsigned types() const; //!< Get other information about the value.
 
   void value(double);//!< Set most likely value, typically the mean.
   void uncertainty(float);//!< Set estimate of uncertainty, typically standard deviation.
@@ -116,22 +116,22 @@ unc& unc::operator=(const unc& rhs)
 }
 
 
-double unc::value() //!< Get most likely value, typically the mean.
+double unc::value() const //!< Get most likely value, typically the mean.
 {
   return value_;
 }
 
-float unc::uncertainty() //!< Get estimate of uncertainty, typically standard deviation.
+float unc::uncertainty()  const//!< Get estimate of uncertainty, typically standard deviation.
 {
   return uncertainty_;
 }
 
-short unsigned unc::deg_free() //!< Get degrees of freedom, usually = number of observations -1;
+short unsigned unc::deg_free()  const//!< Get degrees of freedom, usually = number of observations -1;
 {
   return deg_free_;
 }
 
-short unsigned unc::types() //!< Get other information about the value.
+short unsigned unc::types()  const//!< Get other information about the value.
 {
   return types_;
 }
