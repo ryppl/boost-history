@@ -1,4 +1,4 @@
-[article Version 1.xx.x
+[article Version 1.39.0
     [quickbook 1.4]
     [source-mode c++]
     [purpose New Libraries: Updated Libraries: ]
@@ -36,7 +36,8 @@
 
 [section New Libraries]
 
-* /TODO/
+* [phrase library..[@/libs/signals2/index.html Signals2]:] Managed signals &
+  slots callback implementation (thread-safe version 2), from Frank Mori Hess.
 
 [endsect]
 
