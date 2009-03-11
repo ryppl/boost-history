@@ -1,17 +1,16 @@
 /*!
   \file svg_style.hpp
-
   \brief Styles for SVG specifying font, sizes, shape, color etc for text, values, lines, axes etc.
   \details SVG style information is fill, stroke, width, line & bezier curve.
    This module provides struct plot_point_style & struct plot_line_style
    and class svg_style holding the styles.
    See http://www.w3.org/TR/SVG11/styling.html
-
+  \date Mar 2009
   \author Jacob Voytko and Paul A. Bristow
 */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -26,6 +25,7 @@
 #endif
 
 #include "svg_color.hpp"
+// using svg_color
 #include "detail/svg_style_detail.hpp"
 
 #include <iostream>
@@ -77,26 +77,26 @@ const std::string strip_e0s(std::string s);
 double string_svg_length(const std::string& s, const text_style& style);
 // Estimate length of string when appears as svg units.
 
-/*
-\verbatim
+/*!
  This is the style information for any group (g) tag.
  This may be expanded to include more data from the SVG standard.
 
  There are some strange effects for text on some browsers
  (Firefox especially) when only stroke is specified.
  fill is interpreted as black, and the font outline is fuzzy and bolder.
- <g id="title" stroke="rgb(255,0,0)"> .. is red border and black fill.
- (because created as a graphic not a builtin font?)
- <g id="title" fill="rgb(255,0,0)"> .. is red sharp font.
- <g id="title" stroke="rgb(255,0,0)" fill="rgb(255,0,0)"> red and red fill also fuzzy.
- So for text, only specific the fill unless a different outline is really wanted.
- Defaults for text provide a built-in glyph, for example for title:
- <g id="title">
-   <text x="250" y="36" text-anchor="middle" font-size="18" font-family="Verdana">
-     Plot of data
-   </text>
- </g>
- and this is not a graphic.
+\verbatim
+   <g id="title" stroke="rgb(255,0,0)"> .. is red border and black fill.
+   (because created as a graphic not a builtin font?)
+   <g id="title" fill="rgb(255,0,0)"> .. is red sharp font.
+   <g id="title" stroke="rgb(255,0,0)" fill="rgb(255,0,0)"> red and red fill also fuzzy.
+   So for text, only specific the fill unless a different outline is really wanted.
+   Defaults for text provide a built-in glyph, for example for title:
+   <g id="title">
+     <text x="250" y="36" text-anchor="middle" font-size="18" font-family="Verdana">
+       Plot of data
+     </text>
+   </g>
+   and this is not a graphic.
  \endverbatim
 */
 
@@ -138,7 +138,7 @@ public:
 
   void write(std::ostream& os); // Output to file or stream.
 
-  // comparison operators (useful for testing at least).
+  // Comparison operators (useful for testing at least).
   bool operator==(svg_style& s);
   bool operator!=(svg_style& s);
 }; // class svg_style
@@ -150,31 +150,31 @@ public:
   :
   stroke_(stroke), fill_(fill), width_(width),
   stroke_on_(false), fill_on_(false), width_on_(false)
-  { // Construct with specified fill and stroke colors, and width.
+  { //! Construct svg_style with specified fill and stroke colors, and width.
   }
 
   svg_style::svg_style()
-  :
-  stroke_(svg_color(0, 0, 0)), // == black.
-  fill_(blank),
-  width_(0), // No width specified.
-  fill_on_(false), stroke_on_(false), width_on_(false)
+  : //! Default svg_style has everything off.
+  stroke_(svg_color(0, 0, 0)), //! Stroke default is black.
+  fill_(blank), //! No fill color.
+  width_(0), //! No width specified.
+  fill_on_(false), stroke_on_(false), width_on_(false) //! All switches off.
   { // Default constructor initialises all private data.
   }
 
   // Member Functions definitions.
   svg_color svg_style::fill_color() const
-  { //! \return  SVG fill color.
+  { //! \return SVG fill color.
     return svg_color(fill_);
   }
 
   svg_color svg_style::stroke_color() const
-  { //! \return  SVG stroke color.
+  { //! \return SVG stroke color.
     return svg_color(stroke_);
   }
 
   double svg_style::stroke_width() const
-  { //! \return  SVG stroke width.
+  { //! \return SVG stroke width.
     return width_;
   }
 
@@ -186,8 +186,7 @@ public:
   svg_style& svg_style::fill_on(bool is)
   { //! Set fill is wanted.
     fill_on_ = is;
-    return *this; // Make chainable.
-    //! \return svg_style& to make chainable.
+    return *this; //! \return svg_style& to make chainable.
   }
 
   bool svg_style::stroke_on() const
@@ -235,7 +234,7 @@ public:
   }
 
   bool svg_style::operator==(svg_style& s)
-  { //! Compare styles.
+  { //! Compare svg_styles.
      return (s.fill_color() == fill_)
        && (s.stroke_color() == stroke_)
        && (s.stroke_width() == width_)
@@ -245,7 +244,7 @@ public:
    }
 
   bool svg_style::operator!=(svg_style& s)
-   {//! Compare styles (for inequality).
+   {//! Compare svg_styles (for inequality).
      return (s.fill_color() != fill_)
        || (s.stroke_color() != stroke_)
        || (s.stroke_width() != width_)
@@ -270,9 +269,9 @@ public:
   } // std::ostream& operator<<
 
   void svg_style::write(std::ostream& os)
-  { //! Write any stroke, fill colors and/or width info (start with space) to SVG XML document.
+  { //! Write any stroke, fill colors and/or width info to SVG XML document.
     if(stroke_on_)
-    {
+    { // (Note: start with space but no terminating space)
         os << " stroke=\"";
         stroke_.write(os);
         os << "\"";

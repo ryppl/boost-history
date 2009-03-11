@@ -252,7 +252,8 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
      See also svg_2d_plot.hpp for 2-D version.
     */
 
-  friend void show_plot_settings(svg_1d_plot&);
+  friend void show_1d_plot_settings(svg_1d_plot&);
+  friend void show_2d_plot_settings(svg_1d_plot&);
   friend class detail::axis_plot_frame<svg_1d_plot>;
 
  protected:
@@ -415,7 +416,8 @@ public:
     x_axis_position_(0) // Move into axis_style?
   {
     size(500, 200); // Default image size.
-    // Only need to be quite shallow (y_size) for a 1-D plot.
+    // Only needs to be quite shallow (y_size) for a 1-D plot.
+    // (But may need more height if long value labels are used, for example: "[time = 1.23 +-0.02 sec]").
     // 200 barely leaves enough room for five data series in the legend).
     // (2-D usually needs to be much more rectangular).
 

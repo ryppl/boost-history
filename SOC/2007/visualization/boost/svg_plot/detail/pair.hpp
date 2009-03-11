@@ -16,6 +16,9 @@
 #ifndef BOOST_SVG_PAIR
 #define BOOST_SVG_PAIR
 
+#include <boost/svg_plot/uncertain.hpp>
+// using boost::svg::unc;
+
 #include<iostream>
  // using std::ostream;
 
@@ -29,11 +32,12 @@ namespace svg
 {
 namespace detail
 {
+
   // Hidden in namespace detail to avoid clashes with other implementations of std::pair operator<<.
   template<class T1, class T2>
   std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p);
   std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p);
-  //std::ostream& operator<< (std::ostream& os, const std::pair<unc, unc>& p);
+ // std::ostream& operator<< (std::ostream& os, const std::pair<boost::svg::unc, boost::svg::unc>& p);
 
   template<class T1, class T2>
   std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p)
@@ -51,6 +55,10 @@ namespace detail
       //os.precision(precision); // Restore.
       return os;
   } // std::ostream& operator<<
+
+ 
+
+
 
   //std::pair<class T1, class T2>& operator=(const pair& rhs)
   //{

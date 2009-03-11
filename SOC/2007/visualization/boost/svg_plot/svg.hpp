@@ -7,6 +7,7 @@
 
   \version 1.1
   \author Jacob Voytko & Paul A. Bristow
+  \date Mar 2009
  */
 
 /*!
@@ -108,7 +109,7 @@
 
   */
 // Copyright Jacob Voytko 2007
-// Copyright Paul A Bristow 2007
+// Copyright Paul A Bristow 2007, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -283,8 +284,7 @@ private:
   }
 
   void write_css(std::ostream& s_out)
-  { //! Output CSS (Cascading Style Sheet)
-  // Not used at present.
+  { //! Output CSS (Cascading Style Sheet) - (not yet used or implemented).
     if (css_.size() != 0) // css != ""
     { // TODO confirm that this isn't useful if css is "".
       // [CDATA[ ... ]] enclosing the style information
@@ -366,17 +366,25 @@ public:
   }
 
   unsigned int x_size()
-  { //! \return  X-axis (horizontal) image size.
+  { //! \return  X-axis (horizontal width) SVG image size.
     return x_size_;
   }
 
   unsigned int y_size()
-  { //! \return  Y-axis (vertical) image size.
+  { //! \return  Y-axis (vertical height) SVG image size.
     return y_size_;
   }
 
+  std::pair<double, double> size()
+  { //! \return the size (horizontal width and vertical height) of the SVG image.
+    std::pair<double, double> r;
+    r.first =x_size_;
+    r.second = y_size_;
+    return r;
+  }
+
   unsigned int document_size()
-  { //! How many elements have been added to document.
+  { //! How many elements (groups or layers) have been added to document.
     return static_cast<unsigned int>(document.size());
   }
 
@@ -396,7 +404,7 @@ public:
   }
 
   int coord_precision()
-  { //!< \return  decimal digits to be output for X and Y coordinates.
+  { //! \return  decimal digits to be output for X and Y coordinates.
     return coord_precision_;
   }
 
@@ -412,7 +420,7 @@ public:
   // --------------------------------------------------------------------------------
 
   void write(const std::string& filename)
-  { //!< Write whole .svg 'file' contents to file.
+  { //! Write whole .svg 'file' contents to file.
     std::string file(filename); // Copy to avoid problems with const if need to append.
     if (file.find('.') == std::string::npos)
     { // No file type suffix, so provide the default .svg.
@@ -430,7 +438,7 @@ public:
   }
 
   void write(std::ostream& s_out)
-  { //!< Write whole .svg 'file' contents to stream (perhaps a file).
+  { //! Write whole .svg 'file' contents to stream (perhaps a file).
     write_header(s_out); // "<?xml version=...
     // write svg document, begin <svg tag.
     // <svg xml:space="preserve" width="5.5in" height=".5in">

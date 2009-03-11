@@ -9,7 +9,7 @@
 */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2007
+// Copyright Paul A. Bristow 2007, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -128,8 +128,6 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   int iostate = cout.flags(); // Save to restore one exit.
   cout << dec << std::boolalpha << endl;
   cout  << endl;
-  //cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << "image_filename() " << plot.image.image_filename() << endl;
-  // doesn't work - no filename is shown.
 
   cout << "axes_on " << plot.axes_on() << endl;
   cout << "background_border_width " << plot.background_border_width() << endl;
@@ -145,6 +143,8 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   //cout << plot.draw_bezier_lines() << endl;
   cout << "image_x_size " << plot.image_x_size() << endl;
   cout << "image_y_size " << plot.image_y_size() << endl;
+  cout << "image_size " << plot.image_size() << endl;
+  cout << "image_filename " << plot.image.image_filename() << endl;
   cout << "legend_on " << plot.legend_on() << endl;
   std::pair<double, double> lt = plot.legend_top_left();
   std::pair<double, double> rb = plot.legend_bottom_right();
@@ -252,7 +252,6 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_prefix " << plot.x_prefix() << endl;
   cout << "x_separator " << plot.x_separator() << endl;
   cout << "x_suffix " << plot.x_suffix() << endl;
-
   cout << "xy_values_on "  << plot.xy_values_on() << endl;
   cout << "y_label_on " << plot.y_label_on() << endl;
   cout << "y_label_axis " << plot.y_label_axis() << endl;
@@ -294,7 +293,7 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_ticks_on_window_or_axis " << l_or_r(plot.y_ticks_on_window_or_axis()) << endl;
   cout << "y_max " << plot.y_max() << endl;
   cout << "y_min " << plot.y_min() << endl;
-  //cout << "y_values_on "  << plot.y_values_on() << endl;
+  cout << "y_values_on "  << plot.y_values_on() << endl;
   cout << "y_plusminus_on " << plot.y_plusminus_on() << endl;
   cout << "y_plusminus_color " << plot.y_plusminus_color() << endl;
   cout << "y_df_on " << plot.y_df_on() << endl;
@@ -304,7 +303,6 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "y_suffix " << plot.y_suffix() << endl;
 
   cout << "data lines width " << plot.data_lines_width() << endl;
-
 
  cout.flags(iostate); // Restore.
 } // void show_plot_settings(svg_2d_plot& plot)

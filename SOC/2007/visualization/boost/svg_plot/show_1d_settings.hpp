@@ -172,9 +172,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
 
   int iostate = cout.flags(); // Save to restore one exit.
   cout << dec << std::boolalpha << endl;
-  cout  << endl;
-  //cout << ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" << "image_filename() " << plot.image.image_filename() << endl;
-  // doesn't work - no filename is shown.
+  cout << endl;
 
   cout << "axes_on " << plot.axes_on() << endl;
   cout << "background_border_width " << plot.background_border_width() << endl;
@@ -190,6 +188,8 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   //cout << plot.draw_bezier_lines() << endl;
   cout << "image_x_size " << plot.image_x_size() << endl;
   cout << "image_y_size " << plot.image_y_size() << endl;
+  cout << "image_size " << plot.image_size() << endl;
+  cout << "image_filename " << plot.image.image_filename() << endl;
   cout << "legend_on " << plot.legend_on() << endl;
   std::pair<double, double> lt = plot.legend_top_left();
   std::pair<double, double> rb = plot.legend_bottom_right();

@@ -1,17 +1,18 @@
 /*! \file FP_compare.hpp
     \brief Two types of floating-point comparison "Very close" and "Close enough" to a chosen tolerance.
+    \details
+      Derived from Boost.Test Copyright Gennadiy Rozental 2001-2007.
+      See http://www.boost.org/libs/test for the library home page.
+      Deliberately removed any treatment of percent to avoid further potential confusion!
+    \date Mar 2009
     \author Paul A. Bristow
 */
 
-//  Copyright Paul A. Bristow 2008
+//  Copyright Paul A. Bristow 2008, 2009
 
 //  Distributed under the Boost Software License, Version 1.0.
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
-
-//  Derived from Boost.Test Copyright Gennadiy Rozental 2001-2007.
-//  See http://www.boost.org/libs/test for the library home page.
-//  Deliberately removed any treatment of percent to avoid further potential confusion!
 
 #ifndef BOOST_FLOATING_POINT_COMPARISON_HPP
 #define BOOST_FLOATING_POINT_COMPARISON_HPP
@@ -23,7 +24,6 @@
 //{
 //  namespace math
 //  {
-  // Reminder - add full specification to \enum \class etc
 
 // Check two floating-point values are close within a chosen tolerance.
 template<typename FPT> class close_to;
@@ -34,10 +34,10 @@ template<typename FPT> class smallest;
 enum floating_point_comparison_type
 { /*! \enum floating_point_comparison_type
    \brief Two types of floating-point comparison "Very close" and "Close enough".
-   \details equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
+   \details equations in Douglas E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
     pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.\n
-    Strong requires closeness relative to \b BOTH values being compared,
-    Weak only requires only closeness relative to \b EITHER \b ONE value.
+    Strong requires closeness relative to \b both values being compared,
+    Weak only requires only closeness relative to \b either \b one value.
   */
   FPC_STRONG, //!< "Very close"   - Knuth equation 1 (the default).
   FPC_WEAK    //!< "Close enough" - Knuth equation 2.
@@ -66,7 +66,7 @@ template <class T> T epsilon(T);
 
 template<typename FPT> FPT
 fpt_abs(FPT arg)
-{ //! abs function (just in case abs is not defined for User-defined FPT).
+{ //! abs function (just in case abs is not defined for a user-defined FPT).
   return arg <static_cast<FPT>(0) ? -arg : arg;
 }
 
@@ -100,7 +100,7 @@ class close_to
 
   */
 public:
-  // One constructor for fraction tolerance only. (Percent is NOT implemented).
+  // One constructor for fraction tolerance only. (By design, percent is NOT implemented ).
   template<typename FPT>
   explicit close_to(FPT tolerance,
     floating_point_comparison_type fpc_type = FPC_STRONG)
@@ -140,7 +140,7 @@ public:
 
   template<typename FPT>
   FPT size()
-  { //! Get the chosen fraction_tolerance_.
+  { //! Get the chosen  tolerance, as a fraction.
     return fraction_tolerance_;
   }
 
@@ -150,16 +150,16 @@ public:
   }
 
 private:
-    FPT fraction_tolerance_; //! tolerance as a fraction.
-    floating_point_comparison_type strong_or_weak_;  //! Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
+    FPT fraction_tolerance_; //!< tolerance as a fraction.
+    floating_point_comparison_type strong_or_weak_;  //!< Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
 
 }; // class close_to
 
 template<typename FPT = double>
 class smallest
 { /*! \class smallest
-      \brief   Check floating-point value is smaller than a chosen small value,
-       default twice min_value() for the Floating-point type.
+      \brief Check floating-point value is smaller than a chosen small value,
+         default is twice min_value() for the floating-point type FPT.
       \details
        It is somewhat common for beginners to add a comparison check to 0 before
        computing a division, in order to avoid possible division-by-zero exceptions or
@@ -172,6 +172,7 @@ class smallest
        does, that is, the program may actually test that x == 0, then, further down,
        find that x = 0 without any apparent change to x!\n
        David Monniaux, http://arxiv.org/abs/cs/0701192v4.
+       \tparam FPT A floating-point type, float, double, long double or user-defined like NTL quad_float or RR.
    */
 
 public:
@@ -235,14 +236,14 @@ private:
 typedef smallest<double> tiny;
 /*!
   \typedef tiny
-  \brief Allow tiny as a shorthand for double min_value 4.45e-308.
+  \brief Allow tiny as a shorthand for twice the double min_value 4.45e-308.
   \details Since double and the default smallest value 2 * std::numeric_limits<double>::min_value() = 2 * 2.22507e-308 + 4.45015e-308
   is a very common requirement, provide an convenience alias for this.
 */
 
 /*!
   \typedef neareq
-  \brief Allow neareq as a shorthand for 2 double epsilon = 4.44e-16
+  \brief Allow neareq as a shorthand for twice double epsilon = 4.44e-16
   \details Since double and the default close_to value 2 * epsilon =  std::numeric_limits<double>::epsilon = 2 * 2.220446e-016 = 4.440892e-016
   is a very common requirement, provide an convenience alias for this.
 */

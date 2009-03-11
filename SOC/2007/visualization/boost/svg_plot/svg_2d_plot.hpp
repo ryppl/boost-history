@@ -334,7 +334,7 @@ namespace boost
 
        See also svg_1d_plot.hpp for 1-D version.
     */
-     friend void show_plot_settings(svg_2d_plot&);
+     friend void show_2d_plot_settings(svg_2d_plot&);
      friend svg_2d_plot_series;
      friend class detail::axis_plot_frame<svg_2d_plot>;
      // axis_plot_frame.hpp contains functions common to 1 and 2-D.
@@ -2255,7 +2255,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       std::pair<double, double> svg_2d_plot::y_range()
-      { //! Set the range (max and min) for Y axis from the pair parameter provided.
+      { //! \return the range (max and min) for Y axis.
         std::pair<double, double> r;
         r.first = y_axis_.min_;
         r.second = y_axis_.max_;

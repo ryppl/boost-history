@@ -1,7 +1,7 @@
  /*!  \file axis_plot_frame.hpp
   \brief SVG Plot functions common to 1D, 2D and Boxplots.
   \details Functions are derived from base class axis_plot_frame.
-  \date 11 Feb 2009
+  \date Mar 2009
   \author Jacob Voytko and Paul A. Bristow
 */
 
@@ -20,7 +20,7 @@
 #include "../svg.hpp"
 #include "svg_tag.hpp"
 #include "numeric_limits_handling.hpp"
-//using boost::math::fpclassify for
+// using boost::math::fpclassify for
 // boost::math::
 // template <class T>bool isfinite (T);
 // template <class T>bool isinf (T);
@@ -33,9 +33,9 @@
 // using std::string;
 
 #include <iostream> // for testing only.
- using std::cerr;
- using std::cout;
- using std::endl;
+ //using std::cerr;
+ //using std::cout;
+ //using std::endl;
 
 #include <utility>
 // using std::pair
@@ -48,8 +48,8 @@ namespace boost
     //    when they are in svg_2d_plot.hpp
 
     static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
-    static const double reducer = 0.9; // To make uncertainty and df a bit smaller to distinguish from value.
-          // 0.8 reduced from value 12, to 9 which is a bit too small.
+    static const double reducer = 0.9; //!< To make uncertainty and degrees of freedom testimates a bit smaller to distinguish from value.
+    // (0.8 reduced from value 12, to 9 which is a bit too small).
 
     // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect
     enum x_axis_intersect
@@ -74,11 +74,11 @@ namespace boost
       outside_right = +2, //!< Outside right (Default).
       outside_top = +3, //!< Outside at top.
       outside_bottom = +4, //!< Outside at bottom.
-      somewhere = +5 //! legend_top_left(x, y)
+      somewhere = +5 //!< legend_top_left(x, y)
     };
 
     namespace detail
-    {
+    { //! \namespace detail Holds base class axis_plot_frame for 1D, 2D and Box plots.
       template <class Derived>
       class axis_plot_frame
       { /*! \class boost::svg::detail::axis_plot_frame
@@ -104,6 +104,9 @@ namespace boost
         // void draw_title();
         // void adjust_limits(double& x, double& y);
         // void draw_plot_point(double x, double y, g_element& g_ptr, const plot_point_style& sty);
+        // void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue);
+        // void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy);
+
 
         // Clear functions.
         // void clear_all(); // Calls all the other clear_* functions.
@@ -125,12 +128,12 @@ namespace boost
         // This implies that user's choice of X-axis range is wrong?
         // So more drastic action like throwing might be least worst action?
 
-        void transform_x(double & x)
+        void transform_x(double& x)
         { //! Scale and shift X value only.
           x = derived().x_scale_ * x + derived().x_shift_;
         }
 
-        void transform_y(double & y)
+        void transform_y(double& y)
         { //! Scale and shift Y value only.
           y = derived().y_scale_ * y + derived().y_shift_;
         }
@@ -1027,7 +1030,7 @@ namespace boost
 
           void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue)
           { /*! Write one data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
-             Unecessary e, +, & leading exponent zeros may optionally be stripped, and the position and rotation controlled.
+             Unecessary e, +, \& leading exponent zeros may optionally be stripped, and the position and rotation controlled.
              Uncertainty estimate ('plus or minus') may be optionally be appended.
              Degrees of freedom estimate (number of replicates) may optionally be appended.
              For example: "3.45 +-0.1(10)"\n
@@ -1084,7 +1087,9 @@ namespace boost
               al = center_align;
               y += marker_size;  // Down marker font size;
              break;
-            case uphill: // -45 - OK
+            case slopeup: // -30 - OK
+            case steepup: // -45 - OK
+            case uphill: // -60 - OK
               al = left_align;
               x += label_size /3;  // Right third label font size - centers on marker.
               y -= marker_size * 0.6;  // UP marker font size;
@@ -1100,8 +1105,11 @@ namespace boost
               y -= marker_size * 0.8;  // Up
               rot = downhill;
               break;
-            case downhill: // OK
-              al = left_align;
+
+            case  slopedownhill: // 30 gentle slope down.
+            case downhill: // 45 down.
+            case steepdown: //  60 steeply down.
+             al = left_align;
               x += marker_size * 0.4;  // Right;
               y += marker_size * 0.9;  // Down
               break;
@@ -1140,7 +1148,6 @@ namespace boost
               label_u = sv(u, val_style, true); // stripped.
               t.tspan(pm).fill_color(val_style.plusminus_color_);
               t.tspan(label_u).fill_color(val_style.plusminus_color_).font_size(udf_font);
-              // TODO Colors should not be hard coded.
             }
             if (val_style.df_on_ == true // Is wanted.
                   && (df != (std::numeric_limits<unsigned short int>::max)()) // and deg_free is defined OK.
@@ -1153,6 +1160,10 @@ namespace boost
               // Explicit space "\&#x00A0;" seems necessary.
               label_df = label.str();
               t.tspan(label_df).fill_color(val_style.df_color_).font_size(udf_font);
+            }
+            if (val_style.suffix_ != "")
+            { // Want a suffix like "]" or " sec]".
+              t.tspan(val_style.suffix_);
             }
 
           } // void draw_plot_point_value(double x, double y, g_element& g_ptr, double value)
@@ -1175,15 +1186,19 @@ namespace boost
           } // std::string sv(double v, const value_style& sty)
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy)
-          { //! Write the \b pair of data point's X and Y values as a string,.
-            //! If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
-            //! X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
-            //! For example, x_style prefix("[ X=", and separator ",\&#x00A0;Y= ", " and Y value_style = "]"
-            //! will produce a value label like "[X=-1.23, Y=4.56]"
-            //! Note the need to use a Unicode space \&#x00A0; for get space for all browsers.
-            //! For as long a string as this you may need to make the total image size bigger,
-            //! and to orient the value labels with care.
-            // draw_plot_point_values is only when both x and Y pairs are wanted.
+          { /*! \brief Write the \b pair of data point's X and Y values as a string.
+               \details If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
+               \verbatim
+                 X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
+                 For example, x_style prefix("[ X=", and separator ",<ampersand>#x00A0;Y= ", " and Y value_style = "]"
+                 will produce a value label like "[X=-1.23, Y=4.56]"
+                 Note the need to use a Unicode space <ampsand>#x00A0; for get space for all browsers.
+                 For as long a string as this you may need to make the total image size bigger,
+                 and to orient the value labels with care.
+                 draw_plot_point_values is only when both x and Y pairs are wanted.
+               \endverbatim
+           */
+            // verbatim needed to avoid a warning about using \&#x00A0; within Doxygen comment.
             using std::string;
             using std::stringstream;
             double vx = uncx.value();
@@ -1234,7 +1249,9 @@ namespace boost
               al = center_align;
               y += marker_size;  // Down marker font size;
              break;
-            case uphill: // -45 - OK
+            case slopeup: // -30 - OK
+            case steepup: // -45 - OK
+            case uphill: // -60 - OK
               al = left_align;
               x += label_size /3;  // Right third label font size - centers on marker.
               y -= marker_size * 0.6;  // UP marker font size;
@@ -1250,7 +1267,9 @@ namespace boost
               y -= marker_size * 0.8;  // Up
               rot = downhill;
               break;
-            case downhill: // OK
+            case  slopedownhill: // 30 gentle slope down.
+            case downhill: // 45 down.
+            case steepdown: //  60 steeply down.
               al = left_align;
               x += marker_size * 0.4;  // Right;
               y += marker_size * 0.9;  // Down
@@ -1278,7 +1297,7 @@ namespace boost
 
             int fx = static_cast<int>(x_sty.values_text_style_.font_size() * reducer);
             // Make uncertainty and df a bit smaller to distinguish from value by default (but make configurable).
-            // X value (and optional uncertainty & df).
+            // X value (and optional uncertainty and df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
             // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012
             // and also optionally show degrees of freedom (23).
@@ -1311,11 +1330,11 @@ namespace boost
               t.tspan(label_xdf).fill_color(x_sty.df_color_).font_size(fx);
             }
             int fy = static_cast<int>(y_sty.values_text_style_.font_size() * reducer);
-           // If there is a separator, put values on the same line, else as below put below the marker.
-            bool sameline = (x_sty.separator_ != ""); // Might add to value_style? to allow 1.2, with 3.4 on line below.
+           // If there a comma is 1st char in separator, put values on the same line, else as below put below the marker.
+            bool sameline = (x_sty.separator_[0] == ','); // Might add to value_style? to allow 1.2, with 3.4 on line below.
             if (sameline)
             { // On same line so no change in y.
-              t.tspan(x_sty.separator_).fill_color(black).font_size(fx); // Separator like comma and leading space ", ".
+              t.tspan(x_sty.separator_).fill_color(black).font_size(fx); // Separator like comma and Unicode leading space ", Y=".
               t.tspan(label_yv, y_sty.values_text_style_); // Color?
               if (
                    (y_sty.plusminus_on_) // Is wanted.
@@ -1468,6 +1487,7 @@ namespace boost
           // and so is returned by get functions.
 
           Derived& size(unsigned int x, unsigned int y);
+          std::pair<double, double> image_size();
           unsigned int image_x_size();
           Derived& image_x_size(unsigned int i);
           unsigned int image_y_size();
@@ -1674,7 +1694,7 @@ namespace boost
           bool x_df_on();
           Derived& x_df_color(const svg_color& col);
           svg_color x_df_color();
-          Derived& x_decor(const std::string& pre, const std::string& sep, const std::string& suf);
+          Derived& x_decor(const std::string& pre, const std::string& sep = "", const std::string& suf = "");
           const std::string x_suffix();
           const std::string x_separator();
           const std::string x_prefix();
@@ -1798,8 +1818,14 @@ namespace boost
           }
 
           template <class Derived>
+          std::pair<double, double> axis_plot_frame<Derived>::image_size()
+          { //! \return SVG image size horizontal width and vertical height (SVG units, default pixels).
+            return derived().image.size();
+          }
+
+          template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_x_size()
-          { //! \return  SVG image X-axis size (SVG units, default pixels).
+          { //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
             return derived().image.x_size();
           }
 
@@ -1812,7 +1838,7 @@ namespace boost
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_y_size()
-          { //! \return  SVG image Y-axis size (SVG units, default pixels).
+          { //! \return  SVG image Y-axis size as vertical height (SVG units, default pixels).
             return derived().image.y_size();
           }
 
