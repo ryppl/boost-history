@@ -21,6 +21,8 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/count_if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 
 #include <boost/type_traits/is_same.hpp>
 

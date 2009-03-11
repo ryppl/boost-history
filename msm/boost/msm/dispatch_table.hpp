@@ -62,18 +62,20 @@ struct dispatch_table
         struct execute_helper
         {
             template <class Sequence>
-            static std::pair<int,HandledEnum> execute(
-                Fsm& fsm, int state, pstate_base* all_states, Event const& evt,
-                typename ::boost::enable_if<typename ::boost::mpl::empty<Sequence>::type,void >::type* dmy=0)
+            static
+            typename ::boost::enable_if<typename ::boost::mpl::empty<Sequence>::type,std::pair<int,HandledEnum> >::type
+            execute(Fsm& fsm, int state, pstate_base* all_states, Event const& evt,
+                    ::boost::msm::dummy<0> = 0)
             {
                 // if at least one guard rejected, this will be ignored, otherwise will generate an error
                 return std::make_pair(state,HANDLED_FALSE);
             }
 
-            template <class Sequence>     
-            static std::pair<int,HandledEnum> execute(
-                  Fsm& fsm, int state, pstate_base* all_states, Event const& evt,
-                  typename ::boost::disable_if<typename ::boost::mpl::empty<Sequence>::type,void >::type* dmy=0)
+            template <class Sequence>
+            static
+            typename ::boost::disable_if<typename ::boost::mpl::empty<Sequence>::type,std::pair<int,HandledEnum> >::type
+            execute(Fsm& fsm, int state, pstate_base* all_states, Event const& evt,
+                    ::boost::msm::dummy<1> = 0)
             {
                 // try the first guard
                 typedef typename ::boost::mpl::front<Sequence>::type first_row;

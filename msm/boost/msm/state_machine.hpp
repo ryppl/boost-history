@@ -28,6 +28,8 @@
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/logical.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 
 #include <boost/assert.hpp>
 #include <boost/type_traits.hpp>
@@ -238,7 +240,8 @@ private:
     // get a state
     // as a pointer
     template <class State>
-    State get_state(typename ::boost::enable_if<typename ::boost::is_pointer<State>::type,void >::type* =0)
+    typename ::boost::enable_if<typename ::boost::is_pointer<State>::type,State >::type
+    get_state(::boost::msm::dummy<0> = 0)
     {
         typedef typename create_stt<Derived>::type stt;
         return &(static_cast<typename boost::add_reference<typename ::boost::remove_pointer<State>::type>::type > 
@@ -246,7 +249,8 @@ private:
     }
     // as a reference
     template <class State>
-    State get_state(typename ::boost::enable_if<typename ::boost::is_reference<State>::type,void >::type* =0)
+    typename ::boost::enable_if<typename ::boost::is_reference<State>::type,State >::type
+    get_state(::boost::msm::dummy<1> = 0)
     {
         typedef typename create_stt<Derived>::type stt;
         return static_cast<State > 
@@ -984,11 +988,11 @@ private:
 		// or state is a normal state and needs nothing except creation
         template <class StateType>
         typename ::boost::enable_if<
-					typename ::boost::mpl::and_<typename ::boost::mpl::not_
+            typename boost::mpl::and_<typename boost::mpl::not_
                                                     <typename has_exit_pseudo_states<StateType>::type>::type,
-									            typename ::boost::mpl::not_
+                                      typename boost::mpl::not_
                                                     <typename is_pseudo_exit<StateType>::type>::type
-			       >::type,BaseState*>::type
+                   >::type,BaseState*>::type
         new_state_helper( ::boost::msm::dummy<1> = 0) const
         {
             return new StateType;
