@@ -10,53 +10,53 @@
   {
       return 50 / x;
   }
-  
+
   double g(double x)
   {
       return 40 + 25 * sin(x * 50);
   }
-  
+
   int main()
   {
       std::vector<double> data1, data2;
-  
+
       // Fill our vectors with values from the functions f(x) and g(x)
       for(double i = .1; i < 10; i+=.1)
       {
           data1.push_back(f(i));
           data2.push_back(g(i));
       }
-  
+
       // Initialize a new box plot.
       svg_boxplot my_plot;
-  
+
       // Color information.
       my_plot.background_border_color(black);
-  
+
       // String information.
       my_plot.title("Boxplots of Common Functions")
      .x_label("Functions")
      .y_label("Population Size");
-  
+
       // Axis information.
       my_plot.y_range(0, 100)
              .y_minor_tick_length(20)
        .y_major_interval(20);
-  
+
       // Write data.
       my_plot.plot(data1, "[50 / x]");
       my_plot.plot(data2, "[40 + 25 * sin(x * 50)]");
-  
+
       my_plot.write("boxplot_simple.svg");
       return 0;
   }
-  
+
 [h4 Image boxplot_simple.svg]
 
-[$images/boxplot_simple.png]
+[$images/boxplot_simple.svg]
 
 [h4 Basic Example Breakdown]
-Let's examine what this does. 
+Let's examine what this does.
 
 [h4 Initializing a new boxplot]
 
@@ -74,13 +74,13 @@ label that appears at the bottom to name the X-axis, and the label that appears
 to the left to name the Y-axis.
 
       my_plot.title("Boxplots of Common Functions")
-            .x_label("Functions") 
+            .x_label("Functions")
             .y_label("Population Size");
 
 [h3 Setting axis information]
 Axis information for the X-axis is very limited, as the coordinate system
 for the X-axis is discrete, based only on the number of box-and-whisker plots
-that appear in the same boxplot. 
+that appear in the same boxplot.
 
 Axis information for the Y-axis, however, is customizable much in the same way that that axis information is customizable for the 1 and 2 dimensional graphs.
       // Axis information.
@@ -90,7 +90,7 @@ Axis information for the Y-axis, however, is customizable much in the same way t
 
 [h4 Writing to a file]
 
-This finally writes our plot to the file "boxplot_simple.svg". 
+This finally writes our plot to the file "boxplot_simple.svg".
 ``
 my_plot.write("boxplot_simple.svg");
 ``

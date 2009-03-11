@@ -1,6 +1,6 @@
 [article Plotting graphs in SVG format
     [quickbook 1.4]
-    [id SVG_plot]
+    [id svg_plot]
     [authors [Voytko, Jake], [Bristow, Paul A.]]
     [copyright 2007 to 2009 Jake Voytko and Paul A. Bristow]
     [license
@@ -38,8 +38,10 @@
 [def __svg_2d_plot [^[classref boost::svg::svg_2d_plot svg_2d_plot<>]]]
 [def __svg_2d_plot_series [^[classref boost::svg::svg_2d_plot_series<>]]]
 
-[def __todo [link svg_plot.todo TODO]]
-[def __rationale [link svg_plot.implementation rationale and implementation]]
+[def __todo [link plotting_graphs_in_svg_format.todo TODO]]
+[def __rationale [link plotting_graphs_in_svg_format.implementation rationale and implementation]]
+
+[/ I expect this to be [link svg_plot.todo]
 
 [def __caution Boost.Plot is not (yet) an official Boost library, but remains a library under construction,
      the code is functional, but interfaces, library structure, and function and distribution names

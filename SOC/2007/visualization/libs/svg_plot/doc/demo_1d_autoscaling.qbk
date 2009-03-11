@@ -8,7 +8,7 @@
 The output is:
 [auto_1d_plot_output]
 
-[$images\auto_1d_plot.svg auto_1dplot.svg]
+[$images/auto_1d_plot.svg auto_1d_plot.svg]
 
 See [@../../example/auto_1d_plot.cpp auto_1d_plot..cpp]
 for full source code.
@@ -16,7 +16,7 @@ for full source code.
 [endsect] [/section:auto_1d_plot 1-D Auto scaling Examples]
 
 [section:demo_1d_autoscaling 1-D Autoscaling Various Containers Examples]
-[import ..\example\demo_1d_autoscaling.cpp]
+[import ../example/demo_1d_autoscaling.cpp]
 
 [demo_1d_autoscaling_1]
 [demo_1d_autoscaling_2]
@@ -26,7 +26,7 @@ The output is:
 [demo_1d_autoscaling_output]
 
 and the plot:
-[$images\demo_auto_1d_autoscaling.svg]
+[$images/demo_1d_autoscaling.svg]
 
 See [@../../example/demo_1d_autoscaling.cpp demo_1d_autoscaling.cpp]
 for full source code.

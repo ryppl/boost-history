@@ -43,9 +43,10 @@ When there is a call to the plot() method, define `area_fill_color`
 
   my_plot.plot(my_data, "Data", area_fill_color(red));
 
-This produces the following image:
+This produces the following images:
 
-[$images/2d_area_fill.svg]
+[$images/2d_area_fill_1.svg]
+[$images/2d_area_fill_2.svg]
 
 from source at [@..\..\example\2d_area_fill.cpp]
 

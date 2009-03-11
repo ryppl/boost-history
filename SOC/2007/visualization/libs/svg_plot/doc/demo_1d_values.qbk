@@ -16,7 +16,7 @@
 [demo_1d_limits_2]
 [demo_1d_limits_output]
 
-[$image\demo_1d_limits.svg]
+[$images\demo_1d_limits.svg]
 
 [endsect] [/section:demo_1d_values 1-D Data Values Examples]
 

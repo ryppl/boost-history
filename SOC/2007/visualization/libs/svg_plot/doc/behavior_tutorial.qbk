@@ -45,7 +45,8 @@ these points will appear at the bottom of the graph.
 
 Here is an example of numeric limits handling in action:
 
-[$images/2d_limit.png] [\TODO this file is missing!]
+[$images/2d_limit.svg]
+
 [endsect] [/section:numerical_limits]
 
 
