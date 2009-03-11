@@ -21,6 +21,36 @@ namespace tree {
 
 using namespace boost_concepts;
 
+/**
+ * @brief      The leftmost descendant of the given cursor
+ * @param c    Cursor to be set to its leftmost descendant
+ * @ingroup    traversal
+ */
+template <class Cursor>
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+leftmost(Cursor& c)
+{
+    while (!c.to_begin().is_leaf());
+}
+
+/**
+ * @brief      The rightmost descendant of the given cursor
+ * @param c    Cursor to be set to its rightmost descendant
+ * @ingroup    traversal
+ */
+template <class Cursor>
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+rightmost(Cursor& c)
+{
+    while (!c.to_end().is_leaf());
+}
+
 // These algorithms are actually mostly preorder, as it's most efficient, but I
 // think it doesn't make much sense having in- and postorder versions of them. 
 // The only reason I can think of is that there might be some cases

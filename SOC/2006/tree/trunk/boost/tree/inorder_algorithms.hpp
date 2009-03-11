@@ -12,6 +12,7 @@
 #ifndef BOOST_TREE_INORDER_ALGORITHMS_HPP
 #define BOOST_TREE_INORDER_ALGORITHMS_HPP
 
+#include <boost/tree/general_algorithms.hpp>
 #include <boost/tree/root_tracking_cursor.hpp>
 #include <boost/tree/ascending_cursor.hpp>
 #include <boost/tree/cursor_concepts.hpp>
@@ -46,7 +47,7 @@ BOOST_CONCEPT_REQUIRES(
 successor(inorder, MultiwayCursor& c)
 {
     if (!(++c).is_leaf()) {
-        while (!c.to_begin().is_leaf());
+        leftmost(c);
         return;
     }
     
@@ -68,7 +69,7 @@ BOOST_CONCEPT_REQUIRES(
 predecessor(inorder, MultiwayCursor& c)
 {
     if (!c.is_leaf()) {
-        while (!c.to_end().is_leaf());
+        rightmost(c);
         --c;
         return;
     }

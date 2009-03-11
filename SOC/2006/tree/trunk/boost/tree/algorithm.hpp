@@ -102,9 +102,7 @@ BOOST_CONCEPT_REQUIRES(
     (void)) // return type
 to_forest_end(BinaryCursor& c)
 {
-    c.to_begin();
-    while (!c.is_leaf())
-        c.to_end();
+    rightmost(c.to_begin());
 }
 
 //template <class BinaryCursor>

@@ -17,6 +17,13 @@ using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
+BOOST_AUTO_TEST_CASE( test_leftmost )
+{
+    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root(); //.begin();
+    leftmost(c);
+    BOOST_CHECK_EQUAL(*c, 1);
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
 {
     fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root(); //.begin();
