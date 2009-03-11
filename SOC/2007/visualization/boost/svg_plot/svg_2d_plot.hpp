@@ -1909,7 +1909,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& y_df_on(bool b);
       svg_2d_plot& y_df_color(const svg_color& col);
       const svg_color y_df_color();
-      svg_2d_plot& y_decor(const std::string& pre, const std::string& sep, const std::string& suf);
+      svg_2d_plot& y_decor(const std::string& pre, const std::string& sep = "", const std::string& suf = "");
       const std::string y_prefix();
       const std::string y_suffix();
       const std::string y_separator();

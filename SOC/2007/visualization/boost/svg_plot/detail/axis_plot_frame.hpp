@@ -1214,9 +1214,9 @@ namespace boost
             { // Want a prefix like "["
               label_xv = x_sty.prefix_ + label_xv;
             }
-            std::string label_xu;
+            std::string label_xu; // X uncertainty as string.
             std::string label_yu;
-            std::string label_xdf;
+            std::string label_xdf; // X degrees of freedom as string.
             std::string label_ydf;
 
             int marker_size = derived().serieses_[0].point_style_.size_;
@@ -1297,7 +1297,7 @@ namespace boost
 
             int fx = static_cast<int>(x_sty.values_text_style_.font_size() * reducer);
             // Make uncertainty and df a bit smaller to distinguish from value by default (but make configurable).
-            // X value (and optional uncertainty and df).
+            // Write X value (and optional uncertainty and df).
             text_element& t = x_g_ptr.text(x, y, label_xv, x_sty.values_text_style_, al, rot);
             // Optionally, show uncertainty as 95% confidence plus minus:  2.1 +-0.012
             // and also optionally show degrees of freedom (23).
@@ -1331,11 +1331,17 @@ namespace boost
             }
             int fy = static_cast<int>(y_sty.values_text_style_.font_size() * reducer);
            // If there a comma is 1st char in separator, put values on the same line, else as below put below the marker.
-            bool sameline = (x_sty.separator_[0] == ','); // Might add to value_style? to allow 1.2, with 3.4 on line below.
+            bool sameline = (x_sty.separator_[0] == ',');
             if (sameline)
-            { // On same line so no change in y.
-              t.tspan(x_sty.separator_).fill_color(black).font_size(fx); // Separator like comma and Unicode leading space ", Y=".
-              t.tspan(label_yv, y_sty.values_text_style_); // Color?
+            { // On same line so use X style for separator. But Y style for any text.
+              t.tspan(x_sty.separator_).fill_color(x_sty.fill_color_).font_size(x_sty.values_text_style_.font_size());
+              t.tspan(y_sty.separator_).fill_color(y_sty.fill_color_).font_size(y_sty.values_text_style_.font_size());
+              if (y_sty.prefix_ != "")
+              { // Want a prefix, for example: "length ="
+                t.tspan(y_sty.prefix_).fill_color(y_sty.fill_color_).font_size(y_sty.values_text_style_.font_size());
+              }
+
+              t.tspan(label_yv, y_sty.values_text_style_); // Color
               if (
                    (y_sty.plusminus_on_) // Is wanted.
                    && (uy > 0.) // Is valid uncertainty estimate.
@@ -1357,16 +1363,20 @@ namespace boost
                 label_ydf = label.str();
                 t.tspan(label_ydf).fill_color(y_sty.df_color_).font_size(fy);
               }
-              if (y_sty.prefix_ != "")
-              { // Want a suffix like "]" - with the Y values font size, not reduced for uncertainty info.
-                t.tspan(y_sty.suffix_).fill_color(black).font_size(y_sty.values_text_style_.font_size());
+              if (y_sty.suffix_ != "")
+              { // Want a suffix like "]" - with the Y values font size, (not reduced for uncertainty info), and same color as prefix.
+                t.tspan(y_sty.suffix_).fill_color(y_sty.fill_color_).font_size(y_sty.values_text_style_.font_size());
               }
             }
             else
-            {  // Move ready to put Y value on 'newline' below point marker.
-              // Problem here if orientation is changed?
-              // Need to start a new text_element here because tspan rotation doesn't apply to whole string. ???
+            { // Move ready to put Y value on 'newline' below point marker.
+              // Problem here if orientation is changed? - Yes - doesn't line up :-(
+              if (y_sty.prefix_ != "")
+              { // 
+                label_yv = y_sty.prefix_ + label_yv;
+              }
               double dy = y_sty.values_text_style_.font_size() * 2.2; // "newline"
+              // Need to start a new text_element here because tspan rotation doesn't apply to whole string?
               text_element& ty = y_g_ptr.text(x, y + dy, label_yv, y_sty.values_text_style_, al, rot);
 
               if ((y_sty.plusminus_on_ == true) // Is wanted.
@@ -1389,9 +1399,9 @@ namespace boost
                 label_ydf = label.str();
                 ty.tspan(label_ydf).fill_color(y_sty.df_color_).font_size(fy);
               }
-              if (y_sty.prefix_ != "")
-              { // Want a suffix like "]"
-                ty.tspan(y_sty.suffix_).fill_color(black).font_size(fy);
+              if (y_sty.suffix_ != "")
+              { // Want a suffix like "]" or "sec]" or "&#x00A0;sec]"
+                ty.tspan(y_sty.suffix_).fill_color(y_sty.fill_color_).font_size(y_sty.values_text_style_.font_size());
               }
             }
           } // void draw_plot_point_values(double x, double y, g_element& g_ptr, double value)

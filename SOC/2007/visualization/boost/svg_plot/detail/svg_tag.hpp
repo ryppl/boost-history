@@ -517,7 +517,7 @@ private:
   //! but x_, y_, and text_length need a flag.
   bool use_x_; //!> If true then use X absolute position.
   bool use_y_; //!> If true then use Y absolute position.
-  bool use_text_length_;
+  bool use_text_length_; //!< If true then use user calculated length rather than SVG (not used).
   text_style style_; //!< font variants.
   bool use_style_;
 
@@ -734,7 +734,7 @@ public:
   }
 
   svg_color fill_color()
-  { //! Get the fill color for tspan element . 
+  { //! Get the fill color for tspan element .
     return style_info_.fill_color();
   }
 
