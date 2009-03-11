@@ -2,7 +2,6 @@
     \brief Demonstration of some simple 1D value formatting.
     \details Quickbook markup to include in documentation.
     \date 11 Feb 2009
-
     \author Paul A. Bristow
 */
 
@@ -78,7 +77,8 @@ here a circle with a diameter of 5 pixels.
 
 /*`If the default size and color are not to your taste, set more options, like:
 */
-    my_1d_plot.x_values_font_size(14) // Change font size for the X-axis value labels.
+    my_1d_plot.size(500, 350) // Change from default size
+      .x_values_font_size(14) // Change font size for the X-axis value labels.
       .x_values_font_family("Times New Roman") // Change font for the X-axis value labels.
       .x_values_color(red); // Change color from default black to red.
 
@@ -118,18 +118,22 @@ but for 2-D plots all writing orientations can be useful).
 */
    my_1d_plot.x_values_rotation(steepup); // Orientation for the X-axis value labels.
 
-   my_1d_plot.x_decor("[ x = ", ", y=", "]");
+   my_1d_plot.x_decor("[ x = ", "", "&#x00A0;sec]"); // Note the need for a Unicode space.
 
 /*`To use all these settings, finally write the plot to file.
 */
     my_1d_plot.write("demo_1d_values.svg");
 
-/*`If chosen settings do not have the expected effect, is may be helpful to display them.
+/*`If chosen settings do not have the effect that you expect, it may be helpful to display them.
 
 (All the myriad settings can be displayed with `show_1d_plot_settings(my_1d_plot)`.)
 */
-    show_1d_plot_settings(my_1d_plot);
+    //show_1d_plot_settings(my_1d_plot);
 
+    cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
+    cout << "my_1d_plot.image_x_size() " << my_1d_plot.image_x_size() << endl;
+    cout << "my_1d_plot.image_y_size() " << my_1d_plot.image_y_size() << endl;
+    //cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
     cout << "my_1d_plot.x_values_font_size() " << my_1d_plot.x_values_font_size() << endl;
     cout << "my_1d_plot.x_values_font_family() " << my_1d_plot.x_values_font_family() << endl;
     cout << "my_1d_plot.x_values_color() " << my_1d_plot.x_values_color() << endl;

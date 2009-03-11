@@ -1,9 +1,6 @@
 /*! \file 2d_simple.cpp
-
   \brief Simple 2D plot.
-
   \author Jacob Voytko
-
   \date 2007
 */
 
@@ -40,6 +37,6 @@ int main()
   my_plot.plot(map1, "Series 1").stroke_color(blue);
   my_plot.plot(map2, "Series 2").stroke_color(orange);
 
-    my_plot.write("./simple_2d.svg");
+    my_plot.write("./2d_simple.svg");
   return 0;
 } // int main()

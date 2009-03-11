@@ -1,7 +1,6 @@
 /*! \file demo_1d_autoscaling.cpp
-
     \brief An example to demonstrate simple 1D settings, including auto-scaling.
-   \details
+    \details
       See auto_1d_containers.cpp for an example autoscaling with multiple data series.
       See also demo_1d_plot.cpp for a wider range of use.
     \author Paul A Bristow
@@ -138,7 +137,7 @@ int main()
     << my_1d_plot.x_tight() << " tightness." << endl; // 0.001
 
   /*`Purely to show the possibilities with autoscale, we don't use the whole container,
-  but use the two-iterators version of autoscale to *not use the first and last values* for autoscaling.
+  but use the two-iterators version of autoscale to *not use the first nor the last values* for autoscaling.
   (Remember values in set are sorted).
   */
   my_1d_plot.x_autoscale(++my_set.begin(),--my_set.end());
@@ -155,7 +154,7 @@ int main()
   because it is now outside the plot window.
   This is as if we had only written part of the data series.
   */
-   my_1d_plot.plot(++my_set.begin(),--my_set.end(), "Auto 1D my_set"); // Add whole data series from my_set.
+   my_1d_plot.plot(++my_set.begin(),--my_set.end(), "Auto 1D my_set"); // Add 'top and tailed' data series from my_set.
  //my_1d_plot.plot(my_set, "Auto 1D my_set"); // Add whole data series from my_set.
   my_1d_plot.write("demo_1d_autoscaling.svg"); // Write the plot to file.
   
