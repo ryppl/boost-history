@@ -1,0 +1,198 @@
+<!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
+<html> <head>
+<title>Rvalue References and Exception Safety</title>
+</head>
+
+<body>
+<h1>Rvalue References and Exception Safety</h1>
+
+<p>Authors: Douglas Gregor, David Abrahams<br>
+Contact: doug.gregor@gmail.com, dave@boostpro.com<br>
+Organization: Apple, BoostPro Computing<br>
+Date: 2009-03-07<br>
+Number: D28xx=09-00xx</p>
+
+<h2 id="intro">Introduction</h2>
+
+<p>This paper describes a problem with rvalue references that
+compromises the exception safety guarantees made by the Standard
+Library. In particular, well-formed C++03 programs, when compiled with
+the C++0x Standard Library, can no longer rely on the strong exception
+safety guarantee provided by standard library containers. This silent
+change in behavior makes it nearly impossible to use the Standard
+Library in applications that must recover from exceptions thrown by
+the library. In this paper, we characterize the problem itself and
+outline a potential solution that extends the language and modifies
+the library.</p>
+
+<h2 id="review">Review of Exception Safety Guarantees in the
+Library</h2>
+
+<p>Within the library, we characterize the behavior of a function with
+respect to exceptions based on the guarantees that the implementation
+must provide if an exception is thrown. These guarantees describe the
+state of the program once a thrown exception has unwound the stack
+past the point of that function. We recognize two levels of exception
+safety guarantees for a given library function:
+
+<dl>
+  <dt>Basic exception guarantee</dt>
+  <dd>No resources are leaked and all of the arguments to the function
+  are left in a consistent, destructible state.</dd>
+
+  <dt>Strong exception guarantee</dt>
+  <dd>No resources are leaked and all arguments to the function are
+  left in the same state they were prior to invocation of the
+  function. Therefore, the state of the program after exiting the
+  function (via the exception) is the same as if the function were
+  never called.</dd>
+</dl>
+
+<p>The Standard Library provides at least the basic exception
+guarantee throughout, which has not changed with the introduction of
+rvalue references. Some functions of the library provide the strong
+exception guarantee, such as insertion in most containers
+(23.1.1p10).</p>
+
+<h2 id="problem">The Problem</h2>
+
+<p>The fundamental problem addressed by this paper is that, for some
+functions that are specified with the strong exception guarantee that
+have also been extended with rvalue references, it is no longer
+possible to implement the strong exception guarantee. As an example,
+we consider <code>vector</code>'s <code>push_back</code> operation,
+e.g.,</p>
+
+<pre>
+class Matrix {
+  double *data;
+  unsigned rows, cols;
+
+public:
+  Matrix(const Matrix&amp; other) : rows(other.rows), cols(other.cols) {
+    data = new double [rows * cols];
+    // copy data...
+  }
+};
+
+typedef std::pair&lt;std::string, Matrix&gt; NamedMatrix;
+
+void AddMatrix(std::vector&lt;NamedMatrix&gt;&amp; Named, const NamedMatrix &amp;M) {
+  Named.push_back(M);
+}
+</pre>
+
+<p>In the call to <code>push_back</code>, if the size of the
+<code>vector</code> is the same as it's capacity, we will have to
+allocate more storage for the <code>vector</code>. In this case, we
+first allocate more storage and then copy the contents from the old
+storage into the new storage. Finally, we copy the new element into
+the new storage and, if everything has succeeded, free the old
+storage.</p>
+
+<p>During this reallocation and insertion process, there are many
+opportunities to exhaust the available memory, including the
+allocation of new storage for the <code>vector</code>, the allocation
+of memory while copying the <code>NamedMatrix</code> values from the
+old storage to the new storage, and the allocation of memory while
+copying the new <code>NamedMatrix</code> into the new storage. In
+C++03, the <code>push_back</code> operation can recover from an
+exception thrown from any of these places merely by destroying the
+copies in and then freeing the new storage, since the old storage
+remains intact. Therefore, <code>vector</code>'s
+<code>push_back</code> can provide the strong exception safety
+guarantee.</p>
+
+<p>With the introduction of move semantics (via rvalue references) in
+C++0x, the situation is complicated. To eliminate the need for
+extraneous copies (thereby improving performance) and to support the
+use of move-only types (like <code>std::unique_ptr</code>), the
+elements of the <code>vector</code> are moved from the old storage to
+the new storage. For C++03 types that only have a copy constructor
+(and no move constructor), the "move" operation actually performs a
+copy, so the C++0x library provides the same semantics as in
+C++03. For a type with a non-throwing move constructor (like
+<code>std::unique_ptr</code> or <code>std::string</code>), moving data
+from the old storage to the new storage will not throw any exceptions,
+and the implementation can still easily cope with exceptions thrown
+either when allocating the new storage (the old storage is still
+valid) or when copying the final element into the new storage (the new
+storage is still valid). Therefore, neither of these classes of types
+cause a problem for the strong exception guarantee.</p>
+
+<p>The <code>NamedMatrix</code> type, however, is neither here nor
+there. It is a <code>std::pair</code>, which means that it has a move
+constructor. However, this move constructor moves from its
+<code>first</code> subobject (the <code>std::string</code>) but copies
+from its <code>second</code> subobject (the <code>Matrix</code>),
+which means that it is both destructive (it modifies the source) and
+that it may throw an exception. During reallocation, after some
+elements have been move from the old storage to the new storage, the
+<code>Matrix</code> copy constructor may throw while moving an
+element. In this case, we are left in a state from which we cannot
+recover, where some elements are stored in the old storage and other
+elements are in the new storage. We cannot move the elements from the
+new storage back into the old storage, since doing so might throw
+another exception and cause us to terminate. Nor can we continue
+moving elements into the new storage, since we've already triggered an
+exception. The implementation could still provide the basic guarantee
+by, for example, truncating the <code>vector</code>, but it cannot
+roll back to its state prior to the <code>push_back</code> call.</p>
+  
+<h2 id="solution">Proposed Solution</h2>
+
+<p>In our motivating example, we saw that the <code>push_back</code>
+function can provide the strong exception safety guarantee when one of
+two conditions holds:</p>
+
+<ol>
+  <li>Moving an element from the old storage to the new storage is
+  guaranteed not to throw, or</li>
+  <li>Copying an element from the old storage to the new storage is
+  guaranteed not to change the value of the original element.</li>
+</ol>
+
+<p>At present, we have no way to detect whether either of these
+conditions hold. We therefore propose to ban the definition of move
+constructors and move assignment operators that throw
+exceptions. Therefore, we can be sure that if we are invoking a move
+constructor, it does not throw; that copy constructors preserve the
+original value of the source element is already assumed in C++ and
+need not be addressed separately.</p>
+
+<p>Banning move constructors and move assignment operators that throw
+exceptions is not a straightforward matter. For example, a blanket
+library requirement that prohibits types with a throwing move
+constructor from being used with the library would be ineffective, for
+several reasons:</p>
+
+<ol>
+  <li><i>Users will accidentally violate this requirement</i>. Without
+  any kind of compiler checking that move constructors and move
+  assignment operators don't throw exceptions, it is far too easy for
+  a user to forget that a certain operation used within the move
+  constructor or move assignment operator may throw an exception,
+  silently and accidentally breaking the guarantee. Exception
+  specifications do not help this situation, because they are neither
+  statically checked nor widely used.</li>
+
+  <li><i>The library will violate this requirement</i>. 
+</ol>
+
+<h3 id="noexcept">The <code>noexcept</code> Specifier</h3>
+<h3 id="noexceptmove">Move Construction and Assignment Requires
+<code>noexcept</code></h3>
+<h3 id="movedefault">Default Implementations of Move Construction and Assignment</h3>
+<h3 id="library">Library Changes</h3>
+<h4 id="concepts">Moving and Copying Concepts</h4>
+<h4 id="aggregate">Move Constructors</h4>
+
+<h2 id="alternatives">Alternative Solutions</h2>
+<h3 id="libraryonly">Library-only Solution</h3>
+<h3 id="syntax">Alternative Syntax</h3>
+<p>Yes, we thought of these. No, we don't care to discuss them.</p>
+
+<hr>
+<address></address>
+<!-- hhmts start --> Last modified: Sat Mar  7 17:31:04 PST 2009 <!-- hhmts end -->
+</body> </html>
