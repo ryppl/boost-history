@@ -306,8 +306,8 @@ class text_style
 private:
   int font_size_; //!< Font size (SVG units, default pixels).
   std::string font_family_; //!< Font family, examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
-  std::string weight_; //!< Font weight, examples: normal | bold | italic | oblique.
-  std::string style_; //!< Font style, examples: "bold", "normal".
+  std::string weight_; //!< Font style, examples: "bold", "normal".
+  std::string style_; //!< Font weight, examples: normal | bold | italic | oblique.
   std::string stretch_; //!< Font stretch, examples: normal | wider | narrower.
   std::string decoration_; //!< Font decoration, examples: "underline" | "overline" | "line-through".
 

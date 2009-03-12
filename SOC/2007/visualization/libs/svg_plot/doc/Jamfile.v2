@@ -35,19 +35,26 @@ doxygen autodoc
     [ glob ../../../boost/svg_plot/*.hpp ]
     [ glob ../../../boost/svg_plot/detail/*.hpp ]
   :
+    <doxygen:param>TAB_SIZE=2
     <doxygen:param>EXTRACT_ALL=YES
     <doxygen:param>HIDE_UNDOC_MEMBERS=NO
-    <doxygen:param>INLINE_INHERITED_MEMB=YES
+    <doxygen:param>INLINE_INHERITED_MEMB=YES # Show all inherited members of a class in the documentation of that class as if those members were ordinary class members.
     <doxygen:param>SORT_MEMBER_DOCS=YES
     <doxygen:param>EXTRACT_PRIVATE=YES
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>SEARCH_INCLUDES=YES
-    <doxygen:param>SHOW_INCLUDE_FILES=NO
+    <doxygen:param>SHOW_INCLUDE_FILES=NO # List of the files that are included by a file in the documentation of that file.
+    <doxygen:param>REPEAT_BRIEF=YES # Prepend the brief description of a member or function before the detailed description
+    <doxygen:param>BRIEF_MEMBER_DESC=YES # Include brief member descriptions after the members that are listed in the file and class
+    <doxygen:param> MULTILINE_CPP_IS_BRIEF = YES # Treat a multi-line C++ special comment block (i.e. a block of //! or /// comments) as a brief description.
+    # May be best to always use \brief and \details to avoid ambiguity?
     <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+    <doxygen:param>WARN_LOGFILE=../../../libs/svg_plot/doc/doxywarnings.log
 ;
     #<doxygen:param>"PREDEFINED=\"BOOST_DEDUCED_TYPENAME=typename\" "
+# See Doxygen configuration for detailed explanation of these options
 
 # import boostbook : boostbook ;
 

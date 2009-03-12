@@ -559,6 +559,7 @@ namespace boost
           derived().image.g(PLOT_TITLE).push_back(new text_element(derived().title_info_));
         } // void draw_title()
 
+
         void size_legend_box()
         { //! Calculate how big the legend box needs to be.
           if(derived().legend_on_ == false)
@@ -1759,6 +1760,7 @@ namespace boost
           svg_color limit_color();
           Derived& limit_fill_color(const svg_color&);
           svg_color limit_fill_color();
+          Derived& draw_note(double x, double y, std::string note, text_style& tsty = no_style, align_style al = center_align, rotate_style rot = horizontal, const svg_color& = black);
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -3754,7 +3756,35 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           return derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
         }
 
-    // image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::draw_note(double x, double y, std::string note, text_style& tsty/* = no_style*/, align_style al/* = center_align*/, rotate_style rot /*= horizontal*/, const svg_color& col)
+        { /*! \brief Annotate plot with a  text string (perhaps including Unicode), putting note at SVG Coordinates X, Y.
+            \details Defaults color black, rotation horizontal and align = center_align
+            Using center_align is recommended as it will ensure that will center correctly
+            (even if original string is made much longer because it contains Unicode,
+            for example Greek or math symbols, taking about 6 characters per symbol)
+            because the render engine does the centering.
+          */
+
+           // g_element* g_ptr = &(derived().image.g(detail::PLOT_NOTES));
+           g_element* g = &(derived()).image.g(); // New group
+           g->style().fill_color(col);
+           g->push_back(new text_element(x, y, note, tsty, al, rot));
+
+           //g_ptr->style().fill_color(red);
+           //g_ptr->push_back(new text_element(x, y, note, tsty, al, rot));
+          //derived().image.g(detail::PLOT_NOTES).text(x, y,
+          //gptr.text(x, y,
+          //          note, // string
+          //          tsty, // no_style,
+          //          al, //center_align,
+          //          rot); // horizontal);
+
+          // No checks on X or Y - leave to SVG to not draw outside image.
+          // Could warn if X and/or Y outside - but even if OK, then text could still stray outside image.
+          return derived();
+        } // void draw_note()
+
 
       } // detail
     } // svg

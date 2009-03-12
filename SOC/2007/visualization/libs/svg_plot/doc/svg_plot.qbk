@@ -23,8 +23,6 @@
 [def __docbook__    [@http://www.docbook.org/ DocBook]]
 [def __Boost_Assign [@$(BOOST_ROOT)/libs/assign/doc/index.html Boost.Assign]]
 
-[/def __Boost_Assign [@http://www.boost.org/doc/libs/1_38_0/libs/assign/doc/index.html Boost.Assign]]
-
 [/ Links   ]
 [/ By Eric's convention prefix *and* suffix _ means a defined value.  But Use JM and SW double underscore prefix convention.]
 [def __boost [@http://www.boost.org Boost]]
@@ -40,9 +38,6 @@
 
 [def __todo [link plotting_graphs_in_svg_format.todo TODO]]
 [def __rationale [link plotting_graphs_in_svg_format.implementation rationale and implementation]]
-
-[/ I expect this to be [link svg_plot.todo]
-
 [def __caution Boost.Plot is not (yet) an official Boost library, but remains a library under construction,
      the code is functional, but interfaces, library structure, and function and distribution names
      may still be changed without notice.]

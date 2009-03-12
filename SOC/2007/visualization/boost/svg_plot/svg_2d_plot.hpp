@@ -320,8 +320,8 @@ namespace boost
 
   // end svg_2d_plot_series Member Functions Definitions.
 
-    class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
-    {  /*! \class boost::svg::svg_2d_plot
+  class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
+  {  /*! \class boost::svg::svg_2d_plot
     \brief Provides svg_2d_plot data and functions to create plots.
        Very many functions allow very fine control of the
        appearance and layout of plots, data markers and lines.
@@ -449,6 +449,7 @@ namespace boost
       int y_auto_ticks_; //!< Number of ticks (calculated by Y autoscale).
 
       std::vector<svg_2d_plot_series> serieses_; //!< Store of several series of data points for transformation.
+      std::vector<text_element> notes_; //!< Store of text for annotation.
 
       std::string plot_window_clip_; /*!< = "clip_plot_window" id for clippath
         http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction clipping paths,\n
@@ -563,6 +564,8 @@ my_plot.background_color(ghostwhite) // Whole image.
         image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
         image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
         image.g(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_.width());
+
+        //image.g(detail::PLOT_NOTES).style().fill_color(black);
 
         // Note that widths are stored in member data *and* copied here.
         // Not sure if this is wise but ...
