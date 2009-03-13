@@ -48,7 +48,7 @@ doxygen autodoc
     <doxygen:param>SHOW_INCLUDE_FILES=NO # List of the files that are included by a file in the documentation of that file.
     <doxygen:param>REPEAT_BRIEF=YES # Prepend the brief description of a member or function before the detailed description
     <doxygen:param>BRIEF_MEMBER_DESC=YES # Include brief member descriptions after the members that are listed in the file and class
-    <doxygen:param> MULTILINE_CPP_IS_BRIEF = YES # Treat a multi-line C++ special comment block (i.e. a block of //! or /// comments) as a brief description.
+    <doxygen:param>MULTILINE_CPP_IS_BRIEF=YES # Treat a multi-line C++ special comment block (i.e. a block of //! or /// comments) as a brief description.
     # May be best to always use \brief and \details to avoid ambiguity?
     <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
     <doxygen:param>WARN_LOGFILE=../../../libs/svg_plot/doc/doxywarnings.log
@@ -140,4 +140,5 @@ boostbook standalone
 # install ../ : ../../../boost.png ;
 
 # install pdf-install : standalone : <location>. <install-type>PDF ;
+
 
