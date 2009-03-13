@@ -1108,7 +1108,115 @@ namespace gtl {
     //an odd number of edges to the left implies interior pt
     return counts[0] % 4; 
   }
-           
+
+  //TODO: refactor to expose as user APIs
+  template <typename Unit>
+  struct edge_utils {
+    typedef point_data<Unit> Point;
+    typedef std::pair<Point, Point> half_edge;
+
+    class less_point : public std::binary_function<Point, Point, bool> {
+    public:
+      inline less_point() {}
+      inline bool operator () (const Point& pt1, const Point& pt2) const {
+        if(pt1.get(HORIZONTAL) < pt2.get(HORIZONTAL)) return true;
+        if(pt1.get(HORIZONTAL) == pt2.get(HORIZONTAL)) {
+          if(pt1.get(VERTICAL) < pt2.get(VERTICAL)) return true;
+        }
+        return false;
+      }
+    };
+
+    static inline bool between(Point pt, Point pt1, Point pt2) {
+      less_point lp;
+      if(lp(pt1, pt2))
+        return lp(pt, pt2) && lp(pt1, pt);
+      return lp(pt, pt1) && lp(pt2, pt);
+    }
+    
+    template <typename area_type>
+    static inline bool equal_slope(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
+      typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
+      unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
+      unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
+      int dx1_sign = dx1 < 0 ? -1 : 1;
+      int dx2_sign = dx2 < 0 ? -1 : 1;
+      int dy1_sign = dy1 < 0 ? -1 : 1;
+      int dy2_sign = dy2 < 0 ? -1 : 1;
+      int cross_1_sign = dx2_sign * dy1_sign;
+      int cross_2_sign = dx1_sign * dy2_sign;
+      return cross_1 == cross_2 && (cross_1_sign == cross_2_sign || cross_1 == 0);
+    }
+
+    static inline bool equal_slope(const Unit& x, const Unit& y,
+                                   const Point& pt1, const Point& pt2) {
+      const Point* pts[2] = {&pt1, &pt2};
+      typedef typename coordinate_traits<Unit>::manhattan_area_type at;
+      at dy2 = (at)pts[1]->get(VERTICAL) - (at)y;
+      at dy1 = (at)pts[0]->get(VERTICAL) - (at)y;
+      at dx2 = (at)pts[1]->get(HORIZONTAL) - (at)x;
+      at dx1 = (at)pts[0]->get(HORIZONTAL) - (at)x;
+      return equal_slope(dx1, dy1, dx2, dy2);
+    }
+
+    template <typename area_type>
+    static inline bool less_slope(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
+      //reflext x and y slopes to right hand side half plane
+      if(dx1 < 0) {
+        dy1 *= -1;
+        dx1 *= -1;
+      } else if(dx1 == 0) {
+        //if the first slope is vertical the first cannot be less
+        return false;
+      }
+      if(dx2 < 0) {
+        dy2 *= -1;
+        dx2 *= -1;
+      } else if(dx2 == 0) {
+        //if the second slope is vertical the first is always less unless it is also vertical, in which case they are equal 
+        return dx1 != 0;
+      }
+      typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
+      unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
+      unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
+      int dx1_sign = dx1 < 0 ? -1 : 1;
+      int dx2_sign = dx2 < 0 ? -1 : 1;
+      int dy1_sign = dy1 < 0 ? -1 : 1;
+      int dy2_sign = dy2 < 0 ? -1 : 1;
+      int cross_1_sign = dx2_sign * dy1_sign;
+      int cross_2_sign = dx1_sign * dy2_sign;
+      if(cross_1_sign < cross_2_sign) return true;
+      if(cross_2_sign < cross_1_sign) return false;
+      if(cross_1_sign == -1) return cross_2 < cross_1;
+      return cross_1 < cross_2;
+    }
+
+    static inline bool less_slope(const Unit& x, const Unit& y,
+                                  const Point& pt1, const Point& pt2) {
+      const Point* pts[2] = {&pt1, &pt2};
+      //compute y value on edge from pt_ to pts[1] at the x value of pts[0]
+      typedef typename coordinate_traits<Unit>::manhattan_area_type at;
+      at dy2 = (at)pts[1]->get(VERTICAL) - (at)y;
+      at dy1 = (at)pts[0]->get(VERTICAL) - (at)y;
+      at dx2 = (at)pts[1]->get(HORIZONTAL) - (at)x;
+      at dx1 = (at)pts[0]->get(HORIZONTAL) - (at)x;
+      return less_slope(dx1, dy1, dx2, dy2);
+    }
+
+    //return -1 below, 0 on and 1 above line
+    //assumes point is on x interval of segment
+    static inline int on_above_or_below(Point pt, const half_edge& he) {
+      if(pt == he.first || pt == he.second) return 0;
+      if(equal_slope(pt.get(HORIZONTAL), pt.get(VERTICAL), he.first, he.second)) return 0;
+      bool less_result = less_slope(pt.get(HORIZONTAL), pt.get(VERTICAL), he.first, he.second);
+      int retval = less_result ? -1 : 1;
+      less_point lp;
+      if(lp(he.second, he.first)) retval *= -1;
+      if(!between(pt, he.first, he.second)) retval *= -1;
+      return retval;
+    }
+  };
+
   template <typename T, typename input_point_type>
   typename requires_1< 
     typename gtl_and_3< 
@@ -1117,8 +1225,45 @@ namespace gtl {
       typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type,
     bool>::type
   contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
-    std::cout << "not implemented\n"; //awaiting arrival of general edge concept
-    return false;
+    typedef typename point_traits<input_point_type>::coordinate_type Unit;
+    typedef point_data<Unit> Point;
+    typedef std::pair<Point, Point> half_edge;
+    typedef typename polygon_traits<T>::iterator_type iterator;
+    iterator itr = begin_points(polygon);
+    iterator itrEnd = end_points(polygon);
+    half_edge he;
+    if(itr == itrEnd) return false;
+    he.first = *itr;
+    Point firstPt = *itr;
+    ++itr;
+    if(itr == itrEnd) return false;
+    bool done = false;
+    int above = 0;
+    while(!done) {
+      Point currentPt;
+      if(itr == itrEnd) {
+        done = true;
+        currentPt = firstPt;
+      } else {
+        currentPt = *itr;
+        ++itr;
+      }
+      if(currentPt == he.first) {
+        continue;
+      } else {
+        he.second = currentPt;
+        if(equivalence(point, currentPt)) return consider_touch;
+        Unit xmin = std::min(x(he.first), x(he.second));
+        Unit xmax = std::max(x(he.first), x(he.second));
+        if(x(point) >= xmin && x(point) < xmax) { //double counts if <= xmax
+          int oabedge = edge_utils<Unit>::on_above_or_below(point, he);
+          if(oabedge == 0) return consider_touch;
+          if(oabedge == 1) ++above;
+        }
+      }
+      he.first = he.second;
+    } 
+    return above % 2; //if the point is above an odd number of edges is must be inside polygon
   }
 
   template <typename T1, typename T2>

@@ -1153,7 +1153,31 @@ bool testViewCopyConstruct() {
   return true;
 }
 
+bool testpip() {
+  std::vector<Point> pts;
+  pts.push_back(Point(0, 0));
+  pts.push_back(Point(10, 0));
+  pts.push_back(Point(20, 10));
+  pts.push_back(Point(0, 20));
+  pts.push_back(Point(30, 40));
+  pts.push_back(Point(-10, 50));
+  pts.push_back(Point(-20, -20));
+  pts.push_back(Point(0, 0));
+  polygon_data<int> poly;
+  poly.set(pts.begin(), pts.end());
+  for(unsigned int i = 0; i < pts.size(); ++i) {
+    if(!contains(poly, pts[i], true)) return false;
+    if(contains(poly, pts[i], false)) return false;
+  }
+  Point pt(0, -10);
+  if(contains(poly, pt)) return false;
+  Point p2(0, 1);
+  if(!contains(poly, p2)) return false;
+  return true;
+}
+
 int main() {
+  if(!testpip()) return 1;
   {
     PolygonSet ps;
     Polygon p;
