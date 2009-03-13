@@ -12,6 +12,8 @@
 #include <boost/range/functions.hpp>
 #include <boost/range/metafunctions.hpp>
 
+#include <boost/static_assert.hpp>
+
 #include <geometry/core/cs.hpp>
 
 #include <geometry/geometries/segment.hpp>
@@ -154,13 +156,25 @@ namespace geometry
 	namespace dispatch
 	{
 
-		template <typename TAG1, typename TAG2, typename G1, typename G2>
+		template <typename TAG1, typename TAG2, typename G1, typename G2, bool Reversible>
 		struct distance
 		{
+		    BOOST_STATIC_ASSERT(Reversible);
+
+			template <typename S>
+			static inline typename S::return_type calculate(const G1& g1, const G2& g2, const S& strategy)
+			{
+				return distance<TAG2, TAG1, G2, G1, false>::calculate(g2, g1, strategy);
+			}
+
+			static inline typename distance_result<G1, G2>::type calculate(const G1& g1, const G2& g2)
+			{
+				return distance<TAG2, TAG1, G2, G1, false>::calculate(g2, g1);
+			}
 		};
 
 		template <typename P1, typename P2>
-		struct distance<point_tag, point_tag, P1, P2>
+		struct distance<point_tag, point_tag, P1, P2, false>
 		{
 			template <typename S>
 			static inline typename S::return_type calculate(const P1& p1, const P2& p2, const S& strategy)
@@ -179,8 +193,8 @@ namespace geometry
 			}
 		};
 
-		template <typename P, typename L>
-		struct distance<point_tag, linestring_tag, P, L>
+		template <typename P, typename L, bool Reversible>
+		struct distance<point_tag, linestring_tag, P, L, Reversible>
 		{
 			template<typename S>
 			static inline typename S::return_type calculate(const P& point, const L& linestring, const S& strategy)
@@ -193,22 +207,8 @@ namespace geometry
 			}
 		};
 
-		template <typename L, typename P>
-		struct distance<linestring_tag, point_tag, L, P>
-		{
-			template<typename S>
-			static inline typename S::return_type calculate(const L& linestring, const P& point, const S& strategy)
-			{
-				return impl::distance::point_to_linestring(point, linestring, strategy);
-			}
-			static inline typename distance_result<P, L>::type calculate(const L& linestring, const P& point)
-			{
-				return impl::distance::point_to_linestring(point, linestring);
-			}
-		};
-
-		template <typename P, typename SEG>
-		struct distance<point_tag, segment_tag, P, SEG>
+		template <typename P, typename SEG, bool Reversible>
+		struct distance<point_tag, segment_tag, P, SEG, Reversible>
 		{
 			template<typename STR>
 			static inline typename STR::return_type calculate(const P& point, const SEG& segment, const STR& strategy)
@@ -221,19 +221,6 @@ namespace geometry
 			}
 		};
 
-		template <typename SEG, typename P>
-		struct distance<segment_tag, point_tag, SEG, P>
-		{
-			template<typename STR>
-			static inline typename STR::return_type calculate(const SEG& segment, const P& point, const STR& strategy)
-			{
-				return impl::distance::point_to_segment(point, segment, strategy);
-			}
-			static inline typename distance_result<P, SEG>::type calculate(const SEG& segment, const P& point)
-			{
-				return impl::distance::point_to_segment(point, segment);
-			}
-		};
 
 
 	} // namespace dispatch
@@ -255,7 +242,7 @@ namespace geometry
 		distance(const G1& geometry1, const G2& geometry2)
 	{
 		return dispatch::distance<typename tag<G1>::type,
-				typename tag<G2>::type, G1, G2>::calculate(geometry1, geometry2);
+				typename tag<G2>::type, G1, G2, true>::calculate(geometry1, geometry2);
 	}
 
 	/*!
@@ -279,7 +266,7 @@ namespace geometry
 	inline typename S::return_type distance(const G1& geometry1, const G2& geometry2, const S& strategy)
 	{
 		return dispatch::distance<typename tag<G1>::type,
-				typename tag<G2>::type, G1, G2>::calculate(geometry1, geometry2, strategy);
+				typename tag<G2>::type, G1, G2, true>::calculate(geometry1, geometry2, strategy);
 	}
 
 

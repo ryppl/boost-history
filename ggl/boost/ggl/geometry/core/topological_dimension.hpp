@@ -47,7 +47,7 @@ namespace geometry
 
 
 	/*!
-		\brief Meta-function returning gives the topological dimension of a geometry
+		\brief Meta-function returning the topological dimension of a geometry
 		\details The topological dimension defines a point as 0-dimensional, a linestring as 1-dimensional,
 			and a ring or polygon as 2-dimensional.
 		\see http://www.math.okstate.edu/mathdept/dynamics/lecnotes/node36.html

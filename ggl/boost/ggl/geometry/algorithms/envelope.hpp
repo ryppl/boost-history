@@ -42,7 +42,7 @@
 	returned as a Geometry. The polygon is defined by the corner points of the bounding
 	box [(MINX, MINY), (MAXX, MINY), (MAXX, MAXY), (MINX, MAXY), (MINX, MINY)].
 
-\note Implemented in the Geometry library: The minimum bounding box, always as a box, having min <= max
+\note Implemented in the Generic Geometry Library: The minimum bounding box, always as a box, having min <= max
 
 The envelope algorithm calculates the bounding box, or envelope, of a geometry. There are two versions:
 - envelope, taking a reference to a box as second parameter

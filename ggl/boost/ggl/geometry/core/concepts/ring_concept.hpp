@@ -31,7 +31,7 @@ namespace geometry
 
 
 	/*!
-		\brief Checks linestring concept, using Boost Concept Check Library and metafunctions
+		\brief Checks (linear) Ring concept, using Boost Concept Check Library and metafunctions
 		\ingroup concepts
 	*/
 	template <typename R>
@@ -57,7 +57,7 @@ namespace geometry
 
 
 	/*!
-		\brief Checks Ring concept (const version)
+		\brief Checks (linear) ring concept (const version)
 		\ingroup concepts
 		\details The ConstLinearRing concept check the same as the Ring concept,
 		but does not check write access.

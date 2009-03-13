@@ -18,7 +18,7 @@ namespace geometry
 	/*!
 		\brief Make a geometry
 		\ingroup access
-		\details The Geometry Library uses concepts for all its geometries. Therefore it does not rely
+		\details the Generic Geometry Library uses concepts for all its geometries. Therefore it does not rely
 		on constructors. The "make" functions are object generators creating geometries. There are overloads
 		with two, three, four or six values, which are implemented depending on the geometry specified.
 		\tparam G the geometry type

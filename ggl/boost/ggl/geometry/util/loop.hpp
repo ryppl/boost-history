@@ -47,7 +47,7 @@ namespace geometry
 			- <em>if it is a class functor</em>: bool operator()(const segment&, state&) const
 		- \a S
 			- no specific requirements here, requirments given by F
-		\note Some algorithms from the Geometry Library, for example within, centroid,
+		\note Some algorithms from the Generic Geometry Library, for example within, centroid,
 		use this method.
 		\par Examples:
 		First example, using a class functor

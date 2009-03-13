@@ -13,6 +13,8 @@
 
 #include <boost/type_traits/remove_const.hpp>
 
+#include <geometry/core/is_linear.hpp>
+
 
 namespace geometry
 {
@@ -64,29 +66,27 @@ namespace geometry
 	#ifndef DOXYGEN_NO_DISPATCH
 	namespace dispatch
 	{
-		template <typename TAG, typename G>
+		template <typename TAG, bool LINEAR, typename G>
 		struct num_points {};
 
-		template <typename G>
-		struct num_points<point_tag, G> : impl::other_number_of_points<G, 1> {};
+		template <typename TAG, typename G>
+		struct num_points<TAG, true, G> : impl::range_number_of_points<G> {};
+
 
 		template <typename G>
-		struct num_points<box_tag, G> : impl::other_number_of_points<G, 4> {};
+		struct num_points<point_tag, false, G> : impl::other_number_of_points<G, 1> {};
 
 		template <typename G>
-		struct num_points<segment_tag, G> : impl::other_number_of_points<G, 2> {};
+		struct num_points<box_tag, false, G> : impl::other_number_of_points<G, 4> {};
 
 		template <typename G>
-		struct num_points<nsphere_tag, G> : impl::other_number_of_points<G, 1> {};
+		struct num_points<segment_tag, false, G> : impl::other_number_of_points<G, 2> {};
 
 		template <typename G>
-		struct num_points<linestring_tag, G> : impl::range_number_of_points<G> {};
+		struct num_points<nsphere_tag, false, G> : impl::other_number_of_points<G, 1> {};
 
 		template <typename G>
-		struct num_points<ring_tag, G> : impl::range_number_of_points<G> {};
-
-		template <typename G>
-		struct num_points<polygon_tag, G> : impl::polygon_number_of_points<G> {};
+		struct num_points<polygon_tag, false, G> : impl::polygon_number_of_points<G> {};
 
 	} // namespace dispatch
 	#endif
@@ -107,7 +107,8 @@ namespace geometry
 	inline size_t num_points(G& geometry)
 	{
 		typedef typename boost::remove_const<G>::type NCG;
-		return dispatch::num_points<typename tag<G>::type, NCG>::get(geometry);
+		return dispatch::num_points<typename tag<G>::type, is_linear<NCG>::value,
+					NCG>::get(geometry);
 	}
 
 }

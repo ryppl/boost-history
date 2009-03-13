@@ -25,7 +25,7 @@ namespace geometry
 
 
 	/*!
-		\brief Basic point class, having coordinates dfined in a neutral way
+		\brief Basic point class, having coordinates defined in a neutral way
 		\ingroup Geometry
 		\tparam T numeric type, for example double, float, int
 		\tparam D number of coordinates, for example 2
