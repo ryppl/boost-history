@@ -15,17 +15,18 @@ namespace gtl {
   struct interval_concept {};
  
   template <typename T>
-  struct is_interval_concept {};
+  struct is_interval_concept { typedef gtl_no type; };
   template <>
-  struct is_interval_concept<interval_concept> { typedef void type; };
+  struct is_interval_concept<interval_concept> { typedef gtl_yes type; };
 
   template <typename T>
-  struct is_mutable_interval_concept {};
+  struct is_mutable_interval_concept { typedef gtl_no type; };
   template <>
-  struct is_mutable_interval_concept<interval_concept> { typedef void type; };
+  struct is_mutable_interval_concept<interval_concept> { typedef gtl_yes type; };
 
   template <typename T>
-  static inline typename interval_traits<T>::coordinate_type 
+  typename requires_1<typename gtl_if<typename is_interval_concept<typename geometry_concept<T>::type>::type>::type,
+                      typename interval_traits<T>::coordinate_type>::type
   get(const T& interval, direction_1d dir) {
     return interval_traits<T>::get(interval, dir); 
   }
@@ -49,8 +50,8 @@ namespace gtl {
   }
   
   template <typename T, typename T2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<T2>::type>::type,
+  typename requires_1< typename gtl_and<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type,
+                                        typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
                        T>::type
   copy_construct(const T2& interval) {
     return construct<T>
@@ -59,8 +60,8 @@ namespace gtl {
   }
 
   template <typename T1, typename T2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<T1>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<T2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<T1>::type>::type,
+                       typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
                        T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     lvalue = copy_construct<T1>(rvalue);
@@ -68,8 +69,8 @@ namespace gtl {
   }
 
   template <typename T, typename T2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<T>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<T2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_interval_concept<typename geometry_concept<T>::type>::type,
+                       typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
                        bool>::type 
   equivalence(const T& interval1, const T2& interval2) {
     return get(interval1, LOW) ==
@@ -92,8 +93,8 @@ namespace gtl {
   }
   
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
                        bool>::type 
   contains(const interval_type& interval,
            const interval_type_2& value, bool consider_touch = true) {
@@ -101,46 +102,47 @@ namespace gtl {
       contains(interval, get(value, HIGH), consider_touch);
   }
   
-  /// get the low coordinate
+  // get the low coordinate
   template <typename interval_type>
   typename requires_1< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        typename interval_traits<interval_type>::coordinate_type >::type
   low(const interval_type& interval) { return get(interval, LOW); }
 
-  /// get the high coordinate
+  // get the high coordinate
   template <typename interval_type>
   typename requires_1< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        typename interval_traits<interval_type>::coordinate_type >::type
   high(const interval_type& interval) { return get(interval, HIGH); }
 
-  /// get the center coordinate
+  // get the center coordinate
   template <typename interval_type>
   typename requires_1< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        typename interval_traits<interval_type>::coordinate_type >::type
   center(const interval_type& interval) { return (high(interval) + low(interval))/2; }
 
-  /// set the low coordinate to v
+  // set the low coordinate to v
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, void>::type 
   low(interval_type& interval,
       typename interval_traits<interval_type>::coordinate_type v) { 
     set(interval, LOW, v); }
   
-  /// set the high coordinate to v
+  // set the high coordinate to v
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, void>::type 
   high(interval_type& interval,
        typename interval_traits<interval_type>::coordinate_type v) { 
     set(interval, HIGH, v); }
   
-  /// get the magnitude of the interval
+  // get the magnitude of the interval
   template <typename interval_type>
-  typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference
+  typename requires_1< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                       typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference>::type
   delta(const interval_type& interval) { 
     typedef typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference diffT;
     return (diffT)high(interval) - (diffT)low(interval); }
-  
-  /// flip this about coordinate
+
+  // flip this about coordinate
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type &
   flip(interval_type& interval,
@@ -153,7 +155,7 @@ namespace gtl {
     return interval;
   }
 
-  /// scale interval by factor
+  // scale interval by factor
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type &
   scale_up(interval_type& interval, 
@@ -187,7 +189,7 @@ namespace gtl {
     return interval;
   }
   
-  /// move interval by delta
+  // move interval by delta
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type &
   move(interval_type& interval,
@@ -199,7 +201,7 @@ namespace gtl {
     return interval;
   }
   
-  /// convolve this with b
+  // convolve this with b
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type &
   convolve(interval_type& interval,
@@ -212,7 +214,7 @@ namespace gtl {
     return interval;
   }
 
-  /// deconvolve this with b
+  // deconvolve this with b
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type &
   deconvolve(interval_type& interval,
@@ -225,25 +227,28 @@ namespace gtl {
     return interval;
   }
 
-  /// convolve this with b
+  // convolve this with b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type, interval_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    interval_type>::type &
   convolve(interval_type& interval,
            const interval_type_2& b) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
     Unit newLow  = low(interval)  + low(b);
     Unit newHigh = high(interval) + high(b);
     low(interval, newLow);
-    high(interval, newHigh);
-    return interval;
+                         high(interval, newHigh);
+                         return interval;
   }
   
-  /// deconvolve this with b
+  // deconvolve this with b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       interval_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    interval_type>::type &
   deconvolve(interval_type& interval,
              const interval_type_2& b) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
@@ -254,11 +259,12 @@ namespace gtl {
     return interval;
   }
   
-  /// reflected convolve this with b
+  // reflected convolve this with b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       interval_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    interval_type>::type &
   reflected_convolve(interval_type& interval,
                      const interval_type_2& b) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
@@ -269,10 +275,12 @@ namespace gtl {
     return interval;
   }
   
-  /// reflected deconvolve this with b
+  // reflected deconvolve this with b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type, interval_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type, 
+    interval_type>::type &
   reflected_deconvolve(interval_type& interval,
                        const interval_type_2& b) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
@@ -283,7 +291,7 @@ namespace gtl {
     return interval;
   }
   
-  /// distance from a coordinate to an interval
+  // distance from a coordinate to an interval
   template <typename interval_type>
   typename requires_1< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference>::type
@@ -295,11 +303,12 @@ namespace gtl {
   }
   
   
-  /// distance between two intervals
+  // distance between two intervals
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference>::type
+  typename requires_1< 
+    typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference>::type
   euclidean_distance(const interval_type& interval,
                      const interval_type_2& b) {
     typedef typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference Unit;
@@ -307,23 +316,25 @@ namespace gtl {
     return dist[ (dist[1] > 0) + ((dist[2] > 0) << 1) ];
   }
   
-  /// check if Interval b intersects `this` Interval
+  // check if Interval b intersects `this` Interval
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       bool>::type 
-  intersects(const interval_type& interval, const interval_type_2& b, 
-             bool consider_touch = true) {
-    return consider_touch ? 
-      (low(interval) <= high(b)) & (high(interval) >= low(b)) :
-      (low(interval) < high(b)) & (high(interval) > low(b));
+  typename requires_1< 
+    typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    bool>::type 
+    intersects(const interval_type& interval, const interval_type_2& b, 
+               bool consider_touch = true) {
+                         return consider_touch ? 
+                           (low(interval) <= high(b)) & (high(interval) >= low(b)) :
+                           (low(interval) < high(b)) & (high(interval) > low(b));
   }
 
-  /// check if Interval b partially overlaps `this` Interval
+  // check if Interval b partially overlaps `this` Interval
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       bool>::type 
+  typename requires_1< 
+    typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    bool>::type 
   boundaries_intersect(const interval_type& interval, const interval_type_2& b, 
                        bool consider_touch = true) {
     return (contains(interval, low(b), consider_touch) || 
@@ -332,29 +343,30 @@ namespace gtl {
        contains(b, high(interval), consider_touch));
   }
 
-  /// check if they are end to end
+  // check if they are end to end
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                                         typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
                        bool>::type 
   abuts(const interval_type& interval, const interval_type_2& b, direction_1d dir) {
     return dir.to_int() ? low(b) == high(interval) : low(interval) == high(b);
   }
 
-  /// check if they are end to end
+  // check if they are end to end
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       bool>::type 
+  typename requires_1< 
+    typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    bool>::type 
   abuts(const interval_type& interval, const interval_type_2& b) {
     return abuts(interval, b, HIGH) || abuts(interval, b, LOW);
   } 
 
 
-  /// set 'this' interval to the intersection of 'this' and b
+  // set 'this' interval to the intersection of 'this' and b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                                         typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
                        bool>::type 
   intersect(interval_type& interval, const interval_type_2& b, bool consider_touch = true) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
@@ -370,11 +382,12 @@ namespace gtl {
     return valid;
   }
 
-  /// set 'this' interval to the generalized intersection of 'this' and b
+  // set 'this' interval to the generalized intersection of 'this' and b
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       interval_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    interval_type>::type &
   generalized_intersect(interval_type& interval, const interval_type_2& b) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
     Unit coords[4] = {low(interval), high(interval), low(b), high(b)};
@@ -385,7 +398,7 @@ namespace gtl {
     return interval;
   }
 
-  /// bloat the Interval
+  // bloat the Interval
   template <typename interval_type>
   typename requires_1< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        interval_type>::type &
@@ -395,7 +408,7 @@ namespace gtl {
     return interval;
   }
   
-  /// bloat the specified side of `this` Interval
+  // bloat the specified side of `this` Interval
   template <typename interval_type>
   typename requires_1< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        interval_type>::type &
@@ -405,7 +418,7 @@ namespace gtl {
   }
 
 
-  /// shrink the Interval
+  // shrink the Interval
   template <typename interval_type>
   typename requires_1< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        interval_type>::type &
@@ -413,7 +426,7 @@ namespace gtl {
     return bloat(interval, -shrinking);
   }
 
-  /// shrink the specified side of `this` Interval
+  // shrink the specified side of `this` Interval
   template <typename interval_type>
   typename requires_1< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        interval_type>::type &
@@ -421,11 +434,12 @@ namespace gtl {
     return bloat(interval, dir, -shrinking);
   }
 
-  /// Enlarge `this` Interval to encompass the specified Interval
+  // Enlarge `this` Interval to encompass the specified Interval
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       bool>::type
+  typename requires_1<
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    bool>::type
   encompass(interval_type& interval, const interval_type_2& b) {
     bool retval = !contains(interval, b, true);
     low(interval, std::min(low(interval), low(b)));
@@ -433,7 +447,7 @@ namespace gtl {
     return retval;
   }    
 
-  /// Enlarge `this` Interval to encompass the specified Interval
+  // Enlarge `this` Interval to encompass the specified Interval
   template <typename interval_type>
   typename requires_1< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        bool>::type
@@ -444,7 +458,7 @@ namespace gtl {
     return retval;
   }    
 
-  /// gets the half of the interval as an interval
+  // gets the half of the interval as an interval
   template <typename interval_type>
   typename requires_1<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, interval_type>::type 
   get_half(const interval_type& interval, direction_1d d1d) {
@@ -454,12 +468,13 @@ namespace gtl {
                                     (d1d == LOW) ? c : get(interval, HIGH));
   }
 
-  /// returns true if the 2 intervals exactly touch at one value, like in  l1 <= h1 == l2 <= h2
-  /// sets the argument to the joined interval
+  // returns true if the 2 intervals exactly touch at one value, like in  l1 <= h1 == l2 <= h2
+  // sets the argument to the joined interval
   template <typename interval_type, typename interval_type_2>
-  typename requires_2< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type,
-                       bool>::type 
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
+    bool>::type 
   join_with(interval_type& interval, const interval_type_2& b) {
     if(abuts(interval, b)) {
       encompass(interval, b);

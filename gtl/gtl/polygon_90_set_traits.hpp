@@ -244,7 +244,7 @@ namespace gtl {
   template <typename output_container_type, typename pst>
   void get_90_dispatch(output_container_type& output, const pst& ps,
                        orientation_2d orient, rectangle_concept tag) {
-    get_rectangles(output, ps.begin(), ps.end(), orient, tag);
+    form_rectangles(output, ps.begin(), ps.end(), orient, rectangle_concept());
   }
 
   template <typename output_container_type, typename pst>
@@ -326,18 +326,18 @@ namespace gtl {
   template <typename T>
   struct is_polygon_90_set_concept { };
   template <>
-  struct is_polygon_90_set_concept<polygon_90_set_concept> { typedef void type; };
+  struct is_polygon_90_set_concept<polygon_90_set_concept> { typedef gtl_yes type; };
   template <>
-  struct is_polygon_90_set_concept<rectangle_concept> { typedef void type; };
+  struct is_polygon_90_set_concept<rectangle_concept> { typedef gtl_yes type; };
   template <>
-  struct is_polygon_90_set_concept<polygon_90_concept> { typedef void type; };
+  struct is_polygon_90_set_concept<polygon_90_concept> { typedef gtl_yes type; };
   template <>
-  struct is_polygon_90_set_concept<polygon_90_with_holes_concept> { typedef void type; };
+  struct is_polygon_90_set_concept<polygon_90_with_holes_concept> { typedef gtl_yes type; };
   
   template <typename T>
-  struct is_mutable_polygon_90_set_concept {};
+  struct is_mutable_polygon_90_set_concept { typedef gtl_no type; };
   template <>
-  struct is_mutable_polygon_90_set_concept<polygon_90_set_concept> { typedef void type; };
+  struct is_mutable_polygon_90_set_concept<polygon_90_set_concept> { typedef gtl_yes type; };
   
   template <typename T>
   struct geometry_concept<polygon_90_set_data<T> > { typedef polygon_90_set_concept type; };

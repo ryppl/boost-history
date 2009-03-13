@@ -25,10 +25,10 @@ namespace gtl {
       } else {
         sort();
         arbitrary_boolean_op<coordinate_type> abo;
-        polygon_set_data<coordinate_type> tmp;
-        abo.execute(tmp, begin(), end(), end(), end(), 0);
-        data_.swap(tmp.data_);
-        is_45_ = tmp.is_45_;
+        polygon_set_data<coordinate_type> tmp2;
+        abo.execute(tmp2, begin(), end(), end(), end(), 0);
+        data_.swap(tmp2.data_);
+        is_45_ = tmp2.is_45_;
         dirty_ = false;
       }
     }
@@ -54,8 +54,8 @@ namespace gtl {
     static inline bool sort(const polygon_set_view<ltype, rtype, op_type>& polygon_set);
   };
 
-  template <typename value_type, typename geometry_type_1, typename geometry_type_2>
-  void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_, int op_type) {
+  template <typename value_type, typename geometry_type_1, typename geometry_type_2, int op_type>
+  void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_) {
     typedef geometry_type_1 ltype;
     typedef geometry_type_2 rtype;
     typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
@@ -65,7 +65,7 @@ namespace gtl {
     insert_into_view_arg(rinput_, rvalue_);
     polygon_45_set_data<coordinate_type> l45, r45, o45;
     if(linput_.downcast(l45) && rinput_.downcast(r45)) {
-      l45.applyAdaptiveBoolean_(o45, op_type, r45);
+      l45.template applyAdaptiveBoolean_<op_type>(o45, r45);
       output_.insert(o45);
     } else {
       arbitrary_boolean_op<coordinate_type> abo;
@@ -91,12 +91,12 @@ namespace gtl {
                      const rtype& rvalue ) :
       lvalue_(lvalue), rvalue_(rvalue), evaluated_(false) {}
 
-    /// get iterator to begin vertex data
+    // get iterator to begin vertex data
   public:
     const value_type& value() const {
       if(!evaluated_) {
         evaluated_ = true;
-        execute_boolean_op(output_, lvalue_, rvalue_, op_type);
+        execute_boolean_op<value_type, ltype, rtype, op_type>(output_, lvalue_, rvalue_);
       }
       return output_;
     }
@@ -146,10 +146,16 @@ namespace gtl {
     typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
     typedef polygon_set_data<coordinate_type> value_type;
     value_type output_;
-    execute_boolean_op(output_, lvalue_, rvalue_, op_type);
+    execute_boolean_op<value_type, geometry_type_1, geometry_type_2, op_type>(output_, lvalue_, rvalue_);
     polygon_set_mutable_traits<geometry_type_1>::set(lvalue_, output_.begin(), output_.end());
     return lvalue_;
   }
+
+  // copy constructor
+  template <typename coordinate_type>
+  template <typename ltype, typename rtype, int op_type> 
+  polygon_set_data<coordinate_type>::polygon_set_data(const polygon_set_view<ltype, rtype, op_type>& that) :
+    data_(that.value().data_), dirty_(that.value().dirty_), unsorted_(that.value().unsorted_), is_45_(that.value().is_45_) {}
 
   template <typename ltype, typename rtype, int op_type>
   struct geometry_concept<polygon_set_view<ltype, rtype, op_type> > { typedef polygon_set_concept type; };

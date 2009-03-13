@@ -29,6 +29,43 @@ namespace gtl {
 
   };
 
+  template <typename value_type, typename ltype, typename rtype, int op_type>
+  struct compute_45_set_value {
+    static
+    void value(value_type& output_, const ltype& lvalue_, const rtype& rvalue_) {
+      output_.set(polygon_45_set_traits<ltype>::begin(lvalue_),
+                  polygon_45_set_traits<ltype>::end(lvalue_));
+      value_type rinput_;
+      rinput_.set(polygon_45_set_traits<rtype>::begin(rvalue_),
+                  polygon_45_set_traits<rtype>::end(rvalue_));
+      if(op_type == 0)
+        output_ |= rinput_;
+      else if(op_type == 1)
+        output_ &= rinput_;
+      else if(op_type == 2)
+        output_ ^= rinput_;
+      else
+        output_ -= rinput_;
+    }
+  };
+
+  template <typename value_type, typename ltype, typename rcoord, int op_type>
+  struct compute_45_set_value<value_type, ltype, polygon_45_set_data<rcoord>, op_type> {
+    static
+    void value(value_type& output_, const ltype& lvalue_, const polygon_45_set_data<rcoord>& rvalue_) {
+      output_.set(polygon_45_set_traits<ltype>::begin(lvalue_),
+                  polygon_45_set_traits<ltype>::end(lvalue_));
+      if(op_type == 0)
+        output_ |= rvalue_;
+      else if(op_type == 1)
+        output_ &= rvalue_;
+      else if(op_type == 2)
+        output_ ^= rvalue_;
+      else
+        output_ -= rvalue_;
+    }
+  };
+
   template <typename ltype, typename rtype, int op_type>
   class polygon_45_set_view {
   public:
@@ -43,28 +80,15 @@ namespace gtl {
     mutable bool evaluated_;
   public:
     polygon_45_set_view(const ltype& lvalue,
-                     const rtype& rvalue ) :
+                        const rtype& rvalue ) :
       lvalue_(lvalue), rvalue_(rvalue), evaluated_(false) {}
 
-    /// get iterator to begin vertex data
+    // get iterator to begin vertex data
   public:
     const value_type& value() const {
       if(!evaluated_) {
         evaluated_ = true;
-        value_type rinput_;
-        output_.set(polygon_45_set_traits<ltype>::begin(lvalue_),
-                    polygon_45_set_traits<ltype>::end(lvalue_));
-        //polygon_45_set_traits<rtype>::clean(rvalue_);
-        rinput_.set(polygon_45_set_traits<rtype>::begin(rvalue_),
-                  polygon_45_set_traits<rtype>::end(rvalue_));
-        if(op_type == 0)
-          output_ |= rinput_;
-        else if(op_type == 1)
-          output_ &= rinput_;
-        else if(op_type == 2)
-          output_ ^= rinput_;
-        else
-          output_ -= rinput_;
+        compute_45_set_value<value_type, ltype, rtype, op_type>::value(output_, lvalue_, rvalue_);
       }
       return output_;
     }
@@ -75,14 +99,14 @@ namespace gtl {
     bool dirty() const { return value().dirty(); } //result of a boolean is clean
     bool sorted() const { return value().sorted(); } //result of a boolean is sorted
 
-//     template <typename input_iterator_type>
-//     void set(input_iterator_type input_begin, input_iterator_type input_end, 
-//              orientation_2d orient) const {
-//       orient_ = orient;
-//       output_.clear();
-//       output_.insert(output_.end(), input_begin, input_end);
-//       std::sort(output_.begin(), output_.end());
-//     }
+    //     template <typename input_iterator_type>
+    //     void set(input_iterator_type input_begin, input_iterator_type input_end, 
+    //              orientation_2d orient) const {
+    //       orient_ = orient;
+    //       output_.clear();
+    //       output_.insert(output_.end(), input_begin, input_end);
+    //       std::sort(output_.begin(), output_.end());
+    //     }
   };
 
   template <typename ltype, typename rtype, int op_type>
@@ -143,9 +167,10 @@ namespace gtl {
   struct geometry_concept<polygon_45_set_view<ltype, rtype, op_type> > { typedef polygon_45_set_concept type; };
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
+  typename requires_1< typename gtl_and_3< 
+    typename is_polygon_45_or_90_set_type<geometry_type_1>::type,
+    typename is_polygon_45_or_90_set_type<geometry_type_2>::type,
+    typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
                        polygon_45_set_view<geometry_type_1, geometry_type_2, 0> >::type 
   operator|(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 0>
@@ -153,19 +178,28 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
-                       polygon_45_set_view<geometry_type_1, geometry_type_2, 0> >::type 
+  typename requires_1< typename gtl_and_3< typename is_polygon_45_or_90_set_type<geometry_type_1>
+#ifdef __ICC 
+      ::type
+#endif
+  ::type, typename is_polygon_45_or_90_set_type<geometry_type_2>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, polygon_45_set_view<geometry_type_1, geometry_type_2, 0> >::type 
   operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 0>
       (lvalue, rvalue);
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
+  typename requires_1< typename gtl_and_3< typename is_polygon_45_or_90_set_type<geometry_type_1>::type,
+                                           typename is_polygon_45_or_90_set_type<geometry_type_2>::type,
+                                           typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
                        polygon_45_set_view<geometry_type_1, geometry_type_2, 1> >::type 
   operator*(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 1>
@@ -173,9 +207,9 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
+  typename requires_1< typename gtl_and_3< typename is_polygon_45_or_90_set_type<geometry_type_1>::type,
+                                           typename is_polygon_45_or_90_set_type<geometry_type_2>::type,
+                                           typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
                        polygon_45_set_view<geometry_type_1, geometry_type_2, 2> >::type 
   operator^(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 2>
@@ -183,99 +217,124 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>::type,
-                       polygon_45_set_view<geometry_type_1, geometry_type_2, 3> >::type 
+  typename requires_1< typename gtl_and_3< typename is_polygon_45_or_90_set_type<geometry_type_1>
+#ifdef __ICC 
+      ::type
+#endif
+  ::type, typename is_polygon_45_or_90_set_type<geometry_type_2>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, typename is_either_polygon_45_set_type<geometry_type_1, geometry_type_2>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, polygon_45_set_view<geometry_type_1, geometry_type_2, 3> >::type 
   operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 3>
       (lvalue, rvalue);
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 0>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator|=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 0>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< 
+    typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+    typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator*=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 1>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator&=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 1>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
-                       geometry_type_1>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                      typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+    geometry_type_1>::type &
   operator^=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 2>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_45_or_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op_45<geometry_type_1, geometry_type_2, 3>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       polygon_45_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> >::type 
-  operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
-    polygon_45_set_data<typename polygon_45_set_traits<geometry_type_1>::coordinate_type> ps;
-    assign(ps, lvalue);
-    resize(ps, rvalue);
-    return ps;
-  }
-
-  template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       polygon_45_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> >::type 
-  operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
-    polygon_45_set_data<typename polygon_45_set_traits<geometry_type_1>::coordinate_type> ps;
-    assign(ps, lvalue);
-    resize(ps, -rvalue);
-    return ps;
-  }
-
-  template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_set_type<geometry_type_1>::type, 
+                                         typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, 
+                                                                coordinate_concept>::type>::type,
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     return resize(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+  typename requires_1< typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>::type, 
+                                         typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, 
+                                                                coordinate_concept>::type>::type,
                        geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     return resize(lvalue, -rvalue);
+  }
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename requires_1< typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, 
+                                 coordinate_concept>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, geometry_type_1>::type
+  operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval += rvalue;
+    return retval;
+  }
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename requires_1< typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<geometry_type_1>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, 
+                                 coordinate_concept>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type, geometry_type_1>::type
+  operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval -= rvalue;
+    return retval;
   }
 }
 #endif

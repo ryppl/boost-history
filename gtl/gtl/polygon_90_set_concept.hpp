@@ -10,28 +10,28 @@
 namespace gtl {
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_polygon_90_set_type<polygon_set_type>::type,
                        typename polygon_90_set_traits<polygon_set_type>::iterator_type>::type
   begin_90_set_data(const polygon_set_type& polygon_set) {
     return polygon_90_set_traits<polygon_set_type>::begin(polygon_set);
   }
   
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_polygon_90_set_type<polygon_set_type>::type,
                        typename polygon_90_set_traits<polygon_set_type>::iterator_type>::type
   end_90_set_data(const polygon_set_type& polygon_set) {
     return polygon_90_set_traits<polygon_set_type>::end(polygon_set);
   }
   
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_polygon_90_set_type<polygon_set_type>::type,
                        orientation_2d>::type
   scanline_orientation(const polygon_set_type& polygon_set) {
     return polygon_90_set_traits<polygon_set_type>::orient(polygon_set);
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_polygon_90_set_type<polygon_set_type>::type,
                        bool>::type
   clean(const polygon_set_type& polygon_set) {
     return polygon_90_set_traits<polygon_set_type>::clean(polygon_set);
@@ -39,28 +39,32 @@ namespace gtl {
 
   //assign
   template <typename polygon_set_type_1, typename polygon_set_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_90_set_type<polygon_set_type_2>::type>::type,
-                       polygon_set_type_1>::type &
+  typename requires_1 <
+    typename gtl_and<
+      typename is_mutable_polygon_90_set_type<polygon_set_type_1>::type,
+      typename is_polygon_90_set_type<polygon_set_type_2>::type>::type,
+    polygon_set_type_1>::type &
   assign(polygon_set_type_1& lvalue, const polygon_set_type_2& rvalue) {
-    polygon_90_set_mutable_traits<polygon_set_type_1>::set(lvalue, begin_90_set_data(rvalue), end_90_set_data(rvalue), scanline_orientation(rvalue));
+    polygon_90_set_mutable_traits<polygon_set_type_1>::set(lvalue, begin_90_set_data(rvalue), end_90_set_data(rvalue), 
+                                                           scanline_orientation(rvalue));
     return lvalue;
   }
 
   template <typename T1, typename T2>
-  struct are_not_both_rectangle_concept { typedef void type; };
+  struct are_not_both_rectangle_concept { typedef gtl_yes type; };
   template <>
-  struct are_not_both_rectangle_concept<rectangle_concept, rectangle_concept> {};
+  struct are_not_both_rectangle_concept<rectangle_concept, rectangle_concept> { typedef gtl_no type; };
 
   //equivalence
   template <typename polygon_set_type_1, typename polygon_set_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_90_set_type<polygon_set_type_2>::type>::type,
-                       typename are_not_both_rectangle_concept<typename geometry_concept<polygon_set_type_1>::type,
-                                                               typename geometry_concept<polygon_set_type_2>::type>::type,
+  typename requires_1< typename gtl_and_3< 
+    typename is_polygon_90_set_type<polygon_set_type_1>::type,
+    typename is_polygon_90_set_type<polygon_set_type_2>::type,
+    typename are_not_both_rectangle_concept<typename geometry_concept<polygon_set_type_1>::type,
+                                            typename geometry_concept<polygon_set_type_2>::type>::type>::type,
                        bool>::type 
   equivalence(const polygon_set_type_1& lvalue,
-                                 const polygon_set_type_2& rvalue) {
+              const polygon_set_type_2& rvalue) {
     polygon_90_set_data<typename polygon_90_set_traits<polygon_set_type_1>::coordinate_type> ps1;
     assign(ps1, lvalue);
     polygon_90_set_data<typename polygon_90_set_traits<polygon_set_type_2>::coordinate_type> ps2;
@@ -68,32 +72,56 @@ namespace gtl {
     return ps1 == ps2;
   }
 
+
+  //get rectangle tiles (slicing orientation is vertical)
+  template <typename output_container_type, typename polygon_set_type>
+  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+                       void>::type
+  get_rectangles(output_container_type& output, const polygon_set_type& polygon_set) {
+    clean(polygon_set);
+    polygon_90_set_data<typename polygon_90_set_traits<polygon_set_type>::coordinate_type> ps(VERTICAL);
+    assign(ps, polygon_set);
+    ps.get_rectangles(output);
+  }
+
+  //get rectangle tiles
+  template <typename output_container_type, typename polygon_set_type>
+  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
+                       void>::type
+  get_rectangles(output_container_type& output, const polygon_set_type& polygon_set, orientation_2d slicing_orientation) {
+    clean(polygon_set);
+    polygon_90_set_data<typename polygon_90_set_traits<polygon_set_type>::coordinate_type> ps;
+    assign(ps, polygon_set);
+    ps.get_rectangles(output, slicing_orientation);
+  }
+
   //get: min_rectangles max_rectangles
   template <typename output_container_type, typename polygon_set_type>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<polygon_set_type>::type>::type,
-                       typename is_same_type_SFINAE<rectangle_concept,
-                                                    typename geometry_concept
-                                                    <typename std::iterator_traits
-                                                     <typename output_container_type::iterator>::value_type>::type>::type,
+  typename requires_1 <typename gtl_and< 
+    typename is_polygon_90_set_type<polygon_set_type>::type,
+    typename gtl_same_type<rectangle_concept,
+                           typename geometry_concept
+                           <typename std::iterator_traits
+                            <typename output_container_type::iterator>::value_type>::type>::type>::type,
                        void>::type
   get_max_rectangles(output_container_type& output, const polygon_set_type& polygon_set) {
     std::vector<rectangle_data<typename polygon_90_set_traits<polygon_set_type>::coordinate_type> > rects;
     assign(rects, polygon_set);
     MaxCover<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::getMaxCover(output, rects, scanline_orientation(polygon_set));
   }
-
+  
   //clear
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        void>::type
   clear(polygon_set_type& polygon_set) {
     polygon_90_set_data<typename polygon_90_set_traits<polygon_set_type>::coordinate_type> ps(scanline_orientation(polygon_set));
     assign(polygon_set, ps);
   }
-
+  
   //empty
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        bool>::type
   empty(const polygon_set_type& polygon_set) {
     if(clean(polygon_set)) return begin_90_set_data(polygon_set) == end_90_set_data(polygon_set);
@@ -105,24 +133,20 @@ namespace gtl {
  
   //extents
   template <typename polygon_set_type, typename rectangle_type>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
-                       typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1 <typename gtl_and< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
+                                         typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        bool>::type
   extents(rectangle_type& extents_rectangle, 
                              const polygon_set_type& polygon_set) {
-    std::vector<rectangle_type> rects;
-    assign(rects, polygon_set);
-    if(rects.empty()) return false;
-    extents_rectangle = rects[0];
-    for(unsigned int i = 1; i < rects.size(); ++i) {
-      encompass(extents_rectangle, rects[i]);
-    }
-    return true;
+    typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    return ps.extents(extents_rectangle);
   }
 
   //area
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::manhattan_area_type>::type
   area(const polygon_set_type& polygon_set) {
     typedef rectangle_data<typename polygon_90_set_traits<polygon_set_type>::coordinate_type> rectangle_type;
@@ -138,52 +162,48 @@ namespace gtl {
 
   //interact
   template <typename polygon_set_type_1, typename polygon_set_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type_1>::type>::type,
-                       typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type_2>::type>::type,
+  typename requires_1 <typename gtl_and< typename is_mutable_polygon_90_set_type<polygon_set_type_1>::type,
+                                         typename is_mutable_polygon_90_set_type<polygon_set_type_2>::type>::type,
                        polygon_set_type_1>::type
   interact(polygon_set_type_1& polygon_set_1, const polygon_set_type_2& polygon_set_2) {
     typedef typename polygon_90_set_traits<polygon_set_type_1>::coordinate_type Unit;
-    typename touch_90_operation<Unit>::TouchSetData tsd;
     polygon_90_set_data<Unit> ps(scanline_orientation(polygon_set_2));
-    assign(ps, polygon_set_1);
-    touch_90_operation<Unit>::populateTouchSetData(tsd, begin_90_set_data(ps), end_90_set_data(ps), 0);
-    std::vector<polygon_90_data<Unit> > polys;
-    assign(polys, polygon_set_1);
-    std::vector<std::set<int> > graph(polys.size()+1, std::set<int>());
-    for(unsigned int i = 0; i < polys.size(); ++i){
-      polygon_90_set_data<Unit> psTmp(scanline_orientation(polygon_set_2));
-      psTmp.insert(polys[i]);
-      psTmp.clean();
-      touch_90_operation<Unit>::populateTouchSetData(tsd, psTmp.begin(), psTmp.end(), i+1);
-    }
-    touch_90_operation<Unit>::performTouch(graph, tsd);
-    clear(polygon_set_1);
-    ps.clear();
-    for(std::set<int>::iterator itr = graph[0].begin(); itr != graph[0].end(); ++itr){
-      ps.insert(polys[(*itr)-1]);
-    }
+    polygon_90_set_data<Unit> ps2(ps);
+    ps.insert(polygon_set_1);
+    ps2.insert(polygon_set_2);
+    ps.interact(ps2);
     assign(polygon_set_1, ps);
     return polygon_set_1;
   }
   
   //self_intersect
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   self_intersect(polygon_set_type& polygon_set) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
     polygon_90_set_data<Unit> ps;
     assign(ps, polygon_set);
-    interval_data<Unit> ivl(std::numeric_limits<Unit>::min(), std::numeric_limits<Unit>::max());
-    rectangle_data<Unit> rect(ivl, ivl);
-    ps.insert(rect, true);
-    ps.clean();
+    ps.self_intersect();
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
+  //self_xor
+  template <typename polygon_set_type>
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  self_xor(polygon_set_type& polygon_set) {
+    typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.self_xor();
     assign(polygon_set, ps);
     return polygon_set;
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
@@ -191,7 +211,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, orientation_2d orient,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
@@ -201,7 +221,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, orientation_2d orient,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type low_bloating,
@@ -212,7 +232,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, direction_2d dir,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
@@ -226,7 +246,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type west_bloating,
@@ -234,28 +254,16 @@ namespace gtl {
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type south_bloating,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type north_bloating) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
-    std::vector<rectangle_data<Unit> > rects;
-    if(!clean(polygon_set)) {
-      polygon_90_set_data<Unit> ps;
-      assign(ps, polygon_set);
-      clean(ps);
-      assign(rects, ps);
-    } else {
-      assign(rects, polygon_set);
-    }
-    rectangle_data<Unit> convolutionRectangle(interval_data<Unit>(-((Unit)west_bloating), (Unit)east_bloating),
-                                              interval_data<Unit>(-((Unit)south_bloating), (Unit)north_bloating));
-    for(typename std::vector<rectangle_data<Unit> >::iterator itr = rects.begin();
-        itr != rects.end(); ++itr) {
-      convolve(*itr, convolutionRectangle);
-    }
-    clear(polygon_set);
-    assign(polygon_set, rects);
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.bloat(west_bloating, east_bloating, south_bloating, north_bloating);
+    ps.clean();
+    assign(polygon_set, ps);
     return polygon_set;
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type shrinking) {
@@ -263,7 +271,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, orientation_2d orient,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type shrinking) {
@@ -273,7 +281,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, orientation_2d orient,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type low_shrinking,
@@ -284,7 +292,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, direction_2d dir,
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type shrinking) {
@@ -298,7 +306,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type west_shrinking,
@@ -308,36 +316,14 @@ namespace gtl {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
     polygon_90_set_data<Unit> ps;
     assign(ps, polygon_set);
+    ps.shrink(west_shrinking, east_shrinking, south_shrinking, north_shrinking);
     ps.clean();
-    rectangle_data<Unit> externalBoundary;
-    if(!extents(externalBoundary, ps)) return polygon_set;
-    bloat(externalBoundary, 10); //bloat by diferential ammount
-    //insert a hole that encompasses the data
-    ps.insert(externalBoundary, true); //note that the set is in a dirty state now
-    ps.sort();  //does not apply implicit or operation
-    std::vector<rectangle_data<Unit> > rects;
-    //begin does not apply implicit or operation, this is a dirty range
-    get_rectangles(rects, ps.begin(), ps.end(), scanline_orientation(ps), rectangle_concept());
-    ps.clear();
-    rectangle_data<Unit> convolutionRectangle(interval_data<Unit>(-((Unit)east_shrinking), (Unit)west_shrinking),
-                                              interval_data<Unit>(-((Unit)north_shrinking), (Unit)south_shrinking));
-    for(typename std::vector<rectangle_data<Unit> >::iterator itr = rects.begin();
-        itr != rects.end(); ++itr) {
-      rectangle_data<Unit>& rect = *itr;
-      convolve(rect, convolutionRectangle);
-      //insert rectangle as a hole
-      ps.insert(rect, true);
-    }
-    convolve(externalBoundary, convolutionRectangle);
-    //insert duplicate of external boundary as solid to cancel out the external hole boundaries
-    ps.insert(externalBoundary);
-    ps.clean(); //we have negative values in the set, so we need to apply an OR operation to make it valid input to a boolean
     assign(polygon_set, ps);
     return polygon_set;
   }
 
   template <typename polygon_set_type, typename coord_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   resize(polygon_set_type& polygon_set, coord_type resizing) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
@@ -350,40 +336,53 @@ namespace gtl {
     return polygon_set;
   }
 
+  //positive or negative values allow for any and all directions of sizing
+  template <typename polygon_set_type, typename coord_type>
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  resize(polygon_set_type& polygon_set, coord_type west, coord_type east, coord_type south, coord_type north) {
+    typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.resize(west, east, south, north);
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   grow_and(polygon_set_type& polygon_set, 
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
     return grow_and(polygon_set, bloating, bloating, bloating, bloating);
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   grow_and(polygon_set_type& polygon_set, orientation_2d orient,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
     if(orient == orientation_2d(HORIZONTAL))
       return grow_and(polygon_set, bloating, bloating, 0, 0);
     return grow_and(polygon_set, 0, 0, bloating, bloating);
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   grow_and(polygon_set_type& polygon_set, orientation_2d orient,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type low_bloating,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type high_bloating) {
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type low_bloating,
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type high_bloating) {
     if(orient == orientation_2d(HORIZONTAL))
       return grow_and(polygon_set, low_bloating, high_bloating, 0, 0);
     return grow_and(polygon_set, 0, 0, low_bloating, high_bloating);
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   grow_and(polygon_set_type& polygon_set, direction_2d dir,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
     if(dir == direction_2d(EAST))
       return grow_and(polygon_set, 0, bloating, 0, 0);
     if(dir == direction_2d(WEST))
@@ -397,10 +396,10 @@ namespace gtl {
   typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
                        polygon_set_type>::type &
   grow_and(polygon_set_type& polygon_set, 
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type west_bloating,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type east_bloating,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type south_bloating,
-        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type north_bloating) {
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type west_bloating,
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type east_bloating,
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type south_bloating,
+           typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type north_bloating) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
     std::vector<polygon_90_data<Unit> > polys;
     assign(polys, polygon_set);
@@ -419,106 +418,90 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   scale_up(polygon_set_type& polygon_set, 
            typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>
            ::unsigned_area_type factor) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
-    std::vector<std::pair<Unit, std::pair<Unit, int> > > tmpVec;
     polygon_90_set_data<Unit> ps;
     assign(ps, polygon_set);
-    tmpVec.insert(tmpVec.begin(), ps.begin(), ps.end());
-    for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = tmpVec.begin();
-        itr != tmpVec.end(); ++itr) {
-      (*itr).first *= (Unit)factor;
-      (*itr).second.first *= (Unit)factor;
-    }
-    polygon_90_set_mutable_traits<polygon_set_type>::set(polygon_set, tmpVec.begin(), tmpVec.end(),
-                                                         scanline_orientation(polygon_set));
+    ps.scale_up(factor);
+    assign(polygon_set, ps);
     return polygon_set;
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   scale_down(polygon_set_type& polygon_set, 
              typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>
              ::unsigned_area_type factor) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
-    typedef typename coordinate_traits<Unit>::coordinate_distance dt;
-    std::vector<std::pair<Unit, std::pair<Unit, int> > > tmpVec;
-    polygon_90_set_data<Unit> ps(scanline_orientation(polygon_set));
+    polygon_90_set_data<Unit> ps;
     assign(ps, polygon_set);
-    tmpVec.insert(tmpVec.begin(), ps.begin(), ps.end());
-    for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = tmpVec.begin();
-        itr != tmpVec.end(); ++itr) {
-      (*itr).first = scaling_policy<Unit>::round((dt)((*itr).first) / (dt)factor);
-      (*itr).second.first = scaling_policy<Unit>::round((dt)((*itr).second.first) / (dt)factor);
-    }
-    ps.clear();
-    ps.insert(tmpVec.begin(), tmpVec.end(), scanline_orientation(polygon_set));
-    clean(ps); 
+    ps.scale_down(factor);
     assign(polygon_set, ps);
     return polygon_set;
   }
 
   template <typename polygon_set_type, typename scaling_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   scale(polygon_set_type& polygon_set, 
         const scaling_type& scaling) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
-    typedef typename coordinate_traits<Unit>::coordinate_distance dt;
-    std::vector<std::pair<Unit, std::pair<Unit, int> > > tmpVec;
-    tmpVec.insert(tmpVec.begin(), begin_90_set_data(polygon_set), end_90_set_data(polygon_set));
-    for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = tmpVec.begin();
-        itr != tmpVec.end(); ++itr) {
-      if(scanline_orientation(polygon_set) == orientation_2d(VERTICAL)) {
-        scaling.scale((*itr).first, (*itr).second.first);
-      } else {
-        scaling.scale((*itr).second.first, (*itr).first);
-      }
-    }
-    polygon_90_set_data<Unit> ps(scanline_orientation(polygon_set));
-    ps.insert(tmpVec.begin(), tmpVec.end(), scanline_orientation(polygon_set));
-    clean(ps); 
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.scale(scaling);
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
+  //move
+  template <typename polygon_set_type, typename coord_type>
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  move(polygon_set_type& polygon_set,
+       orientation_2d orient, coord_type displacement) {
+    if(orient == HORIZONTAL)
+      return move(polygon_set, displacement, 0);
+    else 
+      return move(polygon_set, 0, displacement);
+  }
+
+  template <typename polygon_set_type, typename coord_type>
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  move(polygon_set_type& polygon_set, coord_type x_displacement, coord_type y_displacement) {
+    typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.move(x_displacement, y_displacement);
+    ps.clean();
     assign(polygon_set, ps);
     return polygon_set;
   }
 
   //transform
   template <typename polygon_set_type, typename transformation_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   transform(polygon_set_type& polygon_set,
             const transformation_type& transformation) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
-    typedef typename coordinate_traits<Unit>::coordinate_distance dt;
-    std::vector<std::pair<Unit, std::pair<Unit, int> > > tmpVec;
-    tmpVec.insert(tmpVec.begin(), begin_90_set_data(polygon_set), end_90_set_data(polygon_set));
-    direction_2d dir1, dir2;
-    transformation.get_directions(dir1, dir2);
-    int sign = dir1.get_sign() * dir2.get_sign();
-    for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = tmpVec.begin();
-        itr != tmpVec.end(); ++itr) {
-      if(scanline_orientation(polygon_set) == orientation_2d(VERTICAL)) {
-        transformation.transform((*itr).first, (*itr).second.first);
-      } else {
-        transformation.transform((*itr).second.first, (*itr).first);
-      }
-      (*itr).second.second *= sign;
-    }
-    polygon_90_set_data<Unit> ps(scanline_orientation(polygon_set));
-    ps.insert(tmpVec.begin(), tmpVec.end(), scanline_orientation(polygon_set));
-    clean(ps);
+    polygon_90_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.transform(transformation);
+    ps.clean();
     assign(polygon_set, ps);
     return polygon_set;
+    typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
   }
 
   //keep
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   keep(polygon_set_type& polygon_set, 
        typename coordinate_traits<typename polygon_90_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type min_area,

@@ -30,10 +30,10 @@ public:
     return *this;
   }
 
-  /// copy constructor (since we have dynamic memory)
+  // copy constructor (since we have dynamic memory)
   inline polygon_45_data(const polygon_45_data& that) : coords_(that.coords_) {}
   
-  /// assignment operator (since we have dynamic memory do a deep copy)
+  // assignment operator (since we have dynamic memory do a deep copy)
   inline polygon_45_data& operator=(const polygon_45_data& that) {
     coords_ = that.coords_;
     return *this;
@@ -52,10 +52,10 @@ public:
 
   inline bool operator!=(const polygon_45_data& that) const { return !((*this) == that); }
 
-  /// get begin iterator, returns a pointer to a const Unit
+  // get begin iterator, returns a pointer to a const Unit
   inline iterator_type begin() const { return coords_.begin(); }
 
-  /// get end iterator, returns a pointer to a const Unit
+  // get end iterator, returns a pointer to a const Unit
   inline iterator_type end() const { return coords_.end(); }
 
   inline std::size_t size() const { return coords_.size(); }

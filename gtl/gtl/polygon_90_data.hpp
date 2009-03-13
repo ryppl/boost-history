@@ -20,12 +20,12 @@ public:
 
   inline polygon_90_data(){;} //do nothing default constructor
 
-  /// initialize a polygon from x,y values, it is assumed that the first is an x
-  /// and that the input is a well behaved polygon
+  // initialize a polygon from x,y values, it is assumed that the first is an x
+  // and that the input is a well behaved polygon
   template<class iT>
   inline polygon_90_data& set(iT begin_point, iT end_point) {
-    return set_compact(iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(begin_point),
-        iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(end_point));
+    return set_compact(iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(begin_point, end_point),
+                       iterator_points_to_compact<iT, typename std::iterator_traits<iT>::value_type>(end_point, end_point));
   }
 
   template<class iT>
@@ -38,10 +38,10 @@ public:
     return *this;
   }
 
-  /// copy constructor (since we have dynamic memory)
+  // copy constructor (since we have dynamic memory)
   inline polygon_90_data(const polygon_90_data& that) : coords_(that.coords_) {}
   
-  /// assignment operator (since we have dynamic memory do a deep copy)
+  // assignment operator (since we have dynamic memory do a deep copy)
   inline polygon_90_data& operator=(const polygon_90_data& that) {
     coords_ = that.coords_;
     return *this;
@@ -50,21 +50,21 @@ public:
   template <typename T2>
   inline polygon_90_data& operator=(const T2& rvalue);
 
-  /// assignment operator (since we have dynamic memory do a deep copy)
+  // assignment operator (since we have dynamic memory do a deep copy)
   inline bool operator==(const polygon_90_data& that) const {
     return coords_ == that.coords_;
   }
 
-  /// get begin iterator, returns a pointer to a const Unit
+  // get begin iterator, returns a pointer to a const Unit
   inline iterator_type begin() const { return iterator_type(coords_.begin(), coords_.end()); }
 
-  /// get end iterator, returns a pointer to a const Unit
+  // get end iterator, returns a pointer to a const Unit
   inline iterator_type end() const { return iterator_type(coords_.end(), coords_.end()); }
 
-  /// get begin iterator, returns a pointer to a const Unit
+  // get begin iterator, returns a pointer to a const Unit
   inline compact_iterator_type begin_compact() const { return coords_.begin(); }
   
-  /// get end iterator, returns a pointer to a const Unit
+  // get end iterator, returns a pointer to a const Unit
   inline compact_iterator_type end_compact() const { return coords_.end(); }
 
   inline std::size_t size() const { return coords_.size(); }
@@ -128,12 +128,5 @@ std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r)
 
 }
 
-namespace std {
-template <typename T>
-void swap(gtl::polygon_90_data<T>& l, gtl::polygon_90_data<T>& r) {
-  l.swap(r);
-}
-
-}
 #endif
 

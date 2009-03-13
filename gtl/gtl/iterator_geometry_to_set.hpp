@@ -108,8 +108,8 @@ public:
       second_pt = pts[1] = *itrb;
       ++itrb;
       pts[2] = *itrb;
+      evaluate_();
     }
-    evaluate_();
   }
   
   inline iterator_geometry_to_set& operator++() {

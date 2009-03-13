@@ -11,19 +11,19 @@ namespace gtl {
   struct point_3d_concept {};
  
   template <typename T>
-  struct is_point_3d_concept {};
+  struct is_point_3d_concept { typedef gtl_no type; };
   template <>
-  struct is_point_3d_concept<point_3d_concept> { typedef void type; };
+  struct is_point_3d_concept<point_3d_concept> { typedef gtl_yes type; };
   //template <>
   //struct is_point_concept<point_3d_concept> { typedef void type; };
 
   template <typename T>
-  struct is_mutable_point_3d_concept {};
+  struct is_mutable_point_3d_concept { typedef gtl_no type; };
   template <>
-  struct is_mutable_point_3d_concept<point_3d_concept> { typedef void type; };
+  struct is_mutable_point_3d_concept<point_3d_concept> { typedef gtl_yes type; };
 
   template <typename T>
-  typename requires_1< typename is_point_3d_concept<typename geometry_concept<T>::type>::type, 
+  typename requires_1< typename gtl_if<typename is_point_3d_concept<typename geometry_concept<T>::type>::type>::type, 
                        typename point_3d_traits<T>::coordinate_type >::type 
   get(const T& point, orientation_3d orient) { return point_3d_traits<T>::get(point, orient); }
   
@@ -40,9 +40,10 @@ namespace gtl {
     return point_3d_mutable_traits<T>::construct(x_value, y_value, z_value); }
 
   template <typename point_3d_type_1, typename point_3d_type_2>
-  typename requires_2< typename is_mutable_point_3d_concept<typename geometry_concept<point_3d_type_1>::type>::type, 
-                       typename is_point_3d_concept<typename geometry_concept<point_3d_type_2>::type>::type, 
-                       point_3d_type_1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_point_3d_concept<typename geometry_concept<point_3d_type_1>::type>::type, 
+                      typename is_point_3d_concept<typename geometry_concept<point_3d_type_2>::type>::type>::type, 
+    point_3d_type_1>::type &
   assign(point_3d_type_1& lvalue, const point_3d_type_2& rvalue) {
     set(lvalue, HORIZONTAL, get(rvalue, HORIZONTAL));
     set(lvalue, VERTICAL, get(rvalue, VERTICAL));
@@ -66,16 +67,17 @@ namespace gtl {
   z(point_type& point, coordinate_type value) { set(point, PROXIMAL, value); }
 
   template <typename T, typename T2>
-  typename requires_2< typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<T>::type>::type, 
-                       typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<T2>::type>::type,
-                       bool>::type
+  typename requires_1<
+    typename gtl_and<  typename gtl_same_type<point_3d_concept, typename geometry_concept<T>::type>::type, 
+                       typename gtl_same_type<point_3d_concept, typename geometry_concept<T2>::type>::type>::type,
+    bool>::type
   equivalence(const T& point1, const T2& point2) {
     return x(point1) == x(point2) && y(point1) == y(point2) && z(point1) == z(point2);
   }
 
   template <typename point_type_1, typename point_type_2>
-  typename requires_2< typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_2>::type>::type,
+  typename requires_1< typename gtl_and<  typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
+                                          typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
                        typename coordinate_traits<typename point_3d_traits<point_type_1>::coordinate_type>::coordinate_difference>::type
   manhattan_distance(const point_type_1& point1, const point_type_2& point2) {
     return euclidean_distance(point1, point2, HORIZONTAL) + euclidean_distance(point1, point2, VERTICAL) 
@@ -83,8 +85,8 @@ namespace gtl {
   }
 
   template <typename point_type_1, typename point_type_2>
-  typename requires_2< typename is_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_point_3d_concept<typename geometry_concept<point_type_2>::type>::type, 
+  typename requires_1< typename gtl_and<  typename is_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
+                                          typename is_point_3d_concept<typename geometry_concept<point_type_2>::type>::type>::type, 
                        typename coordinate_traits<typename point_3d_traits<point_type_1>::coordinate_type>::coordinate_difference>::type
   euclidean_distance(const point_type_1& point1, const point_type_2& point2, orientation_3d orient) {
     typedef typename coordinate_traits<typename point_3d_traits<point_type_1>::coordinate_type>::coordinate_difference return_type;
@@ -94,8 +96,9 @@ namespace gtl {
   }
 
   template <typename point_type_1, typename point_type_2>
-  typename requires_2< typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_2>::type>::type,
+  typename requires_1< typename gtl_and<  
+    typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
+    typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
                        typename coordinate_traits<typename point_3d_traits<point_type_1>::coordinate_type>::coordinate_distance>::type
   euclidean_distance(const point_type_1& point1, const point_type_2& point2) {
     typedef typename coordinate_traits<typename point_3d_traits<point_type_1>::coordinate_type>::coordinate_distance return_value;
@@ -105,8 +108,9 @@ namespace gtl {
   }
   
   template <typename point_type_1, typename point_type_2>
-  typename requires_2< typename is_mutable_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_2>::type>::type,
+  typename requires_1< typename gtl_and<  
+    typename is_mutable_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
+    typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
                        point_type_1>::type &
   convolve(point_type_1& lvalue, const point_type_2& rvalue) {
     x(lvalue, x(lvalue) + x(rvalue));
@@ -116,9 +120,10 @@ namespace gtl {
   }
  
   template <typename point_type_1, typename point_type_2>
-  typename requires_2< typename is_mutable_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<point_3d_concept, typename geometry_concept<point_type_2>::type>::type,
-                       point_type_1>::type &
+  typename requires_1<
+    typename gtl_and<  typename is_mutable_point_3d_concept<typename geometry_concept<point_type_1>::type>::type, 
+                       typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
+    point_type_1>::type &
   deconvolve(point_type_1& lvalue, const point_type_2& rvalue) {
     x(lvalue, x(lvalue) - x(rvalue));
     y(lvalue, y(lvalue) - y(rvalue));

@@ -523,9 +523,9 @@ inline void transformation<coordinate_type>::transform(coordinate_type& x, coord
   atr_.transform(x,y,z);
 }
   
-/// sets the axis_transform portion to its inverse
-/// transforms the tranlastion portion by that inverse axis_transform
-/// multiplies the translation portion by -1 to reverse it
+// sets the axis_transform portion to its inverse
+// transforms the tranlastion portion by that inverse axis_transform
+// multiplies the translation portion by -1 to reverse it
 template <typename coordinate_type>
 inline transformation<coordinate_type>& transformation<coordinate_type>::invert() {
   coordinate_type x = p_.get(HORIZONTAL), y = p_.get(VERTICAL), z = p_.get(PROXIMAL);

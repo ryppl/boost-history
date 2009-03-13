@@ -20,7 +20,7 @@ public:
   typedef typename coordinate_traits<T>::coordinate_distance area_type;
   typedef point_data<T> point_type;
 
-  /// default constructor of point does not initialize x and y
+  // default constructor of point does not initialize x and y
   inline polygon_45_with_holes_data(){;} //do nothing default constructor
 
   template<class iT>
@@ -40,8 +40,8 @@ public:
     return *this;
   }
 
-  /// initialize a polygon from x,y values, it is assumed that the first is an x
-  /// and that the input is a well behaved polygon
+  // initialize a polygon from x,y values, it is assumed that the first is an x
+  // and that the input is a well behaved polygon
   template<class iT>
   inline polygon_45_with_holes_data& set_holes(iT input_begin, iT input_end) {
     holes_.clear();  //just in case there was some old data there
@@ -52,23 +52,23 @@ public:
     return *this;
   }
 
-  /// copy constructor (since we have dynamic memory)
+  // copy constructor (since we have dynamic memory)
   inline polygon_45_with_holes_data(const polygon_45_with_holes_data& that) : self_(that.self_), 
                                                                   holes_(that.holes_) {}
   
-  /// assignment operator (since we have dynamic memory do a deep copy)
+  // assignment operator (since we have dynamic memory do a deep copy)
   inline polygon_45_with_holes_data& operator=(const polygon_45_with_holes_data& that) {
     self_ = that.self_;
     holes_ = that.holes_;
     return *this;
   }
 
-  /// get begin iterator, returns a pointer to a const coordinate_type
+  // get begin iterator, returns a pointer to a const coordinate_type
   inline const iterator_type begin() const {
     return self_.begin();
   }
 
-  /// get end iterator, returns a pointer to a const coordinate_type
+  // get end iterator, returns a pointer to a const coordinate_type
   inline const iterator_type end() const {
     return self_.end();
   }
@@ -77,12 +77,12 @@ public:
     return self_.size();
   } 
 
-  /// get begin iterator, returns a pointer to a const polygon
+  // get begin iterator, returns a pointer to a const polygon
   inline const iterator_holes_type begin_holes() const {
     return holes_.begin();
   }
 
-  /// get end iterator, returns a pointer to a const polygon
+  // get end iterator, returns a pointer to a const polygon
   inline const iterator_holes_type end_holes() const {
     return holes_.end();
   }

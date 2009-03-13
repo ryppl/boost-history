@@ -9,8 +9,13 @@
 #define GTL_RECTANGLE_TRAITS_HPP
 namespace gtl {
 
+  template <typename T, typename enable = gtl_yes>
+  struct rectangle_traits {};
   template <typename T>
-  struct rectangle_traits {
+  struct rectangle_traits<T, gtl_no> {};
+
+  template <typename T>
+  struct rectangle_traits<T, typename gtl_same_type<typename T::interval_type, typename T::interval_type>::type> {
     typedef typename T::coordinate_type coordinate_type;
     typedef typename T::interval_type interval_type;
     static inline interval_type get(const T& rectangle, orientation_2d orient) {

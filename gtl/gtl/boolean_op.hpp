@@ -106,6 +106,28 @@ namespace boolean_op {
     int counts_[2];
   };
 
+  class UnaryCount {
+  public:
+    inline UnaryCount() { count_ = 0; }
+    // constructs from two integers
+    inline explicit UnaryCount(int count) { count_ = count; }
+    inline UnaryCount& operator=(int count) { count_ = count; return *this; }
+    inline UnaryCount& operator=(const UnaryCount& that) { count_ = that.count_; return *this; }
+    inline UnaryCount(const UnaryCount& that) { *this = that; }
+    inline bool operator==(const UnaryCount& that) const { return count_ == that.count_; }
+    inline bool operator!=(const UnaryCount& that) const { return !((*this) == that);}
+    inline UnaryCount& operator+=(const UnaryCount& that) { count_ += that.count_; return *this; }
+    inline UnaryCount& operator-=(const UnaryCount& that) { count_ -= that.count_; return *this; }
+    inline UnaryCount operator+(const UnaryCount& that) const { UnaryCount tmp(*this); tmp += that; return tmp; }
+    inline UnaryCount operator-(const UnaryCount& that) const { UnaryCount tmp(*this); tmp -= that; return tmp; }
+    inline UnaryCount operator-() const { UnaryCount tmp; return tmp - *this; }
+
+    //cast to int operator evaluates data using T binary functor
+    inline operator int() const { return count_ % 2; }
+  private:
+    int count_;
+  };
+
   template <class T, typename Unit>
   inline BooleanOp<T, Unit>& BooleanOp<T, Unit>::operator=(const BooleanOp& that) { 
     scanData_ = that.scanData_; 
@@ -469,55 +491,64 @@ namespace boolean_op {
   }
  
   template <typename Unit>
-  inline void applyBooleanOr(std::vector<std::pair<Unit, std::pair<Unit, int> > >& input) {
-    BooleanOp<int, Unit> booleanOr;
-    std::vector<std::pair<interval_data<Unit>, int> > container;
-    std::vector<std::pair<Unit, std::pair<Unit, int> > > output;
-    output.reserve(input.size());
-    //consider eliminating dependecy on limits with bool flag for initial state
-    Unit UnitMax = std::numeric_limits<Unit>::max();
-    Unit prevPos = UnitMax;
-    Unit prevY = UnitMax;
-    int count = 0;
-    for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = input.begin();
-        itr != input.end(); ++itr) {
-      Unit pos = (*itr).first;
-      Unit y = (*itr).second.first;
-      if(pos != prevPos) {
-        booleanOr.advanceScan();
-        prevPos = pos;
-        prevY = y;
-        count = (*itr).second.second;
-        continue;
-      }
-      if(y != prevY && count != 0) {
-        interval_data<Unit> ivl(prevY, y);
-        container.clear();
-        booleanOr.processInterval(container, ivl, count);
-        for(unsigned int i = 0; i < container.size(); ++i) {
-          std::pair<interval_data<Unit>, int>& element = container[i];
-          if(!output.empty() && output.back().first == prevPos && 
-             output.back().second.first == element.first.low() &&
-             output.back().second.second == element.second * -1) {
-            output.pop_back();
-          } else {
-            output.push_back(std::pair<Unit, std::pair<Unit, int> >(prevPos, std::pair<Unit, int>(element.first.low(), 
-                                                                                                  element.second)));
-          }
-          output.push_back(std::pair<Unit, std::pair<Unit, int> >(prevPos, std::pair<Unit, int>(element.first.high(), 
-                                                                                                element.second * -1)));
-        }
-      }
-      prevY = y;
-      count += (*itr).second.second;
-    }
-    if(output.size() < input.size() / 2) {
-      input = std::vector<std::pair<Unit, std::pair<Unit, int> > >();
-    } else {
-      input.clear();
-    } 
-    input.insert(input.end(), output.begin(), output.end());
+  inline void applyUnaryXOr(std::vector<std::pair<Unit, std::pair<Unit, int> > >& input) {
+    BooleanOp<UnaryCount, Unit> booleanXOr;
+    
   }
+
+  template <typename count_type = int>
+  struct default_arg_workaround {
+    template <typename Unit>
+    static inline void applyBooleanOr(std::vector<std::pair<Unit, std::pair<Unit, int> > >& input) {
+      BooleanOp<count_type, Unit> booleanOr;
+      std::vector<std::pair<interval_data<Unit>, int> > container;
+      std::vector<std::pair<Unit, std::pair<Unit, int> > > output;
+      output.reserve(input.size());
+      //consider eliminating dependecy on limits with bool flag for initial state
+      Unit UnitMax = std::numeric_limits<Unit>::max();
+      Unit prevPos = UnitMax;
+      Unit prevY = UnitMax;
+      int count = 0;
+      for(typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::iterator itr = input.begin();
+          itr != input.end(); ++itr) {
+        Unit pos = (*itr).first;
+        Unit y = (*itr).second.first;
+        if(pos != prevPos) {
+          booleanOr.advanceScan();
+          prevPos = pos;
+          prevY = y;
+          count = (*itr).second.second;
+          continue;
+        }
+        if(y != prevY && count != 0) {
+          interval_data<Unit> ivl(prevY, y);
+          container.clear();
+          booleanOr.processInterval(container, ivl, count_type(count));
+          for(unsigned int i = 0; i < container.size(); ++i) {
+            std::pair<interval_data<Unit>, int>& element = container[i];
+            if(!output.empty() && output.back().first == prevPos && 
+               output.back().second.first == element.first.low() &&
+               output.back().second.second == element.second * -1) {
+              output.pop_back();
+            } else {
+              output.push_back(std::pair<Unit, std::pair<Unit, int> >(prevPos, std::pair<Unit, int>(element.first.low(), 
+                                                                                                    element.second)));
+            }
+            output.push_back(std::pair<Unit, std::pair<Unit, int> >(prevPos, std::pair<Unit, int>(element.first.high(), 
+                                                                                                  element.second * -1)));
+          }
+        }
+        prevY = y;
+        count += (*itr).second.second;
+      }
+      if(output.size() < input.size() / 2) {
+        input = std::vector<std::pair<Unit, std::pair<Unit, int> > >();
+      } else {
+      input.clear();
+      } 
+      input.insert(input.end(), output.begin(), output.end());
+    }
+  };
 
 }
 

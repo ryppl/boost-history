@@ -11,38 +11,38 @@ namespace gtl {
 
 namespace polygon_formation {
 
-  /**
-   * @brief End has two states, HEAD and TAIL as is represented by a bool
+  /*
+   * End has two states, HEAD and TAIL as is represented by a bool
    */
   typedef bool End;
 
-  /**
-   * @brief HEAD End is represented as false because it is the lesser state
+  /*
+   * HEAD End is represented as false because it is the lesser state
    */
   const End HEAD = false;
 
-  /**
-   * @brief TAIL End is represented by true because TAIL comes after head and 1 after 0
+  /*
+   * TAIL End is represented by true because TAIL comes after head and 1 after 0
    */
   const End TAIL = true;
    
-  /**
-   * @brief 2D turning direction, left and right sides (is a boolean value since it has two states.)
+  /*
+   * 2D turning direction, left and right sides (is a boolean value since it has two states.)
    */
   typedef bool Side;
    
-  /**
-   * @brief LEFT Side is 0 because we inuitively think left to right; left < right
+  /*
+   * LEFT Side is 0 because we inuitively think left to right; left < right
    */
   const Side LEFT = false;
    
-  /**
-   * @brief RIGHT Side is 1 so that right > left
+  /*
+   * RIGHT Side is 1 so that right > left
    */
   const Side RIGHT = true;
 
-  /**
-   * @brief The PolyLine class is data storage and services for building and representing partial polygons.  
+  /*
+   * The PolyLine class is data storage and services for building and representing partial polygons.  
    * As the polyline is added to it extends its storage to accomodate the data.
    * PolyLines can be joined head-to-head/head-to-tail when it is determined that two polylines are
    * part of the same polygon.
@@ -60,21 +60,21 @@ namespace polygon_formation {
   private:
     //data
      
-    /**
-     * @brief ptdata_ a vector of coordiantes
+    /*
+     * ptdata_ a vector of coordiantes
      * if VERTICAL_HEAD, first coordiante is an X
      * else first coordinate is a Y
      */
     std::vector<Unit> ptdata_;
    
-    /**
-     * @brief head and tail points to other polylines before and after this in a chain
+    /*
+     * head and tail points to other polylines before and after this in a chain
      */
     PolyLine* headp_;
     PolyLine* tailp_;
    
-    /**
-     * @brief state bitmask
+    /*
+     * state bitmask
      * bit zero is orientation, 0 H, 1 V
      * bit 1 is head connectivity, 0 for head, 1 for tail
      * bit 2 is tail connectivity, 0 for head, 1 for tail
@@ -83,13 +83,13 @@ namespace polygon_formation {
     int state_;
    
   public:
-    /**
-     * @brief default constructor (for preallocation)
+    /*
+     * default constructor (for preallocation)
      */
     PolyLine();
    
-    /**
-     * @brief constructor that takes the orientation, coordiante and side to which there is solid
+    /*
+     * constructor that takes the orientation, coordiante and side to which there is solid
      */
     PolyLine(orientation_2d orient, Unit coord, Side side);
    
@@ -105,172 +105,172 @@ namespace polygon_formation {
     //equivalence operator
     bool operator==(const PolyLine& b) const;
 
-    /**
-     * @brief valid PolyLine (only default constructed polylines are invalid.)
+    /*
+     * valid PolyLine (only default constructed polylines are invalid.)
      */
     bool isValid() const;
 
-    /**
-     * @brief Orientation of Head
+    /*
+     * Orientation of Head
      */
     orientation_2d headOrient() const;
 
-    /**
-     * @brief returns true if first coordinate is an X value (first segment is vertical)
+    /*
+     * returns true if first coordinate is an X value (first segment is vertical)
      */
     bool verticalHead() const; 
 
-    /**
-     * @brief returns the orientation_2d fo the tail
+    /*
+     * returns the orientation_2d fo the tail
      */
     orientation_2d tailOrient() const;
       
-    /**
-     * @brief returns true if last coordinate is an X value (last segment is vertical)
+    /*
+     * returns true if last coordinate is an X value (last segment is vertical)
      */
     bool verticalTail() const;
      
-    /**
-     * @brief retrun true if PolyLine has odd number of coordiantes
+    /*
+     * retrun true if PolyLine has odd number of coordiantes
      */
     bool oddLength() const;
 
-    /**
-     * @brief retrun the End of the other polyline that the specified end of this polyline is connected to
+    /*
+     * retrun the End of the other polyline that the specified end of this polyline is connected to
      */
     End endConnectivity(End end) const;
 
-    /**
-     * @brief retrun true if the head of this polyline is connect to the tail of a polyline
+    /*
+     * retrun true if the head of this polyline is connect to the tail of a polyline
      */
     bool headToTail() const;
-    /**
-     * @brief retrun true if the head of this polyline is connect to the head of a polyline
+    /*
+     * retrun true if the head of this polyline is connect to the head of a polyline
      */
     bool headToHead() const;
 
-    /**
-     * @brief retrun true if the tail of this polyline is connect to the tail of a polyline
+    /*
+     * retrun true if the tail of this polyline is connect to the tail of a polyline
      */
     bool tailToTail() const;
-    /**
-     * @brief retrun true if the tail of this polyline is connect to the head of a polyline
+    /*
+     * retrun true if the tail of this polyline is connect to the head of a polyline
      */
     bool tailToHead() const;
      
-    /**
-     * @brief retrun the side on which there is solid for this polyline
+    /*
+     * retrun the side on which there is solid for this polyline
      */
     Side solidSide() const;
 
-    /**
-     * @brief retrun true if there is solid to the right of this polyline
+    /*
+     * retrun true if there is solid to the right of this polyline
      */
     bool solidToRight() const;
 
-    /**
-     * @brief returns true if the polyline tail is not connected
+    /*
+     * returns true if the polyline tail is not connected
      */
     bool active() const;
 
-    /**
-     * @brief adds a coordinate value to the end of the polyline changing the tail orientation
+    /*
+     * adds a coordinate value to the end of the polyline changing the tail orientation
      */
     PolyLine& pushCoordinate(Unit coord);
        
-    /**
-     * @brief removes a coordinate value at the end of the polyline changing the tail orientation
+    /*
+     * removes a coordinate value at the end of the polyline changing the tail orientation
      */
     PolyLine& popCoordinate();
       
-    /**
-     * @brief extends the tail of the polyline to include the point, changing orientation if needed
+    /*
+     * extends the tail of the polyline to include the point, changing orientation if needed
      */
     PolyLine& pushPoint(const point_data<Unit>& point);
 
-    /**
-     * @brief changes the last coordinate of the tail of the polyline by the amount of the delta
+    /*
+     * changes the last coordinate of the tail of the polyline by the amount of the delta
      */
     PolyLine& extendTail(Unit delta);
 
-    /**
-     * @brief join thisEnd of this polyline to that polyline's end
+    /*
+     * join thisEnd of this polyline to that polyline's end
      */
     PolyLine& joinTo(End thisEnd, PolyLine& that, End end);
 
-    /**
-     * @brief join an end of this polyline to the tail of that polyline
+    /*
+     * join an end of this polyline to the tail of that polyline
      */
     PolyLine& joinToTail(PolyLine& that, End end);
 
-    /**
-     * @brief join an end of this polyline to the head of that polyline
+    /*
+     * join an end of this polyline to the head of that polyline
      */
     PolyLine& joinToHead(PolyLine& that, End end);
 
-    /**
-     * @brief join the head of this polyline to the head of that polyline
+    /*
+     * join the head of this polyline to the head of that polyline
      */
     //join this to that in the given way
     PolyLine& joinHeadToHead(PolyLine& that);
 
-    /**
-     * @brief join the head of this polyline to the tail of that polyline
+    /*
+     * join the head of this polyline to the tail of that polyline
      */
     PolyLine& joinHeadToTail(PolyLine& that);
 
-    /**
-     * @brief join the tail of this polyline to the head of that polyline
+    /*
+     * join the tail of this polyline to the head of that polyline
      */
     PolyLine& joinTailToHead(PolyLine& that);
 
-    /**
-     * @brief join the tail of this polyline to the tail of that polyline
+    /*
+     * join the tail of this polyline to the tail of that polyline
      */
     PolyLine& joinTailToTail(PolyLine& that);
 
-    /**
-     * @brief dissconnect the tail at the end of the polygon
+    /*
+     * dissconnect the tail at the end of the polygon
      */
     PolyLine& disconnectTails();
 
-    /**
-     * @brief get the coordinate at one end of this polyline, by default the tail end
+    /*
+     * get the coordinate at one end of this polyline, by default the tail end
      */
     Unit getEndCoord(End end = TAIL) const;
 
-    /**
-     * @brief get the point on the polyline at the given index (polylines have the same number of coordinates as points
+    /*
+     * get the point on the polyline at the given index (polylines have the same number of coordinates as points
      */
     point_data<Unit> getPoint(unsigned int index) const;
 
-    /**
-     * @brief get the point on one end of the polyline, by default the tail
+    /*
+     * get the point on one end of the polyline, by default the tail
      */
     point_data<Unit> getEndPoint(End end = TAIL) const;
 
-    /**
-     * @brief get the orientation of a segment by index
+    /*
+     * get the orientation of a segment by index
      */
     orientation_2d segmentOrient(unsigned int index = 0) const;
 
-    /**
-     * @brief get a coordinate by index using the square bracket operator
+    /*
+     * get a coordinate by index using the square bracket operator
      */
     Unit operator[] (unsigned int index) const;
 
-    /**
-     * @brief get the number of segments/points/coordinates in the polyline
+    /*
+     * get the number of segments/points/coordinates in the polyline
      */
     unsigned int numSegments() const;
 
-    /**
-     * @brief get the pointer to the next polyline at one end of this
+    /*
+     * get the pointer to the next polyline at one end of this
      */
     PolyLine* next(End end) const;
 
-    /**
-     * @brief write out coordinates of this and all attached polylines to a single vector
+    /*
+     * write out coordinates of this and all attached polylines to a single vector
      */
     PolyLine* writeOut(std::vector<Unit>& outVec, End startEnd = TAIL) const;
 
@@ -287,8 +287,8 @@ namespace polygon_formation {
   template<bool orientT, typename Unit>
   class PolyLinePolygonWithHolesData;
 
-  /**
-   * @brief ActiveTail represents an edge of an incomplete polygon.
+  /*
+   * ActiveTail represents an edge of an incomplete polygon.
    *
    * An ActiveTail object is the active tail end of a polyline object, which may (should) be the attached to
    * a chain of polyline objects through a pointer.  The ActiveTail class provides an abstraction between
@@ -319,8 +319,8 @@ namespace polygon_formation {
     std::list<ActiveTail*> holesList_;
   public:
 
-    /**
-     * @brief iterator over coordinates of the figure
+    /*
+     * iterator over coordinates of the figure
      */
     class iterator {
     private:
@@ -410,8 +410,8 @@ namespace polygon_formation {
       inline Unit operator*() { return (*pLine_)[index_]; }
     };
 
-    /**
-     * @brief iterator over holes contained within the figure
+    /*
+     * iterator over holes contained within the figure
      */
     typedef typename std::list<ActiveTail*>::const_iterator iteratorHoles;
 
@@ -436,96 +436,96 @@ namespace polygon_formation {
     //equivalence operator
     bool operator==(const ActiveTail& b) const;
 
-    /**
-     * @brief comparison operators, ActiveTail objects are sortable by geometry
+    /*
+     * comparison operators, ActiveTail objects are sortable by geometry
      */
     bool operator<(const ActiveTail& b) const;
     bool operator<=(const ActiveTail& b) const;
     bool operator>(const ActiveTail& b) const;
     bool operator>=(const ActiveTail& b) const;
 
-    /**
-     * @brief get the pointer to the polyline that this is an active tail of
+    /*
+     * get the pointer to the polyline that this is an active tail of
      */
     PolyLine<Unit>* getTail() const;
 
-    /**
-     * @brief get the pointer to the polyline at the other end of the chain
+    /*
+     * get the pointer to the polyline at the other end of the chain
      */
     PolyLine<Unit>* getOtherTail() const;
 
-    /**
-     * @brief get the pointer to the activetail at the other end of the chain
+    /*
+     * get the pointer to the activetail at the other end of the chain
      */
     ActiveTail* getOtherActiveTail() const;
 
-    /**
-     * @brief test if another active tail is the other end of the chain
+    /*
+     * test if another active tail is the other end of the chain
      */
     bool isOtherTail(const ActiveTail& b);
 
-    /**
-     * @brief update this end of chain pointer to new polyline
+    /*
+     * update this end of chain pointer to new polyline
      */
     ActiveTail& updateTail(PolyLine<Unit>* newTail);
 
-    /**
-     * @brief associate a hole to this active tail by the specified policy
+    /*
+     * associate a hole to this active tail by the specified policy
      */
     ActiveTail* addHole(ActiveTail* hole, bool fractureHoles);
 
-    /**
-     * @brief get the list of holes
+    /*
+     * get the list of holes
      */
     const std::list<ActiveTail*>& getHoles() const;
 
-    /**
-     * @brief copy holes from that to this
+    /*
+     * copy holes from that to this
      */
     void copyHoles(ActiveTail& that);
 
-    /**
-     * @brief find out if solid to right
+    /*
+     * find out if solid to right
      */
     bool solidToRight() const;
 
-    /**
-     * @brief get coordinate (getCoord and getCoordinate are aliases for eachother)
+    /*
+     * get coordinate (getCoord and getCoordinate are aliases for eachother)
      */
     Unit getCoord() const;
     Unit getCoordinate() const;
 
-    /**
-     * @brief get the tail orientation
+    /*
+     * get the tail orientation
      */
     orientation_2d getOrient() const;
 
-    /**
-     * @brief add a coordinate to the polygon at this active tail end, properly handle degenerate edges by removing redundant coordinate
+    /*
+     * add a coordinate to the polygon at this active tail end, properly handle degenerate edges by removing redundant coordinate
      */
     void pushCoordinate(Unit coord);
 
-    /**
-     * @brief write the figure that this active tail points to out to the temp buffer
+    /*
+     * write the figure that this active tail points to out to the temp buffer
      */
     void writeOutFigure(std::vector<Unit>& outVec, bool isHole = false) const;
 
-    /**
-     * @brief write the figure that this active tail points to out through iterators
+    /*
+     * write the figure that this active tail points to out through iterators
      */
     void writeOutFigureItrs(iterator& beginOut, iterator& endOut, bool isHole = false, orientation_2d orient = VERTICAL) const;
     iterator begin(bool isHole, orientation_2d orient) const;
     iterator end() const;
 
-    /**
-     * @brief write the holes that this active tail points to out through iterators
+    /*
+     * write the holes that this active tail points to out through iterators
      */
     void writeOutFigureHoleItrs(iteratorHoles& beginOut, iteratorHoles& endOut) const;
     iteratorHoles beginHoles() const;
     iteratorHoles endHoles() const;
 
-    /**
-     * @brief joins the two chains that the two active tail tails are ends of
+    /*
+     * joins the two chains that the two active tail tails are ends of
      * checks for closure of figure and writes out polygons appropriately
      * returns a handle to a hole if one is closed
      */
@@ -533,30 +533,30 @@ namespace polygon_formation {
     template <typename PolygonT>
     static ActiveTail* joinChains(ActiveTail* at1, ActiveTail* at2, bool solid, typename std::vector<PolygonT>& outBufferTmp);
 
-    /**
-     * @brief deallocate temp buffer
+    /*
+     * deallocate temp buffer
      */
     static void destroyOutBuffer();
 
-    /**
-     * @brief deallocate all polygon data this active tail points to (deep delete, call only from one of a pair of active tails)
+    /*
+     * deallocate all polygon data this active tail points to (deep delete, call only from one of a pair of active tails)
      */
     void destroyContents();
   };
 
-  /** @brief allocate a polyline object */
+  /* allocate a polyline object */
   template <typename Unit>
   PolyLine<Unit>* createPolyLine(orientation_2d orient, Unit coord, Side side);
 
-  /** @brief deallocate a polyline object */
+  /* deallocate a polyline object */
   template <typename Unit>
   void destroyPolyLine(PolyLine<Unit>* pLine);
 
-  /** @brief allocate an activetail object */
+  /* allocate an activetail object */
   template <typename Unit>
   ActiveTail<Unit>* createActiveTail();
 
-  /** @brief deallocate an activetail object */
+  /* deallocate an activetail object */
   template <typename Unit>
   void destroyActiveTail(ActiveTail<Unit>* aTail);
      
@@ -646,8 +646,8 @@ namespace polygon_formation {
       return *this;
     }
    
-    /// initialize a polygon from x,y values, it is assumed that the first is an x
-    /// and that the input is a well behaved polygon
+    // initialize a polygon from x,y values, it is assumed that the first is an x
+    // and that the input is a well behaved polygon
     template<class iT>
     inline PolyLinePolygonWithHolesData& set_holes(iT inputBegin, iT inputEnd) {
       return *this;
@@ -655,10 +655,6 @@ namespace polygon_formation {
   };
 
 
-  /**
-   * @brief ScanLine does all the work of stitching together polygons from incoming vertical edges
-   */
-  struct ERROR {};
   template <bool orientT, typename Unit, typename polygon_concept_type>
   struct PolyLineType { };
   template <bool orientT, typename Unit>
@@ -677,7 +673,6 @@ namespace polygon_formation {
   template <bool orientT, typename Unit, typename polygon_concept_type>
   class ScanLineToPolygonItrs {
   private:
-    /** @brief a map of horizontal edges of incomplete polygons by their y value coordinate */
     std::map<Unit, ActiveTail<Unit>*> tailMap_;
     typedef typename PolyLineType<orientT, Unit, polygon_concept_type>::type PolyLinePolygonData;
     std::vector<PolyLinePolygonData> outputPolygons_;
@@ -685,12 +680,12 @@ namespace polygon_formation {
   public:
     typedef typename std::vector<PolyLinePolygonData>::iterator iterator; 
     inline ScanLineToPolygonItrs() {}
-    /** @brief construct a scanline with the proper offsets, protocol and options */
+    /* construct a scanline with the proper offsets, protocol and options */
     inline ScanLineToPolygonItrs(bool fractureHoles) : fractureHoles_(fractureHoles) {}
    
     ~ScanLineToPolygonItrs() { clearOutput_(); }
    
-    /** @brief process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
+    /* process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
     void processEdges(iterator& beginOutput, iterator& endOutput, 
                       Unit currentX, std::vector<interval_data<Unit> >& leftEdges, 
                       std::vector<interval_data<Unit> >& rightEdges);
@@ -699,8 +694,8 @@ namespace polygon_formation {
     void clearOutput_();
   };
 
-  /**
-   * @brief ScanLine does all the work of stitching together polygons from incoming vertical edges
+  /*
+   * ScanLine does all the work of stitching together polygons from incoming vertical edges
    */
 //   template <typename Unit, typename polygon_concept_type>
 //   class ScanLineToPolygons {
@@ -708,10 +703,10 @@ namespace polygon_formation {
 //     ScanLineToPolygonItrs<true, Unit> scanline_;
 //   public:
 //     inline ScanLineToPolygons() : scanline_() {}
-//     /** @brief construct a scanline with the proper offsets, protocol and options */
+//     /* construct a scanline with the proper offsets, protocol and options */
 //     inline ScanLineToPolygons(bool fractureHoles) : scanline_(fractureHoles) {}
    
-//     /** @brief process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
+//     /* process all vertical edges, left and right, at a unique x coordinate, edges must be sorted low to high */
 //     inline void processEdges(std::vector<Unit>& outBufferTmp, Unit currentX, std::vector<interval_data<Unit> >& leftEdges, 
 //                              std::vector<interval_data<Unit> >& rightEdges) {
 //       typename ScanLineToPolygonItrs<true, Unit>::iterator itr, endItr;
@@ -1402,8 +1397,8 @@ namespace polygon_formation {
   // with add hole
   template <typename Unit>
   inline std::pair<ActiveTail<Unit>*, ActiveTail<Unit>*> createActiveTailsAsPair(Unit x, Unit y, bool solid, ActiveTail<Unit>* phole, bool fractureHoles) {
-    ActiveTail<Unit>* at1;
-    ActiveTail<Unit>* at2;
+    ActiveTail<Unit>* at1 = 0;
+    ActiveTail<Unit>* at2 = 0;
     if(!phole || !fractureHoles){
       at1 = createActiveTail<Unit>();
       at2 = createActiveTail<Unit>();

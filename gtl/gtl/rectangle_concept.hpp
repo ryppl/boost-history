@@ -27,132 +27,126 @@ namespace gtl {
   struct rectangle_concept {};
  
   template <typename T>
-  struct is_rectangle_concept {};
+  struct is_rectangle_concept { typedef gtl_no type; };
   template <>
-  struct is_rectangle_concept<rectangle_concept> { typedef void type; };
+  struct is_rectangle_concept<rectangle_concept> { typedef gtl_yes type; };
 
   template <typename T>
-  struct is_mutable_rectangle_concept {};
+  struct is_mutable_rectangle_concept { typedef gtl_no type; };
   template <>
-  struct is_mutable_rectangle_concept<rectangle_concept> { typedef void type; };
+  struct is_mutable_rectangle_concept<rectangle_concept> { typedef gtl_yes type; };
 
   template <>
   struct geometry_domain<rectangle_concept> { typedef manhattan_domain type; };
 
-  template <typename T, orientation_2d_enum orient>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
-                       typename rectangle_traits<T>::interval_type>::type
-  get(const T& rectangle) {
-    return rectangle_traits<T>::get(rectangle, orient); 
-  }
-
   template <typename T>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type,
                        typename rectangle_traits<T>::interval_type>::type
   get(const T& rectangle, orientation_2d orient) {
     return rectangle_traits<T>::get(rectangle, orient); 
   }
 
   template <typename T>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type,
                        typename rectangle_traits<T>::interval_type>::type
   horizontal(const T& rectangle) {
     return rectangle_traits<T>::get(rectangle, HORIZONTAL); 
   }
 
   template <typename T>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type,
                        typename rectangle_traits<T>::interval_type>::type
   vertical(const T& rectangle) {
     return rectangle_traits<T>::get(rectangle, VERTICAL); 
   }
 
   template <orientation_2d_enum orient, typename T, typename T2>
-  typename requires_2<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
-                      typename is_interval_concept<typename geometry_concept<T2>::type>::type,
-                      void>::type 
+  typename requires_1< typename gtl_and<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
+                                        typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
+                       void>::type 
   set(T& rectangle, const T2& interval) {
     rectangle_mutable_traits<T>::set(rectangle, orient, interval); 
   }
 
   template <typename T, typename T2>
-  typename requires_2<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
-                      typename is_interval_concept<typename geometry_concept<T2>::type>::type,
-                      void>::type 
+  typename requires_1< typename gtl_and<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
+                                        typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
+                       void>::type 
   set(T& rectangle, orientation_2d orient, const T2& interval) {
     rectangle_mutable_traits<T>::set(rectangle, orient, interval); 
   }
 
   template <typename T, typename T2>
-  typename requires_2<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
-                      typename is_interval_concept<typename geometry_concept<T2>::type>::type,
-                      void>::type 
+  typename requires_1< typename gtl_and<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
+                                        typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type,
+                       void>::type 
   horizontal(T& rectangle, const T2& interval) {
     rectangle_mutable_traits<T>::set(rectangle, HORIZONTAL, interval); 
   }
 
   template <typename T, typename T2>
-  typename requires_2<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
-                      typename is_interval_concept<typename geometry_concept<T2>::type>::type,
-                      void>::type 
+  typename requires_1< 
+    typename gtl_and<typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type, 
+                     typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type, void>::type 
   vertical(T& rectangle, const T2& interval) {
     rectangle_mutable_traits<T>::set(rectangle, VERTICAL, interval); 
   }
 
   template <typename T, typename T2, typename T3>
-  typename requires_1<
-    typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
-    T>::type 
+  typename requires_1< typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
+                       T>::type 
   construct(const T2& interval_horizontal,
             const T3& interval_vertical) {
     return rectangle_mutable_traits<T>::construct(interval_horizontal, interval_vertical); }
-
+  
   template <typename T, typename coord_type>
-  typename requires_1<
-    typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
-    T>::type 
+  typename requires_1< typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
+                       T>::type 
   construct(coord_type xl, coord_type yl, coord_type xh, coord_type yh) {
     return rectangle_mutable_traits<T>::construct(interval_data<coord_type>(xl, xh), 
-                                          interval_data<coord_type>(yl, yh)); 
+                                                  interval_data<coord_type>(yl, yh)); 
   }
-
+  
   template <typename T, typename T2>
-  typename requires_2<
-    typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<T2>::type>::type,
+  typename requires_1<
+    typename gtl_and<
+      typename is_mutable_rectangle_concept<typename geometry_concept<T>::type>::type,
+      typename is_rectangle_concept<typename geometry_concept<T2>::type>::type>::type,
     T>::type
   copy_construct(const T2& rectangle) {
     return construct<T> (get(rectangle, HORIZONTAL), get(rectangle, VERTICAL));
   }
-
+  
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< 
+    typename gtl_and< 
+      typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
     rectangle_type_1>::type &
   assign(rectangle_type_1& lvalue, const rectangle_type_2& rvalue) {
     set(lvalue, HORIZONTAL, get(rvalue, HORIZONTAL));
     set(lvalue, VERTICAL, get(rvalue, VERTICAL));
     return lvalue;
   }
-
+  
   template <typename T, typename T2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<T2>::type>::type,
+  typename requires_1< 
+    typename gtl_and< 
+      typename is_rectangle_concept<typename geometry_concept<T>::type>::type,
+      typename is_rectangle_concept<typename geometry_concept<T2>::type>::type>::type,
     bool>::type 
   equivalence(const T& rect1, const T2& rect2) {
     return equivalence(get(rect1, HORIZONTAL), get(rect2, HORIZONTAL)) &&
       equivalence(get(rect1, VERTICAL), get(rect2, VERTICAL));
   }
-
+  
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename rectangle_traits<rectangle_type>::coordinate_type>::type
   get(const rectangle_type& rectangle, orientation_2d orient, direction_1d dir) {
     return get(rectangle_traits<rectangle_type>::get(rectangle, orient), dir); 
   }
-
+  
   template <typename rectangle_type>
   typename requires_1<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, void>::type 
   set(rectangle_type& rectangle, orientation_2d orient, direction_1d dir, 
@@ -163,7 +157,7 @@ namespace gtl {
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename rectangle_traits<rectangle_type>::coordinate_type>::type
   xl(const rectangle_type& rectangle) {
     return get(rectangle, HORIZONTAL, LOW);
@@ -176,7 +170,7 @@ namespace gtl {
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename rectangle_traits<rectangle_type>::coordinate_type>::type
   xh(const rectangle_type& rectangle) {
     return get(rectangle, HORIZONTAL, HIGH);
@@ -189,7 +183,7 @@ namespace gtl {
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename rectangle_traits<rectangle_type>::coordinate_type>::type
   yl(const rectangle_type& rectangle) {
     return get(rectangle, VERTICAL, LOW);
@@ -202,7 +196,7 @@ namespace gtl {
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename rectangle_traits<rectangle_type>::coordinate_type>::type
   yh(const rectangle_type& rectangle) {
     return get(rectangle, VERTICAL, HIGH);
@@ -215,59 +209,58 @@ namespace gtl {
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        point_data<typename rectangle_traits<rectangle_type>::coordinate_type> >::type
   ll(const rectangle_type& rectangle) {
     return point_data<typename rectangle_traits<rectangle_type>::coordinate_type> (xl(rectangle), yl(rectangle));
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        point_data<typename rectangle_traits<rectangle_type>::coordinate_type> >::type
   lr(const rectangle_type& rectangle) {
     return point_data<typename rectangle_traits<rectangle_type>::coordinate_type> (xh(rectangle), yl(rectangle));
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        point_data<typename rectangle_traits<rectangle_type>::coordinate_type> >::type
   ul(const rectangle_type& rectangle) {
     return point_data<typename rectangle_traits<rectangle_type>::coordinate_type> (xl(rectangle), yh(rectangle));
   }
 
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        point_data<typename rectangle_traits<rectangle_type>::coordinate_type> >::type
   ur(const rectangle_type& rectangle) {
     return point_data<typename rectangle_traits<rectangle_type>::coordinate_type> (xh(rectangle), yh(rectangle));
   }
 
   template <typename rectangle_type, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-    bool>::type 
+  typename requires_1< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+                       bool>::type 
   contains(const rectangle_type& rectangle, const rectangle_type_2 rectangle_contained, 
-                       bool consider_touch = true) {
+           bool consider_touch = true) {
     return contains(horizontal(rectangle), horizontal(rectangle_contained), consider_touch) &&
       contains(vertical(rectangle), vertical(rectangle_contained), consider_touch);
   }
+
   template <typename rectangle_type, typename point_type>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-    typename is_point_concept<typename geometry_concept<point_type>::type>::type,
-    bool>::type 
+  typename requires_1< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                         typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type, bool>::type 
   contains(const rectangle_type& rectangle, const point_type point_contained, 
-                       bool consider_touch = true) {
+           bool consider_touch = true) {
     return contains(horizontal(rectangle), x(point_contained), consider_touch) &&
       contains(vertical(rectangle), y(point_contained), consider_touch);
   }
 
-  /// set all four coordinates based upon two points
+  // set all four coordinates based upon two points
   template <typename rectangle_type, typename point_type_1, typename point_type_2>
-  typename requires_3< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
-                       typename is_point_concept<typename geometry_concept<point_type_1>::type>::type, 
-                       typename is_point_concept<typename geometry_concept<point_type_2>::type>::type, 
+  typename requires_1< typename gtl_and_3< 
+    typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
+    typename is_point_concept<typename geometry_concept<point_type_1>::type>::type, 
+    typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type, 
                        rectangle_type>::type &
   set_points(rectangle_type& rectangle, const point_type_1& p1,
              const point_type_2& p2) {
@@ -281,7 +274,7 @@ namespace gtl {
     return rectangle;
   }
   
-  /// move rectangle by delta in orient
+  // move rectangle by delta in orient
   template <typename rectangle_type>
   typename requires_1<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, rectangle_type>::type &
   move(rectangle_type& rectangle, orientation_2d orient, 
@@ -292,11 +285,13 @@ namespace gtl {
     return rectangle;
   }
 
-  /// convolve this with b
+  // convolve this with b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type, 
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type, 
-                       rectangle_type_1>::type &
+  typename requires_1<
+    typename gtl_and< 
+      typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type, 
+      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type, 
+    rectangle_type_1>::type &
   convolve(rectangle_type_1& rectangle,
            const rectangle_type_2& convolution_rectangle) {
     typename rectangle_traits<rectangle_type_1>::interval_type ivl = horizontal(rectangle);
@@ -306,10 +301,11 @@ namespace gtl {
     return rectangle;
   }
   
-  /// deconvolve this with b
+  // deconvolve this with b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_and< 
+    typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        rectangle_type_1>::type &
   deconvolve(rectangle_type_1& rectangle, const rectangle_type_2& convolution_rectangle) {
     typename rectangle_traits<rectangle_type_1>::interval_type ivl = horizontal(rectangle);
@@ -319,11 +315,12 @@ namespace gtl {
     return rectangle;
   }
   
-  /// reflectedConvolve this with b
+  // reflectedConvolve this with b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-                       rectangle_type_1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+    rectangle_type_1>::type &
   reflected_convolve(rectangle_type_1& rectangle, const rectangle_type_2& convolution_rectangle) {
     typename rectangle_traits<rectangle_type_1>::interval_type ivl = horizontal(rectangle);
     horizontal(rectangle, reflected_convolve(ivl, horizontal(convolution_rectangle)));
@@ -332,12 +329,13 @@ namespace gtl {
     return rectangle;
   }
   
-  /// reflectedDeconvolve this with b
-  /// deconvolve this with b
+  // reflectedDeconvolve this with b
+  // deconvolve this with b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-                       rectangle_type_1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+    rectangle_type_1>::type &
   reflected_deconvolve(rectangle_type_1& rectangle, const rectangle_type_2& convolution_rectangle) {
     typename rectangle_traits<rectangle_type_1>::interval_type ivl = horizontal(rectangle);
     horizontal(rectangle, reflected_deconvolve(ivl, horizontal(convolution_rectangle)));
@@ -346,10 +344,10 @@ namespace gtl {
     return rectangle;
   }
   
-  /// convolve with point
+  // convolve with point
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                         typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
                        rectangle_type>::type &
   convolve(rectangle_type& rectangle, const point_type& convolution_point) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = horizontal(rectangle);
@@ -359,11 +357,11 @@ namespace gtl {
     return rectangle;
   }
 
-  /// deconvolve with point
+  // deconvolve with point
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
-                       rectangle_type>::type &
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                      typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type, rectangle_type>::type &
   deconvolve(rectangle_type& rectangle, const point_type& convolution_point) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = horizontal(rectangle);
     horizontal(rectangle, deconvolve(ivl, x(convolution_point)));
@@ -372,14 +370,15 @@ namespace gtl {
     return rectangle;
   }
 
-  /// get the magnitude of the interval range depending on orient
+  // get the magnitude of the interval range depending on orient
   template <typename rectangle_type>
-  typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
+                       typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type
   delta(const rectangle_type& rectangle, orientation_2d orient) {
     return delta(get(rectangle, orient));
   }
 
-  /// get the area of the rectangle
+  // get the area of the rectangle
   template <typename rectangle_type>
   typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::manhattan_area_type>::type
@@ -388,7 +387,7 @@ namespace gtl {
     return (area_type)delta(rectangle, HORIZONTAL) * (area_type)delta(rectangle, VERTICAL);
   }
 
-  /// returns the orientation of the longest side
+  // returns the orientation of the longest side
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       orientation_2d>::type 
@@ -397,44 +396,44 @@ namespace gtl {
       HORIZONTAL : VERTICAL;
   }
 
-  /// get the half perimeter of the rectangle
+  // get the half perimeter of the rectangle
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type
   half_perimeter(const rectangle_type& rectangle) {
     return delta(rectangle, HORIZONTAL) + delta(rectangle, VERTICAL);
   }
    
-  /// get the perimeter of the rectangle
+  // get the perimeter of the rectangle
   template <typename rectangle_type>
-  typename requires_1< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+  typename requires_1< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type
   perimeter(const rectangle_type& rectangle) {
     return 2 * half_perimeter(rectangle);
   }
 
-  /// check if Rectangle b intersects `this` Rectangle
+  // check if Rectangle b intersects `this` Rectangle
   //  [in]     b         Rectangle that will be checked
   //  [in]     considerTouch If true, return true even if b touches the boundary
   //  [ret]    .         true if `t` intersects b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< 
+    typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
     bool>::type 
   intersects(const rectangle_type_1& rectangle, const rectangle_type_2& b, bool consider_touch = true) {
     return intersects(horizontal(rectangle), horizontal(b), consider_touch) &&
       intersects(vertical(rectangle), vertical(b), consider_touch);
   }
 
-  /// Check if boundaries of Rectangle b and `this` Rectangle intersect
+  // Check if boundaries of Rectangle b and `this` Rectangle intersect
   //  [in]     b         Rectangle that will be checked
   //  [in]     considerTouch If true, return true even if p is on the foundary
   //  [ret]    .         true if `t` contains p
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< 
+    typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
     bool>::type 
   boundaries_intersect(const rectangle_type_1& rectangle, const rectangle_type_2& b,
                        bool consider_touch = true) {
@@ -443,14 +442,13 @@ namespace gtl {
             !(contains(b, rectangle, !consider_touch)));
   }
     
-  /// check if b is touching 'this' on the end specified by dir
+  // check if b is touching 'this' on the end specified by dir
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-    bool>::type 
+  typename requires_1< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+                       bool>::type 
   abuts(const rectangle_type_1& rectangle, const rectangle_type_2& b,
-                    direction_2d dir) {
+        direction_2d dir) {
     return 
       abuts(get(rectangle, orientation_2d(dir)),
             get(b, orientation_2d(dir)),
@@ -459,35 +457,34 @@ namespace gtl {
                  get(b, orientation_2d(dir).get_perpendicular()), true);
   }
   
-  /// check if they are touching in the given orientation
+  // check if they are touching in the given orientation
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-    bool>::type 
+  typename requires_1< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+                       bool>::type 
   abuts(const rectangle_type_1& rectangle, const rectangle_type_2& b,
-                    orientation_2d orient) {
+        orientation_2d orient) {
     return 
       abuts(get(rectangle, orient), get(b, orient)) &&
       intersects(get(rectangle, orient.get_perpendicular()),
                  get(b, orient.get_perpendicular()), true);
   }
 
-  /// check if they are touching but not overlapping
+  // check if they are touching but not overlapping
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2<
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-    bool>::type 
+  typename requires_1< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+                       bool>::type 
   abuts(const rectangle_type_1& rectangle, const rectangle_type_2& b) {
     return abuts(rectangle, b, HORIZONTAL) || abuts(rectangle, b, VERTICAL);
   }
 
-  /// intersect rectangle with interval on orient
+  // intersect rectangle with interval on orient
   template <typename rectangle_type, typename interval_type>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       bool>::type 
+  typename requires_1< 
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type,
+    bool>::type 
   intersect(rectangle_type& rectangle, const interval_type& b,
             orientation_2d orient, bool consider_touch = true) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
@@ -498,10 +495,10 @@ namespace gtl {
     return false;
   }
 
-  /// clip rectangle to b
+  // clip rectangle to b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        bool>::type 
   intersect(rectangle_type_1& rectangle, const rectangle_type_2& b, bool consider_touch = true) {
     if(intersects(rectangle, b)) {
@@ -512,10 +509,11 @@ namespace gtl {
     return false;
   }
 
-  /// Sets this to the generalized intersection of this and the given rectangle
+  // Sets this to the generalized intersection of this and the given rectangle
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_and<
+    typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        rectangle_type_1>::type &
   generalized_intersect(rectangle_type_1& rectangle, const rectangle_type_2& b) {
     typename rectangle_traits<rectangle_type_1>::interval_type ivl = get(rectangle, HORIZONTAL);
@@ -527,72 +525,73 @@ namespace gtl {
     return rectangle;
   }
 
-  /// bloat the interval specified by orient by bloating
+  // bloat the interval specified by orient by bloating
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   bloat(rectangle_type& rectangle, orientation_2d orient, 
-                        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
+        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
     bloat(ivl, bloating);
     set(rectangle, orient, ivl);
     return rectangle;
   }
 
-  /// bloat the Rectangle by bloating
+  // bloat the Rectangle by bloating
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   bloat(rectangle_type& rectangle,
-                        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
+        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
     bloat(rectangle, HORIZONTAL, bloating);
     return bloat(rectangle, VERTICAL, bloating);
   }
 
-  /// bloat the interval cooresponding to orient by bloating in dir direction
+  // bloat the interval cooresponding to orient by bloating in dir direction
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   bloat(rectangle_type& rectangle, direction_2d dir,
-                        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
+        typename rectangle_traits<rectangle_type>::coordinate_type bloating) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orientation_2d(dir));
     bloat(ivl, direction_1d(dir), bloating);
     set(rectangle, orientation_2d(dir), ivl);
     return rectangle;
   }
 
-  /// shrink the interval specified by orient by bloating
+  // shrink the interval specified by orient by bloating
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   shrink(rectangle_type& rectangle, orientation_2d orient, 
-                         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
+         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
     return bloat(rectangle, orient, -shrinking);
   }
 
-  /// shrink the Rectangle by bloating
+  // shrink the Rectangle by bloating
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   shrink(rectangle_type& rectangle, 
-                         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
+         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
     return bloat(rectangle, -shrinking);
   }
 
-  /// shrink the interval cooresponding to orient by bloating in dir direction
+  // shrink the interval cooresponding to orient by bloating in dir direction
   template <typename rectangle_type>
   typename requires_1<typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
                       rectangle_type>::type &
   shrink(rectangle_type& rectangle, direction_2d dir,
-                         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
+         typename rectangle_traits<rectangle_type>::coordinate_type shrinking) {
     return bloat(rectangle, dir, -shrinking);
   }
 
-  /// encompass interval on orient
+  // encompass interval on orient
   template <typename rectangle_type, typename interval_type>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                      typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type,
+    bool>::type 
   encompass(rectangle_type& rectangle, const interval_type& b,
             orientation_2d orient) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
@@ -603,10 +602,11 @@ namespace gtl {
     return false;
   }
 
-  /// enlarge rectangle to encompass the Rectangle b
+  // enlarge rectangle to encompass the Rectangle b
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_and<
+    typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+    typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        bool>::type 
   encompass(rectangle_type_1& rectangle, const rectangle_type_2& b) {
     //note that operator | is intentional because both should be called regardless
@@ -614,11 +614,12 @@ namespace gtl {
       encompass(rectangle, vertical(b), VERTICAL);
   }
 
- /// enlarge rectangle to encompass the point b
+  // enlarge rectangle to encompass the point b
   template <typename rectangle_type_1, typename point_type>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                      typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
+    bool>::type 
   encompass(rectangle_type_1& rectangle, const point_type& b) {
     typename rectangle_traits<rectangle_type_1>::interval_type hivl, vivl;
     hivl = horizontal(rectangle);
@@ -632,11 +633,12 @@ namespace gtl {
     return retval;
   }
 
-  /// returns the center of the rectangle
+  // returns the center of the rectangle
   template <typename point_type, typename rectangle_type>
-  typename requires_2< typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
+    bool>::type 
   center(point_type& center_point, const rectangle_type& rectangle) {
     center_point = construct<point_type>(center(horizontal(rectangle)),
                                          center(vertical(rectangle)));
@@ -644,9 +646,10 @@ namespace gtl {
   }
 
   template <typename point_type, typename rectangle_type>
-  typename requires_2< typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type,
+                      typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
+    bool>::type 
   get_corner(point_type& corner_point, const rectangle_type& rectangle, direction_2d direction_facing, direction_1d direction_turning) {
     typedef typename rectangle_traits<rectangle_type>::coordinate_type Unit;
     Unit u1 = get(rectangle, direction_facing);
@@ -665,8 +668,8 @@ namespace gtl {
   }
 
   template <typename rectangle_type_1, typename rectangle_type_2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        bool>::type 
   join_with(rectangle_type_1& rectangle, const rectangle_type_2& b) {
     typedef typename rectangle_traits<rectangle_type_1>::interval_type Interval1;
@@ -687,24 +690,28 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_if< typename gtl_and<
+    typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+    typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   euclidean_distance(const rectangle_type& lvalue, const point_type& rvalue, orientation_2d orient) {
     return euclidean_distance(get(lvalue, orient), get(rvalue, orient));
   }
 
   template <typename rectangle_type, typename rectangle_type_2>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-                       typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
+  typename requires_1< 
+    typename gtl_if< typename gtl_and< 
+      typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+      typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type>::type,
+    typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   euclidean_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue, orientation_2d orient) {
     return euclidean_distance(get(lvalue, orient), get(rvalue, orient));
   }
 
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_if< typename gtl_and<
+    typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+    typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   square_euclidean_distance(rectangle_type& lvalue, const point_type& rvalue) {
     typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference xdist, ydist;
@@ -714,9 +721,10 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename rectangle_type_2>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, 
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type, 
-                       typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
+  typename requires_1< 
+    typename gtl_if< typename gtl_and< typename is_rectangle_concept< typename geometry_concept<rectangle_type>::type>::type, 
+                                       typename is_rectangle_concept< typename geometry_concept<rectangle_type_2>::type>::type>::type>::type, 
+    typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   square_euclidean_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue) {
     typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference xdist, ydist;
     xdist = euclidean_distance(lvalue, rvalue, HORIZONTAL);
@@ -725,8 +733,8 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_if< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                                          typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_distance>::type 
   euclidean_distance(rectangle_type& lvalue, const point_type& rvalue) {
     return sqrt((typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_distance)
@@ -734,8 +742,8 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename rectangle_type_2>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
+  typename requires_1< typename gtl_if< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                                          typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type>::type,
                        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_distance>::type 
   euclidean_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue) {
     return sqrt((typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_distance)
@@ -743,9 +751,10 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename point_type>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
-                       typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
+  typename requires_1< 
+    typename gtl_if< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                       typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type,
+    typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   manhattan_distance(rectangle_type& lvalue, const point_type& rvalue) {
     typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference xdist, ydist;
     xdist = euclidean_distance(lvalue, rvalue, HORIZONTAL);
@@ -754,9 +763,10 @@ namespace gtl {
   }
 
   template <typename rectangle_type, typename rectangle_type_2>
-  typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-                       typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
+  typename requires_1< 
+    typename gtl_if< typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
+                                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type>::type,
+    typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference>::type 
   manhattan_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue) {
     typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference xdist, ydist;
     xdist = euclidean_distance(lvalue, rvalue, HORIZONTAL);
@@ -767,7 +777,7 @@ namespace gtl {
   template <typename rectangle_type>
   typename requires_1<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, rectangle_type>::type &
   scale_up(rectangle_type& rectangle, 
-                           typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
+           typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
     horizontal(rectangle, scale_up(horizontal(rectangle), factor));
     vertical(rectangle, scale_up(vertical(rectangle), factor));
     return rectangle;
@@ -776,7 +786,7 @@ namespace gtl {
   template <typename rectangle_type>
   typename requires_1<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, rectangle_type>::type &
   scale_down(rectangle_type& rectangle, 
-                             typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
+             typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
     horizontal(rectangle, scale_down(horizontal(rectangle), factor));
     vertical(rectangle, scale_down(vertical(rectangle), factor));
     return rectangle;
@@ -797,7 +807,7 @@ namespace gtl {
   typename requires_1<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type, rectangle_type>::type &
   transform(rectangle_type& rectangle, const transformation_type& transformation) {
     point_data<typename rectangle_traits<rectangle_type>::coordinate_type> llp(xl(rectangle), yl(rectangle));
-    point_data<typename rectangle_traits<rectangle_type>::coordinate_type> urp(xl(rectangle), yl(rectangle));
+    point_data<typename rectangle_traits<rectangle_type>::coordinate_type> urp(xh(rectangle), yh(rectangle));
     transform(llp, transformation);
     transform(urp, transformation);
     set_points(rectangle, llp, urp);
@@ -810,9 +820,10 @@ namespace gtl {
     orientation_2d orient_;
   public:
     inline less_rectangle_concept(orientation_2d orient = VERTICAL) : orient_(orient) {}
-    typename requires_2< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-                         typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type,
-                         bool>::type 
+    typename requires_1<
+      typename gtl_and< typename is_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+                        typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+      bool>::type 
     operator () (const rectangle_type_1& a,
                  const rectangle_type_2& b) const {
       typedef typename rectangle_traits<rectangle_type_1>::coordinate_type Unit;

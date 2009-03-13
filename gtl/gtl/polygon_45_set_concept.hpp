@@ -42,18 +42,11 @@ namespace gtl {
 
   //assign
   template <typename polygon_set_type_1, typename polygon_set_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_2>::type>::type,
+  typename requires_1< typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type_1>::type>::type,
+                                         typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_2>::type>::type>::type,
                        polygon_set_type_1>::type &
   assign(polygon_set_type_1& lvalue, const polygon_set_type_2& rvalue) {
-    if(clean(rvalue))
-      polygon_45_set_mutable_traits<polygon_set_type_1>::set(lvalue, begin_45_set_data(rvalue), end_45_set_data(rvalue));
-    else {
-      polygon_45_set_data<typename polygon_45_set_traits<polygon_set_type_2>::coordinate_type> ps;
-      ps.insert(begin_45_set_data(rvalue), end_45_set_data(rvalue));
-      ps.clean();
-      polygon_45_set_mutable_traits<polygon_set_type_1>::set(lvalue, ps.begin(), ps.end());
-    }
+    polygon_45_set_mutable_traits<polygon_set_type_1>::set(lvalue, begin_45_set_data(rvalue), end_45_set_data(rvalue));
     return lvalue;
   }
 
@@ -68,11 +61,23 @@ namespace gtl {
     ps.get_trapezoids(output);
   }
 
+  //get trapezoids
+  template <typename output_container_type, typename polygon_set_type>
+  typename requires_1< typename gtl_if<typename is_polygon_45_set_type<polygon_set_type>::type>::type,
+                       void>::type
+  get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set, orientation_2d slicing_orientation) {
+    clean(polygon_set);
+    polygon_45_set_data<typename polygon_45_set_traits<polygon_set_type>::coordinate_type> ps;
+    assign(ps, polygon_set);
+    ps.get_trapezoids(output, slicing_orientation);
+  }
+
   //equivalence
   template <typename polygon_set_type_1, typename polygon_set_type_2>
-  typename requires_3< typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_2>::type>::type,
-                       typename gtl_if<typename is_either_polygon_45_set_type<polygon_set_type_1, polygon_set_type_2>::type>::type,
+  typename requires_1< typename gtl_and_3<typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_1>::type>::type,
+                                          typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_2>::type>::type,
+                                          typename gtl_if<typename is_either_polygon_45_set_type<polygon_set_type_1, 
+                                                                                                 polygon_set_type_2>::type>::type>::type,
                        bool>::type 
   equivalence(const polygon_set_type_1& lvalue,
               const polygon_set_type_2& rvalue) {
@@ -106,9 +111,10 @@ namespace gtl {
  
   //extents
   template <typename polygon_set_type, typename rectangle_type>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
-                       typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-                       bool>::type
+  typename requires_1<
+    typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+                      typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type,
+    bool>::type
   extents(rectangle_type& extents_rectangle, 
           const polygon_set_type& polygon_set) {
     clean(polygon_set);
@@ -119,7 +125,7 @@ namespace gtl {
 
   //area
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::area_type>::type
   area(const polygon_set_type& polygon_set) {
     typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
@@ -134,6 +140,32 @@ namespace gtl {
     return retval;
   }
 
+  //interact
+  template <typename polygon_set_type_1, typename polygon_set_type_2>
+  typename requires_1 <
+    typename gtl_and< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type_1>::type>::type,
+                      typename gtl_if<typename is_polygon_45_or_90_set_type<polygon_set_type_2>::type>::type >::type,
+    polygon_set_type_1>::type
+  interact(polygon_set_type_1& polygon_set_1, const polygon_set_type_2& polygon_set_2) {
+    typedef typename polygon_45_set_traits<polygon_set_type_1>::coordinate_type Unit;
+    std::vector<polygon_45_data<Unit> > polys;
+    assign(polys, polygon_set_1);
+    std::vector<std::set<int> > graph(polys.size()+1, std::set<int>());
+    connectivity_extraction_45<Unit> ce;
+    ce.insert(polygon_set_2);
+    for(unsigned int i = 0; i < polys.size(); ++i){
+      ce.insert(polys[i]);
+    }
+    ce.extract(graph);
+    clear(polygon_set_1);
+    polygon_45_set_data<Unit> ps;
+    for(std::set<int>::iterator itr = graph[0].begin(); itr != graph[0].end(); ++itr){
+      ps.insert(polys[(*itr)-1]);
+    }
+    assign(polygon_set_1, ps);
+    return polygon_set_1;
+  }
+
 //   //self_intersect
 //   template <typename polygon_set_type>
 //   typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
@@ -144,7 +176,7 @@ namespace gtl {
 //   }
 
   template <typename polygon_set_type, typename coord_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   resize(polygon_set_type& polygon_set, coord_type resizing, 
          RoundingOption rounding = CLOSEST, CornerOption corner = INTERSECTION) {
@@ -158,7 +190,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
@@ -166,37 +198,37 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   shrink(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type shrinking) {
     return resize(polygon_set, -(typename polygon_45_set_traits<polygon_set_type>::coordinate_type)shrinking);
   }
 
-//   template <typename polygon_set_type>
-//   typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
-//                        polygon_set_type>::type &
-//   grow_and(polygon_set_type& polygon_set, 
-//         typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
-//     typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
-//     std::vector<polygon_45_data<Unit> > polys;
-//     assign(polys, polygon_set);
-//     clear(polygon_set);
-//     polygon_45_set_data<Unit> ps;
-//     for(unsigned int i = 0; i < polys.size(); ++i) {
-//       polygon_45_set_data<Unit> tmpPs;
-//       tmpPs.insert(polys[i]);
-//       bloat(tmpPs, bloating);
-//       tmpPs.clean(); //apply implicit OR on tmp polygon set
-//       ps.insert(tmpPs);
-//     }
-//     self_intersect(ps);
-//     assign(polygon_set, ps);
-//     return polygon_set;
-//   }
+  template <typename polygon_set_type>
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  grow_and(polygon_set_type& polygon_set, 
+        typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
+    typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
+    std::vector<polygon_45_data<Unit> > polys;
+    assign(polys, polygon_set);
+    clear(polygon_set);
+    polygon_45_set_data<Unit> ps;
+    for(unsigned int i = 0; i < polys.size(); ++i) {
+      polygon_45_set_data<Unit> tmpPs;
+      tmpPs.insert(polys[i]);
+      bloat(tmpPs, bloating);
+      tmpPs.clean(); //apply implicit OR on tmp polygon set
+      ps.insert(tmpPs);
+    }
+    ps.self_intersect();
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   scale_up(polygon_set_type& polygon_set, 
            typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type factor) {
@@ -210,7 +242,7 @@ namespace gtl {
   }
 
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   scale_down(polygon_set_type& polygon_set, 
            typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type factor) {
@@ -223,9 +255,48 @@ namespace gtl {
     return polygon_set;
   }
 
+  template <typename polygon_set_type>
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  scale(polygon_set_type& polygon_set, double factor) {
+    typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
+    clean(polygon_set);
+    polygon_45_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.scale(factor);
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
+  //self_intersect
+  template <typename polygon_set_type>
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  self_intersect(polygon_set_type& polygon_set) {
+    typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_45_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.self_intersect();
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
+  //self_xor
+  template <typename polygon_set_type>
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
+                       polygon_set_type>::type &
+  self_xor(polygon_set_type& polygon_set) {
+    typedef typename polygon_45_set_traits<polygon_set_type>::coordinate_type Unit;
+    polygon_45_set_data<Unit> ps;
+    assign(ps, polygon_set);
+    ps.self_xor();
+    assign(polygon_set, ps);
+    return polygon_set;
+  }
+
   //transform
   template <typename polygon_set_type, typename transformation_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   transform(polygon_set_type& polygon_set,
             const transformation_type& transformation) {
@@ -240,7 +311,7 @@ namespace gtl {
 
   //keep
   template <typename polygon_set_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_45_set_type<polygon_set_type>::type>::type,
+  typename requires_1< typename is_mutable_polygon_45_set_type<polygon_set_type>::type,
                        polygon_set_type>::type &
   keep(polygon_set_type& polygon_set, 
        typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::area_type min_area,

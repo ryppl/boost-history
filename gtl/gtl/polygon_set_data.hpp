@@ -23,23 +23,27 @@ namespace gtl {
     typedef typename value_type::const_iterator iterator_type;
     typedef polygon_set_data operator_arg_type;
 
-    /// default constructor
+    // default constructor
     inline polygon_set_data() : dirty_(false), unsorted_(false), is_45_(true) {}
 
-    /// constructor from an iterator pair over edge data
+    // constructor from an iterator pair over edge data
     template <typename iT>
     inline polygon_set_data(iT input_begin, iT input_end) {
       for( ; input_begin != input_end; ++input_begin) { insert(*input_begin); }
     }
 
-    /// copy constructor
+    // copy constructor
     inline polygon_set_data(const polygon_set_data& that) : 
       data_(that.data_), dirty_(that.dirty_), unsorted_(that.unsorted_), is_45_(that.is_45_) {}
 
-    /// destructor
+    // copy constructor
+    template <typename ltype, typename rtype, int op_type> 
+    inline polygon_set_data(const polygon_set_view<ltype, rtype, op_type>& that);
+
+    // destructor
     inline ~polygon_set_data() {}
 
-    /// assignement operator
+    // assignement operator
     inline polygon_set_data& operator=(const polygon_set_data& that) {
       if(this == &that) return *this;
       data_ = that.data_;
@@ -64,7 +68,7 @@ namespace gtl {
       return *this;
     }
 
-    /// insert iterator range
+    // insert iterator range
     template <typename iT>
     inline void insert(iT input_begin, iT input_end) {
       if(input_begin == input_end) return;
@@ -176,24 +180,24 @@ namespace gtl {
       get_dispatch(output, typename geometry_concept<typename output_container::value_type>::type());
     }
 
-    /// equivalence operator 
+    // equivalence operator 
     inline bool operator==(const polygon_set_data& p) const {
       clean();
       p.clean();
       return data_ == p.data_;
     }
 
-    /// inequivalence operator 
+    // inequivalence operator 
     inline bool operator!=(const polygon_set_data& p) const {
       return !((*this) == p);
     }
 
-    /// get iterator to begin vertex data
+    // get iterator to begin vertex data
     inline iterator_type begin() const {
       return data_.begin();
     }
 
-    /// get iterator to end vertex data
+    // get iterator to end vertex data
     inline iterator_type end() const {
       return data_.end();
     }
@@ -202,16 +206,16 @@ namespace gtl {
       return data_;
     }
 
-    /// clear the contents of the polygon_set_data
+    // clear the contents of the polygon_set_data
     inline void clear() { data_.clear(); dirty_ = unsorted_ = false; }
 
-    /// find out if Polygon set is empty
+    // find out if Polygon set is empty
     inline bool empty() const { return data_.empty(); }
 
-    /// find out if Polygon set is sorted
+    // find out if Polygon set is sorted
     inline bool sorted() const { return !unsorted_; }
 
-    /// find out if Polygon set is clean
+    // find out if Polygon set is clean
     inline bool dirty() const { return dirty_; }
 
     void clean() const;

@@ -111,8 +111,9 @@ namespace gtl {
     typedef T3 type;
   };
 
-  struct gtl_no {};
-  struct gtl_yes { typedef void type; };
+  struct gtl_no { static const bool value = false; };
+  struct gtl_yes { typedef gtl_yes type;
+	static const bool value = true; };
 
   template <typename T, typename T2>
   struct gtl_and { typedef gtl_no type; };
@@ -125,39 +126,36 @@ namespace gtl {
   struct gtl_or<T, T> { typedef T type; };
     
   template <typename T, typename T2, typename T3>
-  struct gtl_and_3 { typedef gtl_no type; };
-  template <typename T>
-  struct gtl_and_3<T, T, T> { typedef T type; };
-  
+  struct gtl_and_3 { typedef typename gtl_and<
+                       T, typename gtl_and<T2, T3>::type>::type type; };
   template <typename T, typename T2, typename T3>
-  struct gtl_or_3 { typedef gtl_yes type; };
-  template <typename T>
-  struct gtl_or_3<T, T, T> { typedef T type; };
-    
-  template <typename T, typename T2, typename T3, typename T4>
-  struct gtl_and_4 { typedef gtl_no type; };
-  template <typename T>
-  struct gtl_and_4<T, T, T, T> { typedef T type; };
-  
-  template <typename T, typename T2, typename T3, typename T4>
-  struct gtl_or_4 { typedef gtl_yes type; };
-  template <typename T>
-  struct gtl_or_4<T, T, T, T> { typedef T type; };
+  struct gtl_or_3 { typedef typename gtl_or<
+                       T, typename gtl_or<T2, T3>::type>::type type; };
 
+  template <typename T, typename T2, typename T3, typename T4>
+  struct gtl_or_4 { typedef typename gtl_or<
+                      T, typename gtl_or_3<T2, T3, T4>::type>::type type; };
+    
   template <typename T>
   struct gtl_not { typedef gtl_no type; };
   template <>
   struct gtl_not<gtl_no> { typedef gtl_yes type; };
 
   template <typename T>
-  struct gtl_if { typedef T type; };
+  struct gtl_if {
+#ifdef WIN32
+    typedef gtl_no type;
+#endif
+  };
   template <>
-  struct gtl_if<gtl_no> {};
+  struct gtl_if<gtl_yes> { typedef gtl_yes type; };
 
   template <typename T, typename T2>
   struct gtl_same_type { typedef gtl_no type; };
   template <typename T>
   struct gtl_same_type<T, T> { typedef gtl_yes type; };
+  template <typename T, typename T2>
+  struct gtl_different_type { typedef typename gtl_not<typename gtl_same_type<T, T2>::type>::type type; };
 
   template <typename T1, typename T2>
   struct requires_type { typedef T2 type; };
@@ -172,20 +170,57 @@ namespace gtl {
   template <typename T>
   struct is_different_type_SFINAE<T, T> {};
 
-  template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6>
-  struct requires_5 { typedef T6 type; };
+  namespace boost_copy {	
+  template <bool B, class T	= void>
+  struct enable_if_c {
+    typedef T type;
+  };
 
-  template <typename T1, typename T2, typename T3, typename T4, typename T5>
-  struct requires_4 { typedef T5 type; };
+  template <class T>
+  struct enable_if_c<false, T> {};
 
-  template <typename T1, typename T2, typename T3, typename T4>
-  struct requires_3 { typedef T4 type; };
+  template <class Cond, class T = void> 
+  struct enable_if : public enable_if_c<Cond::value, T> {};
 
-  template <typename T1, typename T2, typename T3>
-  struct requires_2 { typedef T3 type; };
+  template <bool B, class T>
+  struct lazy_enable_if_c {
+    typedef typename T::type type;
+  };
 
-  template <typename T1, typename T2>
-  struct requires_1 { typedef T2 type; };
+  template <class T>
+  struct lazy_enable_if_c<false, T> {};
+
+  template <class Cond, class T> 
+  struct lazy_enable_if : public lazy_enable_if_c<Cond::value, T> {};
+
+
+  template <bool B, class T = void>
+  struct disable_if_c {
+    typedef T type;
+  };
+
+  template <class T>
+  struct disable_if_c<true, T> {};
+
+  template <class Cond, class T = void> 
+  struct disable_if : public disable_if_c<Cond::value, T> {};
+
+  template <bool B, class T>
+  struct lazy_disable_if_c {
+    typedef typename T::type type;
+  };
+
+  template <class T>
+  struct lazy_disable_if_c<true, T> {};
+
+  template <class Cond, class T> 
+  struct lazy_disable_if : public lazy_disable_if_c<Cond::value, T> {};
+}
+//  template <typename T1, typename T2>
+//  struct requires_1 {};
+//  template <typename T2>
+//  struct requires_1<gtl_yes, T2> { typedef T2 type; };
+#define requires_1 boost_copy::enable_if
 
   struct manhattan_domain {};
   struct forty_five_domain {};
@@ -201,9 +236,10 @@ namespace gtl {
     typedef typename coordinate_traits<coordinate_type>::manhattan_area_type type; };
 
   template <typename coordinate_type_1, typename coordinate_type_2>
-  typename requires_2< typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
+  typename requires_1< 
+    typename gtl_and<typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+                     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
+    typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
   euclidean_distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
     typedef typename coordinate_traits<coordinate_type_1>::coordinate_difference Unit;
     return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;
@@ -211,18 +247,18 @@ namespace gtl {
 
 
 
-/// predicated_swap swaps a and b if pred is true
+// predicated_swap swaps a and b if pred is true
 
-/// predicated_swap is garenteed to behave the same as
-/// if(pred){
-///   T tmp = a;
-///   a = b;
-///   b = tmp;
-/// }
-/// but will not generate a branch instruction.
-/// predicated_swap always creates a temp copy of a, but does not
-/// create more than one temp copy of an input.
-/// predicated_swap can be used to optimize away branch instructions in C++
+// predicated_swap is garenteed to behave the same as
+// if(pred){
+//   T tmp = a;
+//   a = b;
+//   b = tmp;
+// }
+// but will not generate a branch instruction.
+// predicated_swap always creates a temp copy of a, but does not
+// create more than one temp copy of an input.
+// predicated_swap can be used to optimize away branch instructions in C++
 template <class T>
 inline bool predicated_swap(const bool& pred,
                             T& a,
@@ -323,7 +359,7 @@ public:
   inline bool operator> (direction_2d d) const { return (val_ > d.val_); }
   inline bool operator>=(direction_2d d) const { return (val_ >= d.val_); }
 
-  /// Casting to int
+  // Casting to int
   inline unsigned int to_int(void) const { return val_; }
 
   inline direction_2d backward() const {
@@ -331,18 +367,18 @@ public:
     return direction_2d(direction_2d_enum(val_ ^ 1));
   }
 
-  /// Returns a direction 90 degree left (LOW) or right(HIGH) to this one
+  // Returns a direction 90 degree left (LOW) or right(HIGH) to this one
   inline direction_2d turn(direction_1d t) const {
     return direction_2d(direction_2d_enum(val_ ^ 3 ^ (val_ >> 1) ^ t.to_int()));
   }
 
-  /// Returns a direction 90 degree left to this one
+  // Returns a direction 90 degree left to this one
   inline direction_2d left() const {return turn(HIGH);}
 
-  /// Returns a direction 90 degree right to this one
+  // Returns a direction 90 degree right to this one
   inline direction_2d right() const {return turn(LOW);}
 
-  /// N, E are positive, S, W are negative
+  // N, E are positive, S, W are negative
   inline bool is_positive() const {return (val_ & 1);}
   inline bool is_negative() const {return !is_positive();}
   inline int get_sign() const {return ((is_positive()) << 1) -1;}
@@ -408,7 +444,7 @@ public:
   inline bool operator> (direction_3d d) const { return (val_ > d.val_); }
   inline bool operator>=(direction_3d d) const { return (val_ >= d.val_); }
 
-  /// Casting to int
+  // Casting to int
   inline unsigned int to_int(void) const { return val_; }
 
   inline direction_3d backward() const {
@@ -416,7 +452,7 @@ public:
     return direction_2d(direction_2d_enum(val_ ^ 1));
   }
 
-  /// N, E are positive, S, W are negative
+  // N, E are positive, S, W are negative
   inline bool is_positive() const {return (val_ & 1);}
   inline bool is_negative() const {return !is_positive();}
   inline int get_sign() const {return ((is_positive()) << 1) -1;}

@@ -20,25 +20,26 @@ namespace gtl {
   //polygon45formation algorithm
   template <typename Unit>
   struct polygon_45_formation : public boolean_op_45<Unit> {
-    typedef point_data<int> Point;
-    typedef polygon_45_data<int> Polygon45;
-    typedef polygon_45_with_holes_data<int> Polygon45WithHoles;
+    typedef point_data<Unit> Point;
+    typedef polygon_45_data<Unit> Polygon45;
+    typedef polygon_45_with_holes_data<Unit> Polygon45WithHoles;
     typedef typename boolean_op_45<Unit>::Vertex45 Vertex45;
     typedef typename boolean_op_45<Unit>::lessVertex45 lessVertex45;
+    typedef typename boolean_op_45<Unit>::Count2 Count2;
     typedef typename boolean_op_45<Unit>::Scan45Count Scan45Count;
     typedef std::pair<Point, Scan45Count> Scan45Vertex;
-    typedef typename boolean_op_45<Unit>::Count2 Count2;
-    typedef typename boolean_op_45<Unit>::Scan45 Scan45;
+    typedef typename boolean_op_45<Unit>::template
+    Scan45<Count2, typename boolean_op_45<Unit>::template boolean_op_45_output_functor<0> > Scan45;
     
     class PolyLine45 {
     public:
-      typedef std::list<Point>::const_iterator iterator;
+      typedef typename std::list<Point>::const_iterator iterator;
 
-      /// default constructor of point does not initialize x and y
+      // default constructor of point does not initialize x and y
       inline PolyLine45(){;} //do nothing default constructor
 
-      /// initialize a polygon from x,y values, it is assumed that the first is an x
-      /// and that the input is a well behaved polygon
+      // initialize a polygon from x,y values, it is assumed that the first is an x
+      // and that the input is a well behaved polygon
       template<class iT>
       inline PolyLine45& set(iT inputBegin, iT inputEnd) {
         points.clear();  //just in case there was some old data there
@@ -49,19 +50,19 @@ namespace gtl {
         return *this;
       }
 
-      /// copy constructor (since we have dynamic memory)
+      // copy constructor (since we have dynamic memory)
       inline PolyLine45(const PolyLine45& that) : points(that.points) {}
   
-      /// assignment operator (since we have dynamic memory do a deep copy)
+      // assignment operator (since we have dynamic memory do a deep copy)
       inline PolyLine45& operator=(const PolyLine45& that) {
         points = that.points;
         return *this;
       }
 
-      /// get begin iterator, returns a pointer to a const Unit
+      // get begin iterator, returns a pointer to a const Unit
       inline iterator begin() const { return points.begin(); }
 
-      /// get end iterator, returns a pointer to a const Unit
+      // get end iterator, returns a pointer to a const Unit
       inline iterator end() const { return points.end(); }
 
       inline std::size_t size() const { return points.size(); }
@@ -363,8 +364,8 @@ namespace gtl {
 
       static inline std::pair<ActiveTail45*, ActiveTail45*> createActiveTail45sAsPair(Point point, bool solid, 
                                                                                       ActiveTail45* phole, bool fractureHoles) {
-        ActiveTail45* at1;
-        ActiveTail45* at2;
+        ActiveTail45* at1 = 0;
+        ActiveTail45* at2 = 0;
         if(phole && fractureHoles) {
           //std::cout << "adding hole\n";
           at1 = phole;
@@ -385,73 +386,75 @@ namespace gtl {
 
     };
 
-
-
-    class Vertex45Count {
+    template <typename ct>
+    class Vertex45CountT {
     public:
-      inline Vertex45Count() { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
-      inline Vertex45Count(int count) { counts[0] = counts[1] = counts[2] = counts[3] = count; }
-      inline Vertex45Count(const int& count1, const int& count2, const int& count3, 
-                           const int& count4) { 
+      typedef ct count_type;
+      inline Vertex45CountT() { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
+      //inline Vertex45CountT(ct count) { counts[0] = counts[1] = counts[2] = counts[3] = count; }
+      inline Vertex45CountT(const ct& count1, const ct& count2, const ct& count3, 
+                           const ct& count4) { 
         counts[0] = count1; 
         counts[1] = count2; 
         counts[2] = count3;
         counts[3] = count4; 
       }
-      inline Vertex45Count(const Vertex45& vertex) { 
+      inline Vertex45CountT(const Vertex45& vertex) { 
         counts[0] = counts[1] = counts[2] = counts[3] = 0;
         (*this) += vertex;
       }
-      inline Vertex45Count(const Vertex45Count& count) { 
+      inline Vertex45CountT(const Vertex45CountT& count) { 
         (*this) = count;
       }
-      inline bool operator==(const Vertex45Count& count) const { 
+      inline bool operator==(const Vertex45CountT& count) const { 
         for(unsigned int i = 0; i < 4; ++i) {
           if(counts[i] != count.counts[i]) return false; 
         }
         return true;
       }
-      inline bool operator!=(const Vertex45Count& count) const { return !((*this) == count); }
-      inline Vertex45Count& operator=(int count) { 
+      inline bool operator!=(const Vertex45CountT& count) const { return !((*this) == count); }
+      inline Vertex45CountT& operator=(ct count) { 
         counts[0] = counts[1] = counts[2] = counts[3] = count; return *this; }
-      inline Vertex45Count& operator=(const Vertex45Count& count) {
+      inline Vertex45CountT& operator=(const Vertex45CountT& count) {
         for(unsigned int i = 0; i < 4; ++i) {
           counts[i] = count.counts[i]; 
         }
         return *this; 
       }
-      inline int& operator[](int index) { return counts[index]; }
-      inline int operator[](int index) const {return counts[index]; }
-      inline Vertex45Count& operator+=(const Vertex45Count& count){
+      inline ct& operator[](int index) { return counts[index]; }
+      inline ct operator[](int index) const {return counts[index]; }
+      inline Vertex45CountT& operator+=(const Vertex45CountT& count){
         for(unsigned int i = 0; i < 4; ++i) {
           counts[i] += count.counts[i]; 
         }
         return *this;
       }
-      inline Vertex45Count& operator-=(const Vertex45Count& count){
+      inline Vertex45CountT& operator-=(const Vertex45CountT& count){
         for(unsigned int i = 0; i < 4; ++i) {
           counts[i] -= count.counts[i]; 
         }
         return *this;
       }
-      inline Vertex45Count operator+(const Vertex45Count& count) const {
-        return Vertex45Count(*this)+=count;
+      inline Vertex45CountT operator+(const Vertex45CountT& count) const {
+        return Vertex45CountT(*this)+=count;
       }
-      inline Vertex45Count operator-(const Vertex45Count& count) const {
-        return Vertex45Count(*this)-=count;
+      inline Vertex45CountT operator-(const Vertex45CountT& count) const {
+        return Vertex45CountT(*this)-=count;
       }
-      inline Vertex45Count invert() const {
-        return Vertex45Count(0)-=(*this);
+      inline Vertex45CountT invert() const {
+        return Vertex45CountT()-=(*this);
       }
-      inline Vertex45Count& operator+=(const Vertex45& element){
+      inline Vertex45CountT& operator+=(const Vertex45& element){
         counts[element.rise+1] += element.count; return *this;
       }
       inline bool is_45() const {
         return counts[0] != 0 || counts[2] != 0;
       }
     private:
-      int counts[4];
+      ct counts[4];
     };
+
+    typedef Vertex45CountT<int> Vertex45Count;
 
 //     inline std::ostream& operator<< (std::ostream& o, const Vertex45Count& c) {
 //       o << c[0] << ", " << c[1] << ", ";
@@ -459,40 +462,45 @@ namespace gtl {
 //       return o;
 //     }
 
-    class Vertex45Compact {
+    template <typename ct>
+    class Vertex45CompactT {
     public:
       Point pt;
-      Vertex45Count count;
-      inline Vertex45Compact() {}
-      inline Vertex45Compact(const Point& point, int riseIn, int countIn) : pt(point) {
+      ct count;
+      typedef typename boolean_op_45<Unit>::template Vertex45T<typename ct::count_type> Vertex45T;
+      inline Vertex45CompactT() {}
+      inline Vertex45CompactT(const Point& point, int riseIn, int countIn) : pt(point) {
         count[riseIn+1] = countIn;
       }
-      inline Vertex45Compact(const Vertex45& vertex) : pt(vertex.pt) {
+      inline Vertex45CompactT(const Vertex45T& vertex) : pt(vertex.pt) {
         count[vertex.rise+1] = vertex.count;
       }
-      inline Vertex45Compact(const Vertex45Compact& vertex) : pt(vertex.pt), count(vertex.count) {}
-      inline Vertex45Compact& operator=(const Vertex45Compact& vertex){ 
+      inline Vertex45CompactT(const Vertex45CompactT& vertex) : pt(vertex.pt), count(vertex.count) {}
+      inline Vertex45CompactT& operator=(const Vertex45CompactT& vertex){ 
         pt = vertex.pt; count = vertex.count; return *this; }
-      inline Vertex45Compact(const std::pair<Point, Point>& vertex) {}
-      inline Vertex45Compact& operator=(const std::pair<Point, Point>& vertex){ return *this; }
-      inline bool operator==(const Vertex45Compact& vertex) const {
+      inline Vertex45CompactT(const std::pair<Point, Point>& vertex) {}
+      inline Vertex45CompactT& operator=(const std::pair<Point, Point>& vertex){ return *this; }
+      inline bool operator==(const Vertex45CompactT& vertex) const {
         return pt == vertex.pt && count == vertex.count; }
-      inline bool operator!=(const Vertex45Compact& vertex) const { return !((*this) == vertex); }
+      inline bool operator!=(const Vertex45CompactT& vertex) const { return !((*this) == vertex); }
       inline bool operator==(const std::pair<Point, Point>& vertex) const { return false; }
       inline bool operator!=(const std::pair<Point, Point>& vertex) const { return !((*this) == vertex); }
-      inline bool operator<(const Vertex45Compact& vertex) const {
+      inline bool operator<(const Vertex45CompactT& vertex) const {
         if(pt.x() < vertex.pt.x()) return true;
         if(pt.x() == vertex.pt.x()) {
           return pt.y() < vertex.pt.y();
         }
         return false;
       }
-      inline bool operator>(const Vertex45Compact& vertex) const { return vertex < (*this); }
-      inline bool operator<=(const Vertex45Compact& vertex) const { return !((*this) > vertex); }
-      inline bool operator>=(const Vertex45Compact& vertex) const { return !((*this) < vertex); }
+      inline bool operator>(const Vertex45CompactT& vertex) const { return vertex < (*this); }
+      inline bool operator<=(const Vertex45CompactT& vertex) const { return !((*this) > vertex); }
+      inline bool operator>=(const Vertex45CompactT& vertex) const { return !((*this) < vertex); }
       inline bool haveVertex45(int index) const { return count[index]; }
-      inline Vertex45 operator[](int index) const { return Vertex45(pt, index-1, count[index]); }
+      inline Vertex45T operator[](int index) const {
+        return Vertex45T(pt, index-1, count[index]); }
     };
+
+    typedef Vertex45CompactT<Vertex45Count> Vertex45Compact;
 
 //     inline std::ostream& operator<< (std::ostream& o, const Vertex45Compact& c) {
 //       o << c.pt << ", " << c.count;
@@ -996,7 +1004,7 @@ namespace gtl {
       std::cout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
-      Scan45 scan45(0);
+      Scan45 scan45;
       std::vector<Vertex45 > result;
       std::vector<Scan45Vertex> vertices;
       //is a Rectnagle(0, 0, 10, 10);
@@ -1865,7 +1873,7 @@ namespace gtl {
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
 
-      Scan45 scan45(0);
+      Scan45 scan45;
       std::vector<Vertex45 > result;
       std::vector<Scan45Vertex> vertices;
       //is a Rectnagle(0, 0, 10, 10);
@@ -2089,7 +2097,7 @@ namespace gtl {
     typedef Unit coordinate_type;
     typedef point_data<Unit> Point;
     typedef Point point_type;
-    typedef iterator_points_to_compact<iterator, Point> compact_iterator_type;
+    //    typedef iterator_points_to_compact<iterator, Point> compact_iterator_type;
     typedef iterator iterator_type;
     typedef typename coordinate_traits<Unit>::area_type area_type;
     
@@ -2118,7 +2126,7 @@ namespace gtl {
     typedef Unit coordinate_type;
     typedef point_data<Unit> Point;
     typedef Point point_type;
-    typedef iterator_points_to_compact<iterator, Point> compact_iterator_type;
+    //    typedef iterator_points_to_compact<iterator, Point> compact_iterator_type;
     typedef iterator iterator_type;
     typedef holeType hole_type;
     typedef typename coordinate_traits<Unit>::area_type area_type;
@@ -2173,8 +2181,8 @@ namespace gtl {
       return *this;
     }
     
-    /// initialize a polygon from x,y values, it is assumed that the first is an x
-    /// and that the input is a well behaved polygon
+    // initialize a polygon from x,y values, it is assumed that the first is an x
+    // and that the input is a well behaved polygon
     template<class iT>
     inline PolyLine45PolygonData& set_holes(iT inputBegin, iT inputEnd) {
       return *this;

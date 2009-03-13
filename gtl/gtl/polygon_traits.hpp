@@ -9,82 +9,95 @@
 #define GTL_POLYGON_TRAITS_HPP
 namespace gtl {
 
-  template <typename T, typename enable = void>
+  template <typename T, typename enable = gtl_yes>
   struct polygon_90_traits {
     typedef typename T::coordinate_type coordinate_type;
     typedef typename T::compact_iterator_type compact_iterator_type;
 
-    /// Get the begin iterator
+    // Get the begin iterator
     static inline compact_iterator_type begin_compact(const T& t) {
       return t.begin_compact();
     }
   
-    /// Get the end iterator
+    // Get the end iterator
     static inline compact_iterator_type end_compact(const T& t) {
       return t.end_compact();
     }
   
-    /// Get the number of sides of the polygon
+    // Get the number of sides of the polygon
     static inline unsigned int size(const T& t) {
       return t.size();
     }
   
-    /// Get the winding direction of the polygon
+    // Get the winding direction of the polygon
     static inline winding_direction winding(const T& t) {
       return unknown_winding;
     }
   };
 
-  template <typename T, typename enable = void>
-  struct polygon_traits {
+  template <typename T, typename enable = gtl_yes>
+  struct polygon_traits {};
+
+  template <typename T>
+  struct polygon_traits<T, 
+                        typename gtl_or_4<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_with_holes_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_45_with_holes_concept>::type
+  >::type> {
     typedef typename T::coordinate_type coordinate_type;
     typedef typename T::iterator_type iterator_type;
     typedef typename T::point_type point_type;
 
-    /// Get the begin iterator
+    // Get the begin iterator
     static inline iterator_type begin_points(const T& t) {
       return t.begin();
     }
   
-    /// Get the end iterator
+    // Get the end iterator
     static inline iterator_type end_points(const T& t) {
       return t.end();
     }
   
-    /// Get the number of sides of the polygon
+    // Get the number of sides of the polygon
     static inline unsigned int size(const T& t) {
       return t.size();
     }
   
-    /// Get the winding direction of the polygon
+    // Get the winding direction of the polygon
     static inline winding_direction winding(const T& t) {
       return unknown_winding;
     }
   };
 
   template <typename T>
-  struct polygon_traits<T, typename is_same_type_SFINAE<polygon_90_concept, typename geometry_concept<T>::type>::type> {
+  struct polygon_traits< T, 
+                         typename gtl_or<
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_concept>::type,
+    typename gtl_same_type<typename geometry_concept<T>::type, polygon_90_with_holes_concept>::type
+  >::type > {
     typedef typename polygon_90_traits<T>::coordinate_type coordinate_type;
     typedef iterator_compact_to_points<typename polygon_90_traits<T>::compact_iterator_type, point_data<coordinate_type> > iterator_type;
 
-    /// Get the begin iterator
+    // Get the begin iterator
     static inline iterator_type begin_points(const T& t) {
       return iterator_type(polygon_90_traits<T>::begin_compact(t),
                            polygon_90_traits<T>::end_compact(t));
     }
   
-    /// Get the end iterator
+    // Get the end iterator
     static inline iterator_type end_points(const T& t) {
       return iterator_type(polygon_90_traits<T>::end_compact(t),
                            polygon_90_traits<T>::end_compact(t));
     }
   
-    /// Get the number of sides of the polygon
+    // Get the number of sides of the polygon
     static inline unsigned int size(const T& t) {
       return polygon_90_traits<T>::size(t);
     }
   
-    /// Get the winding direction of the polygon
+    // Get the winding direction of the polygon
     static inline winding_direction winding(const T& t) {
       return polygon_90_traits<T>::winding(t);
     }
@@ -95,17 +108,17 @@ namespace gtl {
     typedef typename T::iterator_holes_type iterator_holes_type;
     typedef typename T::hole_type hole_type;
 
-    /// Get the begin iterator
+    // Get the begin iterator
     static inline iterator_holes_type begin_holes(const T& t) {
       return t.begin_holes();
     }
 
-    /// Get the end iterator
+    // Get the end iterator
     static inline iterator_holes_type end_holes(const T& t) {
       return t.end_holes();
     }
 
-    /// Get the number of holes 
+    // Get the number of holes 
     static inline unsigned int size_holes(const T& t) {
       return t.size_holes();
     }
@@ -114,7 +127,7 @@ namespace gtl {
   template <typename T, typename enable = void>
   struct polygon_90_mutable_traits {
   
-    /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
+    // Set the data of a polygon with the unique coordinates in an iterator, starting with an x
     template <typename iT>
     static inline T& set_compact(T& t, iT input_begin, iT input_end) {
       t.set_compact(input_begin, input_end);
@@ -124,8 +137,8 @@ namespace gtl {
   };
 
   template <typename T>
-  struct polygon_90_mutable_traits<T, typename is_same_type_SFINAE<polygon_concept, typename geometry_concept<T>::type>::type> {
-    /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
+  struct polygon_90_mutable_traits<T, typename gtl_same_type<polygon_concept, typename geometry_concept<T>::type>::type> {
+    // Set the data of a polygon with the unique coordinates in an iterator, starting with an x
     template <typename iT>
     static inline T& set_compact(T& t, iT input_begin, iT input_end) {
       typedef iterator_points_to_compact<iT, typename polygon_traits<T>::point_type> iTp;
@@ -137,7 +150,7 @@ namespace gtl {
   template <typename T, typename enable = void>
   struct polygon_mutable_traits {
 
-    /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
+    // Set the data of a polygon with the unique coordinates in an iterator, starting with an x
     template <typename iT>
     static inline T& set_points(T& t, iT input_begin, iT input_end) {
       t.set(input_begin, input_end);
@@ -149,7 +162,7 @@ namespace gtl {
   template <typename T, typename enable = void>
   struct polygon_with_holes_mutable_traits {
 
-    /// Set the data of a polygon with the unique coordinates in an iterator, starting with an x
+    // Set the data of a polygon with the unique coordinates in an iterator, starting with an x
     template <typename iT>
     static inline T& set_holes(T& t, iT inputBegin, iT inputEnd) {
       t.set_holes(inputBegin, inputEnd);
@@ -275,9 +288,10 @@ namespace gtl {
   };
   template <typename T>
   struct is_any_mutable_polygon_without_holes_type {
-    typedef typename gtl_or_3<typename is_mutable_polygon_90_type<T>::type, 
-                              typename is_mutable_polygon_45_type<T>::type, 
-                              typename is_mutable_polygon_type<T>::type>::type type; };
+    typedef typename gtl_or_3<
+      typename is_mutable_polygon_90_type<T>::type, 
+      typename is_mutable_polygon_45_type<T>::type, 
+      typename is_mutable_polygon_type<T>::type>::type type; };
   
   template <typename T>
   struct is_any_mutable_polygon_type {
@@ -300,24 +314,44 @@ namespace gtl {
   struct distance_type_by_domain<manhattan_domain, coordinate_type> { 
     typedef typename coordinate_traits<coordinate_type>::coordinate_difference type; };
 
+  // \brief Sets the boundary of the polygon to the points in the iterator range
+  // \tparam T A type that models polygon_concept
+  // \tparam iT Iterator type over objects that model point_concept
+  // \param t The polygon to set
+  // \param begin_points The start of the range of points
+  // \param end_points The end of the range of points
+
+  /// \relatesalso polygon_concept
   template <typename T, typename iT>
-  typename requires_1 <typename gtl_if<typename is_any_mutable_polygon_type<T>::type>::type, T>::type &
+  typename requires_1 <typename is_any_mutable_polygon_type<T>::type, T>::type &
   set_points(T& t, iT begin_points, iT end_points) {
     polygon_mutable_traits<T>::set_points(t, begin_points, end_points);
     return t;
   }
 
+  // \brief Sets the boundary of the polygon to the non-redundant coordinates in the iterator range
+  // \tparam T A type that models polygon_90_concept
+  // \tparam iT Iterator type over objects that model coordinate_concept
+  // \param t The polygon to set
+  // \param begin_compact_coordinates The start of the range of coordinates
+  // \param end_compact_coordinates The end of the range of coordinates
+
+/// \relatesalso polygon_90_concept
   template <typename T, typename iT>
-  typename requires_1 <typename gtl_if<typename gtl_or< typename is_mutable_polygon_90_type<T>::type, 
-                                        typename is_mutable_polygon_90_with_holes_type<T>::type>::type>::type, T>::type & 
+  typename requires_1 <typename gtl_or< 
+    typename is_mutable_polygon_90_type<T>::type, 
+    typename is_mutable_polygon_90_with_holes_type<T>::type>::type, T>::type & 
   set_compact(T& t, iT begin_compact_coordinates, iT end_compact_coordinates) {
     polygon_90_mutable_traits<T>::set_compact(t, begin_compact_coordinates, end_compact_coordinates);
     return t;
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T, typename iT>
-  typename requires_2 <typename gtl_if<typename is_any_mutable_polygon_with_holes_type<T>::type>::type,
-                       typename is_different_type_SFINAE<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type,
+  typename requires_1< typename gtl_and <
+    typename is_any_mutable_polygon_with_holes_type<T>::type,
+    typename gtl_different_type<typename geometry_domain<typename geometry_concept<T>::type>::type, 
+                                manhattan_domain>::type>::type,
                        T>::type &
   set_compact(T& t, iT begin_compact_coordinates, iT end_compact_coordinates) {
     iterator_compact_to_points<iT, point_data<typename polygon_traits<T>::coordinate_type> >
@@ -326,83 +360,105 @@ namespace gtl {
     return set_points(t, itrb, itre);
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T, typename iT>
-  typename requires_1 <typename gtl_if<typename is_any_mutable_polygon_with_holes_type<T>::type>::type, T>::type &
+  typename requires_1 <typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
   set_holes(T& t, iT begin_holes, iT end_holes) {
     polygon_with_holes_mutable_traits<T>::set_holes(t, begin_holes, end_holes);
     return t;
   }
 
+/// \relatesalso polygon_90_concept
   template <typename T>
-  typename requires_2 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
-                       typename polygon_90_traits<T>::compact_iterator_type>::type
+  typename requires_1<
+    typename gtl_if<
+      typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
+                        typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
+                                               manhattan_domain>::type>::type>::type, 
+    typename polygon_90_traits<T>::compact_iterator_type>::type
   begin_compact(const T& polygon) {
     return polygon_90_traits<T>::begin_compact(polygon);
   }
   
+/// \relatesalso polygon_90_concept
   template <typename T>
-  typename requires_2 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
+  typename requires_1< typename gtl_if<
+    typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
+                      typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
+                                             manhattan_domain>::type>::type>::type, 
                        typename polygon_90_traits<T>::compact_iterator_type>::type
   end_compact(const T& polygon) {
     return polygon_90_traits<T>::end_compact(polygon);
   }
   
+  /// \relatesalso polygon_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename polygon_traits<T>::iterator_type>::type
+  typename requires_1 < typename gtl_if<
+    typename is_polygon_with_holes_type<T>::type>::type, 
+                        typename polygon_traits<T>::iterator_type>::type
   begin_points(const T& polygon) {
     return polygon_traits<T>::begin_points(polygon);
   }
 
+  /// \relatesalso polygon_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename polygon_traits<T>::iterator_type>::type
+  typename requires_1 < typename gtl_if<
+    typename is_polygon_with_holes_type<T>::type>::type, 
+                        typename polygon_traits<T>::iterator_type>::type
   end_points(const T& polygon) {
     return polygon_traits<T>::end_points(polygon);
   }
 
+  /// \relatesalso polygon_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
+  typename requires_1 <typename is_polygon_with_holes_type<T>::type, 
                        unsigned int>::type
   size(const T& polygon) {
     return polygon_traits<T>::size(polygon);
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename polygon_with_holes_traits<T>::iterator_holes_type>::type
+  typename requires_1 < typename gtl_if<
+    typename is_polygon_with_holes_type<T>::type>::type, 
+                        typename polygon_with_holes_traits<T>::iterator_holes_type>::type
   begin_holes(const T& polygon) {
     return polygon_with_holes_traits<T>::begin_holes(polygon);
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename polygon_with_holes_traits<T>::iterator_holes_type>::type
+  typename requires_1 < typename gtl_if<
+    typename is_polygon_with_holes_type<T>::type>::type, 
+                        typename polygon_with_holes_traits<T>::iterator_holes_type>::type
   end_holes(const T& polygon) {
     return polygon_with_holes_traits<T>::end_holes(polygon);
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
+  typename requires_1 <typename is_polygon_with_holes_type<T>::type, 
                        unsigned int>::type
   size_holes(const T& polygon) {
     return polygon_with_holes_traits<T>::size_holes(polygon);
   }
 
+  // \relatesalso polygon_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_type<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_type<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_polygon_type<T1>::type,
+                      typename is_polygon_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_mutable_traits<T1>::set_points(lvalue, polygon_traits<T2>::begin_points(rvalue),
                                            polygon_traits<T2>::end_points(rvalue));
     return lvalue;
   }
 
+// \relatesalso polygon_with_holes_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_with_holes_type<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_with_holes_type<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_polygon_with_holes_type<T1>::type,
+                      typename is_polygon_with_holes_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_mutable_traits<T1>::set_points(lvalue, polygon_traits<T2>::begin_points(rvalue),
                                            polygon_traits<T2>::end_points(rvalue));
@@ -411,19 +467,20 @@ namespace gtl {
     return lvalue;
   }
 
+  // \relatesalso polygon_45_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_type<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_type<T2>::type>::type,
-                       T1>::type &
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_45_type<T1>::type, typename is_polygon_45_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_mutable_traits<T1>::set_points(lvalue, polygon_traits<T2>::begin_points(rvalue),
                                            polygon_traits<T2>::end_points(rvalue));
     return lvalue;
   }
 
+// \relatesalso polygon_45_with_holes_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_45_with_holes_type<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_45_with_holes_type<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_polygon_45_with_holes_type<T1>::type,
+                      typename is_polygon_45_with_holes_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_mutable_traits<T1>::set_points(lvalue, polygon_traits<T2>::begin_points(rvalue),
                                            polygon_traits<T2>::end_points(rvalue));
@@ -432,18 +489,22 @@ namespace gtl {
     return lvalue;
   }
   
+  // \relatesalso polygon_90_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_type<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_90_type<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_polygon_90_type<T1>::type,
+                      typename is_polygon_90_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_90_mutable_traits<T1>::set_compact(lvalue, polygon_90_traits<T2>::begin_compact(rvalue),
                                                polygon_90_traits<T2>::end_compact(rvalue));
     return lvalue;
   }
   
+// \relatesalso polygon_90_with_holes_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_with_holes_type<T1>::type>::type,
-                      typename gtl_if< typename is_polygon_90_with_holes_type<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_mutable_polygon_90_with_holes_type<T1>::type,
+                      typename is_polygon_90_with_holes_type<T2>::type>::type, T1>::type &
   assign(T1& lvalue, const T2& rvalue) {
     polygon_90_mutable_traits<T1>::set_compact(lvalue, polygon_90_traits<T2>::begin_compact(rvalue),
                                                polygon_90_traits<T2>::end_compact(rvalue));
@@ -452,9 +513,11 @@ namespace gtl {
     return lvalue;
   }
 
+  // \relatesalso polygon_90_concept
   template <typename T1, typename T2>
-  typename requires_2< typename gtl_if<typename is_any_mutable_polygon_type<T1>::type>::type,
-                       typename is_rectangle_concept<typename geometry_concept<T2>::type>::type, T1>::type &
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_type<T1>::type,
+                      typename is_rectangle_concept<typename geometry_concept<T2>::type>::type>::type, T1>::type &
   assign(T1& polygon, const T2& rect) {
     typedef point_data<typename polygon_traits<T1>::coordinate_type> PT;
     PT points[4] = {PT(xl(rect), yl(rect)), PT(xh(rect), yl(rect)), PT(xh(rect), yh(rect)), PT(xl(rect), yh(rect))};
@@ -462,9 +525,10 @@ namespace gtl {
     return polygon;
   }
 
+/// \relatesalso polygon_90_concept
   template <typename polygon_type, typename point_type>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_type<polygon_type>::type>::type, 
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_type<polygon_type>::type, 
+                                         typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
                        polygon_type>::type &
   convolve(polygon_type& polygon, const point_type& point) {
     std::vector<typename polygon_90_traits<polygon_type>::coordinate_type> coords;
@@ -478,10 +542,13 @@ namespace gtl {
     polygon_90_mutable_traits<polygon_type>::set_compact(polygon, coords.begin(), coords.end());
     return polygon;
   }
+
+/// \relatesalso polygon_concept
   template <typename polygon_type, typename point_type>
-  typename requires_2< typename gtl_if<typename gtl_or<typename is_mutable_polygon_45_type<polygon_type>::type, 
-                                       typename is_mutable_polygon_type<polygon_type>::type>::type>::type, 
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
+  typename requires_1< typename gtl_and< typename gtl_or< 
+    typename is_mutable_polygon_45_type<polygon_type>::type, 
+    typename is_mutable_polygon_type<polygon_type>::type>::type, 
+                                         typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
                        polygon_type>::type &
   convolve(polygon_type& polygon, const point_type& point) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
@@ -495,10 +562,12 @@ namespace gtl {
     return polygon;
   }
   
+/// \relatesalso polygon_with_holes_concept
   template <typename polygon_type, typename point_type>
-  typename requires_2< typename gtl_if<typename is_any_mutable_polygon_with_holes_type<polygon_type>::type>::type, 
-                       typename is_point_concept<typename geometry_concept<point_type>::type>::type,
-                       polygon_type>::type &
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_with_holes_type<polygon_type>::type, 
+                      typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
+    polygon_type>::type &
   convolve(polygon_type& polygon, const point_type& point) {
     typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
     hole_type h;
@@ -516,36 +585,23 @@ namespace gtl {
     return polygon;
   }
 
+/// \relatesalso polygon_concept
   template <typename T>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_type<T>::type>::type, T>::type &
+  typename requires_1< typename is_any_mutable_polygon_type<T>::type, T>::type &
   move(T& polygon, orientation_2d orient, typename polygon_traits<T>::coordinate_type displacement) {
     typedef typename polygon_traits<T>::coordinate_type Unit;
     if(orient == HORIZONTAL) return convolve(polygon, point_data<Unit>(displacement, Unit(0)));
     return convolve(polygon, point_data<Unit>(Unit(0), displacement));
   }                              
 
+/// \relatesalso polygon_concept
+/// \brief Applies a transformation to the polygon.
+/// \tparam polygon_type A type that models polygon_concept
+/// \tparam transform_type A type that may be either axis_transformation or transformation or that overloads point_concept::transform
+/// \param polygon The polygon to transform
+/// \param tr The transformation to apply
   template <typename polygon_type, typename transform_type>
-  typename requires_1< typename gtl_if<typename is_mutable_polygon_90_type<polygon_type>::type>::type, polygon_type>::type &
-  transform(polygon_type& polygon, const transform_type& tr) {
-    std::vector<typename polygon_90_traits<polygon_type>::coordinate_type> coords;
-    coords.reserve(size(polygon));
-    bool pingpong = true;
-    for(typename polygon_90_traits<polygon_type>::compact_iterator_type iter = begin_compact(polygon); 
-        iter != end_compact(polygon); ++iter) {
-      typename polygon_90_traits<polygon_type>::coordinate_type dummy(0);
-      coords.push_back(*iter);
-      if(pingpong)
-        tr.transform(coords.back(), dummy);
-      else
-        tr.transform(dummy, coords.back());
-      pingpong = !pingpong;
-    }
-    polygon_90_mutable_traits<polygon_type>::set_compact(polygon, coords.begin(), coords.end());
-    return polygon;
-  }
-  template <typename polygon_type, typename transform_type>
-  typename requires_1< typename gtl_if<typename gtl_or<typename is_mutable_polygon_45_type<polygon_type>::type, 
-                                       typename is_mutable_polygon_type<polygon_type>::type>::type>::type, polygon_type>::type &
+  typename requires_1< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, polygon_type>::type &
   transform(polygon_type& polygon, const transform_type& tr) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
     points.reserve(size(polygon));
@@ -558,8 +614,9 @@ namespace gtl {
     return polygon;
   }
 
+/// \relatesalso polygon_with_holes_concept
   template <typename T, typename transform_type>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_with_holes_type<T>::type>::type, T>::type &
+  typename requires_1< typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
   transform(T& polygon, const transform_type& tr) {
     typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
     hole_type h;
@@ -578,7 +635,7 @@ namespace gtl {
   }
 
   template <typename polygon_type>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_without_holes_type<polygon_type>::type>::type, polygon_type>::type &
+  typename requires_1< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, polygon_type>::type &
   scale_up(polygon_type& polygon, typename coordinate_traits<typename polygon_traits<polygon_type>::coordinate_type>::unsigned_area_type factor) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
     points.reserve(size(polygon));
@@ -592,7 +649,7 @@ namespace gtl {
   }
 
   template <typename T>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_with_holes_type<T>::type>::type, T>::type &
+  typename requires_1< typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
   scale_up(T& polygon, typename coordinate_traits<typename polygon_traits<T>::coordinate_type>::unsigned_area_type factor) {
     typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
     hole_type h;
@@ -612,11 +669,12 @@ namespace gtl {
 
   //scale non-45 down
   template <typename polygon_type>
-  typename requires_2< typename gtl_if<typename is_any_mutable_polygon_without_holes_type<polygon_type>::type>::type, 
-                       typename gtl_if<typename gtl_not<typename gtl_same_type
-                                        < forty_five_domain, 
-                                          typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type,
-                       polygon_type>::type &
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
+                      typename gtl_not<typename gtl_same_type
+                                       < forty_five_domain, 
+                                         typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type,
+    polygon_type>::type &
   scale_down(polygon_type& polygon, typename coordinate_traits<typename polygon_traits<polygon_type>::coordinate_type>::unsigned_area_type factor) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
     points.reserve(size(polygon));
@@ -711,7 +769,7 @@ namespace gtl {
   }
 
   template <typename polygon_type>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_without_holes_type<polygon_type>::type>::type, polygon_type>::type &
+  typename requires_1< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, polygon_type>::type &
   snap_to_45(polygon_type& polygon) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
     points.reserve(size(polygon));
@@ -725,7 +783,7 @@ namespace gtl {
   }
 
   template <typename polygon_type>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_with_holes_type<polygon_type>::type>::type, polygon_type>::type &
+  typename requires_1< typename is_any_mutable_polygon_with_holes_type<polygon_type>::type, polygon_type>::type &
   snap_to_45(polygon_type& polygon) {
     typedef typename polygon_with_holes_traits<polygon_type>::hole_type hole_type;
     hole_type h;
@@ -745,11 +803,12 @@ namespace gtl {
 
   //scale specifically 45 down
   template <typename polygon_type>
-  typename requires_2< typename gtl_if<typename is_any_mutable_polygon_without_holes_type<polygon_type>::type>::type, 
-                       typename gtl_if<typename gtl_same_type
-                       < forty_five_domain, 
-                         typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type,
-                       polygon_type>::type &
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
+                      typename gtl_same_type
+                      < forty_five_domain, 
+                        typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type,
+    polygon_type>::type &
   scale_down(polygon_type& polygon, typename coordinate_traits<typename polygon_traits<polygon_type>::coordinate_type>::unsigned_area_type factor) {
     std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
     points.reserve(size(polygon));
@@ -764,7 +823,7 @@ namespace gtl {
   }
 
   template <typename T>
-  typename requires_1< typename gtl_if<typename is_any_mutable_polygon_with_holes_type<T>::type>::type, T>::type &
+  typename requires_1< typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
   scale_down(T& polygon, typename coordinate_traits<typename polygon_traits<T>::coordinate_type>::unsigned_area_type factor) {
     typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
     hole_type h;
@@ -776,6 +835,66 @@ namespace gtl {
         itr != end_holes(polygon); ++itr) {
       holes.push_back(*itr);
       scale_down(holes.back(), factor);
+    }
+    assign(polygon, h);
+    set_holes(polygon, holes.begin(), holes.end());
+    return polygon;
+  }
+
+  //scale non-45 
+  template <typename polygon_type>
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
+                      typename gtl_not<typename gtl_same_type
+                                       < forty_five_domain, 
+                                         typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type,
+    polygon_type>::type &
+  scale(polygon_type& polygon, double factor) {
+    std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
+    points.reserve(size(polygon));
+    for(typename polygon_traits<polygon_type>::iterator_type iter = begin_points(polygon); 
+        iter != end_points(polygon); ++iter) {
+      points.push_back(*iter);
+      scale(points.back(), anisotropic_scale_factor<double>(factor, factor));
+    }
+    polygon_mutable_traits<polygon_type>::set_points(polygon, points.begin(), points.end());
+    return polygon;
+  }
+
+  //scale specifically 45 
+  template <typename polygon_type>
+  typename requires_1<
+    typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
+                      typename gtl_same_type
+                      < forty_five_domain, 
+                        typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type,
+    polygon_type>::type &
+  scale(polygon_type& polygon, double factor) {
+    std::vector<point_data<typename polygon_traits<polygon_type>::coordinate_type> > points;
+    points.reserve(size(polygon));
+    for(typename polygon_traits<polygon_type>::iterator_type iter = begin_points(polygon); 
+        iter != end_points(polygon); ++iter) {
+      points.push_back(*iter);
+      scale(points.back(), anisotropic_scale_factor<double>(factor, factor));
+    }
+    snap_point_vector_to_45(points);
+    polygon_mutable_traits<polygon_type>::set_points(polygon, points.begin(), points.end());
+    return polygon;
+  }
+
+  template <typename T>
+  typename requires_1< typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
+  scale(T& polygon, double factor) {
+    typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
+    hole_type h;
+    set_points(h, begin_points(polygon), end_points(polygon));
+    scale(h, factor);
+    std::vector<hole_type> holes;
+    holes.reserve(size_holes(polygon));
+    for(typename polygon_with_holes_traits<T>::iterator_holes_type itr = begin_holes(polygon);
+        itr != end_holes(polygon); ++itr) {
+      holes.push_back(*itr);
+      scale(holes.back(), factor);
     }
     assign(polygon, h);
     set_holes(polygon, holes.begin(), holes.end());
@@ -825,9 +944,10 @@ namespace gtl {
   }
 
   template <typename T>
-  typename requires_1< typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type,
-                       typename area_type_by_domain< typename geometry_domain<typename geometry_concept<T>::type>::type,
-                                                     typename polygon_traits<T>::coordinate_type>::type>::type
+  typename requires_1<  
+    typename is_polygon_with_holes_type<T>::type,
+                        typename area_type_by_domain< typename geometry_domain<typename geometry_concept<T>::type>::type,
+                                                      typename polygon_traits<T>::coordinate_type>::type>::type
   area(const T& polygon) {
     typedef typename area_type_by_domain< typename geometry_domain<typename geometry_concept<T>::type>::type,
       typename polygon_traits<T>::coordinate_type>::type area_type;
@@ -873,7 +993,7 @@ namespace gtl {
   }
 
   template <typename polygon_type>
-  typename requires_1< typename gtl_if<typename is_polygon_with_holes_type<polygon_type>::type>::type, bool>::type
+  typename requires_1< typename is_polygon_with_holes_type<polygon_type>::type, bool>::type
   is_45(const polygon_type& polygon) {
     typename polygon_traits<polygon_type>::iterator_type itr = begin_points(polygon), itr_end = end_points(polygon);
     if(!point_sequence_is_45(itr, itr_end)) return false;
@@ -906,9 +1026,11 @@ namespace gtl {
   }
 
   template <typename T>
-  typename requires_1< typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename distance_type_by_domain<typename geometry_domain<typename geometry_concept<T>::type>::type, 
-                                                        typename polygon_traits<T>::coordinate_type>::type>::type
+  typename requires_1< 
+    typename gtl_if<
+      typename is_polygon_with_holes_type<T>::type>::type, 
+    typename distance_type_by_domain<typename geometry_domain<typename geometry_concept<T>::type>::type, 
+                                     typename polygon_traits<T>::coordinate_type>::type>::type
   perimeter(const T& polygon) {
     typedef typename distance_type_by_domain
       <typename geometry_domain<typename geometry_concept<T>::type>::type, typename polygon_traits<T>::coordinate_type>::type Unit;
@@ -925,7 +1047,7 @@ namespace gtl {
   }
 
   template <typename T>
-  typename requires_1 <typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
+  typename requires_1 <typename is_polygon_with_holes_type<T>::type, 
                        direction_1d>::type
   winding(const T& polygon) {
     winding_direction wd = polygon_traits<T>::winding(polygon);
@@ -939,10 +1061,11 @@ namespace gtl {
   }
 
   template <typename T, typename input_point_type>
-  typename requires_3< typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<input_point_type>::type, point_concept>::type, 
-  bool>::type
+  typename requires_1< 
+    typename gtl_and_3< typename is_polygon_with_holes_type<T>::type, 
+                        typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
+                        typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type, 
+    bool>::type
   contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
     typedef T polygon_type;
     typedef typename polygon_traits<polygon_type>::coordinate_type coordinate_type;
@@ -970,9 +1093,9 @@ namespace gtl {
              x(point)) return consider_touch;
           ++increment;
           if(y(current_pt) != 
-              y(point) &&
-              y(prev_pt) != 
-              y(point)) {
+             y(point) &&
+             y(prev_pt) != 
+             y(point)) {
             ++increment;
           } 
           counts[index] += increment;
@@ -987,18 +1110,22 @@ namespace gtl {
   }
            
   template <typename T, typename input_point_type>
-  typename requires_3< typename gtl_if<typename is_polygon_with_holes_type<T>::type>::type, 
-                       typename is_different_type_SFINAE<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<input_point_type>::type, point_concept>::type, bool>::type
+  typename requires_1< 
+    typename gtl_and_3< 
+      typename is_polygon_with_holes_type<T>::type, 
+      typename gtl_different_type<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
+      typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type,
+    bool>::type
   contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
     std::cout << "not implemented\n"; //awaiting arrival of general edge concept
     return false;
   }
 
   template <typename T1, typename T2>
-  typename requires_2< typename is_mutable_point_concept<typename geometry_concept<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_with_holes_type<T2>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_point_concept<typename geometry_concept<T1>::type>::type,
+                      typename is_polygon_with_holes_type<T2>::type>::type,
+    bool>::type 
   center(T1& center_point, const T2& polygon) {
     typedef typename polygon_traits<T2>::coordinate_type coordinate_type;
     rectangle_data<coordinate_type> bbox;
@@ -1007,9 +1134,10 @@ namespace gtl {
   }
    
   template <typename T1, typename T2>
-  typename requires_2< typename is_mutable_rectangle_concept<typename geometry_concept<T1>::type>::type,
-                       typename gtl_if<typename is_polygon_with_holes_type<T2>::type>::type,
-                       bool>::type 
+  typename requires_1<
+    typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<T1>::type>::type,
+                      typename is_polygon_with_holes_type<T2>::type>::type,
+    bool>::type 
   extents(T1& bounding_box, const T2& polygon) {
     typedef typename polygon_traits<T2>::iterator_type iterator;
     bool first_iteration = true;

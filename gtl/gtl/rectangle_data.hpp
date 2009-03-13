@@ -7,11 +7,12 @@
 */
 #ifndef GTL_RECTANGLE_DATA_HPP
 #define GTL_RECTANGLE_DATA_HPP
-namespace gtl {
 
 #include "isotropy.hpp"
 //interval
 #include "interval_data.hpp"
+
+namespace gtl {
 
 template <typename T>
 class rectangle_data {

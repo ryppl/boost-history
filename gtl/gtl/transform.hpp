@@ -9,136 +9,136 @@
 #define GTL_TRANSFORM_HPP
 
 namespace gtl {
-/// Transformation of Coordinate Systems
-/// Enum meaning:
-/// Select which direction_3d to change the positive direction of each
-/// axis in the old coordinate system to map it to the new coordiante system.
-/// The first direction_3d listed for each enum is the direction to map the
-/// positive horizontal direction to.
-/// The second direction_3d listed for each enum is the direction to map the
-/// positive vertical direction to.
-/// The third direction_3d listed for each enum is the direction to map the
-/// positive proximal direction to.
-/// The zero position bit (LSB) indicates whether the horizontal axis flips
-/// when transformed.
-/// The 1st postion bit indicates whether the vertical axis flips when 
-/// transformed.
-/// The 2nd position bit indicates whether the horizontal and vertical axis
-/// swap positions when transformed.
-/// Note that the first eight values are the complete set of 2D transforms.
-/// The 3rd position bit indicates whether the proximal axis flips when
-/// transformed.
-/// The 4th position bit indicates whether the proximal and horizontal axis are
-/// swapped when transformed.  It changes the meaning of the 2nd position bit
-/// to mean that the horizontal and vertical axis are swapped in their new
-/// positions, naturally.
-/// The 5th position bit (MSB) indicates whether the proximal and vertical axis
-/// are swapped when transformed.  It is mutually exclusive with the 4th postion
-/// bit, making the maximum legal value 48 (decimal).  It similarly changes the
-/// meaning of the 2nd position bit to mean that the horizontal and vertical are
-/// swapped in their new positions.
-/// Enum Values:
-/// 000000 EAST NORTH UP 
-/// 000001 WEST NORTH UP 
-/// 000010 EAST SOUTH UP 
-/// 000011 WEST SOUTH UP 
-/// 000100 NORTH EAST UP 
-/// 000101 SOUTH EAST UP 
-/// 000110 NORTH WEST UP 
-/// 000111 SOUTH WEST UP 
-/// 001000 EAST NORTH DOWN 
-/// 001001 WEST NORTH DOWN 
-/// 001010 EAST SOUTH DOWN 
-/// 001011 WEST SOUTH DOWN 
-/// 001100 NORTH EAST DOWN 
-/// 001101 SOUTH EAST DOWN 
-/// 001110 NORTH WEST DOWN 
-/// 001111 SOUTH WEST DOWN 
-/// 010000 UP NORTH EAST 
-/// 010001 DOWN NORTH EAST 
-/// 010010 UP SOUTH EAST 
-/// 010011 DOWN SOUTH EAST 
-/// 010100 NORTH UP EAST 
-/// 010101 SOUTH UP EAST 
-/// 010110 NORTH DOWN EAST 
-/// 010111 SOUTH DOWN EAST 
-/// 011000 UP NORTH WEST 
-/// 011001 DOWN NORTH WEST 
-/// 011010 UP SOUTH WEST 
-/// 011011 DOWN SOUTH WEST 
-/// 011100 NORTH UP WEST 
-/// 011101 SOUTH UP WEST 
-/// 011110 NORTH DOWN WEST 
-/// 011111 SOUTH DOWN WEST 
-/// 100000 EAST UP NORTH 
-/// 100001 WEST UP NORTH 
-/// 100010 EAST DOWN NORTH 
-/// 100011 WEST DOWN NORTH 
-/// 100100 UP EAST NORTH 
-/// 100101 DOWN EAST NORTH 
-/// 100110 UP WEST NORTH 
-/// 100111 DOWN WEST NORTH 
-/// 101000 EAST UP SOUTH 
-/// 101001 WEST UP SOUTH 
-/// 101010 EAST DOWN SOUTH 
-/// 101011 WEST DOWN SOUTH 
-/// 101100 UP EAST SOUTH 
-/// 101101 DOWN EAST SOUTH 
-/// 101110 UP WEST SOUTH 
-/// 101111 DOWN WEST SOUTH 
+// Transformation of Coordinate Systems
+// Enum meaning:
+// Select which direction_3d to change the positive direction of each
+// axis in the old coordinate system to map it to the new coordiante system.
+// The first direction_3d listed for each enum is the direction to map the
+// positive horizontal direction to.
+// The second direction_3d listed for each enum is the direction to map the
+// positive vertical direction to.
+// The third direction_3d listed for each enum is the direction to map the
+// positive proximal direction to.
+// The zero position bit (LSB) indicates whether the horizontal axis flips
+// when transformed.
+// The 1st postion bit indicates whether the vertical axis flips when 
+// transformed.
+// The 2nd position bit indicates whether the horizontal and vertical axis
+// swap positions when transformed.
+// Note that the first eight values are the complete set of 2D transforms.
+// The 3rd position bit indicates whether the proximal axis flips when
+// transformed.
+// The 4th position bit indicates whether the proximal and horizontal axis are
+// swapped when transformed.  It changes the meaning of the 2nd position bit
+// to mean that the horizontal and vertical axis are swapped in their new
+// positions, naturally.
+// The 5th position bit (MSB) indicates whether the proximal and vertical axis
+// are swapped when transformed.  It is mutually exclusive with the 4th postion
+// bit, making the maximum legal value 48 (decimal).  It similarly changes the
+// meaning of the 2nd position bit to mean that the horizontal and vertical are
+// swapped in their new positions.
+// Enum Values:
+// 000000 EAST NORTH UP 
+// 000001 WEST NORTH UP 
+// 000010 EAST SOUTH UP 
+// 000011 WEST SOUTH UP 
+// 000100 NORTH EAST UP 
+// 000101 SOUTH EAST UP 
+// 000110 NORTH WEST UP 
+// 000111 SOUTH WEST UP 
+// 001000 EAST NORTH DOWN 
+// 001001 WEST NORTH DOWN 
+// 001010 EAST SOUTH DOWN 
+// 001011 WEST SOUTH DOWN 
+// 001100 NORTH EAST DOWN 
+// 001101 SOUTH EAST DOWN 
+// 001110 NORTH WEST DOWN 
+// 001111 SOUTH WEST DOWN 
+// 010000 UP NORTH EAST 
+// 010001 DOWN NORTH EAST 
+// 010010 UP SOUTH EAST 
+// 010011 DOWN SOUTH EAST 
+// 010100 NORTH UP EAST 
+// 010101 SOUTH UP EAST 
+// 010110 NORTH DOWN EAST 
+// 010111 SOUTH DOWN EAST 
+// 011000 UP NORTH WEST 
+// 011001 DOWN NORTH WEST 
+// 011010 UP SOUTH WEST 
+// 011011 DOWN SOUTH WEST 
+// 011100 NORTH UP WEST 
+// 011101 SOUTH UP WEST 
+// 011110 NORTH DOWN WEST 
+// 011111 SOUTH DOWN WEST 
+// 100000 EAST UP NORTH 
+// 100001 WEST UP NORTH 
+// 100010 EAST DOWN NORTH 
+// 100011 WEST DOWN NORTH 
+// 100100 UP EAST NORTH 
+// 100101 DOWN EAST NORTH 
+// 100110 UP WEST NORTH 
+// 100111 DOWN WEST NORTH 
+// 101000 EAST UP SOUTH 
+// 101001 WEST UP SOUTH 
+// 101010 EAST DOWN SOUTH 
+// 101011 WEST DOWN SOUTH 
+// 101100 UP EAST SOUTH 
+// 101101 DOWN EAST SOUTH 
+// 101110 UP WEST SOUTH 
+// 101111 DOWN WEST SOUTH 
 class axis_transformation {
 public:
-  /// Enum Names and values
-  /// NULL_TRANSFORM = 0, BEGIN_TRANSFORM = 0,
-  /// ENU = 0, EAST_NORTH_UP = 0, EN = 0, EAST_NORTH = 0, 
-  /// WNU = 1, WEST_NORTH_UP = 1, WN = 1, WEST_NORTH = 1, FLIP_X = 1,
-  /// ESU = 2, EAST_SOUTH_UP = 2, ES = 2, EAST_SOUTH = 2, FLIP_Y = 2,
-  /// WSU = 3, WEST_SOUTH_UP = 3, WS = 3, WEST_SOUTH = 3, 
-  /// NEU = 4, NORTH_EAST_UP = 4, NE = 4, NORTH_EAST = 4, SWAP_XY = 4,
-  /// SEU = 5, SOUTH_EAST_UP = 5, SE = 5, SOUTH_EAST = 5, 
-  /// NWU = 6, NORTH_WEST_UP = 6, NW = 6, NORTH_WEST = 6, 
-  /// SWU = 7, SOUTH_WEST_UP = 7, SW = 7, SOUTH_WEST = 7, 
-  /// END_2D_TRANSFORM = 7,
-  /// END = 8, EAST_NORTH_DOWN = 8, 
-  /// WND = 9, WEST_NORTH_DOWN = 9, 
-  /// ESD = 10, EAST_SOUTH_DOWN = 10, 
-  /// WSD = 11, WEST_SOUTH_DOWN = 11, 
-  /// NED = 12, NORTH_EAST_DOWN = 12, 
-  /// SED = 13, SOUTH_EAST_DOWN = 13, 
-  /// NWD = 14, NORTH_WEST_DOWN = 14, 
-  /// SWD = 15, SOUTH_WEST_DOWN = 15, 
-  /// UNE = 16, UP_NORTH_EAST = 16, 
-  /// DNE = 17, DOWN_NORTH_EAST = 17, 
-  /// USE = 18, UP_SOUTH_EAST = 18, 
-  /// DSE = 19, DOWN_SOUTH_EAST = 19, 
-  /// NUE = 20, NORTH_UP_EAST = 20, 
-  /// SUE = 21, SOUTH_UP_EAST = 21, 
-  /// NDE = 22, NORTH_DOWN_EAST = 22, 
-  /// SDE = 23, SOUTH_DOWN_EAST = 23, 
-  /// UNW = 24, UP_NORTH_WEST = 24, 
-  /// DNW = 25, DOWN_NORTH_WEST = 25, 
-  /// USW = 26, UP_SOUTH_WEST = 26, 
-  /// DSW = 27, DOWN_SOUTH_WEST = 27, 
-  /// NUW = 28, NORTH_UP_WEST = 28, 
-  /// SUW = 29, SOUTH_UP_WEST = 29, 
-  /// NDW = 30, NORTH_DOWN_WEST = 30, 
-  /// SDW = 31, SOUTH_DOWN_WEST = 31, 
-  /// EUN = 32, EAST_UP_NORTH = 32, 
-  /// WUN = 33, WEST_UP_NORTH = 33, 
-  /// EDN = 34, EAST_DOWN_NORTH = 34, 
-  /// WDN = 35, WEST_DOWN_NORTH = 35, 
-  /// UEN = 36, UP_EAST_NORTH = 36, 
-  /// DEN = 37, DOWN_EAST_NORTH = 37, 
-  /// UWN = 38, UP_WEST_NORTH = 38, 
-  /// DWN = 39, DOWN_WEST_NORTH = 39, 
-  /// EUS = 40, EAST_UP_SOUTH = 40, 
-  /// WUS = 41, WEST_UP_SOUTH = 41, 
-  /// EDS = 42, EAST_DOWN_SOUTH = 42, 
-  /// WDS = 43, WEST_DOWN_SOUTH = 43, 
-  /// UES = 44, UP_EAST_SOUTH = 44, 
-  /// DES = 45, DOWN_EAST_SOUTH = 45, 
-  /// UWS = 46, UP_WEST_SOUTH = 46, 
-  /// DWS = 47, DOWN_WEST_SOUTH = 47, END_TRANSFORM = 47 
+  // Enum Names and values
+  // NULL_TRANSFORM = 0, BEGIN_TRANSFORM = 0,
+  // ENU = 0, EAST_NORTH_UP = 0, EN = 0, EAST_NORTH = 0, 
+  // WNU = 1, WEST_NORTH_UP = 1, WN = 1, WEST_NORTH = 1, FLIP_X = 1,
+  // ESU = 2, EAST_SOUTH_UP = 2, ES = 2, EAST_SOUTH = 2, FLIP_Y = 2,
+  // WSU = 3, WEST_SOUTH_UP = 3, WS = 3, WEST_SOUTH = 3, 
+  // NEU = 4, NORTH_EAST_UP = 4, NE = 4, NORTH_EAST = 4, SWAP_XY = 4,
+  // SEU = 5, SOUTH_EAST_UP = 5, SE = 5, SOUTH_EAST = 5, 
+  // NWU = 6, NORTH_WEST_UP = 6, NW = 6, NORTH_WEST = 6, 
+  // SWU = 7, SOUTH_WEST_UP = 7, SW = 7, SOUTH_WEST = 7, 
+  // END_2D_TRANSFORM = 7,
+  // END = 8, EAST_NORTH_DOWN = 8, 
+  // WND = 9, WEST_NORTH_DOWN = 9, 
+  // ESD = 10, EAST_SOUTH_DOWN = 10, 
+  // WSD = 11, WEST_SOUTH_DOWN = 11, 
+  // NED = 12, NORTH_EAST_DOWN = 12, 
+  // SED = 13, SOUTH_EAST_DOWN = 13, 
+  // NWD = 14, NORTH_WEST_DOWN = 14, 
+  // SWD = 15, SOUTH_WEST_DOWN = 15, 
+  // UNE = 16, UP_NORTH_EAST = 16, 
+  // DNE = 17, DOWN_NORTH_EAST = 17, 
+  // USE = 18, UP_SOUTH_EAST = 18, 
+  // DSE = 19, DOWN_SOUTH_EAST = 19, 
+  // NUE = 20, NORTH_UP_EAST = 20, 
+  // SUE = 21, SOUTH_UP_EAST = 21, 
+  // NDE = 22, NORTH_DOWN_EAST = 22, 
+  // SDE = 23, SOUTH_DOWN_EAST = 23, 
+  // UNW = 24, UP_NORTH_WEST = 24, 
+  // DNW = 25, DOWN_NORTH_WEST = 25, 
+  // USW = 26, UP_SOUTH_WEST = 26, 
+  // DSW = 27, DOWN_SOUTH_WEST = 27, 
+  // NUW = 28, NORTH_UP_WEST = 28, 
+  // SUW = 29, SOUTH_UP_WEST = 29, 
+  // NDW = 30, NORTH_DOWN_WEST = 30, 
+  // SDW = 31, SOUTH_DOWN_WEST = 31, 
+  // EUN = 32, EAST_UP_NORTH = 32, 
+  // WUN = 33, WEST_UP_NORTH = 33, 
+  // EDN = 34, EAST_DOWN_NORTH = 34, 
+  // WDN = 35, WEST_DOWN_NORTH = 35, 
+  // UEN = 36, UP_EAST_NORTH = 36, 
+  // DEN = 37, DOWN_EAST_NORTH = 37, 
+  // UWN = 38, UP_WEST_NORTH = 38, 
+  // DWN = 39, DOWN_WEST_NORTH = 39, 
+  // EUS = 40, EAST_UP_SOUTH = 40, 
+  // WUS = 41, WEST_UP_SOUTH = 41, 
+  // EDS = 42, EAST_DOWN_SOUTH = 42, 
+  // WDS = 43, WEST_DOWN_SOUTH = 43, 
+  // UES = 44, UP_EAST_SOUTH = 44, 
+  // DES = 45, DOWN_EAST_SOUTH = 45, 
+  // UWS = 46, UP_WEST_SOUTH = 46, 
+  // DWS = 47, DOWN_WEST_SOUTH = 47, END_TRANSFORM = 47 
   enum ATR {
     NULL_TRANSFORM = 0, BEGIN_TRANSFORM = 0,
     ENU = 0, EAST_NORTH_UP = 0, EN = 0, EAST_NORTH = 0, 
@@ -223,33 +223,33 @@ public:
   explicit axis_transformation(const orientation_2d& orient);
   explicit axis_transformation(const direction_2d& dir);
 
-  /// assignment operator 
+  // assignment operator 
   axis_transformation& operator=(const axis_transformation& a);
 
-  /// assignment operator 
+  // assignment operator 
   axis_transformation& operator=(const ATR& atr);
 
-  /// equivalence operator
+  // equivalence operator
   bool operator==(const axis_transformation& a) const;
 
-  /// inequivalence operator
+  // inequivalence operator
   bool operator!=(const axis_transformation& a) const;
 
-  /// ordering
+  // ordering
   bool operator<(const axis_transformation& a) const;
 
-  /// concatenation operator 
+  // concatenation operator 
   axis_transformation operator+(const axis_transformation& a) const;
 
-  /// concatenate this with that
+  // concatenate this with that
   axis_transformation& operator+=(const axis_transformation& a);
 
-  /// populate_axis_array writes the three INDIVIDUAL_AXIS values that the
-  /// ATR enum value of 'this' represent into axis_array
+  // populate_axis_array writes the three INDIVIDUAL_AXIS values that the
+  // ATR enum value of 'this' represent into axis_array
   void populate_axis_array(INDIVIDUAL_AXIS axis_array[]) const;
 
-  /// it is recommended that the directions stored in an array
-  /// in the caller code for easier isotropic access by orientation value
+  // it is recommended that the directions stored in an array
+  // in the caller code for easier isotropic access by orientation value
   inline void get_directions(direction_2d& horizontal_dir,
                              direction_2d& vertical_dir) const {
     bool bit2 = atr_ & 4;
@@ -259,8 +259,8 @@ public:
     horizontal_dir = direction_2d((direction_2d_enum)(((int)(bit2) << 1) + !bit0));
   }
 
-  /// it is recommended that the directions stored in an array
-  /// in the caller code for easier isotropic access by orientation value
+  // it is recommended that the directions stored in an array
+  // in the caller code for easier isotropic access by orientation value
   inline void get_directions(direction_3d& horizontal_dir,
                              direction_3d& vertical_dir,
                              direction_3d& proximal_dir) const {
@@ -282,8 +282,8 @@ public:
                                                       !bit0));
   }
   
-  /// combine_axis_arrays concatenates this_array and that_array overwriting
-  /// the result into this_array
+  // combine_axis_arrays concatenates this_array and that_array overwriting
+  // the result into this_array
   static void combine_axis_arrays (INDIVIDUAL_AXIS this_array[],
                                    const INDIVIDUAL_AXIS that_array[]);
 
@@ -301,24 +301,24 @@ public:
                                  const direction_3d& vertical_dir,
                                  const direction_3d& proximal_dir);
 
-  /// transform the two coordinates by reference using the 2D portion of this
+  // transform the two coordinates by reference using the 2D portion of this
   template <typename coordinate_type>
   void transform(coordinate_type& x, coordinate_type& y) const;
 
-  /// transform the three coordinates by reference
+  // transform the three coordinates by reference
   template <typename coordinate_type>
   void transform(coordinate_type& x, coordinate_type& y, coordinate_type& z) const;
 
-  /// invert the 2D portion of this
+  // invert the 2D portion of this
   axis_transformation& invert_2d();
 
-  /// get the inverse of the 2D portion of this
+  // get the inverse of the 2D portion of this
   axis_transformation inverse_2d() const;
 
-  /// invert this axis_transformation
+  // invert this axis_transformation
   axis_transformation& invert();
 
-  /// get the inverse axis_transformation of this
+  // get the inverse axis_transformation of this
   axis_transformation inverse() const;
 
   friend std::ostream& operator<< (std::ostream& o, const axis_transformation& r);
@@ -329,12 +329,12 @@ private:
 };
 
 
-/// Scaling object to be used to store the scale factor for each axis
+// Scaling object to be used to store the scale factor for each axis
 
-/// For use by the transformation object, in that context the scale factor
-/// is the amount that each axis scales by when transformed.
-/// If the horizontal value of the Scale is 10 that means the horizontal
-/// axis of the input is multiplied by 10 when the transformation is applied.
+// For use by the transformation object, in that context the scale factor
+// is the amount that each axis scales by when transformed.
+// If the horizontal value of the Scale is 10 that means the horizontal
+// axis of the input is multiplied by 10 when the transformation is applied.
 template <typename scale_factor_type>
 class anisotropic_scale_factor {
 public:
@@ -354,11 +354,11 @@ public:
     scale_[2] = zscale;
   } 
 
-  /// get a component of the anisotropic_scale_factor by orientation
+  // get a component of the anisotropic_scale_factor by orientation
   scale_factor_type get(orientation_3d orient) const;
   scale_factor_type get(orientation_2d orient) const { return get(orientation_3d(orient)); }
 
-  /// set a component of the anisotropic_scale_factor by orientation
+  // set a component of the anisotropic_scale_factor by orientation
   void set(orientation_3d orient, scale_factor_type value);
   void set(orientation_2d orient, scale_factor_type value) { set(orientation_3d(orient), value); }
 
@@ -369,24 +369,24 @@ public:
   void y(scale_factor_type value);
   void z(scale_factor_type value);
 
-  /// concatination operator (convolve scale factors)
+  // concatination operator (convolve scale factors)
   anisotropic_scale_factor operator+(const anisotropic_scale_factor& s) const;
 
-  /// concatinate this with that
+  // concatinate this with that
   const anisotropic_scale_factor& operator+=(const anisotropic_scale_factor& s);
 
-  /// transform this scale with an axis_transform
+  // transform this scale with an axis_transform
   anisotropic_scale_factor& transform(axis_transformation atr);
 
-  /// scale the two coordinates
+  // scale the two coordinates
   template <typename coordinate_type>
   void scale(coordinate_type& x, coordinate_type& y) const;
 
-  /// scale the three coordinates
+  // scale the three coordinates
   template <typename coordinate_type>
   void scale(coordinate_type& x, coordinate_type& y, coordinate_type& z) const;
 
-  /// invert this scale factor to give the reverse scale factor
+  // invert this scale factor to give the reverse scale factor
   anisotropic_scale_factor& invert(); 
 
 private:
@@ -396,11 +396,11 @@ private:
   //friend std::istream& operator>> (std::istream& i, Scale& r);
 };
 
-/// Transformation object, stores and provides services for transformations
+// Transformation object, stores and provides services for transformations
 
-/// Transformation object stores an axistransformation, a scale factor and a translation.
-/// The tranlation is the position of the origin of the new system of coordinates in the old system.
-/// The scale scales the coordinates before they are transformed.
+// Transformation object stores an axistransformation, a scale factor and a translation.
+// The tranlation is the position of the origin of the new system of coordinates in the old system.
+// The scale scales the coordinates before they are transformed.
 template <typename coordinate_type>
 class transformation {
 public:
@@ -414,45 +414,45 @@ public:
   transformation(axis_transformation atr, const point_type& referencePt, const point_type& destinationPt);
   transformation(const transformation& tr);
 
-  /// equivalence operator 
+  // equivalence operator 
   bool operator==(const transformation& tr) const;
 
-  /// inequivalence operator 
+  // inequivalence operator 
   bool operator!=(const transformation& tr) const;
 
-  /// ordering
+  // ordering
   bool operator<(const transformation& tr) const;
 
-  /// concatenation operator 
+  // concatenation operator 
   transformation operator+(const transformation& tr) const;
 
-  /// concatenate this with that
+  // concatenate this with that
   const transformation& operator+=(const transformation& tr);
 
-  /// get the axis_transformation portion of this
+  // get the axis_transformation portion of this
   inline axis_transformation get_axis_transformation() const {return atr_;}
 
-  /// set the axis_transformation portion of this
+  // set the axis_transformation portion of this
   void set_axis_transformation(const axis_transformation& atr);
 
-  /// get the translation portion of this as a point3d
+  // get the translation portion of this as a point3d
   template <typename point_type>
   void get_translation(point_type& translation) const;
 
-  /// set the translation portion of this with a point3d
+  // set the translation portion of this with a point3d
   template <typename point_type>
   void set_translation(const point_type& p);
 
-  /// apply the 2D portion of this transformation to the two coordinates given
+  // apply the 2D portion of this transformation to the two coordinates given
   void transform(coordinate_type& x, coordinate_type& y) const;
 
-  /// apply this transformation to the three coordinates given
+  // apply this transformation to the three coordinates given
   void transform(coordinate_type& x, coordinate_type& y, coordinate_type& z) const;
 
-  /// invert this transformation
+  // invert this transformation
   transformation& invert();
     
-  /// get the inverse of this transformation
+  // get the inverse of this transformation
   transformation inverse() const;
 
   inline void get_directions(direction_2d& horizontal_dir,

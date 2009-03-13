@@ -11,7 +11,7 @@ namespace gtl {
 template <typename iT, typename point_type>
 class iterator_points_to_compact {
 private:
-  iT iter_;
+  iT iter_, iterEnd_;
   orientation_2d orient_;
   mutable typename point_traits<point_type>::coordinate_type coord_;
 public:
@@ -23,14 +23,19 @@ public:
   typedef const coordinate_type& reference; //immutable
 
   inline iterator_points_to_compact() {}
-  explicit inline iterator_points_to_compact(iT iter) : iter_(iter), orient_(HORIZONTAL) {}
+  explicit inline iterator_points_to_compact(iT iter, iT iterEnd) : iter_(iter), iterEnd_(iterEnd), orient_(HORIZONTAL) {}
   inline iterator_points_to_compact(const iterator_points_to_compact& that) : 
     iter_(that.iter_), orient_(that.orient_) {}
   //use bitwise copy and assign provided by the compiler
   inline iterator_points_to_compact& operator++() {
-    //consider adding assert/excpetion for non-manhattan case
+    //iT tmp = iter_;
     ++iter_;
+    //iT tmp2 = iter_;
     orient_.turn_90();
+    //while(tmp2 != iterEnd_ && get(*tmp2, orient_) == get(*tmp, orient_)) {
+    //  iter_ = tmp2;
+    //  ++tmp2;
+    //}
     return *this;
   }
   inline const iterator_points_to_compact operator++(int) {
@@ -44,7 +49,9 @@ public:
   inline bool operator!=(const iterator_points_to_compact& that) const {
     return (iter_ != that.iter_);
   }
-  inline reference operator*() const { return coord_ = get(*iter_, orient_); }
+  inline reference operator*() const { coord_ = get(*iter_, orient_); 
+    return coord_;
+  }
 };
 
 }

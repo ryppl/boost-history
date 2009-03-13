@@ -33,6 +33,57 @@ namespace gtl {
     static inline bool sorted(const polygon_90_set_view<ltype, rtype, op_type>& polygon_set);
   };
 
+  template <typename value_type, typename ltype, typename rtype, typename op_type>
+  struct compute_90_set_value {
+    static
+    void value(value_type& output_, const ltype& lvalue_, const rtype& rvalue_, orientation_2d orient_) {
+      value_type linput_(orient_);
+      value_type rinput_(orient_);
+      insert_into_view_arg(linput_, lvalue_, orient_);
+      insert_into_view_arg(rinput_, rvalue_, orient_);
+      output_.applyBooleanBinaryOp(linput_.begin(), linput_.end(),
+                                   rinput_.begin(), rinput_.end(), boolean_op::BinaryCount<op_type>()); 
+    }
+  };
+
+  template <typename value_type, typename lcoord, typename rcoord, typename op_type>
+  struct compute_90_set_value<value_type, polygon_90_set_data<lcoord>, polygon_90_set_data<rcoord>, op_type> {
+    static
+    void value(value_type& output_, const polygon_90_set_data<lcoord>& lvalue_,
+               const polygon_90_set_data<rcoord>& rvalue_, orientation_2d orient_) {
+      lvalue_.sort();
+      rvalue_.sort();
+      output_.applyBooleanBinaryOp(lvalue_.begin(), lvalue_.end(),
+                                   rvalue_.begin(), rvalue_.end(), boolean_op::BinaryCount<op_type>()); 
+    }
+  };
+
+  template <typename value_type, typename lcoord, typename rtype, typename op_type>
+  struct compute_90_set_value<value_type, polygon_90_set_data<lcoord>, rtype, op_type> {
+    static
+    void value(value_type& output_, const polygon_90_set_data<lcoord>& lvalue_,
+               const rtype& rvalue_, orientation_2d orient_) {
+      value_type rinput_(orient_);
+      lvalue_.sort();
+      insert_into_view_arg(rinput_, rvalue_, orient_);
+      output_.applyBooleanBinaryOp(lvalue_.begin(), lvalue_.end(),
+                                   rinput_.begin(), rinput_.end(), boolean_op::BinaryCount<op_type>()); 
+    }
+  };
+
+  template <typename value_type, typename ltype, typename rcoord, typename op_type>
+  struct compute_90_set_value<value_type, ltype, polygon_90_set_data<rcoord>, op_type> {
+    static
+    void value(value_type& output_, const ltype& lvalue_,
+               const polygon_90_set_data<rcoord>& rvalue_, orientation_2d orient_) {
+      value_type linput_(orient_);
+      insert_into_view_arg(linput_, lvalue_, orient_);
+      rvalue_.sort();
+      output_.applyBooleanBinaryOp(linput_.begin(), linput_.end(),
+                                   rvalue_.begin(), rvalue_.end(), boolean_op::BinaryCount<op_type>()); 
+    }
+  };
+
   template <typename ltype, typename rtype, typename op_type>
   class polygon_90_set_view {
   public:
@@ -54,17 +105,12 @@ namespace gtl {
                      op_type op) :
       lvalue_(lvalue), rvalue_(rvalue), orient_(orient), op_(op), output_(orient), evaluated_(false) {}
 
-    /// get iterator to begin vertex data
+    // get iterator to begin vertex data
   private:
     const value_type& value() const {
       if(!evaluated_) {
         evaluated_ = true;
-        value_type linput_(orient_);
-        value_type rinput_(orient_);
-        insert_into_view_arg(linput_, lvalue_, orient_);
-        insert_into_view_arg(rinput_, rvalue_, orient_);
-        output_.applyBooleanBinaryOp(linput_.begin(), linput_.end(),
-                                     rinput_.begin(), rinput_.end(), boolean_op::BinaryCount<op_type>()); 
+        compute_90_set_value<value_type, ltype, rtype, op_type>::value(output_, lvalue_, rvalue_, orient_);
       }
       return output_;
     }
@@ -144,6 +190,11 @@ namespace gtl {
     return *this;
   }
   
+  template <typename T>
+  template <typename ltype, typename rtype, typename op_type>
+  inline polygon_90_set_data<T>::polygon_90_set_data(const polygon_90_set_view<ltype, rtype, op_type>& that) :
+    orient_(that.orient()), data_(that.begin(), that.end()), dirty_(false), unsorted_(false) {}
+  
   template <typename geometry_type_1, typename geometry_type_2>
   struct self_assign_operator_lvalue {
     typedef geometry_type_1& type;
@@ -173,8 +224,9 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type,
+  typename requires_1< typename gtl_and< 
+    typename is_polygon_90_set_type<geometry_type_1>::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> >::type
   operator|(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> 
@@ -184,9 +236,19 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type,
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type,
-                       polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> >::type
+  typename requires_1< 
+    typename gtl_and< 
+      typename is_polygon_90_set_type<geometry_type_1>
+#ifdef __ICC 
+      ::type
+#endif
+      ::type,
+      typename is_polygon_90_set_type<geometry_type_2>::type>
+#ifdef __ICC 
+    ::type
+#endif
+    ::type,
+    polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> >::type
   operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> 
       (lvalue, rvalue, 
@@ -195,8 +257,9 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< 
+    typename is_polygon_90_set_type<geometry_type_1>::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> >::type
   operator*(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> 
@@ -206,8 +269,9 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_if<typename gtl_and< 
+    typename is_polygon_90_set_type<geometry_type_1>::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> >::type
   operator&(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> 
@@ -217,8 +281,9 @@ namespace gtl {
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< 
+    typename is_polygon_90_set_type<geometry_type_1>::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryXor> >::type
   operator^(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryXor> 
@@ -228,8 +293,17 @@ namespace gtl {
   }
   
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< 
+    typename is_polygon_90_set_type<geometry_type_1>
+#ifdef __ICC 
+  ::type
+#endif
+::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>
+#ifdef __ICC 
+  ::type
+#endif
+::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryNot> >::type
   operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryNot> 
@@ -239,7 +313,7 @@ namespace gtl {
   }
   
   template <typename coordinate_type_1, typename geometry_type_2>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type,
+  typename requires_1< typename is_polygon_90_set_type<geometry_type_2>::type,
                        polygon_90_set_data<coordinate_type_1> >::type &
   operator+=(polygon_90_set_data<coordinate_type_1>& lvalue, const geometry_type_2& rvalue) {
     lvalue.insert(polygon_90_set_traits<geometry_type_2>::begin(rvalue), polygon_90_set_traits<geometry_type_2>::end(rvalue),
@@ -249,7 +323,7 @@ namespace gtl {
   
   //
   template <typename coordinate_type_1, typename geometry_type_2>
-  typename requires_1< typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename is_polygon_90_set_type<geometry_type_2>::type, 
                        polygon_90_set_data<coordinate_type_1> >::type &
   operator|=(polygon_90_set_data<coordinate_type_1>& lvalue, const geometry_type_2& rvalue) {
     return lvalue += rvalue;
@@ -257,89 +331,108 @@ namespace gtl {
 
   //normal self assignment boolean operations
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryOr>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator|=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryOr>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator*=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd>(lvalue, rvalue);
   }
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator&=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator^=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryXor>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
+  typename requires_1< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+                                         typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryNot>(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       polygon_90_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> >::type 
-  operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
-    polygon_90_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> ps;
-    assign(ps, lvalue);
-    resize(ps, rvalue);
-    return ps;
-  }
-
-  template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                       polygon_90_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> >::type 
-  operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
-    polygon_90_set_data<typename polygon_90_set_traits<geometry_type_1>::coordinate_type> ps;
-    assign(ps, lvalue);
-    resize(ps, -rvalue);
-    return ps;
-  }
-
-  template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+  typename requires_1< typename gtl_and<
+    typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     return resize(lvalue, rvalue);
   }
 
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename requires_2< typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
-                       typename is_same_type_SFINAE<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+  typename requires_1< typename gtl_and<
+    typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
                        geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     return resize(lvalue, -rvalue);
   }
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename requires_1< typename gtl_and<
+    typename is_mutable_polygon_90_set_type<geometry_type_1>
+#ifdef __ICC 
+  ::type
+#endif
+::type, 
+    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type,
+                       geometry_type_1>::type
+  operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval += rvalue;
+    return retval;
+  }
+
+  template <typename geometry_type_1, typename coordinate_type_1>
+  typename requires_1< typename gtl_and<
+    typename is_mutable_polygon_90_set_type<geometry_type_1>
+#ifdef __ICC 
+  ::type
+#endif
+::type, 
+    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
+#ifdef __ICC 
+  ::type
+#endif
+  ::type,
+                       geometry_type_1>::type
+  operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
+    geometry_type_1 retval(lvalue);
+    retval -= rvalue;
+    return retval;
+  }
+
 }
 #endif
 

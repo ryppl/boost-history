@@ -9,11 +9,11 @@
 #define GTL_POLYGON_45_SET_DATA_HPP
 namespace gtl {
 
-  enum RoundingOption { CLOSEST = 0, OVERSIZE = 1, UNDERSIZE = 2, SQRT2 = 3 };
-  enum CornerOption { INTERSECTION = 0, ORTHOGINAL = 1 };
+  enum RoundingOption { CLOSEST = 0, OVERSIZE = 1, UNDERSIZE = 2, SQRT2 = 3, SQRT1OVER2 = 4 };
+  enum CornerOption { INTERSECTION = 0, ORTHOGONAL = 1, UNFILLED = 2 };
 
   template <typename ltype, typename rtype, int op_type>
-  class polygon_45_set_view;
+  struct polygon_45_set_view;
   
   struct polygon_45_set_concept {};
 
@@ -28,25 +28,31 @@ namespace gtl {
     typedef typename value_type::const_iterator iterator_type;
     typedef polygon_45_set_data operator_arg_type;
 
-    /// default constructor
+    // default constructor
     inline polygon_45_set_data() : dirty_(false), unsorted_(false), is_manhattan_(true) {}
 
-    /// constructor from a geometry object
+    // constructor from a geometry object
     template <typename geometry_type>
     inline polygon_45_set_data(const geometry_type& that) : dirty_(false), unsorted_(false), is_manhattan_(true) {
       insert(that);
     }
 
-    /// copy constructor
+    // copy constructor
     inline polygon_45_set_data(const polygon_45_set_data& that) : 
       data_(that.data_), dirty_(that.dirty_), unsorted_(that.unsorted_), is_manhattan_(that.is_manhattan_) {}
 
-    /// destructor
+    template <typename ltype, typename rtype, int op_type>
+    inline polygon_45_set_data(const polygon_45_set_view<ltype, rtype, op_type>& that) {
+      (*this) = that.value();
+    }
+
+    // destructor
     inline ~polygon_45_set_data() {}
 
-    /// assignement operator
+    // assignement operator
     inline polygon_45_set_data& operator=(const polygon_45_set_data& that) {
       if(this == &that) return *this;
+      error_data_ = that.error_data_;
       data_ = that.data_;
       dirty_ = that.dirty_;
       unsorted_ = that.unsorted_;
@@ -56,9 +62,7 @@ namespace gtl {
 
     template <typename ltype, typename rtype, int op_type>
     inline polygon_45_set_data& operator=(const polygon_45_set_view<ltype, rtype, op_type>& that) {
-      set(that.begin(), that.end());
-      dirty_ = that.dirty();
-      unsorted_ = !that.sorted();
+      (*this) = that.value();
       return *this;
     }
 
@@ -69,7 +73,7 @@ namespace gtl {
       return *this;
     }
 
-    /// insert iterator range
+    // insert iterator range
     template <typename iT>
     inline void insert(iT input_begin, iT input_end, bool is_hole = false) {
       if(input_begin == input_end) return;
@@ -124,24 +128,30 @@ namespace gtl {
       get_dispatch(output, typename geometry_concept<typename output_container::value_type>::type());
     }
 
-    /// equivalence operator 
+    inline void has_error_data() const { return !error_data_.empty(); }
+    inline unsigned int error_count() const { return error_data_.size() / 4; }
+    inline void get_error_data(polygon_45_set_data& p) const {
+      p.data_.insert(p.data_.end(), error_data_.begin(), error_data_.end());
+    }
+
+    // equivalence operator 
     inline bool operator==(const polygon_45_set_data& p) const {
       clean();
       p.clean();
       return data_ == p.data_;
     }
 
-    /// inequivalence operator 
+    // inequivalence operator 
     inline bool operator!=(const polygon_45_set_data& p) const {
       return !((*this) == p);
     }
 
-    /// get iterator to begin vertex data
+    // get iterator to begin vertex data
     inline iterator_type begin() const {
       return data_.begin();
     }
 
-    /// get iterator to end vertex data
+    // get iterator to end vertex data
     inline iterator_type end() const {
       return data_.end();
     }
@@ -150,19 +160,19 @@ namespace gtl {
       return data_;
     }
 
-    /// clear the contents of the polygon_45_set_data
-    inline void clear() { data_.clear(); dirty_ = unsorted_ = false; is_manhattan_ = true; }
+    // clear the contents of the polygon_45_set_data
+    inline void clear() { data_.clear(); error_data_.clear(); dirty_ = unsorted_ = false; is_manhattan_ = true; }
 
-    /// find out if Polygon set is empty
+    // find out if Polygon set is empty
     inline bool empty() const { return data_.empty(); }
 
-    /// find out if Polygon set is sorted
+    // find out if Polygon set is sorted
     inline bool sorted() const { return !unsorted_; }
 
-    /// find out if Polygon set is clean
+    // find out if Polygon set is clean
     inline bool dirty() const { return dirty_; }
 
-    /// find out if Polygon set is clean
+    // find out if Polygon set is clean
     inline bool is_manhattan() const { return is_manhattan_; }
 
     bool clean() const;
@@ -194,35 +204,59 @@ namespace gtl {
       unsorted_ = true;
     }
 
-    /// append to the container cT with polygons (holes will be fractured vertically)
+    // append to the container cT with polygons (holes will be fractured vertically)
     template <class cT>
     void get_polygons(cT& container) const {
       get_dispatch(container, polygon_45_concept());
     }
     
-    /// append to the container cT with PolygonWithHoles objects
+    // append to the container cT with PolygonWithHoles objects
     template <class cT>
     void get_polygons_with_holes(cT& container) const {
       get_dispatch(container, polygon_45_with_holes_concept());
     }
     
-    /// append to the container cT with polygons of three or four verticies
+    // append to the container cT with polygons of three or four verticies
+    // slicing orientation is vertical
     template <class cT>
-    void get_trapezoids(cT& container) const;
+    void get_trapezoids(cT& container) const {
+      clean();
+      typename polygon_45_formation<Unit>::Polygon45Tiling pf;
+      //std::cout << "FORMING POLYGONS\n";
+      pf.scan(container, data_.begin(), data_.end());
+      //std::cout << "DONE FORMING POLYGONS\n";
+    }
 
-    /// insert vertex sequence
+    // append to the container cT with polygons of three or four verticies
+    template <class cT>
+    void get_trapezoids(cT& container, orientation_2d slicing_orientation) const {
+      if(slicing_orientation == VERTICAL) {
+        get_trapezoids(container);
+      } else {
+        polygon_45_set_data<Unit> ps(*this);
+        ps.transform(axis_transformation(axis_transformation::SWAP_XY));
+        cT result;
+        ps.get_trapezoids(result);
+        for(typename cT::iterator itr = result.begin(); itr != result.end(); ++itr) {
+          ::gtl::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
+        }
+        container.insert(container.end(), result.begin(), result.end());
+      }
+    }
+
+    // insert vertex sequence
     template <class iT>
     void insert_vertex_sequence(iT begin_vertex, iT end_vertex,
                                 direction_1d winding, bool is_hole = false);
 
-    /// get the external boundary rectangle
+    // get the external boundary rectangle
     template <typename rectangle_type>
     bool extents(rectangle_type& rect) const;
 
-    /// snap verticies of set to even,even or odd,odd coordinates
+    // snap verticies of set to even,even or odd,odd coordinates
     void snap() const;
     
-    /// |= &= += *= -= ^= binary operators
+    // |= &= += *= -= ^= binary operators
     polygon_45_set_data& operator|=(const polygon_45_set_data& b);
     polygon_45_set_data& operator&=(const polygon_45_set_data& b);
     polygon_45_set_data& operator+=(const polygon_45_set_data& b);
@@ -230,23 +264,40 @@ namespace gtl {
     polygon_45_set_data& operator-=(const polygon_45_set_data& b);
     polygon_45_set_data& operator^=(const polygon_45_set_data& b);
 
-    /// resizing operations
+    // resizing operations
     polygon_45_set_data& operator+=(Unit delta);
     polygon_45_set_data& operator-=(Unit delta);
     
-    /// shrink the Polygon45Set by shrinking
+    // shrink the Polygon45Set by shrinking
     polygon_45_set_data& resize(coordinate_type resizing, RoundingOption rounding = CLOSEST,
                                 CornerOption corner = INTERSECTION);
 
-    /// transform set
+    // transform set
     template <typename transformation_type>
     polygon_45_set_data& transform(const transformation_type& tr);
 
-    /// scale set
+    // scale set
     polygon_45_set_data& scale_up(typename coordinate_traits<Unit>::unsigned_area_type factor);
     polygon_45_set_data& scale_down(typename coordinate_traits<Unit>::unsigned_area_type factor);
+    polygon_45_set_data& scale(double scaling);
 
-    /// accumulate the bloated polygon
+    // self_intersect
+    polygon_45_set_data& self_intersect() {
+      sort();
+      applyAdaptiveUnary_<1>(); //1 = AND
+      dirty_ = false;
+      return *this;
+    }
+
+    // self_xor
+    polygon_45_set_data& self_xor() {
+      sort();
+      applyAdaptiveUnary_<3>(); //3 = XOR
+      dirty_ = false;
+      return *this;
+    }
+
+    // accumulate the bloated polygon
     template <typename geometry_type>
     polygon_45_set_data& insert_with_resize(const geometry_type& poly,
                                             coordinate_type resizing, RoundingOption rounding = CLOSEST,
@@ -256,6 +307,7 @@ namespace gtl {
     }
     
   private:
+    mutable value_type error_data_;
     mutable value_type data_;
     mutable bool dirty_;
     mutable bool unsorted_;
@@ -292,11 +344,7 @@ namespace gtl {
       insert(geometry_object.begin(), geometry_object.end(), is_hole);
     }
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, rectangle_concept tag) {
-      polygon_45_data<Unit> poly;
-      assign(poly, geometry_object);
-      insert_dispatch(poly, is_hole, polygon_45_concept());
-    }
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, rectangle_concept tag); 
     template <typename geometry_type>
     void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_concept tag) {
       insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
@@ -344,7 +392,7 @@ namespace gtl {
                                                      coordinate_type resizing, RoundingOption rounding,
                                                      CornerOption corner, bool hole, polygon_45_concept tag);
     
-    /// accumulate the bloated polygon with holes
+    // accumulate the bloated polygon with holes
     template <typename geometry_type>
     polygon_45_set_data& insert_with_resize_dispatch(const geometry_type& poly,
                                                      coordinate_type resizing, RoundingOption rounding,
@@ -353,12 +401,12 @@ namespace gtl {
     static void snap_vertex_45(Vertex45Compact& vertex);
 
   public:
-    void applyAdaptiveBoolean_(int op, const polygon_45_set_data& rvalue) const;
-    void applyAdaptiveBoolean_(polygon_45_set_data& result, int op, const polygon_45_set_data& rvalue) const;
-    //void applyBoolean_(int op, value_type& rvalue) const;
-    //void applyBoolean_(value_type& result, int op, 
-    //                   value_type& rvalue) const;
-    //void applyBooleanException_(value_type& result, int op, value_type& rvalue) const;
+    template <int op>
+    void applyAdaptiveBoolean_(const polygon_45_set_data& rvalue) const;
+    template <int op>
+    void applyAdaptiveBoolean_(polygon_45_set_data& result, const polygon_45_set_data& rvalue) const;
+    template <int op>
+    void applyAdaptiveUnary_() const;
   };
 
   template <typename T>
@@ -366,15 +414,17 @@ namespace gtl {
     typedef polygon_45_set_concept type;
   };
  
-
-  template <typename Unit>
-  template <class cT>
-  inline void polygon_45_set_data<Unit>::get_trapezoids(cT& container) const {
-    clean();
-    typename polygon_45_formation<Unit>::Polygon45Tiling pf;
-    //std::cout << "FORMING POLYGONS\n";
-    pf.scan(container, data_.begin(), data_.end());
-    //std::cout << "DONE FORMING POLYGONS\n";
+  template <typename iT>
+  void scale_up_vertex_45_compact_range(iT beginr, iT endr, unsigned int factor) {
+    for( ; beginr != endr; ++beginr) {
+      scale_up((*beginr).pt, factor);
+    }
+  }
+  template <typename iT>
+  void scale_down_vertex_45_compact_range_blindly(iT beginr, iT endr, unsigned int factor) {
+    for( ; beginr != endr; ++beginr) {
+      scale_down((*beginr).pt, factor);
+    }
   }
 
   template <typename Unit>
@@ -405,12 +455,13 @@ namespace gtl {
     return retval;
   }
 
-  template <typename Unit>
-  inline void polygon_45_set_data<Unit>::insert_vertex_half_edge_45_pair(const point_data<Unit>& pt1, point_data<Unit>& pt2, 
-                                                                         const point_data<Unit>& pt3, 
-                                                                         direction_1d wdir) {
+  template <typename cT, typename pT>
+  bool insert_vertex_half_edge_45_pair_into_vector(cT& output,
+                                       const pT& pt1, pT& pt2, 
+                                       const pT& pt3, 
+                                       direction_1d wdir) {
     int multiplier = wdir == LOW ? -1 : 1;
-    Vertex45Compact vertex(pt2, 0, 0);
+    typename cT::value_type vertex(pt2, 0, 0);
     //std::cout << pt1 << " " << pt2 << " " << pt3 << std::endl;
     std::pair<int, int> check;
     check = characterizeEdge45(pt1, pt2); 
@@ -419,8 +470,15 @@ namespace gtl {
     check = characterizeEdge45(pt2, pt3); 
     //std::cout << "index " << check.first << " " << check.second * multiplier << std::endl;
     vertex.count[check.first] += check.second * multiplier;
-    data_.push_back(vertex);
-    if(vertex.count.is_45()) is_manhattan_ = false;
+    output.push_back(vertex);
+    return vertex.count.is_45();
+  }
+
+  template <typename Unit>
+  inline void polygon_45_set_data<Unit>::insert_vertex_half_edge_45_pair(const point_data<Unit>& pt1, point_data<Unit>& pt2, 
+                                                                         const point_data<Unit>& pt3, 
+                                                                         direction_1d wdir) {
+    if(insert_vertex_half_edge_45_pair_into_vector(data_, pt1, pt2, pt3, wdir)) is_manhattan_ = false;
   }
 
   template <typename Unit>
@@ -465,7 +523,7 @@ namespace gtl {
     unsorted_ = true;
   }
 
-  /// insert polygon set
+  // insert polygon set
   template <typename Unit>
   inline void polygon_45_set_data<Unit>::insert(const polygon_45_set_data<Unit>& polygon_set, bool is_hole) {
     if(is_hole) {
@@ -477,13 +535,36 @@ namespace gtl {
       return;
     }
     data_.insert(data_.end(), polygon_set.data_.begin(), polygon_set.data_.end());
+    error_data_.insert(error_data_.end(), polygon_set.error_data_.begin(),
+                       polygon_set.error_data_.end());
     dirty_ = true;
     unsorted_ = true;
     if(polygon_set.is_manhattan_ == false) is_manhattan_ = false;
     return;
   }
 
-  /// get the external boundary rectangle
+  template <typename cT, typename rT>
+  void insert_rectangle_into_vector_45(cT& output, const rT& rect, bool is_hole) {
+    point_data<typename rectangle_traits<rT>::coordinate_type> 
+      llpt = ll(rect), lrpt = lr(rect), ulpt = ul(rect), urpt = ur(rect);
+    direction_1d dir = COUNTERCLOCKWISE;
+    if(is_hole) dir = CLOCKWISE;
+    insert_vertex_half_edge_45_pair_into_vector(output, llpt, lrpt, urpt, dir);
+    insert_vertex_half_edge_45_pair_into_vector(output, lrpt, urpt, ulpt, dir);
+    insert_vertex_half_edge_45_pair_into_vector(output, urpt, ulpt, llpt, dir);
+    insert_vertex_half_edge_45_pair_into_vector(output, ulpt, llpt, lrpt, dir);
+  }
+
+  template <typename Unit>
+  template <typename geometry_type>
+  inline void polygon_45_set_data<Unit>::insert_dispatch(const geometry_type& geometry_object, 
+                                                         bool is_hole, rectangle_concept tag) {
+    dirty_ = true;
+    unsorted_ = true;
+    insert_rectangle_into_vector_45(data_, geometry_object, is_hole);
+  }
+
+  // get the external boundary rectangle
   template <typename Unit>
   template <typename rectangle_type>
   inline bool polygon_45_set_data<Unit>::extents(rectangle_type& rect) const{
@@ -539,7 +620,7 @@ namespace gtl {
     }
   }
 
-  /// |= &= += *= -= ^= binary operators
+  // |= &= += *= -= ^= binary operators
   template <typename Unit>
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::operator|=(const polygon_45_set_data<Unit>& b) {
     insert(b);
@@ -549,7 +630,7 @@ namespace gtl {
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::operator&=(const polygon_45_set_data<Unit>& b) {
     //b.sort();
     //sort();
-    applyAdaptiveBoolean_(1, b);
+    applyAdaptiveBoolean_<1>(b);
     dirty_ = false;
     unsorted_ = false;
     return *this;
@@ -566,7 +647,7 @@ namespace gtl {
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::operator-=(const polygon_45_set_data<Unit>& b) {
     //b.sort();
     //sort();
-    applyAdaptiveBoolean_(2, b);   
+    applyAdaptiveBoolean_<2>(b);   
     dirty_ = false;
     unsorted_ = false;
     return *this;
@@ -575,7 +656,7 @@ namespace gtl {
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::operator^=(const polygon_45_set_data<Unit>& b) {
     //b.sort();
     //sort();
-    applyAdaptiveBoolean_(3, b);   
+    applyAdaptiveBoolean_<3>(b);   
     dirty_ = false;
     unsorted_ = false;
     return *this;
@@ -733,14 +814,64 @@ namespace gtl {
 
   template <typename Unit>
   inline
-  void handleResizingEdge45(polygon_45_set_data<Unit>& sizingSet, point_data<Unit> first, 
-                            point_data<Unit> second, Unit resizing, RoundingOption rounding) {
+  void handleResizingEdge45_SQRT1OVER2(polygon_45_set_data<Unit>& sizingSet, point_data<Unit> first, 
+                                       point_data<Unit> second, Unit resizing, CornerOption corner) {
     if(first.x() == second.x()) {
-      sizingSet += rectangle_data<int>(first.x() - resizing, first.y(), first.x() + resizing, second.y());
+      sizingSet.insert(rectangle_data<int>(first.x() - resizing, first.y(), first.x() + resizing, second.y()));
       return;
     }
     if(first.y() == second.y()) {
-      sizingSet += rectangle_data<int>(first.x(), first.y() - resizing, second.x(), first.y() + resizing);
+      sizingSet.insert(rectangle_data<int>(first.x(), first.y() - resizing, second.x(), first.y() + resizing));
+      return;
+    }
+    std::vector<point_data<Unit> > pts;
+    Unit bloating = resizing < 0 ? -resizing : resizing;
+    if(corner == UNFILLED) {
+      //we have to round up
+      bloating = bloating / 2 + bloating % 2 ; //round up
+      if(second.x() < first.x()) std::swap(first, second);
+      if(first.y() < second.y()) { //upward sloping
+        pts.push_back(point_data<Unit>(first.x() + bloating, first.y() - bloating));
+        pts.push_back(point_data<Unit>(first.x() - bloating, first.y() + bloating));
+        pts.push_back(point_data<Unit>(second.x() - bloating, second.y() + bloating));
+        pts.push_back(point_data<Unit>(second.x() + bloating, second.y() - bloating));
+        sizingSet.insert_vertex_sequence(pts.begin(), pts.end(), CLOCKWISE, false);
+      } else { //downward sloping
+        pts.push_back(point_data<Unit>(first.x() + bloating, first.y() + bloating));
+        pts.push_back(point_data<Unit>(first.x() - bloating, first.y() - bloating));
+        pts.push_back(point_data<Unit>(second.x() - bloating, second.y() - bloating));
+        pts.push_back(point_data<Unit>(second.x() + bloating, second.y() + bloating));
+        sizingSet.insert_vertex_sequence(pts.begin(), pts.end(), COUNTERCLOCKWISE, false);
+      }
+      return;
+    }
+    if(second.x() < first.x()) std::swap(first, second);
+    if(first.y() < second.y()) { //upward sloping
+      pts.push_back(point_data<Unit>(first.x(), first.y() - bloating));
+      pts.push_back(point_data<Unit>(first.x() - bloating, first.y()));
+      pts.push_back(point_data<Unit>(second.x(), second.y() + bloating));
+      pts.push_back(point_data<Unit>(second.x() + bloating, second.y()));
+      sizingSet.insert_vertex_sequence(pts.begin(), pts.end(), CLOCKWISE, false);
+    } else { //downward sloping
+      pts.push_back(point_data<Unit>(first.x() - bloating, first.y()));
+      pts.push_back(point_data<Unit>(first.x(), first.y() + bloating));
+      pts.push_back(point_data<Unit>(second.x() + bloating, second.y()));
+      pts.push_back(point_data<Unit>(second.x(), second.y() - bloating));
+      sizingSet.insert_vertex_sequence(pts.begin(), pts.end(), CLOCKWISE, false);
+    }
+  }
+
+
+  template <typename Unit>
+  inline
+  void handleResizingEdge45(polygon_45_set_data<Unit>& sizingSet, point_data<Unit> first, 
+                            point_data<Unit> second, Unit resizing, RoundingOption rounding) {
+    if(first.x() == second.x()) {
+      sizingSet.insert(rectangle_data<int>(first.x() - resizing, first.y(), first.x() + resizing, second.y()));
+      return;
+    }
+    if(first.y() == second.y()) {
+      sizingSet.insert(rectangle_data<int>(first.x(), first.y() - resizing, second.x(), first.y() + resizing));
       return;
     }
     //edge is 45
@@ -763,6 +894,41 @@ namespace gtl {
   }
 
   template <typename Unit>
+  inline point_data<Unit> bloatVertexInDirWithSQRT1OVER2(int edge1, int normal1, const point_data<Unit>& second, Unit bloating,
+                                                         bool first) {
+    orientation_2d orient = first ? HORIZONTAL : VERTICAL;
+    orientation_2d orientp = orient.get_perpendicular();
+    int multiplier = first ? 1 : -1;
+    point_data<Unit> pt1(second);
+    if(edge1 == 1) {
+      if(normal1 == 3) {
+        move(pt1, orient, -multiplier * bloating);
+      } else {
+        move(pt1, orientp, -multiplier * bloating);
+      }
+    } else if(edge1 == 3) {
+      if(normal1 == 1) {
+        move(pt1, orient, multiplier * bloating);
+      } else {
+        move(pt1, orientp, -multiplier * bloating);
+      }
+    } else if(edge1 == 5) {
+      if(normal1 == 3) {
+        move(pt1, orientp, multiplier * bloating);
+      } else {
+        move(pt1, orient, multiplier * bloating);
+      }
+    } else {
+      if(normal1 == 5) {
+        move(pt1, orient, -multiplier * bloating);
+      } else {
+        move(pt1, orientp, multiplier * bloating);
+      }
+    }
+    return pt1;
+  }
+
+  template <typename Unit>
   inline
   void handleResizingVertex45(polygon_45_set_data<Unit>& sizingSet, const point_data<Unit>& first, 
                               const point_data<Unit>& second, const point_data<Unit>& third, Unit resizing, 
@@ -779,15 +945,63 @@ namespace gtl {
       if(resizing > 0) return; //accute interior corner
       else multiplier *= -1; //make it appear to be an accute exterior angle
     }
+    Unit bloating = abs(resizing);
+    if(rounding == SQRT1OVER2) {
+      if(edge1 % 2 && edge2 % 2) return; 
+      if(corner == ORTHOGONAL && edge1 % 2 == 0 && edge2 % 2 == 0) {
+        rectangle_data<Unit> insertion_rect;
+        set_points(insertion_rect, second, second);
+        bloat(insertion_rect, bloating);
+        sizingSet.insert(insertion_rect);
+      } else if(corner != ORTHOGONAL) {
+        point_data<Unit> pt1(0, 0);
+        point_data<Unit> pt2(0, 0);
+        unsigned int normal1 = getEdge45NormalDirection(edge1, multiplier);
+        unsigned int normal2 = getEdge45NormalDirection(edge2, multiplier);
+        if(edge1 % 2) {
+          pt1 = bloatVertexInDirWithSQRT1OVER2(edge1, normal1, second, bloating, true);
+        } else {
+          pt1 = bloatVertexInDirWithOptions(second, normal1, bloating, UNDERSIZE);
+        }
+        if(edge2 % 2) {
+          pt2 = bloatVertexInDirWithSQRT1OVER2(edge2, normal2, second, bloating, false);
+        } else {
+          pt2 = bloatVertexInDirWithOptions(second, normal2, bloating, UNDERSIZE);
+        }
+        std::vector<point_data<Unit> > pts;
+        pts.push_back(pt1);
+        pts.push_back(second);
+        pts.push_back(pt2);
+        pts.push_back(getIntersectionPoint(pt1, edge1, pt2, edge2));
+        polygon_45_data<Unit> poly(pts.begin(), pts.end());
+        sizingSet.insert(poly);
+      } else {
+        //ORTHOGONAL of a 45 degree corner
+        int normal = 0;
+        if(edge1 % 2) {
+          normal = getEdge45NormalDirection(edge2, multiplier);
+        } else {
+          normal = getEdge45NormalDirection(edge1, multiplier);
+        }
+        rectangle_data<Unit> insertion_rect;
+        point_data<Unit> edgePoint = bloatVertexInDirWithOptions(second, normal, bloating, UNDERSIZE);
+        set_points(insertion_rect, second, edgePoint);
+        if(normal == 0 || normal == 4)
+          bloat(insertion_rect, VERTICAL, bloating);
+        else
+          bloat(insertion_rect, HORIZONTAL, bloating);
+        sizingSet.insert(insertion_rect);
+      }
+      return;
+    }
     unsigned int normal1 = getEdge45NormalDirection(edge1, multiplier);
     unsigned int normal2 = getEdge45NormalDirection(edge2, multiplier);
-    Unit bloating = abs(resizing);
     point_data<Unit> edgePoint1 = bloatVertexInDirWithOptions(second, normal1, bloating, rounding);
     point_data<Unit> edgePoint2 = bloatVertexInDirWithOptions(second, normal2, bloating, rounding);
     //if the change in angle is 135 degrees it is an accute exterior corner
     if((edge1+ multiplier * 3) % 8 == edge2) {
-      if(corner == ORTHOGINAL) {
-        rectangle_data<int> insertion_rect;
+      if(corner == ORTHOGONAL) {
+        rectangle_data<Unit> insertion_rect;
         set_points(insertion_rect, edgePoint1, edgePoint2);
         sizingSet.insert(insertion_rect);
         return;
@@ -799,7 +1013,7 @@ namespace gtl {
     pts.push_back(edgePoint2);
     pts.push_back(getIntersectionPoint(edgePoint1, edge1, edgePoint2, edge2));
     polygon_45_data<Unit> poly(pts.begin(), pts.end());
-    sizingSet += poly;
+    sizingSet.insert(poly);
   }
 
   template <typename Unit>
@@ -831,8 +1045,13 @@ namespace gtl {
     polygon_45_set_data<Unit> sizingSet;
     //insert minkofski shapes on edges and corners
     do {
-      handleResizingEdge45(sizingSet, *first, *second, resizing, rounding);
-      handleResizingVertex45(sizingSet, *first, *second, *third, resizing, rounding, corner, multiplier);
+      if(rounding != SQRT1OVER2) {
+        handleResizingEdge45(sizingSet, *first, *second, resizing, rounding);
+      } else {
+        handleResizingEdge45_SQRT1OVER2(sizingSet, *first, *second, resizing, corner);
+      }        
+      if(corner != UNFILLED) 
+        handleResizingVertex45(sizingSet, *first, *second, *third, resizing, rounding, corner, multiplier);
       first = second;
       second = third;
       ++third;
@@ -846,23 +1065,15 @@ namespace gtl {
     //sizingSet.snap();
     polygon_45_set_data<Unit> tmp;
     //insert original shape
-    tmp.insert(poly, hole);
+    tmp.insert_dispatch(poly, hole, polygon_45_concept());
     if(hole) {
-      std::vector<point_data<Unit> > pts;
-      pts.reserve(4);
       Unit UnitMax = std::numeric_limits<Unit>::max();
       Unit UnitMin = std::numeric_limits<Unit>::min();
-      pts.push_back(point_data<Unit> (UnitMin, UnitMin));
-      pts.push_back(point_data<Unit> (UnitMin, UnitMax));
-      pts.push_back(point_data<Unit> (UnitMax, UnitMax));
-      pts.push_back(point_data<Unit> (UnitMax, UnitMin));
-      tmp.insert_vertex_sequence(pts.begin(), pts.end(), LOW, false);
-      //tmp.snap();
+      tmp.insert(rectangle_data<Unit>(UnitMin, UnitMin, UnitMax, UnitMax));
       if(resizing < 0) tmp -= sizingSet;
       else tmp += sizingSet;
       tmp.clean();
-      tmp.insert_vertex_sequence(pts.begin(), pts.end(), LOW, true);
-      //tmp.snap();
+      tmp.insert(rectangle_data<Unit>(UnitMin, UnitMin, UnitMax, UnitMax), true); //insert as hole to cancel out
     } else {
       if(resizing < 0) tmp -= sizingSet;
       else tmp += sizingSet;
@@ -871,7 +1082,7 @@ namespace gtl {
     return (*this) += tmp;
   }
 
-  /// accumulate the bloated polygon with holes
+  // accumulate the bloated polygon with holes
   template <typename Unit>
   template <typename geometry_type>
   inline polygon_45_set_data<Unit>&
@@ -889,7 +1100,7 @@ namespace gtl {
     return *this;
   }
 
-  /// transform set
+  // transform set
   template <typename Unit>
   template <typename transformation_type>
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::transform(const transformation_type& tr){
@@ -909,17 +1120,7 @@ namespace gtl {
     
   template <typename Unit>
   inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::scale_up(typename coordinate_traits<Unit>::unsigned_area_type factor) {
-    clean();
-    std::vector<polygon_45_with_holes_data<Unit> > polys;
-    get_polygons_with_holes(polys);
-    for(typename std::vector<polygon_45_with_holes_data<Unit> >::iterator itr = polys.begin();
-        itr != polys.end(); ++itr) {
-      gtl::scale_up(*itr, factor);
-    }
-    clear();
-    insert(polys.begin(), polys.end());
-    dirty_ = true; 
-    unsorted_ = true;
+    scale_up_vertex_45_compact_range(data_.begin(), data_.end(), factor);
     return *this;
   }
 
@@ -940,29 +1141,342 @@ namespace gtl {
   }
 
   template <typename Unit>
+  inline polygon_45_set_data<Unit>& polygon_45_set_data<Unit>::scale(double factor) {
+    clean();
+    std::vector<polygon_45_with_holes_data<Unit> > polys;
+    get_polygons_with_holes(polys);
+    for(typename std::vector<polygon_45_with_holes_data<Unit> >::iterator itr = polys.begin();
+        itr != polys.end(); ++itr) {
+      gtl::scale(*itr, factor);
+    }
+    clear();
+    insert(polys.begin(), polys.end());
+    dirty_ = true; 
+    unsorted_ = true;
+    return *this;
+  }
+
+  template <typename Unit>
   inline bool polygon_45_set_data<Unit>::clean() const {
     if(unsorted_) sort();
     if(dirty_) {
-      polygon_45_set_data<Unit> empty;
-      applyAdaptiveBoolean_(0, empty);
+      applyAdaptiveUnary_<0>();
       dirty_ = false;
     }
     return true;
   }
 
   template <typename Unit>
-  inline void polygon_45_set_data<Unit>::applyAdaptiveBoolean_(int op, const polygon_45_set_data<Unit>& rvalue) const {
+  template <int op>
+  inline void polygon_45_set_data<Unit>::applyAdaptiveBoolean_(const polygon_45_set_data<Unit>& rvalue) const {
     polygon_45_set_data<Unit> tmp;
-    applyAdaptiveBoolean_(tmp, op, rvalue);
+    applyAdaptiveBoolean_<op>(tmp, rvalue);
     data_.swap(tmp.data_); //swapping vectors should be constant time operation
+    error_data_.swap(tmp.error_data_);
     is_manhattan_ = tmp.is_manhattan_;
     unsorted_ = false;
     dirty_ = false;
   }
 
+  template <typename Unit2, int op>
+  bool applyBoolean45OpOnVectors(std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact>& result_data,
+                                 std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact>& lvalue_data,
+                                 std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact>& rvalue_data
+                                 ) {
+    bool result_is_manhattan_ = true;
+    typename boolean_op_45<Unit2>::template Scan45<typename boolean_op_45<Unit2>::Count2,
+      typename boolean_op_45<Unit2>::template boolean_op_45_output_functor<op> > scan45;
+    std::vector<typename boolean_op_45<Unit2>::Vertex45> eventOut;
+    typedef std::pair<typename boolean_op_45<Unit2>::Point, 
+      typename boolean_op_45<Unit2>::template Scan45CountT<typename boolean_op_45<Unit2>::Count2> > Scan45Vertex;
+    std::vector<Scan45Vertex> eventIn;
+    typedef std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact> value_type;
+    typename value_type::const_iterator iter1 = lvalue_data.begin();
+    typename value_type::const_iterator iter2 = rvalue_data.begin();
+    typename value_type::const_iterator end1 = lvalue_data.end();
+    typename value_type::const_iterator end2 = rvalue_data.end();
+    const Unit2 UnitMax = std::numeric_limits<Unit2>::max();
+    Unit2 x = UnitMax;
+    while(iter1 != end1 || iter2 != end2) {
+      Unit2 currentX = UnitMax;
+      if(iter1 != end1) currentX = iter1->pt.x();
+      if(iter2 != end2) currentX = std::min(currentX, iter2->pt.x());
+      if(currentX != x) {
+        //std::cout << "SCAN " << currentX << "\n";
+        //scan event
+        scan45.scan(eventOut, eventIn.begin(), eventIn.end());
+        std::sort(eventOut.begin(), eventOut.end());
+        unsigned int ptCount = 0;
+        for(unsigned int i = 0; i < eventOut.size(); ++i) {
+          if(!result_data.empty() &&
+             result_data.back().pt == eventOut[i].pt) {
+            result_data.back().count += eventOut[i];
+            ++ptCount;
+          } else {
+            if(!result_data.empty()) { 
+              if(result_data.back().count.is_45()) {
+                result_is_manhattan_ = false;
+              }
+              if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+                result_data.pop_back();
+              }
+            }
+            result_data.push_back(eventOut[i]);
+            ptCount = 1;
+          }
+        }
+        if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+          result_data.pop_back();
+        }
+        eventOut.clear();
+        eventIn.clear();
+        x = currentX;
+      }
+      //std::cout << "get next\n";
+      if(iter2 != end2 && (iter1 == end1 || iter2->pt.x() < iter1->pt.x() || 
+                           (iter2->pt.x() == iter1->pt.x() &&
+                            iter2->pt.y() < iter1->pt.y()) )) {
+        //std::cout << "case1 next\n";
+        eventIn.push_back(Scan45Vertex
+                          (iter2->pt, 
+                           typename polygon_45_formation<Unit2>::
+                           Scan45Count(typename polygon_45_formation<Unit2>::Count2(0, iter2->count[0]),
+                                       typename polygon_45_formation<Unit2>::Count2(0, iter2->count[1]),
+                                       typename polygon_45_formation<Unit2>::Count2(0, iter2->count[2]),
+                                       typename polygon_45_formation<Unit2>::Count2(0, iter2->count[3]))));
+        ++iter2;
+      } else if(iter1 != end1 && (iter2 == end2 || iter1->pt.x() < iter2->pt.x() || 
+                                  (iter1->pt.x() == iter2->pt.x() &&
+                                   iter1->pt.y() < iter2->pt.y()) )) {
+        //std::cout << "case2 next\n";
+        eventIn.push_back(Scan45Vertex
+                          (iter1->pt, 
+                           typename polygon_45_formation<Unit2>::
+                           Scan45Count(
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[0], 0),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[1], 0),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[2], 0),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[3], 0))));
+        ++iter1;
+      } else {
+        //std::cout << "case3 next\n";
+        eventIn.push_back(Scan45Vertex
+                          (iter2->pt, 
+                           typename polygon_45_formation<Unit2>::
+                           Scan45Count(typename polygon_45_formation<Unit2>::Count2(iter1->count[0], 
+                                                                                    iter2->count[0]),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[1], 
+                                                                                    iter2->count[1]),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[2], 
+                                                                                    iter2->count[2]),
+                                       typename polygon_45_formation<Unit2>::Count2(iter1->count[3], 
+                                                                                    iter2->count[3]))));
+        ++iter1;
+        ++iter2;
+      }
+    }
+    scan45.scan(eventOut, eventIn.begin(), eventIn.end());
+    std::sort(eventOut.begin(), eventOut.end());
+
+    unsigned int ptCount = 0;
+    for(unsigned int i = 0; i < eventOut.size(); ++i) {
+      if(!result_data.empty() &&
+         result_data.back().pt == eventOut[i].pt) {
+        result_data.back().count += eventOut[i];
+        ++ptCount;
+      } else {
+        if(!result_data.empty()) { 
+          if(result_data.back().count.is_45()) {
+            result_is_manhattan_ = false;
+          }
+          if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+            result_data.pop_back();
+          }
+        }
+        result_data.push_back(eventOut[i]);
+        ptCount = 1;
+      }
+    }
+    if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+      result_data.pop_back();
+    }
+    if(!result_data.empty() &&
+       result_data.back().count.is_45()) {
+      result_is_manhattan_ = false;
+    }
+    return result_is_manhattan_;
+  }
+
+  template <typename Unit2, int op>
+  bool applyUnary45OpOnVectors(std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact>& result_data,
+                                 std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact>& lvalue_data ) {
+    bool result_is_manhattan_ = true;
+    typename boolean_op_45<Unit2>::template Scan45<typename boolean_op_45<Unit2>::Count1,
+      typename boolean_op_45<Unit2>::template unary_op_45_output_functor<op> > scan45;
+    std::vector<typename boolean_op_45<Unit2>::Vertex45> eventOut;
+    typedef typename boolean_op_45<Unit2>::template Scan45CountT<typename boolean_op_45<Unit2>::Count1> Scan45Count;
+    typedef std::pair<typename boolean_op_45<Unit2>::Point, Scan45Count> Scan45Vertex;
+    std::vector<Scan45Vertex> eventIn;
+    typedef std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact> value_type;
+    typename value_type::const_iterator iter1 = lvalue_data.begin();
+    typename value_type::const_iterator end1 = lvalue_data.end();
+    const Unit2 UnitMax = std::numeric_limits<Unit2>::max();
+    Unit2 x = UnitMax;
+    while(iter1 != end1) {
+      Unit2 currentX = iter1->pt.x();
+      if(currentX != x) {
+        //std::cout << "SCAN " << currentX << "\n";
+        //scan event
+        scan45.scan(eventOut, eventIn.begin(), eventIn.end());
+        std::sort(eventOut.begin(), eventOut.end());
+        unsigned int ptCount = 0;
+        for(unsigned int i = 0; i < eventOut.size(); ++i) {
+          if(!result_data.empty() &&
+             result_data.back().pt == eventOut[i].pt) {
+            result_data.back().count += eventOut[i];
+            ++ptCount;
+          } else {
+            if(!result_data.empty()) { 
+              if(result_data.back().count.is_45()) {
+                result_is_manhattan_ = false;
+              }
+              if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+                result_data.pop_back();
+              }
+            }
+            result_data.push_back(eventOut[i]);
+            ptCount = 1;
+          }
+        }
+        if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+          result_data.pop_back();
+        }
+        eventOut.clear();
+        eventIn.clear();
+        x = currentX;
+      }
+      //std::cout << "get next\n";
+      eventIn.push_back(Scan45Vertex
+                        (iter1->pt, 
+                         Scan45Count( typename boolean_op_45<Unit2>::Count1(iter1->count[0]),
+                                      typename boolean_op_45<Unit2>::Count1(iter1->count[1]),
+                                      typename boolean_op_45<Unit2>::Count1(iter1->count[2]),
+                                      typename boolean_op_45<Unit2>::Count1(iter1->count[3]))));
+      ++iter1;
+    }
+    scan45.scan(eventOut, eventIn.begin(), eventIn.end());
+    std::sort(eventOut.begin(), eventOut.end());
+
+    unsigned int ptCount = 0;
+    for(unsigned int i = 0; i < eventOut.size(); ++i) {
+      if(!result_data.empty() &&
+         result_data.back().pt == eventOut[i].pt) {
+        result_data.back().count += eventOut[i];
+        ++ptCount;
+      } else {
+        if(!result_data.empty()) { 
+          if(result_data.back().count.is_45()) {
+            result_is_manhattan_ = false;
+          }
+          if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+            result_data.pop_back();
+          }
+        }
+        result_data.push_back(eventOut[i]);
+        ptCount = 1;
+      }
+    }
+    if(ptCount == 2 && result_data.back().count == (typename polygon_45_formation<Unit2>::Vertex45Count(0, 0, 0, 0))) {
+      result_data.pop_back();
+    }
+    if(!result_data.empty() &&
+       result_data.back().count.is_45()) {
+      result_is_manhattan_ = false;
+    }
+    return result_is_manhattan_;
+  }
+
+  template <typename cT, typename iT> 
+  void get_error_rects_shell(cT& posE, cT& negE, iT beginr, iT endr) {
+    typedef typename iT::value_type Point;
+    Point pt1, pt2, pt3;
+    bool i1 = true;
+    bool i2 = true;
+    bool not_done = beginr != endr;
+    bool next_to_last = false;
+    bool last = false;
+    Point first, second;
+    while(not_done) {
+      if(last) {
+        last = false;
+        not_done = false;
+        pt3 = second;
+      } else if(next_to_last) {
+        next_to_last = false;
+        last = true;
+        pt3 = first;
+      } else if(i1) {
+        const Point& pt = *beginr;
+        first = pt1 = pt;
+        i1 = false;
+        i2 = true;
+        ++beginr;
+        if(beginr == endr) return; //too few points
+        continue;
+      } else if (i2) {
+        const Point& pt = *beginr;
+        second = pt2 = pt;
+        i2 = false;
+        ++beginr;
+        if(beginr == endr) return; //too few points
+        continue;
+      } else {
+        const Point& pt = *beginr;
+        pt3 = pt;
+        ++beginr;
+        if(beginr == endr) { 
+          next_to_last = true;
+          //skip last point equal to first
+          continue;
+        }
+      }
+      if(abs(x(pt2)) % 2) { //y % 2 should also be odd
+        //is corner concave or convex?
+        Point pts[] = {pt1, pt2, pt3};
+        double ar = point_sequence_area<Point*, double>(pts, pts+3);
+        direction_1d dir = ar < 0 ? COUNTERCLOCKWISE : CLOCKWISE;
+        //std::cout << pt1 << " " << pt2 << " " << pt3 << " " << ar << std::endl;
+        if(dir == CLOCKWISE) {
+          posE.push_back(rectangle_data<typename Point::coordinate_type>
+                         (x(pt2) - 1, y(pt2) - 1, x(pt2) + 1, y(pt2) + 1));
+          
+        } else {
+          negE.push_back(rectangle_data<typename Point::coordinate_type>
+                         (x(pt2) - 1, y(pt2) - 1, x(pt2) + 1, y(pt2) + 1));
+        }
+      }
+      pt1 = pt2;
+      pt2 = pt3;
+    }
+  }
+    
+  template <typename cT, typename pT> 
+  void get_error_rects(cT& posE, cT& negE, const pT& p) {
+    get_error_rects_shell(posE, negE, p.begin(), p.end());
+    for(typename pT::iterator_holes_type iHb = p.begin_holes();
+        iHb != p.end_holes(); ++iHb) {
+      get_error_rects_shell(posE, negE, iHb->begin(), iHb->end());
+    }
+  }
+
   template <typename Unit>
+  template <int op>
   inline void polygon_45_set_data<Unit>::applyAdaptiveBoolean_(polygon_45_set_data<Unit>& result,
-                                                               int op, const polygon_45_set_data<Unit>& rvalue) const {
+                                                               const polygon_45_set_data<Unit>& rvalue) const {
+    result.clear();
+    result.error_data_ = error_data_;
+    result.error_data_.insert(result.error_data_.end(), rvalue.error_data_.begin(),
+                              rvalue.error_data_.end());
     if(is_manhattan() && rvalue.is_manhattan()) {
       //convert each into polygon_90_set data and call boolean operations
       polygon_90_set_data<Unit> l90sd(VERTICAL), r90sd(VERTICAL), output(VERTICAL);
@@ -970,8 +1484,8 @@ namespace gtl {
         if((*itr).count[3] == 0) continue; //skip all non vertical edges
         l90sd.insert(std::make_pair((*itr).pt.x(), std::make_pair((*itr).pt.y(), (*itr).count[3])), false, VERTICAL);
       }
-          for(typename value_type::const_iterator itr = rvalue.data_.begin(); itr != rvalue.data_.end(); ++itr) {
-            if((*itr).count[3] == 0) continue; //skip all non vertical edges
+      for(typename value_type::const_iterator itr = rvalue.data_.begin(); itr != rvalue.data_.end(); ++itr) {
+        if((*itr).count[3] == 0) continue; //skip all non vertical edges
         r90sd.insert(std::make_pair((*itr).pt.x(), std::make_pair((*itr).pt.y(), (*itr).count[3])), false, VERTICAL);
       }
       l90sd.sort();
@@ -989,236 +1503,204 @@ namespace gtl {
         output.applyBooleanBinaryOp(l90sd.begin(), l90sd.end(),
                                     r90sd.begin(), r90sd.end(), boolean_op::BinaryCount<boolean_op::BinaryXor>()); 
       }
-      result.clear();
+      result.data_.clear();
       result.insert(output);
+      result.is_manhattan_ = true;
+      result.dirty_ = false;
+      result.unsorted_ = false;
     } else {
       sort();
       rvalue.sort();
-      typename boolean_op_45<Unit>::Scan45 scan45(op);
-      std::vector<typename boolean_op_45<Unit>::Vertex45> eventOut;
-      std::vector<typename boolean_op_45<Unit>::Scan45Vertex> eventIn;
-      typename value_type::const_iterator iter1 = data_.begin();
-      typename value_type::const_iterator iter2 = rvalue.data_.begin();
-      typename value_type::const_iterator end1 = data_.end();
-      typename value_type::const_iterator end2 = rvalue.data_.end();
-      const Unit UnitMax = std::numeric_limits<Unit>::max();
-      Unit x = UnitMax;
-      while(iter1 != end1 || iter2 != end2) {
-        Unit currentX = UnitMax;
-        if(iter1 != end1) currentX = iter1->pt.x();
-        if(iter2 != end2) currentX = std::min(currentX, iter2->pt.x());
-        if(currentX != x) {
-          //std::cout << "SCAN " << currentX << "\n";
-          //scan event
-          scan45.scan(eventOut, eventIn.begin(), eventIn.end());
-          std::sort(eventOut.begin(), eventOut.end());
-          for(unsigned int i = 0; i < eventOut.size(); ++i) {
-            if(!result.data_.empty() &&
-               result.data_.back().pt == eventOut[i].pt) {
-              result.data_.back().count += eventOut[i];
-            } else {
-              if(!result.data_.empty() &&
-                 result.data_.back().count.is_45()) {
-                result.is_manhattan_ = false;
-              }
-              result.data_.push_back(eventOut[i]);
-            }
-            if(result.data_.back().count == (typename polygon_45_formation<Unit>::Vertex45Count(0, 0, 0, 0))) {
-              result.data_.pop_back();
-            }
+      try {
+        result.is_manhattan_ = applyBoolean45OpOnVectors<Unit, op>(result.data_, data_, rvalue.data_);
+      } catch (std::string str) {
+        std::string msg = "GTL 45 Boolean error, precision insufficient to represent edge intersection coordinate value.";
+        if(str == msg) {
+          result.clear();
+          typedef typename coordinate_traits<Unit>::manhattan_area_type Unit2;
+          typedef typename polygon_45_formation<Unit2>::Vertex45Compact Vertex45Compact2;
+          typedef std::vector<Vertex45Compact2> Data2;
+          Data2 rvalue_data, lvalue_data, result_data;
+          rvalue_data.reserve(rvalue.data_.size());
+          lvalue_data.reserve(data_.size());
+          for(unsigned int i = 0 ; i < data_.size(); ++i) {
+            const Vertex45Compact& vi = data_[i];
+            Vertex45Compact2 ci; 
+            ci.pt = point_data<Unit2>(x(vi.pt), y(vi.pt));
+            ci.count = typename polygon_45_formation<Unit2>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+            lvalue_data.push_back(ci);
           }
-          eventOut.clear();
-          eventIn.clear();
-          x = currentX;
-        }
-        //std::cout << "get next\n";
-        if(iter2 != end2 && (iter1 == end1 || iter2->pt.x() < iter1->pt.x() || 
-                             (iter2->pt.x() == iter1->pt.x() &&
-                              iter2->pt.y() < iter1->pt.y()) )) {
-          //std::cout << "case1 next\n";
-          eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter2->pt, 
-                                                                       typename polygon_45_formation<Unit>::
-                                                                       Scan45Count(typename polygon_45_formation<Unit>::Count2(0, iter2->count[0]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(0, iter2->count[1]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(0, iter2->count[2]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(0, iter2->count[3]))));
-          ++iter2;
-        } else if(iter1 != end1 && (iter2 == end2 || iter1->pt.x() < iter2->pt.x() || 
-                                    (iter1->pt.x() == iter2->pt.x() &&
-                                     iter1->pt.y() < iter2->pt.y()) )) {
-          //std::cout << "case2 next\n";
-          eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter1->pt, 
-                                                                       typename polygon_45_formation<Unit>::
-                                                                       Scan45Count(
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[0], 0),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[1], 0),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[2], 0),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[3], 0))));
-          ++iter1;
-        } else {
-          //std::cout << "case3 next\n";
-          eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter2->pt, 
-                                                                       typename polygon_45_formation<Unit>::
-                                                                       Scan45Count(typename polygon_45_formation<Unit>::Count2(iter1->count[0], 
-                                                                                                                               iter2->count[0]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[1], 
-                                                                                                                               iter2->count[1]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[2], 
-                                                                                                                               iter2->count[2]),
-                                                                                   typename polygon_45_formation<Unit>::Count2(iter1->count[3], 
-                                                                                                                               iter2->count[3]))));
-          ++iter1;
-          ++iter2;
-        }
-      }
-      scan45.scan(eventOut, eventIn.begin(), eventIn.end());
-      std::sort(eventOut.begin(), eventOut.end());
-      for(unsigned int i = 0; i < eventOut.size(); ++i) {
-        if(!result.data_.empty() &&
-           result.data_.back().pt == eventOut[i].pt) {
-          result.data_.back().count += eventOut[i];
-        } else {
-          if(!result.data_.empty() &&
-             result.data_.back().count.is_45()) {
-            result.is_manhattan_ = false;
+          for(unsigned int i = 0 ; i < rvalue.data_.size(); ++i) {
+            const Vertex45Compact& vi = rvalue.data_[i];
+            Vertex45Compact2 ci;
+            ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+            ci.count = typename polygon_45_formation<Unit2>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+            rvalue_data.push_back(ci);
           }
-          result.data_.push_back(eventOut[i]);
-        }
-        if(result.data_.back().count == typename polygon_45_formation<Unit>::Vertex45Count(0, 0, 0, 0)) {
-          result.data_.pop_back();
-        }
-      }
-      if(!result.data_.empty() &&
-         result.data_.back().count.is_45()) {
-        result.is_manhattan_ = false;
+          scale_up_vertex_45_compact_range(lvalue_data.begin(), lvalue_data.end(), 2);
+          scale_up_vertex_45_compact_range(rvalue_data.begin(), rvalue_data.end(), 2);
+          bool result_is_manhattan = applyBoolean45OpOnVectors<Unit2, op>(result_data,
+                                                                          lvalue_data,
+                                                                          rvalue_data );
+          if(!result_is_manhattan) {
+            typename polygon_45_formation<Unit2>::Polygon45Formation pf(false);
+            //std::cout << "FORMING POLYGONS\n";
+            std::vector<polygon_45_with_holes_data<Unit2> > container;
+            pf.scan(container, result_data.begin(), result_data.end());
+            Data2 error_data_out;
+            std::vector<rectangle_data<Unit2> > pos_error_rects;
+            std::vector<rectangle_data<Unit2> > neg_error_rects;
+            for(unsigned int i = 0; i < container.size(); ++i) {
+              get_error_rects(pos_error_rects, neg_error_rects, container[i]);
+            }
+            for(unsigned int i = 0; i < pos_error_rects.size(); ++i) {
+              insert_rectangle_into_vector_45(result_data, pos_error_rects[i], false);
+              insert_rectangle_into_vector_45(error_data_out, pos_error_rects[i], false);
+            }
+            for(unsigned int i = 0; i < neg_error_rects.size(); ++i) {
+              insert_rectangle_into_vector_45(result_data, neg_error_rects[i], true);
+              insert_rectangle_into_vector_45(error_data_out, neg_error_rects[i], false);
+            }
+            scale_down_vertex_45_compact_range_blindly(error_data_out.begin(), error_data_out.end(), 2);
+            for(unsigned int i = 0 ; i < error_data_out.size(); ++i) {
+              const Vertex45Compact2& vi = error_data_out[i];
+              Vertex45Compact ci;
+              ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+              ci.count = typename polygon_45_formation<Unit>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+              result.error_data_.push_back(ci);
+            }
+            Data2 new_result_data;
+            std::sort(result_data.begin(), result_data.end());
+            applyUnary45OpOnVectors<Unit2, 0>(new_result_data, result_data); //OR operation
+            result_data.swap(new_result_data);
+          }
+          scale_down_vertex_45_compact_range_blindly(result_data.begin(), result_data.end(), 2);
+          //result.data_.reserve(result_data.size());
+          for(unsigned int i = 0 ; i < result_data.size(); ++i) {
+            const Vertex45Compact2& vi = result_data[i];
+            Vertex45Compact ci;
+            ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+            ci.count = typename polygon_45_formation<Unit>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+            result.data_.push_back(ci);
+          }
+          result.is_manhattan_ = result_is_manhattan;
+          result.dirty_ = false;
+          result.unsorted_ = false;
+        } else { throw str; }
       }
       //std::cout << "DONE SCANNING\n";
     }
   }
 
-//   template <typename Unit>
-//   inline void polygon_45_set_data<Unit>::applyBoolean_(int op, value_type& rvalue) const {
-//     value_type tmp;
-//     applyBoolean_(tmp, op, rvalue);
-//     data_.swap(tmp); //swapping vectors should be constant time operation
-//     unsorted_ = false;
-//     dirty_ = false;
-//   }
-
-//   template <typename Unit>
-//   inline void polygon_45_set_data<Unit>::applyBoolean_(value_type& result, int op, 
-//                                                        value_type& rvalue) const {
-//     unsigned int originalSize = result.size();
-//     try {
-//       applyBooleanException_(result, op, rvalue);
-//     } catch (std::string str) {
-//       std::string msg = "GTL 45 Boolean error, precision insufficient to represent edge intersection coordinate value.";
-//       if(str == msg) {
-//         result.resize(originalSize);
-//         snap();
-//         std::sort(data_.begin(), data_.end());
-//         for(typename value_type::iterator itr = rvalue.begin();
-//             itr != rvalue.end(); ++itr) {
-//           snap_vertex_45(*itr);
-//         }
-//         std::sort(rvalue.begin(), rvalue.end());
-//         applyBooleanException_(result, op, rvalue);
-//       } else { throw str; }
-//     }
-//   }
-
-//   template <typename Unit>
-//   inline void polygon_45_set_data<Unit>::applyBooleanException_(value_type& result, int op, 
-//                                                                 value_type& rvalue) const {
-//     typename boolean_op_45<Unit>::Scan45 scan45(op);
-//     std::vector<typename boolean_op_45<Unit>::Vertex45> eventOut;
-//     std::vector<typename boolean_op_45<Unit>::Scan45Vertex> eventIn;
-//     typename value_type::const_iterator iter1 = data_.begin();
-//     typename value_type::const_iterator iter2 = rvalue.begin();
-//     typename value_type::const_iterator end1 = data_.end();
-//     typename value_type::const_iterator end2 = rvalue.end();
-//     const Unit UnitMax = std::numeric_limits<Unit>::max();
-//     Unit x = UnitMax;
-//     while(iter1 != end1 || iter2 != end2) {
-//       Unit currentX = UnitMax;
-//       if(iter1 != end1) currentX = iter1->pt.x();
-//       if(iter2 != end2) currentX = std::min(currentX, iter2->pt.x());
-//       if(currentX != x) {
-//         //std::cout << "SCAN " << currentX << "\n";
-//         //scan event
-//         scan45.scan(eventOut, eventIn.begin(), eventIn.end());
-//         std::sort(eventOut.begin(), eventOut.end());
-//         for(unsigned int i = 0; i < eventOut.size(); ++i) {
-//           if(!result.empty() &&
-//              result.back().pt == eventOut[i].pt) {
-//             result.back().count += eventOut[i];
-//           } else {
-//             result.push_back(eventOut[i]);
-//           }
-//           if(result.back().count == (typename polygon_45_formation<Unit>::Vertex45Count(0, 0, 0, 0))) {
-//             result.pop_back();
-//           }
-//         }
-//         eventOut.clear();
-//         eventIn.clear();
-//         x = currentX;
-//       }
-//       //std::cout << "get next\n";
-//       if(iter2 != end2 && (iter1 == end1 || iter2->pt.x() < iter1->pt.x() || 
-//                            (iter2->pt.x() == iter1->pt.x() &&
-//                             iter2->pt.y() < iter1->pt.y()) )) {
-//         //std::cout << "case1 next\n";
-//         eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter2->pt, 
-//                                                                      typename polygon_45_formation<Unit>::
-//                                                                      Scan45Count(typename polygon_45_formation<Unit>::Count2(0, iter2->count[0]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(0, iter2->count[1]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(0, iter2->count[2]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(0, iter2->count[3]))));
-//         ++iter2;
-//       } else if(iter1 != end1 && (iter2 == end2 || iter1->pt.x() < iter2->pt.x() || 
-//                                   (iter1->pt.x() == iter2->pt.x() &&
-//                                    iter1->pt.y() < iter2->pt.y()) )) {
-//         //std::cout << "case2 next\n";
-//         eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter1->pt, 
-//                                                                      typename polygon_45_formation<Unit>::
-//                                                                      Scan45Count(
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[0], 0),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[1], 0),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[2], 0),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[3], 0))));
-//         ++iter1;
-//       } else {
-//         //std::cout << "case3 next\n";
-//         eventIn.push_back(typename boolean_op_45<Unit>::Scan45Vertex(iter2->pt, 
-//                                                                      typename polygon_45_formation<Unit>::
-//                                                                      Scan45Count(typename polygon_45_formation<Unit>::Count2(iter1->count[0], 
-//                                                                                                                              iter2->count[0]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[1], 
-//                                                                                                                              iter2->count[1]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[2], 
-//                                                                                                                              iter2->count[2]),
-//                                                                                  typename polygon_45_formation<Unit>::Count2(iter1->count[3], 
-//                                                                                                                              iter2->count[3]))));
-//         ++iter1;
-//         ++iter2;
-//       }
-//     }
-//     scan45.scan(eventOut, eventIn.begin(), eventIn.end());
-//     std::sort(eventOut.begin(), eventOut.end());
-//     for(unsigned int i = 0; i < eventOut.size(); ++i) {
-//       if(!result.empty() &&
-//          result.back().pt == eventOut[i].pt) {
-//         result.back().count += eventOut[i];
-//       } else {
-//         result.push_back(eventOut[i]);
-//       }
-//       if(result.back().count == typename polygon_45_formation<Unit>::Vertex45Count(0, 0, 0, 0)) {
-//         result.pop_back();
-//       }
-//     }
-//     //std::cout << "DONE SCANNING\n";
-//   }
-
+  template <typename Unit>
+  template <int op>
+  inline void polygon_45_set_data<Unit>::applyAdaptiveUnary_() const {
+    polygon_45_set_data<Unit> result;
+    result.error_data_ = error_data_;
+    if(is_manhattan()) {
+      //convert each into polygon_90_set data and call boolean operations
+      polygon_90_set_data<Unit> l90sd(VERTICAL);
+      for(typename value_type::const_iterator itr = data_.begin(); itr != data_.end(); ++itr) {
+        if((*itr).count[3] == 0) continue; //skip all non vertical edges
+        l90sd.insert(std::make_pair((*itr).pt.x(), std::make_pair((*itr).pt.y(), (*itr).count[3])), false, VERTICAL);
+      }
+      l90sd.sort();
+      if(op == 0) {
+        l90sd.clean();
+      } else if (op == 1) {
+        l90sd.self_intersect();
+      } else if (op == 3) {
+        l90sd.self_xor();
+      }
+      result.data_.clear();
+      result.insert(l90sd);
+      result.is_manhattan_ = true;
+      result.dirty_ = false;
+      result.unsorted_ = false;
+    } else {
+      sort();
+      try {
+        result.is_manhattan_ = applyUnary45OpOnVectors<Unit, op>(result.data_, data_);
+      } catch (std::string str) {
+        std::string msg = "GTL 45 Boolean error, precision insufficient to represent edge intersection coordinate value.";
+        if(str == msg) {
+          result.clear();
+          typedef typename coordinate_traits<Unit>::manhattan_area_type Unit2;
+          typedef typename polygon_45_formation<Unit2>::Vertex45Compact Vertex45Compact2;
+          typedef std::vector<Vertex45Compact2> Data2;
+          Data2 lvalue_data, result_data;
+          lvalue_data.reserve(data_.size());
+          for(unsigned int i = 0 ; i < data_.size(); ++i) {
+            const Vertex45Compact& vi = data_[i];
+            Vertex45Compact2 ci; 
+            ci.pt = point_data<Unit2>(x(vi.pt), y(vi.pt));
+            ci.count = typename polygon_45_formation<Unit2>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+            lvalue_data.push_back(ci);
+          }
+          scale_up_vertex_45_compact_range(lvalue_data.begin(), lvalue_data.end(), 2);
+          bool result_is_manhattan = applyUnary45OpOnVectors<Unit2, op>(result_data,
+                                                                        lvalue_data );
+          if(!result_is_manhattan) {
+            typename polygon_45_formation<Unit2>::Polygon45Formation pf(false);
+            //std::cout << "FORMING POLYGONS\n";
+            std::vector<polygon_45_with_holes_data<Unit2> > container;
+            pf.scan(container, result_data.begin(), result_data.end());
+            Data2 error_data_out;
+            std::vector<rectangle_data<Unit2> > pos_error_rects;
+            std::vector<rectangle_data<Unit2> > neg_error_rects;
+            for(unsigned int i = 0; i < container.size(); ++i) {
+              get_error_rects(pos_error_rects, neg_error_rects, container[i]);
+            }
+            for(unsigned int i = 0; i < pos_error_rects.size(); ++i) {
+              insert_rectangle_into_vector_45(result_data, pos_error_rects[i], false);
+              insert_rectangle_into_vector_45(error_data_out, pos_error_rects[i], false);
+            }
+            for(unsigned int i = 0; i < neg_error_rects.size(); ++i) {
+              insert_rectangle_into_vector_45(result_data, neg_error_rects[i], true);
+              insert_rectangle_into_vector_45(error_data_out, neg_error_rects[i], false);
+            }
+            scale_down_vertex_45_compact_range_blindly(error_data_out.begin(), error_data_out.end(), 2);
+            for(unsigned int i = 0 ; i < error_data_out.size(); ++i) {
+              const Vertex45Compact2& vi = error_data_out[i];
+              Vertex45Compact ci;
+              ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+              ci.count = typename polygon_45_formation<Unit>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+              result.error_data_.push_back(ci);
+            }
+            Data2 new_result_data;
+            std::sort(result_data.begin(), result_data.end());
+            applyUnary45OpOnVectors<Unit2, 0>(new_result_data, result_data); //OR operation
+            result_data.swap(new_result_data);
+          }
+          scale_down_vertex_45_compact_range_blindly(result_data.begin(), result_data.end(), 2);
+          //result.data_.reserve(result_data.size());
+          for(unsigned int i = 0 ; i < result_data.size(); ++i) {
+            const Vertex45Compact2& vi = result_data[i];
+            Vertex45Compact ci;
+            ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+            ci.count = typename polygon_45_formation<Unit>::Vertex45Count
+              ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
+            result.data_.push_back(ci);
+          }
+          result.is_manhattan_ = result_is_manhattan;
+          result.dirty_ = false;
+          result.unsorted_ = false;
+        } else { throw str; }
+      }
+      //std::cout << "DONE SCANNING\n";
+    }
+    data_.swap(result.data_);
+    error_data_.swap(result.error_data_);
+    dirty_ = result.dirty_;
+    unsorted_ = result.unsorted_;
+    is_manhattan_ = result.is_manhattan_;
+  }
 
   template <typename Unit>
   inline std::ostream& operator<< (std::ostream& o, const polygon_45_set_data<Unit>& p) {
@@ -1241,7 +1723,6 @@ namespace gtl {
     //TODO
     return i;
   }
-
 
 }
 #endif

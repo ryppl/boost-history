@@ -553,11 +553,11 @@ namespace gtl {
     public:
       typedef typename std::list<Point>::const_iterator iterator;
 
-      /// default constructor of point does not initialize x and y
+      // default constructor of point does not initialize x and y
       inline poly_line_arbitrary(){;} //do nothing default constructor
 
-      /// initialize a polygon from x,y values, it is assumed that the first is an x
-      /// and that the input is a well behaved polygon
+      // initialize a polygon from x,y values, it is assumed that the first is an x
+      // and that the input is a well behaved polygon
       template<class iT>
       inline poly_line_arbitrary& set(iT inputBegin, iT inputEnd) {
         points.clear();  //just in case there was some old data there
@@ -568,19 +568,19 @@ namespace gtl {
         return *this;
       }
 
-      /// copy constructor (since we have dynamic memory)
+      // copy constructor (since we have dynamic memory)
       inline poly_line_arbitrary(const poly_line_arbitrary& that) : points(that.points) {}
   
-      /// assignment operator (since we have dynamic memory do a deep copy)
+      // assignment operator (since we have dynamic memory do a deep copy)
       inline poly_line_arbitrary& operator=(const poly_line_arbitrary& that) {
         points = that.points;
         return *this;
       }
 
-      /// get begin iterator, returns a pointer to a const Unit
+      // get begin iterator, returns a pointer to a const Unit
       inline iterator begin() const { return points.begin(); }
 
-      /// get end iterator, returns a pointer to a const Unit
+      // get end iterator, returns a pointer to a const Unit
       inline iterator end() const { return points.end(); }
 
       inline std::size_t size() const { return points.size(); }
@@ -1813,7 +1813,7 @@ namespace gtl {
     typedef Point point_type;
     typedef Unit coordinate_type;
     typedef typename active_tail_arbitrary::iterator iterator_type;
-    typedef iterator_points_to_compact<iterator_type, Point> compact_iterator_type;
+    //typedef iterator_points_to_compact<iterator_type, Point> compact_iterator_type;
     
     typedef iterator_type iterator;
     inline poly_line_arbitrary_hole_data() : p_(0) {}
@@ -1821,8 +1821,8 @@ namespace gtl {
     //use default copy and assign
     inline iterator begin() const { return p_->getTail()->begin(); }
     inline iterator end() const { return p_->getTail()->end(); }
-    inline compact_iterator_type begin_compact() const { return compact_iterator_type(begin()); }
-    inline compact_iterator_type end_compact() const { return compact_iterator_type(end()); }
+    //inline compact_iterator_type begin_compact() const { return compact_iterator_type(begin()); }
+    //inline compact_iterator_type end_compact() const { return compact_iterator_type(end()); }
     inline unsigned int size() const { return 0; }
     template<class iT>
     inline poly_line_arbitrary_hole_data& set(iT inputBegin, iT inputEnd) {
@@ -1846,7 +1846,7 @@ namespace gtl {
     typedef Point point_type;
     typedef Unit coordinate_type;
     typedef typename active_tail_arbitrary::iterator iterator_type;
-    typedef iterator_points_to_compact<iterator_type, Point> compact_iterator_type;
+    //typedef iterator_points_to_compact<iterator_type, Point> compact_iterator_type;
     typedef typename coordinate_traits<Unit>::coordinate_distance area_type;
 
     class iterator_holes_type {
@@ -1892,8 +1892,8 @@ namespace gtl {
     //use default copy and assign
     inline iterator_type begin() const { return p_->getTail()->begin(); }
     inline iterator_type end() const { return p_->getTail()->end(); }
-    inline compact_iterator_type begin_compact() const { return p_->getTail()->begin(); }
-    inline compact_iterator_type end_compact() const { return p_->getTail()->end(); }
+    //inline compact_iterator_type begin_compact() const { return p_->getTail()->begin(); }
+    //inline compact_iterator_type end_compact() const { return p_->getTail()->end(); }
     inline iterator_holes_type begin_holes() const { return iterator_holes_type(p_->getHoles().begin()); }
     inline iterator_holes_type end_holes() const { return iterator_holes_type(p_->getHoles().end()); }
     inline active_tail_arbitrary* yield() { return p_; }

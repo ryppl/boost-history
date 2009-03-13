@@ -228,15 +228,24 @@ namespace rectangle_formation {
 
 
 } //namespace rectangle_formation
-  
+
+  template <typename T, typename T2>
+  struct get_coordinate_type_for_rectangles {
+    typedef typename polygon_traits<T>::coordinate_type type;
+  };
+  template <typename T>
+  struct get_coordinate_type_for_rectangles<T, rectangle_concept> {
+    typedef typename rectangle_traits<T>::coordinate_type type;
+  };
+
   template <typename output_container, typename iterator_type, typename rectangle_concept>
-  void get_rectangles(output_container& output, iterator_type begin, iterator_type end,
-                      orientation_2d orient, rectangle_concept tag) {
+  void form_rectangles(output_container& output, iterator_type begin, iterator_type end,
+                       orientation_2d orient, rectangle_concept tag) {
     typedef typename output_container::value_type rectangle_type;
-    typedef typename rectangle_traits<rectangle_type>::coordinate_type Unit;
+    typedef typename get_coordinate_type_for_rectangles<rectangle_type, typename geometry_concept<rectangle_type>::type>::type Unit;
     rectangle_data<Unit> model;
     Unit prevPos = std::numeric_limits<Unit>::max();
-    rectangle_formation::ScanLineToRects<rectangle_type> scanlineToRects(orient, model);
+    rectangle_formation::ScanLineToRects<rectangle_data<Unit> > scanlineToRects(orient, model);
     for(iterator_type itr = begin;
         itr != end; ++ itr) {
       Unit pos = (*itr).first;
