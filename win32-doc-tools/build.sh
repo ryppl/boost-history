@@ -1,6 +1,6 @@
 #!/bin/sh
 
-OUTPUT_NAME=boost-doc-tools
+OUTPUT_NAME=win32-doc-tools-0.1
 FILES=$(pwd)/files
 TMPDIR=$(pwd)/tmp
 DESTDIR=$(pwd)
