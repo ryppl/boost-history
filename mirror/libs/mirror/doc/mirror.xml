@@ -39,6 +39,9 @@
 	already implemented, yet.
 	</para></note>
 
+	<note><para>Mirror is still in development and IS NOT a part of Boost libraries.
+	</para></note>
+
 	<xi:include href="introduction.xml"/>
 	<xi:include href="tutorial.xml"/>
 	<xi:include href="concepts.xml"/>
