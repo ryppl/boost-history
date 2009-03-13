@@ -103,9 +103,18 @@
 						<strong>T</strong><xsl:text>::</xsl:text>
 					</xsl:if>
 					<xsl:if test="$member_kind = 'member_function'">
-						<strong>x</strong><xsl:text>.</xsl:text>
+						<xsl:choose>
+						<xsl:when test="@static='true'">
+							<strong>T</strong><xsl:text>::</xsl:text>
+						</xsl:when>
+						<xsl:otherwise>
+							<strong>x</strong><xsl:text>.</xsl:text>
+						</xsl:otherwise>
+						</xsl:choose>
 					</xsl:if>
-					
+					<xsl:if test="$member_kind = 'member_metafunction'">
+						<strong>T</strong><xsl:text>::</xsl:text>
+					</xsl:if>
 					
 					<xsl:if test="$member_kind = 'free_function' or $member_kind='metafunction'">
 						<xsl:if test="@namespace or @subnamespace">
@@ -114,7 +123,7 @@
 						</xsl:if>
 					</xsl:if>
 					<xsl:value-of select="@name"/>
-					<xsl:if test="$member_kind = 'metafunction' or template_param">
+					<xsl:if test="$member_kind = 'metafunction' or $member_kind = 'member_metafunction' or template_param">
 						<xsl:text>&lt; </xsl:text>
 						<xsl:for-each select="metafn_param | template_param">
 							<xsl:variable name="templ_param_concept" select="@name"/>
@@ -272,6 +281,10 @@
 		</xsl:call-template>
 		<xsl:call-template name="has-member-items">
 			<xsl:with-param name="concept" select="$concept"/>
+			<xsl:with-param name="member_kind" select="'member_metafunction'"/>
+		</xsl:call-template>
+		<xsl:call-template name="has-member-items">
+			<xsl:with-param name="concept" select="$concept"/>
 			<xsl:with-param name="member_kind" select="'metafunction'"/>
 		</xsl:call-template>
 	</xsl:template>
@@ -317,6 +330,17 @@
                         <xsl:with-param name="member_kind" select="'free_function'"/>
                         <xsl:with-param name="caption" select="'Free functions'"/>
                         <xsl:with-param name="concept_column_heading" select="'Return value concept'"/>
+                </xsl:call-template>
+	</xsl:template>
+
+	<!-- makes the member metafunction table -->
+	<xsl:template name="make-mem-meta-fn-table">
+		<xsl:param name="concept"/>
+                <xsl:call-template name="make-member-item-table">
+                        <xsl:with-param name="concept" select="$concept"/>
+                        <xsl:with-param name="member_kind" select="'member_metafunction'"/>
+                        <xsl:with-param name="caption" select="'Member metafunctions'"/>
+                        <xsl:with-param name="concept_column_heading" select="'Result concept'"/>
                 </xsl:call-template>
 	</xsl:template>
 
@@ -384,6 +408,9 @@
 			<xsl:with-param name="concept" select="$concept"/>
 		</xsl:call-template>
 		<xsl:call-template name="make-free-fn-table">
+			<xsl:with-param name="concept" select="$concept"/>
+		</xsl:call-template>
+		<xsl:call-template name="make-mem-meta-fn-table">
 			<xsl:with-param name="concept" select="$concept"/>
 		</xsl:call-template>
 		<xsl:call-template name="make-meta-fn-table">

@@ -289,10 +289,10 @@
 	</concept>
 
 	<concept name="MetaNamedObject">
-		<member_function concept="String" name="base_name">
+		<member_function static="true" concept="String" name="base_name">
 			<desc>Returns the base name of the reflected entity, <em>without</em> the nested name specifier.</desc>
 		</member_function>
-		<member_function concept="String" name="get_name">
+		<member_function static="true" concept="String" name="get_name">
 			<desc>Generic name getter. Returns the base name of the type and allows to select the character type of the returned string, via the type of the char_traits parameter.</desc>
 			<fn_param concept="FalseType" name="full_name"/>
 			<fn_param concept="CharTraits" name="char_traits"/>
@@ -306,11 +306,11 @@
 	</concept>
 	
 	<concept name="MetaNamedScopedObject">
-		<member_function name="full_name" concept="String" >
+		<member_function static="true" name="full_name" concept="String" >
 			<desc>Returns the full name of the reflected entity, <em>with</em> the nested name specifier.</desc>
 		</member_function>
 
-		<member_function concept="String" name="get_name" >
+		<member_function static="true" concept="String" name="get_name" >
 			<desc>Generic name getter. Returns the base or the full name of the type based on the type of the full_name parameter and allows to select the character type of the returned string, (from the supported options) via the type of the char_traits parameter.</desc>
 			<fn_param concept="TrueOrFalseType" name="full_name"/>
 			<fn_param concept="CharTraits" name="char_traits"/>
@@ -384,6 +384,11 @@
 		<member_typedef concept="MplSequence" name="ancestors">
 			<desc>An mpl::Sequence containing the MetaNamespaces for all the namespaces in which the reflected namespace is directly or indirectly nested.</desc>
 		</member_typedef>
+                <member_metafunction concept="MetaObjectSequence" name="members">
+                        <metafn_param name="UnaryPredicate">
+                        </metafn_param>
+                        <desc>Returns a MetaObjectSequence containing the MetaObjects reflecting the members of the namespace which satisfy the UnaryPredicate.</desc>
+                </member_metafunction>
 	</concept>
 
 	<!-- MetaNamespace is MetaNamedScopedObject -->
@@ -587,16 +592,16 @@
 			<desc>Additional properties of the attribute.</desc>
 		</member_typedef>
 
-		<member_function concept="Type" name="get">
+		<member_function static="true" concept="Type" name="get">
 			<desc>Generic attribute value getter. Returns the value of the reflected class attribute when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
 		</member_function>
-		<member_function concept="TypeReference" name="query">
+		<member_function static="true" concept="TypeReference" name="query">
 			<desc>Generic attribute value query. Stores the value of the reflected class attribute into the instance referred to by dest_ref, when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
 			<fn_param concept="TypeReference" name="dest_ref"/>
 		</member_function>
-		<member_function concept="TypeReference" name="set">
+		<member_function static="true" concept="TypeReference" name="set">
 			<desc>Generic attribute value setter. Assigns the new_value to the reflected class attribute, when given an instance of the class that the attribute belongs to.</desc>
 			<fn_param concept="Class" name="instance"/>
 			<fn_param concept="Type" name="new_value"/>
