@@ -56,7 +56,7 @@ public:
 					fibonacci_fn,
 					10),
 			0) );
-		BOOST_CHECK_EQUAL( t.result().get(), 55);
+		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
 	// check shutdown
@@ -73,7 +73,7 @@ public:
 				0) );
 		pool.shutdown();
 		BOOST_CHECK( pool.terminated() );
-		BOOST_CHECK_EQUAL( t.result().get(), 55);
+		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
 	// check runtime_error throw inside task
@@ -90,7 +90,7 @@ public:
 		pool.shutdown();
 		bool thrown( false);
 		try
-		{ t.result().get(); }
+		{ t.get(); }
 		catch ( std::runtime_error const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
@@ -146,7 +146,7 @@ public:
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
 		bool thrown( false);
 		try
-		{ t.result().get(); }
+		{ t.get(); }
 		catch ( boost::thread_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
@@ -180,9 +180,9 @@ public:
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 2) );
 		b.wait();
-		BOOST_CHECK_EQUAL( t1.result().get(), 55);
-		BOOST_CHECK_EQUAL( t2.result().get(), 55);
-		BOOST_CHECK_EQUAL( t3.result().get(), 55);
+		BOOST_CHECK_EQUAL( t1.get(), 55);
+		BOOST_CHECK_EQUAL( t2.get(), 55);
+		BOOST_CHECK_EQUAL( t3.get(), 55);
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 0) );
 	}
 
@@ -263,7 +263,7 @@ public:
 		BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 1) );
 		bool thrown( false);
 		try
-		{ t.result().get(); }
+		{ t.get(); }
 		catch ( boost::thread_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);

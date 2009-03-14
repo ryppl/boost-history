@@ -40,7 +40,7 @@ int main( int argc, char *argv[])
 				boost::bind(
 					fibonacci_fn,
 					10) ) );
-		std::cout << t.result().get() << std::endl;
+		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

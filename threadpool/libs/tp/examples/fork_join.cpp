@@ -44,7 +44,7 @@ private:
 						& fibo::par_,
 						boost::ref( * this),
 						n - 2) ) );
-			return t1.result().get() + t2.result().get();
+			return t1.get() + t2.get();
 		}
 	}
 
@@ -85,7 +85,7 @@ int main( int argc, char *argv[])
 			std::vector< tp::task< int > >::iterator i( results.begin() );
 			i != e;
 			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
+			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
 
 		pt::ptime stop( pt::microsec_clock::universal_time() );
 		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;
