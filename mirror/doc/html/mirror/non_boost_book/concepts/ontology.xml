@@ -606,6 +606,17 @@
 			<fn_param concept="Class" name="instance"/>
 			<fn_param concept="Type" name="new_value"/>
 		</member_function>
+		<member_function static="true" concept="Type*" name="address">
+			<desc>Returns the pointer to the member, reflected by this MetaClassAttribute, in the given instance. Returns null_ptr if the address of the member is not available.</desc>
+			<fn_param concept="Class" name="instance"/>
+		</member_function>
+		<member_function static="true" concept="ptrdiff_t" name="offset">
+			<desc>Returns the offset of the member, reflected by this MetaClassAttribute. Returns (ptrdiff_t)-1 if the offset of the member cannot be calculated.</desc>
+			<fn_param concept="Class" name="instance"/>
+		</member_function>
+		<member_function static="true" concept="ptrdiff_t" name="offset_of">
+			<desc>Returns the offset of the member, reflected by this MetaClassAttribute. This version does not require an instance as an argument, but works only with POD types. Returns (ptrdiff_t)-1 if the offset of the member cannot be calculated.</desc>
+		</member_function>
 	</concept>
 
 	<!-- MetaClassAttribute is MetaClassMember -->
