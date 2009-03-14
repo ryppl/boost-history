@@ -87,6 +87,12 @@
 		the structure of the class and optionally provided with contextual 
 		information about the current position in the traversal.
 	</listitem>
+	<listitem>
+		Reflection of class' constructors.
+	</listitem>
+	<listitem>
+		Facility for generating customizable object factories with a uniform interface.
+	</listitem>
 </itemizedlist>
 
 <para>
@@ -95,10 +101,7 @@
 
 <itemizedlist>
 	<listitem>
-		Reflection of class' member functions and constructors.
-	</listitem>
-	<listitem>
-		Facility for generating customizable object factories with a uniform interface.
+		Reflection of class' member functions.
 	</listitem>
 	<listitem>
 		Facility for generating customizable class method dispatchers, allowing
@@ -201,8 +204,22 @@
 <section id="mirror.motivation.problem.uniformmemattaccess">
 	<title>Problem - Uniform access to member attributes of a class' instance</title>
 
+</section>
+
+<section id="mirror.motivation.problem.factory">
+	<title>Problem - Generating class factories</title>
 
 </section>
+
+<section id="mirror.motivation.problem.nsmemiteration">
+	<title>Problem - Namespace member enumeration</title>
+
+</section>
+<section id="mirror.motivation.problem.traversals">
+	<title>Problem - Namespace members and class structure traversals</title>
+
+</section>
+
 
 </section>
 

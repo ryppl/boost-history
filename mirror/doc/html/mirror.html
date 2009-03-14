@@ -63,7 +63,7 @@
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.intrinsic">Intrinsic Metafunctions</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.algorithms">Algorithms</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.traversals">Traversals</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#id2601491">Header files</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id2601530">Header files</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="mirror/examples.html">Examples</a></span></dt>
 <dd><dl>
@@ -178,16 +178,19 @@
 		the structure of the class and optionally provided with contextual 
 		information about the current position in the traversal.
 	</li>
+<li>
+		Reflection of class' constructors.
+	</li>
+<li>
+		Facility for generating customizable object factories with a uniform interface.
+	</li>
 </ul></div>
 <p>
 	Most important <span class="bold"><strong>planned</strong></span> features include:
 </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
-		Reflection of class' member functions and constructors.
-	</li>
-<li>
-		Facility for generating customizable object factories with a uniform interface.
+		Reflection of class' member functions.
 	</li>
 <li>
 		Facility for generating customizable class method dispatchers, allowing
@@ -203,6 +206,9 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="mirror.html#mirror.motivation.problem.typenames">Problem - Querying typenames</a></span></dt>
 <dt><span class="section"><a href="mirror.html#mirror.motivation.problem.uniformmemattaccess">Problem - Uniform access to member attributes of a class' instance</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation.problem.factory">Problem - Generating class factories</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation.problem.nsmemiteration">Problem - Namespace member enumeration</a></span></dt>
+<dt><span class="section"><a href="mirror.html#mirror.motivation.problem.traversals">Problem - Namespace members and class structure traversals</a></span></dt>
 </dl></div>
 <p>
 	Here are described some of the recurring situations where the facilities 
@@ -355,6 +361,12 @@ const char* get_typename(void)
 </div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
 <a name="mirror.motivation.problem.uniformmemattaccess"></a>Problem - Uniform access to member attributes of a class' instance</h4></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.factory"></a>Problem - Generating class factories</h4></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.nsmemiteration"></a>Problem - Namespace member enumeration</h4></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.traversals"></a>Problem - Namespace members and class structure traversals</h4></div></div></div></div>
 </div>
 </div>
 </div>
