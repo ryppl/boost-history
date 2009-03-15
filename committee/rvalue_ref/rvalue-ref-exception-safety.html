@@ -329,7 +329,15 @@ are not statically checked is a <a
 confusion</a>, especially for programmers who have used the similar
 (statically-checked) facilities in Java. Moreover, exception
 specifications have a poorly-defined role in the C++ type system,
-because they can only be used in very limited ways.
+because they can only be used in very limited ways.</p>
+
+<p>Functions cannot be overloaded based on <code>noexcept</code>
+alone. For example, the following code is ill-formed:</p>
+
+<pre>
+noexcept void f() { } // #1
+void f() { } // #2: redefinition of #1
+</pre>
 
 <h3 id"noexcept-concepts"><code>noexcept</code> in concepts</h3>
 
@@ -372,5 +380,5 @@ NOTE: The move constructor generated for closure types will need to be fixed, to
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 15 12:30:02 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 15 12:36:01 PDT 2009 <!-- hhmts end -->
 </body> </html>
