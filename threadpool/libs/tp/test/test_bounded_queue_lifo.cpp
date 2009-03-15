@@ -18,13 +18,7 @@
 #include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/tp/bounded_channel.hpp>
-#include <boost/tp/exceptions.hpp>
-#include <boost/tp/lifo.hpp>
-#include <boost/tp/pool.hpp>
-#include <boost/tp/poolsize.hpp>
-#include <boost/tp/task.hpp>
-#include <boost/tp/watermark.hpp>
+#include <boost/tp.hpp>
 
 #include "test_functions.hpp"
 

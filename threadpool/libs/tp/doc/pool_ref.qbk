@@ -67,6 +67,9 @@
     };
 
 	pool< unbounded_channel< fifo > > & get_default_pool();
+	
+	template< typename Act >
+	task< R > launch_in_pool( Act const& act);
 
 [section:constructor_unbounded_channel_hw Constructor (unbounded channel)]
 
@@ -342,6 +345,19 @@
 
 [variablelist
 [[Effects:] [Get access to default thread pool (static).]]
+]
+[endsect]
+
+
+[section:launch_in_pool Non-member function `launch_in_pool( Act const& act)`]
+
+	template< typename Act >
+	task< R > launch_in_pool( Act const& act);
+
+[variablelist
+[[Preconditions:] [has_priority< pool >::value == false && ! ( pool.terminating() || pool.terminated() )]]
+[[Effects:] [Submits an __action__ to the default pool and returns a __task__ object.]]
+[[Throws:] [`boost::tp::task_rejected`]]
 ]
 [endsect]
 

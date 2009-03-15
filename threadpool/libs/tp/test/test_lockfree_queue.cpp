@@ -18,25 +18,27 @@
 #include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/tp.hpp>
+#include <boost/tp/lockfree_channel.hpp>
+#include <boost/tp/exceptions.hpp>
+#include <boost/tp/fifo.hpp>
+#include <boost/tp/pool.hpp>
+#include <boost/tp/poolsize.hpp>
+#include <boost/tp/task.hpp>
 
 #include "test_functions.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-class fixed_bounded_channel_fifo
+class fixed_unbounded_channel_fifo
 {
 public:
 	// check size, active, idle
 	void test_case_1()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 3),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 3) );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
@@ -46,11 +48,8 @@ public:
 	void test_case_2()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 1) );
 		tp::task< int > t(
 			pool.submit(
 				boost::bind(
@@ -63,11 +62,8 @@ public:
 	void test_case_3()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 1) );
 		tp::task< int > t(
 			pool.submit(
 				boost::bind(
@@ -82,11 +78,8 @@ public:
 	void test_case_4()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 1) );
 		tp::task< void > t(
 			pool.submit(
 				boost::bind(
@@ -104,11 +97,8 @@ public:
 	void test_case_5()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 1) );
 		pool.shutdown();
 		BOOST_CHECK( pool.terminated() );
 		bool thrown( false);
@@ -128,11 +118,8 @@ public:
 	void test_case_6()
 	{
 		tp::pool<
-			tp::bounded_channel< tp::fifo >
-		> pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 1),
-			tp::low_watermark( 1) );
+			tp::lockfree_channel
+		> pool( tp::poolsize( 1) );
 		boost::function< int() > fn(
 			boost::bind(
 				fibonacci_fn,
@@ -162,12 +149,9 @@ public:
 	void test_case_7()
 	{
 		typedef tp::pool<
-			tp::bounded_channel< tp::fifo >
+			tp::lockfree_channel
 		> pool_type;
-		pool_type pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+		pool_type pool( tp::poolsize( 1) );
 		boost::barrier b( 2);
 		boost::function< int() > fn(
 			boost::bind(
@@ -198,12 +182,9 @@ public:
 	void test_case_8()
 	{
 		typedef tp::pool<
-			tp::bounded_channel< tp::fifo >
+			tp::lockfree_channel
 		> pool_type;
-		pool_type pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+		pool_type pool( tp::poolsize( 1) );
 		boost::barrier b( 2);
 		boost::function< int() > fn(
 			boost::bind(
@@ -232,16 +213,13 @@ public:
 		BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 2) );
 	}
 
-	// check cancelation
+	// check interruptation
 	void test_case_9()
 	{
 		typedef tp::pool<
-			tp::bounded_channel< tp::fifo >
+			tp::lockfree_channel
 		> pool_type;
-		pool_type pool(
-			tp::poolsize( 1),
-			tp::high_watermark( 10),
-			tp::low_watermark( 10) );
+		pool_type pool( tp::poolsize( 1) );
 		boost::barrier b( 2);
 		boost::function< int() > fn(
 			boost::bind(
@@ -280,19 +258,18 @@ public:
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: fixed bounded_channel< fifo > pool test suite") );
+	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: fixed unbounded_channel< fifo > pool test suite") );
 
-	boost::shared_ptr< fixed_bounded_channel_fifo > instance( new fixed_bounded_channel_fifo() );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_1, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_2, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_3, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_4, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_5, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_6, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_7, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_8, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & fixed_bounded_channel_fifo::test_case_9, instance) );
+	boost::shared_ptr< fixed_unbounded_channel_fifo > instance( new fixed_unbounded_channel_fifo() );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_1, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_2, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_3, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_4, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_5, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_6, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_7, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_8, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & fixed_unbounded_channel_fifo::test_case_9, instance) );
 
 	return test;
 }
-

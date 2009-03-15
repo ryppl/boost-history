@@ -2,14 +2,17 @@
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TP_H
-#define BOOST_TP_H
+#ifndef BOOST_TP_TP_H
+#define BOOST_TP_TP_H
 
 #include <boost/tp/bounded_channel.hpp>
 #include <boost/tp/exceptions.hpp>
+#include <boost/tp/default_pool.hpp>
 #include <boost/tp/fifo.hpp>
 #include <boost/tp/info.hpp>
 #include <boost/tp/lifo.hpp>
+#include <boost/tp/launch.hpp>
+#include <boost/tp/lockfree_channel.hpp>
 #include <boost/tp/pool.hpp>
 #include <boost/tp/poolsize.hpp>
 #include <boost/tp/priority.hpp>
@@ -19,5 +22,5 @@
 #include <boost/tp/unbounded_channel.hpp>
 #include <boost/tp/watermark.hpp>
 
-#endif // BOOST_TP_H
+#endif // BOOST_TP_TP_H
 

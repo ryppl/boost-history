@@ -92,6 +92,8 @@ The free function `boost::tp::get_default_pool()` returns a reference to the def
 of type `boost::tp::pool< boost::tp::unbounded_channel< boost::tp::fifo > >` and will contain as many __worker_threads__ as 
 `boost::thread::hardware_concurrency()` returns. 
 
+[heading Launch in pool]
+The free function `boost::tp::launch_in_pool( Act const& act)` submits the __action__ to the default pool and returns a task object.
 
 [heading Meta functions]
 If the __threadpool__ supports priorities `boost::tp::has_priority< pool_type >` evaluates to `true`. The priority type is determined by `boost::tp::priority_type< pool_type >`.

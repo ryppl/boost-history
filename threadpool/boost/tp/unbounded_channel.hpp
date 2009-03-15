@@ -112,6 +112,8 @@ private:
 		item const& itm,
 		unique_lock< shared_mutex > & lk)
 	{
+		if ( ! active_() )
+			throw task_rejected("channel is not active");
 		queue_.push( itm);
 		not_empty_cond_.notify_one();
 	}

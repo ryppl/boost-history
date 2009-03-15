@@ -16,8 +16,8 @@ template< typename R >
 class task
 {
 private:
-	jss::shared_future< R >	fut_;
-	detail::interrupter		intr_;
+	shared_future< R >	fut_;
+	detail::interrupter	intr_;
 
 public:
 	task()
@@ -25,7 +25,7 @@ public:
 	{}
 
 	task(
-		jss::shared_future< R > const& fut,
+		shared_future< R > const& fut,
 		detail::interrupter const& intr)
 	:
 	fut_( fut),
@@ -75,8 +75,8 @@ template<>
 class task< void >
 {
 private:
-	jss::shared_future< void >	fut_;
-	detail::interrupter			intr_;
+	shared_future< void >	fut_;
+	detail::interrupter		intr_;
 
 public:
 	task()
@@ -84,7 +84,7 @@ public:
 	{}
 
 	task(
-		jss::shared_future< void > const& fut,
+		shared_future< void > const& fut,
 		detail::interrupter const& intr)
 	:
 	fut_( fut),
