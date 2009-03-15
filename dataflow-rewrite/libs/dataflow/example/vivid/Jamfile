@@ -7,5 +7,24 @@
 #----------------------------------------------===============================*/
 
 
-exe vivid_graph_example : vivid_graph_example.cpp /boost_guigl//boost_guigl/<link>static ;
-exe vivid_managed_example : vivid_managed_example.cpp /boost_guigl//boost_guigl/<link>static ;
+exe vivid_graph_example
+    :
+        vivid_graph_example.cpp
+        /boost_guigl//boost_guigl/<use-window-manager>platform_glut
+    ;
+    
+exe vivid_managed_example
+    :
+        vivid_managed_example.cpp
+        /boost_guigl//boost_guigl/<use-window-manager>platform_glut
+        ../../build/managed//dataflow_managed
+    ;
+    
+install $(TOP)/bin.v2/examples
+    :
+        vivid_graph_example
+        vivid_managed_example
+    :
+        <install-dependencies>on <install-type>EXE <install-type>LIB
+    ;
+

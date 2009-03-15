@@ -20,8 +20,9 @@ BOOST_AUTO_TEST_CASE( test )
 {
     df::vivid::factory_window<my_blueprint_framework> window;
     
+    typedef df::blueprint::factory<my_blueprint_framework> factory_type;
     df::blueprint::factory<my_blueprint_framework> factory;
-    factory.add_port<my_port_producer>("my_port_producer");
+    factory.add<factory_type::port_adapter_selector, my_port_producer>("my_port_producer");
 
     window.set_factory(factory);
 }

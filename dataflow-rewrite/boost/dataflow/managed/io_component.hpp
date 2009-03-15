@@ -115,9 +115,19 @@ public:
     {
         fusion::for_each(m_ports, detail::set_port_context(*this)); 
     }
+
     template<int Index>
     typename fusion::result_of::at_c<ports_type, Index>::type port()
     {   return fusion::at_c<Index>(m_ports); }
+
+    template<int Index>
+    const typename fusion::result_of::value_at_c<ports_type, Index>::type::value_type &get()
+    {   return fusion::at_c<Index>(m_ports).get(); }
+
+    template<int Index>
+    void set(const typename fusion::result_of::value_at_c<ports_type, Index>::type::value_type &value)
+    {   fusion::at_c<Index>(m_ports).set(value); }
+
     ports_type &ports()
     {   return m_ports; }
 protected:

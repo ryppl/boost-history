@@ -23,6 +23,9 @@ BOOST_AUTO_TEST_CASE( test )
 
     BOOST_CHECK_EQUAL(&at_c<0>(df::entities(c)), &c.port<0>());
     BOOST_CHECK_EQUAL(&at_c<1>(df::entities(c)), &c.port<1>());
+    
+    c.set<1>(true);
+    c.get<1>();
 } // int test_main(int, char* [])
 
 

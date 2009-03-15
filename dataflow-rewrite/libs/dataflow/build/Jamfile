@@ -12,10 +12,11 @@ project boost/dataflow/build ;
 
 make port_binary_operation.hpp : specializable_operation.hpp.py : @in2out ;
 make entities.hpp : specializable_operation.hpp.py : @entities ;
+make set_context.hpp : specializable_operation.hpp.py : @set_context ;
 
 actions in2out
 {
-    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="port_binary_operation" CHECK="are_port_binary_operable" TEMPLATES="Operation" EXTRA_ARGS="Operation" ARITY=2 HAS_TRAITS="is_port" INCLUDES="<boost/dataflow/generic/port/port.hpp>"
+    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="port_binary_operation" CHECK="are_port_binary_operable" TEMPLATES="Operation" EXTRA_ARGS="const Operation" ARITY=2 HAS_TRAITS="is_port" INCLUDES="<boost/dataflow/generic/port/port.hpp>"
 }
 
 actions entities
@@ -23,6 +24,11 @@ actions entities
     python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="entities" CHECK="has_entities" ARITY=1 HAS_TRAITS="is_framework_entity" INCLUDES="<boost/dataflow/generic/framework_entity.hpp>"
 }
 
+actions set_context
+{
+    python $(TOP)/libs/dataflow/build/file_template.py template=$(>) erase="y" into=$(<) NAME="set_context" CHECK="has_set_context" INNER_TEMPLATES="Context" EXTRA_ARGS="Context" ARITY=1 HAS_TRAITS="is_framework_entity" INCLUDES="<boost/dataflow/generic/framework_entity.hpp>"
+}
+
 install port_binary_operation_result : port_binary_operation.hpp : <location>$(TOP)/boost/dataflow/generic ;
-install get_port_result : get_port.hpp : <location>$(TOP)/boost/dataflow/generic/static_vector ;
 install entities_result : entities.hpp : <location>$(TOP)/boost/dataflow/generic ;
+install set_context_result : set_context.hpp : <location>$(TOP)/boost/dataflow/generic ;

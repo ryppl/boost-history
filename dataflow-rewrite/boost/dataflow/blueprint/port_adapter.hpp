@@ -22,16 +22,19 @@ class port_adapter : public framework_entity_adapter<BlueprintFramework, PortOrR
     typedef framework_entity_adapter<BlueprintFramework, PortOrRef, Base> base_type;
 public:
     port_adapter(blueprint::framework_context<BlueprintFramework> &fo)
-        : base_type(fo)        
-    {}
+        : base_type(fo)
+    {   initialize(); }
     template<typename T>
     port_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
         : base_type(fo, t)
-    {}
+    {   initialize(); }
     template<typename T>
     port_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
         : base_type(fo, t)
-    {}
+    {   initialize(); }
+private:
+    void initialize()
+    {   base_type::set_category_type_info(typeid(typename traits_of<typename base_type::entity_type>::type::category)); }
 };
 
 } } } // namespace boost::dataflow::blueprint

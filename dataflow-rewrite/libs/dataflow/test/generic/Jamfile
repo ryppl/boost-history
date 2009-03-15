@@ -22,3 +22,5 @@ run test_operation.cpp ;
 run test_static_vector.cpp ;
 run test_dynamic_vector.cpp ;
 run test_entities.cpp ;
+
+run test_set_context.cpp ;

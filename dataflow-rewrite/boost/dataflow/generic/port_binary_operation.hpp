@@ -31,7 +31,7 @@ namespace extension
         typedef detail::not_specialized result_type;
 
         template<typename T1,typename T2>
-        result_type operator()(T1 &t1,T2 &t2,const Operation &operation)
+        result_type operator()(T1 &t1,T2 &t2,const Operation & operation)
         {
             // Error: port_binary_operation_impl has not been
             // specialized appropriately.
@@ -48,7 +48,7 @@ namespace extension
         typedef bool result_type;
 
         template<typename T1,typename T2>
-        result_type operator()(T1 &t1,T2 &t2,const Operation &operation)
+        result_type operator()(T1 &t1,T2 &t2,const Operation & operation)
         {
             return
                 !is_same<
@@ -113,7 +113,7 @@ namespace result_of {
             extension::port_binary_operation_impl<
                 typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
             >
-            (T1,T2,Operation)
+            (T1,T2,const Operation)
         >::type type;
     };
     
@@ -124,7 +124,7 @@ template<typename Operation,typename Framework1,typename Framework2,typename T1,
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,Framework1,Framework2
     >::type 
-port_binary_operation_framework(T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_framework(T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -135,7 +135,7 @@ template<typename Operation,typename T1,typename T2>
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,typename default_framework_of<T1>::type,typename default_framework_of<T2>::type
     >::type 
-port_binary_operation(T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation(T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -146,7 +146,7 @@ typedef typename default_framework_of<T2>::type Framework2;
 
 template<typename Operation,typename Framework1,typename Framework2,typename T1,typename T2>
 inline bool
-port_binary_operation_will_succeed_framework(T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed_framework(T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_will_succeed_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -155,7 +155,7 @@ port_binary_operation_will_succeed_framework(T1 &t1,T2 &t2,const Operation &oper
 
 template<typename Operation,typename T1,typename T2>
 inline bool 
-port_binary_operation_will_succeed(T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed(T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -168,7 +168,7 @@ template<typename Operation,typename Framework1,typename Framework2,typename T1,
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,Framework1,Framework2
     >::type 
-port_binary_operation_framework(const T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_framework(const T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -179,7 +179,7 @@ template<typename Operation,typename T1,typename T2>
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,typename default_framework_of<T1>::type,typename default_framework_of<T2>::type
     >::type 
-port_binary_operation(const T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation(const T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -190,7 +190,7 @@ typedef typename default_framework_of<T2>::type Framework2;
 
 template<typename Operation,typename Framework1,typename Framework2,typename T1,typename T2>
 inline bool
-port_binary_operation_will_succeed_framework(const T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed_framework(const T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_will_succeed_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -199,7 +199,7 @@ port_binary_operation_will_succeed_framework(const T1 &t1,T2 &t2,const Operation
 
 template<typename Operation,typename T1,typename T2>
 inline bool 
-port_binary_operation_will_succeed(const T1 &t1,T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed(const T1 &t1,T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -212,7 +212,7 @@ template<typename Operation,typename Framework1,typename Framework2,typename T1,
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,Framework1,Framework2
     >::type 
-port_binary_operation_framework(T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_framework(T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -223,7 +223,7 @@ template<typename Operation,typename T1,typename T2>
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,typename default_framework_of<T1>::type,typename default_framework_of<T2>::type
     >::type 
-port_binary_operation(T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation(T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -234,7 +234,7 @@ typedef typename default_framework_of<T2>::type Framework2;
 
 template<typename Operation,typename Framework1,typename Framework2,typename T1,typename T2>
 inline bool
-port_binary_operation_will_succeed_framework(T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed_framework(T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_will_succeed_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -243,7 +243,7 @@ port_binary_operation_will_succeed_framework(T1 &t1,const T2 &t2,const Operation
 
 template<typename Operation,typename T1,typename T2>
 inline bool 
-port_binary_operation_will_succeed(T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed(T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -256,7 +256,7 @@ template<typename Operation,typename Framework1,typename Framework2,typename T1,
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,Framework1,Framework2
     >::type 
-port_binary_operation_framework(const T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_framework(const T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -267,7 +267,7 @@ template<typename Operation,typename T1,typename T2>
 inline typename result_of::port_binary_operation<
     T1,T2,Operation,typename default_framework_of<T1>::type,typename default_framework_of<T2>::type
     >::type 
-port_binary_operation(const T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation(const T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;
@@ -278,7 +278,7 @@ typedef typename default_framework_of<T2>::type Framework2;
 
 template<typename Operation,typename Framework1,typename Framework2,typename T1,typename T2>
 inline bool
-port_binary_operation_will_succeed_framework(const T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed_framework(const T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     return extension::port_binary_operation_will_succeed_impl<
         typename traits_of<T1, Framework1>::type,typename traits_of<T2, Framework2>::type,Operation
@@ -287,7 +287,7 @@ port_binary_operation_will_succeed_framework(const T1 &t1,const T2 &t2,const Ope
 
 template<typename Operation,typename T1,typename T2>
 inline bool 
-port_binary_operation_will_succeed(const T1 &t1,const T2 &t2,const Operation &operation=Operation())
+port_binary_operation_will_succeed(const T1 &t1,const T2 &t2,const Operation & operation=Operation())
 {
     typedef typename default_framework_of<T1>::type Framework1;
 typedef typename default_framework_of<T2>::type Framework2;

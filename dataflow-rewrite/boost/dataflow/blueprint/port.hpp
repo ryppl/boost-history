@@ -27,6 +27,13 @@ public:
     {
         typedef ports::producer_consumer category;
     };
+    const std::type_info &category_type_info() const
+    {   return *m_category_type_info; }
+protected:
+    void set_category_type_info(const std::type_info &ti)
+    {   m_category_type_info = &ti; }
+private:
+    const std::type_info *m_category_type_info;
 };
 
 } } } // namespace boost::dataflow::blueprint

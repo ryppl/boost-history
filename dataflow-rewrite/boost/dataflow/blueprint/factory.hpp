@@ -11,6 +11,7 @@
 
 
 #include <boost/dataflow/blueprint/port_adapter.hpp>
+#include <boost/dataflow/blueprint/static_vector_adapter.hpp>
 #include <boost/dataflow/utility/containing_ptr.hpp>
 
 #include <boost/bind.hpp>
@@ -89,15 +90,35 @@ public:
     function_type operator[](const std::string& k)
     {   return m_components[k]; }
 
-    template<typename T>
-    void add_port(const std::string &s)
+    struct port_adapter_selector
     {
-        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, utility::containing_ptr<T> > *>(), _1);
+        template<typename T>
+        struct apply
+        {
+            typedef port_adapter<BlueprintFramework, utility::containing_ptr<T> > type;
+        };
+    };
+
+    struct static_vector_adapter_selector
+    {
+        template<typename T>
+        struct apply
+        {
+            typedef static_vector_adapter<BlueprintFramework, utility::containing_ptr<T> > type;
+        };
+    };
+
+    template<typename AdapterSelector, typename T>
+    void add(const std::string &s)
+    {
+        typedef typename AdapterSelector::template apply<T>::type adapter_type;
+        m_components[s] = boost::bind(boost::factory<adapter_type *>(), _1);
     }
-    template<typename T, typename T0>
-    void add_port(const std::string &s, const T0 &t0)
+    template<typename AdapterSelector, typename T, typename T0>
+    void add(const std::string &s, const T0 &t0)
     {
-        m_components[s] = boost::bind(boost::factory<port_adapter<BlueprintFramework, utility::containing_ptr<T> > *>(), _1, t0);
+        typedef typename AdapterSelector::template apply<T>::type adapter_type;
+        m_components[s] = boost::bind(boost::factory<adapter_type *>(), _1, t0);
     }
     void add_entity(const std::string &s, const function_type &f)
     {

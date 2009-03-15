@@ -12,6 +12,7 @@
 
 #include <boost/dataflow/generic/framework.hpp>
 
+namespace df=boost::dataflow;
 
 struct my_object
 {};

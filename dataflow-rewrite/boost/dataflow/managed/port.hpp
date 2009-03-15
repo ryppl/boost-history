@@ -37,6 +37,8 @@ class port;
 template<typename T>
 void connect(port<T, ports::producer> &producer, port<T, ports::consumer> &consumer)
 {
+    BOOST_ASSERT(&producer.component_context().network_context());
+    BOOST_ASSERT(&producer.component_context().network_context() == &consumer.component_context().network_context());
     if(consumer.connected())
         disconnect(consumer.connected_producer(), consumer);
     producer.m_consumers.insert(&consumer);
@@ -60,6 +62,7 @@ template<typename T>
 class port<T, ports::producer> : public port_base
 {
 public:
+    typedef T value_type;
     typedef producer_port_traits<T> dataflow_traits;
     
     port(component &component_context) : port_base(component_context), m_value()
@@ -74,7 +77,7 @@ public:
     T &get()
     {   return m_value; }
 private:
-    T m_value;
+    value_type m_value;
     typedef std::set<port<T, ports::consumer> *> consumers_type;
     consumers_type m_consumers;
 
@@ -91,7 +94,9 @@ template<typename T>
 class port<T, ports::consumer> : public port_base
 {
 public:
+    typedef T value_type;
     typedef consumer_port_traits<T> dataflow_traits;
+    
     port(component &component_context)
         : port_base(component_context), m_producer(0)
     {

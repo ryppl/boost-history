@@ -121,16 +121,14 @@ public:
 class example_factory : public df::blueprint::factory<managed_blueprint_framework>
 {
 public:
-    example_factory()
+    example_factory(df::managed::network &m_network)
     {
-/*        add_component<io>("io", boost::ref(m_network));
-        add_component<not_operation>("not", boost::ref(m_network));
-        add_component<and_operation>("and", boost::ref(m_network));
-        add_component<or_operation>("or", boost::ref(m_network));
-        add_component<update_network>("upd", boost::ref(m_network));*/
+        add<static_vector_adapter_selector, io>("io", boost::ref(m_network));
+        add<static_vector_adapter_selector, not_operation>("not", boost::ref(m_network));
+        add<static_vector_adapter_selector, and_operation>("and", boost::ref(m_network));
+        add<static_vector_adapter_selector, or_operation>("or", boost::ref(m_network));
+        add<static_vector_adapter_selector, update_network>("upd", boost::ref(m_network));
     }
-private:
-    df::managed::network m_network;
 };
 
 int main()
@@ -141,8 +139,9 @@ int main()
     df::vivid::factory_window<managed_blueprint_framework> factory_window;
     df::vivid::network_window<managed_blueprint_framework> network_window;
     factory_window.set_network_window(network_window);
+    network_window.framework_context().register_operation<df::managed::port<bool, df::ports::producer>, df::managed::port<bool, df::ports::consumer>, df::operations::connect>();
     
-    example_factory factory;
+    example_factory factory(network_window.framework_context().object());
     
     factory_window.set_factory(factory);
     

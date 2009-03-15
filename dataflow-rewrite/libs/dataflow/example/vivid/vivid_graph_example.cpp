@@ -38,9 +38,10 @@ int main()
     df::vivid::network_window<graph_blueprint_framework> network_window;
     factory_window.set_network_window(network_window);
     
-    df::blueprint::factory<graph_blueprint_framework> factory;
+    typedef df::blueprint::factory<graph_blueprint_framework> factory_type;
+    factory_type factory;
     
-    factory.add_port<df::ugraph::vertex>("vertex");
+    factory.add<factory_type::port_adapter_selector, df::ugraph::vertex>("vertex", boost::ref(network_window.framework_context().object()));
     network_window.framework_context().register_operation<df::ugraph::vertex, df::ugraph::vertex, df::operations::connect>();
 
     factory_window.set_factory(factory);

@@ -15,10 +15,13 @@
 #include <boost/guigl/widget/labeled_button.hpp>
 #include <boost/guigl/view/impl/draggable.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/function.hpp>
+
 
 namespace boost { namespace dataflow { namespace vivid {
 
 BOOST_PARAMETER_UNTYPED_NAME(entity);
+BOOST_PARAMETER_UNTYPED_NAME(click_callback);
 
 template<typename BlueprintFramework>
 class entity_widget
@@ -34,7 +37,9 @@ public:
     entity_widget(const Args &args)
         : base_type(args)
         , m_entity(args[_entity])
-    {}
+    {
+        this->on_click.connect(boost::bind(args[_click_callback], this));
+    }
     void draggable_on_drag(const guigl::position_type &position)
     {
         guigl::position_type difference(position - base_type::drag_origin());

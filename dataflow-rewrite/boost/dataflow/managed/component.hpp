@@ -17,11 +17,15 @@ class port_base;
 class BOOST_EXPORT_SYMBOLS component
 {
 public:
+    component()
+        : m_network_context(0), m_topological_sort_index(0)
+    {}
     component(network &network_context);
     component(const component &other);
     virtual ~component();
+    void set_network_context(network &network_context);
     network &network_context()
-    {   return m_network_context; }
+    {   return *m_network_context; }
     virtual void invoke(){};
     void topological_sort_index(unsigned index)
     {
@@ -33,7 +37,7 @@ public:
     }
     void claim_port(port_base &p);
 private:
-    network &m_network_context;
+    network *m_network_context;
     unsigned m_topological_sort_index;
 };
 

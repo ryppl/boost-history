@@ -13,6 +13,7 @@
 #include <boost/dataflow/blueprint/port_binary_operation.hpp>
 #include <boost/dataflow/blueprint/operation_adapter.hpp>
 #include <boost/dataflow/vivid/entity_widget.hpp>
+#include <boost/dataflow/vivid/vector_widget.hpp>
 #include <boost/guigl/draw.hpp>
 #include <boost/guigl/geometry.hpp>
 #include <boost/guigl/window.hpp>
@@ -46,8 +47,8 @@ public:
         glColor3f(0,1,0);
         for(typename std::vector<connection_type>::iterator it=m_connections.begin(); it!= m_connections.end(); it++)
         {
-            guigl::draw::vertex(guigl::geometry::midpoint(*it->first));
-            guigl::draw::vertex(guigl::geometry::midpoint(*it->second));
+            guigl::draw::vertex(guigl::geometry::root_midpoint(*it->first));
+            guigl::draw::vertex(guigl::geometry::root_midpoint(*it->second));
         }
         glEnd();
     }
@@ -71,7 +72,9 @@ class network_window
     typedef blueprint::framework_entity<BlueprintFramework> framework_entity_type;
     typedef blueprint::framework_context<BlueprintFramework> framework_context_type;
     typedef entity_widget<BlueprintFramework> entity_widget_type;
+    typedef vector_widget<BlueprintFramework> vector_widget_type;
     typedef blueprint::port<BlueprintFramework> port_type;
+    typedef blueprint::vector<BlueprintFramework> vector_type;
 public:
     network_window()
         : m_window(( guigl::_label="Network", guigl::_size=guigl::size_type(800, 600) ))
@@ -90,15 +93,28 @@ public:
     
     void add_entity(std::auto_ptr<framework_entity_type> entity)
     {
-        entity_widget_type *widget = m_layout.create<entity_widget_type>((
-            _entity=entity.release(),
-            guigl::_background(.5,.5,.5),
-            guigl::_label="entity" ));
+        if(dynamic_cast<port_type *> (entity.get()))
+        {
+            entity_widget_type *widget = m_layout.create<entity_widget_type>((
+                _entity=entity.release(),
+                guigl::_background(.5,.5,.5),
+                guigl::_label="entity",
+                _click_callback= boost::bind(&network_window::clicked, this, _1)));
             
-        (*m_network_widget) << widget;
+            (*m_network_widget) << widget;
+        }
+        else if(dynamic_cast<vector_type *> (entity.get()))
+        {
+            vector_widget_type *widget = m_layout.create<vector_widget_type>((
+                _entity=entity.release(),
+                guigl::_background(.5,.5,.5),
+                guigl::_label="entity",
+                _click_callback= boost::bind(&network_window::clicked, this, _1) ));
+
+            (*m_network_widget) << widget;
+        }
+            
         guigl::window::redraw(*m_network_widget);
-        
-        widget->on_click.connect(boost::bind(&network_window::clicked, this, widget));
     }
     
     framework_context_type &framework_context()
@@ -141,7 +157,7 @@ private:
     network_widget<BlueprintFramework> *m_network_widget;
     guigl::layout::grid m_layout;
     entity_widget_type *m_dragged;
-    
+
     blueprint::operation *m_selected_operation;
     boost::ptr_vector<blueprint::operation> m_operations;
 };

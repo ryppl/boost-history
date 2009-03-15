@@ -47,9 +47,9 @@ get_traits = [("typename traits_of<T"+x+", Framework"+x+">::type") for x in arit
 
 targs = [("T" + x + " &t" + x) for x in arity_range]
 targs_names = [("t" + x) for x in arity_range]
-extra_args_args = [("const " + x + " &" + x.lower()) for x in extra_args]
-extra_args_names = [(x.lower()) for x in extra_args]
-default_extra_args_args = [(extra_args_args[x] + '=' + extra_args[x] + '()') for x in range(len(extra_args))]
+extra_args_args = [(x + " & " + x.rpartition(" ")[2].lower()) for x in extra_args]
+extra_args_names = [(x.rpartition(" ")[2].lower()) for x in extra_args]
+default_extra_args_args = [(extra_args_args[x] + '=' + extra_args[x].rpartition(" ")[2] + '()') for x in range(len(extra_args))]
 
 content = """
 namespace boost { namespace dataflow {

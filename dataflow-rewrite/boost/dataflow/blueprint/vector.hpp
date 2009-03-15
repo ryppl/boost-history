@@ -59,6 +59,10 @@ public:
     {
         return m_ptr->clone();
     };
+    bool operator!=(port_iterator_base<BlueprintFramework> const& other) const
+    {
+        return !this->equal(other);
+    }
     bool operator==(port_iterator_base<BlueprintFramework> const& other) const
     {
         return this->equal(other);

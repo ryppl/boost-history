@@ -20,8 +20,9 @@ namespace df = boost::dataflow;
 
 BOOST_AUTO_TEST_CASE( test_default ) 
 {
-    df::blueprint::factory<my_blueprint_framework> factory;
-    factory.add_port<my_port_producer>("my_port_producer");
+    typedef df::blueprint::factory<my_blueprint_framework> factory_type;
+    factory_type factory;
+    factory.add<factory_type::port_adapter_selector, my_port_producer>("my_port_producer");
     
     df::blueprint::framework_context<my_blueprint_framework> fo;
     df::blueprint::framework_entity<my_blueprint_framework> *entity = factory["my_port_producer"](fo);
