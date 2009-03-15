@@ -57,7 +57,7 @@ This pool uses a __bounded_channel__ which schedules __actions__ by integer atrr
 
 
 [heading Shutdown]
-If `boost::tp::pool< Channel >::shutdown()` is called - the the status of the pool is set to ['terminating] and all __worker_threads__ are joined. No futher __actions__ can be submitted by application threads. After all pending __actions__ are processed and all __worker_threads__ are joined, the pool is set to status ['terminated].
+If `boost::tp::pool< Channel >::shutdown()` is called - the the pool is set closed and all __worker_threads__ are joined until all pending __actions__ are processed. No futher __actions__ can be submitted by application threads.
 
 [note The deconstructor calls `boost::tp::pool< Channel >::shutdown()` if the pool was not shutdown yet.]
 
@@ -82,7 +82,7 @@ If `boost::tp::pool< Channel >::shutdown()` is called - the the status of the po
     std::cout << t2.result().get() << std::endl; // 55
 
 [heading Shutdown immediatly]
-The function `boost::tp::pool< Channel >::shutdown_now()` sets the pool status to ['terminating] interrupts and then joins all __worker_threads__. After the __worker_threads__ are joined the status of the pool is set to ['terminated] and all pending (unprocessed) __actions__ will be returned.
+The function `boost::tp::pool< Channel >::shutdown_now()` closes the pool, interrupts and then joins all __worker_threads__. All pending (unprocessed) __actions__ will be returned.
 
 [important Pending __actions__ in the local __worker_queues__ are not returned if `boost::tp::pool< Channel >::shutdown_now()` was called.]
 

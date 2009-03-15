@@ -28,6 +28,7 @@
 #include <boost/utility.hpp>
 #include <boost/utility/result_of.hpp>
 
+#include <boost/tp/detail/atomic.hpp>
 #include <boost/tp/detail/callable.hpp>
 #include <boost/tp/detail/guard.hpp>
 #include <boost/tp/detail/interrupter.hpp>
@@ -143,14 +144,13 @@ private:
 
 	worker_list									worker_;
 	shared_mutex								mtx_worker_;
-	state										state_;
-	shared_mutex								mtx_state_;
+	unsigned int								state_;
 	channel		 								channel_;
 	posix_time::time_duration					asleep_;
 	scanns										scns_;
-	volatile uint32_t							active_worker_;
-	volatile uint32_t							idle_worker_;
-	volatile uint32_t							running_worker_;
+	unsigned int								active_worker_;
+	unsigned int								idle_worker_;
+	unsigned int								running_worker_;
 
 	void execute_(
 		detail::callable & ca,
@@ -313,6 +313,12 @@ private:
 		return false;
 	}
 
+	bool closed_() const
+	{ return state_ > 0; }
+
+	void close_()
+	{ detail::atomic_fetch_add( & state_, 1); }
+
 public:
 	explicit pool(
 		poolsize const& psize,
@@ -321,8 +327,7 @@ public:
 	:
 	worker_(),
 	mtx_worker_(),
-	state_( active_state),
-	mtx_state_(),
+	state_( 0),
 	channel_(),
 	asleep_( asleep),
 	scns_( scns),
@@ -348,8 +353,7 @@ public:
 	:
 	worker_(),
 	mtx_worker_(),
-	state_( active_state),
-	mtx_state_(),
+	state_( 0),
 	channel_(
 		hwm,
 		lwm),
@@ -375,8 +379,7 @@ public:
 	:
 	worker_(),
 	mtx_worker_(),
-	state_( active_state),
-	mtx_state_(),
+	state_( 0),
 	channel_(),
 	asleep_( asleep),
 	scns_( scns),
@@ -403,8 +406,7 @@ public:
 	:
 	worker_(),
 	mtx_worker_(),
-	state_( active_state),
-	mtx_state_(),
+	state_( 0),
 	channel_(
 		hwm,
 		lwm),
@@ -443,32 +445,25 @@ public:
 
 	void shutdown()
 	{
-		unique_lock< shared_mutex > lk1( mtx_state_);
-		if ( terminateing_() || terminated_() ) return;
-		state_ = terminateing_state;
-		lk1.unlock();
+		if ( closed_() ) return;
+		close_();
 
 		channel_.deactivate();
-		shared_lock< shared_mutex > lk2( mtx_worker_);
+		shared_lock< shared_mutex > lk( mtx_worker_);
 		BOOST_FOREACH( detail::worker w, worker_)
 		{ w.signal_shutdown(); }
 		BOOST_FOREACH( detail::worker w, worker_)
 		{ w.join(); }
-		lk2.unlock();
-
-		lk1.lock();
-		state_ = terminated_state;
+		lk.unlock();
 	}
 
 	const std::vector< detail::callable > shutdown_now()
 	{
-		unique_lock< shared_mutex > lk1( mtx_state_);
-		if ( terminateing_() || terminated_() ) return std::vector< detail::callable >();
-		state_ = terminateing_state;
-		lk1.unlock();
+		if ( closed_() ) return std::vector< detail::callable >();
+		close_();
 
 		channel_.deactivate_now();
-		shared_lock< shared_mutex > lk2( mtx_worker_);
+		shared_lock< shared_mutex > lk( mtx_worker_);
 		BOOST_FOREACH( detail::worker w, worker_)
 		{
 			w.signal_shutdown_now();
@@ -476,12 +471,8 @@ public:
 		}
 		BOOST_FOREACH( detail::worker w, worker_)
 		{ w.join(); }
-		lk2.unlock();
+		lk.unlock();
 		std::vector< detail::callable > drain( channel_.drain() );
-
-		lk1.lock();
-		state_ = terminated_state;
-		lk1.unlock();
 
 		return drain;
 	}
@@ -492,17 +483,8 @@ public:
 		return size_();
 	}
 
-	bool terminated()
-	{
-		shared_lock< shared_mutex > lk( mtx_state_);
-		return terminated_();
-	}
-
-	bool terminateing()
-	{
-		shared_lock< shared_mutex > lk( mtx_state_);
-		return terminateing_();
-	}
+	bool closed()
+	{ return closed_(); }
 
 	void clear()
 	{ channel_.clear(); }
@@ -549,11 +531,8 @@ public:
 		}
 		else
 		{
-			shared_lock< shared_mutex > lk( mtx_state_);
-			if ( terminated_() )
-				throw task_rejected("pool ist terminated");
-			if ( terminateing_() )
-				throw task_rejected("pool ist terminateing");
+			if ( closed_() )
+				throw task_rejected("pool is closed");
 
 			channel_item itm( detail::callable( move( tsk) ), intr);
 			channel_.put( itm);
@@ -590,11 +569,8 @@ public:
 		}
 		else
 		{
-			shared_lock< shared_mutex > lk( mtx_state_);
-			if ( terminated_() )
-				throw task_rejected("pool ist terminated");
-			if ( terminateing_() )
-				throw task_rejected("pool ist terminateing");
+			if ( closed_() )
+				throw task_rejected("pool is closed");
 
 			channel_item itm( detail::callable( move( tsk) ), attr, intr);
 			channel_.put( itm);

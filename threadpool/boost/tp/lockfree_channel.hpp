@@ -1,6 +1,9 @@
 #ifndef BOOST_TP_LOCKFREE_CHANNEL_H
 #define BOOST_TP_LOCKFREE_CHANNEL_H
 
+// based on the lock-free algorithm of
+// Edya Ladan-Mozes and Nir Shavit
+
 #include <vector>
 
 #include <boost/assert.hpp>

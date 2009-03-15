@@ -65,7 +65,7 @@ public:
 					fibonacci_fn,
 					10) ) );
 		pool.shutdown();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
@@ -95,7 +95,7 @@ public:
 			tp::unbounded_channel< tp::fifo >
 		> pool( tp::poolsize( 1) );
 		pool.shutdown();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		bool thrown( false);
 		try
 		{
@@ -128,7 +128,7 @@ public:
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		pool.shutdown_now();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );

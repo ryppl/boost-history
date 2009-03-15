@@ -46,8 +46,7 @@
       void shutdown();
       const std::vector< callable > shutdown_now();
 
-      bool terminated();
-      bool terminateing();
+      bool closed();
       void clear();
       bool empty();
       std::size_t pending();
@@ -185,7 +184,7 @@
     void shutdown();
 
 [variablelist
-[[Effects:] [Changes the pool state to ['terminating], deactivates the channel and joins all worker threads. The status of the pool is assigned to ['terminated] at the end.]]
+[[Effects:] [Deactivates the channel and joins all worker threads. The pool is closed.]]
 [[Throws:] [Nothing]]
 [[Notes:] [All pending __actions__ are processed.]]
 ]
@@ -197,30 +196,19 @@
     const std::vector< callable > shutdown_now();
 
 [variablelist
-[[Effects:] [Changes the pool state to ['terminating], deactivates the channel, send interruption request to all worker threads and joins them. The status of the pool is assigned to ['terminated] at the end.]]
+[[Effects:] [Deactivates the channel, send interruption request to all worker threads and joins them. The pool is closed.]]
 [[Throws:] [Nothing]]
 [[Notes:] [Pending __actions__ are not processed but returned.]]
 ]
 [endsect]
 
 
-[section:terminated Member function `terminated()`]
+[section:losed Member function `closed()`]
 
-    bool terminated();
-
-[variablelist
-[[Effects:] [Queries if the pool is in the terminated state (pool is shutdown).]]
-[[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:terminateing Member function `terminateing()`]
-
-    bool terminateing();
+    bool closed();
 
 [variablelist
-[[Effects:] [Queries if the pool is in the terminating state (tries to shutdown the pool).]]
+[[Effects:] [Queries if the pool is closed (pool is shutdown).]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
@@ -319,7 +307,7 @@
     task< typename result_of< Act() >::type > submit( Act const& act);
 
 [variablelist
-[[Preconditions:] [has_priority< pool >::value == false && ! ( pool.terminating() || pool.terminated() )]]
+[[Preconditions:] [has_priority< pool >::value == false && ! closed()]]
 [[Effects:] [Submits an __action__ to the pool and returns a __task__ object.]]
 [[Throws:] [`boost::tp::task_rejected`]]
 ]
@@ -332,7 +320,7 @@
     task< typename result_of< Act() >::type > submit( Act const& act, Attr const& attr);
 
 [variablelist
-[[Preconditions:] [has_priority< pool >::value == true && ! ( pool.terminating() || pool.terminated() )]]
+[[Preconditions:] [has_priority< pool >::value == true && ! closed()]]
 [[Effects:] [Submits an __action__ to the pool and returns a __task__ object. __Action__ is scheduled by the attribute.]]
 [[Throws:] [`boost::tp::task_rejected`]]
 ]
@@ -355,7 +343,7 @@
 	task< R > launch_in_pool( Act const& act);
 
 [variablelist
-[[Preconditions:] [has_priority< pool >::value == false && ! ( pool.terminating() || pool.terminated() )]]
+[[Preconditions:] [has_priority< pool >::value == false && ! closed()]]
 [[Effects:] [Submits an __action__ to the default pool and returns a __task__ object.]]
 [[Throws:] [`boost::tp::task_rejected`]]
 ]

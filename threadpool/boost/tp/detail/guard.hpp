@@ -5,21 +5,18 @@
 #ifndef BOOST_TP_DETAIL_GUARD_H
 #define BOOST_TP_DETAIL_GUARD_H
 
-#include <boost/assert.hpp>
-#include <boost/interprocess/detail/atomic.hpp>
 #include <boost/utility.hpp>
 
 namespace boost { namespace tp {
 namespace detail
 {
-class guard
-: private noncopyable
+class guard : private noncopyable
 {
 private:
-	volatile uint32_t	&	active_worker_;
+	unsigned int	&	active_worker_;
 
 public:
-	guard( volatile uint32_t & active_worker);
+	guard( unsigned int & active_worker);
 
 	~guard();
 };

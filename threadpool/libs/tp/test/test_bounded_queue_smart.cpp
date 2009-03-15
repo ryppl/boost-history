@@ -76,7 +76,7 @@ public:
 					10),
 				0) );
 		pool.shutdown();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
@@ -113,7 +113,7 @@ public:
 			tp::high_watermark( 10),
 			tp::low_watermark( 10) );
 		pool.shutdown();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		bool thrown( false);
 		try
 		{
@@ -153,7 +153,7 @@ public:
 		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 0) );
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 1) );
 		pool.shutdown_now();
-		BOOST_CHECK( pool.terminated() );
+		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
