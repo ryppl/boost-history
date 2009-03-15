@@ -122,6 +122,9 @@
 		0896F70B0F0A8163000EA0D2 /* vector_widget.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector_widget.hpp; sourceTree = "<group>"; };
 		0897C7860E838AEA00DD0CF9 /* framework.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = framework.qbk; sourceTree = "<group>"; };
 		08982F6D0E8C5F8F008C1918 /* test_port_binary_operation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_port_binary_operation.cpp; sourceTree = "<group>"; };
+		08986FF10F6CBCE000FAF4D5 /* test_managed_blueprint.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_managed_blueprint.cpp; sourceTree = "<group>"; };
+		089870AA0F6CC4C400FAF4D5 /* managed_blueprint_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = managed_blueprint_example.cpp; sourceTree = "<group>"; };
+		089870AB0F6CC4CB00FAF4D5 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		0898B4700E83E6E1004F3E91 /* port_binary_operation.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = port_binary_operation.hpp; sourceTree = "<group>"; };
 		089971740E83014B00284E42 /* dataflow.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = dataflow.qbk; sourceTree = "<group>"; };
 		089971750E83014B00284E42 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
@@ -260,6 +263,7 @@
 		08668C4D0C19A16300ACB19A /* example */ = {
 			isa = PBXGroup;
 			children = (
+				089870A80F6CC48F00FAF4D5 /* blueprint */,
 				08A2279B0EAE425000F70466 /* generic */,
 				08A2277C0EAE3E6D00F70466 /* vivid */,
 				08A227910EAE417000F70466 /* Jamfile */,
@@ -267,6 +271,15 @@
 			name = example;
 			path = ../../example;
 			sourceTree = SOURCE_ROOT;
+		};
+		089870A80F6CC48F00FAF4D5 /* blueprint */ = {
+			isa = PBXGroup;
+			children = (
+				089870AA0F6CC4C400FAF4D5 /* managed_blueprint_example.cpp */,
+				089870AB0F6CC4CB00FAF4D5 /* Jamfile */,
+			);
+			path = blueprint;
+			sourceTree = "<group>";
 		};
 		089971810E83058D00284E42 /* generic */ = {
 			isa = PBXGroup;
@@ -590,6 +603,7 @@
 				08ADD5080EDCC9A400838188 /* my_blueprint_static_vector.hpp */,
 				08A53F920EAC14A4000B9C17 /* test_factory.cpp */,
 				08ADD5040EDCC92D00838188 /* test_static_vector.cpp */,
+				08986FF10F6CBCE000FAF4D5 /* test_managed_blueprint.cpp */,
 			);
 			path = blueprint;
 			sourceTree = "<group>";

@@ -13,6 +13,7 @@ project dataflow/example
     ;
 
 build-project generic ;
+build-project blueprint ;
 
 if $(guigl_present)
 {

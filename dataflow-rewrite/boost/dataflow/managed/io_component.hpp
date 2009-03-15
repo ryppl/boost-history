@@ -105,6 +105,9 @@ public:
     typedef component_traits<in_types_sequence, out_types_sequence> dataflow_traits;
     typedef typename detail::make_fusion_ports<in_types_sequence, out_types_sequence>::type ports_type;
     
+    io_component()
+        : m_ports(fusion::transform(mpl::range_c<int,0,fusion::result_of::size<ports_type>::type::value>(), detail::component_f(*this)))
+    {}
     io_component(network &n)
         : component(n)
         , m_ports(fusion::transform(mpl::range_c<int,0,fusion::result_of::size<ports_type>::type::value>(), detail::component_f(*this)))

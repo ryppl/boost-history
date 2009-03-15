@@ -12,30 +12,50 @@
 
 #include <boost/dataflow/blueprint/framework_entity.hpp>
 #include <boost/dataflow/blueprint/framework_context.hpp>
-#include <boost/dataflow/utility/is_type.hpp>
+#include <boost/dataflow/utility/enable_if_type.hpp>
 #include <boost/type_traits/remove_reference.hpp>
-#include <boost/utility/enable_if.hpp>
 #include <boost/pointee.hpp>
 
 namespace boost { namespace dataflow { namespace blueprint {
+
+namespace detail {
+
+template<typename T, typename Enable=void>
+struct dataflow_base_of
+{
+    typedef T type;
+};
+
+template<typename T>
+struct dataflow_base_of<T,
+    typename utility::enable_if_type<typename T::dataflow_base_type>::type>
+{
+    typedef typename T::dataflow_base_type type;
+};
+
+}
 
 template<typename BlueprintFramework, typename Dereferencable, typename Base=framework_entity<BlueprintFramework>, typename Enable=void >
 class framework_entity_adapter : public Base
 {
 public:
     typedef typename pointee<Dereferencable>::type entity_type;
+    typedef
+        typename detail::dataflow_base_of<
+            typename pointee<Dereferencable>::type
+        >::type castable_entity_type;
     
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo)
-        : Base(fo, typeid(entity_type))
+        : Base(fo, typeid(castable_entity_type))
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, const T &t)
-        : Base(fo, typeid(entity_type))
+        : Base(fo, typeid(castable_entity_type))
         , m_entity(t)
     {}
     template<typename T>
     framework_entity_adapter(blueprint::framework_context<BlueprintFramework> &fo, T &t)
-        : Base(fo, typeid(entity_type))
+        : Base(fo, typeid(castable_entity_type))
         , m_entity(t)
     {}
 
@@ -50,7 +70,7 @@ public:
 private:
     virtual void *get_ptr()
     {
-        return &*m_entity;
+        return static_cast<castable_entity_type *>(&*m_entity);
     };
     Dereferencable m_entity;
 };

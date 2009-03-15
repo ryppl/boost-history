@@ -7,4 +7,6 @@
 #----------------------------------------------===============================*/
 
 
-# run test_factory_window.cpp /boost_guigl//boost_guigl/<link>static ;
+exe managed_blueprint_example
+    : managed_blueprint_example.cpp
+    : <library>../../build/managed//dataflow_managed/<link>static ;

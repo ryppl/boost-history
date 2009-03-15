@@ -36,7 +36,8 @@ void component::set_network_context(network &network_context)
 
 component::~component()
 {
-    m_network_context->unregister_component(this);
+    if(m_network_context)
+        m_network_context->unregister_component(this);
 }
 
 void component::claim_port(port_base &p)

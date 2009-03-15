@@ -17,6 +17,8 @@ class port_base;
 class BOOST_EXPORT_SYMBOLS component
 {
 public:
+    typedef component dataflow_base_type;
+    
     component()
         : m_network_context(0), m_topological_sort_index(0)
     {}
