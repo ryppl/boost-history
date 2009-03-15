@@ -17,4 +17,6 @@ SOURCES = component network ;
 lib dataflow_managed : $(SOURCES).cpp 
     :
         <include>../../../..
+# for embedding in AMELiA
+        <include>../../../../include
     ;
