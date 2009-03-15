@@ -31,9 +31,10 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>)),
     (void)) // return type
-leftmost(Cursor& c)
+to_leftmost(Cursor& c)
 {
-    while (!c.to_begin().is_leaf());
+    while (!c.is_leaf())
+        c.to_begin();
 }
 
 /**
@@ -46,9 +47,10 @@ inline
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>)),
     (void)) // return type
-rightmost(Cursor& c)
+to_rightmost(Cursor& c)
 {
-    while (!c.to_end().is_leaf());
+    while (!c.is_leaf())
+        c.to_end();
 }
 
 // These algorithms are actually mostly preorder, as it's most efficient, but I

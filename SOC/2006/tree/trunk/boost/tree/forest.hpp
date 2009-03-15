@@ -125,8 +125,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >)
     cursor end()
     {
         base_cursor b(h.root());
-        while (!b.is_leaf())
-            b.to_end();
+        to_rightmost(b);
         return cursor(b);
     }
 

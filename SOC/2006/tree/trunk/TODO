@@ -14,6 +14,10 @@
 [section TODO]
 
 General:
+* Do we need to_{left|right}most_ancestor?
+* Do we need multiway and plain cursor "flavor" tags (for algorithms)?
+* Add a (horizontal) reverse_cursor adaptor
+* Fix cursor archetype
 * In case of forest cursor, is_leaf() should really be empty().
 * Further reduce test data redundancy: make mock cursor use the data from fake_binary_tree, 
   and give it an Order template argument. Calculate *order positions from level order indices

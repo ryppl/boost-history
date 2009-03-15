@@ -47,7 +47,7 @@ BOOST_CONCEPT_REQUIRES(
 successor(inorder, MultiwayCursor& c)
 {
     if (!(++c).is_leaf()) {
-        leftmost(c);
+        to_leftmost(c);
         return;
     }
     
@@ -69,7 +69,7 @@ BOOST_CONCEPT_REQUIRES(
 predecessor(inorder, MultiwayCursor& c)
 {
     if (!c.is_leaf()) {
-        rightmost(c);
+        to_rightmost(c);
         --c;
         return;
     }
