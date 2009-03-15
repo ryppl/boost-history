@@ -1,9 +1,6 @@
 #ifndef BOOST_TP_LOCKFREE_CHANNEL_H
 #define BOOST_TP_LOCKFREE_CHANNEL_H
 
-// based on the lock-free algorithm of
-// Edya Ladan-Mozes and Nir Shavit
-
 #include <vector>
 
 #include <boost/assert.hpp>
@@ -70,8 +67,8 @@ private:
 		pointer_t( pointer_t const& rhs)
 		: ptr( 0), tag( 0)
 		{
-			detail::atomic_store( & ptr, rhs.ptr);
-			detail::atomic_store( & tag, rhs.tag);
+			detail::atomic_write_ptr( & ptr, rhs.ptr);
+			detail::atomic_write_32( & tag, rhs.tag);
 		}
 		
 		bool operator==( pointer_t const& rhs)
@@ -103,9 +100,9 @@ private:
 
 	bool compare_exchange_( pointer_t & dest, pointer_t & cmp, pointer_t & value)
 	{
-		if ( detail::atomic_compare_exchange( & dest.ptr, & cmp.ptr, value.ptr) )
+		if ( detail::atomic_compare_exchange_ptr( & dest.ptr, cmp.ptr, value.ptr) )
 		{
-			detail::atomic_store( & dest.tag, value.tag);
+			detail::atomic_write_32( & dest.tag, value.tag);
 			return true;
 		}
 
@@ -128,10 +125,10 @@ private:
 	}
 
 	void increment_size_()
-	{ detail::atomic_fetch_add(  & size_, 1); }
+	{ detail::atomic_inc_32( & size_); }
 
 	void decrement_size_()
-	{ detail::atomic_fetch_sub( & size_, 1); }
+	{ detail::atomic_dec_32( & size_); }
 
 public:
 	lockfree_channel()
@@ -250,12 +247,12 @@ public:
 	{ return state_ == channel_deactive_now; }
 
 	void activate()
-	{ detail::atomic_store( & state_, channel_active); }
+	{ detail::atomic_write_32( ( unsigned int *) & state_, channel_active); }
 
 	void deactivate()
 	{
 		if ( active() )
-			detail::atomic_store( & state_, channel_deactive);
+			detail::atomic_write_32(  ( unsigned int *) & state_, channel_deactive);
 
 		BOOST_ASSERT( deactive() );
 	}
@@ -263,7 +260,7 @@ public:
 	void deactivate_now()
 	{
 		if ( active() )
-			detail::atomic_store( & state_, channel_deactive_now);
+			detail::atomic_write_32(  ( unsigned int *) & state_, channel_deactive_now);
 
 		BOOST_ASSERT( deactive_now() );
 	}
