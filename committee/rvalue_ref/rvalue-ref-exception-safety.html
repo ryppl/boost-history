@@ -155,7 +155,7 @@ two conditions holds:</p>
 <p>At present, we have no way to detect whether either of these
 conditions hold. We therefore propose to ban the definition of move
 constructors and move assignment operators that throw
-exceptions. Therefore, we can be sure that if we are invoking a move
+exceptions. We can then be sure that if we are invoking a move
 constructor, it does not throw; that copy constructors preserve the
 original value of the source element is already assumed in C++ and
 need not be addressed separately.</p>
@@ -176,12 +176,188 @@ several reasons:</p>
   specifications do not help this situation, because they are neither
   statically checked nor widely used.</li>
 
-  <li><i>The library will violate this requirement</i>. 
+  <li><i>The library will violate this requirement</i>. Certain
+  library classes like <code>pair</code> and </code>tuple</code>
+  aggregate several kinds of data and provide move constructors. For
+  example, <code>std::pair</code> has the following move constructor:
+  <pre>
+template&lt;class U, class V&gt; 
+  requires Constructible&lt;T1, RvalueOf&lt;U&gt;::type&gt; &amp;&amp;
+           Constructible&lt;T2, RvalueOf&lt;V&gt;::type&gt; 
+  pair(pair&lt;U, V&gt;&amp;&amp; p)
+    : first(std::move(p.first)), second(std::move(p.second)) { }
+  </pre>
+
+  This move constructor is necessary to make types like
+  <code>std::pair&lt;std::string, std::string&gt;</code>
+  move-constructible (for optimization purposes) and to make move-only
+  types like <code>std::unique_ptr</code> usable within
+  <code>std::pair</code>. However, certain combinations of
+  <code>pair</code> template arguments will cause this move
+  constructor to both be destructive and to potentially throw
+  exceptions. For example, consider <code>std::pair&lt;std::string,
+  Matrix&gt;</code>. Here, <code>std::pair</code>'s move constructor
+  will move (destructively) the <code>std::string first</code> and
+  then will copy <code>Matrix second</code>. Thus, the move operation
+  is both destructive and can throw exceptions, which makes it
+  impossible for <code>std::vector</code>'s <code>push_back</code>
+  operation to provide the strong exception safety guarantee. 
+  (FIXME: it's far easier to understand this problem here than it was
+  at the beginning of the document. We need to structure this better!).
 </ol>
 
+<p>The solution for <code>pair</code>'s move constructor is to only
+enable move construction when both <code>T1</code> and <code>T2</code>
+have non-throwing move constructors. For example, we could change the
+signature of <code>pair</code>'s move constructor to:</p>
+
+<pre>
+template&lt;class U, class V&gt; 
+  requires NothrowMoveConstructible&lt;T1, U&gt; &amp;&amp;
+           NothrowMoveConstructible&lt;T2, V&gt; 
+  pair(pair&lt;U, V&gt;&amp;&amp; p)
+    : first(std::move(p.first)), second(std::move(p.second)) { }
+</pre>
+
+<p>The <code>NothrowMoveConstructible</code> concept, in this case,
+expresses the same semantics as the previous
+<code>Constructible</code> requirement, e.g.,<p>
+
+<pre>
+concept NothrowMoveConstructible&lt;typename T, typename U = T&gt; {
+  requires RvalueOf&lt;U&gt; &amp;&amp; Constructible&lt;T, RvalueOf&lt;U&gt;::type&gt;;
+}
+</pre>
+
+<p>The important aspect of this concept is that it is not an
+<code>auto</code> concept, so clients are required to "opt in" by
+explicitly stating, via a concept map, that they provide a
+non-throwing move constructor. The library would provide concept maps
+for its own types, e.g.</p>
+
+<pre>
+concept_map NothrowMoveConstructible&lt;string&gt; { }
+</pre>
+
+<p>Some of these concept maps will, naturally, be conditional on their
+inputs. For example, <code>pair</code>'s concept map can be expressed
+as follows:</p>
+
+<pre>
+template&lt;typename T1, typename T2, typename U, typename V>
+  requires NothrowMoveConstructible&lt;T1, U&gt; &amp;&amp; NothrowMoveConstructible&lt;T2, V&gt;
+  concept_map NothrowMoveConstructible&lt;pair&lt;T1, T2&gt;, pair&lt;U, V&gt;&gt; { }
+</pre>
+
+<p>If diligently applied throughout the library and user code,
+<code>NothrowMoveConstructible</code> permits the safe use of
+move semantics within the library, retaining the strong exception
+safety guarantee.</p>
+
+<p>The danger with a library-only solution is that it is far too easy
+for users of the language to accidentally write a move constructor
+that can throw exceptions, and a single class or class template that
+makes such a mistake compromises the exception safety guarantees of
+the library. The concepts system cannot protect the user from such a
+mistake, because there is no way to statically determine whether a
+function can throw exceptions. Even if concepts could prevent such an
+error in the library, non-templated and unconstrained templates would
+still be susceptible to this class of errors. To address these
+problems, we propose to introduce language facilities that allow the
+nothrow guarantee to be declared for functions, statically enforced by
+the compiler, and queried by concepts.</p>
+
 <h3 id="noexcept">The <code>noexcept</code> Specifier</h3>
+
+<p>We propose the addition of a new declaration specifier,
+<code>noexcept</code>, that indicates that the function it applies to
+does not throw any exceptions. The <code>noexcept</code> specifier can
+only be applied to function declarators, e.g.,</p>
+
+<pre>
+noexcept int printf(const char* format, ...); // okay: printf does not throw exceptions.
+noexcept int (*funcptr)(const char*, ...); // okay: pointer to a function that does not throw exceptions
+noexcept int x; // error: not a function declarator
+</pre>
+
+<p>The <code>noexcept</code> specifier differs from an empty exception
+specification (spelled <code>throw()</code>) in two important
+ways. First, a <code>noexcept</code> function is ill-formed if it (or
+any function it calls) may throw an exception, e.g.,</p>
+
+<pre>
+noexcept int foo(int);
+int bar(int);
+noexcept void wibble(int x, int y) {
+  x = foo(x); // okay: foo can not throw any exceptions
+  y = bar(y); // error: bar() could throw an exception
+
+  try {
+    y = bar(y); 
+  } catch (...) {
+    y = 0;
+  } // okay: all exceptions that could be thrown have been captured
+}
+</pre>
+
+<p>Second, the presence or absence of the <code>noexcept</code>
+specifier is part of a function type. Thus, the types of the function
+pointers <code>fp1</code> and <code>fp2</code>, shown below, are
+distinct:</p>
+
+<pre>
+noexcept int (*fp1)(int); // okay: pointer to a function that does not throw exceptions
+int (*fp2)(int); // okay: pointer to a function that may throw exceptions
+</pre>
+
+<p>There is an implicit conversion from pointers and references to <code>noexcept</code> pointers to their potentially-throwing equivalents. For example:</p>
+
+<pre>
+noexcept int f(int);
+int g(int);
+
+noexcept int (*fp1)(int) = &amp;f; // okay: exact match
+int (*fp2)(int) = &amp;g; // okay: exact match
+int (*fp3)(int) = &amp;f; // okay: conversion from pointer to <code>noexcept</code> function to a pointer to a non-<code>noexcept</code> function
+noexcept int (*fp4)(int) = &amp;g; // error: no conversion from a pointer to a throwing function type to a pointer to a non-throwing function type
+</pre>
+
+<p>In many ways, <code>noexcept</code> provides the behavior that
+users expect from <code>throw()</code>. That exception specifications
+are not statically checked is a <a
+ href="http://www.gotw.ca/publications/mill22.htm">constant source of
+confusion</a>, especially for programmers who have used the similar
+(statically-checked) facilities in Java. Moreover, exception
+specifications have a poorly-defined role in the C++ type system,
+because they can only be used in very limited ways.
+
+<h3 id"noexcept-concepts"><code>noexcept</code> in concepts</h3>
+
+<p>The <code>noexcept</code> specifier can be used on associated
+functions within concepts, allowing one to detect whether a particular
+operation is guaranteed not to throw exceptions. For example:
+
+<pre>
+auto concept NothrowMoveConstructible&lt;typename T, typename U = T&gt; {
+  requires RvalueOf&lt;U&gt; &amp;&amp;;
+  noexcept T::T(RvalueOf&lt;U&gt;::type);
+}
+</pre>
+
+<p>This new, <code>noexcept</code> formulation of the
+<code>NothrowMoveConstructible</code> concept has two benefits over
+the previous formulation. First, since the <code>noexcept</code>
+property is statically checked, there is no potential for users to
+accidentally claim that no exceptions will be thrown from their move
+constructors. Second, since we have strong static checking for the
+no-throw policy, we have made this an <code>auto</code> concept, so
+that users need not write concept maps for this low-level
+concept.</p>
+
 <h3 id="noexceptmove">Move Construction and Assignment Requires
 <code>noexcept</code></h3>
+
+
 <h3 id="movedefault">Default Implementations of Move Construction and Assignment</h3>
 NOTE: The move constructor generated for closure types will need to be fixed, too.
 
@@ -196,5 +372,5 @@ NOTE: The move constructor generated for closure types will need to be fixed, to
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Wed Mar 11 14:04:48 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 15 12:30:02 PDT 2009 <!-- hhmts end -->
 </body> </html>
