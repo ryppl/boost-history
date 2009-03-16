@@ -63,6 +63,22 @@ public:
     template<typename DurationType>
     bool lock_for(DurationType const& rel_time)
     {return lock_for(rel_time);}
+    
+    template<typename Clock, typename Duration>
+    bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {return the_lock().try_lock_until(abs_time);}
+    template<typename Rep, typename Period>
+    bool try_lock_for(chrono::duration<Rep, Period> const & rel_time)
+    {return the_lock().try_lock_for(rel_time);}
+    
+    template<typename Clock, typename Duration>
+    void lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {the_lock().lock_until(abs_time);}
+    template<typename Rep, typename Period>
+    void lock_for(chrono::duration<Rep, Period> const & rel_time)
+    {the_lock().lock_for(rel_time);}
+    
+    
 private:
     TimeLockable& the_lock() {return *static_cast<TimeLockable*>(&this->lock_);}
 };
@@ -96,6 +112,21 @@ public:
     {the_lock().lock_shared_for(t);}
     void lock_shared_until(system_time const& t)
     {the_lock().lock_shared_until(t);}
+
+    template<typename Clock, typename Duration>
+    bool try_lock_shared_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {return the_lock().try_lock_shared_until(abs_time);}
+    template<typename Rep, typename Period>
+    bool try_lock_shared_for(chrono::duration<Rep, Period> const & rel_time)
+    {return the_lock().try_lock_shared_for(rel_time);}
+    
+    
+    template<typename Clock, typename Duration>
+    void lock_shared_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {the_lock().lock_shared_until(abs_time);}
+    template<typename Rep, typename Period>
+    void lock_shared_for(chrono::duration<Rep, Period> const & rel_time)
+    {the_lock().lock_shared_for(rel_time);}
     
 private:
     SharableLock& the_lock() {return *static_cast<SharableLock*>(&this->lock_);}
@@ -137,6 +168,20 @@ public:
     void lock_upgrade_for(TimeDuration const&t)
     {the_lock().lock_upgrade_for(t);}
 
+    template<typename Clock, typename Duration>
+    bool try_lock_upgrade_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {return the_lock().try_lock_upgrade_until(abs_time);}
+    template<typename Rep, typename Period>
+    bool try_lock_upgrade_for(chrono::duration<Rep, Period> const & rel_time)
+    {return the_lock().try_lock_upgrade_for(rel_time);}
+    
+    template<typename Clock, typename Duration>
+    void lock_upgrade_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {the_lock().lock_upgrade_until(abs_time);}
+    template<typename Rep, typename Period>
+    void lock_upgrade_for(chrono::duration<Rep, Period> const & rel_time)
+    {the_lock().try_lock_upgrade_for(rel_time);}
+    
 private:
     UpgradableLock& the_lock() {return *static_cast<UpgradableLock*>(&this->lock_);}
 };

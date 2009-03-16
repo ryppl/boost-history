@@ -12,8 +12,11 @@
 #define BOOST_SYNCHRO_LOCKABLE_CONCEPTS_HPP
 
 #include <boost/synchro/lockable_traits.hpp>
+#include <boost/synchro/lockable/functions.hpp>
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/chrono/chrono.hpp>
+
 #include <boost/concept_check.hpp>
 namespace boost {  namespace synchro {
 
@@ -35,9 +38,9 @@ struct LockableConcept {
     typedef typename naming_tag<Lockable>::type  naming;
 
     BOOST_CONCEPT_USAGE(LockableConcept) {
-        l.lock();
-        l.unlock();
-        l.try_lock();
+        lockable::lock(l);
+        lockable::unlock(l);
+        lockable::try_lock(l);
     }
     Lockable& l;
 };
@@ -53,13 +56,13 @@ struct TimedLockableConcept {
     BOOST_CONCEPT_ASSERT((LockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(TimedLockableConcept) {
-        l.lock_until(t);
-        l.lock_for(boost::posix_time::seconds(1));
-        l.try_lock_until(t);
-        l.try_lock_for(boost::posix_time::seconds(1));
+        lockable::lock_until(l, t);
+        lockable::lock_for(l, boost::chrono::seconds(1));
+        lockable::try_lock_until(l, t);
+        lockable::try_lock_for(l, boost::chrono::seconds(1));
     }
     Lockable& l;
-    system_time t;
+    boost::chrono::system_clock::time_point t;
 };
 //]
 bool pred();
@@ -72,13 +75,13 @@ struct ConditionLockableConcept {
     BOOST_CONCEPT_USAGE(ConditionLockableConcept) {
         l.lock_when(c, pred);
         l.lock_when_until(c, pred, t);
-        l.lock_when_for(c, pred, boost::posix_time::seconds(1));
+        l.lock_when_for(c, pred, boost::chrono::seconds(1));
         l.relock_on(t);
         l.relock_on_until(c, t);
-        l.relock_on_for(c, boost::posix_time::seconds(1));
+        l.relock_on_for(c, boost::chrono::seconds(1));
         l.relock_when(c, pred);
         l.relock_when_until(c, pred, t);
-        l.relock_when_for(c, pred, boost::posix_time::seconds(1));
+        l.relock_when_for(c, pred, boost::chrono::seconds(1));
         c.notify_one();
         c.notify_all();
     }
@@ -100,16 +103,16 @@ struct ShareLockableConcept {
     BOOST_CONCEPT_ASSERT((TimedLockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(ShareLockableConcept) {
-        l.lock_shared();
-        l.lock_shared_until(t);
-        l.lock_shared_for(boost::posix_time::seconds(1));
-        l.try_lock_shared();
-        l.try_lock_shared_until(t);
-        l.try_lock_shared_for(boost::posix_time::seconds(1));
-        l.unlock_shared();
+        lockable::lock_shared(l);
+        lockable::lock_shared_until(l, t);
+        lockable::lock_shared_for(l, boost::chrono::seconds(1));
+        lockable::try_lock_shared(l);
+        lockable::try_lock_shared_until(l, t);
+        lockable::try_lock_shared_for(l, boost::chrono::seconds(1));
+        lockable::unlock_shared(l);
     }
     Lockable& l;
-    system_time t;
+    boost::chrono::system_clock::time_point t;
 };
 //]
 
@@ -126,19 +129,19 @@ struct UpgradeLockableConcept {
     BOOST_CONCEPT_ASSERT((ShareLockableConcept<Lockable>));
 
     BOOST_CONCEPT_USAGE(UpgradeLockableConcept) {
-        l.lock_upgrade();
-        //l.lock_upgrade_until(t);
-        //l.lock_upgrade_for(boost::posix_time::seconds(1));
-        l.try_lock_upgrade();
-        //l.try_lock_upgrade_until(t);
-        //l.try_lock_upgrade_for(boost::posix_time::seconds(1));
-        l.unlock_upgrade_and_lock();
-        l.unlock_and_lock_upgrade();
-        l.unlock_and_lock_shared();
-        l.unlock_upgrade_and_lock_shared();
+        lockable::lock_upgrade(l);
+        //lockable::lock_upgrade_until(l, t);
+        //lockable::lock_upgrade_for(l, boost::chrono::seconds(1));
+        lockable::try_lock_upgrade(l);
+        //lockable::try_lock_upgrade_until(l, t);
+        //lockable::try_lock_upgrade_for(l,boost::chrono::seconds(1));
+        lockable::unlock_upgrade_and_lock(l);
+        lockable::unlock_and_lock_upgrade(l);
+        lockable::unlock_and_lock_shared(l);
+        lockable::unlock_upgrade_and_lock_shared(l);
     }
     Lockable& l;
-    system_time t;
+    boost::chrono::system_clock::time_point t;
 };
 //]
 

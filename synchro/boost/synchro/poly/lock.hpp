@@ -10,6 +10,8 @@
 
 #ifndef BOOST_SYNCHRO_POLY_LOCK__HPP
 #define BOOST_SYNCHRO_POLY_LOCK__HPP
+#include <boost/chrono/chrono.hpp>
+#include <boost/thread/thread_time.hpp>
 
 namespace boost { namespace synchro { namespace poly {
 
@@ -38,6 +40,10 @@ struct timed_lock : exclusive_lock {
     {
         return lock_until(get_system_time()+rel_time);
     }
+    virtual bool try_lock_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual bool try_lock_for(chrono::nanoseconds const & relative_time)=0;
+    virtual void lock_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual void lock_for(chrono::nanoseconds const & relative_time)=0;
 };
 
 
@@ -60,6 +66,10 @@ struct sharable_lock : timed_lock {
         lock_shared_until(get_system_time()+rel_time);
     }
     virtual void unlock_shared()=0;
+    virtual bool try_lock_shared_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual bool try_lock_shared_for(chrono::nanoseconds const & relative_time)=0;
+    virtual void lock_shared_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual void lock_shared_for(chrono::nanoseconds const & relative_time)=0;
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -72,15 +82,19 @@ struct upgradable_lock : sharable_lock {
     template<typename TimeDuration>   
     bool try_lock_upgrade_for(TimeDuration const&t)   
     {
-        return try_lock_upgrade_for(t);
+        return try_lock_upgrade_until(get_system_time()+t);
     }
     
     virtual void lock_upgrade_until(system_time const&t)=0;
     template<typename TimeDuration>   
     void lock_upgrade_for(TimeDuration const&t)
     {
-        lock_upgrade_for(t);
+        lock_upgrade_until(get_system_time()+t);
     }
+    virtual bool try_lock_upgrade_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual bool try_lock_shared_for(chrono::nanoseconds const & relative_time)=0;
+    virtual void lock_upgrade_until(chrono::system_clock::time_point const & abs_time)=0;
+    virtual void lock_shared_for(chrono::nanoseconds const & relative_time)=0;
     
     virtual void unlock_upgrade()=0;
     virtual void unlock_upgrade_and_lock()=0;

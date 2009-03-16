@@ -15,6 +15,7 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/chrono/chrono.hpp>
 
 //!\file
 //!Describes null_mutex classes
@@ -70,6 +71,14 @@ public:
    bool try_lock_for(TimeDuration const & relative_time)
    {return true;}
 
+   template<typename Clock, typename Duration>
+   bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+   {return true;}
+
+   template<typename Rep, typename Period>
+   bool try_lock_for(chrono::duration<Rep, Period> const & rel_time)
+   {return true;}
+
    //!Simulates a mutex timed_lock() operation.
    //!Equivalent to "return true;"
    bool lock_until(const boost::posix_time::ptime &)
@@ -81,6 +90,13 @@ public:
    bool lock_for(TimeDuration const & relative_time)
    {return true;}
 
+   template<typename Clock, typename Duration>
+   void lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+   {}
+
+   template<typename Rep, typename Period>
+   void lock_for(chrono::duration<Rep, Period> const & rel_time)
+   {}
 
    //!Simulates a mutex unlock() operation.
    //!Empty function.
@@ -106,6 +122,14 @@ public:
    bool try_lock_shared_for(const TimeDuration &)
    {  return true;   }
 
+   template<typename Clock, typename Duration>
+   bool try_lock_shared_until(chrono::time_point<Clock, Duration> const & relative_time)
+   {return true;}
+
+   template<typename Rep, typename Period>
+   bool try_lock_shared_for(chrono::duration<Rep, Period> const & relative_time)
+   {return true;}
+   
    //!Simulates a mutex lock_shared_until() operation.
    //!Equivalent to "return true;"
    bool lock_shared_until(const boost::posix_time::ptime &)
@@ -117,6 +141,13 @@ public:
    bool lock_shared_for(const TimeDuration &)
    {  return true;   }
 
+   template<typename Clock, typename Duration>
+   void lock_shared_until(chrono::time_point<Clock, Duration> const & relative_time)
+   {}
+   template<typename Rep, typename Period>
+   void lock_shared_for(chrono::duration<Rep, Period> const & relative_time)
+   {}
+   
    //!Simulates a mutex unlock_share() operation.
    //!Empty function.
    void unlock_shared(){}
@@ -135,6 +166,14 @@ public:
    bool try_lock_upgrade_until(boost::posix_time::ptime const &)
    {  return true;   }
 
+   template<typename Clock, typename Duration>
+   bool try_lock_upgrade_until(chrono::time_point<Clock, Duration> const & relative_time)
+   {return true;}
+
+   template<typename Rep, typename Period>
+   bool try_lock_upgrade_for(chrono::duration<Rep, Period> const & relative_time)
+   {return true;}
+   
    //!Simulates a mutex unlock_upgrade() operation.
    //!Empty function.
    void unlock_upgrade(){}
@@ -167,6 +206,14 @@ public:
    bool unlock_upgrade_and_lock_until(const boost::posix_time::ptime &)
    {  return true;   }
 
+   template<typename Clock, typename Duration>
+   bool unlock_upgrade_and_lock_until(chrono::time_point<Clock, Duration> const & relative_time)
+   {return true;}
+
+   template<typename Rep, typename Period>
+   bool unlock_upgrade_and_lock_for(chrono::duration<Rep, Period> const & relative_time)
+   {return true;}
+   
    //!Simulates try_unlock_share_and_lock().
    //!Equivalent to "return true;"
    bool try_unlock_share_and_lock()

@@ -49,21 +49,34 @@ BOOST_CONCEPT_ASSERT((ShareLockableConcept<poly::sharable_lock_adapter<null_mute
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<poly::upgradable_lock_adapter<null_mutex> >));    
 
 BOOST_CONCEPT_ASSERT((LockableConcept<thread_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::mutex>));    
 
 
 BOOST_CONCEPT_ASSERT((LockableConcept<thread_timed_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<thread_timed_mutex>));    
 
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::timed_mutex>));    
+BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::timed_mutex>));    
+
 BOOST_CONCEPT_ASSERT((LockableConcept<thread_recursive_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::recursive_mutex>));    
 
 BOOST_CONCEPT_ASSERT((LockableConcept<thread_recursive_timed_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<thread_recursive_timed_mutex>));    
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::recursive_timed_mutex>));    
+BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::recursive_timed_mutex>));    
 
 BOOST_CONCEPT_ASSERT((LockableConcept<thread_shared_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<thread_shared_mutex>));    
 BOOST_CONCEPT_ASSERT((ShareLockableConcept<thread_shared_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<thread_shared_mutex>));   
 
+BOOST_CONCEPT_ASSERT((LockableConcept<boost::shared_mutex>));    
+BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::shared_mutex>));    
+BOOST_CONCEPT_ASSERT((ShareLockableConcept<boost::shared_mutex>));    
+BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<boost::shared_mutex>));   
+
+#if 0
 BOOST_CONCEPT_ASSERT((LockableConcept<interprocess_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_mutex>));    
 
@@ -83,9 +96,4 @@ BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_named_upgradabl
 BOOST_CONCEPT_ASSERT((ShareLockableConcept<synchro::interprocess_named_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<boost::synchro::interprocess_named_upgradable_mutex>));    
 
-//____________________________________________________________________________//
-
-
-//____________________________________________________________________________//
-
-// EOF
+#endif

@@ -77,8 +77,8 @@ struct upgrade_to_unique_locker_type<interprocess_mutex> {
     typedef boost::interprocess::upgrade_to_unique_lock<boost::interprocess::interprocess_mutex> type;
 };
 #endif
-#if 0    
-typedef boost::interprocess::interprocess_mutex interprocess_mutex;
+#if 1    
+//typedef boost::interprocess::interprocess_mutex interprocess_mutex;
 
 template<>
 struct timed_interface_tag<boost::interprocess::interprocess_mutex> {
@@ -118,6 +118,40 @@ struct best_condition_any<boost::interprocess::interprocess_mutex> {
 };
 
 #endif
+
+namespace lockable {
+    namespace partial_specialization_workaround {
+        template <class Clock, class Duration >
+        struct lock_until<boost::interprocess::interprocess_mutex,Clock, Duration>   {
+            static void 
+            apply( boost::interprocess::interprocess_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            }
+        };
+        template <class Rep, class Period >
+        struct lock_for<boost::interprocess::interprocess_mutex,Rep, Period> {
+            static void 
+            apply( boost::interprocess::interprocess_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            }
+        };
+        template <class Clock, class Duration >
+        struct try_lock_until<boost::interprocess::interprocess_mutex,Clock, Duration> {
+            static typename result_of::template try_lock_until<boost::interprocess::interprocess_mutex,Clock, Duration>::type 
+            apply( boost::interprocess::interprocess_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+            }
+        };
+        template <class Rep, class Period >
+        struct try_lock_for<boost::interprocess::interprocess_mutex,Rep, Period> {
+            static typename result_of::template try_lock_for<boost::interprocess::interprocess_mutex,Rep, Period>::type 
+            apply( boost::interprocess::interprocess_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time));
+            }
+        };
+    }
+}
+
 }
 }
 

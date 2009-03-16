@@ -154,10 +154,12 @@ public:
 
     //!Creates a semaphore with the given initial count.
     //!exception if there is an error.*/
-    inline explict basic_binary_semaphore(int initialCount):basic_semaphore<ScopeTag>(initialCount>0?1:0) {};
+    inline explicit basic_binary_semaphore(int initialCount)
+                        :basic_semaphore<ScopeTag>(initialCount>0?1:0) {};
+                            
     inline void post()
     {
-        scoped_lock lock(this->m_mut);
+        typename basic_semaphore<ScopeTag>::scoped_lock lock(this->m_mut);
         if(this->m_count == 0){
             this->m_cond.notify_one();
             ++(this->m_count);

@@ -17,6 +17,9 @@
 #include <boost/synchro/thread/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/synchro/lockable/functions.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 
@@ -65,11 +68,56 @@ public:
     void lock_shared_for(TimeDuration const& abs_time)
     {if(!timed_lock_shared(abs_time)) throw timeout_exception();}
     
+    template<typename Clock, typename Duration>
+    bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {
+        return timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+    }
+    template<typename Rep, typename Period>
+    bool try_lock_for(chrono::duration<Rep, Period> const & rel_time)
+    {
+        return timed_lock(boost::convert_to<posix_time::time_duration>(rel_time));
+    }
+
+    template<typename Clock, typename Duration>
+    void lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {
+        if(!timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+    }
+    template<typename Rep, typename Period>
+    void lock_for(chrono::duration<Rep, Period> const & rel_time)
+    {
+        if(!timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+    }
+
+//
+    template<typename Clock, typename Duration>
+    bool try_lock_shared_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {
+        return timed_lock_shared(boost::convert_to<posix_time::ptime>(abs_time));
+    }
+    template<typename Rep, typename Period>
+    bool try_lock_shared_for(chrono::duration<Rep, Period> const & rel_time)
+    {
+        return timed_lock_shared(boost::convert_to<posix_time::time_duration>(rel_time));
+    }
+
+    template<typename Clock, typename Duration>
+    void lock_shared_until(chrono::time_point<Clock, Duration> const & abs_time)
+    {
+        if(!timed_lock_shared(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+    }
+    template<typename Rep, typename Period>
+    void lock_shared_for(chrono::duration<Rep, Period> const & rel_time)
+    {
+        if(!timed_lock_shared(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+    }
+    
 };    
 
-#if 0
+#if 1
 
-typedef boost::shared_mutex thread_shared_mutex;
+//typedef boost::shared_mutex thread_shared_mutex;
 
 template<>
 struct timed_interface_tag<boost::shared_mutex> {
@@ -108,6 +156,70 @@ struct best_condition_any<boost::shared_mutex> {
     typedef boost::condition_variable_any type;
 };
 #endif
+
+namespace lockable {
+    namespace partial_specialization_workaround {
+        template <class Clock, class Duration >
+        struct lock_until<boost::shared_mutex,Clock, Duration>   {
+            static void 
+            apply( boost::shared_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            }
+        };
+        template <class Rep, class Period >
+        struct lock_for<boost::shared_mutex,Rep, Period> {
+            static void 
+            apply( boost::shared_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            }
+        };
+        template <class Clock, class Duration >
+        struct try_lock_until<boost::shared_mutex,Clock, Duration> {
+            static typename result_of::template try_lock_until<boost::shared_mutex,Clock, Duration>::type 
+            apply( boost::shared_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+            }
+        };
+        template <class Rep, class Period >
+        struct try_lock_for<boost::shared_mutex,Rep, Period> {
+            static typename result_of::template try_lock_for<boost::shared_mutex,Rep, Period>::type 
+            apply( boost::shared_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time));
+            }
+        };
+
+        template <class Clock, class Duration >
+        struct lock_shared_until<boost::shared_mutex,Clock, Duration>   {
+            static void 
+            apply( boost::shared_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                if(!lockable.timed_lock_shared(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            }
+        };
+        template <class Rep, class Period >
+        struct lock_shared_for<boost::shared_mutex,Rep, Period> {
+            static void 
+            apply( boost::shared_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                if(!lockable.timed_lock_shared(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            }
+        };
+        template <class Clock, class Duration >
+        struct try_lock_shared_until<boost::shared_mutex,Clock, Duration> {
+            static typename result_of::template try_lock_shared_until<boost::shared_mutex,Clock, Duration>::type 
+            apply( boost::shared_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                return lockable.timed_lock_shared(boost::convert_to<posix_time::ptime>(abs_time));
+            }
+        };
+        template <class Rep, class Period >
+        struct try_lock_shared_for<boost::shared_mutex,Rep, Period> {
+            static typename result_of::template try_lock_shared_for<boost::shared_mutex,Rep, Period>::type 
+            apply( boost::shared_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                return lockable.timed_lock_shared(boost::convert_to<posix_time::time_duration>(rel_time));
+            }
+        };
+        
+    }
+}
+
 
 template <>
 struct unique_lock_type<thread_shared_mutex> {

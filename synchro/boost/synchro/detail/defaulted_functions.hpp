@@ -17,22 +17,42 @@
 
 #if defined(BOOST_HAS_DEFAULTED_FUNCTIONS)
 
-    #define BOOST_DEFAULT_CONSTRUCTOR_DEFAULT(T)        \
-      T()=default;                                      \
+    #define BOOST_DEFAULT_CONSTRUCTOR_DCL_DEFAULT(T)        \
+      T()=default;                                          
 
-    #define BOOST_COPY_ASSIGNEMENT_DEFAULT(T)            \
-      T& operator=(const T& rhs)=default;               \
+    #define BOOST_DEFAULT_CONSTRUCTOR_DEF_DEFAULT(T)        \
+      T::T()=default;                                       
+
+    #define BOOST_COPY_ASSIGNEMENT_DCL=DEFAULT(T)           \
+      T& operator=(const T& rhs)=default;                   
+
+    #define BOOST_COPY_ASSIGNEMENT_DEF=DEFAULT(T)          \
+      T& T::operator=(const T& rhs)=default;               
 
 #else // !defined(BOOST_HAS_DEFAULTED_FUNCTIONS)
 
+    #define BOOST_DEFAULT_CONSTRUCTOR_DCL_DEFAULT(T)        \
+      T(){};                                     
+      
     #define BOOST_DEFAULT_CONSTRUCTOR_DEFAULT(T)        \
-      inline T(){};                                     \
+      T(){};                                     
+      
+    #define BOOST_DEFAULT_CONSTRUCTOR_DEF_DEFAULT(T)        \
+      T::T(){};                                     
+      
 
-    #define BOOST_COPY_ASSIGNEMENT_DEFAULT(T)            \
-      inline T& operator=(const T& rhs) {               \
-        T tmp(rhs);                                     \
-        swap(tmp);\
-        return this;\
+    #define BOOST_COPY_ASSIGNEMENT_DCL_DEFAULT(T)           \
+      T& operator=(const T& rhs) {                          \
+        T tmp(rhs);                                         \
+        swap(tmp);                                          \
+        return this;                                        \
+      }
+
+    #define BOOST_COPY_ASSIGNEMENT_DEF_DEFAULT(T)           \
+      T& T::operator=(const T& rhs) {                       \
+        T tmp(rhs);                                         \
+        swap(tmp);                                          \
+        return this;                                        \
       }
 
 #endif // !defined(BOOST_HAS_DEFAULTED_FUNCTIONS)

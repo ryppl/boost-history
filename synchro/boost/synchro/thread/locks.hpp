@@ -16,7 +16,11 @@
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/lockers.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
-
+//#include <boost/synchro/thread/thread_to_lockable_adapter.hpp>
+#include <boost/chrono/chrono.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/synchro/lockable/functions.hpp>
 
 namespace boost { namespace synchro {
 
@@ -40,12 +44,20 @@ namespace boost { namespace synchro {
 
 
     template<typename Mutex>
-    class unique_locker<Mutex,multi_threaded_tag>:  public unique_lock_type<Mutex>::type {
+    class unique_locker<Mutex,multi_threaded_tag>: 
+        public unique_lock_type<Mutex >::type
+    {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
     public:
         typedef Mutex lockable_type;
         typedef multi_threaded_tag scope_tag_type;
-        typedef typename unique_lock_type<Mutex>::type base_type;
+        typedef typename unique_lock_type<Mutex >::type base_type;
+        typedef typename scope_tag<lockable_type>::type scope;
+        typedef typename category_tag<lockable_type>::type category;
+        typedef typename reentrancy_tag<lockable_type>::type reentrancy;
+        typedef typename timed_interface_tag<lockable_type>::type timed_interface;
+        typedef typename lifetime_tag<lockable_type>::type lifetime;
+        typedef typename naming_tag<lockable_type>::type naming;
 
         BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(unique_locker) /*< disable copy construction >*/
         BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(unique_locker) /*< disable copy asignement >*/
@@ -66,12 +78,22 @@ namespace boost { namespace synchro {
         unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
         {}
 
+        template <class Clock, class Duration>            
+        unique_locker(Mutex& m_, chrono::time_point<Clock, Duration> const& target_time)
+            : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
+        {}
         unique_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
             : base_type(m_, target_time)
         {}
+            
         template<typename TimeDuration>
         unique_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
             : base_type(m_, target_time)
+        {}
+
+        template <class Clock, class Duration>            
+        unique_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
+            : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
         {}
 
         unique_locker(Mutex& m_,system_time const& target_time, throw_timeout_t)
@@ -86,6 +108,12 @@ namespace boost { namespace synchro {
             lock_for(target_time);
         }
 
+        template <class Clock, class Duration>            
+        unique_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time, throw_timeout_t)
+            : base_type(m_, boost::defer_lock)
+        {
+            lock_until(target_time);
+        }
 
         template<typename TimeDuration>
         unique_locker(TimeDuration const& target_time, Mutex& m_)
@@ -94,6 +122,12 @@ namespace boost { namespace synchro {
             lock_for(target_time);
         }
         unique_locker(system_time const& target_time, Mutex& m_)
+            : base_type(m_, boost::defer_lock)
+        {
+            lock_until(target_time);
+        }
+        template <class Clock, class Duration>            
+        unique_locker(chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             lock_until(target_time);
@@ -181,7 +215,21 @@ namespace boost { namespace synchro {
         template<typename TimeDuration>
         bool try_lock_for(TimeDuration const& relative_time)
         {
+            #if 1
             return this->timed_lock(relative_time);
+            #else
+            try_lock_for(*this, relative_time);
+            #endif
+        }
+
+        template <class Rep, class Period >
+        bool try_lock_for(chrono::duration<Rep, Period> const& relative_time)
+        {
+            #if 1
+            return this->timed_lock(boost::convert_to<posix_time::time_duration>(relative_time));
+            #else
+            return lockable::try_lock_for(*this, relative_time);
+            #endif
         }
 
         bool try_lock_until(::boost::system_time const& absolute_time)
@@ -200,6 +248,35 @@ namespace boost { namespace synchro {
             if(!try_lock_until(absolute_time)) throw timeout_exception();
         }
 
+        template<typename Clock, typename Duration>
+        bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+        {
+            #if 1
+            return this->timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+            #else
+            return lockable::try_lock_until(*this, abs_time);
+            #endif
+        }
+
+        template<typename Clock, typename Duration>
+        void lock_until(chrono::time_point<Clock, Duration> const & abs_time)
+        {
+            #if 1
+            if(!this->timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            #else
+            lockable::lock_until(*this, abs_time);
+            #endif
+        }
+        template<typename Rep, typename Period>
+        void lock_for(chrono::duration<Rep, Period> const & rel_time)
+        {
+            #if 1
+            if(!this->timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            #else
+            lockable::lock_for(*this, rel_time);
+            #endif
+        }
+        
         friend class shared_locker<Mutex,scope_tag_type>;
         friend class upgrade_locker<Mutex,scope_tag_type>;
     };
@@ -217,7 +294,13 @@ namespace boost { namespace synchro {
         BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(try_unique_locker) /*< disable copy asignement >*/
 
         explicit try_unique_locker(Mutex& m_): base_type(m_, boost::defer_lock)
-        { this->try_lock(); }
+        { 
+            #if 1
+            this->try_lock(); 
+            #else
+            lockable::try_lock(*this);
+            #endif
+        }
         try_unique_locker(Mutex& m_,force_lock_t): base_type(m_)
         {}
         try_unique_locker(Mutex& m_,adopt_lock_t): base_type(m_, boost::adopt_lock)
@@ -343,7 +426,9 @@ namespace boost { namespace synchro {
     };
 
     template<typename Mutex>
-    class shared_locker<Mutex,multi_threaded_tag>:  public shared_lock_type<Mutex>::type {
+    class shared_locker<Mutex,multi_threaded_tag>:
+        public shared_lock_type<Mutex >::type 
+    {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
     public:
         typedef Mutex lockable_type;
@@ -515,7 +600,9 @@ namespace boost { namespace synchro {
 #endif
 #endif
     template<typename Mutex>
-    class upgrade_locker<Mutex,multi_threaded_tag>:  public upgrade_lock_type<Mutex>::type {
+    class upgrade_locker<Mutex,multi_threaded_tag>:  
+        public upgrade_lock_type<Mutex>::type 
+    {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
     public:
         typedef Mutex lockable_type;
@@ -658,7 +745,9 @@ namespace boost { namespace synchro {
 
 
     template<typename Mutex>
-    class upgrade_to_unique_locker<Mutex,multi_threaded_tag>:  public upgrade_to_unique_locker_type<Mutex>::type {
+    class upgrade_to_unique_locker<Mutex,multi_threaded_tag>:  
+        public upgrade_to_unique_locker_type<Mutex>::type 
+    {
         //typename scope_tag<Mutex>::type == multi_threaded_tag
     public:
         typedef Mutex lockable_type;
@@ -689,7 +778,7 @@ namespace boost { namespace synchro {
         }
         Mutex* mutex() const
         {
-            return static_cast<Mutex*>(this->base_type.mutex());
+            return this->base_type.mutex()->mutex();
         }
 
         bool is_locking(lockable_type* l) const {
