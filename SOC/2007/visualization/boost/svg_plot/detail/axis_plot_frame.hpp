@@ -119,7 +119,7 @@ namespace boost
         // void clear_plot_background();
         // void clear_grids();
         void transform_point(double& x, double& y)
-        { //! Scale & shift both X & Y to graph coordinates.
+        { //! Scale & shift both X & Y to graph Cartesian coordinates.
           x = derived().x_scale_ * x + derived().x_shift_;
           y = derived().y_scale_ * y + derived().y_shift_;
           adjust_limits(x, y); // In case either hits max, min, infinity or NaN.
@@ -1760,7 +1760,11 @@ namespace boost
           svg_color limit_color();
           Derived& limit_fill_color(const svg_color&);
           svg_color limit_fill_color();
-          Derived& draw_note(double x, double y, std::string note, text_style& tsty = no_style, align_style al = center_align, rotate_style rot = horizontal, const svg_color& = black);
+          Derived& draw_note(double x, double y, std::string note, rotate_style rot = horizontal, align_style al = center_align, const svg_color& = black, text_style& tsty = no_style);
+          Derived& draw_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
+          Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
+           Derived& draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3,const svg_color& col = black);
+
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -3757,7 +3761,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         }
 
         template <class Derived>
-        Derived& axis_plot_frame<Derived>::draw_note(double x, double y, std::string note, text_style& tsty/* = no_style*/, align_style al/* = center_align*/, rotate_style rot /*= horizontal*/, const svg_color& col)
+        Derived& axis_plot_frame<Derived>::draw_note(double x, double y, std::string note, rotate_style rot /*= horizontal*/, align_style al/* = center_align*/, const svg_color& col /* black */, text_style& tsty/* = no_style*/)
         { /*! \brief Annotate plot with a  text string (perhaps including Unicode), putting note at SVG Coordinates X, Y.
             \details Defaults color black, rotation horizontal and align = center_align
             Using center_align is recommended as it will ensure that will center correctly
@@ -3765,26 +3769,68 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             for example Greek or math symbols, taking about 6 characters per symbol)
             because the render engine does the centering.
           */
-
-           // g_element* g_ptr = &(derived().image.g(detail::PLOT_NOTES));
-           g_element* g = &(derived()).image.g(); // New group
-           g->style().fill_color(col);
-           g->push_back(new text_element(x, y, note, tsty, al, rot));
-
-           //g_ptr->style().fill_color(red);
-           //g_ptr->push_back(new text_element(x, y, note, tsty, al, rot));
-          //derived().image.g(detail::PLOT_NOTES).text(x, y,
-          //gptr.text(x, y,
-          //          note, // string
-          //          tsty, // no_style,
-          //          al, //center_align,
-          //          rot); // horizontal);
-
+           g_element* g = &(derived()).image.g(); // New group.
+           g->style().fill_color(col); // Set its color
+           g->push_back(new text_element(x, y, note, tsty, al, rot)); // Add to document image.
           // No checks on X or Y - leave to SVG to not draw outside image.
           // Could warn if X and/or Y outside - but even if OK, then text could still stray outside image.
           return derived();
         } // void draw_note()
 
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::draw_line(double x1, double y1, double x2, double y2, const svg_color& col /* black */)
+        { /*! \brief Annotate plot with a line from SVG Coordinates X1, Y1 to X2, Y2.
+              \details Default color black.
+          */
+          g_element* g = &(derived()).image.g(); // New group.
+          g->style().stroke_color(col);
+          //g->style().width(w); // todo
+          g->push_back(new line_element(x1, y1, x2, y2));
+          // No checks on X or Y - leave to SVG to not draw outside image.
+          // Could warn if X and/or Y outside ?
+          return derived();
+        } // void draw_line()
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col /* black */)
+        { /*! \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 to X2, Y2.
+              \details For example, -10, -10, +10, +10, Default color black.
+          */
+          derived().calculate_plot_window(); // To ensure the scale and shift are setup for transform.
+          // It would be better to store the line (and curve and text) information like plot data series to
+          // ensure that transform works correctly.
+          // This assumes that the notes, lines and curves are the last item before the write.
+          transform_point(x1, y1);
+          transform_point(x2, y2);
+          g_element* g = &(derived()).image.g(); // New group.
+          g->style().stroke_color(col);
+          g->push_back(new line_element(x1, y1, x2, y2));
+          // No checks on X or Y - leave to SVG to not draw outside image.
+          // Actually we want to use clip_path for the plot area.
+          // Could warn if X and/or Y outside ?
+          return derived();
+        } // void draw_plot_line()
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3, const svg_color& col /* black */)
+        { /*! \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 via X2, Y2 to X3, Y3.
+              \details For example, -10, -10, +10, +10, Default color black.
+          */
+          derived().calculate_plot_window(); // To ensure the scale and shift are setup for transform.
+          // It would be better to store the line (and curve and text) information like plot data series to
+          // ensure that transform works correctly.
+          // This assumes that the notes, lines and curves are the last item before the write.
+          transform_point(x1, y1);
+          transform_point(x2, y2);
+          transform_point(x3, y3);
+          g_element* g = &(derived()).image.g(); // New group.
+          g->style().stroke_color(col);
+          g->push_back(new qurve_element(x1, y1, x2, y2, x3, y3));
+          // No checks on X or Y - leave to SVG to not draw outside image.
+          // Actually we want to use clip_path for the plot area.
+          // Could warn if X and/or Y outside ?
+          return derived();
+        } // void draw_plot_curve
 
       } // detail
     } // svg

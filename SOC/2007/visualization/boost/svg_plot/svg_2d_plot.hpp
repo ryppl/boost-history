@@ -615,6 +615,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       void transform_pair(std::pair<double, double>& pt)
       { //! Transform both x and y from Cartesian to SVG coordinates.
         //! SVG image is 0, 0 at top left, Cartesian at bottom left.
+        // scale and shift are set in calculate_plot_window().
         transform_point(pt.first, pt.second);
       }
       void calculate_plot_window()

@@ -220,17 +220,19 @@ namespace svg
   // Reminder: Within a literal C string, \"  is needed to output a " ;-)
 
   // -----------------------------------------------------------------
-  // Represents a line
+  // Represents a straight line
   // -----------------------------------------------------------------
   class line_element: public svg_element
   { /*! \class boost::svg::line_element
-        \brief Line from (x1, x2) to (y1, y2).
+        \brief Line from (x1, y1) to (x2, y2).
+        /details Straight line from SVG location (x1, y1) to (x2, y2).
+
     */
   private:
-    double x1_; //! Line from (x1_, x2_) to (y1_, y2_)
-    double x2_; //! Line from (x1_, x2_) to (y1_, y2_)
-    double y1_; //! Line from (x1_, x2_) to (y1_, y2_)
-    double y2_; //! Line from (x1_, x2_) to (y1_, y2_)
+    double x1_; //!< Line from (x1_, x2_) to (y1_, y2_)
+    double x2_; //!< Line from (x1_, x2_) to (y1_, y2_)
+    double y1_; //!< Line from (x1_, x2_) to (y1_, y2_)
+    double y2_; //!< Line from (x1_, x2_) to (y1_, y2_)
 
   public:
     line_element(double x1, double y1, double x2,  double y2)
@@ -250,12 +252,67 @@ namespace svg
     }
 
     void write(std::ostream& rhs)
-    { //! output line from (x1_, x2_) to (y1_, y2_)
+    { //! output line from (x1_, y1_) to (x2_, y2_)
+      //! \brief Write XML SVG command to draw a straight line.
       //! \details \verbatim Example: <line x1="5" y1="185" x2="340" y2="185"/> \endverbatim
       rhs << "<line x1=\"" << x1_ << "\" y1=\"" << y1_
           << "\" x2=\"" << x2_ << "\" y2=\"" << y2_ << "\"/>";
     }
   }; // class line_element
+
+  // Represents a curve (quadratic)
+  class qurve_element: public svg_element
+  { /*! \class boost::svg::qurve_element
+        \brief Quadratic Bezier curved line from (x1, y1) control point (x2, y2) to (x3, y3).
+        \details Note x2 is the Bezier control point - the curve will \b not pass thru this point.
+    */
+  private:
+    double x1_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+    double x2_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+    double y1_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+    double y2_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+    double x3_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+    double y3_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
+
+  public:
+    // bool fill; now inherited from parent svg class.
+    qurve_element(double x1, double y1, double x2,  double y2, double x3,  double y3)
+      :   x1_(x1), y1_(y1), x2_(x2), y2_(y2),  x3_(x3), y3_(y3)
+    {
+    }
+
+    qurve_element(double x1, double y1,
+                 double x2, double y2, // Control point - will not pass thru this point.
+                 double x3, double y3,
+                 const svg_style& style_info,
+                 const std::string& id_name="",
+                 const std::string& class_name="",
+                 const std::string& clip_name = "")
+                : x1_(x1), y1_(y1), x2_(x2), y2_(y2), x3_(x3), y3_(y3),
+                  svg_element(style_info, id_name, class_name, clip_name)
+    {
+    }
+
+    void write(std::ostream& o_str)
+    { /*! output quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (x3_, y3_) 
+       \details
+          \verbatim Example:  
+          \endverbatim
+      */
+      o_str << "<path d=\"M" << x1_ << "," << y1_ 
+          << " Q" << x2_ << "," << y2_ << " " // Control point - will not pass thru this point.
+          //<< x1_ << "," << y1_ << " "
+          //<< x2_ << "," << y2_ << " "
+          << x3_ << "," << y3_ 
+          <<"\"";
+      if(style_info_.fill_on() == false)
+      {
+        o_str << " fill = \"none\"";
+      }
+      o_str<<"/>";
+      // Perhaps
+    }
+  }; // class qurve_element
 
   class rect_element : public svg_element
   { /*! \class boost::svg::rect_element
