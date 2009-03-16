@@ -52,9 +52,18 @@ namespace cgi {
       typedef boost::asio::const_buffers_1      const_buffers_type;
       typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
  
+      /**
+       * If you want to add a new data type to a request you need to:
+       *   > Update this file (just below)
+       *   > Update source_enums.hpp
+       *   > Update map.hpp with a new map type
+       *   > Use the `BOOST_CGI_DETAIL_MAP_ACCESS` macro in `basic_request<>`,
+       *     next to the other uses of it.
+       */
       typedef boost::fusion::vector<
           common::env_map, common::get_map
         , common::post_map, common::cookie_map
+        , common::session_map
       >   var_map_type;
 
       var_map_type vars_;

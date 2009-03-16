@@ -66,7 +66,10 @@ enum fcgi_errors
   bad_read,
 
   // A client wasn't able to open.
-  client_not_open
+  client_not_open,
+  
+  // End of File (read zero bytes)
+  eof
 };
 
   namespace detail {

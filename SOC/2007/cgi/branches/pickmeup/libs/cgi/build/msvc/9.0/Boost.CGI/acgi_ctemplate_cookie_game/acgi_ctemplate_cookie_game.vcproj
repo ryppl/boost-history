@@ -86,7 +86,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\style.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\style.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;&#x0D;&#x0A;"
 			/>
 		</Configuration>
 		<Configuration
@@ -162,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\main.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;"
 			/>
 		</Configuration>
 	</Configurations>

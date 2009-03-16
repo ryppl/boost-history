@@ -160,8 +160,9 @@ namespace cgi {
       form_parser::parse_multipart_form(boost::system::error_code& ec)
     {
       parse_boundary_marker(ec);
-
+      std::cerr<< "Parsed boundary marker" << std::endl;
       move_to_start_of_first_part(ec);
+      std::cerr<< (ec ? "Error finding first multipart section" : "Moved to start of actual data") << std::endl;
 
       if (ec && ec != boost::asio::error::eof)
         return ec;
@@ -191,6 +192,7 @@ namespace cgi {
     boost::system::error_code
       form_parser::parse_form_part_data(boost::system::error_code& ec)
     {
+      std::cerr<< "In form_parser::parse_form_part_data" << std::endl;
       std::string regex("^(.*?)" // the data
                         "\\x0D\\x0A" // CR LF
                         "--" "(");
@@ -209,7 +211,7 @@ namespace cgi {
         regex += *boundary_markers.begin();
       }
 
-      regex += ")(--)?[ ]*\\x0D\\x0A";
+      regex += ")(--)?[ ]*(?:\\x0D\\x0A)?";
       boost::regex re(regex);
 
       typedef buffer_type::iterator buffer_iter;
@@ -221,6 +223,7 @@ namespace cgi {
       //int runs = 0;
       buffer_iter begin(buffer_.begin() + offset);
       buffer_iter end(buffer_.end());
+      std::cerr<< "Current buffer (a) :{ " << std::string(begin,end) << " }: " << std::endl;
 
       for(;;)
       {
@@ -301,7 +304,7 @@ namespace cgi {
                             "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
                             "(?:\"?([-.\\w]*)\"?)" // value may be empty
                           ")?"        // mark the extra n/v pairs optional
-                          "\\x0D\\x0A"
+                          "(?:\\x0D\\x0A)"
                         ")"
                         "(?:"
                           "([-\\w]+)" // name
@@ -322,9 +325,11 @@ namespace cgi {
                             "[ \\x0D\\x0A]*=[ \\x0D\\x0A]*"       // separator
                             "(?:\"?([-.\\w]*)\"?)" // value may be empty
                           ")?"        // mark the extra n/v pairs optional
-                          "\\x0D\\x0A"    // followed by the end of the line
+                          "(?:\\x0D\\x0A)"    // followed by the end of the line
                         ")?"
                       "(\\x0D\\x0A)");     // followed by the 'header termination' line
+                      
+      boost::regex re2("([^\\n\\r]+?)\\r\\n\\r\\n");
 
       typedef buffer_type::iterator buffer_iter;
 
@@ -339,10 +344,12 @@ namespace cgi {
       {
         buffer_iter begin(buffer_.begin() + offset);
         buffer_iter end(buffer_.end());
+        std::cerr<< "Current buffer (b) :{ " << std::string(begin,end) << " }: " << std::endl;
 
-        if (!boost::regex_search(begin, end, matches, re
+        if (!boost::regex_search(begin, end, matches, re2
                                 , boost::match_default | boost::match_partial))
         {
+          std::cerr<< "Read all stdin." << std::endl;
           stdin_parsed_ = true;
           return ec;
         }
@@ -353,7 +360,7 @@ namespace cgi {
               ; i < matches.size()
                && matches[i].matched
                && !matches[i].str().empty()
-              ; i+=2)
+              ; i+=1)
           {
             if (matches[i].str() == "name")
             {
@@ -364,27 +371,30 @@ namespace cgi {
               part.meta_data_[matches[i]]
                 = std::make_pair(matches[i+1].first, matches[i+1].second);
             }
+            std::cerr<< "Adding form part with name :{ " << part.name << " }: " << std::endl;
             form_parts_.push_back(part);
          }
+         
+         std::cerr<< " num matches = " << matches.size() << std::endl;
+         std::cerr<< "matches[13] :{ " << matches[13].str() << " }: " << std::endl;
 
          if (matches[13].str() == "\r\n")
          {
            offset_ = offset + matches[0].length();
            offset += matches[0].length();
            pos_ = matches[0].second;
-
+           std::cerr<< "stuff :{ " << matches[0].str() << " }: " << std::endl;
            return ec;
          }
          else
          {
+           std::cerr<< "oh no" << std::endl;
            throw std::runtime_error("Invalid POST data (header wasn't terminated as expected)");
          }
 
         }else{
-          bytes_read
-            = callback_(ec);
-          if (ec)
-            return ec;
+          bytes_read = callback_(ec);
+          if (ec) return ec;
           if (++runs > 40)
           {
             std::cerr<< "Done 40 runs; bailing out" << std::endl;
@@ -392,7 +402,7 @@ namespace cgi {
           }
        }
       }
-
+      std::cerr<< " -- Done form part meta data. -- " << std::endl;
       return ec;
     }
 
@@ -400,18 +410,19 @@ namespace cgi {
     boost::system::error_code
       form_parser::move_to_start_of_first_part(boost::system::error_code& ec)
     {
-      boost::regex re("((?:.*)?"   // optional leading characters
+      //std::cerr<< "In func: " << boundary_markers.front() << std::endl;
+      boost::regex re("(?:"//(?:.*?)?"   // optional leading characters
                       //"(?:\\x0D\\x0A)|^" // start of line
-                      "[\\x0D\\x0A^]*?"
+                      //"[\\x0D\\x0A^\\<]*?"
                       "("
                         "--" + boundary_markers.front() + // two dashes and our marker
                       ")"
-                      "(--)?" // optional two dashes (not sure if this is allowed)
-                      " *\\x0D\\x0A)");
+                      "(--)?" // optional two dashes
+                      "[ \\r\\n]*?\\r\\n)");
                                         // on the first marker.
 
       typedef buffer_type::iterator buffer_iter;
-      //std::cerr<< "Regex := " << re << std::endl;
+      std::cerr<< "Regex :{ " << re << " }: " << std::endl;
 
       boost::match_results<buffer_iter> matches;
 
@@ -421,11 +432,15 @@ namespace cgi {
       std::size_t bytes_read = 0;
       for(;;)
       {
-        bytes_read
-          = callback_(ec);
+        // The function object stored in `callback_` is used to read data.
+        bytes_read = callback_(ec);
+        
+        std::cerr<< "Read " << bytes_read << " bytes from the socket (offset = " << offset << ")." << std::endl
+                 << "Current buffer :{ " << std::string(buffer_.begin(), buffer_.end()) << " }: " << std::endl;
 
-        if (ec || (bytes_read == 0))
-          return ec;
+        //if (bytes_read == 0) ec = common::error::multipart_form_boundary_not_found;
+        if (ec || bytes_read == 0) return ec;
+        
         buffer_iter begin(buffer_.begin());// + offset);
         buffer_iter end(buffer_.end());
         if (!boost::regex_search(begin, end //impl.buffer_.begin(), impl.buffer_.end()
@@ -436,7 +451,9 @@ namespace cgi {
         }
         else
         {
-          if (matches[2].matched)
+          std::cerr<< "Matches :{ " << matches[0].str() << " }: " << std::endl;
+
+          if (matches[1].matched)
           {
             buffer_.erase(buffer_.begin(), matches[0].second);
             offset_ = 0;
@@ -446,7 +463,7 @@ namespace cgi {
           else
           {
             if (++runs > 10)
-              return ec;
+              return ec = common::error::multipart_form_boundary_not_found;
             continue;
           }
         }
@@ -462,7 +479,20 @@ namespace cgi {
       //BOOST_ASSERT(!content_type.empty());
 
       // **FIXME** (don't use Boost.Regex)
-      boost::regex re("; ?boundary=\"?([^\"\n\r]+)\"?");
+      std::cerr<< " :{ " << content_type_ << " }: " << std::endl;
+      /*
+      std::string::size_type sz = content_type_.find("=");
+      if (sz == std::string::npos)
+        return boost::system::error_code(666, boost::system::system_category);
+        
+      std::string::size_type sz2 = content_type_.find("\r", sz);
+      boundary_marker = content_type_.substr(sz+1);
+      // New boundary markers are added to the front of the list.
+      boundary_markers.push_front(boundary_marker);
+      /*
+      std::cerr<< "Need string:: " << content_type_.substr(sz+1) << " (" << sz << "," << (sz2) << ")";
+      */
+      boost::regex re("; ?boundary=\"?([^\"\\r]+)\"?(\\r\\n)?");
       boost::smatch match_results;
       if (!boost::regex_search(content_type_, match_results, re))
         return boost::system::error_code(666, boost::system::system_category);
@@ -470,7 +500,7 @@ namespace cgi {
       boundary_marker = match_results[1].str();
       // New boundary markers are added to the front of the list.
       boundary_markers.push_front(match_results[1].str());
-      std::cerr<< "boundary marker := " << boundary_marker << std::endl;
+      std::cerr<< "boundary marker :{ " << boundary_marker << " }: " << std::endl;
 
       return ec;
     }

@@ -60,6 +60,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="libboost_system-vc90-mt-gd-1_38.lib"
 				LinkIncremental="2"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -85,6 +86,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\fcgi-bin\$(TargetName)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -132,6 +134,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="libboost_system-vc90-mt-1_38.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -159,6 +162,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\fcgi-bin\$(TargetName)&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -170,6 +174,10 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath="..\..\..\..\..\example\fcgi\hello_world\main.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"

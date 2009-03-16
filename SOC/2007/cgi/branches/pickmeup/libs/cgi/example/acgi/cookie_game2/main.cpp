@@ -1,32 +1,15 @@
-//                     -- main.hpp --
-//
-//           Copyright (c) Darren Garvey 2007.
-// Distributed under the Boost Software License, Version 1.0.
-//    (See accompanying file LICENSE_1_0.txt or copy at
-//          http://www.boost.org/LICENSE_1_0.txt)
-//
-////////////////////////////////////////////////////////////////
-//
-//[acgi_cookie_game2
-//
-// Cookie Test With cTemplate
-// --------------------------
-//
-// This file uses Google cTemplate to show the benefits of using an HTML
-// template engine. Using cTemplate to separate how you show the response and
-// how you figure out what to respond with, is keeping to the MVC paradigm.
-// Read up on that if you're not familiar; if you already are, you can
-// probably stop scowling at the last cookie_game example now.
-//
-#include <boost/cgi/acgi.hpp>
+//                     -- main.hpp --////           Copyright (c) Darren Garvey 2007.// Distributed under the Boost Software License, Version 1.0.//    (See accompanying file LICENSE_1_0.txt or copy at//          http://www.boost.org/LICENSE_1_0.txt)//////////////////////////////////////////////////////////////////////[acgi_cookie_game2//// Cookie Test With cTemplate// --------------------------//// This file uses Google cTemplate to show the benefits of using an HTML// template engine. Using cTemplate to separate how you show the response and// how you figure out what to respond with, is keeping to the MVC paradigm.// Read up on that if you're not familiar; if you already are, you can// probably stop scowling at the last cookie_game example now.//#include <boost/cgi/acgi.hpp>
 #include <boost/cgi/utility.hpp>
 #include <google/template.h>
+//]
 
 /**
  * The following example has a few stages.
  * It is best understood by compiling and testing it, and then looking at
  * the source code.
  */
+
+//[main
 
 using namespace boost::acgi;
 
@@ -106,11 +89,13 @@ int main()
 
     if (has_key(req[form], "name"))
     {
+      // If requested by the user, delete the cookie.
       if (has_key(req[form], "del"))
         resp<< cookie(req[form]["name"]);
-      else
+      else // Set the cookie.
         resp<< cookie(req[form]["name"], req[form]["value"]);
       resp<< redirect(req, req.script_name());
+      // Exit here.
       return_(resp, req, http::ok);
     }
 

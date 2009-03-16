@@ -58,7 +58,7 @@ namespace cgi {
 // on by default).
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
          if (name.empty())
-           destination[current_token.c_str()] = "";
+           destination.insert(std::make_pair(common::name(current_token.c_str()), ""));
          else
 #endif // BOOST_CGI_KEEP_EMPTY_VARS
            destination[name.c_str()] = current_token;

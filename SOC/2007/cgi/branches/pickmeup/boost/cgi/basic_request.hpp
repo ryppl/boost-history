@@ -460,29 +460,31 @@ namespace cgi {
       return env_vars(this->implementation.vars_)[n];
     }
 
+    /// Set up accessor functions for environment variables
+    /**
+     * if you have, eg.
+     *
+     * request req(...);
+     * req[get] -> returns a -> get_map&
+     *
+     * You can use this just like a std::map<>`
+     *
+     * If you want to add a new data type to a request you need to:
+     *   > Update this file (just below)
+     *   > Update source_enums.hpp
+     *   > Update map.hpp with a new map type
+     *   > Update `data_map_type` in the `request_base` class
+     */
     /// Get a `common::env_map&` of all the environment variables.
-    env_map& operator[](common::env_data_type const&)
-    {
-      return env_vars(this->implementation.vars_);
-    }
-
+    BOOST_CGI_DETAIL_MAP_ACCESS(env)
     /// Get a `common::get_map&` of all the GET variables.
-    get_map& operator[](common::get_data_type const&)
-    {
-      return get_vars(this->implementation.vars_);
-    }
-
+    BOOST_CGI_DETAIL_MAP_ACCESS(get)
     /// Get a `common::post_map&` of all the POST variables.
-    post_map& operator[](common::post_data_type const&)
-    {
-      return post_vars(this->implementation.vars_);
-    }
-
+    BOOST_CGI_DETAIL_MAP_ACCESS(post)
     /// Get a `common::cookie_map&` of all the cookies.
-    cookie_map& operator[](common::cookie_data_type const&)
-    {
-      return cookie_vars(this->implementation.vars_);
-    }
+    BOOST_CGI_DETAIL_MAP_ACCESS(cookie)
+    /// Get a `common::session_map&` of all the session variables.
+    BOOST_CGI_DETAIL_MAP_ACCESS(session)
 
     /// Get a `common::form_map&` of either the GET or POST variables.
     form_map& operator[](common::form_data_type const&)

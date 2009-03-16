@@ -136,6 +136,7 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalOptions="libboost_system-vc90-mt-1_38.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -163,6 +164,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;"
 			/>
 		</Configuration>
 	</Configurations>

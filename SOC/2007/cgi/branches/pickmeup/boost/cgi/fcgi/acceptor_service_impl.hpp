@@ -147,18 +147,19 @@ namespace cgi {
        //assign(impl.acceptor_, , 0, ec);
        return acceptor_service_.assign(impl.acceptor_, boost::asio::ip::tcp::v4()
                                       , 0, ec);
- #else
+#else
 //#      error "Windows isn't supported at the moment"
        HANDLE hListen = INVALID_HANDLE_VALUE;
        boost::asio::detail::socket_type sock;
        struct sockaddr sa;
        int sa_len = sizeof(sa);
 #if NO_WSAACCEPT
-       sock = accept((boost::asio::detail::socket_type)hListen, &sa, &sa_len);
-       if (sock == INVALID_SOCKET)
-         return cgi::error::invalid_socket;
+//       sock = accept((boost::asio::detail::socket_type)hListen, &sa, &sa_len);
+//       if (sock == INVALID_SOCKET)
+//         return cgi::error::invalid_socket;
 #else
-       sock = WSAAccept((unsigned int)hListen, &sa, &sa_len, NULL, (DWORD)NULL);
+//#error BOOST_WINDOWS
+       //sock = WSAAccept((unsigned int)hListen, &sa, &sa_len, NULL, (DWORD)NULL);
        if (sock == INVALID_SOCKET)
          return ::cgi::error::invalid_socket;
 #endif

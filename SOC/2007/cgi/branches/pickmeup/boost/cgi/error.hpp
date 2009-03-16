@@ -11,7 +11,9 @@
 // The errors for everything are defined in here. ie. FastCGI,
 // CGI and SCGI errors.
 //
-// **FIXME** This is a mess.
+// **FIXME** There should likely be a common set of errors and
+//           then protocol-specific errors. So far, everything
+//           is an fcgi_error, which clearly isn't right.
 //
 ////////////////////////////////////////////////////////////////
 #ifndef CGI_ERROR_HPP_INCLUDED__
@@ -19,6 +21,7 @@
 
 #include <string>
 #include <boost/system/error_code.hpp>
+#include "boost/cgi/common/error.hpp"
 #include "boost/cgi/fcgi/error.hpp"
 
 namespace cgi {
