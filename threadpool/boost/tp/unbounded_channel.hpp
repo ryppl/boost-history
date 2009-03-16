@@ -133,7 +133,7 @@ private:
 					& unbounded_channel::consumers_activate_,
 					this) );
 		}
-		catch ( thread_interrupted const& e)
+		catch ( thread_interrupted const&)
 		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
@@ -162,7 +162,7 @@ private:
 					this) ) )
 				return false;
 		}
-		catch ( thread_interrupted const& e)
+		catch ( thread_interrupted const&)
 		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;

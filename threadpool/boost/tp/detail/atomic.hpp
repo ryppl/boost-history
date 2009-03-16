@@ -16,22 +16,23 @@ namespace detail
 
 template< typename T >
 bool atomic_compare_exchange_ptr( volatile T * object, T expected, T desired)
-{ return InterlockedCompareExchangePointer( object, expected, desired); }
+{ return InterlockedCompareExchangePointer( ( PVOID *) object, ( PVOID) expected, ( PVOID) desired); }
 
+inline
 void atomic_write_32( volatile unsigned int * object, unsigned int desired)
-{ InterlockedExchange( object, desired); }
+{ InterlockedExchange( ( volatile LONG *) object, desired); }
 
 template< typename T >
 void atomic_write_ptr( volatile T * object, T desired)
-{ InterlockedExchangePointer( object, desired); }
+{ InterlockedExchangePointer( ( volatile LONG *) object, desired); }
 
 inline
 unsigned int atomic_inc_32( volatile unsigned int * object)
-{ return InterlockedIncrement( object); }
+{ return InterlockedIncrement( ( volatile LONG *) object); }
 
 inline
 unsigned int atomic_dec_32( volatile unsigned int * object)
-{ return InterlockedDecrement( object); }
+{ return InterlockedDecrement( ( volatile LONG *) object); }
 
 #elif defined(__hpux)
 
