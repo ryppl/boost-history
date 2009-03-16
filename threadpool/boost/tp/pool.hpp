@@ -316,8 +316,8 @@ private:
 	bool closed_() const
 	{ return state_ > 0; }
 
-	void close_()
-	{ detail::atomic_fetch_add( & state_, 1); }
+	unsigned int close_()
+	{ return detail::atomic_fetch_add( & state_, 1); }
 
 public:
 	explicit pool(
@@ -445,8 +445,7 @@ public:
 
 	void shutdown()
 	{
-		if ( closed_() ) return;
-		close_();
+		if ( closed_() || close_() > 1) return;
 
 		channel_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_worker_);
@@ -459,8 +458,8 @@ public:
 
 	const std::vector< detail::callable > shutdown_now()
 	{
-		if ( closed_() ) return std::vector< detail::callable >();
-		close_();
+		if ( closed_() || close_() > 1)
+			return std::vector< detail::callable >();
 
 		channel_.deactivate_now();
 		shared_lock< shared_mutex > lk( mtx_worker_);

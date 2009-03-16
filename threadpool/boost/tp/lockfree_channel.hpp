@@ -9,6 +9,7 @@
 #include <boost/tp/detail/atomic.hpp>
 #include <boost/tp/detail/callable.hpp>
 #include <boost/tp/detail/interrupter.hpp>
+#include <boost/tp/exceptions.hpp>
 
 namespace boost {
 namespace tp
@@ -140,9 +141,12 @@ public:
 
 	void put( item const& itm)
 	{
+		if ( ! active_() )
+			throw task_rejected("channel is not active");
+
 		pointer_t tail;
 		node_t * node( new node_t( itm) );
-		for (;;)
+		for ( active() )
 		{
 			tail = pointer_t( tail_);
 			node->next = pointer_t( tail.ptr, tail.tag + 1);
