@@ -302,7 +302,7 @@ namespace boost { namespace synchro {
         
         
         typedef bool (unique_array_locker::*bool_type)() const; /*< safe bool idiom >*/
-        operator bool_type() const { return (owns_lock()?&strict_locker::owns_lock:0;  }
+        operator bool_type() const { return (owns_lock()?&unique_array_locker::owns_lock:0);  }
         bool operator!() const { return !owns_lock(); } 
         
         void lock() {
