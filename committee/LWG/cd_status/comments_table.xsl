@@ -9,16 +9,19 @@ table, with anchors for each separate issue of the form US1 or UK234.
 It is NOT the production stylesheet for producing the post-meeting
 comment-status document.
 
-It takes two parameters: "responsible" selects the "owner" attribute
+It takes three parameters: "responsible" selects the "owner" attribute
 of the comments and can thus take the values "LWG", "CWG", or "editor";
 in addition, the special value "all" is accepted.  The parameter
 "open_only" can be either "yes" or "no"; the former value selects only
 those comments for which the "disp" attribute is empty.
+The parameter "brief" can be either "yes" or "no"; if "yes" the Description
+and Suggested Change columns are eliminated.
 
 ************************************************************ -->
 
 <xsl:param name="responsible" select="'all'"/>
 <xsl:param name="open_only" select="'no'"/>
+<xsl:param name="brief" select="'no'"/>
 
 <xsl:output method="html" encoding="us-ascii"/>
 
@@ -98,7 +101,7 @@ the <notes> element, currently used almost exclusively in LWG comments.
         <TH width="19%" align="center">Suggested Change</TH>
         <TH width="4%" align="center">Issue</TH>
         <TH width="18%" align="center">Notes</TH>
-        <TH width="18%" align="center">Remarks</TH>
+        <TH width="18%" align="center">Rationale</TH>
        </xsl:when>
 
 <!-- ************************************************************
@@ -109,14 +112,16 @@ element but not for the owner.
 ************************************************************ -->
 
        <xsl:when test="$responsible='LWG'">
-        <TH width="4%" align="center">ID</TH>
-        <TH width="6%" align="center">Ref</TH>
-        <TH width="6%" align="center">Disposition</TH>
-        <TH width="20%" align="center">Description</TH>
-        <TH width="20%" align="center">Suggested Change</TH>
-        <TH width="4%" align="center">Issue</TH>
-        <TH width="20%" align="center">Notes</TH>
-        <TH width="20%" align="center">Remarks</TH>
+        <TH align="center">ID</TH>
+        <TH align="center">Ref</TH>
+        <TH align="center">Disposition</TH>
+        <xsl:if test="$brief='no'">
+         <TH align="center">Description</TH>
+         <TH align="center">Suggested Change</TH>
+        </xsl:if>
+        <TH align="center">Issue</TH>
+        <TH align="center">Notes</TH>
+        <TH width="25%" align="center">Rationale</TH>
        </xsl:when>
 
 <!-- ************************************************************
@@ -133,7 +138,7 @@ The "CWG" and "editor" versions of the table contain neither owner nor
         <TH width="30%" align="center">Description</TH>
         <TH width="30%" align="center">Suggested Change</TH>
         <TH width="4%" align="center">Issue</TH>
-        <TH width="30%" align="center">Remarks</TH>
+        <TH width="30%" align="center">Rationale</TH>
        </xsl:otherwise>
       </xsl:choose>
      </TR>
@@ -214,14 +219,24 @@ the additional information there, using the "uknum" attribute.
    <TD valign="top">
     <xsl:value-of select="@disp"/>&#160;
    </TD>
+   <xsl:if test="$brief='no'">
+     <TD valign="top">
+      <xsl:apply-templates select="description/*|description/text()"/>&#160;
+     </TD>
+     <TD valign="top">
+      <xsl:apply-templates select="suggestion/*|suggestion/text()"/>&#160;
+     </TD>
+   </xsl:if>  
    <TD valign="top">
-    <xsl:apply-templates select="description/*|description/text()"/>&#160;
-   </TD>
-   <TD valign="top">
-    <xsl:apply-templates select="suggestion/*|suggestion/text()"/>&#160;
-   </TD>
-   <TD valign="top">
-    <xsl:value-of select="@issue"/>&#160;
+    &#160;
+    <xsl:if test="@issue[.!='']">
+      <A>
+      <xsl:attribute name="HREF">
+       lwg-active.html/#<xsl:value-of select="@issue"/>
+      </xsl:attribute>
+      <xsl:value-of select="@issue"/>
+     </A>
+    </xsl:if>
    </TD>
    <xsl:if test="$responsible='all' or $responsible='LWG'">
     <TD valign="top">
