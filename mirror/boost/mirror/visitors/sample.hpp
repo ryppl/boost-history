@@ -35,6 +35,50 @@ public:
 
 	sample_visitor(void):indent(0){ }
 
+	// enter a namespace
+	template <class MetaNamespace, class Context>
+	void enter_namespace(MetaNamespace, Context)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		print_indentation();
+		++indent;
+		cts::bcout() << 
+			"<namespace name='" << 
+			MetaNamespace::base_name();
+		if(!reflects_global_scope<typename MetaNamespace::scope>::value)
+		{
+			cts::bcout() << 
+				"' scope='" <<
+				MetaNamespace::scope::full_name();
+		}
+		cts::bcout() << 
+			"'>" << 
+			endl;
+	}
+
+	// leave the namespace
+	template <class MetaNamespace, class Context>
+	void leave_namespace(MetaNamespace, Context)
+	{
+		using namespace ::std;
+		using namespace ::boost;
+		--indent;
+		print_indentation();
+		cts::bcout() << "</namespace>" << endl;
+	}
+
+	template <class MetaObjectSequence, class Context>
+	void enter_namespace_members(MetaObjectSequence, Context)
+	{
+	}
+
+	template <class MetaObjectSequence, class Context>
+	void leave_namespace_members(MetaObjectSequence, Context)
+	{
+	}
+
+
 	// enter a class/type
 	template <class MetaClass, class Context>
 	void enter_type(MetaClass, Context)

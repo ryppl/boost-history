@@ -15,7 +15,7 @@
 #include <boost/mirror/meta_path/node_context.hpp>
 //
 #include <boost/ref.hpp>
-#include  <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_reference.hpp>
 //
 #include <assert.h>
 
@@ -23,318 +23,389 @@ namespace boost {
 namespace mirror {
 
 
-template <class MetaClass, class NodePath> class deep_traversal_of;
-template <class MetaClass, class NodePath> class flat_traversal_of;
+template <
+	class MetaStructure, 
+	class NodePath = mpl::vector0<> 
+> class deep_traversal_of; 
+
+template <
+	class MetaStructure, 
+	class NodePath = mpl::vector0<>
+> class flat_traversal_of;
 
 namespace detail {
 
-	template <
-		class MetaClass,
-		class NodePath,
-		class MetaAttributes,
-		template <class, class> class TraversalType
-	>
-	struct traversal_utils
+template <
+	class MetaClass,
+	class NodePath,
+	class MetaAttributes,
+	template <class, class> class TraversalType
+>
+struct class_traversal_utils
+{
+protected:
+	typedef typename mpl::push_back<NodePath, MetaClass>::type
+		ClassNodePath;
+
+	typedef typename remove_reference<
+		typename MetaClass::reflected_type
+	>::type* InstancePtr;
+
+
+	template <class VisitorType>
+	class attribute_traversal
 	{
-	protected:
-		typedef typename mpl::push_back<NodePath, MetaClass>::type
-			ClassNodePath;
-
-		typedef typename remove_reference<
-			typename MetaClass::reflected_type
-		>::type* InstancePtr;
-			
-
-
-		template <class VisitorType>
-		class attribute_traversal
-		{
-		public:
-			inline attribute_traversal(
-				reference_wrapper<VisitorType> _visitor,
-				InstancePtr _ptr_to_inst
-			)
-			: visitor(_visitor)
-			, ptr_to_inst(_ptr_to_inst)
-			{
-				visitor.enter_attributes(
-					MetaClass(), 
-					MetaAttributes(), 
-					meta_path::make_node_context(
-						ClassNodePath(),
-						MetaAttributes()
-					)
-				);
-			}
-	
-			inline ~attribute_traversal(void)
-			{
-				visitor.leave_attributes(
-					MetaClass(), 
-					MetaAttributes(), 
-					meta_path::make_node_context(
-						ClassNodePath(),
-						MetaAttributes()
-					)
-				);
-			}
-	
-			template <class MetaAttribute>
-			inline void operator ()(MetaAttribute ma) const
-			{
-				// update the traversal context
-				typename mpl::push_back<
-					ClassNodePath, 
-					MetaAttributes
-				>::type path;
-				//
-				// process a single attribute
-				process_single(
-					ma, 
-					path,
-					typename VisitorType::works_on_instances()
-				);
-			}
-		private:
-			VisitorType& visitor;
-			InstancePtr ptr_to_inst;
-
-			// process single attribute WITH an instance
-			template <class MetaAttribute, class AttribsNodePath>
-			void inline process_single(
-				MetaAttribute ma, 
-				AttribsNodePath path, 
-				mpl::bool_<true>
-			) const
-			{
-				// enter the attribute
-				visitor.enter_attribute(
-					ma, 
-					meta_path::make_node_context(
-						path,
-						ma
-					)
-				);
-				// 
-				// the poiner has to be valid
-				assert(ptr_to_inst != 0);
-				// 
-				// get an attribute instance
-				typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
-				instance_type instance(ma.get(*ptr_to_inst));
-				//
-				// traverse the attribute
-				TraversalType<
-					typename MetaAttribute::type,
-					typename mpl::push_back<
-						AttribsNodePath, 
-						MetaAttribute
-					>::type
-				>::accept(visitor, &instance);
-				//
-				// leave the attribute
-				visitor.leave_attribute(
-					ma, 
-					meta_path::make_node_context(
-						path,
-						ma
-					)
-				);
-			}
-
-			// process single attribute W/O an instance
-			template <class MetaAttribute, class AttribsNodePath>
-			void inline process_single(
-				MetaAttribute ma, 
-				AttribsNodePath path, 
-				mpl::bool_<false>
-			) const
-			{
-				// enter the attribute
-				visitor.enter_attribute(
-					ma, 
-					meta_path::make_node_context(
-						path,
-						ma
-					)
-				);
-				//
-				// traverse the attributes
-				TraversalType<
-					typename MetaAttribute::type,
-					typename mpl::push_back<
-						AttribsNodePath, 
-						MetaAttribute
-					>::type
-				>::accept(visitor, 0);
-				//
-				// leave the attributes
-				visitor.leave_attribute(
-					ma, 
-					meta_path::make_node_context(
-						path,
-						ma
-					)
-				);
-			}
-		};
-	
-		// attribute_traversal factory function
-		template <class VisitorType>
-		static inline attribute_traversal<VisitorType>
-		show_attribs_to(
-			reference_wrapper<VisitorType> visitor,
-			InstancePtr ptr_to_inst
+	public:
+		inline attribute_traversal(
+			reference_wrapper<VisitorType> _visitor,
+			InstancePtr _ptr_to_inst
 		)
+		: visitor(_visitor)
+		, ptr_to_inst(_ptr_to_inst)
 		{
-			return attribute_traversal<VisitorType>(visitor, ptr_to_inst);
-		}
-	
-
-		template <class VisitorType>
-		class base_class_traversal
-		{
-		public:
-			inline base_class_traversal(
-				reference_wrapper<VisitorType> _visitor,
-	                        InstancePtr _ptr_to_inst
-			)
-			: visitor(_visitor)
-			, ptr_to_inst(_ptr_to_inst)
-			{
-				visitor.enter_base_classes(
-					MetaClass(), 
-					typename MetaClass::base_classes(),
-					meta_path::make_node_context(
-						ClassNodePath(),
-						typename MetaClass::base_classes()
-					)
-				);
-			}
-	
-			inline ~base_class_traversal(void)
-			{
-				visitor.leave_base_classes(
-					MetaClass(), 
-					typename MetaClass::base_classes(),
-					meta_path::make_node_context(
-						ClassNodePath(),
-						typename MetaClass::base_classes()
-					)
-				);
-			}
-	
-			template <class MetaInheritance>
-			inline void operator ()(MetaInheritance mbc) const
-			{
-				typedef typename mpl::push_back<
-					ClassNodePath,
-					typename MetaClass::base_classes
-				>::type BaseClassesNodePath;
-				BaseClassesNodePath path;
-				//
-				// enter the base cass
-				visitor.enter_base_class(
-					mbc, 
-					meta_path::make_node_context(
-						path,
-						mbc
-					)
-				);
-				//
-				// get the meta-class of the base class
-				typedef typename MetaInheritance::base_class
-					meta_base_class;
-				// traverse the base class
-				TraversalType<
-					meta_base_class,
-					typename mpl::push_back<
-						BaseClassesNodePath, 
-						MetaInheritance
-					>::type
-				>::accept(visitor, ptr_to_inst);
-				// leave the base class
-				visitor.leave_base_class(
-					mbc, 
-					meta_path::make_node_context(
-						path,
-						mbc
-					)
-				);
-			}
-		private:
-			VisitorType& visitor;
-                        InstancePtr ptr_to_inst;
-		};
-
-		// base class traversal factory function
-		template <class VisitorType>
-		static inline base_class_traversal<VisitorType>
-		show_bases_to(
-			reference_wrapper<VisitorType> visitor,
-                        InstancePtr ptr_to_inst
-		)
-		{
-			return base_class_traversal<VisitorType>(visitor, ptr_to_inst);
+			visitor.enter_attributes(
+				MetaClass(), 
+				MetaAttributes(), 
+				meta_path::make_node_context(
+					ClassNodePath(),
+					MetaAttributes()
+				)
+			);
 		}
 
-		template <
-			class VisitorType, 
-			class InstanceType
-		>
-		inline static void lead_to_instance(
-			reference_wrapper<VisitorType> visitor,
-			MetaClass mc,
-			NodePath path,
-			InstanceType* ptr_to_inst
-		)
+		inline ~attribute_traversal(void)
 		{
-			do_lead_to_instance(
-				visitor,
-				mc,
+			visitor.leave_attributes(
+				MetaClass(), 
+				MetaAttributes(), 
+				meta_path::make_node_context(
+					ClassNodePath(),
+					MetaAttributes()
+				)
+			);
+		}
+
+		template <class MetaAttribute>
+		inline void operator ()(MetaAttribute ma) const
+		{
+			// update the traversal context
+			typename mpl::push_back<
+				ClassNodePath, 
+				MetaAttributes
+			>::type path;
+			//
+			// process a single attribute
+			process_single(
+				ma, 
 				path,
-				ptr_to_inst,
 				typename VisitorType::works_on_instances()
 			);
 		}
-	
 	private:
-		template <
-			class VisitorType, 
-			class InstanceType
-		>
-		inline static void do_lead_to_instance(
-			reference_wrapper<VisitorType> visitor, 
-			MetaClass,
-			NodePath, 
-			InstanceType* ptr_to_inst,
-			mpl::bool_<false>
-		){ }
+		VisitorType& visitor;
+		InstancePtr ptr_to_inst;
 
-		template <
-			class VisitorType, 
-			class InstanceType
-		>
-		inline static void do_lead_to_instance(
-			reference_wrapper<VisitorType> visitor, 
-			MetaClass mc,
-			NodePath path,
-			InstanceType* ptr_to_inst,
+		// process single attribute WITH an instance
+		template <class MetaAttribute, class AttribsNodePath>
+		void inline process_single(
+			MetaAttribute ma, 
+			AttribsNodePath path, 
 			mpl::bool_<true>
-		)
+		) const
 		{
-			visitor.get().visit_instance(
-				mc, 
+			// enter the attribute
+			visitor.enter_attribute(
+				ma, 
 				meta_path::make_node_context(
 					path,
-					mc
-				),
-				ptr_to_inst
+					ma
+				)
+			);
+			// 
+			// the poiner has to be valid
+			assert(ptr_to_inst != 0);
+			// 
+			// get an attribute instance
+			typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
+			instance_type instance(ma.get(*ptr_to_inst));
+			//
+			// traverse the attribute
+			TraversalType<
+				typename MetaAttribute::type,
+				typename mpl::push_back<
+					AttribsNodePath, 
+					MetaAttribute
+				>::type
+			>::accept(visitor, &instance);
+			//
+			// leave the attribute
+			visitor.leave_attribute(
+				ma, 
+				meta_path::make_node_context(
+					path,
+					ma
+				)
 			);
 		}
 
+		// process single attribute W/O an instance
+		template <class MetaAttribute, class AttribsNodePath>
+		void inline process_single(
+			MetaAttribute ma, 
+			AttribsNodePath path, 
+			mpl::bool_<false>
+		) const
+		{
+			// enter the attribute
+			visitor.enter_attribute(
+				ma, 
+				meta_path::make_node_context(
+					path,
+					ma
+				)
+			);
+			//
+			// traverse the attributes
+			TraversalType<
+				typename MetaAttribute::type,
+				typename mpl::push_back<
+					AttribsNodePath, 
+					MetaAttribute
+				>::type
+			>::accept(visitor, 0);
+			//
+			// leave the attributes
+			visitor.leave_attribute(
+				ma, 
+				meta_path::make_node_context(
+					path,
+					ma
+				)
+			);
+		}
 	};
 
+	// attribute_traversal factory function
+	template <class VisitorType>
+	static inline attribute_traversal<VisitorType>
+	show_attribs_to(
+		reference_wrapper<VisitorType> visitor,
+		InstancePtr ptr_to_inst
+	)
+	{
+		return attribute_traversal<VisitorType>(visitor, ptr_to_inst);
+	}
+
+
+	template <class VisitorType>
+	class base_class_traversal
+	{
+	public:
+		inline base_class_traversal(
+			reference_wrapper<VisitorType> _visitor,
+			InstancePtr _ptr_to_inst
+		)
+		: visitor(_visitor)
+		, ptr_to_inst(_ptr_to_inst)
+		{
+			visitor.enter_base_classes(
+				MetaClass(), 
+				typename MetaClass::base_classes(),
+				meta_path::make_node_context(
+					ClassNodePath(),
+					typename MetaClass::base_classes()
+				)
+			);
+		}
+
+		inline ~base_class_traversal(void)
+		{
+			visitor.leave_base_classes(
+				MetaClass(), 
+				typename MetaClass::base_classes(),
+				meta_path::make_node_context(
+					ClassNodePath(),
+					typename MetaClass::base_classes()
+				)
+			);
+		}
+
+		template <class MetaInheritance>
+		inline void operator ()(MetaInheritance mbc) const
+		{
+			typedef typename mpl::push_back<
+				ClassNodePath,
+				typename MetaClass::base_classes
+			>::type BaseClassesNodePath;
+			BaseClassesNodePath path;
+			//
+			// enter the base cass
+			visitor.enter_base_class(
+				mbc, 
+				meta_path::make_node_context(
+					path,
+					mbc
+				)
+			);
+			//
+			// get the meta-class of the base class
+			typedef typename MetaInheritance::base_class
+				meta_base_class;
+			// traverse the base class
+			TraversalType<
+				meta_base_class,
+				typename mpl::push_back<
+					BaseClassesNodePath, 
+					MetaInheritance
+				>::type
+			>::accept(visitor, ptr_to_inst);
+			// leave the base class
+			visitor.leave_base_class(
+				mbc, 
+				meta_path::make_node_context(
+					path,
+					mbc
+				)
+			);
+		}
+	private:
+		VisitorType& visitor;
+		InstancePtr ptr_to_inst;
+	};
+
+	// base class traversal factory function
+	template <class VisitorType>
+	static inline base_class_traversal<VisitorType>
+	show_bases_to(
+		reference_wrapper<VisitorType> visitor,
+		InstancePtr ptr_to_inst
+	)
+	{
+		return base_class_traversal<VisitorType>(visitor, ptr_to_inst);
+	}
+
+	template <
+		class VisitorType, 
+		class InstanceType
+	>
+	inline static void lead_to_instance(
+		reference_wrapper<VisitorType> visitor,
+		MetaClass mc,
+		NodePath path,
+		InstanceType* ptr_to_inst
+	)
+	{
+		do_lead_to_instance(
+			visitor,
+			mc,
+			path,
+			ptr_to_inst,
+			typename VisitorType::works_on_instances()
+		);
+	}
+
+private:
+	template <
+		class VisitorType, 
+		class InstanceType
+	>
+	inline static void do_lead_to_instance(
+		reference_wrapper<VisitorType> visitor, 
+		MetaClass,
+		NodePath, 
+		InstanceType* ptr_to_inst,
+		mpl::bool_<false>
+	){ }
+
+	template <
+		class VisitorType, 
+		class InstanceType
+	>
+	inline static void do_lead_to_instance(
+		reference_wrapper<VisitorType> visitor, 
+		MetaClass mc,
+		NodePath path,
+		InstanceType* ptr_to_inst,
+		mpl::bool_<true>
+	)
+	{
+		visitor.get().visit_instance(
+			mc, 
+			meta_path::make_node_context(
+				path,
+				mc
+			),
+			ptr_to_inst
+		);
+	}
+
+};
+
+/** Base implementation of namespace traversal
+ */
+template <
+	class MetaNamespace,
+	class NodePath,
+	template <class, class> class TraversalType
+> class namespace_traversal_utils
+{
+private:
+	typedef typename mpl::push_back<
+		NodePath,
+		MetaNamespace
+	>::type NamespaceNodePath;
+protected:
+	template <class VisitorType, class Members>
+	struct namespace_member_traversal
+	{
+		reference_wrapper<VisitorType> visitor;
+
+		typedef typename mpl::push_back<
+			NamespaceNodePath,
+			Members
+		>::type MembersNodePath;
+		
+		inline namespace_member_traversal(
+			reference_wrapper<VisitorType> _visitor
+		): visitor(_visitor)
+		{
+			visitor.get().enter_namespace_members(
+				Members(),
+				meta_path::make_node_context(
+					NamespaceNodePath(),
+					Members() 
+				)
+			);
+		}
+
+		template <class MetaObject>
+		inline void operator ()(MetaObject mo) const
+		{
+                        TraversalType<
+                                MetaObject,
+				MembersNodePath
+                        >::accept(visitor);
+		}
+
+		inline ~namespace_member_traversal(void)
+		{
+			visitor.get().leave_namespace_members(
+				Members(),
+				meta_path::make_node_context(
+					NamespaceNodePath(),
+					Members() 
+				)
+			);
+		}
+	};
+
+	template <class Members, class VisitorType>
+	static inline namespace_member_traversal<VisitorType, Members>
+	show_namespace_members_to(reference_wrapper<VisitorType> _visitor, Members)
+	{
+		return namespace_member_traversal<VisitorType, Members>(_visitor);
+	}
+};
 
 } // namespace detail
 } // namespace mirror

@@ -16,9 +16,12 @@ namespace boost {
 namespace mirror {
 
 
-template <class MetaClass, class NodePath = mpl::vector0<> >
-class deep_traversal_of 
-: detail::traversal_utils<
+template <
+	class MetaClass, 
+	class NodePath
+>
+class deep_traversal_of_class
+: detail::class_traversal_utils<
 	MetaClass,
 	NodePath,
 	typename MetaClass::attributes,
@@ -85,10 +88,13 @@ private:
 	}
 };
 
-template <class MetaClass, class NodePath = mpl::vector0<> >
-class flat_traversal_of
-: detail::traversal_utils<
-	MetaClass, 
+template <
+	class MetaClass, 
+	class NodePath
+>
+class flat_traversal_of_class
+: detail::class_traversal_utils<
+	MetaClass,
 	NodePath,
 	typename MetaClass::all_attributes,
 	flat_traversal_of
@@ -107,6 +113,7 @@ public:
 	{
 		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
 	}
+
 	template <class VisitorType>
 	static inline void accept(
 		reference_wrapper<VisitorType> visitor,
@@ -148,6 +155,99 @@ private:
 		);
 	}
 };
+
+template < class Class, class VariantTag, class NodePath > 
+class deep_traversal_of<meta_class<Class, VariantTag>, NodePath>
+: public deep_traversal_of_class<meta_class<Class, VariantTag>, NodePath>
+{ };
+
+template < class Type, class NodePath > 
+class deep_traversal_of<meta_type<Type>, NodePath>
+: public deep_traversal_of_class<meta_class<Type>, NodePath>
+{ };
+
+template < class Class, class VariantTag, class NodePath > 
+class flat_traversal_of<meta_class<Class, VariantTag>, NodePath>
+: public flat_traversal_of_class<meta_class<Class, VariantTag>, NodePath>
+{ };
+
+template < class Type, class NodePath > 
+class flat_traversal_of<meta_type<Type>, NodePath>
+: public flat_traversal_of_class<meta_class<Type>, NodePath>
+{ };
+
+/** Traversal of namespace 
+ */
+template <
+	class MetaNamespace, 
+	class NodePath, 
+	template <class, class> class TraversalType
+> class traversal_of_namespace
+: detail::namespace_traversal_utils<MetaNamespace, NodePath, TraversalType>
+{
+public:
+	template <class VisitorType>
+	static inline void accept(VisitorType visitor)
+	{
+		do_accept(ref<VisitorType>(visitor));
+	}
+
+	template <class VisitorType>
+	static void accept(reference_wrapper<VisitorType> visitor)
+	{
+		do_accept(visitor);
+	}
+private:
+
+	template <class VisitorType>
+	static void do_accept(reference_wrapper<VisitorType> visitor)
+	{
+		MetaNamespace mn;
+		NodePath path;
+		// let the visitor enter the namespace
+		visitor.get().enter_namespace(
+			mn,
+			meta_path::make_node_context(
+				path,
+				mn
+			)
+		);
+		typedef typename MetaNamespace::template members<>::type 
+			members;
+		// show the visitor through all the members of 
+		// the namespace
+		for_each<members>(
+			cref(show_namespace_members_to(
+				visitor, 
+				members()
+			))
+		);
+		// the visitor leaves the namespace
+		visitor.get().leave_namespace(
+			mn,
+			meta_path::make_node_context(
+				path,
+				mn
+			)
+		);
+	}
+};
+
+template <class Placeholder, class NodePath>
+class deep_traversal_of<meta_namespace<Placeholder>, NodePath>
+ : public traversal_of_namespace<
+	meta_namespace<Placeholder>, 
+	NodePath, 
+	deep_traversal_of
+>{ };
+
+template <class Placeholder, class NodePath>
+class flat_traversal_of<meta_namespace<Placeholder>, NodePath>
+ : public traversal_of_namespace<
+	meta_namespace<Placeholder>, 
+	NodePath,
+	flat_traversal_of
+>{ };
 
 } // namespace mirror
 } // namespace boost

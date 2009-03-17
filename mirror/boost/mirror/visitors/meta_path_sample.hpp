@@ -127,6 +127,20 @@ namespace detail {
 			cts::bcout() << "|type '" << mc.base_name() << "'|";
 			print_indent();
 		}
+	
+		template <class Placeholder>
+		void operator()(meta_namespace<Placeholder> mn) const
+		{
+			cts::bcout() << "|namespace '" << mn.base_name() << "'|";
+			print_indent();
+		}
+
+		template <class Unknown>
+		void operator()(Unknown) const
+		{
+			cts::bcout() << "|unknown |";
+			print_indent();
+		}
 	};
 	
 } // namespace detail 
@@ -135,6 +149,25 @@ class meta_path_sample_visitor
 {
 public:
 	typedef mpl::bool_<false> works_on_instances;
+
+        // enter a namespace
+        template <class MetaNamespace, class Context>
+        void enter_namespace(MetaNamespace, Context)
+        {
+		print_node(MetaNamespace(), Context());
+        }
+
+        // leave the namespace
+        template <class MetaNamespace, class Context>
+        void leave_namespace(MetaNamespace, Context) { }
+
+        template <class MetaObjectSequence, class Context>
+        void enter_namespace_members(MetaObjectSequence, Context) { }
+
+        template <class MetaObjectSequence, class Context>
+        void leave_namespace_members(MetaObjectSequence, Context) { }
+
+
 
 	// enter a class/type
 	template <class MetaClass, class Context>
