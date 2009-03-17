@@ -20,19 +20,19 @@ bool atomic_compare_exchange_ptr( volatile T * object, T expected, T desired)
 
 inline
 void atomic_write_32( volatile unsigned int * object, unsigned int desired)
-{ InterlockedExchange( ( volatile LONG *) object, desired); }
+{ InterlockedExchange( reinterpret_cast< volatile LONG * >( object), desired); }
 
 template< typename T >
 void atomic_write_ptr( volatile T * object, T desired)
-{ InterlockedExchangePointer( ( volatile LONG *) object, desired); }
+{ InterlockedExchangePointer( reinterpret_cast< volatile LONG * >( object), desired); }
 
 inline
 unsigned int atomic_inc_32( volatile unsigned int * object)
-{ return InterlockedIncrement( ( volatile LONG *) object); }
+{ return InterlockedIncrement( reinterpret_cast< volatile LONG * >( object) ); }
 
 inline
 unsigned int atomic_dec_32( volatile unsigned int * object)
-{ return InterlockedDecrement( ( volatile LONG *) object); }
+{ return InterlockedDecrement( reinterpret_cast< volatile LONG * >( object) ); }
 
 #elif defined(__hpux)
 

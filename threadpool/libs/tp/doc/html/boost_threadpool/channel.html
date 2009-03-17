@@ -29,20 +29,20 @@
 <p>
       The channel synchronizes the access between application threads (producer threads)
       submitting actions to the pool and worker threads (consumer threads). The scheduling
-      of actions queued into the channel depends on channels the scheduling policy.
-      If the channel becomes empty all worker threads are set to sleep until a new
-      action is put in.
+      of actions queued into the channel depends on channels scheduling policy. If
+      the channel becomes empty all worker threads are set to sleep until a new action
+      is put in.
     </p>
 <a name="boost_threadpool.channel.bounded_channel"></a><h4>
-<a name="id372246"></a>
+<a name="id372399"></a>
       <a class="link" href="channel.html#boost_threadpool.channel.bounded_channel">bounded channel</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">SchedulingPolicy</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">bounded_channel</span>
 </pre>
 <p>
-      The number of pending actions is limited in order to prevent resource exhaustion.
-      For this purpose a high and low watermark has to be passed at construction.
-      <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">high_watermark</span></code>
+      Contains a single lock in order to synchronize access to the queue. The number
+      of pending actions is limited in order to prevent resource exhaustion. For
+      this purpose a high and low watermark has to be passed at construction. <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">high_watermark</span></code>
       sets the maximum of pending tasks. If this limited is reached all threads which
       submit a tasks will be set to sleep (blocked). <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">low_watermark</span></code> sets the threshold when blocked
       threads get woken up. If high watermark is equal to low watermark everytime
@@ -52,15 +52,16 @@
       tasks reaches low watermark.
     </p>
 <a name="boost_threadpool.channel.unbounded_channel"></a><h4>
-<a name="id372359"></a>
+<a name="id372512"></a>
       <a class="link" href="channel.html#boost_threadpool.channel.unbounded_channel">unbounded channel</a>
     </h4>
 <pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">SchedulingPolicy</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">unbounded_channel</span>
 </pre>
 <p>
-      An unlimited number of actions can be queued into this channel. The insertion
-      of actions will never block. If the channel becomes empty worker threads will
-      be set to sleep until new actions are inserted into the channel.
+      Contains a single lock in order to synchronize access to the queue. An unlimited
+      number of actions can be queued into this channel. The insertion of actions
+      will never block. If the channel becomes empty worker threads will be set to
+      sleep until new actions are inserted into the channel.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

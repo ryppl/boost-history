@@ -141,13 +141,14 @@ public:
 
 	void put( item const& itm)
 	{
-		if ( ! active() )
-			throw task_rejected("channel is not active");
-
 		pointer_t tail;
 		node_t * node( new node_t( itm) );
 		while ( active() )
+		for(;;)
 		{
+			if ( ! active() )
+				throw task_rejected("channel is not active");
+			
 			tail = pointer_t( tail_);
 			node->next = pointer_t( tail.ptr, tail.tag + 1);
 			pointer_t ntail( node, tail.tag + 1);

@@ -167,11 +167,9 @@
       <a class="link" href="pool.html#boost_threadpool.pool.shutdown">Shutdown</a>
     </h4>
 <p>
-      If <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown</span><span class="special">()</span></code> is called - the the status of the pool is
-      set to <span class="emphasis"><em>terminating</em></span> and all worker threads are joined.
-      No futher actions can be submitted by application threads. After all pending
-      actions are processed and all worker threads are joined, the pool is set to
-      status <span class="emphasis"><em>terminated</em></span>.
+      If <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown</span><span class="special">()</span></code> is called - the the pool is set closed and
+      all worker threads are joined until all pending actions are processed. No futher
+      actions can be submitted by application threads.
     </p>
 <div class="note"><table border="0" summary="Note">
 <tr>
@@ -204,14 +202,12 @@
 </span><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">t2</span><span class="special">.</span><span class="identifier">result</span><span class="special">().</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// 55
 </span></pre>
 <a name="boost_threadpool.pool.shutdown_immediatly"></a><h4>
-<a name="id368800"></a>
+<a name="id368794"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.shutdown_immediatly">Shutdown immediatly</a>
     </h4>
 <p>
-      The function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown_now</span><span class="special">()</span></code> sets the pool status to <span class="emphasis"><em>terminating</em></span>
-      interrupts and then joins all worker threads. After the worker threads are
-      joined the status of the pool is set to <span class="emphasis"><em>terminated</em></span> and
-      all pending (unprocessed) actions will be returned.
+      The function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;::</span><span class="identifier">shutdown_now</span><span class="special">()</span></code> closes the pool, interrupts and then joins
+      all worker threads. All pending (unprocessed) actions will be returned.
     </p>
 <div class="important"><table border="0" summary="Important">
 <tr>
@@ -225,7 +221,7 @@
       </p></td></tr>
 </table></div>
 <a name="boost_threadpool.pool.default_pool"></a><h4>
-<a name="id368934"></a>
+<a name="id368921"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.default_pool">Default pool</a>
     </h4>
 <p>
@@ -234,8 +230,16 @@
       as <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">hardware_concurrency</span><span class="special">()</span></code>
       returns.
     </p>
+<a name="boost_threadpool.pool.launch_in_pool"></a><h4>
+<a name="id369084"></a>
+      <a class="link" href="pool.html#boost_threadpool.pool.launch_in_pool">Launch in pool</a>
+    </h4>
+<p>
+      The free function <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">launch_in_pool</span><span class="special">(</span> <span class="identifier">Act</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">act</span><span class="special">)</span></code> submits the action to the default pool and
+      returns a task object.
+    </p>
 <a name="boost_threadpool.pool.meta_functions"></a><h4>
-<a name="id369097"></a>
+<a name="id369155"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.meta_functions">Meta functions</a>
     </h4>
 <p>
@@ -259,7 +263,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">tp</span><span class="special">::</span><span class="identifier">has_fibers</span><span class="special">&lt;</span> <span class="identifier">pool_type</span> <span class="special">&gt;::</span><span class="identifier">value</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 </pre>
 <a name="boost_threadpool.pool.processor_binding"></a><h4>
-<a name="id369670"></a>
+<a name="id369728"></a>
       <a class="link" href="pool.html#boost_threadpool.pool.processor_binding">Processor binding</a>
     </h4>
 <p>

@@ -9,11 +9,13 @@
 The channel synchronizes the access between application threads (producer threads) submitting __actions__ to the pool and __worker_threads__ (consumer threads). The scheduling of __actions__ queued into the channel depends on channels scheduling policy.
 If the channel becomes empty all __worker_threads__ are set to sleep until a new __action__ is put in.
 
+[/
 [heading lockfree channel]
 
 	class lockfree_channel
 
 Uses internaly a lockfree algorithm in order to get a fifo queue.
+]
 
 [heading bounded channel]
 

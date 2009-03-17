@@ -1211,6 +1211,8 @@ namespace boost
 					{ this->mark_finished_with_result(f()); }
 					CATCH_ENABLE_CURRENT_EXCEPTION( boost::thread_interrupted)
 					CATCH_ENABLE_CURRENT_EXCEPTION( boost::exception)
+
+					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
 	
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::domain_error)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::invalid_argument)
@@ -1227,8 +1229,6 @@ namespace boost
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_cast)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_typeid)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_exception)
-
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
                 }
                 catch(...)
                 {
@@ -1260,6 +1260,8 @@ namespace boost
 					}
 					CATCH_ENABLE_CURRENT_EXCEPTION( boost::thread_interrupted)
 					CATCH_ENABLE_CURRENT_EXCEPTION( boost::exception)
+
+					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
 	
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::domain_error)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::invalid_argument)
@@ -1276,8 +1278,6 @@ namespace boost
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_cast)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_typeid)
 					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_exception)
-
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
                 }
                 catch(...)
                 {

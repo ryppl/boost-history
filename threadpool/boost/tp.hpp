@@ -12,7 +12,7 @@
 #include <boost/tp/info.hpp>
 #include <boost/tp/lifo.hpp>
 #include <boost/tp/launch.hpp>
-#include <boost/tp/lockfree_channel.hpp>
+//#include <boost/tp/lockfree_channel.hpp>
 #include <boost/tp/pool.hpp>
 #include <boost/tp/poolsize.hpp>
 #include <boost/tp/priority.hpp>

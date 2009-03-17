@@ -27,7 +27,7 @@ rule tp-test ( source )
 }
 
 test-suite thread_pool :
-    [ tp-test test_lockfree_queue ]
+#    [ tp-test test_lockfree_queue ]
     [ tp-test test_bounded_queue_fifo ]
     [ tp-test test_bounded_queue_lifo ]
     [ tp-test test_bounded_queue_priority ]
