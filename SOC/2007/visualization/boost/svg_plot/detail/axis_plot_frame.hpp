@@ -808,7 +808,7 @@ namespace boost
                   legend_x_pos,
                   legend_y_pos,
                   *g_inner_ptr,
-                  derived().serieses_[i].point_style_);
+                  derived().serieses_[i].point_style_, 0, 0);
                 legend_x_pos += 1.5 * spacing;
               }
 
@@ -917,8 +917,10 @@ namespace boost
           } // void adjust_limits
 
           void draw_plot_point(double x, double y, // SVG coordinates.
+          //void draw_plot_point(unc x, unc y, // SVG coordinates.
             g_element& g_ptr,
-            plot_point_style& sty)
+            plot_point_style& sty,
+            unc ux, unc uy) // Default unc ux = 0.? and uy = 0.
           { //! Draw a plot data point marker shape whose size and stroke and fill colors are specified in plot_point_style.
             /*
               For 1-D plots, the points do not *need* to be centered on the X-axis,
@@ -934,8 +936,6 @@ namespace boost
             */
             int size = sty.size_;
             double half_size = size / 2.;
-
-
             //cout << "point style() "<< sty.style() << endl;
             // Whatever shape, text or line, want to use the point style.
             g_ptr.style().stroke_color(sty.stroke_color_);
@@ -953,6 +953,30 @@ namespace boost
               break;
             case egg:
               g_ptr.ellipse(x, y, half_size, size * 2.); // Tall thin egg!
+              break;
+
+            case unc_ellipse:
+              {
+                double xu = ux.uncertainty() + ux.value(); // 
+                transform_x(xu);
+                double x_radius = abs(xu - x);
+                if (x_radius <= 0.)
+                {
+                  x_radius = 1.; // Or size?
+                }
+
+                double yu = uy.uncertainty() + uy.value();
+                transform_y(yu);
+                double y_radius = abs(yu - y);
+                if (y_radius <= 0.)
+                {
+                  y_radius = 1.;
+                }
+                g_ptr.ellipse(x, y, x_radius, y_radius); //  Radii are uncertainty.
+                // g_ptr.style().stroke_color(blue); would need a new group element to hold a different color.
+                // stroke color of outer and center X Y marker must be same stroke_color at present.
+                g_ptr.circle(x, y, 1); // Show x and y values at center.
+              }
               break;
 
              // Offset from center is not an issue with vertical or horizontal ticks.

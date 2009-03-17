@@ -611,6 +611,7 @@ enum point_shape
   square, //!< Square.
   point, //!< Small solid point.
   egg, //!< Ellipse.
+  unc_ellipse, //!< Ellipse sized using uncertainty estimate of x and y, typically about twice standard deviation or 95% confidence interval.
   vertical_line,  //!< Vertical line up & down from axis.
   horizontal_line, //!< Horizontal line left & right from axis.
   vertical_tick, //!< Vertical tick up from axis.

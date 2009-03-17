@@ -1725,7 +1725,7 @@ public:
       { // Inside plot window so want to show.
         y = value;
         transform_y(y); // to SVG.
-        draw_plot_point(x, y, g_mild_ptr, const_cast<plot_point_style&>(mild_style)); // Kludge!
+        draw_plot_point(x, y, g_mild_ptr, const_cast<plot_point_style&>(mild_style), unc(0), unc(0)); // Kludge!
         if (outlier_values_on_)
         { // Show the value of the data point too.
           draw_plot_point_value(x, y, image.g(boxplot::DATA_VALUE_LABELS).g(), const_cast<value_style&>(values_style), mild_outlier_, value);
@@ -1743,7 +1743,7 @@ public:
       { // Inside plot window so want to show.
         y = value;
         transform_y(y); // to SVG.
-        draw_plot_point(x, y, g_ext_ptr, const_cast<plot_point_style&>(extreme_style)); // Kludge!
+        draw_plot_point(x, y, g_ext_ptr, const_cast<plot_point_style&>(extreme_style), 0, 0); // Kludge!
         if (extreme_outlier_values_on_) // This isn't a series setting - but might be.
         { // Show the value of the data point too.
           draw_plot_point_value(x, y, image.g(boxplot::DATA_VALUE_LABELS).g(), const_cast<value_style&>(values_style), ext_outlier_, value);

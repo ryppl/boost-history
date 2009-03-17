@@ -479,8 +479,8 @@ public:
   void calculate_plot_window()
   { //! Calculate the size and position of the plot window,
     //! taking account of the length and font size of axes labels, axis ticks, title and legend box.
-    // This version is only for 1-D.
-    // All calculation use svg units, pixels by default.
+    //! This version is only for 1-D.
+    //! All calculations use SVG units, pixels by default.
 
     // Start by assuming we can use all the svg image,
     // but reduce by the width of any image border.
@@ -515,7 +515,7 @@ public:
     place_legend_box();
 
     // Because there may be several datasets,
-    // and the scaling can be done by anyone or all of them.
+    // and the scaling can be done by any one or all of them.
     // my_plot.autoscale(my_data1) // for 1 dataset.
     // or my_plot.autoscale(my_datas) // for a vector of several datasets.
     // calculates the min & max, increments & ticks.
@@ -688,7 +688,7 @@ public:
       g_ptr.style().fill_color(serieses_[i].point_style_.fill_color_);
 
       for(unsigned int j = 0; j < serieses_[i].series_.size(); ++j)
-      { // Draw jth point for ith series.
+      { // Draw jth point for ith serieses.
         unc ux = serieses_[i].series_[j];
         double x = ux.value();
         // TODO symbols are offset downwards because 
@@ -698,7 +698,7 @@ public:
         if((x >= plot_left_) && (x <= plot_right_)) // Check point is inside plot_window.
         // May need a margin here to avoid points just over the window not being shown.
         {
-          draw_plot_point(x, y, g_ptr, serieses_[i].point_style_); // Marker.
+          draw_plot_point(x, y, g_ptr, serieses_[i].point_style_, ux, unc(0)); // Marker. (y uncertainty is zero)
           if (x_values_on_)
           { // Show the value (& perhaps uncertainty) of the data point too.
             g_element& g_ptr_v = image.g(detail::PLOT_X_POINT_VALUES).g();
@@ -734,7 +734,7 @@ public:
             x = plot_right_;
           }
           //else X axis includes zero, so x is OK.
-          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
+          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);
         }
         else
         { // Not NaN
@@ -749,7 +749,7 @@ public:
           }
           // else is inside plot window, so draw a limit point marker.
           // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
-          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
+          draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);
         }
       } // for j
     } // for i limits point

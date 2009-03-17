@@ -1529,10 +1529,11 @@ my_plot.background_color(ghostwhite) // Whole image.
             uy = j->second;
             y = uy.value(); // Just the Y value
             //double vy = y; // Note the true Y value.
-            transform_point(x, y);
+            transform_point(x, y); // Note x and y are now SVG coordinates.
             if((x > plot_left_) && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
-            { // Is inside plot window, so draw a point.
-              draw_plot_point(x, y, g_ptr, serieses_[i].point_style_);
+            { // Is inside plot window, so draw a point. 
+              draw_plot_point(x, y, g_ptr, serieses_[i].point_style_, ux, uy); // Add the unc to allow access to uncertainty.
+              // TODO might refactor so that only pass ux, and uy.
               g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
               if (x_values_on_)
               { // Show the value of the X data point too.
@@ -1622,12 +1623,12 @@ my_plot.background_color(ghostwhite) // Whole image.
               // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
             }
 
-            draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
+            draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);  // No uncertainty info for values at limit infinity & NaN.
 
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
-              draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_);
+              draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);
             }
           }
         } // limits point

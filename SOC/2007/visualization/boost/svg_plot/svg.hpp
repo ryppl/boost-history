@@ -86,12 +86,12 @@
 
   SVG provides very high quality images that display well on small screens like handheld devices,
   conventional monitors of all sizes,
-  and on big screens (like when projected on lecture theatre screens),
+  and on big screens (for example, projected on lecture theatre screens),
   and especially when printed, but files are tiny
   (compared to images produced by spreadsheets like Microsoft Excel).
 
   SVG files are microscopic when compressed using a zip program
-  to convert to type .zip, or the specific compressed SVG file type (.svgz).
+  to convert to types like .zip, or the specific compressed SVG file type (.svgz).
 
   \section plot_types_sec 1D, 2D and Boxplot
 
@@ -107,7 +107,7 @@
 
   This page generated from file svg.hpp.
 
-  */
+*/
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2007, 2009
 

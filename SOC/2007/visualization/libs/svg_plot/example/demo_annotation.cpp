@@ -1,6 +1,6 @@
-/*! \file demo_notes.cpp
+/*! \file demo_annotation.cpp
     \brief Demonstration of 2D 'note' annotation.
-    \details Adding an annotation to a plot.
+    \details Adding a text annotation to a plot, changing color, font and orientation.
     \author Paul A. Bristow
     \date Mar 2009
 */
@@ -78,7 +78,7 @@ This shows how to add notes to a plot, for example to identify a particular area
   Defaults are provided for size, text style = no_style, center alignment and rotation horizontal.
   */
   my_plot.draw_note(40, 10, "top left (0, 0)");
-  my_plot.draw_note(my_plot.image_x_size()-10, my_plot.image_y_size()- 10, "bottom right(380, 280)", no_style, right_align);
+  my_plot.draw_note(my_plot.image_x_size()-10, my_plot.image_y_size()- 10, "bottom right(380, 280)");
 
 /*`Using center_align is strongly recommended because it will ensure that note will center correctly
  (even if note string is made much longer because it contains Unicode,
@@ -93,19 +93,19 @@ You can use either plain char space or Unicode space \&#x00a0;
   
 /*`and you can change the alignment and rotation using enums align_style and rotate_style.
 */
-  my_plot.draw_note(350, 70, "My 2nd Note", my_note_style, right_align, slopeup);
+  my_plot.draw_note(350, 70, "My 2nd Note", slopeup, right_align, black, my_note_style);
 
 /*`To change the color to red (and text style,  alignment and rotation too, just for fun)
 */
   text_style my_red_note_style(16, "arial", "italic", "bold");
-  my_plot.draw_note(350, 170, "Red Note", my_red_note_style, left_align, upsidedown, red);
-  my_plot.draw_note(300, 220, "Blue Note");
+  my_plot.draw_note(350, 170, "Red Note",  upsidedown,left_align, red, my_red_note_style);
+  my_plot.draw_note(300, 210, "Blue Note", steepup, center_align, blue);
 
   my_plot.write("./demo_2d_annotation");
 
   //show_2d_plot_settings(my_plot);
 
-  //] [/demo_1d_uncertainty_2]
+  //] [/demo_2d_annotation_2]
   
   }
   catch (char* message)

@@ -52,6 +52,7 @@ enum plot_doc_structure
     PLOT_Y_LABEL, //! Y axis text labels "length (cm)".
     PLOT_X_LABEL, //! X axis text labels "height (m)".
     PLOT_DATA_LINES, //! Lines joining data points.
+    PLOT_DATA_UNC, //! Uncertainty zone of data points.
     PLOT_DATA_POINTS, //! Normal data point markers.
     PLOT_LIMIT_POINTS, //! 'At limit or NaN' data point markers.
     PLOT_LEGEND_BACKGROUND, //! Legend box.
@@ -83,6 +84,7 @@ std::string document_ids_[]= //!< Strings used describe and identify SVG layers 
     "yLabel",
     "xLabel",   // axis text labels "length (cm)"
     "plotLines", // normal data point markers.
+    "plotUnc",   // uncertainty zone of data points.
     "plotPoints", // normal data point markers.
     "limitPoints",  // at limit or NaN data point markers
     "legendBackground", // legend box.
