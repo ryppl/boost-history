@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C++ Express 2008
+# Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "algo_begin_end", "algo_begin_end\algo_begin_end.vcproj", "{E874A770-049B-4393-ACC2-1B3F757BC2BF}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "reg_namespaces", "reg_namespaces\reg_namespaces.vcproj", "{D9F9BDBA-22E9-4E3B-BC69-E9ADB105D8CF}"
@@ -24,6 +24,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fact_tetrahedron", "fact_tetrahedron\fact_tetrahedron.vcproj", "{48B5F7B6-1E06-4495-90F9-AA33E43353C3}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fact_simple_gui", "fact_simple_gui\fact_simple_gui.vcproj", "{41A930A9-ED86-4ABA-9FF7-997FBC0B88FA}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tvrsl_meta_path_full", "tvrsl_meta_path_full\tvrsl_meta_path_full.vcproj", "{8D33606B-251B-417E-99D2-73B2D2213563}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{05D1D739-7332-4502-8631-50D5E06D0EE4}"
+	ProjectSection(SolutionItems) = preProject
+		README.txt = README.txt
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +86,10 @@ Global
 		{41A930A9-ED86-4ABA-9FF7-997FBC0B88FA}.Debug|Win32.Build.0 = Debug|Win32
 		{41A930A9-ED86-4ABA-9FF7-997FBC0B88FA}.Release|Win32.ActiveCfg = Release|Win32
 		{41A930A9-ED86-4ABA-9FF7-997FBC0B88FA}.Release|Win32.Build.0 = Release|Win32
+		{8D33606B-251B-417E-99D2-73B2D2213563}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8D33606B-251B-417E-99D2-73B2D2213563}.Debug|Win32.Build.0 = Debug|Win32
+		{8D33606B-251B-417E-99D2-73B2D2213563}.Release|Win32.ActiveCfg = Release|Win32
+		{8D33606B-251B-417E-99D2-73B2D2213563}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

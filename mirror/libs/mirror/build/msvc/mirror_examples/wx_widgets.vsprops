@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<VisualStudioPropertySheet 
+	ProjectType="Visual C++" 
+	Version="8.00" 
+	Name="mirror_examples"
+	IntermediateDirectory="$(BuildDir)\Intermediate\$(ProjectName)\$(ConfigurationName)"
+	OutputDirectory="$(BuildDir)$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="$(WXWIDGETS_ROOT)\include;$(WXWIDGETS_ROOT)\include\msvc;"
+		PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="$(WXWIDGETS_LIB_DIR)"
+	/>
+	<UserMacro
+		Name="MIRROR_EXAMPLE_WINLIBS"
+		Value="comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
+	/>
+	<UserMacro
+		Name="MIRROR_EXAMPLE_WXLIBS_DEBUG"
+		Value="$(MIRROR_EXAMPLE_WINLIBS) wxbase$(WXWIDGETS_VERSION)ud.lib wxmsw$(WXWIDGETS_VERSION)ud_core.lib wxmsw$(WXWIDGETS_VERSION)ud_adv.lib wxregexud.lib "
+	/>
+	<UserMacro
+		Name="MIRROR_EXAMPLE_WXLIBS_RELEASE"
+		Value="$(MIRROR_EXAMPLE_WINLIBS) wxbase$(WXWIDGETS_VERSION)u.lib wxmsw$(WXWIDGETS_VERSION)u_core.lib wxmsw$(WXWIDGETS_VERSION)u_adv.lib wxregexu.lib "
+	/>
+</VisualStudioPropertySheet>

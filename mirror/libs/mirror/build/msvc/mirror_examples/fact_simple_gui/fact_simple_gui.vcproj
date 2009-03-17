@@ -18,8 +18,7 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)/../../../../../../_build_$(SolutionName)/$(ConfigurationName)"
-			IntermediateDirectory="$(OutDir)/$(ProjectName)"
+			InheritedPropertySheets="..\..\..\..\..\..\..\msvc-build.vsprops;..\mirror_examples.vsprops;..\wx_widgets.vsprops;"
 			ConfigurationType="1"
 			CharacterSet="1"
 			>
@@ -41,7 +40,6 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(BOOST_ROOT);$(MIRROR_ROOT);$(WXWIDGETS_ROOT)\include;$(WXWIDGETS_ROOT)\include\msvc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -62,9 +60,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase$(WXWIDGETS_VERSION)ud.lib wxmsw$(WXWIDGETS_VERSION)ud_core.lib wxmsw$(WXWIDGETS_VERSION)ud_adv.lib wxregexud.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
+				AdditionalDependencies="$(MIRROR_EXAMPLE_WXLIBS_DEBUG)"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="$(WXWIDGETS_ROOT)\lib\vc_lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -93,8 +90,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)/../../../../../../_build_$(SolutionName)/$(ConfigurationName)"
-			IntermediateDirectory="$(OutDir)/$(ProjectName)"
+			InheritedPropertySheets="..\..\..\..\..\..\..\msvc-build.vsprops;..\mirror_examples.vsprops;..\wx_widgets.vsprops;"
 			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
@@ -118,7 +114,6 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				EnableIntrinsicFunctions="true"
-				AdditionalIncludeDirectories="$(BOOST_ROOT);$(MIRROR_ROOT);$(WXWIDGETS_ROOT)\include;$(WXWIDGETS_ROOT)\include\msvc"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="true"
@@ -137,9 +132,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase$(WXWIDGETS_VERSION)u.lib wxmsw$(WXWIDGETS_VERSION)u_core.lib wxmsw$(WXWIDGETS_VERSION)u_adv.lib wxregexu.lib comctl32.lib winmm.lib advapi32.lib rpcrt4.lib"
+				AdditionalDependencies="$(MIRROR_EXAMPLE_WXLIBS_RELEASE)"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(WXWIDGETS_ROOT)\lib\vc_lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"

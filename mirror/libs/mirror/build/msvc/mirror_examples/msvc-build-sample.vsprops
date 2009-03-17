@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<VisualStudioPropertySheet 
+	ProjectType="Visual C++" 
+	Version="8.00" 
+	Name="msvc-build"
+	>
+	<UserMacro
+		Name="BuildDir"
+		Value="$(SolutionDir)..\..\..\..\..\..\_build_mirror_examples\"
+	/>
+	<!-- Define this as an environment variable or 
+	   - uncoment and modify the following user macro 
+	   - to point to the boost root directory
+	<UserMacro
+		Name="BOOST_ROOT"
+		Value="X:/Path/To/Boost/Root/Dir/"
+	-->
+
+	<!-- Define this as an environment variable or 
+	   - uncoment and modify the following user macro 
+	   - to point to the root directory of the Mirror
+	   - library
+	<UserMacro
+		Name="MIRROR_ROOT"
+		Value="X:/Path/To/Mirror/Root/Dir/"
+	-->
+
+	<!-- Define this as an environment variable or 
+	   - uncoment and modify the following user macro 
+	   - to point to the wxwidgets root directory
+	<UserMacro
+		Name="WXWIDGETS_ROOT"
+		Value="X:/Path/To/WxWidgets/Root/Dir/"
+	-->
+
+	<!-- Define this as an environment variable or 
+	   - uncoment and modify the following user macro 
+	   - to get the version of the WxWidgets libraries
+	   - to be linked to the examples
+	<UserMacro
+		Name="WXWIDGETS_VERSION"
+		Value="28"
+	-->
+
+	<!-- Modify the folowing macros to point to the
+	   - directories containing the built Boost 
+	   - and WxWidgets libraries
+	--> 
+
+	<UserMacro
+		Name="BOOST_LIB_DIR"
+		Value="$(BOOST_ROOT)/stage/lib/"
+	/>
+	<UserMacro
+		Name="WXWIDGETS_LIB_DIR"
+		Value="$(WXWIDGETS_ROOT)/lib/vc_lib/"
+	/>
+</VisualStudioPropertySheet>

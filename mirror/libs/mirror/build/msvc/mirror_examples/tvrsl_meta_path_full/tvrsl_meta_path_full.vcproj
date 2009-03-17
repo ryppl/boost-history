@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="windows-1250"?>
+<?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9,00"
-	Name="tvrsl_meta_path"
-	ProjectGUID="{CE708ABA-1A98-43DE-9187-A9855E2E0C91}"
-	RootNamespace="tvrsl_meta_path"
+	Name="tvrsl_meta_path_full"
+	ProjectGUID="{8D33606B-251B-417E-99D2-73B2D2213563}"
+	RootNamespace="tvrsl_meta_path_full"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -169,7 +169,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\..\example\traversal\sample_meta_path.cpp"
+				RelativePath="..\..\..\..\example\traversal\meta_path_full.cpp"
 				>
 			</File>
 		</Filter>

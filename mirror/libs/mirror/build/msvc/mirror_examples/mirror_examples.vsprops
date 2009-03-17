@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<VisualStudioPropertySheet 
+	ProjectType="Visual C++" 
+	Version="8.00" 
+	Name="mirror_examples"
+	IntermediateDirectory="$(BuildDir)\Intermediate\$(ProjectName)\$(ConfigurationName)"
+	OutputDirectory="$(BuildDir)$(ConfigurationName)"
+	>
+	<Tool
+		Name="VCCLCompilerTool"
+		AdditionalIncludeDirectories="$(BOOST_ROOT);$(MIRROR_ROOT);"
+		PreprocessorDefinitions="_CRT_SECURE_NO_WARNINGS"
+	/>
+	<Tool
+		Name="VCLinkerTool"
+		AdditionalLibraryDirectories="$(BOOST_LIB_DIR);"
+	/>
+</VisualStudioPropertySheet>
