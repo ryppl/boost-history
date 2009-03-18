@@ -166,12 +166,12 @@ the additional information there, using the "uknum" attribute.
    <p><b>Suggestion</b></p>
     <xsl:apply-templates select="suggestion/*|suggestion/text()"/>
     
-   <xsl:if test="string(notes)">   
+   <xsl:if test="normalize-space(notes)">   
     <p><b>Notes</b></p>
      <xsl:apply-templates select="notes/*|notes/text()"/>
    </xsl:if>  
    
-   <xsl:if test="string(rationale)">   
+   <xsl:if test="normalize-space(rationale)">   
     <p><b>Rationale</b></p>
      <xsl:value-of select="rationale"/>
    </xsl:if>  
