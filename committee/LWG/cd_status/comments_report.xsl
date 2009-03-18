@@ -47,7 +47,6 @@ those comments for which the "disp" attribute is empty.
    </TITLE>
   </HEAD>
   <BODY>
-   <CENTER>
     <H1>
      C++ CD1
      <xsl:if test="$open_only='yes'">
@@ -64,19 +63,14 @@ those comments for which the "disp" attribute is empty.
        Editorial
       </xsl:when>
      </xsl:choose>
-     Comments
+     Comment Status
     </H1>
-    <H2>
-     (Rev.
-     <xsl:value-of select="/document/@rev"/>,
-     <xsl:value-of select="/document/@date"/>)
-    </H2>
-    <H3>
-     William M. Miller<BR/>
-     Edison Design Group, Inc.<BR/>
-     <A HREF="mailto://wmm@edg.com">wmm@edg.com</A>
-    </H3>
-   </CENTER>
+     <p>
+     This is an unofficial document used to track work-in-progress. Its contents 
+     are subject to change.</p>
+    <p>Revised:
+     <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y %I:%M:%S %p %Z" startspan -->18 March 2009 06:43:27 AM -0500<!--webbot bot="Timestamp" endspan i-checksum="58300" --></p>
+     <hr/>
      <xsl:choose>
       <xsl:when test="$responsible='all'">
        <xsl:apply-templates select="document/comment"/>
@@ -85,13 +79,12 @@ those comments for which the "disp" attribute is empty.
        <xsl:apply-templates select="document/comment[@owner=$responsible]"/>
       </xsl:otherwise>
      </xsl:choose>
+    ---- End ----
   </BODY>
  </HTML>
 </xsl:template>
 
 <xsl:template match="comment">
-
-<hr/>
 
 <!-- ************************************************************
 
@@ -103,21 +96,23 @@ are printing all comments.
 
  <xsl:if test="not($open_only='yes') or @disp=''">
 
-
+ 
 <!-- ************************************************************
 
 Add an anchor to the ID so we can reference it as a URI.
 
 ************************************************************ -->
 
+   <h3>Comment
     <A>
      <xsl:attribute name="NAME">
       <xsl:value-of select="@nb"/><xsl:value-of select="@num"/>
      </xsl:attribute>
      <xsl:value-of select="@nb"/>
-     <xsl:text> </xsl:text>
      <xsl:value-of select="@num"/>
     </A>
+   </h3> 
+    
 
 <!-- ************************************************************
 
@@ -127,14 +122,17 @@ the additional information there, using the "uknum" attribute.
 ************************************************************ -->
 
     <xsl:if test="@nb[.='UK']">
+     <b>UKref: </b>
      <A>
       <xsl:attribute name="HREF">
        http://cxxpanel.org.uk/ballotcomment/<xsl:value-of select="@uknum"/>
       </xsl:attribute>
-      [<xsl:value-of select="@uknum"/>]
+      <xsl:value-of select="@uknum"/>
      </A>
-     
+     &#160;
     </xsl:if>
+    
+    <b>Section: </b>
     <xsl:apply-templates select="section/*|section/text()"/>
     
     <xsl:if test="normalize-space(para)">
@@ -144,21 +142,39 @@ the additional information there, using the "uknum" attribute.
 
    <xsl:if test="$responsible='all'">
 
-     <xsl:value-of select="@owner"/>&#160;
+     <xsl:value-of select="@owner"/>
 
    </xsl:if>
-    <xsl:value-of select="@disp"/>&#160;
-   <h3>Description</h3>
-    <xsl:apply-templates select="description/*|description/text()"/>&#160;
+    
+   <b>Issue: </b>
+    <xsl:if test="@issue[.!='']">
+      <A>
+      <xsl:attribute name="HREF">
+       lwg-active.html/#<xsl:value-of select="@issue"/>
+      </xsl:attribute>
+      <xsl:value-of select="@issue"/>
+     </A>
+    </xsl:if>
+    &#160;
    
-   <h3>Suggestion</h3>
-    <xsl:apply-templates select="suggestion/*|suggestion/text()"/>&#160;
-   <h3>Issue</h3>
-    <xsl:value-of select="@issue"/>&#160;
-   <h3>Notes</h3>
-     <xsl:apply-templates select="notes/*|notes/text()"/>&#160;
-   <h3>Rationale</h3>
-    <xsl:value-of select="rationale"/>
+   <b>Disposition: </b>
+    <xsl:value-of select="@disp"/>&#160;
+    
+   <p><b>Description</b></p>
+    <xsl:apply-templates select="description/*|description/text()"/>
+   
+   <p><b>Suggestion</b></p>
+    <xsl:apply-templates select="suggestion/*|suggestion/text()"/>
+    
+   <xsl:if test="string(notes)">   
+    <p><b>Notes</b></p>
+     <xsl:apply-templates select="notes/*|notes/text()"/>
+   </xsl:if>  
+   
+   <xsl:if test="string(rationale)">   
+    <p><b>Rationale</b></p>
+     <xsl:value-of select="rationale"/>
+   </xsl:if>  
 
 <!-- ************************************************************
 
@@ -180,6 +196,10 @@ the URI for the text of the link.)
       N<xsl:value-of select="substring(@extdoc,58,4)"/>
       </A>
     </xsl:if>&#160;
+
+<br/>
+&#160;
+<hr/>
  
  </xsl:if>
 </xsl:template>

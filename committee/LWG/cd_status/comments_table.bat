@@ -1,1 +1,1 @@
-xsltproc --param responsible "'LWG'" %* comments_table.xsl comments_with_numbers.xml >comments_table.html
+xsltproc --param responsible "'LWG'" --param brief "'yes'" %* comments_table.xsl comments_with_numbers.xml >comments_table.html
