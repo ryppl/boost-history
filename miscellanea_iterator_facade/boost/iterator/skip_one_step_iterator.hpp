@@ -100,14 +100,14 @@ make_skip_one_step_begin_iterator(Iter b,Iter skip){
     if(new_b == skip){
         std::advance(new_b,1); }
     return skip_one_step_iterator<Iter>(new_b,skip);
-};
+}
 
 template<typename Iter>
 skip_one_step_iterator<Iter>
 make_skip_one_step_end_iterator(Iter e,Iter skip){
     // constructor below will throw if skip == e
     return skip_one_step_iterator<Iter>(e,skip);
-};
+}
 
 
 
