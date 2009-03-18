@@ -4,24 +4,13 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-
-#include <boost/tree/binary_tree.hpp>
-
-#include <boost/tree/iterator.hpp>
 #include <boost/tree/algorithm.hpp>
 
-#define BOOST_TEST_MODULE binary_tree test
+#define BOOST_TEST_MODULE cursor_algorithm test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
-#include <boost/test/parameterized_test.hpp>
-
-#include <list>
-#include <algorithm>
-#include <iterator>
-
 
 #include "fake_binary_tree.hpp"
-#include "test_tree_traversal_data.hpp"
 
 using namespace boost::tree;
 

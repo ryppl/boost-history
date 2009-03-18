@@ -5,21 +5,12 @@
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/tree/forest.hpp>
-#include <boost/tree/algorithm.hpp>
-
-#include <boost/lambda/bind.hpp>
-
-#include <boost/mpl/list.hpp>
-#include <boost/mpl/pair.hpp>
-
-#include <list>
 
 #define BOOST_TEST_MODULE forest test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 
-#include "test_tree_traversal_data.hpp"
 #include "fake_binary_tree.hpp"
 
 using namespace boost::tree;

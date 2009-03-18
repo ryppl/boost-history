@@ -4,19 +4,10 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/binary_tree.hpp>
 #include <boost/tree/iterator.hpp>
-#include <boost/tree/algorithm.hpp>
-//#include <boost/tree/ascending_cursor.hpp>
-//#include <boost/tree/root_tracking_cursor.hpp>
-
-#include <list>
-#include <iterator>
 
 #define BOOST_TEST_MODULE iterator_algorithm test
 #include <boost/test/included/unit_test.hpp>
-#include <boost/test/test_case_template.hpp>
-#include <boost/mpl/list.hpp>
 
 #include "fake_binary_tree.hpp"
 #include "test_tree_traversal_data.hpp"

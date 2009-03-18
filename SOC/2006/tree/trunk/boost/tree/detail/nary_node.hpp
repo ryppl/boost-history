@@ -24,19 +24,8 @@ namespace tree {
 namespace detail {
 
 using boost::array;
-
-//template <class T> struct binary_array : public array<T, 2> { };
-
-//struct node_base;
-/*
- * node_with_parent_base
- */
  
 class node_with_parent_base {
-//    typedef node_with_parent_base self_type;
-//    typedef self_type* base_pointer;
-//    typedef self_type const* const_base_pointer;
-
 public:
     node_with_parent_base* m_parent; // TODO: protect?
     
@@ -63,53 +52,6 @@ public:
     }
 };
 
-//template <template <typename> class Container>
-//class node_base;
-//
-//template <template <typename> class Container>
-//class node_base : public node_with_parent_base, public Container<node_base<Container>*> {
-//    typedef node_base<Container> self_type;
-//    
-//public:
-// 
-//    typedef Container<node_base<Container>*> base_type;
-//    typedef typename base_type::size_type size_type;
-//    typedef self_type* base_pointer;
-//    typedef self_type const* const_base_pointer;
-//    
-//    node_base() : node_with_parent_base()
-//    { }
-//    
-//    static base_pointer nil()
-//    {
-//        static self_type m_nil_obj;
-//        static base_pointer m_nil = &m_nil_obj;
-//        return m_nil;
-//    }
-//    
-//    void init()
-//    {
-//        for (typename base_type::size_type i=0; i<base_type::size(); ++i)
-//            operator[](i) = nil();
-//    }
-//
-//    // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-//    bool const is_leaf() const
-//    {
-//        return ((this == nil()) || this->base_type::is_leaf());
-//    }
-//
-//    // O(n); n is number of parent's children
-//    typename base_type::size_type const get_index() const
-//    {
-//        typename base_type::size_type i = 0;
-//        while (static_cast<base_pointer>(this->m_parent)->base_type::operator[](i++) != this);
-//        return --i;
-//        //return (static_cast<base_pointer>(this->m_parent)->base_type::operator[](0) == this ? 0 : 1);
-//    }
-//};
-
-class node_base;
 class node_with_children_base;
 
 class node_with_children_base {
@@ -144,35 +86,17 @@ class node_base
     typedef node_base self_type;
     
 public:
-    //typedef node_with_children_base::base_type base_type;
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
         
     node_base() : node_with_parent_base(), node_with_children_base()
     {
-//        m_children[0] = 0;
-//        m_children[1] = 0;
     }
 
     node_base(node_with_parent_base* p)
     : node_with_parent_base(p), node_with_children_base()
     {
-//        m_children[0] = 0;
-//        m_children[1] = 0;
     }
-        
-//    static base_pointer nil()
-//    {
-//        static self_type m_nil_obj;
-//        static base_pointer m_nil = &m_nil_obj;
-//        return m_nil;
-//    }
-
-    // This injures Meyers' Item 36. OTOH, iterator adaptors do that, too, right?
-//    bool const is_leaf() const
-//    {
-//        return (this == nil());
-//    }
     
     // Binary specific
     

@@ -4,22 +4,13 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/tree/binary_tree.hpp>
-//#include <boost/tree/iterator.hpp>
-//#include <boost/tree/algorithm.hpp>
-
 #include <boost/tree/insert_cursor.hpp>
 
 #define BOOST_TEST_MODULE cursor_algorithm test
 #include <boost/test/included/unit_test.hpp>
-#include <boost/test/test_case_template.hpp>
-
 
 #include "test_tree_traversal_data.hpp"
-
 #include "fake_binary_tree.hpp"
-
-// TODO: Actually use fake binary tree.
 
 using namespace boost::tree;
 

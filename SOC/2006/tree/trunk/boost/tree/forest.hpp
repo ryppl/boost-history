@@ -9,8 +9,8 @@
  * Binary tree based forest implementation
  */
 
-#ifndef BOOST_TREE_forest_HPP
-#define BOOST_TREE_forest_HPP
+#ifndef BOOST_TREE_FOREST_HPP
+#define BOOST_TREE_FOREST_HPP
 
 #include <boost/tree/detail/forest_cursor.hpp>
 
@@ -33,12 +33,13 @@ using namespace boost_concepts;
  * TODO: complete this..
  *
 */
+
 template <class T, class Hierarchy = binary_tree<T> >
 class forest {
 
 BOOST_CONCEPT_ASSERT((DefaultConstructible<T>));
-BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::cursor >));
-BOOST_CONCEPT_ASSERT((DescendingCursor< typename binary_tree<T>::const_cursor >));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::cursor >));
+BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::const_cursor >));
 //BOOST_CONCEPT_ASSERT((SameType<T, typename Hierarchy::value_type>)); 
 // Is there a SameType concept in BCCL?
 
@@ -228,4 +229,4 @@ OutCursor copy (postorder, forest_cursor<InCursor> s, forest_cursor<OutCursor> t
 } // namespace tree
 } // namespace boost
 
-#endif // BOOST_TREE_forest_HPP
+#endif // BOOST_TREE_FOREST_HPP
