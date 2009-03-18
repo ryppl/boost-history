@@ -87,6 +87,7 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXFileReference section */
+		08177B6C0F703A48003A0028 /* overlapping_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = overlapping_example.cpp; sourceTree = "<group>"; };
 		081B05C30E5FCCB600EF7F91 /* clickable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = clickable.hpp; sourceTree = "<group>"; };
 		081B05CA0E5FCE1300EF7F91 /* clickable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = clickable.hpp; sourceTree = "<group>"; };
 		081B06720E5FD90300EF7F91 /* labeled_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = labeled_button.cpp; sourceTree = "<group>"; };
@@ -230,6 +231,7 @@
 				089C81F20E7D949400CE0901 /* two_buttons.cpp */,
 				089D7E0E0F3B75C800590295 /* custom_example.cpp */,
 				08A19B410F3F7D930003AC68 /* window_only_example.cpp */,
+				08177B6C0F703A48003A0028 /* overlapping_example.cpp */,
 			);
 			name = example;
 			path = ../../example;
