@@ -21,14 +21,15 @@ BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
 BOOST_AUTO_TEST_CASE( test_rightmost )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root(); //.begin();
+    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
     to_rightmost(c);
-    BOOST_CHECK_EQUAL(*c, 14);
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK(c == fbt1.root_tracking_root().end().end().end());
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root(); //.begin();
+    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
     to_last(Order(), c);
     // Replace by a fake_to_first function for dependency minimization's sake?
     // preorder: fbt1.root_tracking_root().end().end().begin().begin().end().begin();
