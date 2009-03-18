@@ -26,17 +26,17 @@ namespace boost { namespace synchro { namespace lockable {
     namespace partial_specialization_workaround {
         template <typename Lockable, class Rep, class Period >
         struct lock_for {
-            static void 
+            static typename result_of::template lock_for<Lockable>::type 
             apply( Lockable& lockable, const chrono::duration<Rep, Period>& rel_time ) {
-                lockable.lock_for(rel_time);
+                return lockable.lock_for(rel_time);
             }
         };
     }
 
     template <typename Lockable, class Rep, class Period >
-    void 
+    typename result_of::template lock_for<Lockable>::type 
     lock_for(Lockable& lockable, const chrono::duration<Rep, Period>& abs_time) {
-        partial_specialization_workaround::lock_for<Lockable,Rep,Period>::apply(lockable, abs_time);
+        return partial_specialization_workaround::lock_for<Lockable,Rep,Period>::apply(lockable, abs_time);
     }
 
 

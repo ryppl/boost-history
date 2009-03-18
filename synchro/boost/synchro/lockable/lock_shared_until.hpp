@@ -26,7 +26,7 @@ namespace boost { namespace synchro { namespace lockable {
     namespace partial_specialization_workaround {
         template <typename Lockable, class Clock, class Duration >
         struct lock_shared_until {
-            static void 
+            static typename result_of::template lock_shared_until<Lockable,Clock,Duration>::type 
             apply( Lockable& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
                 return lockable.lock_shared_until(abs_time);
             }
@@ -34,7 +34,7 @@ namespace boost { namespace synchro { namespace lockable {
     }
 
     template <typename Lockable, class Clock, class Duration >
-    void 
+    typename result_of::template lock_shared_until<Lockable,Clock,Duration>::type 
     lock_shared_until(Lockable& lockable, const chrono::time_point<Clock, Duration>& abs_time) {
         return partial_specialization_workaround::lock_shared_until<Lockable,Clock,Duration>::apply(lockable, abs_time);
     }
