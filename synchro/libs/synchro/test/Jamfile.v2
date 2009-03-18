@@ -49,9 +49,9 @@ test-suite "sync_lock_traits" :
      [ compile lockable_traits_test.cpp ]
      [ compile lockable_concepts_test.cpp ]
      [ compile locker_concepts_test.cpp ]
-#     [ run sync_buffer_family_test.cpp ]
+     [ run sync_buffer_family_test.cpp ]
 ##     [ run sync_buffer_monitor_test.cpp ]
-#     [ run nested_reverse_locker_test.cpp ]
+     [ run nested_reverse_locker_test.cpp ]
     ; 
 
 test-suite "lockables" :
@@ -59,20 +59,20 @@ test-suite "lockables" :
     ; 
 
 test-suite "compile_fail_test"  :
-#    [ compile-fail ../example/IL_BancAccount.cpp : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
+    [ compile-fail ../example/IL_BancAccount.cpp : <define>BOOST_SYNCHRO_DO_NOT_COMPILE  : IL_BancAccount_comp_fail ]
     ;
     
 test-suite "examples" :
-#    [ run     ../example/BankAccount.cpp  ]
-#    [ run     ../example/SingleBuf.cpp  ]
-#    [ run     ../example/Master_Slave.cpp  ]
+    [ run     ../example/BankAccount.cpp  ]
+    [ run     ../example/SingleBuf.cpp  ]
+    [ run     ../example/Master_Slave.cpp  ]
 ##    [ run     ../example/HotelReservation.cpp  ]
-#    [ link     ../example/QualifiedSingleBuf.cpp  ]
-#    [ run     ../example/Histogram.cpp  ]
-#    [ run     ../example/IL_BancAccount.cpp  ]
-#    [ run-fail     ../example/IL_Lockable_BancAccount.cpp  ]
-#    [ run     ../example/IL_Rec_Lockable_BancAccount.cpp  ]
-#    [ run     ../example/IEL_Rec_Lockable_BancAccount.cpp  ]
-#    [ run     ../example/EL_BancAccount.cpp  ]
+    [ link     ../example/QualifiedSingleBuf.cpp  ]
+    [ run     ../example/Histogram.cpp  ]
+    [ run     ../example/IL_BancAccount.cpp  ]
+    [ run-fail     ../example/IL_Lockable_BancAccount.cpp  ]
+    [ run     ../example/IL_Rec_Lockable_BancAccount.cpp  ]
+    [ run     ../example/IEL_Rec_Lockable_BancAccount.cpp  ]
+    [ run     ../example/EL_BancAccount.cpp  ]
     ;
     
