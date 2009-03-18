@@ -7,6 +7,7 @@
 -----------------------------------------------===============================*/
 
 
+
 //[ window_only_example_includes
 #include <boost/guigl/application.hpp>
 #include <boost/guigl/window.hpp>
