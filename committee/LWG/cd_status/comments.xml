@@ -6931,12 +6931,14 @@ Library
         <BR/><BR/>}
 </suggestion>
 <notes>
+Done
+</notes>
+<rationale>
 Previously considered; we decided not to do it. We believe it is
 not too onerous to use <TT>wbuffer_convert</TT> and
 <TT>wstring_convert</TT> which were added as intermediaries to
 avoid proliferation of types.
-</notes>
-<rationale></rationale>
+</rationale>
 </comment>
 
 <comment nb="UK" num="144" uknum="72" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7544,9 +7546,10 @@ members
         Add reference to quick_exit and
         at_quick_exit
 </suggestion>
-<notes>NAD. We do not belive at_exit and at_quick_exit should be required by 
-    freestanding implementations.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. We do not belive at_exit and at_quick_exit should be required by 
+    freestanding implementations.
+</rationale>
 </comment>
 
 <comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -7777,8 +7780,9 @@ Footnote 175
         Add restriction that exception
         specification of virtual functions cannot be tightened.
 </suggestion>
-<notes>NAD, the standard already has the desired restriction.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD, the standard already has the desired restriction.
+</rationale>
 </comment>
 
 <comment nb="UK" num="181" uknum="108" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7820,9 +7824,10 @@ Footnote 188
 <suggestion>
         Make this footnote normative
 </suggestion>
-<notes>NAD. We cannot mandate all standard-library functions that might use some 
-    third-party library.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. We cannot mandate all standard-library functions that might use some 
+    third-party library.
+</rationale>
 </comment>
 
 <comment nb="UK" num="184" uknum="144" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8312,9 +8317,10 @@ to terminate the program. Bill
 <suggestion>
         Consider other types.
 </suggestion>
-<notes>NAD. There is already guidance in the CD. It is the caller's responsibility 
-    to internationalize MB character string.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. There is already guidance in the CD. It is the caller's responsibility 
+    to internationalize MB character string.
+</rationale>
 </comment>
 
 <comment nb="JP" num="29" uknum="" type="te" owner="LWG" issue="1007" disp="" date="" extdoc="">
@@ -8446,9 +8452,10 @@ to terminate the program. Bill
         accepting a std::string by rvalue reference, with the
         semantics that the passed string may be moved.
 </suggestion>
-<notes>NAD. Implementations are permitted to add the requested signature under the 
-    as-if rule.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. Implementations are permitted to add the requested signature under the 
+    as-if rule. See clause 17.
+</rationale>
 </comment>
 
 <comment nb="JP" num="32" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8487,8 +8494,10 @@ to terminate the program. Bill
         Consider to add footnote that recommends what() returns
         message easy to recognize what exception was thrown.
 </suggestion>
-<notes>NAD. Q of I.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. This is a quality of implementation issue that is beyond
+the scope of the standard.
+</rationale>
 </comment>
 
 <comment nb="US" num="64" uknum="" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8659,13 +8668,14 @@ N2840</a> and was accepted into the WP in Summit.
         library that requires CopyConstructible as well as
         Callable. Consider making (Std)Predicate SemiRegular.
 </suggestion>
-<notes>After further 
+<notes>Done</notes>
+<rationale>After further 
     discussion of UK200, we do not think adding constraints to predicates is a 
     good idea. Straw poll on UK200: status quo, 5 pro - 2 con; remove 
     copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
     3 con; no consensus for moving away from the status quo.<BR/><BR/>
-    Also see UK245.</notes>
-<rationale></rationale>
+    Also see UK245.
+</rationale>
 </comment>
 
 <comment nb="UK" num="201" uknum="290" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8686,9 +8696,10 @@ N2840</a> and was accepted into the WP in Summit.
         into two so that 'basic' consistency can be asserted
         regardless of the &lt;=/&gt;= requirement.
 </suggestion>
-<notes>After consultation with the submitter, we agreed that the suggestion was in 
-    error and there is nothing else to be done.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>After consultation with the submitter, we agreed that the suggestion was in 
+    error and there is nothing else to be done.
+</rationale>
 </comment>
 
 <comment nb="JP" num="33" uknum="" type="te" owner="LWG" issue="1016" disp="" date="" extdoc="">
@@ -9320,9 +9331,10 @@ Correct as follows.<BR/><BR/>
         typedef Alloc allocator_type;
         <BR/><BR/>}
 </suggestion>
-<notes>This change would be redundant because function&lt;&gt; is already sufficiently 
-    constrained. No actions necessary.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>This change would be redundant because function&lt;&gt; is already sufficiently 
+    constrained. No actions necessary.
+</rationale>
 </comment>
 
 <comment nb="JP" num="42" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -9430,9 +9442,9 @@ Correct as follows.<BR/><BR/>
 <suggestion>
         .
 </suggestion>
-<notes>Consensus is that this is an expansion of the scope of C++0X and so we 
-    recommend no action.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>NAD. Consensus is that this is an expansion beyond the scope of C++0X.
+</rationale>
 </comment>
 
 <comment nb="UK" num="209" uknum="111" type="Te" owner="LWG" issue="1026" disp="" date="" extdoc="">
@@ -9799,7 +9811,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 <rationale></rationale>
 </comment>
 
-<comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="modified" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 20.8.2.2
 </section>
@@ -10972,7 +10984,7 @@ after &#182; 1
 <rationale></rationale>
 </comment>
 
-<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.3.1
 </section>
@@ -10992,7 +11004,7 @@ after &#182; 1
         See my recommendations for "23.2.1,
         23.2.6".
 </suggestion>
-<notes>NAD, we think. basic_string elements have to be POD and PODs may not have 
+<notes>NAD. basic_string elements have to be POD and PODs may not have 
     overloaded operator&amp;. Need to check whether this is true in light of relaxed 
     POD constraints.</notes>
 <rationale></rationale>
@@ -11038,7 +11050,7 @@ after &#182; 1
         are other places in the standard where TR1, and new
         classes, did not receive an 'R-value' update.
 </suggestion>
-<notes>We did it differently for basic_string because otherwise rvalue strreaming 
+<notes>We did it differently for basic_string because otherwise rvalue streaming 
     was producing confusing results with strings, but this difference will be 
     fixed by N2831 if it's accepted.</notes>
 <rationale></rationale>
@@ -11779,9 +11791,10 @@ Table 80
         Clarify what is meant and what requirements
         an implementation must satisfy.
 </suggestion>
-<notes>After considerable discussion and 
-    consideration, we do not feel this is a defect given the reference to [res.on.data.races].</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>After considerable discussion and 
+    consideration, we do not feel this is a defect given the reference to [res.on.data.races].
+</rationale>
 </comment>
 
 <comment nb="JP" num="56" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12138,14 +12151,12 @@ Table 84
 <suggestion>
         add the other two swaps.
 </suggestion>
-<notes>Agree. The proposed wording is forthcoming from Martin. We feel that these 
-    overloads of swap are more important for array than other containers because 
-    swap is not O(1) for array.<BR/><BR/>
-    <strong>HOWEVER</strong> in a later session discussing D2844, it was decided 
+<notes>Done</notes>
+<rationale>After discussing D2844, it was decided 
     to remove all the r-value-ref <code>swap</code> overloads from containers. 
     Therefore adding them to <code>array</code> has no benefit. So the final 
-    disposition is NAD.</notes>
-<rationale></rationale>
+    disposition is NAD.
+</rationale>
 </comment>
 
 <comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="" date="" extdoc="">
@@ -12213,13 +12224,13 @@ Table 84
         Compare&gt; requires CopyConstructible&lt;Compare&gt; void
         sort(Compare comp);
 </suggestion>
-<notes>UK245 with additional comments on <a href="#UK200">UK200</a> in clause 20: After further 
+<notes>Done</notes>
+<rationale>UK245 with additional comments on <a href="#UK200">UK200</a> in clause 20: After further 
     discussion of UK200, we do not think adding constraints to predicates is a 
     good idea. Straw poll on 
     UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
     consensus for moving away from the status quo.
-</notes>
-<rationale></rationale>
+</rationale>
 </comment>
 
 <comment nb="JP" num="58" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12345,9 +12356,10 @@ Table 84
         We take no position on moving the text from Clause 24 to
         Clause 20 though.
 </suggestion>
-<notes>NAD. We believe the separate header to have value.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD. We believe the separate header to have value.
+</rationale>
 </comment>
 
 <comment nb="UK" num="248" uknum="47" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12547,9 +12559,10 @@ Table 84
         Add the default : typename
         postincrement_result = X;
 </suggestion>
-<notes>NAD, postdecrement_result is deduced.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, postdecrement_result is deduced.
+</rationale>
 </comment>
 
 <comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12590,9 +12603,10 @@ Table 84
         Add the requirement: requires Iterator&lt;
         postdecrement_result &gt;;
 </suggestion>
-<notes>NAD unless Alisdair comes back with more motivation.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD unless Alisdair comes back with more motivation.
+</rationale>
 </comment>
 
 <comment nb="UK" num="260" uknum="61" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12637,9 +12651,10 @@ Table 84
         the RandomAccessIterator concept as the default
         implementaiton.
 </suggestion>
-<notes>NAD, violates complexity requirements.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, violates complexity requirements.
+</rationale>
 </comment>
 
 <comment nb="UK" num="261" uknum="62" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -12656,14 +12671,14 @@ Table 84
 <suggestion>
         typename subscript_reference = reference;
 </suggestion>
-<notes>
-NAD, subscript reference isn't used.<BR/><BR/>
+<notes>Done
+</notes>
+<rationale>NAD, subscript reference isn't used.<BR/><BR/>
 In c++std-lib-23104, Daniel Kr&#252;gler commented, &#8220;this
 [proposed change] would disable "auto-deduction" of the return
 type of any operator[] as described by
 [concept.map.assoc]/4+5.&#8221;
-</notes>
-<rationale></rationale>
+</rationale>
 </comment>
 
 <comment nb="UK" num="262" uknum="65" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12949,10 +12964,11 @@ deferred.
         InputRange, OutputRange, ForwardRange, BidirectionalRange
         and RandomAccessRange.
 </suggestion>
-<notes>NAD, beyond the scope of the Standard because we are not 
-supplying range-based algorithms.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, beyond the scope of the Standard for C++0x because we are not 
+supplying range-based algorithms.
+</rationale>
 </comment>
 
 <comment nb="UK" num="269" uknum="16" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13048,9 +13064,11 @@ supplying range-based algorithms.
         operations using only operators &lt; and ==, as per the
         move_iterator specification.
 </suggestion>
-<notes>NAD, no consensus.
+<notes>
+Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, no consensus.
+</rationale>
 </comment>
 
 <comment nb="UK" num="274" uknum="119" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13098,9 +13116,10 @@ supplying range-based algorithms.
         The reverse_iterator template constructor
         taking a single Iterator argument should be explicit.
 </suggestion>
-<notes>NAD, withdrawn by submitter.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, withdrawn by submitter.
+</rationale>
 </comment>
 
 <comment nb="UK" num="276" uknum="19" type="Ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13119,9 +13138,10 @@ supplying range-based algorithms.
         Make the member operators taking a
         difference_type argument non-member operators
 </suggestion>
-<notes>NAD, not editorial, withdrawn by submitter.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, not editorial, withdrawn by submitter.
+</rationale>
 </comment>
 
 <comment nb="UK" num="277" uknum="20" type="Te" owner="LWG" issue="1012" disp="" date="" extdoc="">
@@ -13174,10 +13194,11 @@ supplying range-based algorithms.
         Change the const reverse_iterator&lt;U&gt;
         &amp; parameter to pass-by-value
 </suggestion>
-<notes>NAD, we don't believe that copy elision is a 
-sufficiently high priority for iterator types.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD, we don't believe that copy elision is a 
+sufficiently high priority for iterator types.
+</rationale>
 </comment>
 
 <comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13296,10 +13317,11 @@ n/a
         by value, not reference. Affects both class summary and
         operator definition in p
 </suggestion>
-<notes>NAD. This is compatible with C++03; and we lack a 
-consensus for change.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD. This is compatible with C++03; and we lack a 
+consensus for change.
+</rationale>
 </comment>
 
 <comment nb="JP" num="61" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13605,7 +13627,7 @@ programs.
 <rationale></rationale>
 </comment>
 
-<comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="" date="" extdoc="">
 <section>
 25
 </section>
@@ -13622,8 +13644,10 @@ programs.
 <suggestion>
         Adopt n2743, or an update of that paper.
 </suggestion>
-<notes>NAD, this change would break code that takes the address 
+<notes>Summit: NAD, this change would break code that takes the address 
 of an algorithm.
+<BR/>
+Post-Summit: Issue opened at Alisdair's request. See issue for more information.
 </notes>
 <rationale></rationale>
 </comment>
@@ -13649,9 +13673,10 @@ of an algorithm.
         <BR/><BR/>
         Change "is_heap" to "heap_bound"
 </suggestion>
-<notes>no consensus to make the change.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>No consensus to make the change.
+</rationale>
 </comment>
 
 <comment nb="UK" num="296" uknum="183" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13671,9 +13696,10 @@ of an algorithm.
         Change EqualityComparable to HasEqualTo and
         EquivalnceRelation to Predicate
 </suggestion>
-<notes>no consensus to make the change.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>No consensus to make the change.
+</rationale>
 </comment>
 
 <comment nb="UK" num="297" uknum="185" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13769,9 +13795,10 @@ is editorial.
         &lt;utility&gt; to access pair and provide legacy support
         for finding swap.
 </suggestion>
-<notes>no consensus to make the change.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>No consensus to make the change.
+</rationale>
 </comment>
 
 <comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15115,11 +15142,12 @@ defined where it exists.
         <BR/><BR/>};
         <BR/><BR/>}
 </suggestion>
-<notes>Recommend to reject the comment: We believe the current 
+<notes>Done
+</notes>
+<rationale>NAD: We believe the current 
 syntax is most appropriate for an interface that is intended to be 
 highly compatible with C.
-</notes>
-<rationale></rationale>
+</rationale>
 </comment>
 
 <comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15259,12 +15287,10 @@ attached note.
         memory_order_consume to memory_order_acquire with RMW
         operations.
 </suggestion>
-<notes>Create an issue. Assigned to Lawrence. Resolution 
-requires proposed wording.<BR/><BR/>
-Later: Mark as Not A Defect. 
-We can not see the issue being suggested by the comment.
+<notes>Done
 </notes>
-<rationale></rationale>
+<rationale>NAD. We can not see the issue being suggested by the comment.
+</rationale>
 </comment>
 
 <comment nb="JP" num="76" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15419,9 +15445,10 @@ this.
         corresponding type is inherently non-portable. &#8212;end
         note ]
 </suggestion>
-<notes>Not a defect. native_handle_type is a typedef, but it is also a member of 
-    the classes in question.</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>Not a defect. native_handle_type is a typedef, but it is also a member of 
+    the classes in question.
+</rationale>
 </comment>
 
 <comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -15514,9 +15541,10 @@ this.
         Add thread::id
         support for std::hash
 </suggestion>
-<notes>Not a defect. See [unord.hash], where std::thread:id is already listed as a 
-    required specialization for std::hash().</notes>
-<rationale></rationale>
+<notes>Done</notes>
+<rationale>Not a defect. See [unord.hash], where std::thread:id is already listed as a 
+    required specialization for std::hash().
+</rationale>
 </comment>
 
 <comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
