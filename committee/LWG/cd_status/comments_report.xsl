@@ -76,8 +76,11 @@ those comments for which the "disp" attribute is empty.
        <xsl:apply-templates select="document/comment"/>
       </xsl:when>
       <xsl:otherwise>
-       <xsl:apply-templates select="document/comment[@owner=$responsible]"/>
-      </xsl:otherwise>
+       <xsl:apply-templates select="document/comment[@owner=$responsible]">
+         <xsl:sort select="translate(section,'-',' ')"/>
+         <xsl:sort select="para" data-type="number"/>
+       </xsl:apply-templates>
+     </xsl:otherwise>
      </xsl:choose>
     ---- End ----
   </BODY>
@@ -145,6 +148,9 @@ the additional information there, using the "uknum" attribute.
      <xsl:value-of select="@owner"/>
 
    </xsl:if>
+   
+   <b>Type: </b>
+    <xsl:value-of select="@type"/>&#160;
     
    <b>Issue: </b>
     <xsl:if test="@issue[.!='']">
