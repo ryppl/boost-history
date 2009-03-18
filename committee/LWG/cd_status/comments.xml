@@ -1,22 +1,11 @@
 <?xml  version="1.0"?>
 
-<document
-  date="2009-03-13"
+<document date="2009-03-13"
   rev="0"
   docno="PL22.16 09/xxxx = WG21 Nyyyy"
 >
 
-<comment
-  nb="FR"
-  num="1"
-  uknum=""
-  type="ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="1" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 General Comment
 </section>
@@ -36,17 +25,7 @@ General Comment
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="1"
-  uknum=""
-  type="ge/te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="1" uknum="" type="ge/te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1-16
 </section>
@@ -71,17 +50,7 @@ General Comment
 </rationale>
 </comment>
 
-<comment
-  nb="CA"
-  num="1"
-  uknum=""
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="CA" num="1" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 </section>
 <para>
@@ -98,17 +67,7 @@ General Comment
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="1"
-  uknum=""
-  type="ge/te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="1" uknum="" type="ge/te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1 through 16
 </section>
@@ -128,17 +87,7 @@ General Comment
 </rationale>
 </comment>
 
-<comment
-  nb="CH"
-  num="2"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="CH" num="2" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 all
 </section>
@@ -154,17 +103,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="3"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="3" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 all
 </section>
@@ -183,17 +122,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="3"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="3" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1 [intro.scope]
 </section>
@@ -210,17 +139,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="4"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.1
 </section>
@@ -238,17 +157,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="1"
-  uknum="214"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="1" uknum="214" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.1
 </section>
@@ -269,17 +178,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="4"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.2 [intro.refs]
 </section>
@@ -296,17 +195,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="2"
-  uknum="215"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="2" uknum="215" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.2
 </section>
@@ -326,17 +215,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="3"
-  uknum="217"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="3" uknum="217" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.1
 </section>
@@ -366,17 +245,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="4"
-  uknum="216"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="4" uknum="216" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.3
 </section>
@@ -398,17 +267,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="5"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.4
         [defns.
@@ -426,17 +285,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="5"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.5
 </section>
@@ -454,17 +303,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="6"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="6" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.6
         [defns.
@@ -482,17 +321,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="7"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.13
         [defns.
@@ -512,17 +341,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="6"
-  uknum=""
-  type="ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="6" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.3.14
 </section>
@@ -543,17 +362,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="8"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="8" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.4
         [intro.
@@ -574,17 +383,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="5"
-  uknum="1"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="5" uknum="1" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -602,17 +401,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="6"
-  uknum="2"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="6" uknum="2" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -631,17 +420,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="7"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -659,17 +438,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="8"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -689,17 +458,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="9"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="9" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.6
 </section>
@@ -716,17 +475,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="10"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="10" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -745,17 +494,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="11"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -773,17 +512,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="12"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -802,17 +531,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="13"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="13" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -833,17 +552,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="14"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -863,17 +572,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="15"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="15" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.7
 </section>
@@ -892,17 +591,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="16"
-  uknum=""
-  type=""
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="16" uknum="" type="" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -921,17 +610,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="8"
-  uknum="222"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="8" uknum="222" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -956,17 +635,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="7"
-  uknum="218"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="7" uknum="218" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.9
 </section>
@@ -989,17 +658,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="9"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="9" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.9
         [intro.execution]
@@ -1017,17 +676,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="17"
-  uknum=""
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="17" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 1.10
 </section>
@@ -1061,17 +710,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="9"
-  uknum="133"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="9" uknum="133" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.1
 </section>
@@ -1100,17 +739,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="10"
-  uknum="134"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="10" uknum="134" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.1
 </section>
@@ -1133,17 +762,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="10"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.1 [lex.phases]/5
         and
@@ -1179,17 +798,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="11"
-  uknum="135"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="11" uknum="135" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.3
 </section>
@@ -1210,17 +819,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="12"
-  uknum="137"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="12" uknum="137" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.4, 2.8
 </section>
@@ -1245,17 +844,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="18"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.4
 </section>
@@ -1272,17 +861,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="11"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.4
 [lex.pptokens]
@@ -1299,17 +878,7 @@ all
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="12"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.5 [lex.digraph]
 and 2.11
@@ -1327,17 +896,7 @@ and 2.11
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="2"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="2" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.5
 </section>
@@ -1355,17 +914,7 @@ Table 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="13"
-  uknum="138"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="13" uknum="138" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.9
 </section>
@@ -1386,17 +935,7 @@ Table 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="14"
-  uknum="395"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="14" uknum="395" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.11
 </section>
@@ -1415,17 +954,7 @@ table 3
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="1"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="1" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.11
 </section>
@@ -1444,17 +973,7 @@ Table 3
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="19"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="19" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.1
 </section>
@@ -1476,17 +995,7 @@ L&#8221; and &#8220;ll or
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="20"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.1,
         2.13.3
@@ -1509,17 +1018,7 @@ L&#8221; and &#8220;ll or
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="15"
-  uknum="139"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="15" uknum="139" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.2
 </section>
@@ -1541,17 +1040,7 @@ L&#8221; and &#8220;ll or
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="16"
-  uknum="140"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="16" uknum="140" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.2
 </section>
@@ -1571,17 +1060,7 @@ L&#8221; and &#8220;ll or
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="2"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="2" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1600,17 +1079,7 @@ L&#8221; and &#8220;ll or
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="3"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1659,17 +1128,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="4"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1703,17 +1162,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="21"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="21" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1732,17 +1181,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="22"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="22" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1760,17 +1199,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="5"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1789,17 +1218,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="13"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="13" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
         [lex.string]
@@ -1819,17 +1238,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="17"
-  uknum="141"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="17" uknum="141" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1859,17 +1268,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="18"
-  uknum="142"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="18" uknum="142" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1900,17 +1299,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="19"
-  uknum="143"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="19" uknum="143" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 2.13.4
 </section>
@@ -1934,17 +1323,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="14"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="14" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3 [basic]
 </section>
@@ -1970,17 +1349,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="15"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="15" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3 [basic]
 </section>
@@ -2000,17 +1369,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="20"
-  uknum="209"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="20" uknum="209" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3
 </section>
@@ -2031,17 +1390,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="21"
-  uknum="359"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="21" uknum="359" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3
 </section>
@@ -2061,17 +1410,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="22"
-  uknum="362"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="22" uknum="362" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3
 </section>
@@ -2091,17 +1430,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="23"
-  uknum="277"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="23" uknum="277" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -2120,17 +1449,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="24"
-  uknum="360"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="24" uknum="360" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -2155,17 +1474,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="25"
-  uknum="361"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="25" uknum="361" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.1
 </section>
@@ -2190,17 +1499,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="26"
-  uknum="363"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="26" uknum="363" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.2
 </section>
@@ -2222,17 +1521,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="27"
-  uknum="364"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="27" uknum="364" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.2
 </section>
@@ -2252,17 +1541,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="16"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="16" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.3
         [Declarative
@@ -2281,17 +1560,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="28"
-  uknum="365"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="28" uknum="365" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.3.1
 </section>
@@ -2309,17 +1578,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="29"
-  uknum="366"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="29" uknum="366" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.3.10
 </section>
@@ -2343,17 +1602,7 @@ statement behaves exactly the same as
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="17"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="17" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.5 [Program
 and linkage]
@@ -2374,17 +1623,7 @@ and linkage]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="30"
-  uknum="367"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="30" uknum="367" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.5
 </section>
@@ -2405,17 +1644,7 @@ and linkage]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="31"
-  uknum="368"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="31" uknum="368" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.5
 </section>
@@ -2438,17 +1667,7 @@ and linkage]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="23"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="23" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.5
 </section>
@@ -2465,17 +1684,7 @@ and linkage]
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="18"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.5
         [basic.link]
@@ -2492,17 +1701,7 @@ and linkage]
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="19"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="19" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.6 [Start
 and
@@ -2526,17 +1725,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="32"
-  uknum="369"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="32" uknum="369" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.6.1
 </section>
@@ -2555,17 +1744,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="24"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="24" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.6.1
 </section>
@@ -2588,17 +1767,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="25"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="25" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.6.3
 </section>
@@ -2616,17 +1785,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="6"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="6" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.7.4.1
 </section>
@@ -2673,17 +1832,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="3"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.7.4.3
 </section>
@@ -2706,17 +1855,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="26"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="26" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.8
 </section>
@@ -2737,17 +1876,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="27"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="27" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.9
 </section>
@@ -2765,17 +1894,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="20"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.9 [Types]
 </section>
@@ -2796,17 +1915,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="7"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.9.2
 </section>
@@ -2840,17 +1949,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="28"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="28" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 3.9.3
 </section>
@@ -2869,17 +1968,7 @@ termination]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="4"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="4" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 4.2
 </section>
@@ -2907,17 +1996,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="CH"
-  num="1"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="CH" num="1" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 4.9 and 5.2.9
 </section>
@@ -2940,17 +2019,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="5"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 4.11,
 5.3.1,
@@ -2972,17 +2041,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="33"
-  uknum="374"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="33" uknum="374" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 4.13
 </section>
@@ -3006,17 +2065,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="34"
-  uknum="375"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="34" uknum="375" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 4.13
 </section>
@@ -3035,17 +2084,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="36"
-  uknum="407"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="36" uknum="407" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1
 </section>
@@ -3066,17 +2105,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="37"
-  uknum="224"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="37" uknum="224" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1
 </section>
@@ -3096,17 +2125,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="38"
-  uknum="230"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="38" uknum="230" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1
 </section>
@@ -3128,17 +2147,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="8"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1
 </section>
@@ -3180,17 +2189,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="9"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="9" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3318,17 +2317,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="10"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3369,17 +2358,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="29"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="29" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3396,17 +2375,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="30"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="30" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3426,17 +2395,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="31"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="31" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3455,17 +2414,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="45"
-  uknum="444"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="45" uknum="444" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3494,17 +2443,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="32"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="32" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3522,17 +2461,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="39"
-  uknum="408"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="39" uknum="408" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3552,17 +2481,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="40"
-  uknum="409"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="40" uknum="409" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3591,17 +2510,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="41"
-  uknum="225"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="41" uknum="225" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3627,17 +2536,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="42"
-  uknum="226"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="42" uknum="226" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3663,17 +2562,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="43"
-  uknum="231"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="43" uknum="231" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3697,17 +2586,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="44"
-  uknum="252"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="44" uknum="252" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3734,17 +2613,7 @@ para 2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="46"
-  uknum="449"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="46" uknum="449" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3771,17 +2640,7 @@ para 12
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="6"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="6" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1, 20.7.18
 </section>
@@ -3804,17 +2663,7 @@ para 12
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="7"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3832,17 +2681,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="8"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3862,17 +2701,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="33"
-  uknum=""
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="33" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3892,17 +2721,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="9"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="9" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.1.1
 </section>
@@ -3923,17 +2742,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="52"
-  uknum="232"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="52" uknum="232" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2
 </section>
@@ -3951,17 +2760,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="53"
-  uknum="233"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="53" uknum="233" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.1
 </section>
@@ -3985,17 +2784,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="59"
-  uknum="410"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="59" uknum="410" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.2
 </section>
@@ -4018,17 +2807,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="60"
-  uknum="411"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="60" uknum="411" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.5
 </section>
@@ -4047,17 +2826,7 @@ p10
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="61"
-  uknum="234"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="61" uknum="234" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.5
 </section>
@@ -4079,17 +2848,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="62"
-  uknum="235"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="62" uknum="235" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.5
 </section>
@@ -4110,17 +2869,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="10"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.5
 </section>
@@ -4139,17 +2888,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="63"
-  uknum="412"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="63" uknum="412" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.6
 </section>
@@ -4166,17 +2905,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="64"
-  uknum="413"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="64" uknum="413" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.7
 </section>
@@ -4197,17 +2926,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="65"
-  uknum="414"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="65" uknum="414" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.7
 </section>
@@ -4229,17 +2948,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="66"
-  uknum="415"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="66" uknum="415" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.8
 </section>
@@ -4259,17 +2968,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="67"
-  uknum="416"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="67" uknum="416" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.9
 </section>
@@ -4292,17 +2991,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="54"
-  uknum="417"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="54" uknum="417" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.10
 </section>
@@ -4325,17 +3014,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="55"
-  uknum="236"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="55" uknum="236" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.10
 </section>
@@ -4359,17 +3038,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="56"
-  uknum="237"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="56" uknum="237" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.10
 </section>
@@ -4392,17 +3061,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="57"
-  uknum="238"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="57" uknum="238" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.10
 </section>
@@ -4425,17 +3084,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="58"
-  uknum="418"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="58" uknum="418" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.2.11
 </section>
@@ -4458,17 +3107,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="34"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="34" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3
 </section>
@@ -4485,17 +3124,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="68"
-  uknum="419"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="68" uknum="419" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.1
 </section>
@@ -4515,17 +3144,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="69"
-  uknum="240"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="69" uknum="240" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.1
 </section>
@@ -4551,17 +3170,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="70"
-  uknum="420"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="70" uknum="420" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.3
 </section>
@@ -4582,17 +3191,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="71"
-  uknum="254"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="71" uknum="254" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -4615,17 +3214,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="72"
-  uknum="257"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="72" uknum="257" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -4651,17 +3240,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="73"
-  uknum="258"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="73" uknum="258" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -4682,17 +3261,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="74"
-  uknum="259"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="74" uknum="259" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -4715,17 +3284,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="35"
-  uknum="260"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="35" uknum="260" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -4744,17 +3303,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="75"
-  uknum="262"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="75" uknum="262" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.5
 </section>
@@ -4773,17 +3322,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="21"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="21" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.3.6
         [Alignof
@@ -4800,17 +3339,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="35"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="35" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.8
 </section>
@@ -4828,17 +3357,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="47"
-  uknum="242"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="47" uknum="242" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.14 / 5.15
 </section>
@@ -4861,17 +3380,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="48"
-  uknum="249"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="48" uknum="249" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.18
 </section>
@@ -4894,17 +3403,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="49"
-  uknum="376"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="49" uknum="376" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -4932,17 +3431,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="50"
-  uknum="378"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="50" uknum="378" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -4964,17 +3453,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="51"
-  uknum="251"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="51" uknum="251" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -4998,17 +3477,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="76"
-  uknum="131"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="76" uknum="131" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.3
 </section>
@@ -5027,17 +3496,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="22"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="22" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.4.2
 [The switch
@@ -5064,17 +3523,7 @@ statement]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="77"
-  uknum="132"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="77" uknum="132" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.5
 </section>
@@ -5096,17 +3545,7 @@ statement]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="11"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -5160,17 +3599,7 @@ statement]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="78"
-  uknum="130"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="78" uknum="130" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -5193,17 +3622,7 @@ statement]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="79"
-  uknum="445"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="79" uknum="445" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -5232,17 +3651,7 @@ statement]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="11"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="11" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 6.9
 </section>
@@ -5265,17 +3674,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="80"
-  uknum="370"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="80" uknum="370" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7
 </section>
@@ -5301,17 +3700,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="81"
-  uknum="371"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="81" uknum="371" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7
 </section>
@@ -5334,17 +3723,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="82"
-  uknum="386"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="82" uknum="386" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7
 </section>
@@ -5366,17 +3745,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="83"
-  uknum="372"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="83" uknum="372" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1
 </section>
@@ -5398,17 +3767,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="84"
-  uknum="404"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="84" uknum="404" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1
 </section>
@@ -5430,17 +3789,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="3"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1
 </section>
@@ -5463,17 +3812,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="85"
-  uknum="373"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="85" uknum="373" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.1
 </section>
@@ -5496,17 +3835,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="86"
-  uknum="403"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="86" uknum="403" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.1
 </section>
@@ -5530,17 +3859,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="87"
-  uknum="405"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="87" uknum="405" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.1
 </section>
@@ -5564,17 +3883,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="36"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="36" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.1
 </section>
@@ -5594,17 +3903,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="23"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="23" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.5
         [constexpr]
@@ -5631,17 +3930,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="12"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.5
 </section>
@@ -5746,17 +4035,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="37"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="37" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.1
 </section>
@@ -5776,17 +4055,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="89"
-  uknum="377"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="89" uknum="377" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.1
 </section>
@@ -5827,17 +4096,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="90"
-  uknum="379"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="90" uknum="379" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.2
 </section>
@@ -5859,17 +4118,7 @@ para 1 and table 9
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="91"
-  uknum="380"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="91" uknum="380" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.2
 </section>
@@ -5902,17 +4151,7 @@ para 1 and table 9
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="92"
-  uknum="382"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="92" uknum="382" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.3
 </section>
@@ -5934,17 +4173,7 @@ para 1 and table 9
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="93"
-  uknum="454"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="93" uknum="454" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.3
 </section>
@@ -5964,17 +4193,7 @@ Grammar before para 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="94"
-  uknum="383"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="94" uknum="383" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.4
 </section>
@@ -5999,17 +4218,7 @@ Grammar before para 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="95"
-  uknum="396"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="95" uknum="396" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.4
 </section>
@@ -6036,17 +4245,7 @@ Grammar before para 1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="24"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="24" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.1.6.4
 [auto
@@ -6092,17 +4291,7 @@ specifier]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="38"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="38" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6120,17 +4309,7 @@ specifier]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="39"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="39" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6155,17 +4334,7 @@ specifier]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="13"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="13" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6188,17 +4357,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="96"
-  uknum="384"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="96" uknum="384" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6222,17 +4381,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="97"
-  uknum="385"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="97" uknum="385" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6254,17 +4403,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="98"
-  uknum="402"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="98" uknum="402" type="Te" owner="" issue="1055" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6288,17 +4427,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="99"
-  uknum="421"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="99" uknum="421" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -6322,17 +4451,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="14"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.1
 </section>
@@ -6377,17 +4496,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="100"
-  uknum="387"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="100" uknum="387" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.3
 </section>
@@ -6412,17 +4521,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="101"
-  uknum="388"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="101" uknum="388" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.3
 </section>
@@ -6447,17 +4546,7 @@ para 3
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="12"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.3
 </section>
@@ -6476,17 +4565,7 @@ p15
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="25"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="25" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.3
 [The using
@@ -6511,17 +4590,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="102"
-  uknum="389"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="102" uknum="389" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.3.4
 </section>
@@ -6544,17 +4613,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="40"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="40" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6
 </section>
@@ -6577,17 +4636,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="41"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="41" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6
 </section>
@@ -6607,17 +4656,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="26"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="26" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6[Attributes]
 </section>
@@ -6634,17 +4673,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="1"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="1" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6
 </section>
@@ -6661,17 +4690,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="27"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="27" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -6697,17 +4716,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="103"
-  uknum="397"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="103" uknum="397" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -6732,17 +4741,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="104"
-  uknum="398"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="104" uknum="398" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -6763,17 +4762,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="105"
-  uknum="448"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="105" uknum="448" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.1
 </section>
@@ -6793,17 +4782,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="106"
-  uknum="391"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="106" uknum="391" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.2
 </section>
@@ -6821,17 +4800,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="15"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="15" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.2
 </section>
@@ -6856,17 +4825,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="107"
-  uknum="399"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="107" uknum="399" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.3
 </section>
@@ -6888,17 +4847,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="108"
-  uknum="401"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="108" uknum="401" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.4
 </section>
@@ -6919,17 +4868,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="42"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="42" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.4
 </section>
@@ -6954,17 +4893,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="109"
-  uknum="392"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="109" uknum="392" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.5
 </section>
@@ -6984,17 +4913,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="110"
-  uknum="393"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="110" uknum="393" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 7.6.5
 </section>
@@ -7015,17 +4934,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="43"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="43" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8
 </section>
@@ -7047,17 +4956,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="111"
-  uknum="457"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="111" uknum="457" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.3.5
 </section>
@@ -7077,17 +4976,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="44"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="44" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.3.5
 </section>
@@ -7107,17 +4996,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="45"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="45" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.3.5
 </section>
@@ -7204,17 +5083,7 @@ Para 21
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="13"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="13" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.4
 </section>
@@ -7233,17 +5102,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="16"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="16" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.5
 </section>
@@ -7263,17 +5122,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="46"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="46" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.5.3
 </section>
@@ -7332,17 +5181,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="49"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="49" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 8.5.4
 </section>
@@ -7362,17 +5201,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="112"
-  uknum="440"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="112" uknum="440" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 9
 </section>
@@ -7393,17 +5222,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="113"
-  uknum="250"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="113" uknum="250" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 9.4.2
 </section>
@@ -7423,17 +5242,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="50"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="50" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 12.1,
 12.4,
@@ -7492,17 +5301,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="28"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="28" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 12.6.1
 [Explicit
@@ -7520,17 +5319,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="51"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="51" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 12.6.2
 </section>
@@ -7548,17 +5337,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="114"
-  uknum="167"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="114" uknum="167" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 12.6.2
 </section>
@@ -7592,17 +5371,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="52"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="52" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 13.5.8
 </section>
@@ -7619,17 +5388,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="115"
-  uknum="432"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="115" uknum="432" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14
 </section>
@@ -7659,17 +5418,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="116"
-  uknum="434"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="116" uknum="434" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14
 </section>
@@ -7691,17 +5440,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="117"
-  uknum="430"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="117" uknum="430" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14
 </section>
@@ -7724,17 +5463,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="118"
-  uknum="431"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="118" uknum="431" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14
 </section>
@@ -7755,17 +5484,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="119"
-  uknum="433"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="119" uknum="433" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14
 </section>
@@ -7789,17 +5508,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="120"
-  uknum="422"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="120" uknum="422" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.1
 </section>
@@ -7820,17 +5529,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="121"
-  uknum="423"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="121" uknum="423" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.1
 </section>
@@ -7849,17 +5548,7 @@ initialization]
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="29"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="29" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.3
 [Template
@@ -7877,17 +5566,7 @@ arguments]
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="53"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="53" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.5.1
 </section>
@@ -7933,17 +5612,7 @@ arguments]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="122"
-  uknum="426"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="122" uknum="426" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.5.3
 </section>
@@ -7967,17 +5636,7 @@ arguments]
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="30"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="30" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.5.7
 [Template
@@ -8014,17 +5673,7 @@ aliases]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="17"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="17" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.7.2
 </section>
@@ -8057,17 +5706,7 @@ aliases]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="14"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.7.3
 </section>
@@ -8086,17 +5725,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="18"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.7.3
 </section>
@@ -8127,17 +5756,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="19"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="19" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.8.2
 </section>
@@ -8159,17 +5778,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="54"
-  uknum=""
-  type="ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="54" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9
 [concept],
@@ -8193,17 +5802,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="55"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="55" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1
 </section>
@@ -8223,17 +5822,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="56"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="56" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1
 </section>
@@ -8252,17 +5841,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="57"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="57" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8280,17 +5859,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="58"
-  uknum=""
-  type="ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="58" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8309,17 +5878,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="59"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="59" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8385,17 +5944,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="31"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="31" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 [Axioms]
@@ -8427,17 +5976,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="15"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="15" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8462,17 +6001,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="123"
-  uknum="248"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="123" uknum="248" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8496,17 +6025,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="124"
-  uknum="288"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="124" uknum="288" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8523,17 +6042,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="125"
-  uknum="289"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="125" uknum="289" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -8559,17 +6068,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="126"
-  uknum="438"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="126" uknum="438" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.4
 </section>
@@ -8589,17 +6088,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="127"
-  uknum="118"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="127" uknum="118" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.4
 </section>
@@ -8618,17 +6107,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="128"
-  uknum="435"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="128" uknum="435" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.4
 </section>
@@ -8651,17 +6130,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="20"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.9.4
 </section>
@@ -8684,17 +6153,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="129"
-  uknum="128"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="129" uknum="128" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.10.1,
 20.1.2
@@ -8722,17 +6181,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="60"
-  uknum=""
-  type="te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="60" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 14.10.1
 </section>
@@ -8780,17 +6229,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="130"
-  uknum="32"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="130" uknum="32" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.1
 </section>
@@ -8815,17 +6254,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="131"
-  uknum="34"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="131" uknum="34" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.3
 </section>
@@ -8845,17 +6274,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="132"
-  uknum="36"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="132" uknum="36" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.3
 </section>
@@ -8880,17 +6299,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="133"
-  uknum="37"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="133" uknum="37" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -8910,17 +6319,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="134"
-  uknum="38"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="134" uknum="38" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -8941,17 +6340,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="135"
-  uknum="39"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="135" uknum="39" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -8972,17 +6361,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="136"
-  uknum="40"
-  type="Ge"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="136" uknum="40" type="Ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.4
 </section>
@@ -9010,17 +6389,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="137"
-  uknum="44"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="137" uknum="44" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.5
 </section>
@@ -9041,17 +6410,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="138"
-  uknum="41"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="138" uknum="41" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.5.1
 </section>
@@ -9071,17 +6430,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="139"
-  uknum="42"
-  type="Te"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="139" uknum="42" type="Te" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.5.1
 </section>
@@ -9102,17 +6451,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="140"
-  uknum="43"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="140" uknum="43" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.5.2
 </section>
@@ -9135,17 +6474,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="141"
-  uknum="45"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="141" uknum="45" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 15.6
 </section>
@@ -9162,17 +6491,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="142"
-  uknum="455"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="142" uknum="455" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 16.3.5
 </section>
@@ -9190,17 +6509,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="143"
-  uknum="456"
-  type="Ed"
-  owner=""
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="143" uknum="456" type="Ed" owner="" issue="" disp="" date="" extdoc="">
 <section>
 16.3.5
 </section>
@@ -9217,17 +6526,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="2"
-  uknum=""
-  type="ge/te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="2" uknum="" type="ge/te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -9256,17 +6555,7 @@ p1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="2"
-  uknum=""
-  type="ge"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="2" uknum="" type="ge" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 General
 Comment
@@ -9286,17 +6575,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="61"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="61" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 17 onward
 </section>
@@ -9319,17 +6598,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="CA"
-  num="2"
-  uknum=""
-  type="Ge"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="CA" num="2" uknum="" type="Ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 17 Library
 </section>
@@ -9350,17 +6619,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="62"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="62" uknum="" type="ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -9378,17 +6637,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="63"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -9415,17 +6664,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="2"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 17 through 30
 </section>
@@ -9450,17 +6689,7 @@ Library
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="21"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="21" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
         17
         Library
@@ -10054,17 +7283,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="144"
-  uknum="72"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="144" uknum="72" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.1
 </section>
@@ -10084,17 +7303,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="145"
-  uknum="73"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="145" uknum="73" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.1
 </section>
@@ -10114,17 +7323,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="146"
-  uknum="74"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="146" uknum="74" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.1
 </section>
@@ -10143,17 +7342,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="147"
-  uknum="75"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="147" uknum="75" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.1
 </section>
@@ -10170,17 +7359,7 @@ avoid proliferation of types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="148"
-  uknum="247"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="148" uknum="247" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.2
 </section>
@@ -10202,17 +7381,7 @@ Table 12
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="149"
-  uknum="84"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="149" uknum="84" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3
 </section>
@@ -10233,17 +7402,7 @@ Table 12
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="150"
-  uknum="199"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="150" uknum="199" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3
 </section>
@@ -10277,17 +7436,7 @@ Table 12
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="151"
-  uknum="77"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="151" uknum="77" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3.1
 </section>
@@ -10306,17 +7455,7 @@ Table 12
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="152"
-  uknum="80"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="152" uknum="80" type="Te" owner="LWG" issue="1064" disp="" date="" extdoc="">
 <section>
 17.3.12
 </section>
@@ -10338,17 +7477,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="153"
-  uknum="82"
-  type="Te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="153" uknum="82" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3.17
 </section>
@@ -10369,17 +7498,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="154"
-  uknum="83"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="154" uknum="83" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3.20
 </section>
@@ -10397,17 +7516,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="155"
-  uknum="78"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="155" uknum="78" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3.3
 </section>
@@ -10426,17 +7535,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="156"
-  uknum="79"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="156" uknum="79" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.3.4
 </section>
@@ -10456,17 +7555,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="157"
-  uknum="86"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="157" uknum="86" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.2
 </section>
@@ -10485,17 +7574,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="158"
-  uknum="87"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="158" uknum="87" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.2
 </section>
@@ -10515,17 +7594,7 @@ Howard, see [func.referenceclosure.cons]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="159"
-  uknum="88"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="159" uknum="88" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -10546,17 +7615,7 @@ Footnote 152
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="160"
-  uknum="89"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="160" uknum="89" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -10581,17 +7640,7 @@ Footnote 152
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="161"
-  uknum="90"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="161" uknum="90" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -10613,17 +7662,7 @@ Footnote 152
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="162"
-  uknum="170"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="162" uknum="170" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -10646,17 +7685,7 @@ Footnote 152
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="163"
-  uknum="219"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="163" uknum="219" type="Te" owner="LWG" issue="997" disp="" date="" extdoc="">
 <section>
 17.5.2.4
 </section>
@@ -10682,17 +7711,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="164"
-  uknum="91"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="164" uknum="91" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.3.2.1
 </section>
@@ -10717,17 +7736,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="165"
-  uknum="92"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 17.5.3.2.2,
 17.5.3.2.3
@@ -10749,17 +7758,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="166"
-  uknum="93"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="166" uknum="93" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.3.2.4.1,
 17.5.3.3
@@ -10778,17 +7777,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="167"
-  uknum="246"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="167" uknum="246" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.5.3.4
 Private
@@ -10809,17 +7798,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="168"
-  uknum="406"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="168" uknum="406" type="Te" owner="LWG" issue="1065" disp="" date="" extdoc="">
 <section>
 17.6.2.2
 </section>
@@ -10847,17 +7826,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="169"
-  uknum="95"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="169" uknum="95" type="Te" owner="LWG" issue="992" disp="" date="" extdoc="">
 <section>
 17.6.2.2
 </section>
@@ -10878,17 +7847,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="170"
-  uknum="96"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="170" uknum="96" type="Te" owner="LWG" issue="1002" disp="" date="" extdoc="">
 <section>
 17.6.2.3
 </section>
@@ -10916,17 +7875,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="171"
-  uknum="98"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="171" uknum="98" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -10952,17 +7901,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="172"
-  uknum="99"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -10983,17 +7922,7 @@ members
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="173"
-  uknum="450"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -11017,17 +7946,7 @@ language recommendations.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="23"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="23" uknum="" type="te" owner="LWG" issue="1003" disp="" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -11060,17 +7979,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="174"
-  uknum="100"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="174" uknum="100" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.3.2
 </section>
@@ -11095,17 +8004,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="175"
-  uknum="101"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 17.6.4.2.1
 </section>
@@ -11125,17 +8024,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="176"
-  uknum="102"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="176" uknum="102" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.4.3.3
 </section>
@@ -11154,17 +8043,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="177"
-  uknum="103"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="177" uknum="103" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.4.3.4
 </section>
@@ -11184,17 +8063,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="178"
-  uknum="104"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="178" uknum="104" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.4.8
 </section>
@@ -11215,17 +8084,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="179"
-  uknum="105"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="179" uknum="105" type="Te" owner="LWG" issue="1004" disp="accepted" date="" extdoc="">
 <section>
 17.6.4.8
 </section>
@@ -11247,17 +8106,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="22"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="22" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.5.7
 </section>
@@ -11290,17 +8139,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="180"
-  uknum="107"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="180" uknum="107" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.6.5.10
 </section>
@@ -11325,17 +8164,7 @@ Footnote 175
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="181"
-  uknum="108"
-  type="Te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="181" uknum="108" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 17.6.5.10
 </section>
@@ -11359,17 +8188,7 @@ Footnote 186
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="182"
-  uknum="109"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="182" uknum="109" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 17.6.5.10
 </section>
@@ -11391,17 +8210,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="184"
-  uknum="144"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="184" uknum="144" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18 -&gt; 30
 </section>
@@ -11423,17 +8232,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="24"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="24" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18
 </section>
@@ -11463,17 +8262,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="25"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="25" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18.1
 </section>
@@ -11495,17 +8284,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="32"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.2.1
 [Numeric
@@ -11536,17 +8315,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="16"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.2.1
 </section>
@@ -11573,17 +8342,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="26"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="26" uknum="" type="te" owner="LWG" issue="1005" disp="" date="" extdoc="">
 <section>
 18.2.1.1
 </section>
@@ -11626,17 +8385,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="17"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.2.6
 </section>
@@ -11657,17 +8406,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="185"
-  uknum="264"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="185" uknum="264" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18.3.1
 </section>
@@ -11687,17 +8426,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="18"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -11735,17 +8464,7 @@ limits]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="186"
-  uknum="265"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="186" uknum="265" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -11767,17 +8486,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="187"
-  uknum="266"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -11798,17 +8507,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="188"
-  uknum="267"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="188" uknum="267" type="Te" owner="LWG" issue="993" disp="accepted" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -11829,17 +8528,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="189"
-  uknum="273"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 18.4, 18.7
 </section>
@@ -11861,17 +8550,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="27"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.4, 18.9,
 18.7.2.2,
@@ -11905,17 +8584,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="190"
-  uknum="268"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="190" uknum="268" type="Te" owner="LWG" issue="1006" disp="accepted" date="" extdoc="">
 <section>
 18.5.1
 </section>
@@ -11937,17 +8606,7 @@ various
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="191"
-  uknum="271"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="191" uknum="271" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 18.5.1.1
 </section>
@@ -11970,17 +8629,7 @@ various
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="192"
-  uknum="269"
-  type="Te"
-  owner="CWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="192" uknum="269" type="Te" owner="CWG" issue="" disp="" date="" extdoc="">
 <section>
 18.5.1.2
 </section>
@@ -12003,17 +8652,7 @@ various
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="193"
-  uknum="272"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="193" uknum="272" type="Te" owner="LWG" issue="994" disp="" date="" extdoc="">
 <section>
 18.5.2.2
 </section>
@@ -12036,17 +8675,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="194"
-  uknum="443"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.6
 </section>
@@ -12069,17 +8698,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="28"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="28" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 18.6,
 18.7,
@@ -12103,17 +8722,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="29"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="29" uknum="" type="te" owner="LWG" issue="1007" disp="" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -12141,17 +8750,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="30"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -12172,17 +8771,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="31"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="31" uknum="" type="te" owner="LWG" issue="1008" disp="" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -12202,17 +8791,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="195"
-  uknum="451"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.8
 </section>
@@ -12235,17 +8814,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="196"
-  uknum="452"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 18.8.3
 </section>
@@ -12269,17 +8838,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="197"
-  uknum="275"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="197" uknum="275" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 19
 </section>
@@ -12303,17 +8862,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="32"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="32" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 19.1
 </section>
@@ -12354,17 +8903,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="64"
-  uknum=""
-  type="Ge"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="64" uknum="" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 19.3
 </section>
@@ -12387,17 +8926,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="65"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20
 </section>
@@ -12455,17 +8984,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="198"
-  uknum="126"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="198" uknum="126" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20
 </section>
@@ -12513,17 +9032,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="199"
-  uknum="127"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="199" uknum="127" type="Te" owner="LWG" issue="1015" disp="accepted" date="" extdoc="">
 <section>
 20.1.1, 20.1.2
 </section>
@@ -12548,17 +9057,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="200"
-  uknum="354"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="200" uknum="354" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.1.4
 </section>
@@ -12586,17 +9085,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="201"
-  uknum="290"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="201" uknum="290" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.1.5
 </section>
@@ -12620,17 +9109,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="33"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="33" uknum="" type="te" owner="LWG" issue="1016" disp="" date="" extdoc="">
 <section>
 20.1.5
 </section>
@@ -12652,17 +9131,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="66"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="66" uknum="" type="te" owner="LWG" issue="1017" disp="" date="" extdoc="">
 <section>
 20.1.10
 </section>
@@ -12682,17 +9151,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="34"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="34" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20.2
 </section>
@@ -12722,17 +9181,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="67"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="67" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.2.1
 </section>
@@ -12751,17 +9200,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="35"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="35" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.2.3
 </section>
@@ -12782,17 +9221,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="202"
-  uknum="213"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="202" uknum="213" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.2.4
 </section>
@@ -12813,17 +9242,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="68"
-  uknum=""
-  type="te/ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="68" uknum="" type="te/ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.1.12
 </section>
@@ -12846,17 +9265,7 @@ Section reference corrected from 20.2.12.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="203"
-  uknum="229"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="203" uknum="229" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.3.2
 </section>
@@ -12879,17 +9288,7 @@ Section reference corrected from 20.2.12.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="36"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="36" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.4.2.1
 </section>
@@ -12910,17 +9309,7 @@ Section reference corrected from 20.2.12.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="204"
-  uknum="239"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="accepted" date="" extdoc="">
 <section>
 20.5.7 [meta.trans.other]
 </section>
@@ -12943,17 +9332,7 @@ Section reference corrected from 20.5.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="69"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="69" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.5
 </section>
@@ -12973,17 +9352,7 @@ Forward to project editor.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="205"
-  uknum="253"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="205" uknum="253" type="Te" owner="LWG" issue="1019" disp="accepted" date="" extdoc="">
 <section>
 20.5.3
 </section>
@@ -13007,17 +9376,7 @@ Forward to project editor.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="206"
-  uknum="255"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.5.5
 </section>
@@ -13051,17 +9410,7 @@ is well formed:&#8221;</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="207"
-  uknum="256"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="207" uknum="256" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.5.6.1
 </section>
@@ -13101,17 +9450,7 @@ in the same text.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="37"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="37" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.5.7
 </section>
@@ -13146,17 +9485,7 @@ Table 41
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="70"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="70" uknum="" type="te" owner="LWG" issue="1018" disp="" date="" extdoc="">
 <section>
 20.5
 </section>
@@ -13184,17 +9513,7 @@ Section reference corrected from 20.6.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="71"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="71" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.6.7
 </section>
@@ -13214,17 +9533,7 @@ Table 51, last row, column 3
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="38"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20.6.12.1.3
 </section>
@@ -13277,17 +9586,7 @@ return them when F or a type in BoundArgs is move-only.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="39"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="modified"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="39" uknum="" type="te" owner="LWG" issue="1024" disp="modified" date="" extdoc="">
 <section>
 20.6.16.2
 </section>
@@ -13362,17 +9661,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="40"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="40" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.6.16.2
 </section>
@@ -13409,17 +9698,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="41"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="41" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.6.16.2
 </section>
@@ -13460,17 +9739,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="42"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="42" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20.6.16.2
 </section>
@@ -13561,17 +9830,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="208"
-  uknum="338"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 20.6.17
 </section>
@@ -13592,17 +9851,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="209"
-  uknum="111"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="209" uknum="111" type="Te" owner="LWG" issue="1026" disp="" date="" extdoc="">
 <section>
 20.7
 </section>
@@ -13627,17 +9876,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="213"
-  uknum="357"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="213" uknum="357" type="Te" owner="LWG" issue="1027" disp="accepted" date="" extdoc="">
 <section>
 20.7.6
 </section>
@@ -13666,17 +9905,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="214"
-  uknum="125"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="214" uknum="125" type="Te" owner="LWG" issue="1028" disp="" date="" extdoc="">
 <section>
 20.7.8
 </section>
@@ -13695,17 +9924,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="210"
-  uknum="124"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="210" uknum="124" type="Te" owner="LWG" issue="1029" disp="" date="" extdoc="">
 <section>
 20.7.11
 </section>
@@ -13726,17 +9945,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="20"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="20" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.6.12
 </section>
@@ -13757,17 +9966,7 @@ Section reference corrected from 20.7.12.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="72"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20.6.12.1.3 [func.bind.bind]
 </section>
@@ -13792,17 +9991,7 @@ Section reference corrected from 20.7.12.
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="21"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.6.12.1.3 [func.bind.bind]
 </section>
@@ -13828,17 +10017,7 @@ Section reference corrected from 20.7.12.1.3.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="211"
-  uknum="428"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="211" uknum="428" type="Te" owner="LWG" issue="1021" disp="accepted" date="" extdoc="">
 <section>
 20.6.12.2.3 [unique.ptr.single.asgn]
 </section>
@@ -13863,17 +10042,7 @@ Section reference corrected from 20.7.12.2.3.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="212"
-  uknum="270"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="modified"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="212" uknum="270" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 20.6.13.7 [util.dynamic.safety]
 </section>
@@ -13902,17 +10071,7 @@ Section reference corrected from 20.7.13.7.
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="22"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="22" uknum="" type="te" owner="LWG" issue="1023" disp="accepted" date="" extdoc="">
 <section>
 20.6.16.2 [func.wrap.func]
 </section>
@@ -13939,17 +10098,7 @@ Section reference corrected from 20.7.16.2.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="73"
-  uknum=""
-  type="te"
-  owner="CWG"
-  issue=""
-  disp="accepted"
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2845.html"
->
+<comment nb="US" num="73" uknum="" type="te" owner="CWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2845.html">
 <section>
 20.6.18
 </section>
@@ -13995,17 +10144,7 @@ Section reference corrected from 20.7.18.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="74.1"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf"
->
+<comment nb="US" num="74.1" uknum="" type="te" owner="LWG" issue="" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 20.8
 </section>
@@ -14064,17 +10203,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="74.2"
-  uknum=""
-  type="te/ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="74.2" uknum="" type="te/ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.8.2.2
 </section>
@@ -14093,17 +10222,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="75"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue="modified"
-  disp=""
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf"
->
+<comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="modified" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 20.8.2.2
 </section>
@@ -14132,17 +10251,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="43"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="43" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.8.3
 </section>
@@ -14182,17 +10291,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="215"
-  uknum="356"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="215" uknum="356" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.8.3.3
 </section>
@@ -14212,17 +10311,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="77"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 20.8.4
 </section>
@@ -14261,17 +10350,7 @@ See <a href="#US65">US 65</a> for detailed notes.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="78"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="78" uknum="" type="te" owner="LWG" issue="1031" disp="" date="" extdoc="">
 <section>
 20.8.12,
         20.8.13.2
@@ -14302,17 +10381,7 @@ in disguise, with all the associated problems. Not a good idea.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="79"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 20.8.12.2.1
 </section>
@@ -14344,17 +10413,7 @@ Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="44"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="44" uknum="" type="te" owner="LWG" issue="1030" disp="accepted" date="" extdoc="">
 <section>
 20.7.13.6 [util.smartptr.shared.atomic]
 </section>
@@ -14382,17 +10441,7 @@ Section reference corrected from 20.8.13.6.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="45"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="45" uknum="" type="te" owner="LWG" issue="1032" disp="" date="" extdoc="">
 <section>
 20.9
 </section>
@@ -14421,17 +10470,7 @@ paper is available.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="80"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="80" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.8.2.1 [time.traits.is_fp]
 </section>
@@ -14457,17 +10496,7 @@ Section reference corrected from 20.9.2.1.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="81"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue="934"
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="81" uknum="" type="te" owner="LWG" issue="934" disp="accepted" date="" extdoc="">
 <section>
 20.9.3
 </section>
@@ -14549,17 +10578,7 @@ issue 934</a>.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="82"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="82" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 20.9.5.3
 </section>
@@ -14578,17 +10597,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="216"
-  uknum="282"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21
 </section>
@@ -14610,17 +10619,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="46"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.2, 21.3
 </section>
@@ -15332,17 +11331,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="47"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="47" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.3
 </section>
@@ -15369,17 +11358,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="48"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.3
 </section>
@@ -15408,17 +11387,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="217"
-  uknum="340"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="217" uknum="340" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 21.3
 </section>
@@ -15441,17 +11410,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="218"
-  uknum="228"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 21.3.1
 </section>
@@ -15478,17 +11437,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="219"
-  uknum="342"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="219" uknum="342" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 21.3.6.6
         [string.replace]
@@ -15509,17 +11458,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="220"
-  uknum="339"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="220" uknum="339" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 21.3.8.9
 </section>
@@ -15546,17 +11485,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="33"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="33" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 22.1.1
 [locale]
@@ -15578,17 +11507,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="49"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 22.1.3.2.2
 </section>
@@ -15610,17 +11529,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="50"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="50" uknum="" type="te" owner="LWG" issue="991" disp="" date="" extdoc="">
 <section>
 22.1.3.2.2
 </section>
@@ -15670,17 +11579,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="4"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="4" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 22.2.1.4.1
         22.2.1.4.2
@@ -15699,17 +11598,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="5"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="5" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 22.2.1.4.2
 </section>
@@ -15749,17 +11638,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="6"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="6" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 22.2.1.5
         <BR/><BR/>See also
@@ -15793,17 +11672,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="FI"
-  num="7"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FI" num="7" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 22.2.1.4
 </section>
@@ -15825,17 +11694,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="51"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="51" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 22.2.5.1.1
 </section>
@@ -15874,17 +11733,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="52"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 22.2.5.1,
         22.2.5.2,
@@ -16014,17 +11863,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="53"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 22.2.5.3 ,
         22.2.5.4
@@ -16116,17 +11955,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="54"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="54" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23
 </section>
@@ -16147,17 +11976,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="221"
-  uknum="287"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="221" uknum="287" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23
 </section>
@@ -16179,17 +11998,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="222"
-  uknum="295"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="222" uknum="295" type="Te" owner="LWG" issue="1034" disp="" date="" extdoc="">
 <section>
 23
 </section>
@@ -16226,17 +12035,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="55"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="55" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16259,17 +12058,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="223"
-  uknum="285"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf"
->
+<comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.1.1
 </section>
@@ -16293,17 +12082,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="224"
-  uknum="298"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="modified"
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf"
->
+<comment nb="UK" num="224" uknum="298" type="Te" owner="LWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.1.1
 </section>
@@ -16327,17 +12106,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="225"
-  uknum="299"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="225" uknum="299" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16363,17 +12132,7 @@ Table 81
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="226"
-  uknum="336"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="226" uknum="336" type="Te" owner="LWG" issue="1035" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16399,17 +12158,7 @@ Table 81
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="227"
-  uknum="146"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="227" uknum="146" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16431,17 +12180,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="228"
-  uknum="283"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="228" uknum="283" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16461,17 +12200,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="229"
-  uknum="284"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="229" uknum="284" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.1
 </section>
@@ -16495,17 +12224,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="230"
-  uknum="147"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="230" uknum="147" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 23.1.2
 </section>
@@ -16529,17 +12248,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="56"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="56" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16565,17 +12274,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="231"
-  uknum="300"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="231" uknum="300" type="Te" owner="LWG" issue="1036" disp="" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16598,17 +12297,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="232"
-  uknum="301"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="232" uknum="301" type="Te" owner="LWG" issue="1037" disp="accepted" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16629,17 +12318,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="233"
-  uknum="302"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="233" uknum="302" type="Te" owner="LWG" issue="1038" disp="accepted" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16662,17 +12341,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="234"
-  uknum="346"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="234" uknum="346" type="Te" owner="LWG" issue="1039" disp="accepted" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16695,17 +12364,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="235"
-  uknum="148"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="235" uknum="148" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16729,17 +12388,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="236"
-  uknum="150"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="236" uknum="150" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16769,17 +12418,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="237"
-  uknum="334"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="237" uknum="334" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -16802,17 +12441,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="238"
-  uknum="347"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="modified"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="238" uknum="347" type="Te" owner="LWG" issue="1040" disp="modified" date="" extdoc="">
 <section>
 23.1.4
 </section>
@@ -16844,17 +12473,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="239"
-  uknum="447"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="239" uknum="447" type="Te" owner="LWG" issue="1041" disp="" date="" extdoc="">
 <section>
 23.1.4
 </section>
@@ -16882,17 +12501,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="240"
-  uknum="427"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="240" uknum="427" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 23.1.6.1
 </section>
@@ -16930,17 +12539,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="57"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="57" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.1.6.3
 </section>
@@ -16961,17 +12560,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="241"
-  uknum="286"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -16990,17 +12579,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="242"
-  uknum="355"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="242" uknum="355" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -17021,17 +12600,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="243"
-  uknum="337"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="243" uknum="337" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -17058,17 +12627,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="244"
-  uknum="153"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="" date="" extdoc="">
 <section>
 23.2.1,
 23.2.6
@@ -17102,17 +12661,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="245"
-  uknum="358"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="245" uknum="358" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 23.2.3
 </section>
@@ -17154,17 +12703,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="58"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="58" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.3.2
 </section>
@@ -17184,17 +12723,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="59"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="59" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.4.4
 </section>
@@ -17236,17 +12765,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="83"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="83" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.2.6.2
 </section>
@@ -17264,17 +12783,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="246"
-  uknum="350"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="246" uknum="350" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 23.3.2.2
 </section>
@@ -17300,17 +12809,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="247"
-  uknum="46"
-  type="Ge"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="247" uknum="46" type="Ge" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1
 </section>
@@ -17338,17 +12837,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="248"
-  uknum="47"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="248" uknum="47" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.1
 </section>
@@ -17373,17 +12862,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="250"
-  uknum="50"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.1
 </section>
@@ -17405,17 +12884,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="251"
-  uknum="51"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="251" uknum="51" type="Te" owner="LWG" issue="1009" disp="" date="" extdoc="">
 <section>
 24.1.1
 </section>
@@ -17445,17 +12914,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="252"
-  uknum="53"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="252" uknum="53" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.1.2
 </section>
@@ -17476,17 +12935,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="253"
-  uknum="54"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="253" uknum="54" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.1.3
 </section>
@@ -17510,17 +12959,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="254"
-  uknum="55"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="254" uknum="55" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.3
 </section>
@@ -17542,17 +12981,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="255"
-  uknum="56"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="255" uknum="56" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.4
 </section>
@@ -17574,17 +13003,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="256"
-  uknum="57"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="256" uknum="57" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -17606,17 +13025,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="257"
-  uknum="58"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="257" uknum="58" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -17639,17 +13048,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="258"
-  uknum="50"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -17671,17 +13070,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="259"
-  uknum="60"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="259" uknum="60" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -17704,17 +13093,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="260"
-  uknum="61"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="260" uknum="61" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -17739,17 +13118,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="249"
-  uknum="64"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="249" uknum="64" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17773,17 +13142,7 @@ Table 84
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="261"
-  uknum="62"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="261" uknum="62" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17808,17 +13167,7 @@ type of any operator[] as described by
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="262"
-  uknum="65"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="262" uknum="65" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17843,17 +13192,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="263"
-  uknum="66"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="263" uknum="66" type="Te" owner="LWG" issue="1010" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17877,17 +13216,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="264"
-  uknum="67"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="264" uknum="67" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17909,17 +13238,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="265"
-  uknum="68"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17941,17 +13260,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="266"
-  uknum="69"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="266" uknum="69" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -17975,17 +13284,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="267"
-  uknum="70"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="267" uknum="70" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -18007,17 +13306,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="268"
-  uknum="71"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="268" uknum="71" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -18042,17 +13331,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="60"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="60" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.1.8
 </section>
@@ -18185,17 +13464,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="269"
-  uknum="16"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="269" uknum="16" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -18216,17 +13485,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="270"
-  uknum="17"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -18249,17 +13508,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="271"
-  uknum="145"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="271" uknum="145" type="Te" owner="LWG" issue="1011" disp="" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -18283,17 +13532,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="272"
-  uknum="159"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="272" uknum="159" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.4
 </section>
@@ -18327,17 +13566,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="274"
-  uknum="119"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="274" uknum="119" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.4, 24.5
 </section>
@@ -18366,17 +13595,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="275"
-  uknum="18"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="275" uknum="18" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.4.1.1
 </section>
@@ -18399,17 +13618,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="276"
-  uknum="19"
-  type="Ed"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="276" uknum="19" type="Ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.4.1.1
 </section>
@@ -18431,17 +13640,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="277"
-  uknum="20"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="277" uknum="20" type="Te" owner="LWG" issue="1012" disp="" date="" extdoc="">
 <section>
 24.4.1.2.1
 </section>
@@ -18473,17 +13672,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="278"
-  uknum="21"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="278" uknum="21" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.4.1.2.1
 </section>
@@ -18509,17 +13698,7 @@ sufficiently high priority for iterator types.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="279"
-  uknum="24"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.4.1.2.12,
         24.4.3.2.12
@@ -18544,17 +13723,7 @@ iterator adapters.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="280"
-  uknum="22"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="280" uknum="22" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.4.1.2.4
 </section>
@@ -18577,17 +13746,7 @@ iterator adapters.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="281"
-  uknum="23"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="281" uknum="23" type="Te" owner="LWG" issue="1052" disp="" date="" extdoc="">
 <section>
 24.4.1.2.5
 </section>
@@ -18611,17 +13770,7 @@ resolution.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="282"
-  uknum="5"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 24.4.2.1,
         24.4.2.2.2,
@@ -18649,17 +13798,7 @@ n/a
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="283"
-  uknum="156"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="283" uknum="156" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.4.2.5,
         24.4.2.6.4
@@ -18686,17 +13825,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="61"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="61" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.4.3.2.1
 </section>
@@ -18720,17 +13849,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="284"
-  uknum="26"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 24.5
 </section>
@@ -18750,17 +13869,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="285"
-  uknum="27"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="285" uknum="27" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.1
 </section>
@@ -18782,17 +13891,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="286"
-  uknum="28"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="286" uknum="28" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.1
 </section>
@@ -18817,17 +13916,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="287"
-  uknum="25"
-  type="Te"
-  owner="LWG"
-  issue="788"
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="287" uknum="25" type="Te" owner="LWG" issue="788" disp="" date="" extdoc="">
 <section>
 24.5.1.1
 </section>
@@ -18857,17 +13946,7 @@ issue 788</a>.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="288"
-  uknum="29"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="288" uknum="29" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.1.1
 </section>
@@ -18889,17 +13968,7 @@ issue 788</a>.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="289"
-  uknum="30"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="289" uknum="30" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.1.2
 </section>
@@ -18927,17 +13996,7 @@ issue 788</a>.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="290"
-  uknum="160"
-  type="Te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="290" uknum="160" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.2
 </section>
@@ -18959,17 +14018,7 @@ issue 788</a>.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="291"
-  uknum="161"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="291" uknum="161" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.2.2
 </section>
@@ -18992,17 +14041,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="34"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="34" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.3
         [istreambuf.
@@ -19023,17 +14062,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="292"
-  uknum="163"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="292" uknum="163" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.3
 </section>
@@ -19055,17 +14084,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="293"
-  uknum="164"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="293" uknum="164" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 24.5.3
 </section>
@@ -19094,17 +14113,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="294"
-  uknum="166"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="294" uknum="166" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 24.5.3.2
 </section>
@@ -19133,17 +14142,7 @@ programs.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="295"
-  uknum="173"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="rejected" date="" extdoc="">
 <section>
 25
 </section>
@@ -19167,17 +14166,7 @@ of an algorithm.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="62"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="62" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 25, 25.3.1.5,
         26.3.6.5
@@ -19204,17 +14193,7 @@ of an algorithm.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="296"
-  uknum="183"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="296" uknum="183" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 25.1.8
 </section>
@@ -19237,17 +14216,7 @@ of an algorithm.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="297"
-  uknum="185"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="297" uknum="185" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.2.11
 </section>
@@ -19270,17 +14239,7 @@ of an algorithm.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="298"
-  uknum="186"
-  type="Te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="298" uknum="186" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.2.13
 </section>
@@ -19302,17 +14261,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="299"
-  uknum="352"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="299" uknum="352" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.2.2
 </section>
@@ -19336,17 +14285,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="300"
-  uknum="351"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="300" uknum="351" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 25.2.3
 </section>
@@ -19379,17 +14318,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="301"
-  uknum="184"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 25.2.5
 </section>
@@ -19414,17 +14343,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="302"
-  uknum="187"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="302" uknum="187" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.3
 </section>
@@ -19446,17 +14365,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="303"
-  uknum="188"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="303" uknum="188" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.3
 </section>
@@ -19478,17 +14387,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="304"
-  uknum="189"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="304" uknum="189" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 25.3.6
 </section>
@@ -19508,17 +14407,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="305"
-  uknum="335"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="305" uknum="335" type="Te" owner="LWG" issue="1013" disp="accepted" date="" extdoc="">
 <section>
 25.3.7
 </section>
@@ -19541,17 +14430,7 @@ issue.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="84"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 26
 </section>
@@ -19571,17 +14450,7 @@ N2836</a>, which was accepted in New Jersey.
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="35"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 26.3
         [Complex
@@ -19602,17 +14471,7 @@ numbers]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="306"
-  uknum="113"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf"
->
+<comment nb="UK" num="306" uknum="113" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
 <section>
 26.4
 </section>
@@ -19634,17 +14493,7 @@ N2836</a>, which was accepted in New Jersey.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="63"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue="874"
-  disp="accepted"
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf"
->
+<comment nb="JP" num="63" uknum="" type="te" owner="LWG" issue="874" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
 <section>
 26.4.8.5.1
 </section>
@@ -19690,17 +14539,7 @@ submitter.]
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="64"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="64" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 26.5.2
 </section>
@@ -19720,17 +14559,7 @@ submitter.]
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="307"
-  uknum="394"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="307" uknum="394" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 26.7
 </section>
@@ -19753,17 +14582,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="85"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27
 </section>
@@ -19780,17 +14599,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="308"
-  uknum="114"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27
 </section>
@@ -19809,17 +14618,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="65"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.4.4
 </section>
@@ -19840,17 +14639,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="66"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.4.4.3
 </section>
@@ -19873,17 +14662,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="36"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="36" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 27.6.1.2.2
 [istream.
@@ -19908,17 +14687,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="37"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="37" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 27.6.1.2.2
 [istream.
@@ -19945,17 +14714,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="67"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.7.1
 </section>
@@ -20053,17 +14812,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="68"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.7.2
 </section>
@@ -20186,17 +14935,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="69"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.7.3
 </section>
@@ -20319,17 +15058,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="71"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="71" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 27.7.3
 </section>
@@ -20359,17 +15088,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="72"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.7.4
 </section>
@@ -20489,17 +15208,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="73"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 27.8.1.14
 </section>
@@ -20519,17 +15228,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="86"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -20548,17 +15247,7 @@ opened and we await a volunteer.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="309"
-  uknum="115"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -20579,17 +15268,7 @@ opened and we await a volunteer.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="310"
-  uknum="281"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -20610,17 +15289,7 @@ opened and we await a volunteer.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="314"
-  uknum="343"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 28.4
 </section>
@@ -20646,17 +15315,7 @@ opened and we await a volunteer.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="315"
-  uknum="344"
-  type="Te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="315" uknum="344" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 28.4
 </section>
@@ -20680,17 +15339,7 @@ p6
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="316"
-  uknum="345"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 28.4 ff
 </section>
@@ -20710,17 +15359,7 @@ p6
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="317"
-  uknum="278"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="317" uknum="278" type="Te" owner="LWG" issue="1014" disp="" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -20746,17 +15385,7 @@ p6
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="74"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="74" uknum="" type="te" owner="LWG" issue="1014" disp="" date="" extdoc="">
 <section>
 28.8
 </section>
@@ -20776,17 +15405,7 @@ p6
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="318"
-  uknum="279"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="318" uknum="279" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 28.8.2
 </section>
@@ -20806,17 +15425,7 @@ para 22
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="319"
-  uknum="280"
-  type="Te"
-  owner="LWG"
-  issue="909"
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="319" uknum="280" type="Te" owner="LWG" issue="909" disp="" date="" extdoc="">
 <section>
 28.12.2
 </section>
@@ -20864,17 +15473,7 @@ is already covered by issue 909.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="87"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -20896,17 +15495,7 @@ N2427. Needs to also consider issues
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="311"
-  uknum="116"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="311" uknum="116" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -20926,17 +15515,7 @@ N2427. Needs to also consider issues
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="312"
-  uknum="157"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -20966,17 +15545,7 @@ defined where it exists.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="75"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="75" uknum="" type="ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 29
 </section>
@@ -21141,17 +15710,7 @@ highly compatible with C.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="313"
-  uknum="220"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29.1
 </section>
@@ -21182,17 +15741,7 @@ spelling. Move to review state. Hans to ask additional review from cpp-threads.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="88"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -21216,17 +15765,7 @@ See wiki for further comments.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="89"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue="937"
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="89" uknum="" type="te" owner="LWG" issue="937" disp="" date="" extdoc="">
 <section>
 29.3.1
 </section>
@@ -21251,17 +15790,7 @@ Rationale: for compatibility with C.</notes>
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="90"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -21283,17 +15812,7 @@ explicitly consider the process shared issue.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="91"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="91" uknum="" type="te" owner="LWG" issue="1043" disp="accepted" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -21318,17 +15837,7 @@ attached note.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="92"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="92" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -21352,17 +15861,7 @@ We can not see the issue being suggested by the comment.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="76"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="76" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -21401,17 +15900,7 @@ We can not see the issue being suggested by the comment.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="93"
-  uknum=""
-  type="ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -21430,17 +15919,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="320"
-  uknum="117"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -21460,17 +15939,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="321"
-  uknum="172"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="321" uknum="172" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -21498,17 +15967,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="94"
-  uknum=""
-  type="te"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="94" uknum="" type="te" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30.1.2
 </section>
@@ -21536,17 +15995,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="95"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="95" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 30.1.3
 </section>
@@ -21576,17 +16025,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="96"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -21610,17 +16049,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="322"
-  uknum="168"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -21644,17 +16073,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="323"
-  uknum="171"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
 <section>
 30.2.1
 </section>
@@ -21684,17 +16103,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="324"
-  uknum="169"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 30.2.1.1
 </section>
@@ -21715,17 +16124,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="77"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.2.1.2
 </section>
@@ -21746,17 +16145,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="78"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="78" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30.2.1.2
 </section>
@@ -21776,17 +16165,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="97"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date="2009-03-06"
-  extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html"
->
+<comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
 <section>
 30.2.1.3
 </section>
@@ -21807,17 +16186,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="US"
-  num="98"
-  uknum=""
-  type=""
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="US" num="98" uknum="" type="" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.2.1.3,
         30.2.1.4
@@ -21841,17 +16210,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="325"
-  uknum="174"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="325" uknum="174" type="Te" owner="LWG" issue="1044" disp="" date="" extdoc="">
 <section>
 30.3.3
 </section>
@@ -21879,17 +16238,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="326"
-  uknum="176"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="326" uknum="176" type="Te" owner="LWG" issue="1045" disp="accepted" date="" extdoc="">
 <section>
 30.3.3.2.1
 </section>
@@ -21917,17 +16266,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="327"
-  uknum="179"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
@@ -21964,17 +16303,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="328"
-  uknum="182"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
@@ -21997,17 +16326,7 @@ this.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="329"
-  uknum="203"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="329" uknum="203" type="Te" owner="LWG" issue="1046" disp="" date="" extdoc="">
 <section>
 30.5
 </section>
@@ -22062,17 +16381,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="330"
-  uknum="424"
-  type="Ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="330" uknum="424" type="Ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -22096,17 +16405,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="79"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -22146,17 +16445,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="331"
-  uknum="192"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.3
 </section>
@@ -22181,17 +16470,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="332"
-  uknum="194"
-  type="Ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="332" uknum="194" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -22217,17 +16496,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="333"
-  uknum="195"
-  type="Ge"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -22248,17 +16517,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="334"
-  uknum="196"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="334" uknum="196" type="Te" owner="LWG" issue="1047" disp="accepted" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -22281,17 +16540,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="335"
-  uknum="436"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="335" uknum="436" type="Te" owner="LWG" issue="1048" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -22320,17 +16569,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="336"
-  uknum="437"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -22359,17 +16598,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="80"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="80" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 30.5.4,
         30.5.5
@@ -22389,17 +16618,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="337"
-  uknum="198"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -22419,17 +16638,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="338"
-  uknum="223"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -22466,17 +16675,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="339"
-  uknum="200"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="339" uknum="200" type="Te" owner="LWG" issue="1049" disp="accepted" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -22500,17 +16699,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="340"
-  uknum="201"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp="accepted"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="340" uknum="201" type="Te" owner="LWG" issue="1051" disp="accepted" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -22533,17 +16722,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="341"
-  uknum="122"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -22564,17 +16743,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="342"
-  uknum="123"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -22595,17 +16764,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="343"
-  uknum="439"
-  type="Te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -22630,17 +16789,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="JP"
-  num="81"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 30.5.8
 </section>
@@ -22733,17 +16882,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="23"
-  uknum=""
-  type="te"
-  owner="CWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="23" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
 <section>
 Annex B
 </section>
@@ -22767,17 +16906,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="24"
-  uknum=""
-  type="te"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 Annex B
 </section>
@@ -22798,17 +16927,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="DE"
-  num="25"
-  uknum=""
-  type="te"
-  owner="CWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="DE" num="25" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
 <section>
 Annex B
 </section>
@@ -22834,17 +16953,7 @@ p2
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="38"
-  uknum=""
-  type="ed"
-  owner="LWG"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="38" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
 <section>
 C.2
         [diffs.library]
@@ -22872,17 +16981,7 @@ C.2
 </rationale>
 </comment>
 
-<comment
-  nb="UK"
-  num="344"
-  uknum="136"
-  type="Ge"
-  owner="CWG"
-  issue=""
-  disp="rejected"
-  date=""
-  extdoc=""
->
+<comment nb="UK" num="344" uknum="136" type="Ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 Appendix D
 </section>
@@ -22909,17 +17008,7 @@ Appendix D
 </rationale>
 </comment>
 
-<comment
-  nb="FR"
-  num="39"
-  uknum=""
-  type="ed"
-  owner="editor"
-  issue=""
-  disp=""
-  date=""
-  extdoc=""
->
+<comment nb="FR" num="39" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
 <section>
 Index
 </section>
