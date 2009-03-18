@@ -4403,7 +4403,7 @@ para 3
 </rationale>
 </comment>
 
-<comment nb="UK" num="98" uknum="402" type="Te" owner="" issue="1055" disp="" date="" extdoc="">
+<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
 <section>
 7.2
 </section>
@@ -13254,7 +13254,7 @@ deferred.
 <suggestion>
         Strike the Effects clause
 </suggestion>
-<notes>Doug will open issuestrike effect, returns n.
+<notes>Doug will open issue: strike effect, returns n.
 </notes>
 <rationale>
 </rationale>
