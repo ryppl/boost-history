@@ -1,0 +1,47 @@
+[/
+  (C) Copyright 2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:lock_shared_until_hpp Header `<boost/sychro/lockable/lock_shared_until.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __lock_shared_until__ which locks shared the  __Lockable__ passed as parameter until a given time is reached.
+The default implementation applies the __lock_shared_until__ member function to the __Lockable__. 
+A user adapting another __Lockable__ could need 
+to specialize the __lock_shared_until__ free function if the __lock_shared_untilable__ do not provides a __lock_shared_until__ member function 
+with the same prototype.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly 
+to the __lock_shared_until__ 
+member function, __lock_shared_until__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__. 
+So the user can specialize partially this class.
+
+
+    namespace boost { namespace synchro { namespace lockable {
+        namespace result_of {
+            template <typename Lockable, class Clock, class Duration >
+            struct lock_shared_until {
+                typedef void type;
+            };
+        }
+
+        namespace partial_specialization_workaround {
+            template <typename Lockable, class Clock, class Duration >
+            struct lock_shared_until {
+                static typename result_of::template lock_shared_until<Lockable,Clock,Duration>::type 
+                apply( Lockable& lockable, const chrono::time_point<Clock, Duration>& abs_time );
+            };
+        }
+
+        template <typename Lockable, class Clock, class Duration >
+        typename result_of::template lock_shared_until<Lockable,Clock,Duration>::type 
+        lock_shared_until(Lockable& lockable, const chrono::time_point<Clock, Duration>& abs_time);
+    }}}
+
+
+
+[endsect]

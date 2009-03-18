@@ -38,6 +38,43 @@ The type [*[name]] must be a model of [*[concept]].
 In addition to the expressions defined in [concept], the following expressions must be valid.
 ]
 
+
+[def __lock__  `lock`]
+[def __unlock__  `unlock`]
+[def __try_lock__  `try_lock`]
+[def __lock_until__  `lock_until`]
+[def __lock_for__  `lock_for`]
+[def __try_lock_until__  `try_lock_until`]
+[def __try_lock_for__  `try_lock_for`]
+[def __lock_shared__  `lock_shared`]
+[def __try_lock_shared__  `try_lock_shared`]
+[def __unlock_shared__  `unlock_shared`]
+[def __lock_shared_until__  `lock_shared_until`]
+[def __lock_shared_for__  `lock_shared_for`]
+[def __try_lock_shared_until__  `try_lock_shared_until`]
+[def __try_lock_shared_for__  `try_lock_shared_for`]
+[def __lock_upgrade__  `lock_upgrade`]
+[def __lock_upgrade_until__  `lock_upgrade_until`]
+[def __lock_upgrade_for__  `lock_upgrade_for`]
+[def __try_lock_upgrade__  `try_lock_upgrade`]
+[def __try_lock_upgrade_until__  `try_lock_upgrade_until`]
+[def __try_lock_upgrade_for__  `try_lock_upgrade_for`]
+[def __unlock_upgrade__  `unlock_upgrade`]
+[def __unlock_and_lock_upgrade__  `unlock_and_lock_upgrade`]
+[def __unlock_and_lock_shared__  `unlock_and_lock_shared`]
+[def __unlock_upgrade_and_lock_shared__  `unlock_upgrade_and_lock_shared`]
+[def __unlock_upgrade_and_lock__  `unlock_upgrade_and_lock`]
+[def __unlock_upgrade_and_lock_until__  `unlock_upgrade_and_lock_until`]
+[def __unlock_upgrade_and_lock_for__  `unlock_upgrade_and_lock_for`]
+[def __try_unlock_upgrade_and_lock__  `try_unlock_upgrade_and_lock`]
+[def __try_unlock_upgrade_and_lock_until__  `try_unlock_upgrade_and_lock_until`]
+[def __try_unlock_upgrade_and_lock_for__  `try_unlock_upgrade_and_lock_for`]
+[def __unlock_shared_and_lock__  `unlock_shared_and_lock`]
+[def __try_unlock_shared_and_lock__  `try_unlock_shared_and_lock`]
+[def __try_unlock_shared_and_lock_upgrade__  `try_unlock_shared_and_lock_upgrade`]
+[def __Lockable__  `Lockable`]
+
+
 [/
 [section Preface]
 

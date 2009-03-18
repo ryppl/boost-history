@@ -7,7 +7,7 @@
 
 
 [section  Internal Locking--Monitors]
-
+[note This tutorial is an adaptation of chapter Concurrency of the Object-Oriented Programming in the BETA Programming Language and  of the paper of Andrei Alexandrescu "Multithreading and the C++ Type System" to the Boost library.]
 [section Concurrent threads of execution]
 
 Consider, for example, modeling a bank account class that supports simultaneous deposits and withdrawals from multiple locations (arguably the "Hello, World" of multithreaded programming).

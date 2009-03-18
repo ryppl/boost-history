@@ -1,0 +1,45 @@
+[/
+  (C) Copyright 2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/==========================================================================================]
+[section:try_unlock_shared_and_lock_upgrade_hpp Header `<boost/sychro/lockable/try_unlock_shared_and_lock_upgrade.hpp>`]
+[/==========================================================================================]
+
+Defines a free function __try_unlock_shared_and_lock_upgrade__ which try to lock the __Lockable__ passed as parameter and return false if unsucessful.
+The default implementation applies the __try_unlock_shared_and_lock_upgrade__ member function to the __Lockable__. 
+A user adapting another __Lockable__ could need 
+to specialize the __try_unlock_shared_and_lock_upgrade__ free function if the __Lockable__ do not provides a __try_unlock_shared_and_lock_upgrade__ member function 
+with the same prototype.
+
+As for the moment we can not partially specialize a function a trick is used: instead of calling directly 
+to the __try_unlock_shared_and_lock_upgrade__ 
+member function, __try_unlock_shared_and_lock_upgrade__ calls to the static operation apply on a class with the same name in the namespace __partial_specialization_workaround__. 
+So the user can specialize partially this class.
+
+
+    namespace boost { namespace synchro { namespace lockable {
+        namespace result_of {
+            template <typename Lockable> struct try_unlock_shared_and_lock_upgrade_shared {
+                typedef bool type;
+            };
+        }
+
+        namespace partial_specialization_workaround {
+            template< typename Lockable >
+            struct try_unlock_shared_and_lock_upgrade {
+                static typename result_of::template try_unlock_shared_and_lock_upgrade<Lockable>::type apply( Lockable& lockable );
+            };
+        }
+
+        template <typename Lockable>
+        typename result_of::template try_unlock_shared_and_lock_upgrade<Lockable>::type 
+        try_unlock_shared_and_lock_upgrade(Lockable& lockable);
+    }}}
+
+
+
+[endsect]

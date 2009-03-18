@@ -4,7 +4,7 @@
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
-]
+] 
 
 [/=================]
 [section Appendices]
@@ -29,9 +29,7 @@
 
 [heading Tasks to do before review]
 
-* `array_locker` and `tuple_locker` locker containers.
-* A complement to the already present in Boost.Thread `lock`, `try_lock` free functions:
-    * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`, `unlock`
+* `tuple_locker` locker containers.
 
 [heading For later releases]
 

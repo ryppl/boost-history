@@ -30,11 +30,11 @@ This library is a compilation of what I have found in the literature not yet pre
 * A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on lockables(mutexes) concepts and locker(guards) concepts.
 
     * lockables traits and lock generators, 
-    * lock adapters of the Boost.Thread and Boost.Interprocess lockable models,
+    * generic free functions on lockables as: `lock`, `try_lock` 
     * locker adapters of the Boost.Thread and Boost.Interprocess lockers models,
     * complete them with the corresponding models for single-threaded programms: `null_mutex` and `null_condition` classes,
     * locking families,
-    * `semaphore`, 
+    * `semaphore` and `binary_semaphore`, 
     * `condition_lockable` lock which put toghether a lock and its associated conditions.
 
 * A coherent way exception based timed lock approach for functions and constructors,
@@ -47,17 +47,17 @@ This library is a compilation of what I have found in the literature not yet pre
     * `locking_ptr`, `on_derreference_locking_ptr`,
     * `externally_locked`,
     
-* `array_locker` and `tuple_locker` locker ocntainers.
+* `array_locker` on multiple lockables.
 
-* A complement to the already present in Boost.Thread `lock`, `try_lock` free functions:
-
+* Generic free functions on multiple lockables `lock`, `try_lock`, `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`, `unlock`    * lock adapters of the Boost.Thread and Boost.Interprocess lockable models,
     * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`
 
 * A polymorphic lockable hierarchy.
 
 * High-level abstractions for handling more complicated synchronization problems, including
     * `monitor` for guaranteeing exclusive access to an object, and
-    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
+
+* A rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
 
 
 [/====================================]

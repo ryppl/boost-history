@@ -9,6 +9,8 @@
 
 [section:tutorial  Tutorial]
 
+[info The contents of this tutorial is an adaptation of the papers of Andrei Alexandrescu, Kevlin Henney and the concurrent part of the BETA Programming Language.]
+
 Concurrent components may interact in different ways: they may access the same shared objects by, for example, executing functions of these objects; or they may communicate directly by executing functions of each other.
 
 Concurrent execution of objects requires a mechanism for synchronizing the access to shared objects, just as direct communication between objects may require synchronization. The basic mechanism for synchronization in Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes and condition variables are, however, only useful for very simple synchronization problems. The Synchro Library therefore introduce high-level abstractions for handling more complicated synchronization problems, including monitor for guaranteeing exclusive access to an object, controlling external locking and last a so-called rendezvous mechanism for handling direct communication between objects. All the concurrency abstractions being introduced are defined by means of mutexes an conditions.

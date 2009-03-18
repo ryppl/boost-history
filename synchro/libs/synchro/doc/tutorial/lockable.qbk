@@ -6,7 +6,7 @@
  /]
 
 [section Lockables]
-The following is an adaptation of the article "C++ Threading - A Generic-Programming Approach" by Kevin Henney.
+[note The following is an adaptation of the article "C++ Threading - A Generic-Programming Approach" by Kevin Henney.]
 
 [*Lock substitutability]
 

@@ -10,8 +10,8 @@
 [section  External Locking -- `strict_locker` and `externally_locked` classes]
 
 
-This tutorial is an adaptation of the article of Andrei Alexandrescu "Multithreading and the C++ Type System"
-to the Boost library.
+[note This tutorial is an adaptation of the paper of Andrei Alexandrescu "Multithreading and the C++ Type System"
+to the Boost library.]
 
 [/
 [section  Internal locking]

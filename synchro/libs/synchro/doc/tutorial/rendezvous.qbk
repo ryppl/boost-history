@@ -6,7 +6,7 @@
  /]
 
 [section  Concurrent components]
-
+[note This tutorial is an adaptation of chapter Concurrency of the Object-Oriented Programming in the BETA Programming Language to the Boost library.]
 [section  Direct communication between components]
 
 In the previous section we have described a mechanism for concurrent components to communicate through shared objects. In many cases it appears more natural for concurrent components to communicate directly instead of using shared objects. Consider the following example:

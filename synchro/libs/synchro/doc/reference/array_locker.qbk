@@ -1,0 +1,111 @@
+[/
+ / Copyright (c) 2008-2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License,
+ / Version 1.0. (See accompanying file LICENSE_1_0.txt or
+ / copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:array_unique_locker_hpp Header `<boost/synchro/locker/array_unique_locker.hpp>`]
+[/==========================================================================================]
+
+    namespace boost {  namespace synchro {
+
+        template <typename Lockable, unsigned N>
+        class unique_array_locker;
+        template <typename Lockable, unsigned N>
+        class try_unique_array_locker;
+
+    }}
+
+[section Template Class `unique_array_locker<>`]
+[*Synopsis]
+
+
+    template <typename Lockable, unsigned N>
+    class unique_array_locker {
+    public:
+        typedef Lockable lockable_type;
+        BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(unique_array_locker) /*< disable copy construction >*/
+        BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(unique_array_locker) /*< disable copy asignement >*/
+
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n);
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, adopt_lock_t);
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, defer_lock);
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, try_to_lock_t);
+        
+        // try_lock_until constructor
+        template<class Clock, class Duration >
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, chrono::time_point<Clock, Duration> const& target_time);
+        template<class Rep, class Period >
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, chrono::duration<Rep, Period> const& target_time)
+
+        template<class Clock, class Duration >
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, chrono::time_point<Clock, Duration> const& target_time, throw_timeout_t);
+        template<class Rep, class Period >
+        unique_array_locker(Lockable& m0, ..., Lockable& m_n, chrono::duration<Rep, Period> const& target_time, throw_timeout_t)
+
+        template<class Clock, class Duration >
+        unique_array_locker(chrono::time_point<Clock, Duration> const& target_time, Lockable& m0, ..., Lockable& m_n);
+        template<class Rep, class Period >
+        unique_array_locker(chrono::duration<Rep, Period> const& target_time, Lockable& m0, ..., Lockable& m_n, )
+
+        template<class Clock, class Duration >
+        unique_array_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Lockable& m0, ..., Lockable& m_n);
+        template<class Rep, class Period >
+        unique_array_locker(nothrow_timeout_t, chrono::duration<Rep, Period> const& target_time, Lockable& m0, ..., Lockable& m2)
+        
+        ~unique_array_locker();
+
+        bool is_locking(lockable_type* l) const;
+        bool owns_lock() const;
+        typedef unspecified-type bool_type)() const; /*< safe bool idiom >*/
+        operator bool_type() const;
+        bool operator!() const; 
+        
+        void lock();
+        template<class Clock, class Duration >
+        void lock_until(chrono::time_point<Clock, Duration> const& absolute_time);
+        template<class Rep, class Period >
+        void lock_for(chrono::duration<Rep, Period> const& relative_time);
+
+        void unlock();
+        
+        bool try_lock();
+        template<class Clock, class Duration >
+        bool try_lock_until(chrono::time_point<Clock, Duration> const& absolute_time);
+        template<class Rep, class Period >
+        bool try_lock_for(chrono::duration<Rep, Period> const& relative_time);
+
+    };
+
+
+[*Description]
+
+[*`unique_array_locker` template parameters]
+
+* `Lockable` : The exclusive lockable type used to synchronize exclusive access
+* `N` : The number of lockables in the array
+
+[*`unique_array_locker` public types]
+
+* `lockable_type` : The exclusive lockable type used to synchronize exclusive access
+* `lock_error` : The exception type throw in case of errors
+* `bool_type` : The bool_type  of the safe_bool idiom
+
+
+[*`unique_array_locker` private and not defined member functions]
+
+* `unique_array_locker()`
+* `unique_array_locker(unique_array_locker&);`
+* `operator=(unique_array_locker&);`
+
+[endsect]
+
+[section Template Class `try_unique_array_locker<>`]
+[*Synopsis]
+
+[endsect]
+[endsect]

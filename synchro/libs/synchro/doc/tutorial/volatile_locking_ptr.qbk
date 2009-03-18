@@ -6,12 +6,10 @@
  / copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-
-
 [section  `volatile ` and `locking_ptr`]
 
 
-This tutorial is an adaptation of the article of Andrei Alexandrescu "`volatile` - Multithreaded Programmer's Best Friend" to the Boost library.
+[note This tutorial is an adaptation of the article of Andrei Alexandrescu "`volatile` - Multithreaded Programmer's Best Friend" to the Boost library.]
 
 [section  Just a Little Keyword]
 

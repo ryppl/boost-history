@@ -12,45 +12,43 @@
 
 [section Mapping the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts]
 
-The mapping from the current mutexes and scoped guards (Boost.Thread and Boost/Interprocess) to common concepts has been done by adapting the required signatures to the underlying models. For example thread_timed_mutex is defied as:
+The mapping from the current mutexes and scoped guards (Boost.Thread and Boost/Interprocess) to the common concepts has been done adding a indirection level. Instead of requiring a given member function, the lockable concepts reside in fre functions. Neither the Boost.Thread nor Boost/Interprocess mutexes and locks are based on functions, but can see them as models of the common lockable and loker concepts by specializing these generic free functions. In order to make easier the mapping these functions call by default to a member function with the equivalent signature.
 
-    class thread_timed_mutex
-    : public lock_traits_base<
-        multi_threaded_tag,
-        exclusive_lock_tag,
-        non_recursive_tag,
-        has_timed_interface_tag,
-        process_lifetime_tag,
-        anonymous_tag,
-        timed_mutex
-    > {
-    public:
-        typedef boost::condition_variable_any  best_condition_type;
-        typedef boost::condition_variable_any  best_condition_any_type;
 
-        //Non-copyable
-        BOOST_COPY_CONSTRUCTOR_DELETE(thread_mutex) /*< disable copy construction >*/
-        BOOST_COPY_ASSIGNEMENT_DELETE(thread_mutex) /*< disable copy asignement >*/
-        thread_timed_mutex () {}
-            
-        bool try_lock_until(system_time const & abs_time) {
-            return timed_lock(abs_time);
-        }
-        template<typename TimeDuration>
-        bool try_lock_for(TimeDuration const & relative_time) {
-            return timed_lock(relative_time);
-        }
+For example thread_timed_mutex is viwed as a lockable by specializing the folloxing functions:
 
-        void lock_until(system_time const & abs_time) {
-            if(!timed_lock(abs_time)) throw timeout_exception();
-        }
-        template<typename TimeDuration>
-        void lock_for(TimeDuration const & relative_time) {
-            if(!timed_lock(relative_time)) throw timeout_exception();
-        }
-    };    
+    namespace partial_specialization_workaround {
+        template <class Clock, class Duration >
+        struct lock_until<boost::timed_mutex,Clock, Duration>   {
+            static void 
+            apply( boost::timed_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            }
+        };
+        template <class Rep, class Period >
+        struct lock_for<boost::timed_mutex,Rep, Period> {
+            static void 
+            apply( boost::timed_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            }
+        };
+        template <class Clock, class Duration >
+        struct try_lock_until<boost::timed_mutex,Clock, Duration> {
+            static typename result_of::template try_lock_until<boost::timed_mutex,Clock, Duration>::type 
+            apply( boost::timed_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+            }
+        };
+        template <class Rep, class Period >
+        struct try_lock_for<boost::timed_mutex,Rep, Period> {
+            static typename result_of::template try_lock_for<boost::timed_mutex,Rep, Period>::type 
+            apply( boost::timed_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time));
+            }
+        };
+    }
 
-Note that only the functions for which the interface change are defined. The others are inherited.
+Note that only the functions for which the equivalent signature differ are defined. For the others the default works as expected.
 
 [endsect]
 
@@ -96,7 +94,7 @@ Requiring the user of a condition variable to implement a while loop to verify a
 
 Based on the idead of Kevlin Henney, the library supports timeout exception for all the locking functions having a time or duration parameter.
 
-* A lock with a timeout i.e. a time or a duration, parameter throws a `timeout_exception` on expiry
+* A lock with a timeout parameter, i.e. a time or a duration, throws a `timeout_exception` on expiry
 * A `try_lock` with a timeout simply returns false on expiry
 * Any of the conditional locks throw a `timeout_exception` on expiry
 * all the locker constructors with the first parameter a timeout.
@@ -133,7 +131,11 @@ The problem is that even if these locker models the same model, there is no a si
 
 The library defines some locker adapters which take care of naming differences and that can be used like
 
-        boost::synchro::unique_locker<Lockable> scoped(guard);
+        boost::synchro::unique_locker<boost::mutex> scoped(guard);
+
+or        
+
+        boost::synchro::unique_locker<boost::interprocess::interprocess_mutex> scoped(guard);
 
 [*Strict lockers]
 
@@ -168,7 +170,7 @@ The library provides three strict lockers
         ...
     };
 
-and a meta function `is_strict_locker` which states if a locker is a strict locker
+and a meta function `is_strict_locker` which states if a locker is a strict locker.
 
 So as strict lockers do not provide lock/unlock functions they are not models of Lockable.
 
@@ -188,7 +190,7 @@ The following code shows one way to use the TryLocker:
         return pulled;
     }
 
-All of them use a safe strategy for a Boolean conversion which use a member pointer rather than a `bool`, which is typically too permissive:
+All of them use a safe strategy for a boolean conversion which use a member pointer rather than a `bool`, which is typically too permissive:
 
     typedef bool try_locker::*is_locked;
     operator is_locked() const {
@@ -217,7 +219,7 @@ for any model of Lockable.
 
 In addition to supporting timeout exception for Lock, the library supports them also for ExceptionBaseTimedLockers. The semantics of each constructor and member function are identical to those of boost::unique_locker<Lockable> for the same Lockable, except that the constructor that takes a time or a duration as first parameter in a addition to the reference to a mutex will call `m.lock_until(t)` or `m.lock_for(d)` rather than `m.try_lock_until(t)` or `m.try_lock_for(d)` and so a `timeout_exception` is possible on the constructor.
 
-Let me satrt with an example of an application needing to lock several locks at the same time. Once all the locks are locked something must be done. Other wise the application do womething else and reiterate the lock requests. The natural and exception safe way to do that is
+Let me start with an example of an application needing to lock several locks at the same time. Once all the locks are locked something must be done. Otherwise the application do something else and reiterate the lock requests. The natural and exception safe way to do that is
 
     while (polling) {
         t=now()+100;
@@ -230,7 +232,7 @@ Let me satrt with an example of an application needing to lock several locks at 
         } else execute_on_failed(); 
     }
 
-The problem with this code is that it locks `m2` even if `l1` do not owns the lock `m1`. The advertised reader could argument that if the lock m1 has not been locked by a timeout the as all share the same time constraint the failing lock of m2 will not be expensive. Well the problem is that the locking of m1 can fail because m1 is already locked. When we try to optimize this
+The problem with this code is that it locks `m2` even if `l1` do not owns the lock `m1`. The advertised reader could argument that if the lock m1 has not been locked by a timeout, as all share the same time constraint the failing lock of m2 will not be expensive. Well the problem is that the locking of m1 can fail because m1 is already locked. When we try to optimize this
 
     while (polling) {
         t=now()+100;
@@ -251,7 +253,7 @@ we found that this starts to be unmaintenable. What is event wrost is that as th
 
 [*try_lock_until and try_lock_for free functions]
 
-To avoid this we can request the acquisition of all the locks toghether (letting the function to try any order), as it does the function try_lock of Boost.Threads, but adding this time a expiration period parameter
+To avoid this we can request the acquisition of all the locks toghether (letting the function to try several orders), as it does the function try_lock of Boost.Threads, but adding this time a expiration period parameter
 
     while (polling) {
         if (boost::try_lock_for(100, m1, m2, m3)) {
@@ -280,14 +282,14 @@ We can go a step ahead and mix the advantage of taking all the locks at once and
 So the preceding code becomes without timeout exceptions
 
     while (polling) {
-        boost::synchro::array_locker<boost::mutex, 3> lk(m1, m2, m3, 100);
+        boost::synchro::array_unique_locker<boost::mutex, 3> lk(m1, m2, m3, 100);
         if (lk.owns_lock()) {
             foo();
             polling = false;
         } else execute_on_failed(); 
     }
 
-which is not exception safe or with exception based timed locks (Note that the time is given before the locks)
+which is exception safe or with exception based timed locks (Note that the time is given before the locks)
 
     while (polling) 
     try { boost::synchro::array_locker<boost::mutex, 3> lk(100, m1, m2, m3);
@@ -295,10 +297,10 @@ which is not exception safe or with exception based timed locks (Note that the t
         polling = false;
     } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
 
-When the Locks locked by an `array_locker` are not homogeneus we need some kind of tuple.
+When the Locks locked by an `array_unique_locker` are not homogeneus we need some kind of tuple.
 
     while (polling) 
-    try { boost::synchro::tuple_locker<T1, T2, T1> lk(100, m1, m2, m3);
+    try { boost::synchro::tuple_unique_locker<T1, T2, T1> lk(100, m1, m2, m3);
         foo();
         polling = false;
     } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
@@ -306,7 +308,7 @@ When the Locks locked by an `array_locker` are not homogeneus we need some kind 
 
 [*`lock_until` and `lock_for` free functions]
 
-For completude the exception based timed multi lock functions `lock_until` and `lock_for` are also provided.
+For completion the exception based timed multi lock functions `unlock`, `lock_until` and `lock_for` are also provided.
 
     while (polling)
         try {
