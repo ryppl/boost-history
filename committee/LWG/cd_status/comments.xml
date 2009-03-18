@@ -19,10 +19,8 @@ General Comment
         We worry about the complexity
         of the programming model so created.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="1" uknum="" type="ge/te" owner="" issue="" disp="" date="" extdoc="">
@@ -46,8 +44,7 @@ General Comment
         identifying an issue as not requiring a change to the CD,
         or deferring the issue to a later point in time.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="CA" num="1" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -63,8 +60,7 @@ General Comment
         Consider these comments and update ISO/IEC CD 14882
         accordingly
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="1" uknum="" type="ge/te" owner="" issue="" disp="" date="" extdoc="">
@@ -81,10 +77,8 @@ General Comment
         http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2791.html
         .
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="CH" num="2" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -97,10 +91,8 @@ all
         The issues on the issues lists shall be addressed before
         the standard becomes final.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="3" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -118,8 +110,7 @@ all
         <i>i.e</i>. and <i>e.g.</i>, and remove extraneous space
         after each such abbreviation.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="3" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -135,8 +126,7 @@ all
 <suggestion>
         
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -153,8 +143,7 @@ all
 <suggestion>
         
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="1" uknum="214" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -174,8 +163,7 @@ all
         atomic operations concurrency alignment control
         user-defined literals attributes
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -189,10 +177,8 @@ all
         Is the lack of reference to ISO/CEI 9899/AC3:2007
         voluntary?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="2" uknum="215" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -211,8 +197,7 @@ all
 <suggestion>
         ... not sure ...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="3" uknum="217" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -241,8 +226,7 @@ all
         instantiations? What about user-defined literals where
         parens are not used?
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="4" uknum="216" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -263,8 +247,7 @@ all
         issues by the implementation when translating a program
         that violates the rules of the standard. ...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -279,10 +262,8 @@ all
         "The dynamic type of an rvalue expression is its static
         type." Is this true with rvalue references?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -299,8 +280,7 @@ all
         Reword to clarify that it is the input that is here
         considered not well-formed.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="6" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -315,10 +295,8 @@ all
         There is a page break between the title and the
         paragraph.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -337,8 +315,7 @@ all
         Adding it to the note outlying possible undefined
         behaviours.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="6" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
@@ -358,8 +335,7 @@ all
         Clearly state whether or not
         Unspecified behavior includes undefined behavior.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="8" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -377,10 +353,8 @@ all
         required to be diagnosed if the program also uses an
         extension which defines some cases of ODR.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="5" uknum="1" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -397,8 +371,7 @@ all
         Provide a new annex with the missing
         checklist
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="6" uknum="2" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -416,8 +389,7 @@ all
         Provide a new annex with the missing
         documentation. See n2733(08-0243) for a starting point
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -434,8 +406,7 @@ all
         Include Clause 17 among the list of Clauses that specify
         the Standard Library.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -454,8 +425,7 @@ all
         Mention concepts and concept maps among the list of
         entities.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="9" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -469,10 +439,8 @@ all
         The
         syntax description does not account for lines that wrap.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="10" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -490,8 +458,7 @@ all
         <font color=
         "#000000">R</font>eference 1.10 [intro.multithread].
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -508,8 +475,7 @@ all
 <suggestion>
         Insert the recommended reference.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -527,8 +493,7 @@ all
         Clarify that a memory location &#8220;holds&#8221; an
         object rather than that it &#8220;is&#8221; an object.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="13" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -548,8 +513,7 @@ all
         &#8220;separate&#8221; or reword (this and subsequent
         paragraphs) to avoid this term.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -568,8 +532,7 @@ all
         Delete the &#8220;no matter&#8230;&#8221; phrase, or
         resolve the contradiction in a different way.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="15" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -587,8 +550,7 @@ all
         Reword so that a struct is &#8220;held in&#8221; one or
         more memory locations.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="16" uknum="" type="" owner="" issue="" disp="" date="" extdoc="">
@@ -606,8 +568,7 @@ all
 <suggestion>
         Remove/replace various occurrences of "sequence" in 1.9.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="8" uknum="222" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -631,8 +592,7 @@ all
         of the abstract machine CONFORMING TO THE MEMORY MODEL
         (1.10) with the same program and the same input.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="7" uknum="218" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -654,8 +614,7 @@ all
 <suggestion>
         Replace 'sequence' with 'sequences'.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="9" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -670,10 +629,8 @@ all
         This example use int *v while the other examples seems
         to use notation like int* v.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="17" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -706,8 +663,7 @@ all
         threads in the same program.
 </BLOCKQUOTE>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="9" uknum="133" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -735,8 +691,7 @@ all
         implictly added, with an empty line to follow if the last
         character was a back-slash.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="10" uknum="134" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -758,8 +713,7 @@ all
         of whitespace should be left unspecified, rather than
         implementation-defined.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -792,10 +746,8 @@ all
         different locale. During phase 5, they are using an
         implementation defined char set.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="11" uknum="135" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -815,8 +767,7 @@ all
         Deprecate the whole of 2.3 and move it to
         appendix D.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="12" uknum="137" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -840,8 +791,7 @@ all
         conditionally supported behaviour with implementation
         defined semantics.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -857,8 +807,7 @@ all
 <suggestion>
         Delete the empty line.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -872,10 +821,8 @@ all
 <description>
         There are spurious empty lines.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -890,10 +837,8 @@ and 2.11
         The alternative representations are reserved as such
         even in attribute. Is that what is wanted?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="2" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -910,8 +855,7 @@ Table 2
 <suggestion>
         See eq-keyword.doc, eq-keyword.ppt
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="13" uknum="138" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -931,8 +875,7 @@ Table 2
         that a pp-number may briefly acquire a value during
         translation phase 4 while evaluating #if expressions.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="14" uknum="395" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -950,8 +893,7 @@ table 3
 <suggestion>
         Sort the table.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="1" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -969,8 +911,7 @@ Table 3
         Sort it in alphabetical order.
         Complete the table frame.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="19" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -991,8 +932,7 @@ L&#8221; and &#8220;ll or
         Replace the incorrect entries by &#8220;unsigned long
         long int&#8221;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1014,8 +954,7 @@ L&#8221; and &#8220;ll or
         target=
         "_blank">http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2007/n2281.html</a></u></font>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="15" uknum="139" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1036,8 +975,7 @@ L&#8221; and &#8220;ll or
         containing multiple elements, and specify its type is
         integer (or wider)
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="16" uknum="140" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1056,8 +994,7 @@ L&#8221; and &#8220;ll or
         explaining that the ? character may need escaping to avoid
         accidentally creating a trigraph.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="2" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1075,8 +1012,7 @@ L&#8221; and &#8220;ll or
 <suggestion>
         Correct typo.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1124,8 +1060,7 @@ statement behaves exactly the same as
 </PRE>
 &#8212;<I>end note</I>]</LI></OL>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="4" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1158,8 +1093,7 @@ statement behaves exactly the same as
 <suggestion>
         Correct typo.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="21" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1177,8 +1111,7 @@ statement behaves exactly the same as
         Denote the code (and perhaps also its commentary) as an
         Example.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="22" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1195,8 +1128,7 @@ statement behaves exactly the same as
 <suggestion>
         Append a backslash to the first line of the code.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1214,8 +1146,7 @@ statement behaves exactly the same as
 <suggestion>
         Add rules containing raw-string in the table 7.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="13" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1232,10 +1163,8 @@ statement behaves exactly the same as
   assert(std::strcmp(p, "a\nb\nc") == 0);
 </PRE>
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="17" uknum="141" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1264,8 +1193,7 @@ statement behaves exactly the same as
         non-const array is removed or can be turned off) Strike the
         sentence on undefined behaviour.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="18" uknum="142" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1295,8 +1223,7 @@ statement behaves exactly the same as
         although it could combine with type specifier in the same
         way that the R prefix does, supporting u8I, uI, UI and LI.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="19" uknum="143" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1319,8 +1246,7 @@ statement behaves exactly the same as
         u8 u U L string-literal-body: " s-char-sequenceOPT " R
         raw-string
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="14" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1345,8 +1271,7 @@ statement behaves exactly the same as
         <BR/><BR/>as some names denotes entities declared after the first
         occurrence.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="15" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1363,10 +1288,8 @@ statement behaves exactly the same as
         aren't followed by a space when put in plural (see
         /identifier/).
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="20" uknum="209" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -1386,8 +1309,7 @@ statement behaves exactly the same as
 <suggestion>
         Change the title to "Basic definitions".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="21" uknum="359" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1406,8 +1328,7 @@ statement behaves exactly the same as
         Rename the chapter Basic ???. THe note in
         p2 specifically needs similar rewording
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="22" uknum="362" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1426,8 +1347,7 @@ statement behaves exactly the same as
         Add "or reference" after both uses of
         "object"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="23" uknum="277" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1445,8 +1365,7 @@ statement behaves exactly the same as
         Add alias-declaration after typedef
         declaration.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="24" uknum="360" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1470,8 +1389,7 @@ statement behaves exactly the same as
         type may also be definitions if a constant integral
         expression is provided for an initializer.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="25" uknum="361" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1495,8 +1413,7 @@ statement behaves exactly the same as
         C(const C&amp; x): s(x.s) { } C&amp; operator=(const C&amp;
         x) { s = x.s; return *this; } ~C() { } };
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="26" uknum="363" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1517,8 +1434,7 @@ statement behaves exactly the same as
         of 'variable' (see earlier comment) or add reference to the
         list in this paragraph.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="27" uknum="364" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1537,8 +1453,7 @@ statement behaves exactly the same as
         Add "when used in an exception-handler
         (15.3)" to the list.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="16" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1554,10 +1469,8 @@ statement behaves exactly the same as
         parameters is defined, but what is the scope of template
         parameters?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="28" uknum="365" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1574,8 +1487,7 @@ statement behaves exactly the same as
 <suggestion>
         ammend "class" to "class or class template"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="29" uknum="366" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1598,8 +1510,7 @@ statement behaves exactly the same as
         the declaration of an operator or conversion function of a
         base class of the same operator or type;"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="17" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1617,10 +1528,8 @@ and linkage]
         that would be a bit surprising and curious. What is the
         rationale?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="30" uknum="367" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1640,8 +1549,7 @@ and linkage]
         Add a note to clarify that concepts don't
         need linkage.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="31" uknum="368" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1663,8 +1571,7 @@ and linkage]
         Clarify rules for namespaces inside nested
         namespaces, or remove the restriction.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="23" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1678,10 +1585,8 @@ and linkage]
         Bad
         paragraph break.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1695,10 +1600,8 @@ and linkage]
 <description>
         The paragraph number is not aligned with the text.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="19" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1719,10 +1622,8 @@ termination]
         Standard
         should address this aspect.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="32" uknum="369" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -1740,8 +1641,7 @@ termination]
         Add constexpr to
         the list of ill-formed things to annotate main 
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="24" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1763,8 +1663,7 @@ termination]
         from within destructors for static or thread duration
         objects.</font>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="25" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1781,8 +1680,7 @@ termination]
 <suggestion>
         Change &#8220;i.e.&#8221; to &#8220;e.g.&#8221;
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="6" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1828,8 +1726,7 @@ termination]
 <suggestion>
         Correct typo.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1851,8 +1748,7 @@ termination]
         Clarify that &amp;i is considered a safely-derived
         pointer value.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="26" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1872,8 +1768,7 @@ termination]
         Chapter 3 "Use of objects, especially from other threads,
         during destruction".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="27" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1890,8 +1785,7 @@ termination]
         Delete &#8220;and&#8221; from the phrase &#8220;and
         std::nullptr_t&#8221;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1909,10 +1803,8 @@ termination]
         strongly suggest that the phrase 'effective type' not be
         used in such an incompatible way.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1945,8 +1837,7 @@ termination]
         valid pointer value for an over-aligned type<font color=
         "#008000">(3.11)</font>.&#8212;end note ]</font>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="28" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -1964,8 +1855,7 @@ termination]
 <suggestion>
         Delete the extra spaces.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="4" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -1992,8 +1882,7 @@ p2
         "pointer to char32_t" in 4.2 paragraph 2 and 15.1 paragraph
         3.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="CH" num="1" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2015,8 +1904,7 @@ p2
         of class type and B is a public base of D, It should allow
         explicit conversion the other way around.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="5" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2037,8 +1925,7 @@ p2
         dereferencing pointer-to-members (5.5) for type-safety
         concerns in the presence of ref-qualifiers on the member.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="33" uknum="374" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2061,8 +1948,7 @@ p2
         except that signed char shall have the same rank as char
         even if char is signed (3.9.1/1)."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="34" uknum="375" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2080,8 +1966,7 @@ p2
 <suggestion>
         The rank of char
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="36" uknum="407" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2101,8 +1986,7 @@ p2
 <suggestion>
         Delete this paragraph.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="37" uknum="224" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2121,8 +2005,7 @@ p2
         Add member function templates to the 3rd
         bullet
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="38" uknum="230" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2143,8 +2026,7 @@ p2
 <suggestion>
         ... words to follow ...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2185,8 +2067,7 @@ p2
         <BR/><BR/>decltype (
         expression ) ::
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="9" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2313,8 +2194,7 @@ p2
         Add
         move capture in a lambda expression.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2354,8 +2234,7 @@ p2
         result_type to the syntax of an unnamed function object
         generated by a lambda expression.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="29" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2369,10 +2248,8 @@ p2
         standard does not state whether or not direct recursion of
         lambdas is possible.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="30" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2389,10 +2266,8 @@ p2
         lambdas. Does it mean this lambda, or this class within
         which the lambda is nested?</font></font>
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="31" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2408,10 +2283,8 @@ p2
         inner lambda refers to the outer lambda's locals variables
         and parameters.</font>
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="45" uknum="444" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2439,8 +2312,7 @@ para 2
         on library. (Marked as technical comment anyway because
         this clarity is technically important).
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="32" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2455,10 +2327,8 @@ para 2
         final italic "this" in the paragraph should be a teletype
         "this".
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="39" uknum="408" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2477,8 +2347,7 @@ para 2
         Add "F has an implicitly-declared
         destructor".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="40" uknum="409" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2506,8 +2375,7 @@ para 2
         closure object or a copy after the lifetime of any of the
         variables referenced has ended is undefined.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="41" uknum="225" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2532,8 +2400,7 @@ para 2
         Replace inheritance with implicit
         conversion.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="42" uknum="226" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2558,8 +2425,7 @@ para 2
         (a) allow conversion to function reference (b) allow extern
         "C" function pointer types
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="43" uknum="231" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2582,8 +2448,7 @@ para 2
         ... provvide exceptions in the right places
         ...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="44" uknum="252" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2609,8 +2474,7 @@ para 2
         cover [this] lambdas. Consider a simple syntax for creating
         such bound expressions.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="46" uknum="449" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2636,8 +2500,7 @@ para 12
         library implementer have to do compatible things. But it
         cuts the dependency of lambda syntax on &lt;functional&gt;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="6" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2659,8 +2522,7 @@ para 12
         std::reference_closure, require Returnable for R and
         VariableType for each of the ArgTypes.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="7" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2677,8 +2539,7 @@ p10
 <suggestion>
         Remove "or references" in the note.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="8" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2697,8 +2558,7 @@ p10
         Add bullets that say that the ref-qualifier and the
         attribute-specifier are absent.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="33" uknum="" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -2717,8 +2577,7 @@ p10
         the first place the terms are used, a definition should
         either be added here, or a cross reference to one.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="9" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2738,8 +2597,7 @@ p10
 <suggestion>
         Add a few well-chosen examples.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="52" uknum="232" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2756,8 +2614,7 @@ p10
 <suggestion>
         Move p3 to subsection 5.17
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="53" uknum="233" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2780,8 +2637,7 @@ p10
         to avoid introducing normative text that could potentially
         conflict with the later definiton of these semantics.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="59" uknum="410" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2803,8 +2659,7 @@ p10
         Clarify that this sentence only applies
         where the ellipsis is used.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="60" uknum="411" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2822,8 +2677,7 @@ p10
 <suggestion>
         Add "and" before vq
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="61" uknum="234" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2844,8 +2698,7 @@ p1
         Clarify in footnote 60 that this will not
         happen if the whole expression is an unevaluated operand.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="62" uknum="235" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2865,8 +2718,7 @@ p1
         Replace 'not an lvalue' with 'is an
         rvalue'.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="10" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -2884,8 +2736,7 @@ p1
         Adjust the presentation of the types involved as
         appropriate.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="63" uknum="412" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2901,8 +2752,7 @@ p1
 <suggestion>
         Add one.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="64" uknum="413" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -2922,8 +2772,7 @@ p1
         convenience, will be called R in this description)" with
         "T".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="65" uknum="414" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2944,8 +2793,7 @@ p1
         Replace "an lvalue referring to" with
         "reference", twice.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="66" uknum="415" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2964,8 +2812,7 @@ p1
         an implementation-defined class publicly
         derived from std :: type_info
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="67" uknum="416" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -2987,8 +2834,7 @@ p1
         T is an lvalue reference type (8.3.2), and an rvalue
         otherwise."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="54" uknum="417" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3010,8 +2856,7 @@ p1
         Alternatively, delete paragraph 3, since individual cases
         are labelled appropriately.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="55" uknum="236" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3034,8 +2879,7 @@ p1
         its own type should move out of the note into the normative
         text.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="56" uknum="237" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3057,8 +2901,7 @@ p1
         will not be a safely-derived pointer value (3.7.4.3) -- end
         note]
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="57" uknum="238" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3080,8 +2923,7 @@ p1
         object pointer cast to a function pointer can be safely
         cast back -- end note]
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="58" uknum="418" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3103,8 +2945,7 @@ p1
         Replace lvalue with "lvalue or rvalue"
         twice.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="34" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3118,10 +2959,8 @@ p1
         The list of unary operator
         should be in teletype font.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="68" uknum="419" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3140,8 +2979,7 @@ p1
         1a "The following unary operators all produce results that
         are rvalues."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="69" uknum="240" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3166,8 +3004,7 @@ p1
 <suggestion>
         ... unknown ...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="70" uknum="420" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3187,8 +3024,7 @@ p1
         Change "an enumeration type" to "an
         enumeration type whose underlying type is not fixed".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="71" uknum="254" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3210,8 +3046,7 @@ p1
 <suggestion>
         Replace T x = e; with T x(e);
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="72" uknum="257" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3236,8 +3071,7 @@ p1
         Throw std::bad_alloc instead of
         std::length_error.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="73" uknum="258" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3257,8 +3091,7 @@ p1
 <suggestion>
         Add 'literal' before 'class type'
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="74" uknum="259" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3280,8 +3113,7 @@ p1
         name is operator new" to "the allocation function is named
         operator new" and similarly for operator delete.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="35" uknum="260" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3299,8 +3131,7 @@ p1
         Add a period
         between "in the scope of T" and "If this lookup fails"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="75" uknum="262" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3318,8 +3149,7 @@ p1
 <suggestion>
         Swap order of the note and normative text.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="21" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3333,10 +3163,8 @@ p1
         Should not the type of alignof-expression be of type
         std::max_align_t?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="35" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3351,10 +3179,8 @@ p1
         and "E1 &gt;&gt;E2". This is a formatting change since
         previous versions of the Standard.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="47" uknum="242" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3376,8 +3202,7 @@ p1
         Pick one form of wording as 'the best' and
         apply it in both places.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="48" uknum="249" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3399,8 +3224,7 @@ p1
         order of value computation for an overloaded comma operator
         -- end note]
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="49" uknum="376" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3427,8 +3251,7 @@ p1
         meaning that it would never run out of memory given this
         program though.)
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="50" uknum="378" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3449,8 +3272,7 @@ p1
         "effective integral type" to "effective integral or
         enumeration type" in the 4th bullet, 1st sub-bullet.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="51" uknum="251" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3473,8 +3295,7 @@ p1
         polymorphic class type" on the bullet for typeid
         expressions.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="76" uknum="131" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3492,8 +3313,7 @@ p1
         'block' or 'compound statement' as the preferred term and
         use it consistently throughout the standard.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="22" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3517,10 +3337,8 @@ statement]
         restriction for case-labels is at best artificial.
         <BR/><BR/>
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="77" uknum="132" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3541,8 +3359,7 @@ statement]
         Profide a cross-reference for the terms:
         i/o operation, synchronize operation and atomic operation
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="11" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3595,8 +3412,7 @@ statement]
          }
         <BR/><BR/>}
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="78" uknum="130" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3618,8 +3434,7 @@ statement]
         concept fundamental along with the other support concepts
         in 14.9.4 and strike any reference to including a header.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="79" uknum="445" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3647,8 +3462,7 @@ statement]
         expression is an initializer_list, expand range-for
         similarly without requiring &lt;iterator_concepts&gt;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="11" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3670,8 +3484,7 @@ p1
         State that such a late-checked block has the same
         meaning as if the late_check keyword were absent.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="80" uknum="370" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3696,8 +3509,7 @@ p1
 <suggestion>
         Strike the first sentence.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="81" uknum="371" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3719,8 +3531,7 @@ p1
         literals may be used instead of a single /string-literal/;
         see [lex.phases].
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="82" uknum="386" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3741,8 +3552,7 @@ p1
         Add "scoped enumeration" to the list in the
         second sentence.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="83" uknum="372" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3763,8 +3573,7 @@ p1
         Not sure. I understand the rule, just not
         how to say it.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="84" uknum="404" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3785,8 +3594,7 @@ p1
         Delete the production (including the
         duplicate in A6)
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="3" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3808,8 +3616,7 @@ p1
 <suggestion>
         See restricted-auto.ppt
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="85" uknum="373" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -3831,8 +3638,7 @@ p1
 <suggestion>
         Replace "global" with "namespace scope".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="86" uknum="403" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3855,8 +3661,7 @@ p1
         Deprecate current usage of the register
         keyword.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="87" uknum="405" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -3879,8 +3684,7 @@ p1
         with thread_local at block-scope inside a function
         definition.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="36" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3899,8 +3703,7 @@ p1
         Add the static members as a
         permitted use.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="23" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -3924,10 +3727,8 @@ p1
         <BR/><BR/>int a[] = { 41,42,43,44 };
         <BR/><BR/>enum { v = size(a) };
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4031,8 +3832,7 @@ p1
 <suggestion>
         Allow constexpr recursion.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="37" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4049,10 +3849,8 @@ p1
         cv-qualifiers for (member) functions being described in
         8.3.5 Functions.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="89" uknum="377" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4092,8 +3890,7 @@ p1
         into one or more notes, with cross references, and correct
         the referenced text if necessary.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="90" uknum="379" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4114,8 +3911,7 @@ para 1 and table 9
         simple-template-id and punting to clause 14 (cf
         decltype(expression)).
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="91" uknum="380" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4147,8 +3943,7 @@ para 1 and table 9
         the second bullet point, move "(parentheses around e are
         ignored)" into a note.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="92" uknum="382" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4169,8 +3964,7 @@ para 1 and table 9
         Either strike the note or add reference to
         11.4/3 and/or mention of "friend T;".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="93" uknum="454" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4189,8 +3983,7 @@ Grammar before para 1
 <suggestion>
         Change to keyword font
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="94" uknum="383" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4214,8 +4007,7 @@ Grammar before para 1
         return type of a function is specified explicitly at the
         end of a function declarator.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="95" uknum="396" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4241,8 +4033,7 @@ Grammar before para 1
         Change "in a new-type-id" to "in a
         new-type-id or type-id in a new-expression".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="24" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4285,10 +4076,8 @@ specifier]
         unnatural and does not fit well with the usage in this
         section.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="38" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4303,10 +4092,8 @@ specifier]
         discussion of attribute specifiers should be a separate
         paragraph.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="39" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4330,8 +4117,7 @@ specifier]
         representation, it should be either affirmed here or the
         statement should be expanded. Perhaps a note is warranted.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="13" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4353,8 +4139,7 @@ para 3
         Replace the description, "same underlying type", with
         "same as underlying type of (previous) declaration."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="96" uknum="384" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4377,8 +4162,7 @@ para 3
         (before "Otherwise"): "If the enumerator-list is empty, 0
         is the only value of the enumeration."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="97" uknum="385" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4399,32 +4183,7 @@ para 3
         object of type color are red, yellow, green, blue; these
         values can be converted ..."
 </suggestion>
-<rationale>
-</rationale>
-</comment>
-
-<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
-<section>
-7.2
-</section>
-<para>
-5
-</para>
-<description>
-        It would be
-        useful to be able to determine the underlying type of an
-        arbitrary enumeration type. This would allow safe casting
-        to an integral type (especially needed for scoped enums,
-        which do not promote), and would allow use of
-        numeric_limits. In general it makes generic programming
-        with enumerations easier.
-</description>
-<suggestion>
-        Add a TransformationTrait to 20.5.6 that
-        returns the underlying type of an enumeration type.
-</suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="99" uknum="421" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4447,8 +4206,7 @@ para 3
         opaque-enum-declaration ... is a complete type" from the
         note to normative text.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4492,8 +4250,7 @@ para 3
         Add the description of the behavior when a member that was
         defined with same name in other namespace was referred.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="100" uknum="387" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4517,8 +4274,7 @@ para 3
         Delete para 10, moving its example into
         para 13.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="101" uknum="388" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4542,8 +4298,7 @@ para 3
         Allow typename for non-dependent names iff
         they refer to a type.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="12" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4559,10 +4314,8 @@ p15
         using-declarations should consider ref-qualifiers, because
         they are part of the function type.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="25" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4586,8 +4339,7 @@ Para 21
         constructs. The syntactic complexity is too high for a new
         feature presumably designed to support sound programming.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="102" uknum="389" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4609,8 +4361,7 @@ Para 21
         Move the example to paragraph 7, and/or
         replace it with an appropriate example.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="40" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4632,8 +4383,7 @@ Para 21
 <suggestion>
         Add the attribute.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="41" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4652,8 +4402,7 @@ Para 21
         An attribute stating intent to
         override would enable better diagnostics.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="26" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4667,10 +4416,8 @@ Para 21
         or not? The section does not appear to indicate that
         clearly.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="1" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4686,8 +4433,7 @@ Para 21
 <suggestion>
         See override&#173;-attribute.doc, override-attribute.ppt
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="27" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4710,10 +4456,8 @@ Para 21
         since no name lookup is performed, how a 'type-id'is
         determined?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="103" uknum="397" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4737,8 +4481,7 @@ Para 21
         attribute-list Add to list in 14.5.3p4: "In an
         attribute-list(7.6.1); the pattern is an attribute."
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="104" uknum="398" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4758,8 +4501,7 @@ Para 21
         7.6.1p1 should move up one level to become
         7.6p1. There grammar should remain under 7.6.1
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="105" uknum="448" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4778,8 +4520,7 @@ Para 21
         attribute-namespace :: identifier add attribute-namespace
         :: attribute-scoped-token
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="106" uknum="391" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4796,8 +4537,7 @@ Para 21
 <suggestion>
         Add cross-reference to 3.11.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="15" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4821,8 +4561,7 @@ Para 21
 <suggestion>
         Change "[dcl.align]" of 7.6.2 to "[decl.attr.align]".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="107" uknum="399" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4843,8 +4582,7 @@ Para 21
         function marked [[noreturn]] might execute a return
         statement -- end note]
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="108" uknum="401" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4864,8 +4602,7 @@ Para 21
         Strike "no diagnostic required" and the
         associated footnote.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="42" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4889,8 +4626,7 @@ Para 21
         <code>[[final]]</code> attribute applied to
         classes".</font>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="109" uknum="392" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4909,8 +4645,7 @@ Para 21
         Replace "Compilation" with "Translation" in
         two places
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="110" uknum="393" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -4930,8 +4665,7 @@ Para 21
         Change the type of foo_head to
         atomic&lt;foo *&gt;[].
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="43" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -4952,8 +4686,7 @@ Para 21
 <suggestion>
         Some simplification is needed.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="111" uknum="457" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4972,8 +4705,7 @@ Para 21
         Add closing bracket like this:
         template&lt;typename... T&gt; void f(T (* ...t)(int, int));
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="44" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -4992,8 +4724,7 @@ Para 21
         It presumably should read:
         "template void f(T (* ...t))(int, int);".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="45" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5079,8 +4810,7 @@ Para 21
         does not occur at the end of a parameter-declaration-list
         is a non-deduced context.&#8221;</font>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="13" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5098,8 +4828,7 @@ p2
 <suggestion>
         Properly quote the grammar from 8.3.5.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="16" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5118,8 +4847,7 @@ p2
 <suggestion>
         Remove one.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="46" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5177,8 +4905,7 @@ p2
         12.4, 12.8, but restricted to special functions in that
         comment. (See US NN).
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="49" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5197,8 +4924,7 @@ p2
         the attached paper "Issues with the C++ Standard" under
         "Editorial Issues" and "8.5.4/6".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="112" uknum="440" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -5218,8 +4944,7 @@ p2
         Add appropriate forward references to
         14.9.4
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="113" uknum="250" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5238,8 +4963,7 @@ p2
         brace-or-equal-initializer. There are two occurrences in
         this paragraph
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="50" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5297,8 +5021,7 @@ p2
         the implicitly-declared copy assignment operator&#8221;
         from the two places it occurs.</span>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="28" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5313,10 +5036,8 @@ initialization]
         This section, in particular the example with `g' appears
         contradictory with the syntax for uniform initialization.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="51" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5331,10 +5052,8 @@ initialization]
         discussion of delegating constructors should be in its own
         paragraph.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="114" uknum="167" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -5367,8 +5086,7 @@ initialization]
         THE MEM-INITIALIZER-ID and the BRACED-INIT-LIST.
         [Example:...
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="52" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5384,8 +5102,7 @@ initialization]
 <suggestion>
         Change &#8220;shal&#8221; to &#8220;shall&#8221;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="115" uknum="432" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -5414,8 +5131,7 @@ initialization]
         templates, and see if other more appropriate mechanism will
         support compile-time optimization.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="116" uknum="434" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -5436,8 +5152,7 @@ initialization]
         templates, or more directly address what it means to export
         a concept map.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="117" uknum="430" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -5459,8 +5174,7 @@ initialization]
         Allow template aliases to be declared
         inside a function scope, and consider scoped concept maps.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="118" uknum="431" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5480,8 +5194,7 @@ initialization]
         Create a new subclause [temp.export]
         containing 14p6-11. Move 14p12 ahead of this subclause.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="119" uknum="433" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -5504,8 +5217,7 @@ initialization]
         have no linkage, or add concept maps to the list of
         entities with linkage in 3.5
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="120" uknum="422" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5525,8 +5237,7 @@ initialization]
         Insert &#8220;(8.3.5)&#8221; after
         &#8220;parameter pack&#8221;
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="121" uknum="423" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5544,8 +5255,7 @@ initialization]
 <suggestion>
         Prefix the example code with "[ Example:"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="29" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5560,10 +5270,8 @@ arguments]
         Constant expressions of any literal type should be
         allowed as template arguments.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="53" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5608,8 +5316,7 @@ arguments]
         template&#8217;s template arguments for its template
         parameters) will be declared as a deleted function (8.4).
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="122" uknum="426" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -5632,8 +5339,7 @@ arguments]
         clarifies they can be used to declare concepts as well as
         templates.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="30" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5667,10 +5373,8 @@ aliases]
         Z1&lt;T&gt; and Z2&lt;T&gt; are the same for all T), but we
         do not see any wording to that effect.
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="17" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5702,8 +5406,7 @@ aliases]
 <suggestion>
         Replace "from" with "forming"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="14" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5721,8 +5424,7 @@ p1
 <suggestion>
         Add the respective bullets.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="18" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5752,8 +5454,7 @@ p1
 <suggestion>
         Replace "from" with "forming"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="19" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5774,8 +5475,7 @@ p1
 <suggestion>
         Remove one
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="54" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
@@ -5798,8 +5498,7 @@ p1
 <suggestion>
         I propose no specific change here.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="55" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5818,8 +5517,7 @@ p1
         rules, thus numbering the single sentence, &#8220;The body
         of a concept &#8230; .&#8221;
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="56" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5837,8 +5535,7 @@ p1
         Change the second such reference (at the end of the
         sentence) to 14.9.1.4 [concept.axiom].
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="57" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5855,8 +5552,7 @@ p1
         Change &#8220;only find &#8230; if&#8221; to &#8220;find
         &#8230; only if&#8221;.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="58" uknum="" type="ed" owner="" issue="" disp="" date="" extdoc="">
@@ -5874,8 +5570,7 @@ p1
         to obtain &#8220;... in the concept, in one of its less
         refined concepts, or in an associated requirement.&#8221;
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="59" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5940,8 +5635,7 @@ p1
         &#8220;condition.&#8221;
         <BR/><BR/>
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="31" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5970,10 +5664,8 @@ p1
         replace one expression by another one when they have side
         effects?
 </description>
-<suggestion>
-</suggestion>
-<rationale>
-</rationale>
+<suggestion></suggestion>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="15" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -5997,8 +5689,7 @@ p1
         the rest of the proposed standard other than the keyword
         reservation in section 2.11.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="123" uknum="248" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6021,8 +5712,7 @@ p1
         Add a paragraph making axioms ill-formed
         inside an auto concept.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="124" uknum="288" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6038,8 +5728,7 @@ p1
 <suggestion>
         weere -&gt; were
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="125" uknum="289" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6064,8 +5753,7 @@ p1
         declared comparison operators, or restrict their usage to
         declaring equivalence between statements.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="126" uknum="438" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6084,8 +5772,7 @@ p1
         Move the second sentence to the Requires
         clause in paragraph 42.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="127" uknum="118" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6103,8 +5790,7 @@ p1
 <suggestion>
         Provide the diagram.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="128" uknum="435" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6126,8 +5812,7 @@ p1
         rvalue references may be Returnable, but not
         CopyConstructible(20.1.8) - end note]
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="20" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -6149,8 +5834,7 @@ p1
         TriviallyCopyableType that is trivially copyable type as
         concept.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="129" uknum="128" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6177,8 +5861,7 @@ p1
         overloading the true keyword to disambiguate but ideally
         would not.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="60" uknum="" type="te" owner="" issue="" disp="" date="" extdoc="">
@@ -6225,8 +5908,7 @@ p1
         list E1, E2, ..., EN, where N is the number of elements in
         the pack expansion parameters.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="130" uknum="32" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6250,8 +5932,7 @@ p1
         Update sentence to allow for exceptions
         held in excpetion_ptr objects.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="131" uknum="34" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6270,8 +5951,7 @@ p1
         Disallow handlers catching by
         rvalue-reference.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="132" uknum="36" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6295,8 +5975,7 @@ p1
         Rewite using copy-initialization rather
         than directly invoking the copy constructor
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="133" uknum="37" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6315,8 +5994,7 @@ p1
         add "or alias-declaration" after "shall not
         appear in a typedef declaration".
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="134" uknum="38" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6336,8 +6014,7 @@ p1
         note explaining why it is worth calling special attention
         to this class.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="135" uknum="39" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6357,8 +6034,7 @@ p1
         arguments or partially constructed bases and members when
         called from a constructor or destructor
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="136" uknum="40" type="Ge" owner="" issue="" disp="" date="" extdoc="">
@@ -6385,8 +6061,7 @@ p1
         checks. Ideally require vendors to provide a mode where the
         runtime checks are always disabled.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="137" uknum="44" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6406,8 +6081,7 @@ p1
         the ability of an exception_ptr to extend the lifetime of
         an exception object
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="138" uknum="41" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6426,8 +6100,7 @@ p1
         Merge the third bullet into the first
         bullet as a note or example.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="139" uknum="42" type="Te" owner="" issue="" disp="" date="" extdoc="">
@@ -6447,8 +6120,7 @@ p1
         Strike the word 'user' from the first
         bullet point.
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="140" uknum="43" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6470,8 +6142,7 @@ p1
         behaviour of std::unexpected if the user does not supply a
         hander-function
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="141" uknum="45" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6487,8 +6158,7 @@ p1
 <suggestion>
         Strike 15.6
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="142" uknum="455" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6505,8 +6175,7 @@ p1
 <suggestion>
         Add "end note ]"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="143" uknum="456" type="Ed" owner="" issue="" disp="" date="" extdoc="">
@@ -6522,8 +6191,7 @@ p1
 <suggestion>
         Change "x,y.z" to "x,y,z"
 </suggestion>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="2" uknum="" type="ge/te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -6537,9 +6205,7 @@ p1
         active issues identified in WG21 N2806, C++ Standard
         Library Active Issues, must be addressed and appropriate
         action taken.
-        <BR/><BR/>
-        
-        <BR/><BR/>
+        <BR/>
         <font color="#000080"><u><a href=
         "http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html">
         http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html</a></u></font>
@@ -6551,8 +6217,7 @@ p1
         a later point in time.
 </suggestion>
 <notes>Acknowledged</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="2" uknum="" type="ge" owner="editor" issue="" disp="" date="" extdoc="">
@@ -6571,8 +6236,7 @@ Library
         FR 2
 </suggestion>
 <notes>Editorial; sent to Pete Becker</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="61" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -6594,8 +6258,7 @@ Library
         level of detail.
 </suggestion>
 <notes>Agreed. Duplicates <a href="#CA2">CA2</a></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="CA" num="2" uknum="" type="Ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -6615,8 +6278,7 @@ Library
         used appropriately in the library.
 </suggestion>
 <notes>Agreed; We intend to address this.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="62" uknum="" type="ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -6629,12 +6291,10 @@ Library
         Provide concepts
         and requirements clauses for all standard library templates
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>Agreed. Duplicates <a href="#CA2">CA2</a>
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -6655,13 +6315,11 @@ Library
         at() to different characters in the same non-const string
         really introduce a data race?
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>17 SG: should go to threads group; misclassified in document
 <BR/><BR/>
     Concurrency SG: Create an issue. Hans will look into it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -6685,8 +6343,7 @@ Library
         initializer-list constructor.
 </suggestion>
 <notes>Robert Klarer to address this one</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="21" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -7279,8 +6936,7 @@ not too onerous to use <TT>wbuffer_convert</TT> and
 <TT>wstring_convert</TT> which were added as intermediaries to
 avoid proliferation of types.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="144" uknum="72" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7299,8 +6955,7 @@ avoid proliferation of types.
         and threads"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="145" uknum="73" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7319,8 +6974,7 @@ avoid proliferation of types.
         library facilities
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="146" uknum="74" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7338,8 +6992,7 @@ avoid proliferation of types.
         expressions
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="147" uknum="75" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7355,8 +7008,7 @@ avoid proliferation of types.
         Add a summary paragraph for threads
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="148" uknum="247" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7377,8 +7029,7 @@ Table 12
         section to which they relate.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="149" uknum="84" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7398,8 +7049,7 @@ Table 12
         char16_t/char32_t values.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="150" uknum="199" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7432,8 +7082,7 @@ Table 12
         singular state.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="151" uknum="77" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7451,8 +7100,7 @@ Table 12
         brackets
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="152" uknum="80" type="Te" owner="LWG" issue="1064" disp="" date="" extdoc="">
@@ -7473,8 +7121,7 @@ Table 12
 <notes>we think we're removing this; Howard to create LWG issue.
 Howard, see [func.referenceclosure.cons]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="153" uknum="82" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7494,8 +7141,7 @@ Howard, see [func.referenceclosure.cons]
         added to reinforce the intent
 </suggestion>
 <notes>editorial; sent to Pete Becker</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="154" uknum="83" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7512,8 +7158,7 @@ Howard, see [func.referenceclosure.cons]
         Add definition from 25.2.12p7
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="155" uknum="78" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7531,8 +7176,7 @@ Howard, see [func.referenceclosure.cons]
         definition of character
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="156" uknum="79" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7551,8 +7195,7 @@ Howard, see [func.referenceclosure.cons]
         using character container type
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="157" uknum="86" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7570,8 +7213,7 @@ Howard, see [func.referenceclosure.cons]
         Add concepts into the sequence
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="158" uknum="87" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7590,8 +7232,7 @@ Howard, see [func.referenceclosure.cons]
         templates' and 'functions and function templates'
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="159" uknum="88" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7611,8 +7252,7 @@ Footnote 152
         with 'original' or similar
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="160" uknum="89" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7636,8 +7276,7 @@ Footnote 152
         Replace 'Requires' with 'Preconditions'
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="161" uknum="90" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7658,8 +7297,7 @@ Footnote 152
         Strike 17.5.2.4p4
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="162" uknum="170" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7681,8 +7319,7 @@ Footnote 152
         and Throws:.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="163" uknum="219" type="Te" owner="LWG" issue="997" disp="" date="" extdoc="">
@@ -7707,8 +7344,7 @@ Tom Plum to open LWG issue; we believe this is related to
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#625">
 LWG625</a>
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="164" uknum="91" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7732,8 +7368,7 @@ LWG625</a>
         CopyConstructible is mis-spelled.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -7754,8 +7389,7 @@ LWG625</a>
         described in N2235
 </suggestion>
 <notes>Robert Klarer to review</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="166" uknum="93" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7773,8 +7407,7 @@ LWG625</a>
         Replace initial refernce to ch27 with ch30
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="167" uknum="246" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7794,8 +7427,7 @@ members
         exposition only To reflect actual usage.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="168" uknum="406" type="Te" owner="LWG" issue="1065" disp="" date="" extdoc="">
@@ -7822,8 +7454,7 @@ members
 </suggestion>
 <notes>Howard will create issue to adopt UK words (some have reservations whether 
     it is correct)</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="169" uknum="95" type="Te" owner="LWG" issue="992" disp="" date="" extdoc="">
@@ -7843,8 +7474,7 @@ members
 </suggestion>
 <notes>Bill Plauger to open issue. If the wording is too broad we need to add an 
     exception to the standard C library.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="170" uknum="96" type="Te" owner="LWG" issue="1002" disp="" date="" extdoc="">
@@ -7871,8 +7501,7 @@ members
         &lt;std&gt; but no definitions.
 </suggestion>
 <notes>Alisdair to open issue. We prefer &lt;std&gt; only.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="171" uknum="98" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -7897,8 +7526,7 @@ members
         partial support.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="172" uknum="99" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -7918,8 +7546,7 @@ members
 </suggestion>
 <notes>NAD. We do not belive at_exit and at_quick_exit should be required by 
     freestanding implementations.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -7942,8 +7569,7 @@ LWG is interested in
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2814.pdf">
 N2814</a>, but we're concerned whether CWG will accept 
 language recommendations.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="23" uknum="" type="te" owner="LWG" issue="1003" disp="" date="" extdoc="">
@@ -7975,8 +7601,7 @@ LWG is interested in
 N2814</a>, but we're concerned whether CWG will accept 
 language recommendations.<BR/><BR/>
 add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="174" uknum="100" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8000,8 +7625,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
         header declares in the translation unit'
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -8020,8 +7644,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
         Remove the reference to external linkage
 </suggestion>
 <notes>we accept the proposed solution. Martin will draft an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="176" uknum="102" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8039,8 +7662,7 @@ Footnote 175
         Change referfence from 17.6.4.3 to 17.6.4.2
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="177" uknum="103" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8059,8 +7681,7 @@ Footnote 175
         Strike the sentence
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="178" uknum="104" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8080,8 +7701,7 @@ Footnote 175
         Strike the sentence
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="179" uknum="105" type="Te" owner="LWG" issue="1004" disp="accepted" date="" extdoc="">
@@ -8102,8 +7722,7 @@ Footnote 175
         Replace the word 'throws' with 'propogates'
 </suggestion>
 <notes>Agreed. Alisdair will draft an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="22" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8135,8 +7754,7 @@ Footnote 175
         paragraph 6, 30.1 paragraph 1, 30.3.1 paragraph 1 also.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="180" uknum="107" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8160,8 +7778,7 @@ Footnote 175
         specification of virtual functions cannot be tightened.
 </suggestion>
 <notes>NAD, the standard already has the desired restriction.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="181" uknum="108" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8184,8 +7801,7 @@ Footnote 186
 </suggestion>
 <notes>We agree that the footnote is wrong and it will be removed. Pete will handle 
     as editorial.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="182" uknum="109" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8206,8 +7822,7 @@ Footnote 188
 </suggestion>
 <notes>NAD. We cannot mandate all standard-library functions that might use some 
     third-party library.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="184" uknum="144" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8228,8 +7843,7 @@ Footnote 188
         standard C library.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="24" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8258,8 +7872,7 @@ Footnote 188
         "18.8 Initializer lists &#8230;"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="25" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8280,8 +7893,7 @@ Footnote 188
         <font size="2" style="font-size: 11pt">SEE ALSO.</font>
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8311,8 +7923,7 @@ limits]
         carrier type.
 </suggestion>
 <notes>Alisdair and Gaby will work on a resolution.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8338,8 +7949,7 @@ limits]
         appropriate, for example SemiRegular.
 </suggestion>
 <notes>Alisdair and Gaby will work on a resolution.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="26" uknum="" type="te" owner="LWG" issue="1005" disp="" date="" extdoc="">
@@ -8381,8 +7991,7 @@ limits]
         numeric_limits&lt;const volatile T&gt;;
 </suggestion>
 <notes>Alisdair will work on a resolution.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8402,8 +8011,7 @@ limits]
         class type_index.
 </suggestion>
 <notes>Doug will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="185" uknum="264" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8422,8 +8030,7 @@ limits]
         Replace &lt;stdint&gt; with &lt;cstdint&gt;
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8460,8 +8067,7 @@ limits]
 </suggestion>
 <notes>Straw polls: pointer safety: 9-1-10; threading: 14-2-9. Jens will open 
     multiple issues.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="186" uknum="265" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8482,8 +8088,7 @@ Footnote 221
         Remove the footnote
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8503,8 +8108,7 @@ Footnote 221
         safe"
 </suggestion>
 <notes>Lawrence Crowl will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="188" uknum="267" type="Te" owner="LWG" issue="993" disp="accepted" date="" extdoc="">
@@ -8524,8 +8128,7 @@ Footnote 221
         Depends on where _Exit comes from
 </suggestion>
 <notes>Agreed. Bill Plauger will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -8546,8 +8149,7 @@ Footnote 221
         rethrow_exception throw_with_nested
 </suggestion>
 <notes>Agreed. Howard will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8580,8 +8182,7 @@ Footnote 221
         18.9: longjmp.
 </suggestion>
 <notes>See <a href="#UK180">UK 180</a></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="190" uknum="268" type="Te" owner="LWG" issue="1006" disp="accepted" date="" extdoc="">
@@ -8602,8 +8203,7 @@ various
         Precondition : ptr is a safely-derived pointer value.
 </suggestion>
 <notes>agreed. Alisdair will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="191" uknum="271" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8625,8 +8225,7 @@ various
         be sure the term 'installed' is defined.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="192" uknum="269" type="Te" owner="CWG" issue="" disp="" date="" extdoc="">
@@ -8648,8 +8247,7 @@ various
         rather than std::length_error
 </suggestion>
 <notes>Howard will open a CWG issue referring to N2814.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="193" uknum="272" type="Te" owner="LWG" issue="994" disp="" date="" extdoc="">
@@ -8671,8 +8269,7 @@ various
 <notes>change &#8220;call either abort() or exit()&#8221;
 to terminate the program. Bill 
     Plauger will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8694,8 +8291,7 @@ to terminate the program. Bill
         &lt;typeindex&gt;.
 </suggestion>
 <notes>already handled by the free-standing paper.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="28" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8718,8 +8314,7 @@ to terminate the program. Bill
 </suggestion>
 <notes>NAD. There is already guidance in the CD. It is the caller's responsibility 
     to internationalize MB character string.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="29" uknum="" type="te" owner="LWG" issue="1007" disp="" date="" extdoc="">
@@ -8746,8 +8341,7 @@ to terminate the program. Bill
         throw_with_nested(T&amp;&amp; t); // [[noreturn]]
 </suggestion>
 <notes>Alisdair will open an issue.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8767,8 +8361,7 @@ to terminate the program. Bill
         Consider nested_exception to support tree structure.
 </suggestion>
 <notes>Howard will ping Bill Plauger to request more information.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="31" uknum="" type="te" owner="LWG" issue="1008" disp="" date="" extdoc="">
@@ -8787,8 +8380,7 @@ to terminate the program. Bill
         a sample program which rethrows exception.
 </suggestion>
 <notes>Alisdair will incorporate this in the JP29 paper.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8810,8 +8402,7 @@ to terminate the program. Bill
         std::initializer_list.
 </suggestion>
 <notes>will be handled in connection with the free-standing paper.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8834,8 +8425,7 @@ to terminate the program. Bill
         instead of &lt;initializer_list&gt;.
 </suggestion>
 <notes>will be handled in connection with the free-standing paper.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="197" uknum="275" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8858,8 +8448,7 @@ to terminate the program. Bill
 </suggestion>
 <notes>NAD. Implementations are permitted to add the requested signature under the 
     as-if rule.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="32" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -8899,8 +8488,7 @@ to terminate the program. Bill
         message easy to recognize what exception was thrown.
 </suggestion>
 <notes>NAD. Q of I.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="64" uknum="" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
@@ -8922,8 +8510,7 @@ to terminate the program. Bill
         include the relevant referenced text
 </suggestion>
 <notes>We believe that this is editorial.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -8980,8 +8567,7 @@ D2840 was renamed
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 N2840</a> and was accepted into the WP in Summit.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="198" uknum="126" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9028,8 +8614,7 @@ N2840</a> and was accepted into the WP in Summit.
 </suggestion>
 <notes>Agree that this is editorial -- forward to project editor. (effective 
     duplicate of <a href="#US69">US 69</a>)</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="199" uknum="127" type="Te" owner="LWG" issue="1015" disp="accepted" date="" extdoc="">
@@ -9053,8 +8638,7 @@ N2840</a> and was accepted into the WP in Summit.
         Replace the term 'program' with 'user'.
 </suggestion>
 <notes>Agree change 'program' to 'user' in clauses 20.1.1 and 20.1.2</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="200" uknum="354" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -9081,8 +8665,7 @@ N2840</a> and was accepted into the WP in Summit.
     copy-constructible, 3 pro - 4 con; pred must be copy-constructible, 4 pro - 
     3 con; no consensus for moving away from the status quo.<BR/><BR/>
     Also see UK245.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="201" uknum="290" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -9105,8 +8688,7 @@ N2840</a> and was accepted into the WP in Summit.
 </suggestion>
 <notes>After consultation with the submitter, we agreed that the suggestion was in 
     error and there is nothing else to be done.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="33" uknum="" type="te" owner="LWG" issue="1016" disp="" date="" extdoc="">
@@ -9127,8 +8709,7 @@ N2840</a> and was accepted into the WP in Summit.
     devoted to numeric issues. Not every possible state for a type must 
     participate in the axioms. For example, pointers are dereferenceable even if 
     some pointers (e.g. the null pointer) should not be dereferenced.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="66" uknum="" type="te" owner="LWG" issue="1017" disp="" date="" extdoc="">
@@ -9147,8 +8728,7 @@ N2840</a> and was accepted into the WP in Summit.
         apply to floating-point types.
 </suggestion>
 <notes>Recommend that we handle the same as JP 33.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="34" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -9177,8 +8757,7 @@ N2840</a> and was accepted into the WP in Summit.
     header includes another anywhere else in the standard. However, the paper 
     that was voted in explicitly did make that guarantee. Removing that 
     guarantee is beyond the scope of this review.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="67" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9196,8 +8775,7 @@ N2840</a> and was accepted into the WP in Summit.
         lvalue reference type.&#8221;
 </suggestion>
 <notes>Yes. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="35" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9217,8 +8795,7 @@ N2840</a> and was accepted into the WP in Summit.
         Correct typo.
 </suggestion>
 <notes>Yes. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="202" uknum="213" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9238,8 +8815,7 @@ N2840</a> and was accepted into the WP in Summit.
         references to pair.
 </suggestion>
 <notes>Yes. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="68" uknum="" type="te/ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9284,8 +8860,7 @@ Section reference corrected from 20.2.12.
         below type; };
 </suggestion>
 <notes>Yes. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="36" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9305,8 +8880,29 @@ Section reference corrected from 20.2.12.
         Correct typo.
 </suggestion>
 <notes>Yes. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
+</comment>
+
+<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
+<section>
+20.5.6
+</section>
+<para></para>
+<description>
+        It would be
+        useful to be able to determine the underlying type of an
+        arbitrary enumeration type. This would allow safe casting
+        to an integral type (especially needed for scoped enums,
+        which do not promote), and would allow use of
+        numeric_limits. In general it makes generic programming
+        with enumerations easier.
+</description>
+<suggestion>
+        Add a TransformationTrait to 20.5.6 that
+        returns the underlying type of an enumeration type.
+</suggestion>
+<notes>Originlly submitted as section: 7.2 ¶ 5</notes>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="accepted" date="" extdoc="">
@@ -9348,8 +8944,7 @@ Section reference corrected from 20.5.
 </suggestion>
 <notes>Editorial (effective duplicate of <a href="#UK198">UK 198</a>).
 Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="205" uknum="253" type="Te" owner="LWG" issue="1019" disp="accepted" date="" extdoc="">
@@ -9372,8 +8967,7 @@ Forward to project editor.</notes>
 <notes>Agree: Add a constexpr conversion operator to class template 
     integral_constant:
     <code>constexpr operator value_type() { return value; }</code></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -9406,8 +9000,7 @@ be well formed:&#8221;
 To: &#8220;The template is_convertible&lt;From, To&gt; inherits either 
 directly or indirectly from true_type if the following code
 is well formed:&#8221;</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="207" uknum="256" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9446,8 +9039,7 @@ Table 36
 <notes>We tend to agree. Forward to project editor. Also recommend that the word 
 &#8220;is&#8221; be replaced with &#8220;evaluates to&#8221;
 in the same text.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="37" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9481,8 +9073,7 @@ Table 41
         &#8221;.&#8221;
 </suggestion>
 <notes>Agree. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="70" uknum="" type="te" owner="LWG" issue="1018" disp="" date="" extdoc="">
@@ -9529,8 +9120,7 @@ Table 51, last row, column 3
 </suggestion>
 <notes>(The correct reference is section 20.5.7, table 41, last row). Agree: 
     Forward to project editor. There are several ways to fix the grammar.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -9582,8 +9172,7 @@ resolved as proposed by me above, the objects returned by bind will already
 be required to have a move constructor, otherwise bind would be unable to 
 return them when F or a type in BoundArgs is move-only.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="39" uknum="" type="te" owner="LWG" issue="1024" disp="modified" date="" extdoc="">
@@ -9657,8 +9246,7 @@ Correct as follows.<BR/><BR/>
        const A&amp;, F&amp;&amp;);
 </PRE>
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="40" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9694,8 +9282,7 @@ Correct as follows.<BR/><BR/>
         F&amp;&amp;);
 </suggestion>
 <notes>Agree, though minor. Forward to project editor (who may disregard).</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="41" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -9735,8 +9322,7 @@ Correct as follows.<BR/><BR/>
 </suggestion>
 <notes>This change would be redundant because function&lt;&gt; is already sufficiently 
     constrained. No actions necessary.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="42" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -9826,8 +9412,7 @@ Correct as follows.<BR/><BR/>
 <notes>As with <a href="#JP41">JP 41</a>, these constraints are redundant given that function&lt;&gt; is 
     already constrained. So we recommend changing each occurence of &#8220;MoveConstructible&#8221; 
     to &#8220;class&#8221;. Note: this issue is also present in func.wrap.func.nullptr.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="208" uknum="338" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -9847,8 +9432,7 @@ Correct as follows.<BR/><BR/>
 </suggestion>
 <notes>Consensus is that this is an expansion of the scope of C++0X and so we 
     recommend no action.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="209" uknum="111" type="Te" owner="LWG" issue="1026" disp="" date="" extdoc="">
@@ -9872,8 +9456,7 @@ Correct as follows.<BR/><BR/>
     change class T to PointeeType T for shared_ptr, weak_ptr and possibly 
     enable_shared_from_this.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="213" uknum="357" type="Te" owner="LWG" issue="1027" disp="accepted" date="" extdoc="">
@@ -9901,8 +9484,7 @@ Correct as follows.<BR/><BR/>
 <notes>[default.allocator]
 
     Agree as stated. A future paper will address additional related issues.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="214" uknum="125" type="Te" owner="LWG" issue="1028" disp="" date="" extdoc="">
@@ -9920,8 +9502,7 @@ Correct as follows.<BR/><BR/>
 </suggestion>
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="210" uknum="124" type="Te" owner="LWG" issue="1029" disp="" date="" extdoc="">
@@ -9941,8 +9522,7 @@ Correct as follows.<BR/><BR/>
 </suggestion>
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="20" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -9975,8 +9555,7 @@ Section reference corrected from 20.7.12.
 <description>
         bind should support move-only functors and bound arguments.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>We look forward to a paper on this topic. We recommend 
 no action until a paper is available. We do think that bind would 
 require further overloads to support move semantics, if indeed move 
@@ -10199,8 +9778,7 @@ Resolved by
 N2840</a>, accepted in New Jersey.<BR/><BR/>
 See <a href="#US65">US 65</a> for detailed notes.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="74.2" uknum="" type="te/ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -10218,8 +9796,7 @@ See <a href="#US65">US 65</a> for detailed notes.
         &#8220;HasConstructor&#8221; (twice).
 </suggestion>
 <notes>Agree. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="modified" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
@@ -10247,8 +9824,7 @@ See <a href="#US65">US 65</a> for detailed notes.
     proposals 1, 2 and 3 in N2834 (simplify pair). Pablo will submit a paper 
     containing only those parts of N2834 in Frankfurt.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="43" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -10287,8 +9863,7 @@ See <a href="#US65">US 65</a> for detailed notes.
         allocator_type = T::allocator_type;
 </suggestion>
 <notes>Agree. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="215" uknum="356" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -10307,8 +9882,7 @@ See <a href="#US65">US 65</a> for detailed notes.
         Remove the {} or fix formatting
 </suggestion>
 <notes>Agree. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -10346,8 +9920,7 @@ See <a href="#US65">US 65</a> for detailed notes.
         20.8.4 and 20.8.5 from clause 23.
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="78" uknum="" type="te" owner="LWG" issue="1031" disp="" date="" extdoc="">
@@ -10377,8 +9950,7 @@ available. We believe that the shared pointer must use the default deleter for t
 Peter Dimov comments: this is basically a request for shared_ptr&lt;&gt;::release 
 in disguise, with all the associated problems. Not a good idea.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -10403,14 +9975,12 @@ in disguise, with all the associated problems. Not a good idea.
         unique_ptr&lt;int, void(*)(void*)&gt;
         p(malloc(sizeof(int)), free); // ok
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>Agree. The unique_ptr(pointer 
 p) <em>Requires</em> clause should be the same as the unique_ptr() <em>
 Requires</em> clause. Note that unique_ptr [unique.ptr] needs concepts.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="44" uknum="" type="te" owner="LWG" issue="1030" disp="accepted" date="" extdoc="">
@@ -10466,8 +10036,7 @@ Section reference corrected from 20.8.13.6.
 look forward to a paper on this topic. We recommend no action until a 
 paper is available.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="80" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -10574,8 +10143,7 @@ also LWG
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#934">
 issue 934</a>.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="82" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -10593,8 +10161,7 @@ after &#182; 1
         in this synopsis.
 </suggestion>
 <notes>[time.clock.hires] Agree. Forward to project editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -10615,8 +10182,7 @@ after &#182; 1
     from PJP: UK216 (which duplicates) <a href="#JP46">JP46</a>, <a href="#JP48">JP48</a>.
     <a href="#JP46">JP46</a> supplies extensive 
     proposed wording; start there.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11327,8 +10893,7 @@ after &#182; 1
         true_type { };
 </suggestion>
 <notes>See UK 216</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="47" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11354,8 +10919,7 @@ after &#182; 1
         Correct typo.
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11383,8 +10947,7 @@ after &#182; 1
         a concept for char_traits.
 </suggestion>
 <notes>See <a href="#UK216">UK 216</a></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="217" uknum="340" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11406,8 +10969,7 @@ after &#182; 1
         };
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="218" uknum="228" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -11433,8 +10995,7 @@ after &#182; 1
 <notes>NAD, we think. basic_string elements have to be POD and PODs may not have 
     overloaded operator&amp;. Need to check whether this is true in light of relaxed 
     POD constraints.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="219" uknum="342" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11454,8 +11015,7 @@ after &#182; 1
         elements"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="220" uknum="339" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11481,8 +11041,7 @@ after &#182; 1
 <notes>We did it differently for basic_string because otherwise rvalue strreaming 
     was producing confusing results with strings, but this difference will be 
     fixed by N2831 if it's accepted.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="33" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11500,11 +11059,9 @@ after &#182; 1
         so could be an enumeration. Probably using
         goodbit is the solution.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11525,8 +11082,7 @@ after &#182; 1
         a concept for codecvt.
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="50" uknum="" type="te" owner="LWG" issue="991" disp="" date="" extdoc="">
@@ -11575,8 +11131,7 @@ after &#182; 1
         WideAllocator</u>&gt; wide_string;
 </suggestion>
 <notes>to be handled by PJ Plauger</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="4" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11594,8 +11149,7 @@ after &#182; 1
         Change to_limit to to_end.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="5" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11634,8 +11188,7 @@ after &#182; 1
         <tt>note ]</tt>
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="6" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11668,8 +11221,7 @@ after &#182; 1
 <notes>Martin Sebor interested in solving this problem (also POSIX group), but 
     addressing it controversial because it's probably too late in the process 
     for what looks like a new feature.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FI" num="7" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11690,8 +11242,7 @@ after &#182; 1
         Change "codeset" to "character set."
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="51" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11729,8 +11280,7 @@ after &#182; 1
         Requires: [fmt,fmtend) shall be a valid range.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11859,8 +11409,7 @@ after &#182; 1
         typedef <u>InputIter</u> iter_type;
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -11951,8 +11500,7 @@ after &#182; 1
         iter_type;
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="54" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11972,8 +11520,7 @@ after &#182; 1
         &lt;list&gt;.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="221" uknum="287" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -11994,8 +11541,7 @@ Table 79
         &lt;forward_list&gt; into &lt;list&gt;.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="222" uknum="295" type="Te" owner="LWG" issue="1034" disp="" date="" extdoc="">
@@ -12031,8 +11577,7 @@ Table 79
         implemented efficiently.
 </suggestion>
 <notes>Agree in principle. We suggest proposed wording:</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="55" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12054,8 +11599,7 @@ Table 79
         "font-size: 11pt">.</font>
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
@@ -12078,8 +11622,7 @@ Table 79
 </suggestion>
 <notes>Agree. Proposed wording will be presented 
     in N2829 or D2840.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="224" uknum="298" type="Te" owner="LWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
@@ -12102,8 +11645,7 @@ Table 79
 </suggestion>
 <notes>Agree except with moving array to clause 
     20. Proposed wording will be presented in D2840.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="225" uknum="299" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12128,8 +11670,7 @@ Table 81
         value type is (const) T".
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="226" uknum="336" type="Te" owner="LWG" issue="1035" disp="" date="" extdoc="">
@@ -12154,8 +11695,7 @@ Table 81
 </suggestion>
 <notes>Agree. The proposed resolution is 
     incomplete. Further work required.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="227" uknum="146" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12176,8 +11716,7 @@ Table 80
         &#8220;assignment&#8221;
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="228" uknum="283" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12196,8 +11735,7 @@ Table 80
         Replace "concep" with "concept"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="229" uknum="284" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12220,8 +11758,7 @@ Table 80
         call destructors for its stored objects"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="230" uknum="147" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -12244,8 +11781,7 @@ Table 80
 </suggestion>
 <notes>After considerable discussion and 
     consideration, we do not feel this is a defect given the reference to [res.on.data.races].</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="56" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12270,8 +11806,7 @@ Table 80
         <BR/><BR/>a.at(n)
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="231" uknum="300" type="Te" owner="LWG" issue="1036" disp="" date="" extdoc="">
@@ -12293,8 +11828,7 @@ Table 80
 </suggestion>
 <notes>Agree with issue and change to [sequence.reqmts]. The changes required to 
     [strings] will be part of the general concept support for that clause.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="232" uknum="301" type="Te" owner="LWG" issue="1037" disp="accepted" date="" extdoc="">
@@ -12314,8 +11848,7 @@ Table 84
         a[n] operation
 </suggestion>
 <notes>Agree. <code>operator[]</code> is defined elsewhere.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="233" uknum="302" type="Te" owner="LWG" issue="1038" disp="accepted" date="" extdoc="">
@@ -12337,8 +11870,7 @@ Table 84
         for: a.at(n).
 </suggestion>
 <notes>Agree.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="234" uknum="346" type="Te" owner="LWG" issue="1039" disp="accepted" date="" extdoc="">
@@ -12360,8 +11892,7 @@ Table 84
         back: { auto tmp = a.end(); --tmp; return *tmp; }
 </suggestion>
 <notes>Agree.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="235" uknum="148" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12384,8 +11915,7 @@ Table 84
         vector&#8221;.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="236" uknum="150" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12414,8 +11944,7 @@ Table 84
         Remove this paragraph
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="237" uknum="334" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12437,8 +11966,7 @@ Table 84
         be used accordingly"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="238" uknum="347" type="Te" owner="LWG" issue="1040" disp="modified" date="" extdoc="">
@@ -12469,8 +11997,7 @@ Table 84
 </suggestion>
 <notes>Agree with issue. Agree with adding the note but not with changing the 
     normative text. We believe the note provides sufficient guidance.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="239" uknum="447" type="Te" owner="LWG" issue="1041" disp="" date="" extdoc="">
@@ -12497,8 +12024,7 @@ Table 84
 </suggestion>
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available. The paper would need to address exception safety.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="240" uknum="427" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12535,8 +12061,7 @@ Table 84
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available. We suspect that there are other similar issues in this 
     sub-clause (9, 10).</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="57" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12556,8 +12081,7 @@ Table 84
         Remove one.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12575,8 +12099,7 @@ Table 84
         add exception to 23.1.1p3
 </suggestion>
 <notes>Duplicate of <a href="#UK224">UK 224</a>.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="242" uknum="355" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12596,8 +12119,7 @@ Table 84
         and std::reverse_iterator&lt;const_iterator&gt;
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="243" uknum="337" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -12623,8 +12145,7 @@ Table 84
     to remove all the r-value-ref <code>swap</code> overloads from containers. 
     Therefore adding them to <code>array</code> has no benefit. So the final 
     disposition is NAD.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="" date="" extdoc="">
@@ -12657,8 +12178,7 @@ Table 84
 </suggestion>
 <notes>Agree with the issue but not the details of the proposed solution. Walter to 
     provide wording for the new concept.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="245" uknum="358" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -12699,8 +12219,7 @@ Table 84
     UK245: status quo, 5 pro - 0 con; add copy-constructible, 1 pro - 3 con; no 
     consensus for moving away from the status quo.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="58" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12719,8 +12238,7 @@ Table 84
         Remove "{"
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="59" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12761,8 +12279,7 @@ Table 84
         first, const_iterator last);
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="83" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12775,12 +12292,10 @@ Table 84
 <description>
         "shrink_to_fint" should be "shrink_to_fit".
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="246" uknum="350" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12805,8 +12320,7 @@ Table 84
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="247" uknum="46" type="Ge" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -12833,8 +12347,7 @@ Table 84
 </suggestion>
 <notes>NAD. We believe the separate header to have value.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="248" uknum="47" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12858,8 +12371,7 @@ Table 84
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12880,8 +12392,7 @@ Table 84
 </suggestion>
 <notes>Howard will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="251" uknum="51" type="Te" owner="LWG" issue="1009" disp="" date="" extdoc="">
@@ -12910,8 +12421,7 @@ Table 84
 </suggestion>
 <notes>Alisdair will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="252" uknum="53" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12931,8 +12441,7 @@ Table 84
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="253" uknum="54" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -12955,8 +12464,7 @@ Table 84
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="254" uknum="55" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12977,8 +12485,7 @@ Table 84
 </suggestion>
 <notes>deferred until we know whether we have axioms.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="255" uknum="56" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -12999,8 +12506,7 @@ Table 84
 </suggestion>
 <notes>deferred until we know whether we have axioms.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="256" uknum="57" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13021,8 +12527,7 @@ Table 84
 </suggestion>
 <notes>deferred until we know whether we have axioms.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="257" uknum="58" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13044,8 +12549,7 @@ Table 84
 </suggestion>
 <notes>NAD, postdecrement_result is deduced.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13066,8 +12570,7 @@ Table 84
 </suggestion>
 <notes>Howard will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="259" uknum="60" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13089,8 +12592,7 @@ Table 84
 </suggestion>
 <notes>NAD unless Alisdair comes back with more motivation.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="260" uknum="61" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13114,8 +12616,7 @@ Table 84
 </suggestion>
 <notes>deferred for axiom decision.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="249" uknum="64" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13138,8 +12639,7 @@ Table 84
 </suggestion>
 <notes>NAD, violates complexity requirements.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="261" uknum="62" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13163,8 +12663,7 @@ In c++std-lib-23104, Daniel Kr&#252;gler commented, &#8220;this
 type of any operator[] as described by
 [concept.map.assoc]/4+5.&#8221;
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="262" uknum="65" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13188,8 +12687,7 @@ type of any operator[] as described by
 <notes>default implementation already in Standard; axiom part 
 deferred.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="263" uknum="66" type="Te" owner="LWG" issue="1010" disp="" date="" extdoc="">
@@ -13212,8 +12710,7 @@ deferred.
 </suggestion>
 <notes>Alisdair will open an issue, axiom part deferred.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="264" uknum="67" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13234,8 +12731,7 @@ deferred.
 </suggestion>
 <notes>deferred/axiom.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13256,8 +12752,7 @@ deferred.
 </suggestion>
 <notes>Doug will open issue: strike effect, returns n.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="266" uknum="69" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13280,8 +12775,7 @@ deferred.
 <notes>default definition is not implementable; axiom part 
 deferred.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="267" uknum="70" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13302,8 +12796,7 @@ deferred.
 </suggestion>
 <notes>deferred/axiom.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="268" uknum="71" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13327,8 +12820,7 @@ deferred.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="60" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13460,8 +12952,7 @@ deferred.
 <notes>NAD, beyond the scope of the Standard because we are not 
 supplying range-based algorithms.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="269" uknum="16" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13481,8 +12972,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13504,8 +12994,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>Howard will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="271" uknum="145" type="Te" owner="LWG" issue="1011" disp="" date="" extdoc="">
@@ -13528,8 +13017,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>Alisdair will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="272" uknum="159" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13562,8 +13050,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>NAD, no consensus.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="274" uknum="119" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13591,8 +13078,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="275" uknum="18" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13614,8 +13100,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>NAD, withdrawn by submitter.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="276" uknum="19" type="Ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13636,8 +13121,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>NAD, not editorial, withdrawn by submitter.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="277" uknum="20" type="Te" owner="LWG" issue="1012" disp="" date="" extdoc="">
@@ -13668,8 +13152,7 @@ supplying range-based algorithms.
 </suggestion>
 <notes>agree with option i, Alisdair will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="278" uknum="21" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13694,8 +13177,7 @@ supplying range-based algorithms.
 <notes>NAD, we don't believe that copy elision is a 
 sufficiently high priority for iterator types.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13719,8 +13201,7 @@ sufficiently high priority for iterator types.
 <notes>under discussion. This is a general question about all 
 iterator adapters.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="280" uknum="22" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13742,8 +13223,7 @@ iterator adapters.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="281" uknum="23" type="Te" owner="LWG" issue="1052" disp="" date="" extdoc="">
@@ -13766,8 +13246,7 @@ iterator adapters.
 <notes>study group formed to come up with a suggested 
 resolution.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -13794,8 +13273,7 @@ n/a
 </suggestion>
 <notes>deferred to discussion of N2831.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="283" uknum="156" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -13821,8 +13299,7 @@ n/a
 <notes>NAD. This is compatible with C++03; and we lack a 
 consensus for change.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="61" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13845,8 +13322,7 @@ consensus for change.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -13865,8 +13341,7 @@ consensus for change.
 </suggestion>
 <notes>We agree. To be handled by Howard, Martin and PJ.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="285" uknum="27" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13887,8 +13362,7 @@ consensus for change.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="286" uknum="28" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13912,8 +13386,7 @@ consensus for change.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="287" uknum="25" type="Te" owner="LWG" issue="788" disp="" date="" extdoc="">
@@ -13942,8 +13415,7 @@ consensus for change.
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#788">
 issue 788</a>.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="288" uknum="29" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13964,8 +13436,7 @@ issue 788</a>.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="289" uknum="30" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -13992,8 +13463,7 @@ issue 788</a>.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="290" uknum="160" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14014,8 +13484,7 @@ issue 788</a>.
 </suggestion>
 <notes>We agree and believe it to be editorial.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="291" uknum="161" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -14037,8 +13506,7 @@ issue 788</a>.
 <notes>NAD. This is compatible with C++03; and we lack a 
 consensus for change.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="34" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14054,12 +13522,10 @@ consensus for change.
         sections, and the content of the second one is indented
         with respect to the first. I don't it should be.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="292" uknum="163" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14080,8 +13546,7 @@ consensus for change.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="293" uknum="164" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14109,8 +13574,7 @@ consensus for change.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="294" uknum="166" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -14138,8 +13602,7 @@ consensus for change.
 <notes>NAD. This could potentially [break] C++03-conforming 
 programs.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="295" uknum="173" type="Te" owner="LWG" issue="1053" disp="rejected" date="" extdoc="">
@@ -14162,8 +13625,7 @@ programs.
 <notes>NAD, this change would break code that takes the address 
 of an algorithm.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="62" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -14189,8 +13651,7 @@ of an algorithm.
 </suggestion>
 <notes>no consensus to make the change.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="296" uknum="183" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -14212,8 +13673,7 @@ of an algorithm.
 </suggestion>
 <notes>no consensus to make the change.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="297" uknum="185" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14235,8 +13695,7 @@ of an algorithm.
 </suggestion>
 <notes>Editor requests guidance: we agree that it is editorial.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="298" uknum="186" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14257,8 +13716,7 @@ of an algorithm.
 <notes>We agree with the suggested change and believe that it 
 is editorial.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="299" uknum="352" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14281,8 +13739,7 @@ is editorial.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="300" uknum="351" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -14314,8 +13771,7 @@ is editorial.
 </suggestion>
 <notes>no consensus to make the change.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14339,8 +13795,7 @@ is editorial.
 </suggestion>
 <notes>agreed. Howard will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="302" uknum="187" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14361,8 +13816,7 @@ is editorial.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="303" uknum="188" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14383,8 +13837,7 @@ is editorial.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="304" uknum="189" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14403,8 +13856,7 @@ is editorial.
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="305" uknum="335" type="Te" owner="LWG" issue="1013" disp="accepted" date="" extdoc="">
@@ -14426,8 +13878,7 @@ is editorial.
 <notes>agreed. We request that someone from the UK open an 
 issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14439,15 +13890,13 @@ issue.
 <description>
         Parts of the numerics chapter are not concept enabled.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>The portions of this comment dealing 
 with random numbers are resolved by
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
 N2836</a>, which was accepted in New Jersey.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14464,11 +13913,9 @@ numbers]
         types, to reflect existing practice and ISO standards
         (LIA-III).
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="306" uknum="113" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
@@ -14489,8 +13936,7 @@ numbers]
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
 N2836</a>, which was accepted in New Jersey.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="63" uknum="" type="te" owner="LWG" issue="874" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
@@ -14535,8 +13981,7 @@ This comment is also covered by
 issue 874</a>. [Suggested by Daniel Kr&#252;gler and confirmed by the
 submitter.]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="64" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14555,8 +14000,7 @@ submitter.]
         (initializer_list&lt;T&gt;);
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="307" uknum="394" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14578,8 +14022,7 @@ Footnote 288
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14592,11 +14035,9 @@ Footnote 288
         The
         input/output chapter is not concept enabled.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14614,8 +14055,7 @@ Footnote 288
         library, clause 27
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14635,8 +14075,7 @@ Footnote 288
         with "explicit operator bool() const;"
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14658,8 +14097,7 @@ Footnote 288
         with "explicit operator bool() const;"
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="36" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14679,12 +14117,10 @@ Footnote 288
         so could be an enumeration. Probably using
         <BR/><BR/>goodbit is the solution.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="37" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -14706,12 +14142,10 @@ Footnote 288
         <BR/><BR/>The parentheses aren't
         balanced.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14808,8 +14242,7 @@ Footnote 288
         <BR/><BR/>}
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -14931,8 +14364,7 @@ Footnote 288
         <BR/><BR/>}
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15054,8 +14486,7 @@ Footnote 288
         <BR/><BR/>}
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="71" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15084,8 +14515,7 @@ Footnote 288
 </suggestion>
 <notes>[Being reviewed by Editor]
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15204,8 +14634,7 @@ Footnote 288
         <BR/><BR/>}
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15224,8 +14653,7 @@ Footnote 288
         interface corresponding to wchar_t, char16_t and char32_t.
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15238,13 +14666,11 @@ Footnote 288
         The
         regular expressions chapter is not concept enabled.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>US86, UK309, UK310: We believe that an issue can be 
 opened and we await a volunteer.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15264,8 +14690,7 @@ opened and we await a volunteer.
 <notes>US86, UK309, UK310: We believe that an issue can be 
 opened and we await a volunteer.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15285,8 +14710,7 @@ opened and we await a volunteer.
 </suggestion>
 <notes>US86, UK309, UK310: We believe that an issue can be 
 opened and we await a volunteer.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15311,8 +14735,7 @@ opened and we await a volunteer.</notes>
 </suggestion>
 <notes>deferred to discussion of N2831.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="315" uknum="344" type="Te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15335,8 +14758,7 @@ p6
 </suggestion>
 <notes>We believe that this is editorial.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -15355,8 +14777,7 @@ p6
 </suggestion>
 <notes>We agree and await assistance from the UK.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="317" uknum="278" type="Te" owner="LWG" issue="1014" disp="" date="" extdoc="">
@@ -15381,8 +14802,7 @@ p6
 </suggestion>
 <notes>UK317, JP74: Alisdair will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="74" uknum="" type="te" owner="LWG" issue="1014" disp="" date="" extdoc="">
@@ -15401,8 +14821,7 @@ p6
 </suggestion>
 <notes>UK317, JP74: Alisdair will open an issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="318" uknum="279" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15421,8 +14840,7 @@ para 22
         Move para 22 to just after para 17.
 </suggestion>
 <notes></notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="319" uknum="280" type="Te" owner="LWG" issue="909" disp="" date="" extdoc="">
@@ -15469,8 +14887,7 @@ para 22
 In c++std-lib-23130, Daniel Kr&#252;gler pointed out that this comment
 is already covered by issue 909.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15484,15 +14901,13 @@ is already covered by issue 909.
         atomics chapter is not concept enabled. The adopted paper,
         N2427, did have those concepts.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>Create an issue for concepts in the atomics chapter. See 
 N2427. Needs to also consider issues 
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#923">923</a> and 
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#924">924</a>.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="311" uknum="116" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15511,8 +14926,7 @@ N2427. Needs to also consider issues
 </suggestion>
 <notes>Duplicate of US 87.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15541,8 +14955,7 @@ N2427. Needs to also consider issues
 resolvable with a footnote for clarity stating that the header is 
 defined where it exists.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="75" uknum="" type="ed" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -15706,8 +15119,7 @@ defined where it exists.
 syntax is most appropriate for an interface that is intended to be 
 highly compatible with C.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15737,8 +15149,7 @@ UK 313 Update and LWG
 926</a>: Accept proposed resolution, correcting 
 spelling. Move to review state. Hans to ask additional review from cpp-threads.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15761,8 +15172,7 @@ to Lawrence. Description of issue should be based on what is in the
 additional notes for US 88.<BR/><BR/>
 See wiki for further comments.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="89" uknum="" type="te" owner="LWG" issue="937" disp="" date="" extdoc="">
@@ -15786,8 +15196,7 @@ Table 122
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#927">Issue 937</a>. Direct the editor to turn the types into typedefs as proposed in the comment. Paper approved by committee used 
 typedefs, this appears to have been introduced as an editorial change. 
 Rationale: for compatibility with C.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15808,8 +15217,7 @@ Rationale: for compatibility with C.</notes>
 <notes>Create an issue. Assigned to Lawrence Crowl. Should 
 explicitly consider the process shared issue.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="91" uknum="" type="te" owner="LWG" issue="1043" disp="accepted" date="" extdoc="">
@@ -15833,8 +15241,7 @@ explicitly consider the process shared issue.
 Group agrees with the resolution as proposed by Anthony Williams in the 
 attached note.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="92" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -15857,8 +15264,7 @@ requires proposed wording.<BR/><BR/>
 Later: Mark as Not A Defect. 
 We can not see the issue being suggested by the comment.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="76" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15896,8 +15302,7 @@ We can not see the issue being suggested by the comment.
 </suggestion>
 <notes>Pass on to editor.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15910,13 +15315,11 @@ We can not see the issue being suggested by the comment.
         The
         thread chapter is not concept enabled.
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>Create an issue. Need to find volunteers to work on 
 this.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -15935,8 +15338,7 @@ this.
 </suggestion>
 <notes>Duplicate of <a href="#US93">US 93</a>.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="321" uknum="172" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15963,8 +15365,7 @@ this.
 </suggestion>
 <notes>Pass on to editor.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="94" uknum="" type="te" owner="editor" issue="" disp="" date="" extdoc="">
@@ -15991,8 +15392,7 @@ this.
         value.&#8221;</font>
 </suggestion>
 <notes>Reclassify as editorial. Pass on to editor, wording roughly as proposed.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="95" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -16021,8 +15421,7 @@ this.
 </suggestion>
 <notes>Not a defect. native_handle_type is a typedef, but it is also a member of 
     the classes in question.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -16045,8 +15444,7 @@ this.
 <notes>There is a good definition. NAD. There are other problems here (see issue 
     <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#859">859</a>). Create an issue, together with UK 322. Detlef will write the issue, 
     but not proposed wording. Refer also to sections [time.clock.req] and [time.clock.monotonic].</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16069,8 +15467,7 @@ this.
     already allows a non-monotonic clock due to the word &#8220;should&#8221; rather than 
     &#8220;shall&#8221;. If this wording is kept, a footnote should be added to make the 
     meaning clear.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
@@ -16099,8 +15496,7 @@ this.
 </suggestion>
 <notes>Create an issue, goes to review. Attention: Howard. Group agrees with the 
     proposed resolution.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
@@ -16120,8 +15516,7 @@ this.
 </suggestion>
 <notes>Not a defect. See [unord.hash], where std::thread:id is already listed as a 
     required specialization for std::hash().</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16141,8 +15536,7 @@ this.
         a concept for constructor of thread.
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="78" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -16161,8 +15555,7 @@ this.
         Replace "Ti" with "args"
 </suggestion>
 <notes>Pass on to editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
@@ -16182,8 +15575,7 @@ this.
 </suggestion>
 <notes>Create an issue. To be discussed in full library group.<BR/><BR/>
     Later: straw poll 10-0, put N2802 Alternative 2 on formal motions page.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="US" num="98" uknum="" type="" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16206,8 +15598,7 @@ this.
         "Implicit thread detach is harmful".
 </suggestion>
 <notes>Duplicate of US 97.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="325" uknum="174" type="Te" owner="LWG" issue="1044" disp="" date="" extdoc="">
@@ -16234,8 +15625,7 @@ this.
 <notes>Create an issue. Move to review, attention: Howard. The current 
     specification is a &#8220;hack&#8221;, and the proposed specification is a better 
     &#8220;hack&#8221;.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="326" uknum="176" type="Te" owner="LWG" issue="1045" disp="accepted" date="" extdoc="">
@@ -16262,8 +15652,7 @@ this.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Proposed resolution is 
     fine.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16299,8 +15688,7 @@ this.
     means for recursive locks when you are the owner. POSIX has language on 
     this, which should ideally be followed. Proposed fix is not quite right, for 
     example, try_lock should have different wording from lock.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16322,8 +15710,7 @@ this.
 </suggestion>
 <notes>Handle in same issue as UK 327. Also uncertain that the proposed resolution 
     is the correct one.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="329" uknum="203" type="Te" owner="LWG" issue="1046" disp="" date="" extdoc="">
@@ -16377,8 +15764,7 @@ to avoid deadlock async() would almost certainly be specified to
 launch in a different thread from the thread that executed
 async(), but I don't think it was a specific design constraint.
 </notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="330" uknum="424" type="Ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16401,8 +15787,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Related to <a href="#JP79">JP 79</a> and therefore subset of <a href="#US93">US 93</a>. Should be addressed under 
     the issue corresponding to US 93.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16441,8 +15826,7 @@ async(), but I don't think it was a specific design constraint.
         UsesAllocator&lt;promise&lt;R&gt;, Alloc&gt;;
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16466,8 +15850,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Assigned to Detlef. Suggested resolution probably makes 
     sense.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="332" uknum="194" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -16492,8 +15875,7 @@ async(), but I don't think it was a specific design constraint.
         API.
 </suggestion>
 <notes>Pass on to editor. Detlef has volunteered to provide some wording.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16513,8 +15895,7 @@ async(), but I don't think it was a specific design constraint.
         Requires fully baked concepts for clause 30
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="334" uknum="196" type="Te" owner="LWG" issue="1047" disp="accepted" date="" extdoc="">
@@ -16536,8 +15917,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Proposed resolution is 
     fine.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="335" uknum="436" type="Te" owner="LWG" issue="1048" disp="" date="" extdoc="">
@@ -16565,8 +15945,7 @@ async(), but I don't think it was a specific design constraint.
         Then we can say: if(uf.waitable()) uf.wait();
 </suggestion>
 <notes>Create an issue. Requires input from Howard. Probably NAD.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16594,8 +15973,7 @@ async(), but I don't think it was a specific design constraint.
         operator which transfers ownership.
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="80" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -16614,8 +15992,7 @@ async(), but I don't think it was a specific design constraint.
         Remove one
 </suggestion>
 <notes>Pass on to editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16634,8 +16011,7 @@ async(), but I don't think it was a specific design constraint.
         Add a move constructor
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16671,8 +16047,7 @@ async(), but I don't think it was a specific design constraint.
         state.
 </suggestion>
 <notes>Create an issue. Detlef will look into it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="339" uknum="200" type="Te" owner="LWG" issue="1049" disp="accepted" date="" extdoc="">
@@ -16695,8 +16070,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Proposed resolution is 
     fine.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="340" uknum="201" type="Te" owner="LWG" issue="1051" disp="accepted" date="" extdoc="">
@@ -16718,8 +16092,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Proposed resolution is 
     fine.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16739,8 +16112,7 @@ async(), but I don't think it was a specific design constraint.
         reference.
 </suggestion>
 <notes>Create an issue. Detlef will look into it. Probably ready as it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16760,8 +16132,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Move to review, attention: Howard. Detlef will also look 
     into it.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16785,8 +16156,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Create an issue. Detlef will look into it. Will solicit feedback from Pablo. 
     Note that &#8220;rhs&#8221; argument should also be an rvalue reference in any case.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16878,8 +16248,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93. 
     We do not consider this to be an editorial change.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="23" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
@@ -16902,8 +16271,7 @@ p2
 </suggestion>
 <notes>Create issue, share with DE 25. See 
     <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2826.html">N2826</a>. Attention: core group.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16923,8 +16291,7 @@ p2
 </suggestion>
 <notes>Create issue, proposed resolution as in comment. Attention: LWG subgroup 2. 
     Note the section in N2800 is actually 20.6.12.1.4 [func.bind.place].</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="DE" num="25" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
@@ -16949,8 +16316,7 @@ p2
         instantiations [17]".
 </suggestion>
 <notes>Create issue, share with DE 23. Attention: core group.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="38" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
@@ -16977,8 +16343,7 @@ C.2
 <notes>Create issue. Document in question should be C99, not C90+amendment1. The 
     rest of the section requires careful review for completeness. Example &lt;cstdint&gt; 
     18.3.1 [csdtint.sym]. Assign to C liasons.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="UK" num="344" uknum="136" type="Ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
@@ -17004,8 +16369,7 @@ Appendix D
     Bill Plauger<BR/><BR/>
     Update 2009-03-04: Mark as NAD. Compiler switches are outside the domain of 
     the standard.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 <comment nb="FR" num="39" uknum="" type="ed" owner="editor" issue="" disp="" date="" extdoc="">
@@ -17023,11 +16387,9 @@ Index
         increase the usefulness; having a separate index of all
         definitions is something which could also be considered).
 </description>
-<suggestion>
-</suggestion>
+<suggestion></suggestion>
 <notes>  Pass to the editor.</notes>
-<rationale>
-</rationale>
+<rationale></rationale>
 </comment>
 
 </document>
