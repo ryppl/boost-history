@@ -329,7 +329,7 @@ public:
                 return;
                 
             m_header.m_children[0] = other.m_header.m_children[0];
-            m_header.m_children[0]->m_parent = &m_header;
+            static_cast<node_base_pointer>(m_header.m_children[0])->m_parent = &m_header;
 
             m_header.m_children[1] = other.m_header.m_children[1];
             //m_header.m_parent = other.m_header.m_parent;
@@ -343,7 +343,7 @@ public:
         
         if (other.empty()) {
             other.m_header.m_children[0] = m_header.m_children[0];
-            other.m_header.m_children[0]->m_parent = &other.m_header;
+            static_cast<node_base_pointer>(other.m_header.m_children[0])->m_parent = &other.m_header;
             
             other.m_header.m_children[1] = m_header.m_children[1];
             //other.m_header.m_parent = m_header.m_parent;
@@ -357,8 +357,8 @@ public:
         
         swap(m_header, other.m_header);
         //swap(m_header.m_children[0]->m_parent, other.m_header.m_children[0]->m_parent);
-        m_header.m_children[0]->m_parent = &m_header;
-        other.m_header.m_children[0]->m_parent = &other.m_header;
+        static_cast<node_base_pointer>(m_header.m_children[0])->m_parent = &m_header;
+        static_cast<node_base_pointer>(other.m_header.m_children[0])->m_parent = &other.m_header;
         
         return;
     }

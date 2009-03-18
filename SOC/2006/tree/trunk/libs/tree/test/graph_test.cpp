@@ -18,8 +18,8 @@
 
 #include <boost/tree/balance.hpp>
 
-
 #include "test_tree_traversal_data.hpp"
+#include "binary_tree_test_data.hpp" // TODO: Remove
 
 typedef boost::tree::augmented_type< int, boost::default_color_type > data_type;
 

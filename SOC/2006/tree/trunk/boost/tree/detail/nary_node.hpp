@@ -56,6 +56,11 @@ public:
     {
         return m_parent;
     }
+    
+    void attach(node_with_parent_base* p_node)
+    {
+        p_node->m_parent = this;
+    }
 };
 
 //template <template <typename> class Container>
@@ -105,10 +110,11 @@ public:
 //};
 
 class node_base;
+class node_with_children_base;
 
 class node_with_children_base {
 public:
-    typedef array<node_base*, 2> children_type;
+    typedef array<node_with_children_base*, 2> children_type;
     
     node_with_children_base()
     {
@@ -120,6 +126,15 @@ public:
         for (children_type::size_type i=0; i<children_type::size(); ++i)
             m_children[i] = 0;
     }
+
+    void attach(node_with_children_base* p_node, children_type::size_type m_pos)
+    {
+        // Only relevant for non-leaf insertion:
+        p_node->m_children[m_pos] = m_children[m_pos];
+
+        m_children[m_pos] = p_node;
+    }
+
 //protected:
     children_type m_children;
 };
@@ -164,9 +179,9 @@ public:
     children_type::size_type rotate(children_type::size_type const& c)
     {
         //TODO: Optimise.
-        base_pointer q = m_children[c];
+        base_pointer q = static_cast<node_base*>(m_children[c]);
         
-        base_pointer B = m_children[c]->m_children[(c ? 0 : 1)];
+        base_pointer B = static_cast<node_base*>(m_children[c]->m_children[(c ? 0 : 1)]);
         //pre_rotate();
         
         //B swaps places with its m_parent:
@@ -185,24 +200,23 @@ public:
 
     void attach(base_pointer p_node, children_type::size_type m_pos)
     {
-        p_node->m_parent = this;
+        node_with_parent_base::attach(p_node);
         
         // Only relevant for non-leaf insertion:
         if (m_children[m_pos] != 0)
-            m_children[m_pos]->m_parent = p_node;
-        p_node->m_children[m_pos] = m_children[m_pos];
+            static_cast<node_base*>(m_children[m_pos])->m_parent = p_node;
 
-        m_children[m_pos] = p_node;
+        node_with_children_base::attach(p_node, m_pos);
     }
     
     base_pointer detach(children_type::size_type m_pos)
     {
-        base_pointer q = m_children[m_pos];
+        base_pointer q = static_cast<node_base*>(m_children[m_pos]);
         m_children[m_pos] = 
             m_children[m_pos]
           ->m_children[((m_children[m_pos])
           ->m_children[0] == 0 ? 1 : 0)];
-        m_children[m_pos]->m_parent = this;
+        static_cast<node_base*>(m_children[m_pos])->m_parent = this;
         return q;
     }
     
@@ -221,7 +235,7 @@ public:
 
         for (children_type::size_type i=0; i<children_type::max_size(); ++i) {
             m_children[i] = other->m_children[i];
-            m_children[i]->m_parent = this;
+            static_cast<node_base*>(m_children[i])->m_parent = this;
         }
         return x;
     }

@@ -172,7 +172,8 @@ private:
 
     void left()
     {
-        this->base_reference() = this->base_reference()->m_children[m_pos];
+        this->base_reference() = 
+            static_cast<node_base*>(this->base_reference()->m_children[m_pos]);
         m_pos  = 0;
         //this->base_reference() = this->base_reference()->operator[0];
     }
@@ -180,7 +181,8 @@ private:
     void right()
     {
         size_type new_pos = this->base_reference()->m_children.size()-1; 
-        this->base_reference() = this->base_reference()->m_children[m_pos];
+        this->base_reference() = 
+            static_cast<node_base*>(this->base_reference()->m_children[m_pos]);
         m_pos  = new_pos;
         //this->base_reference() = this->base_reference()->operator[0];
     }

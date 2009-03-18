@@ -16,7 +16,6 @@
 General:
 * Do we need to_{left|right}most_ancestor?
 * Do we need multiway and plain cursor "flavor" tags (for algorithms)?
-* Fix cursor archetype
 * In case of forest cursor, is_leaf() should really be empty().
 * Further reduce test data redundancy: make mock cursor use the data from fake_binary_tree, 
   and give it an Order template argument. Calculate *order positions from level order indices
@@ -30,18 +29,17 @@ General:
   (The data pairs position--value
   are always the same, but the order in which they are accessed depends on the order of the
   algorithm acting on them).
-* Get rid of lists used for order checking. Use mock cursor instead.
 * Clean up binary_tree_test
-* binary_tree_search_test -> lower_bound_test
 * preorder_insert_cursor: hopefully easy to implement...
 * Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!).
   This seems to raise one issue, though: subtree algorithms operate on subtree root cursors,
-  not ranges. (They might, however, work for "subforests". Consult Austern's segmented 
+  not ranges.* binary_tree_search_test -> lower_bound_test
+   (They might, however, work for "subforests". Consult Austern's segmented 
   iterators paper!)
   They also work for the important special case in which forest consists of only one
   subtree!
-* Improve cursor_archetype. Currently, there's trouble eg with constructors.
+* Fix cursor_archetype. Currently, there's trouble eg with constructors.
 * Remove a cursor's cursor, const_cursor, iterator and const_iterator typedefs?
   The latter two only make sense in a range algorithm context, where they might actually be
   useful. (The former two are just aliases for completeness' sake.)

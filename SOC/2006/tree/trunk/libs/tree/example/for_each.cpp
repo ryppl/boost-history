@@ -11,7 +11,7 @@
 
 #include <iostream>
 
-#include "../test/test_tree_traversal_data.hpp"
+#include "../test/binary_tree_test_data.hpp"
 
 using namespace boost::tree;
 

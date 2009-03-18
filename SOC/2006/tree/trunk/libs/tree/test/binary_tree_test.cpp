@@ -12,7 +12,7 @@
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
-//
+#include "binary_tree_test_data.hpp"
 #include "test_tree_traversal_data.hpp"
 #include "fake_binary_tree.hpp"
 
