@@ -5,6 +5,29 @@
   docno="PL22.16 09/xxxx = WG21 Nyyyy"
 >
 
+<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
+<section>
+20.5.6
+</section>
+<para></para>
+<description>
+        It would be
+        useful to be able to determine the underlying type of an
+        arbitrary enumeration type. This would allow safe casting
+        to an integral type (especially needed for scoped enums,
+        which do not promote), and would allow use of
+        numeric_limits. In general it makes generic programming
+        with enumerations easier.
+</description>
+<suggestion>
+        Add a TransformationTrait to 20.5.6 that
+        returns the underlying type of an enumeration type.
+</suggestion>
+<notes>Originlly submitted as section: 7.2 ¶ 5</notes>
+<rationale>
+</rationale>
+</comment>
+
 <comment nb="FR" num="1" uknum="" type="ge" owner="" issue="" disp="" date="" extdoc="">
 <section>
 General Comment
@@ -6622,10 +6645,7 @@ Library
 </comment>
 
 <comment nb="JP" num="21" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
-<section>
-        17
-        Library
-        21.2, 21.4,
+<section>21.2, 21.4,
         27.2, 27.6,
 27.7,
 27.8.1,
@@ -6645,568 +6665,569 @@ Library
 <suggestion>
         Add commented
         lines corresponding to char16_t, char32_t.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         21.2 paragraph1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         // 21.4: numeric conversions
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         int stoi(const u16string&amp; str, size_t *idx = 0,
         int base = 10);
-        <BR/><BR/>
+        <BR/>
         long stol(const u16string&amp; str, size_t *idx = 0,
         int base = 10);
-        <BR/><BR/>
+        <BR/>
         unsigned long stoul(const u16string&amp; str, size_t
         *idx = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         long long stoll(const u16string&amp; str, size_t *idx
         = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         unsigned long long stoull(const u16string&amp; str,
         size_t *idx = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         float stof(const u16string&amp; str, size_t *idx =
         0);
-        <BR/><BR/>
+        <BR/>
         double stod(const u16string&amp; str, size_t *idx =
         0);
-        <BR/><BR/>
+        <BR/>
         long double stold(const u16string&amp; str, size_t
         *idx = 0);
-        <BR/><BR/>
+        <BR/>
         u16string to_u16string(long long val);
-        <BR/><BR/>
+        <BR/>
         u16string to_u16string(unsigned long long val);
-        <BR/><BR/>
+        <BR/>
         u16string to_u16string(long double val);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
          int stoi(const u32string&amp; str, size_t *idx = 0,
         int base = 10);
-        <BR/><BR/>
+        <BR/>
         long stol(const u32string&amp; str, size_t *idx = 0,
         int base = 10);
-        <BR/><BR/>
+        <BR/>
         unsigned long stoul(const u32string&amp; str, size_t
         *idx = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         long long stoll(const u32string&amp; str, size_t *idx
         = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         unsigned long long stoull(const u32string&amp; str,
         size_t *idx = 0, int base = 10);
-        <BR/><BR/>
+        <BR/>
         float stof(const u32string&amp; str, size_t *idx =
         0);
-        <BR/><BR/>
+        <BR/>
         double stod(const u32string&amp; str, size_t *idx =
         0);
-        <BR/><BR/>
+        <BR/>
         long double stold(const u32string&amp; str, size_t
         *idx = 0);
-        <BR/><BR/>
+        <BR/>
         u32string to_u32string(long long val);
-        <BR/><BR/>
+        <BR/>
         u32string to_u32string(unsigned long long val);
-        <BR/><BR/>
+        <BR/>
         u32string to_u32string(long double val);
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         27.2
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef basic_ios&lt;char&gt; ios;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ios&lt;wchar_t&gt; wios;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ios&lt;char16_t&gt; u16ios;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ios&lt;char32_t&gt; u32ios;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;wchar_t&gt; wifstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;wchar_t&gt; wofstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_fstream&lt;wchar_t&gt; wfstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_streambuf&lt;char16_t&gt; u16streambuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istream&lt;char16_t&gt; u16istream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostream&lt;char16_t&gt; u16ostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_iostream&lt;char16_t&gt; u16iostream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringbuf&lt;char16_t&gt; u16stringbuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istringstream&lt;char16_t&gt;
         u16istringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostringstream&lt;char16_t&gt;
         u16ostringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;char16_t&gt;
         u16stringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_filebuf&lt;char16_t&gt; u16filebuf;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;char16_t&gt; u16ifstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;char16_t&gt; u16ofstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_fstream&lt;char16_t&gt; u16fstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_streambuf&lt;char32_t&gt; u32streambuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istream&lt;char32_t&gt; u32istream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostream&lt;char32_t&gt; u32ostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_iostream&lt;char32_t&gt; u32iostream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringbuf&lt;char32_t&gt; u32stringbuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istringstream&lt;char32_t&gt;
         u32istringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostringstream&lt;char32_t&gt;
         u32ostringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;char32_t&gt;
         u32stringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_filebuf&lt;char32_t&gt; u32filebuf;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;char32_t&gt; u32ifstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;char32_t&gt; u32ofstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_fstream&lt;char32_t&gt;
         u32fstream;</u>
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         template &lt;class state&gt; class fpos;
-        <BR/><BR/>
+        <BR/>
         typedef
         fpos&lt;char_traits&lt;char&gt;::state_type&gt; streampos;
-        <BR/><BR/>
+        <BR/>
         typedef
         fpos&lt;char_traits&lt;wchar_t&gt;::state_type&gt;
         wstreampos;
-        <BR/><BR/>
+        <BR/>
         typedef
         fpos&lt;char_traits&lt;char16_t&gt;::state_type&gt;
         u16streampos;
-        <BR/><BR/>
+        <BR/>
         typedef
         fpos&lt;char_traits&lt;char32_t&gt;::state_type&gt;
         u32streampos;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         27.6
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_istream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istream&lt;char&gt; istream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istream&lt;wchar_t&gt; wistream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_istream&lt;char16_t&gt;
         u16istream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_istream&lt;char32_t&gt; u32istream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_iostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_iostream&lt;char&gt; iostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_iostream&lt;wchar_t&gt; wiostream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_iostream&lt;char16_t&gt;
         u16iostream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_iostream&lt;char32_t&gt; u32iostream;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_ostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostream&lt;char&gt; ostream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostream&lt;wchar_t&gt; wostream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_ostream&lt;char16_t&gt;
         u16ostream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostream&lt;char32_t&gt; u32ostream;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         27.7 paragraph 1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
          class Allocator =
         allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_stringbuf;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringbuf&lt;char&gt; stringbuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringbuf&lt;wchar_t&gt; wstringbuf;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_stringbuf&lt;char16_t&gt;
         u16stringbuf;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringbuf&lt;char32_t&gt; u32stringbuf;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
          class Allocator =
         allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_istringstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_istringstream&lt;char&gt;
         istringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_istringstream&lt;wchar_t&gt;
         wistringstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_istringstream&lt;char16_t&gt;
         u16istringstream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_istringstream&lt;char32_t&gt;
         u32istringstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
          class Allocator =
         allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_ostringstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostringstream&lt;char&gt;
         ostringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostringstream&lt;wchar_t&gt;
         wostringstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_ostringstream&lt;char16_t&gt;
         u16ostringstream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_ostringstream&lt;char32_t&gt;
         u32ostringstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
          class Allocator =
         allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_stringstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;char&gt; stringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;wchar_t&gt;
         wstringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;char16_t&gt;
         u16stringstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_stringstream&lt;char32_t&gt;
         u32stringstream;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         27.8.1 paragraph 1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_filebuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_filebuf&lt;char&gt; filebuf;
-        <BR/><BR/>
+        <BR/>
         typedef basic_filebuf&lt;wchar_t&gt; wfilebuf;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_filebuf&lt;char16_t&gt;
         u16filebuf;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_filebuf&lt;char32_t&gt; u32filebuf;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_ifstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;char&gt; ifstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;wchar_t&gt; wifstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_ifstream&lt;char16_t&gt;
         u16ifstream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_ifstream&lt;char32_t&gt; u32ifstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_ofstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;char&gt; ofstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;wchar_t&gt; wofstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_ofstream&lt;char16_t&gt;
         u16ofstream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_ofstream&lt;char32_t&gt; u32ofstream;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_fstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_fstream&lt;char&gt; fstream;
-        <BR/><BR/>
+        <BR/>
         typedef basic_fstream&lt;wchar_t&gt; wfstream;
-        <BR/><BR/>
+        <BR/>
         <u>typedef basic_fstream&lt;char16_t&gt;
         u16fstream;</u>
-        <BR/><BR/>
+        <BR/>
         typedef basic_fstream&lt;char32_t&gt; u32fstream;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         28.4
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef basic_regex&lt;char&gt; regex;
-        <BR/><BR/>
+        <BR/>
         typedef basic_regex&lt;wchar_t&gt; wregex;
-        <BR/><BR/>
+        <BR/>
         typedef basic_regex&lt;char16_t&gt; u16regex;
-        <BR/><BR/>
+        <BR/>
         typedef basic_regex&lt;char32_t&gt; u32regex;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;const char*&gt; csub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;const wchar_t*&gt; wcsub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;const char16_t*&gt;
         u16csub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;const char32_t*&gt;
         u16csub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;string::const_iterator&gt;
         ssub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;wstring::const_iterator&gt;
         wssub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;u16string::const_iterator&gt;
         u16ssub_match;
-        <BR/><BR/>
+        <BR/>
         typedef sub_match&lt;u32string::const_iterator&gt;
         u32ssub_match;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;const char*&gt; cmatch;
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;const wchar_t*&gt; wcmatch;
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;const char16_t*&gt;
         u16cmatch;
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;const char32_t*&gt;
         u32cmatch;
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;string::const_iterator&gt;
         smatch;
-        <BR/><BR/>
+        <BR/>
         typedef match_results&lt;wstring::const_iterator&gt;
         wsmatch;
-        <BR/><BR/>
+        <BR/>
         typedef
         match_results&lt;u16string::const_iterator&gt; u16smatch;
-        <BR/><BR/>
+        <BR/>
         typedef
         match_results&lt;u32string::const_iterator&gt; u32smatch;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;const char*&gt;
         cregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;const wchar_t*&gt;
         wcregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;const cha16r_t*&gt;
         u16cregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;const char32_t*&gt;
         u32cregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;string::const_iterator&gt;
         sregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_iterator&lt;wstring::const_iterator&gt;
         wsregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_iterator&lt;u16string::const_iterator&gt;
         u16sregex_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_iterator&lt;u32string::const_iterator&gt;
         u32sregex_iterator;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         ...
-        <BR/><BR/>
+        <BR/>
         typedef regex_token_iterator&lt;const char*&gt;
         cregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_token_iterator&lt;const wchar_t*&gt;
         wcregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_token_iterator&lt;const char16_t*&gt;
         u16cregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef regex_token_iterator&lt;const char32_t*&gt;
         u32cregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_token_iterator&lt;string::const_iterator&gt;
         sregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_token_iterator&lt;wstring::const_iterator&gt;<span lang="zxx">
         &#12288;&#12288;&#12288;</span>wsregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_token_iterator&lt;u16string::const_iterator&gt;
         u16sregex_token_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef
         regex_token_iterator&lt;u32string::const_iterator&gt;<span lang="zxx">
         &#12288;</span>u32sregex_token_iterator;
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>
-Done
+Done. Original section of "17 Library" deleted so that comment will sort as the first actual
+section affected.
 </notes>
 <rationale>
 Previously considered; we decided not to do it. We believe it is
@@ -8286,30 +8307,30 @@ limits]
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class T&gt; class numeric_limits&lt;const
         T&gt;;
-        <BR/><BR/>
+        <BR/>
         template&lt;class T&gt; class numeric_limits&lt;volatile
         T&gt;;
-        <BR/><BR/>
+        <BR/>
         template&lt;class T&gt; class numeric_limits&lt;const
         volatile T&gt;;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>Regular</u> T&gt; class
         numeric_limits&lt;const T&gt;;
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>Regular</u> T&gt; class
         numeric_limits&lt;volatile T&gt;;
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>Regular</u> T&gt; class
         numeric_limits&lt;const volatile T&gt;;
 </suggestion>
@@ -9243,29 +9264,6 @@ Section reference corrected from 20.2.12.
 </rationale>
 </comment>
 
-<comment nb="UK" num="98" uknum="402" type="Te" owner="LWG" issue="1055" disp="" date="" extdoc="">
-<section>
-20.5.6
-</section>
-<para></para>
-<description>
-        It would be
-        useful to be able to determine the underlying type of an
-        arbitrary enumeration type. This would allow safe casting
-        to an integral type (especially needed for scoped enums,
-        which do not promote), and would allow use of
-        numeric_limits. In general it makes generic programming
-        with enumerations easier.
-</description>
-<suggestion>
-        Add a TransformationTrait to 20.5.6 that
-        returns the underlying type of an enumeration type.
-</suggestion>
-<notes>Originlly submitted as section: 7.2 ¶ 5</notes>
-<rationale>
-</rationale>
-</comment>
-
 <comment nb="UK" num="204" uknum="239" type="Te" owner="LWG" issue="1020" disp="accepted" date="" extdoc="">
 <section>
 20.5.7 [meta.trans.other]
@@ -9557,33 +9555,33 @@ return them when F or a type in BoundArgs is move-only.
         <BR/><BR/>
         template&lt;class F, Allocator A&gt;
         function(allocator_arg_t, const A&amp;, F);
-        <BR/><BR/>
+        <BR/>
         template&lt;class F, Allocator A&gt;
         function(allocator_arg_t, const A&amp;, F&amp;&amp;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>should be
-        <BR/><BR/>
+        <BR/>should be
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class F, Allocator A&gt;
-        <BR/><BR/>
+        <BR/>
         requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>
+        <BR/>
         function(allocator_arg_t, const A&amp;, F);
-        <BR/><BR/>
+        <BR/>
         template&lt;class F, Allocator A&gt;
-        <BR/><BR/>
+        <BR/>
         requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>
+        <BR/>
         function(allocator_arg_t, const A&amp;, F&amp;&amp;);
 </suggestion>
 <notes>
@@ -9669,26 +9667,26 @@ Correct as follows.<BR/><BR/>
         Correct as follows.
         <BR/><BR/>
         template &lt;class R, class... Args&gt;
-        <BR/><BR/>
+        <BR/>
         concept_map UsesAllocator&lt;function&lt;R(Args...)&gt;,
         Alloc&gt; {
-        <BR/><BR/>
+        <BR/>
         typedef Alloc allocator_type;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>should be
-        <BR/><BR/>
+        <BR/>should be
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... Args&gt;
-        <BR/><BR/>
+        <BR/>
         concept_map UsesAllocator&lt;function&lt;R(Args...)&gt;,
         Alloc&gt; {
-        <BR/><BR/>
+        <BR/>
         typedef Alloc allocator_type;
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>Done</notes>
 <rationale>This change would be redundant because function&lt;&gt; is already sufficiently 
@@ -9712,71 +9710,71 @@ Correct as follows.<BR/><BR/>
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;MoveConstructible R, MoveConstructible...
         ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(const function&lt;R(ArgTypes...)&gt;&amp;,
         nullptr_t);
-        <BR/><BR/>
+        <BR/>
         template &lt;MoveConstructible R, MoveConstructible...
         ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(nullptr_t, const
         function&lt;R(ArgTypes...)&gt;&amp;);
-        <BR/><BR/>
+        <BR/>
         template &lt;MoveConstructible R, MoveConstructible...
         ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(const function&lt;R(ArgTypes...)&gt;&amp;,
         nullptr_t);
-        <BR/><BR/>
+        <BR/>
         template &lt;MoveConstructible R, MoveConstructible...
         ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(nullptr_t, const
         function&lt;R(ArgTypes...)&gt;&amp;);
-        <BR/><BR/>
+        <BR/>
         template &lt;MoveConstructible R, MoveConstructible...
         ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(function&lt;R(ArgTypes...)&gt;&amp;,
         function&lt;R(ArgTypes...)&gt;&amp;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>should be
-        <BR/><BR/>
+        <BR/>should be
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(const function&lt;R(ArgTypes...)&gt;&amp;,
         nullptr_t);
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(nullptr_t, const
         function&lt;R(ArgTypes...)&gt;&amp;);
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(const function&lt;R(ArgTypes...)&gt;&amp;,
         nullptr_t);
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... ArgTypes&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(nullptr_t, const
         function&lt;R(ArgTypes...)&gt;&amp;);
-        <BR/><BR/>
+        <BR/>
         template &lt;<u>Returnable</u> R,
         <u>CopyConstructible</u>... ArgTypes&gt;
-        <BR/><BR/>void
+        <BR/>void
         swap(function&lt;R(ArgTypes...)&gt;&amp;,
         function&lt;R(ArgTypes...)&gt;&amp;);
 </suggestion>
@@ -10465,61 +10463,61 @@ Section reference corrected from 20.9.2.1.
         requiring the client to extract and operate directly on the
         duration&#8217;s representation as the latter will not
         enforce the correct units of the operation.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>Ex:
-        <BR/><BR/>
+        <BR/>Ex:
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         milliseconds ms(...);
-        <BR/><BR/>
+        <BR/>
         microseconds us(...);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>ms
+        <BR/>ms
         % us; // microseconds
-        <BR/><BR/>us
+        <BR/>us
         % ms; // microseconds
-        <BR/><BR/>ms
+        <BR/>ms
         % 5; // milliseconds
-        <BR/><BR/>5 %
+        <BR/>5 %
         ms; // does not compile
 </description>
 <suggestion>
         Add:
-        <BR/><BR/>
-        <BR/><BR/>
+        <BR/>
+        <BR/>
         template &lt;class Rep, class Period = ratio&lt;1&gt;&gt;
-        <BR/><BR/>
+        <BR/>
         class duration {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>...
-        <BR/><BR/>duration&amp;
+        <BR/>...
+        <BR/>duration&amp;
         operator%(const rep&amp;);
-        <BR/><BR/>duration&amp;
+        <BR/>duration&amp;
         operator%(const duration&amp;);
-        <BR/><BR/>..
-        <BR/><BR/>};
-        <BR/><BR/>
-        <BR/><BR/>template
+        <BR/>..
+        <BR/>};
+        <BR/>
+        <BR/>template
         &lt;class Rep1, class Period,
-        <BR/><BR/>class Rep2&gt;
-        <BR/><BR/>
+        <BR/>class Rep2&gt;
+        <BR/>
         duration&lt;typename common_type&lt;
-        <BR/><BR/>Rep1,
+        <BR/>Rep1,
         Rep2&gt;::type, Period&gt;
-        <BR/><BR/>operator%(const
+        <BR/>operator%(const
         duration&lt;Rep1, Period&gt;&amp; d, const Rep2&amp; s);
-        <BR/><BR/>
-        <BR/><BR/>template
+        <BR/>
+        <BR/>template
         &lt;class Rep1, class Period1,
-        <BR/><BR/>class Rep2,
+        <BR/>class Rep2,
         class Period2&gt;
-        <BR/><BR/>typename
+        <BR/>typename
         common_type&lt;duration&lt;Rep1, Period1&gt;,
         duration&lt;Rep2, Period2&gt;&gt;::type
-        <BR/><BR/>operator%(const
+        <BR/>operator%(const
         duration&lt;Rep1, Period1&gt;&amp; lhs, const
         duration&lt;Rep2, Period2&gt;&amp; rhs);
 </suggestion>
@@ -10591,693 +10589,693 @@ after &#182; 1
         "class InputIterator" is changed to "InputIterator Iter".
         <BR/><BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3, basic_string:
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator</u> Alloc = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_string;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         operator+(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         operator+(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         operator+(charT lhs, const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(charT lhs,
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         operator+(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         operator+(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
         charT rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
-        <BR/><BR/>
+        <BR/>
         operator+(basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;&amp;
         lhs, charT rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator==(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator!=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt; (const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt; (const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt; (const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt; (const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt; (const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt; (const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt;=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt;=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&lt;=(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt;=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt;=(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         const charT* rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         bool operator&gt;=(const charT* lhs,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.8.8: swap
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_string&lt;charT,traits,Alloc&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,Alloc&gt;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_string&lt;charT,traits,Alloc&gt;&amp;&amp;
         lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,Alloc&gt;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_string&lt;charT,traits,Alloc&gt;&amp; lhs,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,Alloc&gt;&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.8.9: inserters and extractors
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_istream&lt;charT,traits&gt;&amp;
-        <BR/><BR/>
+        <BR/>
         operator&gt;&gt;(basic_istream&lt;charT,traits&gt;&amp;&amp;
         is,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; str);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_ostream&lt;charT, traits&gt;&amp;
-        <BR/><BR/>
+        <BR/>
         operator&lt;&lt;(basic_ostream&lt;charT,
         traits&gt;&amp;&amp; os,
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         str);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_istream&lt;charT,traits&gt;&amp;
-        <BR/><BR/>
+        <BR/>
         getline(basic_istream&lt;charT,traits&gt;&amp;&amp; is,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; str,
-        <BR/><BR/>
+        <BR/>
         charT delim);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_istream&lt;charT,traits&gt;&amp;
-        <BR/><BR/>
+        <BR/>
         getline(basic_istream&lt;charT,traits&gt;&amp;&amp; is,
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; str);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3 Class template basic_string
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template&lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator Alloc</u> = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_string {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>//
+        <BR/>//
         types:
-        <BR/><BR/>
+        <BR/>
         typedef traits traits_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::char_type value_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>Alloc</u> allocator_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::size_type size_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::difference_type
         difference_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::reference reference;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::const_reference
         const_reference;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::pointer pointer;
-        <BR/><BR/>
+        <BR/>
         typedef typename <u>Alloc</u>::const_pointer const_pointer;
-        <BR/><BR/>
+        <BR/>
         typedef implementation-defined iterator; // See 23.1
-        <BR/><BR/>
+        <BR/>
         typedef implementation-defined const_iterator; // See 23.1
-        <BR/><BR/>
+        <BR/>
         typedef std::reverse_iterator&lt;iterator&gt;
         reverse_iterator;
-        <BR/><BR/>
+        <BR/>
         typedef std::reverse_iterator&lt;const_iterator&gt;
         const_reverse_iterator;
-        <BR/><BR/>
+        <BR/>
         static const size_type npos = -1;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.2 construct/copy/destroy:
-        <BR/><BR/>
+        <BR/>
         explicit basic_string(const <u>Alloc</u>&amp; a =
         <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string(basic_string&amp;&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string(const basic_string&amp; str, size_type pos,
         size_type n = npos,
-        <BR/><BR/>
+        <BR/>
         const <u>Alloc</u>&amp; a = <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(const charT* s,
-        <BR/><BR/>
+        <BR/>
         size_type n, const <u>Alloc</u>&amp; a = <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(const charT* s, const <u>Alloc</u>&amp; a =
         <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(size_type n, charT c, const <u>Alloc</u>&amp;
         a = <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>InputIterator</u> <u>Iter</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string(<u>Iter</u> begin, <u>Iter</u> end,
-        <BR/><BR/>
+        <BR/>
         const <u>Alloc</u>&amp; a = <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(initializer_list&lt;charT&gt;, const
         <u>Alloc</u>&amp; = <u>Alloc</u>());
-        <BR/><BR/>
+        <BR/>
         basic_string(const basic_string&amp;, const
         <u>Alloc</u>&amp;);
-        <BR/><BR/>
+        <BR/>
         basic_string(basic_string&amp;&amp;, const
         <u>Alloc</u>&amp;);
-        <BR/><BR/>
+        <BR/>
         ~basic_string();
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; operator=(const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; operator=(basic_string&amp;&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; operator=(const charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; operator=(charT c);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; operator=(initializer_list&lt;charT&gt;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.3 iterators:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.4 capacity:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.5 element access:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.6 modifiers:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(const basic_string&amp; str,
         size_type pos,
-        <BR/><BR/>
+        <BR/>
         size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(const charT* s, size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(const charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(size_type n, charT c);
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>InputIterator</u> <u>Iter</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(<u>Iter</u> first, <u>Iter</u>
         last);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; append(initializer_list&lt;charT&gt;);
-        <BR/><BR/>
+        <BR/>
         void push_back(charT c);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(basic_string&amp;&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(const basic_string&amp; str,
         size_type pos,
-        <BR/><BR/>
+        <BR/>
         size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(const charT* s, size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(const charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(size_type n, charT c);
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>InputIterator</u> <u>Iter</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(<u>Iter</u> first, <u>Iter</u>
         last);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; assign(initializer_list&lt;charT&gt;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; insert(size_type pos1, const
         basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; insert(size_type pos1, const
         basic_string&amp; str,
-        <BR/><BR/>
+        <BR/>
         size_type pos2, size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; insert(size_type pos, const charT* s,
         size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; insert(size_type pos, const charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; insert(size_type pos, size_type n, charT
         c);
-        <BR/><BR/>
+        <BR/>
         iterator insert(const_iterator p, charT c);
-        <BR/><BR/>
+        <BR/>
         void insert(const_iterator p, size_type n, charT c);
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>InputIterator</u> <u>Iter</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void insert(const_iterator p, <u>Iter</u> first,
         <u>Iter</u> last);
-        <BR/><BR/>
+        <BR/>
         void insert(const_iterator p,
         initializer_list&lt;charT&gt;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         basic_string&amp; replace(size_type pos1, size_type n1,
-        <BR/><BR/>
+        <BR/>
         const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(size_type pos1, size_type n1,
-        <BR/><BR/>
+        <BR/>
         const basic_string&amp; str,
-        <BR/><BR/>
+        <BR/>
         size_type pos2, size_type n2);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(size_type pos, size_type n1,
         const charT* s,
-        <BR/><BR/>
+        <BR/>
         size_type n2);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(size_type pos, size_type n1,
         const charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(size_type pos, size_type n1,
         size_type n2,
-        <BR/><BR/>
+        <BR/>
         charT c);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator i1, iterator i2,
-        <BR/><BR/>
+        <BR/>
         const basic_string&amp; str);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator i1, iterator i2, const
         charT* s,
-        <BR/><BR/>
+        <BR/>
         size_type n);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator i1, iterator i2, const
         charT* s);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator i1, iterator i2,
-        <BR/><BR/>
+        <BR/>
         size_type n, charT c);
-        <BR/><BR/>
+        <BR/>
         template&lt;<u>InputIterator</u> <u>Iter</u>&gt;
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator i1, iterator i2,
-        <BR/><BR/>
+        <BR/>
         <u>Iter</u> j1, <u>Iter</u> j2);
-        <BR/><BR/>
+        <BR/>
         basic_string&amp; replace(iterator, iterator,
         initializer_list&lt;charT&gt;);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         21.3.7 string operations:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator</u>
         <u>Alloc&gt;</u>
-        <BR/><BR/>
+        <BR/>
         struct constructible_with_allocator_suffix&lt;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT, traits, <u>Alloc</u>&gt; &gt; :
         true_type { };
 </suggestion>
@@ -11497,35 +11495,35 @@ after &#182; 1
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         template&lt;class Codecvt, class Elem = wchar_t&gt; class
         wstring_convert {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef std::basic_string&lt;char&gt; byte_string;
-        <BR/><BR/>
+        <BR/>
         typedef std::basic_string&lt;Elem&gt; wide_string;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>should be
-        <BR/><BR/>
+        <BR/>should be
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template&lt;class Codecvt, class Elem = wchar_t<u>,</u>
-        <BR/><BR/>
+        <BR/>
         <u>Allocator WideAllocator = allocator&lt;Elem&gt;,</u>
-        <BR/><BR/>
+        <BR/>
         <u>Allocator ByteAllocator = allocator&lt;char&gt;</u>&gt;
-        <BR/><BR/>
+        <BR/>
         class wstring_convert {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef std::basic_string&lt;char,
         <u>char_traits&lt;char&gt;, ByteAllocator</u>&gt;
         byte_string;
-        <BR/><BR/>typedef
+        <BR/>typedef
         std::basic_string&lt;Elem, <u>char_traits&lt;Elem&gt;,
         WideAllocator</u>&gt; wide_string;
 </suggestion>
@@ -11674,13 +11672,13 @@ after &#182; 1
         Correct as follows.
         <BR/><BR/>
         Requires: [fmt,end) shall be a valid range.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         Requires: [fmt,fmtend) shall be a valid range.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
@@ -11701,116 +11699,116 @@ after &#182; 1
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         22.2.5.1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class InputIterator =
         istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_get : public locale::facet, public time_base {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef InputIterator iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, <u>InputIterator InputIter</u> =
         istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_get : public locale::facet, public time_base {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>InputIter</u> iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         22.2.5.2
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class InputIterator =
         istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_get_byname : public time_get&lt;charT,
         InputIterator&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef time_base::dateorder dateorder;
-        <BR/><BR/>
+        <BR/>
         typedef InputIterator iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, <u>InputIterator InputIter</u> =
         istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_get_byname : public time_get&lt;charT,
         InputIter&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef time_base::dateorder dateorder;
-        <BR/><BR/>
+        <BR/>
         typedef <u>InputIter</u> iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         22.2.6.1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT,
-        <BR/><BR/>
+        <BR/>
         class InputIterator = istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class money_get : public locale::facet {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef InputIterator iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT,
-        <BR/><BR/>
+        <BR/>
         <u>InputIterator InputIter</u> =
         istreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class money_get : public locale::facet {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>InputIter</u> iter_type;
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
@@ -11830,79 +11828,79 @@ after &#182; 1
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         22.2.5.3
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class OutputIterator =
         ostreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_put : public locale::facet {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef OutputIterator iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         <span lang="zxx">&#12288;</span>should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, <u>OutputIterator OutputIter</u>
         = ostreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_put : public locale::facet {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>OutputIter</u> iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         22.2.5.4
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class OutputIterator =
         ostreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_put_byname : public time_put&lt;charT,
         OutputIterator&gt;
-        <BR/><BR/>{
-        <BR/><BR/>
+        <BR/>{
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef OutputIterator iter_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, <u>OutputIterator OutputIter</u>
         = ostreambuf_iterator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class time_put_byname : public time_put&lt;charT,
         OutputIter&gt;
-        <BR/><BR/>{
-        <BR/><BR/>
+        <BR/>{
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>typedef <u>OutputIter</u>
+        <BR/>typedef <u>OutputIter</u>
         iter_type;
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
@@ -13291,110 +13289,110 @@ deferred.
 <description>
         Capability of an iterator is too much restricted by
         concept.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         Concept of std::Range is defined as:
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         concept Range&lt;typename T&gt; {
-        <BR/><BR/>
+        <BR/>
         InputIterator iterator;
-        <BR/><BR/>
+        <BR/>
         iterator begin(T&amp;);
-        <BR/><BR/>
+        <BR/>
         iterator end(T&amp;);
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>So
+        <BR/>So
         the following code generates an error.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;std::Range Rng&gt;
-        <BR/><BR/>
+        <BR/>
         void sort(Rng&amp; r)
-        <BR/><BR/>{
-        <BR/><BR/>
+        <BR/>{
+        <BR/>
         // error! Rng::iterator does not satisfy requirements of a
         random
-        <BR/><BR/>
+        <BR/>
         // access iterator.
-        <BR/><BR/>
+        <BR/>
         std::sort(begin(r), end(r));
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         std::vector&lt;int&gt; v; // vector::iterator is a random
         access iterator.
-        <BR/><BR/>
+        <BR/>
         sort(v);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         This is because the concept of an iterator of std::Range is
         InputIterator. For this reason, a random access iterator
         loses its capability when passed to a std::Range parameter.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>To
+        <BR/>To
         be able to work the above code, we need to write as
         follows:
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;std::Range T&gt;
-        <BR/><BR/>
+        <BR/>
         requires std::RandomAccessIterator&lt;T::iterator&gt;
         &amp;&amp;
-        <BR/><BR/>
+        <BR/>
         std::ShuffleIterator&lt;T::iterator&gt; &amp;&amp;
-        <BR/><BR/>
+        <BR/>
         std::LessThanComparable&lt;T::iterator::value_type&gt;
-        <BR/><BR/>
+        <BR/>
         void sort(T&amp; r)
-        <BR/><BR/>{
-        <BR/><BR/>
+        <BR/>{
+        <BR/>
         sort(begin(r), end(r));
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         std::vector&lt;int&gt; v;
-        <BR/><BR/>
+        <BR/>
         sort(v);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>It
+        <BR/>It
         needs quiet a few amount of codes like this only to recover
         random access capability from InputIterator concept.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>We
+        <BR/>We
         can write the following valid code with Boost.Range, which
         is implemented with using C++03 SFINAE.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class Range&gt;
-        <BR/><BR/>
+        <BR/>
         void sort(Range&amp; r)
-        <BR/><BR/>{
-        <BR/><BR/>
+        <BR/>{
+        <BR/>
         std::sort(boost::begin(r), boost::end(r));
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         std::vector&lt;int&gt; v;
-        <BR/><BR/>
+        <BR/>
         sort(v); // OK
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>One of the
+        <BR/>One of the
         motivation to introduce concepts are supporting template
         programming techniques by language directly to eliminate
         hacky techniques such as tag-dispatch, SFINAE and Type
@@ -14680,84 +14678,84 @@ Footnote 288
         Alloc&#8221;.
         <BR/><BR/>
          Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator Alloc</u> = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_stringbuf : public
         basic_streambuf&lt;charT,traits&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.1.1 Constructors:
-        <BR/><BR/>
+        <BR/>
         explicit basic_stringbuf(ios_base::openmode which
-        <BR/><BR/>=
+        <BR/>=
         ios_base::in | ios_base::out);
-        <BR/><BR/>
+        <BR/>
         explicit basic_stringbuf
-        <BR/><BR/>
+        <BR/>
         (const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         str,
-        <BR/><BR/>
+        <BR/>
         ios_base::openmode which = ios_base::in | ios_base::out);
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf(basic_stringbuf&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>...
-        <BR/><BR/>
+        <BR/>...
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.1.3 Get and set:
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt; str() const;
-        <BR/><BR/>
+        <BR/>
         void str(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; s);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>...
-        <BR/><BR/>};
-        <BR/><BR/>
+        <BR/>...
+        <BR/>};
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringbuf&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT, traits, <u>Alloc</u>&gt;&amp; y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringbuf&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT, traits, <u>Alloc</u>&gt;&amp; y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringbuf&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; y);
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>
 </notes>
@@ -14779,109 +14777,109 @@ Footnote 288
         Alloc&#8221;.
         <BR/><BR/>
          Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator Alloc</u> = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_istringstream : public
         basic_istream&lt;charT,traits&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::int_type int_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::pos_type pos_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::off_type off_type;
-        <BR/><BR/>
+        <BR/>
         typedef traits traits_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>Alloc</u> allocator_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.2.1 Constructors:
-        <BR/><BR/>
+        <BR/>
         explicit basic_istringstream(ios_base::openmode which =
         ios_base::in);
-        <BR/><BR/>
+        <BR/>
         explicit basic_istringstream(
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         str,
-        <BR/><BR/>
+        <BR/>
         ios_base::openmode which = ios_base::in);
-        <BR/><BR/>
+        <BR/>
         basic_istringstream(basic_istringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.2.2 Assign and swap:
-        <BR/><BR/>
+        <BR/>
         basic_istringstream&amp;
         operator=(basic_istringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         void swap(basic_istringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.2.3 Members:
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT,traits,<u>Alloc</u>&gt;* rdbuf()
         const;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt; str() const;
-        <BR/><BR/>
+        <BR/>
         void str(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; s);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         private:
-        <BR/><BR/>//
+        <BR/>//
         basic_stringbuf&lt;charT,traits,<u>Alloc</u>&gt; sb;
         exposition only
-        <BR/><BR/>};
-        <BR/><BR/>
+        <BR/>};
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_istringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_istringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_istringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_istringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_istringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_istringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; y);
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>
 </notes>
@@ -14903,109 +14901,109 @@ Footnote 288
         Alloc&#8221;.
         <BR/><BR/>
          Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator Alloc</u> = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_ostringstream : public
         basic_ostream&lt;charT,traits&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>//
+        <BR/>//
         types:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::int_type int_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::pos_type pos_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::off_type off_type;
-        <BR/><BR/>
+        <BR/>
         typedef traits traits_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>Alloc</u> allocator_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.3.1 Constructors/destructor:
-        <BR/><BR/>
+        <BR/>
         explicit basic_ostringstream(ios_base::openmode which =
         ios_base::out);
-        <BR/><BR/>
+        <BR/>
         explicit basic_ostringstream(
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         str,
-        <BR/><BR/>
+        <BR/>
         ios_base::openmode which = ios_base::out);
-        <BR/><BR/>
+        <BR/>
         basic_ostringstream(basic_ostringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.3.2 Assign/swap:
-        <BR/><BR/>
+        <BR/>
         basic_ostringstream&amp;
         operator=(basic_ostringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         void swap(basic_ostringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.3.3 Members:
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT,traits,<u>Alloc</u>&gt;* rdbuf()
         const;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt; str() const;
-        <BR/><BR/>
+        <BR/>
         void str(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; s);
-        <BR/><BR/>
+        <BR/>
         private:
-        <BR/><BR/>//
+        <BR/>//
         basic_stringbuf&lt;charT,traits,<u>Alloc</u>&gt; sb;
         exposition only
-        <BR/><BR/>};
-        <BR/><BR/>
+        <BR/>};
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator</u>
         <font size="2" style=
         "font-size: 11pt"><u>Alloc</u>&gt;</font>
-        <BR/><BR/>
+        <BR/>
         void swap(basic_ostringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_ostringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator</u>
         <font size="2" style=
         "font-size: 11pt"><u>Alloc</u>&gt;</font>
-        <BR/><BR/>
+        <BR/>
         void swap(basic_ostringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_ostringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_ostringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_ostringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; y);
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>
 </notes>
@@ -15056,107 +15054,107 @@ Footnote 288
         Replace "class Allocator" to "Allocator Alloc".
         <BR/><BR/>
          Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits =
         char_traits&lt;charT&gt;,
-        <BR/><BR/>
+        <BR/>
         <u>Allocator Alloc</u> = allocator&lt;charT&gt; &gt;
-        <BR/><BR/>
+        <BR/>
         class basic_stringstream
-        <BR/><BR/>:
+        <BR/>:
         public basic_iostream&lt;charT,traits&gt; {
-        <BR/><BR/>
+        <BR/>
         public:
-        <BR/><BR/>//
+        <BR/>//
         types:
-        <BR/><BR/>
+        <BR/>
         typedef charT char_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::int_type int_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::pos_type pos_type;
-        <BR/><BR/>
+        <BR/>
         typedef typename traits::off_type off_type;
-        <BR/><BR/>
+        <BR/>
         typedef traits traits_type;
-        <BR/><BR/>
+        <BR/>
         typedef <u>Alloc</u> allocator_type;
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         constructors/destructor
-        <BR/><BR/>
+        <BR/>
         explicit basic_stringstream(
-        <BR/><BR/>
+        <BR/>
         ios_base::openmode which = ios_base::out|ios_base::in);
-        <BR/><BR/>
+        <BR/>
         explicit basic_stringstream(
-        <BR/><BR/>
+        <BR/>
         const basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp;
         str,
-        <BR/><BR/>
+        <BR/>
         ios_base::openmode which = ios_base::out|ios_base::in);
-        <BR/><BR/>
+        <BR/>
         basic_stringstream(basic_stringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         27.7.5.1 Assign/swap:
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringstream&amp;&amp; rhs);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>//
+        <BR/>//
         Members:
-        <BR/><BR/>
+        <BR/>
         basic_stringbuf&lt;charT,traits,<u>Alloc</u>&gt;* rdbuf()
         const;
-        <BR/><BR/>
+        <BR/>
         basic_string&lt;charT,traits,<u>Alloc</u>&gt; str() const;
-        <BR/><BR/>
+        <BR/>
         void str(const
         basic_string&lt;charT,traits,<u>Alloc</u>&gt;&amp; str);
-        <BR/><BR/>
+        <BR/>
         private:
-        <BR/><BR/>//
+        <BR/>//
         basic_stringbuf&lt;charT, traits&gt; sb; exposition only
-        <BR/><BR/>};
-        <BR/><BR/>
+        <BR/>};
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator
         Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator</u>
         <font size="2" style=
         "font-size: 11pt"><u>Alloc</u>&gt;</font>
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringstream&lt;charT, traits, <u>Alloc</u>&gt;&amp;
         y);
-        <BR/><BR/>
+        <BR/>
         template &lt;class charT, class traits, <u>Allocator</u>
         <font size="2" style=
         "font-size: 11pt"><u>Alloc</u>&gt;</font>
-        <BR/><BR/>
+        <BR/>
         void swap(basic_stringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp; x,
-        <BR/><BR/>
+        <BR/>
         basic_stringstream&lt;charT, traits,
         <u>Alloc</u>&gt;&amp;&amp; y);
-        <BR/><BR/>}
+        <BR/>}
 </suggestion>
 <notes>
 </notes>
@@ -15516,147 +15514,147 @@ defined where it exists.
         Change to a style of C++.
         <BR/><BR/>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         29.1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         <u>typedef</u> enum memory_order {
-        <BR/><BR/>
+        <BR/>
         memory_order_relaxed, memory_order_consume,
         memory_order_acquire,
-        <BR/><BR/>
+        <BR/>
         memory_order_release, memory_order_acq_rel,
         memory_order_seq_cst
-        <BR/><BR/>}
+        <BR/>}
         memory_order;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         enum memory_order {
-        <BR/><BR/>
+        <BR/>
         memory_order_relaxed, memory_order_consume,
         memory_order_acquire,
-        <BR/><BR/>
+        <BR/>
         memory_order_release, memory_order_acq_rel,
         memory_order_seq_cst
-        <BR/><BR/>};
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>};
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         29.3.1
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         <u>typedef</u> struct atomic_bool {
-        <BR/><BR/>...
-        <BR/><BR/>}
+        <BR/>...
+        <BR/>}
         atomic_bool;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         struct atomic_bool {
-        <BR/><BR/>...
-        <BR/><BR/>};
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>...
+        <BR/>};
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         <u>typedef</u> struct atomic_<i>itype</i> {
-        <BR/><BR/>...
-        <BR/><BR/>}
+        <BR/>...
+        <BR/>}
         atomic_<i>itype</i>;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         struct atomic_<i>itype</i> {
-        <BR/><BR/>...
-        <BR/><BR/>};
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>...
+        <BR/>};
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         29.3.2
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         <u>typedef</u> struct atomic_address {
-        <BR/><BR/>...
-        <BR/><BR/>}
+        <BR/>...
+        <BR/>}
         atomic_address;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         struct atomic_address {
-        <BR/><BR/>...
-        <BR/><BR/>};
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>...
+        <BR/>};
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         29.5
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         <u>typedef</u> struct atomic_flag {
-        <BR/><BR/>...
-        <BR/><BR/>}
+        <BR/>...
+        <BR/>}
         atomic_flag;
-        <BR/><BR/>}
-        <BR/><BR/>
+        <BR/>}
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         namespace std {
-        <BR/><BR/>
+        <BR/>
         struct atomic_flag {
-        <BR/><BR/>...
-        <BR/><BR/>};
-        <BR/><BR/>}
+        <BR/>...
+        <BR/>};
+        <BR/>}
 </suggestion>
 <notes>Done
 </notes>
@@ -16753,78 +16751,78 @@ async(), but I don't think it was a specific design constraint.
 </description>
 <suggestion>
         Correct as follows.
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class F&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(F f);
-        <BR/><BR/>
+        <BR/>
         template &lt;class F, class Allocator&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(allocator_arg_t, const
         Allocator&amp; a, F f);
-        <BR/><BR/>
+        <BR/>
         template &lt;class F&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(F&amp;&amp; f);
-        <BR/><BR/>
+        <BR/>
         template &lt;class F, class Allocator&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(allocator_arg_t, const
         Allocator&amp; a, F&amp;&amp; f);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         should be
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class F&gt;
-        <BR/><BR/>
+        <BR/>
         <u>requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;</u>
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(F f);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class F, <u>Allocator Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         <u>requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;</u>
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(allocator_arg_t, const
         <u>Alloc</u>&amp; a, F f);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class F&gt;
-        <BR/><BR/>
+        <BR/>
         <u>requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;</u>
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>
+        <BR/>
         explicit packaged_task(F&amp;&amp; f);
-        <BR/><BR/>
+        <BR/>
         
-        <BR/><BR/>
+        <BR/>
         template &lt;class F, <u>Allocator Alloc</u>&gt;
-        <BR/><BR/>
+        <BR/>
         <u>requires CopyConstructible&lt;F&gt; &amp;&amp;
         Callable&lt;F, ArgTypes...&gt;</u>
-        <BR/><BR/>
+        <BR/>
         &amp;&amp; Convertible&lt;Callable&lt;F,
         ArgTypes...&gt;::result_type, R&gt;
-        <BR/><BR/>explicit
+        <BR/>explicit
         packaged_task(allocator_arg_t, const <u>Alloc</u>&amp; a,
         F&amp;&amp; f);
 </suggestion>
