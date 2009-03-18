@@ -63,7 +63,7 @@ namespace boost{
             binary_op1,
             binary_op2
         );
-    };
+    }
 
     template<typename R0,typename R1>
     typename range_value<const R0>::type
@@ -90,6 +90,6 @@ namespace boost{
             plus_type(),
             multiplies_type()
         );
-    };
+    }
 }
 #endif
