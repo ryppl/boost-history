@@ -15,6 +15,7 @@
 #include <boost/fusion/include/is_sequence.hpp>
 #include <boost/fusion/include/for_each.hpp>
 #include <boost/fusion/include/accumulate.hpp>
+#include <boost/fusion/view/reverse_view.hpp>
 #include <boost/utility/enable_if.hpp>
 
 //#include <boost/range/algorithm.hpp>
@@ -53,6 +54,19 @@ namespace detail {
         return std::accumulate(sequence.begin(), sequence.end(), init, boost::bind(f,_2,_1));
     }
 
+    template<typename Sequence, typename Init, typename F>
+    typename boost::enable_if<fusion::traits::is_sequence<Sequence>, Init >::type
+        reverse_accumulate(Sequence &sequence, const Init &init, const F&f)
+    {
+        return fusion::accumulate(fusion::reverse_view<Sequence>(sequence), init, f);
+    }
+    
+    template<typename Sequence, typename Init, typename F>
+    typename boost::disable_if<fusion::traits::is_sequence<Sequence>, Init >::type
+        reverse_accumulate(Sequence &sequence, const Init &init, const F&f)
+    {
+        return std::accumulate(sequence.rbegin(), sequence.rend(), init, boost::bind(f,_2,_1));
+    }
 }
 
 }}}

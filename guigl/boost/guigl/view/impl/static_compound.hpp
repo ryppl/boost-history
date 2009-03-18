@@ -177,12 +177,12 @@ public:
 
             access::on_event(*view.m_button_focus_child, translated_event_info);
         }
-        return detail::accumulate(view.children(), false, propagate_button_event<static_compound_event_visitor>(*this, event_info));
+        return detail::reverse_accumulate(view.children(), false, propagate_button_event<static_compound_event_visitor>(*this, event_info));
     }
     
     bool operator()(const movement_event &event_info) const
     {
-        return detail::accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
+        return detail::reverse_accumulate(view.children(), false, propagate_movement_event<static_compound_event_visitor>(*this, event_info));
     }
 
     bool operator()(const entry_exit_event &event_info) const
