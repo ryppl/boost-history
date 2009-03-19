@@ -92,16 +92,11 @@ boost::fusion::pair<struct active_color, color_type>
 typedef
 colored<sexy_button_color_map_type,
 view::mouse_tracking<
-//view::solid_background<
-//view::clickable<sexy_button,button::left_type,
+view::clickable<sexy_button,button::left_type,
 view::positioned<>
-/*>*/ > > button_base_type;
+> > > button_base_type;
 
 class sexy_button : public button_base_type {
-private:
-  color_type m_bg_color;
-  color_type m_highlight_color;
-
 public:
   typedef button_base_type base_type;
 
@@ -171,36 +166,75 @@ public:
     glHint (GL_LINE_SMOOTH_HINT, GL_NICEST);    //glEnable(GL_POLYGON_SMOOTH);
     //glHint (GL_POLYGON_SMOOTH_HINT, GL_NICEST);    //glEnable(GL_POLYGON_SMOOTH);
 
-      { // shadow
+    {
       gl::scoped_matrix m;
-      gl::translate(2., 2.);
-      gl::color(black(0.1));
+      double x_offset = button_down() ? (size().x*.1)/2 : 0.;
+      double y_offset = button_down() ? (size().y*.1)/2 : 0.;
+      gl::translate(x_offset, y_offset);
+      double scale_value = button_down() ? 0.9 : 1.;
+      gl::scale(scale_value, scale_value, scale_value);
+
+        { // shadow
+        gl::scoped_matrix m;
+        gl::translate(2., 2.);
+        gl::color(black(0.1));
+        glBegin(GL_POLYGON);
+        draw_rounded_rect();
+        glEnd();
+        }
+
+      if(mouse_state().inside)
+        use_color<highlight_color>();
+      else
+        use_color<bg_color>();
       glBegin(GL_POLYGON);
       draw_rounded_rect();
       glEnd();
-      }
 
-    if(mouse_state().inside)
-      use_color<highlight_color>();
-    else
-      use_color<bg_color>();
-    glBegin(GL_POLYGON);
-    draw_rounded_rect();
-    glEnd();
+      glBegin(GL_LINE_LOOP);
+      draw_rounded_rect();
+      glEnd();
 
-    glBegin(GL_LINE_LOOP);
-    draw_rounded_rect();
-    glEnd();
 
-    glLineWidth(0.5);
-    gl::color(black(mouse_state().inside ? 1.0 : 0.7));
-    glBegin(GL_LINE_LOOP);
-    draw_rounded_rect();
-    glEnd();
+      glLineWidth(0.5);
+      gl::color(black(mouse_state().inside ? 1.0 : 0.7));
+      glBegin(GL_LINE_LOOP);
+      draw_rounded_rect();
+      glEnd();
+
+      gl::color(black(0.1));
+      double radius = (std::min)(10., (std::min)(size().x, size().y)/2);
+      glBegin(GL_POLYGON);
+      draw_circle_segment(
+        circle2d_generator(position_type(radius, radius), radius),
+        180,
+        90);
+
+      draw_circle_segment(
+        circle2d_generator(position_type(size().x - radius, radius), radius),
+        270,
+        90);
+      glEnd();
+
+    }
 
     base_type::draw_epilogue();
     }
 
+  void clickable_on_click()
+    {
+    window::redraw(*this);
+    }
+
+  void clickable_button_down(bool state)
+    {
+    window::redraw(*this);
+    }
+
+  bool on_event(const event_type &event_info)
+      {
+      return base_type::on_event(event_info);
+      }
   };
 
 int main()
@@ -211,7 +245,8 @@ int main()
 
     window test_window1((
       _label = "custom example",
-      _size = window_size
+      _size = window_size,
+      _background = black()
       ));
     
     sexy_button* btn1 = new sexy_button((
