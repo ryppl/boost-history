@@ -10,6 +10,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 #define BOOST__GUIGL__COLOR_HPP
 
 #include <boost/guigl/types.hpp>
+#include "gl.hpp"
 
 namespace boost { namespace guigl {
 
@@ -55,6 +56,13 @@ namespace boost { namespace guigl {
       static_cast<float>(g)/255,
       static_cast<float>(b)/255,
       static_cast<float>(a)/255);
+    }
+
+  namespace gl {
+    inline void color(color_type const& clr)
+      {
+      color(float(clr[0]), float(clr[1]), float(clr[2]), float(clr[3]));
+      }
     }
 
   }}
