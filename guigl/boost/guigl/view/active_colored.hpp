@@ -13,6 +13,7 @@
 
 namespace boost { namespace guigl { namespace view {
 
+
 /// Behavior adding a modifiable active color which can be used for drawing.
 template<typename BaseView=base>
 class active_colored : public BaseView
