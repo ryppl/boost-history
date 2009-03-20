@@ -244,7 +244,7 @@ the additional information there, using the "uknum" attribute.
     </TD>
    </xsl:if>
    <TD valign="top">
-    <xsl:value-of select="rationale"/>
+    <xsl:apply-templates select="rationale/*|rationale/text()"/>
 
 <!-- ************************************************************
 

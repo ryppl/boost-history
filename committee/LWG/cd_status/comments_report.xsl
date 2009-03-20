@@ -179,7 +179,7 @@ the additional information there, using the "uknum" attribute.
    
    <xsl:if test="normalize-space(rationale)">   
     <p><b>Rationale</b></p>
-     <xsl:value-of select="rationale"/>
+     <xsl:apply-templates select="rationale/*|rationale/text()"/>
    </xsl:if>  
 
 <!-- ************************************************************
