@@ -170,10 +170,7 @@ protected:
 				typename visitor_can_enter_attribute<
 					VisitorType,
 					MetaAttribute,
-					meta_path::node_context<
-						AttribsNodePath,
-						MetaAttribute
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				ma,
@@ -217,10 +214,7 @@ protected:
 				typename visitor_can_leave_attribute<
 					VisitorType,
 					MetaAttribute,
-					meta_path::node_context<
-						AttribsNodePath,
-						MetaAttribute
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				ma,
@@ -262,10 +256,7 @@ protected:
 					VisitorType,
 					MetaClass,
 					MetaAttributes,
-					meta_path::node_context<
-						ClassNodePath,
-						MetaAttributes
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor
 			);
@@ -300,10 +291,7 @@ protected:
 					VisitorType,
 					MetaClass,
 					MetaAttributes,
-					meta_path::node_context<
-						ClassNodePath,
-						MetaAttributes
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor
 			);
@@ -404,10 +392,7 @@ protected:
 				typename visitor_can_enter_base_class<
 					VisitorType,
 					MetaInheritance,
-					meta_path::node_context<
-						BaseClassesNodePath,
-						MetaInheritance
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				mbc,
@@ -451,10 +436,7 @@ protected:
 				typename visitor_can_leave_base_class<
 					VisitorType,
 					MetaInheritance,
-					meta_path::node_context<
-						BaseClassesNodePath,
-						MetaInheritance
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				mbc,
@@ -642,10 +624,7 @@ protected:
 			typename visitor_can_enter_type<
 				VisitorType,
 				MetaClass,
-				meta_path::node_context<
-					NodePath,
-					MetaClass
-				>
+				meta_path::empty_context
 			>::type(),
 			visitor,
 			mc,
@@ -689,10 +668,7 @@ protected:
 			typename visitor_can_leave_type<
 				VisitorType,
 				MetaClass,
-				meta_path::node_context<
-					NodePath,
-					MetaClass
-				>
+				meta_path::empty_context
 			>::type(),
 			visitor,
 			mc,
@@ -790,10 +766,7 @@ protected:
 				typename visitor_can_enter_namespace_members<
 					VisitorType,
 					Members,
-					meta_path::node_context<
-						NamespaceNodePath,
-						Members
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				m,
@@ -834,10 +807,7 @@ protected:
 				typename visitor_can_leave_namespace_members<
 					VisitorType,
 					Members,
-					meta_path::node_context<
-						NamespaceNodePath,
-						Members
-					>
+					meta_path::empty_context
 				>::type(),
 				visitor,
 				m,
@@ -888,10 +858,7 @@ protected:
 			typename visitor_can_enter_namespace<
 				VisitorType,
 				MetaNamespace,
-				meta_path::node_context<
-					NodePath,
-					MetaNamespace
-				>
+				meta_path::empty_context
 			>::type(),
 			visitor,
 			mn,
@@ -935,10 +902,7 @@ protected:
 			typename visitor_can_leave_namespace<
 				VisitorType,
 				MetaNamespace,
-				meta_path::node_context<
-					NodePath,
-					MetaNamespace
-				>
+				meta_path::empty_context
 			>::type(),
 			visitor,
 			mn,
