@@ -62,8 +62,9 @@
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.traits">Traits</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.intrinsic">Intrinsic Metafunctions</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.algorithms">Algorithms</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#mirror.reference.iterators">Iterators</a></span></dt>
 <dt><span class="section"><a href="mirror/reference.html#mirror.reference.traversals">Traversals</a></span></dt>
-<dt><span class="section"><a href="mirror/reference.html#id2601530">Header files</a></span></dt>
+<dt><span class="section"><a href="mirror/reference.html#id2601582">Header files</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="mirror/examples.html">Examples</a></span></dt>
 <dd><dl>
@@ -359,8 +360,30 @@ const char* get_typename(void)
 		works out of the box.
 	</p>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
-<a name="mirror.motivation.problem.uniformmemattaccess"></a>Problem - Uniform access to member attributes of a class' instance</h4></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="mirror.motivation.problem.uniformmemattaccess"></a>Problem - Uniform access to member attributes of a class' instance</h4></div></div></div>
+<p>
+		In some situations it is useful to have the ability to traverse or iterate through
+		the member variables (or attributes) of a class' instance. Operations
+		like serialization, parameter marshalling, automated construction 
+		of GUIs for object inspection, are only some examples of this.
+		In many of such applications it is also useful to have some additional
+		meta-data about the class members, like information about their name, 
+		type, specifiers, etc.
+	</p>
+<p>
+		Using the <a class="link" href="mirror/reference.html#mirror.reference.iterators" title="Iterators">iterators</a> or 
+		<a class="link" href="mirror/reference.html#mirror.reference.traversals" title="Traversals">traversals</a> combined 
+		with custom visitors and other facilities provided by Mirror, it is possible
+		to implement such operations in a very generic manner.
+		More importantly it is possible to separate these operations from the 
+		types on which they are going to be executed.
+	</p>
+<p>
+		
+	</p>
+</div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
 <a name="mirror.motivation.problem.factory"></a>Problem - Generating class factories</h4></div></div></div></div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">

@@ -204,6 +204,27 @@
 <section id="mirror.motivation.problem.uniformmemattaccess">
 	<title>Problem - Uniform access to member attributes of a class' instance</title>
 
+	<para>
+		In some situations it is useful to have the ability to traverse or iterate through
+		the member variables (or attributes) of a class' instance. Operations
+		like serialization, parameter marshalling, automated construction 
+		of GUIs for object inspection, are only some examples of this.
+		In many of such applications it is also useful to have some additional
+		meta-data about the class members, like information about their name, 
+		type, specifiers, etc.
+	</para>
+	<para>
+		Using the <link linkend="mirror.reference.iterators">iterators</link> or 
+		<link linkend="mirror.reference.traversals">traversals</link> combined 
+		with custom visitors and other facilities provided by Mirror, it is possible
+		to implement such operations in a very generic manner.
+		More importantly it is possible to separate these operations from the 
+		types on which they are going to be executed.
+	</para>
+	<para>
+		
+	</para>
+
 </section>
 
 <section id="mirror.motivation.problem.factory">

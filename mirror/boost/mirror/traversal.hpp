@@ -60,13 +60,7 @@ private:
 		MetaClass mc;
 		NodePath path;
 		// enter the type
-		visitor.get().enter_type(
-			mc, 
-			meta_path::make_node_context(
-				path,
-				mc
-			)
-		);
+		lead_into_type(visitor, mc, path);
 		// visit the instance
 		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through the base classes
@@ -78,13 +72,7 @@ private:
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(
-			mc, 
-			meta_path::make_node_context(
-				path,
-				mc
-			)
-		);
+		lead_out_of_type(visitor, mc, path);
 	}
 };
 
@@ -132,13 +120,7 @@ private:
 		MetaClass mc;
 		NodePath path;
 		// enter the type
-		visitor.get().enter_type(
-			mc, 
-			meta_path::make_node_context(
-				path,
-				mc
-			)
-		);
+		lead_into_type(visitor, mc, path);
 		// visit the instance
 		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through all of the class' attributes
@@ -146,13 +128,7 @@ private:
 			cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
-		visitor.get().leave_type(
-			mc, 
-			meta_path::make_node_context(
-				path,
-				mc
-			)
-		);
+		lead_out_of_type(visitor, mc, path);
 	}
 };
 
@@ -205,13 +181,7 @@ private:
 		MetaNamespace mn;
 		NodePath path;
 		// let the visitor enter the namespace
-		visitor.get().enter_namespace(
-			mn,
-			meta_path::make_node_context(
-				path,
-				mn
-			)
-		);
+		lead_into_namespace(visitor, mn, path);
 		typedef typename MetaNamespace::template members<>::type 
 			members;
 		// show the visitor through all the members of 
@@ -223,13 +193,7 @@ private:
 			))
 		);
 		// the visitor leaves the namespace
-		visitor.get().leave_namespace(
-			mn,
-			meta_path::make_node_context(
-				path,
-				mn
-			)
-		);
+		lead_out_of_namespace(visitor, mn, path);
 	}
 };
 

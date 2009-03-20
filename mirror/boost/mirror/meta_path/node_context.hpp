@@ -54,6 +54,11 @@ struct node_set
 	>::type nodes;
 };
 
+struct empty_context
+{
+	typedef mpl::vector0<> paths_and_nodes;
+};
+
 } // namespace meta_path
 } // namespace mirror
 } // namespace boost

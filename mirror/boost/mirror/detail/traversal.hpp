@@ -13,6 +13,7 @@
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
 #include <boost/mirror/meta_path/node_context.hpp>
+#include <boost/mirror/detail/visitor_traits.hpp>
 //
 #include <boost/ref.hpp>
 #include <boost/type_traits/remove_reference.hpp>
@@ -63,26 +64,12 @@ protected:
 		: visitor(_visitor)
 		, ptr_to_inst(_ptr_to_inst)
 		{
-			visitor.enter_attributes(
-				MetaClass(), 
-				MetaAttributes(), 
-				meta_path::make_node_context(
-					ClassNodePath(),
-					MetaAttributes()
-				)
-			);
+			lead_into_attribute_list(visitor);
 		}
 
 		inline ~attribute_traversal(void)
 		{
-			visitor.leave_attributes(
-				MetaClass(), 
-				MetaAttributes(), 
-				meta_path::make_node_context(
-					ClassNodePath(),
-					MetaAttributes()
-				)
-			);
+			lead_out_of_attribute_list(visitor);
 		}
 
 		template <class MetaAttribute>
@@ -95,33 +82,49 @@ protected:
 			>::type path;
 			//
 			// process a single attribute
-			process_single(
-				ma, 
-				path,
-				typename VisitorType::works_on_instances()
-			);
+			process_single(ma, path);
 		}
 	private:
-		VisitorType& visitor;
+		reference_wrapper<VisitorType> visitor;
 		InstancePtr ptr_to_inst;
 
 		// process single attribute WITH an instance
 		template <class MetaAttribute, class AttribsNodePath>
 		void inline process_single(
 			MetaAttribute ma, 
-			AttribsNodePath path, 
-			mpl::bool_<true>
+			AttribsNodePath path 
 		) const
 		{
 			// enter the attribute
-			visitor.enter_attribute(
-				ma, 
-				meta_path::make_node_context(
-					path,
-					ma
-				)
-			);
+			lead_into_attribute(visitor, ma, path);
 			// 
+			traverse_attribute(ma, path);
+			// leave the attribute
+			lead_out_of_attribute(visitor, ma, path);
+		}
+
+		template <class MetaAttribute, class AttribsNodePath>
+		inline void traverse_attribute(
+			MetaAttribute ma, 
+			AttribsNodePath path
+		) const
+		{
+			typedef BOOST_TYPEOF(ma.get(*ptr_to_inst)) instance_type;
+
+			traverse_attribute_if(
+				typename VisitorType::works_on_instances(),
+				ma,
+				path
+			);
+		}
+
+		template <class MetaAttribute, class AttribsNodePath>
+		inline void traverse_attribute_if(
+			mpl::bool_<true>,
+			MetaAttribute ma, 
+			AttribsNodePath path
+		) const
+		{
 			// the poiner has to be valid
 			assert(ptr_to_inst != 0);
 			// 
@@ -137,35 +140,16 @@ protected:
 					MetaAttribute
 				>::type
 			>::accept(visitor, &instance);
-			//
-			// leave the attribute
-			visitor.leave_attribute(
-				ma, 
-				meta_path::make_node_context(
-					path,
-					ma
-				)
-			);
 		}
 
-		// process single attribute W/O an instance
 		template <class MetaAttribute, class AttribsNodePath>
-		void inline process_single(
+		inline void traverse_attribute_if(
+			mpl::bool_<false>,
 			MetaAttribute ma, 
-			AttribsNodePath path, 
-			mpl::bool_<false>
+			AttribsNodePath path
 		) const
 		{
-			// enter the attribute
-			visitor.enter_attribute(
-				ma, 
-				meta_path::make_node_context(
-					path,
-					ma
-				)
-			);
-			//
-			// traverse the attributes
+			// traverse the attribute
 			TraversalType<
 				typename MetaAttribute::type,
 				typename mpl::push_back<
@@ -173,16 +157,178 @@ protected:
 					MetaAttribute
 				>::type
 			>::accept(visitor, 0);
-			//
-			// leave the attributes
-			visitor.leave_attribute(
-				ma, 
+		}
+
+		template < class MetaAttribute, class AttribsNodePath>
+		static inline void lead_into_attribute(
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path
+		)
+		{
+			lead_into_attribute_if(
+				typename visitor_can_enter_attribute<
+					VisitorType,
+					MetaAttribute,
+					meta_path::node_context<
+						AttribsNodePath,
+						MetaAttribute
+					>
+				>::type(),
+				visitor,
+				ma,
+				path
+			);
+		}
+
+		template < class MetaAttribute, class AttribsNodePath>
+		static inline void lead_into_attribute_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path
+		)
+		{
+			visitor.get().enter_attribute(
+				ma,
 				meta_path::make_node_context(
 					path,
 					ma
 				)
 			);
 		}
+
+		template <class MetaAttribute, class AttribsNodePath>
+		static inline void lead_into_attribute_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path
+		){ }
+
+		template < class MetaAttribute, class AttribsNodePath>
+		static inline void lead_out_of_attribute(
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path
+		)
+		{
+			lead_out_of_attribute_if(
+				typename visitor_can_leave_attribute<
+					VisitorType,
+					MetaAttribute,
+					meta_path::node_context<
+						AttribsNodePath,
+						MetaAttribute
+					>
+				>::type(),
+				visitor,
+				ma,
+				path
+			);
+		}
+
+		template <class MetaAttribute, class AttribsNodePath>
+		static inline void lead_out_of_attribute_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path 
+		)
+		{
+			visitor.get().leave_attribute(
+				ma,
+				meta_path::make_node_context(
+					path,
+					ma
+				)
+			);
+		}
+
+		template <class MetaAttribute, class AttribsNodePath>
+		static inline void lead_out_of_attribute_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			MetaAttribute ma,
+			AttribsNodePath path
+		){ }
+
+		static inline void lead_into_attribute_list(
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			lead_into_attribute_list_if(
+				typename visitor_can_enter_attributes<
+					VisitorType,
+					MetaClass,
+					MetaAttributes,
+					meta_path::node_context<
+						ClassNodePath,
+						MetaAttributes
+					>
+				>::type(),
+				visitor
+			);
+		}
+
+		static inline void lead_into_attribute_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			visitor.get().enter_attributes(
+				MetaClass(), 
+				MetaAttributes(), 
+				meta_path::make_node_context(
+					ClassNodePath(),
+					MetaAttributes()
+				)
+			);
+		}
+
+		static inline void lead_into_attribute_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor
+		){ }
+
+		static inline void lead_out_of_attribute_list(
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			lead_out_of_attribute_list_if(
+				typename visitor_can_leave_attributes<
+					VisitorType,
+					MetaClass,
+					MetaAttributes,
+					meta_path::node_context<
+						ClassNodePath,
+						MetaAttributes
+					>
+				>::type(),
+				visitor
+			);
+		}
+
+		static inline void lead_out_of_attribute_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			visitor.get().leave_attributes(
+				MetaClass(), 
+				MetaAttributes(), 
+				meta_path::make_node_context(
+					ClassNodePath(),
+					MetaAttributes()
+				)
+			);
+		}
+
+		static inline void lead_out_of_attribute_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor
+		){ }
+
 	};
 
 	// attribute_traversal factory function
@@ -208,45 +354,21 @@ protected:
 		: visitor(_visitor)
 		, ptr_to_inst(_ptr_to_inst)
 		{
-			visitor.enter_base_classes(
-				MetaClass(), 
-				typename MetaClass::base_classes(),
-				meta_path::make_node_context(
-					ClassNodePath(),
-					typename MetaClass::base_classes()
-				)
-			);
+			lead_into_base_class_list(visitor);
 		}
 
 		inline ~base_class_traversal(void)
 		{
-			visitor.leave_base_classes(
-				MetaClass(), 
-				typename MetaClass::base_classes(),
-				meta_path::make_node_context(
-					ClassNodePath(),
-					typename MetaClass::base_classes()
-				)
-			);
+			lead_out_of_base_class_list(visitor);
 		}
 
 		template <class MetaInheritance>
 		inline void operator ()(MetaInheritance mbc) const
 		{
-			typedef typename mpl::push_back<
-				ClassNodePath,
-				typename MetaClass::base_classes
-			>::type BaseClassesNodePath;
 			BaseClassesNodePath path;
 			//
 			// enter the base cass
-			visitor.enter_base_class(
-				mbc, 
-				meta_path::make_node_context(
-					path,
-					mbc
-				)
-			);
+			lead_into_base_class(visitor, mbc, path);
 			//
 			// get the meta-class of the base class
 			typedef typename MetaInheritance::base_class
@@ -260,7 +382,48 @@ protected:
 				>::type
 			>::accept(visitor, ptr_to_inst);
 			// leave the base class
-			visitor.leave_base_class(
+			lead_out_of_base_class(visitor, mbc, path);
+		}
+	private:
+		typedef typename mpl::push_back<
+			ClassNodePath,
+			typename MetaClass::base_classes
+		>::type BaseClassesNodePath;
+
+		reference_wrapper<VisitorType> visitor;
+		InstancePtr ptr_to_inst;
+
+		template <class MetaInheritance>
+		static inline void lead_into_base_class(
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path 
+		)
+		{
+			lead_into_base_class_if(
+				typename visitor_can_enter_base_class<
+					VisitorType,
+					MetaInheritance,
+					meta_path::node_context<
+						BaseClassesNodePath,
+						MetaInheritance
+					>
+				>::type(),
+				visitor,
+				mbc,
+				path
+			);
+		}
+
+		template <class MetaInheritance>
+		static inline void lead_into_base_class_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path 
+		)
+		{
+			visitor.get().enter_base_class(
 				mbc, 
 				meta_path::make_node_context(
 					path,
@@ -268,9 +431,139 @@ protected:
 				)
 			);
 		}
-	private:
-		VisitorType& visitor;
-		InstancePtr ptr_to_inst;
+
+		template <class MetaInheritance>
+		static inline void lead_into_base_class_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path 
+		){ }
+
+		template <class MetaInheritance>
+		static inline void lead_out_of_base_class(
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path 
+		)
+		{
+			lead_out_of_base_class_if(
+				typename visitor_can_leave_base_class<
+					VisitorType,
+					MetaInheritance,
+					meta_path::node_context<
+						BaseClassesNodePath,
+						MetaInheritance
+					>
+				>::type(),
+				visitor,
+				mbc,
+				path
+			);
+		}
+
+		template <class MetaInheritance>
+		static inline void lead_out_of_base_class_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path 
+		)
+		{
+			visitor.get().leave_base_class(
+				mbc, 
+				meta_path::make_node_context(
+					path,
+					mbc
+				)
+			);
+		}
+
+		template <class MetaInheritance>
+		static inline void lead_out_of_base_class_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			MetaInheritance mbc,
+			BaseClassesNodePath path
+		){ }
+
+		static inline void lead_into_base_class_list(
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			lead_into_base_class_list_if(
+				typename visitor_can_enter_base_classes<
+					VisitorType,
+					MetaClass,
+					typename MetaClass::base_classes,
+					meta_path::node_context<
+						ClassNodePath,
+						typename MetaClass::base_classes
+					>
+				>::type(),
+				visitor
+			);
+		}
+
+		static inline void lead_into_base_class_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			visitor.get().enter_base_classes(
+				MetaClass(), 
+				typename MetaClass::base_classes(),
+				meta_path::make_node_context(
+					ClassNodePath(),
+					typename MetaClass::base_classes()
+				)
+			);
+		}
+
+		static inline void lead_into_base_class_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor
+		){ }
+
+		static inline void lead_out_of_base_class_list(
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			lead_out_of_base_class_list_if(
+				typename visitor_can_leave_base_classes<
+					VisitorType,
+					MetaClass,
+					typename MetaClass::base_classes,
+					meta_path::node_context<
+						ClassNodePath,
+						typename MetaClass::base_classes
+					>
+				>::type(),
+				visitor
+			);
+		}
+
+		static inline void lead_out_of_base_class_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor
+		)
+		{
+			visitor.get().leave_base_classes(
+				MetaClass(), 
+				typename MetaClass::base_classes(),
+				meta_path::make_node_context(
+					ClassNodePath(),
+					typename MetaClass::base_classes()
+				)
+			);
+		}
+
+		static inline void lead_out_of_base_class_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor
+		){ }
+
+
 	};
 
 	// base class traversal factory function
@@ -295,38 +588,25 @@ protected:
 		InstanceType* ptr_to_inst
 	)
 	{
-		do_lead_to_instance(
+		lead_to_instance_if(
+			typename VisitorType::works_on_instances(),
 			visitor,
 			mc,
 			path,
-			ptr_to_inst,
-			typename VisitorType::works_on_instances()
+			ptr_to_inst
 		);
 	}
 
-private:
 	template <
 		class VisitorType, 
 		class InstanceType
 	>
-	inline static void do_lead_to_instance(
-		reference_wrapper<VisitorType> visitor, 
-		MetaClass,
-		NodePath, 
-		InstanceType* ptr_to_inst,
-		mpl::bool_<false>
-	){ }
-
-	template <
-		class VisitorType, 
-		class InstanceType
-	>
-	inline static void do_lead_to_instance(
-		reference_wrapper<VisitorType> visitor, 
+	inline static void lead_to_instance_if(
+		mpl::bool_<true>,
+		reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
 		NodePath path,
-		InstanceType* ptr_to_inst,
-		mpl::bool_<true>
+		InstanceType* ptr_to_inst
 	)
 	{
 		visitor.get().visit_instance(
@@ -338,6 +618,112 @@ private:
 			ptr_to_inst
 		);
 	}
+
+	template <
+		class VisitorType, 
+		class InstanceType
+	>
+	inline static void lead_to_instance_if(
+		mpl::bool_<false>,
+		reference_wrapper<VisitorType> visitor,
+		MetaClass mc,
+		NodePath path,
+		InstanceType* ptr_to_inst
+	) { }
+
+	template <class VisitorType>
+	static inline void lead_into_type(
+                reference_wrapper<VisitorType> visitor,
+		MetaClass mc,
+                NodePath path
+        )
+        {
+		lead_into_type_if(
+			typename visitor_can_enter_type<
+				VisitorType,
+				MetaClass,
+				meta_path::node_context<
+					NodePath,
+					MetaClass
+				>
+			>::type(),
+			visitor,
+			mc,
+			path
+		);
+	}
+
+        template < class VisitorType>
+        static inline void lead_into_type_if(
+		mpl::bool_<true>,
+                reference_wrapper<VisitorType> visitor,
+                MetaClass mc,
+                NodePath path
+        )
+        {
+                visitor.get().enter_type(
+                        mc,
+                        meta_path::make_node_context(
+                                path,
+                                mc
+                        )
+                );
+        }
+
+        template < class VisitorType>
+        static inline void lead_into_type_if(
+		mpl::bool_<false>,
+                reference_wrapper<VisitorType> visitor,
+                MetaClass mc,
+                NodePath path
+        ){ }
+
+	template <class VisitorType>
+	static inline void lead_out_of_type(
+                reference_wrapper<VisitorType> visitor,
+		MetaClass mc,
+                NodePath path
+        )
+        {
+		lead_out_of_type_if(
+			typename visitor_can_leave_type<
+				VisitorType,
+				MetaClass,
+				meta_path::node_context<
+					NodePath,
+					MetaClass
+				>
+			>::type(),
+			visitor,
+			mc,
+			path
+		);
+	}
+
+        template < class VisitorType>
+        static inline void lead_out_of_type_if(
+		mpl::bool_<true>,
+                reference_wrapper<VisitorType> visitor,
+                MetaClass mc,
+                NodePath path
+        )
+        {
+                visitor.get().leave_type(
+                        mc,
+                        meta_path::make_node_context(
+                                path,
+                                mc
+                        )
+                );
+        }
+
+        template < class VisitorType>
+        static inline void lead_out_of_type_if(
+		mpl::bool_<false>,
+                reference_wrapper<VisitorType> visitor,
+                MetaClass mc,
+                NodePath path
+        ){ }
 
 };
 
@@ -369,12 +755,10 @@ protected:
 			reference_wrapper<VisitorType> _visitor
 		): visitor(_visitor)
 		{
-			visitor.get().enter_namespace_members(
+			lead_into_namespace_member_list(
+				visitor,
 				Members(),
-				meta_path::make_node_context(
-					NamespaceNodePath(),
-					Members() 
-				)
+				NamespaceNodePath()
 			);
 		}
 
@@ -389,14 +773,100 @@ protected:
 
 		inline ~namespace_member_traversal(void)
 		{
-			visitor.get().leave_namespace_members(
+			lead_out_of_namespace_member_list(
+				visitor,
 				Members(),
+				NamespaceNodePath()
+			);
+		}
+
+		static inline void lead_into_namespace_member_list(
+	                reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+	        )
+	        {
+			lead_into_namespace_member_list_if(
+				typename visitor_can_enter_namespace_members<
+					VisitorType,
+					Members,
+					meta_path::node_context<
+						NamespaceNodePath,
+						Members
+					>
+				>::type(),
+				visitor,
+				m,
+				path
+			);
+		}
+
+		static inline void lead_into_namespace_member_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+		)
+		{
+			visitor.get().enter_namespace_members(
+				m,
 				meta_path::make_node_context(
-					NamespaceNodePath(),
-					Members() 
+					path,
+					m
 				)
 			);
 		}
+
+		static inline void lead_into_namespace_member_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+		){ }
+
+		static inline void lead_out_of_namespace_member_list(
+	                reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+	        )
+	        {
+			lead_out_of_namespace_member_list_if(
+				typename visitor_can_leave_namespace_members<
+					VisitorType,
+					Members,
+					meta_path::node_context<
+						NamespaceNodePath,
+						Members
+					>
+				>::type(),
+				visitor,
+				m,
+				path
+			);
+		}
+
+		static inline void lead_out_of_namespace_member_list_if(
+			mpl::bool_<true>,
+			reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+		)
+		{
+			visitor.get().leave_namespace_members(
+				m,
+				meta_path::make_node_context(
+					path,
+					m
+				)
+			);
+		}
+
+		static inline void lead_out_of_namespace_member_list_if(
+			mpl::bool_<false>,
+			reference_wrapper<VisitorType> visitor,
+			Members m,
+			NamespaceNodePath path
+		){ }
 	};
 
 	template <class Members, class VisitorType>
@@ -405,6 +875,102 @@ protected:
 	{
 		return namespace_member_traversal<VisitorType, Members>(_visitor);
 	}
+
+	
+	template <class VisitorType>
+	static inline void lead_into_namespace(
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        )
+        {
+		lead_into_namespace_if(
+			typename visitor_can_enter_namespace<
+				VisitorType,
+				MetaNamespace,
+				meta_path::node_context<
+					NodePath,
+					MetaNamespace
+				>
+			>::type(),
+			visitor,
+			mn,
+			path
+		);
+	}
+ 
+        template <class VisitorType>
+        static inline void lead_into_namespace_if(
+		mpl::bool_<true>,
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        )
+        {
+                visitor.get().enter_namespace(
+                        mn,
+                        meta_path::make_node_context(
+                                path,
+                                mn
+                        )
+                );
+        }
+
+        template < class VisitorType>
+        static inline void lead_into_namespace_if(
+		mpl::bool_<false>,
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        ){ }
+
+       	template <class VisitorType>
+	static inline void lead_out_of_namespace(
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        )
+        {
+		lead_out_of_namespace_if(
+			typename visitor_can_leave_namespace<
+				VisitorType,
+				MetaNamespace,
+				meta_path::node_context<
+					NodePath,
+					MetaNamespace
+				>
+			>::type(),
+			visitor,
+			mn,
+			path
+		);
+	}
+ 
+	template < class VisitorType>
+        static inline void lead_out_of_namespace_if(
+		mpl::bool_<true>,
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        )
+        {
+                visitor.get().leave_namespace(
+                        mn,
+                        meta_path::make_node_context(
+                                path,
+                                mn
+                        )
+                );
+        }
+
+        template < class VisitorType>
+        static inline void lead_out_of_namespace_if(
+		mpl::bool_<false>,
+                reference_wrapper<VisitorType> visitor,
+		MetaNamespace mn,
+                NodePath path
+        ){ }
+
 };
 
 } // namespace detail

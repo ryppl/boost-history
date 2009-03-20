@@ -176,10 +176,6 @@ public:
 		print_node(MetaClass(), Context());
 	}
 
-	// leave the class/type
-	template <class MetaClass, class Context>
-	void leave_type(MetaClass, Context) const { }
-
 	template <class MetaClass, class BaseClasses, class Context>
 	inline void enter_base_classes(MetaClass, BaseClasses, Context)
 	{
@@ -187,21 +183,12 @@ public:
 			print_node(BaseClasses(), Context());
 	}
 	
-	template <class MetaClass, class BaseClasses, class Context>
-	inline void leave_base_classes(MetaClass, BaseClasses, Context){ }
-
-
 	// enter a base class
 	template <class MetaInheritance, class Context>
 	void enter_base_class(MetaInheritance, Context)
 	{
 		print_node(MetaInheritance(), Context());
 	}
-
-	// leave base class
-	template <class MetaInheritance, class Context>
-	void leave_base_class(MetaInheritance, Context){ }
-
 
 	template <class MetaClass, class MetaAttributes, class Context>
 	void enter_attributes(MetaClass, MetaAttributes, Context)
@@ -210,21 +197,10 @@ public:
 			print_node(MetaAttributes(), Context());
 	}
 
-	template <class MetaClass, class MetaAttributes, class Context>
-	void leave_attributes(MetaClass, MetaAttributes, Context){ }
-
 	template <class MetaAttribute, class Context>
 	inline void enter_attribute(MetaAttribute, Context)
 	{
 		print_node(MetaAttribute(), Context());
-	}
-
-	template <class MetaAttribute, class Context>
-	void leave_attribute(MetaAttribute, Context){ }
-
-	template <class MetaClass, class Context, typename InstanceType>
-	void visit_instance(MetaClass, Context ctx, InstanceType* ptr_to_inst)
-	{
 	}
 
 private:
