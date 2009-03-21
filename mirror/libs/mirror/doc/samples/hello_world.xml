@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.hello_world">
+
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_namespace.hpp&gt;
+#include &lt;boost/mirror/meta_type.hpp&gt;
+
+namespace Hello {
+
+struct World { };
+
+} // namespace Hello
+
+namespace boost {
+namespace mirror {
+
+/** Register the Hello namespace
+ */
+<macroname>BOOST_MIRROR_REG_NAMESPACE</macroname>((Hello))
+
+/** Register the ::Hello::World type
+ */
+<macroname>BOOST_MIRROR_REG_TYPE</macroname>(::Hello, World)
+
+} // namespace mirror
+} // namespace boost
+
+
+int main(void)
+{
+        using namespace ::std;
+        using namespace ::boost;
+        using namespace ::boost::mirror;
+        //
+        // cts::<functionname>bcout</functionname>() returns a reference to ::std::cout
+        // or ::std::wcout based on the used character type
+        //
+        cts::<functionname>bcout</functionname>() &lt;&lt;
+                <macroname>BOOST_MIRRORED_TYPE</macroname>(::Hello::World)::full_name() &lt;&lt;
+                endl;
+
+        cts::<functionname>bcout</functionname>() &lt;&lt;
+                <macroname>BOOST_MIRRORED_TYPE</macroname>(::Hello::World)::scope::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(", ") &lt;&lt;
+                <macroname>BOOST_MIRRORED_TYPE</macroname>(::Hello::World)::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(".") &lt;&lt;
+                endl;
+        //
+        return 0;
+}
+
+</programlisting>
+
