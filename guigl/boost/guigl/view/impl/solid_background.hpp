@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2008,2009 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -21,7 +21,11 @@ template<typename BaseView>
 inline void solid_background<BaseView>::draw_prologue()
 {
     BaseView::draw_prologue();
-    glColor3d(m_background_color[0], m_background_color[1], m_background_color[2]);
+    glColor4f(
+        m_background_color[0],
+        m_background_color[1],
+        m_background_color[2],
+        m_background_color[3]);
     glRectd(0.0, 0.0, solid_background::size().x, solid_background::size().y);
 }
 

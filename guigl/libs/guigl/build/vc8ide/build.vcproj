@@ -85,6 +85,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\boost\guigl\color.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\guigl\export_symbols.hpp"
 				>
 			</File>

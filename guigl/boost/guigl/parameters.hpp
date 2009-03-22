@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2008,2009 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -12,6 +12,7 @@
 #include <boost/guigl/event.hpp>
 #include <boost/guigl/types.hpp>
 #include <boost/parameter/typed_name.hpp>
+#include <boost/guigl/color.hpp>
 
 namespace boost { namespace guigl {
 
@@ -19,9 +20,9 @@ namespace keywords {
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(label,const std::string,"")
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(size,const size_type,(size_type(200,200)))
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(position,const position_type,(size_type(0,0)))
-    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(background,const color_type,(color_type(0,0,0)))
-    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(color,const color_type,(color_type(1,1,1)))
-    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(active_color,const color_type,(color_type(1,0,0)))
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(background,const color_type,(black()))
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(color,const color_type,(white()))
+    BOOST_PARAMETER_TYPED_NAME_WDEFAULT(active_color,const color_type,(red()))
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(depth,const bool,false)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(min,const double,0.0)
     BOOST_PARAMETER_TYPED_NAME_WDEFAULT(max,const double,1.0)

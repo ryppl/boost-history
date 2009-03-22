@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2008 Stjepan Rajko
+    Copyright 2008,2009 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -17,7 +17,7 @@ namespace boost { namespace guigl { namespace view {
 template<typename BaseView>
 void active_colored<BaseView>::use_active_color()
 {
-    glColor3d(m_active_color[0],m_active_color[1],m_active_color[2]);
+    glColor4f(m_active_color[0], m_active_color[1], m_active_color[2], m_active_color[3]);
 }
 
 }}}
