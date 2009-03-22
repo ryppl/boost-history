@@ -25,9 +25,12 @@
 
 using namespace boost::guigl;
 
-color_type make_grey(float value)
+color_type make_grey(double value)
 {
-    return color_type(value, value, value);
+    return color_type(
+        static_cast<float>(value),
+        static_cast<float>(value),
+        static_cast<float>(value));
 }
 
 void idle()
