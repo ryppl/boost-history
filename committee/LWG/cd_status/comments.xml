@@ -3571,7 +3571,7 @@ statement]
 </rationale>
 </comment>
 
-<comment nb="UK" num="78" uknum="130" type="Te" owner="" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="78" uknum="130" type="Te" owner="LWG" issue="1001" disp="" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -3590,6 +3590,9 @@ statement]
         concept fundamental along with the other support concepts
         in 14.9.4 and strike any reference to including a header.
 </suggestion>
+<notes>CWG discussed the core portion of the comment but found no support, and is passing it on
+to LWG for their response to the library aspects of the comment.
+</notes>
 <rationale>
 </rationale>
 </comment>
@@ -8238,7 +8241,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="902" disp="" date="" extdoc="">
 <section>
 18.2.1
 [Numeric
@@ -8269,7 +8272,7 @@ limits]
 </rationale>
 </comment>
 
-<comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="902" disp="" date="" extdoc="">
 <section>
 18.2.1
 </section>
@@ -8482,7 +8485,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="189" uknum="273" type="Te" owner="LWG" issue="1066" disp="accepted" date="" extdoc="">
 <section>
 18.4, 18.7
 </section>
@@ -8881,7 +8884,7 @@ the scope of the standard.
 </rationale>
 </comment>
 
-<comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="65" uknum="" type="te" owner="LWG" issue="1075" disp="" date="" extdoc="">
 <section>
 20
 </section>
@@ -8934,7 +8937,7 @@ meeting.<BR/><BR/>
 D2840 was renamed
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 N2840</a> and was accepted into the WP in Summit.
-</notes>
+<BR/><BR/>Post Summit: Alan moved from NAD to Open.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -9488,7 +9491,7 @@ Table 51, last row, column 3
 </rationale>
 </comment>
 
-<comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="38" uknum="" type="te" owner="LWG" issue="817" disp="" date="" extdoc="">
 <section>
 20.6.12.1.3
 </section>
@@ -9920,7 +9923,7 @@ Section reference corrected from 20.7.12.
 </rationale>
 </comment>
 
-<comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="72" uknum="" type="te" owner="LWG" issue="817" disp="" date="" extdoc="">
 <section>
 20.6.12.1.3 [func.bind.bind]
 </section>
@@ -9944,7 +9947,7 @@ Section reference corrected from 20.7.12.
 </rationale>
 </comment>
 
-<comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="DE" num="21" uknum="" type="te" owner="LWG" issue="817" disp="accepted" date="" extdoc="">
 <section>
 20.6.12.1.3 [func.bind.bind]
 </section>
@@ -10097,7 +10100,7 @@ Section reference corrected from 20.7.18.
 </rationale>
 </comment>
 
-<comment nb="US" num="74.1" uknum="" type="te" owner="LWG" issue="" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="US" num="74.1" uknum="" type="te" owner="LWG" issue="1075" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 20.8
 </section>
@@ -10151,7 +10154,7 @@ Resolved by
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 N2840</a>, accepted in New Jersey.<BR/><BR/>
 See <a href="#US65">US 65</a> for detailed notes.
-</notes>
+<BR/><BR/>Post Summit: Alan moved from NAD to Open.</notes>
 <rationale>
 </rationale>
 </comment>
@@ -10335,7 +10338,7 @@ in disguise, with all the associated problems. Not a good idea.
 </rationale>
 </comment>
 
-<comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="79" uknum="" type="te" owner="LWG" issue="932" disp="accepted" date="" extdoc="">
 <section>
 20.8.12.2.1
 </section>
@@ -13432,7 +13435,7 @@ supplying range-based algorithms.
 </rationale>
 </comment>
 
-<comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="270" uknum="17" type="Te" owner="LWG" issue="940" disp="" date="" extdoc="">
 <section>
 24.3
 </section>
@@ -13646,7 +13649,7 @@ sufficiently high priority for iterator types.
 </rationale>
 </comment>
 
-<comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="279" uknum="24" type="Te" owner="LWG" issue="1051" disp="" date="" extdoc="">
 <section>
 24.4.1.2.12,
         24.4.3.2.12
@@ -13718,7 +13721,7 @@ resolution.
 </rationale>
 </comment>
 
-<comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="282" uknum="5" type="Te" owner="LWG" issue="901" disp="" date="" extdoc="">
 <section>
 24.4.2.1,
         24.4.2.2.2,
@@ -15293,7 +15296,7 @@ p6
 </rationale>
 </comment>
 
-<comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="316" uknum="345" type="Te" owner="LWG" issue="723" disp="accepted" date="" extdoc="">
 <section>
 28.4 ff
 </section>
@@ -15664,7 +15667,7 @@ highly compatible with C.
 </rationale>
 </comment>
 
-<comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="313" uknum="220" type="Te" owner="LWG" issue="926" disp="" date="" extdoc="">
 <section>
 29.1
 </section>
@@ -16023,7 +16026,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="323" uknum="171" type="Te" owner="LWG" issue="929" disp="accepted" date="" extdoc="">
 <section>
 30.2.1
 </section>
@@ -16053,7 +16056,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+<comment nb="UK" num="324" uknum="169" type="Te" owner="LWG" issue="889" disp="rejected" date="" extdoc="">
 <section>
 30.2.1.1
 </section>
@@ -16649,7 +16652,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="340" uknum="201" type="Te" owner="LWG" issue="1051" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="340" uknum="201" type="Te" owner="LWG" issue="1050" disp="accepted" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -16856,7 +16859,7 @@ p2
 </rationale>
 </comment>
 
-<comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="24" uknum="" type="te" owner="LWG" issue="922" disp="" date="" extdoc="">
 <section>
 Annex B
 </section>
