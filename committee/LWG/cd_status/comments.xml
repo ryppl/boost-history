@@ -8428,7 +8428,7 @@ limits]
 </rationale>
 </comment>
 
-<comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="1078" disp="" date="" extdoc="">
 <section>
 18.2.6
 </section>
@@ -10647,7 +10647,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="1081" disp="" date="" extdoc="">
 <section>
 21
 </section>
@@ -10669,7 +10669,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="1081" disp="" date="" extdoc="">
 <section>
 21.2, 21.3
 </section>
@@ -11409,7 +11409,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="1081" disp="" date="" extdoc="">
 <section>
 21.3
 </section>
@@ -11557,7 +11557,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="1082" disp="" date="" extdoc="">
 <section>
 22.1.3.2.2
 </section>
@@ -11783,7 +11783,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="1083" disp="" date="" extdoc="">
 <section>
 22.2.5.1,
         22.2.5.2,
@@ -11913,7 +11913,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="1083" disp="" date="" extdoc="">
 <section>
 22.2.5.3 ,
         22.2.5.4
@@ -12830,7 +12830,7 @@ sequence containers.
 </rationale>
 </comment>
 
-<comment nb="UK" num="246" uknum="350" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="246" uknum="350" type="Te" owner="LWG" issue="1091" disp="" date="" extdoc="">
 <section>
 23.3.2.2
 </section>
@@ -12850,10 +12850,10 @@ sequence containers.
         strike these signatures from the class template
         definition!)
 </suggestion>
-<notes>This comment was submitted as editorial, but the project editor
-has classified it as technical.
+<notes>
 </notes>
-<rationale>
+<rationale>This comment was submitted as editorial, but the project editor
+has classified it as technical.
 </rationale>
 </comment>
 
@@ -12910,7 +12910,7 @@ has classified it as technical.
 </rationale>
 </comment>
 
-<comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="1084" disp="" date="" extdoc="">
 <section>
 24.1.1
 </section>
@@ -13096,7 +13096,7 @@ has classified it as technical.
 </rationale>
 </comment>
 
-<comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="1085" disp="" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -13285,7 +13285,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="265" uknum="68" type="Te" owner="LWG" issue="1079" disp="" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13897,7 +13897,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="1086" disp="accepted" date="" extdoc="">
 <section>
 24.5
 </section>
@@ -14367,7 +14367,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="1087" disp="" date="" extdoc="">
 <section>
 25.2.5
 </section>
@@ -15855,7 +15855,7 @@ Rationale: for compatibility with C.</notes>
 </rationale>
 </comment>
 
-<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="908" disp="" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -16807,7 +16807,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="342" uknum="123" type="Te" owner="LWG" issue="1088" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
