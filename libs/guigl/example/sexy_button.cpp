@@ -265,32 +265,32 @@ int main()
     sexy_button* btn1 = new sexy_button((
         _size = position_type(window_size.x - border*2, window_size.y - border*2),
         _position = position_type(border, border) ));
-    btn1->set_color<bg_color>(make_color256(132, 177, 232));
-    btn1->set_color<highlight_color>(make_color256(160, 197, 241));
+    btn1->set_color<bg_color>(make_color(132, 177, 232));
+    btn1->set_color<highlight_color>(make_color(160, 197, 241));
 
     sexy_button* btn2 = new sexy_button((
         _size = btn_size,
         _position = position_type(border*2, border*2) ));
-    btn2->set_color<bg_color>(make_color256(12, 114, 163));
-    btn2->set_color<highlight_color>(make_color256(3, 95, 138));
+    btn2->set_color<bg_color>(make_color(12, 114, 163));
+    btn2->set_color<highlight_color>(make_color(3, 95, 138));
 
     sexy_button* btn3 = new sexy_button((
         _size = btn_size,
         _position = position_type(border*3 + btn_size.x, border*2) ));
-    btn3->set_color<bg_color>(make_color256(8, 208, 60));
-    btn3->set_color<highlight_color>(make_color256(9, 171, 51));
+    btn3->set_color<bg_color>(make_color(8, 208, 60));
+    btn3->set_color<highlight_color>(make_color(9, 171, 51));
 
     sexy_button* btn4 = new sexy_button((
         _size = btn_size,
         _position = position_type(border*2, border*3 + btn_size.y) ));
-    btn4->set_color<bg_color>(make_color256(255, 35, 87));
-    btn4->set_color<highlight_color>(make_color256(219, 4, 55));
+    btn4->set_color<bg_color>(make_color(255, 35, 87));
+    btn4->set_color<highlight_color>(make_color(219, 4, 55));
 
     sexy_button* btn5 = new sexy_button((
         _size = btn_size,
         _position = position_type(border*3 + btn_size.x, border*3 + btn_size.y) ));
-    btn5->set_color<bg_color>(make_color256(249, 230, 73));
-    btn5->set_color<highlight_color>(make_color256(255, 255, 25));
+    btn5->set_color<bg_color>(make_color(249, 230, 73));
+    btn5->set_color<highlight_color>(make_color(255, 255, 25));
 
     test_window1
         << btn1 << btn2 << btn3 << btn4 << btn5

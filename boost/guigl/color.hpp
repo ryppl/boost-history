@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-Copyright 2008 Torba Andrey
+Copyright 2009 Andrey Torba
 
 Distributed under the Boost Software License, Version 1.0.
 (See accompanying file LICENSE_1_0.txt or copy at
@@ -10,61 +10,93 @@ http://www.boost.org/LICENSE_1_0.txt)
 #define BOOST__GUIGL__COLOR_HPP
 
 #include <boost/guigl/types.hpp>
-#include "gl.hpp"
 
 namespace boost { namespace guigl {
 
-  inline color_type make_color(float r, float g, float b, float a = 1.0f)
+    template<class T>
+    color_type make_color(T r, T g, T b, T a);
+
+    template<>
+    inline color_type make_color<float>(float r, float g, float b, float a)
     {
-    return color_type(r, g, b, a);
+        return color_type(r, g, b, a);
     }
 
-  inline color_type red(float alpha = 1)
+    template<>
+    inline color_type make_color<double>(double r, double g, double b, double a)
     {
-    return make_color(1, 0, 0, alpha);
+        return make_color(
+            static_cast<float>(r),
+            static_cast<float>(g),
+            static_cast<float>(b),
+            static_cast<float>(a));
     }
 
-  inline color_type green(float alpha = 1)
+    template<>
+    inline color_type make_color<int>(int r, int g, int b, int a)
     {
-    return make_color(0, 1, 0, alpha);
+        return make_color(
+            static_cast<float>(r)/255,
+            static_cast<float>(g)/255,
+            static_cast<float>(b)/255,
+            static_cast<float>(a)/255);
     }
 
-  inline color_type blue(float alpha = 1)
+    template<class T>
+    color_type make_color(T r, T g, T b);
+
+    template<>
+    inline color_type make_color<float>(float r, float g, float b)
     {
-    return make_color(0, 0, 1, alpha);
+        return make_color(r, g, b, 1.0f);
     }
 
-  inline color_type yellow(float alpha = 1)
+    template<>
+    inline color_type make_color<double>(double r, double g, double b)
     {
-    return make_color(1, 1, 0, alpha);
+        return make_color(r, g, b, 1.0);
     }
 
-  inline color_type white(float alpha = 1)
+    template<>
+    inline color_type make_color<int>(int r, int g, int b)
     {
-    return make_color(1, 1, 1, alpha);
+        return make_color(r, g, b, 255);
     }
 
-  inline color_type black(float alpha = 1)
-    {
-    return make_color(0, 0, 0, alpha);
+#define BOOST_GUIGL_COLOR(name, red, green, blue)   \
+    inline color_type name(float alpha = 1.0f)      \
+    {                                               \
+    return make_color(red, green, blue, alpha); \
     }
 
-  inline color_type make_color256(unsigned char r, unsigned char g, unsigned char b, unsigned char a = 255)
+    BOOST_GUIGL_COLOR(red,      1.0f, 0.0f, 0.0f);
+    BOOST_GUIGL_COLOR(green,    0.0f, 1.0f, 0.0f);
+    BOOST_GUIGL_COLOR(blue,     0.0f, 0.0f, 1.0f);
+    BOOST_GUIGL_COLOR(black,    0.0f, 0.0f, 0.0f);
+    BOOST_GUIGL_COLOR(white,    1.0f, 1.0f, 1.0f);
+    BOOST_GUIGL_COLOR(yellow,   1.0f, 1.0f, 0.0f);
+
+    inline color_type grey(float brightness = 0.5f, float alpha = 1.0f)
     {
-    return make_color(
-      static_cast<float>(r)/255,
-      static_cast<float>(g)/255,
-      static_cast<float>(b)/255,
-      static_cast<float>(a)/255);
+        return make_color(brightness, brightness, brightness, alpha);
     }
 
-  namespace gl {
+#undef BOOST_GUIGL_COLOR
+
+}}
+
+#include <boost/guigl/gl.hpp>
+// TODO: move to another place
+namespace boost { namespace guigl { namespace gl {
     inline void color(color_type const& clr)
-      {
-      color(float(clr[0]), float(clr[1]), float(clr[2]), float(clr[3]));
-      }
+    {
+        // TODO: use gil concepts to access channels
+        color(
+            static_cast<float>(clr[0]),
+            static_cast<float>(clr[1]),
+            static_cast<float>(clr[2]),
+            static_cast<float>(clr[3]));
     }
-
-  }}
+}}}
 
 #endif BOOST__GUIGL__COLOR_HPP
