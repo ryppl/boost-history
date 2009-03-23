@@ -1,10 +1,11 @@
 /*!  \file demo_svg.cpp
     \brief Demonstration of a few facets of using the SVG interface directly.
-    \details This only demonstrates a very few of the possible features because most users will only need to use the plot interfaces.
-       But this might provide a little guidance for producing other diagrams and drawings.
+    \details This only demonstrates a very few of the possible features
+      because most users will only need to use the plot interfaces.
+      But this might provide a little guidance for producing other diagrams and drawings.
       This module is to demonstrate features of the svg class.
       It is entirely contrived and has no other conceivable use!
-   \author Paul A. Bristow
+    \author Paul A. Bristow
     \date 20 Feb 2009
 */
 // Copyright Paul A Bristow 2007

@@ -220,9 +220,9 @@ public:
   }
 
   svg_style& svg_style::fill_color(const svg_color& col)
-  { //! Set fill color (and set fill on).
+  { //! Set fill color (and set fill on true, unless color is blank).
     fill_ = col;
-    fill_on_ = ! col.is_blank; // If blank fill is off or "none".
+    fill_on_ = ! is_blank(col); // If blank fill is off or "none".
     return *this; //! \return svg_style& to make chainable.
   }
 

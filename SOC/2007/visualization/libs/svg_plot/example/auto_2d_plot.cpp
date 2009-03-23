@@ -1,10 +1,7 @@
 /*! \file auto_2d_plot.cpp
-
   \brief An example to demonstrate autoscaling with *multiple* STL containers.
-  \details See also auto_1d_plot.cpp and auto_1d_container.cpp.
-
+  \details See also demo_2d_autoscaling.cpp, auto_1d_plot.cpp and auto_1d_container.cpp.
   \author Paul A Bristow
-
   \date 2009
 */
 
@@ -84,36 +81,57 @@ int main()
   my_map[7.3] = 9.1;
   my_map[2.1] = 5.4;
 
-/*`Also include some 'limits' values that would confuse autoscaling.
+/*`Also include some 'at limits' values that might confuse autoscaling.
 */
   my_map[99.99] = numeric_limits<double>::quiet_NaN();
   my_map[999.9] = numeric_limits<double>::infinity();
   my_map[999.] = +numeric_limits<double>::infinity();
 
-
   /*`Next a 2D plot is created using defaults for the very many possible settings.
   */
-  svg_2d_plot my_plot;
+  try
+  { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
 
-  /*`Add at least a title,
-  specify the both x and y axes are to use autoscaling,
-  and add the one data series to plotted.
+  /*`Construct `myplot` and add at least a title,
+    specify the both x and y axes are to use autoscaling,
+    and add the one data series to be plotted.
   */
-  my_plot.title("Autoscale example");
-  //my_plot.autoscale_check_limits(false);  // Skip checks for speed.
-  // Will fail at run-time if any infinite or NaNs.
+  svg_2d_plot my_plot;
+  my_plot.title("Autoscale example"); // Add a title.
+  my_plot.xy_autoscale(my_map); // Specify that both x and y axes are to use autoscaling,
+  my_plot.plot(my_map); // Add the one data series to be plotted
+  my_plot.write("./auto_2d_plot.svg"); // And write the SVG image to a file.
 
-  // my_plot.y_autoscale(0., 9.);  // autoscale using two doubles.
-  my_plot.xy_autoscale(my_map);
+  /*`We can show the ranges chosen by autoscaling; */
+  cout << "X min " << my_plot.x_range().first << ", X max " << my_plot.x_range().second << endl;
+  cout << "Y min " << my_plot.y_range().first << ", Y max "  << my_plot.y_range().second << endl;
 
-  my_plot.plot(my_map);
-  /*`Finally write the SVG image to a file. */
-  my_plot.write("./auto_2d_plot.svg");
+  /*`Had we know that there were no 'at limits' values, we could have chosen to skip the checks.
+  This might be important for speed if there were thousands of data values.
+  */
+  my_plot.autoscale_check_limits(false);  // Skip checks for speed.
 
-  cout << "X min " << my_plot.x_range().first <<  ", X max " << my_plot.x_range().second << endl;
+  /*`The possible cost is that it will fail at run-time if there are any infinite or NaNs.
+  
+  We could also chose to autoscale either of the axes separately, for example:*/
+
+  my_plot.y_autoscale(0.4, 9.3); // autoscale using two doubles.
+
+  /*`which will chose a neater scale from 0 to 10 for the Y axis. */
+  
+  my_plot.write("./auto_2d_plot2.svg"); // And write another SVG image to a file.
+
+  /*`We can show the ranges chosen by autoscaling; */
+  cout << "X min " << my_plot.x_range().first << ", X max " << my_plot.x_range().second << endl;
   cout << "Y min " << my_plot.y_range().first << ", Y max "  << my_plot.y_range().second << endl;
 
 //] [/auto_2d_plot_2]
+  }
+  catch(const std::exception& e)
+  {
+    std::cout <<
+      "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
+  }
 
   return 0;
 }

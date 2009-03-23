@@ -108,6 +108,7 @@ int mnmx(iter begin, iter end, double* min, double* max)
     Similar to boost::minmax_element, but ignoring at 'limit': non-finite, +-infinity, max & min, & NaN).
     If can't find a max and a min, then throw a runtime_error exception.
     \tparam iter STL container iterator.
+    \return number of normal values (not NaN nor infinite).
   */
   *max = std::numeric_limits<double>::quiet_NaN();
   *min = std::numeric_limits<double>::quiet_NaN();
@@ -115,8 +116,8 @@ int mnmx(iter begin, iter end, double* min, double* max)
   int goods = 0; // Count of values within limits.
   int limits = 0;
   iter pos = begin;
-  while(pos != end && is_limit(*pos))
-  { // Count any limits before the first good.
+  while(pos != end && is_limit(value_of(*pos)))
+  { // Count any limits before the first 'good' (FP normal) value.
     limits++;
     pos++;
   }
@@ -128,7 +129,7 @@ int mnmx(iter begin, iter end, double* min, double* max)
   }
   else
   {
-    double x = *pos;
+    double x = value_of(*pos);
     *max = x;
     *min = x;
     //cout << "Initial min & max " << x << endl;
@@ -136,9 +137,9 @@ int mnmx(iter begin, iter end, double* min, double* max)
     goods++;
     while(pos != end)
     {
-      if (!is_limit(*pos))
+      if (!is_limit(value_of(*pos)))
       { // x is finite.
-        x = *pos;
+        x = value_of(*pos);
         if (x > *max)
         {
           *max = x;
@@ -172,7 +173,7 @@ int mnmx(iter begin, iter end, double* min, double* max)
 void scale_axis(
    double min_value, //! Minimum value.
    double max_value, //! Maximum value.
-   double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
+   double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, //! All 4 updated.
    bool check_limits, //! Whether to check all values for infinity, NaN etc.
    bool origin, //! If true, ensures that zero is a tick value.
    double tight, //! Allows user to avoid a small fraction over a tick using another tick.
@@ -200,7 +201,7 @@ void scale_axis( //! Scale axis from data series (usually to plot), perhaps only
    int min_ticks = 6, // Minimum number of major ticks.
    int steps = 0) // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
 {
-    void scale_axis(double min_value, double max_value, // Input range.
+   void scale_axis(double min_value, double max_value, // Input range.
                double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
                bool origin, // If true, ensures that zero is a tick value.
                double tight, // Allows user to avoid a small fraction over a tick using another tick.
@@ -253,8 +254,8 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
     // minmax_element is efficient because can use knowledge of being sorted,
     // BUT only if it can be assumed that no values are 'at limits',
     // infinity, NaN, max_value, min_value, denorm_min.
-     x_min = *(result.first);
-     x_max = *(result.second);
+     x_min = value_of(*(result.first));
+     x_max = value_of(*(result.second));
   }
   else
   { // It is necessary to inspect all values individually.
@@ -277,7 +278,8 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
 template <class T>
 void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vector ...
   const T& container, //! Container Data series to plot - entire 2D container.
-  // (not necessarily ordered, so will find min and max).
+  //! (not necessarily ordered, so will find min and max).
+  //! \tparam T STL container of pairs of X and Y.
   double* x_axis_min_value,  double* x_axis_max_value, double* x_axis_tick_increment, int* x_auto_ticks,
   double* y_axis_min_value,  double* y_axis_max_value, double* y_axis_tick_increment, int* y_auto_ticks,
   // All 8 updated.
@@ -288,7 +290,6 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   // allowing values just 1 pixel over the tick to be shown.
   int x_min_ticks = 6, // Minimum number of major ticks.
   int x_steps = 0, // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-
   bool y_origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
   double y_tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
   // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
@@ -296,7 +297,6 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   int y_min_ticks = 6, // Minimum number of major ticks.
   int y_steps = 0) // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
 {
-  typedef T::const_iterator iter;
   double x_max = std::numeric_limits<double>::quiet_NaN();
   double x_min = std::numeric_limits<double>::quiet_NaN();
   double y_max = std::numeric_limits<double>::quiet_NaN();
@@ -305,10 +305,12 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   if (!check_limits)
   { // BUT only if it can be assumed that no values are 'at limits',
     // infinity, NaN, max_value, min_value, denorm_min.
-    // minmax_element is efficient for maps because can use knowledge of being sorted,
-    std::pair<iter, iter> result = boost::minmax_element(container.begin(), container.end());
-    pair<const double, double> px = *result.first; // x min & max
-    pair<const double, double> py = *result.second; // y min & max
+    // minmax_element is efficient for maps because it can use knowledge of all maps being sorted,
+    std::pair<T::const_iterator, T::const_iterator> result = boost::minmax_element(container.begin(), container.end());
+    //std::pair<const double, double> px = *result.first; // x min & max
+    std::pair<const double, double> px = values_of(*result.first); // x min & max
+    //std::pair<const double, double> py = *result.second; // y min & max
+    std::pair<const double, double> py = values_of(*result.second); // y min & max
     x_min = px.first;
     x_max = py.first;
     y_min = px.second;
@@ -322,10 +324,10 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
     // int good_y = mnmx(container.begin(), container.end(), &y_min, &y_max);
 
     // Work out min and max, ignoring non-finite (+-infinity & NaNs).
-    using boost::svg::detail::pair_is_limit; // either x and/or y not a proper data value.
+    using boost::svg::detail::pair_is_limit; // Either x and/or y is not a proper data value.
 
-    int goods = 0; // count of values where both X and Y are within limits.
-    int limits = 0;
+    int goods = 0; // Count of values where both X and Y are normal (within limits).
+    int limits = 0;// Count of values where both X and Y are at limits (not normal).
     T::const_iterator pos = container.begin();
     while(pos != container.end() && pair_is_limit(*pos))
     { // Count any limits before the first good.
@@ -339,10 +341,10 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
     }
     else
     {
-      double x = pos->first;
+      double x = value_of(pos->first);
       x_max = x;
       x_min = x;
-      double y = pos->second;
+      double y = value_of(pos->second);
       y_max = y;
       y_min = y;
       //cout << "Initial min & max " << x << ' ' << y << endl;
@@ -352,7 +354,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
       {
         if (!pair_is_limit(*pos))
         { // Either x and/or y are finite.
-          x = pos->first;
+          x = value_of(pos->first);
           if (x > x_max)
           {
             x_max = x;
@@ -361,7 +363,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
           {
             x_min = x;
           }
-          y = pos->second;
+          y = value_of(pos->second);
           if (y > y_max)
           {
             y_max = y;

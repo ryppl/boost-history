@@ -50,6 +50,7 @@ namespace boost
     static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
     static const double reducer = 0.9; //!< To make uncertainty and degrees of freedom testimates a bit smaller to distinguish from value.
     // (0.8 reduced from value 12, to 9 which is a bit too small).
+    //static const double plusminus = 2.; //! Number of standard deviations used for plusminus display. Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.
 
     // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect
     enum x_axis_intersect
@@ -87,12 +88,11 @@ namespace boost
          class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>\n
          class svg_2d_plot : public detail::axis_plot_frame<svg_2d_plot>
         */
-        //protected:
-      public:
+      protected:
         // We don't use the SVG coordinate transform because then text would
         // be flipped. Might use it to scale the image for resizes.
 
-        // protected member functions (defined below):
+        // Protected Member Functions Declarations (defined below):
 
         // void transform_point(double &x, double &y);
         // void transform_x(double &x);
@@ -107,7 +107,6 @@ namespace boost
         // void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue);
         // void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy);
 
-
         // Clear functions.
         // void clear_all(); // Calls all the other clear_* functions.
         // void clear_legend();
@@ -118,6 +117,9 @@ namespace boost
         // void clear_points();
         // void clear_plot_background();
         // void clear_grids();
+
+        // Protected Member Functions Definitions:
+
         void transform_point(double& x, double& y)
         { //! Scale & shift both X & Y to graph Cartesian coordinates.
           x = derived().x_scale_ * x + derived().x_shift_;
@@ -956,7 +958,7 @@ namespace boost
               break;
 
             case unc_ellipse:
-              {
+              { // Uncertainty ellipses for one, two and three standard deviations.
                 double xu = ux.uncertainty() + ux.value(); // 
                 transform_x(xu);
                 double x_radius = abs(xu - x);
@@ -972,10 +974,15 @@ namespace boost
                 {
                   y_radius = 1.;
                 }
-                g_ptr.ellipse(x, y, x_radius, y_radius); //  Radii are uncertainty.
-                // g_ptr.style().stroke_color(blue); would need a new group element to hold a different color.
-                // stroke color of outer and center X Y marker must be same stroke_color at present.
-                g_ptr.circle(x, y, 1); // Show x and y values at center.
+                //image.g(PLOT_DATA_UNC).style().stroke_color(magenta).fill_color(pink).stroke_width(1);
+                // color set in svg_1d_plot         data at present.
+                g_element* gu3_ptr = &(derived().image.g(PLOT_DATA_UNC3));
+                g_element* gu2_ptr = &(derived().image.g(PLOT_DATA_UNC2));
+                g_element* gu1_ptr = &(derived().image.g(PLOT_DATA_UNC1));
+                gu1_ptr->ellipse(x, y, x_radius, y_radius); //  Radii are one standard deviation.
+                gu2_ptr->ellipse(x, y, x_radius * 2, y_radius * 2); //  Radii are two standard deviation..
+                gu3_ptr->ellipse(x, y, x_radius * 3, y_radius * 3); //  Radii are three standard deviation..
+                g_ptr.circle(x, y, 1); // Show x and y values at center using stroke and fill color of data point marker.
               }
               break;
 
@@ -1056,13 +1063,13 @@ namespace boost
           void draw_plot_point_value(double x, double y, g_element& g_ptr, value_style& val_style, plot_point_style& point_style, unc uvalue)
           { /*! Write one data point (X or Y) value as a string, for example "1.23e-2", near the data point marker.
              Unecessary e, +, \& leading exponent zeros may optionally be stripped, and the position and rotation controlled.
-             Uncertainty estimate ('plus or minus') may be optionally be appended.
+             Uncertainty estimate, typically standard deviation (half conventional 95% confidence 'plus or minus') may be optionally be appended.
              Degrees of freedom estimate (number of replicates) may optionally be appended.
              For example: "3.45 +-0.1(10)"\n
              The precision and format (scientific, fixed), and color and font type and size can be controlled too.
              */
             double value = uvalue.value(); // Most likely value.
-            double u = uvalue.uncertainty(); // Uncertainty or plusminus for value.
+            double u = uvalue.uncertainty(); // Uncertainty standard devision or 1/2 plusminus for value.
             double df = uvalue.deg_free(); // Degrees of freedom estimate for value.
 
             std::stringstream label;
@@ -1169,7 +1176,8 @@ namespace boost
             if ((val_style.plusminus_on_ == true) // Is wanted.
                 && (u > 0.) // Is a valid uncertainty estimate.
               )
-            {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+            {  // Uncertainty estimate usually expressed 95% confidence interval + or - 2 standard deviation.
+              u = u * plusminus; // typically + or - 2 standard deviations.
               label_u = sv(u, val_style, true); // stripped.
               t.tspan(pm).fill_color(val_style.plusminus_color_);
               t.tspan(label_u).fill_color(val_style.plusminus_color_).font_size(udf_font);
@@ -1334,6 +1342,7 @@ namespace boost
                   && (ux > 0.)
                 )
             {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+              ux *= plusminus; // typically  + or - 2 standard deviations.
               label_xu = sv(ux, x_sty, true);
               //t.tspan(pm).fill_color(darkcyan);
               // Should this be stroke_color?
@@ -1371,8 +1380,9 @@ namespace boost
                    (y_sty.plusminus_on_) // Is wanted.
                    && (uy > 0.) // Is valid uncertainty estimate.
                  )
-              {  // Uncertainty estimate usually 95% confidence interval + or - 2 standard deviation.
+              {  // Uncertainty estimate (usually 95% confidence interval + or - 2 standard deviation).
                  // Precision of uncertainty is usually less than value,
+                uy *=plusminus; // Tylically + or - 2 standard deviations.
                 label_yu = "&#x00A0;" + sv(uy, y_sty, true);
                 t.tspan(pm).font_family("arial").font_size(fy).fill_color(green);
                 t.tspan(label_yu).fill_color(y_sty.plusminus_color_).font_size(fy);
@@ -1787,8 +1797,14 @@ namespace boost
           Derived& draw_note(double x, double y, std::string note, rotate_style rot = horizontal, align_style al = center_align, const svg_color& = black, text_style& tsty = no_style);
           Derived& draw_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
           Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
-           Derived& draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3,const svg_color& col = black);
+          Derived& draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3,const svg_color& col = black);
 
+          Derived& one_sd_color(const svg_color&);
+          svg_color one_sd_color();
+          Derived& two_sd_color(const svg_color&);
+          svg_color two_sd_color();
+          Derived& three_sd_color(const svg_color&);
+          svg_color three_sd_color();
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -3783,6 +3799,51 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         { //! \return  the color for the 'at limit' point fill color.
           return derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
         }
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::one_sd_color(const svg_color& col)
+        { //! Set the color for the one standard deviation (~67% confidence) ellipse fill.
+          derived().image.g(detail::PLOT_DATA_UNC1).style().fill_on(true);
+          derived().image.g(detail::PLOT_DATA_UNC1).style().fill_color(col);
+          derived().image.g(detail::PLOT_DATA_UNC1).style().stroke_color(blank);
+          return derived();
+        }
+
+       template <class Derived>
+       svg_color axis_plot_frame<Derived>::one_sd_color()
+       { //! \return Color for the one standard deviation (~67% confidence) ellipse fill.
+         return derived().image.g(detail::PLOT_DATA_UNC1).style().fill_color();
+       }
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::two_sd_color(const svg_color& col)
+        { //! Set the color for two standard deviation (~95% confidence) ellipse fill.
+          derived().image.g(detail::PLOT_DATA_UNC2).style().fill_on(true);
+          derived().image.g(detail::PLOT_DATA_UNC2).style().fill_color(col);
+          derived().image.g(detail::PLOT_DATA_UNC2).style().stroke_color(blank);
+          return derived();
+        }
+
+       template <class Derived>
+       svg_color axis_plot_frame<Derived>::two_sd_color()
+       { //! \return Color for two standard deviation (~95% confidence) ellipse fill.
+         return derived().image.g(detail::PLOT_DATA_UNC2).style().fill_color();
+       }
+
+        template <class Derived>
+        Derived& axis_plot_frame<Derived>::three_sd_color(const svg_color& col)
+        { //! Set the color for three standard deviation (~99% confidence) ellipse fill.
+          derived().image.g(detail::PLOT_DATA_UNC3).style().fill_on(true);
+          derived().image.g(detail::PLOT_DATA_UNC3).style().fill_color(col);
+          derived().image.g(detail::PLOT_DATA_UNC3).style().stroke_color(blank);
+          return derived();
+        }
+
+       template <class Derived>
+       svg_color axis_plot_frame<Derived>::three_sd_color()
+       { //! \return Color for three standard deviation (~99% confidence) ellipse fill.
+         return derived().image.g(detail::PLOT_DATA_UNC3).style().fill_color();
+       }
 
         template <class Derived>
         Derived& axis_plot_frame<Derived>::draw_note(double x, double y, std::string note, rotate_style rot /*= horizontal*/, align_style al/* = center_align*/, const svg_color& col /* black */, text_style& tsty/* = no_style*/)

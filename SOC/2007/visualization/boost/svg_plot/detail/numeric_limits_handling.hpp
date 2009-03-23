@@ -78,9 +78,16 @@ inline bool is_limit(double a)
 }
 
 inline bool pair_is_limit(std::pair<double, double> a)
-{ //! Check on both x and y data points. Return false if either or both are at limit.
+{ //! Check on both x and y double data points. Return false if either or both are at limit.
   return limit_max(a.first) || limit_min(a.first) || limit_NaN(a.first)
     || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
+}
+
+inline bool pair_is_limit(std::pair<const unc, unc> a)
+{ //! Check on values of both x and y unc data points.
+  // \return false if either or both are at limit.
+  return limit_max(value_of(a.first)) || limit_min(value_of(a.first)) || limit_NaN(value_of(a.first))
+    || limit_max(value_of(a.second)) || limit_min(value_of(a.second)) || limit_NaN(value_of(a.second));
 }
 
 } // namespace detail

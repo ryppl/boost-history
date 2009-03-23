@@ -23,7 +23,7 @@ namespace svg
 {
 
 // svg_color.hpp contains definitions.
-struct svg_color;
+class svg_color;
 enum svg_color_constant;
 void constant_to_rgb(svg_color_constant c, unsigned char &r,
                      unsigned char &g, unsigned char &b);

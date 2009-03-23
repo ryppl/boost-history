@@ -438,6 +438,9 @@ public:
     image.g(PLOT_WINDOW_BACKGROUND).style().stroke_width(plot_window_border_.width_).stroke_color(plot_window_border_.stroke_);
     image.g(PLOT_LIMIT_POINTS).style().stroke_color(lightslategray).fill_color(antiquewhite);
     image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
+    image.g(PLOT_DATA_UNC3).style().stroke_color(lightgoldenrodyellow).fill_color(lightgoldenrodyellow).stroke_width(1);
+    image.g(PLOT_DATA_UNC2).style().stroke_color(peachpuff).fill_color(peachpuff).stroke_width(1);
+    image.g(PLOT_DATA_UNC1).style().stroke_color(magenta).fill_color(pink).stroke_width(1);
 
     // Note that widths are stored in member data *and* copied here.
     // Not sure if this is wise but ...
@@ -466,6 +469,7 @@ public:
 
     x_ticks_on_ = x_ticks_.up_ticks_on_ || x_ticks_.down_ticks_on_;
     // Only 2D has left and right y ticks.
+    x_ticks_.ticks_on_window_or_axis_ = 0; // Make ticks (and value labels) on axis the default.
   } // svg_1d_plot() Default constructor.
 
   void set_ids()
@@ -495,7 +499,7 @@ public:
       plot_top_ += title_font_size() * (text_margin_ + 0.5);
     }
 
-    // Assume that X-axis labels are always at bottom.
+    // Assume that X-axis labels are always at bottom for 1D plot.
     if(x_axis_.label_on_)
     { // Leave space at bottom for X axis label.
        plot_bottom_ -= x_axis_label_style_.font_size() * text_margin_;
@@ -539,7 +543,7 @@ public:
     // one would have to *not* do this,
     // but to make sure they are both assigned correctly).
 
-    if(plot_window_on_) // IS this test needed????
+    if(plot_window_on_) // 
     {
       // Calculate the number of chars of the longest value label.
       x_ticks_.longest_label(); // Updates label_max_length_
@@ -604,7 +608,7 @@ public:
     } // plot_window_on_
 
     if(plot_window_on_)
-    { // Draw plot window rect.
+    { // Draw plot window rectangle box.
       image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
         new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
     } // plot_window_on_
@@ -612,7 +616,7 @@ public:
 
   void calculate_transform()
   { //! Calculate scale and shift factors for transform from Cartesian to plot.
-    // SVG image is 0, 0 at top left, Cartesian at bottom left.
+    //! SVG image is (0, 0) at top left, Cartesian (0, 0) at bottom left.
     x_scale_ = (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_);
     x_shift_ = plot_left_ - (x_axis_.min_ * (plot_right_ - plot_left_) / (x_axis_.max_ - x_axis_.min_));
     y_scale_ = 1.;
@@ -682,7 +686,7 @@ public:
     }
 
     for(unsigned int i = 0; i < serieses_.size(); ++i)
-    { // For each of the data series.
+    { // Plot the data points for each of the data series.
       g_element& g_ptr = image.g(detail::PLOT_DATA_POINTS).g();
       g_ptr.style().stroke_color(serieses_[i].point_style_.stroke_color_);
       g_ptr.style().fill_color(serieses_[i].point_style_.fill_color_);

@@ -36,15 +36,23 @@ doxygen autodoc
     [ glob ../../../boost/svg_plot/detail/*.hpp ]
   :
     <doxygen:param>TAB_SIZE=2
-    <doxygen:param>EXTRACT_ALL=YES
+    # <doxygen:param>EXTRACT_ALL=YES
     <doxygen:param>HIDE_UNDOC_MEMBERS=NO
     <doxygen:param>INLINE_INHERITED_MEMB=YES # Show all inherited members of a class in the documentation of that class as if those members were ordinary class members.
     <doxygen:param>SORT_MEMBER_DOCS=YES
-    <doxygen:param>EXTRACT_PRIVATE=YES
+    #<doxygen:param>EXTRACT_PRIVATE=YES
+    <doxygen:param>EXTRACT_STATIC=YES
+    <doxygen:param>EXTRACT_PRIVATE=NO # If the EXTRACT_PRIVATE tag is set to YES all private members of a class will be included in the documentation
+    <doxygen:param>EXTRACT_LOCAL_CLASSES=YES
+    <doxygen:param>EXTRACT_LOCAL_METHODS=YES
+    <doxygen:param>EXTRACT_LOCAL_CLASSES=YES # If the EXTRACT_LOCAL_CLASSES tag is set to YES classes (and structs) defined locally in source files will be included in the documentation.
     <doxygen:param>ENABLE_PREPROCESSING=YES
     <doxygen:param>MACRO_EXPANSION=YES
     <doxygen:param>EXPAND_ONLY_PREDEF=YES
     <doxygen:param>SEARCH_INCLUDES=YES
+    <doxygen:param>INLINE_INFO=YES # If the INLINE_INFO tag is set to YES (the default) then a tag [inline] is inserted in the documentation for inline members.
+    <doxygen:param>SORT_BRIEF_DOCS=YES # If the SORT_BRIEF_DOCS tag is set to YES then doxygen will sort the brief descriptions of file, namespace and class members alphabetically by member name.
+    <doxygen:param>SORT_MEMBER_DOCS=YES # If the SORT_MEMBER_DOCS tag is set to YES (the default) then doxygen will sort the (detailed) documentation of file and class members alphabetically by member name.
     <doxygen:param>SHOW_INCLUDE_FILES=NO # List of the files that are included by a file in the documentation of that file.
     <doxygen:param>REPEAT_BRIEF=YES # Prepend the brief description of a member or function before the detailed description
     <doxygen:param>BRIEF_MEMBER_DESC=YES # Include brief member descriptions after the members that are listed in the file and class

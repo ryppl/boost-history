@@ -565,6 +565,10 @@ my_plot.background_color(ghostwhite) // Whole image.
         image.g(PLOT_X_AXIS).style().stroke_color(black).stroke_width(x_axis_.width());
         image.g(PLOT_Y_AXIS).style().stroke_color(black).stroke_width(y_axis_.width());
 
+        image.g(PLOT_DATA_UNC3).style().stroke_color(blank).fill_color(lightgoldenrodyellow).stroke_width(1);
+        image.g(PLOT_DATA_UNC2).style().stroke_color(peachpuff).fill_color(peachpuff).stroke_width(1);
+        image.g(PLOT_DATA_UNC1).style().stroke_color(pink).fill_color(pink).stroke_width(1);
+
         //image.g(detail::PLOT_NOTES).style().fill_color(black);
 
         // Note that widths are stored in member data *and* copied here.
@@ -1351,7 +1355,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         path_element& path = g_ptr.path();
         path.style().fill_color(series.line_style_.area_fill_);
 
-        bool is_fill = !series.line_style_.area_fill_.is_blank;
+        bool is_fill = !series.line_style_.area_fill_.is_blank();
         path.style().fill_on(is_fill); // Ensure includes a fill="none" if no fill.
 
         double prev_x; // Previous data points.
@@ -1421,7 +1425,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         std::pair<double, double> fwd_vtr;
         std::pair<double, double> back_vtr;
 
-        bool is_fill = !series.line_style_.area_fill_.is_blank;
+        bool is_fill = !series.line_style_.area_fill_.is_blank();
         if(is_fill == false)
         {
           path.style().fill_on(false); // default path constructor is false
@@ -1623,12 +1627,12 @@ my_plot.background_color(ghostwhite) // Whole image.
               // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
             }
 
-            draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);  // No uncertainty info for values at limit infinity & NaN.
+            draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, unc(0.), unc(0.));  // No uncertainty info for values at limit infinity & NaN.
 
             if((x > plot_left_)  && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
             { // Is inside plot window, so draw a point.
               // draw_plot_point(x, y, g_ptr, plot_point_style(blank, blank, s, cone)); default.
-              draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);
+              draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, unc(0.), unc(0.));
             }
           }
         } // limits point

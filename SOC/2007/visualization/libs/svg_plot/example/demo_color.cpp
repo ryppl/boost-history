@@ -62,37 +62,34 @@ int main()
 
   my_colors.write("demo_colors.svg");
 
-
   {
     svg_color my_blank(false);
     cout << "svg_color my_blank(false);" << boolalpha << endl;
-    cout << "my_blank.is_blank is " << my_blank.is_blank << endl;
-    cout << "my_blank.r my_blank.g my_blank.b = "
-      << (unsigned int)my_blank.r << ' ' 
-      << (unsigned int)my_blank.g << ' ' 
-      << (unsigned int)my_blank.b << endl;
-    cout << "my_blank " << my_blank << endl;
+    cout << "my_blank.is_blank() " << my_blank.is_blank() << endl;
+    cout << "my_blank.red() " << my_blank.red() << endl;
+    cout << "my_blank.green() " << my_blank.green() << endl;
+    cout << "my_blank.blue() " << my_blank.blue() << endl;
     my_blank.write(cout); cout << endl;
   }
   {
     svg_color my_blank(true);
     cout << "svg_color my_blank(true)" << boolalpha << endl;
-    cout << "my_blank.is_blank is " << my_blank.is_blank << endl;
+    cout << "my_blank.is_blank is " << my_blank.is_blank() << endl;
     cout << "my_blank.r my_blank.g my_blank.b = "
-      << (unsigned int)my_blank.r << ' ' 
-      << (unsigned int)my_blank.g << ' ' 
-      << (unsigned int)my_blank.b << endl;
+      << (unsigned int)my_blank.red() << ' ' 
+      << (unsigned int)my_blank.green() << ' ' 
+      << (unsigned int)my_blank.blue() << endl;
     cout << "my_blank " << my_blank << endl; // my_blank RGB(0,0,0) == default color.
     my_blank.write(cout); cout << endl;
   }
   {
     svg_color my_blank(blank);
     cout << "svg_color my_blank(blank)" << boolalpha << endl;
-    cout << "my_blank.is_blank is " << my_blank.is_blank << endl;
-    cout << "my_blank.r my_blank.g my_blank.b = "
-      << (unsigned int)my_blank.r << ' ' 
-      << (unsigned int)my_blank.g << ' ' 
-      << (unsigned int)my_blank.b << endl;
+    cout << "my_blank.is_blank is " << my_blank.is_blank() << endl;
+    cout << "my_blank.red() my_blank.green() my_blank.blue() = "
+      << (unsigned int)my_blank.red() << ' ' 
+      << (unsigned int)my_blank.green() << ' ' 
+      << (unsigned int)my_blank.blue() << endl;
     cout << "my_blank " << my_blank << endl; // my_blank RGB(0,0,0) == default color.
     my_blank.write(cout); cout << endl;
   }
