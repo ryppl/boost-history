@@ -37,8 +37,12 @@ Number: D2855=09-0045</p>
 
 <h3>Table of Contents</h3>
 <ul>
-  <li><a href="#intro">Introduction</a></li>
-  <li><a href="#review">Review of Exception Safety Guarantees in the Library</a></li>
+  <li><a href="#intro">Introduction</a>
+    <ul>
+      <li><a href="#ereview">Review of Exception Safety Guarantees in the Library</a></li>
+      <li><a href="#mreview">Review of Move Semantics Idioms</a></li>
+    </ul>
+  </li>
   <li><a href="#problem">The Problem</a>
     <ul>
       <li><a href="#throwing-move-constructor">The Problem With Throwing Move Constructors</a></li>
@@ -63,6 +67,7 @@ Number: D2855=09-0045</p>
       </li>
     </ul>
   </li>
+  <li><a href="#syntax">Alternative Syntax</a></li>
 </ul>
 
 <h2 id="intro">Introduction</h2>
@@ -76,8 +81,8 @@ operations. This change silently breaks existing user code.  In this
 paper, we characterize the problem itself and outline a solution that
 extends the language and modifies the library.</p>
 
-<h2 id="review">Review of Exception Safety Guarantees in the
-Library</h2>
+<h3 id="ereview">Review of Exception Safety Guarantees in the
+Library</h3>
 
 <p>Within the library, we characterize the behavior of a function with
 respect to exceptions based on the guarantees that the implementation
@@ -103,7 +108,7 @@ rvalue references. However, some functions of the library provide the
 strong exception guarantee, such as <code>push_back</code>
 (23.1.1p10).</p>
 
-<h2 id="review">Review of Move Semantics Idioms</h2>
+<h3 id="mreview">Review of Move Semantics Idioms</h3>
 
 The most common "move constructor" signature for a type <code>T</code>
 is <code>T(T&&)</code>, but <em>every</em> move constructor:
@@ -767,12 +772,24 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>
 
 <h4 id="noexcept-annot"><code>noexcept</code> Annotations</h4>
 
-<h2 id="alternatives">Alternative Solutions</h2>
-<h3 id="libraryonly">Library-only Solution</h3>
-<h3 id="syntax">Alternative Syntax</h3>
-<p>Yes, we thought of these. No, we don't care to discuss them.</p>
+<h2 id="syntax">Alternative Syntax</h2>
+
+<p>We have considered several alternative syntaxes for <code>noexcept</code>, and we catalog the most promising alternatives here:</p>
+
+<dl>
+<dt>A <code>nothrow</code> attribute</dt>
+<dd>
+  <b>Why it works</b>: both functions and statements can be annotated with attributes, and since attributes do not require a keyword we can use the "<code>nothrow</code>" identifier. In addition, <code>nothrow</code> is an attribute already supported by the GNU compiler with a similar meaning.<br>
+  <b>Why it doesn't</b>: attributes aren't meant to affect the type system, but it is crucial for the "non-throwing" property to be a part of a function's type. Plus, the existing <code>GNU</code> attribute, whose semantics don't exactly match the intended behavior of <code>noexcept</code>, may prove a hindrance.
+</dd>
+<br>
+<dt>Variants of throw specifications (<code>!throw</code>, <code>throw(void)</code>, <code>throw(not)</code>)</dt>
+<dd>
+  <b>Why it works</b>: we have already carved out a syntactic space for describing the exception behavior of functions, so it doesn't require major surgery to extend that syntax.<br>
+  <b>Why it doesn't</b>: <code>noexcept</code> behaves very differently from existing exception specifications, so having too many syntactic similarities confuses the semantics of the two features in a way that is likely to cause problems for programmers.
+</dl>
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 21:47:30 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 22:06:29 PDT 2009 <!-- hhmts end -->
 </body> </html>
