@@ -134,7 +134,7 @@ simply casts its lvalue argument to the corresponding rvalue type:
 
 <pre>
 template <class T>
-T&& move(T& x) { return static_cast<T&&>(x); }
+T&& move(T& x) { return static_cast&lt;T&&&gt;(x); }
 </pre>
   
 The <code>T(std::move(x))</code> idiom is only a move <em>request</em>
@@ -145,7 +145,7 @@ particular value is no longer needed.  The simplest example is
 in <code>std::swap</code>:
 
 <pre>
-template <class T>
+template &lt;class T&gt;
 void swap(T& x, T& y)
 {
    T tmp(std::move(x));  // 1
