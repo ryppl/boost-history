@@ -1,5 +1,5 @@
 /*=================================---------------------------------------------
-    Copyright 2007,2008 Stjepan Rajko
+    Copyright 2007,2008,2009 Stjepan Rajko, Andrey Torba
   
     Distributed under the Boost Software License, Version 1.0.
     (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,6 +13,7 @@
 #include <boost/guigl/widget/label.hpp>
 #include <boost/guigl/widget/labeled_button.hpp>
 #include <boost/guigl/widget/labeled_slider.hpp>
+#include <boost/guigl/color.hpp>
 
 #include <boost/bind.hpp>
 #include <boost/bind/placeholders.hpp>
@@ -26,7 +27,7 @@ using namespace boost::guigl;
 
 color_type make_grey(double value)
 {
-    return make_color((float)value, (float)value, (float)value);
+    return grey(static_cast<float>(value));
 }
 
 void idle()
@@ -56,15 +57,15 @@ int main()
     test_window1 << new widget::label((
         _label = "Label",
         _size=size_type(100,30),
-        _background=make_color(1,1,1),
-        _color=make_color(0,0,0) ));
+        _background = white(),
+        _color = black() ));
 
     widget::labeled_button *b1 = new widget::labeled_button((
         _size=size_type(100,30),
         _position=position_type(50, 50),
-        _background=make_color(1,1,1),
-        _active_color=make_color(1,0,0),
-        _color=make_color(0,0,0),
+        _background = white(),
+        _active_color = red(),
+        _color = black(),
         _label="Button"));
     test_window1 << b1;
     
@@ -72,8 +73,8 @@ int main()
         _label="Slider",
         _size=size_type(100,30),
         _position=position_type(50,80),
-        _background=make_color(0.5,0.5,0.5),
-        _active_color=make_color(0,1,0),
+        _background = grey(),
+        _active_color = green(),
         _min=0.1,_max=0.9,_value=0.5,
         _step=0.1 ));
     test_window1 << s;
@@ -93,7 +94,7 @@ int main()
 
     layout::grid grid_layout(( _grid_size=test_window3.size(), _horizontal=3, _vertical=3 ));
     for(int i=1; i<=9; i++)
-        test_window3 << grid_layout.create<widget::button>(( _background=make_color(1.0f/i,1.0f/i,1.0f/i) ));
+        test_window3 << grid_layout.create<widget::button>(( _background = make_color(1.0f/i, 1.0f/i, 1.0f/i, 1.0f) ));
     
     window test_window_3d(( _depth = true, _label="3D", _color=make_grey(1) ));
 
