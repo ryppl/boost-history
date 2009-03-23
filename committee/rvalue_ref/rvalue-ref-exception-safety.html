@@ -1,6 +1,29 @@
 <!DOCTYPE HTML PUBLIC "-//IETF//DTD HTML//EN">
 <html> <head>
 <title>Rvalue References and Exception Safety</title>
+<style type="text/css">
+p {text-align:justify}
+li {text-align:justify}
+ins {background-color:#A0FFA0}
+del {background-color:#FFA0A0}
+
+div.admonition {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+</style>
 </head>
 
 <body>
@@ -235,7 +258,7 @@ that exception can occur after the vector's state has been altered
 way to recover the vector's original state, since any attempt to move
 the previously-moved elements back into the vector's storage could
 also throw.  Hence, the best we can do is maintain the basic
-guarantee, where no resources are leaked but the first four values in
+guarantee, where no resources are leaked but the first four elements in
 the vector have indeterminate values.</p>
 
 <h3 id="strong-except-model">A Model of Strong Exception Safety</h3>
@@ -554,10 +577,84 @@ noexcept void f(double &x) {
 <p>We propose the introduction of new concepts for non-throwing assignment and construction:</p>
 
 <pre>
-FIXME: start here
+auto concept NothrowConstructible&lt;typename T, typename... Args&gt;
+  : Constructible&lt;T, Args...&gt; {
+  noexcept T::T(Args...);
+}
+
+auto concept NothrowMoveConstructible&lt;typename T&gt; : MoveConstructible&lt;T&gt; {
+  requires RvalueOf&lt;T&gt; 
+        &amp;&amp; NothrowConstructible&lt;T, RvalueOf&lt;T&gt;::type&gt;;
+}
+
+auto concept HasNothrowAssign&lt;typename T, typename U&gt; : HasAssign&lt;T, U&gt; { 
+  noexcept result_type T::operator=(U); 
+}
+
+auto concept NothrowMoveAssignable&lt;typename T&gt; : MoveAssignable&lt;T&gt;, HasNothrowAssign&lt;T, T&amp;&amp;&gt; { }
+
+concept NothrowConstructibleWithAllocator&lt;class T, class Alloc, class... Args&gt; { 
+  noexcept T::T(allocator_arg_t, Alloc, Args&amp;&amp;...); 
+}
 </pre>
 
 <h4 id="aggregate">Move Constructors and Move Assignment Operators</h4>
+
+<p>Throughout the library, each class template that aggregates other templates and has a move constructor will need to have its move constructor and move assignment operator be specified as <code>noexcept</code> and only be provided when the operations they use are known to be <code>noexcept</code>. We summarize the changes here, but have omitted the changes for some library components pending a full review of the library.<p>
+
+<h5>20.3.3 Pairs [pairs]</h5>
+
+<p>Two of <code>pair</code>'s move constructors will be modified as follows:</p>
+<pre>
+template&lt;class U, class V&gt; 
+  requires <ins>Nothrow</ins>Constructible&lt;T1, RvalueOf&lt;U&gt;::type&gt; &amp;&amp; <ins>Nothrow</ins>Constructible&lt;T2, RvalueOf&lt;V&gt;::type&gt; 
+  pair(pair&lt;U, V&gt;&amp;&amp; p);
+
+template&lt;class U, class V, Allocator Alloc&gt;
+  requires <ins>Nothrow</ins>ConstructibleWithAllocator&lt;T1, Alloc, RvalueOf&lt;U&gt;::type&gt; 
+        &amp;&amp; <ins>Nothrow</ins>ConstructibleWithAllocator&lt;T2, Alloc, RvalueOf&lt;V&gt;::type&gt; 
+  pair(allocator_arg_t, const Alloc& a, pair&lt;U, V&gt;&amp;&amp; p);
+</pre>
+
+<p>Similarly, <code>pair</code>'s move assignment operator will be modified as follows:</p>
+<pre>
+template&lt;class U , class V&gt; 
+  requires Has<ins>Nothrow</ins>Assign&lt;T1, RvalueOf&lt;U&gt;::type&gt; &amp;&amp; Has<ins>Nothrow</ins>Assign&lt;T2, RvalueOf&lt;V&gt;::type&gt; 
+  pair&amp; operator=(pair&lt;U , V&gt;&amp;&amp; p); 
+</pre>
+
+<h5>20.5.2 Class template tuple [tuple.tuple]</h5>
+
+<p>Two of <code>tuple</code>'s move constructors will be modified as follows:</p>
+
+<pre>
+template &lt;class... UTypes&gt; 
+  requires <ins>Nothrow</ins>Constructible&lt;Types, RvalueOf&lt;UTypes&gt;::type&gt;... 
+  tuple(tuple&lt;UTypes...&gt;&amp;&amp;);
+
+template &lt;Allocator Alloc, class... UTypes&gt; 
+  requires <ins>Nothrow</ins>ConstructibleWithAllocator&lt;Types, Alloc, RvalueOf&lt;UTypes&gt;::type&gt;... 
+  tuple(allocator_arg_t, const Alloc&amp; a, tuple&lt;UTypes...&gt;&amp;&amp;);
+</pre>
+
+<p><code>tuple</code>'s move assignment operator will be modified as follows:</p>
+
+<pre>
+template &lt;class... UTypes&gt; 
+  requires Has<ins>Nothrow</ins>Assign&lt;Types, RvalueOf&lt;UTypes&gt;::type&gt;... 
+  tuple&amp; operator=(tuple&lt;UTypes...&gt;&amp;&amp;); 
+</pre>
+
+<h5>23.3.2 Class template deque [deque]</h5>
+<p>Modify two of <code>deque</code>'s constructors as follows:</p>
+
+<pre>
+requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>&amp;&amp; NothrowMoveConstructible&lt;Alloc&gt;</ins>
+   deque(deque&amp;&amp;);
+requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>&amp;&amp; NothrowConstructible&lt;Alloc, const Alloc&amp;&gt;</ins>
+   deque(deque&amp;&amp;, const Alloc&amp;);
+</pre>
+
 <h4 id="noexcept-annot"><code>noexcept</code> Annotations</h4>
 
 <h2 id="alternatives">Alternative Solutions</h2>
@@ -567,5 +664,5 @@ FIXME: start here
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 19:41:21 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 20:22:03 PDT 2009 <!-- hhmts end -->
 </body> </html>
