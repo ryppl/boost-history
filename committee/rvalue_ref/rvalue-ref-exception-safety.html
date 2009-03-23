@@ -53,6 +53,7 @@ Number: D2855=09-0045</p>
       <li><a href="#nothrowmove">Move Constructors are Non-Throwing</a></li>
       <li><a href="#noexcept-destruct">Destructors are Non-throwing</a></li>
       <li><a href="#noexcept-block">The <code>noexcept</code> Block</a></li>
+      <li><a href="#exception-spec">Deprecate Exception Specifications</a></li>
       <li><a href="#library">Library Changes</a>
         <ul>
           <li><a href="#concepts">Nothrow Moving and Copying Concepts</a></li>
@@ -543,7 +544,32 @@ concept.</p>
 
 <h3 id="noexcept-destruct">Destructors are Non-throwing</h3>
 
-<p>All destructors will implicitly be declared <code>noexcept</code>
+<p>Nearly every operation that involves construction of an object also involves destruction of that object. Therefore, the vast majority of uses of a non-throwing move constructor will also require a non-throwing destructor. Non-throwing destructors are not new; in fact, the C++ Standard Library requires that destructors not throw exceptions, and it is very rare that destructors ever throw. For these reasons, we propose that all destructors be implicitly be declared <code>noexcept</code> and are, therefore, banned from throwing exceptions.</p>
+
+<p>Unlike with move constructors, there are some use cases for destructors that throw exceptions. One such example is a return value that can't be ignored, e.g.,</pre>
+
+<pre>
+class ImportantReturn {
+  int value;
+  bool eaten;
+
+public:
+  ImportantReturn(int v) : value(v), eaten(false) { }
+
+  ~ImportantReturn() {
+    if (!eaten) throw important_return_value_ignored(value);
+  }
+
+  operator int() const {
+    eaten = true;
+    return value;
+  }
+};
+</pre>
+
+<p>For these destructors (which are a very slim minority) we require a syntax to disable the implicit <code>noexcept</code>. We propose to use the syntax <code>throw(...)</code> to mean "this function can throw any exception." This syntax is already a <a href="http://msdn.microsoft.com/en-us/library/wfa0edys.aspx">Microsoft extension</a>, and fits in well with existing syntax.</p>
+
+<p>Note that implicitly making destructors <code>noexcept</code> will break existing code for classes like <code>ImportantReturn</code>. Users will need to add the <code>throw(...)</code> specification on these destructors to return them to their C++03 behavior. Given that few destructors need to throw exceptions---and that such classes cannot be used with the C++03 or C++0x standard libraries---we expect that the impact of this breaking change will be small.</p>
 
 <h3 id="noexcept-block">The <code>noexcept</code> Block</h3>
 
@@ -572,6 +598,8 @@ noexcept void f(double &x) {
 </pre>
 
 <p>The <code>noexcept</code> block states that no exceptions will be thrown by the code within its compound statement. An exception that escapes from a <code>noexcept</code> block results in undefined behavior.</p>
+
+<h3 id="exception-spec">Deprecate Exception Specifications</h3>
 
 <h3 id="library">Library Changes</h3>
 <p>The introduction of <code>noexcept</code> and its use throughout the standard library will require significant changes in a few areas. The changes are summarized below.</p>
@@ -606,6 +634,14 @@ concept NothrowConstructibleWithAllocator&lt;class T, class Alloc, class... Args
 
 auto concept NothrowAllocatableElement&lt;class Alloc, class T, class... Args&gt; : AllocatableElement&lt;Alloc, T, Args...&gt; {
   noexcept void Alloc::construct(T*, Args&amp;&amp;...);
+}
+</pre>
+
+<p>Finally, we improve the existing <code>NothrowDestructible</code> concept to statically check the no-throw requirements:</p>
+
+<pre>
+auto concept NothrowDestructible&lt;typename T&gt; : HasDestructor&lt;T&gt; {
+  noexcept T::~T();
 }
 </pre>
 
@@ -675,5 +711,5 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 20:41:22 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 21:19:01 PDT 2009 <!-- hhmts end -->
 </body> </html>
