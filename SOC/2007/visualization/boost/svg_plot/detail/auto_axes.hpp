@@ -175,6 +175,7 @@ void scale_axis(
    double max_value, //! Maximum value.
    double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, //! All 4 updated.
    bool check_limits, //! Whether to check all values for infinity, NaN etc.
+   double autoscale_plusminus, // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
    bool origin, //! If true, ensures that zero is a tick value.
    double tight, //! Allows user to avoid a small fraction over a tick using another tick.
    int min_ticks, //! Minimum number of ticks.
@@ -194,6 +195,7 @@ void scale_axis( //! Scale axis from data series (usually to plot), perhaps only
    // (not necessarily ordered, so will find min and max).
    double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
    bool check_limits, // Whether to check all values for infinity, NaN etc.
+   double autoscale_plusminus, // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
    bool origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
    double tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
    // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
@@ -239,6 +241,7 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
                // (not necessarily ordered, so will find min and max).
                double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
                bool check_limits, // Whether to check all values for infinity, NaN etc.
+               double autoscale_plusminus = 3., // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
                bool origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
                double tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
                // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
@@ -276,7 +279,7 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
 } // template <class T> int scale_axis  T an STL container: array, vector ...
 
 template <class T>
-void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vector ...
+void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vector, list ...
   const T& container, //! Container Data series to plot - entire 2D container.
   //! (not necessarily ordered, so will find min and max).
   //! \tparam T STL container of pairs of X and Y.
@@ -284,6 +287,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   double* y_axis_min_value,  double* y_axis_max_value, double* y_axis_tick_increment, int* y_auto_ticks,
   // All 8 updated.
   bool check_limits = true, // Whether to check all values for infinity, NaN etc.
+  double autoscale_plusminus = 3., // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
   bool x_origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
   double x_tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
   // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
@@ -302,18 +306,19 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   double y_max = std::numeric_limits<double>::quiet_NaN();
   double y_min = std::numeric_limits<double>::quiet_NaN();
 
-  if (!check_limits)
+  if (!check_limits)  // TODO my_plot.autoscale_check_limits(false); This path bombs - I fear it will never work?
   { // BUT only if it can be assumed that no values are 'at limits',
     // infinity, NaN, max_value, min_value, denorm_min.
     // minmax_element is efficient for maps because it can use knowledge of all maps being sorted,
     std::pair<T::const_iterator, T::const_iterator> result = boost::minmax_element(container.begin(), container.end());
-    //std::pair<const double, double> px = *result.first; // x min & max
+    //originally std::pair<const double, double> px = *result.first; // x min & max
+
     std::pair<const double, double> px = values_of(*result.first); // x min & max
-    //std::pair<const double, double> py = *result.second; // y min & max
+    //originally std::pair<const double, double> py = *result.second; // y min & max
     std::pair<const double, double> py = values_of(*result.second); // y min & max
     x_min = px.first;
-    x_max = py.first;
-    y_min = px.second;
+    x_max = px.second;
+    y_min = py.first;
     y_max = py.second;
   }
   else
@@ -325,7 +330,6 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
 
     // Work out min and max, ignoring non-finite (+-infinity & NaNs).
     using boost::svg::detail::pair_is_limit; // Either x and/or y is not a proper data value.
-
     int goods = 0; // Count of values where both X and Y are normal (within limits).
     int limits = 0;// Count of values where both X and Y are at limits (not normal).
     T::const_iterator pos = container.begin();
@@ -342,12 +346,14 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
     else
     {
       double x = value_of(pos->first);
-      x_max = x;
-      x_min = x;
+      double xu = unc_of(pos->first) * autoscale_plusminus;
+      x_max = x + xu;
+      x_min = x - xu;
       double y = value_of(pos->second);
-      y_max = y;
-      y_min = y;
-      //cout << "Initial min & max " << x << ' ' << y << endl;
+      double yu = unc_of(pos->second) * autoscale_plusminus;
+      y_max = y + yu;
+      y_min = y - yu;
+      cout << "Initial min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
       pos++;
       goods++;
       while(pos != container.end())
@@ -355,23 +361,28 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
         if (!pair_is_limit(*pos))
         { // Either x and/or y are finite.
           x = value_of(pos->first);
-          if (x > x_max)
+          xu = unc_of(pos->first) * autoscale_plusminus;
+
+          if (x + xu > x_max)
           {
-            x_max = x;
+            x_max = x + xu;
           }
-          if (x < x_min)
+          if (x - xu < x_min)
           {
-            x_min = x;
+            x_min = x - xu;
           }
           y = value_of(pos->second);
-          if (y > y_max)
+          yu = unc_of(pos->second) * autoscale_plusminus;
+          if (y + yu > y_max)
           {
-            y_max = y;
+            y_max = y + yu;
           }
-          if (y < y_min)
+          if (y - yu < y_min)
           {
-            y_min = y;
+            y_min = y - yu;
           }
+          cout << "min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
+
           goods++;
           // cout << goods << " goods, " << x << ' ' << y << endl;
        } // if finite
@@ -384,9 +395,10 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
         }
         ++pos;
       } // while
-      //cout << "x_min " << x_min << ", x_max " << x_max << endl; // x_min 1, x_max 7.3
-      //cout << "y_min " << y_min << ", y_max " << y_max << endl; // y_min 3.2, y_max 9.1
-      //cout << "limits " << limits << endl;
+
+      cout << "x_min " << x_min << ", x_max " << x_max << endl; // x_min 1, x_max 7.3
+      cout << "y_min " << y_min << ", y_max " << y_max << endl; // y_min 3.2, y_max 9.1
+      cout << "limits " << limits << endl;
     }
   }
   scale_axis(x_min, x_max,

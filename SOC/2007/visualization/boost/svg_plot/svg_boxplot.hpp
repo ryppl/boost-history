@@ -694,6 +694,10 @@ private:
   int x_auto_ticks_; // Number of ticks.
 
   bool y_autoscale_; // Whether to use any y_axis autoscale values.
+  double autoscale_plusminus_; //!< For uncertain values, allow for plusminus ellipses showing 67%, 95% and 99% confidence limits.\n
+  //!< For example, if a max value is 1.2 +or- 0.02, then 1.4 will be used for autoscaling the maximum.\n
+  //!< Similarly, if a min value is 1.2 +or- 0.02, then 1.0 will be used for autoscaling the minimum.
+
   bool y_include_zero_; // If autoscaled, include zero.
   int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
   double y_tight_;
@@ -762,6 +766,8 @@ public:
 
   autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
   x_autoscale_(false),
+  autoscale_plusminus_(3.), // Allow 3 uncertainty (standard deviation) for 99% confidence ellipse.
+
   x_include_zero_(false), // If autoscaled, include zero.
   x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
   x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none (0).
@@ -2618,7 +2624,7 @@ public:
   { //! Set Y min & max pair values to use for autoscale.
     scale_axis(p.first, p.second, // double min and max from pair.
     &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-    autoscale_check_limits_,
+    autoscale_check_limits_, autoscale_plusminus_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
     return *this;  //! \return reference to svg_boxplot to make chainable.
@@ -2628,7 +2634,7 @@ public:
   { //! Set Y min & max pair values to use for autoscale.
     scale_axis(first, second, // double min and max from two doubles.
     &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-    autoscale_check_limits_,
+    autoscale_check_limits_, autoscale_plusminus_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
     return *this;  //! \return reference to svg_boxplot to make chainable.
@@ -2639,7 +2645,7 @@ public:
   { //! Set container and iterator range to use to calculate autoscaled values.
     scale_axis(begin, end,
     &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-    autoscale_check_limits_,
+    autoscale_check_limits_, autoscale_plusminus_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true; // Change (from default false) to use calculated values.
     return *this;  //! \return reference to svg_boxplot to make chainable.
@@ -2650,7 +2656,7 @@ public:
   { //! Set whole data container to use to calculate autoscaled values.
     scale_axis(container.begin(), container.end(), // All the container.
     &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-    autoscale_check_limits_,
+    autoscale_check_limits_, autoscale_plusminus_,
     y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
     y_autoscale_ = true;  // Change (from default false) to use calculated values.
     return *this; //! \return reference to svg_boxplot to make chainable.

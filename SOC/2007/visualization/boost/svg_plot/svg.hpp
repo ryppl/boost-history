@@ -128,7 +128,7 @@
 //#include "stylesheet.hpp" // TODO better to be called svg_stylesheet.hpp?
 #include "detail/svg_tag.hpp" // element class definitions.
 #include "svg_style.hpp"
-//#include "svg_fwd.hpp"
+//#include "svg_fwd.hpp" // Could be used to check declarations and definitions match correctly.
 
 // SVG stands for Scalable Vector Graphics,
 // an XML grammar for stylable graphics, usable as an XML namespace.
@@ -158,7 +158,7 @@ namespace svg
 
   /*! Inserted as a SVG comment, for example
    "<!-- Demo of 1D plot features. --> \n"
-   and also as a \verbatim <desc />
+   and also as a \verbatim <desc>
    http://www.w3.org/TR/SVG/struct.html#DescriptionAndTitleElements
    5.4 The 'desc' and 'title' elements
    \endverbatim
@@ -170,13 +170,14 @@ namespace svg
       "<!-- (See accompanying file LICENSE_1_0.txt --> \n"
       "<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) --> \n";
 
-  /* \verbatim
-  Copyright notice to be inserted into plot image produced by this program.
-   Note: can have more than one copyright date, or a range.
-   produces a copyright notice as an SVG comment like this:
-   "<!-- Copyright Paul A. Bristow, 2007  --> \n"
-   and as a meta item:
-   <meta name="copyright" content="Paul A. Bristow" />
+  /*
+  \verbatim
+     Copyright notice to be inserted into plot image produced by this program.
+     Note: can have more than one copyright date, or a range.
+     Produces a copyright notice as an SVG comment like this:
+     "<!-- Copyright Paul A. Bristow, 2007  --> \n"
+     and as a meta item:
+     <meta name="copyright" content="Paul A. Bristow" />
    \endverbatim
    */
 

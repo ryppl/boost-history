@@ -426,6 +426,10 @@ namespace boost
 
       bool autoscale_check_limits_; //!< true if to check autoscale values for infinity, NaN, max, min.
       bool x_autoscale_; //!< true if to use any X-axis autoscale values.
+      double autoscale_plusminus_; //!< For uncertain values, allow for plusminus ellipses showing 67%, 95% and 99% confidence limits.\n
+      //!< For example, if a max value is 1.2 +or- 0.02, then 1.4 will be used for autoscaling the maximum.\n
+      //!< Similarly, if a min value is 1.2 +or- 0.02, then 1.0 will be used for autoscaling the minimum.
+
       bool x_include_zero_; //!< true if autoscaled, to include zero.
       int  x_min_ticks_;  //!< If autoscaled, set a minimum number of X ticks.
       double x_tight_; //!< Tolerance used by autoscale to avoid extra ticks.
@@ -525,11 +529,14 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         // Autoscaling defaults.
         autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
+        autoscale_plusminus_(3.), // Allow 3 uncertainty (standard deviation) for 99% confidence ellipse.
+
         x_autoscale_(false),
         x_include_zero_(false), // If autoscaled, include zero on X-axis.
         x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
         x_steps_(0),  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc, default none.
         x_tight_(1e-6), // margin that point can lie outside top and bottom tick.
+
         y_autoscale_(false),
         y_include_zero_(false), // If autoscaled, include zero on Y-axis.
         y_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.
@@ -2403,13 +2410,13 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_autoscale(double minimum, double maximum)
-      { //! Set Y min & max values to use to autoscale.
+      { //! Set minimum & maximum Y values to use to autoscale Y axis.
         // Does this assume first is min and second is max?
         scale_axis(minimum, maximum, // double min and max from two doubles.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-        autoscale_check_limits_,
+        autoscale_check_limits_, autoscale_plusminus_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
-        y_autoscale_ = true;  // Default to use calculated values.
+        y_autoscale_ = true;  // Default becomes to use these calculated values.
         return *this; //! \return reference to svg_2d_plot to make chainable.
       } // autoscale(pair<double, double> p)
 
@@ -2417,7 +2424,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       { //! Set Y min & max values as a \b pair to use to autoscale.
         scale_axis(p.first, p.second, // double min and max from pair.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-        autoscale_check_limits_,
+        autoscale_check_limits_, autoscale_plusminus_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true;  // Default to use calculated values.
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -2428,7 +2435,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       { //! Data series using iterator's range to use to calculate autoscaled values.
         scale_axis(begin, end,
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-        autoscale_check_limits_,
+        autoscale_check_limits_, autoscale_plusminus_
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true; // Default to use calculated values.
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -2439,7 +2446,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       { //! Whole data series to use to calculate autoscaled values.
         scale_axis(container.begin(), container.end(), // All the container.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-        autoscale_check_limits_,
+        autoscale_check_limits_, autoscale_plusminus_,
         y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
         y_autoscale_ = true;  // Default to use calculated values.
         return *this;
@@ -2451,11 +2458,11 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         scale_axis(container, // All the container.
           &x_auto_min_value_, &x_auto_max_value_, &x_auto_tick_interval_, &x_auto_ticks_,
           &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
-         autoscale_check_limits_,
-         x_include_zero_, x_tight_, x_min_ticks_, x_steps_,
+          autoscale_check_limits_, autoscale_plusminus_,
+          x_include_zero_, x_tight_, x_min_ticks_, x_steps_,
           y_include_zero_, y_tight_, y_min_ticks_, y_steps_);
-        x_autoscale_ = true; // Default to use calculated values.
-        y_autoscale_ = true; // Can be switch off with autoscale(false);
+          x_autoscale_ = true; // Default to use calculated values.
+          y_autoscale_ = true; // Can be switch off with autoscale(false);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       } // xy_autoscale
 
@@ -2785,7 +2792,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
   template <class T> //! \tparam T Type of data in series (must be convertible to unc double).
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
   { /*! Add a container of a data series to the plot.
-      This version assumes that *ALL* the data value in the container is used.
+      This version assumes that  \b ALL the data values in the container are used.
       \code
 my_plot.plot(data1, "Sqrt(x)");
       \endcode

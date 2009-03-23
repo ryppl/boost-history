@@ -175,9 +175,10 @@ A number of variations are shown below, mianly by way of testing.
 
   // axis_scaling using two begin & end iterators into STL container,
   // scale_axis does finding min and max.
-  scale_axis(my_data.begin(), my_data.end(),
-    &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
+  scale_axis(my_data.begin(), my_data.end(), // Input range
+    &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks, // to update.
     true, // check for non-finite
+    3., // autoscale_plusminus = 3 sd
     false, // Do not include origin
     tol100eps, // tight
     6, // steps at default.
@@ -188,13 +189,13 @@ A number of variations are shown below, mianly by way of testing.
   // scale_axis does finding min and max.
   scale_axis(my_data[1], my_data[4], // Only middle part of the container used, ignoring 1st and last values.
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    false, tol100eps, 6); // Display range.
+    true, tol100eps, 6); // Display range.
   cout << "Axis_scaled 5 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
   // axis_scaling using whole STL container,
   // scale_axis does finding min and max.
   scale_axis(my_data, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    true, false, tol100eps, 6); // Display range.
+    true, 3., false, tol100eps, 6); // Display range.
   cout << "Axis_scaled 6 min " << axis_min_value << ", max = " << axis_max_value << ", increment " << axis_tick_increment << endl;
 
   svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.

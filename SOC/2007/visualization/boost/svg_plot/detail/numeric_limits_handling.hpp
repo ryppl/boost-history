@@ -20,6 +20,8 @@
 #define BOOST_SVG_NUMERIC_LIMITS_HANDLING_DETAIL_HPP
 
 #include <boost/math/special_functions/fpclassify.hpp>
+#include <boost/svg_plot/uncertain.hpp>
+// using boost::svg::unc;
 
 // TODO use the boost version instead to be more portable?
 
@@ -77,6 +79,12 @@ inline bool is_limit(double a)
     return limit_max(a) || limit_min(a) || limit_NaN(a);
 }
 
+inline bool pair_is_limit(std::pair<const double, double> a)
+{ //! Check on both x and y double data points. Return false if either or both are at limit.
+  return limit_max(a.first) || limit_min(a.first) || limit_NaN(a.first)
+    || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
+}
+
 inline bool pair_is_limit(std::pair<double, double> a)
 { //! Check on both x and y double data points. Return false if either or both are at limit.
   return limit_max(a.first) || limit_min(a.first) || limit_NaN(a.first)
@@ -100,5 +108,7 @@ bool boost::svg::detail::limit_min(double); // true if min, denorm_min or -infin
 bool boost::svg::detail::limit_NaN(double); // true if NaN.
 bool boost::svg::detail::is_limit(double); // max, min, infinity or NaN - not a 'proper' data value.
 bool boost::svg::detail::pair_is_limit(std::pair<double, double>); // x and/or y  not a proper data value.
+bool boost::svg::detail::pair_is_limit(std::pair<const double, double>); // x and/or y  not a proper data value.
+bool boost::svg::detail::pair_is_limit(std::pair<const unc, unc>); // x and/or y  not a proper data value.
 
 #endif // BOOST_SVG_NUMERIC_LIMITS_HANDLING_DETAIL_HPP

@@ -48,9 +48,7 @@ namespace boost
     //    when they are in svg_2d_plot.hpp
 
     static const double sin45 = 0.707; //!< Use to calculate 'length' if axis value labels are sloping.
-    static const double reducer = 0.9; //!< To make uncertainty and degrees of freedom testimates a bit smaller to distinguish from value.
-    // (0.8 reduced from value 12, to 9 which is a bit too small).
-    //static const double plusminus = 2.; //! Number of standard deviations used for plusminus display. Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.
+    static const double reducer = 0.9; //!< To make uncertainty and degrees of freedom estimates a bit smaller font to help distinguish from value.
 
     // x_axis_position_ and y_axis_position_ use x_axis_intersect & y_axis_intersect
     enum x_axis_intersect
@@ -1766,6 +1764,9 @@ namespace boost
           double x_max();
           // Set & get autoscale parameters,
           // Note: all these *MUST* preceed x_autoscale(data) call.
+          double autoscale_plusminus();
+          Derived& autoscale_plusminus(double);
+
           bool autoscale_check_limits();
           Derived& autoscale_check_limits(bool b);
           bool x_autoscale();
@@ -1843,7 +1844,7 @@ namespace boost
           { //! Data series (range accessed using iterators) to use to calculate autoscaled X-axis values.
               scale_axis(begin, end,
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
+              derived().autoscale_check_limits_, derived().autoscale_plusminus_,
               derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
 
             derived().x_autoscale_ = true; //! Default to use calculated values.
@@ -1857,7 +1858,7 @@ namespace boost
               //scale_axis(container.begin(), container.end(), // All the container.
               scale_axis(container, // All the container.
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
+              derived().autoscale_check_limits_, derived().autoscale_plusminus_,
               derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
 
             derived().x_autoscale_ = true; // Default to use calculated values.
@@ -3599,7 +3600,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             return derived().autoscale_check_limits_;
           }
 
-         template <class Derived>
+          template <class Derived>
           bool axis_plot_frame<Derived>::x_autoscale()
           { //! \return  true if to use autoscale value for X-axis.
            return derived().x_autoscale_;
@@ -3635,12 +3636,28 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             return derived();
           }
 
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::autoscale_plusminus(double pm)
+          { //! Set how many uncertainty or standard deviation to allow for ellipse when autoscaling.
+            //! Default is 3 for 99% confidence.
+            derived().autoscale_plusminus_ = pm;
+            return derived();
+          }
+
+          template <class Derived>
+          double axis_plot_frame<Derived>::autoscale_plusminus()
+          { //! \return  how many uncertainty or standard deviation to allow for ellipse when autoscaling.
+            //! Default is 3 for 99% confidence.
+            return derived().autoscale_plusminus_;
+          }
+
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_autoscale(std::pair<double, double> p)
           { // Set to use X min & max pair values to autoscale X-axis.
             scale_axis(p.first, p.second, // double min and max from pair.
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_,
+              derived().autoscale_check_limits_, autoscale_plusminus_,
               derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
             derived().x_autoscale_ = true; // Default to use any calculated values?
             return derived();

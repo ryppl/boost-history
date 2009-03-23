@@ -253,7 +253,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
     */
 
   friend void show_1d_plot_settings(svg_1d_plot&);
-  friend void show_2d_plot_settings(svg_1d_plot&);
+  //friend void show_2d_plot_settings(svg_1d_plot&); // Surely not needed?
   friend class detail::axis_plot_frame<svg_1d_plot>;
 
  protected:
@@ -324,20 +324,23 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   ticks_labels_style x_ticks_;
   ticks_labels_style y_ticks_; // Added to permit shared code!
 
-  bool title_on_; // Provide a title for the whole plot.
-  bool legend_on_; // Provide a legend box.
-  bool outside_legend_on_; // Legend box outside the plot window.
-  bool legend_lines_; // Data colored line type in legend box.
-  bool plot_window_on_; // Use a separate plot window (not whole image).
+  bool title_on_; //!< If true include a title for the whole plot.
+  bool legend_on_; //!< If true include a legend box.
+  bool outside_legend_on_; //!< If true, place legend box outside the plot window.
+  bool legend_lines_; //!< If true, include data colored line type in legend box.
+  bool plot_window_on_; //!< Use a separate plot window (not whole image).
   bool x_ticks_on_; // TODO check these are really useful.
-  bool x_values_on_; // values of data are shown by markers.
-  int  x_axis_position_;
-  bool autoscale_check_limits_; // Whether to check autoscale values for infinity, NaN, max, min.
-  bool x_autoscale_; // Whether to use any autoscale values.
-  bool x_include_zero_; // If autoscaled, include zero.
-  int  x_min_ticks_;  // If autoscaled, set a minimum number of ticks.
-  double x_tight_;
-  int  x_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+  bool x_values_on_; //!< values of data are shown by markers.
+  int  x_axis_position_; //!< enum #x_axis_intersect
+  bool autoscale_check_limits_; //!< If true, then check autoscale values for infinity, NaN, max, min.
+  bool x_autoscale_; //!< If true, use any autoscale values for scaling the X axis.
+  double autoscale_plusminus_; //!< For uncertain values, allow for plusminus ellipses showing 67%, 95% and 99% confidence limits.\n
+  //!< For example, if a max value is 1.2 +or- 0.02, then 1.4 will be used for autoscaling the maximum.\n
+  //!< Similarly, if a min value is 1.2 +or- 0.02, then 1.0 will be used for autoscaling the minimum.
+  bool x_include_zero_; //!< If autoscaled, include zero.
+  int  x_min_ticks_;  //!< If autoscaled, set a minimum number of ticks.
+  double x_tight_; //!< How much a value can go beyond the tick value before another tick is required.
+  int  x_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
   // Values calculated by scale_axis, and is used only if x_autoscale == true.
   double x_auto_min_value_;
@@ -404,6 +407,8 @@ public:
     x_values_style_(horizontal, 3, std::ios::dec, true, value_style_, black, black, false, false),
     // Autoscaling.
     autoscale_check_limits_(true), // Do check all value for limits, infinity, max, min, NaN.
+    autoscale_plusminus_(3.), // Allow 3 uncertainty (standard deviation) for 99% confidence ellipse.
+
     x_autoscale_(false),
     x_include_zero_(false), // If autoscaled, include zero.
     x_min_ticks_(6),  // If autoscaled, set a minimum number of ticks, default 6.

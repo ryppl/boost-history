@@ -36,7 +36,7 @@ namespace boost
 {
 namespace svg
 {
-   static const double plusminus = 2.; //! Number of standard deviations used for plusminus display. Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.
+   static const double plusminus = 2.; //! Number of standard deviations used for plusminus text display. Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.\n
 
 //  template <bool correlated = false>
 class unc
@@ -242,16 +242,40 @@ float unc_of(unc v)
 }
 
 // Two helper functions to provide values and uncertainties as pairs.
+// Note names plural valueS_of
 
 template <class T>
-std::pair<const double, double> values_of(std::pair<const T, T> vp)
+std::pair<double, double> values_of(T);
+
+template <class T>
+std::pair<double, double> values_of(std::pair<const T, T> vp)
+{
+  return std::make_pair(value_of(vp.first), value_of(vp.second));
+}
+
+template <class T>
+std::pair<double, double> values_of(std::pair<unc, unc> up)
 { //! \return value (part) as a pair of doubles.
   // so can write
   // std::pair<const double, double> minmax = value_of(*result.first); // x min & max
   // whether T is double or unc.
-  std::pair<const double, double> minmax = make_pair(vp.first.value(), vp.second.value());
+
+  double vp1 = up.first.value();
+  double vp2 = up.second.value();
+  std::pair<double, double> minmax = std::make_pair(up.first.value(), up.second.value());
   return minmax;  
 }
+
+//template <class T>
+//std::pair<double, double> values_of(std::pair<T, T> vp)
+//{ //! \return value (part) as a pair of doubles.
+//  // so can write
+//  // std::pair<double, double> minmax = value_of(*result.first); // x min & max
+//  // whether T is double or unc.
+//  std::pair<double, double> minmax = std::make_pair(vp.first.value(), vp.second.value());
+//  return minmax;  
+//}
+
 
 template <class T>
 std::pair<const float, float> uncs_of(std::pair<const T, T> vp)
@@ -259,7 +283,7 @@ std::pair<const float, float> uncs_of(std::pair<const T, T> vp)
   // so can write
   // std::pair<const float, float> minmax = value_of(*result.first); // min unc & max unc for example/
   // whether T is built-in or unc.
-  std::pair<const double, double> minmax = make_pair(vp.first.value(), vp.second.value());
+  std::pair<const double, double> minmax = std::make_pair(vp.first.value(), vp.second.value());
   return minmax;  
 }
 
