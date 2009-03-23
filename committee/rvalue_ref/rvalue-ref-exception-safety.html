@@ -9,8 +9,36 @@
 <p>Authors: Douglas Gregor, David Abrahams<br>
 Contact: doug.gregor@gmail.com, dave@boostpro.com<br>
 Organization: Apple, BoostPro Computing<br>
-Date: 2009-03-07<br>
+Date: 2009-03-22<br>
 Number: D2855=09-0045</p>
+
+<h3>Table of Contents</h3>
+<ul>
+  <li><a href="#intro">Introduction</a></li>
+  <li><a href="#review">Review of Exception Safety Guarantees in the Library</a></li>
+  <li><a href="#problem">The Problem</a>
+    <ul>
+      <li><a href="#throwing-move-constructor">The Problem With Throwing Move Constructors</a></li>
+      <li><a href="#strong-except-model">A Model of Strong Exception Safety</a></li>
+      <li><a href="#throwing-pair">Throwing Move Constructors in the Standard Library</a></li>
+    </ul>
+  </li>
+  <li><a href="#solution">Proposed Solution</a>
+    <ul>
+      <li><a href="#noexcept">The <code>noexcept</code> Specifier</a></li>
+      <li><a href="#noexcept-concepts"><code>noexcept</code> In Concepts</a></li>
+      <li><a href="#nothrowmove">Move Constructors are Non-Throwing</a></li>
+      <li><a href="#noexcept-block">The <code>noexcept</code> Block</a></li>
+      <li><a href="#library">Library Changes</a>
+        <ul>
+          <li><a href="#concepts">Nothrow Moving and Copying Concepts</a></li>
+          <li><a href="#aggregate">Move Constructors and Move Assignment Operators</a></li>
+          <li><a href="#noexcept-annot"><code>noexcept</code> annotations</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
 <h2 id="intro">Introduction</h2>
 
@@ -188,7 +216,7 @@ T* reallocate(T *old_ptr, size_t old_capacity) {
 
 <p>However, if the element's move constructor can throw an exception (say, while moving the value <code>e</code>), we are left with a problem: neither the old storage nor the new storage captures the vector's state prior to initiating the reallocation. And, since we're recovering from an exception, we don't have the ability to move elements back from the new storage to the old storage, because their move constructors could throw in the process. Hence, the best we can do is maintain the basic guarantee, where no resources are leaked but the first four values in the vector have indeterminate values. Hence, it is not possible to provide the strong exception safety guarantee for vector's <code>push_back</code> in the presence of a throwing move constructor.</p>
 
-<h3 "strong-except-model">A Model of Strong Exception Safety</h3>
+<h3 id="strong-except-model">A Model of Strong Exception Safety</h3>
 <p>Stepping back from this specific instance, we can formulate a simple model for achieving the strong exception-safety guarantee. In this model, we take the set of operations that we need to perform in our routine and partition them into two sets: those operations that perform nonreversible modifications (such as moving a value from one place to another) and those operations that can throw exceptions. Providing strong exception safety means placing any operations that can throw exceptions (memory allocation, copying, etc.) before any operations that perform nonrevisible modifications (moving a value, destroying an object, freeing memory).</p>
 
 <p>Reconsidering <code>vector</code> reallocation in terms of this model, we see that, if we ignore throwing move constructors, the implementation of <code>reallocate</code> performs all of its possibly-throwing routines up front: we allocate memory, then copy (which may throw) or move (which won't throw), then we complete the operation. Either way, at some point within the routine we have committed to only using operations that can no longer throw, such as deallocating memory or destroying already-constructed objects.</p>
@@ -253,82 +281,7 @@ struct pair {
 
 <p>In this case, <code>pair</code> will only provide a move constructor when that move constructor is guaranteed to be non-throwing. Therefore, <code>std::pair&lt;std::string, Matrix&gt;</code> will not provide a move constructor and reallocating a <code>vector</code> of these pairs will use the copy constructor, maintaining the strong exception safety guarantee. Naturally, <code>pair</code> is not the only type whose move constructor is effected: any standard library and user type that aggregates other values, including tuples and containers, will need similarly-constrained move constructors.</p>
 
-<p>At present, there is no good way to write the <code>NothrowMoveConstructible</code> concept. FIXME: pick up here
-
-
-TODO: ban 
-
-<p>At present, we have no way to detect whether either of these
-conditions hold. We copy constructors do not modify the values of 
-We therefore propose to ban the definition of move
-constructors and move assignment operators that throw
-exceptions. We can then be sure that if we are invoking a move
-constructor, it does not throw; that copy constructors preserve the
-original value of the source element is already assumed in C++ and
-need not be addressed separately.</p>
-
-<p>Banning move constructors and move assignment operators that throw
-exceptions is not a straightforward matter. For example, a blanket
-library requirement that prohibits types with a throwing move
-constructor from being used with the library would be ineffective, for
-several reasons:</p>
-
-<ol>
-  <li><i>Users will accidentally violate this requirement</i>. Without
-  any kind of compiler checking that move constructors and move
-  assignment operators don't throw exceptions, it is far too easy for
-  a user to forget that a certain operation used within the move
-  constructor or move assignment operator may throw an exception,
-  silently and accidentally breaking the guarantee. Exception
-  specifications do not help this situation, because they are neither
-  statically checked nor widely used.</li>
-
-  <li><i>The library will violate this requirement</i>. Certain
-  library classes like <code>pair</code> and </code>tuple</code>
-  aggregate several kinds of data and provide move constructors. For
-  example, <code>std::pair</code> has the following move constructor:
-  <pre>
-template&lt;class U, class V&gt; 
-  requires Constructible&lt;T1, RvalueOf&lt;U&gt;::type&gt; &amp;&amp;
-           Constructible&lt;T2, RvalueOf&lt;V&gt;::type&gt; 
-  pair(pair&lt;U, V&gt;&amp;&amp; p)
-    : first(std::move(p.first)), second(std::move(p.second)) { }
-  </pre>
-
-  This move constructor is necessary to make types like
-  <code>std::pair&lt;std::string, std::string&gt;</code>
-  move-constructible (for optimization purposes) and to make move-only
-  types like <code>std::unique_ptr</code> usable within
-  <code>std::pair</code>. However, certain combinations of
-  <code>pair</code> template arguments will cause this move
-  constructor to both be destructive and to potentially throw
-  exceptions. For example, consider <code>std::pair&lt;std::string,
-  Matrix&gt;</code>. Here, <code>std::pair</code>'s move constructor
-  will move (destructively) the <code>std::string first</code> and
-  then will copy <code>Matrix second</code>. Thus, the move operation
-  is both destructive and can throw exceptions, which makes it
-  impossible for <code>std::vector</code>'s <code>push_back</code>
-  operation to provide the strong exception safety guarantee. 
-  (FIXME: it's far easier to understand this problem here than it was
-  at the beginning of the document. We need to structure this better!).
-</ol>
-
-<p>The solution for <code>pair</code>'s move constructor is to only
-enable move construction when both <code>T1</code> and <code>T2</code>
-have non-throwing move constructors. For example, we could change the
-signature of <code>pair</code>'s move constructor to:</p>
-
-<pre>
-template&lt;class U, class V&gt; 
-  requires NothrowMoveConstructible&lt;T1, U&gt; &amp;&amp;
-           NothrowMoveConstructible&lt;T2, V&gt; 
-  pair(pair&lt;U, V&gt;&amp;&amp; p)
-    : first(std::move(p.first)), second(std::move(p.second)) { }
-</pre>
-
-<p>The <code>NothrowMoveConstructible</code> concept, in this case,
-expresses the same semantics as the previous
-<code>Constructible</code> requirement, e.g.,<p>
+<p>At present, there is no good way to write the <code>NothrowMoveConstructible</code> concept. One option that exists within the current language is to write the new concept as follows:</p>
 
 <pre>
 concept NothrowMoveConstructible&lt;typename T, typename U = T&gt; {
@@ -371,7 +324,7 @@ function can throw exceptions. Even if concepts could prevent such an
 error in the library, non-templated and unconstrained templates would
 still be susceptible to this class of errors. To address these
 problems, we propose to introduce language facilities that allow the
-nothrow guarantee to be declared for functions, statically enforced by
+non-throwing guarantee to be declared for functions, statically enforced by
 the compiler, and queried by concepts.</p>
 
 <h3 id="noexcept">The <code>noexcept</code> Specifier</h3>
@@ -439,18 +392,18 @@ specifications have a poorly-defined role in the C++ type system,
 because they can only be used in very limited ways.</p>
 
 <p>Functions cannot be overloaded based on <code>noexcept</code>
-alone. For example, the following code is ill-formed:</p>
+alone, and <code>noexcept</code> is not part of a function's signature. For example, the following code is ill-formed:</p>
 
 <pre>
 noexcept void f() { } // #1
 void f() { } // #2: redefinition of #1
 </pre>
 
-<h3 id"noexcept-concepts"><code>noexcept</code> in concepts</h3>
+<h3 id="noexcept-concepts"><code>noexcept</code> In Concepts</h3>
 
 <p>The <code>noexcept</code> specifier can be used on associated
 functions within concepts, allowing one to detect whether a particular
-operation is guaranteed not to throw exceptions. For example:
+operation is guaranteed not to throw exceptions. For example:</p>
 
 <pre>
 auto concept NothrowMoveConstructible&lt;typename T, typename U = T&gt; {
@@ -469,12 +422,57 @@ no-throw policy, we have made this an <code>auto</code> concept, so
 that users need not write concept maps for this low-level
 concept.</p>
 
-<h3 id="movedefault">Default Implementations of Move Construction and Assignment</h3>
-NOTE: The move constructor generated for closure types will need to be fixed, too.
+<h3 id="nothrowmove">Move Constructors are Non-Throwing</h3>
+<p>Types with throwing move constructors are prohibited within the standard library, and we have not seen motivating use cases for such a feature. On the other hand, failure to mark a non-throwing move constructor as <code>noexcept</code> means that users will miss out on the many optimization opportunities in the standard library that depend on rvalue references.</p>
+
+<p>We therefore propose that all move constructors be implicitly <code>noexcept</code>. This way, users that implement move constructors can be certain that their move constructors (1) will be used by the standard library and (2) will meet the non-throwing requirements of the standard library.</p>
+
+<p>Specifically, for a class <code>X</code>, any constructor whose first parameter is of type <code>X&amp;&amp;</code> and whose remaining parameters, if any, all have default arguments, is considered a move constructor. For a class tempate <code>X</code>, any constructor or constructor template whose first parameter is of type <code>X&lt;T1, T2, ..., TN&gt;</code> for any <code>T1</code>, <code>T2</code>, ..., <code>TN</code> and whose remaining parameters, if any, all have default arguments, is considered a move constructor or move constructor template. If a constructor or constructor template is a move constructor or move constructor template, it is implicitly declared as <code>noexcept</code>.</p>
+
+<!-- Drafting note: The move constructor generated for closure types will need to be fixed, too. -->
+
+TODO: should destructors be implicitly <code>noexcept</code>?
+
+<h3 id="noexcept-block">The <code>noexcept</code> Block</h3>
+
+<p>Statically checking that the body of a function does not throw any exceptions can reject as ill-formed certain programs that are careful to avoid throwing exceptions. As a simple example, imagine a function <code>sqrt(double x)</code> that computes the square root of <code>x</code>. If given zero or a negative number, it will throw an <code>std::out_of_range</code> exception. Now, imagine a function that uses <code>sqrt()</code>:</p>
+
+<pre>
+double sqrt(double); // may throw exceptions
+
+noexcept void f(double &x) {
+  if (x &gt; 0) {
+    x = sqrt(x); // ill-formed: sqrt(x) might throw an exception!
+  }
+}
+</pre>
+
+<p>This code is ill-formed, because the call to may throw exceptions. The user has properly guarded the call to <code>sqrt</code> by checking its preconditions within <code>f</code>, but the compiler is unable to intepret the program to prove that <code>f</code> will not throw. To address this problem, we propose the addition of a <code>noexcept</code> block, which will be used as follows:</p>
+
+<pre>
+double sqrt(double); // may throw exceptions
+
+noexcept void f(double &x) {
+  if (x &gt; 0) {
+    noexcept { x = sqrt(x); } // okay: if sqrt(x) throws, invokes undefined behavior
+  }
+}
+</pre>
+
+<p>The <code>noexcept</code> block states that no exceptions will be thrown by the code within its compound statement. An exception that escapes from a <code>noexcept</code> block results in undefined behavior.</p>
 
 <h3 id="library">Library Changes</h3>
-<h4 id="concepts">Moving and Copying Concepts</h4>
-<h4 id="aggregate">Move Constructors</h4>
+<p>The introduction of <code>noexcept</code> and its use throughout the standard library will require significant changes in a few areas. The changes are summarized below.</p>
+
+<h4 id="concepts">Nothrow Moving and Copying Concepts</h4>
+<p>We propose the introduction of new concepts for non-throwing assignment and construction:</p>
+
+<pre>
+FIXME: start here
+</pre>
+
+<h4 id="aggregate">Move Constructors and Move Assignment Operators</h4>
+<h4 id="noexcept-annot"><code>noexcept</code> Annotations</h4>
 
 <h2 id="alternatives">Alternative Solutions</h2>
 <h3 id="libraryonly">Library-only Solution</h3>
@@ -483,5 +481,5 @@ NOTE: The move constructor generated for closure types will need to be fixed, to
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 18:28:39 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 19:41:21 PDT 2009 <!-- hhmts end -->
 </body> </html>
