@@ -592,9 +592,17 @@ auto concept HasNothrowAssign&lt;typename T, typename U&gt; : HasAssign&lt;T, U&
 }
 
 auto concept NothrowMoveAssignable&lt;typename T&gt; : MoveAssignable&lt;T&gt;, HasNothrowAssign&lt;T, T&amp;&amp;&gt; { }
+</pre>
 
+<p>In addition, we need <code>Nothrow</code> variants of the concepts used for scoped allocators:</p>
+
+<pre>
 concept NothrowConstructibleWithAllocator&lt;class T, class Alloc, class... Args&gt; { 
   noexcept T::T(allocator_arg_t, Alloc, Args&amp;&amp;...); 
+}
+
+auto concept NothrowAllocatableElement&lt;class Alloc, class T, class... Args&gt; : AllocatableElement&lt;Alloc, T, Args...&gt; {
+  noexcept void Alloc::construct(T*, Args&amp;&amp;...);
 }
 </pre>
 
@@ -664,5 +672,5 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 20:22:03 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 20:27:53 PDT 2009 <!-- hhmts end -->
 </body> </html>
