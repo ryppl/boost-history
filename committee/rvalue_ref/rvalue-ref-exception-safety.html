@@ -801,6 +801,22 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; &amp;
 <p>We have considered several alternative syntaxes for <code>noexcept</code>, and we catalog the most promising alternatives here:</p>
 
 <dl>
+  
+<dt>The <code>nothrow</code> keyword</dt>
+<dd>
+  <b>Why it works</b>: <code>nothrow</code> would be our first choice for a keyword to describe a non-throwing function (or block). This term has been in use colloquially to describe non-throwing functions and is also used within the standard library. If the technical problems (described below) can be overcome, we would prefer to use <code>nothrow</code> rather than <code>noexcept</code>.<br>
+  <b>Why it doesn't</b>: the standard library also has an object named <code>nothrow</code>, which is declared as:
+  <pre>
+extern const nothrow_t nothrow;
+</pre>
+  If <code>nothrow</code> were to become a keyword, this object could no longer be defined in the standard library and would have to be removed. We then would have to provide some special syntax allowing existing uses of this object to still work. For example:
+  <pre>
+using std::nothrow;
+X* ptr = new (nothrow) X;
+X* ptr2 = new (std::nothrow) X;
+</pre>
+</dd>
+    
 <dt>A <code>nothrow</code> attribute</dt>
 <dd>
   <b>Why it works</b>: both functions and statements can be annotated with attributes, and since attributes do not require a keyword we can use the "<code>nothrow</code>" identifier. In addition, <code>nothrow</code> is an attribute already supported by the GNU compiler with a similar meaning.<br>
@@ -815,5 +831,5 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; &amp;
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Mon Mar 23 09:02:06 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Mon Mar 23 09:12:03 PDT 2009 <!-- hhmts end -->
 </body> </html>
