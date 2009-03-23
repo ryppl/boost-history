@@ -200,9 +200,7 @@ storage. The reallocation routine looks something like this:</p>
 <pre>
 T* reallocate(T *old_ptr, size_t old_capacity) {
   // #1: allocate new storage
-  T* new_ptr = (T*)malloc(sizeof(T) * old_capacity * 2);
-  if (new_ptr == NULL)
-    throw std::bad_alloc();
+  T* new_ptr = (T*)new char[sizeof(T) * old_capacity * 2];
 
   // #2: try to move the elements to the new storage
   unsigned i = 0;
@@ -215,14 +213,14 @@ T* reallocate(T *old_ptr, size_t old_capacity) {
     // #2b: destroy the copies and deallocate the new storage
     for (unsigned v = 0; v &lt; i; ++v)
       new_ptr[v]-&gt;~T();
-    free(new_ptr);
+    delete[]((char*)new_ptr);
     throw;
   }
 
   // #3: free the old storage
   for (i = 0; i &lt; old_capacity; ++i)
     old_ptr[i]-&gt;~T();
-  free(old_ptr);
+  delete[]((char*)old_ptr);
   return new_ptr;
 }
 </pre>
@@ -355,8 +353,10 @@ transfer resources and (2) there is no non-throwing operation to
 reverse the transfer of resources.</p>
 
 <p>Based on this model, prohibiting the use of types that have
-throwing move constructors appears to solve the problem, and it does
-help somewhat.</p>
+throwing move constructors <em>appears</em> to solve the problem. It
+does help, but we'll need to go further than that to prevent the
+generation of throwing move constructors in standard library class
+templates.</p>
 
 <!-- One immediate problem with this approach (which is -->
 <!-- already used by vector's <code>push_back</code> specification, among -->
@@ -429,13 +429,10 @@ behavior when compiled with a C++0x Standard Library </p>
 
 <h2 id="solution">Proposed Solution</h2>
 
-<p>The problematic throwing move constructor in our example comes from
-the aggregation of two well-formed types, so we focus our attention on
-the <code>pair</code> move constructor. In particular, given the
-prohibition on move constructors that may throw
-exceptions, <code>pair</code> should only declare a move constructor
+<p>Given the prohibition on throwing move
+constructors, <code>pair</code> should only declare a move constructor
 when it is guaranteed that the underlying move operations for the
-types it aggregates are both non-throwing. Using concept syntax, one
+types it aggregates are both non-throwing.  Using concept syntax, one
 might imagine that such a constructor would be written as:</p>
 
 <pre>
@@ -447,7 +444,7 @@ might imagine that such a constructor would be written as:</p>
 <p>In this case, <code>pair</code> will only provide a move
 constructor when that move constructor is guaranteed to be
 non-throwing. Therefore, <code>std::pair&lt;std::string,
-Matrix&gt;</code> will not provide a move constructor and reallocating
+Matrix&gt;</code> will not provide a move constructor, and reallocating
 a <code>vector</code> of these pairs will use the copy constructor,
 maintaining the strong exception safety
 guarantee. Naturally, <code>pair</code> is not the only type whose
@@ -455,7 +452,10 @@ move constructor is affected: any standard library and user type that
 aggregates other values, including tuples and containers, will need
 similarly-constrained move constructors.</p>
 
-<p>At present, there is no good way to write the <code>NothrowMoveConstructible</code> concept. One option that exists within the current language is to write the new concept as follows:</p>
+<p>At present, there is no satisfactory way to write
+the <code>NothrowMoveConstructible</code> concept. Using C++0x as
+currently specified, we could try to write the new concept as
+follows:</p>
 
 <pre>
 concept NothrowMoveConstructible&lt;typename T, typename U = T&gt; {
@@ -490,16 +490,17 @@ safety guarantee.</p>
 
 <p>The danger with a library-only solution is that it is far too easy
 for users of the language to accidentally write a move constructor
-that can throw exceptions, and a single class or class template that
-makes such a mistake compromises the exception safety guarantees of
-the library. The concepts system cannot protect the user from such a
-mistake, because there is no way to statically determine whether a
-function can throw exceptions. Even if concepts could prevent such an
-error in the library, non-templated and unconstrained templates would
-still be susceptible to this class of errors. To address these
-problems, we propose to introduce language facilities that allow the
-non-throwing guarantee to be declared for functions, statically enforced by
-the compiler, and queried by concepts.</p>
+that can throw exceptions (see <code>std::pair</code>), and a single
+class or class template that makes such a mistake compromises the
+exception safety guarantees of the library. The concepts system cannot
+protect the user from such a mistake, because there is no way to
+statically determine whether a function can throw exceptions. Even if
+concepts could prevent such an error in the library, non-templated and
+unconstrained templates would still be susceptible to this class of
+errors. To address these problems, we propose to introduce language
+facilities that allow the non-throwing guarantee to be declared for
+functions, statically enforced by the compiler, and queried by
+concepts.</p>
 
 <h3 id="noexcept">The <code>noexcept</code> Specifier</h3>
 
@@ -544,7 +545,9 @@ noexcept int (*fp1)(int); // okay: pointer to a function that does not throw exc
 int (*fp2)(int); // okay: pointer to a function that may throw exceptions
 </pre>
 
-<p>There is an implicit conversion from pointers and references to <code>noexcept</code> pointers to their potentially-throwing equivalents. For example:</p>
+<p>There is an implicit conversion from pointers and references
+to <code>noexcept</code> pointers to their potentially-throwing
+equivalents. For example:</p>
 
 <pre>
 noexcept int f(int);
@@ -556,8 +559,8 @@ int (*fp3)(int) = &amp;f; // okay: conversion from pointer to <code>noexcept</co
 noexcept int (*fp4)(int) = &amp;g; // error: no conversion from a pointer to a throwing function type to a pointer to a non-throwing function type
 </pre>
 
-<p>In many ways, <code>noexcept</code> provides the behavior that
-users expect from <code>throw()</code>. That exception specifications
+<p>In short, <code>noexcept</code> provides the behavior that
+many users expect from <code>throw()</code>. That exception specifications
 are not statically checked is a <a
  href="http://www.gotw.ca/publications/mill22.htm">constant source of
 confusion</a>, especially for programmers who have used the similar
@@ -565,8 +568,9 @@ confusion</a>, especially for programmers who have used the similar
 specifications have a poorly-defined role in the C++ type system,
 because they can only be used in very limited ways.</p>
 
-<p>Functions cannot be overloaded based on <code>noexcept</code>
-alone, and <code>noexcept</code> is not part of a function's signature. For example, the following code is ill-formed:</p>
+<p><strong>Note:</strong> functions cannot be overloaded based on <code>noexcept</code>
+alone, and <code>noexcept</code> is not part of a function's
+signature. For example, the following code is ill-formed:</p>
 
 <pre>
 noexcept void f() { } // #1
