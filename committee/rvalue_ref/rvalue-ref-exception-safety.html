@@ -51,6 +51,7 @@ Number: D2855=09-0045</p>
       <li><a href="#noexcept">The <code>noexcept</code> Specifier</a></li>
       <li><a href="#noexcept-concepts"><code>noexcept</code> In Concepts</a></li>
       <li><a href="#nothrowmove">Move Constructors are Non-Throwing</a></li>
+      <li><a href="#noexcept-destruct">Destructors are Non-throwing</a></li>
       <li><a href="#noexcept-block">The <code>noexcept</code> Block</a></li>
       <li><a href="#library">Library Changes</a>
         <ul>
@@ -540,7 +541,9 @@ concept.</p>
 
 <!-- Drafting note: The move constructor generated for closure types will need to be fixed, too. -->
 
-TODO: should destructors be implicitly <code>noexcept</code>?
+<h3 id="noexcept-destruct">Destructors are Non-throwing</h3>
+
+<p>All destructors will implicitly be declared <code>noexcept</code>
 
 <h3 id="noexcept-block">The <code>noexcept</code> Block</h3>
 
@@ -672,5 +675,5 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 20:27:53 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 20:41:22 PDT 2009 <!-- hhmts end -->
 </body> </html>
