@@ -415,7 +415,7 @@ that modifies its source
 value. The <code>pair</code>'s <code>second</code> data member is
 a <code>Matrix</code>, which has a throwing copy constructor but no
 move constructor. When we compose these two types, we end up with a
-type—<code>std::pair&lt;std::string, Matrix&gt;</code>—that merges
+type&mdash;<code>std::pair&lt;std::string, Matrix&gt;</code>&mdash;that merges
 their behaviors. This <code>pair</code>'s move constructor performs a
 non-reversible modification on the <code>first</code> member of the
 pair (moving the resources of the <code>std::string</code>) and then
