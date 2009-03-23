@@ -103,6 +103,64 @@ rvalue references. However, some functions of the library provide the
 strong exception guarantee, such as <code>push_back</code>
 (23.1.1p10).</p>
 
+<h2 id="review">Review of Move Semantics Idioms</h2>
+
+The most common "move constructor" signature for a type <code>T</code>
+is <code>T(T&&)</code>, but <em>every</em> move constructor:
+<ol>
+  <li>Can be called with a single non-const rvalue argument of type <code>T</code></li>
+  <li>Has a non-const reference parameter to which that rvalue is bound
+  <li>Transfers resources from that rvalue into the newly-constructed object
+    </ol>
+Although move construction modifies its argument by transferring
+resources away from it, move construction from a real rvalue is still
+a "logically non-mutating" operation.  Since the move constructor
+holds the only reference to that rvalue, any modifications are
+invisible to the rest of the program.  These invisible move
+constructions can take effect automatically whenever an rvalue may
+need to be copied, for example when an rvalue argument is passed by
+value.
+
+However, move construction can also be <em>explicitly requested</em>
+for lvalue arguments.  The standard idiom
+is <code>T(std::move(x))</code>, where <code>x</code> is an lvalue of
+type <code>T</code>.  The <code>std::move</code> function template
+simply casts its lvalue argument to the corresponding rvalue type:
+
+<pre>
+template <class T>
+T&& move(T& x) { return static_cast<T&&>(x); }
+</pre>
+  
+The <code>T(std::move(x))</code> idiom is only a move <em>request</em>
+because in general, <code>T</code> may not have a move constructor, in
+which case an available copy constructor will be used instead.  Such
+an explicit move request can be used anytime a function knows that a
+particular value is no longer needed.  The simplest example is
+in <code>std::swap</code>:
+
+<pre>
+template <class T>
+void swap(T& x, T& y)
+{
+   T tmp(std::move(x));  // 1
+   x = std::move(y);     // 2
+   y = std::move(tmp);   // 3
+}
+</pre>
+
+In this case, it is safe to move from <code>x</code> in line 1 because
+we are about to assign into <code>x</code> in line 2.
+Since <em>copying</em> <code>x</code> is also an acceptable (though
+sometimes suboptimal) way to transfer its value into <code>tmp</code>,
+this code still works when <code>T</code> has a copy constructor but
+no move constructor.  
+
+The act of constructing a new <code>T</code> from an
+explicitly-generated <code>T&&</code> bound to an lvalue is known in
+this paper as "the move operation," whether it actually ends up moving
+or falls back to invoking a copy constructor.
+
 <h2 id="problem">The Problem</h2>
 
 <p>The problem addressed by this paper is three-fold.  First, under
@@ -285,7 +343,7 @@ operation. Either way, at some point within the routine we have
 committed to only using operations that can no longer throw, such as
 deallocating memory or destroying already-constructed objects.</p>
 
-<p>The problem with a throwing move operation is that it fits into
+<p>The problem with a throwing move constructor is that it fits into
 both partitions. It can throw exceptions (obviously) and it is also a
 non-reversible modification, because (1) moving is permitted to
 transfer resources and (2) there is no non-throwing operation to
