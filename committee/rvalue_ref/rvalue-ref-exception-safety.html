@@ -42,15 +42,14 @@ Number: D2855=09-0045</p>
 
 <h2 id="intro">Introduction</h2>
 
-<p>This paper describes a problem with rvalue references that
-compromises the exception safety guarantees made by the Standard
+<p>This paper describes a problem with the move construction idiom
+that compromises the exception safety guarantees made by the Standard
 Library. In particular, well-formed C++03 programs, when compiled with
 the C++0x Standard Library, can no longer rely on the strong exception
-safety guarantee provided by certain standard library containers. This silent
-change in behavior makes it nearly impossible to use these containers in applications that must recover from exceptions thrown by
-the library. In this paper, we characterize the problem itself and
-outline a potential solution that extends the language and modifies
-the library.</p>
+safety guarantee provided by certain standard library container
+operations. This change silently breaks existing user code.  In this
+paper, we characterize the problem itself and outline a solution that
+extends the language and modifies the library.</p>
 
 <h2 id="review">Review of Exception Safety Guarantees in the
 Library</h2>
@@ -75,16 +74,22 @@ safety guarantees for a given library function:
 
 <p>The Standard Library provides at least the basic exception
 guarantee throughout, which has not changed with the introduction of
-rvalue references. Some functions of the library provide the strong
-exception guarantee, such as insertion in most containers
+rvalue references. However, some functions of the library provide the
+strong exception guarantee, such as <code>push_back</code>
 (23.1.1p10).</p>
 
 <h2 id="problem">The Problem</h2>
 
-<p>The problem addressed by this paper is two-fold. First, for some
-functions that are specified with the strong exception guarantee, it
-is not possible to implement the strong exception guarantee if there
-exist any move constructors that throw exceptions. Second, although the C++0x standard library prohibits the use of move constructors in certain places, the C++0x Standard Library itself may provide move constructors that can throw exceptions.
+<p>The problem addressed by this paper is three-fold.  First, under
+C++0x, some existing types such
+as <code>pair&lt;string,legacy_type&gt;</code> automatically acquire a
+throwing move constructor.  Second, currently-legal operations such as
+insertion into a container of those pairs will invoke undefined
+behavior, because the C++0x Standard Library bans throwing move
+constructors in those operations.  Third, operations such
+as <code>vector<T>::push_back</code>, that are currently required to
+provide the strong exception guarantee, only provide the basic
+guarantee when <code>T</code>'s move constructor can throw.
 
 <h3 id="throwing-move-constructor">The Problem With Throwing Move Constructors</h3>
 
@@ -97,7 +102,7 @@ vec.push_back(x);
 </pre>
 
 <p>In the call to <code>push_back</code>, if the size of the
-<code>vector</code> is the same as it's capacity, we will have to
+<code>vector</code> is the same as its capacity, we will have to
 allocate more storage for the <code>vector</code>. In this case, we
 first allocate more storage and then "move" the contents from the old
 storage into the new storage. Finally, we copy the new element into
@@ -134,9 +139,17 @@ T* reallocate(T *old_ptr, size_t old_capacity) {
 }
 </pre>
 
-<p>For this discussion we are interested in section #2, which handles the movement of values from the old storage to the new storage. The use of <code>std::move</code> treats the elements in the old storage as rvalues, enabling a move constructor (if available) or falling back to a copy constructor (if no move constructor is available) with the same syntax.</p>
+<p>For this discussion we are interested in section #2, which handles
+the movement of values from the old storage to the new storage. The
+use of <code>std::move</code> treats the elements in the old storage
+as rvalues, enabling a move constructor (if available) or falling back
+to a copy constructor (if no move constructor is available) with the
+same syntax.</p>
 
-<p>Consider reallocation of the vector when the type stored in the vector provides only a copy constructor (and no move constructor), as shown below. Here, we copy elements from the old storage (top) to the new storage (bottom).</p>
+<p>Consider reallocation of the vector when the type stored in the
+vector provides only a copy constructor (and no move constructor), as
+shown below. Here, we copy elements from the old storage (top) to the
+new storage (bottom).</p>
 
 <table border="0">
   <tr>
@@ -212,26 +225,67 @@ T* reallocate(T *old_ptr, size_t old_capacity) {
   </tr>
 </table>
 
-<p>When the element's move constructor cannot throw, the reallocation is guaranteed to succeed, since no operations after the initial memory allocation can throw.</p>
+<p>When the element's move constructor cannot throw, the
+initialization of the new storage is guaranteed to succeed, since no
+operations after the initial memory allocation can throw.</p>
 
-<p>However, if the element's move constructor can throw an exception (say, while moving the value <code>e</code>), we are left with a problem: neither the old storage nor the new storage captures the vector's state prior to initiating the reallocation. And, since we're recovering from an exception, we don't have the ability to move elements back from the new storage to the old storage, because their move constructors could throw in the process. Hence, the best we can do is maintain the basic guarantee, where no resources are leaked but the first four values in the vector have indeterminate values. Hence, it is not possible to provide the strong exception safety guarantee for vector's <code>push_back</code> in the presence of a throwing move constructor.</p>
+<p>However, if the element's move constructor can throw an exception,
+that exception can occur after the vector's state has been altered
+(say, while moving the value <code>e</code>), and there's no reliable
+way to recover the vector's original state, since any attempt to move
+the previously-moved elements back into the vector's storage could
+also throw.  Hence, the best we can do is maintain the basic
+guarantee, where no resources are leaked but the first four values in
+the vector have indeterminate values.</p>
 
 <h3 id="strong-except-model">A Model of Strong Exception Safety</h3>
-<p>Stepping back from this specific instance, we can formulate a simple model for achieving the strong exception-safety guarantee. In this model, we take the set of operations that we need to perform in our routine and partition them into two sets: those operations that perform nonreversible modifications (such as moving a value from one place to another) and those operations that can throw exceptions. Providing strong exception safety means placing any operations that can throw exceptions (memory allocation, copying, etc.) before any operations that perform nonrevisible modifications (moving a value, destroying an object, freeing memory).</p>
 
-<p>Reconsidering <code>vector</code> reallocation in terms of this model, we see that, if we ignore throwing move constructors, the implementation of <code>reallocate</code> performs all of its possibly-throwing routines up front: we allocate memory, then copy (which may throw) or move (which won't throw), then we complete the operation. Either way, at some point within the routine we have committed to only using operations that can no longer throw, such as deallocating memory or destroying already-constructed objects.</p>
+<p>Stepping back from this specific instance, we can formulate a
+simple model for achieving the strong exception-safety guarantee. In
+this model, we take the set of operations that we need to perform in
+our routine and partition them into two sets: those operations that
+perform nonreversible modifications to existing data and those
+operations that can throw exceptions. Providing strong exception
+safety means placing any operations that can throw exceptions (memory
+allocation, copying, etc.) before any operations that perform
+nonreversible modifications to existing data
+(destroying an object, freeing memory).</p>
+
+<p>Reconsidering <code>vector</code> reallocation in terms of this
+model, we see that, if we ignore throwing move constructors, the
+implementation of <code>reallocate</code> performs all of its
+possibly-throwing routines up front: we allocate memory, then copy
+(which may throw) or move (which won't throw), then we complete the
+operation. Either way, at some point within the routine we have
+committed to only using operations that can no longer throw, such as
+deallocating memory or destroying already-constructed objects.</p>
 
 <p>The problem with a throwing move operation is that it fits into
 both partitions. It can throw exceptions (obviously) and it is also a
-non-reversible modification, because (1) moving is permitted to transfer resources and (2) there is no non-throwing operation to reverse the transfer of resources.</p>
+non-reversible modification, because (1) moving is permitted to
+transfer resources and (2) there is no non-throwing operation to
+reverse the transfer of resources.</p>
 
 <p>Based on this model, prohibiting the use of types that have
 throwing move constructors appears to solve the problem, and it does
-help somewhat. One immediate problem with this approach (which is already used by vector's <code>push_back</code> specification, among other things) is that it places the burden of ensuring that all move constructors are non-throwing on the user, without providing the user with any tools to determine whether this requirement is actually met.</p>
+help somewhat.</p>
+
+<!-- One immediate problem with this approach (which is -->
+<!-- already used by vector's <code>push_back</code> specification, among -->
+<!-- other things) is that it places the burden of ensuring that all move -->
+<!-- constructors are non-throwing on the user, without providing the user -->
+<!-- with any tools to determine whether this requirement is actually -->
+<!-- met. -->
 
 <h3 id="throwing-pair">Throwing Move Constructors in the Standard Library</h3>
 
-<p>So, how easy is it to violate the requirement that move constructors not throw exceptions? It turns out to be surprisingly easy, and in fact existing, well-formed C++03 programs will violate this requirement when compiled with the C++0x Standard Library because the standard library itself creates throwing move constructors. As an example, consider a simple <code>Matrix</code> type that stores its values on the heap:</p>
+<p>So, how easy is it to violate the requirement that move
+constructors not throw exceptions? It turns out to be effortless.  In
+fact existing, well-formed C++03 programs will violate this
+requirement when compiled with the C++0x Standard Library because the
+standard library itself creates throwing move constructors. As an
+example, consider a simple <code>Matrix</code> type that stores its
+values on the heap:</p>
 
 <pre>
 class Matrix {
@@ -259,7 +313,7 @@ typedef std::pair&lt;std::string, Matrix&gt; NamedMatrix;
 <pre>
 template&lt;typename T, typename U&gt;
 struct pair {
-  pair(pair&amp;&mp; other)
+  pair(pair&amp;&amp; other)
     : first(std::move(other.first)), second(std::move(other.second)) { }
 
   T first;
@@ -267,11 +321,34 @@ struct pair {
 };
 </pre>
 
-<p>Here, the <code>pair</code>'s <code>first</code> data member is an <code>std::string</code>, which has a non-throwing move constructor that modifies its source value. The <code>pair</code>'s <code>second</code> data member is a <code>Matrix</code>, which has a throwing copy constructor but no move constructor. When we compose these two types, we end up with a type---<code>std::pair&lt;std::string, Matrix&gt;</code>---that merges their behaviors. This <code>pair</code>'s move constructor performs a non-reversible modification on the <code>first</code> member of the pair (moving the resources of the <code>std::string</code>) and then performs a potentially-throwing copy construction on the <code>second</code> member of the pair (copying the <code>Matrix</code>). Thus, we have composed two well-behaved types, one from the library and one from user code, into a type that violates the prohibition on throwing move constructors. Moreover, this problem affects valid C++03 code, which will silently invoke undefined behavior when compiled with a C++0x Standard Library </p>
+<p>Here, the <code>pair</code>'s <code>first</code> data member is
+a <code>std::string</code>, which has a non-throwing move constructor
+that modifies its source
+value. The <code>pair</code>'s <code>second</code> data member is
+a <code>Matrix</code>, which has a throwing copy constructor but no
+move constructor. When we compose these two types, we end up with a
+type—<code>std::pair&lt;std::string, Matrix&gt;</code>—that merges
+their behaviors. This <code>pair</code>'s move constructor performs a
+non-reversible modification on the <code>first</code> member of the
+pair (moving the resources of the <code>std::string</code>) and then
+performs a potentially-throwing copy construction on
+the <code>second</code> member of the pair (copying
+the <code>Matrix</code>). Thus, we have composed two well-behaved
+types, one from the library and one from user code, into a type that
+violates the prohibition on throwing move constructors. Moreover, this
+problem affects valid C++03 code, which will silently invoke undefined
+behavior when compiled with a C++0x Standard Library </p>
 
 <h2 id="solution">Proposed Solution</h2>
 
-<p>The problematic throwing move constructor in our example comes from the aggregation of two well-formed types, so we focus our attention on the <code>pair</code> move constructor. In particular, given the prohibition on move constructors that may throw exceptions, <code>pair</code> should only declare a move constructor when it is guaranteed that the underlying move operations for the types it aggregates are both non-throwing. Using concept syntax, one might imagine that such a constructor would be written as:</p>
+<p>The problematic throwing move constructor in our example comes from
+the aggregation of two well-formed types, so we focus our attention on
+the <code>pair</code> move constructor. In particular, given the
+prohibition on move constructors that may throw
+exceptions, <code>pair</code> should only declare a move constructor
+when it is guaranteed that the underlying move operations for the
+types it aggregates are both non-throwing. Using concept syntax, one
+might imagine that such a constructor would be written as:</p>
 
 <pre>
   requires NothrowMoveConstructible&lt;T&gt; &amp;&amp; NothrowMoveConstructible&lt;U&gt;
@@ -279,7 +356,16 @@ struct pair {
       : first(std::move(other.first)), second(std::move(other.second)) { }
 </pre>
 
-<p>In this case, <code>pair</code> will only provide a move constructor when that move constructor is guaranteed to be non-throwing. Therefore, <code>std::pair&lt;std::string, Matrix&gt;</code> will not provide a move constructor and reallocating a <code>vector</code> of these pairs will use the copy constructor, maintaining the strong exception safety guarantee. Naturally, <code>pair</code> is not the only type whose move constructor is effected: any standard library and user type that aggregates other values, including tuples and containers, will need similarly-constrained move constructors.</p>
+<p>In this case, <code>pair</code> will only provide a move
+constructor when that move constructor is guaranteed to be
+non-throwing. Therefore, <code>std::pair&lt;std::string,
+Matrix&gt;</code> will not provide a move constructor and reallocating
+a <code>vector</code> of these pairs will use the copy constructor,
+maintaining the strong exception safety
+guarantee. Naturally, <code>pair</code> is not the only type whose
+move constructor is affected: any standard library and user type that
+aggregates other values, including tuples and containers, will need
+similarly-constrained move constructors.</p>
 
 <p>At present, there is no good way to write the <code>NothrowMoveConstructible</code> concept. One option that exists within the current language is to write the new concept as follows:</p>
 
