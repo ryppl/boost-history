@@ -1,6 +1,6 @@
 <?xml  version="1.0"?>
 
-<document date="2009-03-22"
+<document date="2009-03-23"
   rev="0"
   docno="PL22.16 09/0053 = WG21 N2863"
 >
@@ -2601,7 +2601,7 @@ rendering the issue moot.
 </rationale>
 </comment>
 
-<comment nb="UK" num="43" uknum="231" type="Te" owner="CWG" issue="" disp="modified" date="" extdoc="">
+<comment nb="UK" num="43" uknum="231" type="Te" owner="CWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2845.html">
 <section>
 5.1.1
 </section>
@@ -2658,7 +2658,7 @@ rendering the issue moot.
 </rationale>
 </comment>
 
-<comment nb="UK" num="46" uknum="449" type="Te" owner="CWG" issue="" disp="modified" date="" extdoc="">
+<comment nb="UK" num="46" uknum="449" type="Te" owner="CWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2845.html">
 <section>
 5.1.1
 </section>
@@ -2687,7 +2687,7 @@ rendering the issue moot.
 </rationale>
 </comment>
 
-<comment nb="DE" num="6" uknum="" type="te" owner="CWG" issue="" disp="modified" date="" extdoc="">
+<comment nb="DE" num="6" uknum="" type="te" owner="CWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2845.html">
 <section>
 5.1.1, 20.7.18
 </section>
@@ -2792,7 +2792,7 @@ p10
 </rationale>
 </comment>
 
-<comment nb="UK" num="52" uknum="232" type="Ed" owner="editor" issue="modified" disp="" date="" extdoc="">
+<comment nb="UK" num="52" uknum="232" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 5.2
 </section>
