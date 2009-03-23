@@ -133,7 +133,7 @@ type <code>T</code>.  The <code>std::move</code> function template
 simply casts its lvalue argument to the corresponding rvalue type:
 
 <pre>
-template <class T>
+template &lt;class T&gt;
 T&& move(T& x) { return static_cast&lt;T&&&gt;(x); }
 </pre>
   
