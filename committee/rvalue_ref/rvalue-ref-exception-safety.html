@@ -601,6 +601,11 @@ noexcept void f(double &x) {
 
 <h3 id="exception-spec">Deprecate Exception Specifications</h3>
 
+<p>Exception specifications have not proven to be as useful as we had hoped. Their lack of static checking has limited their usability and confused users, and they provide few benefits for compilers. Moreover, exception specifications aren't useful in generic code, where functions need to know whether an exception can be thrown or not but don't know (or care) what kind of exceptions can be thrown. For these and other reasons, exception specifications are discouraged [<a href="http://www.boost.org/development/requirements.html#Exception-specification">1</a>, <a href="http://www.gotw.ca/publications/mill22.htm">2</a>, <a href="http://www.linuxprogrammingblog.com/cpp-exception-specifications-are-evil">3</a>].</p>
+
+<p>In fact, the <code>noexcept</code> specifier---along with the ability to detect whether an operation is <code>noexcept</code> via concepts---provides precisely the statically-checked exception specifications that are required in C++ code. We therefore propose to deprecate C++ exception specifications in C++0x: the community has already decided to avoid exception specifications and <code>noexcept</code> provides a superior alternative.</p>
+
+
 <h3 id="library">Library Changes</h3>
 <p>The introduction of <code>noexcept</code> and its use throughout the standard library will require significant changes in a few areas. The changes are summarized below.</p>
 
@@ -711,5 +716,5 @@ requires <ins>Nothrow</ins>AllocatableElement&lt;Alloc, T, T&amp;&amp;&gt; <ins>
 
 <hr>
 <address></address>
-<!-- hhmts start --> Last modified: Sun Mar 22 21:19:01 PDT 2009 <!-- hhmts end -->
+<!-- hhmts start --> Last modified: Sun Mar 22 21:47:30 PDT 2009 <!-- hhmts end -->
 </body> </html>
