@@ -70,7 +70,7 @@ namespace boost
 namespace svg
 {
 
-// Defines:
+// Declarations:
 
 // Show and show_all to display size and contents of STL containers.
 // range and range_all to find the min and max of STL containers.
@@ -100,6 +100,8 @@ void scale_axis(
    // allowing values just 1 pixel over the tick to be shown.
    int min_ticks, // Minimum number of major ticks.
    int steps); // Round up and down to 2, 4, 6, 8, 10, or 5, 10 or 2, 5, 10 systems.
+
+// Definitions.
 
 template <typename iter>
 int mnmx(iter begin, iter end, double* min, double* max)
@@ -268,7 +270,7 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
     int good = mnmx(container.begin(), container.end(), &x_min, &x_max);
     if (good < 2)
     {
-      throw std::runtime_error("Autoscale could not find useful min & max to scale axis!");
+      throw std::runtime_error("Autoscale could not find useful min & max values to scale the X axis!");
     }
     // cout << "x_min " << x_min << ", x_max " << x_max << endl; //
   }
@@ -306,20 +308,45 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
   double y_max = std::numeric_limits<double>::quiet_NaN();
   double y_min = std::numeric_limits<double>::quiet_NaN();
 
-  if (!check_limits)  // TODO my_plot.autoscale_check_limits(false); This path bombs - I fear it will never work?
+  if (!check_limits)  // TODO my_plot.autoscale_check_limits(false);
   { // BUT only if it can be assumed that no values are 'at limits',
     // infinity, NaN, max_value, min_value, denorm_min.
     // minmax_element is efficient for maps because it can use knowledge of all maps being sorted,
+    // And also sadly it doesn't work right - Y minimum is wrong!
+    // TODO 
     std::pair<T::const_iterator, T::const_iterator> result = boost::minmax_element(container.begin(), container.end());
-    //originally std::pair<const double, double> px = *result.first; // x min & max
-
-    std::pair<const double, double> px = values_of(*result.first); // x min & max
-    //originally std::pair<const double, double> py = *result.second; // y min & max
+    std::pair<const double, double> px = values_of(*result.first); // x min & y_min
     std::pair<const double, double> py = values_of(*result.second); // y min & max
     x_min = px.first;
-    x_max = px.second;
-    y_min = py.first;
-    y_max = py.second;
+    x_max = py.first;
+    // x are OK, but Y are only those corresponding to those X, not min and max.,
+    // so still need to iterate through the Y to find y min and y max.
+    //y_min = px.second;
+    //y_max = py.second;
+    T::const_iterator pos = container.begin();
+    if (pos == container.end())
+    {
+      throw std::runtime_error("Autoscale could not find any values to scale axes!");
+    }
+    double y = value_of(pos->second);
+    double yu = unc_of(pos->second) * autoscale_plusminus;
+    y_max = y + yu;
+    y_min = y - yu;
+    while(pos != container.end())
+    { 
+      y = value_of(pos->second);
+      yu = unc_of(pos->second) * autoscale_plusminus;
+      if (y + yu > y_max)
+      {
+        y_max = y + yu;
+      }
+      if (y - yu < y_min)
+      {
+        y_min = y - yu;
+      }
+      pos++;
+    }
+    cout << "No limits checks: x_min = " << x_min << ", x_max = " << x_max << ", y_min = " << y_min << ", y_max = " << y_max << endl;
   }
   else
   { // Otherwise it is necessary to inspect all values individually.
@@ -353,7 +380,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
       double yu = unc_of(pos->second) * autoscale_plusminus;
       y_max = y + yu;
       y_min = y - yu;
-      cout << "Initial min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
+      //cout << "Initial min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
       pos++;
       goods++;
       while(pos != container.end())
@@ -362,7 +389,6 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
         { // Either x and/or y are finite.
           x = value_of(pos->first);
           xu = unc_of(pos->first) * autoscale_plusminus;
-
           if (x + xu > x_max)
           {
             x_max = x + xu;
@@ -381,8 +407,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
           {
             y_min = y - yu;
           }
-          cout << "min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
-
+          //cout << "min & max " << x << "+-" << xu << " = " << x_min << " to " << x_max << ", " << y << "+-" << yu << "=" <<y_min << " to " << y_max << endl;
           goods++;
           // cout << goods << " goods, " << x << ' ' << y << endl;
        } // if finite
@@ -395,10 +420,7 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
         }
         ++pos;
       } // while
-
-      cout << "x_min " << x_min << ", x_max " << x_max << endl; // x_min 1, x_max 7.3
-      cout << "y_min " << y_min << ", y_max " << y_max << endl; // y_min 3.2, y_max 9.1
-      cout << "limits " << limits << endl;
+      cout << "Checked: x_min " << x_min << ", x_max " << x_max << ", y_min " << y_min << ", y_max " << y_max << ", " << goods << " 'good' values, " << limits << " values at limits."<< endl;
     }
   }
   scale_axis(x_min, x_max,
@@ -411,12 +433,12 @@ void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vecto
 } // template <class T> int scale_axis  T an STL container: array, vector ...
 
 
-// Above versions use version below that does the real scaling work.
+// Above versions all use the scale_axis version below that does the real scaling work.
 
 void scale_axis(double min_value, double max_value, // Scale axis from Input range min & max.
                double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
-               // NO check_limits parameter.
-               bool origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
+               // NO check_limits parameter in this version.
+               bool origin = false, // Do not include the origin unless the range min_value <= 0 <= max_value.
                double tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
                // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
                // allowing values just 1 pixel over the tick to be shown.
@@ -479,7 +501,7 @@ void scale_axis(double min_value, double max_value, // Scale axis from Input ran
 
   if (min_value > max_value)
   { // max and min are transposed!
-    throw(std::domain_error("min > max!"));
+    throw std::domain_error("min > max!");
   }
   else if (is_small(range)
     // range <= 1000. * std::numeric_limits<double>::min()) // Absolute range > ~1e-308 * 1000 ~= 1e-305
