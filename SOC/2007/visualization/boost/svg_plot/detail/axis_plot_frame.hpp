@@ -3698,7 +3698,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
              or 1,5,10 if 5\n
              or 2,5,10 if 10.\n
              default = 0 (none).
-             \note: Must preceed x_autoscale(data) call).
+             \note: Must \b preceed x_autoscale(data) call).
              */
             derived().x_steps_ = steps;
             return derived();
