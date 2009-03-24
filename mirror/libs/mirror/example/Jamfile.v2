@@ -17,6 +17,7 @@ project mirror/examples
 # basics
 #
 exe hello_world       : hello_world.cpp ;
+exe hello_world_2     : hello_world_2.cpp ;
 #
 # registering
 #

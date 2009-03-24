@@ -156,6 +156,21 @@ struct meta_constructors;
 #define BOOST_MIRRORED_CONSTRUCTORS(TYPE)\
 	meta_constructors< TYPE >
 
+template <
+	class ReflectedType,
+	class VariantTag,
+	class MetaAttributes,
+	class AttribPos
+> struct meta_class_attribute;
+
+template <
+	class Class, 
+	class VariantTag = detail::default_meta_class_variant
+> struct meta_class_attributes;
+
+template < class Class, class VariantTag>
+struct meta_class_all_attributes;
+
 
 } // namespace mirror
 } // namespace boost

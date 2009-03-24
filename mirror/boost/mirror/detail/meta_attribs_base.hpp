@@ -15,6 +15,7 @@
 // forward declarations
 #include <boost/mirror/meta_data_fwd.hpp>
 // class generation related
+#include <boost/mirror/detail/meta_attrib_traits.hpp>
 #include <boost/mirror/detail/meta_attribs_outline.hpp>
 //
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -32,7 +33,6 @@
 
 namespace boost {
 namespace mirror {
-
 namespace detail {
 
 /** Allows to detect the type of the member attribute.
@@ -60,64 +60,6 @@ struct meta_class_attributes_base
 	typedef ::boost::mirror::meta_class<Class, VariantTag>
 		scope;
 };
-
-/** Possible class attribute storage specifiers 
- */
-namespace attrib_storage_specifiers {
-	// static class attribute 
-	struct static_ { };
-	// mutable class attribute
-	struct mutable_ { };
-	// regular class attribure
-	struct __ { };
-}
-
-/** Additional attribute traits containing information
- *  about storage class specifiers and some information 
- *  about the type of the attribute
- */
-template <class Specifiers, class TypeOrTypedefSelector>
-struct meta_class_attribute_traits;
-
-/** Specialization for non-static, non-mutable members
- */
-template <class TypeOrTypedefSelector>
-struct meta_class_attribute_traits<
-	attrib_storage_specifiers::__,
-	TypeOrTypedefSelector
->
-{
-	typedef mpl::false_ is_static;
-	typedef mpl::false_ is_mutable;
-	typedef TypeOrTypedefSelector meta_type_selector;
-};
-
-/** Specialization for static member attribs
- */
-template <class TypeOrTypedefSelector>
-struct meta_class_attribute_traits<
-	attrib_storage_specifiers::static_,
-	TypeOrTypedefSelector
->
-{
-	typedef mpl::true_ is_static;
-	typedef mpl::false_ is_mutable;
-	typedef TypeOrTypedefSelector meta_type_selector;
-};
-
-/** Specialization for mutable member attribs
- */
-template <class TypeOrTypedefSelector>
-struct meta_class_attribute_traits<
-	attrib_storage_specifiers::mutable_,
-	TypeOrTypedefSelector
->
-{
-	typedef mpl::false_ is_static;
-	typedef mpl::true_ is_mutable;
-	typedef TypeOrTypedefSelector meta_type_selector;
-};
-
 
 /** This macro starts the declaration of member attributes
  *  of the given class
@@ -200,6 +142,34 @@ struct meta_class_attribute_traits<
 		TYPE_SELECTOR \
 	> get_traits(position_of_##NAME); 
 
+/**
+ */
+#define BOOST_MIRROR_REG_META_CLASS_ATTRIB_HOLDER(NAME) \
+	template < \
+		class MetaClassAttributes, \
+		template <class, class, class, class> \
+		class MetaFunction \
+	> \
+	struct NAME##_generator_plugin \
+	{ \
+		typedef typename MetaFunction< \
+			Class, \
+			variant_tag, \
+			MetaClassAttributes, \
+			position_of_##NAME \
+		>::type NAME; \
+	}; \
+	template < \
+		class MetaClassAttributes, \
+		template <class, class, class, class> \
+		class MetaFunction \
+	> \
+	static NAME##_generator_plugin< \
+		MetaClassAttributes, \
+		MetaFunction \
+	> get_generator_plugin(position_of_##NAME);
+	
+
 /** Helper macro expanding into an epilogue of a meta-attribute
  *  declaration
  */
@@ -207,10 +177,12 @@ struct meta_class_attribute_traits<
 	TYPE_SELECTOR, \
 	NAME, \
 	TYPENAME_KW \
-) typedef TYPENAME_KW mpl::push_back< \
-	partial_list_##NAME, \
-	type_of_##NAME \
->::type 
+) \
+	BOOST_MIRROR_REG_META_CLASS_ATTRIB_HOLDER(NAME) \
+	typedef TYPENAME_KW mpl::push_back< \
+		partial_list_##NAME, \
+		type_of_##NAME \
+	>::type 
 
 /** Helper macro expanding into the declaraion of getter
  *  function of the meta-attribute
@@ -529,7 +501,7 @@ struct meta_class_attribute_traits<
 		TYPE_SELECTOR, \
 		NAME, \
 		TYPENAME_KW \
-	) \
+	) 
 
 
 #define BOOST_MIRROR_REG_SIMPLE_CLASS_ATTRIB_OUTLINE( \
@@ -663,11 +635,12 @@ public:
 	}
 };
 
+
 } // namespace detail
 
 /** Declaration of the meta_class_attributes<> template
  */
-template <class Class, class VariantTag = detail::default_meta_class_variant>
+template <class Class, class VariantTag>
 struct meta_class_attributes
  : public detail::meta_class_attributes_offset_calculator<
 	Class,
@@ -681,6 +654,7 @@ private:
 	> offs_calc;
 	typedef typename offs_calc::byte byte;
 	typedef typename offs_calc::byte_ptr byte_ptr;
+
 public:
 	template <int I>
         static inline ptrdiff_t offset_of(mpl::int_<I> pos)

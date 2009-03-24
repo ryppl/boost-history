@@ -11,96 +11,121 @@
 #ifndef BOOST_MIRROR_META_DETAIL_CLASS_GENERATOR_HPP
 #define BOOST_MIRROR_META_DETAIL_CLASS_GENERATOR_HPP
 
-#include <boost/mirror/detail/meta_attribs_outline.hpp>
-#include <boost/mirror/algorithm/size.hpp>
+#include <boost/mirror/intrinsic/size.hpp>
+#include <boost/typeof/typeof.hpp>
 
 namespace boost {
 namespace mirror {
 namespace detail {
 
-
 template <
-	class MetaAttributes,
-	template <class> class Model, 
-	class Position
+        class MetaClassAttributes,
+	template <class, class, class, class> class MetaFunction,
+        class Position
 >
 struct class_generator_unit
 {
-	BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-		outline_holder,
-		(MetaAttributes::get_outline_holder((Model<void>*)0, Position()))
-	);
+        BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+                generator_plugin,
+                (MetaClassAttributes::template get_generator_plugin<
+			MetaClassAttributes,
+			MetaFunction
+		>(Position()))
+        );
+        typedef typename generator_plugin::type type;
 };
 
+
 template <
-	class Class, 
-	template <class> class Model, 
+	class MetaClassAttributes,
+	template <class, class, class, class> class MetaFunction,
 	class Position, 
 	class Size
->
-struct class_generator_base
+> struct class_generator_base
 : public class_generator_unit<
-	meta_class_attributes<Class>, Model, Position
->::outline_holder::type
+	MetaClassAttributes,
+	MetaFunction, 
+	Position 
+>::type
 , public class_generator_base<
-	Class, Model, mpl::int_<Position::value+1>, Size
+	MetaClassAttributes,
+	MetaFunction, 
+	mpl::int_<Position::value + 1>, 
+	Size
 >
 {
 	typedef typename class_generator_unit<
-		meta_class_attributes<Class>, Model, Position
-	>::outline_holder::type head;
+		MetaClassAttributes,
+		MetaFunction, 
+		Position
+	>::type head;
 
 	typedef class_generator_base<
-		Class, Model, mpl::int_<Position::value+1>, Size
+		MetaClassAttributes,
+		MetaFunction, 
+		mpl::int_<Position::value + 1>, 
+		Size 
 	> tail;
 
-	class_generator_base(Model<void>& model)
-	: head(model)
-	, tail(model)
+	class_generator_base(void)
 	{ }
 
-	class_generator_base(const Model<void>& model)
-	: head(model)
-	, tail(model)
+	template <class Param>
+	class_generator_base(Param& init)
+	 : head(init)
+	 , tail(init)
 	{ }
 };
 
 template <
-	class Class, 
-	template <class> class Model, 
+	class MetaClassAttributes,
+	template <class, class, class, class> class MetaFunction,
 	class Size
 >
-struct class_generator_base<Class, Model, Size, Size>
+struct class_generator_base<
+	MetaClassAttributes, 
+	MetaFunction, 
+	Size, 
+	Size 
+>
 {
-	class_generator_base(Model<void>& model){ }
-	class_generator_base(const Model<void>& model){ }
+	class_generator_base(void){ }
+
+	template <class Param>
+	class_generator_base(Param&){ }
 };
 
 } // namespace detail
 
+/** Creates a class hierarchy based on the results
+ *  of the GeneratorUnit meta-function, with the 
+ *  metaObjectSequence, individual meta-object 
+ *  Positions and the Data as parameters.
+ */
 template <
-	class Class, 
-	template <class> class Model
->
-struct class_generator
-: detail::class_generator_base<
-	Class,
-	Model,
+	class MetaClassAttributes, 
+	template <class, class, class, class> class MetaFunction
+> struct class_generator
+ : detail::class_generator_base<
+	MetaClassAttributes,
+	MetaFunction,
 	mpl::int_<0>,
-	mpl::int_<mirror::size<meta_class_attributes<Class> >::value>
+	mpl::int_<mirror::size<MetaClassAttributes>::value>
 >
 {
 private:
-	Model<void> model;
 	typedef detail::class_generator_base<
-		Class,
-		Model,
+		MetaClassAttributes,
+		MetaFunction,
 		mpl::int_<0>,
-		mpl::int_<mirror::size<meta_class_attributes<Class> >::value>
+		mpl::int_<mirror::size<MetaClassAttributes>::value>
 	> base_generator;
 public:
-	class_generator(void)
-	: base_generator(model)
+	class_generator(void) { }
+
+	template <class Param>
+	class_generator(Param& init)
+	 : base_generator(init)
 	{ }
 };
 
