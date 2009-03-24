@@ -245,7 +245,7 @@ float unc_of(unc v)
 // Note names plural valueS_of
 
 template <class T>
-std::pair<double, double> values_of(T);
+std::pair<double, double> values_of(T); // Declaration.
 
 template <class T>
 std::pair<double, double> values_of(std::pair<const T, T> vp)
@@ -254,7 +254,7 @@ std::pair<double, double> values_of(std::pair<const T, T> vp)
 }
 
 template <class T>
-std::pair<double, double> values_of(std::pair<unc, unc> up)
+std::pair<double, double> values_of(std::pair<const unc, unc> up)
 { //! \return value (part) as a pair of doubles.
   // so can write
   // std::pair<const double, double> minmax = value_of(*result.first); // x min & max
@@ -266,16 +266,29 @@ std::pair<double, double> values_of(std::pair<unc, unc> up)
   return minmax;  
 }
 
-//template <class T>
-//std::pair<double, double> values_of(std::pair<T, T> vp)
-//{ //! \return value (part) as a pair of doubles.
-//  // so can write
-//  // std::pair<double, double> minmax = value_of(*result.first); // x min & max
-//  // whether T is double or unc.
-//  std::pair<double, double> minmax = std::make_pair(vp.first.value(), vp.second.value());
-//  return minmax;  
-//}
+template <class T>
+std::pair<double, double> values_of(std::pair<T, T> vp)
+{
+  return std::make_pair(value_of(vp.first), value_of(vp.second));
+}
 
+template <class T>
+std::pair<double, double> values_of(std::pair<unc, unc> up)
+{ //! \return value (part) as a pair of doubles.
+  // so can write
+  // std::pair<const double, double> minmax = value_of(*result.first); // x min & max
+  // whether T is double or unc.
+  return std::make_pair<double, double>(up.first.value(), up.second.value());
+}
+
+template <class T>
+std::pair<float, float> uncs_of(T); // Declaration.
+
+template <class T>
+std::pair<float, float> uncs_of(std::pair<T, T> vp)
+{
+  return std::make_pair<float, float>(unc_of(vp.first), unc_of(vp.second));
+}
 
 template <class T>
 std::pair<const float, float> uncs_of(std::pair<const T, T> vp)
@@ -283,8 +296,7 @@ std::pair<const float, float> uncs_of(std::pair<const T, T> vp)
   // so can write
   // std::pair<const float, float> minmax = value_of(*result.first); // min unc & max unc for example/
   // whether T is built-in or unc.
-  std::pair<const double, double> minmax = std::make_pair(vp.first.value(), vp.second.value());
-  return minmax;  
+  return std::make_pair(vp.first.unc(), vp.second.unc());
 }
 
 } // namespace svg

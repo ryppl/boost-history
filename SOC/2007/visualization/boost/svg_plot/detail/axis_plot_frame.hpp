@@ -3657,51 +3657,11 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           { // Set to use X min & max pair values to autoscale X-axis.
             scale_axis(p.first, p.second, // double min and max from pair.
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-              derived().autoscale_check_limits_, autoscale_plusminus_,
+              derived().autoscale_check_limits_, derived().autoscale_plusminus_,
               derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
             derived().x_autoscale_ = true; // Default to use any calculated values?
             return derived();
           } // autoscale(pair<double, double> p)
-
-
-       //  unable to match function definition to an existing declaration definition
-       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &,const T &)'
-       // existing declarations
-       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &)'
-       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(const T &,const T &)'
-       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(std::pair<_Ty1,_Ty2>)'
-       // with
-       // [
-       //     _Ty1=double,
-       //     _Ty2=double
-       // ]
-       // 'Derived &boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(bool)'
-       //'bool boost::svg::detail::axis_plot_frame<Derived>::x_autoscale(void)'
-         //
-          //template <class Derived, class T> // T an STL container: array, vector ...
-          //Derived& axis_plot_frame<Derived>::x_autoscale(const T& begin, const T& end)
-          //{ // Data series using iterators to calculate autoscaled values.
-          //    scale_axis(begin, end,
-          //    &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-          //    derived().autoscale_check_limits_,
-          //    derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
-
-          //  derived().x_autoscale_ = true; // Default to use calculated values.
-          //  return derived();
-          //} // x_autoscale(const T& begin, const T& end)
-
-          //template <class Derived, class T> // T an STL container: array, vector ...
-          //Derived& axis_plot_frame<Derived>::x_autoscale(const T& container) // Whole data series.
-          //{ // to use to calculate autoscaled values.
-          //    //scale_axis(container.begin(), container.end(), // All the container.
-          //    scale_axis(container, // All the container.
-          //    &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
-          //    derived().autoscale_check_limits_,
-          //    derived().x_include_zero_, derived().x_tight_, derived().x_min_ticks_, derived().x_steps_);
-
-          //  derived().x_autoscale_ = true; // Default to use calculated values.
-          //  return derived();
-          //} // x_autoscale(const T& container)
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_with_zero(bool b)

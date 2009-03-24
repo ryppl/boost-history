@@ -35,11 +35,11 @@
  using boost::minmax_element;
  // minmax_element finds both min and max elements more efficiently than separately.
 
-#include <cmath> // for fabs, pow, ceil, log10
-#include <limits> // for std::numeric_limits;
-#include <stdexcept> // for std::domain_error;
-#include <iterator> // for std::iterator_traits;
-#include <utility> // using std::pair;
+#include <cmath> // using std::fabs, std::pow, std::ceil, std::log10
+#include <limits> // using std::numeric_limits;
+#include <stdexcept> // using std::domain_error;
+#include <iterator> // using std::iterator_traits;
+#include <utility> // using std::pair; using std::make_pair;
 
 // Autoscaling algorithm derived from:
 // Michael P.D. Bramley. CUJ July 2000, p 20 - 26.
