@@ -61,7 +61,7 @@ struct meta_class_all_attributes_base
 	 *  is implementation detail and can change without any
 	 *  notice.
 	 */
-	struct detail 
+	struct helpers 
 	{
 		/** Tells whether a base class is inherited virtually
 		 */
@@ -125,7 +125,7 @@ struct meta_class_all_attributes_base
 				meta_inheritance:: 
 				base_class:: 
 				all_attributes:: 
-				detail:: 
+				helpers:: 
 				regular_base_class_layout type;
 		};
 		
@@ -160,7 +160,7 @@ struct meta_class_all_attributes_base
 				meta_inheritance:: 
 				base_class:: 
 				all_attributes:: 
-				detail:: 
+				helpers:: 
 				virtual_base_class_layout type;
 		};
 
@@ -176,7 +176,7 @@ struct meta_class_all_attributes_base
 				meta_inheritance:: 
 				base_class:: 
 				all_attributes:: 
-				detail:: 
+				helpers:: 
 				base_class_layout type;
 		};
 
@@ -273,7 +273,7 @@ struct meta_class_all_attributes_base
 		*  the inherited ones.
 		*/
 		typedef typename mpl::joint_view<
-			typename detail::inherited_member_attrib_type_list,
+			typename helpers::inherited_member_attrib_type_list,
 			typename scope::attributes::type_list
 		>::type member_attrib_type_list;
 
@@ -358,7 +358,7 @@ struct meta_class_all_attributes_base
 		struct inherited_attrib_meta_class_and_pos
 		{
 			typedef typename mpl::at<
-				typename detail::inherited_attrib_owners_and_offsets,
+				typename helpers::inherited_attrib_owners_and_offsets,
 				mpl::int_<I>
 			>::type owner_and_offset;
 
@@ -613,7 +613,7 @@ struct meta_class_all_attributes_base
 	}; // struct detail
 	/** The list of inherited attribute types
 	 */
-	typedef typename detail::inherited_member_attrib_type_list 
+	typedef typename helpers::inherited_member_attrib_type_list 
 		inherited_type_list;
 
 	/** The size of the type_list, i.e. the count of inherited attributes
@@ -625,7 +625,7 @@ struct meta_class_all_attributes_base
 	 *  WARNING: this is an implementation detail which
 	 *  can change without any notice.
 	 */
-	typedef typename detail::member_attrib_type_list type_list;
+	typedef typename helpers::member_attrib_type_list type_list;
 	
 	/** The size of the type_list, i.e. the count of all attributes
 	 *  WARNING: this is an implementation detail which
@@ -664,7 +664,7 @@ public:
 		::std::char_traits<CharT> cht
 	)
 	{
-		return detail::get_name(
+		return helpers::get_name(
 			pos, 
 			full_name,
 			cht,
@@ -676,10 +676,10 @@ public:
 	 *  the inherited ones)
 	 */
 	template <class Class, int I>
-	static inline typename detail::template type_of_address<I>::type
+	static inline typename helpers::template type_of_address<I>::type
 	address(Class& instance, mpl::int_<I> pos)
 	{
-		return detail::address(
+		return helpers::address(
 			instance, 
 			pos, 
 			is_inherited(pos)
@@ -690,10 +690,10 @@ public:
 	 *  the inherited ones)
 	 */
 	template <class Class, int I>
-	static inline typename detail::template result_of_get<I>::type
+	static inline typename helpers::template result_of_get<I>::type
 	get(const Class& instance, mpl::int_<I> pos)
 	{
-		return detail::get(
+		return helpers::get(
 			instance, 
 			pos, 
 			is_inherited(pos)
@@ -707,7 +707,7 @@ public:
 	static inline DestType&
 	query(Class instance, mpl::int_<I> pos, DestType& dest)
 	{
-		return detail::query(
+		return helpers::query(
 			instance, 
 			pos, 
 			dest, 
@@ -722,7 +722,7 @@ public:
 	static inline void
 	set(Class& instance, mpl::int_<I> pos, ValueType value)
 	{
-		detail::set(
+		helpers::set(
 			instance, 
 			pos, 
 			value, 
@@ -733,7 +733,7 @@ public:
 	/** The attribute traits getter
 	 */
 	template <int I>
-	static typename detail:: template result_of_get_traits<
+	static typename helpers:: template result_of_get_traits<
 		I,
 		typename result_of_is_inherited<I>::type
 	>::type get_traits(mpl::int_<I>);
@@ -744,7 +744,7 @@ public:
 		class MetaClassAttributes, 
 		template <class, class, class, class> class MetaFunction,
 		int I
-	> static typename detail:: template result_of_get_generator_plugin<
+	> static typename helpers:: template result_of_get_generator_plugin<
 		I,
 		typename result_of_is_inherited<I>::type,
 		MetaClassAttributes,
