@@ -2,12 +2,12 @@
   \file auto_axes.hpp
   \brief Scalable Vector Graphic (SVG) autoscaling of axes.
   \details Inspect container or data values to find minimum and maximum,
-  avoiding values that are NaN and/or 'at limit'.
-  scale axis using max and min values (calculated or user provided)
-  optionally to include the orgin, and to set the ticks.
-  Provide fine control over any overlap at the edges of the axes to avoid a tiny
-  amount over the limit resulting in an ugly extra major tick.
-  Also allow optional forcing of the ticks to be multiples of 1, 2, 5, 10.
+    avoiding values that are NaN and/or 'at limit'.
+    scale axis using max and min values (calculated or user provided)
+    optionally to include the orgin, and to set the ticks.
+    Provide fine control over any overlap at the edges of the axes to avoid a tiny
+    amount over the limit resulting in an ugly extra major tick.
+    Also allow optional forcing of the ticks to be multiples of 1, 2, 5, 10.
   \date 7 Feb 09
   \author Paul A. Bristow
  */
@@ -24,7 +24,7 @@
 
 #if defined (_MSC_VER)
 #  pragma warning (push)
-#  pragma warning (disable: 4100) // 'check_limits' : unreferenced formal parameter
+#  pragma warning (disable: 4100) // 'check_limits' and autoscale_plusminus: unreferenced formal parameters
 #endif
 
 #include <boost\svg_plot\detail\FP_compare.hpp> // is_small & is_close
@@ -90,31 +90,32 @@ double roundup2(double value);
 //! Round value down to nearest multiple of 2.
 double rounddown2(double value);
 
-void scale_axis(
-   double min_value, double max_value, // Scale axis from Input range min & max.
+//! Scale axis and update min and max axis values, and tick increment and number of ticks. 
+void scale_axis( 
+   double min_value, double max_value, //! Scale axis from Input range min & max.
    double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
-   // NO check_limits parameter.
-   bool origin, // do not include the origin unless the range min_value <= 0 <= max_value.
-   double tight, // tightest - fraction of 'overrun' allowed before another tick used.
-   // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
-   // allowing values just 1 pixel over the tick to be shown.
-   int min_ticks, // Minimum number of major ticks.
-   int steps); // Round up and down to 2, 4, 6, 8, 10, or 5, 10 or 2, 5, 10 systems.
+   //! NO check_limits parameter.
+   bool origin, //! Do not include the origin unless the range min_value <= 0 <= max_value.
+   double tight, //! Tightness - fraction of 'overrun' allowed before another tick used.
+   //! for visual effect up to about 0.001 might suit a 1000 pixel wide image,
+   //! allowing values just 1 pixel over the tick to be shown.
+   int min_ticks, //! Minimum number of major ticks.
+   int steps); //! Round up and down to 2, 4, 6, 8, 10, or 5, 10 or 2, 5, 10 systems.
 
 // Definitions.
 
 template <typename iter>
 int mnmx(iter begin, iter end, double* min, double* max)
 { //! \brief Inspect values to find min and max.
-  /*! \details Inspect all values between begin and (before) end to work out min and max.
-    Similar to boost::minmax_element, but ignoring at 'limit': non-finite, +-infinity, max & min, & NaN).
-    If can't find a max and a min, then throw a runtime_error exception.
+  /*! \details Inspect all values between begin and (before) end to work out and update min and max.
+       Similar to boost::minmax_element, but ignoring at 'limit': non-finite, +-infinity, max & min, & NaN).
+       If can't find a max and a min, then throw a runtime_error exception.
     \tparam iter STL container iterator.
     \return number of normal values (not NaN nor infinite).
   */
   *max = std::numeric_limits<double>::quiet_NaN();
   *min = std::numeric_limits<double>::quiet_NaN();
-  using boost::svg::detail::is_limit; // either x and/or y not a proper data value.
+  using boost::svg::detail::is_limit; // Either x and/or y not a proper data value.
   int goods = 0; // Count of values within limits.
   int limits = 0;
   iter pos = begin;
@@ -171,40 +172,45 @@ int mnmx(iter begin, iter end, double* min, double* max)
 } // inmmax(iter begin, iter end, double* min, double* max)
 
 //! scale axis function to define axis marker ticks based on min & max parameters values.
-
 void scale_axis(
-   double min_value, //! Minimum value.
-   double max_value, //! Maximum value.
+   double min_value, //!< Minimum value.
+   double max_value, //!< Maximum value.
    double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, //! All 4 updated.
-   bool check_limits, //! Whether to check all values for infinity, NaN etc.
-   double autoscale_plusminus, // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
-   bool origin, //! If true, ensures that zero is a tick value.
-   double tight, //! Allows user to avoid a small fraction over a tick using another tick.
-   int min_ticks, //! Minimum number of ticks.
-   int steps) //! Round up and down to 2, 4, 6, 8, 10, or 5, 10, or 2, 5, 10 major ticks multiples.
+   bool check_limits, //!< Whether to check all values for infinity, NaN etc.
+   double autoscale_plusminus, //!< Multiplier of uncertainty or standard deviations to allow for confidence ellipses.
+   bool origin, //!< If true, ensures that zero is a tick value.
+   double tight, //!< Allows user to avoid a small fraction over a tick using another tick.
+   int min_ticks, //!< Minimum number of ticks.
+   int steps) //!< Round up and down to 2, 4, 6, 8, 10, or 5, 10, or 2, 5, 10 major ticks multiples.
 {
   // Must assume max and min are OK (can't ignore limit values).
   // If either at limit then will be caught and exception thrown later by x_range.
-  // So deliberately ignore check_limits parameter & suppress any warning.
+  // So deliberately ignore check_limits parameter & and autoscale_plusminus & suppress any warnings.
   scale_axis(min_value, max_value,
     axis_min_value, axis_max_value, axis_tick_increment, auto_ticks, // All 4 updated.
     origin, tight, min_ticks, steps); // Display range.
 }
 
-template <typename iter> // T an STL container: array, vector, set ...
-void scale_axis( //! Scale axis from data series (usually to plot), perhaps only part of container.
-   iter begin, iter end,
+//! Scale axis using an iterator into an STL container.
+template <typename iter> // \tparam iter interator into an STL container: array, vector, set ...
+void scale_axis( 
+   iter begin, //!< iterators into begin in STL container.
+   iter end, //!< iterators into end in STL container.
    // (not necessarily ordered, so will find min and max).
-   double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
-   bool check_limits, // Whether to check all values for infinity, NaN etc.
-   double autoscale_plusminus, // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
-   bool origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
-   double tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
+   double* axis_min_value, //!< Updated with axis_min_value
+   double* axis_max_value, //!< Updated with axis_max_value
+   double* axis_tick_increment, //!< Updated with axis_tick_increment
+   int* auto_ticks, //!< Updated with number of ticks
+   bool check_limits, //!< Whether to check all values for infinity, NaN etc.
+   double autoscale_plusminus, //!< Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
+   bool origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
+   double tight = 0., //!< tightest - fraction of 'overrun' allowed before another tick used.
    // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
    // allowing values just 1 pixel over the tick to be shown.
-   int min_ticks = 6, // Minimum number of major ticks.
-   int steps = 0) // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-{
+   int min_ticks = 6, //!< Minimum number of major ticks.
+   int steps = 0) //!< 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
+{ //! Scale axis from data series (usually to plot), perhaps only part of container.
+  // \tparam iter interator into an STL container: array, vector, set ...
    void scale_axis(double min_value, double max_value, // Input range.
                double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
                bool origin, // If true, ensures that zero is a tick value.
@@ -236,21 +242,26 @@ void scale_axis( //! Scale axis from data series (usually to plot), perhaps only
   }
 } // template <typename iter> void scale_axis(iter begin, iter end, ...
 
+//! Scale axis using all the 1D data in an STL container.
+//! \tparam T type of STL container, vector, map ...
 template <class T>
-void scale_axis( //! scale axis using an Entire Container Data series, usually to plot.
-//! \tparam T an STL container: array, vector ...
-  const T& container,
-               // (not necessarily ordered, so will find min and max).
-               double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
-               bool check_limits, // Whether to check all values for infinity, NaN etc.
-               double autoscale_plusminus = 3., // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
-               bool origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
-               double tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
-               // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
-               // allowing values just 1 pixel over the tick to be shown.
-               int min_ticks = 6, // Minimum number of major ticks.
-               int steps = 0) // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-{
+void scale_axis( 
+  const T& container, //!< STL container
+  double* axis_min_value, //!< Updated with minimum value for the axis.
+  double* axis_max_value, //!< Updated with maximum value for the axis.
+  double* axis_tick_increment,//!< Updated with
+  int* auto_ticks, //!< Updated with
+  bool check_limits, //!< Whether to check all values for infinity, NaN etc.
+  double autoscale_plusminus = 3., //!< Multiplier of uncertainty or standard deviations to allow fo confidence ellipses.
+  bool origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
+  double tight = 0., //!< tightest - fraction of 'overrun' allowed before another tick used.
+  //! for visual effect up to about 0.001 might suit a 1000 pixel wide image,
+  //! allowing values just 1 pixel over the tick to be shown.
+  int min_ticks = 6, //!< Minimum number of major ticks.
+  int steps = 0) //!< 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
+{ //! scale axis using an Entire Container Data series, usually to plot.
+  //! (not necessarily ordered, so will find min and max).
+  //! \tparam T an STL container: array, vector ...
   double x_min;
   double x_max;
   if (!check_limits)
@@ -280,29 +291,36 @@ void scale_axis( //! scale axis using an Entire Container Data series, usually t
     origin, tight, min_ticks, steps); // Display range.
 } // template <class T> int scale_axis  T an STL container: array, vector ...
 
-template <class T>
-void scale_axis( //! Scale X and Y axis using T a 2D STL container: array, vector, list ...
-  const T& container, //! Container Data series to plot - entire 2D container.
-  //! (not necessarily ordered, so will find min and max).
-  //! \tparam T STL container of pairs of X and Y.
-  double* x_axis_min_value,  double* x_axis_max_value, double* x_axis_tick_increment, int* x_auto_ticks,
-  double* y_axis_min_value,  double* y_axis_max_value, double* y_axis_tick_increment, int* y_auto_ticks,
-  // All 8 updated.
-  bool check_limits = true, // Whether to check all values for infinity, NaN etc.
-  double autoscale_plusminus = 3., // Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
-  bool x_origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
-  double x_tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
+ //! Scale X and Y axis using T a 2D STL container: array of pairs, vector of pairs, ...
+template <class T>  //!< \tparam T STL container of 2D pairs of X and Y.
+void scale_axis( 
+  const T& container, //!< Data series to plot - entire 2D container (not necessarily ordered, so will find min and max).
+  double* x_axis_min_value, //!< Updated with x_axis_min_value.
+  double* x_axis_max_value, //!< Updated with x_axis_max_value.
+  double* x_axis_tick_increment, //!< Updated with X axis tick increment.
+  int* x_auto_ticks, //!< Updated with x_auto_ticks.
+  double* y_axis_min_value, //!< Updated with y_axis_min_value.
+  double* y_axis_max_value, //!< Updated with y_axis_max_value.
+  double* y_axis_tick_increment, //!< Updated with Y axis tick increment.
+  int* y_auto_ticks, //!< Updated with number of Y axis ticks.
+  bool check_limits = true, //!< Whether to check all values for infinity, NaN etc.
+  double autoscale_plusminus = 3., //!< Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
+  bool x_origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
+  double x_tight = 0., //!< tightest - fraction of 'overrun' allowed before another tick used.
+  //! for visual effect up to about 0.001 might suit a 1000 pixel wide image,
+  //! allowing values just 1 pixel over the tick to be shown.
+  int x_min_ticks = 6, //!< Minimum number of major ticks.
+  int x_steps = 0, //!< 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
+  bool y_origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
+  double y_tight = 0., //!< tightest - fraction of 'overrun' allowed before another tick used.
   // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
   // allowing values just 1 pixel over the tick to be shown.
-  int x_min_ticks = 6, // Minimum number of major ticks.
-  int x_steps = 0, // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-  bool y_origin = false, // do not include the origin unless the range min_value <= 0 <= max_value.
-  double y_tight = 0., // tightest - fraction of 'overrun' allowed before another tick used.
-  // for visual effect up to about 0.001 might suit a 1000 pixel wide image,
-  // allowing values just 1 pixel over the tick to be shown.
-  int y_min_ticks = 6, // Minimum number of major ticks.
-  int y_steps = 0) // 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-{
+  int y_min_ticks = 6, //!< Minimum number of major ticks.
+  int y_steps = 0) //!< 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
+{ /*! Scale X and Y axis using T a 2D STL container: array, vector, list, map ...
+      \param container Data series to plot - entire 2D container.
+      \tparam T a 2D STL container.
+    */
   double x_max = std::numeric_limits<double>::quiet_NaN();
   double x_min = std::numeric_limits<double>::quiet_NaN();
   double y_max = std::numeric_limits<double>::quiet_NaN();
@@ -629,7 +647,7 @@ void scale_axis(double min_value, double max_value, // Scale axis from Input ran
 
 template <typename T> // T an STL container: array, vector ...
 size_t show(const T& container)
-{
+{ //! Utility functios to display STL containers.
   cout << container.size() << " values in container: ";
   for (T::const_iterator it = container.begin(); it != container.end(); it++)
   {
@@ -643,7 +661,7 @@ size_t show(const T& container)
 
 template <typename iter> // T an STL container: array, vector ...
 size_t show(iter begin, iter end) // Iterators
-{
+{ //! Utility function to display STL containers.
   size_t count = 0;
   while (begin != end)
   {
@@ -656,9 +674,10 @@ size_t show(iter begin, iter end) // Iterators
   return count;
 }// Container Data series to plot.
 
-template <typename T> // T an STL container: container of containers.
+template <typename T> 
 size_t show_all(const T& containers)
-{ // Show all the containers values.
+{ //! Show all the containers values.
+  // \tparam T an STL container: container of containers.
   for (T::const_iterator it = containers.begin(); it != containers.end(); it++)
   {
     show(*it);
@@ -666,9 +685,11 @@ size_t show_all(const T& containers)
   return containers.size();
 } // Container Data series to plot.
 
-template <class T> // T an STL container: array, vector ...
-std::pair<double, double> range(const T& container) // Container Data series
-{
+template <class T>
+std::pair<double, double> range(const T& container) //! Container Data series
+{ /*! \return minimum and maximum of an STL container.
+      \tparam  T an STL container: array, vector, set, map ...
+  */
   pair<T::const_iterator, T::const_iterator> result = boost::minmax_element(container.begin(), container.end());
   pair<double, double> minmax;
   minmax.first = *result.first;
@@ -678,7 +699,9 @@ std::pair<double, double> range(const T& container) // Container Data series
 
 template <class T> // T an STL container: array, vector, set, map ...
 std::pair<double, double> range_all(const T& containers) // Container of STL containers of Data series.
-{
+{ /*! \return minimum and maximum of a container containing STL containers.
+      \tparam T an STL container: array, vector, set, map ...
+  */
   std::pair<double, double> minmax((numeric_limits<double>::max)(), (numeric_limits<double>::min)());
   for (T::const_iterator it = containers.begin(); it != containers.end(); it++)
   {

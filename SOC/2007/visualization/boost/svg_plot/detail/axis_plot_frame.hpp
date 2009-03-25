@@ -1219,15 +1219,13 @@ namespace boost
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy)
           { /*! \brief Write the \b pair of data point's X and Y values as a string.
                \details If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
-               \verbatim
                  X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
-                 For example, x_style prefix("[ X=", and separator ",<ampersand>#x00A0;Y= ", " and Y value_style = "]"
+                 For example, x_style prefix("[ X=", and separator ",\<ampersand\>\#x00A0;Y= ", " and Y value_style = "]"
                  will produce a value label like "[X=-1.23, Y=4.56]"
-                 Note the need to use a Unicode space <ampsand>#x00A0; for get space for all browsers.
+                 Note the need to use a Unicode space \<ampersand\>\#x00A0; for get space for all browsers.
                  For as long a string as this you may need to make the total image size bigger,
                  and to orient the value labels with care.
                  draw_plot_point_values is only when both x and Y pairs are wanted.
-               \endverbatim
            */
             // verbatim needed to avoid a warning about using \&#x00A0; within Doxygen comment.
             using std::string;
@@ -1773,9 +1771,9 @@ namespace boost
           Derived& x_autoscale(bool b);
           bool autoscale();
           Derived& autoscale(bool b);
-          Derived& x_autoscale(std::pair<double, double> p);
+          Derived& x_autoscale(std::pair<double, double> p); //! autoscale X axis using a pair of doubles.
           template <class T> // T an STL container: array, vector ...
-          Derived& x_autoscale(const T& container); // Whole data series.
+          Derived& x_autoscale(const T& container); //! autoscale X axis using the whole data series.
           template <class T> // T an STL container: array, vector ...
           Derived& x_autoscale(const T& begin, const T& end); // Data series using iterators.
           Derived& x_with_zero(bool b);
@@ -2931,8 +2929,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           bool axis_plot_frame<Derived>::legend_box_fill_on()
-          {
-            return derived().legend_box_.fill_on();
+          { //! \return true if legend box has a background fill color.
+            return derived().legend_box_.fill_on(); 
           }
 
           template <class Derived>
@@ -3654,7 +3652,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_autoscale(std::pair<double, double> p)
-          { // Set to use X min & max pair values to autoscale X-axis.
+          { //! Set to use X min & max pair of double values to autoscale X-axis.
             scale_axis(p.first, p.second, // double min and max from pair.
               &derived().x_auto_min_value_, &derived().x_auto_max_value_, &derived().x_auto_tick_interval_, &derived().x_auto_ticks_,
               derived().autoscale_check_limits_, derived().autoscale_plusminus_,

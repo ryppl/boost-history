@@ -102,7 +102,8 @@ double string_svg_length(const std::string& s, const text_style& style);
 
 class svg_style
 { //! \class boost::svg::svg_style Holds the basic SVG stroke, fill colors and width, and their switches.
-  friend std::ostream& operator<< (std::ostream&, svg_style&);
+  friend std::ostream& operator<< (std::ostream&, const svg_style&);
+  //std::ostream& operator<< (std::ostream& os, const svg_style& s)
 
 private: // Accesses only by set and get member functions below.
   // Private data member variables names end with _,
@@ -253,7 +254,7 @@ public:
        || (s.width_on() != width_on_);
    }
 
-  std::ostream& operator<< (std::ostream& os, svg_style& s)
+  std::ostream& operator<< (std::ostream& os, const svg_style& s)
   {  /*! Output a string description of a svg_style.
          Usage: svg_style my_svg_style; cout << my_svg_style << endl;
          Outputs:  svg_style(RGB(0,0,0), RGB(0,0,0), 0, no fill, no stroke, no width)
@@ -472,7 +473,7 @@ public:
   } // operator==
 
   bool text_style::operator!=(const text_style& ts)
-  {//! Compare text_style for inequality (needed for testing).
+  { //! Compare text_style for inequality (needed for testing).
    return (ts.font_size_ != font_size_)
      || (ts.font_family_ != font_family_)
      || (ts.stretch_ != stretch_)
@@ -482,7 +483,9 @@ public:
   } //  operator!=
 
   bool operator==(const text_style& lhs, const text_style& rhs)
-  { // Note operator== and operator << both needed to use Boost.text.
+  { //! Compare two text_style for equality 
+    //! Note operator== and operator << both needed to use Boost.text.
+    //! (But can be avoided with a macro define).
      return (lhs.font_size_ == rhs.font_size_)
        && (lhs.font_family() == rhs.font_family())
        && (lhs.stretch_ ==  rhs.stretch_)
@@ -492,8 +495,9 @@ public:
   } //   bool operator==(const text_style& lhs, const text_style& rhs)
 
   bool operator!= (const text_style& lhs, const text_style& rhs)
-  { // Note operator== and operator << both needed to use Boost.Test.
-    // But can be avoided with a macro .
+  { //! Compare two text_style for equality. 
+    //! Note operator== and operator << both needed to use Boost.Test.
+    //! (But can be avoided with a macro define).
       return (lhs.font_size_ != rhs.font_size_)
        && (lhs.font_family() != rhs.font_family())
        && (lhs.stretch_ !=  rhs.stretch_)
@@ -798,7 +802,8 @@ std::ostream& operator<< (std::ostream& os, plot_point_style p)
 return os;
 } // std::ostream& operator<<
 
-plot_point_style default_plot_point_style(); // Uses all the defaults.
+//! plot_point_style that uses all the defaults.
+plot_point_style default_plot_point_style(); 
 
 class plot_line_style
 { //! \class boost::svg::plot_line_style Style of line joining data series values.
@@ -938,7 +943,7 @@ public:
   bool axis_line_on_; //!< Draw an X horizontal or Y vertical axis line.
   double axis_; //!< Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
   // Used in axis_plot_frame.hpp
-  axis_line_style( // class axis_line_style default constructor, sets all member data items.
+  axis_line_style( //!< class axis_line_style default constructor, sets all member data items.
     dim d = X,
     double min = -10.,
     double max = +10., // Defaults.
@@ -1294,12 +1299,13 @@ public:
     bool border_on_; //!< Display the border of the box.
     bool fill_on_; //!< Color fill the box.
 
-     box_style(const svg_color& scolor = black,
-      const svg_color& fcolor = white, // No fill.
-      double width = 1, // of border
-      double margin = 4., //
-      bool border_on = true, // Draw a border of width.
-      bool fill_on = false); // Apply fill color.
+     box_style( //! Constructor provides defaults for all member variables.
+      const svg_color& scolor = black, //!< stroke color
+      const svg_color& fcolor = white, //!< fill color (white = no fill).
+      double width = 1, //!< of border.
+      double margin = 4., //!< Margin around box (SVG units, default pixels).
+      bool border_on = true, //!< Draw a border of specified width.
+      bool fill_on = false); //!< Apply fill color.
 
   box_style& stroke(const svg_color& color);
   svg_color stroke();
@@ -1406,7 +1412,7 @@ box_style::box_style(
 // End class box_style Definitions.
 
 enum bar_option
-{ //! \enum bar_option
+{ //! \enum bar_option Options for bar to draw bar charts.
   y_block = -2, //!< Rectangular (optionally filled) block style horizontal to Y-axis,
   y_stick = -1, //!< Bar or row line (stroke width) horizontal to Y-axis.
   no_bar = 0, //!< No bar.
@@ -1417,7 +1423,7 @@ enum bar_option
 };
 
 enum histogram_option
-{ //! \enum histogram_option
+{ //! \enum histogram_option options for histograms.
   // row = -1, // Row line (stroke width) horizontal to Y-axis. Not implemented.
   // See svg_2d_plot for details of why not.
   no_histogram = 0, //!< No histogram.
@@ -1472,10 +1478,9 @@ public:
   svg_color color_; //!< Color of line (stroke) (no fill color for lines).
   svg_color area_fill_; //!< Fill color from line to axis.
   double width_; //!< Width of bar, not enclosing line width.
-  bar_option bar_option_; // stick or bar.
-
-  bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar);
-  bar_style& width(double w);
+  bar_option bar_option_; //!< stick or bar.
+  bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar); //!< Construct with defaults for all member variables.
+  bar_style& width(double w); //!< 
   double width();
   bar_style& color(const svg_color& f);
   svg_color& color();
@@ -1488,8 +1493,7 @@ public:
 
 // class bar_style Definitions.
 
-// Constructor.
-
+//! Constructor, setting defaults for all member variables.
 bar_style::bar_style(const svg_color& col, const svg_color& acol, double width, bar_option opt)
 :
 color_(col), area_fill_(acol), width_(width),  bar_option_(opt)

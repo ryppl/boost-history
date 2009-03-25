@@ -1,9 +1,10 @@
 /*! \file stylesheet.hpp
-    \author Jacob Voytko
 
     \brief Implement Cascading Style Sheets for SVG plots (but NOT IMPLEMENTED yet).
     \details
      Get some inscrutable errors from this and so commented out of other modules.
+    \author Jacob Voytko
+    \date 2007
 */
 
 // Copyright Jacob Voytko 2007
@@ -92,8 +93,9 @@ struct css_parse : public ::boost::spirit::grammar<css_parse>
     };
 }; // struct css_parse
 
+//! Validate a style sheet from istream.
 bool validate_stylesheet(std::ifstream& file)
-{ // stream version used by file version below.
+{ //! stream version used by file version below.
     css_parse my_css_parser;
     std::string str;
     std::string tmp;
@@ -115,6 +117,7 @@ bool validate_stylesheet(std::ifstream& file)
     return true;
 } // bool validate_stylesheet(std::ifstream& file)
 
+//! Validate a style sheet from file.
 bool validate_stylesheet(const std::string& file)
 {
     std::ifstream f_str(file.c_str());

@@ -5,6 +5,7 @@
       svg_tag.hpp defines all classes that can occur in the SVG parse tree.
 
    \author Jacob Voytko and Paul A. Bristow
+   \date Mar 2009
 */
 
 // Copyright Jacob Voytko 2007, 2008
@@ -393,12 +394,12 @@ namespace svg
   }; // class rect_element
 
   bool operator==(const rect_element& lhs, const rect_element& rhs)
-  { //
+  { //! Compare equality of two SVG rect_elements.
     return (lhs.x() == rhs.x()) && (lhs.y() == rhs.y()) && (lhs.width() == rhs.width()) && (lhs.height() == rhs.height());
   }
 
   bool operator!=(const rect_element& lhs, const rect_element& rhs)
-  { //
+  { //! Compare inequality of two SVG rect_elements.
     return (lhs.x() != rhs.x()) || (lhs.y() == rhs.y()) || (lhs.width() == rhs.width()) || (lhs.height() == rhs.height());
   }
 
@@ -511,7 +512,7 @@ namespace svg
   }; // class ellipse_element
 
   enum align_style
-  { //! text_element Represents a single block of text, with font & alignment.
+  { //! \enum align_style Represents a single block of text, with font & alignment.
     left_align, //!< Align text to left.
     right_align, //!< Align text to right.
     center_align //!< Center text.
@@ -1168,7 +1169,7 @@ public:
       \details Paths represent the outline of a shape which can be
       filled, stroked, used as a clipping path, or any combination of the three.
      */
-    bool relative; // or if false then absolute.
+    bool relative; //!< If true relative else absolute.
 
     virtual void write(std::ostream& rhs) = 0;
     virtual ~path_point()
@@ -1439,7 +1440,7 @@ public:
     bool sweep; //!< true if to draw in positive-angle direction
 
     void write(std::ostream& o_str)
-    {
+    { //! Write elliptical arc path XML to ostream.
       if(relative)
       {
         o_str << "a";
@@ -1453,6 +1454,7 @@ public:
         << x << "," << y << " ";
     }
 
+    //! Construct elliptic arc path.
     a_path(double x, double y, double rx, double ry, double x_axis_rotation, bool large_arc = false, bool sweep = false, bool relative = false)
       : x(x), y(y), rx(rx), ry(ry), x_axis_rotation(x_axis_rotation), large_arc(large_arc), sweep(sweep), path_point(relative)
     { // Constructor

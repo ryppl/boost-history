@@ -8,11 +8,12 @@
    void set_ids() copies all strings to matching image.get_g_element(i).id()
    So add any new id items to both!
 
-    \author Jacob Voytko and Paul A. Bristow
-   */
+   \author Jacob Voytko and Paul A. Bristow
+   \date Mar 2009
+*/
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -52,10 +53,11 @@ namespace boxplot
     BOXPLOT_DOC_CHILDREN
   };
 
+  //! String descriptors used in SVG XML (matching enum boxplot_doc_structure).
   std::string document_ids_[] = 
-  { //! String descriptors used in SVG XML (matching enum boxplot_doc_structure).
-      "imageBackground", // the whole svg image.
-      "plotBackground", // the smaller plot window (if used).
+  { 
+      "imageBackground", //< the whole svg image.
+      "plotBackground", //< the smaller plot window (if used).
       "X-axis", "Y-axis",
       "xMajorTicks", // Probably not used for Boxplots.
       "yMajorTicks", "yMinorTicks",
@@ -68,7 +70,7 @@ namespace boxplot
       "title",  // of the whole plot.
       "plotNotes", // Free text and shapes to annotate diagram.
       "boxplotDocChildren" // This last string is not used.
-  }; //  std::string document_ids_
+  }; // std::string document_ids_
 
 } // namespace boxplot
 } // namespace svg

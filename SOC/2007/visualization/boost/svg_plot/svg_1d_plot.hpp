@@ -331,7 +331,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   bool plot_window_on_; //!< Use a separate plot window (not whole image).
   bool x_ticks_on_; // TODO check these are really useful.
   bool x_values_on_; //!< values of data are shown by markers.
-  int  x_axis_position_; //!< enum #x_axis_intersect
+  int  x_axis_position_; //!< \see #x_axis_intersect
   bool autoscale_check_limits_; //!< If true, then check autoscale values for infinity, NaN, max, min.
   bool x_autoscale_; //!< If true, use any autoscale values for scaling the X axis.
   double autoscale_plusminus_; //!< For uncertain values, allow for plusminus ellipses showing 67%, 95% and 99% confidence limits.\n

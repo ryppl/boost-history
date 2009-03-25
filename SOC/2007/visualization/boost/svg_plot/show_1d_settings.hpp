@@ -6,11 +6,13 @@
   This is useful for diagnosing why your plot doesn't look as you hoped!
   \warning This creates about 100 lines of output, so should be used sparingly!
 
-  (See also show_2d_settings.cpp for 2-D plot).
+  \author Paul A. Bristow 
+  \date Mar 2009
+  \see show_2d_settings.cpp for 2-D plot.
  */
 
 // Copyright Jacob Voytko 2007
-// Copyright Paul A. Bristow 2008
+// Copyright Paul A. Bristow 2008, 2009
 
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0.
@@ -33,8 +35,9 @@ namespace svg
   // Declaration, defined below.
   void show_1d_plot_settings(svg_1d_plot& plot);
 
+//! Strings describing each bit in std::ios_base::fmtflags.
 const char* fmtFlagWords[16] =
-{ //! Strings describing each bit in std::ios_base::fmtflags.
+{ 
   "skipws", "unitbuf", "uppercase","showbase","showpoint","showpos","left","right",
     "internal","dec","oct","hex","scientific","fixed","boolalpha", "?"
     /*
@@ -140,13 +143,15 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
 //  // but OK for this purpose.
 //} // namespace detail
 
+//! Outputs strings to show horizontal orientation: left, right or none.
 const std::string l_or_r(int i)
-{ //! Outputs strings to show horizontal orientation: left, right or none.
+{ 
  return ((i < 0) ? "left" : ((i == 0) ? "none" : "right"));
 }
 
+//! Outputs strings to show vertical orientation: top, bottom, or none.
 const std::string t_or_b(int i)
-{//! Outputs strings to show vertical orientation: top, bottom, or none.
+{
  return ((i < 0) ? "bottom" : ((i == 0) ? "none" : "top"));
 }
 

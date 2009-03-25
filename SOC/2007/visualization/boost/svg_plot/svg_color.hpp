@@ -244,8 +244,9 @@ namespace svg
     return os;
   } // std::ostream& operator<<
 
+  //! SVG standard colors, \see svg_color_constant
   svg_color color_array[] =
-  { //! SVG standard colors, see also enum #svg_color_constant
+  { 
     svg_color(240, 248, 255), // aliceblue
     svg_color(250, 235, 215), // antiquewhite
     svg_color(0  , 255, 255), // aqua

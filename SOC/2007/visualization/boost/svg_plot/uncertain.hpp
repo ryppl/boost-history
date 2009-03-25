@@ -36,12 +36,14 @@ namespace boost
 {
 namespace svg
 {
-   static const double plusminus = 2.; //! Number of standard deviations used for plusminus text display. Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.\n
+   //! Nominal factor of 2 (strictly 1.96) corresponds to 95% confidence limit.
+   static const double plusminus = 2.; //!< Number of standard deviations used for plusminus text display.\n
 
 //  template <bool correlated = false>
 class unc
 { /*! \brief Class for storing an observed or measured value together with information
-    about its uncertainty (previously called 'error' or 'plusminus').
+    about its uncertainty (previously called 'error' or 'plusminus') represented
+    nominally one standard deviation (but displayed as a multiple, usually two standard deviations). 
     \details This version assumes uncorrelated uncertainties (by far the most common case).
     \see http://www.measurementuncertainty.org/ \n
     International Vocabulary of Basic and General Terms in Metrology; ISO/TAG 4 1994\n
@@ -141,7 +143,7 @@ short unsigned unc::deg_free() const
 }
 
 short unsigned unc::types() const
-{ //! \return Other information about the uncertaint value.
+{ //! \return Other information about the uncertain value.
   return types_;
 }
 
@@ -165,9 +167,9 @@ void unc::types(short unsigned  t)
 }
 
 std::ostream& operator<< (std::ostream& os, const unc& u)
-{ /*! Output an value with (if defined) uncertainty and degrees of freedom (and type).
+{ /*! \brief Output an value with (if defined) uncertainty and degrees of freedom (and type).
      For example: "1.23 +/- 0.01 (13)".\n
-     Note that the uncertainty is input and stored as one standard deviation,
+     /details Note that the uncertainty is input and stored as one standard deviation,
      but output multiplied for a user configurable 'confidence factor' plusminus,
      default two for about 95% confidence (but could also be one for 67% or 3 for 99% confidence).
   */
@@ -244,16 +246,16 @@ float unc_of(unc v)
 // Two helper functions to provide values and uncertainties as pairs.
 // Note names plural valueS_of
 
-template <class T>
-std::pair<double, double> values_of(T); // Declaration.
+template <class T> //! \tparam T Builtin-floating point type or unc.
+std::pair<double, double> values_of(T); //!< Get values of a pair of values.
 
-template <class T>
+template <class T> //! \tparam T Builtin-floating point type or unc.
 std::pair<double, double> values_of(std::pair<const T, T> vp)
-{
+{ //!< \return values of a pair of double values.
   return std::make_pair(value_of(vp.first), value_of(vp.second));
 }
 
-template <class T>
+template <class T> //! \tparam T Builtin-floating point type or unc.
 std::pair<double, double> values_of(std::pair<const unc, unc> up)
 { //! \return value (part) as a pair of doubles.
   // so can write
@@ -281,16 +283,19 @@ std::pair<double, double> values_of(std::pair<unc, unc> up)
   return std::make_pair<double, double>(up.first.value(), up.second.value());
 }
 
-template <class T>
+//! Get uncertainties (standard deviation) of a pair of values.
+template <class T> //! \tparam T Builtin-floating point type or unc.
 std::pair<float, float> uncs_of(T); // Declaration.
 
-template <class T>
+//! Get uncertainties (standard deviation) of a pair of values.
+template <class T> //! \tparam T Builtin-floating point type or unc.
 std::pair<float, float> uncs_of(std::pair<T, T> vp)
 {
   return std::make_pair<float, float>(unc_of(vp.first), unc_of(vp.second));
 }
 
-template <class T>
+//! Get uncertainties (standard deviation) of a pair of values.
+template <class T> //! \tparam T Builtin-floating point type or unc.
 std::pair<const float, float> uncs_of(std::pair<const T, T> vp)
 { //! \return uncertainty parts (if any) as a pair of floats.
   // so can write

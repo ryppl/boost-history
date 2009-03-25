@@ -35,20 +35,20 @@ namespace detail
 
   // Hidden in namespace detail to avoid clashes with other implementations of std::pair operator<<.
   template<class T1, class T2>
-  std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p);
-  std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p);
+  std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p); //! Output pair of type T1 and T2 to ostream.
+  std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p); //! Output pair of doubles to ostream.
  // std::ostream& operator<< (std::ostream& os, const std::pair<boost::svg::unc, boost::svg::unc>& p);
 
   template<class T1, class T2>
   std::ostream& operator<< (std::ostream& os, const std::pair<T1, T2>& p)
-  { // Output a pair of values.
+  { //! Output pair of type T1 and T2 to ostream.
          os << p.first << ", " << p.second;
       // Outputs:  1.2, 3.4
       return os;
   } // std::ostream& operator<<
 
   std::ostream& operator<< (std::ostream& os, const std::pair<double, double>& p)
-  { // Output a pair of double values.
+  { //! Output a pair of double values to ostream.
       //int precision = os.precision(5); // Save & use rather than default precision(6).
       os << p.first << ", " << p.second;
       // Outputs:  1.2, 3.4
