@@ -16,20 +16,7 @@
 #include <boost/synchro/thread/locks.hpp>
 #include <boost/synchro/timeout_exception.hpp>
 #include <boost/synchro/lockers/array_locker.hpp>
-
-namespace boost { namespace synchro
-{
-    template<>
-    struct is_lockable<boost::synchro::thread_mutex>
-    {
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-    template<typename T>
-    struct is_lockable<boost::synchro::unique_locker<T> >
-    {
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-}}
+#include <boost/synchro/synchronized.hpp>
 
 struct dummy_mutex : boost::synchro::lock_traits_base<>
 {
@@ -151,6 +138,33 @@ void test_array_lock_two_uncontended()
     BOOST_CHECK(al.owns_lock());
 }
 
+#if 1
+void test_synchronize_two_uncontended()
+{
+    boost::mutex m1,m2;
+    defer_synchronize_var(l1,m1) defer_synchronize_var(l2,m2) 
+    {
+        BOOST_CHECK(!l1.owns_lock());
+        BOOST_CHECK(!l2.owns_lock());
+
+        boost::synchro::lockables::lock(l1,l2);
+
+        BOOST_CHECK(l1.owns_lock());
+        BOOST_CHECK(l2.owns_lock());
+    }
+    boost::synchro::lockables::lock(m1,m2);
+    adopt_synchronize_var(l1,m1) adopt_synchronize_var(l2,m2) 
+    {
+        BOOST_CHECK(l1.owns_lock());
+        BOOST_CHECK(l2.owns_lock());
+    }
+    synchronize_var(l1,m1) synchronize_var(l2,m2) 
+    {
+        BOOST_CHECK(l1.owns_lock());
+        BOOST_CHECK(l2.owns_lock());
+    }
+}
+#endif
 
 struct wait_data
 {
@@ -855,6 +869,7 @@ boost::unit_test_framework::test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&test_array_lock_two_uncontended));
     test->add(BOOST_TEST_CASE(&test_array_try_lock_three));
     
+    test->add(BOOST_TEST_CASE(&test_synchronize_two_uncontended));
 
 
     return test;

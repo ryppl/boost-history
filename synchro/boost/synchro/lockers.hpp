@@ -15,10 +15,17 @@
 #include <boost/thread/locks.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/locker_options.hpp>
+#include <boost/synchro/is_lockable.hpp>
 
 namespace boost { namespace synchro {
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class unique_locker;
+        
+    template<typename T>
+    struct is_lockable<boost::synchro::unique_locker<T> >
+    {
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
 
     template<typename Mutex, typename ScopeTag=typename scope_tag<Mutex>::type>
     class try_unique_locker;
