@@ -63,6 +63,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\example\ggl.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\example\Jamfile"
 			>
 		</File>

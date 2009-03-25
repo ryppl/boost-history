@@ -27,9 +27,10 @@ exe custom_example : custom_example.cpp ;
 exe window_only_example : window_only_example.cpp ;
 exe overlapping_example : overlapping_example.cpp ;
 exe sexy_button : sexy_button.cpp ;
+exe ggl : ggl.cpp ;
 
 install window_example_stage
-    : window_example custom_example window_only_example overlapping_example sexy_button
+    : window_example custom_example window_only_example overlapping_example sexy_button ggl
     : <install-dependencies>on <install-type>EXE
       <install-type>LIB <location>$(TOP)/bin/stage/window_example
     ;

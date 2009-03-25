@@ -79,7 +79,7 @@ public:
     {}
 
     template<class ColorKey>
-    color_type color()
+    color_type const& color()
     { 
         return boost::fusion::at_key<ColorKey>(m_color_map);
     }
@@ -93,8 +93,8 @@ public:
     template<class ColorKey>
     void use_color()
     {
-        color_type const& clr = boost::fusion::at_key<ColorKey>(m_color_map);
-        gl::color(float(clr[0]), float(clr[1]), float(clr[2]), float(clr[3]));
+        color_type const& clr = color<ColorKey>();
+        gl::color<float>(clr[0], clr[1], clr[2], clr[3]);
     }
 
 };

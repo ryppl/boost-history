@@ -12,12 +12,14 @@
 
 #include <boost/gil/utilities.hpp>
 #include <boost/gil/typedefs.hpp>
+#include <utility>
 
 namespace boost { namespace guigl {
 
 typedef gil::point2<double> size_type;
 typedef gil::point2<double> position_type;
 typedef gil::rgba32f_pixel_t color_type;
+typedef std::pair<position_type, position_type> segment_type;
 
 }}
 
