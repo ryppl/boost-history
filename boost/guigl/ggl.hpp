@@ -11,11 +11,28 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/guigl/gl.hpp>
 #include <boost/guigl/types.hpp>
-#include <boost/ggl/geometry/geometry.hpp>
+
+#include <boost/ggl/geometry/geometries/point.hpp>
+#include <boost/ggl/geometry/geometries/box.hpp>
+#include <boost/ggl/geometry/geometries/segment.hpp>
+#include <boost/ggl/geometry/geometries/linestring.hpp>
+#include <boost/ggl/geometry/geometries/linear_ring.hpp>
+#include <boost/ggl/geometry/geometries/polygon.hpp>
+#include <boost/ggl/geometry/geometries/nsphere.hpp>
+
+#include <boost/ggl/geometry/core/concepts/point_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/segment_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/box_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/linestring_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/ring_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/polygon_concept.hpp>
+#include <boost/ggl/geometry/core/concepts/nsphere_concept.hpp>
+
+#include <boost/ggl/geometry/core/cs.hpp>
 #include <boost/ggl/geometry/geometries/register/register_point.hpp>
 #include <boost/static_assert.hpp>
 
-// i don't know why but GEOMETRY_REGISTER_POINT_2D needs type to be without '::'
+// GEOMETRY_REGISTER_POINT_2D needs type without '::'
 typedef boost::guigl::position_type boost__guigl__position_type;
 GEOMETRY_REGISTER_POINT_2D( boost__guigl__position_type, double, geometry::cs::cartesian, operator[](0), operator[](1) );
 
@@ -331,9 +348,11 @@ namespace boost{ namespace guigl { namespace ggl {
           (void))
           vertex(G const& g)
           {
+          ggl::vertex(geometry::exterior_ring(g));
 
           std::for_each(
-            boost::begin(exterior_ring(g)), boost::end(exterior_ring(g)),
+            boost::begin(geometry::interior_rings(g)),
+            boost::end(geometry::interior_rings(g)),
             vertex_drawer());
           }
 
@@ -342,9 +361,6 @@ namespace boost{ namespace guigl { namespace ggl {
           (void))
           draw(G const& g)
           {
-          //glBegin(GL_POLYGON);
-          //vertex(g);
-          //glEnd();
           }
       };
 

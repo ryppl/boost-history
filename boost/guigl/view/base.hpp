@@ -59,9 +59,9 @@ public:
     template<class PositionTag>
     position_type point() const;
 
-#define BOOST_GUIGL_SPECIAL_POINT_IMPL(point_tag_, val1_, val2_) \
-  template<>                                            \
-    inline position_type point<point_tag_>() const             \
+#define BOOST_GUIGL_SPECIAL_POINT_IMPL(point_tag_, val1_, val2_)  \
+  template<>                                                      \
+    inline position_type point<point_tag_>() const                \
       { return position_type(val1_, val2_); }
   
     BOOST_GUIGL_SPECIAL_POINT_IMPL(LT, 0., 0.);
