@@ -91,11 +91,7 @@ namespace boost { namespace guigl { namespace gl {
     inline void color(color_type const& clr)
     {
         // TODO: use gil concepts to access channels
-        color(
-            static_cast<float>(clr[0]),
-            static_cast<float>(clr[1]),
-            static_cast<float>(clr[2]),
-            static_cast<float>(clr[3]));
+        color<float>(clr[0], clr[1], clr[2], clr[3]);
     }
 }}}
 

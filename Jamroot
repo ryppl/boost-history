@@ -33,6 +33,5 @@ project guigl
    : requirements
         <include>.
         <include>$(BOOST_ROOT)
-        <include>$(GGL)
         <include>$(GGL)/boost/ggl
    ;
