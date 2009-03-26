@@ -43,7 +43,10 @@ public:
 private:
     typedef accumulators::accumulator_set<
         T,
-        accumulators::stats<accumulators::tag::fir,accumulators::tag::delay<> >
+        accumulators::stats<
+            accumulators::tag::fir,
+            accumulators::tag::delay<>
+        >
     > acc_type;
     acc_type acc;
 };

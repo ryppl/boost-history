@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <boost/call_traits.hpp>
 #include <boost/assert.hpp>
+#include <boost/range.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 namespace boost { namespace accumulators{
@@ -26,7 +27,7 @@ namespace boost { namespace accumulators{
     /// Multiply result by \f$ Var[e_i] \f$ if it is not 1.
     template<typename R>
     class acvf_moving_average{
-        typedef typename R::const_iterator iterator_type;
+        typedef typename range_iterator<const R>::type iterator_type;
     public:
         typedef std::size_t                             argument_type;
         typedef typename
@@ -40,7 +41,7 @@ namespace boost { namespace accumulators{
                 return *this;
             }
             result_type operator()(argument_type delay)const{
-                typedef typename R::const_iterator iterator_type;
+                typedef typename range_iterator<const R>::type iterator_type;
                 result_type res = 0.0;
                 size_t h = delay;
                 if(coeffs.size()>0){

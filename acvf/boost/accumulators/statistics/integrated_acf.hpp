@@ -96,8 +96,6 @@ namespace tag
 namespace extract
 {
 
-//  extractor<tag::integrated_acf<> > const integrated_acf = {};
-  // see acvf about default_delay_discriminator
   template<typename Discriminator,typename AccumulatorSet>
   typename mpl::apply<
     AccumulatorSet,tag::integrated_acf<Discriminator> >::type::result_type
@@ -105,9 +103,6 @@ namespace extract
     typedef tag::integrated_acf<Discriminator> the_tag;
     return extract_result<the_tag>(acc);
   }
-
-//  TODO
-//  overload (default) see acvf
 
 }
 

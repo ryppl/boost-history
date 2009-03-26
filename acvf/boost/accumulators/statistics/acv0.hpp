@@ -89,8 +89,7 @@ namespace tag
 namespace extract
 {
 
-//  extractor<tag::acv0<> > const acv0 = {};
-  // see acvf about default_delay_discriminator
+
   template<typename Discriminator,typename AccumulatorSet>
   typename mpl::apply<
     AccumulatorSet,tag::acv0<Discriminator>
@@ -99,9 +98,6 @@ namespace extract
     typedef tag::acv0<Discriminator> the_tag;
     return extract_result<the_tag>(acc);
   }
-
-//  TODO
-//  overload (default) see acvf
 
 }
 

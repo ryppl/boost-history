@@ -4,6 +4,8 @@
 //  Copyright 2008 Erwann Rogard. Distributed under the Boost
 //  Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#ifndef BOOST_ACCUMULATORS_STATISTICS_ACVF_ANALYSIS_HPP_ER_2008_04
+#define BOOST_ACCUMULATORS_STATISTICS_ACVF_ANALYSIS_HPP_ER_2008_04
 #include <iostream>
 #include <algorithm>
 #include <iterator>
@@ -14,6 +16,7 @@
 #include <boost/parameter/parameters.hpp>
 #include <boost/parameter/keyword.hpp>
 #include <boost/bind.hpp>
+#include <boost/range.hpp>
 #include <boost/ref.hpp>
 #include <boost/assign/std/vector.hpp>
 #include <boost/range/iterator_range.hpp>
@@ -28,38 +31,50 @@
 #include <boost/accumulators/statistics/standard_error_autocorrelated.hpp>
 #include <boost/accumulators/statistics/standard_error_iid.hpp>
 
-#ifndef BOOST_ACCUMULATORS_STATISTICS_ACVF_ANALYSIS_HPP_ER_2008_04
-#define BOOST_ACCUMULATORS_STATISTICS_ACVF_ANALYSIS_HPP_ER_2008_04
 namespace boost{namespace accumulators{
 namespace statistics{
 
+    template<
+        typename RealType,
+        typename Discriminator = default_delay_discriminator
+    >
     class acvf_analysis{
-        typedef boost::accumulators::default_delay_discriminator     delaydisrc;
+        typedef Discriminator discr_t;
+        public:
+        typedef RealType    value_type;
+
+        private:
+
         typedef boost::accumulators::accumulator_set<
-        double, boost::accumulators::stats<
+        value_type, boost::accumulators::stats<
             boost::accumulators::tag::mean,
-            boost::accumulators::tag::acf<>,
-            boost::accumulators::tag::integrated_acvf<>,
-            boost::accumulators::tag::percentage_effective_sample_size<>,
-            boost::accumulators::tag::standard_error_autocorrelated<>,
-            boost::accumulators::tag::standard_error_iid<>
+            boost::accumulators::tag::acf<discr_t>,
+            boost::accumulators::tag::integrated_acvf<discr_t>,
+            boost::accumulators::tag::percentage_effective_sample_size<
+                discr_t>,
+            boost::accumulators::tag::standard_error_autocorrelated<discr_t>,
+            boost::accumulators::tag::standard_error_iid<discr_t>
             >
         >  acc_type;
 
     public://TODO define copy and assign
         acvf_analysis(std::size_t max_lag)
         :K(max_lag),
-        acc(boost::accumulators::tag::delay<>::cache_size=(K+1)){};
+        acc(boost::accumulators::tag::delay<discr_t>::cache_size=(K+1)){};
+
+        void operator()(value_type x){
+            return acc(x);
+        }
 
         template<typename R>
         void operator()(
-            const R& range,//TODO specify range, container?
+            const R& range,
             std::size_t offset,
             std::size_t stride){
 
             // an iterator range?
-            typedef typename R::const_iterator const_iter_type;
-            typedef typename R::size_type size_type;
+            typedef typename range_iterator<const R>::type const_iter_type;
+            typedef typename range_size<R>::type size_type;
             const_iter_type i = boost::begin(range);
             const_iter_type e = boost::end(range);
             if(std::distance(i,e)>offset){
@@ -82,29 +97,46 @@ namespace statistics{
                 std::runtime_error("acvf_analysis");
             }
         }
+        std::size_t max_lag()const{ return K; }
+        value_type mean()const{ return accumulators::mean(acc); }
+        value_type standard_error_iid()const{
+            return accumulators::standard_error_iid<discr_t>(acc);
+        }
+        value_type standard_error_autocorrelated()const{
+            return accumulators
+                ::standard_error_autocorrelated<discr_t>(acc);
+        }
+        value_type integrated_acvf()const{
+            return accumulators
+                ::integrated_acvf<discr_t>(acc);
+        }
+
+        value_type percentage_effective_sample_size()const{
+            return accumulators
+                ::percentage_effective_sample_size<discr_t>(acc);
+        }
+
         void print(std::ostream& os)const
         {
-            using namespace boost::accumulators;
-            os  << "->count: " << count(acc)
-                << std::endl
-                << "->estimated acf: ";
+            //using namespace boost::accumulators;
+            os  << "count : " << accumulators::count(acc)
+                << "\nacf : ";
                     copy(
-                        begin(acf<delaydisrc>(acc)),
-                        end(acf<delaydisrc>(acc)),
-                        std::ostream_iterator<double>(os," ")
+                        begin(accumulators::acf<discr_t>(acc)),
+                        end(accumulators::acf<discr_t>(acc)),
+                        std::ostream_iterator<value_type>(os," ")
                     );
-            os  << std::endl
-                << "->estimated var: "
-                << integrated_acvf<delaydisrc>(acc) << std::endl
-                << "->estimated ess%: "
-                << percentage_effective_sample_size<delaydisrc>(acc)
-                << std::endl
-                << "->mean: " << mean(acc) << std::endl
-                << "->estimated standard error assuming iid: "
-                << standard_error_iid<delaydisrc>(acc) << std::endl
-                << "->estimated standard error assuming acf is zero after lag "
-                << K << ": "
-                << standard_error_autocorrelated<delaydisrc>(acc) << std::endl;
+            os  << "\nintegrated_acvf : "
+                << integrated_acvf()
+                << "\ness% : "
+                << percentage_effective_sample_size()
+                << "\nmean : " << mean()
+                << "\nstandard error : "
+                << "\n assuming iid : "
+                << standard_error_iid()
+                << "\n assuming acf is zero after lag "
+                << max_lag() << ": "
+                << standard_error_autocorrelated() << std::endl;
         };
     private:
 
