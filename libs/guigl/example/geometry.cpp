@@ -39,25 +39,25 @@ class RenderVisitor : public IVisitor
   public:
     void visit(int key, source_point& g) const
       {
-      gl::color(blue(0.7));
+      gl::color(blue(0.7f));
       ggl::draw(g.result);
       }
 
     void visit(int key, line_from_two_points& g) const
       {
-      glLineWidth(4);
-      gl::color(red(0.8));
+      gl::line_width(4);
+      gl::color(red(0.8f));
       ggl::draw(g.result);
       }
 
     void visit(int key, plane_from_three_points& g) const
       {
-      gl::color(green(0.5));
+      gl::color(green(0.5f));
       glBegin(GL_POLYGON);
       ggl::vertex(g.result.outer());
       glEnd();
 
-      glLineWidth(2);
+      gl::line_width(2);
       gl::color(black(0.2));
       ggl::draw<geometry::ring_tag>(g.result.outer());
       }
@@ -185,7 +185,7 @@ struct PrintDescription
     if(!i) return ;
 
     point_type center = get_center(obj.result);
-    drawString(descriptions.find(*i)->second.c_str(), center.x + 10, center.y, grey(0.1), GLUT_BITMAP_8_BY_13);
+    drawString(descriptions.find(*i)->second.c_str(), center.x + 10, center.y, grey(0.1f), GLUT_BITMAP_8_BY_13);
     }
   };
 
@@ -247,7 +247,7 @@ struct drawer {
 
   void operator()() const
     {
-    glLineWidth(0.5);
+    gl::line_width(0.5);
     gl::color(black(0.5));
     ggl::draw(w->segment<HC>());
     ggl::draw(w->segment<VC>());
@@ -257,8 +257,8 @@ struct drawer {
 
 //    drawString("center", 0, 0, grey(0.1), GLUT_BITMAP_8_BY_13);
 
-    glPointSize(10);
-    //glLineWidth(2);
+    gl::point_size(10);
+    //gl::line_width(2);
     glEnable(GL_LINE_SMOOTH);
     glEnable(GL_POINT_SMOOTH);
 

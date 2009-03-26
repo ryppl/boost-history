@@ -31,99 +31,6 @@ namespace geometry { namespace traits{
 
 using namespace boost::guigl;
 
-void CALLBACK tess_begin_cb(GLenum which) {
-  //std::cout << __FUNCTION__ << ": " << which << std::endl;
-  glBegin(which);
-  }
-void CALLBACK tess_end_cb() {
-  //std::cout << __FUNCTION__ << std::endl;
-  glEnd();
-  }
-void CALLBACK tess_vertex_cb(const GLvoid *data) {
-  //std::cout << __FUNCTION__ << std::endl;
-  glVertex3dv((const GLdouble*)data);
-  }
-void CALLBACK tess_error_cb(GLenum errorCode)
-{
-    const GLubyte *errorStr;
-    errorStr = gluErrorString(errorCode);
-    std::cerr << "[ERROR]: " << errorStr << std::endl;
-}
-
-class tess : boost::noncopyable {
-public:
-    GLUtesselator *m_tess;
-
-public:
-    tess() {
-        m_tess = gluNewTess(); // create a tessellator
-        if(!m_tess) throw std::runtime_error("failed to create tessellation object");
-    }
-    ~tess() { gluDeleteTess(m_tess); }
-
-    class polygon : boost::noncopyable {
-    public:
-        GLUtesselator *m_tess;
-    public:
-        explicit polygon(tess const& t)
-            : m_tess(t.m_tess)
-        { gluTessBeginPolygon(m_tess, 0); }
-        ~polygon(){ gluTessEndPolygon(m_tess); }
-
-        class contour : boost::noncopyable {
-        public:
-            GLUtesselator *m_tess;
-
-        public:
-            explicit contour(polygon const& pg)
-                : m_tess(pg.m_tess)
-            { gluTessBeginContour(m_tess); }
-            ~contour(){ gluTessEndContour(m_tess); }
-
-            inline void operator()(double coord[3], void *data) const {
-                gluTessVertex(m_tess, coord, data);
-            }
-
-            inline void operator()(double coord[3]) const {
-                (*this)(coord, coord);
-            }
-
-            inline void operator()(position_type const& pos) const {
-                double coord[3] = {pos[0], pos[1], 0.0};
-                (*this)(coord);
-            }
-            
-        };
-    };
-};
-
-GLuint tessellate1()
-{
-    glColor3f(1,0,0);
-
-    tess tt;
-    GLUtesselator* t = tt.m_tess;
-    GLdouble quad1[4][3] = { {-10,30,0}, {0,0,0}, {10,30,0}, {0,20,0} };
-
-    // register callback functions
-    gluTessCallback(t, GLU_TESS_BEGIN, (void (CALLBACK *)())tess_begin_cb);
-    gluTessCallback(t, GLU_TESS_END, (void (CALLBACK *)())tess_end_cb);
-    gluTessCallback(t, GLU_TESS_ERROR, (void (CALLBACK *)())tess_error_cb);
-    gluTessCallback(t, GLU_TESS_VERTEX, (void (CALLBACK *)())tess_vertex_cb);
-
-//    glNewList(id, GL_COMPILE);
-    {
-        tess::polygon p(tt);
-        tess::polygon::contour c(p);
-        c(quad1[0]);
-        c(quad1[1]);
-        c(quad1[2]);
-        c(quad1[3]);
-    }
-
-    return 0;//id;      // return handle ID of a display list
-}
-
 typedef view::positioned<> my_widget_base_type;
 class my_widget : public my_widget_base_type
 {
@@ -148,12 +55,12 @@ public:
 
         // linear_ring
         gl::color(yellow());
-        glLineWidth(7);
+        gl::line_width(7);
         ggl::draw(r);
 
         // box
         gl::color(blue());
-        glLineWidth(1);
+        gl::line_width(1);
         geometry::box<position_type> b(
             point<LT>(),
             point<RB>());
@@ -161,12 +68,12 @@ public:
 
         // segment
         gl::color(green(0.5f));
-        glLineWidth(2);
+        gl::line_width(2);
         ggl::draw(segment<HC>());
         ggl::draw(segment<VC>());
 
         gl::color(red(0.2f));
-        glLineWidth(5);
+        gl::line_width(5);
         ggl::draw(segment<D1>());
         ggl::draw(segment<D2>());
 
@@ -181,7 +88,7 @@ public:
         ggl::draw<geometry::ring_tag>(v);
 
         // std::vector as a linestring
-        glLineWidth(0.5);
+        gl::line_width(0.5);
         gl::color(white());
         ggl::draw<geometry::linestring_tag>(v);
 
@@ -196,57 +103,36 @@ public:
         std::copy(v.begin(), v.end(), std::back_inserter(pg.inners().back()));
         geometry::correct(pg);
 
-        //glPointSize(10);
+        //gl::point_size(10);
         //gl::color(red());
         //glBegin(GL_POINTS);
         //ggl::vertex(pg);
         //glEnd();
 
-        //GLuint id = glGenLists(1);  // create a display list
+        GLuint id = glGenLists(1);  // create a display list
+        glNewList(id, GL_COMPILE);
         gl::color(red(0.5));
-        //{
-        //    GLUtesselator *t = gluNewTess(); // create a tessellator
-        //    //tess t;
-        //    // register callback functions
-        //    gluTessCallback(t, GLU_TESS_BEGIN, (void (__stdcall*)(void))tess_begin_cb);
-        //    gluTessCallback(t, GLU_TESS_END, (void (__stdcall*)(void))tess_end_cb);
-        //    gluTessCallback(t, GLU_TESS_ERROR, (void (__stdcall*)(void))tess_error_cb);
-        //    gluTessCallback(t, GLU_TESS_VERTEX, (void (__stdcall*)())tess_vertex_cb);
 
-        //    glNewList(id, GL_COMPILE);
-        //    gluTessBeginPolygon(t, 0);
-        //    //tess::polygon p(t);
-        //    {
-        //        {
-        //            gluTessBeginContour(t);
-        //            //tess::polygon::contour c(t);
-        //            BOOST_FOREACH(position_type const& pos, pg.outer())
-        //            {
-        //                double coord[3] = {pos[0], pos[1], 0.0};
-        //                gluTessVertex(t, coord, coord);
-        //                //c(pos);
-        //            }
-        //            gluTessEndContour(t);
-        //        }
+        {
+            gl::tess t;
+            gl::tess::polygon p(t);
+            {
+                gl::tess::polygon::contour c(p);
+                BOOST_FOREACH(position_type const& pos, pg.outer())
+                    c(pos);
+            }
+            BOOST_FOREACH(
+                geometry::linear_ring<position_type> const& ring,
+                pg.inners())
+            {
+                gl::tess::polygon::contour c(p);
+                BOOST_FOREACH(position_type const& pos, ring)
+                    c(pos);
+            }
+        }
+        glEndList();
 
-        //        //BOOST_FOREACH(
-        //        //    geometry::linear_ring<position_type> const& ring,
-        //        //    pg.inners())
-        //        //{
-        //        //    tess::polygon::contour c(t);
-        //        //    BOOST_FOREACH(position_type const& pos, ring)
-        //        //    { c(pos); }
-        //        //}
-        //    }
-        //    gluTessEndPolygon(t);
-        //    glEndList();
-        //    gluDeleteTess(t);
-        //}
-
-        //std::cout << "tess-begin" << std::endl;
-        tessellate1();
-        //std::cout << "tess-end" << std::endl;
-//        glCallList(tessellate1());
+        glCallList(id);
     }
 
     BOOST_GUIGL_WIDGET_DRAW_IMPL(my_widget);

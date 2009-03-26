@@ -275,6 +275,10 @@ namespace boost{ namespace guigl { namespace gl {
     void wire_teapot(GLdouble size);
     void solid_teapot(GLdouble size);
 
+    //////////////////////////////////////////////////////////////////////////
+    inline void line_width(float width) {glLineWidth(width);}
+    inline void point_size(float width) {glPointSize(width);}
+
 }}}
 
 #include "platform/impl/vertex.hpp"
@@ -284,5 +288,6 @@ namespace boost{ namespace guigl { namespace gl {
 #include "platform/impl/light.hpp"
 #include "platform/impl/material.hpp"
 #include "platform/impl/glut.hpp"
+#include "platform/impl/tess.hpp"
 
 #endif BOOST__GUIGL__GL_HPP

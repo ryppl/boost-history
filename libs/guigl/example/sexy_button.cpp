@@ -208,7 +208,7 @@ public:
             glEnd();
 
 
-            glLineWidth(0.5);
+            gl::line_width(0.5);
             gl::color(black(mouse_state().inside ? 1.0f : 0.7f));
             glBegin(GL_LINE_LOOP);
             draw_rounded_rect();

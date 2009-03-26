@@ -151,6 +151,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\boost\guigl\platform\impl\tess.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\boost\guigl\platform\impl\transform.hpp"
 						>
 					</File>
