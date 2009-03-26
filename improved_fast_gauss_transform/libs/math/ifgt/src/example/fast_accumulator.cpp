@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/fast_accumulator.cpp
+// fast_accumulator.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -9,8 +9,8 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
 #include <iostream>
-#include <boost/math/ifgt/fast_accumulator.hpp>
-#include <boost/math/ifgt/truncation_degree_constant.hpp>
+#include <boost/math/ifgt/fast/accumulator.hpp>
+#include <boost/math/ifgt/truncation_degree/constant.hpp>
 #include <libs/math/ifgt/src/example/fast_accumulator.h>
 void example_fast_accumulator(){
     std::cout << "-> example_fast_accumulator" << std::endl;
@@ -22,12 +22,12 @@ void example_fast_accumulator(){
     const unsigned int dim = 2;
     const unsigned int wdim = 2;
     typedef std::vector<double>                                 var_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>           trunc_degree;
+    typedef ifgt::truncation_degree::constant<mpl::_1>           trunc_degree;
     typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>       cluster_type;
     typedef ifgt::find_nearest_cluster<mpl::_1, boost::l2_distance_squared>
                                                                 find_type;
-
-    typedef  ifgt::fast_accumulator<cluster_type,find_type>     acc_type;
+    typedef ifgt::kwd<>                                         kwd_t;
+    typedef  ifgt::fast::accumulator<cluster_type,find_type>     acc_type;
 
     double bandwidth            = 0.1;
     double max_cluster_radius   = 1.0;
@@ -49,9 +49,9 @@ void example_fast_accumulator(){
     }
 
     acc_type acc((
-            tag::bandwidth = bandwidth,
-            tag::max_cluster_radius = max_cluster_radius,
-            tag::degree = degree
+            kwd_t::bandwidth = bandwidth,
+            kwd_t::max_cluster_radius = max_cluster_radius,
+            kwd_t::degree = degree
         )
     );
 

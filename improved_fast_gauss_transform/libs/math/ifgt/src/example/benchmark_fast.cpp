@@ -1,11 +1,14 @@
 //////////////////////////////////////////////////////////////////////////////
-// example/benchmark_fast.cpp
+// benchmark_fast.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/range.hpp>
-#include <boost/math/ifgt/benchmark.hpp>
+#include <boost/random/mersenne_twister.hpp>
+#include <boost/random/normal_distribution.hpp>
+#include <boost/random/variate_generator.hpp>
+#include <boost/math/ifgt/include.hpp>
 #include <libs/math/ifgt/src/example/benchmark_fast.h>
 void example_benchmark_fast(){
     std::cout << " -> example_benchmark_fast" << std::endl;
@@ -68,22 +71,22 @@ void example_benchmark_fast(){
         wdim,
         pdf_fun_type,
         w_fun_type>                                         bench_type;
-    typedef ifgt::optimal_bandwidth<sdim,value_type> opt_bandwidth_type;
+    typedef ifgt::bandwidth_normal_plug_in<sdim,value_type> opt_bandwidth_type;
     //fast types
-    typedef ifgt::optimal_parameter_given_max_degree<value_type>
+    typedef ifgt::cluster_radius_at_max_degree<value_type>
                                                               opt_pars_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>         trunc_degree;
+    typedef ifgt::truncation_degree::constant<mpl::_1>         trunc_degree;
     typedef ifgt::cluster<sdim,wdim,trunc_degree,var_type>    cluster_type;
     typedef ifgt::find_nearest_cluster<mpl::_1, boost::l2_distance_squared>
                                                               find_type;
-    typedef ifgt::fast_accumulator<cluster_type,find_type>    fast_acc_type;
+    typedef ifgt::fast::accumulator<cluster_type,find_type>    fast_acc_type;
     typedef mpl::if_<
         mpl::bool_<do_cutoff_rydg>,
-        mpl::identity<ifgt::cutoff_radius_rydg<mpl::_1> >,
-        mpl::identity<ifgt::cutoff_radius_none<mpl::_1> >
+        mpl::identity<ifgt::cutoff_radius::rydg<mpl::_1> >,
+        mpl::identity<ifgt::cutoff_radius::none<mpl::_1> >
     >::type                                                    cutoff_policy;
 
-    typedef ifgt::fast_evaluator<fast_acc_type,cutoff_policy> fast_eval_type;
+    typedef ifgt::fast::evaluator<fast_acc_type,cutoff_policy> fast_eval_type;
 
     //pdf
     // Data generator
@@ -100,12 +103,12 @@ void example_benchmark_fast(){
     std::cout << "dim(w) = " << wdim << std::endl;
 
     value_type  opt_h
-        = opt_bandwidth_type::for_density_estimation_under_normality(
+        = opt_bandwidth_type::find(
         sigma,all_train_count);
     opt_h *= bandwidth_adjust; //override
 
     //fast specific parameters
-    opt_pars_type opt_pars((ifgt::tag::error_tolerance = error_tol));
+    opt_pars_type opt_pars((ifgt::kwd<>::error_tolerance = error_tol));
     opt_pars(max_p, opt_h, start_rx_div_h, max_recursions);
     value_type  max_rx = opt_pars.max_radius();
 
@@ -114,15 +117,15 @@ void example_benchmark_fast(){
 
     fast_acc_type fast_acc(
         (
-            ifgt::tag::bandwidth = opt_h,
-            ifgt::tag::max_cluster_radius = max_rx,
-            ifgt::tag::degree = max_p,
-            ifgt::tag::error_tolerance = error_tol
+            ifgt::kwd<>::bandwidth = opt_h,
+            ifgt::kwd<>::max_cluster_radius = max_rx,
+            ifgt::kwd<>::degree = max_p,
+            ifgt::kwd<>::error_tolerance = error_tol
         )
     );
     fast_eval_type fast_eval((
-        ifgt::tag::accumulator = fast_acc,
-        ifgt::tag::error_tolerance = error_tol));
+        ifgt::kwd<>::accumulator = fast_acc,
+        ifgt::kwd<>::error_tolerance = error_tol));
 
     bench.notation(std::cout);
     std::cout << "K : # clusters" << std::endl;

@@ -17,9 +17,11 @@
 #include <boost/static_assert.hpp>
 #include <boost/assign/std/vector.hpp>
 #include <boost/math/distributions/normal.hpp>
+
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
+
 #include <boost/ref.hpp>
 #include <boost/function.hpp>
 #include <boost/format.hpp>
@@ -27,7 +29,11 @@
 #include <boost/algorithm/l2_distance_squared.hpp>
 #include <boost/iterator/vector2matrix_iterator.hpp>
 #include <boost/algorithm/l2_norm.hpp>
-#include <boost/math/ifgt/include.hpp>
+#include <boost/math/ifgt/for_each/accumulate.hpp>
+#include <boost/math/ifgt/for_each/nadaraya_watson.hpp>
+#include <boost/math/ifgt/for_each/gauss_transform.hpp>
+#include <boost/math/ifgt/for_each/rozenblatt_parzen.hpp>
+#include <boost/math/ifgt/for_each/weight_front_insert_1_accumulate.hpp>
 #include <boost/math/ifgt/detail/product_pdf.hpp>
 namespace boost{namespace math{namespace ifgt{
 template<
@@ -148,9 +154,10 @@ class benchmark{
         update_w(train_x_,train_w_);
         // accumulate
         timer_.restart();
-        ifgt::for_each(
+        //w[1] --> {w[0]=1,w[1]}
+        ifgt::for_each_weight_front_insert_1_accumulate(
             train_x_,
-            ifgt::make_rest_weights_wrapper(train_w_),//w[1] --> {w[0]=1,w[1]}
+            train_w_,
             acc
         );
         acc_time_per_1e3_train_count_.push_back(
@@ -162,8 +169,7 @@ class benchmark{
     template<typename Eval>
     void estimate_pdf(Eval& eval){//by Rozenblatt--Parzen
         timer_.restart();
-        ifgt::for_each(test_x_,est_pdf_,eval,
-            ifgt::call<ifgt::rozenblatt_parzen_estimate>());
+        ifgt::for_each_rozenblatt_parzen(test_x_,est_pdf_,eval);
         eval_rp_time_per_1e3_test_count_.push_back(
             timer_.elapsed() * 1e3/test_count
         );
@@ -179,8 +185,7 @@ class benchmark{
     template<typename Eval>
     void estimate_w(Eval& eval){//by Nadaraya--Watson
         timer_.restart();
-        ifgt::for_each(test_x_,est_w_,eval,
-                ifgt::call<ifgt::nadaraya_watson_estimate>());
+        ifgt::for_each_nadaraya_watson(test_x_,est_w_,eval);
         eval_nw_time_per_1e3_test_count_.push_back(
                 timer_.elapsed() * 1e3/test_count
         );
@@ -193,9 +198,9 @@ class benchmark{
     }
 
     void notation(std::ostream& os)const{
-        os << "M: # evaluated"                                  << std::endl;
-        os << "N: # accumulated"                                << std::endl;
-        os << "err0(a,b) = max {|a - b|:m=0,...,M-1 }"          << std::endl;
+        os << "M: # evaluated"                              << std::endl;
+        os << "N: # accumulated"                            << std::endl;
+        os << "err0(a,b) = max {|a - b|:m=0,...,M-1 }"      << std::endl;
         os << "err1(a,b) = sqrt sum {|a - b|^2:m=0,...,M-1 } / M"<< std::endl;
         os << "e0_rp : err0(rp(y), pdf(y)) "                << std::endl;
         os << "e1_rp : err1(rp(y), pdf(y)) "                << std::endl;

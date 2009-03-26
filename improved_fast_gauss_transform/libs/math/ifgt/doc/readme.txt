@@ -38,10 +38,11 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1 (Apple Inc. build 5490)
 
 The compiler search path must include
 boost_1_37_0
-boost/sandbox/miscellanea_iterator_facade
-boost/sandbox/miscellanea_algorithm
-boost/sandbox/monomials_horner_rule
-boost/sandbox/improved_fast_gauss_transform
+sandbox/miscellanea_iterator_facade
+sandbox/miscellanea_algorithm
+sandbox/monomials_horner_rule
+sandbox/improved_fast_gauss_transform
+sandbox/conditionally_specified_distribution/utility
 
 ///////////////
 / Conventions /
@@ -79,7 +80,6 @@ gt(y)       Gauss transform (u) at y        sum{w G(y):i}
 rp(y)       Rozenblatt Parzen estimate      gt(y)/N
 rp(y)|w=1   RP estimate assuming w=1
 nw(y)       Nadaray Watson estimate         rp(y) / rp(y)|w=1
-
 
 
 The quantity nw(y) and rp(y) is an estimate of E[w|x=y].
@@ -153,7 +153,7 @@ The IFGT coefficients and the approximation involve the monomials
 {z^a:|a|< p+1}, for z=(x-c)/h, and z=(y-c)/h, respectively. For efficiency,
 Hoerner's rule is used.
 
-* Number of clusters (or maximum cluster radius), K
+* Cluster radius (equivalently  K)
 
 Given h, Raykar2006a, Section 4.3 provide an algorithm that find the optimal
 K, equivalently rx. This relies on certain assumptions and we have not
@@ -176,53 +176,29 @@ See Silverman1986, Section 4.3.2
 We may want to evaluate the gt only for a subset of {j=0,...,J-1}. For
 that reason, evaluators take a subset range policy.
 
-//////////
-/ Design /
-//////////
+/////////
+/ Usage /
+/////////
 
-Our two main concepts are Accumulator and Evaluator. The first takes
-care of accumulating training data in a sequential fashion:
-    a(source,weight)
-The second, usually built upon the former (by const ref) takes care of
-evaluating gt(y):
-   e(target,range_out).
-Each of Accumulator and Evaluator inherit from a base class with corres-
-ponding names (CRTP), for overload resolution purposes (e.g. for_each) or to
-provide  additional functionality (e.g. rp(y) and nw(y) in the case
-of an evaluator).
-
-The operations of accumulating and evaluating can be vectorized:
-    for_each(sources,weights,a)
-    for_each(targets,ranges_out,e,call<method>())
-where each of sources,weights, targets, and ranges_out are "flattened"
-matrices. To be able to use Nadaray Watson, we need to prepend
-each weight with 1:
-    for_each(sources,make_rest_weights_wrapper(w),a)
-
-Models of Accumulator include fast_accumulator and exact_accumulator.
-The former finds the nearest among a set of active clusters and forwards the
-job of collecting data to that cluster.
-
-The template class cluster is parameterized by a degree truncation policy,
-models of which include degree_truncation_rydg.
-
-Models of Evaluator include fast_evaluator and exact_evaluator. Naturally,
-a fast_evaluator is built around a fast_accumulator. It is parameterized by
-a cutoff radius policy, a model of which is cutoff_radius_rydg.
-
-End user classes may contain deeply nested components. Therefore,
-for convenience, their constructor takes an argument pack
-(see the Boost Parameter library) which is passed down into the class
-components. For example:
+An Accumulator (fast or exact) is constructed using Boost.Parameter:
      A a((
-            tag::bandwidth = h,
-            tag::max_cluster_radius = rx,
-            tag::degree = p
+            kwd<>::bandwidth = h,
+            kwd<>::max_cluster_radius = rx,
+            kwd<>::degree = p
         )
     );
-
-Instead of template template parameters we use lambda
-expressions to make it easier to allow, for example, G<F<X,_1>,Y>
+A new contribution is passed to an Accumulator (either exact or fast):
+    a(source,weight)
+For convenience, this operation can be vectorized:
+    for_each_accumulate(sources,weights,a)
+    for_each_weight_front_insert_1_accumulate(sources,weights,a)
+The insertion of 1 is needed for NW.
+An Evaluator (fast or exact) is created around an accumulator:
+    e(a);
+Whose interface comprises free functions such as:
+for_each_gauss_transform(targets,ranges_out,e)
+for_each_nadaraya_watson(targets,ranges_out,e)
+for_each_rozenblatt_parzen(targets,ranges_out,e)
 
 //////////////
 / Concepts   /
@@ -235,7 +211,7 @@ Associated type:
 
 Accumulator (A)
 Associated types:
-    A has public base accumulator_base<A>
+    A derives from crtp::accumulator<A>
     A::value_type
     A::sources_count_type
 Valid expressions:  let a an lvalue of A, and source and weight those
@@ -245,7 +221,7 @@ of a ForwardRange,
     active_bandwidth()                      value_type
     sources_count()                         sources_count_type
     e(source, weight)                       void
-Models: fast_accumulator.hpp, exact_accumulator.hpp
+Models: fast/accumulator.hpp, exact/accumulator.hpp
 
 Evaluator (E), e an lvalue of E,  C a type,
     E has public base evaluator_base<C,E>
@@ -280,93 +256,97 @@ f(x)       returns an iterator pointing to an element of r.
 SubsetRangePolicy (S),
 Associated types: R0 a ForwardRange,
    R= result_of<S(R0)>::type (another ForwardRange)
-
 Valid expressions:
     f(r0)    returns an lvalue of R
 
 ////////////////////
 / Files            /
 ////////////////////
+/benchmark.hpp
+/bandwdith
+    /normal_plug_in.hpp
+/crtp
+    /accumulator.hpp
+    /evaluator.hpp
+/cluster_radius
+    /at_max_degree.hpp
+/cutoff_radius
+    /none.hpp
+    /rydg.hpp
+/detail
+    /normal_kernel_properties.hpp
+    /evaluator_common.hpp
+/exact
+    /accumulator.hpp
+    /detail
+        /contribution.hpp
+            var: x, {w:j}, h
+            member: evaluate
+                arg:    t, out
+                effect: adds {gt(t):j} to out
+        /contributions_evaluator.hpp
+    /evaluator.hpp
+/fast
+    /detail
+        /cluster.hpp
+            vars:    x, h, {{b:a}:j}
+            arg:     x, {w:j},{p:j}
+            effect:  updates {{b:a}:j}
+        /cluster_call_center.hpp
+        /cluster_evaluator.hpp
+            vars:   t, {out:j}
+            arg:    C
+            effect: adds {gt(t):j} to {out:j}
+        /clusters_evaluator.hpp
+            arg:    t, {C},{out:j}
+            effect: iterates over {C} and adds {gt(t):j} to {out:j}
+        /coefficients.hpp
+            var:    {b:a}
+            arg:    ({zx^a},w)
+            effect: updates {b:a}
+        /coefficients_evaluator.hpp
+            var:   t
+            arg:   r, cc,h, {b:a}
+            out:   gt(t)
 
-* accumulator_base.hpp
-* benchmark.hpp
-* call_gauss_transform.hpp
-* call_nadaraya_watson_estimate.hpp
-* call_rozenblatt_parzen_estimate.hpp
-* call_wrapper.hpp
-* cluster.hpp
- vars:    x, h, {{b:a}:j}
- arg:     x, {w:j},{p:j}
- effect:  updates {{b:a}:j}
-* cluster_call_center.hpp
-* cluster_evaluator.hpp
-  vars:   t, {out:j}
-  arg:    C
-  effect: adds {gt(t):j} to {out:j}
-* clusters_evaluator.hpp
-  arg:    t, {C},{out:j}
-  effect: iterates over {C} and adds {gt(t):j} to {out:j}
-* coefficients.hpp
- var:    {b:a}
- arg:    ({zx^a},w)
- effect: updates {b:a}
-* coefficients_evaluator.hpp
- var:   t
- arg:   r, cc,h, {b:a}
- out:   gt(t)
-* cutoff_radius_none.hpp
-* cutoff_radius_rydg.hpp
-* evaluator_base.hpp
-* evaluator_common.hpp
-* exact_accumulator.hpp
-* exact_contribution.hpp
-  var: x, {w:j}, h
-  member: evaluate
-   arg:    t, out
-   effect: adds {gt(t):j} to out
-* exact_contributions_evaluator.hpp
-* exact_evaluator.hpp
-* fast_accumulator.hpp
-* fast_evaluator.hpp
-* find_nearest_cluster.hpp:
- var: {cc}
- arg: x
- out: cc nearest to x
-* for_each_accumulate.hpp
-* for_each_evaluator.hpp
-* include.hpp
-* monomials.hpp:
- arg: x, p
- out: {x^a: |a|=p}
-* monomials_properties.hpp
-* multi_factorial.hpp
-  deprecated: redundant with multi_indexes_derived.
-* multi_indexes.hpp
-  member: get
-  arg:    p
-  out:    {a:|a|=p}
-* multi_indexes_derived.hpp
-* optimal_bandwidth.hpp
-* optimal_parameter_given_max_degree.hpp
-* normal_kernel_properties.hpp
-* tag.hpp
-* traits.hpp
-* truncation_degree_constant.hpp
-* truncation_properties.hpp
+        /accumulator.hpp
+        /evaluator.hpp
+        /find_nearest_cluster.hpp:
+            var: {cc}
+            arg: x
+            out: cc nearest to x
+/for_each
+    /accumulate.hpp
+    /evaluate.hpp
+/functor
+    /evaluate.hpp
+    /gauss_transform.hpp
+    /nadaraya_watson_estimate.hpp
+    /rozenblatt_parzen_estimate.hpp
+/include.hpp
+/keyword.hpp
+/truncation_degree
+    /constant.hpp
+    /properties.hpp
 
 ////////
 / TODO /
 ////////
-This is an early version that begs for safeguards, optimization and testing.
+More testing.
 
-As far as design:
-- Customize the exact gauss transform by
-adding a policy for the cutoff radius as well.
-- Add helper classes to predict how parameters affect resource
+Design:
+- Add cutoff radius policy to exact::evaluator
+- Predict how parameters affect resource
 requirement (memory, in particular, easily becomes a problem) and precision.
 - For now, the bandwidth is optimized only in a statistical sense as a
 function of N. What is needed is a per-computation-time optimization.
-- Optimal p, K (see remark in Algorithm)
+- Optimal p and K, simulatneaously
+
+///////////
+/ History /
+///////////
+
+March 24th, 2009 : Simplified the interface.
 
 /////////////
 / Reference /

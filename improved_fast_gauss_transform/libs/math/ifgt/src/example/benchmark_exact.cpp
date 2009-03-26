@@ -1,15 +1,21 @@
 //////////////////////////////////////////////////////////////////////////////
-// example/benchmark_exact.cpp
+// benchmark_exact.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/math/ifgt/benchmark.hpp>
+#include <boost/math/ifgt/fast/accumulator.hpp>
+#include <boost/math/ifgt/exact/accumulator.hpp>
+#include <boost/math/ifgt/fast/evaluator.hpp>
+#include <boost/math/ifgt/exact/evaluator.hpp>
+#include <boost/math/ifgt/bandwidth/normal_plug_in.hpp>
 #include <libs/math/ifgt/src/example/benchmark_exact.h>
 void example_benchmark_exact(){
     std::cout << " -> example_benchmark_exact" << std::endl;
     std::string str =
-        "pdf(x) = prod{N(x[d]|0,1),d=0,...,D} estimated by Rozenblatt-Parzen";
+        "pdf(x) = prod{N(x[d]|0,1),d=0,...,D}";
+    str+= "estimated by Rozenblatt-Parzen";
     str+= "and f(x) = norm(x) = sqrt(x[0]^2+...+x[D]^2) by Nadaraya-Watson";
     std::cout << str << std::endl;
 
@@ -50,9 +56,9 @@ void example_benchmark_exact(){
         wdim,
         pdf_fun_type,
         w_fun_type>                                         bench_type;
-    typedef ifgt::optimal_bandwidth<sdim,value_type> opt_bandwidth_type;
-    typedef ifgt::exact_accumulator<sdim,wdim,var_type>     exact_acc_type;
-    typedef ifgt::exact_evaluator<exact_acc_type>           exact_eval_type;
+    typedef ifgt::bandwidth_normal_plug_in<sdim,value_type> opt_bandwidth_type;
+    typedef ifgt::exact::accumulator<sdim,wdim,var_type>     exact_acc_type;
+    typedef ifgt::exact::evaluator<exact_acc_type>           exact_eval_type;
 
     //pdf
     // Data generator
@@ -69,15 +75,15 @@ void example_benchmark_exact(){
     std::cout << "dim(w) = " << wdim << std::endl;
 
     value_type  opt_h
-        = opt_bandwidth_type::for_density_estimation_under_normality(
+        = opt_bandwidth_type::find(
         sigma,all_train_count);
     opt_h *= bandwidth_adjust; //override
 
     std::cout << "bandwidth ="
         << opt_h  << std::endl;
 
-    exact_acc_type  exact_acc((ifgt::tag::bandwidth = opt_h  ));
-    exact_eval_type exact_eval((ifgt::tag::accumulator = exact_acc));
+    exact_acc_type  exact_acc((ifgt::kwd<>::bandwidth = opt_h  ));
+    exact_eval_type exact_eval((ifgt::kwd<>::accumulator = exact_acc));
 
     bench.notation(std::cout);
     bench.header(std::cout); std::cout << std::endl;

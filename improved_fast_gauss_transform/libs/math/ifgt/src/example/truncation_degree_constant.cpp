@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/truncation_degree_constant.cpp
+// truncation_degree_constant.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -9,8 +9,8 @@
 #include <iostream>
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
-#include <boost/math/ifgt/truncation_degree_constant.hpp>
-#include <boost/math/ifgt/tag.hpp>
+#include <boost/math/ifgt/truncation_degree/constant.hpp>
+#include <boost/math/ifgt/keyword.hpp>
 #include <libs/math/ifgt/src/example/truncation_degree_constant.h>
 void example_truncation_degree_constant(){
     std::cout << "-> example_truncation_degree_constant" << std::endl;
@@ -20,7 +20,7 @@ void example_truncation_degree_constant(){
     const unsigned degree = 5;
     const unsigned dim = 2;
 
-    typedef truncation_degree_constant<>   truncation_degree_type;
+    typedef truncation_degree::constant<>   truncation_degree_type;
     typedef std::vector<unsigned>       degrees_type;
     typedef double                      value_type;
     typedef std::vector<value_type>     var_type;
@@ -28,7 +28,7 @@ void example_truncation_degree_constant(){
     value_type bandwidth = 0.1;
     value_type sqrt_dist_source_to_center = 0.1;
 
-    truncation_degree_type a((tag::degree = degree));
+    truncation_degree_type a((kwd<>::degree = degree));
 
     var_type    weight;
     {

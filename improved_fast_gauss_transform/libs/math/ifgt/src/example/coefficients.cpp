@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/coefficients.cpp
+// coefficients.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -12,8 +12,8 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
 #include <boost/math/monomials.hpp>
-#include <boost/math/ifgt/zscore.hpp>
-#include <boost/math/ifgt/coefficients.hpp>
+#include <boost/math/ifgt/detail/zscore.hpp>
+#include <boost/math/ifgt/fast/detail/coefficients.hpp>
 #include <libs/math/ifgt/src/example/coefficients.h>
 
 void example_coefficients(){
@@ -24,7 +24,6 @@ void example_coefficients(){
     typedef std::vector<value_type>                      var_type;
     typedef std::vector<unsigned>                        ints_type;
     typedef math::ifgt::coefficients<dim>                coeffs_type;
-
     double bandwidth    =   0.1;
     int    degree       =   5;
     var_type    center;

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/for_each_evaluate.cpp
+// for_each_evaluate.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -8,18 +8,18 @@
 #include <iostream>
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
-#include <boost/math/ifgt/exact_accumulator.hpp>
-#include <boost/math/ifgt/fast_accumulator.hpp>
-#include <boost/math/ifgt/fast_evaluator.hpp>
-#include <boost/math/ifgt/truncation_degree_constant.hpp>
-#include <boost/math/ifgt/for_each_accumulate_rest_weights.hpp>
-#include <boost/math/ifgt/for_each_evaluate.hpp>
-#include <boost/math/ifgt/call_wrapper.hpp>
-#include <boost/math/ifgt/call_gauss_transform.hpp>
-#include <boost/math/ifgt/call_rozenblatt_parzen_estimate.hpp>
-#include <boost/math/ifgt/call_nadaraya_watson_estimate.hpp>
-#include <boost/math/ifgt/for_each_rozenblatt_parzen_estimate.hpp>
-#include <boost/math/ifgt/for_each_evaluate.hpp>
+#include <boost/math/ifgt/exact/accumulator.hpp>
+#include <boost/math/ifgt/fast/accumulator.hpp>
+#include <boost/math/ifgt/fast/evaluator.hpp>
+#include <boost/math/ifgt/truncation_degree/constant.hpp>
+#include <boost/math/ifgt/for_each/weight_front_insert_1_accumulate.hpp>
+#include <boost/math/ifgt/for_each/evaluate.hpp>
+#include <boost/math/ifgt/for_each/gauss_transform.hpp>
+#include <boost/math/ifgt/for_each/nadaraya_watson.hpp>
+#include <boost/math/ifgt/functor/gauss_transform.hpp>
+#include <boost/math/ifgt/functor/rozenblatt_parzen.hpp>
+#include <boost/math/ifgt/functor/nadaraya_watson.hpp>
+#include <boost/math/ifgt/for_each/rozenblatt_parzen.hpp>
 #include <libs/math/ifgt/src/example/for_each_evaluate.h>
 
 void example_for_each_evaluate(){
@@ -34,13 +34,13 @@ void example_for_each_evaluate(){
     const unsigned int wdim = 2;
     typedef double                                             value_type;
     typedef std::vector<value_type>                            var_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>           trunc_degree;
+    typedef ifgt::truncation_degree::constant<mpl::_1>           trunc_degree;
     typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>       cluster_type;
     typedef ifgt::find_nearest_cluster<mpl::_1, boost::l2_distance_squared>
                                                                 find_type;
-
-    typedef  ifgt::fast_accumulator<cluster_type,find_type>    fast_acc_type;
-    typedef  ifgt::exact_accumulator<dim,wdim,var_type>       exact_acc_type;
+    typedef ifgt::kwd<>                                         kwd_t;
+    typedef  ifgt::fast::accumulator<cluster_type,find_type>    fast_acc_type;
+    typedef  ifgt::exact::accumulator<dim,wdim,var_type>       exact_acc_type;
 
 
     value_type bandwidth            = 0.1;
@@ -63,16 +63,16 @@ void example_for_each_evaluate(){
     }
 
     fast_acc_type fast_acc((
-            tag::bandwidth = bandwidth,
-            tag::max_cluster_radius = max_cluster_radius,
-            tag::degree = degree
+            kwd_t::bandwidth = bandwidth,
+            kwd_t::max_cluster_radius = max_cluster_radius,
+            kwd_t::degree = degree
         )
     );
 
-    ifgt::for_each(sources,weights,fast_acc);
+    ifgt::for_each_accumulate(sources,weights,fast_acc);
 
-    exact_acc_type exact_acc((tag::bandwidth = bandwidth));
-    ifgt::for_each(sources,weights,exact_acc);
+    exact_acc_type exact_acc((kwd_t::bandwidth = bandwidth));
+    ifgt::for_each_accumulate(sources,weights,exact_acc);
 
     var_type    targets;
     {
@@ -86,18 +86,17 @@ void example_for_each_evaluate(){
     var_type::size_type targets_count = boost::size(targets)/dim;
 
 
-    typedef ifgt::cutoff_radius_none<mpl::_1>           cutoff_policy_type;
-    typedef ifgt::fast_evaluator<fast_acc_type, cutoff_policy_type>
+    typedef ifgt::cutoff_radius::none<mpl::_1>           cutoff_policy_type;
+    typedef ifgt::fast::evaluator<fast_acc_type, cutoff_policy_type>
                                                             fast_eval_type;
-    fast_eval_type eval((tag::accumulator = fast_acc));
+    fast_eval_type eval((kwd_t::accumulator = fast_acc));
 
     var_type ranges_out( targets_count * wdim);
     std::cout << "gauss_transform->" << std::endl;
-    ifgt::for_each(
+    ifgt::for_each_gauss_transform(
         targets,
         ranges_out,
-        eval,
-        ifgt::call<ifgt::gauss_transform>()
+        eval
     );
     copy(
         boost::begin(ranges_out),
@@ -108,11 +107,10 @@ void example_for_each_evaluate(){
     std::cout << "rozenblatt_parzen_estimate->" << std::endl;
 
     var_type rp_out( targets_count * 1);
-    ifgt::for_each(
+    ifgt::for_each_rozenblatt_parzen(
         targets,
         rp_out,
-        eval,
-        ifgt::call<ifgt::rozenblatt_parzen_estimate>()
+        eval
     );
     copy(
         boost::begin(rp_out),
@@ -123,11 +121,10 @@ void example_for_each_evaluate(){
 
     var_type nw_out( targets_count * (wdim-1) );
     std::cout << "nadaraya_watston_estimate->" << std::endl;
-    ifgt::for_each(
+    ifgt::for_each_nadaraya_watson(
         targets,
         nw_out,
-        eval,
-        ifgt::call<ifgt::nadaraya_watson_estimate>()
+        eval
     );
     copy(
         boost::begin(nw_out),

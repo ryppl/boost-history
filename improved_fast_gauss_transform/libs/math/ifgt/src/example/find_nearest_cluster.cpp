@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/find_nearest_cluster.cpp
+// find_nearest_cluster.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -11,8 +11,9 @@
 #include <iostream>
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
-#include <boost/math/ifgt/cluster.hpp>
-#include <boost/math/ifgt/find_nearest_cluster.hpp>
+#include <boost/math/ifgt/keyword.hpp>
+#include <boost/math/ifgt/fast/detail/cluster.hpp>
+#include <boost/math/ifgt/fast/find_nearest_cluster.hpp>
 #include <libs/math/ifgt/src/example/find_nearest_cluster.h>
 
 void example_find_nearest_cluster(){
@@ -27,12 +28,12 @@ void example_find_nearest_cluster(){
     const unsigned wdim = 2;
     typedef double                                        value_type;
     typedef std::vector<value_type>                       var_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>  trunc_degree;
+    typedef ifgt::truncation_degree::constant<mpl::_1>  trunc_degree;
     typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>  cluster_type;
     typedef std::vector<cluster_type>                     clusters_type;
     typedef boost::l2_distance_squared                    dist_type;
     typedef ifgt::find_nearest_cluster<clusters_type,dist_type> find_nc_type;
-
+    typedef ifgt::kwd<>                                     kwd_t;
     typedef cluster_type::coefficients_type          coeffs_type;
     typedef cluster_type::collection_coefficients_type coll_coeffs_type;
 
@@ -61,17 +62,17 @@ void example_find_nearest_cluster(){
             trunc_degree_type(degree)));
     clusters.push_back(
         cluster_type((
-            tag::center = center1,
-            tag::bandwidth = bandwidth,
-            tag::max_cluster_radius = max_cluster_radius,
-            tag::degree = degree
+            kwd_t::center = center1,
+            kwd_t::bandwidth = bandwidth,
+            kwd_t::max_cluster_radius = max_cluster_radius,
+            kwd_t::degree = degree
         )));
     clusters.push_back(
         cluster_type((
-            tag::center = center2,
-            tag::bandwidth = bandwidth,
-            tag::max_cluster_radius = max_cluster_radius,
-            tag::degree = degree
+            kwd_t::center = center2,
+            kwd_t::bandwidth = bandwidth,
+            kwd_t::max_cluster_radius = max_cluster_radius,
+            kwd_t::degree = degree
         )));
 
     find_nc_type find_nc(clusters);

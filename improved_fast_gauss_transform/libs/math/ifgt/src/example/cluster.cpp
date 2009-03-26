@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/cluster.cpp
+// cluster.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -12,7 +12,8 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
-#include <boost/math/ifgt/cluster.hpp>
+#include <boost/parameter/keyword.hpp>
+#include <boost/math/ifgt/include.hpp>
 #include <libs/math/ifgt/src/example/cluster.h>
 
 void example_cluster(){
@@ -27,12 +28,13 @@ void example_cluster(){
     const unsigned wdim = 2;
     typedef double                                            value_type;
     typedef std::vector<value_type>                           var_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>         trunc_degree;
-    typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>     cluster_type;
-
+    typedef ifgt::kwd<>                                     kwd_t;
+    typedef ifgt::truncation_degree::constant<mpl::_1>      trunc_degree;
+    typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>   cluster_type;
     typedef std::vector<unsigned>                           ints_type;
     typedef cluster_type::coefficients_type                 coeffs_type;
     typedef cluster_type::collection_coefficients_type coll_coeffs_type;
+
 
     const value_type bandwidth    =   0.1;
     const value_type max_cluster_radius = 1.0;
@@ -49,10 +51,10 @@ void example_cluster(){
     }
 
     cluster_type cluster(
-        (tag::center=center,
-        tag::bandwidth=bandwidth,
-        tag::max_cluster_radius = max_cluster_radius,
-        tag::degree = degree) );
+        (kwd_t::center=center,
+        kwd_t::bandwidth=bandwidth,
+        kwd_t::max_cluster_radius = max_cluster_radius,
+        kwd_t::degree = degree) );
 
     cluster_type cluster_cpy(cluster);
 

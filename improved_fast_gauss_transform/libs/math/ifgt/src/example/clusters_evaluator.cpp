@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/clusters_evaluator.cpp
+// clusters_evaluator.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -9,10 +9,11 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
 #include <iostream>
-#include <boost/math/ifgt/fast_accumulator.hpp>
-#include <boost/math/ifgt/truncation_degree_constant.hpp>
-#include <boost/math/ifgt/clusters_evaluator.hpp>
-#include <boost/math/ifgt/cutoff_radius_none.hpp>
+#include <boost/math/ifgt/keyword.hpp>
+#include <boost/math/ifgt/fast/accumulator.hpp>
+#include <boost/math/ifgt/truncation_degree/constant.hpp>
+#include <boost/math/ifgt/fast/detail/clusters_evaluator.hpp>
+#include <boost/math/ifgt/cutoff_radius/none.hpp>
 #include <libs/math/ifgt/src/example/clusters_evaluator.h>
 
 void example_clusters_evaluator(){
@@ -27,13 +28,12 @@ void example_clusters_evaluator(){
     const unsigned int wdim = 2;
     typedef double                                              value_type;
     typedef std::vector<value_type>                             var_type;
-    typedef ifgt::truncation_degree_constant<mpl::_1>           trunc_degree;
+    typedef ifgt::truncation_degree::constant<mpl::_1>           trunc_degree;
     typedef ifgt::cluster<dim,wdim,trunc_degree,var_type>       cluster_type;
     typedef ifgt::find_nearest_cluster<mpl::_1, boost::l2_distance_squared>
                                                                 find_type;
-
-    typedef  ifgt::fast_accumulator<cluster_type,find_type>     acc_type;
-
+    typedef  ifgt::fast::accumulator<cluster_type,find_type>     acc_type;
+    typedef ifgt::kwd<>                                         kwd_t;
     value_type bandwidth            = 0.1;
     value_type max_cluster_radius   = 1.0;
     unsigned degree             = 20;
@@ -56,9 +56,9 @@ void example_clusters_evaluator(){
     }
 
     acc_type acc((
-            tag::bandwidth = bandwidth,
-            tag::max_cluster_radius = max_cluster_radius,
-            tag::degree = degree
+            kwd_t::bandwidth = bandwidth,
+            kwd_t::max_cluster_radius = max_cluster_radius,
+            kwd_t::degree = degree
         )
     );
 
@@ -85,7 +85,7 @@ void example_clusters_evaluator(){
 
 
     typedef ifgt::clusters_evaluator<
-    value_type,ifgt::cutoff_radius_none<mpl::_1> > clusters_evaluator_type;
+    value_type,ifgt::cutoff_radius::none<mpl::_1> > clusters_evaluator_type;
 
 
     clusters_evaluator_type clusters_evaluator;

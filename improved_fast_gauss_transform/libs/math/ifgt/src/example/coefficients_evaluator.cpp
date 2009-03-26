@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/coefficients_evaluator.cpp
+// coefficients_evaluator.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -12,10 +12,10 @@
 #include <boost/assign/std/vector.hpp>
 #include <boost/range.hpp>
 #include <boost/math/monomials.hpp>
-#include <boost/math/ifgt/zscore.hpp>
-#include <boost/math/ifgt/normal_kernel_properties.hpp>
-#include <boost/math/ifgt/coefficients.hpp>
-#include <boost/math/ifgt/coefficients_evaluator.hpp>
+#include <boost/math/ifgt/detail/zscore.hpp>
+#include <boost/math/ifgt//detail/normal_kernel_properties.hpp>
+#include <boost/math/ifgt/fast/detail/coefficients.hpp>
+#include <boost/math/ifgt/fast/detail/coefficients_evaluator.hpp>
 #include <libs/math/ifgt/src/example/coefficients_evaluator.h>
 
 void example_coefficients_evaluator(){

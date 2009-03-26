@@ -13,7 +13,7 @@ namespace boost{namespace math{namespace ifgt{
         public:
         typedef RealType                                        value_type;
         template<typename ArgPack>
-        divider(const ArgPack arg):x_(arg[tag::divide_by|(value_type)(2)]){}
+        divider(const ArgPack arg):x_(arg[kwd<>::divide_by|(value_type)(2)]){}
         divider(const divider& that):x_(that.x_){}
         divider& operator=(const divider& that){
             if(&that!=this){

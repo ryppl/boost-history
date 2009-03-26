@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example/truncation_properties.cpp
+// truncation_properties.cpp
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
@@ -17,8 +17,8 @@ void example_truncation_properties(){
     namespace ifgt = math::ifgt;
     typedef double                                      value_type;
     typedef std::vector<value_type>                     vec_type;
-    typedef ifgt::truncation_properties                 prop_type;
-    typedef ifgt::optimal_parameter_given_max_degree<value_type>
+    typedef ifgt::truncation_degree::properties                 prop_type;
+    typedef ifgt::cluster_radius_at_max_degree<value_type>
                                                         opt_pars_type;
 
     value_type h  = 0.5; //Raykar2006 probably meant h=0.5 in Figure 6
@@ -27,7 +27,7 @@ void example_truncation_properties(){
     value_type eps = 1e-3;
 //    unsigned max_p = 40;
     unsigned n = 100;
-    opt_pars_type opt_pars((ifgt::tag::error_tolerance = eps));
+    opt_pars_type opt_pars((ifgt::kwd<>::error_tolerance = eps));
 
     value_type log10 = log((value_type)(10));
     vec_type wry;

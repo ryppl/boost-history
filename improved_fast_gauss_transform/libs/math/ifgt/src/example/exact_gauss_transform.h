@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// example/exact_gauss_transform.h
+// exact_gauss_transform.h
 //  (C) Copyright 2009 Erwann Rogard
 //  Use, modification and distribution are subject to the
 //  Boost Software License, Version 1.0. (See accompanying file
