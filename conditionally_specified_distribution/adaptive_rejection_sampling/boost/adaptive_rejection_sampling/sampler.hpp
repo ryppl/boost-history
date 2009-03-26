@@ -7,6 +7,7 @@
 #ifndef BOOST_ADAPTIVE_REJECTION_SAMPLING_SAMPLER_HPP_ER_2009
 #define BOOST_ADAPTIVE_REJECTION_SAMPLING_SAMPLER_HPP_ER_2009
 #include <vector>
+#include <cmath>
 #include <stdexcept>
 #include <boost/assert.hpp>
 #include <stdexcept>
@@ -95,16 +96,13 @@ namespace adaptive_rejection_sampling{
                 u = gen_excl_endpoints(e);
                 //std::cout << "u1=" << std::setprecision(10) << u;
                 x = approx_t::inverse_cdf(u);
-                //std::cout << "x=" << std::setprecision(10) << x;
                 thresh = exp_lower_minus_upper(x);
                 u = gen_excl_endpoints(e);
-                //std::cout << "u2=" << std::setprecision(10) << u;
                 reject = !( u <= thresh);
 
                 if( reject ){
                     thresh = exp_y_minus_upper(x);
                     u = gen_excl_endpoints(e);
-                    //std::cout << "u3=" << std::setprecision(10) << u;
                     reject = !(u<=thresh);
                     if(reject){
                         approx_t::update(x);
@@ -121,15 +119,16 @@ namespace adaptive_rejection_sampling{
 		result_type postponed_;
         result_type
         exp_lower_minus_upper(result_type x)const{
-            result_type a = approx_t::lower(x); // - inf?!
-            a -= approx_t::upper(x);
-            return math_limit::safer_exp(a);
+            result_type l = approx_t::lower(x);
+            result_type h = approx_t::upper(x);
+            result_type e = exp(l-h); //safer_exp
+            return e;
         }
         result_type
         exp_y_minus_upper(result_type x)const{
             result_type a = approx_t::get_y(x);
             a -= approx_t::upper(x);
-            return math_limit::safer_exp(a);
+            return exp(a); //safer_exp
         }
 		void postpone_update(result_type x){
             is_postponed_ = true;

@@ -85,4 +85,10 @@ At i = 161, normalizing constant = 2.52378 vs true value 2.50663
 At i = 181, normalizing constant = 2.52269 vs true value 2.50663
 <-
 
+///////////
+/ History /
+///////////
 
+2009/03/18
+Fixed some stability issues pertaining to shift_ and removed the reliance
+on a truncated range e.g. exp(-inf) is not only fine but desirable.

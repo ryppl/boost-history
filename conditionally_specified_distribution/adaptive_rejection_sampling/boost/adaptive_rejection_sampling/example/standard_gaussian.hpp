@@ -6,7 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_ADAPTIVE_REJECTION_SAMPLING_STANDARD_GAUSSIAN_HPP_ER_2009
 #define BOOST_ADAPTIVE_REJECTION_SAMPLING_STANDARD_GAUSSIAN_HPP_ER_2009
-#include <boost/math_limit/miscellanea.hpp>
+#include <boost/math/tools/precision.hpp>
 
 namespace boost{
 namespace adaptive_rejection_sampling{
@@ -14,7 +14,6 @@ namespace adaptive_rejection_sampling{
 	/// \brief Example modeling LogConcaveEvaluator
     template<typename RealType>
 	class standard_gaussian_evaluator{
-            typedef math_limit::limits<RealType> limits_t;
 		public:
             typedef RealType                      value_type;
             typedef standard_gaussian_evaluator base_type;
@@ -25,10 +24,10 @@ namespace adaptive_rejection_sampling{
                     return -x;
             }
 			value_type min()const{
-                return limits_t::negative_infinity();
+                return (-max());
             }
 			value_type max()const{
-                return limits_t::infinity();
+                return math::tools::max_value<RealType>();
             }
 	};
 

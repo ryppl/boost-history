@@ -6,6 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #ifndef BOOST_ADAPTIVE_REJECTION_SAMPLING_POINT_HPP_ER_2009
 #define BOOST_ADAPTIVE_REJECTION_SAMPLING_POINT_HPP_ER_2009
+#include <string>
 #include <stdexcept>
 #include <boost/format.hpp>
 #include <boost/math_limit/miscellanea.hpp>
@@ -23,6 +24,12 @@ namespace adaptive_rejection_sampling{
             value_type y()const{return y_;}
             value_type dy()const{return dy_;}
 
+            std::string as_string()const{
+                std::string str ="x = %1%, y = %2%, dy = %3%";
+                format f(str);
+                f%x()%y()%dy();
+                return f.str();
+            }
             private:
             value_type x_;
             value_type y_;
@@ -31,48 +38,45 @@ namespace adaptive_rejection_sampling{
 
         template<typename RealType>
         RealType
-        tangent_at_negative_infinity(const point<RealType>& p){
-            typedef  math_limit::limits<RealType>  limits_t;
+        linear_approximation(
+            const point<RealType>& p0,
+            const point<RealType>& p1,
+            RealType x
+        )
+        {   try{
+                if(x<=p1.x()){
+                }else{
+                    std::string str = "x<=p1.x()";
+                    throw std::runtime_error(str);
+                }
+                if(p0.x()<=x){}else{
+                    std::string str = "p0.x()<=x";
+                    throw std::runtime_error(str);
+                }
+                if(p0.x()<p1.x()){}else{
+                    std::string str = "p0.x()<p1.x()";
+                    throw std::runtime_error(str);
+                }
+            }catch(std::exception& e){
+                std::string str = "linear_approximation(p0,p1,x) : ";
+                str+= e.what();
+                str+= " p0 : "; str+= p0.as_string();
+                str+= " p1 : "; str+= p1.as_string();
+                str+= " x = %1%.";
+                format f(str); f%x;
+                throw std::runtime_error(f.str());
+            }
+            RealType result =  (x-p0.x()) * (p1.y()-p0.y());
+            result /= (p1.x()-p0.x());
+            result += p0.y();
+            return result;
+        }
 
-            RealType result = 0.0;
-            if(p.dy()>0.0){
-                result = limits_t::negative_infinity();
-            }else{
-                result = limits_t::infinity();
-            }
-            return result;
-        }
-        template<typename RealType>
-        RealType
-        tangent_at_infinity(const point<RealType>& p){
-            typedef  math_limit::limits<RealType>  limits_t;
-            RealType result = 0.0;
-            if(p.dy()>0.0){
-                result = limits_t::infinity();
-            }else{
-                result = limits_t::negative_infinity();
-            }
-            return result;
-        }
-        template<typename RealType>
-        RealType tangent_at_finite(const point<RealType>& p,RealType x){
-            return p.y()+(x-p.x()) * p.dy();
-        }
 
         template<typename RealType>
         RealType tangent(const point<RealType>& p,RealType x){
-            typedef  math_limit::limits<RealType>  limits_t;
-            if(limits_t::is_infinity(x)){
-                return tangent_at_infinity(p);
-            }else{
-                if(limits_t::is_negative_infinity(x)){
-                    return tangent_at_negative_infinity(p);
-                }else{
-                    return tangent_at_finite(p,x);
-                }
-            }
+            return p.y()+(x-p.x()) * p.dy();
         }
-
 
         template<typename RealType>
         RealType

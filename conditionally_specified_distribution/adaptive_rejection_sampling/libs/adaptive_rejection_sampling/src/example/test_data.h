@@ -16,7 +16,7 @@
 
 namespace libs{namespace adaptive_rejection_sampling{
 	extern const double limitingNc;//sqrt(2*pi)
-	const unsigned rowsCount=2;
+	const unsigned rowsCount=3;//2
 	const unsigned colsCount=200;
 	const unsigned unifsCount=500;
 	const unsigned show_count=1; //show every show_count iteration
@@ -37,11 +37,9 @@ namespace libs{namespace adaptive_rejection_sampling{
 		Uniform_sampler_mathematica(){
 			unifs.reserve(unifsCount);
 			for(size_t i=0; i<unifsCount; ++i){
-				//std::cout << "unifsAr[i]=" << unifsAr[i] << std::endl;
 				unifs.push_back(unifsAr[i]);
 			};
 			it = unifs.begin();
-			//std::cout << "unifs.size()=" << unifs.size() << std::endl;
 		};
 		unsigned long it_distance()const{return (it-unifs.begin());};
 		double operator()(){

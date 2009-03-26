@@ -8,8 +8,11 @@
 
 namespace libs{namespace adaptive_rejection_sampling{
 	const double limitingNc=2.50663;//sqrt(2*pi)
-	const double initAr[rowsCount][2]={{-0.5,1.5},{-0.001,0.001}};
-	//TODO {-40,40} or above will generate overflow.
+	const double initAr[rowsCount][2]={
+            {-0.5,1.5},
+            {-0.001,0.001},
+            {-40.0,40.0}
+    };
 
 	const double unifsAr[]={
 	//SeedRandom[0]; Table[Random[], {i, 1, 500}]
@@ -155,7 +158,7 @@ namespace libs{namespace adaptive_rejection_sampling{
 -1.09034, -1.45428, -0.504806, 0.00461931, -1.4878, -0.495555, -0.121771,
 -1.2577, 0.204893, 1.33436, 0.934877, -0.475671, 0.486964, -0.694213,
 -0.309207, 0.651196, -0.497478, -0.174707, 1.07433, -0.450561
-	}/*,
+	},//here
 	{
 0.529408, -0.572962, 0.513134, 1.09102, -0.446931, -2.31367, -1.07024,
 -1.65772, -0.991474, -1.41893, 0.316418, 0.101749, 2.20439, -0.789688,
@@ -186,9 +189,9 @@ namespace libs{namespace adaptive_rejection_sampling{
 -1.94589, -0.699194, -1.02964, -0.457675, 0.161575, 0.447034, 0.597158,
 1.50555, 1.48887, -0.832003, -0.372902, 0.0313541
 		}
-*/
+//here
 };
-
+/*
 const double dbarsAr_1[rowsCount][colsCount]={
 		{
 0.141745, 1.33381, 0.426831, 1.26225, -1.89854, -0.897882, 0.838643,
@@ -253,6 +256,7 @@ const double dbarsAr_1[rowsCount][colsCount]={
 		}
 
 	};
+	*/
 }//adaptive_rejection_sampling
 }//libs
 

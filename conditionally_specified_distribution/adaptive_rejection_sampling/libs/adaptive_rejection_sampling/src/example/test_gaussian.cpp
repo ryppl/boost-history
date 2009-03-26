@@ -6,6 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 #include <iostream>
 #include <list>
+#include <string>
 #include <vector>
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
@@ -18,20 +19,19 @@ namespace libs{
 namespace adaptive_rejection_sampling{
 	void example_standard_gaussian(){
 		std::cout<<"-> test_gaussian"<<std::endl;
-        const double tolerance  = 1e-4; //1e-5 causes fail
-        const unsigned report_every = 20;
+        const double tolerance  = 1e-4;
 		std::string str;
-        str+= "We draw from the standard-gaussian using the algorithm.";
-        str+= " Results are compared with a similar implementation in";
-        str+= "Mathematica. A failure will be generated if the difference";
-        str+= " is greater than %1%";
+        str+= "n = %1% samples from N(0,1) using adaptive rejection";
+        str+= "sampling vs a similar implementation in Mathematica.";
+        str+= " Tolerance is set at %2%.";
         str+= " The uniform draws were Mathematica generated.";
-        boost::format f(str); f % tolerance;
+        boost::format f(str); f % colsCount % tolerance;
         std::cout << f.str() << std::endl;
 
 		Uniform_sampler_mathematica usm;
+		typedef double value_type;
 		typedef boost::adaptive_rejection_sampling
-            ::standard_gaussian_evaluator<double>
+            ::standard_gaussian_evaluator<value_type>
             dist_fun_type;
         typedef 		boost::adaptive_rejection_sampling
             ::sampler<dist_fun_type,std::vector> dbars_t;
@@ -47,33 +47,33 @@ namespace adaptive_rejection_sampling{
 				double drawVal,ncVal;
 				BOOST_STATIC_ASSERT(colsCount<=unifsCount);
 				usm.reset();
-				dbars.initialize(initAr[j][0], initAr[j][1]);
 				std::cout<<"Initialized with (x1,x2)=("<<
-                    initAr[j][0]<<","<<initAr[j][1]<<")"<<std::endl;
+                    initAr[j][0]<<","<<initAr[j][1]<<") ";
+				dbars.initialize(initAr[j][0], initAr[j][1]);
 				for(unsigned int i=0; i<colsCount; i++){
-					//std::cout << "usm.it_distance()="
-					//<< usm.it_distance() << std::endl;
+				    //std::cout << "i=" << i << std::endl;
 					drawVal = dbars(usm);
 					ncVal = dbars.total_unnormalized_cdf();
-                   BOOST_ASSERT(drawVal < dbarsAr[j][i]+tolerance);
-                   BOOST_ASSERT(drawVal > dbarsAr[j][i]-tolerance);
-					if(!(i%report_every)){
-					 std::cout
-                        << "At i = "<< i+1
-					     << ", normalizing constant = "
-					     << ncVal
-					     << " vs true value "
-                        << limitingNc
-                        << std::endl;
-					}
+					if(
+                        (drawVal > dbarsAr[j][i]+tolerance)
+                            ||
+                        (drawVal < dbarsAr[j][i]-tolerance)
+                   )
+                   {
+                       std::string str = "(drawVal = %1%)";
+                       str+= "- (dbarsAr[j][i] = %2% ) < %3%";
+                       boost::format f(str); f%drawVal%dbarsAr[j][i];
+                       f % tolerance;
+                       throw std::runtime_error(f.str());
+                   }
 				};
+				std::cout << ": OK." << std::endl;
 			};
 		}catch(std::exception& e){
-			std::cerr << e.what() << std::endl;
-		    std::cout <<  "This throw is meant to illustrate the"
-                << "!(delta>0.0) pitfall described in"
-                << " approximation_impl::update_unnormalized_cdf_impl"
-                << std::endl;
+		    std::string str = e.what();
+		    str+= " ";
+		    str+= dbars.as_string();
+			std::cerr << str << std::endl;
 		};
 
 		std::cout<<"<-"<<std::endl;

@@ -36,6 +36,10 @@ namespace adaptive_rejection_sampling{
     // Modifier:
     // initialize(x1,x2)
     // update(x)
+    //
+    // In case this is used to sample from {Y~(Y|x[i]):i=1,...,n},
+    // consider using reset_distribution_function(const dist_f_t& f)
+    // rather than creating a new object to save allocation
     template<
         typename DistFun,
         template<typename,typename> class Cont = std::vector,
@@ -77,7 +81,6 @@ namespace adaptive_rejection_sampling{
         max_recursion_(max_recursion){
             this->initialize(x0_init,x1_init);
         }
-
         approximation(const approximation& that)
         :super_t(that),
         dist_f_(that.dist_f_),
@@ -93,6 +96,11 @@ namespace adaptive_rejection_sampling{
 		    return *this;
 		}
         public:
+        void reset_distribution_function(const dist_f_t& f){
+            dist_f_ = f;
+            //next : initialize
+        }
+
         void initialize(
             typename super_t::value_type x1,typename super_t::value_type x2){
             try{
