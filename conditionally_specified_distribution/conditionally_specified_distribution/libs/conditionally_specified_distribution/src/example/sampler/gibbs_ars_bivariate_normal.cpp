@@ -8,8 +8,10 @@
 #include <numeric>
 #include <vector>
 #include <cmath>
+#include <string>
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
+#include <boost/format.hpp>
 #include <boost/random/mersenne_twister.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/size_t.hpp>
@@ -24,6 +26,7 @@
 
 #include <boost/shared_features/feature/keyword.hpp>
 #include <boost/shared_features/set.hpp>
+#include <boost/shared_features/parameter.hpp>
 #include <boost/shared_features/mpl_features.hpp>
 #include <boost/shared_features/feature/scalar.hpp>
 #include <boost/shared_features/functor/sample.hpp>
@@ -40,7 +43,7 @@ void example_sampler_gibbs_ars_bivariate_normal(){
     std::cout << "->example_sampler_gibbs_ars_bivariate_normal" << std::endl;
 
     using namespace boost;
-    namespace shared = shared_features;
+    namespace shared = boost::shared_features;
     namespace csd = conditionally_specified_distribution;
     namespace par = csd::parameter;
     namespace sampl = csd::sampler;
@@ -186,24 +189,51 @@ void example_sampler_gibbs_ars_bivariate_normal(){
     std::cout << the_format.str() << std::endl;
 
 
-    for(unsigned i=0; i<n; ++i){
-        //if(i%1e4==0){
-        //    std::cout << "i=" << i << std::endl;
-        //}
-        set.visit_if<is_sampler_x>(
-            shared::functor::sample(),
-            (sampl::kwd<>::random_number_generator = urng)
+    try{
+        for(unsigned i=0; i<n; ++i){
+            unsigned mod = 1e5;
+            if(i%mod==0){
+                std::cout << "i=" << i << std::endl;
+            }
+            try{
+                set.visit_if<is_sampler_x>(
+                    shared::functor::sample(),
+                    (sampl::kwd<>::random_number_generator = urng)
+                );
+            }catch(std::exception& e){
+                std::string str = "x|y : ";
+                str+= e.what();
+                throw std::runtime_error(str);
+            }
+            try{
+                draws_x.push_back(
+                    set.extract<state_x>()()
+                );
+                set.visit_if<is_sampler_y>(
+                    shared::functor::sample(),
+                    (sampl::kwd<>::random_number_generator = urng)
+                );
+            }catch(std::exception& e){
+                std::string str = "y|x : ";
+                str+= e.what();
+                throw std::runtime_error(str);
+            }
+            draws_y.push_back(
+                set.extract<state_y>()()
+            );
+        }
+    }catch(std::exception& e){
+        std::string str = e.what();
+        str += "y|x=";
+        str += set.extract<par_y_given_x>().as_string(
+            (shared::kwd_set = set)
         );
-        draws_x.push_back(
-            set.extract<state_x>()()
+        str += "x|y=";
+        str += set.extract<par_x_given_y>().as_string(
+            (shared::kwd_set = set)
         );
-        set.visit_if<is_sampler_y>(
-            shared::functor::sample(),
-            (sampl::kwd<>::random_number_generator = urng)
-        );
-        draws_y.push_back(
-            set.extract<state_y>()()
-        );
+
+        std::cout << str << std::endl;
     }
 
     std::cout << "sample statistics : " << std::endl;

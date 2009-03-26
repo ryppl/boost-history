@@ -229,7 +229,6 @@ sandbox/acvf (auto-covariance function)
 ////////////////////////
 / Output from main.cpp /
 ////////////////////////
-
 ->example_parameter_normal_given_normal
 mu_y|x=0.1
 beta_y|x=0.75
@@ -276,12 +275,32 @@ sample statistics :
 1000000 samples from (x,y) jointly normal, mu_x = -0.1 sigma_x = 1
 rho_xy = 0.9 mu_y = 0.1 sigma_y = 1.5 using the decomposition (y|x, x|y)
 and an ars sampler for each component.
+i=0
+i=100000
+i=200000
+i=300000
+i=400000
+i=500000
+i=600000
+i=700000
+i=800000
+i=900000
 sample statistics :
- mu_x  : -0.0976351
- sigma_x : 0.972748
- mu_y  : 0.103237
- sigma_y : 1.45947
- rho_xy :0.896274
+ mu_x  : -0.0984778
+ sigma_x : 0.974992
+ mu_y  : 0.102567
+ sigma_y : 1.46175
+ rho_xy :0.896784
 <-
 ->example_function_pair_independent
  OK <-
+
+
+///////////
+/ History /
+///////////
+
+On 2009/03/18, added:
+
+parameter::dependent::detail::regression_coefficient::as_string(args)
+

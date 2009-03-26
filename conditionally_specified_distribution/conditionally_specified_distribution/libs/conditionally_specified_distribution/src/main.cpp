@@ -19,7 +19,6 @@ int main()
 {
     example_parameter_normal_given_normal();
 
-
     //normal (from simple to complex):
     example_sampler_exact_normal_given_normal();
     example_sampler_exact_bivariate_normal();
@@ -28,7 +27,6 @@ int main()
     example_sampler_gibbs_ars_bivariate_normal();
 
     example_function_pair_independent();
-
 
     return 0;
 }

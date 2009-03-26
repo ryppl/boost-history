@@ -8,8 +8,10 @@
 #ifndef BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_DEPENDENT_REGRESSION_COEFFICIENT_HPP_ER_2009
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_DEPENDENT_REGRESSION_COEFFICIENT_HPP_ER_2009
 #include <vector>
+#include <string>
 #include <boost/range.hpp>
 #include <boost/bind.hpp>
+#include <boost/format.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/identity.hpp>
@@ -18,6 +20,7 @@
 #include <boost/utility/dont_care.hpp>
 #include <boost/utility/remove_qualifier.hpp>
 #include <boost/utility/assert_is_base_of.hpp>
+#include <boost/utility/container_to_string.hpp>
 #include <boost/shared_features/feature/keyword.hpp>
 #include <boost/shared_features/parameter.hpp>
 #include <boost/shared_features/depends_on.hpp>
@@ -86,17 +89,14 @@ namespace impl{
                     >::type
                 >::type                                  value_type;
             typedef std::vector<value_type>             container_type;
-
             public:
             struct result_of_range_skip_position_covariate_dot_coefficient
              : mpl::identity<const container_type&>
             {};
-
             // outside interface
             struct function_value    : mpl::identity<value_type>{};
             struct function_argument : mpl::identity<value_type>{};
         };
-
     template<typename Id, typename Dataset,typename Coefficients>
     class regression_coefficient
     : public regression_coefficient_base<
@@ -115,8 +115,6 @@ namespace impl{
         :position_(pos){
                 //Warning : state_ default initializes
         }
-
-
         template<typename Args>
         regression_coefficient(const Args& args)
         :position_(args[shared_features::kwd<Id>::position|0]){
@@ -188,6 +186,8 @@ namespace impl{
             return this->matching_covariate(u);
         }
 
+        //TODO range_matching_covariate
+
         // {<x[-i],b[j]> : i =1,...,n}
         typename conditionally_specified_distribution::result_of
             ::range_skip_position_covariate_dot_coefficient<
@@ -221,6 +221,24 @@ namespace impl{
                 ),
                 the_op
             );
+        }
+
+        template<typename Args>
+        std::string
+        as_string(const Args& args)const{
+            typedef utility::container_to_string to_str_t;
+            std::string str = "[position = %1%\n";
+            format f(str);
+            f%(this->position(args));
+            str = f.str();
+            str += "range_coefficient =";
+            str += to_str_t::get_indexed(this->range_coefficient(args));
+            str += "\nrange_skip_position_covariate_dot_coefficient = ";
+            str += to_str_t::get_indexed(
+                this->range_skip_position_covariate_dot_coefficient(args)
+            );
+            str +="]";
+            return str;
         }
         private:
         void alert_if(mpl::bool_<true>,int i)const{

@@ -21,13 +21,11 @@ namespace detail{
     support_negative_max_to_max(
         const D& d
     ){
-        typedef typename function_support<D>::type fs;
+        typedef typename function_support<D>::type sup_t;
+        typedef typename function_argument<D>::type arg_t;
 
         using boost::math::tools::max_value;
-        return fs(
-            -max_value<typename fs::first_type>(),
-            max_value<typename fs::second_type>()
-        );
+        return sup_t(-max_value<arg_t>(),max_value<arg_t>());
     };
 
 }//detail

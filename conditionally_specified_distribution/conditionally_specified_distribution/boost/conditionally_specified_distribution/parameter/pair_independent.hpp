@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PAIR_INDEPENDENT_HPP_ER_2009
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PAIR_INDEPENDENT_HPP_ER_2009
+#include <string>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/parameter/keyword.hpp>
@@ -85,7 +86,7 @@ namespace impl
             return *this;
         }
 
-        template<typename Set,typename Args>
+        template<typename Args>
         void update(const Args& args){
             this->update_impl(args[shared_features::kwd_set],args);
         }
@@ -101,6 +102,19 @@ namespace impl
         second(const Args& args) const {
             return second_impl(args[shared_features::kwd_set],args);
         }
+
+        template<typename Args>
+        std::string as_string(const Args& args)const{
+            std::string str = "parameter::pair_independent :";
+            str+= "\n first : ";
+            str+= first_impl(
+                args[shared_features::kwd_set],args).as_string(args);
+            str+= "\n second : ";
+            str+= second_impl(
+                args[shared_features::kwd_set],args).as_string(args);
+            return str;
+        }
+
         private:
         template<typename Set,typename Args>
         typename result_of::first<super_t(const Args&)>::type

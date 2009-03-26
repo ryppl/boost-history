@@ -35,6 +35,19 @@ namespace sampler{
 
 namespace impl{
 
+    template<template<typename,typename> class Cont>
+    struct apply_reserve{
+            template<typename Impl,typename T>
+            void operator()(Impl& impl, T n){}
+    };
+    template<>
+    struct apply_reserve<std::vector>{
+            template<typename Impl,typename T>
+            void operator()(Impl& impl, T n){
+                impl.reserve(n);
+            }
+    };
+
     template<typename Par>
     class adaptive_rejection_sampler_base{
         public:
@@ -67,10 +80,13 @@ namespace impl{
         typedef kwd<> kwd;
 
         std::size_t static default_max_init_recursion(){
-            std::size_t static result = 100;
+            static std::size_t result = 100;
             return result;
         }
-
+        std::size_t static default_reserve(){
+            static std::size_t result = 10;
+            return result;
+        }
         public:
 
         template<typename Args>
@@ -78,11 +94,13 @@ namespace impl{
         : init_(args),
         max_init_recursion_(
          args[kwd::ars_max_init_recursion|default_max_init_recursion()]
-        ){}
+        ),
+        reserve_(default_reserve()){}
 
         adaptive_rejection_sampler(const adaptive_rejection_sampler& that)
         : init_(that.init_),
-        max_init_recursion_(that.max_init_recursion_){}
+        max_init_recursion_(that.max_init_recursion_),
+        reserve_(that.reserve_){}
 
         //TODO check
         adaptive_rejection_sampler&
@@ -90,6 +108,7 @@ namespace impl{
             if(&that!=this){
                 init_ = that.init_;
                 max_init_recursion_ = that.max_init_recursion_;
+                reserve_ = that.reserve_;
             }
             return *this;
         }
@@ -127,11 +146,6 @@ namespace impl{
             typedef typename
                 Set::template result_of_extract<State>::type  extr_state_t;
             typedef function::detail::adapter<extr_par_t,Args>  adapter_t;
-//            typedef ::boost::random::adaptive_rejection_sampler::simulator<
-//                adapter_t,
-//                Container,
-//                Allocator
-//            >  impl_t;
             typedef ::boost::adaptive_rejection_sampling::sampler<
                 adapter_t,
                 Container,
@@ -139,12 +153,24 @@ namespace impl{
             >  impl_t;
             const extr_par_t& par = set.template extract<Par>();
             adapter_t adapter (par,args);
+            //TODO (*)
+            //static impl_t impl(
+            //    adapter,
+            //    this->max_init_recursion_
+            //);
+
             impl_t impl(
                 adapter,
                 this->max_init_recursion_
             );
+
             interval_t interval = (this->init_)();
-            // Have had px!=0 fails here with gibbs rte::regression_coeff
+            // TODO (*)
+            // This causes problem due I think to dependence adapter
+            // on Args (wrap around an abstract base class?)
+            // impl.reset_distribution_function(adapter);
+            typedef apply_reserve<Container> apply_res_t;
+            apply_res_t()(impl,reserve_);
             impl.initialize(interval.first,interval.second);
 
             gen_t gen(urng,unif01_t());
@@ -153,17 +179,20 @@ namespace impl{
             extr_state_t& extr_state = set.template extract<State>();
             extr_state.set(args,x);
             (this->init_).update(impl);
+            if(reserve_<impl.size_range_point()){
+                reserve_ = impl.size_range_point();
+            }
         }
         mutable init_t                          init_;
         typename super_t::size_type             max_init_recursion_;
+        mutable typename super_t::size_type     reserve_;
     };
 }//impl
 
 namespace feature{
-    // Warning : pair_quantile_averaged_over_iterations is non_markov
-    // Consequential theretically? Dunno, but from a practical
-    // standpoint, less likely to lead to stability issues
-    // such as exp(-inf).
+    // Warning : pair_quantile_averaged_over_iterations is likely
+    // to require fewer iterations than pair_quantile.
+    // Non-markovian : consequential for convergence?
 
     template<
         typename Par,

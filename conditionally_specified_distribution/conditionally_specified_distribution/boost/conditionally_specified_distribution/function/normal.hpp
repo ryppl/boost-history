@@ -9,6 +9,7 @@
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_FUNCTION_NORMAL_HPP_ER_2009
 #include <cmath>
 #include <boost/math/special_functions/fpclassify.hpp>
+#include <boost/math/constants/constants.hpp>
 namespace boost{
 namespace conditionally_specified_distribution{
 namespace function{

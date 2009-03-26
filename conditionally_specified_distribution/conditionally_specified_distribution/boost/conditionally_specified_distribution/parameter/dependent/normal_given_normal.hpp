@@ -8,6 +8,8 @@
 #ifndef BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_NORMAL_GIVEN_NORMAL_HPP_ER_2009
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_NORMAL_GIVEN_NORMAL_HPP_ER_2009
 #include <cmath>
+#include <string>
+#include <boost/format.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/identity.hpp>
@@ -124,10 +126,28 @@ namespace impl
         typename super_t::result_of_beta::type
         beta(utility::dont_care)const{ return this->beta(); }
 
+        template<typename Args>
+        std::string
+        as_string(const Args& args)const{
+            return this->as_string_impl(
+                args[::boost::shared_features::kwd_set]);
+        }
+
         private:
         typename super_t::value_type mu_;
         typename super_t::value_type sigma_;
         typename super_t::value_type beta_;
+
+        template<typename Set>
+        std::string
+        as_string_impl(const Set& set)const{
+            std::string str = "parameter::normal_given_normal (y|x)";
+            str+= "mu = %1%, sigma = %2%";
+            str+= "x= %3% ";
+            format f(str);
+            f%(this->mu())%(this->sigma())%((this->get_x(set))());
+            return f.str();
+        }
         template<typename Set>
         typename super_t::value_type sigma(const Set& set){
             typename super_t::value_type sigma_y = get_par_y(set).sigma();

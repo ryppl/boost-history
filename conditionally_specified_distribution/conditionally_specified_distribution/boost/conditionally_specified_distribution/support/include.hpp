@@ -8,7 +8,10 @@
 #ifndef BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_SUPPORT_INCLUDE_HPP_ER_2009
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_SUPPORT_INCLUDE_HPP_ER_2009
 
+#include <boost/conditionally_specified_distribution/support/pair_independent.hpp>
 #include <boost/conditionally_specified_distribution/support/normal.hpp>
-#include <boost/conditionally_specified_distribution/support/fwd.hpp>
+
+// Bad idea:
+//#include <boost/conditionally_specified_distribution/support/fwd.hpp>
 
 #endif

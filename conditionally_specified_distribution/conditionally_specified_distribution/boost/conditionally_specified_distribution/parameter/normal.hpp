@@ -7,9 +7,12 @@
 ////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_NORMAL_HPP_ER_2009
 #define BOOST_CONDITIONALLY_SPECIFIED_DISTRIBUTION_PARAMETER_NORMAL_HPP_ER_2009
+#include <string>
 #include <boost/mpl/apply.hpp>
 #include <boost/parameter/keyword.hpp>
+#include <boost/format.hpp>
 #include <boost/utility/assert_is_base_of.hpp>
+#include <boost/utility/dont_care.hpp>
 #include <boost/conditionally_specified_distribution/keyword/parameter.hpp>
 #include <boost/conditionally_specified_distribution/result_of/include.hpp>
 #include <boost/conditionally_specified_distribution/crtp/include.hpp>
@@ -76,8 +79,7 @@ namespace impl
             return *this;
         }
 
-        template<typename Args>
-        void update(const Args& args){}
+        void update(utility::dont_care){}
 
         typename result_of::mu<super_t>::type
         mu() const {
@@ -96,6 +98,18 @@ namespace impl
         template<typename Args>
         typename result_of::sigma<super_t>::type
         sigma(const Args& args) const { return this->sigma(); }
+
+        std::string as_string()const{
+            std::string str = "parameter::impl::normal : ";
+            str += " mu = %1%";
+            str += " sigma = %2%";
+            format f(str); f%mu_%sigma_;
+            return f.str();
+        }
+
+        std::string as_string(utility::dont_care)const{
+            return this->as_string();
+        }
 
         private:
         typename super_t::value_type mu_;
