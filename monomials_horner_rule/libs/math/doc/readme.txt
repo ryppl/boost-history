@@ -14,8 +14,35 @@ Please send questions or suggestions to erwann.rogard@gmail.com
 / Overview  /
 /////////////
 
-This collection of C++ classes computes multivariate monomials and derived quantities using Horner's rule a.k.a. graded lexicographic ordering.
+This collection of C++ classes computes multivariate monomials and derived
+quantities using Horner's rule a.k.a. graded lexicographic ordering.
 Individual classes contain specific documentation.
+
+////////////
+/ Notation /
+////////////
+
+D       dimension
+a       multivariate power
+|a|     total degree of a             |a| = sum{a(d):d=0,...,D-1}
+p       a bound on |a|
+b       coefficient
+x       range of size D
+/////////
+/ Files /
+/////////
+
+/monomials.hpp:
+ arg: x, p
+ out: {x^a: |a|=p}
+/monomials_properties.hpp
+/multi_factorial.hpp
+  deprecated: redundant with multi_indexes_derived.
+/multi_indexes.hpp
+  member: get
+  arg:    p
+  out:    {a:|a|=p}
+/multi_indexes_derived.hpp
 
 //////////////////
 / Requirements   /
