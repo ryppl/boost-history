@@ -31,9 +31,18 @@ namespace geometry { namespace traits{
 
 using namespace boost::guigl;
 
-void CALLBACK tess_begin_cb(GLenum which) { glBegin(which); }
-void CALLBACK tess_end_cb() { glEnd(); }
-void CALLBACK tess_vertex_cb(const GLvoid *data) { glVertex3dv((const GLdouble*)data); }
+void CALLBACK tess_begin_cb(GLenum which) {
+  //std::cout << __FUNCTION__ << ": " << which << std::endl;
+  glBegin(which);
+  }
+void CALLBACK tess_end_cb() {
+  //std::cout << __FUNCTION__ << std::endl;
+  glEnd();
+  }
+void CALLBACK tess_vertex_cb(const GLvoid *data) {
+  //std::cout << __FUNCTION__ << std::endl;
+  glVertex3dv((const GLdouble*)data);
+  }
 void CALLBACK tess_error_cb(GLenum errorCode)
 {
     const GLubyte *errorStr;
@@ -54,25 +63,25 @@ public:
 
     class polygon : boost::noncopyable {
     public:
-        tess const& m_tess;
+        GLUtesselator *m_tess;
     public:
-        polygon(tess const& t)
-            : m_tess(t)
-        { gluTessBeginPolygon(m_tess.m_tess, 0); }
-        ~polygon(){ gluTessEndPolygon(m_tess.m_tess); }
+        explicit polygon(tess const& t)
+            : m_tess(t.m_tess)
+        { gluTessBeginPolygon(m_tess, 0); }
+        ~polygon(){ gluTessEndPolygon(m_tess); }
 
         class contour : boost::noncopyable {
         public:
-            tess const& m_tess;
+            GLUtesselator *m_tess;
 
         public:
-            contour(tess const& t)
-                : m_tess(t)
-            { gluTessBeginContour(m_tess.m_tess); }
-            ~contour(){ gluTessEndContour(m_tess.m_tess); }
+            explicit contour(polygon const& pg)
+                : m_tess(pg.m_tess)
+            { gluTessBeginContour(m_tess); }
+            ~contour(){ gluTessEndContour(m_tess); }
 
             inline void operator()(double coord[3], void *data) const {
-                gluTessVertex(m_tess.m_tess, coord, data);
+                gluTessVertex(m_tess, coord, data);
             }
 
             inline void operator()(double coord[3]) const {
@@ -90,7 +99,7 @@ public:
 
 GLuint tessellate1()
 {
-    glColor3f(1,1,0);
+    glColor3f(1,0,0);
 
     tess tt;
     GLUtesselator* t = tt.m_tess;
@@ -105,7 +114,7 @@ GLuint tessellate1()
 //    glNewList(id, GL_COMPILE);
     {
         tess::polygon p(tt);
-        tess::polygon::contour c(tt);
+        tess::polygon::contour c(p);
         c(quad1[0]);
         c(quad1[1]);
         c(quad1[2]);
@@ -234,7 +243,9 @@ public:
         //    gluDeleteTess(t);
         //}
 
+        //std::cout << "tess-begin" << std::endl;
         tessellate1();
+        //std::cout << "tess-end" << std::endl;
 //        glCallList(tessellate1());
     }
 

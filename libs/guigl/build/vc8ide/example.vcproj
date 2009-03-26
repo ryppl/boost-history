@@ -58,16 +58,36 @@
 	<References>
 	</References>
 	<Files>
+		<Filter
+			Name="autogeo"
+			>
+			<File
+				RelativePath="..\..\example\acceptor.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\geometry.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\geometry.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\graph.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\node_types.hpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\example\visitors.hpp"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath="..\..\example\custom_example.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\geometry.cpp"
-			>
-		</File>
-		<File
-			RelativePath="..\..\example\geometry.hpp"
 			>
 		</File>
 		<File
