@@ -6,11 +6,12 @@
 	<META NAME="GENERATOR" CONTENT="OpenOffice.org 3.0  (Win32)">
 	<META NAME="CREATED" CONTENT="20080922;21044300">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
-	<META NAME="CHANGED" CONTENT="20090309;15363300">
+	<META NAME="CHANGED" CONTENT="20090326;22005200">
 	<META NAME="Info 1" CONTENT="">
 	<META NAME="Info 2" CONTENT="">
 	<META NAME="Info 3" CONTENT="">
 	<META NAME="Info 4" CONTENT="">
+	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
 	<META NAME="CHANGEDBY" CONTENT="Christophe Henry">
@@ -2176,6 +2177,22 @@ substates of a composite. You can however choose to have it called by
 calling </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">visit_current_states</FONT></FONT><FONT COLOR="#000000">
 in the </FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">accept</FONT></FONT><FONT COLOR="#000000">
 of the composite.</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Times New Roman, serif"><FONT SIZE=3><FONT COLOR="#000000"><U>Important
+warning:</U></FONT><FONT COLOR="#000000"> The method
+</FONT><FONT COLOR="#000000"><FONT FACE="Courier New, monospace">visit_current_states</FONT></FONT><FONT COLOR="#000000">
+takes its parameter by value, so if the signature of the accept
+function is to contain a parameter passed by reference, pass this
+parameter with a boost:ref/cref to avoid undesired copies or slicing.
+So, for example, in the above case, call:</FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><BR>
+</P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT SIZE=3><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">SomeVisitor</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">
+</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">vis</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">;</SPAN></FONT></FONT></FONT></FONT></P>
+<P STYLE="margin-bottom: 0cm"><FONT FACE="Courier New, monospace"><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">sm</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">.</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">visit_current_states</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">(</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">boost</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">::</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">ref</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">(</SPAN></FONT></FONT><FONT COLOR="#030003"><FONT SIZE=2><SPAN LANG="">vis</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=2><SPAN LANG="">));</SPAN></FONT></FONT><FONT COLOR="#000000"><FONT SIZE=3>
+</FONT></FONT></FONT>
+</P>
 <P STYLE="margin-bottom: 0cm"><BR>
 </P>
 <P STYLE="margin-bottom: 0cm"><FONT COLOR="#000000"><FONT FACE="Times New Roman, serif"><FONT SIZE=3>Please
