@@ -215,8 +215,7 @@ class set : detail::set_base{
     features_type features_;
 };
 
-
-
-}}
+}
+}
 
 #endif

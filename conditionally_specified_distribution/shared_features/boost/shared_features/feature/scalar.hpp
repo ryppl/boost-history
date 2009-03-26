@@ -16,8 +16,6 @@ namespace boost{namespace shared_features{
 
 namespace impl
 {
-
-
     template<typename T>
     class scalar_base{
         public:
