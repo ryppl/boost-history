@@ -31,6 +31,8 @@
   using boost::svg::g_element;
   using boost::svg::rect_element;
   using boost::svg::svg_style;
+
+#include <boost/svg_plot/svg_color.hpp>
   using namespace boost::svg;
 
 #include <boost/svg_plot/svg_fwd.hpp> // Forward declarations.
@@ -175,10 +177,9 @@ BOOST_AUTO_TEST_CASE(test_styles)
   //std::string stretch;
   //std::string decoration;
 
-  BOOST_CHECK_EQUAL(text.style(), no_style);
-
   text_style def_style; // All defaults.
-  BOOST_CHECK_EQUAL(def_style.font_size(), 20);
+
+  BOOST_CHECK_EQUAL(def_style.font_size(), 12);
   BOOST_CHECK_EQUAL(def_style.font_family(), "");
   BOOST_CHECK_EQUAL(def_style, no_style);
 
