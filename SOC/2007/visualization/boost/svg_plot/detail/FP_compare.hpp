@@ -2,7 +2,7 @@
     \brief Two types of floating-point comparison "Very close" and "Close enough" to a chosen tolerance.
     \details
       Derived from Boost.Test Copyright Gennadiy Rozental 2001-2007.
-      See http://www.boost.org/libs/test for the library home page.
+      See http://www.boost.org/libs/test for the Boost.Test library home page.
       Deliberately removed any treatment of percent to avoid further potential confusion!
     \date Mar 2009
     \author Paul A. Bristow
@@ -17,8 +17,8 @@
 #ifndef BOOST_FLOATING_POINT_COMPARISON_HPP
 #define BOOST_FLOATING_POINT_COMPARISON_HPP
 
-#include <boost/limits.hpp>  // for std::numeric_limits
-#include <boost/math/tools/precision.hpp> // for max_value, min_value & epsilon for floating_point type;
+#include <boost/limits.hpp>  // using std::numeric_limits
+#include <boost/math/tools/precision.hpp> // using max_value, min_value & epsilon for floating_point type.
 
 //namespace boost
 //{
@@ -26,10 +26,10 @@
 //  {
 
 // Check two floating-point values are close within a chosen tolerance.
-template<typename FPT> class close_to;
+template<typename FPT> class close_to; // Default = double.
 
 // Check floating-point value is smaller than a chosen small value.
-template<typename FPT> class smallest;
+template<typename FPT> class smallest; // Default = double.
 
 enum floating_point_comparison_type
 { /*! \enum floating_point_comparison_type
@@ -58,11 +58,11 @@ enum floating_point_comparison_type
 // CNRS Ecole normale superieure, 1 Feb 2008, http://arxiv.org/abs/cs/0701192v4
 // submitted to ACM TOPLAS.
 
-// FPT is Floating-Point Type: float, double, long double, or User-Defined like NTL quad_float or RR.
+// \tparam FPT is Floating-Point Type: float, double, long double, or User-Defined like NTL quad_float or RR.
 // from boost/math/tools/precision.hpp
-template <class T> T max_value(T);
-template <class T> T min_value(T);
-template <class T> T epsilon(T);
+template <class FPT> FPT max_value(FPT); //!< maximum value for floating-point type T.
+template <class FPT> FPT min_value(FPT); //!< minimum value for floating-point type T.
+template <class FPT> FPT epsilon(FPT); //!< epsilon for type T (about 1e-16 for double)
 
 template<typename FPT> FPT
 fpt_abs(FPT arg)
@@ -86,8 +86,7 @@ safe_fpt_division(FPT f1, FPT f2)
   return f1 / f2;
 } // safe_fpt_division(FPT f1, FPT f2)
 
-
-template<typename FPT = double>
+template<typename FPT = double> //! \tparam FPT floating-point type.
 class close_to
 { /*!
    \class close_to
@@ -100,10 +99,10 @@ class close_to
 
   */
 public:
-  // One constructor for fraction tolerance only. (By design, percent is NOT implemented ).
+  //! Constructor for close_to from tolerance and strength. (By design, percent is NOT implemented).
   template<typename FPT>
-  explicit close_to(FPT tolerance,
-    floating_point_comparison_type fpc_type = FPC_STRONG)
+  explicit close_to(FPT tolerance, //!< Fractional tolerance.
+    floating_point_comparison_type fpc_type = FPC_STRONG) //!< strong requires closeness relative to both values.
   :
     fraction_tolerance_(tolerance),
       strong_or_weak_(fpc_type)
@@ -113,7 +112,6 @@ public:
     BOOST_ASSERT(tolerance >= static_cast<FPT>(0));
   }
 
-  //template<typename FPT>
   close_to()
   :
   fraction_tolerance_(2 * boost::math::tools::epsilon<FPT>()),
@@ -138,14 +136,13 @@ public:
       : ((d1 <= fraction_tolerance_) || (d2 <= fraction_tolerance_)); // Weak.
   }
 
-  template<typename FPT>
   FPT size()
-  { //! Get the chosen  tolerance, as a fraction.
+  { //! \return the chosen tolerance, as a \b fraction (not a percentage).
     return fraction_tolerance_;
   }
 
   floating_point_comparison_type strength()
-  { //! Get strength of comparison, Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
+  { //! \return strength of comparison, Knuth's  "Very close" (equation 1), the default, or "Close enough" (equation 2).
     return strong_or_weak_;
   }
 
@@ -155,7 +152,7 @@ private:
 
 }; // class close_to
 
-template<typename FPT = double>
+template<typename FPT = double> //! \tparam FPT floating-point type.
 class smallest
 { /*! \class smallest
       \brief Check floating-point value is smaller than a chosen small value,
@@ -198,7 +195,6 @@ public:
      */
   }
 
-  template<typename FPT>
   bool operator()(FPT fp_value, FPT s)
   { //! True if value is smaller than a smallest value s.
     if (fpt_abs(fp_value) == static_cast<FPT>(0))
@@ -210,7 +206,6 @@ public:
     return fpt_abs(fp_value) < fpt_abs(s);
   } // bool operator()
 
-  template<typename FPT>
   bool operator()(FPT fp_value)
   { //! True if value is smaller than chosen smallest value.
     if (fpt_abs(fp_value) == static_cast<FPT>(0))
@@ -221,9 +216,8 @@ public:
     return fpt_abs(fp_value) < fpt_abs(smallest_);
   } // bool operator()
 
-  template<typename FPT>
   FPT size()
-  { //! Get chosen smallest value that will be counted as effectively zero.
+  { //! \return chosen smallest value that will be counted as effectively zero.
     return smallest_;
   }
 

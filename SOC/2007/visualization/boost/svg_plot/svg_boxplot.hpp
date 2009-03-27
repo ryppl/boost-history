@@ -94,9 +94,10 @@ namespace svg
 
   class svg_boxplot_series
   { /*! \class boost::svg::svg_boxplot_series
-     \brief Information about a data series to be boxplotted.
+     \brief Information about a data series to be box plotted.
      \details A Box Plot that can contain several boxplot data series.
-     median, whiskers and outliers are computed for each series.
+        Median, whiskers and outliers are computed for each series.
+        \see http://en.wikipedia.org/wiki/Boxplot
      */
   public: // TODO private?
     std::vector<double> series_; //!< Data series for the boxplot.
@@ -110,29 +111,29 @@ namespace svg
     std::vector<double> extreme_outliers_; //!< Any data values that are judged extreme outliers.
 
     // std::string title_;
-    text_style series_style_;
-    text_element series_info_;
-    double text_margin_;
+    text_style series_style_; //!< Style (font etc) for text.
+    text_element series_info_; //!< information about the data series.
+    double text_margin_; //!< Margin (SVG units, default pixels) around text items.
 
     // svg_style(stroke, fill, width)
-    double box_width_;
-    svg_style box_style_;
-    svg_style median_style_;
-    svg_style axis_style_;
+    double box_width_; //!< Width of boxplot box.
+    svg_style box_style_; //!< line widths and colors of box.
+    svg_style median_style_; //!< line widths and colors of median marker.
+    svg_style axis_style_;//!< line widths and colors of X and Y axes.
 
-    double whisker_length_;
-    svg_style min_whisker_style_;
-    svg_style max_whisker_style_;
-    value_style values_style_;
+    double whisker_length_; //!< Length of boxplot 'whisker'.
+    svg_style min_whisker_style_; //!< Color and width etc of boxplot minimum 'whisker'.
+    svg_style max_whisker_style_; //!< Color and width etc of boxplot minimum 'whisker'.
+    value_style values_style_; //!< Style for data value labels.
 
-    plot_point_style mild_outlier_;
-    plot_point_style ext_outlier_;
+    plot_point_style mild_outlier_; //!< Style (shape, color...) for marking 'mild' outliers.
+    plot_point_style ext_outlier_; //!< Style (shape, color...) for marking 'extreme' outliers.
 
-    bool outlier_values_on_;
-    bool extreme_outlier_values_on_;
+    bool outlier_values_on_; //!< True if mild outliers are to have their values labelled.
+    bool extreme_outlier_values_on_; //!< True if extreme outliers are to have their values labelled.
 
-    template <class T> // \tparam T is STL data container type.
-    svg_boxplot_series( // Constructor.
+    template <class T> // \tparam T is STL data container type, typically double or uncertain .
+    svg_boxplot_series( //! Constructor, providing default values for all data members.
       T begin,  //!< Data container interator begin.
       T end, //!< Data container interator end.
       const std::string& title, // Data series title.
@@ -149,7 +150,7 @@ namespace svg
       value_style vs, //!< Style for optional display of data point values.
       text_style ss //!< series style (font etc) for box labels.
      )
-     // All other parameters can also be added using chainable functions.
+     //! All other parameters can also be added using chainable functions.
      : //
       box_width_(bw), // svg_boxplot::box_width()),
       box_style_(bs), // green, azure, 1), // stroke, fill, width, 1, true, true, margin, border_on, fill_on
@@ -255,7 +256,7 @@ namespace svg
     svg_boxplot_series& title(const std::string& t); //! Set title for data series.
     const std::string title(); //! \return  title for boxplot.
     svg_boxplot_series& whisker_length(double l); //! Set length of whisker line.
-    double whisker_length(); //! \return  length of whisker line.
+    double whisker_length(); //! \return length of whisker line.
     svg_boxplot_series& box_width(double l); //! Set width of box.
     double box_width(); //! \return  width of box.
     svg_boxplot_series& min_whisker_color(const svg_color& col); //! Color of boxplot whisker.
@@ -332,7 +333,7 @@ namespace svg
   { //! Set minimum and maximum whisker length.
     // Applies to BOTH min and max whisker.
     whisker_length_ = width;
-    return *this; // Chainable.
+    return *this; //! \return reference to svg_boxplot_series to make chainable.
   }
 
   double svg_boxplot_series::whisker_length()
@@ -420,7 +421,7 @@ namespace svg
   }
 
   svg_boxplot_series& svg_boxplot_series::outlier_style(plot_point_style& os)
-  {  //! Set entire outlier style.
+  { //! Set entire outlier style.
     mild_outlier_ = os;
     return *this; //! \return reference to svg_boxplot_series to make chainable.
   }
@@ -645,7 +646,7 @@ private:
   double y_axis_position_; //! < Intersection of Y axis, or not.
 
   // Plot window (calculate_plot_window() sets these values).
-  double plot_left_; 
+  double plot_left_;
   double plot_top_;
   double plot_right_;
   double plot_bottom_;
@@ -1168,7 +1169,7 @@ public:
     /*! \verbatim
       Assumes align = center_align.
       Note: center_align will ensure that will center correctly
-      even if original string is long because contains Unicode like 
+      even if original string is long because contains Unicode like
       because the browser render engine does the centering.
       \endverbatim
     */
@@ -1839,7 +1840,7 @@ public:
 
   // svg_boxplot& load_stylesheet(const std::string& file);  // Removed pending reimplementation of stylesheets.
 
-  // Declarations of user boxplot functions.
+  // Declarations of user svg_boxplot functions.
 
   svg_boxplot& write(const std::string& file); //! Write SVG boxplot to file.
   svg_boxplot& write(std::ostream& s_out); //! Write SVG boxplot to ostream.
@@ -1900,12 +1901,12 @@ public:
   std::string x_label_text();
   std::string y_label_text();
 
-  // Member Functions to control all box and whisker settings.
+  // svg_boxplot Member Functions to control all box and whisker settings.
 
   svg_boxplot& whisker_length(double width);
-  double whisker_length();
-  svg_boxplot& box_width(double width); // Width of the box, not the border.
-  double box_width(); // Width of the box, not the border.
+  double whisker_length(); //!
+  svg_boxplot& box_width(double width); //! Width of the actual box (not the border).
+  double box_width(); //! \return Width of the box (not the border).
   svg_boxplot& x_axis_position(int pos); // Position of the horizontal X-axis line (on the border).
   double x_axis_position(); // Position of the horizontal X-axis line (on the border).
   svg_boxplot& y_axis_position(int pos); // Position of the vertical Y-axis line (on the border).
@@ -1923,35 +1924,35 @@ public:
   svg_boxplot& axis_width(double l); // Width of vertical whisker axis line in box.
   double axis_width(); //  Width of vertical whisker axis line in box.
 
-  plot_point_style& outlier_style();
+  plot_point_style& outlier_style(); //
   svg_boxplot& outlier_style(plot_point_style& os);
 
-  svg_boxplot& outlier_color(const svg_color& color); // Color of outlier marker.
-  svg_color outlier_color(); // Color of outlier marker.
-  svg_boxplot& outlier_fill(const svg_color& color); // Fill color of outlier marker.
-  svg_color outlier_fill(); // Fill color of outlier marker.
+  svg_boxplot& outlier_color(const svg_color& color); //! Set Color of outlier marker.
+  svg_color outlier_color(); //! \return Color of outlier marker.
+  svg_boxplot& outlier_fill(const svg_color& color); //! Set Fill color of outlier marker.
+  svg_color outlier_fill(); //! \return Fill color of outlier marker.
   svg_boxplot& extreme_outlier_color(const svg_color& color); // Color of extreme outlier marker.
-  svg_color extreme_outlier_color(); // Color of extreme outlier marker.
+  svg_color extreme_outlier_color(); //! \return  Color of extreme outlier marker.
   svg_boxplot& extreme_outlier_fill(const svg_color& color); // Fill color of extreme outlier marker.
-  svg_color extreme_outlier_fill(); // Fill color of extreme outlier marker.
+  svg_color extreme_outlier_fill(); //! \return  Fill color of extreme outlier marker.
 
   svg_boxplot& outlier_shape(point_shape shape); // Shape of outlier marker.
-  point_shape outlier_shape(); // Shape of outlier marker.
+  point_shape outlier_shape(); //! \return  Shape of outlier marker.
 
-  svg_boxplot& outlier_size(int size); // Size of outlier marker.
+  svg_boxplot& outlier_size(int size); //! Set size of outlier marker.
   int outlier_size(); // Size of outlier marker.
 
-  svg_boxplot& extreme_outlier_shape(point_shape shape); // Shape of extreme outlier marker.
-  point_shape extreme_outlier_shape(); // Shape of extreme outlier marker.
+  svg_boxplot& extreme_outlier_shape(point_shape shape); //! Shape of extreme outlier marker.
+  point_shape extreme_outlier_shape(); //! \return  Shape of extreme outlier marker.
 
   svg_boxplot& extreme_outlier_size(int size); // Size of extreme outlier marker.
-  int extreme_outlier_size(); // Size of extreme outlier marker.
+  int extreme_outlier_size(); //! \return  Size of extreme outlier marker.
 
   svg_boxplot& quartile_definition(int def); // H&F quartile definition.
   int quartile_definition(); // H&F quartile definition.
 
-  bool y_autoscale(); // If to use y_autoscaled values.
-  svg_boxplot& y_autoscale(bool b); // If to use y_autoscaled values.
+  bool y_autoscale(); //! \return If to use y_autoscaled values.
+  svg_boxplot& y_autoscale(bool b); //! \return  If to use y_autoscaled values.
 
   svg_boxplot& y_autoscale(double first, double second);// Autoscale using two doubles.
 

@@ -234,7 +234,7 @@ protected:
   unsigned int y_size_; //!< SVG image Y-axis size (in SVG units (default pixels).
 
   g_element document; //!< group_element to hold all elements of the svg document.
-  std::vector<clip_path_element> clip_paths;
+  std::vector<clip_path_element> clip_paths; //!< Points on clip path (used for plot window).
   std::string title_document_; //!< SVG document title (for header as \verbatim <title> ... <\title> \endverbatim).
   std::string image_desc_; //!< SVG image description (for header as \verbatim <desc> ... <\desc> \endverbatim).
   std::string holder_copyright_; //!< SVG info on holder of copyright (probably == author, but could be institution).

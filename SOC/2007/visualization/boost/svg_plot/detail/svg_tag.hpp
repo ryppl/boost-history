@@ -110,9 +110,10 @@ namespace svg
       { // Example: clip-path="url(#plot_window)"
         s_out << " clip-path=\"url(#" << clip_name_ << ")\""; // Prefix with space.
       }
+      // should transform be here allow translate and rotate?
       /*! \details
-      \verbatim
         Classes inherited from svg_element add other references, 5.3.1, like color, fill, stroke, gradients...
+      \verbatim
         Example id: <g id="yMinorGrid" ></g>
         Example class: <g class="grid_style"></g>
         Example URI: fill="url(#Gradient01) // local URL
@@ -439,7 +440,7 @@ namespace svg
                  )
       : x(x), y(y), radius(radius),
         svg_element(style_info, id_name, class_name, clip_name)
-    { // Define all private data.
+    { //! Constructor defines all private data.
     }
 
     void write(std::ostream& rhs)
@@ -454,10 +455,6 @@ namespace svg
     }
   }; // class circle_element
 
-
-  // -----------------------------------------------------------------
-  // Represents a single ellipse.
-  // -----------------------------------------------------------------
   class ellipse_element : public svg_element
   { /*! \class boost::svg::ellipse_element
         \brief Ellipse from center coordinate, and radius.
@@ -465,16 +462,19 @@ namespace svg
         Represents a single ellipse.
         http://www.w3.org/TR/SVG/shapes.html#EllipseElement
         9.4 The 'ellipse'  element.
+        Default is 'horizontal' but can be rotated.
         */
   private:
-    double cx; // coordinate x of center of ellipse, default 0
-    double cy; // coordinate y, default 0
-    double rx; // radius x
-    double ry; // radius x
+    double cx_; //!< coordinate x of center of ellipse, default 0.
+    double cy_; //!< coordinate y, default 0.
+    double rx_; //!< radius x.
+    double ry_; //!< radius y.
+    double rotate_; //! rotation in degrees from horizontal (default 0.).
+    // Only hacked in - should be in attributes?
   public:
     ellipse_element(double cx, double cy, double rx = 4,  double ry = 8)
-      : cx(cx), cy(cy), rx(rx), ry(ry)
-    { //! Define all private data (default radii).
+      : cx_(cx), cy_(cy), rx_(rx), ry_(ry), rotate_(0.)
+    { //!< Constructor defines all private data (with default radii).
     }
 
     ellipse_element(double cx, double cy, double rx,  double ry,
@@ -482,32 +482,35 @@ namespace svg
                  const std::string& id_name="",
                  const std::string& class_name="",
                  const std::string& clip_name="")
-      : cx(cx), cy(cy), rx(rx), ry(ry),
+      : cx_(cx), cy_(cy), rx_(rx), ry_(ry), rotate_(0.),
         svg_element(style_info, id_name, class_name, clip_name)
-    { // Define all private data.
+    { //!< Constructor defines all private data.
     }
-
+    // Constructor that also includes style, id, class and clip.
     ellipse_element(double cx, double cy,
-                 const svg_style& style_info,
-                 const std::string& id_name="",
-                 const std::string& class_name="",
-                 const std::string& clip_name="")
-      : cx(cx), cy(cy), rx(4), ry(8), // 4 and 8 are the same defaults used above.
+                 const svg_style& style_info, //! Colors & widths.
+                 const std::string& id_name = "",
+                 const std::string& class_name = "",
+                 const std::string& clip_name = "")
+      : cx_(cx), cy_(cy), rx_(4), ry_(8), // 4 and 8 are the same defaults used above.
+        rotate_(0.),
         svg_element(style_info, id_name, class_name, clip_name)
     { // Define all private data.
     }
 
-    void write(std::ostream& rhs)
+    void write(std::ostream& os)
     { /*!
-        \verbatim
         Output SVG XML for ellipse.
-        Example: <ellipse rx="250" ry="100" fill="red"  />
-       \endverbatim
+        Example: \<ellipse rx="250" ry="100" fill="red"  /\>
      */
-      rhs << "<ellipse";
-      write_attributes(rhs);
-      rhs << " cx=\"" << cx << "\" cy=\"" << cy << "\""
-          << " rx=\"" << rx << "\" ry=\"" << ry  << "\"/>";
+      os << "<ellipse";
+      write_attributes(os);
+      if(rotate_ != 0)
+      { // Should this be in atttributes?
+        os << " transform= \"" << " rotate=(" << rotate_ << ")\"";
+      }
+      os << " cx=\"" << cx_ << "\" cy=\"" << cy_ << "\""
+          << " rx=\"" << rx_ << "\" ry=\"" << ry_  << "\"/>";
     }
   }; // class ellipse_element
 

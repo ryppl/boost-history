@@ -83,10 +83,12 @@ namespace boost
       bar_style bar_style_; //!< Style of bar used in histograms.
       histogram_style histogram_style_; //!< Style of histogram.
 
-      // Constructor.
-      template <class T>  // T an STL container: for example: multimap.
-      svg_2d_plot_series(T begin, T end, // Container of data series.
-        std::string title = ""); // Title of data series.
+      //! Constructor for a data series to plot.
+      template <class T>  //! \tparam T an STL container: for example: multimap.
+      svg_2d_plot_series(
+        T begin, //! starting iterator into container of data series begin() to start at the beginning.
+        T end, //! ending iterator into container of data series, end() to finish with the last item.
+        std::string title = ""); // !Title of data series.
 
       // Function declarations only - definitions may be in .ipp file).
       // Set functions for the plot series.
@@ -300,7 +302,7 @@ namespace boost
   }
 
   svg_2d_plot_series& svg_2d_plot_series::histogram(histogram_option opt_)
-  { /*! 
+  { /*!
       \param opt_ no_histogram = 0,
       \param opt_ bar = +1 // Stick or column line (stroke width) vertical to X-axis.
     */
@@ -310,7 +312,7 @@ namespace boost
 
   int svg_2d_plot_series::values_count()
   { //! \return number of normal values in a data series.
-    return series_.size(); 
+    return series_.size();
   }
 
   int svg_2d_plot_series::limits_count()
@@ -346,9 +348,9 @@ namespace boost
       // for example: border_margin() & border_margin(int).
 
       double x_scale_; //!< scale factor used by transform() to go from Cartesian to SVG coordinates.
-      double x_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates. 
+      double x_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates.
       double y_scale_; //!< scale factor used by transform() to go from Cartesian to SVG coordinates.
-      double y_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates. 
+      double y_shift_; //!< shift factor used by transform() to go from Cartesian to SVG coordinates.
 
       svg image; //!< Stored so as to avoid rewriting style information constantly.
 
@@ -477,7 +479,7 @@ my_plot.background_color(ghostwhite) // Whole image.
   .plot_background_color(svg_color(white)) // Just the plot window
   .plot_border_color(svg_color(green)) // The border rectangle color.
   .plot_border_width(1) // Thin border (SVG units, default pixels).
-  .title_color(red) // Title of whole image. 
+  .title_color(red) // Title of whole image.
 ;
            \endcode
         */
@@ -504,7 +506,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "", y_axis_label_style_, center_align, upward),
         y_units_info_(0, 0, "", y_axis_label_style_, center_align, upward),
-        y_label_value_(0, 0, "", y_value_label_style_, center_align, upward), // 
+        y_label_value_(0, 0, "", y_value_label_style_, center_align, upward), //
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
         plot_window_border_(lightslategray, svg_color(255, 255, 255), 2, 3, true, false),
@@ -1542,7 +1544,7 @@ my_plot.background_color(ghostwhite) // Whole image.
             //double vy = y; // Note the true Y value.
             transform_point(x, y); // Note x and y are now SVG coordinates.
             if((x > plot_left_) && (x < plot_right_) && (y > plot_top_) && (y < plot_bottom_))
-            { // Is inside plot window, so draw a point. 
+            { // Is inside plot window, so draw a point.
               draw_plot_point(x, y, g_ptr, serieses_[i].point_style_, ux, uy); // Add the unc to allow access to uncertainty.
               // TODO might refactor so that only pass ux, and uy.
               g_element& g_ptr_vx = image.g(detail::PLOT_X_POINT_VALUES).g();
@@ -1582,11 +1584,11 @@ my_plot.background_color(ghostwhite) // Whole image.
               transform_x(x);
               // If include zero, OK, else plot on left or right as appropriate.
               if (x < plot_left_)
-              { 
+              {
                 x = plot_left_;
               }
               else if (x > plot_right_)
-              { 
+              {
                 x = plot_right_;
               }
               //else X axis includes zero, so x is OK.
@@ -1614,7 +1616,7 @@ my_plot.background_color(ghostwhite) // Whole image.
                 y = plot_top_;
               }
               else if (y > plot_bottom_)
-              { 
+              {
                 y = plot_bottom_;
               }
               //else y axis includes zero, so y is OK.
@@ -2030,7 +2032,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       }
 
       bool svg_2d_plot::y_label_on()
-      {
+      { //! \return true if Y label is on.
         return y_axis_.label_on_;
       }
 
@@ -2128,32 +2130,31 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_axis_color(const svg_color& col)
-      { //! Set Y axis linecolor.
-        // set only stroke color.
+      { //! Set Y axis linecolor. (set only stroke color).
         image.g(detail::PLOT_Y_AXIS).style().stroke_color(col);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_color()
-      { // return the stroke color.
+      { //! \return the stroke color.
         return image.g(detail::PLOT_Y_AXIS).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_axis_label_color(const svg_color& col)
-      { // Set stroke color.
+      { //! Set stroke color.
         image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_label_color()
-      { // But only return the stroke color.
-        //return y_label_info_.style().stroke_color();
+      { //! \return the y axis label stroke color.
+        //  y_label_info_.style().stroke_color();
         return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_units_on(bool b)
       { //! Set true to add units text to the Y axis label.
-        //! \see 
+        //! \see
         y_axis_.label_units_on_ = b;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -2383,7 +2384,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_decor(const std::string& pre, const std::string& sep, const std::string& suf)
-      { //! Set prefix, separator and suffix for   
+      { //! Set prefix, separator and suffix for
         //! Note if you want a space, you must use a Unicode space "\&#x00A0;",
         //! for example, ",\&#x00A0;" rather than ", ".
         y_values_style_.prefix_ = pre;
@@ -2442,7 +2443,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       template <class T> // T an STL container: array, vector ...
-      svg_2d_plot& svg_2d_plot::y_autoscale(const T& container) 
+      svg_2d_plot& svg_2d_plot::y_autoscale(const T& container)
       { //! Whole data series to use to calculate autoscaled values.
         scale_axis(container.begin(), container.end(), // All the container.
         &y_auto_min_value_, &y_auto_max_value_, &y_auto_tick_interval_, &y_auto_ticks_,
@@ -2565,7 +2566,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::x_major_labels_side(int side)
-      { /*! Side for major ticks label values: 
+      { /*! Side for major ticks label values:
          \param side -1 labels downward.
          \param side 0 no labels.
          \param side +1 labels upward.
@@ -2580,7 +2581,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_ticks_on_window_or_axis(int cmd)
-      {  /*!  Set Y ticks on window or axis 
+      {  /*!  Set Y ticks on window or axis
               \arg cmd -1 left of plot window,
               \arg cmd 0 on Y axis.
               \arg cmd +1 right of plot window.
@@ -2694,7 +2695,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         x_axis_label_style_.font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
-      
+
       const std::string& svg_2d_plot::y_label_font_family()
       { //! \return the font family for label on Y axis.
         return y_axis_label_style_.font_family();
@@ -2707,7 +2708,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       unsigned int svg_2d_plot::y_values_font_size()
-      {//! \return font size for Y axis values. 
+      {//! \return font size for Y axis values.
         return y_values_style_.values_text_style_.font_size();
       }
 
@@ -2773,21 +2774,21 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         return y_values_style_.value_ioflags_;
       }
 
-  svg_2d_plot& svg_2d_plot::write(const std::string& file)
-  { //!  Write the plot image to a named file (default suffix .svg).
-    std::string filename(file); // Copy to avoid problem with const if try to append.
-    if (filename.find(".svg") == std::string::npos)
-    { // No file type suffix, so provide the default .svg.
-      filename.append(".svg");
-    }
-    std::ofstream fout(filename.c_str());
-    if(fout.fail())
-    {
-      throw std::runtime_error("Unable to open " + filename);
-    }
-    write(fout); // Using the ostream version.
-    return *this; //! \return reference to svg_2d_plot to make chainable.
-  } // write(file)
+      svg_2d_plot& svg_2d_plot::write(const std::string& file)
+      { //!  Write the plot image to a named file (default suffix .svg).
+        std::string filename(file); // Copy to avoid problem with const if try to append.
+        if (filename.find(".svg") == std::string::npos)
+        { // No file type suffix, so provide the default .svg.
+          filename.append(".svg");
+        }
+        std::ofstream fout(filename.c_str());
+        if(fout.fail())
+        {
+          throw std::runtime_error("Unable to open " + filename);
+        }
+        write(fout); // Using the ostream version.
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      } // write(file)
 
   template <class T> //! \tparam T Type of data in series (must be convertible to unc double).
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title)
@@ -2826,7 +2827,7 @@ my_plot.plot(data1, "Sqrt(x)");
   { /*! Add a data series to the plot (by default, converting automatically to unc doubles).\n
       This version permits part of the container to be used, a partial range, using iterators begin to end.\n
       For example:
-      \code  
+      \code
 my_2d_plot.plot(my_data.begin(), my_data.end(), "My container");
       \endcode
       \code

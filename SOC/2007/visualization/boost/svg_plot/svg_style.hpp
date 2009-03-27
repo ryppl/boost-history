@@ -344,7 +344,7 @@ public:
 
 // class text_style function *Definitions*.
 
-  text_style::text_style(//! Default constructor only sets font size = 20, and leaves other font details as SVG defaults.
+  text_style::text_style( //!< Default constructor only sets font size = 20, and leaves other font details as SVG defaults.
     int size,
     const std::string& font, //!< Default for browser is sans with Firefox & IE but serif with Opera.
     const std::string& style, //!< font-style: normal
@@ -419,23 +419,23 @@ public:
   }
 
   text_style& text_style::font_weight(const std::string& s)
-  { // svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
-    // Examples: "bold", "normal"
-    // http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
-    // tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape
+  { //! svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+    //! Examples: "bold", "normal"
+    //! http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+    //! tests conformance. Only two weights, "bold", "normal", are supported by Firefox, Opera, Inkscape.
     weight_ = s;
     return *this;
     //! \return reference to text_style to make chainable.
   }
 
   const std::string& text_style::font_stretch() const
-  {
+  { //! \return font stretch, for example: normal | wider | narrower .
     return stretch_;
   }
 
   text_style& text_style::font_stretch(const std::string& s)
-  { // Examples: "wider" but implementation?
-    // font-stretch: normal | wider | narrower ...
+  { //! Examples: "wider" but implementation by browsers varies.
+    //! font-stretch: normal | wider | narrower ...
     stretch_ = s;
     return *this; //! \return reference to text_style to make chainable.
   }
@@ -483,7 +483,7 @@ public:
   } //  operator!=
 
   bool operator==(const text_style& lhs, const text_style& rhs)
-  { //! Compare two text_style for equality 
+  { //! Compare two text_style for equality
     //! Note operator== and operator << both needed to use Boost.text.
     //! (But can be avoided with a macro define).
      return (lhs.font_size_ == rhs.font_size_)
@@ -495,7 +495,7 @@ public:
   } //   bool operator==(const text_style& lhs, const text_style& rhs)
 
   bool operator!= (const text_style& lhs, const text_style& rhs)
-  { //! Compare two text_style for equality. 
+  { //! Compare two text_style for equality.
     //! Note operator== and operator << both needed to use Boost.Test.
     //! (But can be avoided with a macro define).
       return (lhs.font_size_ != rhs.font_size_)
@@ -570,9 +570,9 @@ public:
 }; // class value_style
 
 // class value_style Member Functions definitions.
-// Constructor.
 
-value_style::value_style() //! Data point value label style (provides default color and font).
+ //!< Constructor Data point value label style (provides default color and font).
+ value_style::value_style()
     :
     value_label_rotation_(horizontal), //!< Label orientation, default horizontal.
     value_precision_(4), //!< Reduced from default of 6 which is usually too long.
@@ -594,7 +594,7 @@ value_style::value_style() //! Data point value label style (provides default co
       text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
       // Separators [,] provide, for example: [1.23+-0.01 (3), 4.56 +-0.2 (10)]
       // default color black.
-      std::string pre = "", // "[", 
+      std::string pre = "", // "[",
       std::string sep  = "", // ,\&#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
       std::string suf  = "") // "]")
     :
@@ -675,7 +675,7 @@ public:
   //// to avoid writing over the point marker.
   //text_style value_style_; // Size, font, color etc of the value.
 
-  plot_point_style( //! Constructor with all defaults.
+  plot_point_style( //!< Constructor with all defaults.
     const svg_color& stroke = black, const svg_color& fill = blank,
     int size = 10, point_shape shape = round, const std::string& symbols = "X");
 
@@ -696,7 +696,7 @@ public:
 // class plot_point_style function Definitions.
 // Constructor.
 
-  plot_point_style::plot_point_style( //! Constructor with all defaults (see declaration).
+  plot_point_style::plot_point_style( //!< Constructor set defaults for data members. (see declaration).
     const svg_color& stroke, const svg_color& fill,
     int size, point_shape shape, const std::string& symbols)
   :
@@ -720,7 +720,7 @@ public:
   }
 
   int plot_point_style::size()
-  { //! Get size of shape or symbol used to mark data value plot point(s).
+  { //! \return size of shape or symbol used to mark data value plot point(s).
     return size_;
   }
 
@@ -759,14 +759,14 @@ public:
   }
 
   plot_point_style& plot_point_style::symbols(const std::string s)
-  { // Override default symbol "X" - only effective if .shape(symbol) used.
+  { //! Override default symbol "X" - only effective if .shape(symbol) used.
     symbols_ = s;
     return *this; //! \return plot_point_style& to make chainable.
 
   }
 
   std::string& plot_point_style::symbols()
-  {
+  { //! \return plot point marking symbol (only effective if .shape(symbol) used).
     return symbols_;
   }
 
@@ -777,7 +777,7 @@ public:
   }
 
   text_style& plot_point_style::style() const
-  { // To allow control of symbol font, size, decoration etc.
+  { //! \return text_style& To allow control of symbol font, size, decoration etc.
     return const_cast<text_style&>(symbols_style_);
   }
 
@@ -793,7 +793,7 @@ std::ostream& operator<< (std::ostream& os, plot_point_style p)
      << p.symbols_ << ", "
      << p.symbols_style_ << ", "
      << p.show_x_value_ << ", "
-     << p.show_y_value_ 
+     << p.show_y_value_
 //     << ", symbols style: " << p.symbols_style_  // TODO check this works and alter example.
      << ")";
 /*! \details Example: plot_point_style p;  cout << p << endl;
@@ -803,7 +803,7 @@ return os;
 } // std::ostream& operator<<
 
 //! plot_point_style that uses all the defaults.
-plot_point_style default_plot_point_style(); 
+plot_point_style default_plot_point_style();
 
 class plot_line_style
 { //! \class boost::svg::plot_line_style Style of line joining data series values.
@@ -860,7 +860,7 @@ public:
   }
 
   svg_color& plot_line_style::color()
-  { //! \return  color of line(s) joining data points.
+  { //! \return color of line(s) joining data points.
     return stroke_color_;
   }
 
@@ -876,23 +876,23 @@ public:
   }
 
   bool plot_line_style::line_on() const
-  { // True if line(s) will join data points.
+  { //! \return True if line(s) will join data points.
     return line_on_;
   }
 
   plot_line_style& plot_line_style::line_on(bool is)
-  { // Set true if line(s) are to join data points.
+  { //! Set true if line(s) are to join data points.
     line_on_ = is;
     return *this; //! \return plot_line_style& to make chainable.
   }
 
   bool plot_line_style::bezier_on() const
-  { // Get true if bezier curved line(s) are to join data points.
+  { //! \return true if bezier curved line(s) are to join data points.
     return bezier_on_;
   }
 
   plot_line_style& plot_line_style::bezier_on(bool is)
-  { // Set true if bezier curved line(s) are to join data points.
+  { //! Set true if bezier curved line(s) are to join data points.
     bezier_on_ = is;
     return *this; //! \return plot_line_style& to make chainable.
   }
@@ -943,7 +943,7 @@ public:
   bool axis_line_on_; //!< Draw an X horizontal or Y vertical axis line.
   double axis_; //!< Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
   // Used in axis_plot_frame.hpp
-  axis_line_style( //!< class axis_line_style default constructor, sets all member data items.
+  axis_line_style( //!< class axis_line_style default constructor, sets default values for all member data items.
     dim d = X,
     double min = -10.,
     double max = +10., // Defaults.
@@ -971,9 +971,9 @@ public:
   bool axis_line_on() const;
 }; // class axis_line_style
 
-// class axis_line_style Member Functions Definitions:
+  // class axis_line_style Member Functions Definitions:
   // Default constructor.
-  axis_line_style::axis_line_style(  // Sets all member data items with defaults for all.
+  axis_line_style::axis_line_style( //!< Sets all member data items with defaults for all.
     dim d, //!< Dimension (zero if boxplot)
     double min, //!< Minimum of axis line.
     double max, //!< Maximum of axis line.
@@ -1088,7 +1088,7 @@ public:
     double minor_interval_; //!< Interval (Cartesian units) between minor ticks.
       // No set function because x_num_minor_ticks_ used to determine this instead,
       // but one could calculate x_minor_interval_.
-    unsigned int num_minor_ticks_; //! number of minor ticks, eg 4 gives major 0, minor 1,2,3,4, major 5 (All units in svg units, default pixels).
+    unsigned int num_minor_ticks_; //!< number of minor ticks, eg 4 gives major 0, minor 1,2,3,4, major 5 (All units in svg units, default pixels).
     svg_color major_tick_color_; //!< Color (stroke) of tick lines.
     double major_tick_width_; //!< Width of major tick lines.
     double major_tick_length_;//!< Length of major tick lines.
@@ -1122,7 +1122,8 @@ public:
     // For X-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
     const text_style& value_label_style_; //!< text style (font, size...) for value labels.
 
-    ticks_labels_style(dim d = X,
+    ticks_labels_style( //! Constructor, providng defaults values for all member data.
+      dim d = X,
       const text_style& style = no_style,
       double max = 10., double min = -10.,
       double major_interval = 2.,
@@ -1278,12 +1279,12 @@ public:
   }
 
   int major_value_labels_side() const
-  { // Get side for tick value labels: left (<0), none (==0) or right (>0).
+  { //! \return side for tick value labels: left (<0), none (==0) or right (>0).
     return major_value_labels_side_;
   }
 
   ticks_labels_style& major_value_labels_side(int is)
-  { // Set side for tick value labels: left (<0), none (==0) or right (>0).
+  { //! Set side for tick value labels: left (<0), none (==0) or right (>0).
     major_value_labels_side_ = is;
     return *this; //! \return ticks_labels_style& to make chainable.
   }
@@ -1436,12 +1437,12 @@ class histogram_style
      \brief Histogram options.
     */
 public:
-  histogram_option histogram_option_; //! default bar, no_histogram or column.
+  histogram_option histogram_option_; //!< default bar, no_histogram or column.
 
-  histogram_style(histogram_option opt = no_histogram);
+  histogram_style(histogram_option opt = no_histogram); //!< Set any histogram option.
 
-  histogram_style& histogram(histogram_option opt);
-  double histogram();
+  histogram_style& histogram(histogram_option opt); //!< Set any histogram option.
+  double histogram(); //!
 }; // class histogram_style
 
 
@@ -1451,8 +1452,8 @@ public:
 histogram_style::histogram_style(histogram_option opt)
 :
 histogram_option_(opt)
-{ // Default for all private data.
-  // Line width and area-fill are taken from the plot_line_style style.
+{ //! Constructor providing defaults for all private data.
+  //! Line width and area-fill are taken from the plot_line_style style.
 }
 
 // Member Functions Definitions.
@@ -1464,7 +1465,7 @@ histogram_style& histogram_style::histogram(histogram_option opt)
 }
 
 double histogram_style::histogram()
-{ //
+{ // \return Histogram option.
   return histogram_option_;
 }
 // End class histogram_style Definitions.
@@ -1480,7 +1481,7 @@ public:
   double width_; //!< Width of bar, not enclosing line width.
   bar_option bar_option_; //!< stick or bar.
   bar_style(const svg_color& col = black, const svg_color& acol = true, double width = 2, bar_option opt = no_bar); //!< Construct with defaults for all member variables.
-  bar_style& width(double w); //!< 
+  bar_style& width(double w); //!<
   double width();
   bar_style& color(const svg_color& f);
   svg_color& color();

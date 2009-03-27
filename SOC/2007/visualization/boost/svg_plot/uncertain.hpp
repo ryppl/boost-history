@@ -8,8 +8,9 @@
     This is a simple model of uncertainties, designed to
     accompany an article published in C/C++ Users Journal March 1996.
     A fuller collection of even fancier classes also given in UReal.h.
-    And also based on a extended version including uncertainty as standard deviation & its uncertainty 
+    And also based on a extended version including uncertainty as standard deviation & its uncertainty
     as degrees of freedom, and other information about the value added Paul A Bristow from 31 Mar 98.
+    \see http://en.wikipedia.org/wiki/Plus-minus_sign
 
   \author Paul A. Bristow
   \date Mar 2009
@@ -40,16 +41,17 @@ namespace svg
    static const double plusminus = 2.; //!< Number of standard deviations used for plusminus text display.\n
 
 //  template <bool correlated = false>
-class unc
-{ /*! \brief Class for storing an observed or measured value together with information
-    about its uncertainty (previously called 'error' or 'plusminus') represented
-    nominally one standard deviation (but displayed as a multiple, usually two standard deviations). 
+/*! \brief Uncertain class for storing an observed or measured value together with information
+    about its uncertainty (previously called 'error' or 'plusminus', but now deprecated) represented
+    nominally one standard deviation (but displayed as a multiple, usually two standard deviations).
     \details This version assumes uncorrelated uncertainties (by far the most common case).
     \see http://www.measurementuncertainty.org/ \n
     International Vocabulary of Basic and General Terms in Metrology; ISO/TAG 4 1994\n
     ISO, Guide to the expression of uncertainty in measurement, ISO, Geneva, 1993.\n
     Eurochem, Quantifying uncertainty in analytical measurements.
 */
+class unc
+{
 public:
   unc(); // Default constructor.
   unc(double v, float u, short unsigned df, short unsigned ty);
@@ -76,7 +78,7 @@ private:
   double value_; //!< Most likely value, typically the mean.
   float uncertainty_; //!< Estimate of uncertainty, typically one standard deviation.
   //! Negative values mean that uncertainty is not defined.
-  //! 
+  //!
   short unsigned deg_free_;  /*!< Degrees of freedom, usually = number of observations -1;
   so for 2 observations, 1 degree of freedom.
   Range from 0 (1 observation) to 65534 = (std::numeric_limits<unsigned short int>::max)() - 1\n
@@ -123,7 +125,7 @@ unc& unc::operator=(const unc& u)
   value_ = u.value_;
   uncertainty_ = u.uncertainty_;
   deg_free_ = u.deg_free_;
-  types_ = u.types_ ; 
+  types_ = u.types_ ;
   return *this; //! to make chainable.
 }
 
@@ -184,7 +186,7 @@ std::ostream& operator<< (std::ostream& os, const unc& u)
     //! hexadecimal F1, or
     // os <<  "&#x00A0;&#x00B1;"
     //! Unicode space plusminus glyph, or\n
-    //! os << " +or-" << u.uncertainty_; 
+    //! os << " +or-" << u.uncertainty_;
     //! Plain ANSI 7 bit code chars.
       << u.uncertainty_ * plusminus; // Typically two standard deviation.
   };
@@ -265,7 +267,7 @@ std::pair<double, double> values_of(std::pair<const unc, unc> up)
   double vp1 = up.first.value();
   double vp2 = up.second.value();
   std::pair<double, double> minmax = std::make_pair(up.first.value(), up.second.value());
-  return minmax;  
+  return minmax;
 }
 
 template <class T>

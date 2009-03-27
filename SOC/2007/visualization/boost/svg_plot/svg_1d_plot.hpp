@@ -249,8 +249,8 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
      \brief Hold all data about a plot, and functions to get and set.
      \details All data about a plot, and functions to get and set appearance.
       axis_plot_frame.hpp contains functions common to 1 and 2-D.
-     See also svg_2d_plot.hpp for 2-D version.
-    */
+      See also svg_2d_plot.hpp for 2-D version.
+  */
 
   friend void show_1d_plot_settings(svg_1d_plot&);
   //friend void show_2d_plot_settings(svg_1d_plot&); // Surely not needed?
@@ -259,70 +259,70 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
  protected:
   // Member data names conventionally end with _.
   // for example: border_margin_,
-  // and set & get accessor functions are named without _ suffix,
+  // and set & get accessor functions are named *without* _ suffix,
   // for example: border_margin() & border_margin(int).
 
-  double x_scale_; //! scale used for transform from Cartesian to SVG coordinates.
-  double x_shift_; //! shift from SVG origin is top left, Cartesian is bottom right.
-  double y_scale_; //! scale used for transform from Cartesian to SVG coordinates.
-  double y_shift_; //! shift from SVG origin is top left, Cartesian is bottom right.
+  double x_scale_; //!< scale used for transform from Cartesian to SVG coordinates.
+  double x_shift_; //!< shift from SVG origin is top left, Cartesian is bottom right.
+  double y_scale_; //!< scale used for transform from Cartesian to SVG coordinates.
+  double y_shift_; //!< shift from SVG origin is top left, Cartesian is bottom right.
 
-  svg image; // Stored so as to avoid rewriting style information constantly.
+  svg image; //!< Stored so as to avoid rewriting style information constantly.
 
-  double text_margin_; //! Marginal space around text items like title,
+  double text_margin_; //!< Marginal space around text items like title,
 
-  text_style a_style_; //! Default text style that contains font size & type etc.
-  text_style title_style_;
-  text_style legend_style_;
-  text_style x_axis_label_style_;
-  text_style y_axis_label_style_;  //! Not used for 1D but needed by axis_plot_frame.hpp.
-  text_style x_value_label_style_;
-  text_style y_value_label_style_; //! Not used for 1D but needed by axis_plot_frame.hpp.
-  text_style point_symbols_style_; //! Used for data point marking.
-  text_style value_style_; //! Used for data point value label.
+  text_style a_style_; //!< Default text style that contains font size & type etc.
+  text_style title_style_; //!< style (font etc) of title.
+  text_style legend_style_; //!<  style (font etc of legend.
+  text_style x_axis_label_style_; //!< style of X axis label.
+  text_style y_axis_label_style_;  //!< Not used for 1D but needed by axis_plot_frame.hpp.
+  text_style x_value_label_style_; //!< style of X value label.
+  text_style y_value_label_style_; //!< Not used for 1D but needed by axis_plot_frame.hpp.
+  text_style point_symbols_style_; //!< Used for data point marking.
+  text_style value_style_; //!< Used for data point value label.
 
-  value_style x_values_style_; //! Used for data point value marking.
+  value_style x_values_style_; //!< Used for data point value marking.
   //rotate_style x_value_label_rotation_; // Direction point value labels written.
   //int x_value_precision_;
   //std::ios_base::fmtflags x_value_ioflags_;
 
-  text_element title_info_; //! Title of whole plot.
-  text_element legend_header_; //! legend box header or title (if any).
-  text_element x_label_info_; //! X-axis label, Example: "length of widget"
-  text_element x_label_value_; // For example: "1.2" or "1.2e1"
-  text_element x_units_info_; // For example, to display, "length (meter)"
+  text_element title_info_; //!< Title of whole plot.
+  text_element legend_header_; //!< legend box header or title (if any).
+  text_element x_label_info_; //!< X-axis label, Example: "length of widget"
+  text_element x_label_value_; //!< For example: "1.2" or "1.2e1"
+  text_element x_units_info_; //!< For example, to display, "length (meter)"
 
   // No Y-axis info for 1D.
   // Note that text_elements hold font_size, bold, italic...
 
   // Border information for the plot window (not the full image size).
-  box_style image_border_; // rectangular border of all image width, color...
-  box_style plot_window_border_; // rectangular border of plot window width, color...
-  box_style legend_box_; // rectangular box of legend width, color...
+  box_style image_border_; //!< rectangular border of all image width, color...
+  box_style plot_window_border_; //!< rectangular border of plot window width, color...
+  box_style legend_box_; //!< rectangular box of legend width, color...
 
-  double plot_left_; // calculate_plot_window() sets these values.
-  double plot_top_;
-  double plot_right_;
-  double plot_bottom_;
+  double plot_left_; //!< svg left of plot window (calculate_plot_window() sets these values).
+  double plot_top_; //!< svg top of plot window (calculate_plot_window() sets these values).
+  double plot_right_; //!< svg right of plot window (calculate_plot_window() sets these values).
+  double plot_bottom_; //!< svg bottom of plot window (calculate_plot_window() sets these values).
 
   // enum legend_places{ nowhere, inside...}
-  legend_places legend_place_; // Place for any legend box.
-  double legend_width_; // Width of legend box (pixels).
-  double legend_height_; // Height of legend box (in pixels).
-  // Size of legend box is controlled by its contents,
-  // but helpful to store computed coordinates.
-  double legend_left_; // Left of legend box.
-  double legend_top_; // Top of legend box.
+  legend_places legend_place_; //!< Place for any legend box.
+  double legend_width_; //!< Width of legend box (pixels).
+  double legend_height_; //!< Height of legend box (in pixels).
+  //!< Size of legend box is controlled by its contents,
+  //!< but helpful to store computed coordinates.
+  double legend_left_; //!< Left of legend box.
+  double legend_top_; //!< Top of legend box.
   // Both optionally set by legend_top_left.
-  double legend_right_; // SVG Coordinates of right of legend box,
-  double legend_bottom_; // bottom of legend box.
-  size_t legend_longest_; // longest (both header & data) string in legend box,
+  double legend_right_; //!< SVG Coordinates of right of legend box,
+  double legend_bottom_; //!< bottom of legend box.
+  size_t legend_longest_; //!< longest (both header & data) string in legend box,
 
-  axis_line_style x_axis_;
-  axis_line_style y_axis_;
+  axis_line_style x_axis_; //!< style of X axis line.
+  axis_line_style y_axis_; //!< style of Y axis line.
 
-  ticks_labels_style x_ticks_;
-  ticks_labels_style y_ticks_; // Added to permit shared code!
+  ticks_labels_style x_ticks_; //!< style of X axis tick value labels.
+  ticks_labels_style y_ticks_; //!< style of Y axis tick value labels. ( Meaningless of 1D but added to permit shared code!)
 
   bool title_on_; //!< If true include a title for the whole plot.
   bool legend_on_; //!< If true include a legend box.
@@ -343,24 +343,23 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   int  x_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
   // Values calculated by scale_axis, and is used only if x_autoscale == true.
-  double x_auto_min_value_;
-  double x_auto_max_value_;
-  double x_auto_tick_interval_; // tick major interval.
-  int x_auto_ticks_; // Number of ticks.
+  double x_auto_min_value_; //!< X minimum value calculated by autoscaling.
+  double x_auto_max_value_;//!< X maximum value calculated by autoscaling.
+  double x_auto_tick_interval_; //!< X axis tick major interval.
+  int x_auto_ticks_; //!< Number of X axis ticks.
 
   // Similar y_auto value for 2-D
-  bool y_autoscale_; // Stays false for 1-D plot.
+  bool y_autoscale_; //!< Always false for 1-D plot because Y axis is not autoscaled.
 
-  std::string plot_window_clip_; // = "clip_plot_window" id for clippath
-  // http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction
-  // clipping paths, which uses any combination of 'path', 'text' and basic shapes
-  // to serve as the outline where everything on the "inside" of the outline
-  // is allowed to show through but everything on the outside is masked out.
-  // So the plot_window_clip_ limits display to a plot_window rectangle.
+  std::string plot_window_clip_; //!< = "clip_plot_window" id for clippath
+  //!< http://www.w3.org/TR/SVG/masking.html#ClipPathElement 14.1 Introduction
+  //!< clipping paths, which uses any combination of 'path', 'text' and basic shapes
+  //!< to serve as the outline where everything on the "inside" of the outline
+  //!< is allowed to show through but everything on the outside is masked out.
+  //!< So the plot_window_clip_ limits display to a plot_window rectangle.
 
-  // Storing the (perhaps several) series of data points for transformation.
-  std::vector<svg_1d_plot_series> serieses_;
-  // These are sorted into two vectors for normal and abnormal (max, inf and NaN).
+  std::vector<svg_1d_plot_series> serieses_;  //!< The (perhaps several) series of data points for transformation.
+  //!< These are sorted into two vectors for normal and abnormal (max, inf and NaN).
 
 public:
   svg_1d_plot()
@@ -548,7 +547,7 @@ public:
     // one would have to *not* do this,
     // but to make sure they are both assigned correctly).
 
-    if(plot_window_on_) // 
+    if(plot_window_on_) //
     {
       // Calculate the number of chars of the longest value label.
       x_ticks_.longest_label(); // Updates label_max_length_
@@ -629,8 +628,8 @@ public:
   } // void calculate_transform()
 
   void draw_axes()
-  { // Add information to the plot image for X axis lines.
-    // For 1-D, there is, of course, only the horizontal X-axis!
+  { //! Add information to the plot image for X axis lines.
+    //! (For 1-D, there is, of course, only the horizontal X-axis!)
     double x(0.);
     double y1(0.);
     double y2(image.y_size());
@@ -700,7 +699,7 @@ public:
       { // Draw jth point for ith serieses.
         unc ux = serieses_[i].series_[j];
         double x = ux.value();
-        // TODO symbols are offset downwards because 
+        // TODO symbols are offset downwards because
         // the origin of the point is the top left of the glyph.
         // Need to offset by the height and width of the font size?
         transform_x(x);
@@ -735,11 +734,11 @@ public:
           transform_x(x);
           // If include zero, OK, else plot on left or right as appropriate.
           if (x < plot_left_)
-          { 
+          {
             x = plot_left_;
           }
           else if (x > plot_right_)
-          { 
+          {
             x = plot_right_;
           }
           //else X axis includes zero, so x is OK.
@@ -785,7 +784,7 @@ public:
   svg_1d_plot_series& plot(const T& begin, const T& end, const std::string& title = "", U functor = double_1d_convert);
   template <class T, class U>
   svg_1d_plot_series& plot(const T& container, const std::string& title = "", U functor = double_1d_convert);
-}; // class svg_1d_plot 
+}; // class svg_1d_plot
 
 // svg_1d_plot Member functions definitions.
 
