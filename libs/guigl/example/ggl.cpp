@@ -18,8 +18,7 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/assign/std.hpp>
 
-#include <geometry/geometries/geometries.hpp>
-#include <geometry/algorithms/correct.hpp>
+#include <geometry/geometry.hpp>
 
 namespace geometry { namespace traits{
     template<class T>
