@@ -105,6 +105,100 @@ namespace boost{ namespace guigl { namespace ggl {
       geometry::get<geometry::max_corner, 1>(g));
     }
 
+    namespace dispatch
+    {
+        template<int N>
+        struct pvertex_;
+        
+        template<>
+        struct pvertex_<2>
+        {
+            template<typename G>
+            inline void operator()(G const& g)
+            {
+                boost::guigl::gl::vertex(
+                    geometry::get<0>(g),
+                    geometry::get<1>(g));
+            }
+        };
+
+        template<>
+        struct pvertex_<3>
+        {
+            template<typename G>
+            inline void operator()(G const& g)
+            {
+                boost::guigl::gl::vertex(
+                    geometry::get<0>(g),
+                    geometry::get<1>(g),
+                    geometry::get<2>(g));
+            }
+        };
+
+        template<>
+        struct pvertex_<4>
+        {
+            template<typename G>
+            inline void operator()(G const& g)
+            {
+                boost::guigl::gl::vertex(
+                    geometry::get<0>(g),
+                    geometry::get<1>(g),
+                    geometry::get<2>(g),
+                    geometry::get<3>(g));
+            }
+        };
+        
+        template <typename Tag, typename G>
+        struct object_tag
+        {
+            //static inline void vertex(G const& ) {}
+            //static inline void draw(G const& g) {}
+        };
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // Point
+        template<typename G>
+        struct object_tag<geometry::point_tag, G>
+        {
+        public:
+            static inline
+                BOOST_CONCEPT_REQUIRES(((geometry::ConstPoint<G>)),
+                (void))
+                vertex(G const& g)
+            {
+                pvertex_<geometry::traits::dimension<G>::value>()(g);
+            }
+
+            static inline
+                BOOST_CONCEPT_REQUIRES(((geometry::ConstPoint<G>)),
+                (void))
+                draw(G const& g)
+            {
+                glBegin(GL_POINTS);
+                vertex(g);
+                glEnd();
+            }
+        };
+    }
+
+    template<class Tag, class G>
+    void vertex(G const& g)
+    {
+        dispatch::object_tag<Tag, G>::vertex(g);
+    }
+
+    template<class G>
+    void vertex(G const& g)
+    {
+        vertex<typename geometry::traits::tag<G>::type>(g);
+    }
+
+    struct vertex_drawer {
+        template<class G>
+        void operator()(G const& g) const {vertex(g);}
+    };
+
   template<class Point>
   class tess : public boost::guigl::gl::tess
     {
@@ -181,100 +275,14 @@ namespace boost{ namespace guigl { namespace ggl {
 
     namespace dispatch
     {
-        template <typename Tag, typename G>
-        struct object_tag
+        template<int N>
+        struct svertex_;
+        
+        template<>
+        struct svertex_<2>
         {
-            //static inline void vertex(G const& ) {}
-            //static inline void draw(G const& g) {}
-        };
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // Point
-        template<typename G>
-        struct object_tag<geometry::point_tag, G>
-        {
-        private:
-            template<int D>
-            static inline void vertex_(G const& g);
-
-            template<>
-            static inline void vertex_<2>(G const& g)
-            {
-                boost::guigl::gl::vertex(
-                    geometry::get<0>(g),
-                    geometry::get<1>(g));
-            }
-
-            template<>
-            static inline void vertex_<3>(G const& g)
-            {
-                boost::guigl::gl::vertex(
-                    geometry::get<0>(g),
-                    geometry::get<1>(g),
-                    geometry::get<2>(g));
-            }
-            template<>
-            static inline void vertex_<4>(G const& g)
-            {
-                boost::guigl::gl::vertex(
-                    geometry::get<0>(g),
-                    geometry::get<1>(g),
-                    geometry::get<2>(g),
-                    geometry::get<3>(g));
-            }
-
-        public:
-            static inline
-                BOOST_CONCEPT_REQUIRES(((geometry::ConstPoint<G>)),
-                (void))
-                vertex(G const& g)
-            {
-                vertex_<geometry::traits::dimension<G>::value>(g);
-            }
-
-            static inline
-                BOOST_CONCEPT_REQUIRES(((geometry::ConstPoint<G>)),
-                (void))
-                draw(G const& g)
-            {
-                glBegin(GL_POINTS);
-                vertex(g);
-                glEnd();
-            }
-        };
-    }
-
-    template<class Tag, class G>
-    void vertex(G const& g)
-    {
-        dispatch::object_tag<Tag, G>::vertex(g);
-    }
-
-    template<class G>
-    void vertex(G const& g)
-    {
-        vertex<typename geometry::traits::tag<G>::type>(g);
-    }
-
-    struct vertex_drawer {
-        template<class G>
-        void operator()(G const& g) const {vertex(g);}
-    };
-
-    namespace dispatch
-    {
-
-        ////////////////////////////////////////////////////////////////////////////////
-        // Segment
-        template<typename G>
-        struct object_tag<geometry::segment_tag, G>
-        {
-        private:
-            template<int D>
-            static inline void vertex_(const G& g);
-
-            template<>
-            static inline void vertex_<2>(const G& g)
+            template<typename G>
+            inline void operator()(G const& g)
             {
                 boost::guigl::gl::vertex(
                     geometry::get<0, 0>(g),
@@ -283,9 +291,13 @@ namespace boost{ namespace guigl { namespace ggl {
                     geometry::get<1, 0>(g),
                     geometry::get<1, 1>(g));
             }
+        };
 
-            template<>
-            static inline void vertex_<3>(const G& g)
+        template<>
+        struct svertex_<3>
+        {
+            template<typename G>
+            inline void operator()(G const& g)
             {
                 boost::guigl::gl::vertex(
                     geometry::get<0, 0>(g),
@@ -296,9 +308,13 @@ namespace boost{ namespace guigl { namespace ggl {
                     geometry::get<1, 1>(g),
                     geometry::get<1, 2>(g));
             }
+        };
 
-            template<>
-            static inline void vertex_<4>(const G& g)
+        template<>
+        struct svertex_<4>
+        {
+            template<typename G>
+            inline void operator()(G const& g)
             {
                 boost::guigl::gl::vertex(
                     geometry::get<0, 0>(g),
@@ -311,7 +327,14 @@ namespace boost{ namespace guigl { namespace ggl {
                     geometry::get<1, 2>(g),
                     geometry::get<1, 3>(g));
             }
+        };
 
+
+        ////////////////////////////////////////////////////////////////////////////////
+        // Segment
+        template<typename G>
+        struct object_tag<geometry::segment_tag, G>
+        {
         public:
             static inline
                 BOOST_CONCEPT_REQUIRES(((geometry::ConstSegment<G>)),
@@ -319,7 +342,7 @@ namespace boost{ namespace guigl { namespace ggl {
                 vertex(G const& g)
             {
                 typedef typename geometry::traits::point_type<G>::type point_type;
-                vertex_<geometry::traits::dimension<point_type>::value>(g);
+                svertex_<geometry::traits::dimension<point_type>::value>()(g);
             }
 
             static inline
@@ -333,17 +356,14 @@ namespace boost{ namespace guigl { namespace ggl {
             }
         };
 
-        ////////////////////////////////////////////////////////////////////////////////
-        // Box
-        template<typename G>
-        struct object_tag<geometry::box_tag, G>
+        template<int N>
+        struct bvertex_;
+        
+        template<>
+        struct bvertex_<2>
         {
-        private:
-            template<int D>
-            static inline void vertex_(const G& g);
-
-            template<>
-            static inline void vertex_<2>(const G& g)
+            template<typename G>
+            inline void operator()(G const& g)
             {
                 boost::guigl::gl::vertex(
                     geometry::get<geometry::min_corner, 0>(g),
@@ -358,7 +378,13 @@ namespace boost{ namespace guigl { namespace ggl {
                     geometry::get<geometry::max_corner, 0>(g),
                     geometry::get<geometry::min_corner, 1>(g));
             }
-
+        };
+        
+        ////////////////////////////////////////////////////////////////////////////////
+        // Box
+        template<typename G>
+        struct object_tag<geometry::box_tag, G>
+        {
             // support for 3d
 
         public:
@@ -368,7 +394,7 @@ namespace boost{ namespace guigl { namespace ggl {
                 vertex(G const& g)
             {
                 typedef typename geometry::traits::point_type<G>::type point_type;
-                vertex_<geometry::traits::dimension<point_type>::value>(g);
+                bvertex_<geometry::traits::dimension<point_type>::value>()(g);
             }
 
             static inline
