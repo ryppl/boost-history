@@ -97,6 +97,8 @@
 		081B078D0E5FF94A00EF7F91 /* draggable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = draggable.hpp; sourceTree = "<group>"; };
 		081B07900E5FF9B000EF7F91 /* draggable.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = draggable.hpp; sourceTree = "<group>"; };
 		081B07930E5FFBEC00EF7F91 /* mouse_tracking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouse_tracking.hpp; sourceTree = "<group>"; };
+		083138550F7D678D00934B8E /* ggl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ggl.cpp; sourceTree = "<group>"; };
+		083138560F7D678D00934B8E /* polygon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polygon.cpp; sourceTree = "<group>"; };
 		088513240E689E650089DAD3 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		0885132B0E68AEC70089DAD3 /* guigl.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = guigl.qbk; sourceTree = "<group>"; };
 		0885D4290E539AF600DFFA5D /* test_field_map_compilation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_field_map_compilation.cpp; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 		08A13C090E535040008C8A10 /* field_map.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = field_map.hpp; sourceTree = "<group>"; };
 		08A19AE10F3F728F0003AC68 /* usage.qbk */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = usage.qbk; sourceTree = "<group>"; };
 		08A19B410F3F7D930003AC68 /* window_only_example.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window_only_example.cpp; sourceTree = "<group>"; };
+		08A26D570F7A9B7E0058DBDA /* ggl.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ggl.hpp; sourceTree = "<group>"; };
 		08A61CEE0F37B50300F2DF50 /* Jamfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.jam; path = Jamfile; sourceTree = "<group>"; };
 		08A6D3950E7B99C700BF2671 /* two_buttons.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = two_buttons.hpp; sourceTree = "<group>"; };
 		08A77AB30E4F91AA00B8793E /* Jamroot */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = Jamroot; path = ../../../../Jamroot; sourceTree = SOURCE_ROOT; };
@@ -190,6 +193,7 @@
 		08E17F6F0E773D30008EAE5E /* two_spheres.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = two_spheres.hpp; sourceTree = "<group>"; };
 		08E17FC10E774298008EAE5E /* glu.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = glu.hpp; sourceTree = "<group>"; };
 		08E225F00E65D5C700C3319B /* mouse_tracking.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = mouse_tracking.hpp; sourceTree = "<group>"; };
+		08F126B10F729E3E000E12BD /* sexy_button.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sexy_button.cpp; sourceTree = "<group>"; };
 		08F506AB0E5B41AD0020D95E /* typed_tagged_argument.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_tagged_argument.hpp; sourceTree = "<group>"; };
 		08F506AF0E5B42930020D95E /* typed_arg_list.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = typed_arg_list.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -223,6 +227,9 @@
 		08668C4D0C19A16300ACB19A /* example */ = {
 			isa = PBXGroup;
 			children = (
+				083138550F7D678D00934B8E /* ggl.cpp */,
+				083138560F7D678D00934B8E /* polygon.cpp */,
+				08F126B10F729E3E000E12BD /* sexy_button.cpp */,
 				08D560D20E529971005A2391 /* Jamfile */,
 				08D560D70E5299E6005A2391 /* window_example.cpp */,
 				08E17F6E0E773D25008EAE5E /* two_spheres.cpp */,
@@ -356,6 +363,7 @@
 		08A454D80E5243ED002C4151 /* guigl */ = {
 			isa = PBXGroup;
 			children = (
+				08A26D570F7A9B7E0058DBDA /* ggl.hpp */,
 				081B06DC0E5FE32A00EF7F91 /* layout */,
 				08978DC60E5D943200C79062 /* view */,
 				089E06FA0E5D0F2A00C425FE /* widget */,

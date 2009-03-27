@@ -55,20 +55,28 @@ struct circle2d_generator {
 #include <boost/fusion/include/pair.hpp>
 #include <boost/fusion/include/map.hpp>
 
+struct make_color_type_pair
+{
+    template<typename T>
+    struct apply
+    {
+        typedef boost::fusion::pair<T, boost::guigl::color_type> type;
+    };
+};
+
 template<class ColorVector, class BaseType>
 class colored : public BaseType {
 private:
-    template<class ColorVector>
     struct create_color_map {
         typedef typename boost::fusion::result_of::as_map<
             typename boost::mpl::transform<
             ColorVector,
-            boost::fusion::pair<boost::mpl::placeholders::_, boost::guigl::color_type>
+            make_color_type_pair
             >::type
         >::type type;
     };
 
-    typename create_color_map<ColorVector>::type m_color_map;
+    typename create_color_map::type m_color_map;
 
 public:
     typedef BaseType base_type;
