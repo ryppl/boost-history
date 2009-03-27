@@ -92,6 +92,19 @@ namespace geometry { namespace traits {
 
 namespace boost{ namespace guigl { namespace ggl {
 
+  template<class T>
+  inline
+  BOOST_CONCEPT_REQUIRES(((geometry::ConstBox<T>)),
+    (void))
+    rect(T const& g)
+    {
+    gl::rect(
+      geometry::get<geometry::min_corner, 0>(g),
+      geometry::get<geometry::min_corner, 1>(g),
+      geometry::get<geometry::max_corner, 0>(g),
+      geometry::get<geometry::max_corner, 1>(g));
+    }
+
   template<class Point>
   class tess : public boost::guigl::gl::tess
     {
@@ -425,12 +438,6 @@ namespace boost{ namespace guigl { namespace ggl {
                 vertex(G const& g)
             {
             geometry::for_each_point(g, vertex_drawer());
-                //ggl::vertex(geometry::exterior_ring(g));
-
-                //std::for_each(
-                //    boost::begin(geometry::interior_rings(g)),
-                //    boost::end(geometry::interior_rings(g)),
-                //    vertex_drawer());
             }
 
             static inline

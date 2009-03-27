@@ -109,10 +109,11 @@ public:
         // correct polygon
         geometry::correct(pg);
 
-        // drawing
+        // drawing polygon
         gl::color(red(0.5));
         ggl::draw(pg);
 
+        // drawing all points of polygon
         gl::color(blue(0.5));
         gl::point_size(10);
         glBegin(GL_POINTS);

@@ -99,6 +99,10 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\example\polygon.cpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\example\sexy_button.cpp"
 			>
 		</File>
