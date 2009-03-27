@@ -578,7 +578,8 @@ struct meta_class_all_attributes_base
 			int I, 
 			class Inherited, 
 			class MetaClassAttributes,
-			template <class, class, class, class> class MetaFunction
+			template <class, class, class, class> class MetaFunction,
+			class UnitKindSelector
 		> struct result_of_get_generator_plugin
 		{
 			// get the right meta-class
@@ -602,7 +603,7 @@ struct meta_class_all_attributes_base
 				(ancestor::attributes::template get_generator_plugin<
 					MetaClassAttributes,
 					MetaFunction
-				>(position()))
+				>(position(), UnitKindSelector()))
 			)
 
 			// the traits of the i-th attribute
@@ -743,13 +744,15 @@ public:
 	template <
 		class MetaClassAttributes, 
 		template <class, class, class, class> class MetaFunction,
-		int I
+		int I,
+		bool B
 	> static typename helpers:: template result_of_get_generator_plugin<
 		I,
 		typename result_of_is_inherited<I>::type,
 		MetaClassAttributes,
-		MetaFunction
-	>::type get_generator_plugin(mpl::int_<I>);
+		MetaFunction,
+		mpl::bool_<B>
+	>::type get_generator_plugin(mpl::int_<I>, mpl::bool_<B>);
 
 }; // all_attributes_base
 

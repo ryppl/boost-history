@@ -1,0 +1,128 @@
+/**
+ * \file test/classes.hpp
+ *
+ * This file is part of the Mirror library testsuite.
+ *
+ * Several test classes
+ *
+ *  Copyright 2008 Matus Chochlik. Distributed under the Boost
+ *  Software License, Version 1.0. (See accompanying file
+ *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ */
+#ifndef BOOST_MIRROR_LIBS_MIRROR_TEST_CLASSES_HPP
+#define BOOST_MIRROR_LIBS_MIRROR_TEST_CLASSES_HPP
+
+#include "./namespaces.hpp"
+
+namespace test {
+
+struct A
+{
+	::std::string a;
+};
+
+struct B : A
+{
+	bool b;
+};
+
+struct C : B
+{
+	char c;
+};
+
+struct D : C
+{
+	double d;
+};
+
+struct E : D
+{
+	wchar_t e;
+};
+
+struct F : E
+{
+	float f;
+};
+
+struct G : F
+{
+	unsigned g;
+};
+
+struct H : G
+{
+	short h;
+};
+
+} // namespace test
+
+namespace boost {
+namespace mirror {
+
+BOOST_MIRROR_REG_TYPE(::test, A)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::A)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, a)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, B)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::B)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::A)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::B)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, b)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, C)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::C)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::B)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::C)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, c)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, D)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::D)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::C)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::D)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, d)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, E)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::E)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::D)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::E)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, e)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, F)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::F)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::E)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::F)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, f)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, G)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::G)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::F)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::G)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, g)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+BOOST_MIRROR_REG_TYPE(::test, H)
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(::test::H)
+        BOOST_MIRROR_REG_BASE_CLASS(0,  public, ::test::G)
+BOOST_MIRROR_REG_BASE_CLASSES_END
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::H)
+        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, h)
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+} // namespace miror
+} // namespace boost
+
+#endif

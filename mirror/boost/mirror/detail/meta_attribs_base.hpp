@@ -144,13 +144,13 @@ struct meta_class_attributes_base
 
 /**
  */
-#define BOOST_MIRROR_REG_META_CLASS_ATTRIB_HOLDER(NAME) \
+#define BOOST_MIRROR_REG_META_CLASS_GENERATOR_PLUGIN(NAME) \
 	template < \
 		class MetaClassAttributes, \
 		template <class, class, class, class> \
 		class MetaFunction \
 	> \
-	struct NAME##_generator_plugin \
+	struct NAME##_generator_plugin_mem_typedef \
 	{ \
 		typedef typename MetaFunction< \
 			Class, \
@@ -164,10 +164,43 @@ struct meta_class_attributes_base
 		template <class, class, class, class> \
 		class MetaFunction \
 	> \
-	static NAME##_generator_plugin< \
+	static NAME##_generator_plugin_mem_typedef< \
 		MetaClassAttributes, \
 		MetaFunction \
-	> get_generator_plugin(position_of_##NAME);
+	> get_generator_plugin(position_of_##NAME, mpl::true_); \
+	template < \
+		class MetaClassAttributes, \
+		template <class, class, class, class> \
+		class MetaFunction \
+	> \
+	struct NAME##_generator_plugin_mem_attrib \
+	{ \
+		typedef typename MetaFunction< \
+			Class, \
+			variant_tag, \
+			MetaClassAttributes, \
+			position_of_##NAME \
+		>::type type; \
+		type NAME; \
+		inline NAME##_generator_plugin_mem_attrib(void){ } \
+		template <class Param> \
+		inline NAME##_generator_plugin_mem_attrib(Param& param) \
+		 : NAME(param) \
+		{ } \
+		template <class Param> \
+		inline NAME##_generator_plugin_mem_attrib(const Param& param) \
+		 : NAME(param) \
+		{ } \
+	}; \
+	template < \
+		class MetaClassAttributes, \
+		template <class, class, class, class> \
+		class MetaFunction \
+	> \
+	static NAME##_generator_plugin_mem_attrib< \
+		MetaClassAttributes, \
+		MetaFunction \
+	> get_generator_plugin(position_of_##NAME, mpl::false_);
 	
 
 /** Helper macro expanding into an epilogue of a meta-attribute
@@ -178,7 +211,7 @@ struct meta_class_attributes_base
 	NAME, \
 	TYPENAME_KW \
 ) \
-	BOOST_MIRROR_REG_META_CLASS_ATTRIB_HOLDER(NAME) \
+	BOOST_MIRROR_REG_META_CLASS_GENERATOR_PLUGIN(NAME) \
 	typedef TYPENAME_KW mpl::push_back< \
 		partial_list_##NAME, \
 		type_of_##NAME \

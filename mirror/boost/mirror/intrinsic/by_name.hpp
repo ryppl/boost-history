@@ -1,6 +1,6 @@
 /**
- * \file boost/mirror/intrinsic/empty.hpp
- * Gets count of meta-attributes/meta-inheritences/etc.
+ * \file boost/mirror/intrinsic/by_name.hpp
+ * 
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
@@ -17,30 +17,12 @@ namespace boost {
 namespace mirror {
 namespace detail {
 
-/** A class generator unit which "returns" the result type of the
- *  get_meta_attrib_holder function on the MetaClassAttributes.
- */
-template <
-        class Class,
-        class VariantTag,
-	class MetaClassAttributes,
-        class Position
->
-struct get_meta_attrib_generator_plugin
-{
-	typedef meta_class_attribute<
-		Class,
-		VariantTag,
-		MetaClassAttributes,
-		Position
-	> type;
-};
-
 
 template <class MetaClassAttributes>
 struct attrib_by_name : public class_generator<
 	MetaClassAttributes,
-	get_meta_attrib_generator_plugin
+	get_meta_attrib_generator_plugin,
+	mpl::true_
 > { };
 
 
