@@ -75,8 +75,6 @@ private:
         v.clear();
         intersection(cb, poly, std::back_inserter(v));
 
-        BOOST_FOREACH(Polygon& pg, v)
-            correct(pg);
         window::redraw(*this);
     }
 
@@ -115,6 +113,7 @@ public:
         base_type::draw_prologue();
 
         glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_POINT_SMOOTH);
 
         // hull
         draw_polygon(hull, yellow(0.3), red(0.4));
@@ -126,9 +125,14 @@ public:
         gl::color(blue(0.2));
         ggl::rect(cb);
 
+        gl::point_size(10);
         // intersection
         BOOST_FOREACH(polygon_2d const& pg, v)
+        {
             draw_polygon(pg, red(0.4), black(0.8));
+            geometry::for_each_point(pg, ggl::drawer());
+        }
+
     }
 
     BOOST_GUIGL_WIDGET_DRAW_IMPL(my_widget);
