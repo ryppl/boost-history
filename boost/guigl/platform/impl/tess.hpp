@@ -34,7 +34,7 @@ namespace boost{ namespace guigl { namespace gl {
         class polygon : boost::noncopyable {
         private:
             GLUtesselator *m_tess;
-            friend contour;
+            friend class contour;
 
         public:
             explicit polygon(tess const& t);
