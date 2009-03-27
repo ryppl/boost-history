@@ -108,9 +108,10 @@ You can use either plain char space or Unicode space \&#x00a0;
   //] [/demo_2d_annotation_2]
   
   }
-  catch (char* message)
+  catch (const std::exception& e)
   {
-    cout << message << endl;
+    std::cout <<
+      "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
   return 0;
 } // int main()

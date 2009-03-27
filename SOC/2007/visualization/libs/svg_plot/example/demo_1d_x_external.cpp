@@ -61,7 +61,7 @@ It can be controlled using values in the enum x_axis_intersect.
   enum x_axis_intersect
   { //! \enum x_axis_intersect
     bottom = -1, // On the bottom of the plot window.
-    x_intersects_y = 0, // On the X axis (in the middle of the plot window).
+    x_intersects_y = 0, // On the Y axis (in the middle of the plot window).
     top = +1 // On the top of the plot window.
   };
 ``

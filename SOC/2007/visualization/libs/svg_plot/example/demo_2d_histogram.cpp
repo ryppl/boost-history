@@ -65,7 +65,6 @@ int main()
   time2s[90] =   10000.;   //     5          57     90 to 150 min
   time2s[150] =     0.;   // Final bin end (15) with zero value.
 
-
   // Check that the last element contains the expected last bin end.
   std::map<double, double>::const_iterator last = times.end();
   last--;
@@ -122,7 +121,6 @@ int main()
   cout << b << endl;
   b.write(cout);
 
-
   // Plot the histogram.
   svg_2d_plot my_plot1;
 
@@ -144,16 +142,15 @@ int main()
     .y_num_minor_ticks(4) // plus 1 major = 5 ticks per major step.
     ;
 
-  //my_plot1.plot(times, "Series 1").shape(none).line_on(false).histogram(column); // Need to supress line and shape plot options.
+  //my_plot1.plot(times, "Series 1").shape(none).line_on(false).area_fill(red).histogram(column); // Need to supress line and shape plot options.
   // TODO change shape and line to off automatically when histogram is chosen?
   //my_plot1.plot(times, "Journey time").shape(none).line_on(false).line_color(red).area_fill(pink). histogram(column);
-  //my_plot1.plot(time2s, "2050 times? ").shape(none).line_on(false).line_color(blue).area_fill(lightblue).histogram(column);
+  my_plot1.plot(time2s, "2050 times? ").shape(none).line_on(false).line_color(blue).area_fill(lightblue).histogram(column);
   // Overlay hides plot details underneath.
-  //my_plot1.write("./demo_2d_histogram_x.svg");
+  my_plot1.write("./demo_2d_histogram_x.svg");
 
   my_plot1.plot(time2s, "2050 times? ").shape(none).line_on(false).line_color(blue).area_fill(blank).histogram(column);
   my_plot1.write("./demo_2d_histogram_x2.svg");
-
 
   return 0;
 } // int main()

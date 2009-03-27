@@ -263,14 +263,12 @@ int main()
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYP.svg", "X-axis", +1., +10., "Y-axis", +1., +10.); // x & y all > 0
    plot("Plot of Mathematical Functions", "./demo_2d_plot_XYN.svg", "X-axis", -10., -1., "Y-axis", -10., -1.); // x & y all < 0
    plot("Title with Unicode <sup>-&#945; </sup> &#x3A9; &#x3A6; &#x221A; &#x221E; &#x3B6; &#x00B1;", "./demo_2d_plot_XYPM.svg", "X-axis &#x00B1;&#x3A9;", -10., +10., "Y-axis &#x221E;&#x221A;", -10., +10.); // Both X & Y include zero.
-
   }
-  catch (char* message)
+  catch (const std::exception& e)
   {
-    cout << message << endl;
+    std::cout <<
+      "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-
-
   return 0;
 } // int main()
 
