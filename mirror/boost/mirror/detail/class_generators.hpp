@@ -82,13 +82,7 @@ template <
 	{ }
 
 	template <class Param>
-	inline class_generator_base(Param& init)
-	 : head(init)
-	 , tail(init)
-	{ }
-
-	template <class Param>
-	inline class_generator_base(const Param& init)
+	inline class_generator_base(Param init)
 	 : head(init)
 	 , tail(init)
 	{ }
@@ -111,10 +105,7 @@ struct class_generator_base<
 	inline class_generator_base(void){ }
 
 	template <class Param>
-	inline class_generator_base(Param&){ }
-
-	template <class Param>
-	inline class_generator_base(const Param&){ }
+	inline class_generator_base(Param){ }
 };
 
 /** Creates a class hierarchy based on the results
@@ -151,12 +142,7 @@ public:
 	{ }
 
 	template <class Param>
-	inline class_generator(Param& init)
-	 : base_generator(init)
-	{ }
-
-	template <class Param>
-	inline class_generator(const Param& init)
+	inline class_generator(Param init)
 	 : base_generator(init)
 	{ }
 };

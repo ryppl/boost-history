@@ -152,12 +152,12 @@ struct do_get_building_block<MetaAttribute, ::boost::mpl::false_>
                 typename MetaAttribute::type::all_attributes,
                 get_building_block,
                 ::boost::mpl::false_
-        > base_generator;
+	> helper_class_generator;
 
 	/** This is the building block type for attributes
 	 *  with non-fundamental types
 	 */
-	struct type : public base_generator
+	struct type : public helper_class_generator
 	{
 		static inline const string& separator(void)
 		{
@@ -170,7 +170,7 @@ struct do_get_building_block<MetaAttribute, ::boost::mpl::false_>
 		 *  to the base generator
 		 */
 		type(const string& path)
-		 : base_generator(
+		 : helper_class_generator(
 			path + 
 			separator() +
 			MetaAttribute::base_name()

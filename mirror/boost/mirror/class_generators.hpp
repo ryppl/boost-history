@@ -70,17 +70,14 @@ public:
 	 : base_class(static_cast<const base_class&>(other))
 	{ }
 
+	/*	
 	inline class_generator(class_generator& other)
 	 : base_class(static_cast<const base_class&>(other))
 	{ }
+	 */
 
 	template <class Param>
-	inline class_generator(Param& param)
-	 : base_class(param)
-	{ }
-
-	template <class Param>
-	inline class_generator(const Param& param)
+	inline class_generator(Param param)
 	 : base_class(param)
 	{ }
 };
