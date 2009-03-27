@@ -30,7 +30,9 @@ http://www.boost.org/LICENSE_1_0.txt)
 
 #include <geometry/core/cs.hpp>
 #include <geometry/geometries/register/register_point.hpp>
+#include <geometry/algorithms/foreach.hpp>
 #include <boost/static_assert.hpp>
+#include <boost/foreach.hpp>
 
 // GEOMETRY_REGISTER_POINT_2D needs type without '::'
 typedef boost::guigl::position_type boost__guigl__position_type;
@@ -89,6 +91,80 @@ namespace geometry { namespace traits {
 }}
 
 namespace boost{ namespace guigl { namespace ggl {
+
+  template<class Point>
+  class tess : public boost::guigl::gl::tess
+    {
+    public:
+      typedef boost::guigl::gl::tess base_type;
+      typedef Point point_type;
+
+    private:
+
+      static void CALLBACK begin_cb(GLenum which)
+        {
+        glBegin(which);
+        }
+
+      static void CALLBACK end_cb()
+        {
+        glEnd();
+        }
+      static void CALLBACK vertex_cb(const GLvoid *data)
+        {
+        point_type const& pt =
+          *((point_type const*)data);
+
+        boost::guigl::ggl::vertex(pt);
+        }
+
+      static void CALLBACK error_cb(GLenum error_code)
+        {
+        BOOST_ASSERT(!gluGetString(error_code));
+        }
+
+    public:
+      tess() {
+        if(base_type::operator !())
+          throw std::runtime_error("invalid tess");
+
+        begin_callback(begin_cb);
+        end_callback(end_cb);
+        vertex_callback(vertex_cb);
+        error_callback(error_cb);
+        }
+
+      class contour : public base_type::contour
+        {
+        private:
+
+          inline void init_coordinates(double coord[3], point_type const& pt, boost::mpl::int_<2>)
+            {
+            coord[0] = geometry::get<0>(pt);
+            coord[1] = geometry::get<1>(pt);
+            coord[2] = 0.0;
+            }
+
+          inline void init_coordinates(double coord[3], point_type const& pt, boost::mpl::int_<3>)
+            {
+            coord[0] = geometry::get<0>(pt);
+            coord[1] = geometry::get<1>(pt);
+            coord[2] = geometry::get<2>(pt);
+            }
+
+        public:
+          inline explicit contour(polygon const& pg)
+          : base_type::contour(pg) {}
+
+          inline void operator()(point_type const& pt)
+            {
+            double coord[3];
+            init_coordinates(coord, pt, geometry::dimension<point_type>());
+            base_type::contour::operator()(coord, (void*)&pt);
+            }
+        
+        };
+    };
 
     namespace dispatch
     {
@@ -348,12 +424,13 @@ namespace boost{ namespace guigl { namespace ggl {
                 (void))
                 vertex(G const& g)
             {
-                ggl::vertex(geometry::exterior_ring(g));
+            geometry::for_each_point(g, vertex_drawer());
+                //ggl::vertex(geometry::exterior_ring(g));
 
-                std::for_each(
-                    boost::begin(geometry::interior_rings(g)),
-                    boost::end(geometry::interior_rings(g)),
-                    vertex_drawer());
+                //std::for_each(
+                //    boost::begin(geometry::interior_rings(g)),
+                //    boost::end(geometry::interior_rings(g)),
+                //    vertex_drawer());
             }
 
             static inline
@@ -361,6 +438,29 @@ namespace boost{ namespace guigl { namespace ggl {
                 (void))
                 draw(G const& g)
             {
+            typedef
+              typename geometry::point_type<G>::type
+              point_type;
+            typedef
+              typename geometry::ring_type<G>::type
+              ring_type;
+            typedef
+              ::boost::guigl::ggl::tess<point_type>
+              tess_type;
+
+            tess_type t;
+            typename tess_type::polygon p(t);
+              {
+              typename tess_type::contour c(p);
+              BOOST_FOREACH(point_type const& pt, geometry::exterior_ring(g))
+                c(pt);
+              }
+              BOOST_FOREACH(ring_type const& ring, geometry::interior_rings(g))
+                {
+                typename tess_type::contour c(p);
+                BOOST_FOREACH(point_type const& pt, ring)
+                  c(pt);
+                }
             }
         };
 

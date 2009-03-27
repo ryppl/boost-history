@@ -94,45 +94,30 @@ public:
 
         // polygon
         geometry::polygon<position_type> pg;
+
+        // making outer contour
         pg.outer() +=
             point<LT>(),
             point<RT>(),
             point<RB>(),
             point<LB>();
+
+        // making inner contour
         pg.inners().resize(1);
         std::copy(v.begin(), v.end(), std::back_inserter(pg.inners().back()));
+
+        // correct polygon
         geometry::correct(pg);
 
-        //gl::point_size(10);
-        //gl::color(red());
-        //glBegin(GL_POINTS);
-        //ggl::vertex(pg);
-        //glEnd();
-
-        GLuint id = glGenLists(1);  // create a display list
-        glNewList(id, GL_COMPILE);
+        // drawing
         gl::color(red(0.5));
+        ggl::draw(pg);
 
-        {
-            gl::tess t;
-            gl::tess::polygon p(t);
-            {
-                gl::tess::polygon::contour c(p);
-                BOOST_FOREACH(position_type const& pos, pg.outer())
-                    c(pos);
-            }
-            BOOST_FOREACH(
-                geometry::linear_ring<position_type> const& ring,
-                pg.inners())
-            {
-                gl::tess::polygon::contour c(p);
-                BOOST_FOREACH(position_type const& pos, ring)
-                    c(pos);
-            }
-        }
-        glEndList();
-
-        glCallList(id);
+        gl::color(blue(0.5));
+        gl::point_size(10);
+        glBegin(GL_POINTS);
+        ggl::vertex(pg);
+        glEnd();
     }
 
     BOOST_GUIGL_WIDGET_DRAW_IMPL(my_widget);
