@@ -427,7 +427,6 @@ namespace boost{ namespace guigl { namespace ggl {
 
         ////////////////////////////////////////////////////////////////////////////////
         // polygon_tag
-        // polygon is not implemented yet
         template<typename G>
         struct object_tag<geometry::polygon_tag, G>
         {

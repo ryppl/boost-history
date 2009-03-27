@@ -25,9 +25,6 @@ class Acceptor :
       v.visit(key, obj);
       }
 
-    //T& get() {return m_obj;}
-    //T const& get() const {return m_obj;}
-
     typedef typename T::result_type result_type;
     result_type const& result() const {return T::result;}
   };

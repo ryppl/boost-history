@@ -1,5 +1,5 @@
 #==================================---------------------------------------------
-#   Copyright 2008, 2009 Stjepan Rajko, Andrey Torba
+#   Copyright 2009 Andrey Torba
 #  
 #   Distributed under the Boost Software License, Version 1.0.
 #   (See accompanying file LICENSE_1_0.txt or copy at
@@ -11,34 +11,11 @@ project boost/guigl/example
         <library>$(TOP)/libs/guigl/build//boost_guigl/<use-window-manager>platform_glut
     ;
 
-exe window_example
-    :
-        window_example.cpp two_spheres.cpp two_buttons.cpp
-    ;
-
-exe window_example_static
-    :
-        window_example.cpp two_spheres.cpp two_buttons.cpp
-    :
-       <link>static
-    ;
-
-exe custom_example : custom_example.cpp ;
-exe window_only_example : window_only_example.cpp ;
-exe overlapping_example : overlapping_example.cpp ;
-exe sexy_button : sexy_button.cpp ;
-exe ggl : ggl.cpp ;
-exe polygon : polygon.cpp ;
+exe geometry : geometry.cpp ;
 
 install window_example_stage
     :
-        window_example
-        custom_example
-        window_only_example
-        overlapping_example
-        sexy_button
-        ggl
- 	polygon
+        geometry
     :
         <install-dependencies>on
         <install-type>EXE

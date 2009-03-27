@@ -62,27 +62,27 @@
 			Name="autogeo"
 			>
 			<File
-				RelativePath="..\..\example\acceptor.hpp"
+				RelativePath="..\..\example\autogeo\acceptor.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\geometry.cpp"
+				RelativePath="..\..\example\autogeo\geometry.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\geometry.hpp"
+				RelativePath="..\..\example\autogeo\geometry.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\graph.hpp"
+				RelativePath="..\..\example\autogeo\graph.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\node_types.hpp"
+				RelativePath="..\..\example\autogeo\node_types.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\example\visitors.hpp"
+				RelativePath="..\..\example\autogeo\visitors.hpp"
 				>
 			</File>
 		</Filter>
