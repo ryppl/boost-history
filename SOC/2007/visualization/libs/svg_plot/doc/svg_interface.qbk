@@ -11,9 +11,9 @@
   [[`g_element& add_g_element()`] [Adds a g_element at the root of the document tree. Acts as a `push_back()`] [Returns the `g_element` that is pushed back. This allows you to do something like the following: `image.add_g_element().line(/**/).line(/**/).rect(/**/);  `
   which adds two lines and a rectangle to the g_element that was just created.]]
 
-  [[`circle_element& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user is unlikely want a point if they are making this call.]]
+  [[`circle_element& circle(double x, double y, unsigned int radius = 5)`] [Adds a point at (x,y) in the root level of the document.][If the user is calling the circle method, odds are they would prefer a real circle instead of a degenerate circle (a point). 5 is as good a default as any other, and the user is unlikely want a point if they are making this call.]]
 
-  [[`ellipse_element& ellipse(double rx, double ry, double cx, double cy)`] [Adds an ellipse at the root level of the doucment][The widths of the ellipse are required]]
+  [[`ellipse_element& ellipse(double rx, double ry, double cx, double cy)`] [Adds an ellipse at the root level of the doucment.][The radii of the ellipse are required.]]
 
   [[`g_element& get_g_element(int)`] [Gets the g_element at the index specified.] [Gives a runtime error if you specify an index that does not contain a `g_element`. An iterator interface to access these elements might be useful.]]
 
@@ -50,7 +50,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`polygon_element& triangle(double x1, double y1, double x2, double y2, double x3, double y3, bool f = true`] [Generates a triangle at the three Cartesian coordinates specified] [Fill is determined by `f`]]
 
-][/SVG C++ default methods table]
+] [/SVG C++ default methods table]
 
 [table Special methods
   [[Signature] [Description] [Notes & Examples]]
@@ -59,7 +59,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`void load_stylesheet(const std::string& input)`][Allows you to define the filename of a stylesheet. The stylesheet is validated as being a strict subset of the CSS syntax.][]]
 
-][/Special methods for SVG class]
+] [/Special methods for SVG class]
 
 [table `svg` Copyright
   [[Signature] [Description] [Notes & Examples]]
@@ -98,7 +98,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
   [[`const std::string& reproduction()`] [Returns the Reproduction segment of the license] [The default is `""`]]
 
-][/Copyright table]
+] [/Copyright table]
 
 [table `svg` document settings and writing
   [[Signature] [Description] [Notes & Examples]]
@@ -133,7 +133,7 @@ my_path.M(3, 3).l(150, 150).m(5, 6).l(7, 8).l(9, 10); // and so on.
 
 
 [/ svg_interface.qbk
-  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Copyright 2008, 2009 Jake Voytko and Paul A. Bristow.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

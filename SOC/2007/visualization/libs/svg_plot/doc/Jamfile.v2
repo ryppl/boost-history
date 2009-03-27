@@ -1,4 +1,4 @@
-# jamfile.v2 for SVG_plot using Doxygen
+# jamfile.v2 for SVG_plot Quickbook Documentation and index using Doxygen
 
 # Copyright Paul A. Bristow 2009
 # Derived from Copyright Eric Niebler 2005 Boost xPressive docs.

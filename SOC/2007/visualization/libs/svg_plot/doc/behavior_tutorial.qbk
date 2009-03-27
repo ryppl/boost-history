@@ -28,7 +28,7 @@ following is considered to be Infinity:
 
 When plotted, these values will appear at the *top* of your plot window.
 If the plot window is not turned on,
-these points will appear at the top of the graph.
+these points will appear at the top of the image.
 
 [h4 Negative Infinity]
 
@@ -41,11 +41,14 @@ following is considered to be Negative Infinity:
 
 When plotted, these values will appear at the *bottom* of your plot window.
 If the plot window is not turned on,
-these points will appear at the bottom of the graph.
+these points will appear at the bottom of the image.
 
-Here is an example of numeric limits handling in action:
-
+Here is an example of showing values at numeric limits:
 [$images/2d_limit.svg]
+
+See also examples of limits in 1-D and 2-D plots.
+[@../../example/demo_1d_limits.cpp]
+[@../../example/demo_2d_limits.cpp]
 
 [endsect] [/section:numerical_limits]
 

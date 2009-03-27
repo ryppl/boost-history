@@ -32,7 +32,7 @@ num_minor_ticks = 2[super]n -1 are useful, for example
  3 if major on 0, minor on 1, 2, 3 and major on 4...
  7 if major on 0, minor on 1,2,3,4,5,6,7 and major on 8 ...
  15 if major on 0, minor on 1,2,3,4,5,6,7, 8,9,A,B,C,D,E,F, major on 0x10...
- 
+
  For decimal based values, num_minor_ticks 1, 4, 9 are useful, for example:
  1 if major are even, major 0, minor 1, major 2 ...
  4 if major on 0, minor on 1,2,3,4, major on 5 ...
@@ -52,7 +52,7 @@ is also available and appears to be final and designed to be backward compatible
 No changes that affect the code produced
 have been detected from a quick perusal of this document.
 It is probable but untested that the svg files produced will also comply
-with the [@http://www.w3.org/TR/SVGMobile12/ Tiny svg for mobiles specification].
+with the [@http://www.w3.org/TR/SVGMobile12/ Tiny SVG for mobiles specification].
 
 [h4 Design]
 
@@ -167,18 +167,18 @@ is currently beyond the scope of the SVG specification.
 This does not exclude the use of other metadata schemes.
 
 A simple way of adding metadata for copyright is provided by functions to set
-  
+
     copyright_holder(std::string);
     copyright_date(std::string);
-  
+
 (as well as description and document_title, and .svg filename if any).
-  
+
 For example, setting these will incorporate an XML comment
-  
-   <!-- SVG Plot Copyright Paul A. Bristow 2007 --> 
- 
+
+   <!-- SVG Plot Copyright Paul A. Bristow 2007 -->
+
 and also as meta data:
- 
+
    <meta name="copyright" content="Paul A. Bristow" />
    <meta name="date" content="2007" />
 
@@ -189,12 +189,12 @@ The [@http://creativecommons.org/about/licenses Creative Commons License] is one
 of providing license terms in a machine-readable format.
 
 Typical data added to the file would be XML like this:
-  
+
   <metadata>
     <rdf:RDF xmlns:cc="http://web.resource.org/cc/"
              xmlns:dc="http://purl.org/dc/elements/1.1/"
              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-      <cc:work rdf:about="filename.svg">        
+      <cc:work rdf:about="filename.svg">
         <!-- insert filename or title here -->
         <dc:title>Plot title</dc:title>
         <dc:creator>Boost.Plot</dc:creator>
@@ -210,9 +210,9 @@ Typical data added to the file would be XML like this:
       </cc:work>
     </rdf:RDF>
   </metadata>
-  
+
 cc:permits can also be cc:requires or cc:prohibits, as required.
-  
+
 A license that permits reproduction, distribution and commercial use,
 but requires both notice & attribution
 is probably most suitable for Boost documents as is therefore chosen as the default.
@@ -221,7 +221,7 @@ This license can be included by calling svg  member function `is_license(true)`.
 If this license will be included can be discovered by calling svg  member function `is_license()`.
 
 Similarly functions
-  const std::string license_reproduction();`
+  const std::string license_reproduction();
   const std::string license_distribution();
   const std::string license_attribution();
   const std::string license_commercialuse()
@@ -242,7 +242,7 @@ for example a publisher.  svg set and get member functions:
 
   author(const std::string);
   const std::string author();
-  
+
 [h4 Using Unicode Symbols (usually Math Sumbols and Greek letters)]
 
 Unicode symbols that work on most browsers in html are listed at:
@@ -261,9 +261,9 @@ Thus diamond can be used a point marker.
 
 Similarly for greek in title, legend and axes:
 
-  .legend_title("My Legend &#956;") // generates <em>&#956;</em>  greek mu 
-  
-  
+  .legend_title("My Legend &#956;") // generates <em>&#956;</em>  greek mu
+
+
 [h4 Subscript and superscript in title, legend and labels]
 
 It is very common need to show superscript, in units for example, area (m[super 2]),
@@ -300,18 +300,18 @@ https://bugzilla.mozilla.org/show_bug.cgi?id=401102
 but baseline-shift has no effect on Firefox 2. See
 http://www.imagemagick.org/discourse-server/viewtopic.php?f=3&t=7410&view=previous
 
-The use of <tspan to shift characters *is* feasible, as shown 
+The use of <tspan to shift characters *is* feasible, as shown
 [@http://www.w3.org/TR/SVG/images/text/tspan02.svg in this example],
-which displays correctly in all browsers, 
+which displays correctly in all browsers,
 
 and it is also possible to use
 
   <svg:g transform="translate(5.062500, -5.367188)">
-  
+
 to shift the next letter up, but these parameters are font-size related,*
 and the svg most verbose.
 
-None of these method provides a *convenient* method of creating the right string 
+None of these method provides a *convenient* method of creating the right string
 for titles, legends, or axis labels, but it may be possible to devise code that does.
 
 [h4 Coding style]
@@ -319,19 +319,6 @@ for titles, legends, or axis labels, but it may be possible to devise code that 
 In general [@http://www.boost.org/libs/spirit/doc/style_guide.html Boost coding style guide]
 and [@http://groups.yahoo.com/group/boost/files/coding_guidelines.html Boost coding guidelines]
 has been used.
-
-But some work is needed to rename arguments named with lading underscores in violation of
-guidance 2.14:
-
-Names containing double underscores (``__'') or beginning with single underscores (``_'')
-are entirely forbidden. These are reserved to the C++ implementation in various contexts.
-
-and also
-
-2.10. Data members should have a ``m_'' prefix, to distinguish them
-from an otherwise-identical member function name
-and to clarify their provenance in code which uses them.
-Non-member names must not have an ``m_'' prefix.
 
 Some data members end with _ to avoid name clashes, another widely used convention.
 

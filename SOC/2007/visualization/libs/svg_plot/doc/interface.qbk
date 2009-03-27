@@ -8,7 +8,7 @@
   [[`svg_1d_plot()`] [See the defaults section for further details] []]
   [[`svg_1d_plot& image_size(unsigned int, unsigned int)`] [Sets the size of the image produced (pixels)] [500, 200]]
   [[`svg_1d_plot& coord_precision(int)`] [Sets the precision output for coordinates (decimal digits).] [3]]
-  [[`svg_1d_plot& document_title(std::string)`] [Sets title for the SVG XML document (not the plot). <title>My Document title</title>] [""]
+  [[`svg_1d_plot& document_title(std::string)`] [Sets title for the SVG XML document (not the plot). <title>My Document title</title>] [""]]
   [[`svg_1d_plot& description(std::string)`] [Sets description for the SVG XML document, as comment and XML, for example: <!-- My Document description -->
 <desc>My Document description</desc>]]
 
@@ -27,7 +27,7 @@
   [[`svg_1d_plot& legend_on(bool)`] [Sets if the legend is on (true) or off.] [true]]
   [[`svg_1d_plot& plot_window_on(bool)`] [Sets if the plot window border will be displayed.] [false]]
   [[`svg_1d_plot& title_on(bool)`] [Sets if image title is displayed.] [false, until title string assigned.]]
-  [[`svg_1d_plot& x_axis_on(bool)`] [Sets if X-axis is displayed.]]
+  [[`svg_1d_plot& x_axis_on(bool)`] [Sets if X-axis is displayed.] [true]]
   [[`svg_1d_plot& x_external_style_on(bool)`] [Sets if axis is inside or outside of the plot.]  [false]]
   [[`svg_1d_plot& x_label_on(bool)`] [Sets if X-axis label will show.][false, until label assigned.]]
   [[`svg_1d_plot& x_major_labels_on(int)`] [Sets if  major ticks will be labelled on the X-axis. ][true]]
@@ -54,7 +54,7 @@
 ] [/ table 1D_plot Colors]
 
 [table 1D_plot X-Axis Definition
-  [[Signature] [Description] [Default]]
+  [[Signature] [Description]]
   [[`svg_1d_plot& x_axis_width(unsigned int)`] [Sets the stroke width of the X-axis.] ]
   [[`svg_1d_plot& x_label(const std::string&)`] [Sets the label of the X-axis. You must call `x_label_on(true)` to display.] ]
   [[`svg_1d_plot& x_label_units(const std::string&)`] [Sets the units label of the X-axis. You must call `x_label_on(true)` to display.] ]
@@ -73,27 +73,18 @@
 
 
 [heading The 1D_plot `plot()` Method]
-The `plot()` method is defined using Boost.Parameter. As such, it supports a
-few extra named parameters, as well as a deduced parameter.
+The `plot()` function takes as its main parameters the data to be plotted, and its title, but can also take many chained functions.
 
 [table 1D_plot Required parameter
 [[ID] [Type (* is a wildcard)] [Description] [Default]]
 [[container] [*] [Any object that can return an iterator with begin() and end()]]
-[[title] [`std::string`] [The name of this data series. ]]
-] [/ table 1D_plot Required parameter]
+[[title] [`std::string`] [The name or title of this data series. ]]
+] [/ table 1D_plot Required parameters]
 
 [note To use special characters, insert the XML character entity equivalents: for example: left angle bracket &lt;, right angle bracket &gt;, and ampersand &amp;, double-quotation marks &quot; for single-quotation marks &apos;. You can use numeric character references, such as &#165; for Greek and Math symbols.]
 
-[table 1D_plot Deduced parameter
-[[ID] [Type] [Description] [Default] [Default]]
-[[fill_color] [`svg_color`] [Color that shows *inside the circle* being drawn.] [white]]
-] [/ table 1D_plot Deduced parameter]
-
 [table 1D_plot Optional Parameters
-[[ID] [Type] [Description] [Default] [Default]]
-[[stroke_color] [`svg_color`] [Outline of the circle that is being drawn.] [black] ]
-[[point_style] [`point_shape`] [Shape of the point. Options currently are: [^none], [^circle], and [^square].] [circle]]
-[[size] [`unsigned int`] [Height/width of the circle and square.] [10]]
+[[ID] [Type] [Description]]
 [[x_functor] [*] [A class or functor that contains a conversion function. You will not have to worry about this, unless you are trying to plot a container of type that does *not* have a conversion to double, for example, age of a user-defined type `humans`. For example:
 ``
 class my_functor

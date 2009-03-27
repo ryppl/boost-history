@@ -8,7 +8,7 @@
 The output is:
 [auto_1d_plot_output]
 
-[$images/auto_1d_plot.svg auto_1d_plot.svg]
+[$images/auto_1d_plot.svg]
 
 See [@../../example/auto_1d_plot.cpp auto_1d_plot..cpp]
 for full source code.
