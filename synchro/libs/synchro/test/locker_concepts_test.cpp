@@ -53,6 +53,7 @@ BOOST_CONCEPT_ASSERT((UniqueLockerConcept<upgrade_locker<thread_shared_mutex> >)
 BOOST_CONCEPT_ASSERT((SharedLockerConcept<upgrade_locker<thread_shared_mutex> >));    
 BOOST_CONCEPT_ASSERT((UpgradeLockerConcept<upgrade_locker<thread_shared_mutex> >));    
 
+#if 0
 BOOST_CONCEPT_ASSERT((LockerConcept<unique_locker<interprocess_mutex> >));    
 BOOST_CONCEPT_ASSERT((TimedLockerConcept<unique_locker<interprocess_mutex> >));    
 BOOST_CONCEPT_ASSERT((UniqueLockerConcept<unique_locker<interprocess_mutex> >));    
@@ -68,6 +69,7 @@ BOOST_CONCEPT_ASSERT((TimedLockerConcept<upgrade_locker<interprocess_upgradable_
 BOOST_CONCEPT_ASSERT((UniqueLockerConcept<upgrade_locker<interprocess_upgradable_mutex> >));    
 BOOST_CONCEPT_ASSERT((SharedLockerConcept<upgrade_locker<interprocess_upgradable_mutex> >));    
 BOOST_CONCEPT_ASSERT((UpgradeLockerConcept<upgrade_locker<interprocess_upgradable_mutex> >));    
+#endif
 #if 0
 
 BOOST_CONCEPT_ASSERT((LockableConcept<exclusive_lockable_adapter<null_mutex> >));    

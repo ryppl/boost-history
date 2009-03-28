@@ -89,7 +89,7 @@ struct dummy_mutex : boost::synchro::lock_traits_base<>
     }
     
 #if 0
-    bool timed_lock(::boost::system_time const& absolute_time)
+    bool timed_lock(boost::chrono::system_clock::time_point const& absolute_time)
     {
         if(is_locked)
         {
@@ -222,8 +222,8 @@ void lock_mutexes_slowly(boost::synchro::thread_mutex* m1,boost::synchro::thread
 void lock_pair(boost::synchro::thread_mutex* m1,boost::synchro::thread_mutex* m2)
 {
     boost::synchro::lockables::lock(*m1,*m2);
-    boost::synchro::unique_locker<boost::synchro::thread_mutex> l1(*m1,boost::adopt_lock),
-        l2(*m2,boost::adopt_lock);
+    boost::synchro::unique_locker<boost::synchro::thread_mutex> l1(*m1,boost::synchro::adopt_lock),
+        l2(*m2,boost::synchro::adopt_lock);
 }
 
 void test_lock_two_other_thread_locks_in_order()

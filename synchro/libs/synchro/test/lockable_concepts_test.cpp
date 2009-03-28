@@ -76,9 +76,9 @@ BOOST_CONCEPT_ASSERT((TimedLockableConcept<boost::shared_mutex>));
 BOOST_CONCEPT_ASSERT((ShareLockableConcept<boost::shared_mutex>));    
 BOOST_CONCEPT_ASSERT((UpgradeLockableConcept<boost::shared_mutex>));   
 
-#if 0
 BOOST_CONCEPT_ASSERT((LockableConcept<interprocess_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_mutex>));    
+
 
 BOOST_CONCEPT_ASSERT((LockableConcept<synchro::interprocess_recursive_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_recursive_mutex>));    
@@ -86,6 +86,7 @@ BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_recursive_mutex
 BOOST_CONCEPT_ASSERT((LockableConcept<synchro::named_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::named_mutex>));    
 
+#if 0
 BOOST_CONCEPT_ASSERT((LockableConcept<synchro::interprocess_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((TimedLockableConcept<synchro::interprocess_upgradable_mutex>));    
 BOOST_CONCEPT_ASSERT((ShareLockableConcept<synchro::interprocess_upgradable_mutex>));    

@@ -89,9 +89,9 @@ void test_xxx() {
     }
     {
     typedef const try_unique_locker<thread_mutex> &try_locker;
-    thread_mutex mtx;
+    boost::mutex mtx;
     bool res=false;
-    try_unique_locker<thread_mutex> locker(mtx);
+    try_unique_locker<boost::mutex> locker(mtx);
     if (locker) {
         res=true;
         std::cout << "try_unique_locker:OK=" << std::endl;
