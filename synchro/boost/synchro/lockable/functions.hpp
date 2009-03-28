@@ -63,4 +63,13 @@
 //#include <boost/synchro/lockable/try_unlock_shared_and_lock_upgrade_until.hpp>
 //#include <boost/synchro/lockable/try_unlock_shared_and_lock_upgrade_for.hpp>
 
+
+#include <boost/synchro/lockable/lock_when.hpp>
+#include <boost/synchro/lockable/lock_when_until.hpp>
+#include <boost/synchro/lockable/lock_when_for.hpp>
+
+#include <boost/synchro/lockable/relock_when.hpp>
+#include <boost/synchro/lockable/relock_when_until.hpp>
+#include <boost/synchro/lockable/relock_when_for.hpp>
+
 #endif
