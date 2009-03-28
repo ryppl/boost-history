@@ -1,0 +1,105 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Class template at</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="The Mirror library documentation">
+<link rel="up" href="../../mirror/reference.html#header.boost.mirror.intrinsic.at.hpp" title="Header &lt;boost/mirror/intrinsic/at.hpp&gt;">
+<link rel="prev" href="size.html" title="Class template size">
+<link rel="next" href="point_to.html" title="Class template point_to">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../boost.png"></td>
+<td align="center"><a href="../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
+<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="size.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.intrinsic.at.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="point_to.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="refentry" lang="en">
+<a name="boost.mirror.at"></a><div class="titlepage"></div>
+<div class="refnamediv">
+<h2><span class="refentrytitle">Class template at</span></h2>
+<p>boost::mirror::at &#8212; Returns the i-th element of the <code class="computeroutput">MetaObjectSequence</code>. 
+				The <code class="computeroutput">Position</code> parameter must be an instantiation of mpl::int_.
+				</p>
+</div>
+<h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
+<div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Position&gt; 
+<span class="bold"><strong>class</strong></span> <a class="link" href="at.html" title="Class template at">at</a> {
+<span class="bold"><strong>public</strong></span>:
+  <span class="emphasis"><em>// types</em></span>
+  <span class="bold"><strong>typedef</strong></span> <span class="emphasis"><em>unspecified</em></span> <a name="boost.mirror.at.type"></a>type;
+};</pre></div>
+<div class="refsect1" lang="en">
+<a name="id2615579"></a><h2>Description</h2>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.intrinsic.at.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+BOOST_CHECK((
+	at&lt; 
+		<a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;0&gt; 
+	&gt;::type::base_name() == 
+	<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("first")
+));
+BOOST_CHECK((
+	at&lt; 
+		<a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;1&gt; 
+	&gt;::type::base_name() == 
+	<a class="link" href="../../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a>("second")
+));
+</pre>
+<pre class="programlisting">
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		at&lt; 
+			<a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;0&gt; 
+		&gt;::type::type::reflected_type,
+		bool
+	&gt;
+));
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		at&lt; 
+			<a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;1&gt; 
+		&gt;::type::type::reflected_type,
+		double
+	&gt;
+));
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Matú&#353; Chochlík<p>Use, modification and distribution is subject to the Boost
+			Software License, Version 1.0. (See accompanying file
+			<code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+			</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="size.html"><img src="../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../../mirror/reference.html#header.boost.mirror.intrinsic.at.hpp"><img src="../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="point_to.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

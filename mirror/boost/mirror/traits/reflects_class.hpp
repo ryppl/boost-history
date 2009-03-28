@@ -12,17 +12,17 @@
 #define BOOST_MIRROR_META_REFLECTS_CLASS_HPP
 
 // true type/false type for trait templates 
-#include <boost/type_traits/integral_constant.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mirror/meta_class.hpp>
 
 namespace boost {
 namespace mirror {
 
 template <class MetaObject>
-struct reflects_class : public false_type{ };
+struct reflects_class : public mpl::false_{ };
 
 template <class Class>
-struct reflects_class<meta_class<Class> > : public true_type{ };
+struct reflects_class<meta_class<Class> > : public mpl::true_{ };
 
 
 } // namespace mirror

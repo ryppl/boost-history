@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/by_name.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="by_name">
+			<template>
+				<template-type-parameter name="MetaClassAttributes"/>
+			</template>
+			<purpose>
+				<para>Allows to get the individual MetaAttributes in the MetaClassAttributes which was passed as a parameter,
+                                by the name of the attributes they are reflecting.
+				</para>
+			</purpose>
+			<inherit access="public">
+				<type><emphasis>unspecified</emphasis></type>
+			</inherit>
+			<description>
+				<section id="mirror.intrinsic.by_name.reference.samples">
+					<title>Examples</title>
+<programlisting>
+typedef ::std::pair&lt; bool, double&gt; P;
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(P) meta_P;
+BOOST_CHECK((
+	by_name&lt;meta_P::attributes&gt;::first::base_name() == 
+	<macroname>BOOST_CTS_LIT</macroname>("first")
+));
+BOOST_CHECK((
+	by_name&lt;meta_P::attributes&gt;::second::base_name() == 
+	<macroname>BOOST_CTS_LIT</macroname>("second")
+));
+BOOST_CHECK((
+	by_name&lt;meta_P::all_attributes&gt;::first::base_name() == 
+	<classname>at</classname>&lt;meta_P::all_attributes, mpl::int_&lt;0&gt; &gt;::type::base_name()
+));
+BOOST_CHECK((
+	by_name&lt;meta_P::all_attributes&gt;::second::base_name() == 
+	<classname>at</classname>&lt;meta_P::all_attributes, mpl::int_&lt;1&gt; &gt;::type::base_name()
+));
+</programlisting>
+<programlisting>
+typedef ::std::pair&lt; bool, double&gt; P;
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(P) meta_P;
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		by_name&lt;meta_P::all_attributes&gt;::first::type::reflected_type,
+		bool
+	&gt;
+));
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		by_name&lt;meta_P::all_attributes&gt;::second::type::reflected_type,
+		double
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

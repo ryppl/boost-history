@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/iterator/deref.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="deref">
+			<template>
+				<template-type-parameter name="Iterator"/>
+			</template>
+			<purpose>
+				<para>Returns the <code>MetaObject</code> that the <code>Iterator</code> points to.
+				</para>
+			</purpose>
+			<access name="public">
+				<typedef name="type">
+					<type><emphasis>MetaObject</emphasis></type>
+				</typedef>
+			</access>
+			<description>
+				<section id="mirror.iterator.deref.reference.samples">
+					<title>Examples</title>
+<programlisting>
+BOOST_CHECK((
+	<classname>at</classname>&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;0&gt; 
+	&gt;::type::base_name() == 
+	deref&lt;
+		<classname>point_to</classname>&lt;
+			<macroname>BOOST_MIRRORED_CLASS</macroname>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;0&gt; 
+		&gt;::type
+	&gt;::type::base_name()
+));
+BOOST_CHECK((
+	<classname>at</classname>&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;1&gt; 
+	&gt;::type::base_name() == 
+	deref&lt;
+		<classname>point_to</classname>&lt;
+			<macroname>BOOST_MIRRORED_CLASS</macroname>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;1&gt; 
+		&gt;::type
+	&gt;::type::base_name()
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

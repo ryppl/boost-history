@@ -11,12 +11,12 @@
 			<purpose>
 				<para>If <code>MetaObject</code> is an instantiation of 
 				<code><classname>meta_class</classname></code>, then <code><classname>reflects_class</classname></code>
-				inherits from <code><classname>::boost::true_type</classname></code>. Otherwise it inherits from
-				<code><classname>::boost::false_type</classname></code>.
+				inherits from <code><classname>::boost::mpl::true_</classname></code>. Otherwise it inherits from
+				<code><classname>::boost::mpl::false_</classname></code>.
 				</para>
 			</purpose>
 			<inherit access="public">
-				<type><classname>false_type</classname>-or-<classname>true_type</classname></type>
+				<type><classname>mpl::false_</classname>-or-<classname>mpl::true_</classname></type>
 			</inherit>
 			<description>
 				<para>This template can be used to distinguish whether the opaque <code>MetaObject</code> type reflects a class
@@ -26,17 +26,17 @@
 					<title>Examples</title>
 <programlisting>
 BOOST_MPL_ASSERT_NOT((
-	reflects_class&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;
+	reflects_class&lt; <macroname>BOOST_MIRRORED_TYPE</macroname>(::std::string) &gt;
 ));
 </programlisting>
 <programlisting>
 BOOST_MPL_ASSERT((
-	reflects_class&lt; BOOST_MIRRORED_CLASS(::std::string) &gt;
+	reflects_class&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::string) &gt;
 ));
 </programlisting>
 <programlisting>
 BOOST_MPL_ASSERT_NOT((
-	reflects_class&lt; BOOST_MIRRORED_CLASS(::std::string)::scope &gt;
+	reflects_class&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::string)::scope &gt;
 ));
 </programlisting>
 				</section>

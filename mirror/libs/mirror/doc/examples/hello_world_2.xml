@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section id="mirror.examples.hello_world_2"
+	 xmlns:xi="http://www.w3.org/2001/XInclude"
+>
+<using-namespace name="boost::mirror"/>
+<using-namespace name="boost::cts"/>
+
+<title>Hello world v.2</title>
+<para>This is another simple example of namespace and type registration and reflection facilities.
+
+</para>
+<xi:include href="../samples/hello_world_2.xml"/>
+</section>
+

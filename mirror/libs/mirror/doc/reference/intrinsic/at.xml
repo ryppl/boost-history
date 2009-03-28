@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/at.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="at">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+				<template-type-parameter name="Position"/>
+			</template>
+			<purpose>
+				<para>Returns the i-th element of the <code>MetaObjectSequence</code>. 
+				The <code>Position</code> parameter must be an instantiation of mpl::int_.
+				</para>
+			</purpose>
+			<access name="public">
+				<typedef name="type">
+					<type><emphasis>unspecified</emphasis></type>
+				</typedef>
+			</access>
+			<description>
+				<section id="mirror.intrinsic.at.reference.samples">
+					<title>Examples</title>
+<programlisting>
+BOOST_CHECK((
+	at&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;0&gt; 
+	&gt;::type::base_name() == 
+	<macroname>BOOST_CTS_LIT</macroname>("first")
+));
+BOOST_CHECK((
+	at&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(
+			::std::pair&lt; bool, double&gt;
+		)::attributes, 
+		mpl::int_&lt;1&gt; 
+	&gt;::type::base_name() == 
+	<macroname>BOOST_CTS_LIT</macroname>("second")
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		at&lt; 
+			<macroname>BOOST_MIRRORED_CLASS</macroname>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;0&gt; 
+		&gt;::type::type::reflected_type,
+		bool
+	&gt;
+));
+BOOST_MPL_ASSERT((
+	is_same&lt;
+		at&lt; 
+			<macroname>BOOST_MIRRORED_CLASS</macroname>(
+				::std::pair&lt; bool, double&gt;
+			)::attributes, 
+			mpl::int_&lt;1&gt; 
+		&gt;::type::type::reflected_type,
+		double
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

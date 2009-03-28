@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<programlisting id="mirror.reference.sample.hello_world_2">
+
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+#include &lt;boost/mirror/meta_class.hpp&gt;
+#include &lt;boost/mirror/intrinsic/by_name.hpp&gt;
+#include &lt;boost/mirror/intrinsic/at.hpp&gt;
+
+struct Greeting
+{
+        int Hello;
+        int World;
+};
+
+namespace boost {
+namespace mirror {
+
+<macroname>BOOST_MIRROR_REG_TYPE_GLOBAL_SCOPE</macroname>(Greeting)
+
+<macroname>BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN</macroname>(::Greeting)
+        <macroname>BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB</macroname>(_, Hello)
+        <macroname>BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB</macroname>(_, World)
+<macroname>BOOST_MIRROR_REG_CLASS_ATTRIBS_END</macroname>
+
+} // namespace mirror
+} // namespace boost
+
+
+int main(void)
+{
+        using namespace ::std;
+        using namespace ::boost;
+        using namespace ::boost::mirror;
+        //
+        //
+        typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(::Greeting) meta_Greeting;
+        //
+        // cts::bcout() returns a reference to ::std::cout
+        // or ::std::wcout based on the used character type
+        //
+        cts::<functionname>bcout</functionname>() &lt;&lt;
+                <classname>by_name</classname>&lt;meta_Greeting::all_attributes&gt;::Hello::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(", ") &lt;&lt;
+                <classname>by_name</classname>&lt;meta_Greeting::all_attributes&gt;::World::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(".") &lt;&lt;
+                endl;
+        //
+        cts::<functionname>bcout</functionname>() &lt;&lt;
+                <classname>at</classname>&lt;meta_Greeting::attributes, mpl::int_&lt;0&gt; &gt;::type::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(", ") &lt;&lt;
+                <classname>at</classname>&lt;meta_Greeting::attributes, mpl::int_&lt;1&gt; &gt;::type::base_name() &lt;&lt;
+                <macroname>BOOST_CTS_LIT</macroname>(".") &lt;&lt;
+                endl;
+        //
+        return 0;
+}
+
+
+</programlisting>
+

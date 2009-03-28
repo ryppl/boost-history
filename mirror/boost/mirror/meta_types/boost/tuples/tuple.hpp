@@ -41,7 +41,7 @@ struct meta_type_boost_tuple
 // designate tuples::null_type as typelist null type
 template <>
 struct is_typelist_null_type< ::boost::tuples::null_type>
-	: ::boost::true_type { };
+	: ::boost::mpl::true_ { };
 
 
 } // namespace detail

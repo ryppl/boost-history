@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/size.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="size">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+			</template>
+			<purpose>
+				<para>Returns the size of the <code>MetaObjectSequence</code>. 
+				</para>
+			</purpose>
+                        <inherit access="public">
+				<type><emphasis>MplIntegralConstant</emphasis></type>
+                        </inherit>
+
+			<description>
+				<section id="mirror.intrinsic.size.reference.samples">
+					<title>Examples</title>
+<programlisting>
+size_t x = size&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(
+			::boost::tuple&lt; 
+				bool, 
+				char, 
+				wchar_t, 
+				short int, 
+				int, 
+				long int, 
+				float, 
+				double
+			&gt;
+		)::attributes
+	&gt;::value;
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_RELATION((
+	size&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt; int, int&gt;)::attributes&gt;::value,
+	==,
+	2
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_RELATION((
+	size&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt; int, int&gt;)::all_attributes&gt;::value,
+	==,
+	2
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

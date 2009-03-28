@@ -127,6 +127,7 @@
 		<para>
 		</para>
 		<xi:include href="examples/hello_world.xml"/>
+		<xi:include href="examples/hello_world_2.xml"/>
 		<xi:include href="examples/refl_namespaces_01.xml"/>
 		<xi:include href="examples/refl_namespaces_02.xml"/>
 		<xi:include href="examples/refl_namespaces_03.xml"/>

@@ -28,16 +28,16 @@
 <h2><span class="refentrytitle">Class template reflects_class</span></h2>
 <p>boost::mirror::reflects_class &#8212; If <code class="computeroutput">MetaObject</code> is an instantiation of 
 				<code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>, then <code class="computeroutput"><a class="link" href="reflects_class.html" title="Class template reflects_class">reflects_class</a></code>
-				inherits from <code class="computeroutput">::boost::true_type</code>. Otherwise it inherits from
-				<code class="computeroutput">::boost::false_type</code>.
+				inherits from <code class="computeroutput">::boost::mpl::true_</code>. Otherwise it inherits from
+				<code class="computeroutput">::boost::mpl::false_</code>.
 				</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; 
-<span class="bold"><strong>class</strong></span> <a class="link" href="reflects_class.html" title="Class template reflects_class">reflects_class</a> : <span class="bold"><strong>public</strong></span> <span class="type">false_type-or-true_type</span> {
+<span class="bold"><strong>class</strong></span> <a class="link" href="reflects_class.html" title="Class template reflects_class">reflects_class</a> : <span class="bold"><strong>public</strong></span> <span class="type">mpl::false_-or-mpl::true_</span> {
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2613960"></a><h2>Description</h2>
+<a name="id2614482"></a><h2>Description</h2>
 <p>This template can be used to distinguish whether the opaque <code class="computeroutput">MetaObject</code> type reflects a class
 				and thus is an instantiation of <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>.
 				</p>
@@ -46,17 +46,17 @@
 <a name="mirror.reflects_class.reference.samples"></a>Examples</h6></div></div></div>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	reflects_class&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;
+	reflects_class&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string) &gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT((
-	reflects_class&lt; BOOST_MIRRORED_CLASS(::std::string) &gt;
+	reflects_class&lt; <a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(::std::string) &gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	reflects_class&lt; BOOST_MIRRORED_CLASS(::std::string)::scope &gt;
+	reflects_class&lt; <a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(::std::string)::scope &gt;
 ));
 </pre>
 </div>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/rbegin.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="rbegin">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+			</template>
+			<purpose>
+				<para>Returns a reverse iterator pointing to the last element of the <code>MetaObjectSequence</code>. 
+				</para>
+			</purpose>
+                        <access name="public">
+                                <typedef name="type">
+                                        <type><emphasis>unspecified</emphasis></type>
+                                </typedef>
+                        </access>
+
+			<description>
+				<section id="mirror.intrinsic.rbegin.reference.samples">
+					<title>Examples</title>
+<programlisting>
+typedef ::std::pair&lt; bool, double&gt; P;
+BOOST_CHECK((
+	<classname>deref</classname>&lt;
+		rbegin&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::attributes &gt;::type
+	&gt;::type::base_name() == 
+	<classname>at</classname>&lt; 
+		<macroname>BOOST_MIRRORED_CLASS</macroname>(P)::attributes, 
+		mpl::int_&lt;1&gt; 
+	&gt;::type::base_name()
+));
+</programlisting>
+<programlisting>
+typedef ::std::pair&lt; bool, double&gt; P;
+BOOST_CHECK((
+	<classname>deref</classname>&lt;
+		rbegin&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::all_attributes &gt;::type
+	&gt;::type::base_name() == 
+	<macroname>BOOST_CTS_LIT</macroname>("second")
+));
+</programlisting>
+<programlisting>
+typedef ::std::pair&lt; bool, double&gt; P;
+BOOST_MPL_ASSERT((
+	<classname>iterator_not_equal</classname>&lt;
+		rbegin&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::all_attributes &gt;::type,
+		<classname>rend</classname>&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::all_attributes &gt;::type
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

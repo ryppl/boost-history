@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/iterator/prior.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="prior">
+			<template>
+				<template-type-parameter name="Iterator"/>
+			</template>
+			<purpose>
+				<para>Returns an <code>Iterator</code> pointing to the previous <code>MetaObject</code> 
+				in a <code>MetaObjectSequence</code>.
+				</para>
+			</purpose>
+			<access name="public">
+				<typedef name="type">
+					<type><emphasis>Iterator</emphasis></type>
+				</typedef>
+			</access>
+			<description>
+				<section id="mirror.iterator.prior.reference.samples">
+					<title>Examples</title>
+<programlisting>
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

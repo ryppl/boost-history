@@ -28,16 +28,16 @@
 <h2><span class="refentrytitle">Class template reflects_type</span></h2>
 <p>boost::mirror::reflects_type &#8212; If <code class="computeroutput">MetaObject</code> is either an instantiation of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>
 				or <code class="computeroutput"><a class="link" href="meta_class.html" title="Class template meta_class">meta_class</a></code>, then <code class="computeroutput"><a class="link" href="reflects_type.html" title="Class template reflects_type">reflects_type</a></code>
-				inherits from <code class="computeroutput">::boost::true_type</code>. Otherwise it inherits from
-				<code class="computeroutput">::boost::false_type</code>.
+				inherits from <code class="computeroutput">::boost::mpl::true_</code>. Otherwise it inherits from
+				<code class="computeroutput">::boost::mpl::false_</code>.
 				</p>
 </div>
 <h2 xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv-title">Synopsis</h2>
 <div xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" class="refsynopsisdiv"><pre class="synopsis"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObject&gt; 
-<span class="bold"><strong>class</strong></span> <a class="link" href="reflects_type.html" title="Class template reflects_type">reflects_type</a> : <span class="bold"><strong>public</strong></span> <span class="type">false_type-or-true_type</span> {
+<span class="bold"><strong>class</strong></span> <a class="link" href="reflects_type.html" title="Class template reflects_type">reflects_type</a> : <span class="bold"><strong>public</strong></span> <span class="type">mpl::false_-or-mpl::true_</span> {
 };</pre></div>
 <div class="refsect1" lang="en">
-<a name="id2613708"></a><h2>Description</h2>
+<a name="id2614193"></a><h2>Description</h2>
 <p>This template can be used to distinguish whether the opaque <code class="computeroutput">MetaObject</code> type reflects a type or a class
 				and thus is an instantiation of <code class="computeroutput"><a class="link" href="meta_type.html" title="Class template meta_type">meta_type</a></code>.
 				</p>
@@ -46,32 +46,32 @@
 <a name="mirror.reflects_type.reference.samples"></a>Examples</h6></div></div></div>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	reflects_type&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;::value
+	reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string) &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	reflects_type&lt; BOOST_MIRRORED_CLASS(::std::pair&lt;int, ::std::string&gt;) &gt;::value
+	reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_CLASS.html" title="Macro BOOST_MIRRORED_CLASS">BOOST_MIRRORED_CLASS</a>(::std::pair&lt;int, ::std::string&gt;) &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	!reflects_type&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;::value
+	!reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_STATIC_ASSERT((
-	!reflects_type&lt; BOOST_MIRRORED_TYPE(::std::string)::scope &gt;::value
+	!reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string)::scope &gt;::value
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT((
-	reflects_type&lt; BOOST_MIRRORED_TYPE(::std::string) &gt;
+	reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a>(::std::string) &gt;
 ));
 </pre>
 <pre class="programlisting">
 BOOST_MPL_ASSERT_NOT((
-	reflects_type&lt; BOOST_MIRRORED_NAMESPACE(::boost::mirror) &gt;
+	reflects_type&lt; <a class="link" href="../../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a>(::boost::mirror) &gt;
 ));
 </pre>
 </div>

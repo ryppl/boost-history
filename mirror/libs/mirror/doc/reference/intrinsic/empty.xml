@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/empty.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="empty">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+			</template>
+			<purpose>
+				<para>If <code>MetaObjectSequence</code> is empty then <code><classname>empty</classname></code>&lt;MetaObjectSequence&gt;
+				inherits from <code><classname>::boost::mpl::true_</classname></code>. Otherwise it inherits from
+				<code><classname>::boost::mpl::false_</classname></code>.
+				</para>
+			</purpose>
+                        <inherit access="public">
+				<type><classname>mpl::false_</classname>-or-<classname>mpl::true_</classname></type>
+                        </inherit>
+
+			<description>
+				<section id="mirror.intrinsic.empty.reference.samples">
+					<title>Examples</title>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	empty&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt; int, int&gt;)::attributes &gt;
+));
+</programlisting>
+<programlisting>
+BOOST_MPL_ASSERT_NOT((
+	empty&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(::std::pair&lt; int, int&gt;)::all_attributes &gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

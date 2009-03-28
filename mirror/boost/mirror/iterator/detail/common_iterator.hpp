@@ -13,6 +13,7 @@
 
 #include <boost/mirror/intrinsic/size.hpp>
 #include <boost/mirror/intrinsic/at.hpp>
+#include <boost/mirror/iterator/deref.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/arithmetic.hpp>
 #include <boost/mpl/if.hpp>
@@ -24,16 +25,6 @@
 
 namespace boost {
 namespace mirror {
-
-/** Dereferences an iterator
- */
-template <class Iterator>
-struct deref
-{
-	typedef typename Iterator::template get_pointed_to<void>::type
-		type;
-};
-
 namespace detail {
 
 	/** This is the declaration of the base iterator template.

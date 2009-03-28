@@ -29,12 +29,12 @@ namespace detail {
  *  template param types
  */
 template <typename T>
-struct is_typelist_null_type : ::boost::false_type { };
+struct is_typelist_null_type : ::boost::mpl::false_ { };
 
 // mpl::void_ is a type_list null type
 template <>
 struct is_typelist_null_type< ::boost::mpl::void_ >
-	: ::boost::true_type { };
+	: ::boost::mpl::true_ { };
 
 template <typename ArgTypeList>
 struct template_args_type_list_wo_nulls

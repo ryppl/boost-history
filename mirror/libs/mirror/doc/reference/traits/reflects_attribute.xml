@@ -11,12 +11,12 @@
 			<purpose>
 				<para>If <code>MetaObject</code> is an instantiation of <code><classname>meta_attribute</classname></code>,
 				then <code><classname>reflects_attribute</classname></code>
-				inherits from <code><classname>::boost::true_type</classname></code>. Otherwise it inherits from
-				<code><classname>::boost::false_type</classname></code>.
+				inherits from <code><classname>::boost::mpl::true_</classname></code>. Otherwise it inherits from
+				<code><classname>::boost::mpl::false_</classname></code>.
 				</para>
 			</purpose>
 			<inherit access="public">
-				<type><classname>false_type</classname>-or-<classname>true_type</classname></type>
+				<type><classname>mpl::false_</classname>-or-<classname>mpl::true_</classname></type>
 			</inherit>
 		</class>
 	</namespace><!-- mirror -->

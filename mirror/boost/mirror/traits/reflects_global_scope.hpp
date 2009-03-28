@@ -12,7 +12,7 @@
 #define BOOST_MIRROR_META_REFLECTS_GLOBAL_SCOPE_HPP
 
 // true type/false type for trait templates 
-#include <boost/type_traits/integral_constant.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mirror/meta_namespace.hpp>
 
 namespace boost {
@@ -22,13 +22,13 @@ namespace mirror {
  */
 template <class MetaNamespace>
 struct reflects_global_scope
-: public false_type{ };
+: public mpl::false_{ };
 
 /** Reflects-global-scope trait specialization for global scope meta_namespace
  */
 template <>
 struct reflects_global_scope< BOOST_MIRRORED_GLOBAL_SCOPE() >
-: public true_type{ };
+: public mpl::true_{ };
 
 
 } // namespace mirror

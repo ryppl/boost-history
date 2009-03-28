@@ -12,14 +12,15 @@
 #define BOOST_MIRROR_META_REFLECTS_VIRTUAL_INHERITANCE_HPP
 
 // true type/false type for trait templates 
- #include  <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/mirror/meta_inheritance.hpp>
 
 namespace boost {
 namespace mirror {
 
 template <class MetaObject>
-struct reflects_virtual_inheritance : public false_type{ };
+struct reflects_virtual_inheritance : public mpl::false_{ };
 
 template < 
         class DerivedClass,
@@ -38,7 +39,9 @@ struct reflects_virtual_inheritance<
 		AccessSpecifier,
 		InheritanceSpecifier
 	> 
-> : public is_same< InheritanceSpecifier, virtual_base_ > { };
+> : public mpl::bool_<
+	is_same< InheritanceSpecifier, virtual_base_>::value
+> { };
 
 template < class InheritanceInfo >
 struct reflects_virtual_inheritance<

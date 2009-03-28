@@ -40,7 +40,7 @@ struct meta_type_boost_fusion_vector
 // designate fusion::void_ type as a typelist null type
 template <>
 struct is_typelist_null_type< ::boost::fusion::void_ >
-	: ::boost::true_type { };
+	: ::boost::mpl::true_ { };
 
 
 } // namespace detail

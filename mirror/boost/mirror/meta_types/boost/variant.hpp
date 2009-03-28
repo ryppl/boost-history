@@ -38,7 +38,7 @@ struct meta_type_boost_variant
 // designate detail::variant::void_ as typelist null type
 template <>
 struct is_typelist_null_type< ::boost::detail::variant::void_ >
-	: ::boost::true_type { };
+	: ::boost::mpl::true_ { };
 
 
 } // namespace detail

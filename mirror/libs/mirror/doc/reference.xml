@@ -243,9 +243,57 @@
 
 	</section>
 	<section id="mirror.reference.intrinsic">
+		<using-namespace name="boost::mirror"/>
 		<title>Intrinsic Metafunctions</title>
 		<para>
 		</para>
+                <table frame="all"><title>MetaFunctions</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Meta-function</entry> <entry>Purpose</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><code><classname>empty</classname></code></entry>
+                                <entry>Can be used to check whether a MetaObjectSequence is empty.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>size</classname></code></entry>
+                                <entry>Returns the size of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>at</classname></code></entry>
+                                <entry>Retrieves the i-th element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>point_to</classname></code></entry>
+                                <entry>Returns the iterator pointing to the i-th element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>begin</classname></code></entry>
+                                <entry>Returns an iterator pointing to the first element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>end</classname></code></entry>
+                                <entry>Returns an iterator pointing past the last element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>rbegin</classname></code></entry>
+                                <entry>Returns a reverse iterator pointing to the last element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>rend</classname></code></entry>
+                                <entry>Returns a reverse iterator pointing before the first element of the MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>by_name</classname></code></entry>
+                                <entry>Allows to get the individual MetaAttributes in the MetaClassAttributes passed as a parameter 
+				by the name of the attributes they are reflecting.</entry>
+                        </row>
+                </tbody>
+                </tgroup>
+                </table>
+
 	</section>
 	<section id="mirror.reference.algorithms">
 		<title>Algorithms</title>
@@ -253,9 +301,61 @@
 		</para>
 	</section>
 	<section id="mirror.reference.iterators">
+		<using-namespace name="boost"/>
+		<using-namespace name="boost::mirror"/>
 		<title>Iterators</title>
 		<para>
 		</para>
+                <table frame="all"><title>Iterator-related meta-functions</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Meta-function</entry> <entry>Purpose</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><code><classname>deref</classname></code></entry>
+                                <entry>Can be used to dereference an Iterator.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>is_valid</classname></code></entry>
+                                <entry>Checks whether an Iterator is valid.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>prior</classname></code></entry>
+                                <entry>Returns an Iterator pointing to the previous element in a MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>next</classname></code></entry>
+                                <entry>Returns an Iterator pointing to the next element in a MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_equal</classname></code></entry>
+                                <entry>Iterator equality comparison.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_not_equal</classname></code></entry>
+                                <entry>Iterator inequality comparison.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_less</classname></code></entry>
+                                <entry>Iterator less than comparison.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_less_equal</classname></code></entry>
+                                <entry>Iterator less than or equality comparison.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_greater</classname></code></entry>
+                                <entry>Iterator greater than comparison.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>iterator_greater_equal</classname></code></entry>
+                                <entry>Iterator greater than or equality comparison.</entry>
+                        </row>
+                </tbody>
+                </tgroup>
+                </table>
+
 	</section>
 	<section id="mirror.reference.traversals">
 		<title>Traversals</title>
@@ -281,6 +381,27 @@
 
 		<xi:include href="reference/traits/reflects_inheritance.xml"/>
 		<xi:include href="reference/traits/reflects_virtual_inheritance.xml"/>
+
+		<xi:include href="reference/intrinsic/empty.xml"/>
+		<xi:include href="reference/intrinsic/size.xml"/>
+		<xi:include href="reference/intrinsic/at.xml"/>
+		<xi:include href="reference/intrinsic/point_to.xml"/>
+		<xi:include href="reference/intrinsic/begin.xml"/>
+		<xi:include href="reference/intrinsic/end.xml"/>
+		<xi:include href="reference/intrinsic/rbegin.xml"/>
+		<xi:include href="reference/intrinsic/rend.xml"/>
+		<xi:include href="reference/intrinsic/by_name.xml"/>
+
+		<xi:include href="reference/iterator/deref.xml"/>
+		<xi:include href="reference/iterator/is_valid.xml"/>
+		<xi:include href="reference/iterator/prior.xml"/>
+		<xi:include href="reference/iterator/next.xml"/>
+		<xi:include href="reference/iterator/iterator_equal.xml"/>
+		<xi:include href="reference/iterator/iterator_not_equal.xml"/>
+		<xi:include href="reference/iterator/iterator_less.xml"/>
+		<xi:include href="reference/iterator/iterator_less_equal.xml"/>
+		<xi:include href="reference/iterator/iterator_greater.xml"/>
+		<xi:include href="reference/iterator/iterator_greater_equal.xml"/>
 	</section>
 
 </library-reference>

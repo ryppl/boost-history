@@ -34,7 +34,7 @@
 <dt><span class="section"><a href="reference.html#mirror.reference.algorithms">Algorithms</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.iterators">Iterators</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.traversals">Traversals</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2601738">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2602181">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
@@ -59,7 +59,7 @@
 		As a general rule of the thumb these macros should be used in the <code class="computeroutput">boost::mirror</code> namespace.
 		</p>
 <div class="table">
-<a name="id2600409"></a><p class="title"><b>Table 1.1. Registering macros</b></p>
+<a name="id2600411"></a><p class="title"><b>Table 1.1. Registering macros</b></p>
 <div class="table-contents"><table class="table" summary="Registering macros">
 <colgroup>
 <col>
@@ -131,7 +131,7 @@
 		the individual macros.
 		</p>
 <div class="table">
-<a name="id2600746"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
+<a name="id2600747"></a><p class="title"><b>Table 1.2. Reflection macros</b></p>
 <div class="table-contents"><table class="table" summary="Reflection macros">
 <colgroup>
 <col>
@@ -203,7 +203,7 @@
 		template instantiations are commonly referred to as MetaObjects. Some other MetaObjects can be accessed by applying the intrinsic meta-functions on other MetaObjects.
 		</p>
 <div class="table">
-<a name="id2601155"></a><p class="title"><b>Table 1.3. Meta objects</b></p>
+<a name="id2601156"></a><p class="title"><b>Table 1.3. Meta objects</b></p>
 <div class="table-contents"><table class="table" summary="Meta objects">
 <colgroup>
 <col>
@@ -264,7 +264,7 @@
 		indicate whether the inspected MetaObject has or has not the trait.  
 		</p>
 <div class="table">
-<a name="id2601427"></a><p class="title"><b>Table 1.4. Traits</b></p>
+<a name="id2601428"></a><p class="title"><b>Table 1.4. Traits</b></p>
 <div class="table-contents"><table class="table" summary="Traits">
 <colgroup>
 <col>
@@ -313,6 +313,59 @@
 <a name="mirror.reference.intrinsic"></a>Intrinsic Metafunctions</h3></div></div></div>
 <p>
 		</p>
+<div class="table">
+<a name="id2601697"></a><p class="title"><b>Table 1.5. MetaFunctions</b></p>
+<div class="table-contents"><table class="table" summary="MetaFunctions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Meta-function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/empty.html" title="Class template empty">empty</a></code></td>
+<td>Can be used to check whether a MetaObjectSequence is empty.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/size.html" title="Class template size">size</a></code></td>
+<td>Returns the size of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/at.html" title="Class template at">at</a></code></td>
+<td>Retrieves the i-th element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/point_to.html" title="Class template point_to">point_to</a></code></td>
+<td>Returns the iterator pointing to the i-th element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/begin.html" title="Class template begin">begin</a></code></td>
+<td>Returns an iterator pointing to the first element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/end.html" title="Class template end">end</a></code></td>
+<td>Returns an iterator pointing past the last element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/rbegin.html" title="Class template rbegin">rbegin</a></code></td>
+<td>Returns a reverse iterator pointing to the last element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/rend.html" title="Class template rend">rend</a></code></td>
+<td>Returns a reverse iterator pointing before the first element of the MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/by_name.html" title="Class template by_name">by_name</a></code></td>
+<td>Allows to get the individual MetaAttributes in the MetaClassAttributes passed as a parameter 
+				by the name of the attributes they are reflecting.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -325,6 +378,62 @@
 <a name="mirror.reference.iterators"></a>Iterators</h3></div></div></div>
 <p>
 		</p>
+<div class="table">
+<a name="id2601937"></a><p class="title"><b>Table 1.6. Iterator-related meta-functions</b></p>
+<div class="table-contents"><table class="table" summary="Iterator-related meta-functions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Meta-function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/deref.html" title="Class template deref">deref</a></code></td>
+<td>Can be used to dereference an Iterator.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/is_valid.html" title="Class template is_valid">is_valid</a></code></td>
+<td>Checks whether an Iterator is valid.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/prior.html" title="Class template prior">prior</a></code></td>
+<td>Returns an Iterator pointing to the previous element in a MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/next.html" title="Class template next">next</a></code></td>
+<td>Returns an Iterator pointing to the next element in a MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_equal.html" title="Class template iterator_equal">iterator_equal</a></code></td>
+<td>Iterator equality comparison.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_not_equal.html" title="Class template iterator_not_equal">iterator_not_equal</a></code></td>
+<td>Iterator inequality comparison.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_less.html" title="Class template iterator_less">iterator_less</a></code></td>
+<td>Iterator less than comparison.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_less_equal.html" title="Class template iterator_less_equal">iterator_less_equal</a></code></td>
+<td>Iterator less than or equality comparison.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_greater.html" title="Class template iterator_greater">iterator_greater</a></code></td>
+<td>Iterator greater than comparison.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/iterator_greater_equal.html" title="Class template iterator_greater_equal">iterator_greater_equal</a></code></td>
+<td>Iterator greater than or equality comparison.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -334,7 +443,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2601738"></a>Header files</h3></div></div></div>
+<a name="id2602181"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
@@ -348,6 +457,25 @@
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_attribute.hpp">Header &lt;boost/mirror/traits/reflects_attribute.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_inheritance.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.traits.reflects_virtual_inheritance.hpp">Header &lt;boost/mirror/traits/reflects_virtual_inheritance.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.empty.hpp">Header &lt;boost/mirror/intrinsic/empty.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.size.hpp">Header &lt;boost/mirror/intrinsic/size.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.at.hpp">Header &lt;boost/mirror/intrinsic/at.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.point_to.hpp">Header &lt;boost/mirror/intrinsic/point_to.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.begin.hpp">Header &lt;boost/mirror/intrinsic/begin.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.end.hpp">Header &lt;boost/mirror/intrinsic/end.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.rbegin.hpp">Header &lt;boost/mirror/intrinsic/rbegin.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.rend.hpp">Header &lt;boost/mirror/intrinsic/rend.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.intrinsic.by_name.hpp">Header &lt;boost/mirror/intrinsic/by_name.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.deref.hpp">Header &lt;boost/mirror/iterator/deref.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.is_valid.hpp">Header &lt;boost/mirror/iterator/is_valid.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.prior.hpp">Header &lt;boost/mirror/iterator/prior.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.next.hpp">Header &lt;boost/mirror/iterator/next.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_equal.hpp">Header &lt;boost/mirror/iterator/iterator_equal.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_not_equal.hpp">Header &lt;boost/mirror/iterator/iterator_not_equal.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_less.hpp">Header &lt;boost/mirror/iterator/iterator_less.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_less_equal.hpp">Header &lt;boost/mirror/iterator/iterator_less_equal.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_greater.hpp">Header &lt;boost/mirror/iterator/iterator_greater.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_greater_equal.hpp">Header &lt;boost/mirror/iterator/iterator_greater_equal.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -480,6 +608,178 @@
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaInheritance&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reflects_virtual_inheritance.html" title="Class template reflects_virtual_inheritance">reflects_virtual_inheritance</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.empty.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/empty.hpp" target="_top">boost/mirror/intrinsic/empty.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/empty.html" title="Class template empty">empty</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.size.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/size.hpp" target="_top">boost/mirror/intrinsic/size.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/size.html" title="Class template size">size</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.at.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/at.hpp" target="_top">boost/mirror/intrinsic/at.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Position&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/at.html" title="Class template at">at</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.point_to.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/point_to.hpp" target="_top">boost/mirror/intrinsic/point_to.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Position&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/point_to.html" title="Class template point_to">point_to</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.begin.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/begin.hpp" target="_top">boost/mirror/intrinsic/begin.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/begin.html" title="Class template begin">begin</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.end.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/end.hpp" target="_top">boost/mirror/intrinsic/end.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/end.html" title="Class template end">end</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.rbegin.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/rbegin.hpp" target="_top">boost/mirror/intrinsic/rbegin.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/rbegin.html" title="Class template rbegin">rbegin</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.rend.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/rend.hpp" target="_top">boost/mirror/intrinsic/rend.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/rend.html" title="Class template rend">rend</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.intrinsic.by_name.hpp"></a>Header &lt;<a href="../../../boost/mirror/intrinsic/by_name.hpp" target="_top">boost/mirror/intrinsic/by_name.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaClassAttributes&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/by_name.html" title="Class template by_name">by_name</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.deref.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/deref.hpp" target="_top">boost/mirror/iterator/deref.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/deref.html" title="Class template deref">deref</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.is_valid.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/is_valid.hpp" target="_top">boost/mirror/iterator/is_valid.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/is_valid.html" title="Class template is_valid">is_valid</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.prior.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/prior.hpp" target="_top">boost/mirror/iterator/prior.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/prior.html" title="Class template prior">prior</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.next.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/next.hpp" target="_top">boost/mirror/iterator/next.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/next.html" title="Class template next">next</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_equal.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_equal.hpp" target="_top">boost/mirror/iterator/iterator_equal.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_equal.html" title="Class template iterator_equal">iterator_equal</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_not_equal.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_not_equal.hpp" target="_top">boost/mirror/iterator/iterator_not_equal.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_not_equal.html" title="Class template iterator_not_equal">iterator_not_equal</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_less.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_less.hpp" target="_top">boost/mirror/iterator/iterator_less.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_less.html" title="Class template iterator_less">iterator_less</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_less_equal.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_less_equal.hpp" target="_top">boost/mirror/iterator/iterator_less_equal.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_less_equal.html" title="Class template iterator_less_equal">iterator_less_equal</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_greater.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_greater.hpp" target="_top">boost/mirror/iterator/iterator_greater.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_greater.html" title="Class template iterator_greater">iterator_greater</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.iterator.iterator_greater_equal.hpp"></a>Header &lt;<a href="../../../boost/mirror/iterator/iterator_greater_equal.hpp" target="_top">boost/mirror/iterator/iterator_greater_equal.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_greater_equal.html" title="Class template iterator_greater_equal">iterator_greater_equal</a>;
   }
 }</pre>
 </div>

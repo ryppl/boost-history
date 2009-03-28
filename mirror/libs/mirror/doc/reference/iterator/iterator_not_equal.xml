@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/iterator/iterator_not_equal.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="iterator_not_equal">
+			<template>
+				<template-type-parameter name="Iterator1"/>
+				<template-type-parameter name="Iterator2"/>
+			</template>
+                        <purpose>
+                                <para>If the <code>Iterator1</code> is not equal to <code>Iterator2</code> then 
+				<code><classname>iterator_not_equal</classname></code>&lt;Iterator1, Iterator2&gt;
+                                inherits from <code><classname>::boost::mpl::true_</classname></code>. Otherwise it inherits from
+                                <code><classname>::boost::mpl::false_</classname></code>.
+                                </para>
+                        </purpose>
+                        <inherit access="public">
+                                <type><classname>mpl::false_</classname>-or-<classname>mpl::true_</classname></type>
+                        </inherit>
+
+			<description>
+				<section id="mirror.iterator.iterator_not_equal.reference.samples">
+					<title>Examples</title>
+<programlisting>
+typedef ::std::pair&lt;int, int&gt; P;
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(P) meta_P;
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	iterator_not_equal&lt;
+		<classname>begin</classname>&lt;meta_P::attributes&gt;::type,
+		<classname>point_to</classname>&lt;
+			meta_P::attributes,
+			mpl::int_&lt;1&gt;
+		&gt;::type
+	&gt;
+));
+<macroname>BOOST_MPL_ASSERT</macroname>((
+	iterator_not_equal&lt;
+		<classname>rbegin</classname>&lt;meta_P::all_attributes&gt;::type,
+		<classname>rend</classname>&lt;meta_P::all_attributes&gt;::type
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/iterator/is_valid.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="is_valid">
+			<template>
+				<template-type-parameter name="Iterator"/>
+			</template>
+                        <purpose>
+                                <para>If the <code>Iterator</code> is valid then <code><classname>is_valid</classname></code>&lt;Iterator&gt;
+                                inherits from <code><classname>::boost::mpl::true_</classname></code>. Otherwise it inherits from
+                                <code><classname>::boost::mpl::false_</classname></code>.
+                                </para>
+                        </purpose>
+                        <inherit access="public">
+                                <type><classname>mpl::false_</classname>-or-<classname>mpl::true_</classname></type>
+                        </inherit>
+
+			<description>
+				<section id="mirror.iterator.is_valid.reference.samples">
+					<title>Examples</title>
+<programlisting>
+typedef ::boost::tuple&lt;int, int, int&gt; T;
+typedef <macroname>BOOST_MIRRORED_CLASS</macroname>(T) meta_T;
+BOOST_MPL_ASSERT((
+	is_valid&lt;
+		<classname>begin</classname>&lt;meta_T::attributes&gt;::type
+	&gt;
+));
+BOOST_MPL_ASSERT_NOT((
+	is_valid&lt;
+		<classname>end</classname>&lt;meta_T::attributes&gt;::type
+	&gt;
+));
+BOOST_MPL_ASSERT((
+	is_valid&lt;
+		<classname>rbegin</classname>&lt;meta_T::all_attributes&gt;::type
+	&gt;
+));
+BOOST_MPL_ASSERT_NOT((
+	is_valid&lt;
+		<classname>rend</classname>&lt;meta_T::all_attributes&gt;::type
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

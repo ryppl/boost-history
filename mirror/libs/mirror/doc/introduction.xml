@@ -114,6 +114,18 @@
 </section>
 
 
+<section id="mirror.introduction.hello_world">
+        <title>Hello world</title>
+<para>In order to comply with the tradition of computer programming we will start
+with a simple if not very useful example showing the basic usage of some of the
+Mirror's facilities. The sole purpose of this program is to print a hello message, twice.
+A little more complex example accomplishing the same task in a different way can be found 
+<link linkend="mirror.examples.hello_world_2">here</link>.
+</para>
+        <xi:include href="samples/hello_world.xml"/>
+</section>
+
+
 <section id="mirror.motivation">
 	<title>Motivation</title>
 <para>

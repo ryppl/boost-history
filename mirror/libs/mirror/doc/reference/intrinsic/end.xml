@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/intrinsic/end.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="end">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+			</template>
+			<purpose>
+				<para>Returns the iterator pointing past the last element of the <code>MetaObjectSequence</code>. 
+				</para>
+			</purpose>
+                        <access name="public">
+                                <typedef name="type">
+                                        <type><emphasis>unspecified</emphasis></type>
+                                </typedef>
+                        </access>
+
+			<description>
+				<section id="mirror.intrinsic.end.reference.samples">
+					<title>Examples</title>
+<programlisting>
+typedef ::std::pair&lt; int, ::std::string&gt; P;
+BOOST_MPL_ASSERT((
+	<classname>iterator_not_equal</classname>&lt;
+		<classname>begin</classname>&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::attributes &gt;::type,
+		end&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::attributes &gt;::type
+	&gt;
+));
+BOOST_MPL_ASSERT((
+	<classname>iterator_not_equal</classname>&lt;
+		end&lt; <macroname>BOOST_MIRRORED_CLASS</macroname>(P)::all_attributes &gt;::type,
+		<classname>point_to</classname>&lt; 
+			<macroname>BOOST_MIRRORED_CLASS</macroname>(P)::all_attributes, 
+			mpl::int_&lt;1&gt;
+		&gt;::type
+	&gt;
+));
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>
