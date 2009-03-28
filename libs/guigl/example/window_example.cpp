@@ -6,6 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#include "pch.hpp"
+
 #include <boost/guigl/application.hpp>
 #include <boost/guigl/window.hpp>
 #include <boost/guigl/layout/grid.hpp>

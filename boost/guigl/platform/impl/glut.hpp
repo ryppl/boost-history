@@ -105,4 +105,4 @@ namespace boost{ namespace guigl { namespace gl {
 
 }}}
 
-#endif
+#endif // BOOST__GUIGL__GL__GLUT_HPP

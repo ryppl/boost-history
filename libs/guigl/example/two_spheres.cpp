@@ -6,6 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#include "pch.hpp"
+
 #include "two_spheres.hpp"
 
 #include <boost/guigl/view/impl/colored.hpp>

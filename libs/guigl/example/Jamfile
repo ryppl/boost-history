@@ -8,27 +8,30 @@
 
 project boost/guigl/example
     : requirements
+		<include>.
         <library>$(TOP)/libs/guigl/build//boost_guigl/<use-window-manager>platform_glut
     ;
 
+cpp-pch pch : pch.hpp ;
+
 exe window_example
     :
-        window_example.cpp two_spheres.cpp two_buttons.cpp
+        window_example.cpp two_spheres.cpp two_buttons.cpp pch
     ;
 
 exe window_example_static
     :
-        window_example.cpp two_spheres.cpp two_buttons.cpp
+        window_example.cpp two_spheres.cpp two_buttons.cpp pch
     :
        <link>static
     ;
 
-exe custom_example : custom_example.cpp ;
-exe window_only_example : window_only_example.cpp ;
-exe overlapping_example : overlapping_example.cpp ;
-exe sexy_button : sexy_button.cpp ;
-exe ggl : ggl.cpp ;
-exe polygon : polygon.cpp ;
+exe custom_example : custom_example.cpp pch ;
+exe window_only_example : window_only_example.cpp pch ;
+exe overlapping_example : overlapping_example.cpp pch ;
+exe sexy_button : sexy_button.cpp pch ;
+exe ggl : ggl.cpp pch ;
+exe polygon : polygon.cpp pch ;
 
 install window_example_stage
     :

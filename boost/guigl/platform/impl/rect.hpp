@@ -56,4 +56,4 @@ namespace boost{ namespace guigl { namespace gl {
 
 }}}
 
-#endif BOOST__GUIGL__GL__RECT_HPP
+#endif // BOOST__GUIGL__GL__RECT_HPP

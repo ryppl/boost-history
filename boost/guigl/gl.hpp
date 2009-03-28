@@ -290,4 +290,4 @@ namespace boost{ namespace guigl { namespace gl {
 #include "platform/impl/glut.hpp"
 #include "platform/impl/tess.hpp"
 
-#endif BOOST__GUIGL__GL_HPP
+#endif // BOOST__GUIGL__GL_HPP

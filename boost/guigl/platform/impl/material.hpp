@@ -164,4 +164,4 @@ namespace boost{ namespace guigl { namespace gl {
     }
 }}}
 
-#endif BOOST__GUIGL__GL__MATERIAL_HPP
+#endif // BOOST__GUIGL__GL__MATERIAL_HPP

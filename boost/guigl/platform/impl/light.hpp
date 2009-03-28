@@ -270,4 +270,4 @@ namespace boost{ namespace guigl { namespace gl {
 
 }}}
 
-#endif BOOST__GUIGL__GL__LIGHT_HPP
+#endif // BOOST__GUIGL__GL__LIGHT_HPP

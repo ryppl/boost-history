@@ -6,6 +6,8 @@ Distributed under the Boost Software License, Version 1.0.
 http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
+#include "pch.hpp"
+
 #include <boost/guigl/application.hpp>
 #include <boost/guigl/window.hpp>
 #include <boost/guigl/view/positioned.hpp>
@@ -65,16 +67,16 @@ public:
             point<RB>());
         ggl::draw(b);
 
-        // segment
-        gl::color(green(0.5f));
-        gl::line_width(2);
-        ggl::draw(segment<HC>());
-        ggl::draw(segment<VC>());
+        //// segment
+        //gl::color(green(0.5f));
+        //gl::line_width(2);
+        //ggl::draw(segment<HC>());
+        //ggl::draw(segment<VC>());
 
-        gl::color(red(0.2f));
-        gl::line_width(5);
-        ggl::draw(segment<D1>());
-        ggl::draw(segment<D2>());
+        //gl::color(red(0.2f));
+        //gl::line_width(5);
+        //ggl::draw(segment<D1>());
+        //ggl::draw(segment<D2>());
 
         // std::vector as a ring
         gl::color(black());

@@ -103,4 +103,4 @@ namespace boost { namespace guigl { namespace gl {
 
 }}} // gl
 
-#endif BOOST__GUIGL__GL__VERTEX_HPP
+#endif // BOOST__GUIGL__GL__VERTEX_HPP

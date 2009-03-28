@@ -517,4 +517,4 @@ namespace boost{ namespace guigl { namespace ggl {
 
 }}}
 
-#endif BOOST__GUIGL__GGL_HPP
+#endif // BOOST__GUIGL__GGL_HPP

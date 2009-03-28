@@ -71,6 +71,14 @@
 			>
 		</File>
 		<File
+			RelativePath="..\..\example\overlapping_example.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\pch.hpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\example\polygon.cpp"
 			>
 		</File>

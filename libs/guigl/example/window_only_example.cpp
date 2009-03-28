@@ -6,7 +6,7 @@
     http://www.boost.org/LICENSE_1_0.txt)
 -----------------------------------------------===============================*/
 
-
+#include "pch.hpp"
 
 //[ window_only_example_includes
 #include <boost/guigl/application.hpp>
