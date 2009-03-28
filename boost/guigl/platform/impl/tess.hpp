@@ -12,6 +12,11 @@ http://www.boost.org/LICENSE_1_0.txt)
 #include <boost/guigl/types.hpp>
 #include <boost/guigl/platform/glu.hpp>
 
+// TODO: solve proble with CALLBACK definition
+#ifndef CALLBACK
+#define CALLBACK
+#endif
+
 namespace boost{ namespace guigl { namespace gl {
 
     class tess : boost::noncopyable {

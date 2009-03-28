@@ -95,4 +95,4 @@ namespace boost { namespace guigl { namespace gl {
     }
 }}}
 
-#endif BOOST__GUIGL__COLOR_HPP
+#endif // BOOST__GUIGL__COLOR_HPP

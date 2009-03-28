@@ -137,7 +137,11 @@ public:
 
     }
 
-    BOOST_GUIGL_WIDGET_DRAW_IMPL(my_widget);
+    void draw()
+    {
+        draw_prologue();
+        draw_epilogue();
+    }
 };
 
 int main()
