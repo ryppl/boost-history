@@ -23,7 +23,7 @@
 
 namespace boost { namespace synchro {
 
-    
+#if 0    
 class thread_recursive_mutex
 : public lock_traits_base<
     multi_threaded_tag,
@@ -43,9 +43,10 @@ public:
     BOOST_COPY_CONSTRUCTOR_DELETE(thread_recursive_mutex) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(thread_recursive_mutex) /*< disable copy asignement >*/
     thread_recursive_mutex() {}
-};    
+};   
+#endif
 #if 1    
-//typedef boost::recursive_mutex thread_recursive_mutex;
+typedef boost::recursive_mutex thread_recursive_mutex;
 
 template<>
 struct timed_interface_tag<boost::recursive_mutex> {
@@ -87,7 +88,7 @@ struct best_condition_any<boost::recursive_mutex> {
 };
 #endif
 
-
+#if 0
 class thread_recursive_timed_mutex
 : public lock_traits_base<
     multi_threaded_tag,
@@ -108,18 +109,6 @@ public:
     BOOST_COPY_CONSTRUCTOR_DELETE(thread_recursive_timed_mutex) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(thread_recursive_timed_mutex) /*< disable copy asignement >*/
     thread_recursive_timed_mutex() {}
-
-    bool try_lock_until(system_time const & abs_time)
-    {return this->timed_lock(abs_time);}
-    template<typename TimeDuration>
-    bool try_lock_for(TimeDuration const & relative_time)
-    {return timed_lock(relative_time);}
-
-    void lock_until(system_time const & abs_time)
-    {if(!timed_lock(abs_time)) throw timeout_exception();}
-    template<typename TimeDuration>
-    void lock_for(TimeDuration const & relative_time)
-    {if(!timed_lock(relative_time)) throw timeout_exception();}
 
     template<typename Clock, typename Duration>
     bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
@@ -144,9 +133,9 @@ public:
     }
     
 };    
-
+#endif
 #if 1
-//typedef boost::recursive_timed_mutex thread_recursive_timed_mutex;
+typedef boost::recursive_timed_mutex thread_recursive_timed_mutex;
 
 template<>
 struct timed_interface_tag<boost::recursive_timed_mutex> {

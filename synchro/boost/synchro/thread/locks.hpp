@@ -72,41 +72,24 @@ namespace boost { namespace synchro {
         unique_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
 
-        unique_locker(Mutex& m_,system_time const& target_time): base_type(m_, target_time)
-        {}
-        template<typename TimeDuration>
-        unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
-        {}
-
         template <class Clock, class Duration>            
         unique_locker(Mutex& m_, chrono::time_point<Clock, Duration> const& target_time)
             : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
         {}
-        unique_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
-            : base_type(m_, target_time)
+        template <typename Rep, typename Period>            
+        unique_locker(Mutex& m_, chrono::duration<Rep, Period> const& target_time)
+            : base_type(m_, boost::convert_to<posix_time::time_duration>(target_time))
         {}
             
-        template<typename TimeDuration>
-        unique_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
-            : base_type(m_, target_time)
-        {}
-
         template <class Clock, class Duration>            
         unique_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
         {}
+        template <typename Rep, typename Period>            
+        unique_locker(nothrow_timeout_t, chrono::duration<Rep, Period> const& target_time, Mutex& m_)
+            : base_type(m_, boost::convert_to<posix_time::time_duration>(target_time))
+        {}
 
-        unique_locker(Mutex& m_,system_time const& target_time, throw_timeout_t)
-            : base_type(m_, boost::defer_lock)
-        {
-            lock_until(target_time);
-        }
-        template<typename TimeDuration>
-        unique_locker(Mutex& m_,TimeDuration const& target_time, throw_timeout_t)
-            : base_type(m_, boost::defer_lock)
-        {
-            lock_for(target_time);
-        }
 
         template <class Clock, class Duration>            
         unique_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time, throw_timeout_t)
@@ -114,23 +97,24 @@ namespace boost { namespace synchro {
         {
             lock_until(target_time);
         }
-
-        template<typename TimeDuration>
-        unique_locker(TimeDuration const& target_time, Mutex& m_)
+        template <typename Rep, typename Period>            
+        unique_locker(Mutex& m_, chrono::duration<Rep, Period> const& target_time, throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_for(target_time);
         }
-        unique_locker(system_time const& target_time, Mutex& m_)
-            : base_type(m_, boost::defer_lock)
-        {
-            lock_until(target_time);
-        }
+
         template <class Clock, class Duration>            
         unique_locker(chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             lock_until(target_time);
+        }
+        template <typename Rep, typename Period>            
+        unique_locker(chrono::duration<Rep, Period> const& target_time, Mutex& m_)
+            : base_type(m_, boost::defer_lock)
+        {
+            lock_for(target_time);
         }
 #ifdef BOOST_HAS_RVALUE_REFS
         unique_locker(unique_locker&& other): base_type(other)
@@ -212,69 +196,27 @@ namespace boost { namespace synchro {
             return l==mutex();
         } /*< strict lockers specific function >*/
 
-        template<typename TimeDuration>
-        bool try_lock_for(TimeDuration const& relative_time)
+        template<typename Clock, typename Duration>
+        bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
         {
-            #if 1
-            return this->timed_lock(relative_time);
-            #else
-            try_lock_for(*this, relative_time);
-            #endif
+            return this->timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
         }
 
         template <class Rep, class Period >
         bool try_lock_for(chrono::duration<Rep, Period> const& relative_time)
         {
-            #if 1
             return this->timed_lock(boost::convert_to<posix_time::time_duration>(relative_time));
-            #else
-            return lockable::try_lock_for(*this, relative_time);
-            #endif
-        }
-
-        bool try_lock_until(::boost::system_time const& absolute_time)
-        {
-            return this->timed_lock(absolute_time);
-        }
-
-        template<typename TimeDuration>
-        void lock_for(TimeDuration const& relative_time)
-        {
-            if(!try_lock_for(relative_time)) throw timeout_exception();
-        }
-
-        void lock_until(::boost::system_time const& absolute_time)
-        {
-            if(!try_lock_until(absolute_time)) throw timeout_exception();
-        }
-
-        template<typename Clock, typename Duration>
-        bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
-        {
-            #if 1
-            return this->timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
-            #else
-            return lockable::try_lock_until(*this, abs_time);
-            #endif
         }
 
         template<typename Clock, typename Duration>
         void lock_until(chrono::time_point<Clock, Duration> const & abs_time)
         {
-            #if 1
             if(!this->timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
-            #else
-            lockable::lock_until(*this, abs_time);
-            #endif
         }
         template<typename Rep, typename Period>
         void lock_for(chrono::duration<Rep, Period> const & rel_time)
         {
-            #if 1
             if(!this->timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
-            #else
-            lockable::lock_for(*this, rel_time);
-            #endif
         }
         
         friend class shared_locker<Mutex,scope_tag_type>;
@@ -293,57 +235,59 @@ namespace boost { namespace synchro {
         BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE(try_unique_locker) /*< disable copy construction >*/
         BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE(try_unique_locker) /*< disable copy asignement >*/
 
-        explicit try_unique_locker(Mutex& m_): base_type(m_, boost::defer_lock)
+        explicit try_unique_locker(Mutex& m_): base_type(m_, defer_lock)
         { 
-            #if 1
             this->try_lock(); 
-            #else
-            lockable::try_lock(*this);
-            #endif
         }
         try_unique_locker(Mutex& m_,force_lock_t): base_type(m_)
         {}
-        try_unique_locker(Mutex& m_,adopt_lock_t): base_type(m_, boost::adopt_lock)
+        try_unique_locker(Mutex& m_,adopt_lock_t tag): base_type(m_, tag)
         {}
-        try_unique_locker(Mutex& m_,defer_lock_t): base_type(m_, boost::defer_lock)
+        try_unique_locker(Mutex& m_,defer_lock_t tag): base_type(m_, tag)
         {}
-        try_unique_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
-        {}
-            
-        try_unique_locker(Mutex& m_,system_time const& target_time): base_type(m_, target_time)
-        {}
-        template<typename TimeDuration>
-        try_unique_locker(Mutex& m_,TimeDuration const& target_time): base_type(m_, target_time)
+        try_unique_locker(Mutex& m_,try_to_lock_t tag): base_type(m_, tag)
         {}
             
-        try_unique_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
-            : base_type(m_, target_time)
+        template<typename Clock, typename Duration>
+        try_unique_locker(Mutex& m_, chrono::time_point<Clock, Duration> const& abs_time)
+            : base_type(m_, boost::convert_to<posix_time::ptime>(abs_time))
         {}
-        template<typename TimeDuration>
-        try_unique_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        try_unique_locker(Mutex& m_,chrono::duration<Rep, Period> const& rel_time)
+            : base_type(m_, boost::convert_to<posix_time::time_duration>(rel_time))
+        {}
+            
+        template<typename Clock, typename Duration>
+        try_unique_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
+            : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
+        {}
+        template<typename Rep, typename Period>
+        try_unique_locker(nothrow_timeout_t, chrono::duration<Rep, Period> const& target_time, Mutex& m_)
             : base_type(m_, target_time)
         {}
 
 
-        try_unique_locker(Mutex& m_,system_time const& target_time, throw_timeout_t)
+        template<typename Clock, typename Duration>
+        try_unique_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time, throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_until(target_time);
         }
-        template<typename TimeDuration>
-        try_unique_locker(Mutex& m_,TimeDuration const& target_time, throw_timeout_t)
+        template<typename Rep, typename Period>
+        try_unique_locker(Mutex& m_,chrono::duration<Rep, Period> const& target_time, throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_for(target_time);
         }
         
-        try_unique_locker(system_time const& target_time, Mutex& m_)
+        template<typename Clock, typename Duration>
+        try_unique_locker(chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_until(target_time);
         }
-        template<typename TimeDuration>
-        try_unique_locker(TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        try_unique_locker(chrono::duration<Rep, Period> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_for(target_time);
@@ -448,45 +392,49 @@ namespace boost { namespace synchro {
         shared_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
             
-        shared_locker(Mutex& m_,system_time const& target_time)
+        template<typename Clock, typename Duration>
+        shared_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time)
             : base_type(m_, boost::defer_lock)
         {
             try_lock_until(target_time);
         }
-        template<typename TimeDuration>
-        shared_locker(Mutex& m_,TimeDuration const& target_time)
+        template<typename Rep, typename Period>
+        shared_locker(Mutex& m_,chrono::duration<Rep, Period> const& target_time)
             : base_type(m_, boost::defer_lock)
         {
             try_lock_for(target_time);
         }
             
-        shared_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
-            : base_type(m_, target_time)
+        template<typename Clock, typename Duration>
+        shared_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
+            : base_type(m_, boost::convert_to<posix_time::ptime>(target_time))
         {}
-        template<typename TimeDuration>
-        shared_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        shared_locker(nothrow_timeout_t, chrono::duration<Rep, Period> const& target_time, Mutex& m_)
         {
             try_lock_for(target_time);
         }
             
-        shared_locker(Mutex& m_,system_time const& target_time,throw_timeout_t)
+        template<typename Clock, typename Duration>
+        shared_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_until(target_time);
         }
-        template<typename TimeDuration>
-        shared_locker(Mutex& m_,TimeDuration const& target_time,throw_timeout_t)
+        template<typename Rep, typename Period>
+        shared_locker(Mutex& m_,chrono::duration<Rep, Period> const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             lock_for(target_time);
         }
         
-        template<typename TimeDuration>
-        shared_locker(TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        shared_locker(chrono::duration<Rep, Period> const& target_time, Mutex& m_)
         {
             lock_for(target_time);
         }
-        shared_locker(system_time const& target_time, Mutex& m_)
+        template<typename Clock, typename Duration>
+        shared_locker(chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             lock_until(target_time);
@@ -561,25 +509,27 @@ namespace boost { namespace synchro {
             return l==mutex();
         } /*< strict lockers specific function >*/
 
-        bool try_lock_until(boost::system_time const& absolute_time)
+        template<typename Clock, typename Duration>
+        bool try_lock_until(boost::chrono::time_point<Clock, Duration> const& absolute_time)
         {
-            return this->timed_lock(absolute_time);
+            return this->timed_lock(boost::convert_to<posix_time::ptime>(absolute_time));
         }
-        template<typename Duration>
-        bool try_lock_for(Duration const& relative_time)
+        template<typename Rep, typename Period>
+        bool try_lock_for(chrono::duration<Rep, Period> const& relative_time)
         {
-            return this->timed_lock(relative_time);
-        }
-
-        template<typename TimeDuration>
-        void lock_for(TimeDuration const& relative_time)
-        {
-            if(!try_lock_for(relative_time)) throw timeout_exception();
+            return this->timed_lock(boost::convert_to<posix_time::time_duration>(relative_time));
         }
 
-        void lock_until(::boost::system_time const& absolute_time)
+        template<typename Rep, typename Period>
+        void lock_for(chrono::duration<Rep, Period> const& relative_time)
         {
-            if(!try_lock_until(absolute_time)) throw timeout_exception();
+            if(!this->try_lock_for(relative_time)) throw timeout_exception();
+        }
+
+        template<typename Clock, typename Duration>
+        void lock_until(::boost::chrono::time_point<Clock, Duration> const& absolute_time)
+        {
+            if(!this->try_lock_until(absolute_time)) throw timeout_exception();
         }
 
     };
@@ -623,47 +573,51 @@ namespace boost { namespace synchro {
         upgrade_locker(Mutex& m_,try_to_lock_t): base_type(m_, boost::try_to_lock)
         {}
 
-        upgrade_locker(Mutex& m_,system_time const& target_time)
+        template<typename Clock, typename Duration>
+        upgrade_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time)
             : base_type(m_, boost::defer_lock)
         {
-            try_lock_until(target_time);
+            this->try_lock_until(target_time);
         }
-        template<typename TimeDuration>
-        upgrade_locker(Mutex& m_,TimeDuration const& target_time)
+        template<typename Rep, typename Period>
+        upgrade_locker(Mutex& m_,chrono::duration<Rep, Period> const& target_time)
             : base_type(m_, boost::defer_lock)
         {
-            try_lock_for(target_time);
+            this->try_lock_for(target_time);
         }
             
-        upgrade_locker(nothrow_timeout_t, system_time const& target_time, Mutex& m_)
+        template<typename Clock, typename Duration>
+        upgrade_locker(nothrow_timeout_t, chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
-            try_lock_until(target_time);
+            this->try_lock_until(target_time);
         }
-        template<typename TimeDuration>
-        upgrade_locker(nothrow_timeout_t, TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        upgrade_locker(nothrow_timeout_t, chrono::duration<Rep, Period> const& target_time, Mutex& m_)
         {
-            try_lock_for(target_time);
+            this->try_lock_for(target_time);
         }
             
-        upgrade_locker(Mutex& m_,system_time const& target_time,throw_timeout_t)
+        template<typename Clock, typename Duration>
+        upgrade_locker(Mutex& m_,chrono::time_point<Clock, Duration> const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_until(target_time);
         }
-        template<typename TimeDuration>
-        upgrade_locker(Mutex& m_,TimeDuration const& target_time,throw_timeout_t)
+        template<typename Rep, typename Period>
+        upgrade_locker(Mutex& m_,chrono::duration<Rep, Period> const& target_time,throw_timeout_t)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_for(target_time);
         }
         
-        template<typename TimeDuration>
-        upgrade_locker(TimeDuration const& target_time, Mutex& m_)
+        template<typename Rep, typename Period>
+        upgrade_locker(chrono::duration<Rep, Period> const& target_time, Mutex& m_)
         {
             this->lock_for(target_time);
         }
-        upgrade_locker(system_time const& target_time, Mutex& m_)
+        template<typename Clock, typename Duration>
+        upgrade_locker(chrono::time_point<Clock, Duration> const& target_time, Mutex& m_)
             : base_type(m_, boost::defer_lock)
         {
             this->lock_until(target_time);
@@ -718,25 +672,27 @@ namespace boost { namespace synchro {
             return l==mutex();
         } /*< strict lockers specific function >*/
 
-        bool try_lock_until(boost::system_time const& absolute_time)
+        template<typename Clock, typename Duration>
+        bool try_lock_until(boost::chrono::time_point<Clock, Duration> const& absolute_time)
         {
-            return this->timed_lock(absolute_time);
+            return this->timed_lock(boost::convert_to<posix_time::ptime>(absolute_time));
         }
-        template<typename Duration>
-        bool try_lock_for(Duration const& relative_time)
+        template<typename Rep, typename Period>
+        bool try_lock_for(chrono::duration<Rep, Period> const& relative_time)
         {
-            return this->timed_lock(boost::get_system_time()+relative_time);
-        }
-
-        template<typename TimeDuration>
-        void lock_for(TimeDuration const& relative_time)
-        {
-            if(!try_lock_for(relative_time)) throw timeout_exception();
+            return this->timed_lock(boost::convert_to<posix_time::time_duration>(relative_time));
         }
 
-        void lock_until(::boost::system_time const& absolute_time)
+        template<typename Rep, typename Period>
+        void lock_for(chrono::duration<Rep, Period> const& relative_time)
         {
-            if(!try_lock_until(absolute_time)) throw timeout_exception();
+            if(!this->try_lock_for(relative_time)) throw timeout_exception();
+        }
+
+        template<typename Clock, typename Duration>
+        void lock_until(::boost::chrono::time_point<Clock, Duration> const& absolute_time)
+        {
+            if(!this->try_lock_until(absolute_time)) throw timeout_exception();
         }
 
         friend class shared_locker<Mutex, scope_tag_type>;

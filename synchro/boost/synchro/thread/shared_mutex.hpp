@@ -23,7 +23,7 @@
 
 namespace boost { namespace synchro {
 
-    
+#if 0    
 class thread_shared_mutex
 : public lock_traits_base<
     multi_threaded_tag,
@@ -43,30 +43,6 @@ public:
     BOOST_COPY_CONSTRUCTOR_DELETE(thread_shared_mutex) /*< disable copy construction >*/
     BOOST_COPY_ASSIGNEMENT_DELETE(thread_shared_mutex) /*< disable copy asignement >*/
     thread_shared_mutex() {}
-
-    bool try_lock_until(system_time const & abs_time)
-    {return this->timed_lock(abs_time);}
-    template<typename TimeDuration>
-    bool try_lock_for(TimeDuration const & relative_time)
-    {return timed_lock(relative_time);}
-
-    void lock_until(system_time const & abs_time)
-    {if(!timed_lock(abs_time)) throw timeout_exception();}
-    template<typename TimeDuration>
-    void lock_for(TimeDuration const & relative_time)
-    {if(!timed_lock(relative_time)) throw timeout_exception();}
-    
-    bool try_lock_shared_until(system_time const& abs_time)
-    {return timed_lock_shared(abs_time);}
-    template<typename TimeDuration>
-    bool try_lock_shared_for(TimeDuration const& rel_time)
-    {return timed_lock_shared(rel_time);}
-
-    void lock_shared_until(system_time const& abs_time)
-    {if(!timed_lock_shared(abs_time)) throw timeout_exception();}
-    template<typename TimeDuration>
-    void lock_shared_for(TimeDuration const& abs_time)
-    {if(!timed_lock_shared(abs_time)) throw timeout_exception();}
     
     template<typename Clock, typename Duration>
     bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
@@ -114,10 +90,10 @@ public:
     }
     
 };    
-
+#endif
 #if 1
 
-//typedef boost::shared_mutex thread_shared_mutex;
+typedef boost::shared_mutex thread_shared_mutex;
 
 template<>
 struct timed_interface_tag<boost::shared_mutex> {
@@ -220,7 +196,7 @@ namespace lockable {
     }
 }
 
-
+#if 0
 template <>
 struct unique_lock_type<thread_shared_mutex> {
     typedef boost::unique_lock<boost::shared_mutex> type;
@@ -241,7 +217,7 @@ template <>
 struct upgrade_to_unique_locker_type<thread_shared_mutex> {
     typedef boost::upgrade_to_unique_lock<boost::shared_mutex> type;
 };
-
+#endif
 }
 }
 

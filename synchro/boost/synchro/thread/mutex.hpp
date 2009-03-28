@@ -26,7 +26,7 @@
 
 
 namespace boost { namespace synchro {
-
+#if 0
 class thread_mutex
 : public lock_traits_base<
     multi_threaded_tag,
@@ -55,12 +55,6 @@ public:
     {
         BOOST_STATIC_CONSTANT(bool, value = true);
     };
-    template<>
-    struct is_lockable<boost::mutex>
-    {
-        BOOST_STATIC_CONSTANT(bool, value = true);
-    };
-
     
 template <>
 struct unique_lock_type<thread_mutex> {
@@ -81,6 +75,12 @@ struct upgrade_to_unique_locker_type<thread_mutex> {
     typedef boost::upgrade_to_unique_lock<boost::mutex> type;
 };
 
+#endif    
+    template<>
+    struct is_lockable<boost::mutex>
+    {
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
 
 template <>
 struct lock_error_type<boost::mutex> {
@@ -88,7 +88,7 @@ struct lock_error_type<boost::mutex> {
 };
 
 #if 1
-//typedef boost::mutex thread_mutex;
+typedef boost::mutex thread_mutex;
 
 template<>
 struct timed_interface_tag<boost::mutex> {
@@ -129,7 +129,7 @@ struct best_condition_any<boost::mutex> {
 #endif
 
 ////////////////////////////////////////////////////
-
+#if 0
 class thread_timed_mutex
 : public lock_traits_base<
     multi_threaded_tag,
@@ -149,21 +149,6 @@ public:
     BOOST_COPY_ASSIGNEMENT_DELETE(thread_timed_mutex) /*< disable copy asignement >*/
     thread_timed_mutex () {}
         
-    bool try_lock_until(system_time const & abs_time) {
-        return timed_lock(abs_time);
-    }
-    template<typename TimeDuration>
-    bool try_lock_for(TimeDuration const & relative_time) {
-        return timed_lock(relative_time);
-    }
-
-    void lock_until(system_time const & abs_time) {
-        if(!timed_lock(abs_time)) throw timeout_exception();
-    }
-    template<typename TimeDuration>
-    void lock_for(TimeDuration const & relative_time) {
-        if(!timed_lock(relative_time)) throw timeout_exception();
-    }
     
     template<typename Clock, typename Duration>
     bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
@@ -188,9 +173,9 @@ public:
     }
 
 };    
-
+#endif
 #if 1
-//typedef boost::timed_mutex thread_timed_mutex;
+typedef boost::timed_mutex thread_timed_mutex;
 
 template<>
 struct timed_interface_tag<boost::timed_mutex> {
