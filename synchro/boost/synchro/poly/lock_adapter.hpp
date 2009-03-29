@@ -53,16 +53,14 @@ class timed_lock_adapter
 {
 public:
     ~timed_lock_adapter()    {}
-    bool try_lock_until(boost::system_time  const&  abs_time)
+    bool try_lock_until(chrono::system_clock::time_point  const&  abs_time)
     {return the_lock().try_lock_until(abs_time);}
-    template<typename DurationType>
-    bool try_lock_for(DurationType const& rel_time)
+    bool try_lock_for(chrono::nanoseconds const& rel_time)
     {return try_lock_for(rel_time);}
-    bool lock_until(boost::system_time  const&  abs_time)
-    {return the_lock().lock_until(abs_time);}
-    template<typename DurationType>
-    bool lock_for(DurationType const& rel_time)
-    {return lock_for(rel_time);}
+    void lock_until(chrono::system_clock::time_point const&  abs_time)
+    {the_lock().lock_until(abs_time);}
+    void lock_for(chrono::nanoseconds const& rel_time)
+    {lock_for(rel_time);}
     
     template<typename Clock, typename Duration>
     bool try_lock_until(chrono::time_point<Clock, Duration> const & abs_time)
@@ -101,17 +99,15 @@ public:
     void unlock_shared()
     {the_lock().unlock_shared();}
 
-    bool try_lock_shared_until(system_time const& t)
+    bool try_lock_shared_until(chrono::system_clock::time_point const& t)
     {return the_lock().try_lock_shared_until(t);}
-    template<typename TimeDuration>   
-    bool try_lock_shared_for(TimeDuration const& t)
+    bool try_lock_shared_for(chrono::nanoseconds const& t)
     {return the_lock().try_lock_shared_for(t);}
     
-    template<typename TimeDuration>   
-    void lock_shared_for(TimeDuration const& t)
-    {the_lock().lock_shared_for(t);}
-    void lock_shared_until(system_time const& t)
+    void lock_shared_until(chrono::system_clock::time_point const& t)
     {the_lock().lock_shared_until(t);}
+    void lock_shared_for(chrono::nanoseconds const& t)
+    {the_lock().lock_shared_for(t);}
 
     template<typename Clock, typename Duration>
     bool try_lock_shared_until(chrono::time_point<Clock, Duration> const & abs_time)
@@ -157,15 +153,13 @@ public:
 
     bool try_lock_upgrade()   
     {return the_lock().try_lock_upgrade();}
-    bool try_lock_upgrade_until(system_time const&t)   
+    bool try_lock_upgrade_until(chrono::system_clock::time_point const&t)   
     {return the_lock().try_lock_upgrade_until(t);}
-    template<typename TimeDuration>   
-    bool try_lock_upgrade_for(TimeDuration const&t)   
+    bool try_lock_upgrade_for(chrono::nanoseconds const&t)   
     {return the_lock().try_lock_upgrade_for(t);}
-    void lock_upgrade_until(system_time const&t)
+    void lock_upgrade_until(chrono::system_clock::time_point const&t)
     {the_lock().lock_upgrade_until(t);}
-    template<typename TimeDuration>   
-    void lock_upgrade_for(TimeDuration const&t)
+    void lock_upgrade_for(chrono::nanoseconds const&t)
     {the_lock().lock_upgrade_for(t);}
 
     template<typename Clock, typename Duration>

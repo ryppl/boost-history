@@ -68,6 +68,10 @@
 #include <boost/synchro/lockable/lock_when_until.hpp>
 #include <boost/synchro/lockable/lock_when_for.hpp>
 
+#include <boost/synchro/lockable/relock_on.hpp>
+#include <boost/synchro/lockable/relock_on_until.hpp>
+#include <boost/synchro/lockable/relock_on_for.hpp>
+
 #include <boost/synchro/lockable/relock_when.hpp>
 #include <boost/synchro/lockable/relock_when_until.hpp>
 #include <boost/synchro/lockable/relock_when_for.hpp>

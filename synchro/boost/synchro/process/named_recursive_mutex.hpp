@@ -16,8 +16,11 @@
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
+#if 0
 class named_recursive_mutex
 :   public boost::interprocess::named_recursive_mutex,
     public lock_traits_base<
@@ -57,8 +60,8 @@ public:
     void lock_for(TimeDuration const & relative_time)
     {if(!timed_lock(relative_time)) throw timeout_exception();}
 };    
+#endif
 
-#if 0
 typedef boost::interprocess::named_recursive_mutex named_recursive_mutex;
 
 template<>
@@ -98,7 +101,39 @@ struct best_condition_any<boost::interprocess::named_recursive_mutex> {
     typedef boost::interprocess::interprocess_condition type;
 };
 
-#endif
+
+namespace lockable {
+    namespace partial_specialization_workaround {
+        template <class Clock, class Duration >
+        struct lock_until<boost::interprocess::named_recursive_mutex,Clock, Duration>   {
+            static void 
+            apply( boost::interprocess::named_recursive_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                if(!lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();
+            }
+        };
+        template <class Rep, class Period >
+        struct lock_for<boost::interprocess::named_recursive_mutex,Rep, Period> {
+            static void 
+            apply( boost::interprocess::named_recursive_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                if(!lockable.timed_lock(get_system_time()+boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+            }
+        };
+        template <class Clock, class Duration >
+        struct try_lock_until<boost::interprocess::named_recursive_mutex,Clock, Duration> {
+            static typename result_of::template try_lock_until<boost::interprocess::named_recursive_mutex,Clock, Duration>::type 
+            apply( boost::interprocess::named_recursive_mutex& lockable, const chrono::time_point<Clock, Duration>& abs_time ) {
+                return lockable.timed_lock(boost::convert_to<posix_time::ptime>(abs_time));
+            }
+        };
+        template <class Rep, class Period >
+        struct try_lock_for<boost::interprocess::named_recursive_mutex,Rep, Period> {
+            static typename result_of::template try_lock_for<boost::interprocess::named_recursive_mutex,Rep, Period>::type 
+            apply( boost::interprocess::named_recursive_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
+                return lockable.timed_lock(get_system_time()+boost::convert_to<posix_time::time_duration>(rel_time));
+            }
+        };
+    }
+}
 
 }
 }

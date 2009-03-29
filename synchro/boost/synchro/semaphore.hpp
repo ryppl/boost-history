@@ -16,6 +16,8 @@
 #include <boost/synchro/thread_synchronization_family.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 //!\file
 //!Describes a semaphore class for inter-process synchronization
@@ -67,19 +69,21 @@ public:
     //!to the posted or the timeout expires. If the timeout expires, the
     //!function returns false. If the semaphore is posted the function
     //!returns true. If there is an error throws sem_exception
-    inline bool try_wait_until(const system_time &abs_time);
+    template<typename Clock, typename Duration>
+    inline bool try_wait_until(chrono::time_point<Clock, Duration> const& abs_time);
     
-    template<typename TimeDuration>
-    inline bool try_wait_for(const TimeDuration &rel_time) {
-        return try_wait_until(get_system_time()+rel_time);
+    template<typename Rep, typename Period>
+    inline bool try_wait_for(const chrono::duration<Rep, Period> &rel_time) {
+        return try_wait_until(Rep::now()+rel_time);
     }
     
-    inline void wait_until(const system_time &abs_time) {
+    template<typename Clock, typename Duration>
+    inline void wait_until(chrono::time_point<Clock, Duration> const& abs_time) {
         if (!try_wait_until(abs_time)) throw timeout_exception();
     }
     
-    template<typename TimeDuration>
-    inline void wait_for(const TimeDuration &rel_time) {
+    template<typename Rep, typename Period>
+    inline void wait_for(const chrono::duration<Rep, Period> &rel_time) {
         if (!try_wait_until(rel_time)) throw timeout_exception();
     }        
 
@@ -131,12 +135,14 @@ inline bool basic_semaphore<ScopeTag>::try_wait()
    return true;
 }
 
-template <typename ScopeTag>
-inline bool basic_semaphore<ScopeTag>::try_wait_until(const system_time &abs_time)
+   
+template<class ScopeTag> 
+template<class Clock, class Duration>
+inline bool basic_semaphore<ScopeTag>::try_wait_until(const chrono::time_point<Clock, Duration> &abs_time)
 {
    scoped_lock lock(m_mut);
    while(m_count == 0){
-      if(!m_cond.timed_wait(lock, abs_time))
+      if(!m_cond.timed_wait(lock, boost::convert_to<posix_time::ptime>(abs_time)))
          return m_count != 0;
    }
    --m_count;

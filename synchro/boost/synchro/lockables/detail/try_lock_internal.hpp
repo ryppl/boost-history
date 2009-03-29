@@ -16,7 +16,7 @@ namespace boost { namespace synchro { namespace lockables { namespace detail {
         template<typename MutexType1,typename MutexType2>
         unsigned try_lock_internal(MutexType1& m1,MutexType2& m2)
         {
-            unique_locker<MutexType1> l1(m1,boost::try_to_lock);
+            unique_locker<MutexType1> l1(m1,boost::synchro::try_to_lock);
             if(!l1)
             {
                 return 1;
@@ -32,7 +32,7 @@ namespace boost { namespace synchro { namespace lockables { namespace detail {
         template<typename MutexType1,typename MutexType2,typename MutexType3>
         unsigned try_lock_internal(MutexType1& m1,MutexType2& m2,MutexType3& m3)
         {
-            unique_locker<MutexType1> l1(m1,boost::try_to_lock);
+            unique_locker<MutexType1> l1(m1,boost::synchro::try_to_lock);
             if(!l1)
             {
                 return 1;
@@ -51,7 +51,7 @@ namespace boost { namespace synchro { namespace lockables { namespace detail {
         unsigned try_lock_internal(MutexType1& m1,MutexType2& m2,MutexType3& m3,
                                    MutexType4& m4)
         {
-            unique_locker<MutexType1> l1(m1,boost::try_to_lock);
+            unique_locker<MutexType1> l1(m1,boost::synchro::try_to_lock);
             if(!l1)
             {
                 return 1;
@@ -69,7 +69,7 @@ namespace boost { namespace synchro { namespace lockables { namespace detail {
         unsigned try_lock_internal(MutexType1& m1,MutexType2& m2,MutexType3& m3,
                                    MutexType4& m4,MutexType5& m5)
         {
-            unique_locker<MutexType1> l1(m1,boost::try_to_lock);
+            unique_locker<MutexType1> l1(m1,boost::synchro::try_to_lock);
             if(!l1)
             {
                 return 1;

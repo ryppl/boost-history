@@ -18,6 +18,8 @@
 #include <boost/synchro/condition_backdoor.hpp>
 #include <boost/synchro/condition_safe.hpp>
 #include <boost/synchro/timeout_exception.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 
@@ -42,25 +44,26 @@ public:
     void lock_when(condition &cond, Predicate pred){
         typename condition::backdoor(cond).wait_when(*this, pred);
     }
-    template<typename Predicate>
+    template<typename Predicate, typename Clock, typename Duration>
     void lock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time){
+            chrono::time_point<Clock, Duration> const& abs_time){
         typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     }
-    template<typename Predicate, typename duration_type>
+    template<typename Predicate, typename Rep, typename Period>
     void lock_when_for(condition &cond, Predicate pred,
-            duration_type const& rel_time){
+            chrono::duration<Rep, Period> const& rel_time){
         typename condition::backdoor(cond).wait_when_for(*this, pred, rel_time);
     }
         
     void relock_on(condition & cond) {
         typename condition::backdoor(cond).wait(*this);
     }
-    void relock_on_until(condition & cond, boost::system_time const& abs_time) {
+    template<typename Clock, typename Duration>
+    void relock_on_until(condition & cond, chrono::time_point<Clock, Duration> const& abs_time) {
            typename condition::backdoor(cond).wait_until(*this, abs_time);
     }
-    template<typename duration_type>
-    void relock_on_for(condition & cond, duration_type const& rel_time) {
+    template< typename Rep, typename Period>
+    void relock_on_for(condition & cond, chrono::duration<Rep, Period> const& rel_time) {
         typename condition::backdoor(cond).wait_for(*this, rel_time);
     }
 
@@ -68,14 +71,14 @@ public:
     void relock_when(condition &cond, Predicate pred){
         typename condition::backdoor(cond).wait_when(*this, pred);
     }
-    template<typename Predicate>
+    template<typename Predicate, typename Clock, typename Duration>
     void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time){
+            chrono::time_point<Clock, Duration> const& abs_time){
         typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     }
-    template<typename Predicate, typename duration_type>
+    template<typename Predicate,  typename Rep, typename Period>
     void relock_when_for(condition &cond, Predicate pred,
-            duration_type const& rel_time){
+            chrono::duration<Rep, Period> const& rel_time){
         typename condition::backdoor(cond).wait_when_for(*this, pred, rel_time);
     }
 

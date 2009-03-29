@@ -17,9 +17,11 @@
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
-
+#if 0
 class interprocess_mutex
 : public lock_traits_base<
     multi_process_tag,
@@ -56,7 +58,6 @@ public:
 
 };    
 
-
 template <>
 struct unique_lock_type<interprocess_mutex> {
     typedef boost::interprocess::scoped_lock<boost::interprocess::interprocess_mutex> type;
@@ -71,14 +72,15 @@ template <>
 struct upgrade_lock_type<interprocess_mutex> {
     typedef boost::interprocess::upgradable_lock<boost::interprocess::interprocess_mutex> type;
 };
+#endif
 #if 0
 template <>
 struct upgrade_to_unique_locker_type<interprocess_mutex> {
     typedef boost::interprocess::upgrade_to_unique_lock<boost::interprocess::interprocess_mutex> type;
 };
 #endif
-#if 1    
-//typedef boost::interprocess::interprocess_mutex interprocess_mutex;
+
+typedef boost::interprocess::interprocess_mutex interprocess_mutex;
 
 template<>
 struct timed_interface_tag<boost::interprocess::interprocess_mutex> {
@@ -117,7 +119,7 @@ struct best_condition_any<boost::interprocess::interprocess_mutex> {
     typedef boost::interprocess::interprocess_condition type;
 };
 
-#endif
+
 
 namespace lockable {
     namespace partial_specialization_workaround {
@@ -132,7 +134,7 @@ namespace lockable {
         struct lock_for<boost::interprocess::interprocess_mutex,Rep, Period> {
             static void 
             apply( boost::interprocess::interprocess_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
-                if(!lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
+                if(!lockable.timed_lock(get_system_time()+boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
             }
         };
         template <class Clock, class Duration >
@@ -146,7 +148,7 @@ namespace lockable {
         struct try_lock_for<boost::interprocess::interprocess_mutex,Rep, Period> {
             static typename result_of::template try_lock_for<boost::interprocess::interprocess_mutex,Rep, Period>::type 
             apply( boost::interprocess::interprocess_mutex& lockable, const chrono::duration<Rep, Period>& rel_time ) {
-                return lockable.timed_lock(boost::convert_to<posix_time::time_duration>(rel_time));
+                return lockable.timed_lock(get_system_time()+boost::convert_to<posix_time::time_duration>(rel_time));
             }
         };
     }

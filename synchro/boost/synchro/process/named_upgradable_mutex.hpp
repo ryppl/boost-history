@@ -19,6 +19,7 @@
 
 namespace boost { namespace synchro {
 
+#if 0
 class interprocess_named_upgradable_mutex
     : public interprocess::named_upgradable_mutex,
       public lock_traits_base<
@@ -109,8 +110,6 @@ public:
     void unlock_upgrade_and_lock_shared()
     {
         unlock_upgradable_and_lock_sharable();
-#if 0
-#endif
     }
     void unlock_upgrade_and_lock()
     {unlock_upgrade_and_lock();}
@@ -130,24 +129,47 @@ public:
 #endif
 
 };
+#endif
+
+typedef interprocess::named_upgradable_mutex interprocess_named_upgradable_mutex;
 
 
-//template<>
-//struct timed_interface_tag<boost::synchro::named_upgradable_mutex> {
-//    typedef has_timed_interface_tag type;
-//};
-//template<>
-//struct reentrancy_tag<boost::synchro::named_upgradable_mutex> {
-//    typedef non_recursive_tag type;
-//};
-//template<>
-//struct category_tag<boost::synchro::named_upgradable_mutex> {
-//    typedef upgradable_lock_tag type;
-//};
-//template<>
-//struct scope_tag<boost::synchro::named_upgradable_mutex> {
-//    typedef multi_process_tag type;
-//};
+template<>
+struct timed_interface_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef has_timed_interface_tag type;
+};
+template<>
+struct reentrancy_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef non_recursive_tag type;
+};
+template<>
+struct category_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef upgradable_lock_tag type;
+};
+template<>
+struct scope_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef multi_process_tag type;
+};
+
+template<>
+struct lifetime_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef kernel_lifetime_tag type;
+};
+
+template<>
+struct naming_tag<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef named_tag type;
+};
+
+template <>
+struct best_condition<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef boost::interprocess::interprocess_condition type;
+};
+
+template <>
+struct best_condition_any<boost::synchro::interprocess_named_upgradable_mutex> {
+    typedef boost::interprocess::interprocess_condition type;
+};
 
 #if 0
 template<>

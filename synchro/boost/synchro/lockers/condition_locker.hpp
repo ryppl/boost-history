@@ -17,6 +17,8 @@
 #include <boost/synchro/condition_backdoor.hpp>
 #include <boost/synchro/condition_safe.hpp>
 #include <boost/synchro/lockers.hpp>
+#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 
@@ -49,15 +51,17 @@ public:
     bool is_locking(lockable_type* l) const /*< strict lockers specific function >*/
 
     void relock_on(condition & cond);
-    void relock_until(condition & cond, boost::system_time const& abs_time);
+    template<typename Clock, typename Duration>
+    void relock_until(condition & cond, chrono::time_point<Clock, Duration> const& abs_time);
     template<typename duration_type>
     void relock_on_for(condition & cond, duration_type const& rel_time);
 
     template<typename Predicate>
     void relock_when(condition &cond, Predicate pred);
     template<typename Predicate>
+    template<typename Clock, typename Duration>
     void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time);
+            chrono::time_point<Clock, Duration> const& abs_time);
     template<typename Predicate, typename duration_type>
     void relock_when_for(condition &cond, Predicate pred,
             duration_type const& rel_time);
@@ -86,11 +90,12 @@ public:
     explicit condition_unique_locker(lockable_type& obj)
         : super_type(obj) { } /*< locks on construction >*/
 
-    template<typename TimeDuration>
-    condition_unique_locker(TimeDuration const& target_time, lockable_type& m_)
+    template<typename Rep, typename Period>
+    condition_unique_locker(chrono::duration<Rep, Period> const& target_time, lockable_type& m_)
         : super_type(target_time, m_)
     {}
-    condition_unique_locker(system_time const& target_time, lockable_type& m_)
+    template<typename Clock, typename Duration>
+    condition_unique_locker(chrono::time_point<Clock, Duration> const& target_time, lockable_type& m_)
         : super_type(target_time, m_)
     {}
 
@@ -103,12 +108,13 @@ public:
     //        typename condition::backdoor(cond).wait(*static_cast<unique_lock<Lockable>*>(this)); /*< relock on condition >*/
     //    }
 
-    template<typename TimeDuration>
-    condition_unique_locker(TimeDuration const& target_time, lockable_type& obj, condition &cond)
+    template<typename Rep, typename Period>
+    condition_unique_locker(chrono::duration<Rep, Period> const& target_time, lockable_type& obj, condition &cond)
         : super_type(obj) {
             typename condition::backdoor(cond).wait_for(target_time, *static_cast<super_type*>(this)); /*< relock on condition >*/
         }
-    condition_unique_locker(system_time const& target_time, lockable_type& obj, condition &cond)
+    template<typename Clock, typename Duration>
+    condition_unique_locker(chrono::time_point<Clock, Duration> const& target_time, lockable_type& obj, condition &cond)
         : super_type(obj) {
             typename condition::backdoor(cond).wait_until(target_time, *static_cast<super_type*>(this)); /*< relock on condition >*/
         }
@@ -124,14 +130,14 @@ public:
     //    : super_type(obj) {
     //        typename condition::backdoor(cond).wait_when(*static_cast<unique_lock<Lockable>*>(this), pred); /*< relock condition when predicate satisfaied>*/
     //    }
-    template <typename TimeDuration, typename Predicate>
-    condition_unique_locker(TimeDuration const& target_time, lockable_type& obj, condition &cond, Predicate pred)
+    template <typename Rep, typename Period, typename Predicate>
+    condition_unique_locker(chrono::duration<Rep, Period> const& target_time, lockable_type& obj, condition &cond, Predicate pred)
         : super_type(obj) {
             typename condition::backdoor(cond).wait_when_for(*static_cast<super_type*>(this), pred, target_time); /*< relock condition when predicate satisfaied>*/
             //typename condition::backdoor(cond).wait_when(*this, pred); /*< relock condition when predicate satisfaied>*/
         }
-    template <typename Predicate>
-    condition_unique_locker(system_time const& target_time, lockable_type& obj, condition &cond, Predicate pred)
+    template <typename Predicate, typename Clock, typename Duration>
+    condition_unique_locker(chrono::time_point<Clock, Duration> const& target_time, lockable_type& obj, condition &cond, Predicate pred)
         : super_type(obj) {
             typename condition::backdoor(cond).wait_when_until(*static_cast<super_type*>(this), pred, target_time); /*< relock condition when predicate satisfaied>*/
             //typename condition::backdoor(cond).wait_when(*this, pred); /*< relock condition when predicate satisfaied>*/
@@ -152,10 +158,11 @@ public:
     //    typename condition::backdoor(cond).wait(*this);
     //}
 
-    void relock_until(condition & cond, boost::system_time const& abs_time) {
+    template<typename Clock, typename Duration>
+    void relock_until(condition & cond, chrono::time_point<Clock, Duration> const& abs_time) {
            typename condition::backdoor(cond).wait_until(*this, abs_time);
     }
-    //void relock_until(condition_boosted & cond, boost::system_time const& abs_time) {
+    //void relock_until(condition_boosted & cond, chrono::time_point<Clock, Duration> const& abs_time) {
     //       typename condition::backdoor(cond).wait_until(*this, abs_time);
     //}
 
@@ -177,14 +184,14 @@ public:
     //    typename condition::backdoor(cond).wait_when(*this, pred);
     //}
 
-    template<typename Predicate>
+    template <typename Predicate, typename Clock, typename Duration>
     void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time){
+            chrono::time_point<Clock, Duration> const& abs_time){
         typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     }
     //template<typename Predicate>
     //void relock_when_until(condition_boosted &cond, Predicate pred,
-    //        boost::system_time const& abs_time){
+    //        chrono::time_point<Clock, Duration> const& abs_time){
     //    typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     //}
 
@@ -270,10 +277,11 @@ public:
     //    typename condition::backdoor(cond).wait(*this);
     //}
 
-    void relock_until(condition & cond, boost::system_time const& abs_time) {
+    template <typename Clock, typename Duration>
+    void relock_until(condition & cond, chrono::time_point<Clock, Duration> const& abs_time) {
            typename condition::backdoor(cond).wait_until(*this, abs_time);
     }
-    //void relock_until(condition_boosted & cond, boost::system_time const& abs_time) {
+    //void relock_until(condition_boosted & cond, chrono::time_point<Clock, Duration> const& abs_time) {
     //       typename condition::backdoor(cond).wait_until(*this, abs_time);
     //}
 
@@ -295,14 +303,14 @@ public:
     //    typename condition::backdoor(cond).wait_when(*this, pred);
     //}
 
-    template<typename Predicate>
+    template <typename Predicate, typename Clock, typename Duration>
     void relock_when_until(condition &cond, Predicate pred,
-            boost::system_time const& abs_time){
+            chrono::time_point<Clock, Duration> const& abs_time){
         typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     }
     //template<typename Predicate>
     //void relock_when_until(condition_boosted &cond, Predicate pred,
-    //        boost::system_time const& abs_time){
+    //        chrono::time_point<Clock, Duration> const& abs_time){
     //    typename condition::backdoor(cond).wait_when_until(*this, pred, abs_time);
     //}
 

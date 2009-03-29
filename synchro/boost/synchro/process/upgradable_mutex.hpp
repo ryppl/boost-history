@@ -19,6 +19,7 @@
 
 namespace boost { namespace synchro {
 
+#if 0
 class interprocess_upgradable_mutex
 : public lock_traits_base<
     multi_process_tag,
@@ -119,23 +120,46 @@ public:
 
 };
 
+#endif
+typedef interprocess::interprocess_upgradable_mutex interprocess_upgradable_mutex;
 
-//template<>
-//struct timed_interface_tag<boost::synchro::interprocess_upgradable_mutex> {
-//    typedef has_timed_interface_tag type;
-//};
-//template<>
-//struct reentrancy_tag<boost::synchro::interprocess_upgradable_mutex> {
-//    typedef non_recursive_tag type;
-//};
-//template<>
-//struct category_tag<boost::synchro::interprocess_upgradable_mutex> {
-//    typedef upgradable_lock_tag type;
-//};
-//template<>
-//struct scope_tag<boost::synchro::interprocess_upgradable_mutex> {
-//    typedef multi_process_tag type;
-//};
+template<>
+struct timed_interface_tag<boost::synchro::interprocess_upgradable_mutex> {
+    typedef has_timed_interface_tag type;
+};
+template<>
+struct reentrancy_tag<boost::synchro::interprocess_upgradable_mutex> {
+    typedef non_recursive_tag type;
+};
+template<>
+struct category_tag<boost::synchro::interprocess_upgradable_mutex> {
+    typedef upgradable_lock_tag type;
+};
+template<>
+struct scope_tag<boost::synchro::interprocess_upgradable_mutex> {
+    typedef multi_process_tag type;
+};
+
+template<>
+struct lifetime_tag<boost::interprocess::interprocess_upgradable_mutex> {
+    typedef kernel_lifetime_tag type;
+};
+
+template<>
+struct naming_tag<boost::interprocess::interprocess_upgradable_mutex> {
+    typedef anonymous_tag type;
+};
+
+template <>
+struct best_condition<boost::interprocess::interprocess_upgradable_mutex> {
+    typedef boost::interprocess::interprocess_condition type;
+};
+
+template <>
+struct best_condition_any<boost::interprocess::interprocess_upgradable_mutex> {
+    typedef boost::interprocess::interprocess_condition type;
+};
+
 
 #if 0
 template<>

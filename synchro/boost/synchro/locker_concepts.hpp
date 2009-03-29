@@ -16,6 +16,7 @@
 #include <boost/date_time/posix_time/ptime.hpp>
 #include <boost/concept_check.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/chrono/chrono.hpp>
 
 namespace boost {  namespace synchro {
 
@@ -38,7 +39,6 @@ struct BasicLockerConcept {
         if (!l1) return;
     }
     lockable_type mtx_;
-    system_time t;
 };
 
 template <typename Locker>
@@ -56,7 +56,6 @@ struct LockerConcept {
         //l2.release();
     }
     lockable_type mtx_;
-    system_time t;
 };
 
 template <typename Locker>
@@ -66,20 +65,20 @@ struct TimedLockerConcept {
 
     BOOST_CONCEPT_USAGE(TimedLockerConcept) {
         Locker l1(mtx_, t);
-        Locker l2(mtx_, boost::posix_time::seconds(1));
+        Locker l2(mtx_, chrono::seconds(1));
         Locker l3(mtx_, t, throw_timeout);
-        Locker l4(mtx_, boost::posix_time::seconds(1), throw_timeout);
+        Locker l4(mtx_, chrono::seconds(1), throw_timeout);
         Locker l5(t, mtx_);
-        Locker l6(boost::posix_time::seconds(1), mtx_);
+        Locker l6(chrono::seconds(1), mtx_);
         Locker l7(nothrow_timeout, t, mtx_);
-        Locker l8(nothrow_timeout, boost::posix_time::seconds(1), mtx_);
+        Locker l8(nothrow_timeout, chrono::seconds(1), mtx_);
         l5.lock_until(t);
-        l5.lock_for(boost::posix_time::seconds(1));
+        l5.lock_for(chrono::seconds(1));
         if (l5.try_lock_until(t)) return;
-        if (l5.try_lock_for(boost::posix_time::seconds(1))) return;
+        if (l5.try_lock_for(chrono::seconds(1))) return;
     }
     lockable_type mtx_;
-    system_time t;
+    boost::chrono::system_clock::time_point t;
 };
 
 

@@ -11,8 +11,6 @@
 #ifndef BOOST_SYNCHRO_SYNCHRONIZED__HPP
 #define BOOST_SYNCHRO_SYNCHRONIZED__HPP
 
-#include <boost/synchro/thread/locks.hpp>
-
 namespace boost { namespace synchro { namespace detail {
     bool no_opt_false() {return false;}
 }}}
@@ -72,9 +70,15 @@ namespace boost { namespace synchro { namespace detail {
 #define adopt_synchronize_var(VAR, LOCKABLE) BOOST_ADOPT_SYNCHRONIZE_VAR(VAR, LOCKABLE)
 #define defer_synchronize_var(VAR, LOCKABLE) BOOST_DEFER_SYNCHRONIZE_VAR(VAR, LOCKABLE)
 #define try_to_synchronize_var(VAR, LOCKABLE) BOOST_TRY_TO_SYNCHRONIZE_VAR(VAR, LOCKABLE)
-#define try_to_synchronize_var_until(VAR, LOCKABLE, ABS_TIME) BOOST_TRY_TO_SYNCHRONIZE_VAR_UNTIL(LOCKABLE, ABS_TIME)
-#define synchronize_var_until(VAR, LOCKABLE, ABS_TIME) BOOST_SYNCHRONIZE_VAR_UNTIL(ABS_TIME, LOCKABLE)
+#define try_to_synchronize_var_until(VAR, LOCKABLE, ABS_TIME) BOOST_TRY_TO_SYNCHRONIZE_VAR_UNTIL(VAR, LOCKABLE, ABS_TIME)
+#define synchronize_var_until(VAR, LOCKABLE, ABS_TIME) BOOST_SYNCHRONIZE_VAR_UNTIL(VAR, ABS_TIME, LOCKABLE)
 
 #define synchronize_type(TYPE, VAR, LOCKABLE) BOOST_SYNCHRONIZE_TYPE(TYPE, VAR, LOCKABLE)
+#define adopt_synchronize_type(TYPE, VAR, LOCKABLE) BOOST_ADOPT_SYNCHRONIZE_VAR(TYPE, VAR, LOCKABLE)
+#define defer_synchronize_type(TYPE, VAR, LOCKABLE) BOOST_DEFER_SYNCHRONIZE_VAR(TYPE, VAR, LOCKABLE)
+#define try_to_synchronize_type(TYPE, VAR, LOCKABLE) BOOST_TRY_TO_SYNCHRONIZE_VAR(TYPE, VAR, LOCKABLE)
+#define try_to_synchronize_type_until(TYPE, VAR, LOCKABLE, ABS_TIME) BOOST_TRY_TO_SYNCHRONIZE_VAR_UNTIL(TYPE, VAR, LOCKABLE, ABS_TIME)
+#define synchronize_type_until(TYPE, VAR, LOCKABLE, ABS_TIME) BOOST_SYNCHRONIZE_VAR_UNTIL(TYPE, VAR, ABS_TIME, LOCKABLE)
+
 
 #endif

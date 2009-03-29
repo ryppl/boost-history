@@ -87,7 +87,7 @@ struct ConditionLockableConcept {
     }
     Lockable& l;
     Condition c;
-    system_time t;
+    boost::chrono::system_clock::time_point t;
 };
       
 
