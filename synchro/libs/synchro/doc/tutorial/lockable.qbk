@@ -55,8 +55,8 @@ Boost synchronization mechanisms (from now bip stands for boost::interprocess):
 
 * boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface, multi-threaded
 * boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface, multi-threaded
-* bip::synchro::null_mutex: UpgradableLock, recursive, has-timed-interface, mono-threaded
-* bip::synchro::interprocess_recursive_mutex ExclusiveLock, recursive, has-timed-interface, multi_process.
+* bip::sync::null_mutex: UpgradableLock, recursive, has-timed-interface, mono-threaded
+* bip::sync::interprocess_recursive_mutex ExclusiveLock, recursive, has-timed-interface, multi_process.
 
 [*Lock traits]
 

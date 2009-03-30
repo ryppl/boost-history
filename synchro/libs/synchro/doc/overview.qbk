@@ -30,7 +30,7 @@ This library is a compilation of what I have found in the literature not yet pre
 * A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms based on lockables(mutexes) concepts and locker(guards) concepts.
 
     * lockables traits and lock generators, 
-    * generic free functions on lockables as: `lock`, `try_lock` 
+    * generic free functions on lockables as: `lock`, `try_lock`, ... 
     * locker adapters of the Boost.Thread and Boost.Interprocess lockers models,
     * complete them with the corresponding models for single-threaded programms: `null_mutex` and `null_condition` classes,
     * locking families,
@@ -47,7 +47,7 @@ This library is a compilation of what I have found in the literature not yet pre
     * `locking_ptr`, `on_derreference_locking_ptr`,
     * `externally_locked`,
     
-* `array_locker` on multiple lockables.
+* `array_unique_locker` on multiple lockables.
 
 * Generic free functions on multiple lockables `lock`, `try_lock`, `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`, `unlock`    * lock adapters of the Boost.Thread and Boost.Interprocess lockable models,
     * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`
@@ -55,10 +55,11 @@ This library is a compilation of what I have found in the literature not yet pre
 * A polymorphic lockable hierarchy.
 
 * High-level abstractions for handling more complicated synchronization problems, including
-    * `monitor` for guaranteeing exclusive access to an object, and
+    * `monitor` for guaranteeing exclusive access to an object.
 
 * A rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
 
+* Language-like Synchronized Block Macros
 
 [/====================================]
 [heading How to Use This Documentation]
@@ -79,7 +80,7 @@ This documentation makes use of the following naming and formatting conventions.
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all of InterThreads
+    // Include all of Synchro files
     #include <boost/synchro/synchro.hpp>
 
     // Create a namespace aliases

@@ -131,11 +131,11 @@ The problem is that even if these locker models the same model, there is no a si
 
 The library defines some locker adapters which take care of naming differences and that can be used like
 
-        boost::synchro::unique_locker<boost::mutex> scoped(guard);
+        bsynchro::unique_locker<boost::mutex> scoped(guard);
 
 or        
 
-        boost::synchro::unique_locker<boost::interprocess::interprocess_mutex> scoped(guard);
+        bsynchro::unique_locker<boost::interprocess::interprocess_mutex> scoped(guard);
 
 [*Strict lockers]
 
@@ -211,7 +211,7 @@ There are other `TryLockers` in Boost.Thread defined as a member typedef `scoped
 
 The library defines in a generic way a try_unique_locker adapter which takes care of naming differences and that can be used like
 
-        boost::synchro::unique_try_locker<Lockable> locker(mtx);
+        bsynchro::unique_try_locker<Lockable> locker(mtx);
 
 for any model of Lockable.
 
@@ -256,7 +256,7 @@ we found that this starts to be unmaintenable. What is event wrost is that as th
 To avoid this we can request the acquisition of all the locks toghether (letting the function to try several orders), as it does the function try_lock of Boost.Threads, but adding this time a expiration period parameter
 
     while (polling) {
-        if (boost::try_lock_for(100, m1, m2, m3)) {
+        if (bsynchro::try_lock_for(100, m1, m2, m3)) {
             foo();
             polling = false;
         } else execute_on_failed(); 
@@ -267,12 +267,12 @@ While this solve the deadlock problem, this code is not exception safe. With exc
     while (polling)
         try {
             t=now()+100;
-            boost::unique_locker<boost::mutex> l1(t, m1);
-            boost::unique_locker<boost::mutex> l2(t, m2);
-            boost::unique_locker<boost::mutex> l3(t, m3);
+            bsynchro::unique_locker<boost::mutex> l1(t, m1);
+            bsynchro::unique_locker<boost::mutex> l2(t, m2);
+            bsynchro::unique_locker<boost::mutex> l3(t, m3);
             foo();
             polling = false;
-        } catch (timeout_exception& ex) {execute_on_failed(); }
+        } catch (bsynchro::timeout_exception& ex) {execute_on_failed(); }
 
 [*`locker_tuples` or `locker_array` of Locker containers]
 
@@ -282,7 +282,7 @@ We can go a step ahead and mix the advantage of taking all the locks at once and
 So the preceding code becomes without timeout exceptions
 
     while (polling) {
-        boost::synchro::array_unique_locker<boost::mutex, 3> lk(m1, m2, m3, 100);
+        bsynchro::array_unique_locker<boost::mutex, 3> lk(m1, m2, m3, 100);
         if (lk.owns_lock()) {
             foo();
             polling = false;
@@ -292,18 +292,18 @@ So the preceding code becomes without timeout exceptions
 which is exception safe or with exception based timed locks (Note that the time is given before the locks)
 
     while (polling) 
-    try { boost::synchro::array_locker<boost::mutex, 3> lk(100, m1, m2, m3);
+    try { bsynchro::array_locker<boost::mutex, 3> lk(100, m1, m2, m3);
         foo();
         polling = false;
-    } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
+    } catch (bsynchro::timeout_exception& ex) { execute_on_failed(); }
 
 When the Locks locked by an `array_unique_locker` are not homogeneus we need some kind of tuple.
 
     while (polling) 
-    try { boost::synchro::tuple_unique_locker<T1, T2, T1> lk(100, m1, m2, m3);
+    try { bsynchro::tuple_unique_locker<T1, T2, T1> lk(100, m1, m2, m3);
         foo();
         polling = false;
-    } catch (boost::synchro::timed_exception& ex) { execute_on_failed(); }
+    } catch (bsynchro::timed_exception& ex) { execute_on_failed(); }
 
 
 [*`lock_until` and `lock_for` free functions]
@@ -312,10 +312,10 @@ For completion the exception based timed multi lock functions `unlock`, `lock_un
 
     while (polling)
         try {
-            boost::lock_for(100, m1, m2, m3);
+            bsynchro::lock_for(100, m1, m2, m3);
             foo();
             polling = false;
-        } catch (timeout_exception& ex) {execute_on_failed(); }
+        } catch (bsynchro::timeout_exception& ex) {execute_on_failed(); }
 
 
 [*External lockers]
@@ -381,7 +381,7 @@ Nest follows an example of mutual exclusion with automatic objects.
 
 With language-like mutual exclusion this results in:
 
-    synchronized(l) 
+    synchronize(l) 
     {
         foo();
         return bar(); 
@@ -393,10 +393,12 @@ This is achieved through macros. If the user wants to use synchronized this way 
 
 The library do not provides this directly because this can broke some user code. The library provideds other safer macros, using the BOOST prefix.
 
-    #define BOOST_SYNCHRONIZED_VAR(VARS_DECLARATION) if (bool stop_ = false) {} else \
-    for (VARS_DECLARATION; !stop_; stop_ = true)
+    #define BOOST_SYNCHRONIZED_VAR(VARS_DECLARATION) \
+        if (bool stop_ = false) {} else \
+        for (VARS_DECLARATION; !stop_; stop_ = true)
 
-    #define BOOST_SYNCHRONIZED(MUTEX) BOOST_SYNCHRONIZED_VAR(boost::scoped_guard<boost::mutex> __lock(MUTEX))
+    #define BOOST_SYNCHRONIZED(MUTEX) \
+        BOOST_SYNCHRONIZED_VAR(boost::scoped_guard<boost::mutex> __lock(MUTEX))
 
 [endsect]
 

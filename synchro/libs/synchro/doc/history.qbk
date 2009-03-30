@@ -7,11 +7,19 @@
 
 [section:history Appendix A: History]
  
+[section [*Version 0.3.1, Mars 29, 2009] ['Language-like Synchronized Block Macros]]
+
+[*New Features:]
+
+* Language-like Synchronized Block Macros.
+
+[endsect]
+
 [section [*Version 0.3.0, Mars 19, 2009] ['Generic free operations on multiple lockables + Usage of Boost.Chrono]]
 
 [*New Features:]
 
-* Adding generic free functions on lockables: `lock`, `try_lock` 
+* Generic free functions on lockables: `lock`, `try_lock` 
 
 * Complete the generic free functions on multiple lockables in Boost.Thread `lock`, `try_lock` with:
     * `lock_until`, `lock_for`, `try_lock_until`, `try_lock_for`, `unlock`
