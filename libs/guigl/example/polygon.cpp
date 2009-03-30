@@ -53,8 +53,7 @@ private:
 
     void init()
     {
-        box_2d b(make<point_2d>(150, 150), make<point_2d>(450, 250));
-        cb = b;
+        cb = make<box_2d>(150, 150, 450, 250);
 
         const double coor[][2] = {
             {200, 130}, {240, 170}, {280, 180}, {340, 120}, {370, 160},
@@ -77,10 +76,9 @@ private:
 
     void on_mouse_move()
     {
-        box_2d box(
-            make<point_2d>(mouse_state().position.x - 100, mouse_state().position.y - 50),
-            make<point_2d>(mouse_state().position.x + 100, mouse_state().position.y + 50));
-        cb = box;
+        cb = make<box_2d>(
+            mouse_state().position.x - 100, mouse_state().position.y - 50,
+            mouse_state().position.x + 100, mouse_state().position.y + 50);
 
         v.clear();
         intersection(cb, poly, std::back_inserter(v));
@@ -128,20 +126,20 @@ public:
         glEnable(GL_POINT_SMOOTH);
 
         // hull
-        draw_polygon(hull, yellow(0.3), red(0.4));
+        draw_polygon(hull, yellow(0.3f), red(0.4f));
 
         // polygon
-        draw_polygon(poly, yellow(0.8), red(0.8));
+        draw_polygon(poly, yellow(0.8f), red(0.8f));
 
         // box
-        gl::color(blue(0.2));
+        gl::color(blue(0.2f));
         ggl::rect(cb);
 
         gl::point_size(10);
         // intersection
         BOOST_FOREACH(polygon_2d const& pg, v)
         {
-            draw_polygon(pg, red(0.4), black(0.8));
+            draw_polygon(pg, red(0.4f), black(0.8f));
             geometry::for_each_point(pg, ggl::drawer());
         }
 

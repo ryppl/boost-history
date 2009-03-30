@@ -4,3 +4,6 @@
 #include <boost/bind.hpp>
 #include <boost/bind/placeholders.hpp>
 #include <boost/signal.hpp>
+#include <boost/gil/utilities.hpp>
+#include <boost/gil/typedefs.hpp>
+#include <utility>
