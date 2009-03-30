@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="8,00"
+	Name="autogeo"
+	ProjectGUID="{AC3E72D9-A1F8-4D85-B040-6C021CE9CAB7}"
+	RootNamespace="example"
+	>
+	<Platforms>
+		<Platform
+			Name="Win32"
+		/>
+	</Platforms>
+	<ToolFiles>
+	</ToolFiles>
+	<Configurations>
+		<Configuration
+			Name="debug|Win32"
+			OutputDirectory="..\..\..\..\bin\stage\window_example"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="bjam --v2 ../../example/$(ProjectName) $(ConfigurationName)"
+				ReBuildCommandLine="bjam --v2 -a ../../example/$(ProjectName) $(ConfigurationName)"
+				CleanCommandLine="bjam --v2 --clean ../../example/$(ProjectName) $(ConfigurationName)"
+				Output=""
+				PreprocessorDefinitions=""
+				IncludeSearchPath="D:\Libraries\ggl\boost\ggl;D:\Libraries\ggl"
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+		<Configuration
+			Name="release|Win32"
+			OutputDirectory="..\..\..\..\bin\stage\window_example"
+			IntermediateDirectory="$(OutDir)"
+			ConfigurationType="0"
+			>
+			<Tool
+				Name="VCNMakeTool"
+				BuildCommandLine="bjam --v2 ../../$(ProjectName) $(ConfigurationName)"
+				ReBuildCommandLine="bjam --v2 -a ../../$(ProjectName) $(ConfigurationName)"
+				CleanCommandLine="bjam --v2 --clean ../../$(ProjectName) $(ConfigurationName)"
+				Output=""
+				PreprocessorDefinitions=""
+				IncludeSearchPath="D:\Libraries\ggl\boost\ggl;D:\Libraries\ggl"
+				ForcedIncludes=""
+				AssemblySearchPath=""
+				ForcedUsingAssemblies=""
+				CompileAsManaged=""
+			/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+		<File
+			RelativePath="..\..\example\autogeo\acceptor.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\functor.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\geometry.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\geometry.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\graph.hpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\Jamfile"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\autogeo\visitors.hpp"
+			>
+		</File>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

@@ -34,23 +34,23 @@
 
 using namespace boost::guigl;
 
-class RenderVisitor : public IVisitor
+class Renderer : public IVisitor
   {
   public:
-    void visit(int key, source_point& g) const
+    void operator()(SmartResult<point_type>& g) const
       {
       gl::color(blue(0.7f));
       ggl::draw(g.result);
       }
 
-    void visit(int key, line_from_two_points& g) const
+    void operator()(SmartResult<line_type>& g) const
       {
       gl::line_width(4);
       gl::color(red(0.8f));
       ggl::draw(g.result);
       }
 
-    void visit(int key, plane_from_three_points& g) const
+    void operator()(SmartResult<plane_type>& g) const
       {
       gl::color(green(0.5f));
       glBegin(GL_POLYGON);
@@ -66,30 +66,41 @@ class RenderVisitor : public IVisitor
 class RecomputeVisitor : public IVisitor
   {
   public:
-    void visit(int key, line_from_two_points& g) const
+    void visit(source_point& o) const
       {
-      g.result = line_type(g.pt1, g.pt2);
+      o.result = o.data;
+
+      point_type const* p = &o.result;
       };
 
-    void visit(int key, plane_from_three_points& g) const
+    void visit(line_from_two_points& o) const
+      {
+      o.result.first = arg<0>(o).result;
+      o.result.second = arg<1>(o).result;
+      };
+
+    void visit(plane_from_three_points& o) const
       {
       using namespace boost::assign;
-      g.result.outer().clear();
-      g.result.outer() += g.pt1, g.pt2, g.pt3;
-      geometry::correct(g.result);
+      o.result.outer().clear();
+      o.result.outer() +=
+        arg<1>(o).result,
+        arg<2>(o).result,
+        arg<3>(o).result;
+      geometry::correct(o.result);
       };
   };
 
 struct StreamWriter
   {
   template<class T>
-  void operator()(int key, T& g) const
+  void operator()(T& g) const
     {
     std::cout << g.result << std::endl;
     }
 
   template<>
-  void operator()<line_from_two_points>(int key, line_from_two_points& g) const
+  void operator()<line_from_two_points>(line_from_two_points& g) const
     {
     geometry::linestring<point_type> s;
     geometry::append(s, g.result.first);
@@ -103,13 +114,13 @@ template<class Tag>
 struct StreamByTag
   {
   template<class T>
-  void operator()(int key, T& g) const
+  void operator()(T& g) const
     {
     return ;
     }
 
   template<>
-  void operator()<Tag>(int key, Tag& g) const
+  void operator()<Tag>(Tag& g) const
     {
     std::cout << g.result << std::endl;
     }
@@ -137,11 +148,11 @@ void drawString(const char *str, int x, int y, color_type const& clr, void *font
 struct PrintDescription
   {
   std::map<int, std::string> const& descriptions;
-  dependency_graph const& g;
+  DependencyGraph const& g;
 
   PrintDescription(
     std::map<int, std::string> const& descriptions_,
-    dependency_graph const& g_)
+    DependencyGraph const& g_)
     :descriptions(descriptions_), g(g_) {}
 
   template<class T>
@@ -179,13 +190,13 @@ struct PrintDescription
   //  }
 
   template<class T>
-  void operator()(int key, T const& obj) const
+  void operator()(T const& obj) const
     {
-    boost::optional<int> i = g.get_key(key);
-    if(!i) return ;
+    //boost::optional<int> i = g.get_key(key);
+    //if(!i) return ;
 
-    point_type center = get_center(obj.result);
-    drawString(descriptions.find(*i)->second.c_str(), center.x + 10, center.y, grey(0.1f), GLUT_BITMAP_8_BY_13);
+    //point_type center = get_center(obj.result);
+    //drawString(descriptions.find(*i)->second.c_str(), center.x + 10, center.y, grey(0.1f), GLUT_BITMAP_8_BY_13);
     }
   };
 
@@ -193,7 +204,7 @@ widget::custom *w;
 
 struct drawer {
   typedef boost::shared_ptr<IAcceptor> IAcceptorPtr;
-  dependency_graph g;
+  DependencyGraph g;
   std::map<int, std::string> names;
 
   void init_geometry_graph();
@@ -216,11 +227,6 @@ struct drawer {
     {
     using namespace boost::assign;
 
-    typedef GraphVertex<int, point_type> Point;
-    typedef GraphVertex<int, line_type> Line;
-    typedef GraphVertex<int, plane_type> Plane;
-
-
     insert(names)
       (middle_notch_point, "middle notch point")
       (femoral_head_point, "femoral head point")
@@ -239,10 +245,10 @@ struct drawer {
       g.objects.end(),
       accept_each(RecomputeVisitor()));
 
-    std::for_each(
-      g.objects.begin(),
-      g.objects.end(),
-      accept_each(Visitor<StreamWriter>()));
+    //std::for_each(
+    //  g.objects.begin(),
+    //  g.objects.end(),
+    //  accept_each(Visitor<StreamWriter>()));
     }
 
   void operator()() const
@@ -271,7 +277,7 @@ struct drawer {
     std::for_each(
       g.objects.begin(),
       g.objects.end(),
-      accept_each(RenderVisitor()));
+      accept_each(Visitor<Renderer>()));
 
     std::for_each(
       g.objects.begin(),
@@ -307,30 +313,26 @@ void drawer::init_geometry_graph()
   {
   using namespace boost::assign;
 
-  typedef GraphVertex<int, point_type> Point;
-  typedef GraphVertex<int, line_type> Line;
-  typedef GraphVertex<int, plane_type> Plane;
+  boost::make_tuple(1).get<0>();
 
-  Point
-    pt_mnp = g.make_source_point(middle_notch_point, point_type(90, 90)),
-    pt_fh = g.make_source_point(femoral_head_point, point_type(-90, -90)),
-    pt_laepi = g.make_source_point(lateral_epi_point, point_type(90, -90)),
-    pt_meepi = g.make_source_point(medial_epi_point, point_type(0, -180));
+  SmartPoint
+    pt_mnp = make_source_point(g, point_type(90, 90)),
+    pt_fh = make_source_point(g, point_type(-90, -90)),
+    pt_laepi = make_source_point(g, point_type(90, -90)),
+    pt_meepi = make_source_point(g, point_type(0, -180));
 
-  ////Point
-  ////  pt_mnp = g.make_indicatable_point(middle_notch_point);
+  SmartLine
+    ax_mech = make_line(g, pt_mnp, pt_fh),
+    ax_epi = make_line(g, pt_meepi, pt_laepi);
 
-  Line
-    ax_mech = g.make_line(mechanical_axis, pt_mnp, pt_fh),
-    ax_epi = g.make_line(epi_axis, pt_meepi, pt_laepi);
+  SmartPlane
+    pl_axial = make_plane(g, pt_mnp, pt_fh, pt_laepi);
 
-  Plane
-    pl_axial = g.make_plane(axial_plane, pt_mnp, pt_fh, pt_laepi);
+  SmartPoint pt1 = make_source_point(g, point_type(120, 30));
 
-  Point pt1 = g.make_source_point(point1, point_type(120, 30));
-
-  g.make_plane(
-    g.make_source_point(point_type(-90, 90)),
+  make_plane(g,
+    make_source_point(g, point_type(-90, 90)),
     pt1,
     pt_mnp);
+
   }

@@ -10,7 +10,7 @@ class IAcceptor
   {
   public:
     virtual ~IAcceptor() {}
-    virtual void accept(int key, IVisitor const& v) = 0;
+    virtual void accept(IVisitor const& v) = 0;
   };
 
 template<class T>
@@ -20,9 +20,9 @@ class Acceptor :
   {
   public:
     explicit Acceptor(T const& obj) : T(obj) {}
-    void accept(int key, IVisitor const& v){
+    void accept(IVisitor const& v){
       T& obj = *this;
-      v.visit(key, obj);
+      v.visit(obj);
       }
 
     typedef typename T::result_type result_type;
@@ -41,7 +41,7 @@ struct accept_each
   accept_each(IVisitor const& v):visitor(v){}
 
   template<class T>
-  void operator()(T& obj) const {obj.second->accept(obj.first, visitor);}
+  void operator()(T& obj) const {obj.second->accept(visitor);}
   };
 
 #endif

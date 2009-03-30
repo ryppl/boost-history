@@ -1,130 +1,108 @@
 #ifndef BOOST_GUIGL_EXAMPLE_GRAPH_HPP
 #define BOOST_GUIGL_EXAMPLE_GRAPH_HPP
 
-#include "node_types.hpp"
+#include "functor.hpp"
 
 #include <boost/graph/graph_traits.hpp>
 #include <boost/graph/adjacency_list.hpp>
-//#include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/tuple/tuple.hpp>
+#include <boost/ref.hpp>
 
-template<class Key, class T>
-class GraphVertex
+template<class T1, class T2, class F>
+inline void for_each(boost::tuples::cons<T1, T2>& t, F const& f)
   {
-  public:
-    Key key;
-    boost::shared_ptr<base_result<T> > obj;
+  f(t.head);
+  for_each(t.tail, f);
+  }
 
-    GraphVertex(
-      Key key_,
-      boost::shared_ptr<base_result<T> > const& obj_)
-      :key(key_), obj(obj_) {}
-  };
+template<class T1, class F>
+inline void for_each(boost::tuples::cons<T1, boost::tuples::null_type>& t, F const& f) {
+  f(t.head);
+  }
 
+template<class F>
+inline void for_each(boost::tuple<>& t, F const& f) {}
 
-class dependency_graph
+template<class T1, class T2, class F>
+inline void for_each(boost::tuples::cons<T1, T2> const& t, F const& f)
+  {
+  f(t.head);
+  for_each(t.tail, f);
+  }
+
+template<class T1, class F>
+inline void for_each(boost::tuples::cons<T1, boost::tuples::null_type> const& t, F const& f) {
+  f(t.head);
+  }
+
+template<class F>
+inline void for_each(boost::tuple<> const& t, F const& f) {}
+
+class DependencyGraph
   {
   public:
     std::map<int, boost::shared_ptr<IAcceptor> > objects;
-    std::map<int, int> key_map;
 
   public:
     typedef boost::adjacency_list<boost::vecS, boost::vecS, boost::directedS> Graph;
-
     Graph g;
 
-    boost::shared_ptr<IAcceptor> get(int key)
+    struct edge_creator {
+      int v;
+      Graph& g;
+      edge_creator(int v_, Graph& g_):v(v_), g(g_){}
+      template<class T>
+      void operator()(SmartResult<T> const& r) const { boost::add_edge(r.id, v, g);}
+      };
+
+    template<class F>
+    SmartResult<typename F::result_type> const& add_functor(
+      typename F::args_type const& args,
+      typename F::data_type const& data = F::data_type())
       {
-      return objects[key_map[key]];
+      boost::shared_ptr<Acceptor<F> >
+        obj(new Acceptor<F>(F(boost::add_vertex(g), args, data)));
+      for_each(args, edge_creator(obj->id, g));
+      objects[obj->id] = obj;
+      SmartResult<typename F::result_type> const& r = *obj;
+      return r;
       }
 
-    int add_vertex(boost::shared_ptr<IAcceptor> const& ptr)
-      {
-      int v = boost::add_vertex(g);
-      objects[v] = ptr;
-      return v;
-      }
-
-    void add_key(int key, int v)
-      {
-      if(key_map.end() != key_map.find(key))
-        throw std::runtime_error("vertex already exists");
-      key_map[key] = v;
-      }
-
-    boost::optional<int> get_key(int v) const
-      {
-      typedef std::pair<int, int> pair_type;
-      BOOST_FOREACH(pair_type const& p, key_map)
-        if(p.second == v)
-          return p.first;
-      return boost::optional<int>();
-      }
-
-    GraphVertex<int, point_type> make_source_point(point_type const& pt)
-      {
-      boost::shared_ptr<Acceptor<source_point> >
-        obj(new Acceptor<source_point>(source_point(pt)) );
-      int v = add_vertex(obj);
-      return GraphVertex<int, point_type>(v, obj);
-      }
-
-    GraphVertex<int, point_type> make_source_point(int key, point_type const& pt)
-      {
-      GraphVertex<int, point_type> result = make_source_point(pt);
-      add_key(key, result.key);
-      return result;
-      }
-
-    GraphVertex<int, line_type> make_line(
-      GraphVertex<int, point_type> const& pt1,
-      GraphVertex<int, point_type> const& pt2)
-      {
-      boost::shared_ptr<Acceptor<line_from_two_points> >
-        obj(new Acceptor<line_from_two_points>(line_from_two_points(pt1.obj->result, pt2.obj->result)) );
-
-      int v = add_vertex(obj);
-
-      boost::add_edge(pt1.key, v, g);
-      boost::add_edge(pt2.key, v, g);
-
-      return GraphVertex<int, line_type>(v, obj);
-      }
-
-    GraphVertex<int, line_type> make_line(int key,
-      GraphVertex<int, point_type> const& pt1,
-      GraphVertex<int, point_type> const& pt2)
-      {
-      GraphVertex<int, line_type> result = make_line(pt1, pt2);
-      add_key(key, result.key);
-      return result;
-      }
-
-    GraphVertex<int, plane_type> make_plane(
-      GraphVertex<int, point_type> const& pt1,
-      GraphVertex<int, point_type> const& pt2,
-      GraphVertex<int, point_type> const& pt3)
-      {
-      boost::shared_ptr<Acceptor<plane_from_three_points> >
-        obj(new Acceptor<plane_from_three_points>(plane_from_three_points(pt1.obj->result, pt2.obj->result, pt3.obj->result)) );
-
-      int v = add_vertex(obj);
-
-      boost::add_edge(pt1.key, v, g);
-      boost::add_edge(pt2.key, v, g);
-      boost::add_edge(pt3.key, v, g);
-
-      return GraphVertex<int, plane_type>(v, obj);
-      }
-
-    GraphVertex<int, plane_type> make_plane(int key,
-      GraphVertex<int, point_type> const& pt1,
-      GraphVertex<int, point_type> const& pt2,
-      GraphVertex<int, point_type> const& pt3)
-      {
-      GraphVertex<int, plane_type> result = make_plane(pt1, pt2, pt3);
-      add_key(key, result.key);
-      return result;
-      }
   };
+
+  SmartPoint make_source_point(DependencyGraph& g, point_type const& pt)
+  {
+    return g.add_functor<source_point>(boost::make_tuple(), pt);
+  }
+
+#define FUNCTOR_IMPL_1(FunctionName, F, T1)\
+  SmartResult<typename F::result_type> const& FunctionName(DependencyGraph& g,\
+    SmartResult<T1> const& arg1)\
+    {\
+    return g.add_functor<F>(boost::make_tuple(boost::cref(arg1)));\
+    }
+
+#define FUNCTOR_IMPL_2(FunctionName, F, T1, T2)\
+  SmartResult<typename F::result_type> const& FunctionName(DependencyGraph& g,\
+    SmartResult<T1> const& arg1,\
+    SmartResult<T2> const& arg2)\
+    {\
+    return g.add_functor<F>(boost::make_tuple(boost::cref(arg1), boost::cref(arg2)));\
+    }
+
+#define FUNCTOR_IMPL_3(FunctionName, F, T1, T2, T3)\
+  SmartResult<typename F::result_type> const& FunctionName(DependencyGraph& g,\
+    SmartResult<T1> const& arg1,\
+    SmartResult<T2> const& arg2,\
+    SmartResult<T3> const& arg3)\
+    {\
+    return g.add_functor<F>(\
+    boost::make_tuple(boost::cref(arg1), boost::cref(arg2), boost::cref(arg3)));\
+    }
+
+FUNCTOR_IMPL_2(make_line, line_from_two_points, point_type, point_type);
+//FUNCTOR_IMPL_3(make_line, line_from_point_vector_distance, point_type, vector_type, distance_type);
+
+FUNCTOR_IMPL_3(make_plane, plane_from_three_points, point_type, point_type, point_type);
 
 #endif
