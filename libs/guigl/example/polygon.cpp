@@ -27,6 +27,14 @@ http://www.boost.org/LICENSE_1_0.txt)
 #include <geometry/geometries/adapted/std_as_linestring.hpp>
 #include <geometry/io/wkt/streamwkt.hpp>
 
+template<class T>
+std::ostream& operator<<(std::ostream& os, std::vector<T> const& v)
+{
+    BOOST_FOREACH(T const& t, v)
+        os << t;
+    return os;
+}
+
 using namespace boost::guigl;
 using namespace geometry;
 
@@ -76,6 +84,8 @@ private:
 
         v.clear();
         intersection(cb, poly, std::back_inserter(v));
+
+        //std::cout << v << std::endl;
 
         window::redraw(*this);
     }
