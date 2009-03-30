@@ -56,6 +56,11 @@ boost/mirror/iterator_less.html
 boost/mirror/iterator_less_equal.html
 boost/mirror/iterator_greater.html
 boost/mirror/iterator_greater_equal.html
+boost/mirror/accumulate.html
+boost/mirror/find_if.html
+boost/mirror/reverse_find_if.html
+boost/mirror/flat_traversal_of.html
+boost/mirror/deep_traversal_of.html
 mirror/examples.html
 mirror/rationale.html
 char_type_switch.html

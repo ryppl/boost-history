@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/algorithm/accumulate.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="accumulate">
+			<template>
+				<template-type-parameter name="MetaObjectSequence"/>
+				<template-type-parameter name="InitialState"/>
+				<template-type-parameter name="ForwardOp"/>
+			</template>
+			<purpose>
+				<para>Returns the result of cumulative application of binary <code>ForwardOp</code>
+				to the <code>InitialState</code> or the result of previous application of
+				<code>ForwardOp</code> and each element in the <code>MetaObjectSequence</code>.
+				</para>
+			</purpose>
+			<access name="public">
+				<typedef name="type">
+					<type><emphasis>unspecified</emphasis></type>
+				</typedef>
+			</access>
+			<description>
+				<section id="mirror.algorithm.accumulate.reference.samples">
+					<title>Examples</title>
+<programlisting>
+</programlisting>
+				</section>
+			</description>
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

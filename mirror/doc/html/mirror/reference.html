@@ -34,7 +34,7 @@
 <dt><span class="section"><a href="reference.html#mirror.reference.algorithms">Algorithms</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.iterators">Iterators</a></span></dt>
 <dt><span class="section"><a href="reference.html#mirror.reference.traversals">Traversals</a></span></dt>
-<dt><span class="section"><a href="reference.html#id2602181">Header files</a></span></dt>
+<dt><span class="section"><a href="reference.html#id2602417">Header files</a></span></dt>
 </dl></div>
 <p>
 	</p>
@@ -372,6 +372,59 @@
 <a name="mirror.reference.algorithms"></a>Algorithms</h3></div></div></div>
 <p>
 		</p>
+<div class="table">
+<a name="id2601923"></a><p class="title"><b>Table 1.6. Meta-functions</b></p>
+<div class="table-contents"><table class="table" summary="Meta-functions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Meta-function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/accumulate.html" title="Class template accumulate">accumulate</a></code></td>
+<td>Returns the result of cumulative application of a binary forward operation to all elements in a MetaObjectSequence.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/find_if.html" title="Class template find_if">find_if</a></code></td>
+<td>Returns the iterator pointing to the first meta-object in a meta-object sequence satisfying the given unary predicate.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/reverse_find_if.html" title="Class template reverse_find_if">reverse_find_if</a></code></td>
+<td>Returns a reverse iterator pointing to the first-from-end meta-object in a meta-object sequence satisfying the given unary predicate.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+		</p>
+<div class="table">
+<a name="id2602020"></a><p class="title"><b>Table 1.7. Template-functions</b></p>
+<div class="table-contents"><table class="table" summary="Template-functions">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.for_each_id2528327">for_each</a></code></td>
+<td>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.reverse_for_each_id2520594">reverse_for_each</a></code></td>
+<td>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -379,7 +432,7 @@
 <p>
 		</p>
 <div class="table">
-<a name="id2601937"></a><p class="title"><b>Table 1.6. Iterator-related meta-functions</b></p>
+<a name="id2602107"></a><p class="title"><b>Table 1.8. Iterator-related meta-functions</b></p>
 <div class="table-contents"><table class="table" summary="Iterator-related meta-functions">
 <colgroup>
 <col>
@@ -440,10 +493,34 @@
 <a name="mirror.reference.traversals"></a>Traversals</h3></div></div></div>
 <p>
 		</p>
+<div class="table">
+<a name="id2602350"></a><p class="title"><b>Table 1.9. Traversals</b></p>
+<div class="table-contents"><table class="table" summary="Traversals">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>Template classes</th>
+<th>Purpose</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/flat_traversal_of.html" title="Class template flat_traversal_of">flat_traversal_of</a></code></td>
+<td> </td>
+</tr>
+<tr>
+<td><code class="computeroutput"><a class="link" href="../boost/mirror/deep_traversal_of.html" title="Class template deep_traversal_of">deep_traversal_of</a></code></td>
+<td> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id2602181"></a>Header files</h3></div></div></div>
+<a name="id2602417"></a>Header files</h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_namespace.hpp">Header &lt;boost/mirror/meta_namespace.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.meta_type.hpp">Header &lt;boost/mirror/meta_type.hpp&gt;</a></span></dt>
@@ -476,6 +553,12 @@
 <dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_less_equal.hpp">Header &lt;boost/mirror/iterator/iterator_less_equal.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_greater.hpp">Header &lt;boost/mirror/iterator/iterator_greater.hpp&gt;</a></span></dt>
 <dt><span class="section"><a href="reference.html#header.boost.mirror.iterator.iterator_greater_equal.hpp">Header &lt;boost/mirror/iterator/iterator_greater_equal.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.algorithm.accumulate.hpp">Header &lt;boost/mirror/algorithm/accumulate.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.algorithm.find_if.hpp">Header &lt;boost/mirror/algorithm/find_if.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.algorithm.reverse_find_if.hpp">Header &lt;boost/mirror/algorithm/reverse_find_if.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.algorithm.for_each.hpp">Header &lt;boost/mirror/algorithm/for_each.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.algorithm.reverse_for_each.hpp">Header &lt;boost/mirror/algorithm/reverse_for_each.hpp&gt;</a></span></dt>
+<dt><span class="section"><a href="reference.html#header.boost.mirror.traversal.hpp">Header &lt;boost/mirror/traversal.hpp&gt;</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
@@ -780,6 +863,158 @@
   <span class="bold"><strong>namespace</strong></span> mirror {
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> Iterator1, <span class="bold"><strong>typename</strong></span> Iterator2&gt; 
       <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/iterator_greater_equal.html" title="Class template iterator_greater_equal">iterator_greater_equal</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.algorithm.accumulate.hpp"></a>Header &lt;<a href="../../../boost/mirror/algorithm/accumulate.hpp" target="_top">boost/mirror/algorithm/accumulate.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> InitialState, 
+             <span class="bold"><strong>typename</strong></span> ForwardOp&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/accumulate.html" title="Class template accumulate">accumulate</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.algorithm.find_if.hpp"></a>Header &lt;<a href="../../../boost/mirror/algorithm/find_if.hpp" target="_top">boost/mirror/algorithm/find_if.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Predicate&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/find_if.html" title="Class template find_if">find_if</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.algorithm.reverse_find_if.hpp"></a>Header &lt;<a href="../../../boost/mirror/algorithm/reverse_find_if.hpp" target="_top">boost/mirror/algorithm/reverse_find_if.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Predicate&gt; 
+      <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/reverse_find_if.html" title="Class template reverse_find_if">reverse_find_if</a>;
+  }
+}</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.algorithm.for_each.hpp"></a>Header &lt;<a href="../../../boost/mirror/algorithm/for_each.hpp" target="_top">boost/mirror/algorithm/for_each.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2490554-bb">for_each functions</a></em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2528327"></a>for_each(Functor functor);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.for_each_id2529499">for_each</a>(reference_wrapper&lt;Functor&gt;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
+             <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2452092"></a>for_each(Functor functor, TransformOp transform);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
+             <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> 
+      <a class="link" href="reference.html#boost.mirror.for_each_id2382648">for_each</a>(reference_wrapper&lt;Functor&gt;, reference_wrapper&lt;TransformOp&gt;);
+  }
+}</pre>
+<div class="refsect2" lang="en">
+<a name="id2620483"></a><h3>
+<a name="id2490554-bb"></a><code class="computeroutput"></code> for_each functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+  <span class="type">reference_wrapper&lt;Functor&gt;</span> <a name="boost.mirror.for_each_id2529499"></a>for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
+<p>Sequentially calls a <code class="computeroutput">functor</code> on a temporary instance 
+				of each element in the <code class="computeroutput">MetaObjectSequence</code>.
+		                </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.algorithm.for_each.plain.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+</pre>
+</div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+  <span class="type">reference_wrapper&lt;Functor&gt;</span> 
+  <a name="boost.mirror.for_each_id2382648"></a>for_each(reference_wrapper&lt;Functor&gt; functor, 
+           reference_wrapper&lt;TransformOp&gt; transform);</pre>
+<p>Sequentially calls a <code class="computeroutput">functor</code> on the result of <code class="computeroutput">transform(meta_object)</code> (where 
+				<code class="computeroutput">meta_object</code> is a temporary instance of a <code class="computeroutput">MetaObject</code>) for each element in the <code class="computeroutput">MetaObjectSequence</code>.
+		                </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.algorithm.for_each.transf.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+</pre>
+</div>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.algorithm.reverse_for_each.hpp"></a>Header &lt;<a href="../../../boost/mirror/algorithm/reverse_for_each.hpp" target="_top">boost/mirror/algorithm/reverse_for_each.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2561679-bb">reverse_for_each functions</a></em></span>
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2520594"></a>reverse_for_each(Functor functor);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2508238">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
+             <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2534446"></a>reverse_for_each(Functor functor, TransformOp transform);
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
+             <span class="bold"><strong>typename</strong></span> Functor&gt; 
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> 
+      <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2520392">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;, 
+                       reference_wrapper&lt;TransformOp&gt;);
+  }
+}</pre>
+<div class="refsect2" lang="en">
+<a name="id2620850"></a><h3>
+<a name="id2561679-bb"></a><code class="computeroutput"></code> reverse_for_each functions</h3>
+<div class="orderedlist"><ol type="1">
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+  <span class="type">reference_wrapper&lt;Functor&gt;</span> 
+  <a name="boost.mirror.reverse_for_each_id2508238"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
+<p>Sequentially calls a <code class="computeroutput">functor</code> on a temporary instance 
+				of each element in the reversed <code class="computeroutput">MetaObjectSequence</code>.
+		                </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.algorithm.reverse_for_each.plain.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+</pre>
+</div>
+</li>
+<li>
+<pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, <span class="bold"><strong>typename</strong></span> Functor&gt; 
+  <span class="type">reference_wrapper&lt;Functor&gt;</span> 
+  <a name="boost.mirror.reverse_for_each_id2520392"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor, 
+                   reference_wrapper&lt;TransformOp&gt; transform);</pre>
+<p>Sequentially calls a <code class="computeroutput">functor</code> on the result of <code class="computeroutput">transform(meta_object)</code> (where 
+				<code class="computeroutput">meta_object</code> is a temporary instance of a <code class="computeroutput">MetaObject</code>) for each element in the reversed <code class="computeroutput">MetaObjectSequence</code>.
+		                </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="mirror.algorithm.reverse_for_each.transf.reference.samples"></a>Examples</h6></div></div></div>
+<pre class="programlisting">
+</pre>
+</div>
+</li>
+</ol></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="header.boost.mirror.traversal.hpp"></a>Header &lt;<a href="../../../boost/mirror/traversal.hpp" target="_top">boost/mirror/traversal.hpp</a>&gt;</h4></div></div></div>
+<pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
+  <span class="bold"><strong>namespace</strong></span> mirror {
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaClass-or-MetaNamespace&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/flat_traversal_of.html" title="Class template flat_traversal_of">flat_traversal_of</a>;
+    <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaClass-or-MetaNamespace&gt; <span class="bold"><strong>class</strong></span> <a class="link" href="../boost/mirror/deep_traversal_of.html" title="Class template deep_traversal_of">deep_traversal_of</a>;
   }
 }</pre>
 </div>

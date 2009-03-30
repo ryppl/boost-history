@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/algorithm/reverse_for_each.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+        <free-function-group name="reverse_for_each functions">
+		<function name="reverse_for_each" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaObjectSequence"/>
+                                <template-type-parameter name="Functor"/>
+                        </template>
+
+		        <type>Functor</type>
+		        <parameter name="functor">
+		                <paramtype>Functor</paramtype>
+		        </parameter>
+		</function>
+		<function name="reverse_for_each" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaObjectSequence"/>
+                                <template-type-parameter name="Functor"/>
+                        </template>
+
+		        <type><classname>reference_wrapper</classname>&lt;Functor&gt;</type>
+		        <parameter name="functor">
+		                <paramtype><classname>reference_wrapper</classname>&lt;Functor&gt;</paramtype>
+		        </parameter>
+		        <purpose>
+		                <para>Sequentially calls a <code>functor</code> on a temporary instance 
+				of each element in the reversed <code>MetaObjectSequence</code>.
+		                </para>
+		        </purpose>
+			<description>
+				<section id="mirror.algorithm.reverse_for_each.plain.reference.samples">
+					<title>Examples</title>
+<programlisting>
+</programlisting>
+				</section>
+			</description>
+		</function>
+
+		<function name="reverse_for_each" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaObjectSequence"/>
+                                <template-type-parameter name="TransformOp"/>
+                                <template-type-parameter name="Functor"/>
+                        </template>
+
+		        <type>Functor</type>
+		        <parameter name="functor">
+		                <paramtype>Functor</paramtype>
+		        </parameter>
+		        <parameter name="transform">
+		                <paramtype>TransformOp</paramtype>
+		        </parameter>
+		</function>
+		<function name="reverse_for_each" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaObjectSequence"/>
+                                <template-type-parameter name="TransformOp"/>
+                                <template-type-parameter name="Functor"/>
+                        </template>
+
+		        <type><classname>reference_wrapper</classname>&lt;Functor&gt;</type>
+		        <parameter name="functor">
+		                <paramtype><classname>reference_wrapper</classname>&lt;Functor&gt;</paramtype>
+		        </parameter>
+		        <parameter name="transform">
+		                <paramtype><classname>reference_wrapper</classname>&lt;TransformOp&gt;</paramtype>
+		        </parameter>
+		        <purpose>
+		                <para>Sequentially calls a <code>functor</code> on the result of <code>transform(meta_object)</code> (where 
+				<code>meta_object</code> is a temporary instance of a <code>MetaObject</code>) for each element in the reversed <code>MetaObjectSequence</code>.
+		                </para>
+		        </purpose>
+			<description>
+				<section id="mirror.algorithm.reverse_for_each.transf.reference.samples">
+					<title>Examples</title>
+<programlisting>
+</programlisting>
+				</section>
+			</description>
+		</function>
+        </free-function-group>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

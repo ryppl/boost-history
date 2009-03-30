@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<header name="boost/mirror/traversal.hpp">
+	<namespace name="boost">
+	<namespace name="mirror">
+		<class name="flat_traversal_of" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaClass-or-MetaNamespace"/>
+                        </template>
+                        <purpose>
+                                <para>
+                                </para>
+                        </purpose>
+                        <access name="public">
+                                <method name="accept">
+                                        <type>void</type>
+					<parameter name="visitor">
+						<paramtype>Visitor</paramtype>
+					</parameter>
+                                </method>
+                                <method name="accept">
+                                        <type>void</type>
+					<parameter name="visitor">
+						<paramtype><classname>reference_wrapper</classname>&lt;Visitor&gt;</paramtype>
+					</parameter>
+                                </method>
+                        </access>
+                        <description>
+                                <section id="mirror.algorithm.flat_traversal_of.reference.samples">
+                                        <title>Examples</title>
+<programlisting>
+</programlisting>
+                                </section>
+                        </description>
+
+		</class>
+
+		<class name="deep_traversal_of" xmlns:xi="http://www.w3.org/2001/XInclude">
+                        <template>
+                                <template-type-parameter name="MetaClass-or-MetaNamespace"/>
+                        </template>
+                        <purpose>
+                                <para>
+                                </para>
+                        </purpose>
+                        <access name="public">
+                                <method name="accept">
+                                        <type>void</type>
+					<parameter name="visitor">
+						<paramtype>Visitor</paramtype>
+					</parameter>
+                                </method>
+                                <method name="accept">
+                                        <type>void</type>
+					<parameter name="visitor">
+						<paramtype><classname>reference_wrapper</classname>&lt;Visitor&gt;</paramtype>
+					</parameter>
+                                </method>
+                        </access>
+                        <description>
+                                <section id="mirror.algorithm.flat_traversal_of.reference.samples">
+                                        <title>Examples</title>
+<programlisting>
+</programlisting>
+                                </section>
+                        </description>
+
+		</class>
+	</namespace><!-- mirror -->
+	</namespace><!-- boost -->
+</header>

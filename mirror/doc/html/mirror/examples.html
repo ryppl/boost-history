@@ -6,7 +6,7 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="../index.html" title="The Mirror library documentation">
 <link rel="up" href="../mirror.html" title="Chapter 1. Mirror">
-<link rel="prev" href="../boost/mirror/iterator_greater_equal.html" title="Class template iterator_greater_equal">
+<link rel="prev" href="../boost/mirror/deep_traversal_of.html" title="Class template deep_traversal_of">
 <link rel="next" href="rationale.html" title="Rationale">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../boost/mirror/iterator_greater_equal.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../boost/mirror/deep_traversal_of.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
@@ -43,7 +43,7 @@
 <p>
 		</p>
 <div class="table">
-<a name="id2619544"></a><p class="title"><b>Table 1.7. Registering examples</b></p>
+<a name="id2621463"></a><p class="title"><b>Table 1.10. Registering examples</b></p>
 <div class="table-contents"><table class="table" summary="Registering examples">
 <colgroup>
 <col>
@@ -67,7 +67,7 @@
 <p>The following table contains a list of examples showing the use of the <a class="link" href="reference.html#mirror.reference.reflecting" title="Reflecting">reflection macros</a>.
 		</p>
 <div class="table">
-<a name="id2619629"></a><p class="title"><b>Table 1.8. Reflection examples</b></p>
+<a name="id2621548"></a><p class="title"><b>Table 1.11. Reflection examples</b></p>
 <div class="table-contents"><table class="table" summary="Reflection examples">
 <colgroup>
 <col>
@@ -105,7 +105,7 @@
 <p>Examples listed in the following table are related to the usage of the templates modelling the <a class="link" href="concepts.html#mirror.concepts.meta_object" title="MetaObject">MetaObject</a> concept.
 		</p>
 <div class="table">
-<a name="id2619794"></a><p class="title"><b>Table 1.9. Reflection examples</b></p>
+<a name="id2621713"></a><p class="title"><b>Table 1.12. Reflection examples</b></p>
 <div class="table-contents"><table class="table" summary="Reflection examples">
 <colgroup>
 <col>
@@ -228,14 +228,14 @@ int main(void)
         using namespace ::boost;
         using namespace ::boost::mirror;
         //
-        // cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() returns a reference to ::std::cout
+        // cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() returns a reference to ::std::cout
         // or ::std::wcout based on the used character type
         //
-        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() &lt;&lt;
+        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::Hello::World)::full_name() &lt;&lt;
                 endl;
 
-        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() &lt;&lt;
+        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::Hello::World)::scope::base_name() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(", ") &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(::Hello::World)::base_name() &lt;&lt;
@@ -292,14 +292,14 @@ int main(void)
         // cts::bcout() returns a reference to ::std::cout
         // or ::std::wcout based on the used character type
         //
-        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() &lt;&lt;
+        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../boost/mirror/by_name.html" title="Class template by_name">by_name</a></code>&lt;meta_Greeting::all_attributes&gt;::Hello::base_name() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(", ") &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../boost/mirror/by_name.html" title="Class template by_name">by_name</a></code>&lt;meta_Greeting::all_attributes&gt;::World::base_name() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(".") &lt;&lt;
                 endl;
         //
-        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() &lt;&lt;
+        cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../boost/mirror/at.html" title="Class template at">at</a></code>&lt;meta_Greeting::attributes, mpl::int_&lt;0&gt; &gt;::type::base_name() &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>(", ") &lt;&lt;
                 <code class="computeroutput"><a class="link" href="../boost/mirror/at.html" title="Class template at">at</a></code>&lt;meta_Greeting::attributes, mpl::int_&lt;1&gt; &gt;::type::base_name() &lt;&lt;
@@ -331,7 +331,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>();
+	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>();
 
 	// several namespaces are pre-registered
 	bcout &lt;&lt; <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_GLOBAL_SCOPE.html" title="Macro BOOST_MIRRORED_GLOBAL_SCOPE">BOOST_MIRRORED_GLOBAL_SCOPE</a></code>() ::base_name() &lt;&lt; endl;
@@ -374,7 +374,7 @@ public:
 	{
 		using namespace ::std;
 		using namespace ::boost;
-		cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>();
+		cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>();
 		bcout &lt;&lt; 
 			<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("ancestor ") &lt;&lt;
 			ctr++ &lt;&lt;
@@ -394,7 +394,7 @@ int main(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>();
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>();
 	//
 	typedef <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_NAMESPACE.html" title="Macro BOOST_MIRRORED_NAMESPACE">BOOST_MIRRORED_NAMESPACE</a></code>(::boost::mirror) meta_boost_mirror;
 	//
@@ -542,7 +542,7 @@ void do_print_meta_data(::boost::true_type)
 {
 	using namespace ::std;
 	using namespace ::boost;
-	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>();
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>();
 	bcout &lt;&lt; 
 		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("This is the global scope") &lt;&lt; 
 	endl &lt;&lt;
@@ -557,7 +557,7 @@ void do_print_meta_data(::boost::false_type)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>();
+	cts::bostream&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>();
 
 	bcout &lt;&lt; 
 		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("Namespace '") &lt;&lt; 
@@ -656,7 +656,7 @@ int main(void)
 	typedef <code class="computeroutput"><a class="link" href="../BOOST_MIRRORED_TYPE.html" title="Macro BOOST_MIRRORED_TYPE">BOOST_MIRRORED_TYPE</a></code>(T) meta_T;
 
 	// print out the full type name
-	cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>() &lt;&lt; 
+	cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>() &lt;&lt; 
 		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("The full type name is: ") &lt;&lt; 
 		meta_T::full_name() &lt;&lt; 
 	endl;
@@ -690,7 +690,7 @@ void print_meta_data(void)
 	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
-	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2441765">bcout</a></code>(); 
+	cts::<code class="computeroutput"><a class="link" href="../boost/cts/bostream.html" title="Type definition bostream">bostream</a></code>&amp; bcout = cts::<code class="computeroutput"><a class="link" href="../char_type_switch/reference.html#boost.cts.bcout_id2447908">bcout</a></code>(); 
 	// print out the base type name
 	bcout &lt;&lt; 
 		<code class="computeroutput"><a class="link" href="../BOOST_CTS_LIT.html" title="Macro BOOST_CTS_LIT">BOOST_CTS_LIT</a></code>("The type name is: ") &lt;&lt; 
@@ -753,7 +753,7 @@ int main(void)
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="../boost/mirror/iterator_greater_equal.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="../boost/mirror/deep_traversal_of.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../mirror.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="rationale.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -296,10 +296,52 @@
 
 	</section>
 	<section id="mirror.reference.algorithms">
+		<using-namespace name="boost"/>
+		<using-namespace name="boost::mirror"/>
 		<title>Algorithms</title>
 		<para>
 		</para>
-	</section>
+                <table frame="all"><title>Meta-functions</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Meta-function</entry> <entry>Purpose</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><code><classname>accumulate</classname></code></entry>
+                                <entry>Returns the result of cumulative application of a binary forward operation to all elements in a MetaObjectSequence.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>find_if</classname></code></entry>
+                                <entry>Returns the iterator pointing to the first meta-object in a meta-object sequence satisfying the given unary predicate.</entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>reverse_find_if</classname></code></entry>
+                                <entry>Returns a reverse iterator pointing to the first-from-end meta-object in a meta-object sequence satisfying the given unary predicate.</entry>
+                        </row>
+                </tbody>
+                </tgroup>
+                </table>
+		<para>
+		</para>
+                <table frame="all"><title>Template-functions</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Function</entry> <entry>Purpose</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><code><functionname>for_each</functionname></code></entry>
+                                <entry>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</entry>
+                        </row>
+                        <row>
+                                <entry><code><functionname>reverse_for_each</functionname></code></entry>
+                                <entry>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</entry>
+                        </row>
+                </tbody>
+                </tgroup>
+                </table>
+ 	</section>
 	<section id="mirror.reference.iterators">
 		<using-namespace name="boost"/>
 		<using-namespace name="boost::mirror"/>
@@ -358,9 +400,28 @@
 
 	</section>
 	<section id="mirror.reference.traversals">
+		<using-namespace name="boost"/>
+		<using-namespace name="boost::mirror"/>
 		<title>Traversals</title>
 		<para>
 		</para>
+                <table frame="all"><title>Traversals</title>
+                <tgroup cols="2">
+                <thead>
+                        <row> <entry>Template classes</entry> <entry>Purpose</entry> </row>
+                </thead>
+                <tbody>
+                        <row>
+                                <entry><code><classname>flat_traversal_of</classname></code></entry>
+                                <entry></entry>
+                        </row>
+                        <row>
+                                <entry><code><classname>deep_traversal_of</classname></code></entry>
+                                <entry></entry>
+                        </row>
+                </tbody>
+                </tgroup>
+                </table>
 	</section>
 	<section>
 		<title>Header files</title>
@@ -402,6 +463,14 @@
 		<xi:include href="reference/iterator/iterator_less_equal.xml"/>
 		<xi:include href="reference/iterator/iterator_greater.xml"/>
 		<xi:include href="reference/iterator/iterator_greater_equal.xml"/>
+
+		<xi:include href="reference/algorithm/accumulate.xml"/>
+		<xi:include href="reference/algorithm/find_if.xml"/>
+		<xi:include href="reference/algorithm/reverse_find_if.xml"/>
+		<xi:include href="reference/algorithm/for_each.xml"/>
+		<xi:include href="reference/algorithm/reverse_for_each.xml"/>
+
+		<xi:include href="reference/traversal.xml"/>
 	</section>
 
 </library-reference>
