@@ -72,7 +72,7 @@ class DependencyGraph
 
   SmartPoint make_source_point(DependencyGraph& g, point_type const& pt)
   {
-    return g.add_functor<source_point>(boost::make_tuple(), pt);
+    return g.add_functor<functor::source_point>(boost::make_tuple(), pt);
   }
 
 #define FUNCTOR_IMPL_1(FunctionName, F, T1)\
@@ -100,9 +100,15 @@ class DependencyGraph
     boost::make_tuple(boost::cref(arg1), boost::cref(arg2), boost::cref(arg3)));\
     }
 
-FUNCTOR_IMPL_2(make_line, line_from_two_points, point_type, point_type);
-//FUNCTOR_IMPL_3(make_line, line_from_point_vector_distance, point_type, vector_type, distance_type);
+FUNCTOR_IMPL_2(make_line, functor::line_from_two_points, point_type, point_type);
+//FUNCTOR_IMPL_3(make_line, functor::line_from_point_vector_distance, point_type, vector_type, distance_type);
 
-FUNCTOR_IMPL_3(make_plane, plane_from_three_points, point_type, point_type, point_type);
+FUNCTOR_IMPL_3(make_plane, functor::plane_from_three_points, point_type, point_type, point_type);
+
+FUNCTOR_IMPL_2(perpendicular_to, functor::perpendicular_to, vector_type, vector_type);
+FUNCTOR_IMPL_1(normal_of, functor::normal_of, plane_type);
+FUNCTOR_IMPL_1(direction_of, functor::direction_of, line_type);
+FUNCTOR_IMPL_2(translate, functor::translate_line, line_type, vector_type);
+
 
 #endif

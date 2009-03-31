@@ -71,24 +71,44 @@ typedef boost::guigl::position_type vector_type;
 typedef boost::guigl::segment_type line_type;
 typedef geometry::polygon<point_type> plane_type;
 
+typedef SmartResult<vector_type> const& SmartVector;
 typedef SmartResult<point_type> const& SmartPoint;
 typedef SmartResult<line_type> const& SmartLine;
 typedef SmartResult<plane_type> const& SmartPlane;
 
-typedef
-Functor<point_type, boost::tuple<>, point_type>
-source_point;
+namespace functor {
+  //SmartVector
+  typedef
+    Functor<vector_type, boost::tuple<SmartLine> >
+    direction_of;
 
-typedef
-Functor<line_type, boost::tuple<SmartPoint, SmartPoint> >
-line_from_two_points;
+  typedef
+    Functor<line_type, boost::tuple<SmartLine, SmartVector> >
+    translate_line;
 
-//typedef
-//Functor<line_type, boost::tuple<SmartPoint, SmartVector, SmartDistance> >
-//line_from_point_vector_distance;
+  typedef
+    Functor<vector_type, boost::tuple<SmartPlane> >
+    normal_of;
 
-typedef
-Functor<plane_type, boost::tuple<SmartPoint, SmartPoint, SmartPoint> >
-plane_from_three_points;
+  typedef
+    Functor<vector_type, boost::tuple<SmartVector, SmartVector> >
+    perpendicular_to;
 
+  //SmartPoint
+  typedef
+    Functor<point_type, boost::tuple<>, point_type>
+    source_point;
+
+  typedef
+    Functor<line_type, boost::tuple<SmartPoint, SmartPoint> >
+    line_from_two_points;
+
+  //typedef
+  //Functor<line_type, boost::tuple<SmartPoint, SmartVector, SmartDistance> >
+  //line_from_point_vector_distance;
+
+  typedef
+    Functor<plane_type, boost::tuple<SmartPoint, SmartPoint, SmartPoint> >
+    plane_from_three_points;
+  };
 #endif // BOOST_GUIGL_EXAMPLE_FUNCTORS_HPP

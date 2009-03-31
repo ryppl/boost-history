@@ -34,9 +34,10 @@
 
 using namespace boost::guigl;
 
-class Renderer : public IVisitor
+class Renderer
   {
   public:
+
     void operator()(SmartResult<point_type>& g) const
       {
       gl::color(blue(0.7f));
@@ -66,27 +67,43 @@ class Renderer : public IVisitor
 class RecomputeVisitor : public IVisitor
   {
   public:
-    void visit(source_point& o) const
+    void visit(functor::direction_of& x) const
+      {
+      line_type const& line = x.args.get<0>().result;
+      x.result = vector_type(line.second.x - line.first.x, line.second.y - line.first.y);
+      }
+
+    void visit(functor::translate_line& x) const
+      {
+      line_type const& line = x.args.get<0>().result;
+      vector_type const& vector = x.args.get<1>().result;
+
+      x.result = line;
+      x.result.first.x += vector.x;
+      x.result.second.x += vector.x;
+      x.result.first.y += vector.y;
+      x.result.second.y += vector.y;
+      }
+
+    void visit(functor::source_point& o) const
       {
       o.result = o.data;
-
-      point_type const* p = &o.result;
       };
 
-    void visit(line_from_two_points& o) const
+    void visit(functor::line_from_two_points& o) const
       {
-      o.result.first = arg<0>(o).result;
-      o.result.second = arg<1>(o).result;
+      o.result.first = o.args.get<0>().result;
+      o.result.second = o.args.get<1>().result;
       };
 
-    void visit(plane_from_three_points& o) const
+    void visit(functor::plane_from_three_points& o) const
       {
       using namespace boost::assign;
       o.result.outer().clear();
       o.result.outer() +=
-        arg<1>(o).result,
-        arg<2>(o).result,
-        arg<3>(o).result;
+        o.args.get<0>().result,
+        o.args.get<1>().result,
+        o.args.get<2>().result;
       geometry::correct(o.result);
       };
   };
@@ -100,7 +117,7 @@ struct StreamWriter
     }
 
   template<>
-  void operator()<line_from_two_points>(line_from_two_points& g) const
+  void operator()<functor::line_from_two_points>(functor::line_from_two_points& g) const
     {
     geometry::linestring<point_type> s;
     geometry::append(s, g.result.first);
@@ -279,10 +296,10 @@ struct drawer {
       g.objects.end(),
       accept_each(Visitor<Renderer>()));
 
-    std::for_each(
-      g.objects.begin(),
-      g.objects.end(),
-      accept_each(Visitor<PrintDescription>(PrintDescription(names, g))));
+    //std::for_each(
+    //  g.objects.begin(),
+    //  g.objects.end(),
+    //  accept_each(Visitor<PrintDescription>(PrintDescription(names, g))));
     }
   };
 
@@ -313,8 +330,6 @@ void drawer::init_geometry_graph()
   {
   using namespace boost::assign;
 
-  boost::make_tuple(1).get<0>();
-
   SmartPoint
     pt_mnp = make_source_point(g, point_type(90, 90)),
     pt_fh = make_source_point(g, point_type(-90, -90)),
@@ -323,7 +338,10 @@ void drawer::init_geometry_graph()
 
   SmartLine
     ax_mech = make_line(g, pt_mnp, pt_fh),
-    ax_epi = make_line(g, pt_meepi, pt_laepi);
+    ax_epi = make_line(g, pt_meepi, pt_laepi),
+    ax = make_line(g, pt_fh, pt_laepi);
+
+  translate(g, ax, direction_of(g, ax_epi));
 
   SmartPlane
     pl_axial = make_plane(g, pt_mnp, pt_fh, pt_laepi);
