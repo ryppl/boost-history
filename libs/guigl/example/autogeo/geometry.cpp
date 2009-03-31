@@ -1,12 +1,12 @@
 #define NOMINMAX
 
-//*=================================---------------------------------------------
-//Copyright 2009 Andrey Torba
-//
-//Distributed under the Boost Software License, Version 1.0.
-//(See accompanying file LICENSE_1_0.txt or copy at
-//http://www.boost.org/LICENSE_1_0.txt)
-//-----------------------------------------------===============================*/
+/*=================================---------------------------------------------
+Copyright 2009 Andrey Torba
+
+Distributed under the Boost Software License, Version 1.0.
+(See accompanying file LICENSE_1_0.txt or copy at
+http://www.boost.org/LICENSE_1_0.txt)
+-----------------------------------------------===============================*/
 
 #include "geometry.hpp"
 
@@ -59,7 +59,7 @@ class Renderer
       glEnd();
 
       gl::line_width(2);
-      gl::color(black(0.2));
+      gl::color(black(0.2f));
       ggl::draw<geometry::ring_tag>(g.result.outer());
       }
   };

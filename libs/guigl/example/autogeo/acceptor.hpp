@@ -1,10 +1,10 @@
 #ifndef BOOST_GUIGL_EXAMPLE_ACCEPTOR_HPP
 #define BOOST_GUIGL_EXAMPLE_ACCEPTOR_HPP
 
+#include "visitors.hpp"
+
 #include <boost/shared_ptr.hpp>
 #include <boost/make_shared.hpp>
-
-class IVisitor;
 
 class IAcceptor
   {

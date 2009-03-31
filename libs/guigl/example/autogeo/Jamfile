@@ -8,7 +8,8 @@
 
 project boost/guigl/example
     : requirements
-        <library>$(TOP)/libs/guigl/build//boost_guigl/<use-window-manager>platform_glut
+        <library>$(TOP)/libs/guigl/build//boost_guigl/
+        <use-window-manager>platform_glut
     ;
 
 exe geometry : geometry.cpp ;
