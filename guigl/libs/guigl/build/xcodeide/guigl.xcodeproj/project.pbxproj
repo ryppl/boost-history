@@ -175,6 +175,7 @@
 		08B919780EB682BC00F743E3 /* delayed_constructor.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = delayed_constructor.hpp; sourceTree = "<group>"; };
 		08B9197C0EB6885C00F743E3 /* test_delayed_constructor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = test_delayed_constructor.cpp; sourceTree = "<group>"; };
 		08CD92110EEB51120047AE90 /* export_symbols.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = export_symbols.hpp; sourceTree = "<group>"; };
+		08CF173F0F784CC1002C4CBF /* color.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = color.hpp; sourceTree = "<group>"; };
 		08D0F2550E6712E90026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D0F25D0E67139E0026C6DF /* active_colored.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = active_colored.hpp; sourceTree = "<group>"; };
 		08D5606D0E52901F005A2391 /* window.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = window.cpp; sourceTree = "<group>"; };
@@ -356,6 +357,7 @@
 		08A454D80E5243ED002C4151 /* guigl */ = {
 			isa = PBXGroup;
 			children = (
+				08CF173F0F784CC1002C4CBF /* color.hpp */,
 				081B06DC0E5FE32A00EF7F91 /* layout */,
 				08978DC60E5D943200C79062 /* view */,
 				089E06FA0E5D0F2A00C425FE /* widget */,
