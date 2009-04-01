@@ -28,6 +28,7 @@ struct color_type : public gil::rgba32f_pixel_t
     color_type(channel_t v0, channel_t v1, channel_t v2, channel_t v3 = static_cast<channel_t>(1))
         : base_type(v0,v1,v2,v3)
     {}
+    // addressing an issue in MSVC
     color_type &operator=(const color_type &rhs)
     {
         static_cast<base_type &>(*this) = static_cast<const base_type &>(rhs);
