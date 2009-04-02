@@ -12,7 +12,7 @@
 
 #include <vector>
 
-
+#include "test_data.hpp"
 
 template <class T>
 struct fake_descending_binary_cursor;
@@ -283,19 +283,22 @@ public:
 
 fake_binary_tree<int> generate_fake_binary_tree()
 {
-    fake_binary_tree<int> mt(57);
+    test_data_set mpo;
+    mock_cursor_data(mpo);
 
-    mt.m_data[0] = 8;
-    mt.m_data[1] = 3;
-    mt.m_data[2] = 10;
-    mt.m_data[3] = 1;
-    mt.m_data[4] = 6;
-    mt.m_data[6] = 14;
-    mt.m_data[9] = 4;
-    mt.m_data[10] = 7;
-    mt.m_data[13] = 13;
-    mt.m_data[27] = 11;
-    mt.m_data[56] = 12;
+    typedef test_data_set::nth_index<0>::type container_type;
+    const container_type& order_index = mpo.get<0>();
+
+    container_type::const_iterator ci = order_index.begin();
+    container_type::const_iterator cie = order_index.end();
+    
+    fake_binary_tree<int> mt(57);
+    
+    for(;ci!=cie;++ci) {
+        if (ci->pos_level >= mt.m_data.size())
+            mt.m_data.resize(ci->pos_level + 1);
+        mt.m_data[ci->pos_level] = ci->val;
+    }
 
     return mt;
 }

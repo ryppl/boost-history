@@ -4,8 +4,8 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_DATA_HPP
-#define LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_DATA_HPP
+#ifndef LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
+#define LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP
 
 #include <boost/tree/algorithm.hpp>
 
@@ -14,7 +14,7 @@
 typedef boost::mpl::list<boost::tree::preorder
                         ,boost::tree::inorder
                         ,boost::tree::postorder> orders;
-
+    
 template <class Cursor>
 static void validate_test_dataset1_tree(Cursor cur)
 {
@@ -60,6 +60,57 @@ static void validate_test_dataset1_minus_1_tree(Cursor cur)
     BOOST_CHECK_EQUAL(*cur.end().end().begin().begin().end().begin(), 11); //Leaf
 }
 
+template <class Container>
+void generate_mock_cursor_data(boost::tree::preorder, Container& data)
+{
+    using std::make_pair;
+    data[0] = make_pair(0, 8);
+    data[1] = make_pair(1, 3);
+    data[2] = make_pair(3, 1);
+    data[3] = make_pair(4, 6);
+    data[4] = make_pair(9, 4);
+    data[5] = make_pair(10, 7);
+    data[6] = make_pair(2, 10);
+    data[7] = make_pair(6, 14);
+    data[8] = make_pair(13, 13);
+    data[9] = make_pair(27, 11);
+    data[10] = make_pair(56, 12);
+}
+
+template <class Container>
+void generate_mock_cursor_data(boost::tree::inorder, Container& data)
+{
+    using std::make_pair;
+    data[0] = make_pair(3, 1);
+    data[1] = make_pair(1, 3);
+    data[2] = make_pair(9, 4); 
+    data[3] = make_pair(4, 6);
+    data[4] = make_pair(10, 7);
+    data[5] = make_pair(0, 8);
+    data[6] = make_pair(2, 10);
+    data[7] = make_pair(27, 11);
+    data[8] = make_pair(56, 12);
+    data[9] = make_pair(13, 13);
+    data[10] = make_pair(6, 14);
+}
+
+template <class Container>
+void generate_mock_cursor_data(boost::tree::postorder, Container& data)
+{
+    using std::make_pair;
+    data[0] = make_pair(3, 1);
+    data[1] = make_pair(9, 4);
+    data[2] = make_pair(10, 7);
+    data[3] = make_pair(4, 6);
+    data[4] = make_pair(1, 3);
+    data[5] = make_pair(56, 12);
+    data[6] = make_pair(27, 11);
+    data[7] = make_pair(13, 13);
+    data[8] = make_pair(6, 14);
+    data[9] = make_pair(2, 10);
+    data[10] = make_pair(0, 8);
+}
+
 template <class Iterator>
 void test_traversal_from_leaf4(Iterator a, Iterator b)
 {    
@@ -71,4 +122,5 @@ void test_traversal_from_leaf4(Iterator a, Iterator b)
 
 } // namespace ascending
 
-#endif // LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_DATA_HPP
+
+#endif // LIBS_TREE_TEST_TEST_TREE_TRAVERSAL_HPP

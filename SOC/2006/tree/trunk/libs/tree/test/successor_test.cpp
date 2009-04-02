@@ -33,14 +33,17 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
     // preorder: fbt1.root_tracking_root().begin();
     // in- and postorder: fbt1.root_tracking_root().begin().begin().begin(); 
 
-    typedef std::vector< std::pair<std::size_t, int> > container_type;
-    container_type po(11);
-    generate_mock_cursor_data(Order(), po);
-    container_type::const_iterator ci = po.begin();
-    container_type::const_iterator cie = po.end();
+    test_data_set mpo;
+    mock_cursor_data(mpo);
+
+    typedef typename test_data_set::index<Order>::type container_type;
+    const container_type& order_index = mpo.get<Order>();
+
+    typename container_type::const_iterator ci = order_index.begin();
+    typename container_type::const_iterator cie = order_index.end();
 
     for (; ci!=cie; ++ci) {
-        BOOST_CHECK_EQUAL(*c, ci->second);
+        BOOST_CHECK_EQUAL(*c, ci->val);
         boost::tree::successor(Order(), c);
     }
 }

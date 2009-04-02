@@ -17,19 +17,8 @@ General:
 * Do we need to_{left|right}most_ancestor?
 * Do we need multiway and plain cursor "flavor" tags (for algorithms)?
 * In case of forest cursor, is_leaf() should really be empty().
-* Further reduce test data redundancy: make mock cursor use the data from fake_binary_tree, 
-  and give it an Order template argument. Calculate *order positions from level order indices
-  as of fake_binary_tree. Possibly change fake_binary_tree internal representation to a 
-  vector<bool> with indices indicating the level order position (and also the value),
-  and values indicating "empty or not".
-* Re-merge algorithm tests into algorithm_test.cpp after they're all tidied up?
 * Add algorithms for construction of a tree based on two ranges specifying its
   pre-/in-/postorder linearization (see Knuth).
-* Use Boost.MultiIndex for organising mock objects to avoid redundancy? 
-  (The data pairs position--value
-  are always the same, but the order in which they are accessed depends on the order of the
-  algorithm acting on them).
-* Clean up binary_tree_test
 * preorder_insert_cursor: hopefully easy to implement...
 * Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!).
@@ -62,18 +51,9 @@ General:
 * Clean up node/cursor/binary_tree implementation.
 * Fix forest copy
 * Fix cursor archetypes: *order copy checks don't compile
-* Test insert_cursor independently of algorithms.
 * Implement forest_tree::insert_above.
 * Revisit namespaces.
 * Move some of the secondary stuff to a util/ dir? Is that what they're used for?
-* Redo testing. Right now, it's just chaotic.
-* Implement a real output cursor (if possible) and use copy(preorder(), ...) to build a new tree.
-  Then, do some performance measurements comparing
-  * Different *orders;
-  * BOOST_RECURSIVE_ORDER_ALGORITHMS on and off;
-  * cursor and iterator based algorithms (from Boost.Tree and the STL, respectively)
-  Do these measurements also with algorithms other than copy.
-* Test cursor adaptors wrapped around output cursors!
 * Think of a couple good examples (draw inspiration eg from Wikipedia: Tree traversal
   or CRLS) and include them in the docs. Maybe move some files from libs/test to
   example.
@@ -102,20 +82,7 @@ General:
     (Compare this again to container vs sequence; also look into graph concepts.)
     Finally, mind the implications for internal/external adaptation; they might be
     generalised, if the above assumption is true.
-* Re-organize traversal tests:
-  * Verify recursive algorithms to work
-    * 1. with a tree filled with given data
-    * 2. with an empty tree
-  * Same for iterators
-  * Start with an empty tree, fill it with data. At each step, check if
-    cursor and iterator algorithms yield the same result.
-    (Or, alternatively, if neither is to be trusted: compare to subsets of
-    the complete test data.)
-  * With the tree complete, do the same recursively for all its subtrees.
-* Also test copy with two trees (not just one tree and a container/output iterator)
-* /Possibly/ move detail/algorithm/cursor/ to detail/cursor/algorithm/ or even just
-  detail/cursor/ (same for iterator).
-* Make *order iterators work with empty subtrees; same for cursor algorithms.
+* Make algorithms work with empty subtrees.
   (Not necessarily! If that means a check for empty(), it's better to leave it to
   the user!)
 * Investigate the lower_bound for search vs insert purposes problem.
@@ -127,9 +94,6 @@ General:
   Let the cursor based *order algorithms then copy its elements into linear structures 
   and compare these linear structures to an iterator-based *order traversal.
 * Should const_cursor have cbegin(), cend() and cparent() members?
-* Implement "flat" (sequential *order representation) trees (cf. Knuth, Fundamental Algorithms,
-  pp. 348--351). Those should be especially useful for automated testing of "real" (binary, 
-  forest) trees.
 * have `erase()` operations return cursor/iterator instead of void (as in new STD)
 * We might need still more binary_tree members for more efficient functions operating on
   ranges...
@@ -142,6 +106,29 @@ General:
   They'd surely be interesting for experimenting with algorithms!
 * Start an RFC: what subtree algorithms should there be? In particular, of which of
   the STL's linear algorithms should there be a hierarchical version?
+
+Testing:
+* Re-merge algorithm tests into algorithm_test.cpp after they're all tidied up?
+* Clean up binary_tree_test
+* Re-organize traversal tests:
+  * Verify algorithms to work
+    * 1. with at least one tree filled with given data
+    * 2. with an empty tree
+  Minimize possible points of failure, ie always compare to pre-defined test data.
+
+Testing tools:
+* Possibly calculate *order positions from level order indices
+  as of fake_binary_tree. Possibly change fake_binary_tree internal representation to a 
+  vector<bool> with indices indicating the level order position (and also the value),
+  and values indicating "empty or not".
+  
+Performance tests:
+* Implement a real output cursor (if possible) and use copy(preorder(), ...) to build a new tree.
+  Then, do some performance measurements comparing
+  * Different *orders;
+  * BOOST_RECURSIVE_ORDER_ALGORITHMS on and off;
+  * cursor and iterator based algorithms (from Boost.Tree and the STL, respectively)
+  Do these measurements also with algorithms other than copy.
 
 Pre-release:
 * Look into 
@@ -161,6 +148,8 @@ Future:
   (preorder copy; ideally, we can guarantee RAII for every single element)
   and clear/dtor (postorder for_each).
 * Deprecate non-preorder insert cursors.
+* Implement "flat" (sequential *order representation) trees (cf. Knuth, Fundamental Algorithms,
+  pp. 348--351). Possibly useful for automated testing of "real" (binary, forest) trees.
 
 Ask on the mailing list:
 

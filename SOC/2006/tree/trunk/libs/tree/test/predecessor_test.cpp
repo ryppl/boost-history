@@ -31,20 +31,23 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_predecessor, Order, orders )
 {
     fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
     to_last(Order(), c);
-    // Replace by a fake_to_first function for dependency minimization's sake?
+    // Replace by a fake_to_last function for dependency minimization's sake?
     // preorder: fbt1.root_tracking_root().end().end().begin().begin().end().begin();
     // inorder: fbt1.root_tracking_root().end().end().begin();
     // postorder: fbt1.root_tracking_root().begin(); 
 
-    typedef std::vector< std::pair<std::size_t, int> > container_type;
-    container_type po(11);
-    generate_mock_cursor_data(Order(), po);
-    container_type::const_iterator cib = po.begin();
-    container_type::const_iterator ci = po.end();
+    test_data_set mpo;
+    mock_cursor_data(mpo);
+
+    typedef typename test_data_set::index<Order>::type container_type;
+    const container_type& order_index = mpo.get<Order>();
+
+    typename container_type::const_iterator cib = order_index.begin();
+    typename container_type::const_iterator ci = order_index.end();
 
     for (--ci; ci!=cib; --ci) {
         boost::tree::predecessor(Order(), c);
-        BOOST_CHECK_EQUAL(*c, ci->second);
+        BOOST_CHECK_EQUAL(*c, ci->val);
     }
 }
 

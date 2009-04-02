@@ -24,26 +24,30 @@ BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_descending, Order, orders)
 {
-    typedef std::vector< std::pair<std::size_t, int> > container_type;
-    container_type po(11);
-    generate_mock_cursor_data(Order(), po);
-    //std::transform(po.begin(), po.end(), po.begin(), std::bind2nd(std::plus<int>(/*second member of pair*/),0))
-    container_type::const_iterator ci = po.begin();
-    container_type::const_iterator cie = po.end();
-    mock_binary_cursor< container_type::const_iterator > mc(ci, cie);
+    test_data_set mpo;
+    mock_cursor_data(mpo);
+
+    typedef typename test_data_set::index<Order>::type container_type;
+    const container_type& order_index = mpo.get<Order>();
+
+    typename container_type::const_iterator ci = order_index.begin();
+    typename container_type::const_iterator cie = order_index.end();
+    mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
     
     boost::tree::transform(Order(), fbt1.descending_root(), mc, std::bind2nd(std::plus<int>(),0));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_ascending, Order, orders)
 {
-    typedef std::vector< std::pair<std::size_t, int> > container_type;
-    container_type po(11);
-    generate_mock_cursor_data(Order(), po);
-    //std::transform(po.begin(), po.end(), po.begin(), std::bind2nd(std::plus<int>(/*second member of pair*/),0))
-    container_type::const_iterator ci = po.begin();
-    container_type::const_iterator cie = po.end();
-    mock_binary_cursor< container_type::const_iterator > mc(ci, cie);
+    test_data_set mpo;
+    mock_cursor_data(mpo);
+
+    typedef typename test_data_set::index<Order>::type container_type;
+    const container_type& order_index = mpo.get<Order>();
+
+    typename container_type::const_iterator ci = order_index.begin();
+    typename container_type::const_iterator cie = order_index.end();
+    mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
     
     boost::tree::transform(Order(), fbt1.ascending_root(), mc, std::bind2nd(std::plus<int>(),0));
 }

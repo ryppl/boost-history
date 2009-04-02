@@ -7,6 +7,8 @@
 #ifndef LIBS_TREE_TEST_MOCK_BINARY_CURSOR_HPP
 #define LIBS_TREE_TEST_MOCK_BINARY_CURSOR_HPP
 
+#include "test_data.hpp"
+
 template <class Iter>
 class mock_binary_cursor;
 
@@ -40,13 +42,13 @@ public:
     mock_binary_cursor(mock_binary_cursor<Iter> const& other)
     : m_iter(other.m_iter), m_end(other.m_end), m_pos(other.m_pos) {}
 
-    void operator=(typename Iter::value_type::second_type const& val)
+    void operator=(typename Iter::value_type::value_type const& val)
     {
         BOOST_CHECK(m_iter != m_end);
         if (m_iter == m_end)
             return;  
-        BOOST_CHECK_EQUAL((m_pos-1)/2, m_iter->first);
-        BOOST_CHECK_EQUAL(val, m_iter->second);
+        BOOST_CHECK_EQUAL((m_pos-1)/2, m_iter->pos_level);
+        BOOST_CHECK_EQUAL(val, m_iter->val);
         ++m_iter;
     }
     

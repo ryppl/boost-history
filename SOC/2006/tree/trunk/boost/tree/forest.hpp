@@ -94,7 +94,6 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::const_cursor >));
      */     
     cursor begin()
     {
-        //cursor c(h.root());
         return cursor(h.root());
     }
 
@@ -113,7 +112,6 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::const_cursor >));
      */     
     const_cursor cbegin() const
     {
-        //const_cursor c(h.croot());
         return const_cursor(h.croot());
     }
 
@@ -146,8 +144,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::const_cursor >));
     const_cursor cend() const
     {
         base_const_cursor b(h.croot());
-        while (!b.is_leaf())
-            b.to_end();
+        to_rightmost(b);
         return const_cursor(b);
     }
 
