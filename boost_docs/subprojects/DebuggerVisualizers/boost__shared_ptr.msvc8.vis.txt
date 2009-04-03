@@ -1,0 +1,27 @@
+;-----------------------------------------
+; BOOST_VISUALIZER_START boost::shared_ptr
+;
+; Copyright Filip Konvièka 2009. Use, modification and distribution are subject
+; to the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     CF808B30-203F-11DE-8C30-0800200C9A66
+; @platform msvc-8, msvc-9
+; @version  1.0
+; @author   Filip Konvièka
+; @email    filip dot konvicka at logis dot cz
+;
+; Usage
+; =====
+;
+; This is a simple visualizer for shared_ptr (only shows the object or "null").
+
+; boost::shared_ptr
+boost::shared_ptr<*> {
+  preview  (#if (!$e.px) (#("null")) #else (#(*$e.px, " (shared_ptr)")))
+  children (#if (!$e.px) (#("null")) #else (*$e.px))
+}
+
+;
+; BOOST_VISUALIZER_END boost::shared_ptr
+;---------------------------------------

@@ -1,0 +1,36 @@
+;----------------------------------------
+; BOOST_VISUALIZER_START boost::date_time
+;
+; Copyright Filip Konvièka 2009. Use, modification and distribution are subject
+; to the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     C7541090-203E-11DE-8C30-0800200C9A66
+; @platform msvc-8, msvc-9
+; @version  1.0
+; @header   date_time_visualizer.hpp
+; @author   Filip Konvièka
+; @email    filip dot konvicka at logis dot cz
+;
+; Usage
+; =====
+;
+; Visualization must be enabled by including the header file date_time_visualizer.hpp in each translation unit.
+; The visualization is not immediate, you must use the green 'Recalculate' icon.
+;
+
+; Posix time
+boost::posix_time::ptime {
+  preview  (#if ($e.is_not_a_date_time()) (#("not_a_date_time")) #else (#("ptime (expand to view)")))
+  children (#if ($e.is_not_a_date_time()) (#("not_a_date_time")) #else ([_print_ptime(*&($e)),s]))
+}
+
+; Posix time_duration
+boost::posix_time::time_duration {
+  preview  (#if ($e.is_special()) (#("special")) #else (#("time_duration (expand to view)")))
+  children (#if ($e.is_special()) (#("special")) #else ([_print_time_duration(*&($e)),s]))
+}
+
+;
+; BOOST_VISUALIZER_END boost::date_time
+;--------------------------------------

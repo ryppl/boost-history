@@ -13,6 +13,8 @@ using namespace boost::multi_index;
 using std::wstring;
 using namespace std;
 
+#include <boost/pool/pool_alloc.hpp>
+
 struct test {
   wstring x;
   wstring y;
@@ -24,6 +26,7 @@ struct test {
     return x==other.x;
   }
 };
+
 namespace boost {
   inline std::size_t hash_value(test const& t)
   {
@@ -31,7 +34,7 @@ namespace boost {
   }
 }
 
-typedef multi_index_container<test, indexed_by<hashed_non_unique<identity<test> > > > cont;
+typedef multi_index_container<test, indexed_by<hashed_non_unique<identity<test> >, sequenced<>>/*, boost::fast_pool_allocator<test> */> cont;
 
 VISUALIZE_MULTI_INDEX_CONTAINER(cont);
 
@@ -39,6 +42,13 @@ int wmain() {
   cont test_cont;
   test_cont.insert(test(L"aaa"));
   test_cont.insert(test(L"aaa", L"other"));
+  test_cont.insert(test(L"E", L"other"));
   test_cont.insert(test(L"aac"));
+  /*
+  test_cont.push_back(test(L"aaa"));
+  test_cont.push_back(test(L"aaa", L"other"));
+  test_cont.push_back(test(L"E", L"other"));
+  test_cont.push_back(test(L"aac"));
+  */
   return 0; // see screenshoxt
 }
