@@ -46,15 +46,6 @@ namespace boost { namespace pinhole
             return instance.get(); // address of sole instance
         }
         
-        #if defined(BOOST_MSVC)
-            #pragma warning(push)
-            #pragma warning( disable: 4251 )
-        #endif
-            boost::signal<void(property_group*)> add_event;
-            boost::signal<void(property_group*)> remove_event;
-        #if defined(BOOST_MSVC)
-            #pragma warning(pop)
-        #endif
         void raise_on_add_event( property_group *group )
         {
             add_event( group );
@@ -64,6 +55,16 @@ namespace boost { namespace pinhole
         {
             remove_event( group );
         }
+        
+        #if defined(BOOST_MSVC)
+            #pragma warning(push)
+            #pragma warning( disable: 4251 )
+        #endif
+            boost::signal<void(property_group*)> add_event;
+            boost::signal<void(property_group*)> remove_event;
+        #if defined(BOOST_MSVC)
+            #pragma warning(pop)
+        #endif
         
     private :
         
@@ -75,14 +76,6 @@ namespace boost { namespace pinhole
     {
     public:
         typedef std::tr1::shared_ptr<property_manager> instance_type;
-
-    private:
-        static void deleter(property_manager* manager)
-        {
-            delete manager;
-        }
-        
-    public:
         typedef std::multimap<std::string, property_group*> category_to_property_group_map;
         typedef map_value_iterator<category_to_property_group_map::iterator> iterator;
         typedef map_value_iterator<category_to_property_group_map::const_iterator> const_iterator;
@@ -106,25 +99,7 @@ namespace boost { namespace pinhole
         {
             internal_instance().reset();
         }
-        
-    protected:
-        property_manager(){;}
-    
-    // TODO: This needs to be protected so no-one will deal with it, but
-    // checked_delete can't be made a friend in gcc, so I can't shared_ptr
-    // to work.
-    public:
-        virtual ~property_manager()
-        {
-            category_to_property_group_map::iterator itr     = m_property_group_collection.begin();
-            category_to_property_group_map::iterator itr_end = m_property_group_collection.end();
-            for( ; itr != itr_end; ++itr )
-            {
-                event_source::instance()->raise_on_remove_event((*itr).second);
-            }
-        }
-        
-    public:        
+              
         /**
          * Retrieves an iterator pointing to the first property group.
          */
@@ -218,11 +193,22 @@ namespace boost { namespace pinhole
 
     protected:
         
+        property_manager(){;}
+        
+        virtual ~property_manager()
+        {
+            category_to_property_group_map::iterator itr     = m_property_group_collection.begin();
+            category_to_property_group_map::iterator itr_end = m_property_group_collection.end();
+            for( ; itr != itr_end; ++itr )
+            {
+                event_source::instance()->raise_on_remove_event((*itr).second);
+            }
+        }
+        
         /** Provides direct access to the shared_ptr that owns the property_manager singleton. */
         static boost::shared_ptr<boost::pinhole::property_manager>& internal_instance()
         {
-            static boost::shared_ptr<boost::pinhole::property_manager>
-            instance(new boost::pinhole::property_manager);
+            static boost::shared_ptr<boost::pinhole::property_manager> instance;
             
             return instance;
         }
@@ -285,8 +271,18 @@ namespace boost { namespace pinhole
         #if defined(BOOST_MSVC)
             #pragma warning(pop)
         #endif
+    
+    private:
+        
+        // This allows us make the destructor protected. I can't make checked_delete a friend
+        // in gcc, so shared_ptr couldn't access the desctructor directly.
+        static void deleter(property_manager* manager)
+        {
+            delete manager;
+        }
+        
             
-        friend class property_group;
+        friend class boost::pinhole::property_group;
     };
 }}
 
