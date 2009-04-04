@@ -15,7 +15,6 @@ project
     : requirements
       <library>/boost/test//boost_unit_test_framework/<link>static
       <library>/boost/signals//boost_signals/<link>static
-      <library>../build//boost_pinhole/<link>static
       <define>BOOST_ALL_NO_LIB=1
     ;
 {

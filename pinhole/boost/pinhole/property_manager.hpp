@@ -1,6 +1,6 @@
 // Pinhole property_manager.hpp file
 //
-// Copyright Jared McIntyre 2007.
+// Copyright Jared McIntyre 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -36,12 +36,14 @@ namespace boost { namespace pinhole
     public :
         static event_source* instance()
         {
-            if ( !m_instance )  // is it the first call?
+            static boost::shared_ptr<boost::pinhole::event_source> instance;
+            
+            if ( !instance )  // is it the first call?
             {  
-                m_instance.reset( new event_source ); // create sole instance
+                instance.reset( new event_source ); // create sole instance
             }
             
-            return m_instance.get(); // address of sole instance
+            return instance.get(); // address of sole instance
         }
         
         #if defined(BOOST_MSVC)
@@ -64,15 +66,6 @@ namespace boost { namespace pinhole
         }
         
     private :
-
-        #if defined(BOOST_MSVC)
-            #pragma warning(push)
-            #pragma warning( disable: 4251 )
-        #endif
-        static boost::shared_ptr<event_source> m_instance;
-        #if defined(BOOST_MSVC)
-            #pragma warning(pop)
-        #endif
         
         event_source(){};
         
@@ -96,25 +89,22 @@ namespace boost { namespace pinhole
         
         static instance_type instance()
         {
-            if ( !m_instance )  // is it the first call?
+            if ( !exists() )  // is it the first call?
             {  
-                m_instance.reset( new property_manager, property_manager::deleter ); // create sole instance
+                internal_instance().reset( new property_manager, property_manager::deleter ); // create sole instance
             }
             
-            return m_instance; // address of sole instance
+            return internal_instance(); // address of sole instance
         }
         
         static bool exists()
         {
-            return (m_instance != NULL);
+            return (internal_instance() != NULL);
         }
         
         static void delete_instance()
         {
-            if( m_instance )
-            {
-                m_instance.reset();
-            }
+            internal_instance().reset();
         }
         
     protected:
@@ -227,6 +217,16 @@ namespace boost { namespace pinhole
         }
 
     protected:
+        
+        /** Provides direct access to the shared_ptr that owns the property_manager singleton. */
+        static boost::shared_ptr<boost::pinhole::property_manager>& internal_instance()
+        {
+            static boost::shared_ptr<boost::pinhole::property_manager>
+            instance(new boost::pinhole::property_manager);
+            
+            return instance;
+        }
+        
         /**
          * Register's group with the property_manager.
          */
@@ -276,12 +276,10 @@ namespace boost { namespace pinhole
             }
         }
         
-    protected:
         #if defined(BOOST_MSVC)
             #pragma warning(push)
             #pragma warning( disable: 4251 )
         #endif
-            static std::tr1::shared_ptr<property_manager> m_instance;
             category_to_property_group_map m_property_group_collection;
             category_collection m_category_collection;
         #if defined(BOOST_MSVC)

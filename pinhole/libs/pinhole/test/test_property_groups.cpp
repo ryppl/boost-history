@@ -113,7 +113,7 @@ class TestPropertyManager : public property_manager
 public:
     TestPropertyManager() : property_manager()
     {
-        property_manager::m_instance.reset( this );
+        property_manager::internal_instance().reset( this );
             
         uiChildCount                       = 0;
         uiRegisterPropertyGroupCallCount   = 0;

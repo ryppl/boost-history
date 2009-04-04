@@ -14,10 +14,6 @@
 using namespace std;
 using namespace boost;
 using namespace boost::pinhole;
-        
-// I can hide these two line if I don't do everything in headers
-shared_ptr<property_manager> property_manager::m_instance(new property_manager);
-event_source* event_source::m_instance = 0;
 
 class SubGroup : public property_group
 {
