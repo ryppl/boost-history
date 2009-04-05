@@ -32,7 +32,7 @@
 #include <boost/tp/detail/callable.hpp>
 #include <boost/tp/detail/guard.hpp>
 #include <boost/tp/detail/interrupter.hpp>
-#ifdef BOOST_BIND_WORKER_TO_PROCESSORS
+#ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 #include <boost/tp/detail/bind_processor.hpp>
 #endif
 #include <boost/tp/detail/worker.hpp>
@@ -42,39 +42,7 @@
 #include <boost/tp/task.hpp>
 #include <boost/tp/watermark.hpp>
 
-namespace boost {
-namespace this_task
-{
-template< typename Pred >
-void reschedule_until( Pred const& pred)
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	w->reschedule_until( pred);
-}
-
-template< typename Pool >
-Pool & get_thread_pool()
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	return w->get_thread_pool< Pool >();
-}
-
-inline
-bool is_worker()
-{ return tp::detail::worker::tss_get() != 0; }
-
-inline
-thread::id worker_id()
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	return w->get_id();
-}
-}
-
-namespace tp
+namespace boost { namespace tp
 {
 template< typename Channel >
 class pool : private noncopyable
@@ -269,7 +237,7 @@ private:
 					this) ) );
 	}
 
-#ifdef BOOST_BIND_WORKER_TO_PROCESSORS
+#ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 	void entry_( std::size_t n)
 	{
 		this_thread::bind_to_processor( n);
@@ -372,7 +340,7 @@ public:
 		lk.unlock();
 	}
 
-#ifdef BOOST_BIND_WORKER_TO_PROCESSORS
+#ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 	explicit pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& scns = scanns( 20) )

@@ -74,8 +74,10 @@ public:
 	{ impl_->interrupt_and_wait( rel_time); }
 
 	bool interruption_requested();
+
+	void swap( interrupter & other)
+	{ impl_.swap( other.impl_); }
 };
-}
-} }
+}}}
 
 #endif // BOOST_TP_DETAIL_INTERRUPTER_H

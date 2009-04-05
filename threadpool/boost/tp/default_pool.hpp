@@ -7,6 +7,7 @@
 
 #include <boost/tp/fifo.hpp>
 #include <boost/tp/pool.hpp>
+#include <boost/tp/task.hpp>
 #include <boost/tp/unbounded_channel.hpp>
 
 namespace boost { namespace tp
@@ -22,6 +23,10 @@ struct static_pool
 inline
 default_pool & get_default_pool()
 { return detail::static_pool::instance; }
+
+template< typename Act >
+task< typename result_of< Act() >::type > lauch_in_pool( Act const& act)
+{ return get_default_pool().submit( act); }
 } }
 
 #endif // BOOST_TP_DEFAULT_POOL_H
