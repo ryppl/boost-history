@@ -59,6 +59,14 @@
 	</References>
 	<Files>
 		<File
+			RelativePath="..\..\example\ball.cpp"
+			>
+		</File>
+		<File
+			RelativePath="..\..\example\ball.hpp"
+			>
+		</File>
+		<File
 			RelativePath="..\..\example\custom_example.cpp"
 			>
 		</File>

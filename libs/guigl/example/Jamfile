@@ -32,6 +32,7 @@ exe overlapping_example : overlapping_example.cpp pch ;
 exe sexy_button : sexy_button.cpp pch ;
 exe ggl : ggl.cpp pch ;
 exe polygon : polygon.cpp pch ;
+# exe ball : ball.cpp pch ;
 
 install window_example_stage
     :
@@ -41,6 +42,7 @@ install window_example_stage
         overlapping_example
         sexy_button
         ggl
+#        ball
  	polygon
     :
         <install-dependencies>on
