@@ -11,30 +11,23 @@
 #include <boost/test/test_case_template.hpp>
 
 #include "fake_binary_tree.hpp"
+#include "test_tree_traversal_data.hpp"
 
 using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
-BOOST_AUTO_TEST_CASE( test_to_first_preorder )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_to_first, Order, orders )
 {
-    fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
-    boost::tree::to_first(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 8);
-}
+    test_data_set mpo;
+    mock_cursor_data(mpo);
 
-BOOST_AUTO_TEST_CASE( test_to_first_inorder )
-{
+    typename test_data_set::index<Order>::type::const_iterator ci 
+    = mpo.get<Order>().begin();
+    
     fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
-    boost::tree::to_first(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 1);
-}
-
-BOOST_AUTO_TEST_CASE( test_to_first_postorder )
-{
-    fake_binary_tree<int>::descending_cursor c = fbt1.descending_root();
-    boost::tree::to_first(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 1);
+    boost::tree::to_first(Order(), c);
+    BOOST_CHECK_EQUAL(*c, ci->val);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

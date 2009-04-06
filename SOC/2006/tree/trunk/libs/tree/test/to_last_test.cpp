@@ -11,33 +11,25 @@
 #include <boost/test/test_case_template.hpp>
 
 #include "fake_binary_tree.hpp"
+#include "test_tree_traversal_data.hpp"
 
 using namespace boost::tree;
 
 BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
-BOOST_AUTO_TEST_CASE( test_to_last_preorder )
+BOOST_AUTO_TEST_CASE_TEMPLATE( test_to_last, Order, orders )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
-    boost::tree::to_last(preorder(), c);
-    boost::tree::predecessor(preorder(), c);
-    BOOST_CHECK_EQUAL(*c, 12);
-}
+    test_data_set mpo;
+    mock_cursor_data(mpo);
 
-BOOST_AUTO_TEST_CASE( test_to_last_inorder )
-{
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
-    boost::tree::to_last(inorder(), c);
-    boost::tree::predecessor(inorder(), c);
-    BOOST_CHECK_EQUAL(*c, 14);
-}
+    typename test_data_set::index<Order>::type::const_iterator cie
+    = mpo.get<Order>().end();
+    --cie;
 
-BOOST_AUTO_TEST_CASE( test_to_last_postorder )
-{
     fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
-    boost::tree::to_last(postorder(), c);
-    boost::tree::predecessor(postorder(), c);
-    BOOST_CHECK_EQUAL(*c, 8);
+    boost::tree::to_last(Order(), c);
+    boost::tree::predecessor(Order(), c);
+    BOOST_CHECK_EQUAL(*c, cie->val);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
