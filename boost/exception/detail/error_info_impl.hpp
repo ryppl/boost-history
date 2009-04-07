@@ -1,4 +1,4 @@
-//Copyright (c) 2006-2008 Emil Dotchevski and Reverge Studios, Inc.
+//Copyright (c) 2006-2009 Emil Dotchevski and Reverge Studios, Inc.
 
 //Distributed under the Boost Software License, Version 1.0. (See accompanying
 //file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -30,6 +30,32 @@ boost
                 }
             };
         }
+
+    template <class Tag,class T>
+    class
+    error_info:
+        public exception_detail::error_info_base
+        {
+        public:
+
+        typedef T value_type;
+
+        error_info( value_type const & value );
+        ~error_info() throw();
+
+        value_type const &
+        value() const
+            {
+            return value_;
+            }
+
+        private:
+
+        char const * tag_typeid_name() const;
+        std::string value_as_string() const;
+
+        value_type const value_;
+        };
     }
 
 #endif
