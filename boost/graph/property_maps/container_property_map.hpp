@@ -1,14 +1,14 @@
-// (C) Copyright Andrew Sutton 2007
+// (C) Copyright 2007-2009 Andrew Sutton
 //
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0 (See accompanying file
 // LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_GRAPH_CONTAINER_PROPERTY_MAP_HXX
-#define BOOST_GRAPH_CONTAINER_PROPERTY_MAP_HXX
+#ifndef BOOST_GRAPH_CONTAINER_PROPERTY_MAP_HPP
+#define BOOST_GRAPH_CONTAINER_PROPERTY_MAP_HPP
 
 #include <boost/graph/detail/index.hpp>
-#include <boost/property_map.hpp>
+#include <boost/property_map/property_map.hpp>
 
 namespace boost
 {
