@@ -18,6 +18,8 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
 #include <boost/any.hpp>
+#include <boost/archive/iterators/mb_from_wchar.hpp>
+#include <boost/archive/iterators/wchar_from_mb.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
@@ -94,7 +96,8 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Set_Type>
         inline void operator()( Set_Type setter, std::wstring value )
         {
-            throw std::invalid_argument( "A wstring cannot be used to set a string." );
+            typedef boost::archive::iterators::mb_from_wchar<std::wstring::const_iterator> translator;
+            setter( std::string( translator(value.begin()), translator(value.end()) ) );
         }
     };
 
@@ -107,7 +110,8 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Set_Type>
         inline void operator()( Set_Type setter, std::string value )
         {
-            throw std::invalid_argument( "A string cannot be used to set a wstring." );
+            typedef boost::archive::iterators::wchar_from_mb<std::string::const_iterator> translator;
+            setter( std::wstring( translator(value.begin()), translator(value.end()) ) );
         }
     };
 
@@ -201,7 +205,10 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Get_Type>
         inline std::string operator()( Get_Type getter ) const
         {
-            throw std::invalid_argument( "A wstring property cannot be returned as a string." ); 
+            typedef boost::archive::iterators::mb_from_wchar<std::wstring::const_iterator> translator;
+
+            std::wstring& value = getter();
+            return std::string( translator(value.begin()), translator(value.end()) );
         }
     };
 
@@ -214,7 +221,10 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Get_Type>
         inline std::wstring operator()( Get_Type getter ) const
         {
-            throw std::invalid_argument( "A wstring property cannot be returned as a string." ); 
+            typedef boost::archive::iterators::wchar_from_mb<std::string::const_iterator> translator;
+
+            std::string& value = getter();
+            return std::wstring( translator(value.begin()), translator(value.end()) );
         }
     };
 
