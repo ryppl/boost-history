@@ -11,13 +11,17 @@
 #include <boost/assert.hpp>
 #include <boost/function.hpp>
 #include <boost/interprocess/sync/interprocess_semaphore.hpp>
+#include <boost/random.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/tp/detail/callable.hpp>
+#include <boost/tp/detail/guard.hpp>
 #include <boost/tp/detail/interrupter.hpp>
 #include <boost/tp/detail/wsq.hpp>
+#include <boost/tp/poolsize.hpp>
+#include <boost/tp/scanns.hpp>
 
 namespace boost {
 namespace tp {
@@ -28,71 +32,237 @@ class worker
 private:
 	static thread_specific_ptr< worker >	tss_;
 
-	class impl : private noncopyable
+	struct impl
+	{
+		virtual ~impl() {}
+
+		virtual const thread::id get_id() const = 0;
+
+		virtual void join() const = 0;
+
+		virtual void interrupt() const = 0;
+
+		virtual void put( callable const&, interrupter const&) = 0;
+
+		virtual bool try_take( callable &, interrupter &) = 0;
+
+		virtual bool try_steal( callable &, interrupter &) = 0;
+
+		virtual void signal_shutdown() = 0;
+
+		virtual void signal_shutdown_now() = 0;
+
+		virtual void schedule_until( function< bool() > const&) = 0;
+
+		virtual void run() = 0;
+	};
+
+	template< typename Pool >
+	class impl_pool : public impl,
+					  private noncopyable
 	{
 	private:
+		class random_idx
+		{
+		private:
+			rand48 rng_;
+			uniform_int<> six_;
+			variate_generator< rand48 &, uniform_int<> > die_;
+	
+		public:
+			random_idx( std::size_t size)
+			:
+			rng_(),
+			six_( 0, size - 1),
+			die_( rng_, six_)
+			{}
+	
+			std::size_t operator()()
+			{ return die_(); }
+		};
+
 		typedef std::pair< callable, interrupter >	item;
+
+		Pool									&	pool_;
 		shared_ptr< thread >						thrd_;
 		wsq< item > 								wsq_;
 		interprocess::interprocess_semaphore		shtdwn_sem_;
 		interprocess::interprocess_semaphore		shtdwn_now_sem_;
 		bool										shtdwn_;
+		posix_time::time_duration					asleep_;
+		scanns										max_scns_;
 		std::size_t									scns_;
+		random_idx									rnd_idx_;
+
+		void execute_(
+			callable & ca,
+			interrupter & intr)
+		{
+			BOOST_ASSERT( ! ca.empty() );
+			guard grd( get_pool().active_worker_);
+			shared_ptr< void > ig(
+				static_cast< void * >( 0),
+				boost::bind(
+					& interrupter::reset,
+					intr) );
+			intr.set( thrd_);
+			ca();
+			ca.clear();
+			BOOST_ASSERT( ca.empty() );
+		}
+	
+		void next_callable_( callable & ca, interrupter & intr)
+		{
+			if ( ! try_take( ca, intr) )
+			{
+				if ( ! get_pool().channel_.try_take( ca, intr) )
+				{
+					std::size_t idx( rnd_idx_() );
+					for ( std::size_t j( 0); j < get_pool().wg_.size(); ++j)
+					{
+						worker other( get_pool().wg_[idx]);
+						if ( this_thread::get_id() == other.get_id() ) continue;
+						if ( ++idx >= get_pool().wg_.size() ) idx = 0;
+						if ( other.try_steal( ca, intr) ) break;
+					}
+	
+					if ( ca.empty() )
+					{
+						guard grd( get_pool().idle_worker_);
+						if ( shutdown_() ) return;
+						++scns_;
+						if ( scns_ >= max_scns_)
+						{
+							if ( get_pool().size_() == get_pool().idle_worker_)
+								get_pool().channel_.take( ca, intr, asleep_);
+							else
+								this_thread::sleep( asleep_);
+							scns_ = 0;
+						}
+						else
+							this_thread::yield();
+					}
+				}
+			}
+		}
+
+		bool shutdown_()
+		{
+			if ( shutdown__() && get_pool().channel_.empty() )
+				return true;
+			else if ( shutdown_now__() )
+				return true;
+			return false;
+		}
+
+		bool shutdown__()
+		{
+			if ( ! shtdwn_)
+				shtdwn_ = shtdwn_sem_.try_wait();
+			return shtdwn_;
+		}
+		
+		bool shutdown_now__()
+		{ return shtdwn_now_sem_.try_wait(); }
 
 	public:
-		impl( function< void() > const&);
+		impl_pool(
+			Pool & pool,
+			poolsize const& psize,
+			posix_time::time_duration const& asleep,
+			scanns const& max_scns,
+			function< void() > const& fn)
+		:
+		pool_( pool),
+		thrd_( new thread( fn) ),
+		wsq_(),
+		shtdwn_sem_( 0),
+		shtdwn_now_sem_( 0),
+		shtdwn_( false),
+		asleep_( asleep),
+		max_scns_( max_scns),
+		scns_( 0),
+		rnd_idx_( psize)
+		{ BOOST_ASSERT( ! fn.empty() ); }
 
-		virtual ~impl() {}
+		const thread::id get_id() const
+		{ return thrd_->get_id(); }
 
-		const shared_ptr< thread > thrd() const;
+		void join() const
+		{ thrd_->join(); }
 
-		const thread::id get_id() const;
+		void
+		interrupt() const
+		{ thrd_->interrupt(); }
 
-		void join() const;
+		void signal_shutdown()
+		{ shtdwn_sem_.post(); }
+		
+		void signal_shutdown_now()
+		{ shtdwn_now_sem_.post(); }
 
-		void interrupt() const;
+		void put(
+			callable const& ca,
+			interrupter const& intr)
+		{
+			BOOST_ASSERT( ! ca.empty() );
+			wsq_.put( std::make_pair( ca, intr) );
+		}
 
-		void put( callable const&, interrupter const&);
-
-		bool try_take( callable &, interrupter &);
-
-		bool try_steal( callable &, interrupter &);
-
-		bool empty();
-
-		void signal_shutdown();
-
-		void signal_shutdown_now();
-
-		bool shutdown();
-
-		bool shutdown_now();
-
-		std::size_t scanns() const;
-
-		void increment_scanns();
-
-		void reset_scanns();
-
-		virtual void reschedule_until( function< bool() > const&) = 0;
-	};
-
-	template< typename Pool >
-	class impl_pool : public impl
-	{
-	private:
-		Pool	&	p_;
-
-	public:
-		impl_pool( Pool & p, function< void() > const& fn)
-		: impl( fn), p_( p)
-		{}
-
-		void reschedule_until( function< bool() > const& pred)
-		{ p_.reschedule_until_( pred); }
+		bool try_take(
+			callable & ca,
+			interrupter & intr)
+		{
+			item itm;
+			bool result( wsq_.try_take( itm) );
+			if ( result)
+			{
+				ca = itm.first;
+				intr = itm.second;
+			}
+			return result;
+		}
+		
+		bool try_steal(
+			callable & ca,
+			interrupter & intr)
+		{
+			item itm;
+			bool result( wsq_.try_steal( itm) );
+			if ( result)
+			{
+				ca = itm.first;
+				intr = itm.second;
+			}
+			return result;
+		}
 
 		Pool & get_pool() const
-		{ return p_; }
+		{ return pool_; }
+
+		void run()
+		{
+			BOOST_ASSERT( get_id() == this_thread::get_id() );
+
+			schedule_until(
+				bind( & impl_pool::shutdown_, this) );
+		}
+	
+		void schedule_until( function< bool() > const& pred)
+		{
+			callable ca;
+			interrupter intr;
+	
+			while ( ! pred() )
+			{
+				next_callable_( ca, intr);
+				if( ! ca.empty() )
+				{
+					execute_( ca, intr);
+					scns_ = 0;
+				}
+			}
+		}
 	};
 
 	shared_ptr< impl >	impl_;
@@ -101,39 +271,30 @@ public:
 	template< typename Pool >
 	worker(
 		Pool & pool,
+		poolsize const& psize,
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
 		function< void() > const& fn)
-	: impl_( new impl_pool< Pool >( pool, fn) )
+	:
+	impl_(
+		new impl_pool< Pool >(
+			pool,
+			psize,
+			asleep,
+			max_scns,
+			fn) )
 	{}
-
-	const shared_ptr< thread > thrd() const;
 
 	const thread::id get_id() const;
 
 	void join() const;
-
 	void interrupt() const;
-
-	void put( callable const&, interrupter const&);
-
-	bool try_take( callable &, interrupter &);
-
-	bool try_steal( callable &, interrupter &);
-
-	bool empty() const;
-
 	void signal_shutdown();
-
 	void signal_shutdown_now();
 
-	bool shutdown();
-
-	bool shutdown_now();
-
-	std::size_t scanns() const;
-
-	void increment_scanns();
-
-	void reset_scanns();
+	void put( callable const&, interrupter const&);
+	bool try_take( callable &, interrupter &);
+	bool try_steal( callable &, interrupter &);
 
 	void reschedule_until( function< bool() > const&);
 
@@ -145,9 +306,9 @@ public:
 		return p->get_pool();
 	}
 
-	static worker * tss_get();
+	void run();
 
-	static void tss_reset( worker * w);
+	static worker * tss_get();
 };
 
 } } }

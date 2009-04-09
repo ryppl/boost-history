@@ -16,12 +16,7 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
-#include <boost/multi_index_container.hpp>
-#include <boost/multi_index/mem_fun.hpp>
-#include <boost/multi_index/ordered_index.hpp>
-#include <boost/multi_index/random_access_index.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/random.hpp>
 #include <boost/ref.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
@@ -30,12 +25,12 @@
 
 #include <boost/tp/detail/atomic.hpp>
 #include <boost/tp/detail/callable.hpp>
-#include <boost/tp/detail/guard.hpp>
 #include <boost/tp/detail/interrupter.hpp>
 #ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 #include <boost/tp/detail/bind_processor.hpp>
 #endif
 #include <boost/tp/detail/worker.hpp>
+#include <boost/tp/detail/worker_group.hpp>
 #include <boost/tp/exceptions.hpp>
 #include <boost/tp/poolsize.hpp>
 #include <boost/tp/scanns.hpp>
@@ -59,199 +54,62 @@ private:
 	typedef Channel						channel;
 	typedef typename channel::item		channel_item;
 
-	enum state
-	{
-		active_state,
-		terminateing_state,
-		terminated_state
-	};
 
-	struct id_idx_tag {};
-	struct rnd_idx_tag {};
-
-	typedef multi_index::multi_index_container<
-		detail::worker,
-		multi_index::indexed_by<
-			multi_index::ordered_unique<
-				multi_index::tag< id_idx_tag >,
-				multi_index::const_mem_fun<
-					detail::worker,
-					const thread::id,
-					& detail::worker::get_id
-				>
-			>,
-			multi_index::random_access< multi_index::tag< rnd_idx_tag > >
-		>
-	>										worker_list;
-
-	typedef typename worker_list::template index<
-		id_idx_tag >::type					id_idx;
-	typedef typename worker_list::template index<
-		rnd_idx_tag >::type					rnd_idx;
-
-	class random_idx
-	{
-	private:
-		rand48 rng_;
-		uniform_int<> six_;
-		variate_generator< rand48 &, uniform_int<> > die_;
-
-	public:
-		random_idx( std::size_t size)
-		:
-		rng_(),
-		six_( 0, size - 1),
-		die_( rng_, six_)
-		{}
-
-		std::size_t operator()()
-		{ return die_(); }
-	};
-
-	static thread_specific_ptr< random_idx >	tss_rnd_idx_;
-
-	worker_list									worker_;
-	shared_mutex								mtx_worker_;
+	detail::worker_group						wg_;
+	shared_mutex								mtx_wg_;
 	unsigned int								state_;
 	channel		 								channel_;
-	posix_time::time_duration					asleep_;
-	scanns										scns_;
 	unsigned int								active_worker_;
 	unsigned int								idle_worker_;
-	unsigned int								running_worker_;
 
-	void execute_(
-		detail::callable & ca,
-		detail::interrupter & intr,
-		shared_ptr< thread > const& thrd)
+	void worker_entry_()
 	{
-		BOOST_ASSERT( ! ca.empty() );
-		detail::guard grd( active_worker_);
-		shared_ptr< void > ig(
-			static_cast< void * >( 0),
-			boost::bind(
-				& detail::interrupter::reset,
-				intr) );
-		intr.set( thrd);
-		ca();
-		ca.clear();
-		BOOST_ASSERT( ca.empty() );
-	}
-
-	void next_callable_( detail::worker & w, detail::callable & ca, detail::interrupter & intr)
-	{
-		rnd_idx & ridx( worker_.get< rnd_idx_tag >() );
-		if ( ! w.try_take( ca, intr) )
-		{
-			if ( ! channel_.try_take( ca, intr) )
-			{
-				std::size_t idx( ( * tss_rnd_idx_)() );
-				for ( std::size_t j( 0); j < worker_.size(); ++j)
-				{
-					detail::worker other( ridx[idx]);
-					if ( this_thread::get_id() == other.get_id() ) continue;
-					if ( ++idx >= worker_.size() ) idx = 0;
-					if ( other.try_steal( ca, intr) ) break;
-				}
-
-				if ( ca.empty() )
-				{
-					detail::guard grd( idle_worker_);
-					if ( shutdown_( w) ) return;
-					w.increment_scanns();
-					if ( w.scanns() >= scns_)
-					{
-						if ( size_() == idle_worker_)
-							channel_.take( ca, intr, asleep_);
-						else
-							this_thread::sleep( asleep_);
-						w.reset_scanns();
-					}
-					else
-						this_thread::yield();
-				}
-			}
-		}
-	}
-
-	void reschedule_until_( function< bool() > const& pred)
-	{
-		detail::worker * w( detail::worker::tss_get() );
-		BOOST_ASSERT( w);
-		BOOST_ASSERT( w->get_id() == this_thread::get_id() );
-		shared_ptr< thread > thrd( w->thrd() );
-		BOOST_ASSERT( thrd);
-		detail::interrupter intr;
-		detail::callable ca;
-		while ( ! pred() )
-		{
-			next_callable_( * w, ca, intr);
-			if( ! ca.empty() )
-			{
-				execute_( ca, intr, thrd);
-				w->reset_scanns();
-			}
-		}
-	}
-
-	void entry_()
-	{
-		shared_lock< shared_mutex > lk( mtx_worker_);
-		id_idx & iidx( worker_.get< id_idx_tag >() );
-		typename id_idx::iterator i( iidx.find( this_thread::get_id() ) );
+		shared_lock< shared_mutex > lk( mtx_wg_);
+		typename detail::worker_group::iterator i( wg_.find( this_thread::get_id() ) );
 		lk.unlock();
-		BOOST_ASSERT( i != iidx.end() );
-		detail::worker::tss_reset( new detail::worker( * i) );
-		
-		detail::worker * w( detail::worker::tss_get() );
-		BOOST_ASSERT( w);	
-		BOOST_ASSERT( w->get_id() == this_thread::get_id() );
-		shared_ptr< thread > thrd( w->thrd() );
-		BOOST_ASSERT( thrd);
-		detail::callable ca;
-		detail::interrupter intr;
+		BOOST_ASSERT( i != wg_.end() );
 
-		tss_rnd_idx_.reset( new random_idx( worker_.size() ) );
-
-		detail::guard grd( running_worker_);
-
-		while ( ! shutdown_( * w) )
-		{
-			next_callable_( * w, ca, intr);
-			if( ! ca.empty() )
-			{
-				execute_( ca, intr, thrd);
-				w->reset_scanns();
-			}
-		}
+		detail::worker w( * i);
+		w.run();
 	}
-
-	void create_worker_()
+	
+	void create_worker_(
+		poolsize const& psize,
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns)
 	{
-		BOOST_ASSERT( ! terminateing_() && ! terminated_() );
-		worker_.insert(
+		wg_.insert(
 			detail::worker(
 				* this,
+				psize,
+				asleep,
+				max_scns,
 				boost::bind(
-					& pool::entry_,
+					& pool::worker_entry_,
 					this) ) );
 	}
 
 #ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
-	void entry_( std::size_t n)
+	void worker_entry_( std::size_t n)
 	{
 		this_thread::bind_to_processor( n);
-		entry_();
+		worker_entry_();
 	}
 
-	void create_worker_( std::size_t n)
+	void create_worker_(
+		poolsize const& psize,
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
+		std::size_t n)
 	{
-		BOOST_ASSERT( ! terminateing_() && ! terminated_() );
-		worker_.insert(
+		wg_.insert(
 			detail::worker(
 				* this,
+				psize,
+				asleep,
+				max_scns,
 				boost::bind(
-					& pool::entry_,
+					& pool::worker_entry_,
 					this,
 					n) ) );
 	}
@@ -264,22 +122,7 @@ private:
 	{ return size_() - active_(); }
 
 	std::size_t size_() const
-	{ return worker_.size(); }
-
-	bool terminated_() const
-	{ return state_ == terminated_state; }
-
-	bool terminateing_() const
-	{ return state_ == terminateing_state; }
-
-	bool shutdown_( detail::worker & w)
-	{
-		if ( w.shutdown() && channel_.empty() )
-			return true;
-		else if ( w.shutdown_now() )
-			return true;
-		return false;
-	}
+	{ return wg_.size(); }
 
 	bool closed_() const
 	{ return state_ > 0; }
@@ -291,24 +134,21 @@ public:
 	explicit pool(
 		poolsize const& psize,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& scns = scanns( 20) )
+		scanns const& max_scns = scanns( 20) )
 	:
-	worker_(),
-	mtx_worker_(),
+	wg_(),
+	mtx_wg_(),
 	state_( 0),
 	channel_(),
-	asleep_( asleep),
-	scns_( scns),
 	active_worker_( 0),
-	idle_worker_( 0),
-	running_worker_( 0)
+	idle_worker_( 0)
 	{
-		if ( asleep_.is_special() || asleep_.is_negative() )
+		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
 		channel_.activate();
-		unique_lock< shared_mutex > lk( mtx_worker_);
+		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_();
+			create_worker_( psize, asleep, max_scns);
 		lk.unlock();
 	}
 
@@ -317,52 +157,46 @@ public:
 		high_watermark const& hwm,
 		low_watermark const& lwm,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& scns = scanns( 20) )
+		scanns const& max_scns = scanns( 20) )
 	:
-	worker_(),
-	mtx_worker_(),
+	wg_(),
+	mtx_wg_(),
 	state_( 0),
 	channel_(
 		hwm,
 		lwm),
-	asleep_( asleep),
-	scns_( scns),
 	active_worker_( 0),
-	idle_worker_( 0),
-	running_worker_( 0)
+	idle_worker_( 0)
 	{
-		if ( asleep_.is_special() || asleep_.is_negative() )
+		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
 		channel_.activate();
-		unique_lock< shared_mutex > lk( mtx_worker_);
+		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_();
+			create_worker_( psize, asleep, max_scns);
 		lk.unlock();
 	}
 
 #ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 	explicit pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& scns = scanns( 20) )
+		scanns const& max_scns = scanns( 20) )
 	:
-	worker_(),
-	mtx_worker_(),
+	wg_(),
+	mtx_wg_(),
 	state_( 0),
 	channel_(),
-	asleep_( asleep),
-	scns_( scns),
 	active_worker_( 0),
-	idle_worker_( 0),
-	running_worker_( 0)
+	idle_worker_( 0)
 	{
-		if ( asleep_.is_special() || asleep_.is_negative() )
+		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
 		std::size_t psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
-		unique_lock< shared_mutex > lk( mtx_worker_);
+		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( i);
+			create_worker_( psize, asleep, max_scns, i);
 		lk.unlock();
 	}
 
@@ -370,28 +204,25 @@ public:
 		high_watermark const& hwm,
 		low_watermark const& lwm,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& scns = scanns( 20) )
+		scanns const& max_scns = scanns( 20) )
 	:
-	worker_(),
-	mtx_worker_(),
+	wg_(),
+	mtx_wg_(),
 	state_( 0),
 	channel_(
 		hwm,
 		lwm),
-	asleep_( asleep),
-	scns_( scns),
 	active_worker_( 0),
-	idle_worker_( 0),
-	running_worker_( 0)
+	idle_worker_( 0)
 	{
-		if ( asleep_.is_special() || asleep_.is_negative() )
+		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
 		std::size_t psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
-		unique_lock< shared_mutex > lk( mtx_worker_);
+		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( i);
+			create_worker_( psize, asleep, max_scns, i);
 		lk.unlock();
 	}
 #endif
@@ -401,26 +232,24 @@ public:
 
 	std::size_t active()
 	{
-		shared_lock< shared_mutex > lk( mtx_worker_);
+		shared_lock< shared_mutex > lk( mtx_wg_);
 		return active_();
 	}
 
 	std::size_t idle()
 	{
-		shared_lock< shared_mutex > lk( mtx_worker_);
+		shared_lock< shared_mutex > lk( mtx_wg_);
 		return idle_();
 	}
-
+	
 	void shutdown()
 	{
 		if ( closed_() || close_() > 1) return;
 
 		channel_.deactivate();
-		shared_lock< shared_mutex > lk( mtx_worker_);
-		BOOST_FOREACH( detail::worker w, worker_)
-		{ w.signal_shutdown(); }
-		BOOST_FOREACH( detail::worker w, worker_)
-		{ w.join(); }
+		shared_lock< shared_mutex > lk( mtx_wg_);
+		wg_.signal_shutdown_all();
+		wg_.join_all();
 		lk.unlock();
 	}
 
@@ -430,14 +259,10 @@ public:
 			return std::vector< detail::callable >();
 
 		channel_.deactivate_now();
-		shared_lock< shared_mutex > lk( mtx_worker_);
-		BOOST_FOREACH( detail::worker w, worker_)
-		{
-			w.signal_shutdown_now();
-			w.interrupt();
-		}
-		BOOST_FOREACH( detail::worker w, worker_)
-		{ w.join(); }
+		shared_lock< shared_mutex > lk( mtx_wg_);
+		wg_.signal_shutdown_now_all();
+		wg_.interrupt_all();
+		wg_.join_all();
 		lk.unlock();
 		std::vector< detail::callable > drain( channel_.drain() );
 
@@ -446,7 +271,7 @@ public:
 
 	std::size_t size()
 	{
-		shared_lock< shared_mutex > lk( mtx_worker_);
+		shared_lock< shared_mutex > lk( mtx_wg_);
 		return size_();
 	}
 
@@ -490,8 +315,8 @@ public:
 					f) );
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool::*)( function< bool() > const&) ) & pool::reschedule_until_,
-					this,
+					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
+					w,
 					wcb) );
 			w->put( detail::callable( move( tsk) ), intr);
 			return task< R >( f, intr);
@@ -528,8 +353,8 @@ public:
 					f) );
 			tsk.set_wait_callback(
 				bind(
-					( void ( pool::*)( function< bool() > const&) ) & pool::reschedule_until_,
-					this,
+					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
+					w,
 					wcb) );
 			w->put( detail::callable( move( tsk) ), intr);
 			return task< R >( f, intr);
@@ -545,11 +370,6 @@ public:
 		}
 	}
 };
-
-template< typename Channel >
-thread_specific_ptr< typename pool< Channel >::random_idx >
-pool< Channel >::tss_rnd_idx_;
-
 }}
 
 #endif // BOOST_TP_POOL_H
