@@ -85,7 +85,7 @@ public:
     std::string name = (device[0] == '\\') ? device : "\\\\.\\" + device;
 
     // Open a handle to the serial port.
-    ::HANDLE handle = ::CreateFile(name.c_str(),
+    ::HANDLE handle = ::CreateFileA(name.c_str(),
         GENERIC_READ | GENERIC_WRITE, 0, 0,
         OPEN_EXISTING, FILE_FLAG_OVERLAPPED, 0);
     if (handle == INVALID_HANDLE_VALUE)
@@ -237,7 +237,7 @@ public:
   }
 
   // Send a break sequence to the serial port.
-  boost::system::error_code send_break(implementation_type& impl,
+  boost::system::error_code send_break(implementation_type&,
       boost::system::error_code& ec)
   {
     ec = boost::asio::error::operation_not_supported;
