@@ -70,7 +70,7 @@ private:
 				boost::this_task::get_thread_pool< pool_type >().submit(
 					fn2) );
 
-			return t1.get() + t2.get();
+			return t1.result().get() + t2.result().get();
 		}
 	}
 
@@ -111,16 +111,13 @@ int main( int argc, char *argv[])
 						boost::ref( fib),
 						i) ) );
 
-		::sleep( 1);
-		tsk();
-
 		int k = 0;
 		std::vector< tp::task< int > >::iterator e( results.end() );
 		for (
 			std::vector< tp::task< int > >::iterator i( results.begin() );
 			i != e;
 			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
+			std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
 
 		pt::ptime stop( pt::microsec_clock::universal_time() );
 		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;

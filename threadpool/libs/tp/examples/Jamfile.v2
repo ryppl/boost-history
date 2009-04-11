@@ -15,12 +15,16 @@ project boost/tp/example
         <threading>multi
     ;
 
-exe chained_submit : chained_submit.cpp ;
+exe bind_to_processor : bind_to_processor.cpp ;
+exe fork_join : for_join.cpp ;
 exe interrupt : interrupt.cpp ;
-exe lazy_submit : lazy_submit.cpp ;
+exe launch : launch.cpp ;
+exe parrallel_sort : parralele_sort.cpp ;
 exe pending : pending.cpp ;
 exe priority : priority.cpp ;
-exe fork_join : fork_join.cpp ;
+exe reschedule_until : reschedule_until.cpp ;
 exe shutdonw_now : shutdonw_now.cpp ;
+exe sleep : sleep.cpp ;
 exe smart : smart.cpp ;
 exe submit : submit.cpp ;
+exe yield : yield.cpp ;

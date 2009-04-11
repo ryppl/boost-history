@@ -240,6 +240,43 @@ unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, tas
 
 namespace this_task
 {
+namespace detail
+{
+struct time_reached
+{
+	system_time	abs_time;
+
+	time_reached( system_time & abs_time_)
+	: abs_time( abs_time_)
+	{}
+
+	bool operator()()
+	{ return get_system_time() >= abs_time; }
+};
+
+class always_true
+{
+private:
+	bool	result_;
+
+public:
+	always_true()
+	: result_( false)
+	{}
+	
+	bool operator()()
+	{
+		if ( ! result_)
+		{
+			result_ = true;
+			return false;
+		}
+		else
+			return true;
+	}
+};
+}
+
 template< typename Pred >
 void reschedule_until( Pred const& pred)
 {
@@ -268,48 +305,41 @@ thread::id worker_id()
 	return w->get_id();
 }
 
-template< typename Pool >
-void sleep_until( system_time & abs_time)
+inline
+void sleep( system_time abs_time)
 {
-	struct time_reached
-	{
-		system_time	abs_time;
-	
-		time_reached( system_time & abs_time_)
-		: abs_time( abs_time_)
-		{}
-	
-		bool operator()()
-		{ return get_system_time() >= abs_time; }
-	};
-	
 	if ( is_worker() )
 	{
-		time_reached t( abs_time);
-		get_thread_pool< Pool >()->reschedule_until( t);
+		detail::time_reached t( abs_time);
+		reschedule_until( t);
 	}
 	else
 		this_thread::sleep( abs_time);
 }
 
-template< typename Pool >
+template< typename Duration >
+void sleep( Duration const& rel_time)
+{ sleep( get_system_time() + rel_time); }
+
+inline
 void yield()
 {
-	struct always_true
-	{
-		always_true() {}
-		
-		bool operator()()
-		{ return true; }
-	};
-	
 	if ( is_worker() )
 	{
-		always_true t;
-		get_thread_pool< Pool >()->reschedule_until( t);
+		detail::always_true t;
+		reschedule_until( t);
 	}
 	else
 		this_thread::yield();
+}
+
+inline
+void interrupt()
+{
+	tp::detail::worker * w( tp::detail::worker::tss_get() );
+	BOOST_ASSERT( w);
+	w->interrupt();
+	this_thread::interruption_point();
 }
 } }
 

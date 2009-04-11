@@ -6,84 +6,84 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
 typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
 
-class fibo
+long serial_fib( long n)
+{
+	if( n < 2)
+		return n;
+	else
+		return serial_fib( n - 1) + serial_fib( n - 2);
+}
+
+class fib_task
 {
 private:
-	int		offset_;
+	long	cutof_;
 
-	int seq_( int n)
+public:
+	fib_task( long cutof)
+	: cutof_( cutof)
+	{}
+
+	long execute( long n)
 	{
-		if ( n <= 1) return n;
-		else return seq_( n - 2) + seq_( n - 1);
-	}
-	
-	int par_( int n)
-	{
-		if ( n <= offset_) return seq_( n);
+		if ( n < cutof_) return serial_fib( n);
 		else
 		{
-			tp::task< int > t1(
+			tp::task< long > t1(
 				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
-						& fibo::par_,
+						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
-			tp::task< int > t2(
+			tp::task< long > t2(
 				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
-						& fibo::par_,
+						& fib_task::execute,
 						boost::ref( * this),
 						n - 2) ) );
 			return t1.get() + t2.get();
 		}
 	}
-
-public:
-	fibo( int offset)
-	: offset_( offset)
-	{}
-
-	int execute( int n)
-	{
-		int result( par_( n) );
-		return result;
-	}
 };
+
+
+long parallel_fib( long n)
+{
+	fib_task a( 5);
+	return a.execute( n);
+}
 
 int main( int argc, char *argv[])
 {
 	try
 	{
-		// ! BOOST_BIND_WORKER_TO_PROCESSORS must be defined !
 		pool_type pool;
-		fibo fib( 5);
-		std::vector< tp::task< int > > results;
-		results.reserve( 40);
+
+		std::vector< tp::task< long > > results;
+		results.reserve( 20);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 32; ++i)
+		for ( int i = 0; i < 26; ++i)
 			results.push_back(
-				pool.submit(
+				tp::get_default_pool().submit(
 					boost::bind(
-						& fibo::execute,
-						boost::ref( fib),
+						& parallel_fib,
 						i) ) );
 
+		tp::waitfor_all( results.begin(), results.end() );
+
 		int k = 0;
-		std::vector< tp::task< int > >::iterator e( results.end() );
+		std::vector< tp::task< long > >::iterator e( results.end() );
 		for (
-			std::vector< tp::task< int > >::iterator i( results.begin() );
+			std::vector< tp::task< long > >::iterator i( results.begin() );
 			i != e;
 			++i)
 			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;

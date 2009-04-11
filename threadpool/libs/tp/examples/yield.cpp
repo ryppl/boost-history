@@ -33,7 +33,11 @@ public:
 
 	long execute( long n)
 	{
-		if ( n < cutof_) return serial_fib( n);
+		if ( n == 7)
+			boost::this_task::yield();
+
+		if ( n < cutof_)
+			return serial_fib( n);
 		else
 		{
 			tp::task< long > t1(
@@ -54,40 +58,24 @@ public:
 };
 
 
-long parallel_fib( long n)
+void parallel_fib( long n)
 {
 	fib_task a( 5);
-	return a.execute( n);
+	long result = a.execute( n);
+	printf("n == %d, fibonnaci == %d\n", n, result);
 }
 
 int main( int argc, char *argv[])
 {
 	try
 	{
-		std::vector< tp::task< long > > results;
-		results.reserve( 20);
-
-		pt::ptime start( pt::microsec_clock::universal_time() );
-
-		for ( int i = 0; i < 26; ++i)
-			results.push_back(
-				tp::get_default_pool().submit(
-					boost::bind(
-						& parallel_fib,
-						i) ) );
-
-		tp::waitfor_all( results.begin(), results.end() );
-
-		int k = 0;
-		std::vector< tp::task< long > >::iterator e( results.end() );
-		for (
-			std::vector< tp::task< long > >::iterator i( results.begin() );
-			i != e;
-			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
-
-		pt::ptime stop( pt::microsec_clock::universal_time() );
-		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;
+		pool_type pool( tp::poolsize( 1) );
+		for ( int i = 0; i < 10; ++i)
+			pool.submit(
+				boost::bind(
+					& parallel_fib,
+					i) );
+		pool.shutdown();
 
 		return EXIT_SUCCESS;
 	}

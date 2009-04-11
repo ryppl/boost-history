@@ -54,7 +54,7 @@ int main( int argc, char *argv[])
 					fibonacci_fn,
 					10) ) );
 		t.interrupt();
-		std::cout << t.get() << std::endl;
+		std::cout << t.result().get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

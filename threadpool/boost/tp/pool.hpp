@@ -191,7 +191,7 @@ public:
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
-		std::size_t psize( thread::hardware_concurrency() );
+		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
 		unique_lock< shared_mutex > lk( mtx_wg_);
@@ -217,7 +217,7 @@ public:
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration("argument asleep is not valid");
-		std::size_t psize( thread::hardware_concurrency() );
+		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
 		unique_lock< shared_mutex > lk( mtx_wg_);
