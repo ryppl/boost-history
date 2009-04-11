@@ -62,7 +62,7 @@ namespace boost { namespace numeric { namespace bindings {
       >::value));
       BOOST_STATIC_ASSERT((boost::is_same<
         typename traits::matrix_traits<MatrA>::ordering_type,
-        traits::row_major_t
+        traits::column_major_t
       >::value));
 #endif
 
