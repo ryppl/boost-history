@@ -6,44 +6,13 @@
 
 import mpi ;
 
-project boost/graph
+project boost/graph_parallel
     : requirements <include>../src
     : source-location ../src
     ;
 
 local optional_sources ;
 local optional_reqs ;
-
-if [ modules.peek : EXPAT_INCLUDE ] && [ modules.peek : EXPAT_LIBPATH ]
-{
-  local EXPAT_INCLUDE = [ modules.peek : EXPAT_INCLUDE ] ;
-  local EXPAT_LIBPATH = [ modules.peek : EXPAT_LIBPATH ] ;
-
-  if --debug-configuration in [ modules.peek : ARGV ]
-  {
-    ECHO "Expat include directory: $(EXPAT_INCLUDE)" ;
-    ECHO "Expat library directory: $(EXPAT_LIBPATH)" ;
-  }
-
-  alias graphml
-      : graphml.cpp
-      : # requirements
-      : # default built
-      : # usage requirements
-        <include>$(EXPAT_INCLUDE)
-        <library-path>$(EXPAT_LIBPATH)
-        <find-shared-library>expat
-      ;
-}
-else
-{
-    message graphml
-      : "warning: Graph library does not contain optional GraphML reader."
-      : "note: to enable GraphML support, set EXPAT_INCLUDE and EXPAT_LIBPATH to the"
-      : "note: directories containing the Expat headers and libraries, respectively."
-      ;
-}
-explicit graphml ;
 
 if [ mpi.configured ]
 {
@@ -57,20 +26,9 @@ if [ mpi.configured ]
         <library>../../mpi/build//boost_mpi
         <library>/mpi//mpi [ mpi.extra-requirements ]
       ;
-}
-else
-{
-    message pbgl
-      : "warning: Graph library does not contain MPI-based parallel components."
-      : "note: to enable them, add \"using mpi ;\" to your user_config.jam"
-      ;
-}
-explicit graphml ;
-
-lib boost_graph
+    
+  lib boost_graph_parallel
     :
-    read_graphviz_spirit.cpp
-    graphml
     pbgl
     :
     <define>BOOST_GRAPH_NO_LIB=1
@@ -82,4 +40,15 @@ lib boost_graph
     <toolset>msvc-8.0:<cxxflags>-GR-
     ;
 
-boost-install boost_graph ;
+}
+else
+{
+  message boost_graph_parallel
+      : "warning: Graph library does not contain MPI-based parallel components."
+      : "note: to enable them, add \"using mpi ;\" to your user_config.jam"
+      ;
+}
+
+
+
+boost-install boost_graph_parallel ;
