@@ -66,12 +66,12 @@ private:
 private:
 	const region_alloc& operator=(const region_alloc&);
 
-	MemBlock* BOOST_MEMORY_CALL _chainHeader() const
+	MemBlock* BOOST_MEMORY_CALL chainHeader_() const
 	{
 		return (MemBlock*)(m_begin - HeaderSize);
 	}
 
-	void BOOST_MEMORY_CALL _init()
+	void BOOST_MEMORY_CALL init_()
 	{
 		MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
 		pNew->pPrev = NULL;
@@ -82,16 +82,16 @@ private:
 public:
 	region_alloc() : m_destroyChain(NULL)
 	{
-		_init();
+		init_();
 	}
 	explicit region_alloc(AllocT alloc) : m_alloc(alloc), m_destroyChain(NULL)
 	{
-		_init();
+		init_();
 	}
 	explicit region_alloc(region_alloc& owner)
 		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
 	{
-		_init();
+		init_();
 	}
 
 	~region_alloc()
@@ -115,7 +115,7 @@ public:
 			m_destroyChain = m_destroyChain->pPrev;
 			curr->fnDestroy(curr + 1);
 		}
-		MemBlock* pHeader = _chainHeader();
+		MemBlock* pHeader = chainHeader_();
 		while (pHeader)
 		{
 			MemBlock* curr = pHeader;
@@ -126,11 +126,11 @@ public:
 	}
 
 private:
-	void* BOOST_MEMORY_CALL _do_allocate(size_t cb)
+	void* BOOST_MEMORY_CALL do_allocate_(size_t cb)
 	{
 		if (cb >= BlockSize)
 		{
-			MemBlock* pHeader = _chainHeader();
+			MemBlock* pHeader = chainHeader_();
 			MemBlock* pNew = (MemBlock*)m_alloc.allocate(HeaderSize + cb);
 			if (pHeader)
 			{
@@ -147,7 +147,7 @@ private:
 		else
 		{
 			MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
-			pNew->pPrev = _chainHeader();
+			pNew->pPrev = chainHeader_();
 			m_begin = pNew->buffer;
 			m_end = (char*)pNew + m_alloc.alloc_size(pNew);
 			return m_end -= cb;
@@ -161,7 +161,7 @@ public:
 		{
 			return m_end -= cb;
 		}
-		return _do_allocate(cb);
+		return do_allocate_(cb);
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
@@ -236,7 +236,79 @@ public:
 // -------------------------------------------------------------------------
 // class auto_alloc
 
+#if defined(_MSC_VER) && (_MSC_VER <= 1200) // VC++ 6.0
+
+class auto_alloc
+{
+private:
+	region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> m_impl;
+
+public:
+	auto_alloc() {}
+	explicit auto_alloc(auto_alloc&) {}
+
+	__forceinline void BOOST_MEMORY_CALL swap(auto_alloc& o) {
+		m_impl.swap(o.m_impl);
+	}
+
+	__forceinline void BOOST_MEMORY_CALL clear() {
+		m_impl.clear();
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb) {
+		return m_impl.allocate(cb);
+	}
+
+#if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
+		return m_impl.allocate(cb);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn) {
+		return m_impl.allocate(cb, fn);
+	}
+#endif
+	
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
+		return m_impl.unmanaged_alloc(cb, fn);
+	}
+
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
+		m_impl.manage(p, fn);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
+		return m_impl.allocate(cb);
+	}
+
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
+		// no action
+	}
+
+	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
+		return m_impl.reallocate(p, oldSize, newSize);
+	}
+
+	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
+		// no action
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL destroy(Type* obj) {
+		// no action
+	}
+
+	template <class Type>
+	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count) {
+		// no action
+	}
+};
+
+#else
+
 typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> auto_alloc;
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: auto_alloc.hpp,v $

@@ -41,6 +41,19 @@
 #endif
 
 // -------------------------------------------------------------------------
+// default_alloc
+
+NS_BOOST_MEMORY_BEGIN
+
+#if defined(BOOST_MEMORY_USE_AUTO_ALLOC)
+typedef auto_alloc default_alloc;
+#else
+typedef scoped_alloc default_alloc;
+#endif
+
+NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
 // function swap_object
 
 NS_BOOST_MEMORY_BEGIN
@@ -105,7 +118,7 @@ NS_BOOST_MEMORY_END
 
 NS_BOOST_MEMORY_BEGIN
 
-template <class Type, class AllocT = scoped_alloc>
+template <class Type, class AllocT = default_alloc>
 class stl_allocator
 {
 private:
@@ -170,12 +183,12 @@ template <class AllocT>
 class stl_allocator<void, AllocT>
 {
 public:
-    typedef void        value_type;
-    typedef void*       pointer;
-    typedef const void* const_pointer;
- 
-    template <class U>
-    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+	typedef void        value_type;
+	typedef void*       pointer;
+	typedef const void* const_pointer;
+
+	template <class U>
+	struct rebind { typedef stl_allocator<U, AllocT> other; };
 };
 
 #else
@@ -183,12 +196,12 @@ public:
 template<> class stl_allocator<void, scoped_alloc>
 {
 public:
-    typedef void        value_type;
-    typedef void*       pointer;
-    typedef const void* const_pointer;
- 
-    template <class U>
-    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+	typedef void        value_type;
+	typedef void*       pointer;
+	typedef const void* const_pointer;
+
+	template <class U>
+	struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
 };
 
 template<> class stl_allocator<void, auto_alloc>
@@ -199,7 +212,7 @@ public:
     typedef const void* const_pointer;
  
     template <class U>
-    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+    struct rebind { typedef stl_allocator<U, auto_alloc> other; };
 };
 
 /*
@@ -211,7 +224,7 @@ public:
     typedef const void* const_pointer;
  
     template <class U>
-    struct rebind { typedef stl_allocator<U, scoped_alloc> other; };
+    struct rebind { typedef stl_allocator<U, gc_alloc> other; };
 };
 */
 

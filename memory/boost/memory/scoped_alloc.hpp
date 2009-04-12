@@ -177,7 +177,7 @@ tls_block_pool_t* tls_block_pool_<Unused>::_tls_blockPool = _boost_TlsBlockPool(
 typedef tls_block_pool_<int> tls_block_pool;
 
 // -------------------------------------------------------------------------
-// class scoped_alloc
+// class pool
 
 typedef proxy_alloc<block_pool, tls_block_pool> proxy_block_pool;
 
@@ -191,7 +191,82 @@ public:
 
 NS_BOOST_MEMORY_POLICY_END
 
+// -------------------------------------------------------------------------
+// class scoped_alloc
+
+#if 0 // defined(_MSC_VER) && (_MSC_VER <= 1200) // VC++ 6.0
+
+class scoped_alloc
+{
+private:
+	region_alloc<NS_BOOST_MEMORY_POLICY::pool> m_impl;
+	
+public:
+	scoped_alloc() {}
+	explicit scoped_alloc(scoped_alloc&) {}
+	
+	__forceinline void BOOST_MEMORY_CALL swap(scoped_alloc& o) {
+		m_impl.swap(o.m_impl);
+	}
+	
+	__forceinline void BOOST_MEMORY_CALL clear() {
+		m_impl.clear();
+	}
+	
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb) {
+		return m_impl.allocate(cb);
+	}
+	
+#if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
+		return m_impl.allocate(cb);
+	}
+	
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn) {
+		return m_impl.allocate(cb, fn);
+	}
+#endif
+	
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
+		return m_impl.unmanaged_alloc(cb, fn);
+	}
+	
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
+		m_impl.manage(p, fn);
+	}
+	
+	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
+		return m_impl.allocate(cb);
+	}
+	
+	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
+		// no action
+	}
+	
+	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
+		return m_impl.reallocate(p, oldSize, newSize);
+	}
+	
+	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
+		// no action
+	}
+	
+	template <class Type>
+		void BOOST_MEMORY_CALL destroy(Type* obj) {
+		// no action
+	}
+	
+	template <class Type>
+		void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count) {
+		// no action
+	}
+};
+
+#else
+
 typedef region_alloc<NS_BOOST_MEMORY_POLICY::pool> scoped_alloc;
+
+#endif
 
 // -------------------------------------------------------------------------
 // $Log: $
