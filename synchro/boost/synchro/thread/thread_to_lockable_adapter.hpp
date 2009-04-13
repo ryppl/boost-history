@@ -19,6 +19,8 @@
 #include <boost/chrono/chrono.hpp>
 #include <boost/synchro/lockable/functions.hpp>
 #include <boost/synchro/is_lockable.hpp>
+#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 

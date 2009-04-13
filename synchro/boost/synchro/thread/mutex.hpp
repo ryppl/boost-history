@@ -21,8 +21,8 @@
 #include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/synchro/is_lockable.hpp>
 #include <boost/synchro/lockable/functions.hpp>
-#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
-#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
 
 
 namespace boost { namespace synchro {

@@ -18,8 +18,8 @@
 #include <boost/synchro/condition_backdoor.hpp>
 #include <boost/synchro/condition_safe.hpp>
 #include <boost/synchro/timeout_exception.hpp>
-#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
-#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 

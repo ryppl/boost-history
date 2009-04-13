@@ -16,8 +16,8 @@
 #include <boost/synchro/thread/mutex.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
 #include <boost/synchro/detail/defaulted_functions.hpp>
-#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
-#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 
@@ -62,10 +62,6 @@ private:
         if (!cond_.timed_wait(lock, boost::convert_to<posix_time::time_duration>(rel_time))) throw timeout_exception();
     }
 
-//    template<typename Locker, typename predicate_type>
-//    bool wait_when(Locker& lock, predicate_type pred) {
-//        return cond_.wait(lock, pred);
-//    }
     template<typename Locker, typename predicate_type, typename Clock, typename Duration>
     void wait_when_until(Locker& lock, predicate_type pred, chrono::time_point<Clock, Duration> const& abs_time) {
         if (!cond_.timed_wait(lock, pred, boost::convert_to<posix_time::ptime>(abs_time))) throw timeout_exception();

@@ -16,8 +16,8 @@
 #include <boost/synchro/thread_synchronization_family.hpp>
 #include <boost/synchro/lockable_traits.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
-#include <boost/convert_to/chrono_time_point_to_posix_time_ptime.hpp>
-#include <boost/convert_to/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
 
 //!\file
 //!Describes a semaphore class for inter-process synchronization
