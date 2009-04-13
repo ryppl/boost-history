@@ -6,10 +6,7 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
@@ -39,22 +36,19 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tp::pool<
-			tp::unbounded_channel< tp::fifo >
-		> pool( tp::poolsize( 1) );
-		pool.submit(
+		tp::get_default_pool().submit(
 			boost::bind(
 				long_running_fn) );
-		std::cout << "poolsize == " << pool.size() << std::endl;
-		std::cout << "idle threads == " << pool.idle() << std::endl;
-		std::cout << "active threads == " << pool.active() << std::endl;
+		std::cout << "poolsize == " << tp::get_default_pool().size() << std::endl;
+		std::cout << "idle threads == " << tp::get_default_pool().idle() << std::endl;
+		std::cout << "active threads == " << tp::get_default_pool().active() << std::endl;
 		tp::task< int > t(
-			pool.submit(
+			tp::get_default_pool().submit(
 				boost::bind(
 					fibonacci_fn,
 					10) ) );
 		t.interrupt();
-		std::cout << t.result().get() << std::endl;
+		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

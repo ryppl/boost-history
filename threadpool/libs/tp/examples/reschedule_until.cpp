@@ -1,126 +1,156 @@
+#include <cerrno>
+#include <cstddef>
+#include <cstring>
 #include <iostream>
 #include <cstdlib>
 #include <stdexcept>
-#include <vector>
+#include <string>
+
+extern "C"
+{
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <unistd.h>
+}
 
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/interprocess/sync/interprocess_semaphore.hpp>
 #include <boost/thread.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
+typedef tp::default_pool pool_type;
 
-class fibo
+long serial_fib( long n)
+{
+	if( n < 2)
+		return n;
+	else
+		return serial_fib( n - 1) + serial_fib( n - 2);
+}
+
+class fib_task
 {
 private:
-	boost::shared_future< void >		f_;
-	int								offset_;
-
-	class holder
-	{
-	private:
-		boost::shared_future< void >		f_;
-
-	public:
-		holder( boost::shared_future< void > const& f)
-		: f_( f)
-		{}
-
-		bool operator()()
-		{ return f_.is_ready(); }
-	};
-
-	int seq_( int n)
-	{
-		if ( n <= 1) return n;
-		else return seq_( n - 2) + seq_( n - 1);
-	}
-	
-	int par_( int n)
-	{
-		if ( n <= offset_) return seq_( n);
-		else
-		{
-			if ( n == 7)
-			{
-				holder hldr( f_);
-				boost::this_task::reschedule_until( hldr);
-			}
-
-			boost::function< int() > fn1 = boost::bind(
-						& fibo::par_,
-						* this,
-						n - 1);
-			tp::task< int > t1(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					fn1) );
-			boost::function< int() > fn2 = boost::bind(
-						& fibo::par_,
-						* this,
-						n - 2);
-			tp::task< int > t2(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					fn2) );
-
-			return t1.result().get() + t2.result().get();
-		}
-	}
+	long	cutof_;
 
 public:
-	fibo(
-		boost::shared_future< void > f,
-		int offset)
-	:  f_( f), offset_( offset)
+	fib_task( long cutof)
+	: cutof_( cutof)
 	{}
 
-	int execute( int n)
+	long execute( long n)
 	{
-		int result( par_( n) );
-		return result;
+		if ( n < cutof_) return serial_fib( n);
+		else
+		{
+			tp::task< long > t1(
+				boost::this_task::get_thread_pool< pool_type >().submit(
+					boost::bind(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 1) ) );
+			tp::task< long > t2(
+				boost::this_task::get_thread_pool< pool_type >().submit(
+					boost::bind(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 2) ) );
+			return t1.get() + t2.get();
+		}
 	}
 };
 
-void f() {}
+void parallel_fib( long n)
+{
+	fib_task a( 5);
+	printf("%d -> %d\n", n, a.execute( n) );
+}
+
+bool has_bytes( int fd)
+{
+	char buffer[1];
+
+	int n = ::recv(
+		fd,
+		& buffer,
+		sizeof buffer,
+		MSG_PEEK | MSG_DONTWAIT);
+	if ( n == -1 && errno != EWOULDBLOCK)
+	{
+		printf("::recv() failed: %s(%d)\n", std::strerror( errno), errno);
+		::exit( 1);
+	}
+
+	return n > 0;
+}
+
+void read( int fd)
+{
+	int nread = 0;
+	do
+	{
+		boost::this_task::reschedule_until(
+			boost::bind(
+				has_bytes,
+				fd) );
+	
+		char buffer[4096];
+		int n = ::read( fd, buffer, sizeof( buffer) );
+		if ( n < 0)
+		{
+			printf("::read() failed: %s(%d)\n", std::strerror( errno), errno);
+			::exit( 1);
+		}
+		nread += n;
+		printf("%s\n", std::string( buffer, n).c_str() );
+	}
+	while ( nread < 12);
+}
+
+void write( int fd, std::string const& msg)
+{
+	if ( ::write( fd, msg.c_str(), msg.size() ) < 0)
+	{
+		printf("::write() failed: %s(%d)\n", std::strerror( errno), errno);
+		::exit( 1);
+	}
+}
+
+void create_sockets( int fd[2])
+{
+	if ( ::socketpair( PF_LOCAL, SOCK_STREAM, 0, fd) < 0)
+	{
+		printf("::pipe() failed: %s(%d)\n", std::strerror( errno), errno);
+		::exit( 1);
+	}
+}
 
 int main( int argc, char *argv[])
 {
 	try
 	{
-		pool_type pool( tp::poolsize( 1) );
-		boost::packaged_task< void > tsk( boost::bind( f) );
-		boost::shared_future< void > f( tsk.get_future() );
-		fibo fib( f, 3);
-		std::vector< tp::task< int > > results;
-		results.reserve( 40);
+		int fd[2];
+		create_sockets( fd);
 
-		pt::ptime start( pt::microsec_clock::universal_time() );
+		tp::get_default_pool().submit(
+				boost::bind(
+					& read,
+					fd[0]) );
 
-		for ( int i = 0; i < 10; ++i)
-			results.push_back(
-				pool.submit(
-					boost::bind(
-						& fibo::execute,
-						boost::ref( fib),
-						i) ) );
+		write( fd[1], "Hello ");
+		boost::this_thread::sleep( pt::seconds( 1) );
 
-		int k = 0;
-		std::vector< tp::task< int > >::iterator e( results.end() );
-		for (
-			std::vector< tp::task< int > >::iterator i( results.begin() );
-			i != e;
-			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->result().get() << std::endl;
+		for ( int i = 0; i < 15; ++i)
+			tp::get_default_pool().submit(
+				boost::bind(
+					& parallel_fib,
+					i) );
 
-		pt::ptime stop( pt::microsec_clock::universal_time() );
-		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;
+		write( fd[1], "World!");
 
 		return EXIT_SUCCESS;
 	}

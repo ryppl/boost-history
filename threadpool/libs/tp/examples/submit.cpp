@@ -4,10 +4,7 @@
 
 #include <boost/bind.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace tp = boost::tp;
 
@@ -32,15 +29,12 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tp::pool<
-			tp::unbounded_channel< tp::fifo >
-		> pool( tp::poolsize( 1) );
 		tp::task< int > t(
-			pool.submit(
+			tp::get_default_pool().submit(
 				boost::bind(
 					fibonacci_fn,
 					10) ) );
-		std::cout << t.result().get() << std::endl;
+		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

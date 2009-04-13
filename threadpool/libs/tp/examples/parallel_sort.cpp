@@ -17,9 +17,7 @@
 #include <boost/progress.hpp>
 #include <boost/thread/thread.hpp>
 #include <boost/bind.hpp>
-#include <boost/tp/pool.hpp>
-#include <boost/tp/unbounded_channel.hpp>
-#include <boost/tp/fifo.hpp>
+#include "boost/tp.hpp"
 #include <boost/range/algorithm/sort.hpp>
 #include <boost/range/algorithm/inplace_merge.hpp>
 #include <boost/range/sub_range.hpp>

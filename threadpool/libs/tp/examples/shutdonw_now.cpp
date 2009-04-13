@@ -7,10 +7,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/ref.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
@@ -47,7 +44,7 @@ int main( int argc, char *argv[])
 					10) ) );
 		boost::this_thread::sleep( pt::milliseconds( 250) );
 		pool.shutdown_now();
-		std::cout << t.result().get() << std::endl;
+		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

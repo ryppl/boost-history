@@ -69,7 +69,7 @@ int main( int argc, char *argv[])
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 26; ++i)
+		for ( int i = 0; i < 15; ++i)
 			results.push_back(
 				tp::get_default_pool().submit(
 					boost::bind(

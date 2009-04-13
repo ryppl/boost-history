@@ -7,10 +7,7 @@
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/ref.hpp>
 
-#include "boost/tp/fifo.hpp"
-#include "boost/tp/pool.hpp"
-#include "boost/tp/poolsize.hpp"
-#include "boost/tp/unbounded_channel.hpp"
+#include "boost/tp.hpp"
 
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
@@ -40,19 +37,16 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tp::pool<
-			tp::unbounded_channel< tp::fifo >
-		> pool( tp::poolsize( 1) );
-		pool.submit(
+		tp::get_default_pool().submit(
 			boost::bind(
 				long_running_fn) );
 		tp::task< int > t(
-			pool.submit(
+			tp::get_default_pool().submit(
 				boost::bind(
 					fibonacci_fn,
 					10) ) );
-		std::cout << "pending tasks == " << pool.pending() << std::endl;
-		std::cout << t.result().get() << std::endl;
+		std::cout << "pending tasks == " << tp::get_default_pool().pending() << std::endl;
+		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

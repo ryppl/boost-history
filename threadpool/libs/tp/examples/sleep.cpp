@@ -70,13 +70,11 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		pool_type pool( tp::poolsize( 1) );
 		for ( int i = 0; i < 10; ++i)
-			pool.submit(
+			tp::get_default_pool().submit(
 				boost::bind(
 					& parallel_fib,
 					i) );
-		pool.shutdown();
 
 		return EXIT_SUCCESS;
 	}
