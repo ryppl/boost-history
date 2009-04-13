@@ -238,47 +238,47 @@ public:
 
 #if defined(_MSC_VER) && (_MSC_VER <= 1200) // VC++ 6.0
 
-class auto_alloc
+class auto_alloc : public region_alloc<NS_BOOST_MEMORY_POLICY::stdlib>
 {
 private:
-	region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> m_impl;
+	typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> BaseClass;
 
 public:
 	auto_alloc() {}
 	explicit auto_alloc(auto_alloc&) {}
 
 	__forceinline void BOOST_MEMORY_CALL swap(auto_alloc& o) {
-		m_impl.swap(o.m_impl);
+		BaseClass::swap(o);
 	}
 
 	__forceinline void BOOST_MEMORY_CALL clear() {
-		m_impl.clear();
+		BaseClass::clear();
 	}
 
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb) {
-		return m_impl.allocate(cb);
+		return BaseClass::allocate(cb);
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
-		return m_impl.allocate(cb);
+		return BaseClass::allocate(cb);
 	}
 
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn) {
-		return m_impl.allocate(cb, fn);
+		return BaseClass::allocate(cb, fn);
 	}
 #endif
 	
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
-		return m_impl.unmanaged_alloc(cb, fn);
+		return BaseClass::unmanaged_alloc(cb, fn);
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
-		m_impl.manage(p, fn);
+		BaseClass::manage(p, fn);
 	}
 
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
-		return m_impl.allocate(cb);
+		return BaseClass::allocate(cb);
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
@@ -286,7 +286,7 @@ public:
 	}
 
 	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
-		return m_impl.reallocate(p, oldSize, newSize);
+		return BaseClass::reallocate(p, oldSize, newSize);
 	}
 
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
