@@ -1,3 +1,4 @@
+#include <iostream>
 
 // Copyright (C) 2003-2004 Jeremy B. Maitin-Shepard.
 // Copyright (C) 2005-2009 Daniel James.
@@ -16,10 +17,7 @@
 #include <boost/unordered/unordered_map_fwd.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/unordered/detail/hash_table.hpp>
-
-#if !defined(BOOST_HAS_RVALUE_REFS)
-#include <boost/unordered/detail/move.hpp>
-#endif
+#include <boost/move/move.hpp>
 
 #if defined(BOOST_MSVC)
 #pragma warning(push)
@@ -104,35 +102,31 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_map(unordered_map&& other)
+        BOOST_ENABLE_MOVE_EMULATION(unordered_map)
+
+        unordered_map(BOOST_RV_REF(unordered_map) other)
             : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
-        unordered_map(unordered_map&& other, allocator_type const& a)
+        unordered_map(BOOST_RV_REF(unordered_map) other, allocator_type const& a)
             : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 
+
+#if defined(BOOST_HAS_RVALUE_REFS)
         unordered_map& operator=(unordered_map&& x)
         {
             base.move(x.base);
             return *this;
         }
-#else
-        unordered_map(boost::unordered_detail::move_from<unordered_map<Key, T, Hash, Pred, Alloc> > other)
-            : base(other.source.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
+#elif !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
         unordered_map& operator=(unordered_map x)
         {
             base.move(x.base);
             return *this;
         }
-#endif
 #endif
 
 #if !defined(BOOST_NO_INITIALIZER_LISTS)
@@ -510,35 +504,30 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_multimap(unordered_multimap&& other)
+        BOOST_ENABLE_MOVE_EMULATION(unordered_multimap)
+
+        unordered_multimap(BOOST_RV_REF(unordered_multimap) other)
             : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
-        unordered_multimap(unordered_multimap&& other, allocator_type const& a)
+        unordered_multimap(BOOST_RV_REF(unordered_multimap) other, allocator_type const& a)
             : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
         unordered_multimap& operator=(unordered_multimap&& x)
         {
             base.move(x.base);
             return *this;
         }
-#else
-        unordered_multimap(boost::unordered_detail::move_from<unordered_multimap<Key, T, Hash, Pred, Alloc> > other)
-            : base(other.source.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
+#elif !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
         unordered_multimap& operator=(unordered_multimap x)
         {
             base.move(x.base);
             return *this;
         }
-#endif
 #endif
 
 #if !defined(BOOST_NO_INITIALIZER_LISTS)

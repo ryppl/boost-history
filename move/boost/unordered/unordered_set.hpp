@@ -16,10 +16,7 @@
 #include <boost/unordered/unordered_set_fwd.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/unordered/detail/hash_table.hpp>
-
-#if !defined(BOOST_HAS_RVALUE_REFS)
-#include <boost/unordered/detail/move.hpp>
-#endif
+#include <boost/move/move.hpp>
 
 #if defined(BOOST_MSVC)
 #pragma warning(push)
@@ -102,35 +99,30 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_set(unordered_set&& other)
+        BOOST_ENABLE_MOVE_EMULATION(unordered_set)
+
+        unordered_set(BOOST_RV_REF(unordered_set) other)
             : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
-        unordered_set(unordered_set&& other, allocator_type const& a)
+        unordered_set(BOOST_RV_REF(unordered_set) other, allocator_type const& a)
             : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
         unordered_set& operator=(unordered_set&& x)
         {
             base.move(x.base);
             return *this;
         }
-#else
-        unordered_set(boost::unordered_detail::move_from<unordered_set<Value, Hash, Pred, Alloc> > other)
-            : base(other.source.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
+#elif !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
         unordered_set& operator=(unordered_set x)
         {
             base.move(x.base);
             return *this;
         }
-#endif
 #endif
 
 #if !defined(BOOST_NO_INITIALIZER_LISTS)
@@ -480,35 +472,30 @@ namespace boost
         {
         }
 
-#if defined(BOOST_HAS_RVALUE_REFS)
-        unordered_multiset(unordered_multiset&& other)
+        BOOST_ENABLE_MOVE_EMULATION(unordered_multiset)
+
+        unordered_multiset(BOOST_RV_REF(unordered_multiset) other)
             : base(other.base, boost::unordered_detail::move_tag())
         {
         }
 
-        unordered_multiset(unordered_multiset&& other, allocator_type const& a)
+        unordered_multiset(BOOST_RV_REF(unordered_multiset) other, allocator_type const& a)
             : base(other.base, a, boost::unordered_detail::move_tag())
         {
         }
 
+#if defined(BOOST_HAS_RVALUE_REFS)
         unordered_multiset& operator=(unordered_multiset&& x)
         {
             base.move(x.base);
             return *this;
         }
-#else
-        unordered_multiset(boost::unordered_detail::move_from<unordered_multiset<Value, Hash, Pred, Alloc> > other)
-            : base(other.source.base, boost::unordered_detail::move_tag())
-        {
-        }
-
-#if !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
+#elif !BOOST_WORKAROUND(__BORLANDC__, < 0x0593)
         unordered_multiset& operator=(unordered_multiset x)
         {
             base.move(x.base);
             return *this;
         }
-#endif
 #endif
 
 #if !defined(BOOST_NO_INITIALIZER_LISTS)
