@@ -304,8 +304,8 @@ public:
 	{
 		typedef typename result_of< Act() >::type R;
 		detail::interrupter intr;
-		packaged_task< R > tsk( act);
-		shared_future< R > f( tsk.get_future() );
+		promise< R > prom;
+		shared_future< R > f( prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -313,12 +313,12 @@ public:
 				bind(
 					& shared_future< R >::is_ready,
 					f) );
-			tsk.set_wait_callback(
+			prom.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( move( tsk) ), intr);
+			w->put( detail::callable( act, prom), intr);
 			return task< R >( f, intr);
 		}
 		else
@@ -326,7 +326,7 @@ public:
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_item itm( detail::callable( move( tsk) ), intr);
+			channel_item itm( detail::callable( act, prom), intr);
 			channel_.put( itm);
 			return task< R >( f, intr);
 		}
@@ -342,8 +342,8 @@ public:
 	{
 		typedef typename result_of< Act() >::type R;
 		detail::interrupter intr;
-		packaged_task< R > tsk( act);
-		shared_future< R > f( tsk.get_future() );
+		promise< R > prom;
+		shared_future< R > f( prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -351,12 +351,12 @@ public:
 				bind(
 					& shared_future< R >::is_ready,
 					f) );
-			tsk.set_wait_callback(
+			prom.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( move( tsk) ), intr);
+			w->put( detail::callable( act, prom), intr);
 			return task< R >( f, intr);
 		}
 		else
@@ -364,7 +364,7 @@ public:
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_item itm( detail::callable( move( tsk) ), attr, intr);
+			channel_item itm( detail::callable( act, prom), attr, intr);
 			channel_.put( itm);
 			return task< R >( f, intr);
 		}

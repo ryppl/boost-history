@@ -5,6 +5,6 @@ namespace boost { namespace tp {
 namespace detail
 {
 default_pool
-static_pool::instance = default_pool( poolsize( thread::hardware_concurrency() ) );
+static_pool::instance( poolsize( thread::hardware_concurrency() ) );
 }
 } }

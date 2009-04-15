@@ -6,8 +6,10 @@
 #define BOOST_TP_DETAIL_CALLABLE_H
 
 #include <boost/future.hpp>
+#include <boost/thread.hpp>
 
 #include <boost/thread/detail/move.hpp>
+#include <boost/tp/exceptions.hpp>
 
 namespace boost { namespace tp {
 namespace detail
@@ -21,18 +23,58 @@ private:
 		virtual void run() = 0;
 	};
 
-	template< typename T >
+	template<
+		typename Act,
+		typename T
+	>
 	struct impl_wrapper
 	: public impl
 	{
-		packaged_task< T > tsk;
+		Act act;
+		promise< T > prom;
 
-		impl_wrapper( boost::detail::thread_move_t< packaged_task< T > > const& t)
-		: tsk( t)
+		impl_wrapper(
+			Act const& act_,
+			promise< T > & prom_)
+		: act( act_), prom( move( prom_) )
 		{}
 
 		void run()
-		{ tsk(); }
+		{
+			try
+			{ prom.set_value( act() ); }
+			catch ( thread_interrupted const&)
+			{ prom.set_exception( copy_exception( task_interrupted() ) ); }
+			catch(...)
+			{ prom.set_exception( current_exception() ); }
+		}
+	};
+
+	template< typename Act >
+	struct impl_wrapper< Act, void >
+	: public impl
+	{
+		Act act;
+		promise< void > prom;
+
+		impl_wrapper(
+			Act const& act_,
+			promise< void > & prom_)
+		: act( act_), prom( move( prom_) )
+		{}
+
+		void run()
+		{
+			try
+			{
+				act();
+				prom.set_value();
+			}
+			catch ( thread_interrupted const&)
+			{ prom.set_exception( copy_exception( task_interrupted() ) ); }
+			catch(...)
+			{ prom.set_exception( current_exception() ); }
+		}
 	};
 
 	boost::shared_ptr< impl >	impl_;
@@ -40,9 +82,14 @@ private:
 public:
 	callable();
 
-	template< typename T >
-	callable( boost::detail::thread_move_t< packaged_task< T > > const& t)
-	: impl_( new impl_wrapper<  T >( t) )
+	template<
+		typename Act,
+		typename T
+	>
+	callable(
+		Act const& act,
+		promise< T > & prom)
+	: impl_( new impl_wrapper<  Act, T >( act, prom) )
 	{}
 
 	void operator()();

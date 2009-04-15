@@ -48,8 +48,8 @@ int main( int argc, char *argv[])
 
 		return EXIT_SUCCESS;
 	}
-	catch ( boost::thread_interrupted const& )
-	{ std::cerr << "thread_interrupted: thread was interrupted" << std::endl; }
+	catch ( tp::task_interrupted const& )
+	{ std::cerr << "task_interrupted: task was interrupted" << std::endl; }
 	catch ( std::exception const& e)
 	{ std::cerr << "exception: " << e.what() << std::endl; }
 	catch ( ... )

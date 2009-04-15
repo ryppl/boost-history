@@ -46,6 +46,9 @@ public:
 	{}
 };
 
+struct task_interrupted
+{};
+
 class task_rejected
 : public std::runtime_error
 {
