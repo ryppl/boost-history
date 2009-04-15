@@ -414,11 +414,11 @@
 </tr></thead>
 <tbody>
 <tr>
-<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.for_each_id2528327">for_each</a></code></td>
+<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.for_each_id2402052">for_each</a></code></td>
 <td>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</td>
 </tr>
 <tr>
-<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.reverse_for_each_id2520594">reverse_for_each</a></code></td>
+<td><code class="computeroutput"><a class="link" href="reference.html#boost.mirror.reverse_for_each_id2416447">reverse_for_each</a></code></td>
 <td>Calls a unary functor on a temporary instance of each element in a MetaObjectSequence, possibly transformed by a transformation functor.</td>
 </tr>
 </tbody>
@@ -902,27 +902,27 @@
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
 
-    <span class="emphasis"><em>// <a class="link" href="reference.html#id2490554-bb">for_each functions</a></em></span>
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2500638-bb">for_each functions</a></em></span>
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2528327"></a>for_each(Functor functor);
+      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2402052"></a>for_each(Functor functor);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.for_each_id2529499">for_each</a>(reference_wrapper&lt;Functor&gt;);
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.for_each_id2495375">for_each</a>(reference_wrapper&lt;Functor&gt;);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
              <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2452092"></a>for_each(Functor functor, TransformOp transform);
+      <span class="type">Functor</span> <a name="boost.mirror.for_each_id2488422"></a>for_each(Functor functor, TransformOp transform);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
              <span class="bold"><strong>typename</strong></span> Functor&gt; 
       <span class="type">reference_wrapper&lt;Functor&gt;</span> 
-      <a class="link" href="reference.html#boost.mirror.for_each_id2382648">for_each</a>(reference_wrapper&lt;Functor&gt;, reference_wrapper&lt;TransformOp&gt;);
+      <a class="link" href="reference.html#boost.mirror.for_each_id2499377">for_each</a>(reference_wrapper&lt;Functor&gt;, reference_wrapper&lt;TransformOp&gt;);
   }
 }</pre>
 <div class="refsect2" lang="en">
-<a name="id2620483"></a><h3>
-<a name="id2490554-bb"></a><code class="computeroutput"></code> for_each functions</h3>
+<a name="id2620480"></a><h3>
+<a name="id2500638-bb"></a><code class="computeroutput"></code> for_each functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
-  <span class="type">reference_wrapper&lt;Functor&gt;</span> <a name="boost.mirror.for_each_id2529499"></a>for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
+  <span class="type">reference_wrapper&lt;Functor&gt;</span> <a name="boost.mirror.for_each_id2495375"></a>for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
 <p>Sequentially calls a <code class="computeroutput">functor</code> on a temporary instance 
 				of each element in the <code class="computeroutput">MetaObjectSequence</code>.
 		                </p>
@@ -936,7 +936,7 @@
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, <span class="bold"><strong>typename</strong></span> Functor&gt; 
   <span class="type">reference_wrapper&lt;Functor&gt;</span> 
-  <a name="boost.mirror.for_each_id2382648"></a>for_each(reference_wrapper&lt;Functor&gt; functor, 
+  <a name="boost.mirror.for_each_id2499377"></a>for_each(reference_wrapper&lt;Functor&gt; functor, 
            reference_wrapper&lt;TransformOp&gt; transform);</pre>
 <p>Sequentially calls a <code class="computeroutput">functor</code> on the result of <code class="computeroutput">transform(meta_object)</code> (where 
 				<code class="computeroutput">meta_object</code> is a temporary instance of a <code class="computeroutput">MetaObject</code>) for each element in the <code class="computeroutput">MetaObjectSequence</code>.
@@ -957,29 +957,29 @@
 <pre class="synopsis"><span class="bold"><strong>namespace</strong></span> boost {
   <span class="bold"><strong>namespace</strong></span> mirror {
 
-    <span class="emphasis"><em>// <a class="link" href="reference.html#id2561679-bb">reverse_for_each functions</a></em></span>
+    <span class="emphasis"><em>// <a class="link" href="reference.html#id2418553-bb">reverse_for_each functions</a></em></span>
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2520594"></a>reverse_for_each(Functor functor);
+      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2416447"></a>reverse_for_each(Functor functor);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2508238">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;);
+      <span class="type">reference_wrapper&lt;Functor&gt;</span> <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2503324">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
              <span class="bold"><strong>typename</strong></span> Functor&gt; 
-      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2534446"></a>reverse_for_each(Functor functor, TransformOp transform);
+      <span class="type">Functor</span> <a name="boost.mirror.reverse_for_each_id2530570"></a>reverse_for_each(Functor functor, TransformOp transform);
     <span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, 
              <span class="bold"><strong>typename</strong></span> Functor&gt; 
       <span class="type">reference_wrapper&lt;Functor&gt;</span> 
-      <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2520392">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;, 
+      <a class="link" href="reference.html#boost.mirror.reverse_for_each_id2525566">reverse_for_each</a>(reference_wrapper&lt;Functor&gt;, 
                        reference_wrapper&lt;TransformOp&gt;);
   }
 }</pre>
 <div class="refsect2" lang="en">
-<a name="id2620850"></a><h3>
-<a name="id2561679-bb"></a><code class="computeroutput"></code> reverse_for_each functions</h3>
+<a name="id2620846"></a><h3>
+<a name="id2418553-bb"></a><code class="computeroutput"></code> reverse_for_each functions</h3>
 <div class="orderedlist"><ol type="1">
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> Functor&gt; 
   <span class="type">reference_wrapper&lt;Functor&gt;</span> 
-  <a name="boost.mirror.reverse_for_each_id2508238"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
+  <a name="boost.mirror.reverse_for_each_id2503324"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor);</pre>
 <p>Sequentially calls a <code class="computeroutput">functor</code> on a temporary instance 
 				of each element in the reversed <code class="computeroutput">MetaObjectSequence</code>.
 		                </p>
@@ -993,7 +993,7 @@
 <li>
 <pre class="literallayout"><span class="bold"><strong>template</strong></span>&lt;<span class="bold"><strong>typename</strong></span> MetaObjectSequence, <span class="bold"><strong>typename</strong></span> TransformOp, <span class="bold"><strong>typename</strong></span> Functor&gt; 
   <span class="type">reference_wrapper&lt;Functor&gt;</span> 
-  <a name="boost.mirror.reverse_for_each_id2520392"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor, 
+  <a name="boost.mirror.reverse_for_each_id2525566"></a>reverse_for_each(reference_wrapper&lt;Functor&gt; functor, 
                    reference_wrapper&lt;TransformOp&gt; transform);</pre>
 <p>Sequentially calls a <code class="computeroutput">functor</code> on the result of <code class="computeroutput">transform(meta_object)</code> (where 
 				<code class="computeroutput">meta_object</code> is a temporary instance of a <code class="computeroutput">MetaObject</code>) for each element in the reversed <code class="computeroutput">MetaObjectSequence</code>.

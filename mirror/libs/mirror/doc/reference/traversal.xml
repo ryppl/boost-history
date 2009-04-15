@@ -2,6 +2,9 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
 	"http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <header name="boost/mirror/traversal.hpp">
+	<using-namespace name="boost::mirror"/>
+	<using-namespace name="boost::cts"/>
+
 	<namespace name="boost">
 	<namespace name="mirror">
 		<class name="flat_traversal_of" xmlns:xi="http://www.w3.org/2001/XInclude">
@@ -30,6 +33,46 @@
                                 <section id="mirror.algorithm.flat_traversal_of.reference.samples">
                                         <title>Examples</title>
 <programlisting>
+#include &lt;boost/char_type_switch/iostream.hpp&gt;
+//
+#include &lt;boost/mirror/meta_class.hpp&gt;
+#include &lt;boost/mirror/meta_classes/std/pair.hpp&gt;
+//
+#include &lt;boost/mirror/visitors/json.hpp&gt;
+#include &lt;boost/mirror/traversal.hpp&gt;
+
+
+template &lt;class Class&gt;
+void test(Class value)
+{
+        using namespace ::std;
+        using namespace ::boost;
+        using namespace ::boost::mirror;
+
+        flat_traversal_of&lt;
+                <macroname>BOOST_MIRRORED_CLASS</macroname>(Class)
+        &gt;::accept(
+                make_json_serializer(cts::bcout(), mpl::true_()),
+                &amp;value
+        );
+        cts::<functionname>bcout</functionname>() &lt;&lt; endl;
+}
+
+int main(void)
+{
+        using namespace ::std;
+        using namespace ::boost;
+        //
+        pair&lt;cts::bstring, cts::bstring&gt; p;
+        cts::<functionname>bcout</functionname>() &lt;&lt; "enter first: " &lt;&lt; ::std::flush;
+        cts::<functionname>bcin</functionname>() &gt;&gt; p.first;
+        cts::<functionname>bcout</functionname>() &lt;&lt; "enter second: " &lt;&lt; ::std::flush;
+        cts::<functionname>bcin</functionname>() &gt;&gt; p.second;
+        test(p);
+        //
+        return 0;
+}
+
 </programlisting>
                                 </section>
                         </description>

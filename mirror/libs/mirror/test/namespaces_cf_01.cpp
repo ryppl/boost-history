@@ -23,7 +23,7 @@ void test_main()
 	using namespace ::boost::mirror;
 	//
 	// no such namespace registered
-	typedef BOOST_MIRROR_REFLECT_NAMESPACE(not_defined_ns) meta_ns_ndns;
+	typedef BOOST_MIRRORED_NAMESPACE(not_defined_ns) meta_ns_ndns;
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )
