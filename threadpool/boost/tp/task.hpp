@@ -14,6 +14,7 @@
 #include <boost/exception_ptr.hpp>
 #include <boost/exception/exception.hpp>
 #include <boost/future.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility/result_of.hpp>
@@ -403,6 +404,34 @@ unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, tas
 template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, task< T4 > & t4, task< T5 > & t5)
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
+
+template< typename Fn >
+task< typename result_of< Fn() >::type > make_task( Fn fn)
+{ return task< typename boost::result_of< Fn() >::type >( fn); }
+
+# ifndef BOOST_TP_MAKE_TASK_MAX_ARITY
+#   define BOOST_TP_MAKE_TASK_MAX_ARITY 10
+# endif
+
+# define BOOST_TP_MAKE_TASK_FUNC_ARG(z, n, unused) \
+   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
+# define BOOST_ENUM_TP_MAKE_TASK_FUNC_ARGS(n) BOOST_PP_ENUM(n, BOOST_TP_MAKE_TASK_FUNC_ARG, ~)
+
+# define BOOST_TP_MAKE_TASK_FUNCTION(z, n, unused)	\
+template<											\
+	typename Fn,									\
+	BOOST_PP_ENUM_PARAMS(n, typename A)				\
+>													\
+task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >		\
+make_task( Fn fn, BOOST_ENUM_TP_MAKE_TASK_FUNC_ARGS(n))					\
+{ return make_task( boost::bind( fn, BOOST_PP_ENUM_PARAMS(n, a))); }
+
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TP_MAKE_TASK_MAX_ARITY, BOOST_TP_MAKE_TASK_FUNCTION, ~)
+
+# undef BOOST_TP_MAKE_TASK_FUNCTION
+# undef BOOST_TP_MAKE_TASK_FUNC_ARG
+# undef BOOST_ENUM_TP_MAKE_TASK_FUNC_ARGS
+
 }}
 
 #endif // BOOST_TP_TASK_H
