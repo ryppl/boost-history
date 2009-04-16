@@ -55,30 +55,39 @@ void test_main()
 		double
 	> some_types;
 
-	BOOST_MPL_ASSERT(( mpl::accumulate<
-		some_types,
-		mpl::true_,
-		mpl::and_<
-			mpl::_1,
-			mirror::reflects_global_scope<
-				get_scope<
-					BOOST_MIRRORED_TYPE(mpl::_2)
-				>
-			>
-		>
-	>::type ));
+	typedef mpl::accumulate<
+                some_types,
+                mpl::true_,
+                mpl::and_<
+                        mpl::_1,
+                        mirror::reflects_global_scope<
+                                get_scope<
+                                        BOOST_MIRRORED_TYPE(mpl::_2)
+                                >
+                        >
+                >
+        >::type result_01;
+	BOOST_MIRROR_ASSERT(
+		result_01,
+		"All types in list should be declared in the global scope"
+	);
 
-	BOOST_MPL_ASSERT(( mpl::accumulate<
-		some_types,
-		mpl::true_,
-		mpl::and_<
-			mpl::_1,
-			is_same<
-				get_reflected_type<BOOST_MIRRORED_TYPE(mpl::_2)>,
-				mpl::_2
-			>
-		>
-	>::type ));
+	typedef mpl::accumulate<
+                some_types,
+                mpl::true_,
+                mpl::and_<
+                        mpl::_1,
+                        is_same<
+                                get_reflected_type<BOOST_MIRRORED_TYPE(mpl::_2)>,
+                                mpl::_2
+                        >
+                >
+        >::type result_02;
+	BOOST_MIRROR_ASSERT(
+		result_02,
+		"The reflected type and the real type must match for all "\
+		"types in the list"
+	);
 
 	typedef mpl::vector<
 		::std::string,
@@ -86,18 +95,23 @@ void test_main()
 		BOOST_MIRROR_TYPEDEF(::boost::cts, bstring)
 	> other_types;
 
-	BOOST_MPL_ASSERT_NOT(( mpl::accumulate<
-		other_types,
-		mpl::false_,
-		mpl::or_<
-			mpl::_1,
-			mirror::reflects_global_scope<
-				get_scope<
-					BOOST_MIRRORED_TYPE(mpl::_2)
-				>
-			>
-		>
-	>::type ));
+	typedef mpl::accumulate<
+                other_types,
+                mpl::false_,
+                mpl::or_<
+                        mpl::_1,
+                        mirror::reflects_global_scope<
+                                get_scope<
+                                        BOOST_MIRRORED_TYPE(mpl::_2)
+                                >
+                        >
+                >
+        >::type result_03;
+	BOOST_MIRROR_ASSERT_NOT(
+		result_03,
+		"None of the types in the list should be declared "\
+		"in the global scope"
+	);
 
 }
 

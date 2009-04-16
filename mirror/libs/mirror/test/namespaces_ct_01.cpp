@@ -18,6 +18,9 @@
 #include "./namespaces.hpp"
 #include "./test.hpp"
 
+#define BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG\
+	"The meta-namespace should not reflect the global scope"
+
 void test_main()
 {
 	using namespace ::std;
@@ -35,11 +38,26 @@ void test_main()
 	typedef BOOST_MIRRORED_NAMESPACE(::test::feature) meta_ns_test_feature;
 	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
-	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test> ));
-	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_stuff> ));
-	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_stuff_detail> ));
-	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_feature> ));
-	BOOST_MPL_ASSERT_NOT(( reflects_global_scope<meta_ns_test_feature_detail> ));
+	BOOST_MIRROR_ASSERT_NOT(
+		reflects_global_scope<meta_ns_test>,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
+	);
+	BOOST_MIRROR_ASSERT_NOT(
+		reflects_global_scope<meta_ns_test_stuff>,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
+	);
+	BOOST_MIRROR_ASSERT_NOT(
+		reflects_global_scope<meta_ns_test_stuff_detail>,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
+	);
+	BOOST_MIRROR_ASSERT_NOT(
+		reflects_global_scope<meta_ns_test_feature>,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
+	);
+	BOOST_MIRROR_ASSERT_NOT(
+		reflects_global_scope<meta_ns_test_feature_detail>,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

@@ -46,8 +46,8 @@ namespace detail {
 	private:
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void do_apply_to(
-			reference_wrapper<MetaObjectOp> op_ref, 
-			reference_wrapper<TransformOp> transf_ref, 
+			::boost::reference_wrapper<MetaObjectOp> op_ref, 
+			::boost::reference_wrapper<TransformOp> transf_ref, 
 			Iterator
 		)
 		{
@@ -67,8 +67,8 @@ namespace detail {
 
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void pre_apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator, 
 			forward
 		)
@@ -78,24 +78,24 @@ namespace detail {
 
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void pre_apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator, 
 			reverse
 		){	}
 
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void post_apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator, 
 			forward
 		){	}
 
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void post_apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator, 
 			reverse
 		)
@@ -106,16 +106,16 @@ namespace detail {
 	
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator, 
 			mpl::true_
 		){ }
 	
 		template <class MetaObjectOp, class TransformOp, class Iterator>
 		static inline void apply_to(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf, 
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf, 
 			Iterator i, 
 			mpl::false_
 		)
@@ -129,9 +129,9 @@ namespace detail {
 		}
 	public:
 		template <class MetaObjectOp, class TransformOp>
-		static inline reference_wrapper<MetaObjectOp> perform(
-			reference_wrapper<MetaObjectOp> op, 
-			reference_wrapper<TransformOp> transf
+		static inline ::boost::reference_wrapper<MetaObjectOp> perform(
+			::boost::reference_wrapper<MetaObjectOp> op, 
+			::boost::reference_wrapper<TransformOp> transf
 		)
 		{
 			typename iterator_equal<begin, end>::type done;

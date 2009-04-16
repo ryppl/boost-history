@@ -25,26 +25,32 @@
 #include "./simple_classes.hpp"
 #include "./test.hpp"
 
+template <class T1, class T2>
+void test_type_of_attribs(T1*, T2*)
+{
+	typedef typename ::boost::is_same<T1, T2>::type 
+		types_are_same;
+	
+	BOOST_MIRROR_ASSERT(
+		types_are_same,
+		"The attributes should have the same types"
+	);
+}
+
+template <class T>
+void test_type_of_attribs(T*, T*) { }
+
 template <class MetaAttribute1, class MetaAttribute2>
 void test_attribs(void)
 {
-	BOOST_MPL_ASSERT((
-		is_same<
-			MetaAttribute1::type::reflected_type,
-			MetaAttribute2::type::reflected_type
-		>
-	));
-	BOOST_MPL_ASSERT((
-		is_same<
-			MetaAttribute1::scope::type::reflected_type,
-			MetaAttribute2::scope::type::reflected_type
-		>
-	));
+	test_type_of_attribs(
+		(typename MetaAttribute1::type::reflected_type*)0,
+		(typename MetaAttribute2::type::reflected_type*)0
+	);
 }
 
 void test_main()
 {
-	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
@@ -122,7 +128,6 @@ void test_main()
 		by_name<meta_H::all_attributes>::h,
 		at<meta_H::all_attributes, mpl::int_<7> >::type
 	>();
-
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

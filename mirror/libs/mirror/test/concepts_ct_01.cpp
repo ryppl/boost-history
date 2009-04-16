@@ -54,7 +54,11 @@ void test_main()
 		>
 	>::type all_passed;
 	//
-	BOOST_MPL_ASSERT(( all_passed ));
+        BOOST_MIRROR_ASSERT(
+                all_passed,
+                "All tests must pass the test for compliance "\
+                "with the MetaType concept"
+        );
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

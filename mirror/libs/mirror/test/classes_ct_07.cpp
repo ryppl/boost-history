@@ -311,13 +311,17 @@ void test_main_templ()
 	//
 	// go through the list and execute 
 	// the tests on each tuple <type, attribs, base_classes>
-	BOOST_MPL_ASSERT((
-		mpl::accumulate<
-			classes_attribs_and_base_classes,
-			mpl::true_,
-			test_op
-		>
-	));
+	typedef typename mpl::accumulate<
+		classes_attribs_and_base_classes,
+		mpl::true_,
+		test_op
+	>::type result_01;
+	BOOST_MIRROR_ASSERT(
+		result_01,
+		"The types of attributes and base classes must match "\
+		"the hardcoded values"
+	); 
+	
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

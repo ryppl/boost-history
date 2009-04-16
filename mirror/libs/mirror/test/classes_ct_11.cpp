@@ -29,18 +29,23 @@
 template <class MetaAttribute1, class MetaAttribute2>
 void test_attribs(void)
 {
-	BOOST_MPL_ASSERT((
-		is_same<
-			MetaAttribute1::type::reflected_type,
-			MetaAttribute2::type::reflected_type
-		>
-	));
-	BOOST_MPL_ASSERT((
-		is_same<
-			MetaAttribute1::scope::type::reflected_type,
-			MetaAttribute2::scope::type::reflected_type
-		>
-	));
+        typedef typename ::boost::is_same<
+                typename MetaAttribute1::type::reflected_type,
+                typename MetaAttribute2::type::reflected_type
+        >::type result_01;
+        BOOST_MIRROR_ASSERT(
+                result_01,
+                "The attributes should have the same types"
+        );
+        //
+        typedef typename ::boost::is_same<
+                typename MetaAttribute1::scope::reflected_type,
+                typename MetaAttribute2::scope::reflected_type
+        >::type result_02;
+        BOOST_MIRROR_ASSERT(
+                result_02,
+                "The attributes should be declared in the same class"
+        );
 }
 
 void test_main()
@@ -58,7 +63,7 @@ void test_main()
 	>();
 	test_attribs<
 		by_name<meta_P::attributes>::second,
-		at<meta_P::attributes, mpl::int_<0> >::type
+		at<meta_P::attributes, mpl::int_<1> >::type
 	>();
 	//
 	test_attribs<

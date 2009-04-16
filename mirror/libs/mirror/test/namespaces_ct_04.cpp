@@ -20,51 +20,68 @@
 #include "./namespaces.hpp"
 #include "./test.hpp"
 
+#define BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_1(TYPE) \
+	"The " #TYPE " type should be defined on the global scope"
+
+#define BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(TYPE) \
+        BOOST_MIRROR_ASSERT( \
+                reflects_namespace< \
+                        BOOST_MIRRORED_TYPE(TYPE) :: scope \
+                >::type, \
+		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_1(TYPE) \
+         );
+
+#define BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2(MODAL) \
+	"The types " MODAL " be defined in the same scope"
+
 void test_main()
 {
-	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(bool) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(char) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(int) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(double) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(void*) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(int const * const *) :: scope
-	>::value );
-	BOOST_STATIC_ASSERT( reflects_namespace<
-		BOOST_MIRRORED_TYPE(char volatile * const &) :: scope
-	>::value );
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(bool)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(char)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(int)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(double)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(void*)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(int const * const *)
+	BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(char volatile * const &)
 	//
-	BOOST_STATIC_ASSERT(( is_same<
-		BOOST_MIRRORED_TYPE(const char* []) :: scope,
-		BOOST_MIRRORED_TYPE(int volatile &) :: scope
-	>::value ));
+	typedef is_same<
+                BOOST_MIRRORED_TYPE(const char* []) :: scope,
+                BOOST_MIRRORED_TYPE(int volatile &) :: scope
+        >::type result_01;
+	BOOST_MIRROR_ASSERT(
+		result_01,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should")
+	);
+	
+	typedef is_same<
+                BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+                BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) :: scope
+        >::type result_02;
+	BOOST_MIRROR_ASSERT(
+		result_02,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should")
+	);
 
-	BOOST_MPL_ASSERT(( is_same<
-		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
-		BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) :: scope
-	> ));
-	BOOST_MPL_ASSERT_NOT((is_same<
-		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
-		BOOST_MIRRORED_TYPE(char) :: scope
-	> ));
-	BOOST_MPL_ASSERT_NOT(( is_same<
-		BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
-		BOOST_MIRRORED_TYPE(wchar_t) :: scope
-	> ));
+	typedef is_same<
+                BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+                BOOST_MIRRORED_TYPE(char) :: scope
+        >::type result_03;
+	BOOST_MIRROR_ASSERT_NOT(
+		result_03,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should not")
+	);
+	
+	typedef is_same<
+                BOOST_MIRRORED_TYPEDEF(::boost::cts, bchar) :: scope,
+                BOOST_MIRRORED_TYPE(wchar_t) :: scope
+        >::type result_04;
+	BOOST_MIRROR_ASSERT_NOT(
+		result_04,
+		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should not")
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

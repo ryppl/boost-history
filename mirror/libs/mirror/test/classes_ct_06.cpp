@@ -60,7 +60,7 @@ void test_main()
 	> some_classes;
 
 	// check the counts of base classes
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -74,7 +74,11 @@ void test_main()
 				mpl::at<mpl::_2, mpl::int_<1> >
 			>
 		>
-	>::type ));
+	>::type result_01;
+	BOOST_MIRROR_ASSERT(
+		result_01, 
+		"The count of base classes must match the hardcoded values"
+	);
 
 }
 

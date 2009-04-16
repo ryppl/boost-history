@@ -53,7 +53,7 @@ template <
 	class NodeSet, 
 	class Functor
 >
-void for_each(boost::reference_wrapper<Functor> f_ref)
+void for_each(::boost::reference_wrapper<Functor> f_ref)
 {
 	mpl::for_each<
 		typename NodeSet::paths_and_nodes

@@ -46,7 +46,6 @@ struct get_all_attribs
 
 void test_main()
 {
-	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
@@ -66,7 +65,7 @@ void test_main()
 	> some_classes;
 
 	// check the counts of own attributes
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -80,10 +79,14 @@ void test_main()
 				mpl::at<mpl::_2, mpl::int_<1> >
 			>
 		>
-	>::type ));
+	>::type result_01;
+	BOOST_MIRROR_ASSERT(
+		result_01,
+		"The count of attributes must match the hardcoded values"
+	);
 
 	// check the counts of all attributes
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -97,7 +100,11 @@ void test_main()
 				mpl::at<mpl::_2, mpl::int_<2> >
 			>
 		>
-	>::type ));
+	>::type result_02;
+	BOOST_MIRROR_ASSERT(
+		result_02, 
+		"The count of attributes must match the hardcoded values"
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

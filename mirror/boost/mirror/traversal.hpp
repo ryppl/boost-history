@@ -41,12 +41,12 @@ public:
 		InstancePtr ptr_to_inst = 0
 	)
 	{
-		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
+		do_accept(::boost::ref<VisitorType>(visitor), ptr_to_inst);
 	}
 
 	template <class VisitorType>
 	static inline void accept(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst = 0
 	)
 	{
@@ -59,12 +59,12 @@ public:
 		ConstInstancePtr ptr_to_inst
 	)
 	{
-		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
+		do_accept(::boost::ref<VisitorType>(visitor), ptr_to_inst);
 	}
 
 	template <class VisitorType>
 	static inline void accept(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		ConstInstancePtr ptr_to_inst
 	)
 	{
@@ -73,7 +73,7 @@ public:
 private:
 	template <class VisitorType, class InstanceType>
 	static inline void do_accept(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		InstanceType* ptr_to_inst
 	)
 	{
@@ -85,11 +85,11 @@ private:
 		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through the base classes
 		for_each<typename MetaClass::base_classes>(
-			cref(show_bases_to(visitor, ptr_to_inst))
+			::boost::cref(show_bases_to(visitor, ptr_to_inst))
 		);
 		// go through the own class' attributes
 		for_each<typename MetaClass::attributes>(
-			cref(show_attribs_to(visitor, ptr_to_inst))
+			::boost::cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		lead_out_of_type(visitor, mc, path);
@@ -121,12 +121,12 @@ public:
 		InstancePtr ptr_to_inst = 0
 	)
 	{
-		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
+		do_accept(::boost::ref<VisitorType>(visitor), ptr_to_inst);
 	}
 
 	template <class VisitorType>
 	static inline void accept(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst = 0
 	)
 	{
@@ -139,12 +139,12 @@ public:
 		ConstInstancePtr ptr_to_inst
 	)
 	{
-		do_accept(ref<VisitorType>(visitor), ptr_to_inst);
+		do_accept(::boost::ref<VisitorType>(visitor), ptr_to_inst);
 	}
 
 	template <class VisitorType>
 	static inline void accept(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		ConstInstancePtr ptr_to_inst
 	)
 	{
@@ -153,7 +153,7 @@ public:
 private:
 	template <class VisitorType, class InstanceType>
 	static inline void do_accept(
-		reference_wrapper<VisitorType> visitor, 
+		::boost::reference_wrapper<VisitorType> visitor, 
 		InstanceType* ptr_to_inst
 	)
 	{
@@ -165,7 +165,7 @@ private:
 		lead_to_instance(visitor, mc, path, ptr_to_inst);
 		// go through all of the class' attributes
 		for_each<typename MetaClass::all_attributes>(
-			cref(show_attribs_to(visitor, ptr_to_inst))
+			::boost::cref(show_attribs_to(visitor, ptr_to_inst))
 		);
 		// leave the type
 		lead_out_of_type(visitor, mc, path);
@@ -205,18 +205,18 @@ public:
 	template <class VisitorType>
 	static inline void accept(VisitorType visitor)
 	{
-		do_accept(ref<VisitorType>(visitor));
+		do_accept(::boost::ref<VisitorType>(visitor));
 	}
 
 	template <class VisitorType>
-	static void accept(reference_wrapper<VisitorType> visitor)
+	static void accept(::boost::reference_wrapper<VisitorType> visitor)
 	{
 		do_accept(visitor);
 	}
 private:
 
 	template <class VisitorType>
-	static void do_accept(reference_wrapper<VisitorType> visitor)
+	static void do_accept(::boost::reference_wrapper<VisitorType> visitor)
 	{
 		MetaNamespace mn;
 		NodePath path;
@@ -227,7 +227,7 @@ private:
 		// show the visitor through all the members of 
 		// the namespace
 		for_each<members>(
-			cref(show_namespace_members_to(
+			::boost::cref(show_namespace_members_to(
 				visitor, 
 				members()
 			))

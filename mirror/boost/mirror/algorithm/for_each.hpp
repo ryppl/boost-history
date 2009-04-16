@@ -36,14 +36,14 @@ template <
 	class MetaObjectSequence,
 	class Functor
 >
-static inline reference_wrapper<Functor> for_each(
-	reference_wrapper<Functor> fn
+static inline ::boost::reference_wrapper<Functor> for_each(
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(fn, cref(detail::no_op()));
+	> ::perform(fn, ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -55,7 +55,7 @@ static inline Functor for_each(Functor fn)
 	return detail::for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(ref(fn), cref(detail::no_op()));
+	> ::perform(::boost::ref(fn), ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -63,9 +63,9 @@ template <
 	class TransformOp,
 	class Functor
 >
-static inline reference_wrapper<Functor> for_each(
-	reference_wrapper<TransformOp> transf, 
-	reference_wrapper<Functor> fn
+static inline ::boost::reference_wrapper<Functor> for_each(
+	::boost::reference_wrapper<TransformOp> transf, 
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::for_each_impl<
@@ -87,21 +87,21 @@ static inline Functor for_each(
 	return detail::for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(ref(fn), ref(transf));
+	> ::perform(::boost::ref(fn), ::boost::ref(transf));
 }
 template <
 	class IteratorBegin,
 	class IteratorEnd,
 	class Functor
 >
-static inline reference_wrapper<Functor> for_each(
-	reference_wrapper<Functor> fn
+static inline ::boost::reference_wrapper<Functor> for_each(
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::for_each_impl<
 		IteratorBegin,
 		IteratorEnd
-	> ::perform(fn, cref(detail::no_op()));
+	> ::perform(fn, ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -110,9 +110,9 @@ template <
 	class TransformOp,
 	class Functor
 >
-static inline reference_wrapper<Functor> for_each(
-	reference_wrapper<TransformOp> transf, 
-	reference_wrapper<Functor> fn
+static inline ::boost::reference_wrapper<Functor> for_each(
+	::boost::reference_wrapper<TransformOp> transf, 
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::for_each_impl<

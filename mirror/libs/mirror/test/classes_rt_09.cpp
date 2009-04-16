@@ -77,7 +77,6 @@ public:
 
 void test_main()
 {
-	using namespace ::std;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//

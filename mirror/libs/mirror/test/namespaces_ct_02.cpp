@@ -10,12 +10,14 @@
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#include <boost/mpl/assert.hpp>
 // namespace registering 
 #include <boost/mirror/traits/reflects_namespace.hpp>
 //
 #include "./namespaces.hpp"
 #include "./test.hpp"
+
+#define BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG \
+	"The meta-object must reflect a namespace"
 
 void test_main()
 {
@@ -32,12 +34,30 @@ void test_main()
 	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
 	//
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_gs> ));
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test> ));
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_stuff> ));
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_stuff_detail> ));
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_feature> ));
-	BOOST_MPL_ASSERT(( reflects_namespace<meta_ns_test_feature_detail> ));
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_gs>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_ns_test>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_ns_test_stuff>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_ns_test_stuff_detail>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_ns_test_feature>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
+	BOOST_MIRROR_ASSERT(
+		reflects_namespace<meta_ns_test_feature_detail>,
+		BOOST_MIRROR_TEST_NAMESPACE_CT_02_MSG
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

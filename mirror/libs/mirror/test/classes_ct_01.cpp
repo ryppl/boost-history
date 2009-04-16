@@ -66,7 +66,7 @@ void test_main()
 	> some_classes;
 
 	// none of the classes is defined in the global scope
-	BOOST_MPL_ASSERT_NOT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::false_,
 		mpl::or_<
@@ -77,11 +77,15 @@ void test_main()
 				>
 			>
 		>
-	>::type ));
+	>::type result_01;
+	BOOST_MIRROR_ASSERT_NOT(
+		result_01,
+		"No class in list should be from the global scope"
+	);
 
 	// all off the classes are defined in a namespace defined
 	// (directly) under the global scope
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -92,8 +96,13 @@ void test_main()
 				>
 			>
 		>
-	>::type ));
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	>::type result_02;
+	BOOST_MIRROR_ASSERT(
+		result_02,
+		"All classes in list should be from a named namespace"
+	);
+
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -104,9 +113,13 @@ void test_main()
 				> >
 			>
 		>
-	>::type ));
+	>::type result_03;
+	BOOST_MIRROR_ASSERT(
+		result_03, 
+		"All classes in list should be from a not-nested namespace"
+	);
 
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
@@ -115,19 +128,27 @@ void test_main()
 				BOOST_MIRRORED_CLASS(mpl::_2)
 			>
 		>
-	>::type ));
+	>::type result_04;
+	BOOST_MIRROR_ASSERT(
+		result_04,
+		"Meta-classes for classes in list should be recognized"
+	);
 
-	BOOST_MPL_ASSERT(( mpl::accumulate<
+	typedef mpl::accumulate<
 		some_classes,
 		mpl::true_,
 		mpl::and_<
 			mpl::_1,
-			is_same<
+			::boost::is_same<
 				get_reflected_type<BOOST_MIRRORED_CLASS(mpl::_2)>,
 				mpl::_2
 			>
 		>
-	>::type ));
+	>::type result_05;
+	BOOST_MIRROR_ASSERT(
+		result_05, 
+		"Base-level type and reflected type must be the same"
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

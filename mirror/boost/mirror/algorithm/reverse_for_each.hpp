@@ -36,14 +36,14 @@ template <
 	class MetaObjectSequence,
 	class Functor
 >
-static reference_wrapper<Functor> reverse_for_each(
-	reference_wrapper<Functor> fn
+static ::boost::reference_wrapper<Functor> reverse_for_each(
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::reverse_for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(fn, cref(detail::no_op()));
+	> ::perform(fn, ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -55,7 +55,7 @@ static Functor reverse_for_each(Functor fn)
 	return detail::reverse_for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(ref(fn), cref(detail::no_op()));
+	> ::perform(::boost::ref(fn), ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -63,9 +63,9 @@ template <
 	class TransformOp,
 	class Functor
 >
-static reference_wrapper<Functor> reverse_for_each(
-	reference_wrapper<TransformOp> transf, 
-	reference_wrapper<Functor> fn
+static ::boost::reference_wrapper<Functor> reverse_for_each(
+	::boost::reference_wrapper<TransformOp> transf, 
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::reverse_for_each_impl<
@@ -87,7 +87,7 @@ static Functor reverse_for_each(
 	return detail::reverse_for_each_impl<
 		typename mirror::begin<MetaObjectSequence>::type,
 		typename mirror::end<MetaObjectSequence>::type
-	> ::perform(ref(fn), ref(transf));
+	> ::perform(::boost::ref(fn), ::boost::ref(transf));
 }
 
 template <
@@ -95,14 +95,14 @@ template <
 	class IteratorEnd,
 	class Functor
 >
-static reference_wrapper<Functor> reverse_for_each(
-	reference_wrapper<Functor> fn
+static ::boost::reference_wrapper<Functor> reverse_for_each(
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::reverse_for_each_impl<
 		IteratorBegin,
 		IteratorEnd
-	> ::perform(fn, cref(detail::no_op()));
+	> ::perform(fn, ::boost::cref(detail::no_op()));
 }
 
 template <
@@ -112,8 +112,8 @@ template <
 	class Functor
 >
 static Functor reverse_for_each(
-	reference_wrapper<TransformOp> transf, 
-	reference_wrapper<Functor> fn
+	::boost::reference_wrapper<TransformOp> transf, 
+	::boost::reference_wrapper<Functor> fn
 )
 {
 	return detail::reverse_for_each_impl<

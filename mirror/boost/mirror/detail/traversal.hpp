@@ -54,7 +54,7 @@ protected:
 	{
 	public:
 		inline attribute_traversal(
-			reference_wrapper<VisitorType> _visitor,
+			::boost::reference_wrapper<VisitorType> _visitor,
 			InstancePtr _ptr_to_inst
 		)
 		: visitor(_visitor)
@@ -81,7 +81,7 @@ protected:
 			process_single(ma, path);
 		}
 	private:
-		reference_wrapper<VisitorType> visitor;
+		::boost::reference_wrapper<VisitorType> visitor;
 		InstancePtr ptr_to_inst;
 
 		// process single attribute WITH an instance
@@ -157,7 +157,7 @@ protected:
 
 		template < class MetaAttribute, class AttribsNodePath>
 		static inline void lead_into_attribute(
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path
 		)
@@ -177,7 +177,7 @@ protected:
 		template < class MetaAttribute, class AttribsNodePath>
 		static inline void lead_into_attribute_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path
 		)
@@ -194,14 +194,14 @@ protected:
 		template <class MetaAttribute, class AttribsNodePath>
 		static inline void lead_into_attribute_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path
 		){ }
 
 		template < class MetaAttribute, class AttribsNodePath>
 		static inline void lead_out_of_attribute(
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path
 		)
@@ -221,7 +221,7 @@ protected:
 		template <class MetaAttribute, class AttribsNodePath>
 		static inline void lead_out_of_attribute_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path 
 		)
@@ -238,13 +238,13 @@ protected:
 		template <class MetaAttribute, class AttribsNodePath>
 		static inline void lead_out_of_attribute_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaAttribute ma,
 			AttribsNodePath path
 		){ }
 
 		static inline void lead_into_attribute_list(
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			lead_into_attribute_list_if(
@@ -260,7 +260,7 @@ protected:
 
 		static inline void lead_into_attribute_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			visitor.get().enter_attributes(
@@ -275,11 +275,11 @@ protected:
 
 		static inline void lead_into_attribute_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		){ }
 
 		static inline void lead_out_of_attribute_list(
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			lead_out_of_attribute_list_if(
@@ -295,7 +295,7 @@ protected:
 
 		static inline void lead_out_of_attribute_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			visitor.get().leave_attributes(
@@ -310,7 +310,7 @@ protected:
 
 		static inline void lead_out_of_attribute_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		){ }
 
 	};
@@ -319,7 +319,7 @@ protected:
 	template <class VisitorType, class InstancePtr>
 	static inline attribute_traversal<VisitorType, InstancePtr>
 	show_attribs_to(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst
 	)
 	{
@@ -335,7 +335,7 @@ protected:
 	{
 	public:
 		inline base_class_traversal(
-			reference_wrapper<VisitorType> _visitor,
+			::boost::reference_wrapper<VisitorType> _visitor,
 			InstancePtr _ptr_to_inst
 		)
 		: visitor(_visitor)
@@ -377,12 +377,12 @@ protected:
 			typename MetaClass::base_classes
 		>::type BaseClassesNodePath;
 
-		reference_wrapper<VisitorType> visitor;
+		::boost::reference_wrapper<VisitorType> visitor;
 		InstancePtr ptr_to_inst;
 
 		template <class MetaInheritance>
 		static inline void lead_into_base_class(
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path 
 		)
@@ -402,7 +402,7 @@ protected:
 		template <class MetaInheritance>
 		static inline void lead_into_base_class_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path 
 		)
@@ -419,14 +419,14 @@ protected:
 		template <class MetaInheritance>
 		static inline void lead_into_base_class_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path 
 		){ }
 
 		template <class MetaInheritance>
 		static inline void lead_out_of_base_class(
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path 
 		)
@@ -446,7 +446,7 @@ protected:
 		template <class MetaInheritance>
 		static inline void lead_out_of_base_class_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path 
 		)
@@ -463,13 +463,13 @@ protected:
 		template <class MetaInheritance>
 		static inline void lead_out_of_base_class_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			MetaInheritance mbc,
 			BaseClassesNodePath path
 		){ }
 
 		static inline void lead_into_base_class_list(
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			lead_into_base_class_list_if(
@@ -488,7 +488,7 @@ protected:
 
 		static inline void lead_into_base_class_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			visitor.get().enter_base_classes(
@@ -503,11 +503,11 @@ protected:
 
 		static inline void lead_into_base_class_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		){ }
 
 		static inline void lead_out_of_base_class_list(
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			lead_out_of_base_class_list_if(
@@ -526,7 +526,7 @@ protected:
 
 		static inline void lead_out_of_base_class_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		)
 		{
 			visitor.get().leave_base_classes(
@@ -541,7 +541,7 @@ protected:
 
 		static inline void lead_out_of_base_class_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor
+			::boost::reference_wrapper<VisitorType> visitor
 		){ }
 
 
@@ -551,7 +551,7 @@ protected:
 	template <class VisitorType, class InstancePtr>
 	static inline base_class_traversal<VisitorType, InstancePtr>
 	show_bases_to(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		InstancePtr ptr_to_inst
 	)
 	{
@@ -566,7 +566,7 @@ protected:
 		class InstanceType
 	>
 	inline static void lead_to_instance(
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
 		NodePath path,
 		InstanceType* ptr_to_inst
@@ -587,7 +587,7 @@ protected:
 	>
 	inline static void lead_to_instance_if(
 		mpl::true_,
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
 		NodePath path,
 		InstanceType* ptr_to_inst
@@ -609,7 +609,7 @@ protected:
 	>
 	inline static void lead_to_instance_if(
 		mpl::false_,
-		reference_wrapper<VisitorType> visitor,
+		::boost::reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
 		NodePath path,
 		InstanceType* ptr_to_inst
@@ -617,7 +617,7 @@ protected:
 
 	template <class VisitorType>
 	static inline void lead_into_type(
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
                 NodePath path
         )
@@ -637,7 +637,7 @@ protected:
         template < class VisitorType>
         static inline void lead_into_type_if(
 		mpl::true_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
                 MetaClass mc,
                 NodePath path
         )
@@ -654,14 +654,14 @@ protected:
         template < class VisitorType>
         static inline void lead_into_type_if(
 		mpl::false_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
                 MetaClass mc,
                 NodePath path
         ){ }
 
 	template <class VisitorType>
 	static inline void lead_out_of_type(
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaClass mc,
                 NodePath path
         )
@@ -681,7 +681,7 @@ protected:
         template < class VisitorType>
         static inline void lead_out_of_type_if(
 		mpl::true_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
                 MetaClass mc,
                 NodePath path
         )
@@ -698,7 +698,7 @@ protected:
         template < class VisitorType>
         static inline void lead_out_of_type_if(
 		mpl::false_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
                 MetaClass mc,
                 NodePath path
         ){ }
@@ -722,7 +722,7 @@ protected:
 	template <class VisitorType, class Members>
 	struct namespace_member_traversal
 	{
-		reference_wrapper<VisitorType> visitor;
+		::boost::reference_wrapper<VisitorType> visitor;
 
 		typedef typename mpl::push_back<
 			NamespaceNodePath,
@@ -730,7 +730,7 @@ protected:
 		>::type MembersNodePath;
 		
 		inline namespace_member_traversal(
-			reference_wrapper<VisitorType> _visitor
+			::boost::reference_wrapper<VisitorType> _visitor
 		): visitor(_visitor)
 		{
 			lead_into_namespace_member_list(
@@ -759,7 +759,7 @@ protected:
 		}
 
 		static inline void lead_into_namespace_member_list(
-	                reference_wrapper<VisitorType> visitor,
+	                ::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 	        )
@@ -778,7 +778,7 @@ protected:
 
 		static inline void lead_into_namespace_member_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 		)
@@ -794,13 +794,13 @@ protected:
 
 		static inline void lead_into_namespace_member_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 		){ }
 
 		static inline void lead_out_of_namespace_member_list(
-	                reference_wrapper<VisitorType> visitor,
+	                ::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 	        )
@@ -819,7 +819,7 @@ protected:
 
 		static inline void lead_out_of_namespace_member_list_if(
 			mpl::true_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 		)
@@ -835,7 +835,7 @@ protected:
 
 		static inline void lead_out_of_namespace_member_list_if(
 			mpl::false_,
-			reference_wrapper<VisitorType> visitor,
+			::boost::reference_wrapper<VisitorType> visitor,
 			Members m,
 			NamespaceNodePath path
 		){ }
@@ -843,7 +843,7 @@ protected:
 
 	template <class Members, class VisitorType>
 	static inline namespace_member_traversal<VisitorType, Members>
-	show_namespace_members_to(reference_wrapper<VisitorType> _visitor, Members)
+	show_namespace_members_to(::boost::reference_wrapper<VisitorType> _visitor, Members)
 	{
 		return namespace_member_traversal<VisitorType, Members>(_visitor);
 	}
@@ -851,7 +851,7 @@ protected:
 	
 	template <class VisitorType>
 	static inline void lead_into_namespace(
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         )
@@ -871,7 +871,7 @@ protected:
         template <class VisitorType>
         static inline void lead_into_namespace_if(
 		mpl::true_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         )
@@ -888,14 +888,14 @@ protected:
         template < class VisitorType>
         static inline void lead_into_namespace_if(
 		mpl::false_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         ){ }
 
        	template <class VisitorType>
 	static inline void lead_out_of_namespace(
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         )
@@ -915,7 +915,7 @@ protected:
 	template < class VisitorType>
         static inline void lead_out_of_namespace_if(
 		mpl::true_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         )
@@ -932,7 +932,7 @@ protected:
         template < class VisitorType>
         static inline void lead_out_of_namespace_if(
 		mpl::false_,
-                reference_wrapper<VisitorType> visitor,
+                ::boost::reference_wrapper<VisitorType> visitor,
 		MetaNamespace mn,
                 NodePath path
         ){ }

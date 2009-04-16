@@ -12,7 +12,6 @@
 
 #include <boost/type_traits/is_same.hpp>
 // assert
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/vector.hpp>
@@ -78,30 +77,60 @@ void test_main()
 	// if the global lists are not available, then mirror does not
 	// reflect namespace members
 	//
-	BOOST_MPL_ASSERT( empty< meta_test::members<>::type > );
-	BOOST_MPL_ASSERT_RELATION( size< meta_test::members<>::type >::value, ==, 0);
-        BOOST_MPL_ASSERT((iterator_equal<
+	BOOST_MIRROR_ASSERT(
+		empty< meta_test::members<>::type >::type,
+		"The list of members of the ::test namespace should be empty"
+	);
+
+	BOOST_MIRROR_ASSERT_RELATION(
+		size< meta_test::members<>::type >::value, 
+		==, 
+		0,
+		"The count of members of the ::test namespace should be 0"
+	);
+
+	typedef iterator_equal<
                 begin<meta_test::members<>::type>::type,
                 end<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT_NOT((iterator_not_equal<
+        >::type result_01;
+        BOOST_MIRROR_ASSERT(
+		result_01,
+		"The iterators returned by begin<> and end<> should be equal"
+        );
+
+	typedef iterator_not_equal<
                 begin<meta_test::members<>::type>::type,
                 end<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT((iterator_equal<
+        >::type result_02;
+        BOOST_MIRROR_ASSERT_NOT(
+		result_02,
+		"The iterators returned by begin<> and end<> should "\
+		"not be different"
+        );
+
+	typedef iterator_equal<
                 find_if<
-			meta_test::members<>::type, 
-			mpl::lambda<reflects_namespace<mpl::_1> >::type
-		>::type,
+                        meta_test::members<>::type,
+                        mpl::lambda<reflects_namespace<mpl::_1> >::type
+                >::type,
                 end<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT((iterator_equal<
+        >::type result_03;
+        BOOST_MIRROR_ASSERT(
+		result_03,
+		"There should be no namespace members in the ::test namespace"
+        );
+
+	typedef iterator_equal<
                 find_if<
-			meta_test::members<>::type, 
-			mpl::lambda<reflects_global_scope<mpl::_1> >::type
-		>::type,
+                        meta_test::members<>::type,
+                        mpl::lambda<reflects_global_scope<mpl::_1> >::type
+                >::type,
                 end<meta_test::members<>::type>::type
-        >));
+        >::type result_04;
+        BOOST_MIRROR_ASSERT(
+		result_04,
+		"There should be no type members in the ::test namespace"
+        );
 #else
 	typedef mpl::vector<
 		mpl::vector2<BOOST_MIRRORED_NAMESPACE(::test::a), mpl::int_<0> >,
@@ -123,51 +152,84 @@ void test_main()
 		>
 	>::type meta_namespaces;
 
-	BOOST_MPL_ASSERT_NOT( empty< meta_test::members<>::type > );
-	BOOST_MPL_ASSERT_RELATION( 
+	BOOST_MIRROR_ASSERT_NOT(
+		empty< meta_test::members<>::type >::type,
+		"The list of members of the ::test namespace should not "\
+		"be empty"
+	);
+	
+	BOOST_MIRROR_ASSERT_RELATION( 
 		size< meta_test::members<>::type >::value, 
 		==, 
-		8
+		8,
+		"There should be 8 members in the ::test namespace"
 	);
-	BOOST_MPL_ASSERT(( 
-		mpl::accumulate<
-			meta_namespaces_and_indices,
-			mpl::true_,
-			mpl::and_<
-				mpl::_1,
-				is_same<
-					at<
-						meta_test::members<>::type, 
-						mpl::back<mpl::_2> 
-					>,
-					mpl::front<mpl::_2>
-				>
+
+	typedef mpl::accumulate<
+		meta_namespaces_and_indices,
+		mpl::true_,
+		mpl::and_<
+			mpl::_1,
+			is_same<
+				at<
+					meta_test::members<>::type,
+					mpl::back<mpl::_2>
+				>,
+				mpl::front<mpl::_2>
 			>
 		>
-	));
+	>::type result_01;
+	BOOST_MIRROR_ASSERT( 
+		result_01,
+		"The position of the members in the ::test namespace "\
+		"should match the hardcoded order"
+	);
 	//
-        BOOST_MPL_ASSERT((iterator_not_equal<
+	typedef iterator_not_equal<
                 begin<meta_test::members<>::type>::type,
                 end<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT_NOT((iterator_equal<
+        >::type result_02;
+        BOOST_MIRROR_ASSERT(
+		result_02,
+		"The iterators returned by begin<> and end<> on the list "\
+		"of members of the ::test namespace should be different"
+        );
+	//
+	typedef iterator_equal<
                 begin<meta_test::members<>::type>::type,
                 end<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT((iterator_equal<
+        >::type result_03;
+        BOOST_MIRROR_ASSERT_NOT(
+		result_03,
+		"The iterators returned by begin<> and end<> on the list "\
+		"of members of the ::test namespace should not be equal"
+        );
+	//
+	typedef iterator_equal<
                 find_if<
-			meta_test::members<>::type, 
-			mpl::lambda<reflects_namespace<mpl::_1> >::type
-		>::type,
+                        meta_test::members<>::type,
+                        mpl::lambda<reflects_namespace<mpl::_1> >::type
+                >::type,
                 begin<meta_test::members<>::type>::type
-        >));
-        BOOST_MPL_ASSERT((iterator_equal<
+        >::type result_04;
+        BOOST_MIRROR_ASSERT(
+		result_04,
+		"The first member of the ::test namespace should "\
+		"be a namespace"
+        );
+	//
+	typedef iterator_equal<
                 find_if<
-			meta_test::members<>::type, 
-			mpl::lambda<reflects_global_scope<mpl::_1> >::type
-		>::type,
+                        meta_test::members<>::type,
+                        mpl::lambda<reflects_global_scope<mpl::_1> >::type
+                >::type,
                 end<meta_test::members<>::type>::type
-        >));
+        >::type result_05;
+        BOOST_MIRROR_ASSERT(
+		result_05,
+		"There should not be any member in the ::test namespace "\
+		"identified as the global scope"
+        );
  
 #endif
 }
