@@ -1,5 +1,7 @@
 #include "boost/tp/detail/interrupter.hpp"
 
+#include <boost/assert.hpp>
+
 namespace boost { namespace tp {
 namespace detail
 {

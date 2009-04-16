@@ -6,10 +6,11 @@
 #define BOOST_TP_TP_H
 
 #include <boost/tp/bounded_channel.hpp>
-#include <boost/tp/exceptions.hpp>
 #include <boost/tp/default_pool.hpp>
+#include <boost/tp/exceptions.hpp>
 #include <boost/tp/fifo.hpp>
 #include <boost/tp/info.hpp>
+#include <boost/tp/launch.hpp>
 #include <boost/tp/lifo.hpp>
 #include <boost/tp/pool.hpp>
 #include <boost/tp/poolsize.hpp>
@@ -18,6 +19,7 @@
 #include <boost/tp/smart.hpp>
 #include <boost/tp/task.hpp>
 #include <boost/tp/unbounded_channel.hpp>
+#include <boost/tp/utility.hpp>
 #include <boost/tp/watermark.hpp>
 
 #endif // BOOST_TP_TP_H

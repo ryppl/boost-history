@@ -18,5 +18,12 @@ callable::empty() const
 void
 callable::clear()
 { impl_.reset(); }
+
+callable::scoped_lock::scoped_lock( callable & ca, shared_ptr< thread > & thrd)
+: ca_( ca)
+{ ca_.impl_->set( thrd); }
+
+callable::scoped_lock::~scoped_lock()
+{ ca_.impl_->reset(); }
 } } }
 

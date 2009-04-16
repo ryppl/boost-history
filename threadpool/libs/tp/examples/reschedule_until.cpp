@@ -22,8 +22,6 @@ extern "C"
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-typedef tp::default_pool pool_type;
-
 long serial_fib( long n)
 {
 	if( n < 2)
@@ -48,17 +46,17 @@ public:
 		else
 		{
 			tp::task< long > t1(
-				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
 						& fib_task::execute,
 						boost::ref( * this),
-						n - 1) ) );
+						n - 1) );
 			tp::task< long > t2(
-				boost::this_task::get_thread_pool< pool_type >().submit(
 					boost::bind(
 						& fib_task::execute,
 						boost::ref( * this),
-						n - 2) ) );
+						n - 2) );
+			tp::launch_in_pool( t1);
+			tp::launch_in_pool( t2);
 			return t1.get() + t2.get();
 		}
 	}
@@ -135,20 +133,22 @@ int main( int argc, char *argv[])
 	{
 		int fd[2];
 		create_sockets( fd);
-
-		tp::get_default_pool().submit(
+		
+		tp::launch_in_pool(
+			tp::task< void >(
 				boost::bind(
 					& read,
-					fd[0]) );
+					fd[0]) ) );
 
 		write( fd[1], "Hello ");
 		boost::this_thread::sleep( pt::seconds( 1) );
 
 		for ( int i = 0; i < 15; ++i)
-			tp::get_default_pool().submit(
-				boost::bind(
-					& parallel_fib,
-					i) );
+			tp::launch_in_pool(
+				tp::task< void >(
+					boost::bind(
+						& parallel_fib,
+						i) ) );
 
 		write( fd[1], "World!");
 

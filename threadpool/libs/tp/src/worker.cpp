@@ -27,22 +27,16 @@ worker::signal_shutdown_now()
 { impl_->signal_shutdown_now(); }
 
 void
-worker::put(
-	callable const& ca,
-	interrupter const& intr)
-{ impl_->put( ca, intr); }
+worker::put( callable const& ca)
+{ impl_->put( ca); }
 
 bool
-worker::try_take(
-	callable & ca,
-	interrupter & intr)
-{ return impl_->try_take( ca, intr); }
+worker::try_take( callable & ca)
+{ return impl_->try_take( ca); }
 
 bool
-worker::try_steal(
-	callable & ca,
-	interrupter & intr)
-{ return impl_->try_steal( ca, intr); }
+worker::try_steal( callable & ca)
+{ return impl_->try_steal( ca); }
 
 void
 worker::reschedule_until( function< bool() > const& pred)

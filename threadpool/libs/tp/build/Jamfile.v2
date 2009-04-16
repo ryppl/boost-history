@@ -14,7 +14,20 @@ project boost/tp
       <link>static:<define>BOOST_THREADPOOL_STATIC_LINK=1
     ;
 
-SOURCES = callable default_pool guard interrupter poolsize scanns watermark worker worker_group ;
+SOURCES =
+	callable.cpp
+	default_pool.cpp
+	guard.cpp
+	interrupter.cpp
+	poolsize.cpp
+	scanns.cpp
+	semaphore_posix.cpp
+//	semaphore_windows.cpp
+	watermark.cpp
+	worker.cpp
+	worker_group.cpp
+	wsq.cpp
+	;
 
 lib boost_threadpool
    : $(SOURCES).cpp

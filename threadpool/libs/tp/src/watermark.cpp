@@ -1,5 +1,7 @@
 #include "boost/tp/watermark.hpp"
 
+#include <boost/tp/exceptions.hpp>
+
 namespace boost { namespace tp
 {
 high_watermark::high_watermark( std::size_t value)

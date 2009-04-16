@@ -36,23 +36,23 @@ public:
 		if ( n < cutof_)
 		{
 			if ( n == 0)
-				boost::this_task::sleep( pt::seconds( 2) );
+				boost::this_task::delay( pt::seconds( 2) );
 			return serial_fib( n);
 		}
 		else
 		{
 			tp::task< long > t1(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 1) );
 			tp::task< long > t2(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 2) );
+			tp::launch_in_pool( t1);
+			tp::launch_in_pool( t2);
 			return t1.get() + t2.get();
 		}
 	}
@@ -71,10 +71,11 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tp::get_default_pool().submit(
-				boost::bind(
-					& parallel_fib,
-					i) );
+			tp::launch_in_pool(
+				tp::task< void >(
+					boost::bind(
+						& parallel_fib,
+						i) ) );
 
 		return EXIT_SUCCESS;
 	}

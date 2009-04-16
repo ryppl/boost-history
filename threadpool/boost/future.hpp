@@ -27,10 +27,6 @@
 #include <list>
 #include <boost/next_prior.hpp>
 
-#define CATCH_ENABLE_CURRENT_EXCEPTION( Exception)	\
-catch ( Exception const& e)						\
-{ throw boost::enable_current_exception( e); }
-
 namespace boost
 {
     class future_uninitialized:
@@ -1207,28 +1203,7 @@ namespace boost
             {
                 try
                 {
-                    try
-					{ this->mark_finished_with_result(f()); }
-					CATCH_ENABLE_CURRENT_EXCEPTION( boost::thread_interrupted)
-					CATCH_ENABLE_CURRENT_EXCEPTION( boost::exception)
-
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::domain_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::invalid_argument)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::length_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::out_of_range)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::logic_error)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::overflow_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::range_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::underflow_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::runtime_error)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_alloc)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_cast)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_typeid)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_exception)
+					this->mark_finished_with_result(f());
                 }
                 catch(...)
                 {
@@ -1253,31 +1228,8 @@ namespace boost
             {
                 try
                 {
-					try
-					{
-                    	f();
-                    	this->mark_finished_with_result();
-					}
-					CATCH_ENABLE_CURRENT_EXCEPTION( boost::thread_interrupted)
-					CATCH_ENABLE_CURRENT_EXCEPTION( boost::exception)
-
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::ios_base::failure)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::domain_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::invalid_argument)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::length_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::out_of_range)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::logic_error)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::overflow_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::range_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::underflow_error)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::runtime_error)
-	
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_alloc)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_cast)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_typeid)
-					CATCH_ENABLE_CURRENT_EXCEPTION( std::bad_exception)
+                    f();
+                    this->mark_finished_with_result();
                 }
                 catch(...)
                 {
@@ -1411,7 +1363,5 @@ namespace boost
 	detail::thread_move_t< packaged_task< T > > move( packaged_task< T > & t)
 	{ return detail::thread_move_t< packaged_task< T > >( t); }
 }
-
-#undef CATCH_ENABLE_CURRENT_EXCEPTION
 
 #endif

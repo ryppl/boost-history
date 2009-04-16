@@ -8,12 +8,8 @@
 #include <cstddef>
 #include <list>
 
-#include <boost/assert.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-
+#include <boost/tp/detail/callable.hpp>
 #include <boost/tp/detail/info.hpp>
-#include <boost/tp/detail/interrupter.hpp>
 
 namespace boost { namespace tp
 {
@@ -21,35 +17,12 @@ struct lifo
 {
 	typedef detail::has_no_priority	priority_tag_type;
 
-	template< typename Callable >
 	class impl
 	{
-	private:
-		typedef Callable	callable;
-
 	public:
-		class item
-		{
-		private:
-			callable			ca_;
-			detail::interrupter	intr_;
-	
-		public:
-			item(
-				callable const& ca,
-				detail::interrupter const& intr)
-			: ca_( ca), intr_( intr)
-			{ BOOST_ASSERT( ! ca_.empty() ); }
-
-			const callable ca() const
-			{ return ca_; }
-
-			const detail::interrupter intr() const
-			{ return intr_; }
-		};
-
-		typedef typename std::list< item >::iterator		iterator;
-		typedef typename std::list< item >::const_iterator	const_iterator;
+		typedef detail::callable					item;
+		typedef std::list< item >::iterator			iterator;
+		typedef std::list< item >::const_iterator	const_iterator;
 	
 	private:
 		std::list< item >	lst_;

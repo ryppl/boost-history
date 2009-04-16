@@ -12,13 +12,11 @@
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
 #include <boost/function.hpp>
-#include <boost/ref.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/tp/detail/callable.hpp>
-#include <boost/tp/detail/interrupter.hpp>
 #include <boost/tp/exceptions.hpp>
 
 namespace boost { namespace tp
@@ -26,17 +24,13 @@ namespace boost { namespace tp
 template< typename SchedulingPolicy >
 class unbounded_channel
 {
-private:
-	typedef SchedulingPolicy					scheduling_policy;
-	typedef typename scheduling_policy::template impl<
-		detail::callable
-	>											queue;
-
 public:
-	typedef typename queue::item		item;
-	typedef scheduling_policy			scheduler_type;
+	typedef SchedulingPolicy					scheduler_type;
+	typedef typename scheduler_type::impl::item	item;
 
 private:
+	typedef typename scheduler_type::impl	queue;
+
 	enum channel_state
 	{
 		channel_active,
@@ -95,8 +89,8 @@ private:
 		BOOST_ASSERT( deactive_now_() );
 		std::vector< detail::callable > unprocessed;
 		unprocessed.reserve( queue_.size() );
-		BOOST_FOREACH( item itm, queue_)
-		{ unprocessed.push_back( itm.ca() ); }
+		BOOST_FOREACH( detail::callable ca, queue_)
+		{ unprocessed.push_back( ca); }
 		clear_();
 		BOOST_ASSERT( empty_() );
 		return unprocessed;
@@ -120,7 +114,6 @@ private:
 
 	bool take_(
 		detail::callable & ca,
-		detail::interrupter & intr,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
@@ -137,16 +130,13 @@ private:
 		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		item itm( queue_.pop() );
-		ca = itm.ca();
-		intr = itm.intr();
+		ca = queue_.pop();
 		return ! ca.empty();
 	}
 
 	template< typename Duration >
 	bool take_(
 		detail::callable & ca,
-		detail::interrupter & intr,
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
@@ -166,21 +156,15 @@ private:
 		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		item itm( queue_.pop() );
-		ca = itm.ca();
-		intr = itm.intr();
+		ca = queue_.pop();
 		return ! ca.empty();
 	}
 
-	bool try_take_(
-		detail::callable & ca,
-		detail::interrupter & intr)
+	bool try_take_( detail::callable & ca)
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
-		item itm( queue_.pop() );
-		ca = itm.ca();
-		intr = itm.intr();
+		ca = queue_.pop();
 		return ! ca.empty();
 	}
 
@@ -258,37 +242,32 @@ public:
 
 	template< typename Duration >
 	void put(
-		item const& itm,
+		item & itm,
 		Duration const&)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		put_( itm, lk);
 	}
 
-	bool take(
-		detail::callable & ca,
-		detail::interrupter & intr)
+	bool take( detail::callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, intr, lk);
+		return take_( ca, lk);
 	}
 
 	template< typename Duration >
 	bool take(
 		detail::callable & ca,
-		detail::interrupter & intr,
 		Duration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return take_( ca, intr, rel_time, lk);
+		return take_( ca, rel_time, lk);
 	}
 
-	bool try_take(
-		detail::callable & ca,
-		detail::interrupter & intr)
+	bool try_take( detail::callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		return try_take_( ca, intr);
+		return try_take_( ca);
 	}
 };
 } }

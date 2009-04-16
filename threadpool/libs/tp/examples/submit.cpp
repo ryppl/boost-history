@@ -30,10 +30,12 @@ int main( int argc, char *argv[])
 	try
 	{
 		tp::task< int > t(
-			tp::get_default_pool().submit(
 				boost::bind(
 					fibonacci_fn,
-					10) ) );
+					10) );
+// 		tp::launch_in_pool( t);
+// 		tp::launch_in_thread( t);
+		tp::launch_local( t);
 		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;

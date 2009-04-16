@@ -19,8 +19,7 @@ namespace detail
 class interrupter
 {
 private:
-	class impl
-	: private noncopyable
+	class impl : private noncopyable
 	{
 	private:
 		bool					interruption_requested_;

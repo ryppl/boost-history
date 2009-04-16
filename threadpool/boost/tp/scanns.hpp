@@ -7,11 +7,8 @@
 
 #include <cstddef>
 
-#include <boost/tp/exceptions.hpp>
-
 namespace boost { namespace tp
 {
-
 class scanns
 {
 private:

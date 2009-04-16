@@ -13,14 +13,12 @@
 namespace boost { namespace tp
 {
 template< typename Pool >
-struct has_priority
-:
-public mpl::bool_<
-	is_same<
-		detail::has_priority,
-		typename Pool::scheduler_type::priority_tag_type
-	>::value
->
+struct has_priority : public mpl::bool_<
+						is_same<
+							detail::has_priority,
+							typename Pool::scheduler_type::priority_tag_type
+						>::value
+					>
 {};
 
 template< typename Pool >

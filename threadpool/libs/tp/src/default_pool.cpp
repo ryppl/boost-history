@@ -1,5 +1,8 @@
 #include "boost/tp/default_pool.hpp"
+
 #include <boost/thread.hpp>
+
+#include "boost/tp/poolsize.hpp"
 
 namespace boost { namespace tp {
 namespace detail

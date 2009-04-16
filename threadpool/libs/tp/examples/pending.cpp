@@ -37,16 +37,17 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tp::get_default_pool().submit(
+		tp::task< void > t1(
 			boost::bind(
 				long_running_fn) );
-		tp::task< int > t(
-			tp::get_default_pool().submit(
+		tp::task< int > t2(
 				boost::bind(
 					fibonacci_fn,
-					10) ) );
+					10) );
+		tp::launch_in_pool( t1);
+		tp::launch_in_pool( t2);
 		std::cout << "pending tasks == " << tp::get_default_pool().pending() << std::endl;
-		std::cout << t.get() << std::endl;
+		std::cout << t2.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

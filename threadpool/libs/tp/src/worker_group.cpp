@@ -4,6 +4,7 @@
 
 #include "boost/tp/detail/worker_group.hpp"
 
+#include <boost/foreach.hpp>
 #include <boost/utility.hpp>
 
 namespace boost { namespace tp {

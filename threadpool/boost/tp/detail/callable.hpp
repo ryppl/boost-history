@@ -5,11 +5,11 @@
 #ifndef BOOST_TP_DETAIL_CALLABLE_H
 #define BOOST_TP_DETAIL_CALLABLE_H
 
-#include <boost/future.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
+#include <boost/utility.hpp>
 
-#include <boost/thread/detail/move.hpp>
-#include <boost/tp/exceptions.hpp>
+#include <boost/tp/task.hpp>
 
 namespace boost { namespace tp {
 namespace detail
@@ -21,75 +21,50 @@ private:
 	{
 		virtual ~impl() {}
 		virtual void run() = 0;
+		virtual void set( shared_ptr< thread > &) = 0;
+		virtual void reset() = 0;
 	};
 
-	template<
-		typename Act,
-		typename T
-	>
-	struct impl_wrapper
-	: public impl
+	template< typename R >
+	class impl_wrapper : public impl
 	{
-		Act act;
-		promise< T > prom;
+	private:
+		task< R >	tsk_;
 
-		impl_wrapper(
-			Act const& act_,
-			promise< T > & prom_)
-		: act( act_), prom( move( prom_) )
+	public:
+		impl_wrapper( task< R > const& tsk)
+		: tsk_( tsk)
 		{}
 
 		void run()
-		{
-			try
-			{ prom.set_value( act() ); }
-			catch ( thread_interrupted const&)
-			{ prom.set_exception( copy_exception( task_interrupted() ) ); }
-			catch(...)
-			{ prom.set_exception( current_exception() ); }
-		}
+		{ tsk_(); }
+
+		void set( shared_ptr< thread > & thrd)
+		{ tsk_.impl_->intr.set( thrd); }
+
+		void reset()
+		{ tsk_.impl_->intr.reset(); }
 	};
 
-	template< typename Act >
-	struct impl_wrapper< Act, void >
-	: public impl
-	{
-		Act act;
-		promise< void > prom;
-
-		impl_wrapper(
-			Act const& act_,
-			promise< void > & prom_)
-		: act( act_), prom( move( prom_) )
-		{}
-
-		void run()
-		{
-			try
-			{
-				act();
-				prom.set_value();
-			}
-			catch ( thread_interrupted const&)
-			{ prom.set_exception( copy_exception( task_interrupted() ) ); }
-			catch(...)
-			{ prom.set_exception( current_exception() ); }
-		}
-	};
-
-	boost::shared_ptr< impl >	impl_;
+	shared_ptr< impl >	impl_;
 
 public:
+	class scoped_lock : public noncopyable
+	{
+	private:
+		callable	&	ca_;
+
+	public:
+		scoped_lock( callable &, shared_ptr< thread > &);
+
+		~scoped_lock();
+	};
+
 	callable();
 
-	template<
-		typename Act,
-		typename T
-	>
-	callable(
-		Act const& act,
-		promise< T > & prom)
-	: impl_( new impl_wrapper<  Act, T >( act, prom) )
+	template< typename R >
+	callable( task< R > const& tsk)
+	: impl_( new impl_wrapper<  R >( tsk) )
 	{}
 
 	void operator()();

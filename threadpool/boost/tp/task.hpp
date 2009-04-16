@@ -5,22 +5,39 @@
 #ifndef BOOST_TP_TASK_H
 #define BOOST_TP_TASK_H
 
-#include <boost/assert.hpp>
+#include <exception>
+#include <ios>
+#include <new>
+#include <stdexcept>
+#include <typeinfo>
+
+#include <boost/exception_ptr.hpp>
+#include <boost/exception/exception.hpp>
 #include <boost/future.hpp>
-#include <boost/next_prior.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <boost/tp/detail/interrupter.hpp>
-#include <boost/tp/detail/worker.hpp>
+#include <boost/tp/exceptions.hpp>
 
 namespace boost {
 namespace tp
 {
+namespace detail
+{
+class callable;
+}
+template< typename Channel >
+class pool;
+
 template< typename R >
 class task
 {
 private:
+	template< typename Channel >
+	friend class pool;
+	friend class detail::callable;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -42,71 +59,146 @@ private:
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 	friend unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, task< T4 > & t4, task< T5 > & t5);
 
-	shared_future< R >	fut_;
-	detail::interrupter	intr_;
+	struct impl
+	{
+		promise< R >			prom;
+		shared_future< R >		fut;
+		detail::interrupter		intr;
+
+		impl()
+		:
+		prom(),
+		fut( prom.get_future() ),
+		intr()
+		{}
+
+		virtual ~impl() {}
+
+		virtual void operator()() = 0;
+	};
+
+	template< typename Fn >
+	class impl_wrapper : public impl
+	{
+	private:
+		Fn		fn_;
+
+	public:
+		impl_wrapper( Fn const& fn)
+		: fn_( fn)
+		{}
+
+		void operator()() // throw()
+		{
+			try
+			{ impl::prom.set_value( fn_() ); }
+			catch ( promise_already_satisfied const&)
+			{ throw task_already_executed(); }
+			catch ( thread_interrupted const&)
+			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
+			catch ( boost::exception const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::ios_base::failure const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::domain_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::invalid_argument const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::length_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::out_of_range const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::logic_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::overflow_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::range_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::underflow_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::runtime_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_alloc const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_cast const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_typeid const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_exception const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch(...)
+			{ impl::prom.set_exception( current_exception() ); }
+		}
+	};
+
+	shared_ptr< impl >	impl_;
 
 public:
 	task()
-	: fut_(), intr_()
+	: impl_()
 	{}
 
-	task(
-		shared_future< R > const& fut,
-		detail::interrupter const& intr)
-	:
-	fut_( fut),
-	intr_( intr)
+	template< typename Fn >
+	task( Fn const& fn)
+	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
 
 	void interrupt()
-	{ intr_.interrupt(); }
+	{ impl_->intr.interrupt(); }
 
 	void interrupt_and_wait()
-	{ intr_.interrupt_and_wait(); }
+	{ impl_->intr.interrupt_and_wait(); }
 
 	void interrupt_and_wait( system_time const& abs_time)
-	{ intr_.interrupt_and_wait( abs_time); }
+	{ impl_->intr.interrupt_and_wait( abs_time); }
 
 	template< typename Duration >
 	void interrupt_and_wait( Duration const& rel_time)
-	{ intr_.interrupt_and_wait( rel_time); }
+	{ impl_->intr.interrupt_and_wait( rel_time); }
 
 	bool interruption_requested()
-	{ return intr_.interruption_requested(); }
+	{ return impl_->intr.interruption_requested(); }
 
 	R get()
-	{ return fut_.get(); }
+	{ return impl_->fut.get(); }
 
 	bool is_ready() const
-	{ return fut_.is_ready(); }
+	{ return impl_->fut.is_ready(); }
 
 	bool has_value() const
-	{ return fut_.has_value(); }
+	{ return impl_->fut.has_value(); }
 
 	bool has_exception() const
-	{ return fut_.has_exception(); }
+	{ return impl_->fut.has_exception(); }
 
 	void wait() const
-	{ fut_.wait(); }
+	{ impl_->fut.wait(); }
 
     template< typename Duration >
     bool timed_wait( Duration const& rel_time) const
-	{ return fut_.timed_wait( rel_time); }
+	{ return impl_->fut.timed_wait( rel_time); }
 
     bool timed_wait_until( system_time const& abs_time) const
-	{ return fut_.timed_wait_until( abs_time); }
+	{ return impl_->fut.timed_wait_until( abs_time); }
 
-	void swap( task< R > & other)
-	{
-		fut_.swap( other.fut_);
-		intr_.swap( other.intr_);
-	}
+	void swap( task< R > & other) // throw()
+	{ impl_.swap( other.impl_); }
+
+	void operator()() // throw()
+	{ ( * impl_)(); }
+
+	template< typename F >
+	void set_wait_callback( F const& f)
+	{ impl_->prom.set_wait_callback( f); }
 };
 
 template<>
 class task< void >
 {
 private:
+	template< typename Channel >
+	friend class pool;
+	friend class detail::callable;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -128,65 +220,140 @@ private:
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 	friend unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, task< T4 > & t4, task< T5 > & t5);
 
-	shared_future< void >	fut_;
-	detail::interrupter		intr_;
+	struct impl
+	{
+		promise< void >			prom;
+		shared_future< void >	fut;
+		detail::interrupter		intr;
+
+		impl()
+		:
+		prom(),
+		fut( prom.get_future() ),
+		intr()
+		{}
+
+		virtual ~impl() {}
+
+		virtual void operator()() = 0;
+	};
+
+	template< typename Fn >
+	class impl_wrapper : public impl
+	{
+	private:
+		Fn		fn_;
+
+	public:
+		impl_wrapper( Fn const& fn)
+		: fn_( fn)
+		{}
+
+		void operator()() // throw()
+		{
+			try
+			{
+				fn_();
+				impl::prom.set_value();
+			}
+			catch ( promise_already_satisfied const&)
+			{ throw task_already_executed(); }
+			catch ( thread_interrupted const&)
+			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
+			catch ( boost::exception const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::ios_base::failure const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::domain_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::invalid_argument const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::length_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::out_of_range const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::logic_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::overflow_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::range_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::underflow_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::runtime_error const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_alloc const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_cast const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_typeid const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch ( std::bad_exception const& e)
+			{ impl::prom.set_exception( copy_exception( e) ); }
+			catch(...)
+			{ impl::prom.set_exception( current_exception() ); }
+		}
+	};
+
+	shared_ptr< impl >	impl_;
 
 public:
 	task()
-	: fut_(), intr_()
+	: impl_()
 	{}
 
-	task(
-		shared_future< void > const& fut,
-		detail::interrupter const& intr)
-	:
-	fut_( fut),
-	intr_( intr)
+	template< typename Fn >
+	task( Fn const& fn)
+	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
 
 	void interrupt()
-	{ intr_.interrupt(); }
+	{ impl_->intr.interrupt(); }
 
 	void interrupt_and_wait()
-	{ intr_.interrupt_and_wait(); }
+	{ impl_->intr.interrupt_and_wait(); }
 
 	void interrupt_and_wait( system_time const& abs_time)
-	{ intr_.interrupt_and_wait( abs_time); }
+	{ impl_->intr.interrupt_and_wait( abs_time); }
 
 	template< typename Duration >
 	void interrupt_and_wait( Duration const& rel_time)
-	{ intr_.interrupt_and_wait( rel_time); }
+	{ impl_->intr.interrupt_and_wait( rel_time); }
 
 	bool interruption_requested()
-	{ return intr_.interruption_requested(); }
+	{ return impl_->intr.interruption_requested(); }
 
 	void get()
-	{ fut_.get(); }
+	{ impl_->fut.get(); }
 
 	bool is_ready() const
-	{ return fut_.is_ready(); }
+	{ return impl_->fut.is_ready(); }
 
 	bool has_value() const
-	{ return fut_.has_value(); }
+	{ return impl_->fut.has_value(); }
 
 	bool has_exception() const
-	{ return fut_.has_exception(); }
+	{ return impl_->fut.has_exception(); }
 
 	void wait() const
-	{ fut_.wait(); }
+	{ impl_->fut.wait(); }
 
     template< typename Duration >
     bool timed_wait( Duration const& rel_time) const
-	{ return fut_.timed_wait( rel_time); }
+	{ return impl_->fut.timed_wait( rel_time); }
 
     bool timed_wait_until( system_time const& abs_time) const
-	{ return fut_.timed_wait_until( abs_time); }
+	{ return impl_->fut.timed_wait_until( abs_time); }
 
-	void swap( task< void > & other)
-	{
-		fut_.swap( other.fut_);
-		intr_.swap( other.intr_);
-	}
+	void swap( task< void > & other) // throw()
+	{ impl_.swap( other.impl_); }
+
+	void operator()() // throw()
+	{ ( * impl_)(); }
+
+	template< typename F >
+	void set_wait_callback( F const& f)
+	{ impl_->prom.set_wait_callback( f); }
 };
 
 template< typename Iterator >
@@ -236,111 +403,6 @@ unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, tas
 template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 unsigned int waitfor_any( task< T1 > & t1, task< T2 > & t2, task< T3 > & t3, task< T4 > & t4, task< T5 > & t5)
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
-}
-
-namespace this_task
-{
-namespace detail
-{
-struct time_reached
-{
-	system_time	abs_time;
-
-	time_reached( system_time & abs_time_)
-	: abs_time( abs_time_)
-	{}
-
-	bool operator()()
-	{ return get_system_time() >= abs_time; }
-};
-
-class always_true
-{
-private:
-	bool	result_;
-
-public:
-	always_true()
-	: result_( false)
-	{}
-	
-	bool operator()()
-	{
-		if ( ! result_)
-		{
-			result_ = true;
-			return false;
-		}
-		else
-			return true;
-	}
-};
-}
-
-template< typename Pred >
-void reschedule_until( Pred const& pred)
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	w->reschedule_until( pred);
-}
-
-template< typename Pool >
-Pool & get_thread_pool()
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	return w->get_thread_pool< Pool >();
-}
-
-inline
-bool is_worker()
-{ return tp::detail::worker::tss_get() != 0; }
-
-inline
-thread::id worker_id()
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	return w->get_id();
-}
-
-inline
-void sleep( system_time abs_time)
-{
-	if ( is_worker() )
-	{
-		detail::time_reached t( abs_time);
-		reschedule_until( t);
-	}
-	else
-		this_thread::sleep( abs_time);
-}
-
-template< typename Duration >
-void sleep( Duration const& rel_time)
-{ sleep( get_system_time() + rel_time); }
-
-inline
-void yield()
-{
-	if ( is_worker() )
-	{
-		detail::always_true t;
-		reschedule_until( t);
-	}
-	else
-		this_thread::yield();
-}
-
-inline
-void interrupt()
-{
-	tp::detail::worker * w( tp::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	w->interrupt();
-	this_thread::interruption_point();
-}
-} }
+}}
 
 #endif // BOOST_TP_TASK_H

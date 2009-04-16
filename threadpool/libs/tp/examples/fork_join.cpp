@@ -11,7 +11,7 @@
 namespace pt = boost::posix_time;
 namespace tp = boost::tp;
 
-typedef tp::default_pool pool_type;
+typedef tp::pool< tp::unbounded_channel< tp::fifo > > pool_type;
 
 long serial_fib( long n)
 {
@@ -37,22 +37,25 @@ public:
 		else
 		{
 			tp::task< long > t1(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 1) );
 			tp::task< long > t2(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 2) );
+			tp::launch_in_pool(
+				boost::this_task::get_pool< pool_type >(),
+				t1);
+			tp::launch_in_pool(
+				boost::this_task::get_pool< pool_type >(),
+				t2);
 			return t1.get() + t2.get();
 		}
 	}
 };
-
 
 long parallel_fib( long n)
 {
@@ -64,17 +67,22 @@ int main( int argc, char *argv[])
 {
 	try
 	{
+		pool_type pool( tp::poolsize( 5) );
+
 		std::vector< tp::task< long > > results;
 		results.reserve( 20);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 15; ++i)
-			results.push_back(
-				tp::get_default_pool().submit(
-					boost::bind(
-						& parallel_fib,
-						i) ) );
+		for ( int i = 0; i < 26; ++i)
+		{
+			tp::task< long > t(
+				boost::bind(
+					& parallel_fib,
+					i) );
+			results.push_back( t);
+			tp::launch_in_pool( pool, t);
+		}
 
 		tp::waitfor_all( results.begin(), results.end() );
 

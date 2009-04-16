@@ -36,19 +36,20 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tp::get_default_pool().submit(
+		tp::task< void > t1(
 			boost::bind(
 				long_running_fn) );
+		tp::get_default_pool().submit( t1);
 		std::cout << "poolsize == " << tp::get_default_pool().size() << std::endl;
 		std::cout << "idle threads == " << tp::get_default_pool().idle() << std::endl;
 		std::cout << "active threads == " << tp::get_default_pool().active() << std::endl;
-		tp::task< int > t(
-			tp::get_default_pool().submit(
+		tp::task< int > t2(
 				boost::bind(
 					fibonacci_fn,
-					10) ) );
-		t.interrupt();
-		std::cout << t.get() << std::endl;
+					10) );
+		tp::get_default_pool().submit( t2);
+		t2.interrupt();
+		std::cout << t2.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

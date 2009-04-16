@@ -26,25 +26,27 @@ int main( int argc, char *argv[])
 		tp::pool<
 			tp::unbounded_channel< tp::priority< int > >
 		> pool( tp::poolsize( 1) );
-		pool.submit(
+
+		tp::task< void > t1(
 			boost::bind(
-				long_running_fn),
-			0);
-		pool.submit(
-			boost::bind(
-				print_fn,
-				"This"),
-			0);
-		pool.submit(
+				long_running_fn) );
+		tp::task< void > t2(
 			boost::bind(
 				print_fn,
-				"a text.\n"),
-			2);
-		pool.submit(
+				"This") );
+		tp::task< void > t3(
 			boost::bind(
 				print_fn,
-				" is "),
-			1);
+				"a text.\n") );
+		tp::task< void > t4(
+			boost::bind(
+				print_fn,
+				" is ") );
+
+		tp::launch_in_pool( pool, t1, 0);
+		tp::launch_in_pool( pool, t2, 0);
+		tp::launch_in_pool( pool, t3, 2);
+		tp::launch_in_pool( pool, t4, 1);
 
 		return EXIT_SUCCESS;
 	}

@@ -37,13 +37,17 @@ int main( int argc, char *argv[])
 		tp::pool<
 			tp::unbounded_channel< tp::fifo >
 		> pool( tp::poolsize( 1) );
+
 		tp::task< int > t(
-			pool.submit(
-				boost::bind(
-					fibonacci_fn,
-					10) ) );
+			boost::bind(
+				fibonacci_fn,
+				10) );
+		tp::launch_in_pool( pool, t);
+
 		boost::this_thread::sleep( pt::milliseconds( 250) );
+
 		pool.shutdown_now();
+
 		std::cout << t.get() << std::endl;
 
 		return EXIT_SUCCESS;

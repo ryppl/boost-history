@@ -6,7 +6,6 @@
 #define BOOST_TP_POOL_H
 
 #include <cstddef>
-#include <list>
 #include <utility>
 #include <vector>
 
@@ -14,18 +13,13 @@
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
-#include <boost/foreach.hpp>
 #include <boost/function.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
-#include <boost/ref.hpp>
-#include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <boost/tp/detail/atomic.hpp>
 #include <boost/tp/detail/callable.hpp>
-#include <boost/tp/detail/interrupter.hpp>
 #ifdef BOOST_TP_BIND_WORKER_TO_PROCESSOR
 #include <boost/tp/detail/bind_processor.hpp>
 #endif
@@ -43,24 +37,17 @@ template< typename Channel >
 class pool : private noncopyable
 {
 private:
-	template< typename Pred >
-	friend void this_task::reschedule_until( Pred const&);
-
-	template< typename Pool >
-	friend Pool & this_task::get_thread_pool();
-
 	friend class detail::worker;
 
-	typedef Channel						channel;
-	typedef typename channel::item		channel_item;
+	typedef Channel					channel;
+	typedef typename channel::item	channel_item;
 
-
-	detail::worker_group						wg_;
-	shared_mutex								mtx_wg_;
-	unsigned int								state_;
-	channel		 								channel_;
-	unsigned int								active_worker_;
-	unsigned int								idle_worker_;
+	detail::worker_group	wg_;
+	shared_mutex			mtx_wg_;
+	unsigned int			state_;
+	channel		 			channel_;
+	unsigned int			active_worker_;
+	unsigned int			idle_worker_;
 
 	void worker_entry_()
 	{
@@ -144,7 +131,7 @@ public:
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration("argument asleep is not valid");
+			throw invalid_timeduration();
 		channel_.activate();
 		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
@@ -169,7 +156,7 @@ public:
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration("argument asleep is not valid");
+			throw invalid_timeduration();
 		channel_.activate();
 		unique_lock< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
@@ -190,7 +177,7 @@ public:
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration("argument asleep is not valid");
+			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
@@ -216,7 +203,7 @@ public:
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
-			throw invalid_timeduration("argument asleep is not valid");
+			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
 		channel_.activate();
@@ -299,74 +286,58 @@ public:
 	void lower_bound( low_watermark const lwm)
 	{ return channel_.lower_bound( lwm); }
 
-	template< typename Act >
-	task< typename result_of< Act() >::type > submit( Act const& act)
+	template< typename R >
+	void submit( task< R > tsk)
 	{
-		typedef typename result_of< Act() >::type R;
-		detail::interrupter intr;
-		promise< R > prom;
-		shared_future< R > f( prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
-					f) );
-			prom.set_wait_callback(
+					tsk.impl_->fut) );
+			tsk.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( act, prom), intr);
-			return task< R >( f, intr);
+			w->put( detail::callable( tsk) );
 		}
 		else
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_item itm( detail::callable( act, prom), intr);
-			channel_.put( itm);
-			return task< R >( f, intr);
+			channel_.put( detail::callable( tsk) );
 		}
 	}
 
 	template<
-		typename Act,
+		typename R,
 		typename Attr
 	>
-	task< typename result_of< Act() >::type > submit(
-		Act const& act,
-		Attr const& attr)
+	void submit( task< R > tsk, Attr const& attr)
 	{
-		typedef typename result_of< Act() >::type R;
-		detail::interrupter intr;
-		promise< R > prom;
-		shared_future< R > f( prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
-					f) );
-			prom.set_wait_callback(
+					tsk.impl_->fut) );
+			tsk.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( act, prom), intr);
-			return task< R >( f, intr);
+			w->put( detail::callable( tsk) );
 		}
 		else
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_item itm( detail::callable( act, prom), attr, intr);
-			channel_.put( itm);
-			return task< R >( f, intr);
+			channel_.put( channel_item( detail::callable( tsk), attr) );
 		}
 	}
 };

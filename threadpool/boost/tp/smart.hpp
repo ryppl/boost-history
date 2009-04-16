@@ -8,13 +8,12 @@
 #include <cstddef>
 
 #include <boost/assert.hpp>
-#include <boost/function.hpp>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
+#include <boost/tp/detail/callable.hpp>
 #include <boost/tp/detail/info.hpp>
-#include <boost/tp/detail/interrupter.hpp>
 
 namespace boost { namespace tp
 {
@@ -26,15 +25,13 @@ template<
 >
 struct smart
 {
-	typedef Attr					attribute_type;
 	typedef detail::has_priority	priority_tag_type;
+	typedef Attr					attribute_type;
 
-	template< typename Callable >
 	class impl
 	{
 	private:
 		typedef Attr		attribute;
-		typedef Callable	callable;
 		typedef Deq			dequeue_op;
 		typedef Enq			enqueue_op;
 		typedef Ord			ordering;
@@ -43,30 +40,25 @@ struct smart
 		class item
 		{
 		private:
-			callable			ca_;
+			detail::callable	ca_;
 			attribute			attr_;
-			detail::interrupter	intr_;
 	
 		public:
 			item()
-			: ca_(), attr_(), intr_()
+			: ca_(), attr_()
 			{}
 
 			item(
-				callable const& ca,
-				attribute const& attr,
-				detail::interrupter const& intr)
-			: ca_( ca), attr_( attr), intr_( intr)
+				detail::callable const& ca,
+				attribute const& attr)
+			: ca_( ca), attr_( attr)
 			{ BOOST_ASSERT( ! ca_.empty() ); }
 	
-			const callable ca() const
+			const detail::callable ca() const
 			{ return ca_; }
 	
 			const attribute attr() const
 			{ return attr_; }
-
-			const detail::interrupter intr() const
-			{ return intr_; }
 		};
 	
 	private:
@@ -107,11 +99,11 @@ struct smart
 		void push( item const& itm)
 		{ enq_op_( idx_, itm); }
 	
-		const item pop()
+		const detail::callable pop()
 		{
 			item itm;
 			deq_op_( idx_, itm);
-			return itm;
+			return itm.ca();
 		}
 	
 		std::size_t size() const

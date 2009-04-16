@@ -52,24 +52,33 @@ int main( int argc, char *argv[])
 				>
 			>
 		> pool( tp::poolsize( 1) );
-		pool.submit(
-			boost::bind(
-				long_running_fn),
+
+		tp::launch_in_pool(
+			pool,
+			tp::task< void >(
+				boost::bind(
+					long_running_fn) ),
 			0);
-		pool.submit(
-			boost::bind(
-				fibonacci_fn,
-				0),
+		tp::launch_in_pool(
+			pool,
+			tp::task< void >(
+				boost::bind(
+					fibonacci_fn,
+					0) ),
 			1);
-		pool.submit(
-			boost::bind(
-				fibonacci_fn,
-				1),
+		tp::launch_in_pool(
+			pool,
+			tp::task< void >(
+				boost::bind(
+					fibonacci_fn,
+					1) ),
 			2);
-		pool.submit(
-			boost::bind(
-				fibonacci_fn,
-				10),
+		tp::launch_in_pool(
+			pool,
+			tp::task< void >(
+				boost::bind(
+					fibonacci_fn,
+					10) ),
 			2);
 
 		return EXIT_SUCCESS;

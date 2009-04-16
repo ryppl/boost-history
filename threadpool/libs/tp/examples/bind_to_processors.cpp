@@ -37,17 +37,21 @@ public:
 		else
 		{
 			tp::task< long > t1(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 1) ) ;
 			tp::task< long > t2(
-				boost::this_task::get_thread_pool< pool_type >().submit(
-					boost::bind(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2) ) );
+				boost::bind(
+					& fib_task::execute,
+					boost::ref( * this),
+					n - 2) );
+			tp::launch_in_pool(
+				boost::this_task::get_pool< pool_type >(),
+				t1);
+			tp::launch_in_pool(
+				boost::this_task::get_pool< pool_type >(),
+				t2);
 			return t1.get() + t2.get();
 		}
 	}
@@ -72,11 +76,14 @@ int main( int argc, char *argv[])
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
 		for ( int i = 0; i < 26; ++i)
-			results.push_back(
-				tp::get_default_pool().submit(
-					boost::bind(
-						& parallel_fib,
-						i) ) );
+		{
+			tp::task< long > t(
+				boost::bind(
+					& parallel_fib,
+					i) );
+			results.push_back( t);
+			tp::launch_in_pool( pool, t);
+		}
 
 		tp::waitfor_all( results.begin(), results.end() );
 
