@@ -29,6 +29,8 @@ env["BOOST_VERSION"] = "1.38"
 
 SConsignFile(File(env.subst("$BOOST_BUILD_DIR/sconsign.dblite")).path)
 
+env.Decider("MD5-timestamp")
+
 SConscript("libs/SConscript")
 
 Alias("install-headers", env.Install("$prefix/include", "boost"))
