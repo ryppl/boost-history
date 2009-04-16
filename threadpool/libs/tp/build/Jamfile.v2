@@ -7,30 +7,65 @@
 
 # See library home page at http://www.boost.org/libs/system
 
+import os ;
+import feature ;
+import indirect ;
+import path ;
+
 project boost/tp
     : source-location ../src
-    : usage-requirements  # pass these requirement to dependents (i.e. users)
       <link>shared:<define>BOOST_THREADPOOL_DYN_LINK=1
       <link>static:<define>BOOST_THREADPOOL_STATIC_LINK=1
     ;
 
-SOURCES =
-	callable.cpp
-	default_pool.cpp
-	guard.cpp
-	interrupter.cpp
-	poolsize.cpp
-	scanns.cpp
-	semaphore_posix.cpp
-//	semaphore_windows.cpp
-	watermark.cpp
-	worker.cpp
-	worker_group.cpp
-	wsq.cpp
-	;
+local rule default_threadpoolapi ( )
+{
+    local api = posix ;
+    if [ os.name ] = "NT" { api = win32 ; }
+    return $(api) ;
+}
+
+feature.feature threadpoolapi : posix win32 : propagated ;
+feature.set-default threadpoolapi : [ default_threadpoolapi ] ;
+
+alias threadpool_sources
+    : ## win32 sources ##
+	 callable.cpp
+	 default_pool.cpp
+	 guard.cpp
+	 interrupter.cpp
+	 poolsize.cpp
+	 scanns.cpp
+	 semaphore_windows.cpp
+	 watermark.cpp
+	 worker.cpp
+	 worker_group.cpp
+	 wsq.cpp
+    : ## requirements ##
+      <threadpoolapi>win32
+    ;
+
+alias threadpool_sources
+    : ## posix sources ##
+	 callable.cpp
+	 default_pool.cpp
+	 guard.cpp
+	 interrupter.cpp
+	 poolsize.cpp
+	 scanns.cpp
+	 semaphore_posix.cpp
+	 watermark.cpp
+	 worker.cpp
+	 worker_group.cpp
+	 wsq.cpp
+    : ## requirements ##
+      <threadpoolapi>posix
+    ;
+
+explicit threadpool_sources ;
 
 lib boost_threadpool
-   : $(SOURCES).cpp
+   : threadpool_sources
    : <link>shared:<define>BOOST_THREADPOOL_DYN_LINK=1
      <link>static:<define>BOOST_THREADPOOL_STATIC_LINK=1
    ;
