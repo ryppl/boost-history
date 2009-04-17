@@ -7,6 +7,7 @@
 #ifndef BOOST_TASK_DEFAULT_POOL_H
 #define BOOST_TASK_DEFAULT_POOL_H
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/fifo.hpp>
 #include <boost/task/pool.hpp>
 #include <boost/task/unbounded_channel.hpp>
@@ -19,7 +20,7 @@ typedef pool< unbounded_channel< fifo > > default_pool;
 
 namespace detail
 {
-struct static_pool
+struct BOOST_TASK_DECL static_pool
 { static default_pool instance; };
 }
 

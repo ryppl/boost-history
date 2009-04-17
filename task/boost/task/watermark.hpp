@@ -9,11 +9,13 @@
 
 #include <cstddef>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
-class high_watermark
+class BOOST_TASK_DECL high_watermark
 {
 private:
 	std::size_t	value_;
@@ -24,7 +26,7 @@ public:
 	operator std::size_t () const;
 };
 
-class low_watermark
+class BOOST_TASK_DECL low_watermark
 {
 private:
 	std::size_t	value_;

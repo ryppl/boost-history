@@ -14,13 +14,15 @@ extern "C"
 
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
 namespace detail
 {
-class semaphore : private boost::noncopyable
+class BOOST_TASK_DECL semaphore : private boost::noncopyable
 {
 private:
 	sem_t	sem_;

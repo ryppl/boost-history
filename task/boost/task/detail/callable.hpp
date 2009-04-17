@@ -11,6 +11,7 @@
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -19,7 +20,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class callable
+class BOOST_TASK_DECL callable
 {
 private:
 	struct impl

@@ -15,6 +15,7 @@
 #include <boost/multi_index/random_access_index.hpp>
 #include <boost/thread.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/detail/worker.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -23,7 +24,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class worker_group
+class BOOST_TASK_DECL worker_group
 {
 private:
 	struct id_idx_tag {};

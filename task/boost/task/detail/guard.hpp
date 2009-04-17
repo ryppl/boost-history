@@ -9,13 +9,15 @@
 
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
 namespace detail
 {
-class guard : private noncopyable
+class BOOST_TASK_DECL guard : private noncopyable
 {
 private:
 	unsigned int	&	active_worker_;

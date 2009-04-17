@@ -9,11 +9,13 @@
 
 #include <cstddef>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
-class poolsize
+class BOOST_TASK_DECL poolsize
 {
 private:
 	std::size_t	value_;
