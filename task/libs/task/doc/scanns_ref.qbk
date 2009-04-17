@@ -1,0 +1,42 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:scanns Class `scanns`]
+
+    #include <boost/tp/scanns.hpp>
+
+    class scanns
+    {
+    public:
+      explicit scanns( std::size_t value);
+
+      operator std::size_t () const;
+    };
+
+[section:constructor Constructor]
+
+    explicit scanns( std::size_t value);
+
+[variablelist
+[[Preconditions:][value >= 0]]
+[[Effects:] [Constructs a `boost::tp::scanns` instance.]]
+[[Postconditions:][operator std::size_t () >= 0]]
+[[Throws:] [`boost::tp::invalid_scanns`]]
+]
+[endsect]
+
+[section:operator Member function `operator std::size_t()`]
+
+    operator std::size_t () const;
+
+[variablelist
+[[Effects:] [Returns scanns size.]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+[endsect]

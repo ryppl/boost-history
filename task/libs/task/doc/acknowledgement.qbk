@@ -1,0 +1,11 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:acknowledgement Acknowledgements]
+I'd like to thank Vincente Botet Escriba for his comments on the implementation details of the code and 
+Anthony Williams and Braddock Gaskill for their future libraries.
+[endsect]

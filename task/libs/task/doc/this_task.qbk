@@ -1,0 +1,16 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section:this_task Namespace this_task]
+In the function `boost::this_task::reschedule_until( Pred const&)` allows to synchronize the task with other
+asynchronous events without blocking the __worker_threads__ (bool Pred::operator()() must not block)
+The current task will be rescheduled until the passed predicate becomes true.
+The pool can be accessed via `boost::this_task::get_thread_pool< Pool >()` if the calling code is executed by a __worker_thread__.
+`boost::this_task::s_worker()` evaluates true if the current thread is __worker_thread__ and `boost::this_task::worker_id()`
+returns the thread id.
+
+[endsect]

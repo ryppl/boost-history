@@ -1,0 +1,33 @@
+# Boost.ThreadPool Library Test Jamfile
+
+# Copyright (C) 2008 Oliver Kowalke
+
+# Use, modification and distribution is subject to the Boost Software License, 
+# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at 
+# http://www.boost.org/LICENSE_1_0.txt) 
+
+# bring in rules for testing
+import testing ;
+
+project
+    : requirements
+         <library>../../test/build//boost_unit_test_framework
+         <library>../../thread/build//boost_thread
+         <library>../../system/build//boost_system
+         <library>../../task/build//boost_task
+         <link>static
+         <threading>multi
+    ;
+
+rule tp-test ( source )
+{
+    return
+        [ run $(source).cpp ]
+    ;
+}
+
+test-suite thread_pool :
+    [ tp-test test_pool_bounded_channel ]
+    [ tp-test test_pool_unbounded_channel ]
+    [ tp-test test_launch ]
+    ;

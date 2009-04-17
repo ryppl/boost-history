@@ -1,0 +1,24 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section Introduction]
+__boost_threadpool__ is designed for effectively utilize the available hardware and provide a way for efficient asynchronous processing of independent time consuming operations (__actions__) in the same process.
+A __threadpool__ contains a number of __worker_threads__ to perform __actions__ in parallel, which are usually managed by a scheduler. If a __worker_thread__ completes its __action__, it will take the next __action__ from the scheduler until all __actions__ have been completed. The __worker_thread__ then sleeps until there are new __actions__ available.
+Using a pool of __worker_threads__  over creating a new thread for each __action__ may result in better performance and better system stability because the overhead for thread creation and destruction is negated.
+
+__boost_threadpool__ uses a __work_stealing__ algorithm and supports __fork_join__ parallelism (recursively splitting of __actions__ into sub-actions that are solved in parallel, waiting for them to complete, and then joining results).
+
+In order to use the classes and functions described here, you can either include the specific headers specified by the descriptions of each class or function, or include the master library header:
+
+    #include <boost/tp/tp.hpp>
+
+which includes all the other headers in turn.
+
+[note
+__boost_threadpool__ uses a modified version of the futures library, N2561 C++0x proposal, from Anthony Williams ([@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html]).]
+
+[endsect]

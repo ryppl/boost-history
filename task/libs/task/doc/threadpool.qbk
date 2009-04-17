@@ -1,0 +1,59 @@
+[/
+  (C) Copyright 2008 Oliver Kowalke.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[library Boost.Threadpool
+    [quickbook 1.4]
+    [copyright 2008 Oliver Kowalke]
+    [purpose C++ Library for executing actions in a pool of worker threads]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+    [authors [Kowalke, Oliver]]
+    [category text]
+]
+
+
+[def __action__ action]
+[def __actions__ actions]
+[def __Actions__ Actions]
+[def __boost__ [*boost-1.37.0]]
+[def __boost_future__ [*Boost.Future]]
+[def __boost_threadpool__ [*Boost.Threadpool]]
+[def __bounded_channel__ [link boost_threadpool.channel.bounded_channel ['bounded channel]]]
+[def __unbounded_channel__ [link boost_threadpool.channel.unbounded_channel ['unbounded channel]]]
+[def __channel__ [link boost_threadpool.channel ['channel]]]
+[def __channels__ [link boost_threadpool.channel ['channels]]]
+[def __fork_join__ [link boost_threadpool.forkjoin ['fork/join]]]
+[def __global_queue__ [link boost_threadpool.pool.work_stealing ['global queue]]]
+[def __hardware_concurrency__ boost::thread::hardware_concurrency]
+[def __hwm__ high watermark]
+[def __interruption_point__ [link boost_threadpool.task.interruption ['interruption point]]]
+[def __lwm__ low watermark]
+[def __scheduler_type__ [link boost_threadpool.scheduling ['scheduler type]]]
+[def __sub_action__ sub_action]
+[def __sub_actions__ sub_actions]
+[def __task__ [link boost_threadpool.task ['task]]]
+[def __tasks__ [link boost_threadpool.task ['tasks]]]
+[def __threadpool__ thread pool]
+[def __work_stealing__ [link boost_threadpool.pool.work_stealing ['work stealing]]]
+[def __worker_queue__ [link boost_threadpool.pool.work_stealing ['worker queue]]]
+[def __worker_queues__ [link boost_threadpool.pool.work_stealing ['worker queues]]]
+[def __worker_thread__ worker thread]
+[def __worker_threads__ worker threads]
+
+
+[include introduction.qbk]
+[include pool.qbk]
+[include task.qbk]
+[include this_task.qbk]
+[include channel.qbk]
+[include scheduling.qbk]
+[include forkjoin.qbk]
+[include acknowledgement.qbk]
+[include reference.qbk]
