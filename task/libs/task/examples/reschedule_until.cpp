@@ -92,7 +92,7 @@ bool has_bytes( int fd)
 	return n > 0;
 }
 
-void read( int fd)
+void do_read( int fd)
 {
 	int nread = 0;
 	do
@@ -115,7 +115,7 @@ void read( int fd)
 	while ( nread < 12);
 }
 
-void write( int fd, std::string const& msg)
+void do_write( int fd, std::string const& msg)
 {
 	if ( ::write( fd, msg.c_str(), msg.size() ) < 0)
 	{
@@ -139,13 +139,13 @@ int main( int argc, char *argv[])
 	{
 		int fd[2];
 		create_sockets( fd);
-		
+
 		tsk::launch_in_pool(
 			tsk::make_task(
-				& read,
+				& do_read,
 				fd[0]) );
 
-		write( fd[1], "Hello ");
+		do_write( fd[1], "Hello ");
 		boost::this_thread::sleep( pt::seconds( 1) );
 
 		for ( int i = 0; i < 15; ++i)
@@ -154,7 +154,7 @@ int main( int argc, char *argv[])
 					& parallel_fib,
 					i) );
 
-		write( fd[1], "World!");
+		do_write( fd[1], "World!");
 
 		return EXIT_SUCCESS;
 	}

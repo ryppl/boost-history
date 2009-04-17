@@ -49,7 +49,7 @@ int main( int argc, char *argv[])
 				10) );
  		tsk::launch_in_pool( t1);
   		tsk::launch_in_thread( t2);
-		tsk::launch_local( t3);
+		tsk::launch_in_current( t3);
 		std::cout << t1.get() << std::endl;
 		std::cout << t2.get() << std::endl;
 		std::cout << t3.get() << std::endl;

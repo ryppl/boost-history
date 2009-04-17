@@ -84,8 +84,7 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tsk::launch_in_thread(
-// 			tsk::launch_in_pool(
+			tsk::launch_in_pool(
 				tsk::make_task(
 					& parallel_fib,
 					i) );
