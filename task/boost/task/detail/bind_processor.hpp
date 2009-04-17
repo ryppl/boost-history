@@ -9,18 +9,23 @@
 
 #include <boost/task/detail/config.hpp>
 
-# if defined(BOOST_WINDOWS_OS)
+# if defined(BOOST_TASK_WIN32)
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_windows.hpp>
-# elif defined(BOOST_LINUX_OS)
+# elif defined(BOOST_TASK_LINUX)
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_linux.hpp>
-//# elif defined(BOOST_xBSD_OS)
-//#   include <boost/task/detail/bind_processor_bsd.hpp>
-# elif defined(BOOST_AIX_OS)
+# elif defined(BOOST_TASK_AIX)
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_aix.hpp>
-# elif defined(BOOST_HPUX_OS)
+# elif defined(BOOST_TASK_HPUX)
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_hpux.hpp>
-# elif defined(BOOST_SOLARIS_OS)
+# elif defined(BOOST_TASK_SOLARIS)
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_solaris.hpp>
+# else
+#   define BOOST_HAS_PROCESSOR_BINDINGS 0
 # endif
 
 #endif // BOOST_TASK_DETAIL_BIND_PROCESSOR_H

@@ -4,10 +4,27 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
+// this file is based on config.hpp of boost.thread
+
 #ifndef BOOST_TASK_DETAIL_CONFIG_H
 #define BOOST_TASK_DETAIL_CONFIG_H
 
 #include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+
+# if BOOST_WORKAROUND(__BORLANDC__, < 0x600)
+#   pragma warn -8008 // Condition always true/false
+#   pragma warn -8080 // Identifier declared but never used
+#   pragma warn -8057 // Parameter never used
+#   pragma warn -8066 // Unreachable code
+# endif
+
+#include <boost/task/detail/platform.hpp>
+
+# if defined(BOOST_TASK_DYN_DLL) || defined(BOOST_ALL_DYN_LINK)
+#   undef  BOOST_TASK_USE_LIB
+#   define BOOST_TASK_USE_DLL
+# endif
 
 # if defined(BOOST_WINDOWS_API) && defined(BOOST_POSIX_API)
 #   error "Both BOOST_WINDOWS_API and BOOST_POSIX_API are defined!"
@@ -19,26 +36,57 @@
 #   endif
 # endif
 
-#define BOOST_HAS_PROCESSOR_BINDINGS 0
-
-# if defined(BOOST_WINDOWS_API)
-#   define BOOST_WINDOWS_OS
-#   define BOOST_HAS_PROCESSOR_BINDINGS 1
-# elif defined(linux) || defined(__linux) || defined(__linux__)
-#   define BOOST_LINUX_OS
-#   define BOOST_HAS_PROCESSOR_BINDINGS 1
-# elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
-#   define BOOST_xBSD_OS
-# elif defined(__IBMCPP__) || defined(_AIX)
-#   define BOOST_AIX_OS
-#   define BOOST_HAS_PROCESSOR_BINDINGS 1
-# elif defined(__hpux)
-#   define BOOST_HPUX_OS
-#   define BOOST_HAS_PROCESSOR_BINDINGS 1
-# elif defined(sun) || defined(__sun)
-#   define BOOST_SOLARIS_OS
-#   define BOOST_HAS_PROCESSOR_BINDINGS 1
+# if defined(BOOST_TASK_BUILD_DLL)   //Build dll
+# elif defined(BOOST_TASK_BUILD_LIB) //Build lib
+# elif defined(BOOST_TASK_USE_DLL)   //Use dll
+# elif defined(BOOST_TASK_USE_LIB)   //Use lib
+# else //Use default
+#   if defined(BOOST_TASK_PLATFORM_WIN32)
+#      if defined(BOOST_MSVC) || defined(BOOST_INTEL_WIN)
+            //For compilers supporting auto-tss cleanup
+            //with Boost.Threads lib, use Boost.Threads lib
+#         define BOOST_TASK_USE_LIB
+#      else
+            //For compilers not yet supporting auto-tss cleanup
+            //with Boost.Threads lib, use Boost.Threads dll
+#         define BOOST_TASK_USE_DLL
+#      endif
+#   else
+#      define BOOST_TASK_USE_LIB
+#   endif
 # endif
+
+# if defined(BOOST_HAS_DECLSPEC)
+#   if defined(BOOST_TASK_BUILD_DLL) //Build dll
+#      define BOOST_TASK_DECL __declspec(dllexport)
+#   elif defined(BOOST_TASK_USE_DLL) //Use dll
+#      define BOOST_TASK_DECL __declspec(dllimport)
+#   else
+#      define BOOST_TASK_DECL
+#   endif
+# else
+#   define BOOST_TASK_DECL
+# endif
+
+// Automatically link to the correct build variant where possible.
+# if ! defined(BOOST_ALL_NO_LIB) && ! defined(BOOST_TASK_NO_LIB) && ! defined(BOOST_TASK_BUILD_DLL) && ! defined(BOOST_TASK_BUILD_LIB)
+
+// Tell the autolink to link dynamically, this will get undef'ed by auto_link.hpp
+# if defined(BOOST_TASK_USE_DLL)
+#   define BOOST_DYN_LINK
+# endif
+
+// Set the name of our library, this will get undef'ed by auto_link.hpp
+# if defined(BOOST_TASK_LIB_NAME)
+#   define BOOST_LIB_NAME BOOST_TASK_LIB_NAME
+# else
+#   define BOOST_LIB_NAME boost_task
+# endif
+
+// If we're importing code from a dll, then tell auto_link.hpp about it
+// And include the header that does the work
+#include <boost/config/auto_link.hpp>
+# endif  // auto-linking disabled
 
 #endif // BOOST_TASK_DETAIL_CONFIG_H
 
