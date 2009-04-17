@@ -13,6 +13,8 @@
 
 #include <boost/task/detail/callable.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -41,7 +43,9 @@ public:
 
 	bool try_steal( callable &);
 };
-} } }
+}}}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_WSQ_H
 

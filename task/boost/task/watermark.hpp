@@ -9,6 +9,8 @@
 
 #include <cstddef>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 class high_watermark
@@ -32,6 +34,8 @@ public:
 
 	operator std::size_t () const;
 };
-} }
+}}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_WATER_MARK_H

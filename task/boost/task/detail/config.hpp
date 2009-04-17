@@ -19,18 +19,25 @@
 #   endif
 # endif
 
+#define BOOST_HAS_PROCESSOR_BINDINGS 0
+
 # if defined(BOOST_WINDOWS_API)
 #   define BOOST_WINDOWS_OS
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 # elif defined(linux) || defined(__linux) || defined(__linux__)
 #   define BOOST_LINUX_OS
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 # elif defined(__FreeBSD__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__)
 #   define BOOST_xBSD_OS
 # elif defined(__IBMCPP__) || defined(_AIX)
 #   define BOOST_AIX_OS
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 # elif defined(__hpux)
 #   define BOOST_HPUX_OS
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 # elif defined(sun) || defined(__sun)
 #   define BOOST_SOLARIS_OS
+#   define BOOST_HAS_PROCESSOR_BINDINGS 1
 # endif
 
 #endif // BOOST_TASK_DETAIL_CONFIG_H

@@ -11,6 +11,8 @@
 #include <boost/task/pool.hpp>
 #include <boost/task/unbounded_channel.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 typedef pool< unbounded_channel< fifo > > default_pool;
@@ -25,5 +27,7 @@ inline
 default_pool & get_default_pool()
 { return detail::static_pool::instance; }
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DEFAULT_POOL_H

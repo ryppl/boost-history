@@ -17,6 +17,8 @@
 
 #include <boost/task/detail/worker.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -80,6 +82,8 @@ public:
 	void signal_shutdown_now_all();
 };
 } } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_WORKER_GROUP_H
 

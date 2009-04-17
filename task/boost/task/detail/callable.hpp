@@ -13,6 +13,8 @@
 
 #include <boost/task/task.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -77,6 +79,8 @@ public:
 	void clear();
 };
 } } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_CALLABLE_H
 

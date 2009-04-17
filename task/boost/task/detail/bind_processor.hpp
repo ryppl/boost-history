@@ -7,24 +7,20 @@
 #ifndef BOOST_TASK_DETAIL_BIND_PROCESSOR_H
 #define BOOST_TASK_DETAIL_BIND_PROCESSOR_H
 
-#include <boost/tp/detail/config.hpp>
-
-#define BOOST_THREAD_BIND_PROCESSOR_AFFINITY 1
+#include <boost/task/detail/config.hpp>
 
 # if defined(BOOST_WINDOWS_OS)
-#   include <boost/tp/detail/bind_processor_windows.hpp>
+#   include <boost/task/detail/bind_processor_windows.hpp>
 # elif defined(BOOST_LINUX_OS)
-#   include <boost/tp/detail/bind_processor_linux.hpp>
+#   include <boost/task/detail/bind_processor_linux.hpp>
 //# elif defined(BOOST_xBSD_OS)
-//#   include <boost/tp/detail/bind_processor_bsd.hpp>
+//#   include <boost/task/detail/bind_processor_bsd.hpp>
 # elif defined(BOOST_AIX_OS)
-#   include <boost/tp/detail/bind_processor_aix.hpp>
+#   include <boost/task/detail/bind_processor_aix.hpp>
 # elif defined(BOOST_HPUX_OS)
-#   include <boost/tp/detail/bind_processor_hpux.hpp>
+#   include <boost/task/detail/bind_processor_hpux.hpp>
 # elif defined(BOOST_SOLARIS_OS)
-#   include <boost/tp/detail/bind_processor_solaris.hpp>
-# else
-#   undef BOOST_THREAD_BIND_PROCESSOR_AFFINITY
+#   include <boost/task/detail/bind_processor_solaris.hpp>
 # endif
 
 #endif // BOOST_TASK_DETAIL_BIND_PROCESSOR_H

@@ -9,6 +9,8 @@
 
 #include <cstddef>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 class scanns
@@ -22,5 +24,7 @@ public:
 	operator std::size_t () const;
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_SCANNS_H

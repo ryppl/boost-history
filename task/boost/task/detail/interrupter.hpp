@@ -15,6 +15,8 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -81,5 +83,7 @@ public:
 	{ impl_.swap( other.impl_); }
 };
 }}}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_INTERRUPTER_H

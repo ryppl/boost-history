@@ -9,6 +9,8 @@
 
 #include <boost/utility.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -24,6 +26,8 @@ public:
 	~guard();
 };
 } } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_GUARD_H
 

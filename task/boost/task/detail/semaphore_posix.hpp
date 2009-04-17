@@ -14,6 +14,8 @@ extern "C"
 
 #include <boost/utility.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -36,5 +38,7 @@ public:
 	int value();
 };
 }}}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_SEMAPHORE_POSIX_H

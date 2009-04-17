@@ -25,6 +25,8 @@
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -291,8 +293,9 @@ public:
 
 	static worker * tss_get();
 };
+}}}
 
-} } }
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_WORKER_H
 

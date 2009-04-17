@@ -19,10 +19,8 @@
 #include <boost/utility.hpp>
 
 #include <boost/task/detail/atomic.hpp>
-#include <boost/task/detail/callable.hpp>
-#ifdef BOOST_TASK_BIND_WORKER_TO_PROCESSOR
 #include <boost/task/detail/bind_processor.hpp>
-#endif
+#include <boost/task/detail/callable.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
@@ -79,7 +77,7 @@ private:
 					this) ) );
 	}
 
-#ifdef BOOST_TASK_BIND_WORKER_TO_PROCESSOR
+#ifdef BOOST_HAS_PROCESSOR_BINDINGS
 	void worker_entry_( std::size_t n)
 	{
 		this_thread::bind_to_processor( n);
@@ -167,7 +165,7 @@ public:
 		lk.unlock();
 	}
 
-#ifdef BOOST_TASK_BIND_WORKER_TO_PROCESSOR
+#ifdef BOOST_HAS_PROCESSOR_BINDINGS
 	explicit pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20) )
