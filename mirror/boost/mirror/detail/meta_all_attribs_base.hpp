@@ -601,7 +601,7 @@ struct meta_class_all_attributes_base
 			BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
 				detail, 
 				(ancestor::attributes::template get_generator_plugin<
-					MetaClassAttributes,
+					typename ancestor::attributes,
 					MetaFunction
 				>(position(), UnitKindSelector()))
 			)

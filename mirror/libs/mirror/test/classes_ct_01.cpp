@@ -79,7 +79,7 @@ void test_main()
 		>
 	>::type result_01;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_01,
+		(result_01),
 		"No class in list should be from the global scope"
 	);
 
@@ -98,7 +98,7 @@ void test_main()
 		>
 	>::type result_02;
 	BOOST_MIRROR_ASSERT(
-		result_02,
+		(result_02),
 		"All classes in list should be from a named namespace"
 	);
 
@@ -115,7 +115,7 @@ void test_main()
 		>
 	>::type result_03;
 	BOOST_MIRROR_ASSERT(
-		result_03, 
+		(result_03), 
 		"All classes in list should be from a not-nested namespace"
 	);
 
@@ -130,7 +130,7 @@ void test_main()
 		>
 	>::type result_04;
 	BOOST_MIRROR_ASSERT(
-		result_04,
+		(result_04),
 		"Meta-classes for classes in list should be recognized"
 	);
 
@@ -146,7 +146,7 @@ void test_main()
 		>
 	>::type result_05;
 	BOOST_MIRROR_ASSERT(
-		result_05, 
+		(result_05), 
 		"Base-level type and reflected type must be the same"
 	);
 }

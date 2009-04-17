@@ -48,15 +48,14 @@ struct add_pointer_to_type_at
 } // boost
 
 #define BOOST_MIRROR_TEST_CLASSES_CT_03(POSITION, ADDRESS) \
-	typedef is_same< \
-                add_pointer_to_type_at< \
-                        meta_H::all_attributes, \
-			mpl::int_< POSITION > \
-                >::type, \
-                BOOST_TYPEOF(ADDRESS) \
-        >::type result_##POSITION; \
 	BOOST_MIRROR_ASSERT( \
-		result_##POSITION, \
+		(is_same< \
+                	add_pointer_to_type_at< \
+                        	meta_H::all_attributes, \
+				mpl::int_< POSITION > \
+                	>::type, \
+                	BOOST_TYPEOF(ADDRESS) \
+        	>::type), \
 		BOOST_MIRROR_TEST_CLASSES_CT_03_MSG \
 	);
 

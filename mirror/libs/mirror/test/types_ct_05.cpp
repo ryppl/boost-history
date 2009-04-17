@@ -28,19 +28,19 @@ void test_main()
 {
 	using namespace ::boost;
 	//
-	BOOST_MPL_ASSERT(( is_same<
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(false || true)::reflected_type,
 		bool
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be bool");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF('c')::reflected_type,
 		char
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be char");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(L'w')::reflected_type,
 		wchar_t
-	> ));
-	BOOST_MPL_ASSERT(( mpl::or_<
+	> ), "The reflected type must be wchar_t");
+	BOOST_MIRROR_ASSERT(( mpl::or_<
 		is_same<
 			BOOST_MIRRORED_TYPEOF("a+b")::reflected_type,
 			const char [4]
@@ -49,8 +49,8 @@ void test_main()
 			BOOST_MIRRORED_TYPEOF("a+b")::reflected_type,
 			char [4]
 		>
-	> ));
-	BOOST_MPL_ASSERT(( mpl::or_<
+	> ), "The reflected type must be a char array");
+	BOOST_MIRROR_ASSERT(( mpl::or_<
 		is_same<
 			BOOST_MIRRORED_TYPEOF(L"v+w")::reflected_type,
 			const wchar_t [4]
@@ -59,41 +59,41 @@ void test_main()
 			BOOST_MIRRORED_TYPEOF(L"v+w")::reflected_type,
 			wchar_t [4]
 		>
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be a wchar_t array");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(1+2)::reflected_type,
 		int
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be an int");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(3L + 4L)::reflected_type,
 		long
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be a long int");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(5.0f + 6.0f)::reflected_type,
 		float
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be a float");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(7.0 + 8.0)::reflected_type,
 		double
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be a double");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(::std::string("x+y"))::reflected_type,
 		::std::string
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be a ::std::string");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(::std::wstring(L"x+y"))::reflected_type,
 		::std::wstring
-	> ));
+	> ), "The reflected type must be a ::std::wstring");
 	//
 	const int i = 10;
-	BOOST_MPL_ASSERT(( is_same<
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(&i)::reflected_type,
 		const int *
-	> ));
-	BOOST_MPL_ASSERT(( is_same<
+	> ), "The reflected type must be const int *");
+	BOOST_MIRROR_ASSERT(( is_same<
 		BOOST_MIRRORED_TYPEOF(&foo)::reflected_type,
 		int (*)(short, long)
-	> ));
+	> ), "The reflected type must be int (*)(short, long)");
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

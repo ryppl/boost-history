@@ -68,7 +68,7 @@ void test_main()
                 >
         >::type result_01;
 	BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		"All types in list should be declared in the global scope"
 	);
 
@@ -84,7 +84,7 @@ void test_main()
                 >
         >::type result_02;
 	BOOST_MIRROR_ASSERT(
-		result_02,
+		(result_02),
 		"The reflected type and the real type must match for all "\
 		"types in the list"
 	);
@@ -108,7 +108,7 @@ void test_main()
                 >
         >::type result_03;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_03,
+		(result_03),
 		"None of the types in the list should be declared "\
 		"in the global scope"
 	);

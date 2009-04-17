@@ -196,7 +196,7 @@ struct attrib_printer
 
 int main(void)
 {
-	using namespace ::std;
+	using ::std::endl;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//
@@ -262,13 +262,6 @@ int main(void)
 		reflects_virtual_inheritance< mpl::at<BOOST_MIRRORED_CLASS(E)::base_classes::list, mpl::int_<2> >::type >
 	));
 	//
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_base_class_infos huuh = "1223";
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_regular_base_classes huuh = "1223";
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::list_of_virtual_base_classes huuh = "1223";
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::regular_base_class_layout huuh = "1223";
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::virtual_base_class_layout_w_dups huuh = "1223";
-	//BOOST_MIRRORED_CLASS(B)::all_attributes::detail::virtual_base_class_layout huuh = "1223";
-	//BOOST_MIRRORED_CLASS(E)::all_attributes::detail::base_class_layout huuh = "1223";
 	//
 	BOOST_MPL_ASSERT((
 		reflects_virtual_inheritance< 

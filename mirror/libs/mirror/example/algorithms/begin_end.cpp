@@ -62,7 +62,7 @@ struct is_integral_attrib
 
 int main(void)
 {
-	using namespace ::std;
+	using ::std::endl;
 	using namespace ::boost;
 	using namespace ::boost::mirror;
 	//

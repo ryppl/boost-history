@@ -25,9 +25,9 @@
 
 #define BOOST_MIRROR_TEST_NAMESPACES_CT_04_TYPE_GS(TYPE) \
         BOOST_MIRROR_ASSERT( \
-                reflects_namespace< \
+                (reflects_namespace< \
                         BOOST_MIRRORED_TYPE(TYPE) :: scope \
-                >::type, \
+                >), \
 		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_1(TYPE) \
          );
 
@@ -52,7 +52,7 @@ void test_main()
                 BOOST_MIRRORED_TYPE(int volatile &) :: scope
         >::type result_01;
 	BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should")
 	);
 	
@@ -61,7 +61,7 @@ void test_main()
                 BOOST_MIRRORED_TYPEDEF(::boost::cts, bstring) :: scope
         >::type result_02;
 	BOOST_MIRROR_ASSERT(
-		result_02,
+		(result_02),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should")
 	);
 
@@ -70,7 +70,7 @@ void test_main()
                 BOOST_MIRRORED_TYPE(char) :: scope
         >::type result_03;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_03,
+		(result_03),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should not")
 	);
 	
@@ -79,7 +79,7 @@ void test_main()
                 BOOST_MIRRORED_TYPE(wchar_t) :: scope
         >::type result_04;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_04,
+		(result_04),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_04_MSG_2("should not")
 	);
 }

@@ -39,23 +39,23 @@ void test_main()
 	typedef BOOST_MIRRORED_NAMESPACE(::test::feature::detail) meta_ns_test_feature_detail;
 	//
 	BOOST_MIRROR_ASSERT_NOT(
-		reflects_global_scope<meta_ns_test>,
+		(reflects_global_scope<meta_ns_test>),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
 	);
 	BOOST_MIRROR_ASSERT_NOT(
-		reflects_global_scope<meta_ns_test_stuff>,
+		(reflects_global_scope<meta_ns_test_stuff>),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
 	);
 	BOOST_MIRROR_ASSERT_NOT(
-		reflects_global_scope<meta_ns_test_stuff_detail>,
+		(reflects_global_scope<meta_ns_test_stuff_detail>),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
 	);
 	BOOST_MIRROR_ASSERT_NOT(
-		reflects_global_scope<meta_ns_test_feature>,
+		(reflects_global_scope<meta_ns_test_feature>),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
 	);
 	BOOST_MIRROR_ASSERT_NOT(
-		reflects_global_scope<meta_ns_test_feature_detail>,
+		(reflects_global_scope<meta_ns_test_feature_detail>),
 		BOOST_MIRROR_TEST_NAMESPACES_CT_01_MSG
 	);
 }

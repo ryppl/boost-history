@@ -315,9 +315,9 @@ void test_main_templ()
 		classes_attribs_and_base_classes,
 		mpl::true_,
 		test_op
-	>::type result_01;
+	>::type result;
 	BOOST_MIRROR_ASSERT(
-		result_01,
+		(result),
 		"The types of attributes and base classes must match "\
 		"the hardcoded values"
 	); 

@@ -81,7 +81,7 @@ void test_main()
 		>
 	>::type result_01;
 	BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		"The count of attributes must match the hardcoded values"
 	);
 
@@ -102,7 +102,7 @@ void test_main()
 		>
 	>::type result_02;
 	BOOST_MIRROR_ASSERT(
-		result_02, 
+		(result_02), 
 		"The count of attributes must match the hardcoded values"
 	);
 }

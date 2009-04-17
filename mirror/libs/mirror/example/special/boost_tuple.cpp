@@ -84,13 +84,13 @@ int main(void)
 	typedef A D[2][3];
         typedef ::boost::optional< ::boost::any> Z;
         typedef ::boost::variant< A, B, C&, D> V;
-	typedef tuple<int, double, const string *> T1;
-	typedef tuple<const A, volatile B, C&, D, V, Z> T2;
+	typedef ::boost::tuple<int, double, const string *> T1;
+	typedef ::boost::tuple<const A, volatile B, C&, D, V, Z> T2;
 	typedef pair<T1, T2> T3;
-	typedef tuple<void*, const wstring& , const string&> T4;
-	typedef tuple<char, wchar_t, short int const> T5;
+	typedef ::boost::tuple<void*, const wstring& , const string&> T4;
+	typedef ::boost::tuple<char, wchar_t, short int const> T5;
 	typedef pair<T4, T5> T6;
-	typedef vector<tuple<T1, T2, T3, T4, T5, T6> > T7;
+	typedef vector< ::boost::tuple<T1, T2, T3, T4, T5, T6> > T7;
 	typedef set<map<list<T1>, T7> > T;
 	//
 	typedef BOOST_MIRRORED_CLASS(T) meta_T;
@@ -136,17 +136,20 @@ int main(void)
 	bcout << "---------------------------------------------------" << endl;
 	reverse_for_each<meta_X::attributes>(p);
 	bcout << "---------------------------------------------------" << endl;
-	for_each<meta_X::attributes>(cref(select_base_name()), cref(str_printer()));
+	for_each<meta_X::attributes>(
+		::boost::cref(select_base_name()), 
+		::boost::cref(str_printer())
+	);
 	bcout << "---------------------------------------------------" << endl;
 	for_each<
 		begin<meta_X::attributes>::type,
 		end<meta_X::attributes>::type
-	>(cref(select_full_name()), cref(str_printer()));
+	>(::boost::cref(select_full_name()), ::boost::cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	reverse_for_each<
 		begin<meta_X::attributes>::type,
 		end<meta_X::attributes>::type
-	>(cref(select_base_name()), cref(str_printer()));
+	>(::boost::cref(select_base_name()), ::boost::cref(str_printer()));
 	bcout << "---------------------------------------------------" << endl;
 	bcout << "Finished" << endl;
 

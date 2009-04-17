@@ -15,7 +15,6 @@
  */
 
 // MPL
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/front.hpp>
@@ -60,23 +59,23 @@ void test_main()
 	> some_classes;
 
 	// check the counts of base classes
-	typedef mpl::accumulate<
-		some_classes,
-		mpl::true_,
-		mpl::and_<
-			mpl::_1,
-			mpl::equal_to<
-				mirror::size< get_base_classes<
-					BOOST_MIRRORED_CLASS(
-						mpl::front<mpl::_2>
-					)
-				> >,
-				mpl::at<mpl::_2, mpl::int_<1> >
-			>
-		>
-	>::type result_01;
+
 	BOOST_MIRROR_ASSERT(
-		result_01, 
+		(mpl::accumulate<
+			some_classes,
+			mpl::true_,
+			mpl::and_<
+				mpl::_1,
+				mpl::equal_to<
+					mirror::size< get_base_classes<
+						BOOST_MIRRORED_CLASS(
+							mpl::front<mpl::_2>
+						)
+					> >,
+					mpl::at<mpl::_2, mpl::int_<1> >
+				>
+			>
+		>::type),
 		"The count of base classes must match the hardcoded values"
 	);
 

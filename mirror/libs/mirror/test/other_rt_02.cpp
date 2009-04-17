@@ -110,8 +110,8 @@ void test_main()
 		mpl::vector2<selector_4, mpl::int_<6> >
 	> selectors_and_sizes;
 
-	BOOST_MPL_ASSERT((
-		mpl::accumulate<
+	BOOST_MIRROR_ASSERT(
+		(mpl::accumulate<
 			selectors_and_sizes,
 			mpl::true_,
 			mpl::and_<
@@ -125,8 +125,9 @@ void test_main()
 					mpl::at< mpl::_2, mpl::int_<1> >
 				>
 			>
-		>::type
-	));
+		>::type),
+		"Sizes of the global lists must match the hardcoded values"
+	);
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

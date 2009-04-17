@@ -34,7 +34,7 @@ void test_attribs(void)
                 typename MetaAttribute2::type::reflected_type
         >::type result_01;
         BOOST_MIRROR_ASSERT(
-                result_01,
+                (result_01),
                 "The attributes should have the same types"
         );
         //
@@ -43,7 +43,7 @@ void test_attribs(void)
                 typename MetaAttribute2::scope::reflected_type
         >::type result_02;
         BOOST_MIRROR_ASSERT(
-                result_02,
+                (result_02),
                 "The attributes should be declared in the same class"
         );
 }

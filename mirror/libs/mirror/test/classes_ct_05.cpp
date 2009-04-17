@@ -80,9 +80,9 @@ void test_main()
         typedef mpl::equal<attrib_types_1, attrib_types_2>::type result_01;
         typedef mpl::equal<attrib_types_2, attrib_types_3>::type result_02;
         typedef mpl::equal<attrib_types_1, attrib_types_3>::type result_03;
-        BOOST_MIRROR_ASSERT(result_01, "Sequences 1 and 2 must be equal");
-        BOOST_MIRROR_ASSERT(result_02, "Sequences 2 and 3 must be equal");
-        BOOST_MIRROR_ASSERT(result_03, "Sequences 1 and 3 must be equal");
+        BOOST_MIRROR_ASSERT((result_01), "Sequences 1 and 2 must be equal");
+        BOOST_MIRROR_ASSERT((result_02), "Sequences 2 and 3 must be equal");
+        BOOST_MIRROR_ASSERT((result_03), "Sequences 1 and 3 must be equal");
 }
 
 test_suite* init_unit_test_suite( int argc, char* argv[] )

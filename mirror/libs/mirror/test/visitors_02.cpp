@@ -77,9 +77,10 @@ void test_traversals(const Class& instance)
 
 void test_main()
 {
-	using namespace ::std;
-	using namespace ::boost;
-
+	using ::std::pair;
+	using ::std::string;
+	using ::std::wstring;
+	using ::boost::make_tuple;
 	test_traversals(make_tuple(0,1,2,3,4,5,6,7,8,9));
 	test_traversals(pair<string, wstring>("ABC",L"DEF"));
 }

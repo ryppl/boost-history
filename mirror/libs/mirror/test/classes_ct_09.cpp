@@ -78,7 +78,7 @@ void test_main()
 	// reflect namespace members
 	//
 	BOOST_MIRROR_ASSERT(
-		empty< meta_test::members<>::type >,
+		(empty< meta_test::members<>::type >),
 		"The list of members of the test namespace should be empty"
 	);
 	BOOST_MIRROR_ASSERT_RELATION(
@@ -94,7 +94,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_01;
 	BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		"Member iterators returned by begin<> and end<> "\
 		"for the test namespace should be equal"
 	);
@@ -104,7 +104,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_02;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_02,
+		(result_02),
 		"Member iterators returned by begin<> and end<> "\
 		"for the test namespace should be equal"
 	);	
@@ -118,7 +118,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_03;
 	BOOST_MIRROR_ASSERT(
-		result_03,
+		(result_03),
 		"There should be no namespace among the members of test"
 	);
 	//
@@ -130,13 +130,13 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_04;
 	BOOST_MIRROR_ASSERT(
-		result_04,
+		(result_04),
 		"There should be no member of test namespace identified "\
 		"as the global scope"
 	);
 #else
 	BOOST_MIRROR_ASSERT_NOT(
-		empty< meta_test::members<>::type >,
+		(empty< meta_test::members<>::type >),
 		"List of members of the test namespace should not be empty"
 	);
 	BOOST_MIRROR_ASSERT_RELATION( 
@@ -174,7 +174,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_01;
         BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		"The meta-object iterators returned by begin<> and end<> "\
 		"should point to different elements"
         );
@@ -184,7 +184,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_02;
 	BOOST_MIRROR_ASSERT_NOT(
-		result_02,
+		(result_02),
 		"The meta-object iterators returned by begin<> and end<> "\
 		"should not point to the same element"
         );
@@ -194,7 +194,7 @@ void test_main()
                 end<meta_test::members<filter_types>::type>::type
         >::type result_03;
         BOOST_MIRROR_ASSERT(
-		result_03,
+		(result_03),
 		"The meta-type iterators returned by begin<> and end<> "\
 		"should point to different elements"
         );
@@ -204,7 +204,7 @@ void test_main()
                 end<meta_test::members<filter_types>::type>::type
         >::type result_04;
         BOOST_MIRROR_ASSERT_NOT(
-		result_04,
+		(result_04),
 		"The meta-type iterators returned by begin<> and end<> "\
                 "should not point to the same element"
         );
@@ -214,7 +214,7 @@ void test_main()
                 end<meta_test::members<filter_namespaces>::type>::type
         >::type result_05;
         BOOST_MIRROR_ASSERT(
-		result_05,
+		(result_05),
                 "The meta-namespace iterators returned by begin<> and end<> "\
                 "should point to different elements"
         );
@@ -224,7 +224,7 @@ void test_main()
                 end<meta_test::members<filter_namespaces>::type>::type
         >::type result_06;
         BOOST_MIRROR_ASSERT_NOT(
-		result_06,
+		(result_06),
                 "The meta-namespace iterators returned by begin<> and end<> "\
                 "should not point to the same element"
         );
@@ -237,7 +237,7 @@ void test_main()
                 begin<meta_test::members<>::type>::type
         >::type result_07;
         BOOST_MIRROR_ASSERT(
-		result_07,
+		(result_07),
 		"The first member of the test namespace should be "\
 		"a nested namespace"
         );
@@ -250,7 +250,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_08;
         BOOST_MIRROR_ASSERT(
-		result_08,
+		(result_08),
 		"There should be no member of the test namespace "\
 		"identified as the global scope"
         );
@@ -263,7 +263,7 @@ void test_main()
                 end<meta_test::members<filter_types>::type>::type
         >::type result_09;
         BOOST_MIRROR_ASSERT(
-		result_09,
+		(result_09),
 		"There should be no namespace among the type members "\
 		"of the test namespace"
         );

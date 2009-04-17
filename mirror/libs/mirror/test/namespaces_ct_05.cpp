@@ -78,7 +78,7 @@ void test_main()
 	// reflect namespace members
 	//
 	BOOST_MIRROR_ASSERT(
-		empty< meta_test::members<>::type >::type,
+		(empty< meta_test::members<>::type >),
 		"The list of members of the ::test namespace should be empty"
 	);
 
@@ -94,7 +94,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_01;
         BOOST_MIRROR_ASSERT(
-		result_01,
+		(result_01),
 		"The iterators returned by begin<> and end<> should be equal"
         );
 
@@ -103,7 +103,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_02;
         BOOST_MIRROR_ASSERT_NOT(
-		result_02,
+		(result_02),
 		"The iterators returned by begin<> and end<> should "\
 		"not be different"
         );
@@ -116,7 +116,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_03;
         BOOST_MIRROR_ASSERT(
-		result_03,
+		(result_03),
 		"There should be no namespace members in the ::test namespace"
         );
 
@@ -128,7 +128,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_04;
         BOOST_MIRROR_ASSERT(
-		result_04,
+		(result_04),
 		"There should be no type members in the ::test namespace"
         );
 #else
@@ -153,7 +153,7 @@ void test_main()
 	>::type meta_namespaces;
 
 	BOOST_MIRROR_ASSERT_NOT(
-		empty< meta_test::members<>::type >::type,
+		(empty< meta_test::members<>::type >),
 		"The list of members of the ::test namespace should not "\
 		"be empty"
 	);
@@ -180,7 +180,7 @@ void test_main()
 		>
 	>::type result_01;
 	BOOST_MIRROR_ASSERT( 
-		result_01,
+		(result_01),
 		"The position of the members in the ::test namespace "\
 		"should match the hardcoded order"
 	);
@@ -190,7 +190,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_02;
         BOOST_MIRROR_ASSERT(
-		result_02,
+		(result_02),
 		"The iterators returned by begin<> and end<> on the list "\
 		"of members of the ::test namespace should be different"
         );
@@ -200,7 +200,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_03;
         BOOST_MIRROR_ASSERT_NOT(
-		result_03,
+		(result_03),
 		"The iterators returned by begin<> and end<> on the list "\
 		"of members of the ::test namespace should not be equal"
         );
@@ -213,7 +213,7 @@ void test_main()
                 begin<meta_test::members<>::type>::type
         >::type result_04;
         BOOST_MIRROR_ASSERT(
-		result_04,
+		(result_04),
 		"The first member of the ::test namespace should "\
 		"be a namespace"
         );
@@ -226,7 +226,7 @@ void test_main()
                 end<meta_test::members<>::type>::type
         >::type result_05;
         BOOST_MIRROR_ASSERT(
-		result_05,
+		(result_05),
 		"There should not be any member in the ::test namespace "\
 		"identified as the global scope"
         );

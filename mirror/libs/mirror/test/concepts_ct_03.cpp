@@ -73,7 +73,7 @@ void test_main()
 	>::type all_passed;
 	//
 	BOOST_MIRROR_ASSERT(
-		all_passed,
+		(all_passed),
 		"All tests must pass the test for compliance "\
 		"with the MetaType concept"
 	);

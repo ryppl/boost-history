@@ -32,7 +32,7 @@ void test_type_of_attribs(T1*, T2*)
 		types_are_same;
 	
 	BOOST_MIRROR_ASSERT(
-		types_are_same,
+		(types_are_same),
 		"The attributes should have the same types"
 	);
 }
