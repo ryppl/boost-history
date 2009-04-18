@@ -1,0 +1,165 @@
+
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[article Async
+    [quickbook 1.4]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2008-2009 Vicente J. Botet Escriba]
+    [purpose C++ Asynchronous executors and asyncronous completion tokes framework with threaders/joiners, launcher.]
+    [category text]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+
+[def __boost_thread__ [@http://www.boost.org/libs/thread [*Boost.Threads]]]
+[def __boost_async__ [*Boost.Async]]
+[def __Boost_Async__ [*Boost.Async]]
+[def __Boost_InterThreads__ [*Boost.Async]]
+
+[def __not_a_thread__ ['Not-a-Thread]]
+[def __interruption_points__ ['interruption points]]
+
+[def __thread__  `boost::thread`]
+[def __thread_id__ `boost::thread::id`]
+
+
+[template join_link[link_text] [link async.reference.thread_tuple_thread_tuple_hpp.thread_tuple_join_all [link_text]]]
+[def __join__ `join()`]
+[template timed_join_link[link_text] [link async.reference.thread_tuple_thread_tuple_hpp.thread_tuple_timed_join_all [link_text]]]
+[def __timed_join__  `timed_join()`]
+[def __detach__ `detach()`]
+[def __interrupt__  `interrupt_all()`]
+
+[def __sleep__  `boost::this_thread::sleep()`]
+
+
+[def __thread_resource_error__ `boost::thread_resource_error`]
+[def __thread_interrupted__ `boost::thread_interrupted`]
+[def __barrier__  `boost::barrier`]
+
+
+[template thread_decorator_link[link_text] [link async.reference.decorator_thread_decoration_file.thread_decorator [link_text]]]
+[def __thread_decorator__ `thread_decorator`]
+
+[template thread_decoration_link[link_text] [link async.reference.decorator_thread_decoration_file.decorator_thread_decoration_class [link_text]]]
+[def __thread_decoration__  `thread_decoration`]
+
+[template thread_decorate_link[link_text] [link async.reference.decorator_thread_decoration_file.decorate [link_text]]]
+[def __thread_decorator_decorate__  `decorate()`]
+
+[def __blocked__ ['blocked]]
+
+
+[def __thread_tuple__ `thread_tuple<>`]
+[def __thread_group__ `boots::thread_group`]
+
+
+[def __AE__ `AsynchronousExecutor`]
+[def __AsynchronousExecutor__ `AsynchronousExecutor`]
+
+[def __IAE__ `IntrinsicAsynchronousExecutor`]
+
+[def __ACT__ `AsynchronousCompletionToken`]
+[def __ACTs__ `AsynchronousCompletionToken`s]
+[def __FutureBasedACT__ `FutureBasedACT`]
+[def __ThreadBasedACT__ `ThreadBasedACT`]
+
+[def __Future__ inherits from `unique_future|shared_future`]
+[def __Sequence__ `Sequence`]
+[def __Nullary__ `Nullary`]
+[def __Movable__ `Movable`]
+[def __CopyConstructible__ `CopyConstructible`]
+
+[def __system_time__ `system_time`]
+[def __Duration__ `DurationType`]
+
+[def __partial_specialization_workaround__ `partial_specialization_workaround`]
+
+[template fork_link[link_text] [link async.reference.ae_act_framework_reference.ae_operations.fork_hpp.non_member_function [link_text]]]
+
+[def __forkss__ [link async.reference.ae_act_framework_reference.ae_operations.fork_hpp.non_member_function `fork`]
+[def __fork__ `fork`]
+[def __fork_after__ `fork_after`]
+
+[def __get__ `get`]
+[def __wait__ `wait`]
+[def __wait_until__ `wait_until`]
+[def __wait_for__ `wait_for`]
+[def __is_ready__ `is_ready`]
+[def __has_value__ `has_value`]
+[def __has_exception__ `has_exception`]
+
+
+[def __get_all__ `get_all`]
+[def __wait_all__ `wait_all`]
+[def __wait_all_until__ `wait_all_until`]
+[def __wait_all_for__ `wait_all_for`]
+[def __are_all_ready__ `are_all_ready`]
+[def __have_all_value__ `have_all_value`]
+[def __have_all_exception__ `have_all_exception`]
+
+[def __detach__ `detach`]
+[def __interrupt__ `interrupt`]
+[def __interruption_requested__ `interruption_requested`]
+[def __join__ `join`]
+[def __join_until__ `join_until`]
+[def __join_for__ `join_for`]
+[def __joinable__ `joinable`]
+
+[def __detach_all__ `detach_all`]
+[def __interrupt_all__ `interrupt_all`]
+[def __interruption_requested_on_all__ `interruption_requested_on_all`]
+[def __join_all__ `join_all`]
+[def __join_all_until__ `join_all_until`]
+[def __join_for__ `join_all_for`]
+[def __are_all_joinable__ `are_all_joinable`]
+
+[def __unique_threader__ `unique_threader`]
+[def __shared_threader__ `shared_threader`]
+
+[def __unique_future__ `unique_future`]
+[def __shared_future__ `shared_future`]
+[def __unique_joiner__ `unique_joiner`]
+[def __shared_joiner__ `shared_joiner`]
+
+[def __basic_threader__ `basic_threader`]
+[def __unique_threader__ `unique_threader`]
+[def __shared_threader__ `shared_threader`]
+[def __launcher__ `launcher`]
+[def __shared_launcher__ `shared_launcher`]
+[def __scheduler__ `scheduler`]
+
+[def __asynchronous_executor_decorator__ `asynchronous_executor_decorator`]
+
+[def __tp_task__ `tp::task`]
+[def __tp_pool__ `tp::pool`]
+
+[def __handle__ `handle`]
+
+[def __decorate__ `basync::decorate`]
+
+[def __apply__ `apply`]
+
+[warning Async is not a part of the Boost libraries.]
+
+
+[include overview.qbk]
+
+[include users_guide.qbk]
+
+[/include concepts.qbk]
+
+[include reference.qbk]
+
+[include case_studies.qbk]
+
+[include appendices.qbk]

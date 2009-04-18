@@ -1,0 +1,95 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/=================]
+[section Appendices]
+[/=================]
+
+[include changes.qbk]
+
+[include rationale.qbk]
+
+[include implementation.qbk]
+
+[include acknowledgements.qbk]
+
+[include tests.qbk]
+[include tickets.qbk]
+
+[/=====================================]
+[section:todo  Appendix G: Future plans]
+[/=====================================]
+
+[section Tasks to do before review]
+
+
+[heading Add an overloading for wait_for_all_in_sequence(ae, f, seq)]
+
+This will be quite useful on recursive algorithms evaluating asynchronously the same function on different parts.
+
+    template <
+        typename DirectSolver,
+        typename Composer,
+        typename AsynchronousExecutor,
+        typename Input>
+    void inplace_solve(AsynchronousExecutor& ae, Problem& input) {
+      //  if (problem is small)
+        if (size(range) < concurrency_threshold) {
+        // directly solve problem
+            DirectSolver()(input);
+        } else {
+            // split problem into independent parts
+            BOOST_AUTO(partition, partition_view(input));
+            // evaluates asynchronously inplace_solve on each element of the partition
+            // using the asynchronous executor as scheduler
+            wait_for_all_in_sequence(ae, inplace_solve, partition);
+            // compose the result in place from subresults
+            Composer()(partition);
+        }
+    }
+
+
+[heading Add polymorphic act and adapters]
+When we need to chain __ACT__ using the fork_after the nature of the __ACT__ can change over time, an why not change also its
+template parameter. So at least we need to make polymorphic every function used by fork_after.
+
+
+[heading Complete the tests]
+
+Even if the current release include some test there is yet a long way before been able to review the library.
+
+* change the test so they take less time using locks; conditions and variables.
+* Complete the test for the AE/ACT framework
+* Add test with functions throwing
+
+[heading Add more examples]
+
+[heading Complete the reference]
+
+* ae/act framework
+
+[heading Change the rational and implementation sections]
+
+[heading Use Boost.Chrono]
+
+[heading Add C++0x move semantics on compilers supporting it and use the Boost.Move emulation otherwise]
+
+[endsect]
+
+[section For later releases]
+
+[heading Use C++0x variadic templates on compilers supporting it and use the preprocesor otherwise]
+
+[heading Use C++0x Concepts on compilers supporting them and use the Boost.ConceptCheck or Boost.ConceptTraits otherwise]
+
+
+[endsect]
+[endsect]
+[endsect]
+
+
+

@@ -1,0 +1,102 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/============================]
+[section Examples]
+[/============================]
+
+This section do includes complete examples using the library.
+
+
+[/==================================]
+[section Parallel sort]
+[/==================================]
+
+Next follows a generic algorithm based on partitioning od a given problem in smaler problems, and compose a solution from the solution of the smaller problems. 
+
+    template <
+        typename DirectSolver,
+        typename Composer,
+        typename AE,
+        typename Range
+    >
+      void inplace_solve( AE & ae, 
+            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
+            unsigned cutoff );
+            
+    template <
+        typename DirectSolver,
+        typename Composer,
+        typename AE,
+        typename Range
+    >
+      void inplace_solve( AE & ae, 
+            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
+            unsigned cutoff )
+      {
+        unsigned size = boost::size(range);
+        //std::cout << "<<par_ " << size;  
+        if ( size <= cutoff) DirectSolver()(range);
+        else {
+            partition<Range> parts(range, BOOST_PARTS);
+            
+            // wait_for_all_in_sequence(ae, &inplace_solve<DirectSolver,Composer,AE,Range>, parts);
+            std::list<task_type> tasks;
+            for (unsigned i=0;i < BOOST_PARTS-1; ++i) {
+                task_type tmp(ae.submit(
+                    boost::bind(
+                        &inplace_solve<DirectSolver,Composer,AE,Range>,
+                        boost::ref(ae),
+                        parts[i],
+                        cutoff
+                )));
+                tasks.push_back(tmp);
+            }
+            inplace_solve<DirectSolver,Composer,AE,Range>(ae, parts[BOOST_PARTS-1], cutoff);
+            boost::for_each(tasks, &boost::async::wait_act<task_type>);
+            // wait_for_all_in_sequence
+            
+            Composer()(range);
+        }
+      }
+
+
+So parallel sort could be
+
+    struct sort_fct {
+        template<class RandomAccessRange>
+        RandomAccessRange& operator()(RandomAccessRange rng) {
+            return boost::sort(rng);
+        }
+    };
+
+    struct inplace_merge_fct {
+        template<class BidirectionalRange>
+        BidirectionalRange&
+        operator()( BidirectionalRange rng) {
+            return boost::inplace_merge(rng, boost::begin(rng)+(boost::size(rng)/2));
+        }
+    };
+    template <typename AE, typename Range>
+    void parallel_sort(AE& ae, Range& range, unsigned cutoff=10000) {
+        boost::iterator_range<typename boost::range_iterator<Range>::type> rng(range);
+        inplace_solve<sort_fct,inplace_merge_fct,pool_type,Range>( ae, rng, cutoff);
+    }
+
+
+[endsect]
+
+[/==================================]
+[section From a single to a multi threaded application]
+[/==================================]
+
+
+
+[endsect]
+
+
+[endsect]

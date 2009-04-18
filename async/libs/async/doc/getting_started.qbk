@@ -1,0 +1,94 @@
+[/
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[include installation.qbk]
+
+[/=============================]
+[section Async Hello World!]
+[/=============================]
+
+This is a little bit more than a Hello World! example. It will also say Bye, Bye!
+
+    #include <boost/async/basic_threader.hpp>
+    #include <iostream>
+
+    namespace basync = boost::async;
+
+    void my_thread() {
+        std::cout << "Hello World!" << std::endl;
+    }
+
+    int main() {
+        boost::async::basic_threader ae;
+        basync::wait_for_all(ae, my_thread);
+        return 0;
+    }
+
+
+[pre
+Hello World!
+]
+
+
+[endsect]
+
+[/==========================]
+[section Multiple algorithms]
+[/==========================]
+
+This example shows how to launch several algorithms and wait only for the more efficient.
+
+    #include <boost/async/typeof/threader.hpp>
+    #include <boost/async/wait_for_any.hpp>
+    #include <iostream>
+
+    namespace basync = boost::async;
+
+    int my_thread1() {
+        sleep(3);
+        std::cout << "1 thread_id=" << boost::this_thread::get_id() << std::endl;
+    }
+
+    int my_thread2() {
+        sleep(1);
+        std::cout << "2 thread_id=" << boost::this_thread::get_id() << std::endl;
+    }
+
+    int my_thread3() {
+        sleep(2);
+        std::cout << "3 thread_id=" << boost::this_thread::get_id() << std::endl;
+    }
+
+    int main() {
+        basync::shared_threader ae;
+        BOOST_AUTO(res,basync::wait_for_any(ae, my_thread1, my_thread2, my_thread3));
+        std::cout << "Algotithm " << result.first+1 << " finished the first. result=" << result.second << std::endl;
+        return 0;
+    }
+
+This results on the following output
+
+[pre
+3 thread_id=0x9c03f8
+2 thread_id=0x9c0850
+1 thread_id=0x9d0c40
+Algotithm 2 finished the first. result=0
+
+]
+
+
+[endsect]
+
+[endsect]
+
+
