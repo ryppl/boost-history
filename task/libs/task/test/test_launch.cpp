@@ -36,7 +36,7 @@ public:
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_pool( t);
+		tsk::launch( t);
 		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
@@ -50,42 +50,31 @@ public:
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_pool( pool, t);
+		tsk::launch( pool, t);
 		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
-	// launch in new thread
+	// launch in current thread
 	void test_case_3()
 	{
 		tsk::task< int > t(
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_thread( t);
+		t();
 		BOOST_CHECK_EQUAL( t.get(), 55);
 	}
 
-	// launch in current thread
+	// don't execute twice
 	void test_case_4()
 	{
 		tsk::task< int > t(
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_current( t);
+		t();
 		BOOST_CHECK_EQUAL( t.get(), 55);
-	}
-
-	// don't execute twice
-	void test_case_5()
-	{
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::launch_in_current( t);
-		BOOST_CHECK_EQUAL( t.get(), 55);
-		tsk::launch_in_current( t);
+		t();
 		bool thrown( false);
 		try
 		{ t.get(); }
@@ -95,22 +84,22 @@ public:
 	}
 
 	// check runs in pool
+	void test_case_5()
+	{
+		tsk::task< bool > t(
+			tsk::make_task(
+				runs_in_pool_fn) );
+		tsk::launch( t);
+		BOOST_CHECK_EQUAL( t.get(), true);
+	}
+
+	// check runs not in pool
 	void test_case_6()
 	{
 		tsk::task< bool > t(
 			tsk::make_task(
 				runs_in_pool_fn) );
-		tsk::launch_in_pool( t);
-		BOOST_CHECK_EQUAL( t.get(), true);
-	}
-
-	// check runs not in pool
-	void test_case_7()
-	{
-		tsk::task< bool > t(
-			tsk::make_task(
-				runs_in_pool_fn) );
-		tsk::launch_in_thread( t);
+		t();
 		BOOST_CHECK_EQUAL( t.get(), false);
 	}
 };
@@ -126,7 +115,6 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_launch::test_case_4, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_launch::test_case_5, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_launch::test_case_6, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_launch::test_case_7, instance) );
 
 	return test;
 }

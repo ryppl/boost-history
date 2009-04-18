@@ -42,7 +42,7 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::launch_in_pool(
+		tsk::launch(
 			tsk::make_task(
 				long_running_fn) );
 		std::cout << "poolsize == " << tsk::get_default_pool().size() << std::endl;
@@ -52,7 +52,7 @@ int main( int argc, char *argv[])
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_pool( t);
+		tsk::launch( t);
 		t.interrupt();
 		std::cout << t.get() << std::endl;
 

@@ -48,7 +48,7 @@ int main( int argc, char *argv[])
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::launch_in_pool( pool, t);
+		tsk::launch( pool, t);
 
 		boost::this_thread::sleep( pt::milliseconds( 250) );
 

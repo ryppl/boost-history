@@ -33,24 +33,24 @@ int main( int argc, char *argv[])
 			tsk::unbounded_channel< tsk::priority< int > >
 		> pool( tsk::poolsize( 1) );
 
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				long_running_fn),
 			0);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				print_fn,
 				"This"),
 			0);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				print_fn,
 				"a text.\n"),
 			2);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				print_fn,

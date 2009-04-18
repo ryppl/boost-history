@@ -43,16 +43,10 @@ int main( int argc, char *argv[])
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		tsk::task< int > t3(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
- 		tsk::launch_in_pool( t1);
-  		tsk::launch_in_thread( t2);
-		tsk::launch_in_current( t3);
+ 		tsk::launch( t1);
+		t2();
 		std::cout << t1.get() << std::endl;
 		std::cout << t2.get() << std::endl;
-		std::cout << t3.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

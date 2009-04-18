@@ -59,24 +59,24 @@ int main( int argc, char *argv[])
 			>
 		> pool( tsk::poolsize( 1) );
 
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				long_running_fn),
 			0);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				fibonacci_fn,
 				0),
 			1);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				fibonacci_fn,
 				1),
 			2);
-		tsk::launch_in_pool(
+		tsk::launch(
 			pool,
 			tsk::make_task(
 				fibonacci_fn,

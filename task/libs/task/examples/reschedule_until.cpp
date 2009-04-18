@@ -61,8 +61,8 @@ public:
 					& fib_task::execute,
 					boost::ref( * this),
 					n - 2) );
-			tsk::launch_in_pool( t1);
-			tsk::launch_in_pool( t2);
+			tsk::launch( t1);
+			tsk::launch( t2);
 			return t1.get() + t2.get();
 		}
 	}
@@ -140,7 +140,7 @@ int main( int argc, char *argv[])
 		int fd[2];
 		create_sockets( fd);
 
-		tsk::launch_in_pool(
+		tsk::launch(
 			tsk::make_task(
 				& do_read,
 				fd[0]) );
@@ -149,7 +149,7 @@ int main( int argc, char *argv[])
 		boost::this_thread::sleep( pt::seconds( 1) );
 
 		for ( int i = 0; i < 15; ++i)
-			tsk::launch_in_pool(
+			tsk::launch(
 				tsk::make_task(
 					& parallel_fib,
 					i) );

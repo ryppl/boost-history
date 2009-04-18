@@ -52,10 +52,10 @@ public:
 					& fib_task::execute,
 					boost::ref( * this),
 					n - 2) );
-			tsk::launch_in_pool(
+			tsk::launch(
 				boost::this_task::get_pool< pool_type >(),
 				t1);
-			tsk::launch_in_pool(
+			tsk::launch(
 				boost::this_task::get_pool< pool_type >(),
 				t2);
 			return t1.get() + t2.get();
@@ -88,7 +88,7 @@ int main( int argc, char *argv[])
 					& parallel_fib,
 					i) );
 			results.push_back( t);
-			tsk::launch_in_pool( pool, t);
+			tsk::launch( pool, t);
 		}
 
 		tsk::waitfor_all( results.begin(), results.end() );
