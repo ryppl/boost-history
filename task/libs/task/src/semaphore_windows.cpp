@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/task/detail/semaphore_windows.hpp"
+#include "boost/task/semaphore.hpp"
 
 #include <cerrno>
 #include <limits>
@@ -13,8 +13,6 @@
 #include <boost/system/system_error.hpp>
 
 namespace boost { namespace task
-{
-namespace detail
 {
 semaphore::semaphore( int value)
 : handle_()
@@ -67,4 +65,4 @@ semaphore::value()
 	}
 	return value;
 }
-}}}
+}}

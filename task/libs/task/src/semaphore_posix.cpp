@@ -4,7 +4,7 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/task/detail/semaphore_posix.hpp"
+#include "boost/task/semaphore.hpp"
 
 #include <cerrno>
 
@@ -13,36 +13,34 @@
 
 namespace boost { namespace task
 {
-namespace detail
-{
 semaphore::semaphore( int value)
-: sem_()
+: handle_()
 {
-	if ( ::sem_init( & sem_, 0, value) == -1)
+	if ( ::sem_init( & handle_, 0, value) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 semaphore::~semaphore()
-{ ::sem_destroy( & sem_); }
+{ ::sem_destroy( & handle_); }
 
 void
 semaphore::post()
 {
-	if ( ::sem_post( & sem_) == -1)
+	if ( ::sem_post( & handle_) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 void
 semaphore::wait()
 {
-	if ( ::sem_wait( & sem_) == -1)
+	if ( ::sem_wait( & handle_) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 bool 
 semaphore::try_wait()
 {
-	if ( ::sem_trywait( & sem_) == -1)
+	if ( ::sem_trywait( & handle_) == -1)
 	{
 		if ( errno == EAGAIN)
 			return false;
@@ -56,8 +54,8 @@ int
 semaphore::value()
 {
 	int value( 0);
-	if ( ::sem_getvalue( & sem_, & value) == -1)
+	if ( ::sem_getvalue( & handle_, & value) == -1)
 		throw system::system_error( errno, system::system_category);
 	return value;
 }
-}}}
+}}

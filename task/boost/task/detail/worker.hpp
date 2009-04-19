@@ -21,10 +21,10 @@
 #include <boost/task/detail/config.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/interrupter.hpp>
-#include <boost/task/detail/semaphore.hpp>
 #include <boost/task/detail/wsq.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 

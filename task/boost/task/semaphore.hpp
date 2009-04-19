@@ -4,12 +4,18 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_SEMAPHORE_WINDOWS_H
-#define BOOST_TASK_DETAIL_SEMAPHORE_WINDOWS_H
+#ifndef BOOST_TASK_SEMAPHORE_H
+#define BOOST_TASK_SEMAPHORE_H
+
+#include <boost/task/detail/config.hpp>
 
 extern "C"
 {
+# if defined(BOOST_WINDOWS_API)
 #include <Windows.h>
+# elif defined(BOOST_POSIX_API)
+#include <semaphore.h>
+# endif
 }
 
 #include <boost/utility.hpp>
@@ -20,13 +26,14 @@ extern "C"
 
 namespace boost { namespace task
 {
-namespace detail
-{
 class BOOST_TASK_DECL semaphore : private boost::noncopyable
 {
 private:
+# if defined(BOOST_WINDOWS_API)
 	HANDLE	handle_;
-
+# elif defined(BOOST_POSIX_API)
+	sem_t	handle_;;
+# endif
 public:
 	semaphore( int);
 
@@ -39,8 +46,8 @@ public:
 
 	int value();
 };
-}}}
+}}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_SEMAPHORE_WINDOWS_H
+#endif // BOOST_TASK_SEMAPHORE_H

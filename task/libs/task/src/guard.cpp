@@ -18,12 +18,12 @@ guard::guard( unsigned int & active_worker)
 : active_worker_( active_worker)
 {
 	BOOST_ASSERT( active_worker_ >= 0);
-	atomic_inc_32( & active_worker_);
+	atomic_fetch_add( & active_worker_, 1);
 }
 
 guard::~guard()
 {
-	atomic_dec_32( & active_worker_);
+	atomic_fetch_sub( & active_worker_, 1);
 	BOOST_ASSERT( active_worker_ >= 0);
 }
 } } }

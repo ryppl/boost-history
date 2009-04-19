@@ -116,7 +116,7 @@ private:
 	{ return state_ > 0; }
 
 	unsigned int close_()
-	{ return detail::atomic_inc_32( & state_); }
+	{ return detail::atomic_fetch_add( & state_, 1); }
 
 public:
 	explicit pool(
