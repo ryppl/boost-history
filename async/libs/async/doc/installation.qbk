@@ -1,0 +1,119 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/======================================]
+[section:install Installing Async]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Async]
+[/=================================]
+
+You can get the last stable release of __Boost_Async__ by downloading [^async.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming Boost Vault]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/async Boost Sandbox].
+
+[/==================================]
+[heading Building Boost.Async]
+[/==================================]
+
+__Boost_Async__ is a header only library. 
+
+[/=========================]
+[heading Build Requirements]
+[/=========================]
+
+
+[*Boost.Async] depends on Boost. You must use either Boost version 1.38.x
+or the version in SVN trunk. In particular, __Boost_Async__ depends on:
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/bind [*Boost.Bind]]] [for bind, ...]
+]
+[
+    [[@http://www.boost.org/libs/config [*Boost.Config]]] [for ??? and abi_prefic_sufix, ...]
+]
+[
+    [[@http://www.boost.org/libs/fusion [*Boost.Fusion]]] [for tuples, and sequence algorithms ...]
+]
+[
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for transform, ...]
+]
+[
+    [[@http://www.boost.org/libs [*Boost.Preprocesor]]] [to simulate variadic templates , ...]
+]
+[
+    [[@http://www.boost.org/libs/smart_ptr [*Boost.SmartPtr]]] [for shared_ptr, ...]
+]
+[
+    [[@http://www.boost.org/libs/thread [*Boost.Threads]]] [for thread, mutex, condition_variable, ...]
+]
+[
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTrais]]] [for is_void, remove_references, ...]
+]
+[
+    [[@http://www.boost.org/libs/typeof [*Boost.TypeOf]]] [to register the ACT types.]
+]
+[
+    [[@http://www.boost.org/libs [*Boost.Utility]]] [for result_of, enable_if...]
+]
+]
+
+In addition it depends on the following libraries that are not yet accepted on Boost
+[variablelist
+[
+    [[@http://www.boost.org/libs/futures [*Boost.Futures]]] [for futures]
+]
+[
+    [[@https://svn.boost.org/svn/boost/sandbox/threadpool/ [*Boost.ThreadPool]]] [Only when using the __AE__ boost::tp::pool and the __ACT__ boost::tp::task]
+]
+]
+
+And also will depend on a near future, conditionaly, on the following libraries that are even not submited to Boost.
+[variablelist
+[
+    [[@https://svn.boost.org/svn/boost/sandbox/chrono/ [*Boost.Chrono]]] [for time and duration]
+]
+[
+    [[@https://svn.boost.org/svn/boost/sandbox/move/ [*Boost.Move]]] [to emulate the move semantic.]
+]
+[
+    [[@http://home.roadrunner.com/~hinnant/unique_ptr03.html [*Boost.SmartPtr.UniquePtr]]] [for unique_ptr, ...]
+]
+
+]
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
+the underlying parameters provide it.
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+
+Currently, __Boost_Async__ has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+*  GCC 3.4.6 Linux
+[/*  GCC 4.3.2 Cygwin]
+*  GCC 4.1.2 Linux
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]

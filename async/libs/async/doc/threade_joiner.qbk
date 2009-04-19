@@ -1,0 +1,138 @@
+[/
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+[/=============================================================================]
+
+[/=============================================================================]
+[section Threader/Joiner]
+[/=============================================================================]
+
+Threading in Boost.Threads is currently based on the idea that a thread is
+identified with an object that launches it. This notion is somewhat confused by
+the idea that on destruction the thread object is destroyed but the thread is not
+- in other words the thread is not identified the thread object... except when it
+is.
+
+Another appropriate separation is the distinction between initialization and
+execution. These are significantly different concepts but they are conflated in
+the existing thread-launching interface: the constructor is responsible both for
+preparing the thread and launching it, which means that it is not possible for
+one piece of code to set up a thread and another to initiate it separately at its
+own discretion, e.g. thread pools. Separating the two roles into constructor and
+executor function clears up both the technical and the conceptual issue. The
+executor function can be reasonably expressed as an overloaded function-call
+operator, or a start function.
+
+    void task();
+    ...
+    thread async_function;
+    ...
+    asynch_functiont(task);
+
+The separation also offers a simple and non-intrusive avenue for platform specific
+extension of how a thread is to execute: configuration details such as
+scheduling policy, stack size, security attributes, etc, can be added as
+parameters to t without intruding on the signatures of any other function in the
+threading interface:
+
+    size_t stack_size = ...;
+    security_attributes security(...);
+    thread async_function(stack_size, security);
+
+The default constructor could be the feature standardized, and the Boost
+implementation could add additional constructors as appropriate.
+
+Given that the same configuration might be used to launch other threads, and
+given the identity confusion of a thread being an object except when it's not, we
+can consider the interface not to be the interface of a thread but to be the
+interface of a thread launcher, i.e. an executor. A thread initiator can submit
+zero-argument functions and function objects to an executor for execution:
+
+    threader run;
+    ...
+    run(first_task);
+    run(second_task);
+
+Boost.InterThreads offers several asynchronous executors types and variables, but as
+a concept an asynchronous executor could be implemented in a variety of ways that still
+conform to the same basic launching interface, i.e. the function-call operator..
+
+Given that a threader can be used to launch multiple threads, there is the
+obvious question of how to join with each separately run thread. Instead of
+returning void, the threader returns an object whose primary purpose is to
+represent the ability to join with the completion of a separately executing thread
+of control.
+
+    joiner wait = run(first_task);
+
+The role played by the joiner in this fragment is that of an asynchronous
+completion token, a common pattern for synchronizing with and controlling
+asynchronous tasks. Via the joiner the initiator can poll or wait
+for the completion of the running thread, and control it in other ways, some of
+which may be platform specific extensions.
+
+joiner is Movable. Its principal action, the act of joining, can be expressed as a function
+call:
+joiner join = run(first_task);
+...
+join();
+
+If there are no joiners for a given thread, that thread is considered detached, a
+role currently played in Boost.Threads by the thread destructor:
+
+    run(second_task); // runs detached because return value ignored
+
+Boost.Threads does
+not return a value from a completed thread when joined. For many threaded
+tasks this makes sense, but where a thread is working towards a result then the
+idea that an asynchronously executed function can return a value for later
+collection should not be discarded. With a void-returning interface the
+programmer is forced to set up an arrangement for the threaded task to
+communicate a value to the party that wants the one-time result. This is tedious
+for such a simple case, and can be readily catered for by making the joiner a
+proper future variable that proxies the result. This leads to the threader
+interface looking like the following:
+
+    class threader
+    {
+    public:
+    threader();
+
+    template<typename nullary_function>
+    joiner<result_of<nullary_function()>::type> operator()(nullary_function);
+    ...
+    };
+
+For the common default configured threader, a wrapper function, fork, can be
+provided:
+
+    template<typename nullary_function>
+    joiner<result_of<nullary_function>::type> fork(nullary_function);
+
+And use it as follows:
+
+    void void_task();
+    int int_task();
+    ...
+    joiner<void> t1 = fork(void_task);
+    joiner<int> t2 = fork(int_task);
+    ...
+    int result = t1.get();
+    t2.join();
+
+The benefit of programming with futures is that for a certain class of code that
+would use end-of-thread synchronization to pick up results, programmers are
+not presented with unnecessarily low-level synchronization APIs. The function based
+model is applied consistently.
+
+When the application needs only the result it seems interesting to return only
+the future value associated to the unary function result..
+
+    unique_future<int> t3 = launch(int_task);
+
+
+[endsect]
+

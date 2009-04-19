@@ -1,0 +1,73 @@
+[/
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/========================]
+[section:overview Overview]
+[/========================]
+
+[/==================]
+[heading Description]
+[/==================]
+
+Boost.Async is a C++ library to allow the calling of functions and functors in an asynchronous manner, thereby making it easier to improve the level of concurrency and parallelism in your applications. It provides:
+
+* An asynchronous execution framework working with __AE__ and __ACT__. It includes some generic functions and several __AE__ and __ACT__:
+    * fork and fork_all to execute asynchronously functions
+    * fork_after: request an __AE__ to execute a function asynchronously once each one of __ACT__ in the dependency tuple parameter are ready. It is similar to the async_with_dependencies proposed Peter Dimov.
+    * generic get, join, ... free functions to synchroyze on an __ACT__
+    * generic get_all, join_all, ... free functions to synchroyze on multiple __ACT__
+    * generic wait_for_all, wait_for_any to execute asynchronously functions and wait for the completion of all or any of them.
+
+* Some __AE__ and __ACT__ models
+    * basic_threader: can be seen as a thread factory executing asynchronously a function on the returned thread.
+    * launchers: Lanchers can be seen as a future factory executing asynchronously a function on a hiden thread.
+    * threader/joiner: A Threader runs a unary function in its own thread. A Threader can be seen as a Joiner
+    factory executing asynchronously a function on a thread encapsulated on the returned Joiner. The joiner is used
+    to synchronise with and pick up the result from a function or to manage the encapsulated thread.
+    * __tp_pool__ and __tp_task__ customization as an __AE__ and an __ACT__ respectively. __tp_pool__ can be seen as
+    a __tp_task__ factory executing asynchronously a function on a pool of threads.
+    * a generic asynchronous_executor_decorator which allows to decorate the function to be evaluated asynchronously.
+
+References
+
+* threader/joiner are based on the original idea of Kevlin Henney [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`
+  to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:
+  `class_template<>`; that is, it is in code font and its name is followed by `<>`
+  to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to
+  indicate that it is a function-like macro. Object-like macros appear without the
+  trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are
+  specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that
+provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Async
+    #include <boost/async/async.hpp>
+
+    // Create a namespace aliases
+    namespace basync = boost::async;
+
+[include introduction.qbk]
+[endsect]
