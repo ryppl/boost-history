@@ -43,16 +43,16 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
 		tsk::launch(
 			tsk::make_task(
 				long_running_fn) );
-		tsk::launch( t);
+		tsk::handle< int > h(
+			tsk::launch(
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 		std::cout << "pending tasks == " << tsk::get_default_pool().pending() << std::endl;
-		std::cout << t.get() << std::endl;
+		std::cout << h.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

@@ -48,13 +48,13 @@ int main( int argc, char *argv[])
 		std::cout << "poolsize == " << tsk::get_default_pool().size() << std::endl;
 		std::cout << "idle threads == " << tsk::get_default_pool().idle() << std::endl;
 		std::cout << "active threads == " << tsk::get_default_pool().active() << std::endl;
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::launch( t);
-		t.interrupt();
-		std::cout << t.get() << std::endl;
+		tsk::handle< int > h(
+			tsk::launch(
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		h.interrupt();
+		std::cout << h.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

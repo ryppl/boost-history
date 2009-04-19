@@ -42,23 +42,19 @@ public:
 		if ( n < cutof_) return serial_fib( n);
 		else
 		{
-			tsk::task< long > t1(
-				tsk::make_task(
-					& fib_task::execute,
-					boost::ref( * this),
-					n - 1) ) ;
-			tsk::task< long > t2(
-				tsk::make_task(
-					& fib_task::execute,
-					boost::ref( * this),
-					n - 2) );
-			tsk::launch(
-				boost::this_task::get_pool< pool_type >(),
-				t1);
-			tsk::launch(
-				boost::this_task::get_pool< pool_type >(),
-				t2);
-			return t1.get() + t2.get();
+			tsk::handle< long > h1(
+				tsk::launch(
+					tsk::make_task(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 1) ) ) ;
+			tsk::handle< long > h2(
+				tsk::launch(
+					tsk::make_task(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 2) ) );
+			return h1.get() + h2.get();
 		}
 	}
 };
@@ -76,27 +72,24 @@ int main( int argc, char *argv[])
 	{
 		pool_type pool;
 
-		std::vector< tsk::task< long > > results;
+		std::vector< tsk::handle< long > > results;
 		results.reserve( 20);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
 		for ( int i = 0; i < 26; ++i)
-		{
-			tsk::task< long > t(
-				tsk::make_task(
-					& parallel_fib,
-					i) );
-			results.push_back( t);
-			tsk::launch( pool, t);
-		}
+			results.push_back(
+				tsk::launch(
+					tsk::make_task(
+						& parallel_fib,
+						i) ) );
 
 		tsk::waitfor_all( results.begin(), results.end() );
 
 		int k = 0;
-		std::vector< tsk::task< long > >::iterator e( results.end() );
+		std::vector< tsk::handle< long > >::iterator e( results.end() );
 		for (
-			std::vector< tsk::task< long > >::iterator i( results.begin() );
+			std::vector< tsk::handle< long > >::iterator i( results.begin() );
 			i != e;
 			++i)
 			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;

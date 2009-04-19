@@ -8,43 +8,44 @@
 #define BOOST_TASK_LAUNCH_H
 
 #include <boost/task/default_pool.hpp>
+#include <boost/task/handle.hpp>
 #include <boost/task/pool.hpp>
 #include <boost/task/task.hpp>
 
 namespace boost { namespace task
 {
 template< typename R >
-void launch( task< R > t)
-{ get_default_pool().submit( t); }
+handle< R > launch( task< R > t)
+{ return get_default_pool().submit( t); }
 
 template<
 	typename R,
 	typename Attr
 >
-void launch(
+handle< R > launch(
 	task< R > t,
 	Attr const& attr)
-{ get_default_pool().submit( t, attr); }
+{ return get_default_pool().submit( t, attr); }
 
 template<
 	typename Channel,
 	typename R
 >
-void launch(
+handle< R > launch(
 	pool< Channel > & pool,
 	task< R > t)
-{ pool.submit( t); }
+{ return pool.submit( t); }
 
 template<
 	typename Channel,
 	typename R,
 	typename Attr
 >
-void launch(
+handle< R > launch(
 	pool< Channel > & pool,
 	task< R > t,
 	Attr const& attr)
-{ pool.submit( t, attr); }
+{ return pool.submit( t, attr); }
 } }
 
 #endif // BOOST_TASK_LAUNCH_H

@@ -45,19 +45,19 @@ public:
 		}
 		else
 		{
-			tsk::task< long > t1(
-				tsk::make_task(
-					& fib_task::execute,
-					boost::ref( * this),
-					n - 1) );
-			tsk::task< long > t2(
-				tsk::make_task(
-					& fib_task::execute,
-					boost::ref( * this),
-					n - 2) );
-			tsk::launch( t1);
-			tsk::launch( t2);
-			return t1.get() + t2.get();
+			tsk::handle< long > h1(
+				tsk::launch(
+					tsk::make_task(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 1) ) );
+			tsk::handle< long > h2(
+				tsk::launch(
+					tsk::make_task(
+						& fib_task::execute,
+						boost::ref( * this),
+						n - 2) ) );
+			return h1.get() + h2.get();
 		}
 	}
 };

@@ -52,12 +52,12 @@ public:
 			tsk::poolsize( 1),
 			tsk::high_watermark( 10),
 			tsk::low_watermark( 10) );
-		tsk::task< int > t(
-			tsk::make_task(
+		tsk::handle< int > h(
+			pool.submit(
+				tsk::make_task(
 				fibonacci_fn,
-				10) );
-		pool.submit( t);
-		BOOST_CHECK_EQUAL( t.get(), 55);
+				10) ) );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check shutdown
@@ -69,14 +69,14 @@ public:
 			tsk::poolsize( 1),
 			tsk::high_watermark( 10),
 			tsk::low_watermark( 10) );
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		pool.submit( t);
+		tsk::handle< int > h(
+			pool.submit(
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 		pool.shutdown();
 		BOOST_CHECK( pool.closed() );
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check runtime_error throw inside task

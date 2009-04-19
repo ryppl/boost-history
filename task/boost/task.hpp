@@ -11,6 +11,7 @@
 #include <boost/task/default_pool.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/fifo.hpp>
+#include <boost/task/handle.hpp>
 #include <boost/task/info.hpp>
 #include <boost/task/launch.hpp>
 #include <boost/task/lifo.hpp>

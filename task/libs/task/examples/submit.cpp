@@ -35,18 +35,12 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::task< int > t1(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::task< int > t2(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
- 		tsk::launch( t1);
-		t2();
-		std::cout << t1.get() << std::endl;
-		std::cout << t2.get() << std::endl;
+		tsk::handle< int > h(
+			tsk::launch(
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		std::cout << h.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

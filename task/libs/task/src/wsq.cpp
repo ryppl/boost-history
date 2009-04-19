@@ -71,7 +71,7 @@ wsq::try_take( callable & ca)
 	if ( tail == 0)
 		return false;
 	tail -= 1;
-	atomic_write_32( & tail_idx_, tail); // Interlocked.Exchange( & tail_idx_, tail); -> XCHG
+	atomic_exchange( & tail_idx_, tail); // Interlocked.Exchange( & tail_idx_, tail); -> XCHG
 	if ( head_idx_ <= tail)
 	{
 		ca = array_[tail & mask_];
@@ -100,7 +100,7 @@ wsq::try_steal( callable & ca)
 	if ( lk.owns_lock() )
 	{
 		uint32_t head( head_idx_);
-		atomic_write_32( & head_idx_, head + 1); // Interlocked.Exchange( & head_idx_, head + 1);
+		atomic_exchange( & head_idx_, head + 1); // Interlocked.Exchange( & head_idx_, head + 1);
 		if ( head < tail_idx_)
 		{
 			ca = array_[head & mask_];

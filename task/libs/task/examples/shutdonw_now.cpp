@@ -44,17 +44,18 @@ int main( int argc, char *argv[])
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
 
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::launch( pool, t);
+		tsk::handle< int > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 
 		boost::this_thread::sleep( pt::milliseconds( 250) );
 
 		pool.shutdown_now();
 
-		std::cout << t.get() << std::endl;
+		std::cout << h.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}

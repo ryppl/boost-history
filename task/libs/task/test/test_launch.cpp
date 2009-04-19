@@ -32,12 +32,12 @@ public:
 	// launch in default pool
 	void test_case_1()
 	{
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::launch( t);
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		tsk::handle< int > h(
+			tsk::launch(
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// launch in custom pool
@@ -46,12 +46,13 @@ public:
 		tsk::pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::launch( pool, t);
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		tsk::handle< int > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// launch in current thread
@@ -86,11 +87,11 @@ public:
 	// check runs in pool
 	void test_case_5()
 	{
-		tsk::task< bool > t(
-			tsk::make_task(
-				runs_in_pool_fn) );
-		tsk::launch( t);
-		BOOST_CHECK_EQUAL( t.get(), true);
+		tsk::handle< bool > h(
+			tsk::launch(
+				tsk::make_task(
+					runs_in_pool_fn) ) );
+		BOOST_CHECK_EQUAL( h.get(), true);
 	}
 
 	// check runs not in pool

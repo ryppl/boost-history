@@ -25,6 +25,7 @@
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/future.hpp>
+#include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/task.hpp>
@@ -288,21 +289,23 @@ public:
 	{ return channel_.lower_bound( lwm); }
 
 	template< typename R >
-	void submit( task< R > t)
+	handle< R > submit( task< R > t)
 	{
+		shared_future< R > fut( t.impl_->prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
-					t.impl_->fut) );
+					fut) );
 			t.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
 			w->put( detail::callable( t) );
+			return handle< R >( fut, t.impl_->intr);
 		}
 		else
 		{
@@ -310,6 +313,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( detail::callable( t) );
+			return handle< R >( fut, t.impl_->intr);
 		}
 	}
 
@@ -317,21 +321,23 @@ public:
 		typename R,
 		typename Attr
 	>
-	void submit( task< R > t, Attr const& attr)
+	handle< R > submit( task< R > t, Attr const& attr)
 	{
+		shared_future< R > fut( t.impl_->prom.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
-					t.impl_->fut) );
+					fut) );
 			t.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
 			w->put( detail::callable( t) );
+			return handle< R >( fut, t.impl_->intr);
 		}
 		else
 		{
@@ -339,6 +345,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( channel_item( detail::callable( t), attr) );
+			return handle< R >( fut, t.impl_->intr);
 		}
 	}
 };
