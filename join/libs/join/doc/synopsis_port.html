@@ -1,0 +1,571 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Synopsis of Join Classes</title>
+</head>
+<body>
+<h2>Synopsis of Join Classes<br>
+</h2>
+<ol>
+  <li>classes</li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">namespace
+boost {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; namespace join {</span><br>
+</div>
+<div style="margin-left: 40px;">&nbsp;&nbsp;<span
+ style="font-weight: bold;">&nbsp; &nbsp;&nbsp;&nbsp; template
+&lt;typename MsgT, typename QueT&gt; class async;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+template &lt;typename ResT, typename MsgT&gt; class synch;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+template &lt;typename scheduler, size_t max_size&gt;
+class joint;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; joint joins(joint::spawn_type s =
+0, int hb = 0, const char *name = 0);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+class executor;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+</div>
+<ol start="2">
+  <li>Asynchronous ports<br>
+    <span style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename MsgT, typename QueT&gt;&nbsp; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">class async {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef
+MsgT argument_type;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef void result_type;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+......</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span>
+<span style="font-weight: bold;"></span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+async(size_t sz=0) : ... { ... }</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; void
+operator()(MsgT msg)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br style="font-weight: bold;">
+<br>
+Asynchronous port objects provide one-way non-blocking message passing
+interfaces.<br>
+<br>
+<span style="font-weight: bold;">typename QueT: <br>
+</span>The queue type async ports used to buffer messages internally
+when no chords are ready to fire. The default QueT is std::deque. QueT
+must satisfy the following interface:<br>
+<div style="margin-left: 40px;">class QueT {<br>
+&nbsp;&nbsp;&nbsp; void push_back(MsgT);<br>
+&nbsp;&nbsp;&nbsp; MsgT front();<br>
+&nbsp;&nbsp;&nbsp; void pop_front();<br>
+&nbsp;&nbsp;&nbsp; void clear();<br>
+}<br>
+</div>
+<span style="font-weight: bold;"></span><br>
+<span style="font-weight: bold;">async(size_t sz=0):<br>
+Effect: </span>initialize a asynchronous port with underlying
+message queue of <span style="font-weight: bold;">QueT</span> type.
+The queue size <span style="font-weight: bold;">sz</span> is specified
+for flow control; the default value 0 means
+unlimited queue size. Internally there are 2 implementations for this
+class. If the signature is async&lt;void&gt;, there is no
+message to be passed, and template specialization will choose
+a proper implementation without a queue (and its overhead) while
+maintaining the
+same semantics.<span style="font-weight: bold;"><br>
+Throw:<br>
+<br>
+</span><span style="font-weight: bold;">void operator()(MsgT msg): </span><br>
+<span style="font-weight: bold;">Effect:</span> the port api to
+send asynchronous messages; calling threads will return immediately.
+Since async calls will return immediately, and <span
+ style="font-weight: bold;">msg</span> argument may be
+buffered in queues, the <span style="font-weight: bold;">msg</span>
+argument cannot be references or pointers to
+variables on calling stacks which will probably be unwound when async
+calls
+return.<br>
+<span style="font-weight: bold;">Throws</span>: not_in_chord_exception,
+queue_overflow_exception, no_executor_exception<br>
+</div>
+<ol start="3">
+  <li>Synchronous ports<span style="font-weight: bold;"></span></li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename ResT, typename MsgT&gt; <br>
+class synch {<br>
+public:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef MsgT argument_type;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; typedef ResT result_type;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ......<br>
+&nbsp;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; synch(size_t sz=0) : ... { ... }<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ResT operator()(MsgT msg);<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+ResT operator()(MsgT msg, boost::xtime &amp;timeout);<br>
+</span><span style="font-weight: bold;">};<br>
+<br>
+</span>Synchronous ports provides blocking message ports.<br>
+<br>
+<span style="font-weight: bold;">synch(size_t sz=0):<br>
+Effect: </span>initialize a synchronous port with underlying thread
+waiting queue.
+The queue size <span style="font-weight: bold;">sz</span> is specified
+for flow control; the default value 0 means
+unlimited queue size. Internally there are four implementations and
+template specialization help choose the most efficient one.<span
+ style="font-weight: bold;"><br>
+Throw:<br>
+<br>
+</span><span style="font-weight: bold;">ResT operator()(MsgT msg):</span><br>
+<span style="font-weight: bold;">Effect: </span>the port
+interface to send a synchronous message;
+calling thread will block here till a reply is available. Since the
+call will block till a result is returned, the <span
+ style="font-weight: bold;">msg</span> argument can be
+anything just as normal function calls, including pointers or
+references to variables on stack.<br>
+<span style="font-weight: bold;">Throws: </span>not_in_chord_exception,
+queue_overflow_exception, or&nbsp;
+application_specific_exceptions_raised_inside_chord_body<br>
+<br>
+<span style="font-weight: bold;">ResT operator()(MsgT msg, boost::xtime
+&amp;timeout):</span><br>
+<span style="font-weight: bold;">Effect: </span>this is a variant of
+the above interface with a timeout. The call will return either the
+result is available or return with a "synch_time_out_exception" when
+the timeout is reached.<br>
+<span style="font-weight: bold;">Throws:</span><span
+ style="font-weight: bold;"></span> not_in_chord_exception,
+queue_overflow_exception, synch_time_out_exception,&nbsp;
+application_specific_exceptions_raised_inside_chord_body<span
+ style="font-weight: bold;"> </span>
+</div>
+<ol start="4">
+  <li>Joint<br>
+  </li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">template &lt;size_t&gt; scheduler =
+sched_first_match,<br>
+</span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; size_t
+max_size = 32&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class joint {<br>
+&nbsp;&nbsp;&nbsp; typedef function1&lt;void, typename
+joint_base::callable&gt; spawn_type;<br style="font-weight: bold;">
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp;&nbsp;&nbsp; joint(spawn_type spawn =
+0, int heartbeat = 0, const char *name = 0):<br>
+</span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2,
+......, typename CallT&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void chord(PortT1
+&amp;p1, PortT2 &amp;p2, ......, CallT c, int priority=0)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2, </span><span
+ style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">typename CallT&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+chord_override(PortT1 &amp;p1, PortT2 &amp;p2, </span><span
+ style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">CallT c</span><span
+ style="font-weight: bold;">, int priority=0</span><span
+ style="font-weight: bold;">)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+template
+&lt;typename PortT1, typename PortT2,
+......&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; void
+chord_remove(PortT1
+&amp;p1, PortT2 &amp;p2, ......)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+......</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">};</span><br>
+Joint can be used as the parent of classes which use
+async&lt;&gt; / synch&lt;&gt; methods and chords to define concurrent
+activities; or it can be used to directly join message ports
+together. Joint maintains the status of message arrival and
+synchronization. <br>
+<br>
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">typename
+spawn_type:</span> <br>
+&nbsp;&nbsp;&nbsp; the type of execution service used to drive Join
+based asynchronous applications. It could be the async "execute" method
+of the following thread pool based executor, or it could be a adaptor
+to existing applications execution service, as long as it provides a
+functional / functor interface to spawn a task:<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">void
+operator()(callable t);<br>
+<br>
+</span><span style="font-weight: bold;">max_size:</span> <br>
+&nbsp;&nbsp;&nbsp; defines the capacity
+of Joint, ie. how many async&lt;&gt; / synch&lt;&gt; ports can be
+defined in this Joint. When max_size &lt;= 32, an integer bitmask is
+used
+to maintain status; while for "larger" Joint, std::bitset&lt;&gt; is
+used for status.<br>
+<br>
+<span style="font-weight: bold;">scheduling_policy: </span><br>
+&nbsp;&nbsp;&nbsp; Joint
+supports three basic kinds of scheduling policies that decide which
+chord
+will fire when multiple chords become ready at the same time:<br>
+<ul>
+  <li><span style="font-weight: bold;">sched_first_match</span>: fire
+the first chord which is ready to
+fire</li>
+  <li><span style="font-weight: bold;">sched_longest_match</span>: when
+multiple chords are ready to fire,
+fire the one defined with most async&lt;&gt; / synch&lt;&gt; ports.</li>
+  <li><span style="font-weight: bold;">sched_round_robin</span>:
+internally the last chord fired is
+remembered and chords are fired in round-robin style.</li>
+</ul>
+&nbsp;&nbsp;&nbsp; Additionally Joint supports priority based variants
+of the above three scheduling algorithms.<br>
+<br>
+<span style="font-weight: bold;">joint(spawn_type spawn = 0, int
+heartbeat = 0, const char *name = 0):<br>
+</span>&nbsp;&nbsp;&nbsp; an Joint is constructed with the following
+two settings:<br>
+<ul>
+  <li><span style="font-weight: bold;">spawn_type spawn</span>: the
+asynchronous port to spawn a new task.
+It could be an adaptor to spawn tasks into existing applications main
+threads (and it must be non-blocking and returns immediately), or the
+execute port of the following executor (thread pool),
+ie.
+the task waiting queues. In Join based applications, concurrency are
+generated by
+chords with only async&lt;&gt; ports whose body will run as a task
+in
+executor thread pool.</li>
+  <li>int <span style="font-weight: bold;">heartbeat: </span>used to
+control the life time of message coordination definitions (chords)
+inside the joint. If a heartbeat ( &gt; 0 ) is provided, the joint's
+internal definitions (chords) will be automatically reset / destroyed
+after its chords have fired "heartbeat" times totally. So after
+heartbeat expires, all of joint's chords will be destroyed and ports
+detached.<br>
+  </li>
+  <li>const char *name: the name of Joint; it is used as a flag to turn
+on/off debug messages, when it is set to a non-NULL value, debugging
+message will be printed out.<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">template
+&lt;typename PortT1, typename PortT2,
+......, typename CallT&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">void chord(PortT1 &amp;p1, PortT2
+&amp;p2, ......, CallT c, int priority=0)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">Effect:
+</span>overloaded chord()
+functions to create chords with different number of
+async&lt;&gt; / synch&lt;&gt; ports. By default Joint has just eight
+overloaded chord() functions to create chords for one to eight
+async&lt;&gt; / synch&lt;&gt; ports,&nbsp; because any of these
+async&lt;&gt; ports can be a std::vector&lt;async&lt;&gt;&gt;, so in
+fact
+chords can be created for unlimited number of
+async&lt;&gt; ports, while each chord can have at most one
+synchronous port:<br>
+<ul>
+  <li>PortT &amp;p, &amp;p1, ... &amp;pn: async&lt;&gt; / synch&lt;&gt;
+ports which are in the header of chord body; only one of them can be
+synchronous and if we do have one, it must the first port.<br>
+  </li>
+  <li>CallT c: a function, a lambda, class-method, or object-method
+which will consume and process the messages from chord's specified
+ports. Normally the signature of CallT is deduced from chord's port /
+port types:</li>
+</ul>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">PortT1::result_type
+call(PortT1::argument_type, PortT2::argument_type, ...);<br>
+<br>
+</span>Please note that if a port's message type is "void" (such as
+async&lt;void&gt;), we substitue its argument_type as "void_t" which is
+an "empty" struct type defined internally.<span
+ style="font-weight: bold;"><br>
+</span></div>
+<ul>
+  <li>int priority: the scheduling priority of this chord; the
+default value 0 has the highest priority, the greater the number, the
+lower the priority. During scheduling, the chords with higher priority
+will be scanned and scheduled first.</li>
+</ul>
+<span style="font-weight: bold;">Throws: </span>hidden_chord_exception,
+too_many_ports_exception<br>
+<br>
+<span style="font-weight: bold;">template &lt;typename PortT1, typename
+PortT2, </span><span style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">typename CallT&gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">void chord_override(PortT1 &amp;p1,
+PortT2 &amp;p2, </span><span style="font-weight: bold;">......, </span><span
+ style="font-weight: bold;">CallT c</span><span
+ style="font-weight: bold;">, int priority=0</span><span
+ style="font-weight: bold;">)</span><span style="font-weight: bold;"></span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">Effect:&nbsp; </span>allow overriding
+an existing chord (the chord body is replaced with the new one).
+It is mostly used in child class to override a chord defined in parent
+class. The overridden chord is identified by the set of async&lt;&gt; /
+synch&lt;&gt; ports in its header. It uses the same arguments as
+normal chord() functions. <br>
+<span style="font-weight: bold;">Throws:&nbsp; </span>chord_override_exception
+(chord not found)<br>
+<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename PortT1, typename PortT2,
+......&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">void chord_remove(PortT1
+&amp;p1, PortT2 &amp;p2, ......)</span><br style="font-weight: bold;">
+</div>
+<div style="margin-left: 40px;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">Effect:&nbsp; </span>remove the chord
+identified by the set of async / synch ports. <br>
+<span style="font-weight: bold;">Throws:&nbsp; </span>chord_remove_exception
+(chord not found)<br>
+<br>
+</div>
+<ol start="5">
+  <li>Factory functions to create "unnamed" joints</li>
+</ol>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; joint
+joins(joint::spawn_type s = 0, int hb = 0, const char *name =
+0);&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; &nbsp; </span>or a more general templated function:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; template &lt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;size_t&gt; class scheduler, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; size_t
+max_size</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+joint_t&lt;scheduler, max_size&gt; joins_t(joint::spawn_type s = 0, int
+hb = 0, const char *name = 0);<br>
+&nbsp;&nbsp;&nbsp; </span>Often joint is used directly to join message
+ports together, and we don't need direct reference to the "joint"
+object. In these cases, the factory functions can be used to create
+unnamed joints, such as:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; joins(exec)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+.chord(async1, async2, handler1)</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+.chord(async2, async3, handler2);</span><span style="font-weight: bold;"></span><br>
+<span style="font-weight: bold;"></span>
+<div style="margin-left: 40px;"><span style="font-weight: bold;"></span></div>
+<ol start="6">
+  <li>executor</li>
+</ol>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;template &lt;size_t&gt; class scheduler=sched_first_match, size_t
+sz=32&gt;<br>
+class executor :
+public Joint {<br>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+executor(int
+num_threads, const char *name = NULL);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;task&gt;
+execute;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+synch&lt;void,void&gt; shutdown;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">};</span><br>
+Chords with only
+async&lt;&gt; ports will run its body as an asynchronous task,
+either in a newly spawned thread, or in the thread
+pool of executor, or in exisiting applications' execution services
+(such as Boost.Asio's
+main threads). So executor is the "engine" of Join based
+applications. Different execution strategies can be used, such as a
+thread per request or thread pool, as long as it provides a
+functional / functor interface to spawn a task: <span
+ style="font-weight: bold;">void
+operator()(task t). </span><br>
+Here the default executor class is thread
+pool based and defined using
+async&lt;&gt; / synch&lt;&gt; ports and chords,&nbsp; and is a good
+sample
+of
+Join.<br>
+<br style="font-weight: bold;">
+<span style="font-weight: bold;">executor(int num_threads, const char
+*name = NULL)</span>: <br>
+<ul>
+  <li>int num_threads: number of worker threads in executor's thread
+pool</li>
+  <li>const char *name: name of executor, a flag to turn on/off
+debugging messages<br>
+  </li>
+</ul>
+<span style="font-weight: bold;">async&lt;task&gt; execute</span>: an
+asynchronous port for applications to submit tasks; never block; it
+is the default <span style="font-weight: bold;">task queue</span> of
+executor.<br>
+<span style="font-weight: bold;">synch&lt;void()&gt; shutdown</span>:
+a synchronous port for application code to wait for executor to
+shutdown (and its threads to exit). All chords defined with <span
+ style="font-weight: bold;">shutdown</span> have a low priority (1)
+than normal (0), so shutdown will return when all submited tasks have
+been finished and all worker threads exit.<br>
+</div>
+<ol start="7">
+  <li>support of group/bundle of async&lt;&gt; ports:</li>
+</ol>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">boost::std::vector&lt;async&lt;</span><span
+ style="font-weight: bold;">MsgT</span><span style="font-weight: bold;">&gt;
+&gt;<br>
+</span><span style="font-weight: bold;"></span>In C&#969;&nbsp; the chords
+are defined with a&nbsp; few async/synch ports with distinct names.
+What if
+we want to
+define chords with a group / std::vector of asynchronous message ports
+of the same message type? Inspired by
+similar abstractions in CCR[4] and C#.Joins[3], Join allows the
+definition of an std::vector of async ports and their participation
+in chord as a whole. Since there are at most one synch port per
+chord, so there is no support for std::vector of synch ports. The
+argument type for vector of async ports will be vector&lt;MsgT&gt;.
+Please
+refer to the Group of Asynchronous port
+tutotail (join_many.cpp) for their usage. <span
+ style="font-weight: bold;"></span></div>
+<ol start="8">
+  <li>exceptions</li>
+</ol>
+<div style="margin-left: 40px;">
+<p>In C&#969; , many of the following errors related to the definitions of
+async/synch ports and chords will be found by the compiler. Since
+Join is implemented as a library, these errors can only be
+reported as the following exceptions during runtime:</p>
+<p><span style="font-weight: bold;">class
+join_exception : public
+std::exception</span></p>
+<p style="margin-left: 40px;"><span style="font-weight: bold;"></span>the
+base class of all Join related exceptions</p>
+<p><span style="font-weight: bold;">class not_in_chord_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When a async / synch port is
+declared
+and no chord include it, this port has no body defined similar
+to&nbsp; pure virtual port in C++ abstract classes (pure virtual ports
+have only signature / declaration, no body). When this class
+is
+instantiated and client code calls this port, not_in_chord_exception
+will be thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class double_association_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">Every async / synch port should only
+be associated with one Joint. When attempting to use the port in the
+chords of more than one Joints, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class
+queue_overflow_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">For basic flow control, async / synch
+port can be constructed with a limited queue size. When the buffered
+(unprocessed) messages exceed the queue size, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span><span
+ style="font-weight: bold;">class no_executor_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When an Joint contains chords with only
+async ports but without an executor associated, this exception is
+thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class hidden_chord_exception :
+public
+join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When Joint's scheduling policy is
+fire_as_soon_as_possible (default), if the definition of a new chord
+contains all the ports of another chord, or vice versa, this exception
+will be thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class too_many_ports_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When defining a new chord, the total
+number of async / synch ports (accumulated thru all the defined
+chords) exceeds the max_size of Joint, this exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;"></span></p>
+<p><span style="font-weight: bold;">class chord_override_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When chord_override() is called and no
+existing chord found with the same set of async / synch ports, this
+exception is thrown.<br>
+</div>
+<p><span style="font-weight: bold;">class chord_remove_exception :
+public join_exception<br>
+</span></p>
+<div style="margin-left: 40px;">When chord_remove() is called and no
+existing chord found with the same set of async / synch ports, this
+exception is thrown.<br>
+<br>
+</div>
+</div>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">class
+synch_not_1st_exception : public join_exception </span><br
+ style="font-weight: bold;">
+<p style="margin-left: 40px;">When chords are defined with synchronous
+port, however the synchronous port is not used as the first port
+of chord, this exception is thrown.<br>
+</p>
+<span style="font-weight: bold;"> class single_synch_exception : public
+join_exception </span><br>
+<p style="margin-left: 40px;">When chords are defined with more than
+one synchronous ports, this exception is thrown.<br>
+</p>
+<span style="font-weight: bold;"> class synch_time_out_exception :
+public
+join_exception </span><br>
+<p style="margin-left: 40px;">The call of a synchronous port is timed
+out.<br>
+</p>
+</div>
+<div style="margin-left: 40px;"></div>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Chords and Joints</title>
+</head>
+<body>
+<h2>Samples</h2>
+<a href="#buffer"><br>
+Thread safe buffer and message queue</a>
+<br>
+<a href="#flows">Handle multiple message flows</a>
+<br>
+<a href="#chain">Using channels as the interface between components</a><br>
+<a href="#lifecycle">Joint's life cycle</a><br>
+<h3><a name="buffer"></a>Thread safe buffer and message queue</h3>
+a thread safe buffer can be defined in various manners.<br>
+<br>
+the most explicit version:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class buffer: public joint {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;V&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V,void&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(get, put,
+&amp;buffer::chord_body);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; V chord_body(void_t g, V p) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return p;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};<br>
+</span></div>
+<a href="../examples/buffer.cpp">buffer.cpp</a><br>
+<br>
+simplified version using boost::lambda or boost::phoenix and "joins()"
+factory function:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class buffer {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;V&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V,void&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; joins().chord(get,
+put, lambda::_2);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};<br>
+</span></div>
+<a href="../examples/buffer_lambda.cpp">buffer_lambda.cpp</a><br>
+<a href="../examples/buffer_phoenix.cpp">buffer_phoenix.cpp</a><br>
+<br>
+Using boost::tuples, boost::phoenix, and "joins()" factory function, we
+can create message queue (essentially a thread safe buffer) in JoCaml
+style:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename V&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">boost::tuple&lt;async&lt;V&gt;,synch&lt;V,void&gt;
+&gt; create_msg_que() {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;V&gt; send;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;V,void&gt; recv;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; joins().chord(recv, send, arg2);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return boost::make_tuple(send,
+recv);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}&nbsp;&nbsp; <br>
+...<br>
+&nbsp; async&lt;int&gt; send;<br>
+&nbsp; synch&lt;int, void&gt; recv;<br>
+&nbsp; boost::tie(send, recv) = create_msg_que&lt;int&gt;();<br>
+</span></div>
+<a href="../examples/producer_consumer.cpp">producer_consumer.cpp</a><br>
+<h3><a name="flows"></a>Handle multiple message flows</h3>
+A simple demo of joint handling 3 message flows and performing
+different processing on messages when they are available in different
+channels:<br>
+<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">flows_bundle
+make_data_channels(joint::spawn_type e) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;int&gt; flow1;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;int&gt; flow2;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; async&lt;int&gt; flow3;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; joins(e)</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; .chord(flow1,
+flow2, std::cout &lt;&lt;&nbsp; (arg1 + arg2) &lt;&lt; "\n")</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; .chord(flow2,
+flow3, std::cout &lt;&lt;&nbsp; (arg1 - arg2) &lt;&lt; "\n")</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; .chord(flow1,
+flow3, std::cout &lt;&lt;&nbsp; (arg1 * arg2) &lt;&lt; "\n");</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; return boost::make_tuple(flow1,
+flow2, flow3);</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">}</span><br>
+</div>
+<a href="../examples/flows.cpp">flows.cpp</a><br>
+<br>
+a sample of joining a vector of message flows into one output flow:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">template
+&lt;typename T&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">class join_many : public joint {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">public:</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; vector&lt;async&lt;T&gt; &gt;
+inputs;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; synch&lt;vector&lt;T&gt;,
+void&gt; output;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; join_many(int num) :
+inputs(num) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; chord(output,
+inputs, &amp;join_many::chord_body);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; vector&lt;T&gt;
+chord_body(void_t out, vector&lt;T&gt; in) {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; return in;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp; }</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">};<br>
+</span></div>
+<a href="../examples/join_many.cpp">join_many.cpp</a><br>
+<h3><a name="chain"></a>Using channels as the interface between
+components</h3>
+A sample of a chain of nodes, each node exposes its input and output
+interfaces as channels.<br>
+Each node reads from its input, does some transformation of data, wait
+a second and send it to output interface, all these are performed in
+executor's thread pool.<br>
+The way to connect one node (A) to the next (B) is simple:&nbsp;
+A.output = B.input.<br>
+<div style="margin-left: 40px; font-weight: bold;">template
+&lt;typename T&gt;<br>
+class node {<br>
+&nbsp; int my_no;<br>
+&nbsp; boost::function&lt;T(T)&gt; func_;<br>
+public:<br>
+&nbsp; async&lt;T&gt; input;<br>
+&nbsp; async&lt;T&gt; output;<br>
+&nbsp; bool stop;<br>
+&nbsp; node(joint::spawn_type e, int n, boost::function&lt;T(T)&gt; f)
+: <br>
+&nbsp;&nbsp;&nbsp; my_no(n), func_(f), stop(false) {<br>
+&nbsp;&nbsp;&nbsp; joins(e).chord(input, bind(&amp;node::proc, this,
+_1));<br>
+&nbsp; }<br>
+private:<br>
+&nbsp; void proc(T in) {<br>
+&nbsp;&nbsp;&nbsp; try {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if(!stop) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; T o = func_(in);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "node ["
+&lt;&lt; my_no &lt;&lt; "] recv [" &lt;&lt; in &lt;&lt;"] and send ["
+&lt;&lt; o &lt;&lt; "]" &lt;&lt; endl;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; thread_sleep(1);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; output(o);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; } catch (join_exception &amp;e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; cout &lt;&lt; "node [" &lt;&lt; my_no
+&lt;&lt; "] got exception: " &lt;&lt; e.what() &lt;&lt; "\n";<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp; }<br>
+};<br>
+</div>
+<a href="../examples/chain.cpp">chain.cpp</a><br>
+<br>
+<h3><span style="font-weight: bold;"><a name="lifecycle"></a>Joint's
+life cycle</span></h3>
+After the initial definition, a joint's set of chords can modified thru
+methods: chord_override(), chord_remove() or reset(). And if a joint's
+heartbeat is set during its creation, its set of chords will be
+auto-destroyed after "heartbeat" number of firings of chords.<br>
+Here is a sample demonstrating these joint's lifecycle related methods.<br>
+<a href="../examples/joint_lifetime.cpp">joint_lifetime.cpp</a><br>
+<br>
+</body>
+</html>

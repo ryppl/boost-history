@@ -1,0 +1,301 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Join Design</title>
+  <meta content="Yigong Liu" name="author">
+  <meta content="Join Design Doc" name="description">
+</head>
+<body>
+<h2 style="text-align: center;">Join - Asynchronous Message
+Coordination and
+Concurrency
+Library</h2>
+<div style="text-align: center;">
+<h2>Yigong Liu (2007-2009)</h2>
+<h4>yigongliu@gmail.com</h4>
+<p style="color: rgb(255, 0, 0);">Warning:&nbsp; This library is NOT an
+official Boost library yet </p>
+<hr style="width: 100%; height: 2px;">
+<ol style="text-align: left;" id="mozToc">
+<!--mozToc h3 1-->
+  <li><a href="#mozTocId387457">Introduction</a></li>
+  <li><a href="chords_joints.html">Chords and
+Joints</a></li>
+  <li><a href="samples.html">Samples</a></li>
+  <li><a href="synopsis_port.html">Synopsis of Join Classes</a></li>
+  <li><a href="internals.html">Join Internals</a></li>
+  <li><a href="./references.html">References</a></li>
+</ol>
+<hr style="width: 100%; height: 2px;"></div>
+<h3><a class="mozTocH3" name="mozTocId387457"></a>Introduction</h3>
+Join is an asynchronous message coordination and concurrency library
+based
+on concepts and techniques developed in JoCaml[1] and C&#969;[2]. It is
+applicable both to
+multithreaded applications
+and
+to the orchestration of asynchronous message flows.<br>
+<br>
+Join supports message orchestration with a few simple
+abstractions:<br>
+<ol>
+  <li>
+    <h4>&nbsp;typed asynchronous and synchronous message
+ports<br>
+    </h4>
+  </li>
+</ol>
+<div style="text-align: left;">
+<div style="margin-left: 40px;">These are function objects used as
+typed ports or interfaces to message flows. Message passing is done by
+invoking or
+calling these function objects. Ports by themselves
+are not
+complete message passing constructs yet, they are merely interfaces to
+these constructs which are created when ports are "joined"
+together thru chords. For example, a message queue has a sending port
+and receiving port.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>&nbsp;&nbsp; <span style="font-weight: bold;">async&lt;MsgT&gt;</span></li>
+</ul>
+<div style="margin-left: 80px;">A asynchronous port provides
+one-way,
+non-blocking calls. Message passing thru async&lt;T&gt; port is
+guaranteed to return immediately; internally there
+could be a queue to buffer the arguments or message.<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>&nbsp;&nbsp; <span style="font-weight: bold;">synch&lt;ResT,
+MsgT&gt;</span></li>
+</ul>
+<div style="margin-left: 80px;">A synchronous port is similar to
+normal
+method call, in that the calling thread will block till result is
+returned. However a normal method call just
+involve the calling thread, a call to synch&lt;R,T&gt; port could
+involves
+multiple threads and synchronization.<br>
+</div>
+</div>
+<ol start="2">
+  <li>
+    <h4>chords (or join patterns)<br>
+    </h4>
+  </li>
+</ol>
+<div style="margin-left: 40px;">A chord binds a set of ports to the
+message processing function which will be invoked when all ports in the
+set are called and messages are available.<br>
+</div>
+&nbsp; &nbsp;<br>
+<div style="margin-left: 40px;">In C&#969;, a thread-safe buffer can be
+defined as following:<br>
+<div style="margin-left: 40px;"><span style="font-weight: bold;">public
+class Buffer {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; public async Put(string s);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;
+&nbsp;&nbsp; <span style="font-style: italic;">public string Get()
+&amp; Put(string s) { return s; }&nbsp;&nbsp; //a chord</span></span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">} </span><br>
+</div>
+Here a chord is defined with a synchronous Get port and asynchronous
+Put port;
+the calling of Get will block if no Put is called yet, otherwise the
+string sent by Put will be returned to Get.&nbsp; &nbsp;<br>
+<br>
+In Join, the buffer class can be
+defined in C&#969; style as
+following:<br>
+<div style="margin-left: 40px;">class buffer : public <span
+ style="font-weight: bold;">joint</span> {<br>
+public:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;string&gt;
+put;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+synch&lt;string,void&gt; get;</span><br>
+&nbsp;&nbsp;&nbsp; buffer() {<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span style="font-style: italic;">chord(get, put, &amp;buffer::proc);</span></span><br>
+&nbsp;&nbsp;&nbsp; }<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; string proc(void_t
+g, string p) {</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp; return p;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; }</span><br>
+<span style="font-weight: bold;"></span>};<br>
+<br>
+or with boost::lambda, it becomes:<br>
+class buffer {<br>
+public:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; async&lt;string&gt;
+put;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; synch&lt;string,
+void&gt; get;</span><br style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; buffer() {<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; <span
+ style="font-style: italic;">joins().chord(get, put, lambda::_2);</span></span><br
+ style="font-weight: bold;">
+&nbsp;&nbsp;&nbsp; }<br>
+}<br>
+</div>
+</div>
+<div style="margin-left: 40px;">&nbsp;&nbsp; <br>
+</div>
+<div style="margin-left: 40px;">In JoCaml, such a buffer can be created
+with a "factory" function:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; let
+create_buffer() = </span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; def put(n) &amp; get() = reply n to get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; put, get</span><br>
+<br>
+Similarly in Join, with the help of boost lambda and tuples, a factory
+function can be defined in JoCaml style as following:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+template &lt;typename T&gt;</span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+tuple&lt;async&lt;T&gt;, synch&lt;T,void&gt; &gt; create_buffer() {</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; async&lt;T&gt; put;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;T,void&gt; get;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; <span style="font-style: italic;">joins().chord(get,
+put, lambda::_2);</span></span><br style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;
+&nbsp;&nbsp; &nbsp;&nbsp; return make_tuple(put, get);</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }</span><br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; <br>
+such a buffer can be safely used in
+multithread applications:<br>
+<div style="margin-left: 40px;">buffer
+b;<br>
+b.put("Hello");
+b.put("World");<br>
+cout &lt;&lt;
+b.get() &lt;&lt; b.get() &lt;&lt; endl;<br>
+</div>
+</div>
+<br>
+<div style="margin-left: 40px;">Difference of Join with C&#969; in
+Chord definitions:<br>
+</div>
+<ul style="margin-left: 40px;">
+  <li>C&#969;'s chord defintion is "static", declared in class definition,
+cannot change during runtime, can be optimized by compiler.</li>
+  <li>Join's chord definition is "dynamic", created by chord()
+functions, can be changed during runtime. It can support dynamic join
+programming similar
+to JoCaml and CCR[4].</li>
+</ul>
+<ol start="3">
+  <li>
+    <h4>joint<br>
+    </h4>
+  </li>
+</ol>
+<div style="margin-left: 40px;">A joint "joins" together a set of
+chords, each of which may bind several ports and may share some ports
+with each other, thus creating competing requests for
+messages, which are synchronized by joint's internal logic. A joint
+defines a complete synchronized concurrent message passing contruct. A
+joint is
+where message ports meet
+and processing logic are attached thru chords. All application code
+which use
+async/synch ports and chords to define concurrent behaviours should
+either inherit class joint or use a joint instance to join
+message flows together. Joint maintains the internal state
+about the
+message
+arrivals and synchronization, and firing chords when all of their
+messages are available.<br>
+<br>
+</div>
+In Join based applications, with the help of simple thread-pool based
+executors (which can be built on top of Join's primitives), we can
+develop concurrent
+applications without
+explicit usage of threads (thread creation and synchronization);
+concurrency are mostly defined and controlled by chords with only
+async&lt;&gt; ports.<br>
+<div style="margin-left: 40px;"></div>
+<h3><span class="mozTocH3"></span>License</h3>
+Join is licensed under the <a
+ href="http://www.boost.org/LICENSE_1_0.txt">Boost Software License</a>.<br>
+<h3><span class="mozTocH3"></span>Installation<br>
+</h3>
+Join is continuously being developed and tested in Linux (Fedora
+Core &amp; Ubuntu) and Windows (WindowsXP/Vista and Visual C++ 2008).
+The
+implementation is solely based on standard boost facilities
+(Boost.Bind, Boost.Function, Boost.Shared_Ptr, etc.) which will be part
+of next C++ standard. <br>
+Download: <a href="http://channel.sourceforge.net/">http://port.sourceforge.net</a><br>
+Installation: <br>
+Join is a header only library. There is no need to build the
+library itself to use it. Please following these steps:<br>
+<div style="margin-left: 40px;"><a
+ href="http://www.boost.org/more/getting_started.html">download or
+checkout boost distribution</a><br>
+download latest boost_join_x_x.tar.gz<br>
+tar xvzf boost_join_x_x.tar.gz<br>
+add boost's directory and Join's directory to compilers' include
+path<br>
+cd to &lt;boost_join_directory&gt;/libs/join/exmaple<br>
+bjam<br>
+</div>
+<h3>Acknowlegement<br>
+</h3>
+The original theory and systems of Join Calculus / JoCaml are developed
+by C&eacute;dric Fournet, Georges
+Gonthier, Jean-Jacques L&eacute;vy, Luc Maranget and Didier R&eacute;my
+and others at MOSCOVA INRIA.<br>
+At Microsoft Research, C&#969; is developed by Nick Benton, Luca Cardelli,
+C&eacute;dric Fournet and others. Claudio Russo developed the C# Joins
+library which is an efficient combinator library for C&#969;-style join
+patterns, implemented in C# 2.0 generics and accessible from multiple
+.Net languages.<br>
+An earlier version of the Join library described here is based on
+both C&#969; and Jocaml
+which supports multiple synchronous methods per chord (join-pattern)
+and propagation of exceptions to all synchronous callers. <br>
+The current version
+is mostly based on C&#969;, supporting only one synchronous method per chord
+for simplicity and better performance.<br>
+Thanks Dr. Claudio Russo at Microsoft Research for many insightful
+email
+discussions, clarifying many of my questions about C&#969; internals and
+semantics, and many helpful links to other Join based projects.<br>
+Thanks Dr. Luc Maranget at Moscova INRIA for many kind advices and
+links to papers, for pointing out the advantages (simplification and
+optimization) of the single-synch per chord design.<br>
+In the earlier version of this Join library, the functional signature
+API of async / synch methods is modeled after
+Douglas Gregor's <a href="http://www.boost.org/doc/html/signals.html">Boost.Signals</a>.<br>
+For earlier versions which support multiple
+synchronous methods and exception propagation,&nbsp; the scheme of
+catching
+exceptions in one thread, and rethrowing it in another thread is
+based on Christopher M. Kohlhoff's idea and sample code posted in boost
+email
+list discussions.<br>
+<br>
+<br>
+<div style="margin-left: 40px;"></div>
+<span style="font-weight: bold;">
+</span>
+</body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>Chords and Joints</title>
+</head>
+<body>
+<h2>Chords and Joints<br>
+</h2>
+<h3>The Role of Chords, and Joints</h3>
+In sequential languages, a common construct of control flow is "switch
+/ case" statements:<br>
+<div style="margin-left: 40px;">switch(val) {<br>
+case val1: statements1; break;<br>
+case val2: statements2; break;<br>
+...<br>
+default: ...<br>
+}<br>
+</div>
+<br>
+In CSP based concurrent languages, such as Occam, Limbo, etc., there is
+a "ATL" construct to branch control flow based on the communication
+readiness of channels:<br>
+<div style="margin-left: 40px;">alt {<br>
+&nbsp;&nbsp;&nbsp; i = &lt;- inchan =&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; statements1;<br>
+&nbsp;&nbsp;&nbsp; outchan &lt;- = "sent it!" =&gt;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; statements2;<br>
+}<br>
+</div>
+Different blocks of statements will run based on the communication
+readiness of channels (inchan, outchan). However in "alt", if the
+qualifier before "=&gt;" contains several channel communication
+operations (&lt;-, -&gt;), only the first one will be tested. The
+relationship between different "alting" segments are OR relationship.<br>
+<br>
+In JoCaml, an "count-down" idiom is defined as :<br>
+<div style="margin-left: 40px;">def count(n) &amp;tick() = count(n-1)<br>
+or count(0) &amp; wait() = reply to wait<br>
+</div>
+There are 2 join-patterns (chords) here: count(n) &amp; tick(),
+count(0) &amp; wait(), each of which contains 2 ports. Similar to CSP,
+join-patterns act as qualifier "guarding" the actions statements
+following it. If all two ports in a join-pattern are called, the action
+statements of this chord is ready to run. The relationship inside a
+join-pattern or chord is AND, while the relationship between different
+chords are OR.<br>
+<br>
+Similarly in Join, joints act as a "switch / case" construct for
+message passing, run different codes depending on the communication
+readiness of ports. So it is a construct for message coordination and
+orchestration, such as following code, different operations are done
+based on readiness of ports:<br>
+async&lt;T1&gt; port1;<br>
+async&lt;T2&gt; port2;<br>
+async&lt;T3&gt; port3;<br>
+joins(executor)<br>
+&nbsp;&nbsp;&nbsp; .chord(port1, port2, operation1)<br>
+&nbsp;&nbsp;&nbsp; .chord(port2, port3, operation2);<br>
+<h3>Chord Definition</h3>
+Chords are created when joint's chord() methods are invoked. A chord
+binds a set of ports to the processing logic which consume and
+process messages from those ports. The processing logic is a
+function object which can be in the form of normal function, lambda,
+class method, or object method. Its signature can be deduced as
+following:<br>
+<div style="margin-left: 40px;">for a chord of a set of ports with
+types: <br>
+&nbsp;&nbsp;&nbsp; PortT1, PortT2, PortT3, ...<br>
+the chord binds to a function object "call" with signature:<br>
+&nbsp;&nbsp;&nbsp; <span style="font-weight: bold;">PortT1::result_type
+call(PortT1::argument_type,
+PortT2::argument_type, PortT3::argument_type, ...);</span><br>
+</div>
+For async&lt;MsgT&gt; port, its result_type is "void", and its
+argument_type is the message type it carries - MsgT.<br>
+For synch&lt;ResT,MsgT&gt;, obviously its result_type is ResT and its
+argument_type is MsgT.<br>
+For ports sending "void" messages (async&lt;void&gt;, synch&lt;ResT,
+void&gt;), their argument type is "void_t" defined as <span
+ style="font-weight: bold;">struct void_t {}</span>; so C/C++ compilers
+can be satisfied.<br>
+<br>
+In the set of ports of a chord, there can be at most one
+synch&lt;R,T&gt; port; and if there is one, it must be the first
+argument of chord and so its result_type is the return type of chord's
+"call" function object.<br>
+<br>
+So a thread safe message queue with async send port and synchronous
+"blocking" recv port can be defined as following:<br>
+&nbsp;&nbsp;&nbsp; template &lt;MsgT&gt;<br>
+&nbsp;&nbsp;&nbsp; class msg_que : public joint {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async&lt;MsgT&gt; send;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;MsgT,void&gt; recv;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; msg_que() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; chord(recv, send,
+&amp;msg_que::proc);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; private:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; MsgT proc(void_t r, MsgT s) { return s;
+}<br>
+&nbsp;&nbsp;&nbsp; }<br>
+Please note that synchronous port "recv" is used as the first
+argument of chord; and the signature of&nbsp; msg_que::proc matches the
+argument types of chord's ports.<br>
+<br>
+Using boost::lambda, the msg_que class can be redefined as following:<br>
+&nbsp;&nbsp;&nbsp; template &lt;MsgT&gt;<br>
+&nbsp;&nbsp;&nbsp; class msg_que {<br>
+&nbsp;&nbsp;&nbsp; public:<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; async&lt;MsgT&gt; send;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; synch&lt;MsgT,void&gt; recv;<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; msg_que() {<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; joins().chord(recv, send,
+_2);<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; }<br>
+<h3>Joint Definition</h3>
+A joint "joins" a set of chords which may share ports, thus
+competing for messages. Internally joint synchronizes the consumption
+of messages and schedules the firing of chords.<br>
+A joint can be defined and used in 2 ways:<br>
+<ol>
+  <li>The joint initially defines a set of chords which later may need
+to be changed (by chord_remove, chord_override, reset) to change
+message processing logic. In this case we need a name or reference to
+the "joint" object to invoke those methods. For this, the "joint" class
+can be used as parent of application classes, or a "joint" object can
+be instantiated; for example:</li>
+</ol>
+<div style="margin-left: 40px;">async&lt;T1&gt; chan1;<br>
+async&lt;T2&gt; chan2;<br>
+async&lt;T3&gt; chan3;<br>
+joint joins1(executor);<br>
+joins1<br>
+&nbsp;&nbsp;&nbsp; .chord(chan1, chan2, proc1)<br>
+&nbsp;&nbsp;&nbsp; .chord(chan2, chan3, proc2);<br>
+...<br>
+joins1.override_chord(chan1, chan2, new_proc);<br>
+joins1.remove_chord(...);<br>
+</div>
+<ol start="2">
+  <li>In many cases, joint is used one-shot to create a "fixed" set of
+synchronization chords which never change during its lifetime. And
+async&lt;&gt; / synch&lt;&gt; ports are the primary programming
+interfaces. We can
+use "factory" funtions "joins() / joins_t()" to create unnamed joints
+for this purpose:</li>
+</ol>
+<div style="margin-left: 40px;">async&lt;T1&gt; chan1;<br>
+async&lt;T2&gt; chan2;<br>
+async&lt;T3&gt; chan3;<br>
+joins(executor)<br>
+&nbsp;&nbsp;&nbsp; .chord(chan1, chan2, proc1)<br>
+&nbsp;&nbsp;&nbsp; .chord(chan2, chan3, proc2);<br>
+<br>
+</div>
+The variance of joint can be configured from the following aspects:<br>
+<ul>
+  <li>template parameters: <br>
+  </li>
+  <ul>
+    <li>scheduling policies: <br>
+    </li>
+  </ul>
+</ul>
+<div style="margin-left: 80px;">simple schedulers:<br>
+&nbsp;&nbsp;&nbsp; sched_first_match, sched_longest_match,
+sched_round_robin;<br>
+priority based schedulers:<br>
+&nbsp;&nbsp;&nbsp; sched_pri_first_match, sched_pri_longest_match,
+sched_pri_round_robin;</div>
+<ul>
+  <ul>
+    <li>max number of ports: 32 or larger<br>
+    </li>
+  </ul>
+</ul>
+<div style="margin-left: 40px;">The templated joint type can be defined
+similar to:&nbsp; joint_t&lt;sched_round_robin, 32&gt;. The default
+"joint" type is "joint_t&lt;sched_first_match,32&gt;".<br>
+or unnamed joints can be created with template factory function:&nbsp;
+joins_t&lt;sched_round_robin, 32&gt;(executor,...). The default factory
+method "joins()" is "joins_t&lt;sched_first_match,32&gt;()".<br>
+</div>
+<ul>
+  <li>instantiation parameters: <br>
+  </li>
+  <ul>
+    <li>executor: if a joint contains chords with all async ports
+(such as the above 2 joint definitions), chord's function have to run
+in a separate thread; executors with type
+boost::function&lt;void(callable)&gt; are used to spawn new tasks.<br>
+    </li>
+    <li>heartbeat: an experiment feature to allow auto-destruction of
+joint and its chords. If a positive heartbeat is specified, after
+"heartbeat" number of firings of chords, this joint will be
+auto-destroyed and ports detached.<br>
+    </li>
+    <li>name: if defined, debuging messages will be printed for this
+joint.<br>
+    </li>
+  </ul>
+</ul>
+<div style="margin-left: 40px;"></div>
+<h3>Runtime Semantics</h3>
+Quoted and modified from <a
+ href="http://research.microsoft.com/Comega/doc/comega_tutorials_concurrency_extensions.htm">C&#969;
+Concurrency Extensions Tutorials [2]</a>:
+<p style="margin-left: 40px;">The body (message processing logic) of a
+chord can only execute once
+<i>all</i> the ports in
+its header have been called. When a async / synch port
+is called there may be zero, one, or more chords which are enabled
+(ready to fire):</p>
+<ul style="margin-left: 40px;">
+  <li> If no chord is enabled then the port invocation is queued up.
+If the port is asynchronous, then this simply involves adding the
+message to a queue. If the method is
+synchronous, then the calling thread is blocked. </li>
+  <li> If there is a single enabled chord, then the messages of the
+calls involved in the match are de-queued, any blocked thread involved
+in the match is awakened, and the body runs. </li>
+  <li> If there are several chords which are enabled then the joint
+scheduling policy decides which is chosen to run. </li>
+  <li>chord body execution:<br>
+  </li>
+  <ul>
+    <li> When a chord which involves only asynchronous ports runs,
+then it does so in a thread of executors' thread pool.</li>
+  </ul>
+  <ul>
+    <li>If a chord involves a (single) synch&lt;&gt; method, the chord
+body will execute in the thread which calls the synch&lt;&gt; method</li>
+  </ul>
+  <li><span style="font-weight: bold;">Exception handling</span>: if an
+exception is thrown inside a chord
+"body" function object,</li>
+  <ul>
+    <li>if this chord only involves asynchronous methods, its body will
+run in a thread from executor's thread pool, and the exception thrown
+inside chord body will be caught and then simply dropped (in fact if
+executor's log is
+turned on, we'll see it in log), since the semantics of async calls are
+to return immediately with no result.<br>
+    </li>
+    <li>if this chord has a synchronous method, the chord body will
+execute in the calling thread of this synchronous method and this
+caller will also get the exception.<br>
+    </li>
+  </ul>
+</ul>
+</body>
+</html>

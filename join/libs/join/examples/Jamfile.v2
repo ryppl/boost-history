@@ -1,0 +1,30 @@
+
+project
+  : requirements
+    <library>/boost/thread//boost_thread
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj buffer.obj : buffer.cpp ;
+exe buffer : buffer.obj ;
+obj buffer_phoenix.obj : buffer_phoenix.cpp ;
+exe buffer_phoenix : buffer_phoenix.obj ;
+obj buffer_lambda.obj : buffer_lambda.cpp ;
+exe buffer_lambda : buffer_lambda.obj ;
+obj bounded_buffer.obj : bounded_buffer.cpp ;
+exe bounded_buffer : bounded_buffer.obj ;
+obj join_many.obj : join_many.cpp ;
+exe join_many : join_many.obj ;
+obj flows.obj : flows.cpp ;
+exe flows : flows.obj ;
+obj prime_sieve.obj : prime_sieve.cpp ;
+exe prime_sieve : prime_sieve.obj ;
+obj joint_lifetime.obj : joint_lifetime.cpp ;
+exe joint_lifetime : joint_lifetime.obj ;
+obj chain.obj : chain.cpp ;
+exe chain : chain.obj ;
+obj producer_consumer.obj : producer_consumer.cpp ;
+exe producer_consumer : producer_consumer.obj ;
+obj async_call_ret.obj : async_call_ret.cpp ;
+exe async_call_ret : async_call_ret.obj ;
