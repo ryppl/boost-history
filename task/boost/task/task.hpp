@@ -13,16 +13,14 @@
 #include <stdexcept>
 #include <typeinfo>
 
-#include <boost/exception_ptr.hpp>
-#include <boost/exception.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility/result_of.hpp>
 
 #include <boost/task/detail/interrupter.hpp>
-#include <boost/task/exceptions.hpp>
 #include <boost/task/future.hpp>
+#include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
 
 namespace boost { namespace task
@@ -48,14 +46,12 @@ private:
 		promise< R >			prom;
 		shared_future< R >		fut;
 		detail::interrupter		intr;
-		exception_ptr			excep;
 
 		impl()
 		:
 		prom(),
 		fut( prom.get_future() ),
-		intr(),
-		excep()
+		intr()
 		{}
 
 		virtual ~impl() {}
@@ -78,8 +74,6 @@ private:
 		{
 			try
 			{ impl::prom.set_value( fn_() ); }
-			catch ( promise_already_satisfied const&)
-			{ impl::excep = copy_exception( task_already_executed() ); }
 			catch ( thread_interrupted const&)
 			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
 			catch ( boost::exception const& e)
@@ -156,14 +150,12 @@ private:
 		promise< void >			prom;
 		shared_future< void >	fut;
 		detail::interrupter		intr;
-		exception_ptr			excep;
 
 		impl()
 		:
 		prom(),
 		fut( prom.get_future() ),
-		intr(),
-		excep()
+		intr()
 		{}
 
 		virtual ~impl() {}
@@ -189,8 +181,6 @@ private:
 				fn_();
 				impl::prom.set_value();
 			}
-			catch ( promise_already_satisfied const&)
-			{ impl::excep = copy_exception( task_already_executed() ); }
 			catch ( thread_interrupted const&)
 			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
 			catch ( boost::exception const& e)

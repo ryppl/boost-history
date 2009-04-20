@@ -74,12 +74,7 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	R get()
-	{
-		try
-		{ return fut_.get(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-	}
+	{ return fut_.get(); }
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
@@ -111,7 +106,7 @@ template<>
 class handle< void >
 {
 private:
-	template< typename T >
+	template< typename Channel >
 	friend class task;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
@@ -163,12 +158,7 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	void get()
-	{
-		try
-		{ fut_.get(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-	}
+	{ fut_.get(); }
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
