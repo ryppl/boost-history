@@ -12,6 +12,7 @@
 
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/future.hpp>
+#include <boost/task/exceptions.hpp>
 
 namespace boost { namespace task
 {
@@ -74,7 +75,12 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	R get()
-	{ return fut_.get(); }
+	{
+		try
+		{ return fut_.get(); }
+		catch ( broken_promise const&)
+		{ throw broken_task(); }
+	}
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
@@ -158,7 +164,12 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	void get()
-	{ fut_.get(); }
+	{
+		try
+		{ fut_.get(); }
+		catch ( broken_promise const&)
+		{ throw broken_task(); }
+	}
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
