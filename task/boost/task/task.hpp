@@ -46,12 +46,14 @@ private:
 	struct impl
 	{
 		promise< R >			prom;
+		shared_future< R >		fut;
 		detail::interrupter		intr;
 		exception_ptr			excep;
 
 		impl()
 		:
 		prom(),
+		fut( prom.get_future() ),
 		intr(),
 		excep()
 		{}
@@ -127,6 +129,9 @@ public:
 	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
 
+	const handle< R > get_handle()
+	{ return handle< R >( impl_->fut, impl_->intr); }
+
 	void swap( task< R > & other) // throw()
 	{ impl_.swap( other.impl_); }
 
@@ -149,12 +154,14 @@ private:
 	struct impl
 	{
 		promise< void >			prom;
+		shared_future< void >	fut;
 		detail::interrupter		intr;
 		exception_ptr			excep;
 
 		impl()
 		:
 		prom(),
+		fut( prom.get_future() ),
 		intr(),
 		excep()
 		{}
@@ -232,6 +239,9 @@ public:
 	task( Fn const& fn)
 	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
+
+	const handle< void > get_handle()
+	{ return handle< void >( impl_->fut, impl_->intr); }
 
 	void swap( task< void > & other) // throw()
 	{ impl_.swap( other.impl_); }

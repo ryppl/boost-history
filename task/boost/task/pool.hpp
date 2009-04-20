@@ -291,7 +291,7 @@ public:
 	template< typename R >
 	handle< R > submit( task< R > t)
 	{
-		shared_future< R > fut( t.impl_->prom.get_future() );
+		shared_future< R > fut( t.impl_->fut);
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -305,7 +305,7 @@ public:
 					w,
 					wcb) );
 			w->put( detail::callable( t) );
-			return handle< R >( fut, t.impl_->intr);
+			return t.get_handle();
 		}
 		else
 		{
@@ -313,7 +313,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( detail::callable( t) );
-			return handle< R >( fut, t.impl_->intr);
+			return t.get_handle();
 		}
 	}
 
@@ -323,7 +323,7 @@ public:
 	>
 	handle< R > submit( task< R > t, Attr const& attr)
 	{
-		shared_future< R > fut( t.impl_->prom.get_future() );
+		shared_future< R > fut( t.impl_->fut);
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -337,7 +337,7 @@ public:
 					w,
 					wcb) );
 			w->put( detail::callable( t) );
-			return handle< R >( fut, t.impl_->intr);
+			return t.get_handle();
 		}
 		else
 		{
@@ -345,7 +345,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( channel_item( detail::callable( t), attr) );
-			return handle< R >( fut, t.impl_->intr);
+			return t.get_handle();
 		}
 	}
 };

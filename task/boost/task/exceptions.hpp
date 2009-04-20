@@ -52,6 +52,14 @@ public:
 	{}
 };
 
+class broken_task : public std::logic_error
+{
+public:
+    broken_task()
+	: std::logic_error("broken task")
+	{}
+};
+
 struct task_interrupted
 {};
 

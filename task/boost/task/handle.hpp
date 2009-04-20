@@ -15,15 +15,15 @@
 
 namespace boost { namespace task
 {
-template< typename Channel >
-class pool;
+template< typename T >
+class task;
 
 template< typename R >
 class handle
 {
 private:
-	template< typename Channel >
-	friend class pool;
+	template< typename T >
+	friend class task;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -74,7 +74,12 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	R get()
-	{ return fut_.get(); }
+	{
+		try
+		{ return fut_.get(); }
+		catch ( broken_promise const&)
+		{ throw broken_task(); }
+	}
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
@@ -94,14 +99,20 @@ public:
 
     bool timed_wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
+
+	void swap( handle< R > & other)
+	{
+		fut_.swap( other.fut_);
+		intr_.swap( other.intr_);
+	}
 };
 
 template<>
 class handle< void >
 {
 private:
-	template< typename Channel >
-	friend class pool;
+	template< typename T >
+	friend class task;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -152,7 +163,12 @@ public:
 	{ return intr_.interruption_requested(); }
 
 	void get()
-	{ fut_.get(); }
+	{
+		try
+		{ fut_.get(); }
+		catch ( broken_promise const&)
+		{ throw broken_task(); }
+	}
 
 	bool is_ready() const
 	{ return fut_.is_ready(); }
@@ -172,6 +188,12 @@ public:
 
     bool timed_wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
+
+	void swap( handle< void > & other)
+	{
+		fut_.swap( other.fut_);
+		intr_.swap( other.intr_);
+	}
 };
 
 template< typename Iterator >
