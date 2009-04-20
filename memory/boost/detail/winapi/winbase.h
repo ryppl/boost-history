@@ -45,10 +45,6 @@
 	#endif
 #endif
 
-#ifndef BOOST_DETAIL_WINAPI_ATOMIC_WINDOWS_HPP
-#include "atomic/windows.hpp"
-#endif
-
 #else
 
 #define BOOST_DETAIL_NO_WINSDK
@@ -63,10 +59,6 @@
 
 #ifndef BOOST_DETAIL_WINAPI_POSIX_TIME_HPP
 #include "posix/time.hpp"
-#endif
-
-#ifndef BOOST_DETAIL_WINAPI_ATOMIC_ATOMIC_BUILTINS_HPP
-#include "atomic/atomic_builtins.hpp"
 #endif
 
 #endif
