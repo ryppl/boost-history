@@ -11,8 +11,10 @@
 #include <ios>
 #include <new>
 #include <stdexcept>
+#include <string>
 #include <typeinfo>
 
+#include <boost/lexical_cast.hpp>
 #include <boost/preprocessor/repetition.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
@@ -22,6 +24,7 @@
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
+#include <boost/task/id.hpp>
 
 namespace boost { namespace task
 {
@@ -115,17 +118,16 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	task()
-	: impl_()
-	{}
-
 	template< typename Fn >
 	task( Fn const& fn)
 	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
 
+	const id get_id() const
+	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
+
 	const handle< R > get_handle()
-	{ return handle< R >( impl_->fut, impl_->intr); }
+	{ return handle< R >( impl_->fut, impl_->intr, get_id() ); }
 
 	void swap( task< R > & other) // throw()
 	{ impl_.swap( other.impl_); }
@@ -223,17 +225,16 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	task()
-	: impl_()
-	{}
-
 	template< typename Fn >
 	task( Fn const& fn)
 	: impl_( new impl_wrapper< Fn >( fn) )
 	{}
 
+	const id get_id() const
+	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
+
 	const handle< void > get_handle()
-	{ return handle< void >( impl_->fut, impl_->intr); }
+	{ return handle< void >( impl_->fut, impl_->intr, get_id() ); }
 
 	void swap( task< void > & other) // throw()
 	{ impl_.swap( other.impl_); }

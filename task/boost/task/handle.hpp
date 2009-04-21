@@ -13,6 +13,7 @@
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/id.hpp>
 
 namespace boost { namespace task
 {
@@ -48,15 +49,25 @@ private:
 
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
+	id						id_;
 
-	handle( shared_future< R > const& fut, detail::interrupter const& intr)
-	: fut_( fut), intr_( intr)
+	handle(
+		shared_future< R > const& fut,
+		detail::interrupter const& intr,
+		id const& id__)
+	:
+	fut_( fut),
+	intr_( intr),
+	id_( id__)
 	{}
 
 public:
 	handle()
-	: fut_(), intr_()
+	: fut_(), intr_(), id_()
 	{}
+
+	const id get_id() const
+	{ return id_; }
 
 	void interrupt()
 	{ intr_.interrupt(); }
@@ -105,6 +116,7 @@ public:
 	{
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
+		id_.swap( other.id_);
 	}
 };
 
@@ -137,15 +149,26 @@ private:
 
 	shared_future< void >	fut_;
 	detail::interrupter		intr_;
+	id						id_;
 
-	handle( shared_future< void > const& fut, detail::interrupter const& intr)
-	: fut_( fut), intr_( intr)
+	handle(
+		shared_future< void > const& fut,
+		detail::interrupter const& intr,
+		id const& id__)
+	:
+	fut_( fut),
+	intr_( intr),
+	id_( id__)
 	{}
+
 
 public:
 	handle()
-	: fut_(), intr_()
+	: fut_(), intr_(), id_()
 	{}
+
+	const id get_id() const
+	{ return id_; }
 
 	void interrupt()
 	{ intr_.interrupt(); }
