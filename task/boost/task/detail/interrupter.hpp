@@ -30,6 +30,7 @@ private:
 	{
 	private:
 		bool					interruption_requested_;
+		bool					done_;
 		condition_variable		cond_;
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;

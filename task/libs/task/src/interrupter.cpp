@@ -15,7 +15,7 @@ namespace detail
 void
 interrupter::impl::interrupt_()
 {
-	if ( ! interruption_requested_)
+	if ( ! interruption_requested_ && ! done_)
 	{
 		interruption_requested_ = true;
 		if ( thrd_) thrd_->interrupt();
@@ -25,6 +25,7 @@ interrupter::impl::interrupt_()
 interrupter::impl::impl()
 :
 interruption_requested_( false),
+done_( false),
 cond_(),
 mtx_(),
 thrd_()
@@ -37,7 +38,8 @@ interrupter::impl::set( shared_ptr< thread > const& thrd)
 	unique_lock< mutex > lk( mtx_);
 	thrd_ = thrd;
 	BOOST_ASSERT( thrd_);
-	if ( interruption_requested_) thrd_->interrupt();
+	if ( interruption_requested_)
+		thrd_->interrupt();
 }
 
 void
@@ -51,6 +53,7 @@ interrupter::impl::reset()
 	catch ( thread_interrupted const&)
 	{}
 	BOOST_ASSERT( ! this_thread::interruption_requested() );
+	done_ = true;
 	cond_.notify_all();
 }
 
@@ -66,7 +69,8 @@ interrupter::impl::interrupt_and_wait()
 {
 	unique_lock< mutex > lk( mtx_);
 	interrupt_();
-	cond_.wait( lk);
+	while ( ! done_)
+		cond_.wait( lk);
 }
 
 void
@@ -74,7 +78,8 @@ interrupter::impl::interrupt_and_wait( system_time const& abs_time)
 {
 	unique_lock< mutex > lk( mtx_);
 	interrupt_();
-	cond_.timed_wait( lk, abs_time);
+	while ( ! done_)
+		cond_.timed_wait( lk, abs_time);
 }
 
 bool

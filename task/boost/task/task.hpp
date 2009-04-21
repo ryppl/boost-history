@@ -54,7 +54,8 @@ private:
 		intr()
 		{}
 
-		virtual ~impl() {}
+		virtual ~impl()
+		{ intr.reset(); }
 
 		virtual void operator()() = 0;
 	};
@@ -158,7 +159,8 @@ private:
 		intr()
 		{}
 
-		virtual ~impl() {}
+		virtual ~impl()
+		{ intr.reset(); }
 
 		virtual void operator()() = 0;
 	};

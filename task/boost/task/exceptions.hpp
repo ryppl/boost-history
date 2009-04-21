@@ -44,6 +44,14 @@ public:
 	{}
 };
 
+class task_already_executed : public std::logic_error
+{
+public:
+    task_already_executed()
+	: std::logic_error("task already executed")
+	{}
+};
+
 class broken_task : public std::logic_error
 {
 public:
