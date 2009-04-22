@@ -76,9 +76,9 @@ private:
 
 #pragma pack()
 
-	AllocT m_alloc;
-	dcl_list<MemBlock> m_blks;
 	dcl_list<FreeChunk> m_freelist;
+	dcl_list<MemBlock> m_blks;
+	AllocT m_alloc;
 	size_type m_cbChunk;
 	size_type m_nMaxPerBlock;
 	MemBlock* m_lastBlock;
