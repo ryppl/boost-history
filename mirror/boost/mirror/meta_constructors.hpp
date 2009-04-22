@@ -21,13 +21,18 @@
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/comparison/not_equal.hpp>
+#include <boost/preprocessor/comparison/equal.hpp>
 #include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/facilities/empty.hpp>
 #include <boost/preprocessor/stringize.hpp>
 #include <boost/preprocessor/wstringize.hpp>
+#include <boost/preprocessor/logical/and.hpp>
+#include <boost/preprocessor/logical/not.hpp>
+#include <boost/preprocessor/arithmetic/sub.hpp>
 
 #include <boost/char_type_switch/string.hpp>
 #include <boost/mirror/meta_data_fwd.hpp>
@@ -35,10 +40,14 @@
 namespace boost {
 namespace mirror {
 
+/** Forward declaration of the meta-constructors base template
+ */
 template <class Class /*, class VariantTag*/ >
 struct meta_constructors_base;
 
-#define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTORS_BEGIN(TEMPLATE, TEMPL_ARG_COUNT) \
+/** Begins the registering of template class' constructors
+ */
+#define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTORS_BEGIN(TEMPLATE, TEMPL_ARG_COUNT)\
 template < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, typename T) >  \
 struct meta_constructors_base< \
 	TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
@@ -47,12 +56,17 @@ struct meta_constructors_base< \
         typedef mpl::vector0<>
 
 
+/** Begins the registering of class' constructors
+ */
 #define BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN(CLASS) \
 template <> \
 struct meta_constructors_base< CLASS > \
 { \
         typedef mpl::vector0<>
 
+/** Registers the parameter name of the j-th parameter
+ *  of the i-th constructor
+ */
 #define BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME(CONSTRUCTOR, PARAM, NAME) \
 inline static const ::std::string& get_param_name( \
         mpl::false_, \
@@ -75,11 +89,17 @@ inline static const ::std::wstring& get_param_name( \
         return result; \
 }
 
+
+/** Ends the registering of (template) class' constructors
+ */
 #define BOOST_MIRROR_REG_CONSTRUCTORS_END \
         param_type_lists; \
         template <class ConstrIndex, class ParamIndex> \
-        inline static const cts::bstring& base_param_name(ConstrIndex ci, ParamIndex pi) \
-        {\
+        inline static const cts::bstring& base_param_name( \
+		ConstrIndex ci, \
+		ParamIndex pi \
+	) \
+        { \
                 return get_param_name( \
                         mpl::false_(), \
                         ::std::char_traits< cts::bchar >(), \
@@ -89,45 +109,180 @@ inline static const ::std::wstring& get_param_name( \
         } \
 };
 
-#define BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE(R, X, TYPE_AND_NAME) \
-        BOOST_PP_COMMA_IF(BOOST_PP_NOT_EQUAL(R, 2) ) \
-        BOOST_PP_SEQ_HEAD(TYPE_AND_NAME)
+
+/** Helper macro which expands into the type of the j-th parameter
+ *  preceeded by a comma if it is not the first parameter
+ */
+#define BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE( \
+	R, X, \
+	PARAM_INDEX, \
+	TYPE_AND_NAME \
+) BOOST_PP_COMMA_IF(PARAM_INDEX) BOOST_PP_SEQ_HEAD(TYPE_AND_NAME)
 
 
-#define BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME(R, CONSTR_INDEX, TYPE_AND_NAME) \
-        BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME( \
+
+/** Calls the BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME macro
+ *  in repetitions.
+ */
+#define BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME(\
+	R, \
+	CONSTR_INDEX, \
+	PARAM_INDEX, \
+	TYPE_AND_NAME \
+) BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME( \
                 CONSTR_INDEX, \
-                R-2, \
+                PARAM_INDEX, \
                 BOOST_PP_SEQ_HEAD(BOOST_PP_SEQ_TAIL(TYPE_AND_NAME)) \
         )
 
-#define BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, TYPENAME_KW) \
-        typedef TYPENAME_KW mpl::push_back< \
+
+/** Adds the parameter typelist to the list storing 
+ *  storing the parameter types for the individual constructors
+ */
+#define BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES( \
+	CONSTR_INDEX, \
+	TYPENAME_KW\
+) 	typedef TYPENAME_KW mpl::push_back< \
                 BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX), \
                 BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) \
 	>::type
 
 
+/** Registers a single default constructor
+ */
 #define BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(CONSTR_INDEX) \
         param_type_lists_ ## CONSTR_INDEX ; \
         typedef mpl::vector0< \
         > BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) ;\
-	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, BOOST_PP_EMPTY()) 
+	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(\
+		CONSTR_INDEX, \
+		BOOST_PP_EMPTY()\
+	) 
 
-#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, TYPENAME_KW) \
+/** registers a single non-default constructor 
+ */
+#define BOOST_MIRROR_DO_REG_CLASS_OR_TEMPL_CONSTRUCTOR(\
+	CONSTR_INDEX, \
+	PARAM_SEQ, \
+	TYPENAME_KW\
+) \
         param_type_lists_ ## CONSTR_INDEX ; \
         typedef BOOST_PP_CAT(mpl::vector, BOOST_PP_SEQ_SIZE(PARAM_SEQ)) < \
-                BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE, 0, PARAM_SEQ) \
+                BOOST_PP_SEQ_FOR_EACH_I( \
+			BOOST_MIRROR_REG_CONSTR_EXTRACT_PARAM_TYPE, \
+			0, \
+			PARAM_SEQ \
+		) \
         > BOOST_PP_CAT(BOOST_PP_CAT(constr_, CONSTR_INDEX), _params) ;\
-        BOOST_PP_SEQ_FOR_EACH(BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME, CONSTR_INDEX, PARAM_SEQ) \
-	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES(CONSTR_INDEX, TYPENAME_KW) 
+        BOOST_PP_SEQ_FOR_EACH_I( \
+		BOOST_MIRROR_REG_CONSTR_REG_CALL_PARAM_NAME, \
+		CONSTR_INDEX, \
+		PARAM_SEQ \
+	) \
+	BOOST_MIRROR_REG_CONSTRUCTOR_PUSH_BACK_PARAM_TYPES( \
+		CONSTR_INDEX, \
+		TYPENAME_KW \
+	) 
 
+
+
+/** Decides whether the PARAM_SEQ is a argument sequence for 
+ *  a default constructor (having no parameters)
+ */
+#define BOOST_MIRROR_IS_VOID_FN_ARG_LIST(PARAM_SEQ) \
+	BOOST_PP_AND( \
+		BOOST_PP_EQUAL(BOOST_PP_SEQ_SIZE(PARAM_SEQ),1), \
+		BOOST_PP_EQUAL( \
+			BOOST_PP_SEQ_SIZE( \
+				BOOST_PP_SEQ_HEAD(PARAM_SEQ) \
+			),1 \
+		) \
+	)
+
+/** expands into the default constructor registering macro
+ */
+#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR_1( \
+        CONSTR_INDEX, \
+        PARAM_SEQ, \
+        TYPENAME_KW \
+) BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(CONSTR_INDEX)
+
+/** expands into the non-default constructor registering macro
+ */
+#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR_0( \
+        CONSTR_INDEX, \
+        PARAM_SEQ, \
+        TYPENAME_KW \
+) BOOST_MIRROR_DO_REG_CLASS_OR_TEMPL_CONSTRUCTOR( \
+	CONSTR_INDEX, \
+	PARAM_SEQ, \
+	TYPENAME_KW \
+)
+
+/** Registers a single constructor, by disparching between 
+ *  the BOOST_MIRROR_DO_REG_CLASS_OR_TEMPL_CONSTRUCTOR and
+ *  the BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR macros based on
+ *  whether the constructor is default or non-default.
+ *  Default constructors are identified as those
+ *  having only a single parameter of void type. All other constructors
+ *  are considered as non-default.
+ */
+#define BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR( \
+	CONSTR_INDEX, \
+	PARAM_SEQ, \
+	TYPENAME_KW \
+) BOOST_PP_CAT( \
+	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR_, \
+	BOOST_MIRROR_IS_VOID_FN_ARG_LIST(PARAM_SEQ) \
+) (CONSTR_INDEX, PARAM_SEQ, TYPENAME_KW)
+	
+
+
+/** Registers a constructor of a non-template class
+ */
 #define BOOST_MIRROR_REG_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, BOOST_PP_EMPTY())
+	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR( \
+		CONSTR_INDEX, \
+		PARAM_SEQ, \
+		BOOST_PP_EMPTY() \
+	)
  
+/** Registers a constructor of a template class
+ */
 #define BOOST_MIRROR_REG_TEMPLATE_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ) \
-	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR(CONSTR_INDEX, PARAM_SEQ, typename)
+	BOOST_MIRROR_REG_CLASS_OR_TEMPL_CONSTRUCTOR( \
+		CONSTR_INDEX, \
+		PARAM_SEQ, \
+		typename \
+	)
  
+/** Helper macro used to call the BOOST_MIRROR_REG_CONSTRUCTOR 
+ *  for each constructor in the quick registering macro
+ */
+#define BOOST_MIRROR_CALL_REG_CONSTRUCTOR_QREG(R, D, PARAM_SEQ)\
+	BOOST_MIRROR_REG_CONSTRUCTOR(BOOST_PP_SUB(R,2), PARAM_SEQ)
+
+/** Quick and simple constructor registering macro
+ */
+#define BOOST_MIRROR_QREG_CONSTRUCTORS( \
+	CLASS, \
+	CONSTR_PARAM_SEQ_SEQ \
+) \
+BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( CLASS ) \
+	BOOST_PP_SEQ_FOR_EACH( \
+		BOOST_MIRROR_CALL_REG_CONSTRUCTOR_QREG, \
+		_, \
+		CONSTR_PARAM_SEQ_SEQ \
+	) \
+BOOST_MIRROR_REG_CONSTRUCTORS_END
+
+
+
+
+/** Helper macro which registers the constructors of
+ *  native C++ types and some other commonly used types
+ *  like strings.
+ */
 #define BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(TYPE)\
 BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( TYPE ) \
         BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(0) \
@@ -153,6 +308,9 @@ BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::wstring)
 
 #undef BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS
 
+/** Template providing meta-data about the constructors
+ *  of the Class.
+ */
 template <class Class /*, class VariantTag*/ >
 struct meta_constructors : public meta_constructors_base<Class>
 {
@@ -186,7 +344,8 @@ struct meta_constructors : public meta_constructors_base<Class>
 			> size;
 
 			template <class CharT, class ParamIndex>
-			inline static const ::std::basic_string<CharT>& get_param_name(
+			inline static const ::std::basic_string<CharT>& 
+			get_param_name(
 				mpl::false_ full_or_base,
 				const ::std::char_traits<CharT>& traits,
 				ParamIndex
@@ -219,10 +378,16 @@ struct meta_constructors : public meta_constructors_base<Class>
 			}
 		private:
 			template <class Functor, class ParamIndex>
-			static inline void call_for_each(Functor func, ParamIndex pi)
+			static inline void call_for_each(
+				Functor func, 
+				ParamIndex pi
+			)
 			{
 				func((params*)0, pi);
-				call_for_each(func, mpl::next<ParamIndex>::type());
+				call_for_each(
+					func, 
+					typename mpl::next<ParamIndex>::type()
+				);
 			}
 
 			template <class Functor>

@@ -122,35 +122,32 @@ namespace mirror {
 BOOST_MIRROR_REG_NAMESPACE( (test) )
 
 // register the vector, triangle and tetrahedron classes
-BOOST_MIRROR_REG_TYPE( ::test, vector)
-BOOST_MIRROR_REG_TYPE( ::test, triangle)
-BOOST_MIRROR_REG_TYPE( ::test, tetrahedron)
-
-// register the constructors of ::test::vector
-BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( ::test::vector )
-	BOOST_MIRROR_REG_CONSTRUCTOR(0, 
-		((double)(x))((double)(y))((double)(z))
-	)
-	BOOST_MIRROR_REG_CONSTRUCTOR(1, 
-		((double)(w))
-	)
-	BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(2)
-BOOST_MIRROR_REG_CONSTRUCTORS_END
-
-// register the constructor of ::test::triangle
-BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( ::test::triangle )
-	BOOST_MIRROR_REG_CONSTRUCTOR(0, 
-		((::test::vector)(a))((::test::vector)(b))((::test::vector)(c))
-	)
-	BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(1)
-BOOST_MIRROR_REG_CONSTRUCTORS_END
-
-// register the constructor of ::test::tetrahedron
-BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( ::test::tetrahedron )
-	BOOST_MIRROR_REG_CONSTRUCTOR(0, 
-		((::test::triangle)(base))((::test::vector)(apex))
-	)
-BOOST_MIRROR_REG_CONSTRUCTORS_END
+// abnnd their constructor
+//
+// ::test::vector
+BOOST_MIRROR_QREG_CLASS_NO_BASE( ::test, vector, (x)(y)(z))
+BOOST_MIRROR_QREG_CONSTRUCTORS(
+	::test::vector,
+	// ::test::vector(double x, double y, double z)
+	(((double)(x))((double)(y))((double)(z)))
+	// ::test::vector(double w)
+	(((double)(w)))
+	// ::test::vector(void)
+	(((void)))
+)
+// ::test::triangle
+BOOST_MIRROR_QREG_CLASS_NO_BASE( ::test, triangle, (a)(b)(c))
+BOOST_MIRROR_QREG_CONSTRUCTORS(
+	::test::triangle,
+	(((::test::vector)(a))((::test::vector)(b))((::test::vector)(c)))
+	(((void)))
+)
+// ::test::tetrahedron
+BOOST_MIRROR_QREG_CLASS_NO_BASE( ::test, tetrahedron, (base)(apex))
+BOOST_MIRROR_QREG_CONSTRUCTORS(
+	::test::tetrahedron,
+	(((::test::triangle)(base))((::test::vector)(apex)))
+)
 
 } // namespace mirror
 } // namespace boost

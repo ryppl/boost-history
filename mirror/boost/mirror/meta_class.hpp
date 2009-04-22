@@ -23,6 +23,9 @@
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/joint_view.hpp>
 //
+// preprocessor
+#include <boost/preprocessor/seq/for_each.hpp>
+#include <boost/preprocessor/seq/for_each_i.hpp>
 // basic meta types
 #include <boost/mirror/meta_type.hpp>
 // reflection of class inheritance
@@ -124,9 +127,129 @@ struct meta_class<
  *  with private or protected members, that should be refleccted
  */
 #define BOOST_MIRROR_FRIENDLY_CLASS(CLASS_NAME) \
-		friend struct ::boost::mirror::meta_class_attributes_base<CLASS_NAME>;
+	friend struct ::boost::mirror::meta_class_attributes_base<CLASS_NAME>;
 
 
+/** A helper macro used in the BOOST_MIRROR_QREG_* macros,
+ *  as a parameter to the BOOST_PP_SEQ_FOR_EACH_I and
+ *  registers the i-th base class of the registered class
+ */
+#define BOOST_MIRROR_QREG_CLASS_REG_BASE_CLASS_HELPER(R, DATA, I, BASE_CLASS)\
+	BOOST_MIRROR_REG_BASE_CLASS(I, public, BASE_CLASS)
+
+/** A helper macro used in the BOOST_MIRROR_QREG_* macros,
+ *  as a parameter to the BOOST_PP_SEQ_FOR_EACH_I and
+ *  registers the i-th virtual base class of the registered class
+ */
+#define BOOST_MIRROR_QREG_CLASS_REG_V_BASE_CLASS_HELPER(R, DATA, I, BASE_CLASS)\
+	BOOST_MIRROR_REG_VIRTUAL_BASE_CLASS(I, public, BASE_CLASS)
+
+/** Another helper macro used in the BOOST_MIRROR_QREG_* macros
+ *  as a parameter to BOOST_PP_SEQ_FOR_EACH, which registers
+ *  a class member attribute
+ */
+#define BOOST_MIRROR_QREG_CLASS_REG_ATTRIB_HELPER(R, DATA, ATTRIB)\
+	BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, ATTRIB)
+
+
+/** This macro provides a quick all-in-one registering of
+ *  a class. It registers the class' type, its base classes
+ *  and member attributes. 
+ */
+#define BOOST_MIRROR_QREG_CLASS( \
+	NAMESPACE, \
+	CLASS, \
+	BASE_CLASS_PP_SEQ, \
+	ATTRIB_PP_SEQ \
+) \
+/** Registers the type */ \
+BOOST_MIRROR_REG_TYPE(NAMESPACE, CLASS) \
+/** Registers the base classes */ \
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH_I( \
+	BOOST_MIRROR_QREG_CLASS_REG_BASE_CLASS_HELPER, \
+	_, \
+	BASE_CLASS_PP_SEQ \
+) \
+BOOST_MIRROR_REG_BASE_CLASSES_END \
+/** Registers the class' attributes */ \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH( \
+	BOOST_MIRROR_QREG_CLASS_REG_ATTRIB_HELPER, \
+	_, \
+	ATTRIB_PP_SEQ \
+) \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+
+/** A variant of BOOST_MIRROR_QREG_CLASS for classes that have 
+ *  only virtual base classes (i.e. no base clases with regular
+ *  inheritance).
+ */
+#define BOOST_MIRROR_QREG_CLASS_V_BASES( \
+	NAMESPACE, \
+	CLASS, \
+	BASE_CLASS_PP_SEQ, \
+	ATTRIB_PP_SEQ \
+) \
+/** Registers the type */ \
+BOOST_MIRROR_REG_TYPE(NAMESPACE, CLASS) \
+/** Registers the base classes */ \
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH_I( \
+	BOOST_MIRROR_QREG_CLASS_REG_V_BASE_CLASS_HELPER, \
+	_, \
+	BASE_CLASS_PP_SEQ \
+) \
+BOOST_MIRROR_REG_BASE_CLASSES_END \
+/** Registers the class' attributes */ \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH( \
+	BOOST_MIRROR_QREG_CLASS_REG_ATTRIB_HELPER, \
+	_, \
+	ATTRIB_PP_SEQ \
+) \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+
+/** Similar to BOOST_MIRROR_QREG_CLASS this macro registers
+ *  a class without base classes. 
+ */
+#define BOOST_MIRROR_QREG_CLASS_NO_BASE( \
+        NAMESPACE, \
+        CLASS, \
+        ATTRIB_PP_SEQ \
+) \
+/** Registers the type */ \
+BOOST_MIRROR_REG_TYPE(NAMESPACE, CLASS) \
+/** Registers the class' attributes */ \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH( \
+        BOOST_MIRROR_QREG_CLASS_REG_ATTRIB_HELPER, \
+        _, \
+        ATTRIB_PP_SEQ \
+) \
+BOOST_MIRROR_REG_CLASS_ATTRIBS_END
+
+/** similar to BOOST_MIRROR_QREG_CLASS this macro registers
+ *  a class with base classes but without any own attributes
+ */
+#define BOOST_MIRROR_QREG_CLASS_NO_ATTR( \
+        NAMESPACE, \
+        CLASS, \
+        BASE_CLASS_PP_SEQ, \
+        ATTRIB_PP_SEQ \
+) \
+/** Registers the type */ \
+BOOST_MIRROR_REG_TYPE(NAMESPACE, CLASS) \
+/** Registers the base classes */ \
+BOOST_MIRROR_REG_BASE_CLASSES_BEGIN(NAMESPACE :: CLASS) \
+BOOST_PP_SEQ_FOR_EACH_I( \
+        BOOST_MIRROR_QREG_CLASS_REG_BASE_CLASS_HELPER, \
+        _, \
+        BASE_CLASS_PP_SEQ \
+) \
+BOOST_MIRROR_REG_BASE_CLASSES_END \
 
 } // namespace mirror
 } // namespace boost

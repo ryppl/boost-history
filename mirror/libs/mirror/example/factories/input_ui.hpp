@@ -67,6 +67,17 @@ struct console_input_ui
 {
 	Product x;
 
+	struct constr_param_name_printer
+	{
+		template <class MetaParams, class ParamIndex>
+		inline void operator()(MetaParams* pmp, ParamIndex pi) const
+		{
+			if(ParamIndex::value > 0) 
+				boost::cts::bcout() << BOOST_CTS_LIT(", ");
+			::boost::cts::bcout() << MetaParams::base_param_name(pi);
+		}
+	};
+	
 	template <class Context, class ConstrIndex, class ParamIndex>
 	console_input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
 	{
@@ -78,7 +89,18 @@ struct console_input_ui
 			boost::mirror::meta_constructors<
 				Context
 			>::base_param_name(ci, pi) <<
-			BOOST_CTS_LIT(" = ") <<
+			BOOST_CTS_LIT(" for ") <<
+			BOOST_MIRRORED_TYPE(Context)::full_name() <<
+			BOOST_CTS_LIT("(");
+			//
+			boost::mirror::meta_constructors<
+                                Context
+                        >::template constructor<
+				ConstrIndex
+			>::params::for_each(constr_param_name_printer());
+			//
+			::boost::cts::bcout() <<
+			BOOST_CTS_LIT(") = ") <<
                         ::std::flush;
 		::boost::cts::bcin() >> x;
 	}
