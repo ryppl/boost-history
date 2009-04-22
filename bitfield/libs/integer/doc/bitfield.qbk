@@ -1,0 +1,693 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Boost.Bitfield
+    [quickbook 1.3]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2009 Vicente J. Botet Escriba]
+    [id boost.bitfield]
+    [dirname integer]
+    [purpose Bitfield traits]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+
+[/
+[section Preface]
+
+[:[".]]
+[:[*['-- ]]]
+
+[endsect]
+/]
+
+[warning Bitfield is not a part of the Boost libraries.]
+
+[/========================]
+[section Overview]
+[/========================]
+
+[/==================]
+[heading Description]
+[/==================]
+
+Portable bitfields.
+
+The main source of inspiration of this library was Boost.Bitfield from Emile Cormier.
+
+[*Boost.Bitfield] provides:
+
+* a generic bitfield traits class providing generic getter and setter.
+* a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Bitfield files
+    #include <boost/integer/bitfield.hpp>
+    #include <boost/integer/bitfield_dcl.hpp>
+
+[section Motivation]
+   
+In order for an application or a device driver to use the same source code base on both platforms, it must either be endian neutral, or use conditional compilation to select appropriate code modules. A program module is considered endian neutral if it retains its functionality while being ported across platforms of different endianness. In other words, there is no relation between its functionality and the endianness of the platform it is running on.
+Endianness issues become important when porting the pieces of the application that relate to client communication over a heterogeneous network, persistent data storage on the disk, product tracing (it is important that trace generated on SPARC gets formatted correctly on x86) and other related areas.
+
+Boost.Endian handles with most of the issues related to the byte ordering, but do not manage the bit ordering. E.g. the following structure has a different layout in big and little endian machines.
+
+    struct X {
+        unsigned int d00:1;
+        unsigned int d01:7;
+        unsigned int d02:2;
+        unsigned int d03:6;
+        unsigned int d04:4;
+        unsigned int d05:4;
+        unsigned int d06:1;
+        unsigned int d07:3;
+        unsigned int d08:4;
+    };
+
+In order to make this structure endian neutral, we need to use conditional compilation, and swap on byte level of the fields
+
+
+    struct X {
+    #if __BYTE_ORDER == __BIG_ENDIAN
+        unsigned int d00:1; 
+        unsigned int d01:7;
+        unsigned int d02:2;
+        unsigned int d03:6;
+        unsigned int d04:4;
+        unsigned int d05:4;
+        unsigned int d06:1;
+        unsigned int d07:3;
+        unsigned int d08:4;
+    #else
+        unsigned int d01:7;
+        unsigned int d00:1;
+        unsigned int d03:6;
+        unsigned int d02:2;
+        unsigned int d05:4;
+        unsigned int d04:4;
+        unsigned int d08:4;
+        unsigned int d07:3;
+        unsigned int d06:1;
+    #endif
+    }
+
+The preceding technique can be applied as far as the bitfield is contained on a byte boundary. But for bitfields using several bytes as
+
+    struct X {
+        unsigned int d00:11;
+        unsigned int d01:21;
+    };
+    
+There is no way using conditional compilation to to adapt the structure and preserve the fields. 
+
+Two approaches can be considered:
+
+[heading Decompose the fields not defined on a byte boundary on several bitfield defined on a byte boundary]
+
+    struct X {
+    #if __BYTE_ORDER == __BIG_ENDIAN
+        unsigned int d00_b0:8; 
+        unsigned int d00_b1:3; 
+        unsigned int d01_b0:5; 
+        unsigned int d01_b1:8; 
+        unsigned int d01_b2:8; 
+    #else
+        unsigned int d01_b2:8; 
+        unsigned int d01_b1:8; 
+        unsigned int d01_b0:5; 
+        unsigned int d00_b1:3; 
+        unsigned int d00_b0:8; 
+    #endif
+    };
+
+and define a way to access the bitfield information of the ENDIAN_UNSAFE structure. This library do not use this apprach.
+
+[heading Replace the bitfields by the integer type] 
+
+When it is possible, a suggestion would be to transform the bitfields into integers, as follows:
+
+    struct X {
+    #ifdef ATRIUM_PORTABLE
+        unsigned int d0;
+    #else
+        unsigned int d00:11; /* ENDIAN_UNSAFE */
+        unsigned int d01:21; /* ENDIAN_UNSAFE */
+    #endif
+    };
+    
+and define a way to access the bitfield information.
+
+When the structure is used by a C++ program, all the uses of the bit fields (d00 and d01) could be replaced by an inline function, so 
+
+    y = x.d00;	
+    
+could be replaced by 
+
+    y = x.d00(); 
+    
+or
+
+    y = x.get_d00();
+    
+and 
+    x.d00= y;
+    
+could be replaced by 
+
+    x.d00()= y; 
+    
+or  
+
+    x.set_d00(y)
+
+where 
+
+    struct X {
+        typedef boost::ubig_32 storage_type;
+        storage_type d0;
+        typedef unsigned int value_type;
+        BOOST_BITFIELD_DCL(storage_type, d0, unsigned int, d00, 0, 10);
+        BOOST_BITFIELD_DCL(storage_type, d0, unsigned int, d01, 11, 31);
+    };
+
+
+The goal of Boost.Bitfield is to make possible this simple portable translation.
+
+[endsect]
+[endsect]
+
+[/==============================]
+[section:users_guide Users'Guide]
+[/==============================]
+
+[/======================================]
+[section:getting_started Getting Started]
+[/======================================]
+
+[/======================================]
+[section:install Installing Bitfield]
+[/======================================]
+
+[/=================================]
+[heading Getting Boost.Bitfield]
+[/=================================]
+
+You can get the last stable release of Boost.Bitfield by downloading [^bitfield.zip] from the
+[@http://www.boost-consulting.com/vault/index.php?directory=Endianess%20Programming Boost Vault]
+
+You can also access the latest (unstable?) state from the [@https://svn.boost.org/svn/boost/sandbox/bitfield Boost Sandbox].
+
+[/=================================]
+[heading Building Boost.Bitfield]
+[/=================================]
+
+There is no need to compile [*Boost.Bitfield], since it's a header only library. Just include your Boost header directory in your compiler include path.
+
+[/=========================]
+[heading Requirements]
+[/=========================]
+
+[*Boost.Bitfield] depends on some Boost library. For these specific parts you must use either Boost version 1.38.0 or the version in SVN trunk (even if older version should works also). 
+
+
+[/========================]
+[heading Exceptions safety]
+[/========================]
+
+All functions in the library are exception-neutral and provide strong guarantee of exception safety as long as
+the underlying parameters provide it.
+
+[/====================]
+[heading Thread safety]
+[/====================]
+
+All functions in the library are thread-unsafe except when noted explicitly.
+
+
+[/=======================]
+[heading Tested compilers]
+[/=======================]
+
+Currently, [*Boost.Bitfield] has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+*  GCC 3.4.6 Linux
+[/*  GCC 4.3.2 Cygwin]
+*  GCC 4.1.2 Linux
+
+[note Please send any questions, comments and bug reports to boost <at> lists <dot> boost <dot> org.]
+
+[endsect]
+[/=============================]
+[section Hello World! ]
+[/=============================]
+
+
+[endsect]
+
+[endsect]
+
+[section Tutorial]
+
+[section Declaring a storage variable]
+
+        struct Rgb565
+        {
+            typedef ubig16_t storage_type;
+            storage_type storage;
+        };
+
+[endsect]
+
+[section Bitfieds helper classes and bitfield accessors]
+
+[heading Declaring a bitfield helper type]
+
+        struct Rgb565
+        {
+            //...
+            typedef bitfield_traits<storage_type, 0, 4, unsigned char>    red_type;
+        };
+
+
+[heading bitfield getters]
+
+        struct Rgb565
+        {
+            //...
+            red_type::value::value_type red() const { return red_type::value(storage).get(); }
+            red_type::value::value_type get_red() const { return red_type::value(storage).get(); }
+        };
+
+[heading bitfield setters]
+
+        struct Rgb565
+        {
+            //...
+            red_type::reference red() { return red_type::reference(storage); }
+            void set_red(unsigned char val) { return red_type::reference(storage).set(val); }
+        };
+
+
+
+[endsect]
+
+[section Using macros to declare portable bitfields ]
+
+        struct Rgb565
+        {
+            typedef volatile uint16_t storage_type;
+            storage_type storage;
+            typedef volatile uint16_t value_type;
+            BOOST_BITFIELD_DCL(storage_type, storage, unsigned char, red, 0, 4);
+            BOOST_BITFIELD_DCL(storage_type, storage, unsigned char, green, 5, 10);
+            BOOST_BITFIELD_DCL(storage_type, storage, unsigned char, blue, 11,15);
+        };
+
+[endsect]
+
+[section Using bitfield getters and setters]
+
+        Rgb565 r;
+        r.storage= 0xffff;
+
+        // Write to a bitfield. Note that parenthesis are needed around the bitfield so
+        r.red() = 23;
+
+        // Read from a bitfield
+        Rgb565::value_type b = r.blue();
+
+        // Access a bit within a bit field
+        bool bit = r.blue()[3];
+
+[endsect]
+
+[endsect]
+
+
+[section:ext_references References]
+[variablelist
+
+[
+    [[@http://www.boost.org/libs/integer/endian.htm [*Boost.Endian]]]
+    [general integer-like byte-holder binary types with explicit control over byte order, value type, size, and alignment from Beman Dawes]
+]
+
+
+]
+
+[endsect]
+
+[endsect]
+
+
+[section Reference]
+[/==========================================================================================]
+[section:bitfield_hpp Header `<boost/integer/bitfield.hpp>`]
+[/==========================================================================================]
+
+This is the main file of Boost.Bitfield, which includes the definition of the bitfield<> class. 
+
+    template <typename T>
+    struct bitfield_default_value_type;
+    
+    template <class, std::size, std::size, class, bool, class> 
+    class bitfield;
+    
+    template <class T, class R, class V> 
+    class bitfield_bit_proxy;
+    
+    template <typename STORAGE_TYPE, int F, int L
+        , typename VALUE_TYPE=bitfield_default_value_type<typename STORAGE_TYPE::type>
+    >
+    strcut bitfield_traits;
+
+[/==========================================================================================]
+[section:bitfield_default_value_type Metafunction `bitfield_default_value_type<>`]
+[/==========================================================================================]
+
+The default value type associated to an storage type is the storage type.
+
+    template <typename T>
+    struct bitfield_value_type {
+        typedef T type;
+    };
+
+The user could need to specialize this metafunction for some specific types.
+
+[endsect]
+
+[/==========================================================================================]
+[section:bitfield_default_value_type Template class `bitfield<>`]
+[/==========================================================================================]
+
+The bitfield class is a wrapper to an storage type that allows to get/set a bitfield of a given value type defined by the first and last bit that the bitfield occupes in the strogae type. It defines the conversion to the bitfield value type as weel as all the arithmetic assignement operators.
+
+This template class behaves as a reference to a bitfield. Note that C/C++ do not allows to take directly the address of a bit field.
+
+    template <typename STORAGE_TYPE, std::size F, std::size L
+        , typename VALUE_TYPE=typename bitfield_value_type<typename STORAGE_TYPE::type>
+        , typename REFERENCE_TYPE=STORAGE_TYPE&>
+    class bitfield {
+    public:
+        //! Reference type of the word occupied by the bitfield
+        typedef REFERENCE_TYPE reference_type;
+        //! Value type of the bitfield itself 
+        typedef VALUE_TYPE value_type;
+        //! storage type of the bitfield support
+        typedef typename reference_traits<REFERENCE_TYPE>::value_type storage_type;
+
+        //! Useful constants
+        static const unsigned int FIRST;        //!< Position of the first bit
+        static const unsigned int LAST;         //!< Position of the last bit
+        static const unsigned int STS;
+        static const unsigned int LASTD;
+        static const unsigned int WIDTH;        //!< Width in bits of the bitfield
+        static const unsigned int VAL_MASK;     //!< Mask applied against assigned values
+        static const unsigned int SIGN_MASK;    //!< Sign Mask applied against assigned values
+        static const value_type MIN_VAL;        //!< min value that can be represented with the bitfield
+        static const value_type MAX_VAL;        //!< max value that can be represented with the bitfield
+        static const unsigned int FIELD_MASK;   //!< Mask of the field's bit positions
+
+        static std::size_t first();
+        static std::size_t last();
+        static std::size_t width();
+        static storage_type val_mask();
+        static storage_type field_mask();
+
+        //! deleted because a reference is nedeed
+        bitfield() = delete;
+        //! explicit constructor from a reference
+        explicit bitfield(reference_type field);
+
+        //! Assignment from a value type
+        bitfield& operator=(value_type val);
+
+        //! value_type implicit conversion
+        operator value_type() const;
+
+        //! value_type explicit getter
+        value_type get() const;
+
+        //! Returns the negative of the bitfield value.
+        // this must be modified on the case of signed value_type
+        value_type operator~() const;
+
+        bit_reference_type operator[](std::size_t index);
+
+        bit_const_reference_type operator[](std::size_t index) const;
+
+        //! Returns the current bitfield value as bit flags.
+        /*! The returned bit flags can be ORed with other bit flags. */
+        storage_type flags() const;
+
+        //! Returns the current bitfield value as bit flags.
+        /*! The returned bit flags can be ORed with other bit flags. */
+        static storage_type flags(value_type val) const;
+
+        //! Arithmetic-assign operators
+        bitfield& operator++();
+        value_type operator++(int);
+
+        bitfield& operator--();
+        value_type operator--(int);
+
+        bitfield& operator+=(value_type rhs);
+        bitfield& operator-=(value_type rhs);
+
+        bitfield& operator*=(value_type rhs);
+        bitfield& operator/=(value_type rhs);
+        bitfield& operator%=(value_type rhs);
+
+        bitfield& operator<<=(int rhs);
+        bitfield& operator>>=(int rhs);
+
+        bitfield& operator&=(value_type rhs);
+        bitfield& operator|=(value_type rhs);
+        bitfield& operator^=(value_type rhs);
+    };
+
+[endsect]
+
+[/==========================================================================================]
+[section:bitfield_bit_proxy Template class `bitfield_bit_proxy<>`]
+[/==========================================================================================]
+
+This template class behaves as a reference to a bitfield bit. Note that C/C++ do not allows to take directly the address of a bit field. The class takes a reference to the storage and the index of the bit.
+
+    template <class T, class R, class V>
+    class bitfield_bit_proxy {
+    public:
+        bitfield_bit_proxy& operator=(bool state);
+
+        operator bool() const;
+    };
+
+
+[endsect]
+
+[/==========================================================================================]
+[section:bitfield_traits Template class `bitfield_traits<>`]
+[/==========================================================================================]
+
+This traits class defies two traits: 
+
+* reference: used to modify a bitfield
+* value: used to get the value of a bitset
+
+    template <typename STORAGE_TYPE, int F, int L
+        , typename VALUE_TYPE=typename bitfield_value_type<typename STORAGE_TYPE::type>
+    >
+    struct bitfield_traits {
+        typedef bitfield<STORAGE_TYPE, F, L, VALUE_TYPE> reference;
+        typedef bitfield<const STORAGE_TYPE, F, L, VALUE_TYPE> value;
+    };
+
+[endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section:bitfield_dcl_hpp Header `<boost/integer/bitfield_dcl.hpp>`]
+[/==========================================================================================]
+
+This file constains the macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
+
+    #define BOOST_BITFIELD_DCL(STORAGE_TYPE, STORAGE_VAR, VALUE_TYPE, FIELD, F, L)
+
+[/==========================================================================================]
+[section:BOOST_BITFIELD_DCL Macro `BOOST_BITFIELD_DCL`]
+[/==========================================================================================]
+
+    #define BOOST_BITFIELD_DCL(STORAGE_TYPE, STORAGE_VAR, VALUE_TYPE, FIELD, F, L)
+
+* Parameters
+    * STORAGE_TYPE: the type to store the bitfield
+    * STORAGE_VAR: the variable used to store the bitfield
+    * VALUE_TYPE: the type for the bitfield
+    * FIELD: the name of the bitfield
+    * F: the first bit
+    * L: the last bit
+    
+* Effect
+This macro defines the bitfield traits and the functions necessary to make valid the following expressions:
+    * str.FIELD() = value;
+    * var= str.FIELD();
+    * str.set_FIELD(var);
+    * var= str.get_FIELD()
+
+
+Two styles of getter/setter are provided: one using overloading on the field name, the other suning clasical prefic get_/set_.
+
+[endsect]
+
+[endsect]
+
+[/==========================================================================================]
+[section:endian_bitfield_value_type_hpp Header `<boost/integer/endian_bitfield_value_type.hpp>`]
+[/==========================================================================================]
+
+This file includes the customization for the endian types for the bitfield_default_value_type metafunction. You need to include this file if you use endian types as storage for the bitfields.
+
+    template <endianness E, typename T, std::size_t n_bits, alignment A>
+    struct bitfield_value_type<endian<E,T,n_bits,A> > {
+        typedef typename endian<E,T,n_bits,A>::value_type type;
+    };
+
+[endsect]
+
+[endsect]
+
+[section Examples]
+[section bitfield signed value type]
+[SIGNED__HPP]
+
+[endsect]
+
+[endsect]
+
+[/=================]
+[section Appendices]
+[/=================]
+[section:history Appendix A: History]
+[section [*Version 0.1.0, April 25, 2009] ['Announcement of Bitfield]]
+
+[*Features:]
+
+* a generic bitfield traits class providing generic getter and setter for portable bitfields.
+* a BOOST_BITFIELD_DCL macro making easier the definition of the bitfield helper type and the bitfield getter and setter functions.
+
+[endsect]
+[endsect]
+
+[section:rationale Appendix B: Rationale]
+
+[heading Why we can not declare portable bitfields ?]
+
+[endsect]
+
+[section:implementation Appendix C: Implementation Notes]
+
+[heading Why we can not declare portable bitfields ?]
+
+[heading FAQ]
+
+* Why bother with endian bitfields ? 
+
+External data portability and both speed and space efficiency. 
+Availability of bit order representations is important in some applications.
+
+* Why not just use Boost.Serialization? 
+
+Serialization involves a conversion for every object involved in I/O. Endian objects require no conversion or copying. They are already in the desired format for binary I/O. Thus they can be read or written in bulk.
+
+* Do these types have any uses outside of I/O? 
+
+Probably not.
+
+* Is there is a performance hit when doing arithmetic using these types? 
+
+Yes, for sure, compared to arithmetic operations on native bitfields integer types. 
+However, these types are usually faster, and sometimes much faster, for I/O compared to stream inserters and extractors, or to serialization.
+
+* These types are really just byte-holders. Why provide the arithmetic operations at all? 
+
+Providing a full set of operations reduces program clutter and makes code both easier to write and to read. Consider incrementing a variable in a record. It is very convenient to write:
+
+    ++record.foo();
+
+Rather than:
+
+    int temp( record.foo());
+    ++temp;
+    record.foo() = temp;
+    
+[heading Design considerations for Boost.Endian]
+
+* Must provide exactly the size and internal bit ordering specified.
+* It is better software engineering if the same implementation works regardless of the CPU endianness. In other words, #ifdefs should be avoided where possible.
+
+[endsect]
+[section:acknowledgements Appendix D: Acknowledgements]
+
+Thanks to Emile Cormier whic was the initiator of this library.
+
+[endsect]
+[section  Appendix E: Tests]
+
+[section aligned bitfields]
+[table
+    [[Name]                                  [kind]          [Description]                                           [Result] [Ticket]]
+    [[get]         [run]       [check assign_to works for builting types]                 [Pass]   [#]]
+    [[assign]        [run]       [check convert_to works for builting types]                [Pass]   [#]]
+]
+[endsect]
+
+
+[endsect]
+[section  Appendix F: Tickets]
+
+[endsect]
+
+[/=====================================]
+[section:todo  Appendix F: Future plans]
+[/=====================================]
+
+[heading Tasks to do before review]
+
+
+[heading For later releases]
+
+
+[endsect]
+[endsect]
+
+
+
