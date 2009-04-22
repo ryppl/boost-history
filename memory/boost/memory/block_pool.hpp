@@ -12,8 +12,8 @@
 #ifndef BOOST_MEMORY_BLOCKPOOL_HPP
 #define BOOST_MEMORY_BLOCKPOOL_HPP
 
-#ifndef BOOST_MEMORY_BASIC_HPP
-#include "basic.hpp"
+#ifndef BOOST_MEMORY_SYSTEM_ALLOC_HPP
+#include "system_alloc.hpp"
 #endif
 
 #ifndef BOOST_MEMORY_THREAD_TLS_HPP

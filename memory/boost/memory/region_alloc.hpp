@@ -12,12 +12,8 @@
 #ifndef BOOST_MEMORY_REGION_ALLOC_HPP
 #define BOOST_MEMORY_REGION_ALLOC_HPP
 
-#ifndef BOOST_MEMORY_SYSTEM_ALLOC_HPP
-#include "system_alloc.hpp"
-#endif
-
-#ifndef BOOST_MEMORY_BLOCKPOOL_HPP
-#include "block_pool.hpp"
+#ifndef BOOST_MEMORY_BASIC_HPP
+#include "basic.hpp"
 #endif
 
 #if !defined(_GLIBCXX_ALGORITHM) && !defined(_ALGORITHM)
@@ -37,7 +33,6 @@ private:
 
 public:
 	enum { MemBlockSize = PolicyT::MemBlockBytes - AllocT::Padding };
-	enum { IsGCAllocator = 1 };
 
 	typedef AllocT alloc_type;
 
@@ -236,88 +231,6 @@ public:
 		// no action
 	}
 };
-
-// -------------------------------------------------------------------------
-// class auto_alloc
-
-#if defined(_MSC_VER) && (_MSC_VER <= 1200) // VC++ 6.0
-
-class auto_alloc : public region_alloc<NS_BOOST_MEMORY_POLICY::stdlib>
-{
-private:
-	typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> BaseClass;
-
-public:
-	auto_alloc() {}
-	explicit auto_alloc(auto_alloc&) {}
-
-	__forceinline void BOOST_MEMORY_CALL swap(auto_alloc& o) {
-		BaseClass::swap(o);
-	}
-
-	__forceinline void BOOST_MEMORY_CALL clear() {
-		BaseClass::clear();
-	}
-
-	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb) {
-		return BaseClass::allocate(cb);
-	}
-
-#if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
-	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
-		return BaseClass::allocate(cb);
-	}
-
-	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn) {
-		return BaseClass::allocate(cb, fn);
-	}
-#endif
-	
-	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
-		return BaseClass::unmanaged_alloc(cb, fn);
-	}
-
-	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
-		BaseClass::manage(p, fn);
-	}
-
-	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
-		return BaseClass::allocate(cb);
-	}
-
-	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
-		// no action
-	}
-
-	void* BOOST_MEMORY_CALL reallocate(void* p, size_t oldSize, size_t newSize) {
-		return BaseClass::reallocate(p, oldSize, newSize);
-	}
-
-	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb) {
-		// no action
-	}
-
-	template <class Type>
-	void BOOST_MEMORY_CALL destroy(Type* obj) {
-		// no action
-	}
-
-	template <class Type>
-	void BOOST_MEMORY_CALL destroyArray(Type* array, size_t count) {
-		// no action
-	}
-};
-
-#else
-
-typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> auto_alloc;
-
-#endif
-
-// -------------------------------------------------------------------------
-// class scoped_alloc
-
-typedef region_alloc<NS_BOOST_MEMORY_POLICY::pool> scoped_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: region_alloc.hpp,v $
