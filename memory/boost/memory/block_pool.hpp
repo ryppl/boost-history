@@ -77,7 +77,7 @@ private:
 public:
 	block_pool_(int cbFreeLimit = INT_MAX)
 		: m_freeList(NULL), m_nFree(0),
-		  m_nFreeLimit(cbFreeLimit / m_cbBlock + 1)
+		  m_nFreeLimit(cbFreeLimit / m_cbBlock)
 	{
 	}
 	~block_pool_()
