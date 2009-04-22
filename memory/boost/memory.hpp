@@ -40,6 +40,10 @@
 #include "memory/scoped_alloc.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_FIXED_ALLOC_HPP
+#include "memory/fixed_alloc.hpp"
+#endif
+
 // -------------------------------------------------------------------------
 // default_alloc
 

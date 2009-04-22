@@ -16,8 +16,13 @@
 #include "basic.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_CONTAINER_DCL_LIST_HPP
+#include "container/dcl_list.hpp"
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
+/*
 // -------------------------------------------------------------------------
 // class fixed_alloc
 
@@ -41,7 +46,16 @@ private:
 		Header* pPrev;
 		Header* pNext;
 		size_t nUsed;
-	}
+
+	public:
+		Header() {
+			pPrev = pNext = this;
+		}
+
+		bool BOOST_MEMORY_CALL empty() const {
+			return pPrev == this;
+		}
+	};
 
 	enum { HeaderSize = sizeof(Header) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
@@ -54,10 +68,25 @@ private:
 	enum { ChunkHeaderSize = sizeof(void*) };
 	struct Chunk
 	{
-		MemBlock* pBlock;
-		char data[1];
+		struct Used
+		{
+			MemBlock* pBlock;
+			char data[1];
+		};
+		struct Unused
+		{
+			Unused* pPrev;
+			Unused* pNext;
+		};
 	};
 #pragma pack()
+
+	class MemBlocks : public Header
+	{
+	private:
+
+
+	};
 
 	AllocT m_alloc;
 	Header m_blks;
@@ -80,18 +109,25 @@ public:
 	}
 
 	fixed_alloc(AllocT alloc, size_type cbElem)
-		: : m_alloc(alloc), m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
+		: m_alloc(alloc), m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
 	{
 		init_();
 	}
 
-	region_alloc(fixed_alloc& owner)
+	fixed_alloc(fixed_alloc& owner)
 		: m_alloc(owner.m_alloc), m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
 	{
 		init_();
 	}
+
+public:
+	void* BOOST_MEMORY_CALL allocate()
+	{
+		if (m_blks.)
+	}
 };
 
+*/
 // -------------------------------------------------------------------------
 // $Log: $
 
