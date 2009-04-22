@@ -74,7 +74,6 @@ public:
 public:
 	bool BOOST_MEMORY_CALL empty() const
 	{
-		BOOST_MEMORY_ASSERT(m_next == this || m_next != m_prev);
 		return m_next == this;
 	}
 

@@ -25,8 +25,13 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class fixed_alloc
 
-#ifndef BOOST_MEMORY_ROUND
-#define BOOST_MEMORY_ROUND(x, y)		(((x)+((y)-1)) & ~((y)-1))
+#ifndef ROUND
+#define ROUND(x, y)		(((x)+((y)-1)) & ~((y)-1))
+#endif
+
+#ifndef MAX
+#define MAX(x, y)		((x) > (y) ? (x) : (y))
+#define MIN(x, y)		((x) < (y) ? (x) : (y))
 #endif
 
 template <class PolicyT>
@@ -62,11 +67,13 @@ private:
 		MemBlock* pBlock;
 	};
 
-	enum { ChunkHeaderSize = sizeof(ChunkHeader) };
-
 	struct FreeChunk : public dcl_list_node<FreeChunk>
 	{
 	};
+
+	enum { ChunkHeaderSize = sizeof(ChunkHeader) };
+	enum { MinElemBytes = sizeof(FreeChunk) };
+
 #pragma pack()
 
 	AllocT m_alloc;
@@ -78,10 +85,11 @@ private:
 private:
 	void init_(size_type cbElem)
 	{
-		m_cbChunk = BOOST_MEMORY_ROUND(cbElem, ChunkHeaderSize) + ChunkHeaderSize;
+		cbElem = ROUND(cbElem, sizeof(void*));
+		m_cbChunk = MAX(cbElem, MinElemBytes) + ChunkHeaderSize;
 		m_nMaxPerBlock = BlockSize / m_cbChunk;
 
-		BOOST_MEMORY_ASSERT(cbElem > 0 && m_nMaxPerBlock > 0);
+		BOOST_MEMORY_ASSERT(m_nMaxPerBlock > 0);
 	}
 
 public:
@@ -150,7 +158,7 @@ public:
 		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
 		{
 			nextBlk = blk->next();
-			m_alloc.deallocate(blk)
+			m_alloc.deallocate(blk);
 		}
 		m_blks.clear();
 		m_freelist.clear();
