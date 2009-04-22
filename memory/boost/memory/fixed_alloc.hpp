@@ -22,9 +22,12 @@
 
 NS_BOOST_MEMORY_BEGIN
 
-/*
 // -------------------------------------------------------------------------
 // class fixed_alloc
+
+#ifndef BOOST_MEMORY_ROUND
+#define BOOST_MEMORY_ROUND(x, y)		(((x)+((y)-1)) & ~((y)-1))
+#endif
 
 template <class PolicyT>
 class fixed_alloc
@@ -41,20 +44,9 @@ public:
 #pragma pack(1)
 private:
 	struct MemBlock;
-	struct Header
+	struct Header : public dcl_list_node<MemBlock>
 	{
-		Header* pPrev;
-		Header* pNext;
 		size_t nUsed;
-
-	public:
-		Header() {
-			pPrev = pNext = this;
-		}
-
-		bool BOOST_MEMORY_CALL empty() const {
-			return pPrev == this;
-		}
 	};
 
 	enum { HeaderSize = sizeof(Header) };
@@ -65,69 +57,128 @@ private:
 		char buffer[BlockSize];
 	};
 
-	enum { ChunkHeaderSize = sizeof(void*) };
-	struct Chunk
+	struct ChunkHeader
 	{
-		struct Used
-		{
-			MemBlock* pBlock;
-			char data[1];
-		};
-		struct Unused
-		{
-			Unused* pPrev;
-			Unused* pNext;
-		};
+		MemBlock* pBlock;
+	};
+
+	enum { ChunkHeaderSize = sizeof(ChunkHeader) };
+
+	struct FreeChunk : public dcl_list_node<FreeChunk>
+	{
 	};
 #pragma pack()
 
-	class MemBlocks : public Header
-	{
-	private:
-
-
-	};
-
 	AllocT m_alloc;
-	Header m_blks;
-	const size_type m_cbChunk;
-	const size_type m_nMaxPerBlock;
+	dcl_list<MemBlock> m_blks;
+	dcl_list<FreeChunk> m_freelist;
+	size_type m_cbChunk;
+	size_type m_nMaxPerBlock;
 
 private:
-	void init_()
+	void init_(size_type cbElem)
 	{
-		BOOST_MEMORY_ASSERT(m_nMaxPerBlock > 0);
+		m_cbChunk = BOOST_MEMORY_ROUND(cbElem, ChunkHeaderSize) + ChunkHeaderSize;
+		m_nMaxPerBlock = BlockSize / m_cbChunk;
 
-		m_blks.pPrev = m_blks.pNext = &m_blks;
+		BOOST_MEMORY_ASSERT(cbElem > 0 && m_nMaxPerBlock > 0);
 	}
 
 public:
 	explicit fixed_alloc(size_type cbElem)
-		: m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
 	{
-		init_();
+		init_(cbElem);
 	}
 
 	fixed_alloc(AllocT alloc, size_type cbElem)
-		: m_alloc(alloc), m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
+		: m_alloc(alloc)
 	{
-		init_();
+		init_(cbElem);
 	}
 
-	fixed_alloc(fixed_alloc& owner)
-		: m_alloc(owner.m_alloc), m_cbChunk(cbElem + ChunkHeaderSize), m_nMaxPerBlock(BlockSize / m_cbChunk)
+	fixed_alloc(fixed_alloc& owner, size_type cbElem)
+		: m_alloc(owner.m_alloc)
 	{
-		init_();
+		init_(cbElem);
+	}
+
+	~fixed_alloc()
+	{
+		clear();
+	}
+
+private:
+	__forceinline MemBlock*& BOOST_MEMORY_CALL chunkHeader_(void* const p)
+	{
+		return ((ChunkHeader*)p - 1)->pBlock;
+	}
+
+	void BOOST_MEMORY_CALL do_allocate_block_()
+	{
+		MemBlock* const blk = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
+		m_blks.push_front(blk);
+
+		blk->nUsed = 0;
+
+		char* p = blk->buffer + ChunkHeaderSize;
+		for (size_type i = m_nMaxPerBlock; i--; p += m_cbChunk)
+		{
+			chunkHeader_(p) = blk;
+			m_freelist.push_front((FreeChunk*)p);
+		}
+
+		BOOST_MEMORY_ASSERT(!m_freelist.empty());
+	}
+
+	void BOOST_MEMORY_CALL do_deallocate_block_(MemBlock* const blk)
+	{
+		char* p = blk->buffer + ChunkHeaderSize;
+		for (size_type i = m_nMaxPerBlock; i--; p += m_cbChunk)
+		{
+			((FreeChunk*)p)->erase();
+		}
+
+		blk->erase();
+
+		m_alloc.deallocate(blk);
 	}
 
 public:
-	void* BOOST_MEMORY_CALL allocate()
+	void BOOST_MEMORY_CALL clear()
 	{
-		if (m_blks.)
+		MemBlock* nextBlk;
+		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
+		{
+			nextBlk = blk->next();
+			m_alloc.deallocate(blk)
+		}
+		m_blks.clear();
+		m_freelist.clear();
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate()
+	{
+		if (m_freelist.empty())
+			do_allocate_block_();
+
+		void* p = &m_freelist.front();
+		++chunkHeader_(p)->nUsed;
+		m_freelist.pop_front();
+		return p;
+	}
+
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p)
+	{
+		BOOST_MEMORY_ASSERT(chunkHeader_(p)->nUsed <= m_nMaxPerBlock);
+
+		MemBlock* const blk = chunkHeader_(p);
+		if (--blk->nUsed > 0)
+			m_freelist.push_front((FreeChunk*)p);
+		else
+			do_deallocate_block_(blk);
 	}
 };
 
-*/
 // -------------------------------------------------------------------------
 // $Log: $
 

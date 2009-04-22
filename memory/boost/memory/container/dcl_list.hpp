@@ -57,8 +57,6 @@ public:
 public:
 	void BOOST_MEMORY_CALL insert_me_front_(dcl_list_node_base_& head)
 	{
-		BOOST_MEMORY_ASSERT(empty());
-
 		m_prev = &head;
 		m_next = head.m_next;
 		head.m_next->m_prev = this;
@@ -67,8 +65,6 @@ public:
 
 	void BOOST_MEMORY_CALL insert_me_back_(dcl_list_node_base_& head)
 	{
-		BOOST_MEMORY_ASSERT(empty());
-
 		m_next = &head;
 		m_prev = head.m_prev;
 		head.m_prev->m_next = this;
@@ -79,8 +75,12 @@ public:
 	bool BOOST_MEMORY_CALL empty() const
 	{
 		BOOST_MEMORY_ASSERT(m_next == this || m_next != m_prev);
-
 		return m_next == this;
+	}
+
+	void BOOST_MEMORY_CALL clear()
+	{
+		m_next = m_prev = this;
 	}
 
 	void BOOST_MEMORY_CALL erase()
@@ -93,17 +93,13 @@ public:
 	void BOOST_MEMORY_CALL pop_front()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
-
-		dcl_list_node_base_* node = m_next;
-		node->erase();
+		static_cast<dcl_list_node_base_*>(m_next)->erase();
 	}
 
 	void BOOST_MEMORY_CALL pop_back()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
-
-		dcl_list_node_base_* node = m_prev;
-		node->erase();
+		static_cast<dcl_list_node_base_*>(m_prev)->erase();
 	}
 };
 
@@ -231,9 +227,12 @@ public:
 		return static_cast<const dcl_list_node_base_*>(node) == this;
 	}
 
+private:
+	typedef dcl_list_node<NodeT> BaseNodeT;
+
 public:
-	typedef dcl_list_iterator_<NodeT, NodeT&, NodeT*> iterator;
-	typedef dcl_list_iterator_<NodeT, const NodeT&, const NodeT*> const_iterator;
+	typedef dcl_list_iterator_<BaseNodeT, BaseNodeT&, BaseNodeT*> iterator;
+	typedef dcl_list_iterator_<BaseNodeT, const BaseNodeT&, const BaseNodeT*> const_iterator;
 
 	iterator BOOST_MEMORY_CALL begin() { return iterator(first()); }
 	const_iterator BOOST_MEMORY_CALL begin() const { return const_iterator(first()); }

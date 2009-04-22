@@ -61,7 +61,7 @@ private:
 private:
 	const region_alloc& operator=(const region_alloc&);
 
-	MemBlock* BOOST_MEMORY_CALL chainHeader_() const
+	__forceinline MemBlock* BOOST_MEMORY_CALL chainHeader_() const
 	{
 		return (MemBlock*)(m_begin - HeaderSize);
 	}

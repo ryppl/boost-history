@@ -40,8 +40,8 @@
 #include "memory/scoped_alloc.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_FIXED_ALLOC_HPP
-#include "memory/fixed_alloc.hpp"
+#ifndef BOOST_MEMORY_POOL_HPP
+#include "memory/pool.hpp"
 #endif
 
 // -------------------------------------------------------------------------
