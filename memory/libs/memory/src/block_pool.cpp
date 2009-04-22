@@ -18,7 +18,7 @@ using namespace NS_BOOST_MEMORY;
 
 tls_block_pool_t g_tls_blockPool;
 
-STDAPI_(tls_block_pool_t*) _boost_TlsBlockPool()
+STDAPI_(tls_block_pool_t*) boost_TlsBlockPool()
 {
 	return &g_tls_blockPool;
 }

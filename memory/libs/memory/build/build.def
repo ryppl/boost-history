@@ -1,3 +1,2 @@
 EXPORTS
-	_boost_TlsBlockPool
-
+	boost_TlsBlockPool
