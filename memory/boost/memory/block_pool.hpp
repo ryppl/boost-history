@@ -187,7 +187,7 @@ typedef proxy_alloc<block_pool, tls_block_pool> proxy_block_pool;
 
 NS_BOOST_MEMORY_POLICY_BEGIN
 
-class pool : public sys
+class scoped : public sys
 {
 public:
 	typedef proxy_block_pool alloc_type;

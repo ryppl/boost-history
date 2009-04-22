@@ -25,7 +25,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class scoped_alloc
 
-typedef region_alloc<NS_BOOST_MEMORY_POLICY::pool> scoped_alloc;
+typedef region_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_alloc;
 
 // -------------------------------------------------------------------------
 // $Log: scoped_alloc.hpp,v $

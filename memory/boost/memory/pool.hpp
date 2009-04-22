@@ -26,7 +26,7 @@ NS_BOOST_MEMORY_BEGIN
 // class pool, scoped_pool
 
 typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
-typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::pool> scoped_pool;
+typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
 
 // -------------------------------------------------------------------------
 // $Log: $
