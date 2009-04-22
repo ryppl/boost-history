@@ -36,14 +36,10 @@ public:
 
 	typedef AllocT alloc_type;
 
+#pragma pack(1)
 private:
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
-
-#pragma pack(1)
-private:
-	struct MemBlock;
-	friend struct MemBlock;
 
 	struct MemBlock
 	{
