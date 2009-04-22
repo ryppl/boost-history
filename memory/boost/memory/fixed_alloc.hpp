@@ -81,6 +81,7 @@ private:
 	dcl_list<FreeChunk> m_freelist;
 	size_type m_cbChunk;
 	size_type m_nMaxPerBlock;
+	MemBlock* m_lastBlock;
 
 private:
 	void init_(size_type cbElem)
@@ -88,6 +89,7 @@ private:
 		cbElem = ROUND(cbElem, sizeof(void*));
 		m_cbChunk = MAX(cbElem, MinElemBytes) + ChunkHeaderSize;
 		m_nMaxPerBlock = BlockSize / m_cbChunk;
+		m_lastBlock = NULL;
 
 		BOOST_MEMORY_ASSERT(m_nMaxPerBlock > 0);
 	}
@@ -125,6 +127,7 @@ private:
 	{
 		MemBlock* const blk = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
 		m_blks.push_front(blk);
+		m_lastBlock = blk;
 
 		blk->nUsed = 0;
 
@@ -182,7 +185,7 @@ public:
 		MemBlock* const blk = chunkHeader_(p);
 		if (--blk->nUsed > 0)
 			m_freelist.push_front((FreeChunk*)p);
-		else
+		else if (blk != m_lastBlock)
 			do_deallocate_block_(blk);
 	}
 };
