@@ -1,5 +1,5 @@
 EXPORTED {
 global:
-	_boost_TlsBlockPool;
+	boost_TlsBlockPool;
 local: *;
 };
