@@ -40,7 +40,7 @@ void testScopedAlloc()
 	int* intBuf = BOOST_MEMORY_ALLOC(alloc, int);
 	int* intArrayBuf = BOOST_MEMORY_ALLOC_ARRAY(alloc, int, 100);
 	
-	NS_BOOST_MEMORY::scoped_alloc* suballoc = BOOST_MEMORY_NEW(alloc, NS_BOOST_MEMORY::scoped_alloc)(alloc);
+	NS_BOOST_MEMORY::scoped_alloc* suballoc = BOOST_MEMORY_NEW(alloc, NS_BOOST_MEMORY::scoped_alloc)(alloc.get_alloc());
 
 	int* e = BOOST_MEMORY_NEW(*suballoc, int);
 }
@@ -48,7 +48,7 @@ void testScopedAlloc()
 void testTlsScopedAlloc()
 {
 	NS_BOOST_MEMORY::scoped_alloc alloc;
-	// same as: NS_BOOST_MEMORY::scoped_alloc(boost::tls_block_pool::instance());
+	// same as: NS_BOOST_MEMORY::scoped_alloc(boost::memory::tls_block_pool::instance());
 	
 	int* intObj = BOOST_MEMORY_NEW(alloc, int);
 	int* intObjWithArg = BOOST_MEMORY_NEW(alloc, int)(10);

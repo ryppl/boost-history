@@ -40,6 +40,9 @@ class fixed_alloc
 private:
 	typedef typename PolicyT::alloc_type AllocT;
 
+	fixed_alloc(const fixed_alloc&);
+	void operator=(const fixed_alloc&);
+
 public:
 	enum { MemBlockSize = PolicyT::MemBlockBytes - AllocT::Padding };
 
@@ -99,15 +102,8 @@ public:
 	{
 		init_(cbElem);
 	}
-
 	fixed_alloc(AllocT alloc, size_type cbElem)
 		: m_alloc(alloc)
-	{
-		init_(cbElem);
-	}
-
-	fixed_alloc(fixed_alloc& owner, size_type cbElem)
-		: m_alloc(owner.m_alloc)
 	{
 		init_(cbElem);
 	}
@@ -115,6 +111,28 @@ public:
 	~fixed_alloc()
 	{
 		clear();
+	}
+
+	alloc_type BOOST_MEMORY_CALL get_alloc() const
+	{
+		return m_alloc;
+	}
+
+	void BOOST_MEMORY_CALL swap(fixed_alloc& o)
+	{
+		swap_object(this, &o);
+	}
+
+	void BOOST_MEMORY_CALL clear()
+	{
+		MemBlock* nextBlk;
+		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
+		{
+			nextBlk = blk->next();
+			m_alloc.deallocate(blk);
+		}
+		m_blks.clear();
+		m_freelist.clear();
 	}
 
 private:
@@ -155,18 +173,6 @@ private:
 	}
 
 public:
-	void BOOST_MEMORY_CALL clear()
-	{
-		MemBlock* nextBlk;
-		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
-		{
-			nextBlk = blk->next();
-			m_alloc.deallocate(blk);
-		}
-		m_blks.clear();
-		m_freelist.clear();
-	}
-
 	__forceinline void* BOOST_MEMORY_CALL allocate()
 	{
 		if (m_freelist.empty())

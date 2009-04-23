@@ -16,6 +16,10 @@
 #include "../basic.hpp"
 #endif
 
+#ifndef _ITERATOR_
+#include <iterator>
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------

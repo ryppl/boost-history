@@ -16,10 +16,6 @@
 #include "basic.hpp"
 #endif
 
-#if !defined(_GLIBCXX_ALGORITHM) && !defined(_ALGORITHM)
-#include <algorithm> // std::swap
-#endif
-
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
@@ -30,6 +26,9 @@ class region_alloc
 {
 private:
 	typedef typename PolicyT::alloc_type AllocT;
+
+	region_alloc(const region_alloc&);
+	const region_alloc& operator=(const region_alloc&);
 
 public:
 	enum { MemBlockSize = PolicyT::MemBlockBytes - AllocT::Padding };
@@ -59,8 +58,6 @@ private:
 	DestroyNode* m_destroyChain;
 
 private:
-	const region_alloc& operator=(const region_alloc&);
-
 	__forceinline MemBlock* BOOST_MEMORY_CALL chainHeader_() const
 	{
 		return (MemBlock*)(m_begin - HeaderSize);
@@ -83,23 +80,20 @@ public:
 	{
 		init_();
 	}
-	explicit region_alloc(region_alloc& owner)
-		: m_alloc(owner.m_alloc), m_destroyChain(NULL)
-	{
-		init_();
-	}
 
 	~region_alloc()
 	{
 		clear();
 	}
 
+	alloc_type BOOST_MEMORY_CALL get_alloc() const
+	{
+		return m_alloc;
+	}
+
 	void BOOST_MEMORY_CALL swap(region_alloc& o)
 	{
-		std::swap(m_begin, o.m_begin);
-		std::swap(m_end, o.m_end);
-		std::swap(m_destroyChain, o.m_destroyChain);
-		m_alloc.swap(o.m_alloc);
+		swap_object(this, &o);
 	}
 
 	void BOOST_MEMORY_CALL clear()

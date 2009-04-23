@@ -21,6 +21,7 @@ void testPool()
 {
 	int i;
 	boost::memory::pool alloc(sizeof(int));
+	boost::memory::pool alloc2(sizeof(double));
 
 	void* p[3000];
 	for (i = 0; i < countof(p); ++i)
@@ -48,6 +49,7 @@ void testScopedPool()
 	int i;
 	boost::memory::block_pool recycle;
 	boost::memory::scoped_pool alloc(recycle, sizeof(int));
+	boost::memory::scoped_pool alloc2(alloc.get_alloc(), sizeof(double));
 
 	void* p[3000];
 	for (i = 0; i < countof(p); ++i)

@@ -58,26 +58,6 @@ typedef scoped_alloc default_alloc;
 NS_BOOST_MEMORY_END
 
 // -------------------------------------------------------------------------
-// function swap_object
-
-NS_BOOST_MEMORY_BEGIN
-
-inline void swap(void* a, void* b, size_t cb)
-{
-	void* t = _alloca(cb);
-	memcpy(t, a, cb);
-	memcpy(a, b, cb);
-	memcpy(b, t, cb);
-}
-
-template <class Type>
-void swap_object(Type* a, Type* b) {
-	swap(a, b, sizeof(Type));
-}
-
-NS_BOOST_MEMORY_END
-
-// -------------------------------------------------------------------------
 // class defragment
 
 NS_BOOST_MEMORY_BEGIN

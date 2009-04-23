@@ -97,7 +97,7 @@
 
 NS_BOOST_MEMORY_BEGIN
 
-class _unmanaged
+class unmanaged_
 {
 public:
 	template <class Type>
@@ -108,13 +108,13 @@ public:
 };
 
 template <class AllocT>
-class _managed
+class managed_
 {
 private:
 	AllocT& m_alloc;
 
 public:
-	explicit _managed(AllocT& alloc) : m_alloc(alloc) {}
+	explicit managed_(AllocT& alloc) : m_alloc(alloc) {}
 
 	template <class Type>
 	__forceinline Type* BOOST_MEMORY_CALL operator->*(Type* p) const
@@ -125,16 +125,16 @@ public:
 };
 
 template <class AllocT>
-__forceinline _unmanaged BOOST_MEMORY_CALL _get_managed(AllocT& alloc, int fnZero)
+__forceinline unmanaged_ BOOST_MEMORY_CALL get_managed__(AllocT& alloc, int fnZero)
 {
-	return _unmanaged();
+	return unmanaged_();
 }
 
 template <class AllocT>
 __forceinline 
-_managed<AllocT> BOOST_MEMORY_CALL _get_managed(AllocT& alloc, destructor_t fn)
+managed_<AllocT> BOOST_MEMORY_CALL get_managed__(AllocT& alloc, destructor_t fn)
 {
-	return _managed<AllocT>(alloc);
+	return managed_<AllocT>(alloc);
 }
 
 NS_BOOST_MEMORY_END
@@ -159,7 +159,7 @@ NS_BOOST_MEMORY_END
 	::new((alloc).unmanaged_alloc(sizeof(Type), BOOST_MEMORY_DESTRUCTOR(Type))) Type
 
 #define BOOST_MEMORY_GET_MANAGED_(alloc, Type)			\
-	NS_BOOST_MEMORY::_get_managed(alloc, BOOST_MEMORY_DESTRUCTOR(Type))
+	NS_BOOST_MEMORY::get_managed__(alloc, BOOST_MEMORY_DESTRUCTOR(Type))
 
 #define BOOST_MEMORY_NEW(alloc, Type)					\
 	BOOST_MEMORY_GET_MANAGED_(alloc, Type) ->* BOOST_MEMORY_UNMANAGED_ALLOC_(alloc, Type)
@@ -170,6 +170,7 @@ NS_BOOST_MEMORY_END
 	::new((alloc).allocate(sizeof(Type))) Type
 
 // =========================================================================
+// function enableMemoryLeakCheck
 
 NS_BOOST_MEMORY_BEGIN
 
@@ -178,6 +179,27 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 #if defined(_MSC_VER)
 	_CrtSetDbgFlag(_CrtSetDbgFlag(_CRTDBG_REPORT_FLAG) | _CRTDBG_LEAK_CHECK_DF);
 #endif
+}
+
+NS_BOOST_MEMORY_END
+
+// -------------------------------------------------------------------------
+// function swap_object
+
+NS_BOOST_MEMORY_BEGIN
+
+inline void swap(void* a, void* b, size_t cb)
+{
+	void* t = _alloca(cb);
+	memcpy(t, a, cb);
+	memcpy(a, b, cb);
+	memcpy(b, t, cb);
+}
+
+template <class Type>
+void swap_object(Type* a, Type* b)
+{
+	swap(a, b, sizeof(Type));
 }
 
 NS_BOOST_MEMORY_END
