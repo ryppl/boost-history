@@ -14,8 +14,8 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_TRAITS_HPP
 
-#include <boost/numeric/bindings/traits/type.hpp> 
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/type.hpp> 
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
 #include <boost/static_assert.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS

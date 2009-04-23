@@ -17,11 +17,11 @@
 // Roldan Pozo's TNT (Template Numerical Toolkit)
 // see: http://math.nist.gov/tnt/index.html
 
-#include <boost/numeric/bindings/traits/config.hpp> 
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/config.hpp> 
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
 #include <tnt/tnt_array1d.h>
 #include <tnt/tnt_fortran_array1d.h>
 #include <tnt/tnt_array2d.h>

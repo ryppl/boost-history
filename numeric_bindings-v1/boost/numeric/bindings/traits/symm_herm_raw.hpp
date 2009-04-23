@@ -10,7 +10,7 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_RAW_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_SYMM_HERM_RAW_HPP
 
-#include <boost/numeric/bindings/traits/matrix_raw.hpp> 
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/matrix_raw.hpp> 
 #ifndef BOOST_UBLAS_HAVE_BINDINGS
 #  include <boost/numeric/ublas/symmetric.hpp> 
 #  include <boost/numeric/ublas/hermitian.hpp> 

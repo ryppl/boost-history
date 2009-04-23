@@ -4,7 +4,7 @@
 
 #include <stddef.h>
 #include <iostream>
-#include <boost/numeric/bindings/traits/traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
 
 
 ///////////////////////////////

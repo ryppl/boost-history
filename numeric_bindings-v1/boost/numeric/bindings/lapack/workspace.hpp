@@ -14,10 +14,10 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_WORKSPACE_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_WORKSPACE_HPP
 
-#include <boost/numeric/bindings/traits/detail/array_impl.hpp>
-#include <boost/numeric/bindings/traits/type.hpp>
-#include <boost/numeric/bindings/traits/type_traits.hpp>
-#include <boost/numeric/bindings/traits/vector_traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/array_impl.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/type.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/type_traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/vector_traits.hpp>
 #include <memory>
 
 namespace boost { namespace numeric { namespace bindings {

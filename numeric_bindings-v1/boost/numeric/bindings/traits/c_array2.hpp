@@ -15,12 +15,12 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY2_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_C_ARRAY2_H
 
-#include <boost/numeric/bindings/traits/config.hpp> 
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/config.hpp> 
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
-#include <boost/numeric/bindings/traits/c_array.hpp>
-#include <boost/numeric/bindings/traits/matrix_traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/c_array.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/matrix_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 

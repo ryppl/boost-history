@@ -14,10 +14,10 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_SYEV_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_SYEV_HPP
 
-#include <boost/numeric/bindings/traits/traits.hpp>
-#include <boost/numeric/bindings/lapack/lapack.h>
-#include <boost/numeric/bindings/lapack/workspace.hpp>
-#include <boost/numeric/bindings/traits/detail/array.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/lapack/lapack.h>
+#include <numeric_bindings-v1/boost/numeric/bindings/lapack/workspace.hpp>
+#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/array.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>
