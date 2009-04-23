@@ -118,24 +118,6 @@ public:
 		intr_.swap( other.intr_);
 		id_.swap( other.id_);
 	}
-
-	bool operator==( handle< R > const& other) const
-	{ return id_ == other.id_; }
-
-	bool operator!=( handle< R > const& other) const
-	{ return id_ != other.id_; }
-
-	bool operator<( handle< R > const& other) const
-	{ return id_ < other.id_; }
-
-	bool operator>( handle< R > const& other) const
-	{ return id_ > other.id_; }
-
-	bool operator<=( handle< R > const& other) const
-	{ return id_ <= other.id_; }
-
-	bool operator>=( handle< R > const& other) const
-	{ return id_ >= other.id_; }
 };
 
 template<>
@@ -236,24 +218,6 @@ public:
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
 	}
-
-	bool operator==( handle< void > const& other) const
-	{ return id_ == other.id_; }
-
-	bool operator!=( handle< void > const& other) const
-	{ return id_ != other.id_; }
-
-	bool operator<( handle< void > const& other) const
-	{ return id_ < other.id_; }
-
-	bool operator>( handle< void > const& other) const
-	{ return id_ > other.id_; }
-
-	bool operator<=( handle< void > const& other) const
-	{ return id_ <= other.id_; }
-
-	bool operator>=( handle< void > const& other) const
-	{ return id_ >= other.id_; }
 };
 
 template< typename Iterator >

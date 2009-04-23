@@ -57,7 +57,7 @@ private:
 
 		virtual void signal_shutdown_now() = 0;
 
-		virtual void schedule_until( function< bool() > const&) = 0;
+		virtual void reschedule_until( function< bool() > const&) = 0;
 
 		virtual void run() = 0;
 	};
@@ -141,6 +141,17 @@ private:
 							this_thread::yield();
 					}
 				}
+			}
+		}
+	
+		void next_callable__( callable & ca)
+		{
+			if ( ! try_take( ca) )
+			{
+				guard grd( get_pool().idle_worker_);
+				if ( shutdown_() ) return;
+				this_thread::yield();
+				this_thread::sleep( asleep_);
 			}
 		}
 
@@ -230,16 +241,24 @@ private:
 		{
 			BOOST_ASSERT( get_id() == this_thread::get_id() );
 
-			schedule_until(
-				bind( & impl_pool::shutdown_, this) );
+			callable ca;
+			while ( ! shutdown_() )
+			{
+				next_callable_( ca);
+				if( ! ca.empty() )
+				{
+					execute_( ca);
+					scns_ = 0;
+				}
+			}
 		}
 
-		void schedule_until( function< bool() > const& pred)
+		void reschedule_until( function< bool() > const& pred)
 		{
 			callable ca;
 			while ( ! pred() )
 			{
-				next_callable_( ca);
+				next_callable__( ca);
 				if( ! ca.empty() )
 				{
 					execute_( ca);

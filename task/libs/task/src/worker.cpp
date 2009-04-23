@@ -46,7 +46,7 @@ worker::try_steal( callable & ca)
 
 void
 worker::reschedule_until( function< bool() > const& pred)
-{ return impl_->schedule_until( pred); }
+{ return impl_->reschedule_until( pred); }
 
 void
 worker::run()
