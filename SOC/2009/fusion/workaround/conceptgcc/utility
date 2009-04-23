@@ -1,0 +1,38 @@
+// Copyright Christopher Schmidt 2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
+
+#pragma once
+
+#include <type_traits>
+#include_next <utility>
+
+namespace std
+{
+	namespace detail
+	{
+		//20.3.2...
+		template<class Type>struct identity
+		{
+			typedef Type type;
+		};
+	}
+
+	template<class Type> Type&& forward(typename detail::identity<Type>::type&& type)
+	{
+		return type;
+	}
+
+	template<class Type> typename remove_reference<Type>::type&& move(Type&& type)
+	{
+		return type;
+	}
+
+	template<class Type> void swap(Type& a, Type& b)
+	{
+		Type temp = move(a);
+		a = move(b);
+		b = move(temp);
+	}
+}
