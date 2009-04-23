@@ -16,33 +16,33 @@
 
 // linear systems
 
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/gesv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/posv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/ppsv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/sysv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/spsv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/hesv.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/hpsv.hpp>
+#include <boost/numeric/bindings/lapack/gesv.hpp>
+#include <boost/numeric/bindings/lapack/posv.hpp>
+#include <boost/numeric/bindings/lapack/ppsv.hpp>
+#include <boost/numeric/bindings/lapack/sysv.hpp>
+#include <boost/numeric/bindings/lapack/spsv.hpp>
+#include <boost/numeric/bindings/lapack/hesv.hpp>
+#include <boost/numeric/bindings/lapack/hpsv.hpp>
 
 // eigenproblems
 
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/gees.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/trevc.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/trexc.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/hbev.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/syev.hpp>
+#include <boost/numeric/bindings/lapack/gees.hpp>
+#include <boost/numeric/bindings/lapack/trevc.hpp>
+#include <boost/numeric/bindings/lapack/trexc.hpp>
+#include <boost/numeric/bindings/lapack/hbev.hpp>
+#include <boost/numeric/bindings/lapack/syev.hpp>
 
 // SVD
 
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/gesvd.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/gesdd.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/sygv.hpp>
+#include <boost/numeric/bindings/lapack/gesvd.hpp>
+#include <boost/numeric/bindings/lapack/gesdd.hpp>
+#include <boost/numeric/bindings/lapack/sygv.hpp>
 
 // Miscellaneous
 // QR
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/geqrf.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/ormqr.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/orgqr.hpp>
+#include <boost/numeric/bindings/lapack/geqrf.hpp>
+#include <boost/numeric/bindings/lapack/ormqr.hpp>
+#include <boost/numeric/bindings/lapack/orgqr.hpp>
 
 
 

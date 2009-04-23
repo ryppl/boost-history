@@ -14,15 +14,15 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_HERMITIAN_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_HERMITIAN_H
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/traits.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
 #ifndef BOOST_UBLAS_HAVE_BINDINGS
 #  include <boost/numeric/ublas/hermitian.hpp> 
 #endif 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/ublas_matrix.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/ublas_uplo.hpp>
+#include <boost/numeric/bindings/traits/ublas_matrix.hpp>
+#include <boost/numeric/bindings/traits/detail/ublas_uplo.hpp>
 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {

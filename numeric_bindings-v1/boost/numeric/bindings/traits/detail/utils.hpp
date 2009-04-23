@@ -16,7 +16,7 @@
 
 // #include <cstring> 
 #include <iterator>
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/type_traits.hpp>
+#include <boost/numeric/bindings/traits/type_traits.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 

@@ -353,7 +353,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_NO_SYMMETRIC_TRAITS 
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/symm_herm_raw.hpp> 
+#include <boost/numeric/bindings/traits/symm_herm_raw.hpp> 
 
 #endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_NO_SYMMETRIC_TRAITS 
 

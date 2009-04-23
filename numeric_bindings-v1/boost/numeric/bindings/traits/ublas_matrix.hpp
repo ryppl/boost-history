@@ -14,14 +14,14 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_UBLAS_MATRIX_H
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/traits/traits.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
 #ifndef BOOST_UBLAS_HAVE_BINDINGS
 #  include <boost/numeric/ublas/matrix.hpp> 
 #endif 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
+#include <boost/numeric/bindings/traits/detail/ublas_ordering.hpp>
 
 #if defined (BOOST_NUMERIC_BINDINGS_FORTRAN) || !defined (BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK)
 #  include <boost/static_assert.hpp>

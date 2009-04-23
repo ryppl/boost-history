@@ -9,7 +9,7 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_SYEVX_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_SYEVX_HPP
 
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/heevx.hpp>
+#include <boost/numeric/bindings/lapack/heevx.hpp>
 
 namespace boost { namespace numeric { namespace bindings {
   namespace lapack {

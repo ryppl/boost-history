@@ -18,11 +18,11 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_STD_VALARRAY2_H
 #define BOOST_NUMERIC_BINDINGS_TRAITS_STD_VALARRAY2_H
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/config.hpp> 
+#include <boost/numeric/bindings/traits/config.hpp> 
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/matrix_traits.hpp>
+#include <boost/numeric/bindings/traits/matrix_traits.hpp>
 #include <valarray>
 
 

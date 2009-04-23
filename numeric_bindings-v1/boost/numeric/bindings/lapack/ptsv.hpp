@@ -11,9 +11,9 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_PTSV_HPP
 #define BOOST_NUMERIC_BINDINGS_LAPACK_PTSV_HPP
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/type_traits.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/traits.hpp>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/lapack.h>
+#include <boost/numeric/bindings/traits/type_traits.hpp>
+#include <boost/numeric/bindings/traits/traits.hpp>
+#include <boost/numeric/bindings/lapack/lapack.h>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  include <boost/static_assert.hpp>

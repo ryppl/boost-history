@@ -14,8 +14,8 @@
 #ifndef BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
 #define BOOST_NUMERIC_BINDINGS_LAPACK_LAPACK_H
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/type.h>
-#include <numeric_bindings-v1/boost/numeric/bindings/lapack/lapack_names.h>
+#include <boost/numeric/bindings/traits/type.h>
+#include <boost/numeric/bindings/lapack/lapack_names.h>
 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_STRUCTURE_CHECK
 #  define BOOST_NUMERIC_BINDINGS_FORTRAN

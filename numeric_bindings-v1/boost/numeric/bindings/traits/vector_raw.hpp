@@ -16,7 +16,7 @@
 #  include <boost/numeric/ublas/vector.hpp> 
 #endif 
 #include <vector> 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/array_impl.hpp> 
+#include <boost/numeric/bindings/traits/detail/array_impl.hpp> 
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 

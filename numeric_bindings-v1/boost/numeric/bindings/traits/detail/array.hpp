@@ -14,11 +14,11 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_DETAIL_ARRAY_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_DETAIL_ARRAY_HPP
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/vector_traits.hpp>
+#include <boost/numeric/bindings/traits/vector_traits.hpp>
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS 
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/array_impl.hpp>
+#include <boost/numeric/bindings/traits/detail/array_impl.hpp>
 
 namespace boost { namespace numeric { namespace bindings { namespace traits {
 

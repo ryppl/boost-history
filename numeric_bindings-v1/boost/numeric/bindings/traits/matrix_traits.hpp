@@ -14,11 +14,11 @@
 #ifndef BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP
 #define BOOST_NUMERIC_BINDINGS_TRAITS_MATRIX_TRAITS_HPP
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/config.hpp> 
+#include <boost/numeric/bindings/traits/config.hpp> 
 
 #ifndef BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/detail/generate_const.hpp> 
+#include <boost/numeric/bindings/traits/detail/generate_const.hpp> 
 #include <boost/type_traits/remove_const.hpp> 
 #ifndef BOOST_NUMERIC_BINDINGS_NO_SANITY_CHECK
 #  include <boost/type_traits/is_same.hpp> 
@@ -150,7 +150,7 @@ namespace boost { namespace numeric { namespace bindings { namespace traits {
 
 #else // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
-#include <numeric_bindings-v1/boost/numeric/bindings/traits/matrix_raw.hpp> 
+#include <boost/numeric/bindings/traits/matrix_raw.hpp> 
 
 #endif // BOOST_NUMERIC_BINDINGS_POOR_MANS_TRAITS
 
