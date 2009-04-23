@@ -46,12 +46,13 @@ public:
 		tsk::pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		pool.submit( t);
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		tsk::handle< int > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check shutdown
@@ -60,14 +61,15 @@ public:
 		tsk::pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		pool.submit( t);
+		tsk::handle< int > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 		pool.shutdown();
 		BOOST_CHECK( pool.closed() );
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check runtime_error throw inside task
@@ -76,14 +78,15 @@ public:
 		tsk::pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::task< void > t(
-			tsk::make_task(
-				throwing_fn) );
-		pool.submit( t);
+		tsk::handle< void > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					throwing_fn) ) );
 		pool.shutdown();
 		bool thrown( false);
 		try
-		{ t.get(); }
+		{ h.get(); }
 		catch ( std::runtime_error const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
@@ -100,7 +103,8 @@ public:
 		bool thrown( false);
 		try
 		{
-			pool.submit(
+			tsk::launch(
+				pool,
 				tsk::make_task(
 					boost::bind(
 						fibonacci_fn,
@@ -117,11 +121,12 @@ public:
 		tsk::pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::task< void > t(
-			tsk::make_task(
-				delay_fn,
-				pt::millisec( 500) ) );
-		pool.submit( t);
+		tsk::handle< void > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					delay_fn,
+					pt::millisec( 500) ) ) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		pool.shutdown_now();
@@ -131,7 +136,7 @@ public:
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
 		bool thrown( false);
 		try
-		{ t.get(); }
+		{ h.get(); }
 		catch ( tsk::task_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
@@ -145,31 +150,34 @@ public:
 		> pool_type;
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		tsk::task< void > t1(
-			tsk::make_task(
-				barrier_fn,
-				boost::ref( b) ) );
-		pool.submit( t1);
+		tsk::handle< void > h1(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					barrier_fn,
+					boost::ref( b) ) ) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 0) );
-		tsk::task< int > t2(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		pool.submit( t2);
+		tsk::handle< int > h2(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 1) );
-		tsk::task< int > t3(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		pool.submit( t3);
+		tsk::handle< int > h3(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 2) );
 		b.wait();
-		t1.get();
-		BOOST_CHECK_EQUAL( t2.get(), 55);
-		BOOST_CHECK_EQUAL( t3.get(), 55);
+		h1.get();
+		BOOST_CHECK_EQUAL( h2.get(), 55);
+		BOOST_CHECK_EQUAL( h3.get(), 55);
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 0) );
 	}
 
@@ -186,25 +194,27 @@ public:
 				barrier_fn,
 				boost::ref( b) ) );
 		std::vector< int > buffer;
-		tsk::task< void > t(
-			tsk::make_task(
-				buffer_fibonacci_fn,
-				boost::ref( buffer),
-				10) );
-		pool.submit( t);
-		pool.submit(
+		tsk::handle< void > h(
+			tsk::launch(
+				pool,
+				tsk::make_task(
+					buffer_fibonacci_fn,
+					boost::ref( buffer),
+					10) ) );
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0) );
-		t.interrupt();
+		h.interrupt();
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);
 		BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 1) );
 		bool thrown( false);
 		try
-		{ t.get(); }
+		{ h.get(); }
 		catch ( tsk::task_interrupted const&)
 		{ thrown = true; }
 		BOOST_CHECK( thrown);
@@ -218,17 +228,20 @@ public:
 		> pool_type;
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				barrier_fn,
 				boost::ref( b) ) );
 		std::vector< int > buffer;
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10) );
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
@@ -248,17 +261,20 @@ public:
 		> pool_type;
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				barrier_fn,
 				boost::ref( b) ) );
 		std::vector< int > buffer;
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10) );
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
@@ -278,19 +294,22 @@ public:
 		> pool_type;
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				barrier_fn,
 				boost::ref( b) ),
 			0);
 		std::vector< int > buffer;
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10),
 			1);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
@@ -317,19 +336,22 @@ public:
 				boost::ref( b) ),
 			0);
 		std::vector< int > buffer;
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10),
 			2);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0),
 			1);
-		pool.submit(
+		tsk::launch(
+			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
@@ -345,7 +367,7 @@ public:
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: pool (with unbounded channel) test suite") );
+	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.Task: test suite") );
 
 	boost::shared_ptr< test_pool_unbounded_channel > instance( new test_pool_unbounded_channel() );
 	test->add( BOOST_CLASS_TEST_CASE( & test_pool_unbounded_channel::test_case_1, instance) );

@@ -102,7 +102,7 @@ private:
 			BOOST_ASSERT( ! ca.empty() );
 			guard grd( get_pool().active_worker_);
 			{
-				callable::scoped_lock lk( ca, thrd_);
+				callable::scoped_guard lk( ca, thrd_);
 				ca();
 			}
 			ca.clear();

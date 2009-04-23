@@ -26,11 +26,11 @@ void
 callable::clear()
 { impl_.reset(); }
 
-callable::scoped_lock::scoped_lock( callable & ca, shared_ptr< thread > & thrd)
+callable::scoped_guard::scoped_guard( callable & ca, shared_ptr< thread > & thrd)
 : ca_( ca)
 { ca_.impl_->set( thrd); }
 
-callable::scoped_lock::~scoped_lock()
+callable::scoped_guard::~scoped_guard()
 { ca_.impl_->reset(); }
 } } }
 

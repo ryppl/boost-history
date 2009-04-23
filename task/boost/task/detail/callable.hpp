@@ -55,15 +55,15 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	class scoped_lock : public noncopyable
+	class scoped_guard : public noncopyable
 	{
 	private:
 		callable	&	ca_;
 
 	public:
-		scoped_lock( callable &, shared_ptr< thread > &);
+		scoped_guard( callable &, shared_ptr< thread > &);
 
-		~scoped_lock();
+		~scoped_guard();
 	};
 
 	callable();

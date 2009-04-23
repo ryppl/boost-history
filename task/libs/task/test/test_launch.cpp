@@ -63,7 +63,8 @@ public:
 				fibonacci_fn,
 				10) );
 		t();
-		BOOST_CHECK_EQUAL( t.get(), 55);
+		tsk::handle< int > h( t.get_handle() );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// don't execute twice
@@ -73,15 +74,16 @@ public:
 			tsk::make_task(
 				fibonacci_fn,
 				10) );
-		t();
-		BOOST_CHECK_EQUAL( t.get(), 55);
-		t();
-		bool thrown( false);
-		try
-		{ t.get(); }
-		catch ( tsk::task_already_executed const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		tsk::handle< int > h( t.get_handle() );
+		tsk::launch( t);
+		BOOST_CHECK_EQUAL( h.get(), 55);
+// 		tsk::launch( t);
+// 		bool thrown( false);
+// 		try
+// 		{ h.get(); }
+// 		catch ( tsk::task_already_executed const&)
+// 		{ thrown = true; }
+// 		BOOST_CHECK( thrown);
 	}
 
 	// check runs in pool
@@ -101,13 +103,14 @@ public:
 			tsk::make_task(
 				runs_in_pool_fn) );
 		t();
-		BOOST_CHECK_EQUAL( t.get(), false);
+		tsk::handle< bool > h( t.get_handle() );
+		BOOST_CHECK_EQUAL( h.get(), false);
 	}
 };
 
 boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 {
-	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.ThreadPool: pool (with unbounded channel) test suite") );
+	boost::unit_test::test_suite * test( BOOST_TEST_SUITE("Boost.Task: test suite") );
 
 	boost::shared_ptr< test_launch > instance( new test_launch() );
 	test->add( BOOST_CLASS_TEST_CASE( & test_launch::test_case_1, instance) );
