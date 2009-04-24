@@ -20,6 +20,18 @@ namespace std
 		typedef Type type;
 	};
 
+	template<bool, class TrueType, class>class conditional
+	{
+	public:
+		typedef TrueType type;
+	};
+
+	template<class TrueType, class FalseType>class conditional<false, TrueType, FalseType>
+	{
+	public:
+		typedef FalseType type;
+	};
+
 	namespace detail
 	{
 		//20.3.2...

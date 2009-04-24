@@ -327,7 +327,7 @@ namespace boost{namespace fusion{namespace gsoc{
 		};
 	}
 
-	template<std::size_t Index,class Container>typename result_of::at_c<Container,Index>::type at_c(const Container& container)
+	template<std::size_t Index,class Container>typename result_of::at_c<const Container,Index>::type at_c(const Container& container)
 	{
 		return result_of::at_c<const Container,Index>::call(container);
 	}

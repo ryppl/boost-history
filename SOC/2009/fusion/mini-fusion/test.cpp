@@ -48,56 +48,63 @@ int main()
 	namespace gsoc=boost::fusion::gsoc;
 
 	{
+		typedef gsoc::vector<> at;
+
 		{
-			typedef gsoc::vector<> at;
-
-			{
-				using namespace gsoc::result_of;
-				static_assert(equal_to<advance_c<begin<at>::type,0>::type,end<at>::type>::type::value,"");
-				static_assert(!distance<begin<at>::type,end<at>::type>::type::value,"");
-				static_assert(!size<at>::type::value,"");
-				static_assert(empty<at>::type::value,"");
-			}
-
-			{
-				at a;
-
-				using namespace gsoc;
-				assert(equal_to(advance_c<0>(begin(a)),end(a)));
-				assert(!distance(begin(a),end(a)));
-				assert(!size(a));
-				assert(empty(a));
-			}
+			using namespace gsoc::result_of;
+			static_assert(equal_to<advance_c<begin<at>::type,0>::type,end<at>::type>::type::value,"");
+			static_assert(!distance<begin<at>::type,end<at>::type>::type::value,"");
+			static_assert(!size<at>::type::value,"");
+			static_assert(empty<at>::type::value,"");
 		}
 
 		{
-			typedef gsoc::vector<long long,float,char> bt;
+			at a;
 
-			{
-				using namespace gsoc::result_of;
-				static_assert(equal_to<advance_c<begin<bt>::type,3>::type,end<bt>::type>::type::value,"");
-				static_assert(distance<begin<bt>::type,end<bt>::type>::type::value==3,"");
-				static_assert(distance<next<begin<bt>::type>::type,prior<end<bt>::type>::type>::type::value==1,"");
-				static_assert(size<bt>::type::value==3,"");
-				static_assert(!empty<bt>::type::value,"");
+			using namespace gsoc;
+			assert(equal_to(advance_c<0>(begin(a)),end(a)));
+			assert(!distance(begin(a),end(a)));
+			assert(!size(a));
+			assert(empty(a));
+		}
+	}
 
-				static_assert(std::is_same<value_of<begin<bt>::type>::type,long long>::value,"");
-			}
+	{
+		typedef gsoc::vector<long long,float,char> bt;
 
-			{
-				bt b(0xDEADBEEF,1337.0f,42);
+		{
+			using namespace gsoc::result_of;
+			static_assert(equal_to<advance_c<begin<bt>::type,3>::type,end<bt>::type>::type::value,"");
+			static_assert(distance<begin<bt>::type,end<bt>::type>::type::value==3,"");
+			static_assert(distance<next<begin<bt>::type>::type,prior<end<bt>::type>::type>::type::value==1,"");
+			static_assert(size<bt>::type::value==3,"");
+			static_assert(!empty<bt>::type::value,"");
 
-				using namespace gsoc;
-				assert(equal_to(advance_c<3>(begin(b)),end(b)));
-				assert(distance(begin(b),end(b))==3);
-				assert(distance(next(begin(b)),prior(end(b)))==1);
-				assert(size(b)==3);
-				assert(!empty(b));
+			static_assert(std::is_same<value_of<begin<bt>::type>::type,long long>::value,"");
+		}
 
-				assert(deref(begin(b))==0xDEADBEEF);
-				at_c<0>(b)=0xBEEFDEEF;
-				assert(at_c<0>(b)==0xBEEFDEEF);
-			}
+		{
+			bt b(0xDEADBEEF,1337.0f,42);
+
+			using namespace gsoc;
+			assert(equal_to(advance_c<3>(begin(b)),end(b)));
+			assert(distance(begin(b),end(b))==3);
+			assert(distance(next(begin(b)),prior(end(b)))==1);
+			assert(size(b)==3);
+			assert(!empty(b));
+
+			assert(deref(begin(b))==0xDEADBEEF);
+			at_c<0>(b)=0xBEEFDEEF;
+			assert(at_c<0>(b)==0xBEEFDEEF);
+		}
+
+		{
+			const bt b(0xDEADBEEF,1337.0f,42);
+
+			using namespace gsoc;
+			assert(deref(begin(b))==0xDEADBEEF);
+			//at_c<0>(b)=0xBEEFDEEF;
+			assert(at_c<0>(b)==0xBEEFDEEF);
 		}
 	}
 

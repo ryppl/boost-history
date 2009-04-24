@@ -31,6 +31,7 @@ namespace boost{namespace fusion{namespace gsoc{
 
 		public:
 			typedef vector_iterator_tag tag;
+			typedef mpl::bool_<std::is_const<Vector>::value> is_const;
 
 		private:
 			typedef Vector sequence;
@@ -315,8 +316,12 @@ namespace boost{namespace fusion{namespace gsoc{
 			public:
 				template<class Iterator>class apply
 				{
+				private:
+					typedef typename result_of::value_of<Iterator>::type value_type;
 				public:
-					typedef typename std::add_reference<typename result_of::value_of<Iterator>::type>::type type;
+					typedef typename std::add_reference<
+						typename std::conditional<Iterator::is_const::value,typename std::add_const<value_type>::type,value_type>::type
+						>::type type;
 
 				private:
 					template<std::size_t Index,class VectorImpl>static typename std::enable_if<!Index,type>::type impl(VectorImpl& impl)
