@@ -17,20 +17,20 @@ if "%1" == "conceptgcc" (
 		call :gcc
 	) else (
 		if "%1" == "msvc" (
-			call :msvc			
+			call :msvc
 		) else (
 			if "%1" == "" (
-				call :conceptgcc			
+				call :conceptgcc
 			) else (
 				echo Unknown toolset '%1'
-				goto :eof	
+				goto :eof
 			)
 		)
 	)
 )
 
 rem compile...
-z:\projekte\cl_link_frontend\tools\bjam --toolset=%TOOLSET% mini-fusion
+z:\projekte\cl_link_frontend\tools\bjam --toolset=%TOOLSET% mini-fusion %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :conceptgcc

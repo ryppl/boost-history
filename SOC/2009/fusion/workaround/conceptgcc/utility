@@ -10,6 +10,16 @@
 
 namespace std
 {
+	template<bool, class>class enable_if
+	{
+	};
+
+	template<class Type>class enable_if<true, Type>
+	{
+	public:
+		typedef Type type;
+	};
+
 	namespace detail
 	{
 		//20.3.2...
