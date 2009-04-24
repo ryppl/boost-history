@@ -15,14 +15,14 @@
 namespace boost { namespace task
 {
 template< typename R >
-handle< R > launch( task< R > t)
+handle< R > launch_in_pool( task< R > t)
 { return get_default_pool().submit( t); }
 
 template<
 	typename R,
 	typename Attr
 >
-handle< R > launch(
+handle< R > launch_in_pool(
 	task< R > t,
 	Attr const& attr)
 { return get_default_pool().submit( t, attr); }
@@ -31,7 +31,7 @@ template<
 	typename Channel,
 	typename R
 >
-handle< R > launch(
+handle< R > launch_in_pool(
 	pool< Channel > & pool,
 	task< R > t)
 { return pool.submit( t); }
@@ -41,7 +41,7 @@ template<
 	typename R,
 	typename Attr
 >
-handle< R > launch(
+handle< R > launch_in_pool(
 	pool< Channel > & pool,
 	task< R > t,
 	Attr const& attr)

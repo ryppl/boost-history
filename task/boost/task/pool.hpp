@@ -13,6 +13,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
+#include <boost/cstdint.hpp>
 #include <boost/function.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread.hpp>
@@ -46,10 +47,10 @@ private:
 
 	detail::worker_group	wg_;
 	shared_mutex			mtx_wg_;
-	unsigned int			state_;
+	volatile uint32_t		state_;
 	channel		 			channel_;
-	unsigned int			active_worker_;
-	unsigned int			idle_worker_;
+	volatile uint32_t		active_worker_;
+	volatile uint32_t		idle_worker_;
 
 	void worker_entry_()
 	{

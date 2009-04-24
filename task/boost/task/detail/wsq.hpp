@@ -7,6 +7,7 @@
 #ifndef BOOST_TASK_DETAIL_WSQ_H
 #define BOOST_TASK_DETAIL_WSQ_H
 
+#include <boost/cstdint.hpp>
 #include <boost/shared_array.hpp>
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>

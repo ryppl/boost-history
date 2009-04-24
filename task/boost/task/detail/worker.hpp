@@ -144,14 +144,20 @@ private:
 			}
 		}
 	
-		void next_callable__( callable & ca)
+		void next_local_callable_( callable & ca)
 		{
 			if ( ! try_take( ca) )
 			{
 				guard grd( get_pool().idle_worker_);
 				if ( shutdown_() ) return;
-				this_thread::yield();
-				this_thread::sleep( asleep_);
+				++scns_;
+				if ( scns_ >= max_scns_)
+				{
+					this_thread::sleep( asleep_);
+					scns_ = 0;
+				}
+				else
+					this_thread::yield();
 			}
 		}
 
@@ -258,7 +264,7 @@ private:
 			callable ca;
 			while ( ! pred() )
 			{
-				next_callable__( ca);
+				next_local_callable_( ca);
 				if( ! ca.empty() )
 				{
 					execute_( ca);
