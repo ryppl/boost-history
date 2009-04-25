@@ -14,6 +14,7 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
+#include <boost/weak_ptr.hpp>
 
 #include <boost/task/detail/config.hpp>
 
@@ -33,14 +34,14 @@ private:
 		bool					done_;
 		condition_variable		cond_;
 		mutex					mtx_;
-		shared_ptr< thread >	thrd_;
+		weak_ptr< thread >		thrd_;
 
 		void interrupt_();
 
 	public:
 		impl();
 
-		void set( shared_ptr< thread > const& thrd);
+		void set( weak_ptr< thread > const& thrd);
 
 		void reset();
 
@@ -66,7 +67,7 @@ private:
 public:
 	interrupter();
 
-	void set( shared_ptr< thread > const& thrd);
+	void set( weak_ptr< thread > const& thrd);
 
 	void reset();
 
