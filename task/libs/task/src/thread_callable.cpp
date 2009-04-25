@@ -16,9 +16,5 @@ thread_callable::operator()()
 	impl_->run();
 	impl_.reset();
 }
-
-void
-thread_callable::set( shared_ptr< thread > & thrd)
-{ impl_->set( thrd); }
 } } }
 

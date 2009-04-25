@@ -58,7 +58,9 @@ struct joiner
 {
 	void operator()( thread * thrd)
 	{
+printf("thrd->join() - 1\n");
 		thrd->join();
+printf("thrd->join() - 2\n");
 		delete thrd;
 	}
 };
@@ -68,10 +70,10 @@ template< typename R >
 async_handle< R > async_thread( task< R > t)
 {
 	detail::interrupter intr;
-	detail::thread_callable ca( t, intr);
+	detail::thread_callable ca( t);
 
 	shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
-	ca.set( thrd);
+	intr.set( thrd);
 
 	return async_handle< R >( t.get_id(), t.get_future(), intr);
 }

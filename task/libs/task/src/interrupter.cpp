@@ -18,8 +18,7 @@ interrupter::impl::interrupt_()
 	if ( ! interruption_requested_ && ! done_)
 	{
 		interruption_requested_ = true;
-		shared_ptr< thread > tmp( thrd_.lock() );
-		if ( tmp) tmp->interrupt();
+		if ( thrd_) thrd_->interrupt();
 	}
 }
 
@@ -33,16 +32,13 @@ thrd_()
 {}
 
 void
-interrupter::impl::set( weak_ptr< thread > const& thrd)
+interrupter::impl::set( shared_ptr< thread > const& thrd)
 {
 	unique_lock< mutex > lk( mtx_);
 	thrd_ = thrd;
-	BOOST_ASSERT( ! thrd_.expired() );
+	BOOST_ASSERT( thrd_);
 	if ( interruption_requested_)
-	{
-		shared_ptr< thread > tmp( thrd_.lock() );
-		if ( tmp) tmp->interrupt();
-	}
+		if ( thrd_) thrd_->interrupt();
 }
 
 void
@@ -50,7 +46,7 @@ interrupter::impl::reset()
 {
 	unique_lock< mutex > lk( mtx_);
 	thrd_.reset();
-	BOOST_ASSERT( ! thrd_.expired() );
+	BOOST_ASSERT( thrd_);
 	try
 	{ this_thread::interruption_point(); }
 	catch ( thread_interrupted const&)
@@ -97,7 +93,7 @@ interrupter::interrupter()
 {}
 
 void
-interrupter::set( weak_ptr< thread > const& thrd)
+interrupter::set( shared_ptr< thread > const& thrd)
 { impl_->set( thrd); }
 
 void

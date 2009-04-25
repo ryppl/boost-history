@@ -29,7 +29,6 @@ private:
 	{
 		virtual ~impl() {}
 		virtual void run() = 0;
-		virtual void set( shared_ptr< thread > &) = 0;
 	};
 
 	template< typename R >
@@ -37,42 +36,25 @@ private:
 	{
 	private:
 		task< R >			t_;
-		detail::interrupter	i_;
-		semaphore			sem_;
 
 	public:
-		impl_wrapper(
-			task< R > const& t,
-			detail::interrupter const& i)
-		: t_( t), i_( i), sem_( 0)
+		impl_wrapper( task< R > const& t)
+		: t_( t)
 		{}
 
 		void run()
-		{
-			sem_.wait();
-			t_();
-		}
-
-		void set( shared_ptr< thread > & thrd)
-		{
-			i_.set( thrd);
-			sem_.post();
-		}
+		{ t_(); }
 	};
 
 	shared_ptr< impl >	impl_;
 
 public:
 	template< typename R >
-	thread_callable(
-		task< R > const& t,
-		detail::interrupter const& i)
-	: impl_( new impl_wrapper<  R >( t, i) )
+	thread_callable( task< R > const& t)
+	: impl_( new impl_wrapper<  R >( t) )
 	{}
 
 	void operator()();
-
-	void set( shared_ptr< thread > &);
 };
 } } }
 
