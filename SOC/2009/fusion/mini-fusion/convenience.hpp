@@ -43,16 +43,16 @@ namespace boost{namespace fusion{namespace gsoc{
 		{
 		};
 	}
-    template<class Sequence> typename result_of::begin<typename std::remove_reference<Sequence>::type>::type begin(Sequence&& sequence)
-    {
-        return result_of::begin<typename std::remove_reference<Sequence>::type>::call(std::forward<Sequence>(sequence));
-    }
-    template<class Sequence> typename result_of::begin<const Sequence>::type begin(const Sequence& sequence)
-    {
-        return result_of::begin<const Sequence>::call(sequence);
-    }
+	template<class Sequence> typename result_of::begin<typename std::remove_reference<Sequence>::type>::type begin(Sequence&& sequence)
+	{
+		return result_of::begin<typename std::remove_reference<Sequence>::type>::call(std::forward<Sequence>(sequence));
+	}
+	template<class Sequence> typename result_of::begin<const Sequence>::type begin(const Sequence& sequence)
+	{
+		return result_of::begin<const Sequence>::call(sequence);
+	}
 
-    //end
+	//end
 	namespace result_of
 	{
 		namespace impl
@@ -68,16 +68,16 @@ namespace boost{namespace fusion{namespace gsoc{
 		{
 		};
 	}
-    template<class Sequence> typename result_of::end<typename std::remove_reference<Sequence>::type>::type end(Sequence&& sequence)
-    {
-        return result_of::end<typename std::remove_reference<Sequence>::type>::call(std::forward<Sequence>(sequence));
-    }
-    template<class Sequence> typename result_of::end<const Sequence>::type end(const Sequence& sequence)
-    {
-        return result_of::end<const Sequence>::call(sequence);
-    }
+	template<class Sequence> typename result_of::end<typename std::remove_reference<Sequence>::type>::type end(Sequence&& sequence)
+	{
+		return result_of::end<typename std::remove_reference<Sequence>::type>::call(std::forward<Sequence>(sequence));
+	}
+	template<class Sequence> typename result_of::end<const Sequence>::type end(const Sequence& sequence)
+	{
+		return result_of::end<const Sequence>::call(sequence);
+	}
 
-    //advance_c
+	//advance_c
 	namespace result_of
 	{
 		namespace impl
@@ -94,9 +94,9 @@ namespace boost{namespace fusion{namespace gsoc{
 		};
 	}
 	template<int Distance,class Iterator> typename result_of::advance_c<Iterator,Distance>::type advance_c(const Iterator& iterator)
-    {
-        return result_of::advance_c<Iterator,Distance>::call(iterator);
-    }
+	{
+		return result_of::advance_c<Iterator,Distance>::call(iterator);
+	}
 
 	//distance
 	namespace result_of
@@ -117,11 +117,11 @@ namespace boost{namespace fusion{namespace gsoc{
 	}
 	template<class IteratorA,class IteratorB> typename result_of::distance<IteratorA,IteratorB>::type
 		distance(const IteratorA& iteratora,const IteratorB& iteratorb)
-    {
-        return typename result_of::distance<IteratorA,IteratorB>::type();
-    }
+	{
+		return typename result_of::distance<IteratorA,IteratorB>::type();
+	}
 
-    //next
+	//next
 	namespace result_of
 	{
 		namespace impl
@@ -148,9 +148,9 @@ namespace boost{namespace fusion{namespace gsoc{
 		};
 	}
 	template<class Iterator> typename result_of::next<Iterator>::type next(const Iterator& iterator)
-    {
-        return result_of::next<Iterator>::call(iterator);
-    }
+	{
+		return result_of::next<Iterator>::call(iterator);
+	}
 
 	//prior
 	namespace result_of
@@ -179,9 +179,9 @@ namespace boost{namespace fusion{namespace gsoc{
 		};
 	}
 	template<class Iterator> typename result_of::prior<Iterator>::type prior(const Iterator& iterator)
-    {
-        return result_of::prior<Iterator>::call(iterator);
-    }
+	{
+		return result_of::prior<Iterator>::call(iterator);
+	}
 
 	//equal_to
 	namespace result_of
@@ -209,9 +209,9 @@ namespace boost{namespace fusion{namespace gsoc{
 	}
 	template<class IteratorA,class IteratorB> typename result_of::equal_to<IteratorA,IteratorB>::type
 		equal_to(const IteratorA& iteratora,const IteratorB& iteratorb)
-    {
-        return typename result_of::equal_to<IteratorA,IteratorB>::type();
-    }
+	{
+		return typename result_of::equal_to<IteratorA,IteratorB>::type();
+	}
 
 	//size
 	namespace result_of
