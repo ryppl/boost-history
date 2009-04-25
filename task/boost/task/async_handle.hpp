@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_HANDLE_H
-#define BOOST_TASK_HANDLE_H
+#ifndef BOOST_TASK_ASYNC_HANDLE_H
+#define BOOST_TASK_ASYNC_HANDLE_H
 
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
@@ -19,7 +19,7 @@ namespace boost { namespace task
 {
 
 template< typename R >
-class handle;
+class async_handle;
 
 template< typename R >
 class task;
@@ -28,42 +28,42 @@ template< typename Channel >
 class pool;
 
 template< typename R >
-handle< R > launch_in_thread( task< R >);
+async_handle< R > async_thread( task< R >);
 
 template< typename R >
-class handle
+class async_handle
 {
 private:
 	template< typename Channel >
 	friend class pool;
 	template< typename T >
-	friend handle< T > launch_in_thread( task< T >);
+	friend async_handle< T > async_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
 	friend void waitfor_all( T1 & t1, T2 & t2);
 	template< typename T1, typename T2, typename T3 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3);
 	template< typename T1, typename T2, typename T3, typename T4 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4);
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5);
 	template< typename Iterator >
 	friend Iterator waitfor_any( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2);
 	template< typename T1, typename T2, typename T3 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3);
 	template< typename T1, typename T2, typename T3, typename T4 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4);
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5);
 
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
 	id						id_;
 
-	handle(
+	async_handle(
 		id const& id__,
 		shared_future< R > const& fut,
 		detail::interrupter const& intr)
@@ -74,7 +74,7 @@ private:
 	{}
 
 public:
-	handle()
+	async_handle()
 	: fut_(), intr_(), id_()
 	{}
 
@@ -124,7 +124,7 @@ public:
     bool timed_wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
 
-	void swap( handle< R > & other)
+	void swap( async_handle< R > & other)
 	{
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
@@ -133,39 +133,39 @@ public:
 };
 
 template<>
-class handle< void >
+class async_handle< void >
 {
 private:
 	template< typename Channel >
 	friend class pool;
 	template< typename T >
-	friend handle< T > launch_in_thread( task< T >);
+	friend async_handle< T > async_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
 	friend void waitfor_all( T1 & t1, T2 & t2);
 	template< typename T1, typename T2, typename T3 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3);
 	template< typename T1, typename T2, typename T3, typename T4 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4);
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
+	friend void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5);
 	template< typename Iterator >
 	friend Iterator waitfor_any( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2);
 	template< typename T1, typename T2, typename T3 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3);
 	template< typename T1, typename T2, typename T3, typename T4 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4);
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
+	friend unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5);
 
 	shared_future< void >	fut_;
 	detail::interrupter		intr_;
 	id						id_;
 
-	handle(
+	async_handle(
 		shared_future< void > const& fut,
 		detail::interrupter const& intr,
 		id const& id__)
@@ -177,7 +177,7 @@ private:
 
 
 public:
-	handle()
+	async_handle()
 	: fut_(), intr_(), id_()
 	{}
 
@@ -227,7 +227,7 @@ public:
     bool timed_wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
 
-	void swap( handle< void > & other)
+	void swap( async_handle< void > & other)
 	{
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
@@ -246,15 +246,15 @@ void waitfor_all( T1 & t1, T2 & t2)
 { wait_for_all( t1.fut_, t2.fut_); }
 
 template< typename T1, typename T2, typename T3 >
-void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
+void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3)
 { wait_for_all( t1.fut_, t2.fut_, t3.fut_); }
 
 template< typename T1, typename T2, typename T3, typename T4 >
-void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
+void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4)
 { wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_); }
 
 template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
+void waitfor_all( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5)
 { wait_for_all( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
 
 template< typename Iterator >
@@ -267,21 +267,21 @@ Iterator waitfor_any( Iterator begin, Iterator end)
 }
 
 template< typename T1, typename T2 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2)
+unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2)
 { return wait_for_any( t1.fut_, t2.fut_); }
 
 template< typename T1, typename T2, typename T3 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3)
+unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3)
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_); }
 
 template< typename T1, typename T2, typename T3, typename T4 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4)
+unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4)
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_); }
 
 template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5)
+unsigned int waitfor_any( async_handle< T1 > & t1, async_handle< T2 > & t2, async_handle< T3 > & t3, async_handle< T4 > & t4, async_handle< T5 > & t5)
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
 
 }}
 
-#endif // BOOST_TASK_HANDLE_H
+#endif // BOOST_TASK_ASYNC_HANDLE_H

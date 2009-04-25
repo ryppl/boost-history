@@ -30,9 +30,9 @@ class BOOST_TASK_DECL semaphore : private boost::noncopyable
 {
 private:
 # if defined(BOOST_WINDOWS_API)
-	HANDLE	handle_;
+	HANDLE	async_handle_;
 # elif defined(BOOST_POSIX_API)
-	sem_t	handle_;;
+	sem_t	async_handle_;;
 # endif
 public:
 	semaphore( int);

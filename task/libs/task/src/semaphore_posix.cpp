@@ -14,33 +14,33 @@
 namespace boost { namespace task
 {
 semaphore::semaphore( int value)
-: handle_()
+: async_handle_()
 {
-	if ( ::sem_init( & handle_, 0, value) == -1)
+	if ( ::sem_init( & async_handle_, 0, value) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 semaphore::~semaphore()
-{ ::sem_destroy( & handle_); }
+{ ::sem_destroy( & async_handle_); }
 
 void
 semaphore::post()
 {
-	if ( ::sem_post( & handle_) == -1)
+	if ( ::sem_post( & async_handle_) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 void
 semaphore::wait()
 {
-	if ( ::sem_wait( & handle_) == -1)
+	if ( ::sem_wait( & async_handle_) == -1)
 		throw system::system_error( errno, system::system_category);
 }
 
 bool 
 semaphore::try_wait()
 {
-	if ( ::sem_trywait( & handle_) == -1)
+	if ( ::sem_trywait( & async_handle_) == -1)
 	{
 		if ( errno == EAGAIN)
 			return false;
@@ -54,7 +54,7 @@ int
 semaphore::value()
 {
 	int value( 0);
-	if ( ::sem_getvalue( & handle_, & value) == -1)
+	if ( ::sem_getvalue( & async_handle_, & value) == -1)
 		throw system::system_error( errno, system::system_category);
 	return value;
 }

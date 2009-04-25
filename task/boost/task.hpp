@@ -7,14 +7,14 @@
 #ifndef BOOST_TASK_H
 #define BOOST_TASK_H
 
+#include <boost/task/async.hpp>
+#include <boost/task/async_handle.hpp>
 #include <boost/task/bounded_channel.hpp>
 #include <boost/task/default_pool.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/fifo.hpp>
-#include <boost/task/handle.hpp>
 #include <boost/task/id.hpp>
 #include <boost/task/info.hpp>
-#include <boost/task/launch.hpp>
 #include <boost/task/lifo.hpp>
 #include <boost/task/pool.hpp>
 #include <boost/task/poolsize.hpp>

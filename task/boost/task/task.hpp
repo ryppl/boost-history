@@ -22,7 +22,7 @@
 
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/handle.hpp>
+#include <boost/task/async_handle.hpp>
 #include <boost/task/id.hpp>
 
 namespace boost { namespace task
