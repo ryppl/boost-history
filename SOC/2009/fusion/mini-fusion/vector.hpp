@@ -22,6 +22,7 @@ namespace boost{namespace fusion{namespace gsoc{
 		class vector_iterator_tag;
 		template<class Vector,std::size_t Index> class vector_iterator
 		{
+			template<class,class>friend class is_compareable;
 			friend class result_of::impl::end<vector_tag>;
 			friend class result_of::impl::begin<vector_tag>;
 			friend class result_of::impl::advance_c<vector_iterator_tag>;
@@ -42,6 +43,18 @@ namespace boost{namespace fusion{namespace gsoc{
 			vector_iterator(Vector& vector):
 				_vector(vector)
 			{
+			}
+
+		public:
+			vector_iterator(const vector_iterator& other_iterator):
+				_vector(other_iterator._vector)
+			{
+			}
+
+			vector_iterator& operator=(const vector_iterator& other_iterator)
+			{
+				_vector=other_iterator._vector;
+				return *this;
 			}
 		};
 
@@ -210,6 +223,11 @@ namespace boost{namespace fusion{namespace gsoc{
 				public:
 					typedef gsoc::detail::vector_iterator<Vector,0> type;
 
+					static type call(Vector&& vector)
+					{
+						return type(vector);
+					}
+
 					static type call(Vector& vector)
 					{
 						return type(vector);
@@ -231,6 +249,11 @@ namespace boost{namespace fusion{namespace gsoc{
 				{
 				public:
 					typedef gsoc::detail::vector_iterator<Vector,Vector::num_elements::value> type;
+
+					static type call(Vector&& vector)
+					{
+						return type(vector);
+					}
 
 					static type call(Vector& vector)
 					{

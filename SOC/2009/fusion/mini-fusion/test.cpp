@@ -99,13 +99,28 @@ int main()
 		}
 
 		{
-			const bt b(0xDEADBEEF,1337.0f,42);
+			bt b(0xDEADBEEF,1337.0f,42);
 
 			using namespace gsoc;
 			assert(deref(begin(b))==0xDEADBEEF);
-			//at_c<0>(b)=0xBEEFDEEF;
+			at_c<0>(b)=0xBEEFDEEF;
 			assert(at_c<0>(b)==0xBEEFDEEF);
 		}
+	}
+
+	{
+		using namespace gsoc;
+		//equal_to(begin(vector<long long>()),begin(vector<int>()));
+		assert(equal_to(begin(vector<long long>()),begin(vector<long long>()))==true);
+	}
+
+	{
+		using namespace gsoc::result_of;
+
+		typedef const gsoc::vector<float> f;
+		static_assert(std::is_same<deref<begin<f>::type>::type,const float&>::value,"");
+		static_assert(std::is_same<deref<advance_c<begin<f>::type,0>::type>::type,const float&>::value,"");
+
 	}
 
 	{

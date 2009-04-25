@@ -4,7 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 #pragma once
 
-//TODO: constexpr!!!
+//TODO: constexpr
 
 #include <type_traits>
 #include <cstddef>
@@ -14,6 +14,12 @@
 namespace boost{namespace fusion{namespace gsoc{
 	namespace detail
 	{
+		template<class IteratorA,class IteratorB>class is_compareable
+		{
+			static_assert(std::is_same<typename IteratorA::tag,typename IteratorB::tag>::value,"Different iterator types specified");
+			static_assert(std::is_same<typename IteratorA::sequence,typename IteratorB::sequence>::value,"Different iterator sequences");
+		};
+
 		template<class Arg>class always_false
 		{
 		public:
@@ -104,10 +110,9 @@ namespace boost{namespace fusion{namespace gsoc{
 		}
 
 		template<class IteratorA,class IteratorB>class distance:
+			private detail::is_compareable<IteratorA,IteratorB>,
 			public impl::distance<typename IteratorA::tag>::template apply<IteratorA,IteratorB>
 		{
-			//!!!
-			static_assert(std::is_same<typename IteratorA::tag,typename IteratorB::tag>::value,"Different iterator types specified");
 		};
 	}
 	template<class IteratorA,class IteratorB> typename result_of::distance<IteratorA,IteratorB>::type
@@ -197,9 +202,9 @@ namespace boost{namespace fusion{namespace gsoc{
 		}
 
 		template<class IteratorA,class IteratorB>class equal_to:
+			private detail::is_compareable<IteratorA,IteratorB>,
 			public impl::equal_to<typename IteratorA::tag>::template apply<IteratorA,IteratorB>
 		{
-			static_assert(std::is_same<typename IteratorA::tag,typename IteratorB::tag>::value,"Different iterator types specified");
 		};
 	}
 	template<class IteratorA,class IteratorB> typename result_of::equal_to<IteratorA,IteratorB>::type
