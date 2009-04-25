@@ -52,6 +52,17 @@ async_handle< R > async_pool(
 	Attr const& attr)
 { return pool.submit( t, attr); }
 
+namespace detail
+{
+struct joiner
+{
+	void operator()( thread * thrd)
+	{
+		thrd->join();
+		delete thrd;
+	}
+};
+}
 
 template< typename R >
 async_handle< R > async_thread( task< R > t)
@@ -59,7 +70,7 @@ async_handle< R > async_thread( task< R > t)
 	detail::interrupter intr;
 	detail::thread_callable ca( t, intr);
 
-	shared_ptr< thread > thrd( new thread( ca) );
+	shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
 	ca.set( thrd);
 
 	return async_handle< R >( t.get_id(), t.get_future(), intr);
