@@ -17,7 +17,7 @@ namespace detail
 wsq::wsq()
 :
 initial_size_( 32),
-array_( new callable[ initial_size_]),
+array_( new pool_callable[ initial_size_]),
 capacity_( initial_size_),
 mask_( initial_size_ - 1),
 head_idx_( 0),
@@ -34,7 +34,7 @@ wsq::size() const
 { return tail_idx_ - head_idx_; }
 
 void
-wsq::put( callable const& ca)
+wsq::put( pool_callable const& ca)
 {
 	uint32_t tail( tail_idx_);
 	if ( tail <= head_idx_ + mask_)
@@ -51,7 +51,7 @@ wsq::put( callable const& ca)
 		if ( count >= mask_)
 		{
 			capacity_ <<= 1;
-			shared_array< callable > array( new callable[capacity_]);
+			shared_array< pool_callable > array( new pool_callable[capacity_]);
 			for ( int i( 0); i != count; ++i)
 				array[i] = array_[(i + head) & mask_];
 			array_.swap( array);
@@ -65,7 +65,7 @@ wsq::put( callable const& ca)
 }
 
 bool
-wsq::try_take( callable & ca)
+wsq::try_take( pool_callable & ca)
 {
 	uint32_t tail( tail_idx_);
 	if ( tail == 0)
@@ -94,7 +94,7 @@ wsq::try_take( callable & ca)
 }
 
 bool
-wsq::try_steal( callable & ca)
+wsq::try_steal( pool_callable & ca)
 {
 	recursive_mutex::scoped_try_lock lk( mtx_);
 	if ( lk.owns_lock() )

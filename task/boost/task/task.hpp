@@ -20,7 +20,6 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <boost/task/detail/interrupter.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
@@ -28,37 +27,24 @@
 
 namespace boost { namespace task
 {
-namespace detail
-{
-class callable;
-}
-
-template< typename Channel >
-class pool;
 
 template< typename R >
 class task
 {
 private:
-	template< typename Channel >
-	friend class pool;
-	friend class detail::callable;
-
 	struct impl
 	{
 		promise< R >			prom;
 		shared_future< R >		fut;
-		detail::interrupter		intr;
 
 		impl()
 		:
 		prom(),
-		fut( prom.get_future() ),
-		intr()
+		fut( prom.get_future() )
 		{}
 
 		virtual ~impl()
-		{ intr.reset(); }
+		{}
 
 		virtual void operator()() = 0;
 	};
@@ -126,8 +112,8 @@ public:
 	const id get_id() const
 	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
 
-	const handle< R > get_handle()
-	{ return handle< R >( impl_->fut, impl_->intr, get_id() ); }
+	shared_future< R > & get_future()
+	{ return impl_->fut; }
 
 	void swap( task< R > & other) // throw()
 	{ impl_.swap( other.impl_); }
@@ -144,25 +130,19 @@ template<>
 class task< void >
 {
 private:
-	template< typename Channel >
-	friend class pool;
-	friend class detail::callable;
-
 	struct impl
 	{
 		promise< void >			prom;
 		shared_future< void >	fut;
-		detail::interrupter		intr;
 
 		impl()
 		:
 		prom(),
-		fut( prom.get_future() ),
-		intr()
+		fut( prom.get_future() )
 		{}
 
 		virtual ~impl()
-		{ intr.reset(); }
+		{}
 
 		virtual void operator()() = 0;
 	};
@@ -233,8 +213,8 @@ public:
 	const id get_id() const
 	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
 
-	const handle< void > get_handle()
-	{ return handle< void >( impl_->fut, impl_->intr, get_id() ); }
+	shared_future< void > & get_future()
+	{ return impl_->fut; }
 
 	void swap( task< void > & other) // throw()
 	{ impl_.swap( other.impl_); }

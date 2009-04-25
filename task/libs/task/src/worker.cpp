@@ -33,15 +33,15 @@ worker::signal_shutdown_now()
 { impl_->signal_shutdown_now(); }
 
 void
-worker::put( callable const& ca)
+worker::put( pool_callable const& ca)
 { impl_->put( ca); }
 
 bool
-worker::try_take( callable & ca)
+worker::try_take( pool_callable & ca)
 { return impl_->try_take( ca); }
 
 bool
-worker::try_steal( callable & ca)
+worker::try_steal( pool_callable & ca)
 { return impl_->try_steal( ca); }
 
 void

@@ -13,7 +13,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/detail/pool_callable.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -25,7 +25,7 @@ class BOOST_TASK_DECL wsq : private noncopyable
 {
 private:
 	const int					initial_size_;
-	shared_array< callable >	array_;
+	shared_array< pool_callable >	array_;
 	int							capacity_;
 	int							mask_;
 	volatile uint32_t			head_idx_;
@@ -39,11 +39,11 @@ public:
 
 	std::size_t size() const;
 
-	void put( callable const&);
+	void put( pool_callable const&);
 
-	bool try_take( callable &);
+	bool try_take( pool_callable &);
 
-	bool try_steal( callable &);
+	bool try_steal( pool_callable &);
 };
 }}}
 

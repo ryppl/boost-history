@@ -10,7 +10,7 @@
 #include <cstddef>
 #include <list>
 
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/info.hpp>
 
 namespace boost { namespace task
@@ -22,7 +22,7 @@ struct lifo
 	class impl
 	{
 	public:
-		typedef detail::callable					item;
+		typedef detail::pool_callable					item;
 		typedef std::list< item >::iterator			iterator;
 		typedef std::list< item >::const_iterator	const_iterator;
 	

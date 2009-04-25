@@ -4,14 +4,15 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_CALLABLE_H
-#define BOOST_TASK_DETAIL_CALLABLE_H
+#ifndef BOOST_TASK_DETAIL_POOL_CALLABLE_H
+#define BOOST_TASK_DETAIL_POOL_CALLABLE_H
 
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/task/detail/config.hpp>
+#include <boost/task/detail/interrupter.hpp>
 #include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -20,7 +21,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class BOOST_TASK_DECL callable
+class BOOST_TASK_DECL pool_callable
 {
 private:
 	struct impl
@@ -35,21 +36,24 @@ private:
 	class impl_wrapper : public impl
 	{
 	private:
-		task< R >	t_;
+		task< R >			t_;
+		detail::interrupter	i_;
 
 	public:
-		impl_wrapper( task< R > const& t)
-		: t_( t)
+		impl_wrapper(
+			task< R > const& t,
+			detail::interrupter const& i)
+		: t_( t), i_( i)
 		{}
 
 		void run()
 		{ t_(); }
 
 		void set( shared_ptr< thread > & thrd)
-		{ t_.impl_->intr.set( thrd); }
+		{ i_.set( thrd); }
 
 		void reset()
-		{ t_.impl_->intr.reset(); }
+		{ i_.reset(); }
 	};
 
 	shared_ptr< impl >	impl_;
@@ -58,19 +62,21 @@ public:
 	class scoped_guard : public noncopyable
 	{
 	private:
-		callable	&	ca_;
+		pool_callable	&	ca_;
 
 	public:
-		scoped_guard( callable &, shared_ptr< thread > &);
+		scoped_guard( pool_callable &, shared_ptr< thread > &);
 
 		~scoped_guard();
 	};
 
-	callable();
+	pool_callable();
 
 	template< typename R >
-	callable( task< R > const& t)
-	: impl_( new impl_wrapper<  R >( t) )
+	pool_callable(
+		task< R > const& t,
+		detail::interrupter const& i)
+	: impl_( new impl_wrapper<  R >( t, i) )
 	{}
 
 	void operator()();
@@ -83,5 +89,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_CALLABLE_H
+#endif // BOOST_TASK_DETAIL_POOL_CALLABLE_H
 

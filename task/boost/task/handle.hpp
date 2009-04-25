@@ -17,15 +17,27 @@
 
 namespace boost { namespace task
 {
-template< typename T >
+
+template< typename R >
+class handle;
+
+template< typename R >
 class task;
+
+template< typename Channel >
+class pool;
+
+template< typename R >
+handle< R > launch_in_thread( task< R >);
 
 template< typename R >
 class handle
 {
 private:
+	template< typename Channel >
+	friend class pool;
 	template< typename T >
-	friend class task;
+	friend handle< T > launch_in_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -52,9 +64,9 @@ private:
 	id						id_;
 
 	handle(
+		id const& id__,
 		shared_future< R > const& fut,
-		detail::interrupter const& intr,
-		id const& id__)
+		detail::interrupter const& intr)
 	:
 	fut_( fut),
 	intr_( intr),
@@ -125,7 +137,9 @@ class handle< void >
 {
 private:
 	template< typename Channel >
-	friend class task;
+	friend class pool;
+	template< typename T >
+	friend handle< T > launch_in_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >

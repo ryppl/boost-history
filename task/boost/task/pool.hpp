@@ -21,7 +21,8 @@
 
 #include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/bind_processor.hpp>
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/detail/interrupter.hpp>
+#include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
@@ -34,7 +35,7 @@
 
 namespace boost { namespace task
 {
-typedef detail::callable	callable;
+typedef detail::pool_callable	pool_callable;
 
 template< typename Channel >
 class pool : private noncopyable
@@ -243,10 +244,10 @@ public:
 		lk.unlock();
 	}
 
-	const std::vector< callable > shutdown_now()
+	const std::vector< pool_callable > shutdown_now()
 	{
 		if ( closed_() || close_() > 1)
-			return std::vector< callable >();
+			return std::vector< pool_callable >();
 
 		channel_.deactivate_now();
 		shared_lock< shared_mutex > lk( mtx_wg_);
@@ -254,7 +255,7 @@ public:
 		wg_.interrupt_all();
 		wg_.join_all();
 		lk.unlock();
-		std::vector< callable > drain( channel_.drain() );
+		std::vector< pool_callable > drain( channel_.drain() );
 
 		return drain;
 	}
@@ -292,7 +293,8 @@ public:
 	template< typename R >
 	handle< R > submit( task< R > t)
 	{
-		shared_future< R > fut( t.impl_->fut);
+		detail::interrupter intr;
+		shared_future< R > fut( t.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -305,16 +307,16 @@ public:
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( t) );
-			return t.get_handle();
+			w->put( detail::pool_callable( t, intr) );
+			return handle< R >( t.get_id(), fut, intr);
 		}
 		else
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_.put( detail::callable( t) );
-			return t.get_handle();
+			channel_.put( detail::pool_callable( t, intr) );
+			return handle< R >( t.get_id(), fut, intr);
 		}
 	}
 
@@ -324,7 +326,8 @@ public:
 	>
 	handle< R > submit( task< R > t, Attr const& attr)
 	{
-		shared_future< R > fut( t.impl_->fut);
+		detail::interrupter intr;
+		shared_future< R > fut( t.get_future() );
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
@@ -337,16 +340,16 @@ public:
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( t) );
-			return t.get_handle();
+			w->put( detail::pool_callable( t, intr) );
+			return handle< R >( t.get_id(), fut, intr);
 		}
 		else
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			channel_.put( channel_item( detail::callable( t), attr) );
-			return t.get_handle();
+			channel_.put( channel_item( detail::pool_callable( t, intr), attr) );
+			return handle< R >( t.get_id(), fut, intr);
 		}
 	}
 };
