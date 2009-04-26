@@ -21,9 +21,13 @@ namespace boost { namespace task
 {
 namespace detail
 {
+class scoped_guard;
+
 class BOOST_TASK_DECL pool_callable
 {
 private:
+	friend class scoped_guard;
+
 	struct impl
 	{
 		virtual ~impl() {}
@@ -59,16 +63,6 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	class scoped_guard : public noncopyable
-	{
-	private:
-		pool_callable	&	ca_;
-
-	public:
-		scoped_guard( pool_callable &, shared_ptr< thread > &);
-
-		~scoped_guard();
-	};
 
 	pool_callable();
 
@@ -84,6 +78,17 @@ public:
 	bool empty() const;
 
 	void clear();
+};
+
+class BOOST_TASK_DECL scoped_guard : public noncopyable
+{
+private:
+	pool_callable	ca_;
+
+public:
+	scoped_guard( pool_callable &, shared_ptr< thread > &);
+
+	~scoped_guard();
 };
 } } }
 

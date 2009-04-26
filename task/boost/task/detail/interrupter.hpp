@@ -33,7 +33,7 @@ private:
 		bool					done_;
 		condition_variable		cond_;
 		mutex					mtx_;
-		shared_ptr< thread >		thrd_;
+		shared_ptr< thread >	thrd_;
 
 		void interrupt_();
 

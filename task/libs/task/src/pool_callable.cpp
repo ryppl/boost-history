@@ -26,11 +26,11 @@ void
 pool_callable::clear()
 { impl_.reset(); }
 
-pool_callable::scoped_guard::scoped_guard( pool_callable & ca, shared_ptr< thread > & thrd)
+scoped_guard::scoped_guard( pool_callable & ca, shared_ptr< thread > & thrd)
 : ca_( ca)
 { ca_.impl_->set( thrd); }
 
-pool_callable::scoped_guard::~scoped_guard()
+scoped_guard::~scoped_guard()
 { ca_.impl_->reset(); }
 } } }
 

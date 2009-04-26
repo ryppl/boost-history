@@ -13,13 +13,14 @@
 #include <boost/task/default_pool.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/fifo.hpp>
+#include <boost/task/future.hpp>
 #include <boost/task/id.hpp>
 #include <boost/task/info.hpp>
-#include <boost/task/lifo.hpp>
 #include <boost/task/pool.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/semaphore.hpp>
 #include <boost/task/smart.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/unbounded_channel.hpp>

@@ -58,9 +58,7 @@ struct joiner
 {
 	void operator()( thread * thrd)
 	{
-printf("thrd->join() - 1\n");
 		thrd->join();
-printf("thrd->join() - 2\n");
 		delete thrd;
 	}
 };

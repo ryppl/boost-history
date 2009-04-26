@@ -166,9 +166,9 @@ private:
 	id						id_;
 
 	async_handle(
+		id const& id__,
 		shared_future< void > const& fut,
-		detail::interrupter const& intr,
-		id const& id__)
+		detail::interrupter const& intr)
 	:
 	fut_( fut),
 	intr_( intr),
