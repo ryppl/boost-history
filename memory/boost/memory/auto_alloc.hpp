@@ -31,10 +31,11 @@ class auto_alloc : public region_alloc<NS_BOOST_MEMORY_POLICY::stdlib>
 {
 private:
 	typedef region_alloc<NS_BOOST_MEMORY_POLICY::stdlib> BaseClass;
-
+	typedef BaseClass::alloc_type AllocT;
+	
 public:
 	auto_alloc() {}
-	explicit auto_alloc(auto_alloc&) {}
+	explicit auto_alloc(AllocT alloc) {}
 
 	__forceinline void BOOST_MEMORY_CALL swap(auto_alloc& o) {
 		BaseClass::swap(o);

@@ -56,6 +56,14 @@
 #define BOOST_MEMORY_ASSERT(e)	BOOST_DETAIL_ASSERT(e)
 #endif
 
+#ifndef BOOST_MEMORY_STATIC_ASSERT
+#if defined(BOOST_STATIC_ASSERT)
+#define BOOST_MEMORY_STATIC_ASSERT(e)	BOOST_STATIC_ASSERT(e)
+#else
+#define BOOST_MEMORY_STATIC_ASSERT(e)	BOOST_DETAIL_ASSERT(e)
+#endif
+#endif
+
 // -------------------------------------------------------------------------
 
 #if defined(BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION)

@@ -50,7 +50,7 @@ public:
 	typedef size_t size_type;
 
 #pragma pack(1)
-private:
+protected:
 	struct MemBlock;
 	friend struct MemBlock;
 	
