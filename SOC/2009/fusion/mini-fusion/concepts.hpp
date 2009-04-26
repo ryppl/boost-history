@@ -62,28 +62,24 @@ namespace boost{namespace fusion{namespace gsoc{
 		//typename detail_value_of_type=typename result_of::value_of<Iterator>::type;
 	}
 
-	/*auto concept BidirectionalIterator<class Iterator>
+	/*auto concept BidirectionalIterator<class Iterator> : ForwardIterator<Iterator>
 	{
-		requires ForwardIterator<Type>;
 	}
 
-	auto concept RandomAccessIterator<class Iterator>
+	auto concept RandomAccessIterator<class Iterator> : BidirectionalIterator<Iterator>
 	{
-		requires BidirectionalIterator<Type>;
 	}*/
 
-	/*auto concept ForwardSequence<class Type>
+	/*auto concept ForwardSequence<class Sequence>
 	{
 	}
 
-	auto concept BidirectionalSequence<class Type>
+	auto concept BidirectionalSequence<class Sequence> : ForwardSequence<Sequence>
 	{
-		requires ForwardSequence<Type>;
 	}
 
-	auto concept RandomAccessSequence<class Type>
+	auto concept RandomAccessSequence<class Sequence> : BidirectionalSequence<Sequence>
 	{
-		requires BidirectionalSequence<Type>;
 	}
 	*/
 }}}
