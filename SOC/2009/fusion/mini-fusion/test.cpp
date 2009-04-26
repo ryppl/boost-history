@@ -44,15 +44,9 @@ public:
 	}
 };
 
-template<boost::fusion::gsoc::ForwardIterator ForwardIterator>void forward_iterator_func()
-{
-}
-
 int main()
 {
 	namespace gsoc=boost::fusion::gsoc;
-
-	forward_iterator_func<gsoc::result_of::begin<gsoc::vector<>>::type>();
 
 	{
 		typedef gsoc::vector<> at;

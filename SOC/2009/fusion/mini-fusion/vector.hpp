@@ -4,6 +4,7 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 #pragma once
 
+#include "categories.hpp"
 #include "convenience.hpp"
 
 #include <utility>
@@ -31,6 +32,7 @@ namespace boost{namespace fusion{namespace gsoc{
 			friend class result_of::impl::deref<vector_iterator_tag>;
 
 		public:
+			typedef random_access_iterator_category category;
 			typedef vector_iterator_tag tag;
 			typedef mpl::bool_<std::is_const<Vector>::value> is_const;
 
@@ -153,6 +155,7 @@ namespace boost{namespace fusion{namespace gsoc{
 		typedef mpl::size_t<sizeof...(Elements)> num_elements;
 
 	public:
+		typedef random_access_sequence_category category;
 		typedef vector_tag tag;
 
 		vector()

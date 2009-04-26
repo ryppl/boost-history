@@ -6,6 +6,9 @@
 
 //TODO: constexpr
 
+#include "categories.hpp"
+#include "concepts.hpp"
+
 #include <type_traits>
 #include <cstddef>
 
@@ -88,7 +91,7 @@ namespace boost{namespace fusion{namespace gsoc{
 			};
 		}
 
-		template<class Iterator,int Distance>class advance_c:
+		template<class Iterator,int Distance> class advance_c:
 			public impl::advance_c<typename Iterator::tag>::template apply<Iterator,Distance>
 		{
 		};
