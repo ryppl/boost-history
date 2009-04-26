@@ -72,11 +72,49 @@ void testScopedPool()
 		alloc.allocate();
 }
 
+int g_nConstruct = 0;
+int g_nDestruct = 0;
+
+struct Obj
+{
+	char m_val[100];
+
+	Obj()		 { ++g_nConstruct; }
+	Obj(int val) { ++g_nConstruct; }
+	~Obj()		 { ++g_nDestruct; }
+};
+
+void testObjectPool()
+{
+	boost::memory::object_pool<int> alloc;
+	int* p1 = alloc.construct();
+	int* p2 = alloc.construct();
+	int* p3 = BOOST_NEW(alloc, int)(30);
+	BOOST_MEMORY_ASSERT(*p3 == 30);
+
+	{
+		boost::memory::object_pool<Obj> alloc2;
+		for (int i = 0; i < 3000; ++i)
+		{
+			Obj* o1 = alloc2.construct();
+			Obj* o2 = alloc2.construct();
+			Obj* o3 = BOOST_NEW(alloc2, Obj)(20);
+			Obj* o4 = BOOST_NEW(alloc2, Obj)(25);
+			alloc2.destroy(o2);
+			alloc2.destroy(o3);
+		}
+	}
+	BOOST_MEMORY_ASSERT(g_nConstruct == g_nDestruct);
+	if (g_nConstruct != g_nDestruct)
+		printf("ERROR: memory leaks!\n");
+}
+
 int main()
 {
 	NS_BOOST_MEMORY::enableMemoryLeakCheck();
 
 	testPool();
 	testScopedPool();
+	testObjectPool();
 	return 0;
 }

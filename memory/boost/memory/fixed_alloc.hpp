@@ -128,13 +128,13 @@ public:
 	void BOOST_MEMORY_CALL clear()
 	{
 		MemBlock* nextBlk;
-		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
+		for (MemBlock* blk = this->m_blks.first(); !this->m_blks.done(blk); blk = nextBlk)
 		{
 			nextBlk = blk->next();
-			m_alloc.deallocate(blk);
+			this->m_alloc.deallocate(blk);
 		}
-		m_blks.clear();
-		m_freelist.clear();
+		this->m_blks.clear();
+		this->m_freelist.clear();
 	}
 
 private:
