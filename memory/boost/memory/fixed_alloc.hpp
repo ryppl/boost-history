@@ -52,6 +52,8 @@ public:
 #pragma pack(1)
 private:
 	struct MemBlock;
+	friend struct MemBlock;
+	
 	struct Header : public dcl_list_node<MemBlock>
 	{
 		size_t nUsed;

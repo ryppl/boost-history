@@ -37,6 +37,9 @@ public:
 
 #pragma pack(1)
 private:
+	struct MemBlock;
+	friend struct MemBlock;
+
 	enum { HeaderSize = sizeof(void*) };
 	enum { BlockSize = MemBlockSize - HeaderSize };
 
