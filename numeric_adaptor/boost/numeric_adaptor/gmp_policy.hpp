@@ -11,7 +11,7 @@
 #define NUMERIC_ADAPTOR_GMP_POLICY_HPP_
 
 
-#include "gmp.h"
+#include <gmp.h>
 
 
 struct gmp_policy

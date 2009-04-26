@@ -8,8 +8,9 @@
 
 
 lib gmp : : <name>gmp ;
+lib cln : : <name>cln ;
 
-project : requirements <include>../../.. <library>gmp ;
+project : requirements <include>../../.. <library>gmp <library>cln ;
 
 import testing ;
 
