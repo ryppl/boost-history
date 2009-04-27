@@ -31,6 +31,9 @@ mtx_(),
 thrd_()
 {}
 
+interrupter::impl::~impl()
+{ reset(); }
+
 void
 interrupter::impl::set( shared_ptr< thread > const& thrd)
 {
@@ -45,8 +48,11 @@ void
 interrupter::impl::reset()
 {
 	unique_lock< mutex > lk( mtx_);
-	BOOST_ASSERT( thrd_);
-	thrd_.reset();
+// 	BOOST_ASSERT( thrd_);
+// 	try
+// 	{ thrd_.reset(); }
+// 	catch (...)
+// 	{ printf("exception\n"); }
 	try
 	{ this_thread::interruption_point(); }
 	catch ( thread_interrupted const&)

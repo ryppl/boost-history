@@ -28,7 +28,7 @@ template< typename Channel >
 class pool;
 
 template< typename R >
-async_handle< R > async_thread( task< R >);
+async_handle< R > async_in_thread( task< R >);
 
 template< typename R >
 class async_handle
@@ -37,7 +37,7 @@ private:
 	template< typename Channel >
 	friend class pool;
 	template< typename T >
-	friend async_handle< T > async_thread( task< T >);
+	friend async_handle< T > async_in_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -103,6 +103,8 @@ public:
 		{ return fut_.get(); }
 		catch ( broken_promise const&)
 		{ throw broken_task(); }
+		catch ( promise_already_satisfied const&)
+		{ throw task_already_executed(); }
 	}
 
 	bool is_ready() const
@@ -139,7 +141,7 @@ private:
 	template< typename Channel >
 	friend class pool;
 	template< typename T >
-	friend async_handle< T > async_thread( task< T >);
+	friend async_handle< T > async_in_thread( task< T >);
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >

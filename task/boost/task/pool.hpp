@@ -35,8 +35,6 @@
 
 namespace boost { namespace task
 {
-typedef detail::pool_callable	pool_callable;
-
 template< typename Channel >
 class pool : private noncopyable
 {
@@ -244,10 +242,9 @@ public:
 		lk.unlock();
 	}
 
-	const std::vector< pool_callable > shutdown_now()
+	const void shutdown_now()
 	{
-		if ( closed_() || close_() > 1)
-			return std::vector< pool_callable >();
+		if ( closed_() || close_() > 1) return;
 
 		channel_.deactivate_now();
 		shared_lock< shared_mutex > lk( mtx_wg_);
@@ -255,9 +252,6 @@ public:
 		wg_.interrupt_all();
 		wg_.join_all();
 		lk.unlock();
-		std::vector< pool_callable > drain( channel_.drain() );
-
-		return drain;
 	}
 
 	std::size_t size()

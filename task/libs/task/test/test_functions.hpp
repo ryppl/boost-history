@@ -34,6 +34,17 @@ void barrier_fn(
 void delay_fn( pt::time_duration const& td)
 { boost::this_thread::sleep( td); }
 
+void interrupt_fn( pt::time_duration const& td, bool & finished)
+{
+	try
+	{ boost::this_thread::sleep( td); }
+	catch (...)
+	{
+		finished = true;
+		throw;
+	}
+}
+
 inline
 int fibonacci_fn( int n)
 {

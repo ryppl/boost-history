@@ -28,7 +28,7 @@ rule tp-test ( source )
 
 test-suite thread_pool :
     [ tp-test test_handle ]
-    [ tp-test test_launch ]
-    [ tp-test test_pool_unbounded_channel ]
-    [ tp-test test_pool_bounded_channel ]
+    [ tp-test test_in_thread ]
+    [ tp-test test_in_unbounded_pool ]
+    [ tp-test test_in_bounded_pool ]
     ;

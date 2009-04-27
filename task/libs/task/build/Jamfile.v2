@@ -30,34 +30,36 @@ feature.set-default taskapi : [ default_taskapi ] ;
 
 alias task_sources
     : ## win32 sources ##
-	 callable.cpp
-	 default_pool.cpp
-	 guard.cpp
-	 interrupter.cpp
-	 poolsize.cpp
-	 scanns.cpp
-	 semaphore_windows.cpp
-	 watermark.cpp
-	 worker.cpp
-	 worker_group.cpp
-	 wsq.cpp
+	default_pool.cpp
+	guard.cpp
+	interrupter.cpp
+	pool_callable.cpp
+	poolsize.cpp
+	scanns.cpp
+	semaphore_windows.cpp
+	thread_callable.cpp
+	watermark.cpp
+	worker.cpp
+	worker_group.cpp
+	wsq.cpp
     : ## requirements ##
       <taskapi>win32
     ;
 
 alias task_sources
     : ## posix sources ##
-	 callable.cpp
-	 default_pool.cpp
-	 guard.cpp
-	 interrupter.cpp
-	 poolsize.cpp
-	 scanns.cpp
-	 semaphore_posix.cpp
-	 watermark.cpp
-	 worker.cpp
-	 worker_group.cpp
-	 wsq.cpp
+	default_pool.cpp
+	guard.cpp
+	interrupter.cpp
+	pool_callable.cpp
+	poolsize.cpp
+	scanns.cpp
+	semaphore_posix.cpp
+	thread_callable.cpp
+	watermark.cpp
+	worker.cpp
+	worker_group.cpp
+	wsq.cpp
     : ## requirements ##
       <taskapi>posix
     ;

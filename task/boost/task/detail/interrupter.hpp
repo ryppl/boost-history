@@ -40,6 +40,8 @@ private:
 	public:
 		impl();
 
+		~impl();
+
 		void set( shared_ptr< thread > const& thrd);
 
 		void reset();

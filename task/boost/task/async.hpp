@@ -20,14 +20,14 @@
 namespace boost { namespace task
 {
 template< typename R >
-async_handle< R > async_pool( task< R > t)
+async_handle< R > async_in_pool( task< R > t)
 { return get_default_pool().submit( t); }
 
 template<
 	typename R,
 	typename Attr
 >
-async_handle< R > async_pool(
+async_handle< R > async_in_pool(
 	task< R > t,
 	Attr const& attr)
 { return get_default_pool().submit( t, attr); }
@@ -36,7 +36,7 @@ template<
 	typename Channel,
 	typename R
 >
-async_handle< R > async_pool(
+async_handle< R > async_in_pool(
 	pool< Channel > & pool,
 	task< R > t)
 { return pool.submit( t); }
@@ -46,7 +46,7 @@ template<
 	typename R,
 	typename Attr
 >
-async_handle< R > async_pool(
+async_handle< R > async_in_pool(
 	pool< Channel > & pool,
 	task< R > t,
 	Attr const& attr)
@@ -65,10 +65,10 @@ struct joiner
 }
 
 template< typename R >
-async_handle< R > async_thread( task< R > t)
+async_handle< R > async_in_thread( task< R > t)
 {
 	detail::interrupter intr;
-	detail::thread_callable ca( t);
+	detail::thread_callable ca( t, intr);
 
 	shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
 	intr.set( thrd);

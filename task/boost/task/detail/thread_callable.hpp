@@ -35,23 +35,31 @@ private:
 	class impl_wrapper : public impl
 	{
 	private:
-		task< R >			t_;
+		task< R >		t_;
+		interrupter		i_;
 
 	public:
-		impl_wrapper( task< R > const& t)
-		: t_( t)
+		impl_wrapper(
+			task< R > const& t,
+			interrupter const& i)
+		: t_( t), i_( i)
 		{}
 
 		void run()
-		{ t_(); }
+		{
+			t_();
+			i_.reset();
+		}
 	};
 
 	shared_ptr< impl >	impl_;
 
 public:
 	template< typename R >
-	thread_callable( task< R > const& t)
-	: impl_( new impl_wrapper<  R >( t) )
+	thread_callable(
+		task< R > const& t,
+		interrupter const& i)
+	: impl_( new impl_wrapper<  R >( t, i) )
 	{}
 
 	void operator()();
