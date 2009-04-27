@@ -5,11 +5,11 @@
 #pragma once
 
 namespace boost{namespace fusion{namespace gsoc{
-	class forward_iterator_category;
-	class bidirectional_iterator_category;
-	class random_access_iterator_category;
+    class forward_iterator_category;
+    class bidirectional_iterator_category;
+    class random_access_iterator_category;
 
-	class forward_sequence_category;
-	class bidirectional_sequence_category;
-	class random_access_sequence_category;
+    class forward_sequence_category;
+    class bidirectional_sequence_category;
+    class random_access_sequence_category;
 }}}

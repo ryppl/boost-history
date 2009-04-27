@@ -12,51 +12,51 @@
 
 namespace std
 {
-	template<bool, class>class enable_if
-	{
-	};
+    template<bool, class>class enable_if
+    {
+    };
 
-	template<class Type>class enable_if<true, Type>
-	{
-	public:
-		typedef Type type;
-	};
+    template<class Type>class enable_if<true, Type>
+    {
+    public:
+        typedef Type type;
+    };
 
-	template<bool, class TrueType, class>class conditional
-	{
-	public:
-		typedef TrueType type;
-	};
+    template<bool, class TrueType, class>class conditional
+    {
+    public:
+        typedef TrueType type;
+    };
 
-	template<class TrueType, class FalseType>class conditional<false, TrueType, FalseType>
-	{
-	public:
-		typedef FalseType type;
-	};
+    template<class TrueType, class FalseType>class conditional<false, TrueType, FalseType>
+    {
+    public:
+        typedef FalseType type;
+    };
 
-	namespace detail
-	{
-		//20.3.2...
-		template<class Type>struct identity
-		{
-			typedef Type type;
-		};
-	}
+    namespace detail
+    {
+        //20.3.2...
+        template<class Type>struct identity
+        {
+            typedef Type type;
+        };
+    }
 
-	template<class Type> Type&& forward(typename detail::identity<Type>::type&& type)
-	{
-		return type;
-	}
+    template<class Type> Type&& forward(typename detail::identity<Type>::type&& type)
+    {
+        return type;
+    }
 
-	template<class Type> typename remove_reference<Type>::type&& move(Type&& type)
-	{
-		return type;
-	}
+    template<class Type> typename remove_reference<Type>::type&& move(Type&& type)
+    {
+        return type;
+    }
 
-	template<class Type> void swap(Type& a, Type& b)
-	{
-		Type temp = move(a);
-		a = move(b);
-		b = move(temp);
-	}
+    template<class Type> void swap(Type& a, Type& b)
+    {
+        Type temp = move(a);
+        a = move(b);
+        b = move(temp);
+    }
 }

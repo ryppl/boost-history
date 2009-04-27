@@ -11,22 +11,22 @@ set HOME=
 
 rem call toolset specific procedure
 if "%1" == "conceptgcc" (
-	call :conceptgcc
+    call :conceptgcc
 ) else (
-	if "%1" == "gcc" (
-		call :gcc
-	) else (
-		if "%1" == "msvc" (
-			call :msvc
-		) else (
-			if "%1" == "" (
-				call :conceptgcc
-			) else (
-				echo Unknown toolset '%1'
-				goto :eof
-			)
-		)
-	)
+    if "%1" == "gcc" (
+        call :gcc
+    ) else (
+        if "%1" == "msvc" (
+            call :msvc
+        ) else (
+            if "%1" == "" (
+                call :conceptgcc
+            ) else (
+                echo Unknown toolset '%1'
+                goto :eof
+            )
+        )
+    )
 )
 
 rem compile...
