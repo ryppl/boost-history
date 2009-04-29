@@ -1020,7 +1020,7 @@ private:
          // second location. If it's there, it means we made a copy of a piece
          for (WriteContainer::iterator j = writeList().begin(); writeList().end() != j; ++j)
          {
-            if (j->second == &in)
+            if (j->second == (base_transaction_object*)&in)
             {
                writeList().insert(tx_pair(j->first, NULL));
                deletedMemoryList().push_back(j->first);
