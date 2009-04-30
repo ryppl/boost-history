@@ -81,6 +81,11 @@ public:
 		return m_next == this;
 	}
 
+	bool BOOST_MEMORY_CALL valid() const
+	{
+		return m_prev->m_next == this && m_next->m_prev == this;
+	}
+
 	void BOOST_MEMORY_CALL clear()
 	{
 		m_next = m_prev = this;
@@ -88,6 +93,7 @@ public:
 
 	void BOOST_MEMORY_CALL erase()
 	{
+		BOOST_MEMORY_ASSERT(valid());
 		m_next->m_prev = m_prev;
 		m_prev->m_next = m_next;
 		m_prev = m_next = this;

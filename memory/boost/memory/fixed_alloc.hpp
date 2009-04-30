@@ -188,12 +188,12 @@ public:
 
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p)
 	{
-		BOOST_MEMORY_ASSERT(chunkHeader_(p)->nUsed <= m_nMaxPerBlock);
-
 		MemBlock* const blk = chunkHeader_(p);
-		if (--blk->nUsed > 0)
-			m_freelist.push_front((FreeChunk*)p);
-		else if (blk != m_lastBlock)
+
+		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= m_nMaxPerBlock);
+
+		m_freelist.push_front((FreeChunk*)p);
+		if (--blk->nUsed == 0 && blk != m_lastBlock)
 			do_deallocate_block_(blk);
 	}
 };

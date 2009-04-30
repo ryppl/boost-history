@@ -23,11 +23,16 @@ void testPool()
 	boost::memory::pool alloc(sizeof(int));
 	boost::memory::pool alloc2(sizeof(double));
 
-	void* p[3000];
+	int* p[3000];
 	for (i = 0; i < countof(p); ++i)
-		p[i] = alloc.allocate();
+	{
+		p[i] = (int*)alloc.allocate();
+		*p[i] = i;
+	}
 	for (i = 0; i < countof(p); ++i)
+	{
 		alloc.deallocate(p[i]);
+	}
 
 	void* p1 = alloc.allocate();
 	void* p2 = alloc.allocate();
@@ -79,7 +84,7 @@ struct Obj
 {
 	char m_val[100];
 
-	Obj()		 { ++g_nConstruct; }
+	Obj()		 { ++g_nConstruct; m_val[1] = 0x23; }
 	Obj(int val) { ++g_nConstruct; }
 	~Obj()		 { ++g_nDestruct; }
 };
