@@ -63,7 +63,6 @@ protected:
 	}
 	
 public:
-	typedef PoolT pool_type;
 	typedef AllocT alloc_type;
 	
 public:
@@ -83,11 +82,6 @@ public:
 	~norm_object_pool_()
 	{
 		clear();
-	}
-
-	pool_type& BOOST_MEMORY_CALL get_pool()
-	{
-		return *this;
 	}
 
 private:
@@ -165,7 +159,6 @@ private:
 	typedef typename PoolT::alloc_type AllocT;
 
 public:
-	typedef PoolT pool_type;
 	typedef AllocT alloc_type;
 
 public:
@@ -177,10 +170,6 @@ public:
 
 	explicit pod_object_pool_(AllocT alloc)
 		: PoolT(alloc, sizeof(Type)) {
-	}
-
-	pool_type& BOOST_MEMORY_CALL get_pool() {
-		return *this;
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
