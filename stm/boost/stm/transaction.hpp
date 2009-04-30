@@ -471,10 +471,18 @@ public:
    template <typename T>
    T* get_written(T const & in)
    {
-      WriteContainer::iterator i = writeList().find
-         ((base_transaction_object*)(&in));
-      if (i == writeList().end()) return NULL;
-      else return static_cast<T*>(i->second);
+      if (directUpdating_)
+      {
+         if (in.transaction_thread() == threadId_) return (T*)(&in);
+         else return NULL;
+      }
+      else
+      {
+         WriteContainer::iterator i = writeList().find
+            ((base_transaction_object*)(&in));
+         if (i == writeList().end()) return NULL;
+         else return static_cast<T*>(i->second);
+      }
    }
 
    //--------------------------------------------------------------------------
@@ -1375,6 +1383,7 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 #include <boost/stm/detail/auto_lock.hpp>
+#include <boost/stm/detail/tx_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // TRANSACTION_H
