@@ -162,7 +162,8 @@ public:
 	void test_case_8()
 	{
 		tsk::handle< void > h1(
-			tsk::async_in_pool(
+			tsk::async(
+				tsk::own_thread(),
 				tsk::make_task(
 					delay_fn,
 					pt::seconds( 3) ) ) );
@@ -173,7 +174,7 @@ public:
 					fibonacci_fn,
 					10) ) );
 		tsk::waitfor_any( h1, h2);
-		BOOST_CHECK( ! h1.is_ready() );
+		BOOST_CHECK( h1.is_ready() );
 		BOOST_CHECK( h2.is_ready() );
 		BOOST_CHECK_EQUAL( h2.get(), 55);
 	}

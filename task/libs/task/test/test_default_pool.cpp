@@ -162,7 +162,8 @@ public:
 	void test_case_8()
 	{
 		tsk::handle< void > h1(
-			tsk::async_in_pool(
+			tsk::async(
+				tsk::default_pool(),
 				tsk::make_task(
 					delay_fn,
 					pt::seconds( 3) ) ) );

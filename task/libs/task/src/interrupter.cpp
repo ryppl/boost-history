@@ -15,7 +15,7 @@ namespace detail
 void
 interrupter::impl::interrupt_()
 {
-	if ( ! interruption_requested_ && ! done_)
+	if ( ! interruption_requested_)
 	{
 		interruption_requested_ = true;
 		if ( thrd_) thrd_->interrupt();
