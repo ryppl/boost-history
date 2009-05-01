@@ -20,14 +20,15 @@ namespace gtl {
     typedef polygon_90_set_data operator_arg_type;
 
     // default constructor
-    inline polygon_90_set_data() : orient_(HORIZONTAL), dirty_(false), unsorted_(false) {}
+    inline polygon_90_set_data() : orient_(HORIZONTAL), data_(), dirty_(false), unsorted_(false) {}
 
     // constructor
-    inline polygon_90_set_data(orientation_2d orient) : orient_(orient), dirty_(false), unsorted_(false) {}
+    inline polygon_90_set_data(orientation_2d orient) : orient_(orient), data_(), dirty_(false), unsorted_(false) {}
 
     // constructor from an iterator pair over vertex data
     template <typename iT>
-    inline polygon_90_set_data(orientation_2d orient, iT input_begin, iT input_end) {
+    inline polygon_90_set_data(orientation_2d orient, iT input_begin, iT input_end) : 
+      orient_(HORIZONTAL), data_(), dirty_(false), unsorted_(false) {
       dirty_ = true;
       unsorted_ = true;
       for( ; input_begin != input_end; ++input_begin) { insert(*input_begin); }
@@ -42,7 +43,7 @@ namespace gtl {
 
     // copy with orientation change constructor
     inline polygon_90_set_data(orientation_2d orient, const polygon_90_set_data& that) : 
-      orient_(orient), dirty_(false), unsorted_(false) {
+      data_(), orient_(orient), dirty_(false), unsorted_(false) {
       insert(that, false, that.orient_);
     }
 
@@ -75,6 +76,20 @@ namespace gtl {
 //       insert(geometry.begin(), geometry.end(), geometry.orient());
 //       return *this;
 //     }
+
+    // insert iterator range
+    inline void insert(iterator_type input_begin, iterator_type input_end, orientation_2d orient = HORIZONTAL) {
+      if(input_begin == input_end || input_begin == data_.begin()) return;
+      dirty_ = true;
+      unsorted_ = true;
+      if(orient == orient_)
+        data_.insert(data_.end(), input_begin, input_end);
+      else {
+        for( ; input_begin != input_end; ++input_begin) {
+          insert(*input_begin, false, orient);
+        }
+      }
+    }
 
     // insert iterator range
     template <typename iT>
@@ -501,15 +516,21 @@ namespace gtl {
     if((e_total < 0) ^ (n_total < 0)) {
       //different signs
       if(e_total < 0) {
-        shrink(0, e_total, 0, 0);
-        return bloat(0, 0, 0, n_total);
+        shrink(0, -e_total, 0, 0);
+        if(n_total != 0)
+          return bloat(0, 0, 0, n_total);
+        else
+          return (*this);
       } else {
-        shrink(0, 0, 0, n_total); //shrink first
-        return bloat(0, e_total, 0, 0);
+        shrink(0, 0, 0, -n_total); //shrink first
+        if(e_total != 0)
+          return bloat(0, e_total, 0, 0);
+        else
+          return (*this);
       }
     } else {
       if(e_total < 0) {
-        return shrink(0, e_total, 0, n_total);
+        return shrink(0, -e_total, 0, -n_total);
       }
       return bloat(0, e_total, 0, n_total);
     }
@@ -520,7 +541,7 @@ namespace gtl {
   private:
     std::vector<std::pair<property_merge_point<coordinate_type>, std::pair<property_type, int> > > pmd_;
   public:
-    inline property_merge_90() {}
+    inline property_merge_90() : pmd_() {}
     inline property_merge_90(const property_merge_90& that) : pmd_(that.pmd_) {}
     inline property_merge_90& operator=(const property_merge_90& that) { pmd_ = that.pmd_; }
     inline void insert(const polygon_90_set_data<coordinate_type>& ps, const property_type& property) {
@@ -553,7 +574,7 @@ namespace gtl {
     tsd tsd_;
     unsigned int nodeCount_;
   public:
-    inline connectivity_extraction_90() : nodeCount_(0) {}
+    inline connectivity_extraction_90() : tsd_(), nodeCount_(0) {}
     inline connectivity_extraction_90(const connectivity_extraction_90& that) : tsd_(that.tsd_),
                                                                           nodeCount_(that.nodeCount_) {}
     inline connectivity_extraction_90& operator=(const connectivity_extraction_90& that) { 

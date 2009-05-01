@@ -29,20 +29,22 @@ namespace gtl {
     typedef polygon_45_set_data operator_arg_type;
 
     // default constructor
-    inline polygon_45_set_data() : dirty_(false), unsorted_(false), is_manhattan_(true) {}
+    inline polygon_45_set_data() : error_data_(), data_(), dirty_(false), unsorted_(false), is_manhattan_(true) {}
 
     // constructor from a geometry object
     template <typename geometry_type>
-    inline polygon_45_set_data(const geometry_type& that) : dirty_(false), unsorted_(false), is_manhattan_(true) {
+    inline polygon_45_set_data(const geometry_type& that) : error_data_(), data_(), dirty_(false), unsorted_(false), is_manhattan_(true) {
       insert(that);
     }
 
     // copy constructor
     inline polygon_45_set_data(const polygon_45_set_data& that) : 
-      data_(that.data_), dirty_(that.dirty_), unsorted_(that.unsorted_), is_manhattan_(that.is_manhattan_) {}
+      error_data_(that.error_data_), data_(that.data_), dirty_(that.dirty_), 
+      unsorted_(that.unsorted_), is_manhattan_(that.is_manhattan_) {}
 
     template <typename ltype, typename rtype, int op_type>
-    inline polygon_45_set_data(const polygon_45_set_view<ltype, rtype, op_type>& that) {
+    inline polygon_45_set_data(const polygon_45_set_view<ltype, rtype, op_type>& that) :
+      error_data_(), data_(), dirty_(false), unsorted_(false), is_manhattan_(true) {
       (*this) = that.value();
     }
 
@@ -71,6 +73,17 @@ namespace gtl {
       data_.clear();
       insert(geometry);
       return *this;
+    }
+
+    // insert iterator range
+    inline void insert(iterator_type input_begin, iterator_type input_end, bool is_hole = false) {
+      if(input_begin == input_end || input_begin == data_.begin()) return;
+      dirty_ = true;
+      unsorted_ = true;
+      while(input_begin != input_end) {
+        insert(*input_begin, is_hole);
+        ++input_begin;
+      }
     }
 
     // insert iterator range
@@ -526,17 +539,15 @@ namespace gtl {
   // insert polygon set
   template <typename Unit>
   inline void polygon_45_set_data<Unit>::insert(const polygon_45_set_data<Unit>& polygon_set, bool is_hole) {
-    if(is_hole) {
-      (*this) -= polygon_set;
-      return;
-    }
-    if(empty()) {
-      (*this) = polygon_set;
-      return;
-    }
+    unsigned int count = data_.size();
     data_.insert(data_.end(), polygon_set.data_.begin(), polygon_set.data_.end());
     error_data_.insert(error_data_.end(), polygon_set.error_data_.begin(),
                        polygon_set.error_data_.end());
+    if(is_hole) {
+      for(unsigned int i = count; i < data_.size(); ++i) {
+        data_[i].count = data_[i].count.invert();
+      }
+    }
     dirty_ = true;
     unsorted_ = true;
     if(polygon_set.is_manhattan_ == false) is_manhattan_ = false;
@@ -568,6 +579,7 @@ namespace gtl {
   template <typename Unit>
   template <typename rectangle_type>
   inline bool polygon_45_set_data<Unit>::extents(rectangle_type& rect) const{
+    clean();
     if(empty()) {
       return false;
     }
@@ -1026,11 +1038,7 @@ namespace gtl {
                                                          bool hole, polygon_45_concept tag) {
     direction_1d wdir = winding(poly);
     int multiplier = wdir == LOW ? -1 : 1;
-    if(hole) multiplier *= -1;
-    //if(resizing < 0) {
-    //multiplier *= -1;
-    //resizing *= -1;
-    //}
+    if(hole) resizing *= -1; 
     typedef typename polygon_45_data<Unit>::iterator_type piterator;
     piterator first, second, third, end, real_end;
     real_end = end_points(poly);
@@ -1065,21 +1073,12 @@ namespace gtl {
     //sizingSet.snap();
     polygon_45_set_data<Unit> tmp;
     //insert original shape
-    tmp.insert_dispatch(poly, hole, polygon_45_concept());
-    if(hole) {
-      Unit UnitMax = std::numeric_limits<Unit>::max();
-      Unit UnitMin = std::numeric_limits<Unit>::min();
-      tmp.insert(rectangle_data<Unit>(UnitMin, UnitMin, UnitMax, UnitMax));
-      if(resizing < 0) tmp -= sizingSet;
-      else tmp += sizingSet;
-      tmp.clean();
-      tmp.insert(rectangle_data<Unit>(UnitMin, UnitMin, UnitMax, UnitMax), true); //insert as hole to cancel out
-    } else {
-      if(resizing < 0) tmp -= sizingSet;
-      else tmp += sizingSet;
-      tmp.clean();
-    }
-    return (*this) += tmp;
+    tmp.insert_dispatch(poly, false, polygon_45_concept());
+    if(resizing < 0) tmp -= sizingSet;
+    else tmp += sizingSet;
+    tmp.clean();
+    insert(tmp, hole);
+    return (*this);
   }
 
   // accumulate the bloated polygon with holes

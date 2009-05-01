@@ -13,11 +13,11 @@ namespace gtl {
   class interval_data {
   public:
     typedef T coordinate_type;
-    inline interval_data(){} 
-    inline interval_data(coordinate_type low, coordinate_type high) {
+    inline interval_data():coords_(){} 
+    inline interval_data(coordinate_type low, coordinate_type high):coords_() {
       coords_[LOW] = low; coords_[HIGH] = high; 
     }
-    inline interval_data(const interval_data& that) {
+    inline interval_data(const interval_data& that):coords_() {
       (*this) = that; 
     }
     inline interval_data& operator=(const interval_data& that) {

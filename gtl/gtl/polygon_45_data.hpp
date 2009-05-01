@@ -18,7 +18,7 @@ public:
   typedef typename coordinate_traits<T>::coordinate_distance area_type;
   typedef point_data<T> point_type;
 
-  inline polygon_45_data(){;} //do nothing default constructor
+  inline polygon_45_data() : coords_() {} //do nothing default constructor
 
   template<class iT>
   inline polygon_45_data(iT input_begin, iT input_end) : coords_(input_begin, input_end) {}

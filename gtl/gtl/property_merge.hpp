@@ -14,7 +14,7 @@ class property_merge_point {
 private:
   coordinate_type x_, y_;
 public:
-  inline property_merge_point() {}
+  inline property_merge_point() : x_(), y_() {}
   inline property_merge_point(coordinate_type x, coordinate_type y) : x_(x), y_(y) {}
   //use builtin assign and copy
   inline bool operator==(const property_merge_point& that) const { return x_ == that.x_ && y_ == that.y_; }
@@ -35,7 +35,7 @@ class property_merge_interval {
 private:
   coordinate_type low_, high_;
 public:
-  inline property_merge_interval() {}
+  inline property_merge_interval() : low_(), high_() {}
   inline property_merge_interval(coordinate_type low, coordinate_type high) : low_(low), high_(high) {}
   //use builtin assign and copy
   inline bool operator==(const property_merge_interval& that) const { return low_ == that.low_ && high_ == that.high_; }
@@ -87,7 +87,7 @@ public:
 
   //public member functions
 
-  merge_scanline() {}
+  merge_scanline() : output(), scanline(), currentVertex(), tmpVector(), previousY(), countFromBelow(), scanlinePosition() {}
   merge_scanline(const merge_scanline& that) :
     output(that.output),
     scanline(that.scanline),

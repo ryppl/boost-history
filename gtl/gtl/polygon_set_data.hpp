@@ -24,11 +24,11 @@ namespace gtl {
     typedef polygon_set_data operator_arg_type;
 
     // default constructor
-    inline polygon_set_data() : dirty_(false), unsorted_(false), is_45_(true) {}
+    inline polygon_set_data() : data_(), dirty_(false), unsorted_(false), is_45_(true) {}
 
     // constructor from an iterator pair over edge data
     template <typename iT>
-    inline polygon_set_data(iT input_begin, iT input_end) {
+    inline polygon_set_data(iT input_begin, iT input_end) : data_(), dirty_(false), unsorted_(false), is_45_(true) {
       for( ; input_begin != input_end; ++input_begin) { insert(*input_begin); }
     }
 
@@ -66,6 +66,18 @@ namespace gtl {
       data_.clear();
       insert(geometry);
       return *this;
+    }
+
+
+    // insert iterator range
+    inline void insert(iterator_type input_begin, iterator_type input_end) {
+      if(input_begin == input_end || input_begin == data_.begin()) return;
+      dirty_ = true;
+      unsorted_ = true;
+      while(input_begin != input_end) {
+        insert(*input_begin);
+        ++input_begin;
+      }
     }
 
     // insert iterator range
@@ -134,7 +146,8 @@ namespace gtl {
       insert(polygon_object, is_hole, polygon_concept()); }
 
     template <typename polygon_with_holes_type>
-    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_with_holes_concept tag) {
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
+                       polygon_with_holes_concept tag) {
       insert(polygon_with_holes_object, is_hole, polygon_concept());
       for(typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type itr = 
             begin_holes(polygon_with_holes_object);
@@ -144,11 +157,13 @@ namespace gtl {
     }
 
     template <typename polygon_with_holes_type>
-    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_45_with_holes_concept tag) {
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
+                       polygon_45_with_holes_concept tag) {
       insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
 
     template <typename polygon_with_holes_type>
-    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, polygon_90_with_holes_concept tag) {
+    inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
+                       polygon_90_with_holes_concept tag) {
       insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
 
     template <typename rectangle_type>

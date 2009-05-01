@@ -203,7 +203,7 @@ namespace gtl {
       Unit *x_; //x value at which to apply comparison
       int *justBefore_;
     public:
-      inline less_half_edge() : x_(0) {}
+      inline less_half_edge() : x_(0), justBefore_(0) {}
       inline less_half_edge(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       inline less_half_edge(const less_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline less_half_edge& operator=(const less_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
@@ -518,7 +518,7 @@ namespace gtl {
       Unit *x_; //x value at which to apply comparison
       int *justBefore_;
     public:
-      inline less_vertex_half_edge() : x_(0) {}
+      inline less_vertex_half_edge() : x_(0), justBefore_(0) {}
       inline less_vertex_half_edge(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       inline less_vertex_half_edge(const less_vertex_half_edge& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline less_vertex_half_edge& operator=(const less_vertex_half_edge& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
@@ -554,7 +554,7 @@ namespace gtl {
       typedef typename std::list<Point>::const_iterator iterator;
 
       // default constructor of point does not initialize x and y
-      inline poly_line_arbitrary(){;} //do nothing default constructor
+      inline poly_line_arbitrary() : points() {} //do nothing default constructor
 
       // initialize a polygon from x,y values, it is assumed that the first is an x
       // and that the input is a well behaved polygon
@@ -621,20 +621,23 @@ namespace gtl {
         otherTailp_ = otherTailp;
       }
 
-      inline active_tail_arbitrary(Point point, active_tail_arbitrary* otherTailp, bool head = true) {
+      inline active_tail_arbitrary(Point point, active_tail_arbitrary* otherTailp, bool head = true) :
+        tailp_(), otherTailp_(), holesList_(), head_() {
         tailp_ = new poly_line_arbitrary;
         tailp_->points.push_back(point);
         head_ = head;
         otherTailp_ = otherTailp;
       
       }
-      inline active_tail_arbitrary(active_tail_arbitrary* otherTailp) {
+      inline active_tail_arbitrary(active_tail_arbitrary* otherTailp) :
+        tailp_(), otherTailp_(), holesList_(), head_() {
         tailp_ = otherTailp->tailp_;
         otherTailp_ = otherTailp;
       }
 
       //copy constructor
-      inline active_tail_arbitrary(const active_tail_arbitrary& that) { (*this) = that; }
+      inline active_tail_arbitrary(const active_tail_arbitrary& that) :
+        tailp_(), otherTailp_(), holesList_(), head_() { (*this) = that; }
 
       //destructor
       inline ~active_tail_arbitrary() {
@@ -1021,16 +1024,18 @@ namespace gtl {
     int justBefore_;
     int fractureHoles_; 
   public:
-    inline polygon_arbitrary_formation() : x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(0) {
+    inline polygon_arbitrary_formation() : 
+      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(0) {
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
     }
-    inline polygon_arbitrary_formation(bool fractureHoles = false) : x_(std::numeric_limits<Unit>::min()), justBefore_(false), 
-                                                   fractureHoles_(fractureHoles) {
+    inline polygon_arbitrary_formation(bool fractureHoles = false) : 
+      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(fractureHoles) {
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
     }
-    inline polygon_arbitrary_formation(const polygon_arbitrary_formation& that) { (*this) = that; }
+    inline polygon_arbitrary_formation(const polygon_arbitrary_formation& that) : 
+      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(0) { (*this) = that; }
     inline polygon_arbitrary_formation& operator=(const polygon_arbitrary_formation& that) {
       x_ = that.x_;
       justBefore_ = that.justBefore_;
@@ -1261,6 +1266,7 @@ namespace gtl {
                 //std::cout << "case5: " << i << " " << j << std::endl;
                 //we are ending a hole and may potentially close a figure and have to handle the hole
                 returnValue = active_tail_arbitrary::joinChains(point, tails[i], tails[j], false, output);
+                if(returnValue) returnCount.first = point;
                 //std::cout << returnValue << std::endl;
                 tails[i] = 0;
                 tails[j] = 0;
@@ -1284,8 +1290,11 @@ namespace gtl {
                 active_tail_arbitrary* holep = 0;
                 //if(c_size && counts[c_size_less_1] == 0 && 
                 //   counts_from_scanline[c_size_less_1].first.first.first.get(HORIZONTAL) == point.get(HORIZONTAL)) 
-                if(have_vertical_tail_from_below)
+                if(have_vertical_tail_from_below) {
                   holep = tails[c_size_less_1];
+                  tails[c_size_less_1] = 0;
+                  have_vertical_tail_from_below = false;
+                }
                 std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
                   active_tail_arbitrary::createActiveTailsAsPair(point, false, holep, fractureHoles_);
                 if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
@@ -1861,9 +1870,9 @@ namespace gtl {
       typedef std::ptrdiff_t difference_type;
       typedef const holeType* pointer; //immutable
       typedef const holeType& reference; //immutable
-      inline iterator_holes_type() {}
-      inline iterator_holes_type(typename active_tail_arbitrary::iteratorHoles itr) : itr_(itr) {}
-      inline iterator_holes_type(const iterator_holes_type& that) : itr_(that.itr_) {} 
+      inline iterator_holes_type() : hole_(), itr_() {}
+      inline iterator_holes_type(typename active_tail_arbitrary::iteratorHoles itr) : hole_(), itr_(itr) {}
+      inline iterator_holes_type(const iterator_holes_type& that) : hole_(that.hole_), itr_(that.itr_) {} 
       inline iterator_holes_type& operator=(const iterator_holes_type& that) {
         itr_ = that.itr_;
         return *this;

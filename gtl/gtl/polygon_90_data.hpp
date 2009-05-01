@@ -18,7 +18,7 @@ public:
   typedef iterator_compact_to_points<compact_iterator_type, point_data<coordinate_type> > iterator_type;
   typedef typename coordinate_traits<T>::area_type area_type;
 
-  inline polygon_90_data(){;} //do nothing default constructor
+  inline polygon_90_data() : coords_() {} //do nothing default constructor
 
   // initialize a polygon from x,y values, it is assumed that the first is an x
   // and that the input is a well behaved polygon

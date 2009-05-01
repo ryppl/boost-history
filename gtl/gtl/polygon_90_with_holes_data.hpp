@@ -22,7 +22,7 @@ public:
   typedef point_data<T> point_type;
 
   // default constructor of point does not initialize x and y
-  inline polygon_90_with_holes_data(){;} //do nothing default constructor
+  inline polygon_90_with_holes_data() : self_(), holes_() {} //do nothing default constructor
 
   // initialize a polygon from x,y values, it is assumed that the first is an x
   // and that the input is a well behaved polygon

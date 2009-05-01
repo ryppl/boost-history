@@ -16,11 +16,11 @@ namespace gtl {
   class point_data {
   public:
     typedef T coordinate_type;
-    inline point_data(){} 
-    inline point_data(coordinate_type x, coordinate_type y) {
+    inline point_data():coords_(){} 
+    inline point_data(coordinate_type x, coordinate_type y):coords_() {
       coords_[HORIZONTAL] = x; coords_[VERTICAL] = y; 
     }
-    inline point_data(const point_data& that) { (*this) = that; }
+    inline point_data(const point_data& that):coords_() { (*this) = that; }
     inline point_data& operator=(const point_data& that) {
       coords_[0] = that.coords_[0]; coords_[1] = that.coords_[1]; return *this; 
     }

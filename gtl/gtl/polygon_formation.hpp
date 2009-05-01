@@ -330,8 +330,9 @@ namespace polygon_formation {
       unsigned int indexEnd_;
       End startEnd_;
     public:
-      inline iterator() : pLine_(0), index_(0) {}
-      inline iterator(const ActiveTail* at, bool isHole, orientation_2d orient) {
+      inline iterator() : pLine_(), pLineEnd_(), index_(), indexEnd_(), startEnd_() {}
+      inline iterator(const ActiveTail* at, bool isHole, orientation_2d orient) : 
+        pLine_(), pLineEnd_(), index_(), indexEnd_(), startEnd_() {
         //if it is a hole and orientation is vertical or it is not a hole and orientation is horizontal
         //we want to use this active tail, otherwise we want to use the other active tail
         startEnd_ = TAIL;
@@ -679,9 +680,9 @@ namespace polygon_formation {
     bool fractureHoles_;
   public:
     typedef typename std::vector<PolyLinePolygonData>::iterator iterator; 
-    inline ScanLineToPolygonItrs() {}
+    inline ScanLineToPolygonItrs() : tailMap_(), outputPolygons_(), fractureHoles_(false)  {}
     /* construct a scanline with the proper offsets, protocol and options */
-    inline ScanLineToPolygonItrs(bool fractureHoles) : fractureHoles_(fractureHoles) {}
+    inline ScanLineToPolygonItrs(bool fractureHoles) : tailMap_(), outputPolygons_(), fractureHoles_(fractureHoles) {}
    
     ~ScanLineToPolygonItrs() { clearOutput_(); }
    
@@ -1006,17 +1007,18 @@ namespace polygon_formation {
   }
 
   template <typename Unit>
-  inline ActiveTail<Unit>::ActiveTail() : tailp_(0), otherTailp_(0) {}
+  inline ActiveTail<Unit>::ActiveTail() : tailp_(0), otherTailp_(0), holesList_() {}
 
   template <typename Unit>
-  inline ActiveTail<Unit>::ActiveTail(orientation_2d orient, Unit coord, Side solidToRight, ActiveTail* otherTailp) {
+  inline ActiveTail<Unit>::ActiveTail(orientation_2d orient, Unit coord, Side solidToRight, ActiveTail* otherTailp) : 
+    tailp_(0), otherTailp_(0), holesList_() {
     tailp_ = createPolyLine(orient, coord, solidToRight);
     otherTailp_ = otherTailp;
   }
 
   template <typename Unit>
   inline ActiveTail<Unit>::ActiveTail(PolyLine<Unit>* active, ActiveTail<Unit>* otherTailp) : 
-    tailp_(active), otherTailp_(otherTailp) {}
+    tailp_(active), otherTailp_(otherTailp), holesList_() {}
 
   //copy constructor
   template <typename Unit>

@@ -20,8 +20,8 @@ namespace gtl {
       std::set<Interval> tracedPaths_;
     public:
       Rectangle rect;
-      Node() {}
-      Node(const Rectangle rectIn) : rect(rectIn) {}
+      Node() : children_(), tracedPaths_(), rect() {}
+      Node(const Rectangle rectIn) : children_(), tracedPaths_(), rect(rectIn) {}
       typedef typename std::vector<Node*>::iterator iterator;
       inline iterator begin() { return children_.begin(); }
       inline iterator end() { return children_.end(); }
@@ -54,6 +54,7 @@ namespace gtl {
       }
       node->addPath(rectIvl);
       if(node->begin() == node->end()) {
+        //std::cout << "WRITE OUT 3: " << node->rect << std::endl;
         outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(node->rect));
         return;
       }
@@ -64,9 +65,109 @@ namespace gtl {
         if(contains(nodeIvl, rectIvl, true)) writeOut = false;
       }
       if(writeOut) {
+        //std::cout << "WRITE OUT 2: " << node->rect << std::endl;
         outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(node->rect));
       }
     }
+
+    struct stack_element {
+      inline stack_element() :
+        node(), rect(), itr() {}
+      inline stack_element(Node* n,
+                           const Rectangle& r,
+                           typename Node::iterator i) :
+        node(n), rect(r), itr(i) {}
+      Node* node;
+      Rectangle rect;
+      typename Node::iterator itr;
+    };
+
+    template <class cT>
+    static inline void getMaxCover(cT& outputContainer, Node* node, orientation_2d orient, 
+                                   Rectangle rect) {
+      //std::cout << "New Root\n";
+      std::vector<stack_element> stack;
+      typename Node::iterator itr = node->begin();
+      do {
+        //std::cout << "LOOP\n";
+        //std::cout << node->rect << std::endl;
+        Interval rectIvl = rect.get(orient);
+        Interval nodeIvl = node->rect.get(orient);
+        bool iresult = intersect(rectIvl, nodeIvl, false);
+        bool tresult = !node->tracedPath(rectIvl);
+        //std::cout << (itr != node->end()) << " " << iresult << " " << tresult << std::endl;
+        Rectangle nextRect = Rectangle(rectIvl, rectIvl);
+        Unit low = rect.get(orient.get_perpendicular()).low();
+        Unit high = node->rect.get(orient.get_perpendicular()).high();
+        nextRect.set(orient.get_perpendicular(), Interval(low, high));
+        if(iresult && tresult) {
+          node->addPath(rectIvl);
+          bool writeOut = true;
+          //check further visibility beyond this node
+          for(typename Node::iterator itr2 = node->begin(); itr2 != node->end(); ++itr2) {
+            Interval nodeIvl3 = (*itr2)->rect.get(orient);
+            //if a child of this node can contain the interval then we can extend through
+            if(contains(nodeIvl3, rectIvl, true)) writeOut = false;
+            //std::cout << "child " << (*itr2)->rect << std::endl;
+          }
+          Rectangle nextRect = Rectangle(rectIvl, rectIvl);
+          Unit low = rect.get(orient.get_perpendicular()).low();
+          Unit high = node->rect.get(orient.get_perpendicular()).high();
+          nextRect.set(orient.get_perpendicular(), Interval(low, high));
+          if(writeOut) {
+            //std::cout << "write out " << nextRect << std::endl;
+            outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(nextRect));
+          } else {
+            //std::cout << "supress " << nextRect << std::endl;
+          }
+        }
+        if(itr != node->end() && iresult && tresult) {
+          //std::cout << "recurse into child\n";
+          stack.push_back(stack_element(node, rect, itr));
+          rect = nextRect;
+          node = *itr;
+          itr = node->begin();
+        } else {
+          if(!stack.empty()) {
+            //std::cout << "recurse out of child\n";
+            node = stack.back().node;
+            rect = stack.back().rect;
+            itr = stack.back().itr;
+            stack.pop_back();
+          } else {
+            //std::cout << "empty stack\n";
+            //if there were no children of the root node
+//             Rectangle nextRect = Rectangle(rectIvl, rectIvl);
+//             Unit low = rect.get(orient.get_perpendicular()).low();
+//             Unit high = node->rect.get(orient.get_perpendicular()).high();
+//             nextRect.set(orient.get_perpendicular(), Interval(low, high));
+//             outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(nextRect));
+          }
+          //std::cout << "increment " << (itr != node->end()) << std::endl;
+          if(itr != node->end()) {
+            ++itr;
+            if(itr != node->end()) {
+              //std::cout << "recurse into next child.\n";
+              stack.push_back(stack_element(node, rect, itr));
+              Interval rectIvl2 = rect.get(orient);
+              Interval nodeIvl2 = node->rect.get(orient);
+              bool iresult = intersect(rectIvl2, nodeIvl2, false);
+              Rectangle nextRect2 = Rectangle(rectIvl2, rectIvl2);
+              Unit low2 = rect.get(orient.get_perpendicular()).low();
+              Unit high2 = node->rect.get(orient.get_perpendicular()).high();
+              nextRect2.set(orient.get_perpendicular(), Interval(low2, high2));
+              rect = nextRect2;
+              //std::cout << "rect for next child" << rect << std::endl;
+              node = *itr;
+              itr = node->begin();
+            }
+          }
+        }
+      } while(!stack.empty() || itr != node->end());
+    }
+
+    /*  Function recursive version of getMaxCover
+        Because the code is so much simpler than the loop algorithm I retain it for clarity
 
     template <class cT>
     static inline void getMaxCover(cT& outputContainer, Node* node, orientation_2d orient, 
@@ -89,15 +190,16 @@ namespace gtl {
       for(typename Node::iterator itr = node->begin(); itr != node->end(); ++itr) {
         nodeIvl = (*itr)->rect.get(orient);
         if(contains(nodeIvl, rectIvl, true)) writeOut = false;
-        getMaxCover(outputContainer, *itr, orient, nextRect);
       }
       if(writeOut) {
         outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(nextRect));
       }
+      for(typename Node::iterator itr = node->begin(); itr != node->end(); ++itr) {
+        getMaxCover(outputContainer, *itr, orient, nextRect);
+      }
     }
+    */
 
-    //computeDag populates the node of the iterator range of Nodes with parent child
-    //relationships by adding the child node to the parent node's list of children
     //iterator range is assummed to be in topological order meaning all node's trailing
     //edges are in sorted order
     template <class iT>
@@ -168,7 +270,6 @@ namespace gtl {
         getMaxCover(outputContainer, &(nodes[i]), orient);
       }
     }
-
 
   };
 

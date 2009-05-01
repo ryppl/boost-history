@@ -28,13 +28,13 @@ namespace gtl {
         typename EventData::const_iterator itr_;
         std::pair<Interval, std::set<int> > ivlIds_;
       public:
-        inline iterator() {}
+        inline iterator() : itr_(), ivlIds_() {}
         inline iterator(typename EventData::const_iterator itr, 
-                        Unit prevPos, const std::set<int>& ivlIds) : itr_(itr) {
+                        Unit prevPos, const std::set<int>& ivlIds) : itr_(itr), ivlIds_() {
           ivlIds_.second = ivlIds;
           ivlIds_.first = Interval(prevPos, itr->first);
         }
-        inline iterator(const iterator& that) { (*this) = that; }
+        inline iterator(const iterator& that) : itr_(), ivlIds_() { (*this) = that; }
         inline iterator& operator=(const iterator& that) {
           itr_ = that.itr_;
           ivlIds_.first = that.ivlIds_.first;
@@ -77,7 +77,7 @@ namespace gtl {
         inline std::pair<Interval, std::set<int> >& operator*() { if(ivlIds_.second.empty())(++(*this)); return ivlIds_; }
       };
 
-      inline TouchScanEvent() {}
+      inline TouchScanEvent() : eventData_() {}
       template<class iT>
       inline TouchScanEvent(iT begin, iT end) {
         for( ; begin != end; ++begin){
@@ -155,8 +155,8 @@ namespace gtl {
       ScanData scanData_;
       typename ScanData::iterator nextItr_;
     public:
-      inline TouchOp () { nextItr_ = scanData_.end(); }
-      inline TouchOp (const TouchOp& that) : scanData_(that.scanData_) { nextItr_ = scanData_.begin(); }
+      inline TouchOp () : scanData_(), nextItr_() { nextItr_ = scanData_.end(); }
+      inline TouchOp (const TouchOp& that) : scanData_(that.scanData_), nextItr_() { nextItr_ = scanData_.begin(); }
       inline TouchOp& operator=(const TouchOp& that); 
    
       //moves scanline forward

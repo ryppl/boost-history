@@ -16,10 +16,10 @@ namespace gtl {
 
     class Count2 {
     public:
-      inline Count2() { counts[0] = counts[1] = 0; }
+      inline Count2() : counts() { counts[0] = counts[1] = 0; }
       //inline Count2(int count) { counts[0] = counts[1] = count; }
-      inline Count2(int count1, int count2) { counts[0] = count1; counts[1] = count2; }
-      inline Count2(const Count2& count) { counts[0] = count.counts[0]; counts[1] = count.counts[1]; }
+      inline Count2(int count1, int count2) : counts() { counts[0] = count1; counts[1] = count2; }
+      inline Count2(const Count2& count) : counts() { counts[0] = count.counts[0]; counts[1] = count.counts[1]; }
       inline bool operator==(const Count2& count) const { return counts[0] == count.counts[0] && counts[1] == count.counts[1]; }
       inline bool operator!=(const Count2& count) const { return !((*this) == count); }
       inline Count2& operator=(int count) { counts[0] = counts[1] = count; return *this; }
@@ -51,9 +51,9 @@ namespace gtl {
 
     class Count1 {
     public:
-      inline Count1() { count_ = 0; }
-      inline Count1(int count) { count_ = count; }
-      inline Count1(const Count1& count) { count_ = count.count_; }
+      inline Count1() : count_(0) { }
+      inline Count1(int count) : count_(count) { }
+      inline Count1(const Count1& count) : count_(count.count_) { }
       inline bool operator==(const Count1& count) const { return count_ == count.count_; }
       inline bool operator!=(const Count1& count) const { return !((*this) == count); }
       inline Count1& operator=(int count) { count_ = count; return *this; }
@@ -152,7 +152,7 @@ namespace gtl {
       Unit *x_; //x value at which to apply comparison
       int *justBefore_;
     public:
-      inline lessScan45Element() : x_(0) {}
+      inline lessScan45Element() : x_(0), justBefore_(0) {}
       inline lessScan45Element(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       inline lessScan45Element(const lessScan45Element& that) : x_(that.x_), justBefore_(that.justBefore_) {}
       inline lessScan45Element& operator=(const lessScan45Element& that) { x_ = that.x_; justBefore_ = that.justBefore_; return *this; }
@@ -176,16 +176,16 @@ namespace gtl {
     template <typename CountType>
     class Scan45CountT {
     public:
-      inline Scan45CountT() {} //counts[0] = counts[1] = counts[2] = counts[3] = 0; }
-      inline Scan45CountT(CountType count) { counts[0] = counts[1] = counts[2] = counts[3] = count; }
+      inline Scan45CountT() : counts() {} //counts[0] = counts[1] = counts[2] = counts[3] = 0; }
+      inline Scan45CountT(CountType count) : counts() { counts[0] = counts[1] = counts[2] = counts[3] = count; }
       inline Scan45CountT(const CountType& count1, const CountType& count2, const CountType& count3, 
-                          const CountType& count4) { 
+                          const CountType& count4) : counts() { 
         counts[0] = count1; 
         counts[1] = count2; 
         counts[2] = count3;
         counts[3] = count4; 
       }
-      inline Scan45CountT(const Scan45CountT& count) { 
+      inline Scan45CountT(const Scan45CountT& count) : counts() { 
         (*this) = count;
       }
       inline bool operator==(const Scan45CountT& count) const { 
@@ -294,7 +294,7 @@ namespace gtl {
       Unit *x_; //x value at which to apply comparison
       int *justBefore_;
     public:
-      inline lessVertex45() : x_(0) {}
+      inline lessVertex45() : x_(0), justBefore_() {}
       
       inline lessVertex45(Unit *x, int *justBefore) : x_(x), justBefore_(justBefore) {}
       
@@ -458,11 +458,14 @@ namespace gtl {
       Unit x_;
       int justBefore_;
     public:
-      inline Scan45() : x_(std::numeric_limits<Unit>::min()), justBefore_(false) {
+      inline Scan45() : scanData_(), crossQueue_(), crossVector_(), 
+                        x_(std::numeric_limits<Unit>::min()), justBefore_(false) {
         lessScan45Element<CountType>  lessElm(&x_, &justBefore_);
         scanData_ = std::set<Scan45ElementT<CountType>, lessScan45Element<CountType> >(lessElm);
       }
-      inline Scan45(const Scan45& that) { (*this) = that; }
+      inline Scan45(const Scan45& that) : scanData_(), crossQueue_(), crossVector_(), 
+                                          x_(std::numeric_limits<Unit>::min()), justBefore_(false) {
+        (*this) = that; }
       inline Scan45& operator=(const Scan45& that) {
         x_ = that.x_;
         justBefore_ = that.justBefore_;
@@ -723,6 +726,8 @@ namespace gtl {
             ++nextIter;
             //std::cout << "erase\n";
             scanData_.erase(lowIter);
+            if(nextIter != scanData_.end())
+              findCross_(nextIter);
             lowIter = nextIter;
           }
           verticalCount += vertex.second[3];

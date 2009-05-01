@@ -23,9 +23,9 @@ public:
   typedef const point_type* pointer; //immutable
   typedef const point_type& reference; //immutable
 
-  inline iterator_compact_to_points() {}
+  inline iterator_compact_to_points() : iter_(), iter_end_(), pt_(), firstX_(), orient_() {}
   inline iterator_compact_to_points(iterator_type iter, iterator_type iter_end) : 
-    iter_(iter), iter_end_(iter_end), orient_(HORIZONTAL) {
+    iter_(iter), iter_end_(iter_end), pt_(), firstX_(), orient_(HORIZONTAL) {
     if(iter_ != iter_end_) {
       firstX_ = *iter_;
       x(pt_, firstX_);

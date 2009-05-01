@@ -55,7 +55,7 @@ namespace gtl {
 
     class CountTouch {
     public:
-      inline CountTouch() {}
+      inline CountTouch() : counts() {}
       //inline CountTouch(int count) { counts[0] = counts[1] = count; }
       //inline CountTouch(int count1, int count2) { counts[0] = count1; counts[1] = count2; }
       inline CountTouch(const CountTouch& count) : counts(count.counts) {}
@@ -240,7 +240,7 @@ namespace gtl {
     tsd tsd_;
     unsigned int nodeCount_;
   public:
-    inline connectivity_extraction_45() : nodeCount_(0) {}
+    inline connectivity_extraction_45() : tsd_(), nodeCount_(0) {}
     inline connectivity_extraction_45(const connectivity_extraction_45& that) : tsd_(that.tsd_),
                                                                           nodeCount_(that.nodeCount_) {}
     inline connectivity_extraction_45& operator=(const connectivity_extraction_45& that) { 

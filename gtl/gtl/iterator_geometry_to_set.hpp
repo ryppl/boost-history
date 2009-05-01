@@ -27,9 +27,10 @@ private:
   orientation_2d orient_;
   bool is_hole_;
 public:
-  iterator_geometry_to_set() : corner_(4) {}
+  iterator_geometry_to_set() : rectangle_(), vertex_(), corner_(4), orient_(), is_hole_() {}
   iterator_geometry_to_set(const rectangle_type& rectangle, direction_1d dir, 
-                           orientation_2d orient = HORIZONTAL, bool is_hole = false) : corner_(0), orient_(orient), is_hole_(is_hole) {
+                           orientation_2d orient = HORIZONTAL, bool is_hole = false) : 
+    rectangle_(), vertex_(), corner_(0), orient_(orient), is_hole_(is_hole) {
     assign(rectangle_, rectangle);
     if(dir == HIGH) corner_ = 4;
   }
@@ -91,9 +92,11 @@ private:
   orientation_2d orient_;
   int polygon_index;
 public:
-  iterator_geometry_to_set() : polygon_index(-1) {}
+  iterator_geometry_to_set() : vertex_(), itrb(), itre(), last_vertex_(), is_hole_(), multiplier_(), first_pt(), second_pt(), pts(), use_wrap(), orient_(), polygon_index(-1) {}
   iterator_geometry_to_set(const polygon_type& polygon, direction_1d dir, orientation_2d orient = HORIZONTAL, bool is_hole = false) : 
-    is_hole_(is_hole), orient_(orient), polygon_index(0) {
+    vertex_(), itrb(), itre(), last_vertex_(), 
+    is_hole_(is_hole), multiplier_(), first_pt(), second_pt(), pts(), use_wrap(), 
+    orient_(orient), polygon_index(0) {
     itrb = begin_points(polygon);
     itre = end_points(polygon);
     use_wrap = false;
@@ -160,10 +163,16 @@ public:
   inline void evaluate_() {
     vertex_.first = pts[1].get(orient_.get_perpendicular());
     vertex_.second.first =pts[1].get(orient_);
+    if(pts[1] == pts[2]) {
+      vertex_.second.second = 0;
+      return;
+    }
     if(pts[0].get(HORIZONTAL) != pts[1].get(HORIZONTAL)) {
       vertex_.second.second = -1; 
-    } else {
+    } else if(pts[0].get(VERTICAL) != pts[1].get(VERTICAL)) {
       vertex_.second.second = 1;
+    } else {
+      vertex_.second.second = 0;
     }
     vertex_.second.second *= multiplier_;
   }
@@ -186,9 +195,10 @@ private:
   bool is_hole_;
   bool started_holes;
 public:
-  iterator_geometry_to_set() {}
+  iterator_geometry_to_set() : itrb(), itre(), itrhib(), itrhie(), itrhb(), itrhe(), orient_(), is_hole_(), started_holes() {}
   iterator_geometry_to_set(const polygon_with_holes_type& polygon, direction_1d dir, 
-                           orientation_2d orient = HORIZONTAL, bool is_hole = false) : orient_(orient), is_hole_(is_hole) {
+                           orientation_2d orient = HORIZONTAL, bool is_hole = false) : 
+    itrb(), itre(), itrhib(), itrhie(), itrhb(), itrhe(), orient_(orient), is_hole_(is_hole), started_holes() {
     itre = iterator_geometry_to_set<polygon_90_concept, polygon_with_holes_type>(polygon, HIGH, orient, is_hole_);
     itrhe = end_holes(polygon);
     if(dir == HIGH) {

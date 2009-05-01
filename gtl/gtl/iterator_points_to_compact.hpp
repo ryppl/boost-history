@@ -22,10 +22,11 @@ public:
   typedef const coordinate_type* pointer; //immutable
   typedef const coordinate_type& reference; //immutable
 
-  inline iterator_points_to_compact() {}
-  explicit inline iterator_points_to_compact(iT iter, iT iterEnd) : iter_(iter), iterEnd_(iterEnd), orient_(HORIZONTAL) {}
+  inline iterator_points_to_compact() : iter_(), iterEnd_(), orient_(), coord_() {}
+  explicit inline iterator_points_to_compact(iT iter, iT iterEnd) : 
+    iter_(iter), iterEnd_(iterEnd), orient_(HORIZONTAL), coord_() {}
   inline iterator_points_to_compact(const iterator_points_to_compact& that) : 
-    iter_(that.iter_), orient_(that.orient_) {}
+    iter_(that.iter_), iterEnd_(that.iterEnd_), orient_(that.orient_), coord_(that.coord_) {}
   //use bitwise copy and assign provided by the compiler
   inline iterator_points_to_compact& operator++() {
     //iT tmp = iter_;

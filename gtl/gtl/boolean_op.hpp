@@ -26,9 +26,9 @@ namespace boolean_op {
     typename ScanData::iterator nextItr_;
     T nullT_;
   public:
-    inline BooleanOp () { nextItr_ = scanData_.end(); nullT_ = 0; }
-    inline BooleanOp (T nullT) : nullT_(nullT) { nextItr_ = scanData_.end(); }
-    inline BooleanOp (const BooleanOp& that) : scanData_(that.scanData_),
+    inline BooleanOp () : scanData_(), nextItr_(), nullT_() { nextItr_ = scanData_.end(); nullT_ = 0; }
+    inline BooleanOp (T nullT) : scanData_(), nextItr_(), nullT_(nullT) { nextItr_ = scanData_.end(); }
+    inline BooleanOp (const BooleanOp& that) : scanData_(that.scanData_), nextItr_(),
                                                nullT_(that.nullT_) { nextItr_ = scanData_.begin(); }
     inline BooleanOp& operator=(const BooleanOp& that); 
    
@@ -85,12 +85,12 @@ namespace boolean_op {
   template <class T>
   class BinaryCount {
   public:
-    inline BinaryCount() { counts_[0] = counts_[1] = 0; }
+    inline BinaryCount() : counts_() { counts_[0] = counts_[1] = 0; }
     // constructs from two integers
-    inline BinaryCount(int countL, int countR) { counts_[0] = countL, counts_[1] = countR; }
+    inline BinaryCount(int countL, int countR) : counts_() { counts_[0] = countL, counts_[1] = countR; }
     inline BinaryCount& operator=(int count) { counts_[0] = count, counts_[1] = count; }
     inline BinaryCount& operator=(const BinaryCount& that); 
-    inline BinaryCount(const BinaryCount& that) { *this = that; }
+    inline BinaryCount(const BinaryCount& that) : counts_() { *this = that; }
     inline bool operator==(const BinaryCount& that) const;
     inline bool operator!=(const BinaryCount& that) const { return !((*this) == that);}
     inline BinaryCount& operator+=(const BinaryCount& that);
@@ -108,12 +108,12 @@ namespace boolean_op {
 
   class UnaryCount {
   public:
-    inline UnaryCount() { count_ = 0; }
+    inline UnaryCount() : count_(0) {}
     // constructs from two integers
-    inline explicit UnaryCount(int count) { count_ = count; }
+    inline explicit UnaryCount(int count) : count_(count) {}
     inline UnaryCount& operator=(int count) { count_ = count; return *this; }
     inline UnaryCount& operator=(const UnaryCount& that) { count_ = that.count_; return *this; }
-    inline UnaryCount(const UnaryCount& that) { *this = that; }
+    inline UnaryCount(const UnaryCount& that) : count_(that.count_) {}
     inline bool operator==(const UnaryCount& that) const { return count_ == that.count_; }
     inline bool operator!=(const UnaryCount& that) const { return !((*this) == that);}
     inline UnaryCount& operator+=(const UnaryCount& that) { count_ += that.count_; return *this; }

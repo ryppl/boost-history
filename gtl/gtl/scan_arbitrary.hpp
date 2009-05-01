@@ -7,7 +7,7 @@
 */
 #ifndef GTL_SCAN_ARBITRARY_HPP
 #define GTL_SCAN_ARBITRARY_HPP
-
+#include <fstream>
 namespace gtl {
 
   template <typename Unit>
@@ -864,11 +864,14 @@ namespace gtl {
     Unit y_;
     int just_before_;
   public:
-    inline scanline() : x_(std::numeric_limits<Unit>::max()), y_(std::numeric_limits<Unit>::max()), just_before_(false) {
+    inline scanline() : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
+                        x_(std::numeric_limits<Unit>::max()), y_(std::numeric_limits<Unit>::max()), just_before_(false) {
       less_half_edge lessElm(&x_, &just_before_);
       scan_data_ = scanline_type(lessElm);
     }
-    inline scanline(const scanline& that) { (*this) = that; }
+    inline scanline(const scanline& that) : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
+                        x_(std::numeric_limits<Unit>::max()), y_(std::numeric_limits<Unit>::max()), just_before_(false) {
+      (*this) = that; }
     inline scanline& operator=(const scanline& that) {
       x_ = that.x_;
       y_ = that.y_;
@@ -1348,7 +1351,7 @@ namespace gtl {
   template <typename Unit, typename property_type, typename key_type = std::set<property_type>, 
             typename output_functor_type = merge_output_functor<Unit> >
   class property_merge : public scanline_base<Unit> {
-  private:
+  protected:
     typedef typename scanline_base<Unit>::Point Point;
       
     //the first point is the vertex and and second point establishes the slope of an edge eminating from the vertex
@@ -1386,12 +1389,14 @@ namespace gtl {
       }
     };
 
+
     inline void sort_property_merge_data() {
       less_vertex_data<vertex_property> lvd;
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
-    inline property_merge() {}
+    inline property_merge_data& get_property_merge_data() { return pmd; }
+    inline property_merge() : pmd() {}
     inline property_merge(const property_merge& pm) : pmd(pm.pmd) {}
     inline property_merge& operator=(const property_merge& pm) { pmd = pm.pmd; return *this; }
 
@@ -1443,7 +1448,7 @@ namespace gtl {
 
     void clear() {*this = property_merge();}
 
-  private:
+  protected:
     template <typename polygon_type>
     void insert(const polygon_type& polygon_object, const property_type& property_value, bool is_hole, 
                 polygon_concept tag) {
@@ -2421,7 +2426,7 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       std::sort(pmd.begin(), pmd.end(), lvd);
     }
   public:
-    inline arbitrary_boolean_op() {}
+    inline arbitrary_boolean_op() : pmd() {}
     inline arbitrary_boolean_op(const arbitrary_boolean_op& pm) : pmd(pm.pmd) {}
     inline arbitrary_boolean_op& operator=(const arbitrary_boolean_op& pm) { pmd = pm.pmd; return *this; }
 
@@ -2437,6 +2442,13 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       insert(b1, e1, 0);
       insert(b2, e2, 1);
       property_merge_data tmp_pmd;
+      //#define GTL_DEBUG_FILE
+#ifdef GTL_DEBUG_FILE
+      std::fstream debug_file;
+      debug_file.open("gtl_debug.txt", std::ios::out);
+      property_merge<Unit, property_type, std::vector<property_type> >::print(debug_file, pmd);
+      debug_file.close();
+#endif
       line_intersection<Unit>::validate_scan(tmp_pmd, pmd.begin(), pmd.end());
       pmd.swap(tmp_pmd);
       sort_property_merge_data();

@@ -25,11 +25,11 @@ namespace rectangle_formation {
     orientation_2d orient_;
     typename rectangle_traits<T>::coordinate_type currentCoordinate_;
   public:
-    inline ScanLineToRects() {}
+    inline ScanLineToRects() : scanData_(), haveCurrentRect_(), currentRect_(), orient_(), currentCoordinate_() {}
     
     inline ScanLineToRects(orientation_2d orient, rectangle_type model) :
       scanData_(orientation_2d(orient.to_int() ? VERTICAL : HORIZONTAL)),
-      haveCurrentRect_(false), orient_(orient) {
+      haveCurrentRect_(false), currentRect_(), orient_(orient), currentCoordinate_() {
       assign(currentRect_, model);
       currentCoordinate_ = std::numeric_limits<coordinate_type>::max();
     }

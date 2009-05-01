@@ -36,7 +36,7 @@ namespace gtl {
       typedef typename std::list<Point>::const_iterator iterator;
 
       // default constructor of point does not initialize x and y
-      inline PolyLine45(){;} //do nothing default constructor
+      inline PolyLine45() : points() {} //do nothing default constructor
 
       // initialize a polygon from x,y values, it is assumed that the first is an x
       // and that the input is a well behaved polygon
@@ -91,10 +91,11 @@ namespace gtl {
       typedef typename std::list<ActiveTail45*>::const_iterator iteratorHoles;
    
       //default constructor
-      inline ActiveTail45() : tailp_(0), otherTailp_(0), head_(0) {}
+      inline ActiveTail45() : tailp_(0), otherTailp_(0), holesList_(), head_(0) {}
    
       //constructor
-      inline ActiveTail45(const Vertex45& vertex, ActiveTail45* otherTailp = 0) {
+      inline ActiveTail45(const Vertex45& vertex, ActiveTail45* otherTailp = 0) :
+        tailp_(0), otherTailp_(0), holesList_(), head_(0) {
         tailp_ = new PolyLine45;
         tailp_->points.push_back(vertex.pt);
         bool headArray[4] = {false, true, true, true};
@@ -103,20 +104,23 @@ namespace gtl {
         otherTailp_ = otherTailp;
       }
 
-      inline ActiveTail45(Point point, ActiveTail45* otherTailp, bool head = true) {
+      inline ActiveTail45(Point point, ActiveTail45* otherTailp, bool head = true) :
+        tailp_(0), otherTailp_(0), holesList_(), head_(0) {
         tailp_ = new PolyLine45;
         tailp_->points.push_back(point);
         head_ = head;
         otherTailp_ = otherTailp;
       
       }
-      inline ActiveTail45(ActiveTail45* otherTailp) {
+      inline ActiveTail45(ActiveTail45* otherTailp) :
+        tailp_(0), otherTailp_(0), holesList_(), head_(0)  {
         tailp_ = otherTailp->tailp_;
         otherTailp_ = otherTailp;
       }
 
       //copy constructor
-      inline ActiveTail45(const ActiveTail45& that) { (*this) = that; }
+      inline ActiveTail45(const ActiveTail45& that) :
+        tailp_(0), otherTailp_(0), holesList_(), head_(0)  { (*this) = that; }
 
       //destructor
       inline ~ActiveTail45() {
@@ -390,20 +394,20 @@ namespace gtl {
     class Vertex45CountT {
     public:
       typedef ct count_type;
-      inline Vertex45CountT() { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
+      inline Vertex45CountT() : counts() { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
       //inline Vertex45CountT(ct count) { counts[0] = counts[1] = counts[2] = counts[3] = count; }
       inline Vertex45CountT(const ct& count1, const ct& count2, const ct& count3, 
-                           const ct& count4) { 
+                           const ct& count4) : counts() { 
         counts[0] = count1; 
         counts[1] = count2; 
         counts[2] = count3;
         counts[3] = count4; 
       }
-      inline Vertex45CountT(const Vertex45& vertex) { 
+      inline Vertex45CountT(const Vertex45& vertex) : counts() { 
         counts[0] = counts[1] = counts[2] = counts[3] = 0;
         (*this) += vertex;
       }
-      inline Vertex45CountT(const Vertex45CountT& count) { 
+      inline Vertex45CountT(const Vertex45CountT& count) : counts() { 
         (*this) = count;
       }
       inline bool operator==(const Vertex45CountT& count) const { 
@@ -468,18 +472,16 @@ namespace gtl {
       Point pt;
       ct count;
       typedef typename boolean_op_45<Unit>::template Vertex45T<typename ct::count_type> Vertex45T;
-      inline Vertex45CompactT() {}
-      inline Vertex45CompactT(const Point& point, int riseIn, int countIn) : pt(point) {
+      inline Vertex45CompactT() : pt(), count() {}
+      inline Vertex45CompactT(const Point& point, int riseIn, int countIn) : pt(point), count() {
         count[riseIn+1] = countIn;
       }
-      inline Vertex45CompactT(const Vertex45T& vertex) : pt(vertex.pt) {
+      inline Vertex45CompactT(const Vertex45T& vertex) : pt(vertex.pt), count() {
         count[vertex.rise+1] = vertex.count;
       }
       inline Vertex45CompactT(const Vertex45CompactT& vertex) : pt(vertex.pt), count(vertex.count) {}
       inline Vertex45CompactT& operator=(const Vertex45CompactT& vertex){ 
         pt = vertex.pt; count = vertex.count; return *this; }
-      inline Vertex45CompactT(const std::pair<Point, Point>& vertex) {}
-      inline Vertex45CompactT& operator=(const std::pair<Point, Point>& vertex){ return *this; }
       inline bool operator==(const Vertex45CompactT& vertex) const {
         return pt == vertex.pt && count == vertex.count; }
       inline bool operator!=(const Vertex45CompactT& vertex) const { return !((*this) == vertex); }
@@ -520,15 +522,16 @@ namespace gtl {
       int justBefore_;
       int fractureHoles_; 
     public:
-      inline Polygon45Formation() : x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(0) {
+      inline Polygon45Formation() : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(0) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
-      inline Polygon45Formation(bool fractureHoles) : x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(fractureHoles) {
+      inline Polygon45Formation(bool fractureHoles) : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(fractureHoles) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
-      inline Polygon45Formation(const Polygon45Formation& that) { (*this) = that; }
+      inline Polygon45Formation(const Polygon45Formation& that) :
+        scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(0) { (*this) = that; }
       inline Polygon45Formation& operator=(const Polygon45Formation& that) {
         x_ = that.x_;
         justBefore_ = that.justBefore_;
@@ -1230,11 +1233,12 @@ namespace gtl {
       Unit x_;
       int justBefore_;
     public:
-      inline Polygon45Tiling() : x_((std::numeric_limits<Unit>::min())), justBefore_(false) {
+      inline Polygon45Tiling() : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
-      inline Polygon45Tiling(const Polygon45Tiling& that) { (*this) = that; }
+      inline Polygon45Tiling(const Polygon45Tiling& that) : 
+        scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false) { (*this) = that; }
       inline Polygon45Tiling& operator=(const Polygon45Tiling& that) {
         x_ = that.x_;
         justBefore_ = that.justBefore_;

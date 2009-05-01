@@ -81,7 +81,7 @@ namespace gtl {
   public:
     polygon_45_set_view(const ltype& lvalue,
                         const rtype& rvalue ) :
-      lvalue_(lvalue), rvalue_(rvalue), evaluated_(false) {}
+      lvalue_(lvalue), rvalue_(rvalue), output_(), evaluated_(false) {}
 
     // get iterator to begin vertex data
   public:

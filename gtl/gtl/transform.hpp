@@ -338,17 +338,17 @@ private:
 template <typename scale_factor_type>
 class anisotropic_scale_factor {
 public:
-  inline anisotropic_scale_factor() {
+  inline anisotropic_scale_factor() : scale_() {
     scale_[0] = 1;
     scale_[1] = 1;
     scale_[2] = 1;
   } 
-  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale) {
+  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale) : scale_() {
     scale_[0] = xscale;
     scale_[1] = yscale;
     scale_[2] = 1;
   } 
-  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale, scale_factor_type zscale) {
+  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale, scale_factor_type zscale) : scale_() {
     scale_[0] = xscale;
     scale_[1] = yscale;
     scale_[2] = zscale;
@@ -406,6 +406,7 @@ class transformation {
 public:
   transformation();
   transformation(axis_transformation atr);
+  transformation(axis_transformation::ATR atr);
   template <typename point_type>
   transformation(const point_type& p);
   template <typename point_type>

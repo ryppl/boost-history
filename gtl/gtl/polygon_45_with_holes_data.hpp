@@ -21,15 +21,15 @@ public:
   typedef point_data<T> point_type;
 
   // default constructor of point does not initialize x and y
-  inline polygon_45_with_holes_data(){;} //do nothing default constructor
+  inline polygon_45_with_holes_data() : self_(), holes_() {} //do nothing default constructor
 
   template<class iT>
-  inline polygon_45_with_holes_data(iT input_begin, iT input_end) {
+  inline polygon_45_with_holes_data(iT input_begin, iT input_end) : self_(), holes_() {
     set(input_begin, input_end);
   }
 
   template<class iT, typename hiT>
-  inline polygon_45_with_holes_data(iT input_begin, iT input_end, hiT holes_begin, hiT holes_end) {
+  inline polygon_45_with_holes_data(iT input_begin, iT input_end, hiT holes_begin, hiT holes_end) : self_(), holes_() {
     set(input_begin, input_end);
     set_holes(holes_begin, holes_end);
   }
