@@ -22,16 +22,23 @@ namespace detail {
 	template <typename CharT>
 	struct meta_class_tuple_attrib_name_prefix;
 
-	template <>
-	struct meta_class_tuple_attrib_name_prefix<char>
-	{
-		typedef mpl::vector_c<char, '_' > type;
+#define BOOST_MIRROR_DEFINE_MC_TUPLE_ATTRIB_NAME_PREFIX(R, DATA, I, CHAR_T)\
+	template <> \
+	struct meta_class_tuple_attrib_name_prefix< CHAR_T > \
+	{ \
+		typedef mpl::vector_c< \
+			CHAR_T, \
+			BOOST_CTS_LIT_CHAR_T(CHAR_T, '_') \
+		> type; \
 	};
-	template <>
-	struct meta_class_tuple_attrib_name_prefix<wchar_t>
-	{
-		typedef mpl::vector_c<wchar_t, L'_' > type;
-	};
+
+BOOST_CTS_FOR_EACH_CHAR_T(
+	BOOST_MIRROR_DEFINE_MC_TUPLE_ATTRIB_NAME_PREFIX,
+	_
+)
+
+#undef BOOST_MIRROR_DEFINE_MC_TUPLE_ATTRIB_NAME_PREFIX
+
 } // namespace detail
 } // namespace mirror
 } // namespace boost

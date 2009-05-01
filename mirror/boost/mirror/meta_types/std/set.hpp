@@ -23,7 +23,7 @@ namespace detail {
 template <typename K, class Comp, class Allocator> 
 struct meta_type_std_set
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("set")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(set)
 };
 
 } // namespace detail

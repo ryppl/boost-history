@@ -29,19 +29,26 @@ namespace detail {
 template <typename CharT>
 struct static_int_to_str_constants;
 
-template <>
-struct static_int_to_str_constants<char>
-{
-	static inline char null(void){return '\0';}
-	static inline char zero(void){return '0';}
+#define BOOST_MIRROR_DEFINE_STATIC_INT_TO_STR_CONSTANTS(R, DATA, I, CHAR_T)\
+template <> \
+struct static_int_to_str_constants< CHAR_T > \
+{ \
+	static inline CHAR_T null(void)\
+	{\
+		return BOOST_CTS_LIT_CHAR_T(CHAR_T,'\0');\
+	}\
+	static inline CHAR_T zero(void)\
+	{\
+		return BOOST_CTS_LIT_CHAR_T(CHAR_T,'0');\
+	} \
 };
 
-template <>
-struct static_int_to_str_constants<wchar_t>
-{
-	static inline wchar_t null(void){return L'\0';}
-	static inline wchar_t zero(void){return L'0';}
-};
+BOOST_CTS_FOR_EACH_CHAR_T(
+	BOOST_MIRROR_DEFINE_STATIC_INT_TO_STR_CONSTANTS, 
+	_
+)
+
+#undef BOOST_MIRROR_DEFINE_STATIC_INT_TO_STR_CONSTANTS
 
 template <typename CharT, int I>
 struct static_int_to_str 

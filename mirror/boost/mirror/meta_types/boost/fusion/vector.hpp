@@ -33,7 +33,7 @@ namespace detail {
 BOOST_MIRROR_TMP_BOOST_FUSION_VECTOR_TEMPL_DECL()
 struct meta_type_boost_fusion_vector 
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("vector")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(vector)
 };
 
 

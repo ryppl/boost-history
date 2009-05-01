@@ -23,7 +23,7 @@ namespace detail {
 
 struct meta_type_boost_mpl_int_
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("int_")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(int_)
 };
 
 } // namespace detail

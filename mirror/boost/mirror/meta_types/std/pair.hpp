@@ -23,7 +23,7 @@ namespace detail {
 template <typename FirstType, typename SecondType> 
 struct meta_type_std_pair 
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("pair")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(pair)
 };
 
 } // namespace detail

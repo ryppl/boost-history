@@ -26,6 +26,19 @@
 namespace boost {
 namespace mirror {
 
+#define BOOST_MIRROR_JSON_SERIALIZER_STRING_RELATED_HELPER(R,DATA,I,CHAR_T)\
+        static inline mpl::true_ is_base_type(::std::basic_string< CHAR_T >*) \
+        { \
+                return mpl::true_(); \
+        } \
+        inline void do_print_value( \
+		const ::std::basic_string< CHAR_T >& value \
+	) const \
+        { \
+                do_print_string(value); \
+        }
+
+
 template <class OutputStream, class EncodeMBCs>
 class json_serializer 
 {
@@ -82,20 +95,15 @@ private:
 		throw ::std::runtime_error("JSON encoding error");
 	}
 
+	BOOST_CTS_FOR_EACH_CHAR_T(
+		BOOST_MIRROR_JSON_SERIALIZER_STRING_RELATED_HELPER,
+		_
+	)
+
 	template <typename Type>
 	static inline is_fundamental<Type> is_base_type(Type*)
 	{
 		return is_fundamental<Type>();
-	}
-
-	static inline mpl::true_ is_base_type(::std::string*)
-	{
-		return mpl::true_();
-	}
-
-	static inline mpl::true_ is_base_type(::std::wstring*)
-	{
-		return mpl::true_();
 	}
 
 	template <typename Type>
@@ -285,16 +293,6 @@ private:
 		out_stream << '"' ;
 	}
 
-	inline void do_print_value(const ::std::string& value) const
-	{
-		do_print_string(value);
-	}
-
-	inline void do_print_value(const ::std::wstring& value) const
-	{
-		do_print_string(value);
-	}
-
 	template <typename T>
 	inline void do_print_value(T* pointer) const
 	{
@@ -312,6 +310,8 @@ private:
 		out_stream << value ;
 	}
 };
+
+#undef BOOST_MIRROR_JSON_SERIALIZER_STRING_RELATED_HELPER
 
 template <class OutputStream, class EncodeMBCs>
 inline json_serializer<OutputStream, EncodeMBCs> 

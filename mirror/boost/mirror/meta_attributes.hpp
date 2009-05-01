@@ -42,6 +42,13 @@ public:
 
 };
 
+#define BOOST_MIRROR_IMPLEMENT_META_CLASS_ATTRIB_GET_DBL_CLN(R,DATA,I, CHAR_T) \
+inline static const CHAR_T* get_double_colon(::std::char_traits< CHAR_T >) \
+{ \
+	return BOOST_CTS_LIT_CHAR_T(CHAR_T, "::"); \
+}
+
+
 /** Instances of this template are used to store information 
  *  about single class' member attribute and are used mainly
  *  in the algorithms.
@@ -71,15 +78,10 @@ private:
 	typedef typename scope::reflected_type
 		owner_class;
 
-	inline static const char* get_double_colon(::std::char_traits<char>)
-	{
-		return "::";
-	}
-
-	inline static const wchar_t* get_double_colon(::std::char_traits<wchar_t>)
-	{
-		return L"::";
-	}
+	BOOST_CTS_FOR_EACH_CHAR_T(
+		BOOST_MIRROR_IMPLEMENT_META_CLASS_ATTRIB_GET_DBL_CLN,
+		_
+	)
 
 	template <typename CharT>
 	inline static ::std::basic_string<CharT> init_full_name(
@@ -231,6 +233,7 @@ public:
 
 };
 
+#undef BOOST_MIRROR_IMPLEMENT_META_CLASS_ATTRIB_GET_DBL_CLN
 
 } // namespace mirror
 } // namespace boost

@@ -22,7 +22,7 @@ namespace detail {
 template <typename T, class Allocator> 
 struct meta_type_std_slist
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("slist")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(slist)
 };
 
 } // namespace detail

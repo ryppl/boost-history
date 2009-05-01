@@ -23,7 +23,7 @@ namespace detail {
 template <typename K, typename T, class Comp, class Allocator> 
 struct meta_type_std_map
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("map")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(map)
 };
 
 } // namespace detail

@@ -34,7 +34,7 @@ namespace detail {
 BOOST_MIRROR_TMP_BOOST_TUPLE_TEMPL_DECL()
 struct meta_type_boost_tuple 
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("tuple")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(tuple)
 };
 
 

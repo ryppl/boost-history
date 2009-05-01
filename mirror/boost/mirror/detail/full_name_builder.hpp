@@ -30,6 +30,28 @@ namespace namespace_ {struct _;}
 
 namespace detail {
 	
+
+#define BOOST_MIRROR_IMPLEMENT_FULL_NAME_BUILDER_APPEND_SEP(Z,D,I,CHAR_T)\
+	template <typename Type> \
+	inline static void append_separator( \
+		::std::basic_string< CHAR_T >& _str, \
+		mpl::identity<meta_namespace<namespace_::_> >, \
+		mpl::identity<detail::registered_type_info<Type> > \
+	) { } \
+	template <typename AnyScope, class AnyMO> \
+	inline static void append_separator( \
+		::std::basic_string< CHAR_T >& _str, \
+		mpl::identity<AnyScope>, \
+		mpl::identity<AnyMO> \
+	) \
+	{ \
+		static const ::std::basic_string<CHAR_T> separator( \
+			BOOST_CTS_LIT_CHAR_T(CHAR_T, "::") \
+		); \
+		_str.append(separator); \
+	} 
+
+
 	/** Helper template that builds the fully qualified names
 	 *  from base names
 	 */
@@ -38,48 +60,14 @@ namespace detail {
 	{
 	private:
 
-		// don't prepend '::' to types on global scope
-		template <typename Type>
-		inline static void append_separator(
-			::std::basic_string<char>& _str, 
-			mpl::identity<meta_namespace<namespace_::_> >,
-			mpl::identity<detail::registered_type_info<Type> >
+		// implement the append_separator functions for all
+		// supported character types
+		// do not prepend :: for types declared on the global scope
+		BOOST_CTS_FOR_EACH_CHAR_T(
+			BOOST_MIRROR_IMPLEMENT_FULL_NAME_BUILDER_APPEND_SEP,
+			_
 		)
-		{ }
-		// don't prepend '::' to types on global scope
-		template <typename Type>
-		inline static void append_separator(
-			::std::basic_string<wchar_t>& _str, 
-			mpl::identity<meta_namespace<namespace_::_> >,
-			mpl::identity<detail::registered_type_info<Type> >
-		)
-		{ }
-
-		// append separator to anything else
-		template <typename AnyScope, class AnyMO>
-		inline static void append_separator(
-			::std::string& _str, 
-			mpl::identity<AnyScope>,
-			mpl::identity<AnyMO>
-		)
-		{
-			static const ::std::string separator("::");
-			_str.append(separator);
-		}
-
-		// append separator to anything else
-		template <typename AnyScope, class AnyMO>
-		inline static void append_separator(
-			::std::wstring& _str, 
-			mpl::identity<AnyScope>,
-			mpl::identity<AnyMO>
-		)
-		{
-			static const ::std::wstring separator(L"::");
-			_str.append(separator);
-		}
-
-
+		
 		// initializes the full names
 		template <typename CharT>
 		inline static ::std::basic_string<CharT> init_name(
@@ -135,6 +123,7 @@ namespace detail {
 		}
 	};
 	
+#undef BOOST_MIRROR_IMPLEMENT_FULL_NAME_BUILDER_APPEND_SEP
 	
 } // namespace detail
 } // namespace mirror

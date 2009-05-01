@@ -25,44 +25,53 @@ namespace mirror {
 
 namespace calling_convention {
 
-#define BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER(CC) \
+#define BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_NAME(R, CC, I, CHAR_T) \
+	inline static const ::std::basic_string< CHAR_T >& \
+	name(::std::char_traits< CHAR_T >) \
+	{ \
+		static ::std::basic_string<CHAR_T> cc_name( \
+			BOOST_CTS_STRINGIZE_CHAR_T(CHAR_T, __##CC) \
+		);\
+		return cc_name; \
+	} 
+
+#define BOOST_MIRROR_IMPLEMENT_DEFAULT_CALLING_CONVENTION_NAME(R,CC,I, CHAR_T)\
+	inline static ::std::basic_string< CHAR_T > \
+	name(::std::char_traits< CHAR_T >) \
+	{ \
+		return ::std::basic_string< CHAR_T >(); \
+	} 
+
+#define BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_HELPER(CC) \
 	struct __##CC##_ \
 	{ \
-		inline static const ::std::string& name(::std::char_traits<char>) \
-		{ \
-			static ::std::string cc_name(BOOST_PP_STRINGIZE(__##CC));\
-			return cc_name; \
-		} \
-		inline static const ::std::wstring& name(::std::char_traits<wchar_t>) \
-		{ \
-			static ::std::wstring cc_name(BOOST_PP_WSTRINGIZE(__##CC));\
-			return cc_name; \
-		} \
+		BOOST_CTS_FOR_EACH_CHAR_T( \
+			BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_NAME, \
+			CC \
+		) \
 	}; 
 
-	BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER(cdecl)
-	BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER(stdcall)
-	BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER(pascal)
+	BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_HELPER(cdecl)
+	BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_HELPER(stdcall)
+	BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_HELPER(pascal)
 
 	struct __default_
 	{ 
-		inline static ::std::string name(::std::char_traits<char>)
-		{
-			return ::std::string();
-		}
-		inline static ::std::wstring name(::std::char_traits<wchar_t>)
-		{
-			return ::std::wstring();
-		}
+		BOOST_CTS_FOR_EACH_CHAR_T(
+			BOOST_MIRROR_IMPLEMENT_DEFAULT_CALLING_CONVENTION_NAME,
+			_
+		)
 	}; 
 
 // undefine the helper macros
-#undef BOOST_MIRROR_DECLARE_CALLING_CONVENTION_HELPER
+#undef BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_HELPER
+#undef BOOST_MIRROR_IMPLEMENT_DEFAULT_CALLING_CONVENTION_NAME
+#undef BOOST_MIRROR_IMPLEMENT_CALLING_CONVENTION_NAME
 }
 
 /** Meta-type for free function types
  */
-#define BOOST_MIRROR_DECLARE_FREE_FUNCTION_META_TYPE( \
+#define BOOST_MIRROR_IMPLEMENT_FREE_FUNCTION_META_TYPE( \
 	X, \
 	ARG_COUNT, \
 	CALLING_CONVENTION \
@@ -80,7 +89,7 @@ struct meta_type<RetVal (BOOST_PP_ENUM_PARAMS(ARG_COUNT, T))>\
 		(reflected_type)(BOOST_PP_ENUM_PARAMS(ARG_COUNT, T)); \
 };
 
-BOOST_PP_REPEAT(16, BOOST_MIRROR_DECLARE_FREE_FUNCTION_META_TYPE, default)
+BOOST_PP_REPEAT(16, BOOST_MIRROR_IMPLEMENT_FREE_FUNCTION_META_TYPE, default)
 
 
 } // namespace mirror

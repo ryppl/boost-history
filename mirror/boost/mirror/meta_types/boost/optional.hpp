@@ -22,7 +22,7 @@ namespace detail {
 
 struct meta_type_boost_optional
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("optional")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(optional)
 };
 
 } // namespace detail

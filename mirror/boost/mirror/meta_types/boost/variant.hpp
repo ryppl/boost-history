@@ -31,7 +31,7 @@ namespace detail {
 
 struct meta_type_boost_variant 
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("variant")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(variant)
 };
 
 

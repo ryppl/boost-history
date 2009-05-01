@@ -112,6 +112,19 @@ struct meta_class_attributes_base
 	BOOST_MIRROR_REG_CLASS_ATTRIBS_END
 
 
+#define BOOST_MIRROR_REG_TEMPL_OR_CLASS_ATTRIB_IMPL_GET_NAME(R,NAME,I, CHAR_T)\
+        inline static const ::std::basic_string< CHAR_T >& get_name( \
+                position_of_##NAME, \
+                ::boost::mpl::false_, \
+                ::std::char_traits< CHAR_T > \
+        ) \
+	{ \
+		static ::std::basic_string< CHAR_T > name( \
+			BOOST_CTS_STRINGIZE_CHAR_T(CHAR_T, NAME) \
+		); \
+		return name; \
+	}
+	
 /** Helper macro expanding into a prologue of a meta-attribute
  *  declaration
  */
@@ -127,16 +140,10 @@ struct meta_class_attributes_base
 	typedef TYPENAME_KW ::boost::mirror::typedef_::extract_type< \
 		TYPE_SELECTOR \
 	>::type type_of_##NAME; \
-	inline static const ::std::string& get_name( \
-		position_of_##NAME, \
-		::boost::mpl::false_, \
-		::std::char_traits<char> \
-	){static ::std::string name(#NAME); return name;}\
-	inline static const ::std::wstring& get_name( \
-		position_of_##NAME, \
-		::boost::mpl::false_, \
-		::std::char_traits<wchar_t> \
-	){static ::std::wstring name(L ## #NAME); return name;}\
+	BOOST_CTS_FOR_EACH_CHAR_T( \
+		BOOST_MIRROR_REG_TEMPL_OR_CLASS_ATTRIB_IMPL_GET_NAME, \
+		NAME \
+	) \
 	static meta_class_attribute_traits< \
 		::boost::mirror::attrib_storage_specifiers:: SPECIFIERS##_, \
 		TYPE_SELECTOR \

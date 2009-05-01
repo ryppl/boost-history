@@ -153,49 +153,34 @@ struct type_name_decorator_literal_selectors
 template <typename CharT>
 struct type_name_decorator_literals;
 
-// specialization for chars
-template <>
-struct type_name_decorator_literals<char>
-: type_name_decorator_literal_selectors
-{
-	typedef type_name_decorator_literal_selectors bc;
-	inline static const char* get(bc::space_){return " ";}
-	inline static const char* get(bc::asterisk_post_){return " *";}
-	inline static const char* get(bc::ampersand_post_){return " &";}
-	inline static const char* get(bc::const_post_){return " const";}
-	inline static const char* get(bc::volatile_post_){return " volatile";}
-	inline static const char* get(bc::cv_post_){return " const volatile";}
-	inline static const char* get(bc::lbracket_){return "[";}
-	inline static const char* get(bc::rbracket_){return "]";}
-	inline static const char* get(bc::brackets_){return "[]";}
-	inline static const char* get(bc::lpar_){return "(";}
-	inline static const char* get(bc::rpar_){return ")";}
-	inline static const char* get(bc::comma_){return ", ";}
-	inline static const char* get(bc::langle_){return "< ";}
-	inline static const char* get(bc::rangle_){return " >";}
+#define BOOST_MIRROR_DEFINE_TYPE_NAME_DECORATOR_LITERALS(R, DATA, I, CHAR_T) \
+template <> \
+struct type_name_decorator_literals<CHAR_T> \
+: type_name_decorator_literal_selectors \
+{ \
+	typedef type_name_decorator_literal_selectors bc; \
+	inline static const CHAR_T* get(bc::space_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " ");} \
+	inline static const CHAR_T* get(bc::asterisk_post_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " *");} \
+	inline static const CHAR_T* get(bc::ampersand_post_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " &");} \
+	inline static const CHAR_T* get(bc::const_post_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " const");} \
+	inline static const CHAR_T* get(bc::volatile_post_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " volatile");} \
+	inline static const CHAR_T* get(bc::cv_post_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " const volatile");} \
+	inline static const CHAR_T* get(bc::lbracket_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, "[");} \
+	inline static const CHAR_T* get(bc::rbracket_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, "]");} \
+	inline static const CHAR_T* get(bc::brackets_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, "[]");} \
+	inline static const CHAR_T* get(bc::lpar_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, "(");} \
+	inline static const CHAR_T* get(bc::rpar_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, ")");} \
+	inline static const CHAR_T* get(bc::comma_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, ", ");} \
+	inline static const CHAR_T* get(bc::langle_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, "< ");} \
+	inline static const CHAR_T* get(bc::rangle_){return BOOST_CTS_LIT_CHAR_T(CHAR_T, " >");} \
 };
 
-// specialization for chars
-template <>
-struct type_name_decorator_literals<wchar_t>
-: type_name_decorator_literal_selectors
-{
-	typedef type_name_decorator_literal_selectors bc;
-	inline static const wchar_t* get(bc::space_){return L" ";}
-	inline static const wchar_t* get(bc::asterisk_post_){return L" *";}
-	inline static const wchar_t* get(bc::ampersand_post_){return L" &";}
-	inline static const wchar_t* get(bc::const_post_){return L" const";}
-	inline static const wchar_t* get(bc::volatile_post_){return L" volatile";}
-	inline static const wchar_t* get(bc::cv_post_){return L" const volatile";}
-	inline static const wchar_t* get(bc::lbracket_){return L"[";}
-	inline static const wchar_t* get(bc::rbracket_){return L"]";}
-	inline static const wchar_t* get(bc::brackets_){return L"[]";}
-	inline static const wchar_t* get(bc::lpar_){return L"(";}
-	inline static const wchar_t* get(bc::rpar_){return L")";}
-	inline static const wchar_t* get(bc::comma_){return L", ";}
-	inline static const wchar_t* get(bc::langle_){return L"< ";}
-	inline static const wchar_t* get(bc::rangle_){return L" >";}
-};
+BOOST_CTS_FOR_EACH_CHAR_T(
+	BOOST_MIRROR_DEFINE_TYPE_NAME_DECORATOR_LITERALS,
+	_
+)
+
+#undef BOOST_MIRROR_DEFINE_TYPE_NAME_DECORATOR_LITERALS
 
 // no-op decorator
 template <typename T>

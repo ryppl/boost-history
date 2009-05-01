@@ -22,7 +22,7 @@ namespace detail {
 
 struct meta_type_std_less
 {
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME("less")
+	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(less)
 };
 
 } // namespace detail

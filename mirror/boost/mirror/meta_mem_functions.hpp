@@ -1,42 +1,16 @@
 /**
- * \file boost/mirror/meta_constructors.hpp
- * Meta data concerning class' constructors
+ * \file boost/mirror/meta_mem_functions.hpp
+ * Meta data concerning class' member functions
  *
  *  Copyright 2008 Matus Chochlik. Distributed under the Boost
  *  Software License, Version 1.0. (See accompanying file
  *  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  */
 
-#ifndef BOOST_MIRROR_META_CONSTRUCTORS_HPP
-#define BOOST_MIRROR_META_CONSTRUCTORS_HPP
+#ifndef BOOST_MIRROR_META_MEM_FUNCTIONS_HPP
+#define BOOST_MIRROR_META_MEM_FUNCTIONS_HPP
 
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/size.hpp>
-#include <boost/mpl/accumulate.hpp>
-#include <boost/mpl/push_back.hpp>
-
-#include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/repeat.hpp>
-#include <boost/preprocessor/seq/size.hpp>
-#include <boost/preprocessor/seq/seq.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/comparison/not_equal.hpp>
-#include <boost/preprocessor/comparison/equal.hpp>
-#include <boost/preprocessor/seq/for_each.hpp>
-#include <boost/preprocessor/seq/for_each_i.hpp>
-#include <boost/preprocessor/punctuation/comma_if.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/facilities/empty.hpp>
-#include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/wstringize.hpp>
-#include <boost/preprocessor/logical/and.hpp>
-#include <boost/preprocessor/logical/not.hpp>
-#include <boost/preprocessor/arithmetic/sub.hpp>
-#include <boost/preprocessor/array/elem.hpp>
-
-#include <boost/char_type_switch/string.hpp>
-#include <boost/mirror/meta_data_fwd.hpp>
+#include <boost/mirror/meta_constructors.hpp>
 
 namespace boost {
 namespace mirror {
@@ -44,7 +18,9 @@ namespace mirror {
 /** Forward declaration of the meta-constructors base template
  */
 template <class Class /*, class VariantTag*/ >
-struct meta_constructors_base;
+struct meta_mem_functions_base;
+
+#ifdef NOT_DEFINED //TODO:
 
 /** Begins the registering of template class' constructors
  */
@@ -68,39 +44,28 @@ struct meta_constructors_base< CLASS > \
 /** Registers the parameter name of the j-th parameter
  *  of the i-th constructor
  */
-#define BOOST_MIRROR_IMPLEMENT_CONSTRUCTOR_GET_PARAM_NAME( \
-	CONSTRUCTOR, \
-	PARAM, \
-	NAME, \
-	CHAR_T \
-) \
-inline static const ::std::basic_string< CHAR_T >& get_param_name( \
+#define BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME(CONSTRUCTOR, PARAM, NAME) \
+inline static const ::std::string& get_param_name( \
         mpl::false_, \
-        const ::std::char_traits< CHAR_T >&, \
+        const ::std::char_traits<char>&, \
         mpl::int_< CONSTRUCTOR >, \
         mpl::int_< PARAM > \
 ) \
 { \
-        static ::std::basic_string< CHAR_T > result( \
-		BOOST_CTS_STRINGIZE_CHAR_T( CHAR_T, NAME ) \
-	); \
+        static ::std::string result( BOOST_PP_STRINGIZE( NAME ) ); \
         return result; \
-} 
+} \
+inline static const ::std::wstring& get_param_name( \
+        mpl::false_, \
+        const ::std::char_traits<wchar_t>&, \
+        mpl::int_< CONSTRUCTOR >, \
+        mpl::int_< PARAM > \
+) \
+{ \
+        static ::std::wstring result( BOOST_PP_WSTRINGIZE( NAME ) ); \
+        return result; \
+}
 
-#define BOOST_MIRROR_IMPLEMENT_CONSTRUCTOR_GET_PARAM_NAME_HELPER(\
-	R, PARAMS, I, CHAR_T \
-) BOOST_MIRROR_IMPLEMENT_CONSTRUCTOR_GET_PARAM_NAME( \
-	BOOST_PP_ARRAY_ELEM(0, PARAMS), \
-	BOOST_PP_ARRAY_ELEM(1, PARAMS), \
-	BOOST_PP_ARRAY_ELEM(2, PARAMS), \
-	CHAR_T \
-)
-
-#define BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME(R,CONSTRUCTOR, PARAM, NAME) \
-	BOOST_CTS_FOR_EACH_CHAR_T_2( \
-		BOOST_MIRROR_IMPLEMENT_CONSTRUCTOR_GET_PARAM_NAME_HELPER, \
-		(3, (CONSTRUCTOR, PARAM, NAME)) \
-	)
 
 /** Ends the registering of (template) class' constructors
  */
@@ -142,7 +107,6 @@ inline static const ::std::basic_string< CHAR_T >& get_param_name( \
 	PARAM_INDEX, \
 	TYPE_AND_NAME \
 ) BOOST_MIRROR_REG_CONSTRUCTOR_PARAM_NAME( \
-		R, \
                 CONSTR_INDEX, \
                 PARAM_INDEX, \
                 BOOST_PP_SEQ_HEAD(BOOST_PP_SEQ_TAIL(TYPE_AND_NAME)) \
@@ -290,55 +254,54 @@ BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( CLASS ) \
 BOOST_MIRROR_REG_CONSTRUCTORS_END
 
 
+#endif //NOT_DEFINED TODO
 
-
-/** Helper macro which registers the constructors of
- *  native C++ types and some other commonly used types
- *  like strings.
- */
-#define BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(TYPE)\
-BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( TYPE ) \
-        BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(0) \
-        BOOST_MIRROR_REG_CONSTRUCTOR(1, ((TYPE)(init))) \
-BOOST_MIRROR_REG_CONSTRUCTORS_END 
-
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(bool)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(char)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(unsigned char)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(signed char)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(wchar_t)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(short int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(unsigned short int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(unsigned int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(long int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(unsigned long int)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(float)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(double)
-
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::string)
-BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::wstring)
-
-#undef BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS
-
-/** Template providing meta-data about the constructors
- *  of the Class.
+/** Template providing meta-data about the member functions
+ *  (methods) of the Class.
  */
 template <class Class /*, class VariantTag*/ >
-struct meta_constructors : public meta_constructors_base<Class>
+struct meta_member_functions : public meta_mem_functions_base<Class>
 {
-	typedef meta_constructors_base<Class> base_class;
-	template <class ConstructorIndex>
-	struct constructor
+	typedef meta_mem_functions_base<Class> base_class;
+	template <class FunctionIndex>
+	struct member_function
 	{
+		// returns the name of the member function
+		template <bool FullOrBase, class CharT>
+		inline static const ::std::basic_string<CharT>&
+		get_name(
+			mpl::bool_<FullOrBase> full_or_base,
+			const ::std::char_traits<CharT>& traits
+		)
+		{
+			return meta_member_functions::get_name(
+				full_or_base,
+				traits,
+				FunctionIndex()
+			);
+		}
+
+		// returns the base name of the member function
+		inline static const cts::bstring&
+		base_name(void)
+		{
+			return meta_member_functions::get_name(
+                                mpl::false_(),
+                                cts::bchar_traits(),
+                                FunctionIndex()
+                        );
+		}
+		
+		// meta-data about the parameters of the function
 		struct params
 		{
 		private:
 			typedef typename mpl::at<
 				typename base_class::param_type_lists,
-				ConstructorIndex
+				FunctionIndex
 			>::type type_list;
 		public:
+			// some meta-data about the i-th param
 			template <class ParamIndex>
 			struct param
 			{
@@ -352,10 +315,12 @@ struct meta_constructors : public meta_constructors_base<Class>
 					type;
 			};
 
+			// the count of parameters
 			typedef mpl::int_<
 				mpl::size< type_list>::value
 			> size;
 
+			// gets the i-th param name
 			template <class CharT, class ParamIndex>
 			inline static const ::std::basic_string<CharT>& 
 			get_param_name(
@@ -364,26 +329,29 @@ struct meta_constructors : public meta_constructors_base<Class>
 				ParamIndex
 			)
 			{
-				return meta_constructors::get_param_name(
+				return meta_member_functions::get_param_name(
 					full_or_base, 
 					traits,
-					ConstructorIndex(),
+					FunctionIndex(),
 					ParamIndex()
 				);
 			}
 
+			// get the base name of the i-th param
 			template <class ParamIndex>
 			inline static const cts::bstring& base_param_name(
 				ParamIndex
 			)
 			{
-				return meta_constructors::base_param_name(
-					ConstructorIndex(),
+				return meta_member_functions::base_param_name(
+					FunctionIndex(),
 					ParamIndex()
 				);
 			}
 
 
+			// executes the given binary functor on all
+			// parameters of the i-th function
 			template <class Functor>
 			static void for_each(Functor f)
 			{

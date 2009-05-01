@@ -13,76 +13,14 @@
 #include <algorithm>
 
 #include <boost/char_type_switch/iostream.hpp>
+
 #include <boost/mirror/functor_call.hpp>
+#include <boost/mirror/meta_mem_functions.hpp>
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
 
 #include "./input_ui.hpp"
-
-namespace test {
-	
-struct person 
-{
-	::boost::cts::bstring first_name;
-	::boost::cts::bstring family_name;
-	::boost::cts::bstring street;
-	::boost::cts::bstring number;
-	::boost::cts::bstring city;
-	::boost::cts::bstring postal_code;
-
-	person(
-		const ::boost::cts::bstring& _first_name,
-		const ::boost::cts::bstring& _family_name,
-		const ::boost::cts::bstring& _street,
-		const ::boost::cts::bstring& _number,
-		const ::boost::cts::bstring& _city,
-		const ::boost::cts::bstring& _postal_code
-	): first_name(_first_name)
-	 , family_name(_family_name)
-	 , street(_street)
-	 , number(_number)
-	 , city(_city)
-	 , postal_code(_postal_code)
-	{ }
-};
-
-} // namespace test 
-
-
-namespace boost {
-namespace mirror {
-
-// register the ::test namespace
-BOOST_MIRROR_REG_NAMESPACE( (test) )
-
-// register the person type
-BOOST_MIRROR_REG_TYPE( ::test, person)
-
-// register the constructors of ::test::person
-BOOST_MIRROR_REG_CONSTRUCTORS_BEGIN( ::test::person )
-	BOOST_MIRROR_REG_CONSTRUCTOR(0, 
-		((::boost::cts::bstring)(first_name))
-		((::boost::cts::bstring)(family_name))
-		((::boost::cts::bstring)(street))
-		((::boost::cts::bstring)(number))
-		((::boost::cts::bstring)(city))
-		((::boost::cts::bstring)(postal_code))
-	)
-BOOST_MIRROR_REG_CONSTRUCTORS_END
-
-// register the attributes of person
-BOOST_MIRROR_REG_CLASS_ATTRIBS_BEGIN(::test::person)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, first_name)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, family_name)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, street)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, number)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, city)
-        BOOST_MIRROR_REG_AUTO_CLASS_ATTRIB(_, postal_code)
-BOOST_MIRROR_REG_CLASS_ATTRIBS_END
-
-
-} // namespace mirror
-} // namespace boost
+#include "./person.hpp"
 
 /** Prints the types, names and values of
  *  class' attribute
@@ -158,11 +96,13 @@ int main(void)
 	using namespace ::test;
 	//
 	// a list of persons
-	::std::list< ::test::person > persons;
+	::std::list< person > persons;
 	// 
 	// keep inserting while insert_more == 'y'
-	cts::bchar insert_more = BOOST_CTS_LIT('y');
-	while(insert_more == BOOST_CTS_LIT('y'))
+	const cts::bchar yes = BOOST_CTS_LIT('y');
+	const cts::bchar no = BOOST_CTS_LIT('n');
+	cts::bchar insert_more = yes;
+	while(insert_more == yes)
 	{
 		// the name of the function argument.
 		// there is only one in this case
@@ -178,13 +118,17 @@ int main(void)
 		// check whether to insert more persons
 		do
 		{
-			cts::bcout() << BOOST_CTS_LIT("Insert more ? (y/n) ") << ::std::flush;
+			cts::bcout() << 
+				BOOST_CTS_LIT("Insert more ? (y/n) ") << 
+				::std::flush;
 			cts::bcin() >> insert_more;
-		} while(
-			insert_more != BOOST_CTS_LIT('y') && 
-			insert_more != BOOST_CTS_LIT('n')
-		);
+		} while(insert_more != yes && insert_more != no);
 	}
+	//
+	typedef meta_member_functions<person> mem_fns;
+	cts::bcout() <<
+		mem_fns::member_function<mpl::int_<0> >::base_name() <<
+		::std::endl;
 	//
 	// print out all the persons in the list
 	cts::bcout() << "Persons:" << ::std::endl;

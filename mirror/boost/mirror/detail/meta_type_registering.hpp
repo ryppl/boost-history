@@ -54,30 +54,27 @@ struct meta_type
 	typedef typename base_info::reflected_type reflected_type;
 };
 
-#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPE_NAME_STRING) \
-	static inline const ::std::string& get_name( \
+#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(R, TYPE, I, CHAR_T) \
+	static inline const ::std::basic_string< CHAR_T >& get_name( \
 		mpl::false_, \
-		::std::char_traits<char> \
+		::std::char_traits< CHAR_T > \
 	)\
 	{ \
-		static ::std::string s_name(TYPE_NAME_STRING); \
-		return s_name; \
-	} \
-	static inline const ::std::wstring& get_name( \
-		mpl::false_, \
-		::std::char_traits<wchar_t> \
-	)\
-	{ \
-		static ::std::wstring s_name(L ## TYPE_NAME_STRING); \
+		static ::std::basic_string< CHAR_T > s_name( \
+			BOOST_CTS_STRINGIZE_CHAR_T(CHAR_T, TYPE) \
+		); \
 		return s_name; \
 	} 
 
 
-/** Helper macro used to declare base-name getting functions
+/** macro used to declare base-name getting functions
  *  and base-name length static constants
  */
-#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPE_NAME) \
-	BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(#TYPE_NAME)
+#define BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPE) \
+	BOOST_CTS_FOR_EACH_CHAR_T( \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER, \
+		TYPE \
+	)
 
 /** Macro for registering global-scope types
  */
@@ -87,7 +84,7 @@ struct meta_type
 	{ \
 		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \
 		typedef BASE_NAME reflected_type; \
-		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(BASE_NAME) \
 	}; \
 	} /* namespace detail */ \
 	BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
@@ -110,7 +107,7 @@ struct meta_type
 	{ \
 		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
 		typedef NAMESPACE::BASE_NAME reflected_type; \
-		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(BASE_NAME) \
 	}; \
 	} /* namespace detail */ \
         BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
@@ -188,7 +185,7 @@ namespace typedef_ {
 	{ \
 		typedef BOOST_MIRRORED_GLOBAL_SCOPE() scope; \
 		typedef ::TYPEDEFD_NAME reflected_type; \
-		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPEDEFD_NAME) \
 	}; \
 	} /* namespace detail */ \
         BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
@@ -221,7 +218,7 @@ namespace typedef_ {
 	{ \
 		typedef BOOST_MIRRORED_NAMESPACE(NAMESPACE) scope; \
 		typedef NAMESPACE::TYPEDEFD_NAME reflected_type; \
-		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(TYPEDEFD_NAME) \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(TYPEDEFD_NAME) \
 	}; \
 	} /* namespace detail */ \
         BOOST_MIRROR_ADD_TO_GLOBAL_LIST( \
@@ -242,7 +239,7 @@ namespace typedef_ {
 	{ \
 		typedef meta_type< WRAPPER > scope; \
 		typedef WRAPPER::BASE_NAME reflected_type; \
-		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME_HELPER(BASE_NAME) \
+		BOOST_MIRROR_REG_TYPE_DECLARE_BASE_NAME(BASE_NAME) \
 	}; \
 	} // namespace detail
 

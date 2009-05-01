@@ -16,8 +16,6 @@
 #include <boost/preprocessor/seq/pop_back.hpp>
 #include <boost/preprocessor/seq/seq.hpp>
 #include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/stringize.hpp>
-#include <boost/preprocessor/wstringize.hpp>
 
 // template meta programming
 #include <boost/mpl/bool.hpp>
@@ -181,6 +179,26 @@ BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( ::boost::mirror::namespace_::_)
 	:: NAMESPACE_NAME 
 
 
+// this macro is used to implement the get_name function 
+// for various character types
+#define BOOST_MIRROR_REG_NAMESPACE_IMPLEMENT_GET_NAME(R,NAME_SEQUENCE,I,CHAR_T)\
+static inline const ::std::basic_string< CHAR_T >& get_name( \
+	mpl::false_, \
+	::std::char_traits< CHAR_T > \
+) \
+{ \
+	static ::std::basic_string< CHAR_T> s_name( \
+		BOOST_CTS_STRINGIZE_CHAR_T(\
+			CHAR_T, \
+			BOOST_PP_SEQ_HEAD( \
+				BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
+			) \
+		) \
+	); \
+	return s_name; \
+}
+
+
 /** Macro that does the registering of a namespace.
  *  The argument must be a BOOST_PP sequence containing the
  *  names of the parent namspaces and the registered namespace.
@@ -229,30 +247,10 @@ BOOST_MIRROR_REGISTER_GLOBAL_LIST_SELECTOR( ::boost::mirror::namespace_::_)
 			_, \
 			BOOST_PP_SEQ_POP_BACK(NAME_SEQUENCE) \
 		) :: _ parent_placeholder; /* -4- */ \
-		static inline const ::std::string& get_name( \
-			mpl::false_, \
-			::std::char_traits<char> \
-		) \
-		{ \
-			static ::std::string s_name(BOOST_PP_STRINGIZE( \
-				BOOST_PP_SEQ_HEAD( \
-					BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
-				) \
-			)); \
-			return s_name; \
-		} \
-		static inline const ::std::wstring& get_name( \
-			mpl::false_, \
-			::std::char_traits<wchar_t> \
-		) \
-		{ \
-			static ::std::wstring s_name(BOOST_PP_WSTRINGIZE( \
-				BOOST_PP_SEQ_HEAD( \
-					BOOST_PP_SEQ_REVERSE(NAME_SEQUENCE) \
-				) \
-			)); \
-			return s_name; \
-		} /* -5- */ \
+		BOOST_CTS_FOR_EACH_CHAR_T( \
+			BOOST_MIRROR_REG_NAMESPACE_IMPLEMENT_GET_NAME, \
+			NAME_SEQUENCE \
+		) /* -5- */ \
 	}; \
 	} \
 	BOOST_PP_SEQ_FOR_EACH( \
