@@ -16,16 +16,16 @@
 
 namespace boost { namespace task
 {
-typedef pool< unbounded_channel< fifo > > default_pool;
+typedef pool< unbounded_channel< fifo > > default_pool_t;
 
 namespace detail
 {
 struct BOOST_TASK_DECL static_pool
-{ static default_pool instance; };
+{ static default_pool_t instance; };
 }
 
 inline
-default_pool & get_default_pool()
+default_pool_t & get_default_pool()
 { return detail::static_pool::instance; }
 } }
 

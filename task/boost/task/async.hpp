@@ -13,44 +13,13 @@
 #include <boost/task/default_pool.hpp>
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/thread_callable.hpp>
-#include <boost/task/async_handle.hpp>
+#include <boost/task/handle.hpp>
+#include <boost/task/future.hpp>
 #include <boost/task/pool.hpp>
 #include <boost/task/task.hpp>
 
 namespace boost { namespace task
 {
-template< typename R >
-async_handle< R > async_in_pool( task< R > t)
-{ return get_default_pool().submit( t); }
-
-template<
-	typename R,
-	typename Attr
->
-async_handle< R > async_in_pool(
-	task< R > t,
-	Attr const& attr)
-{ return get_default_pool().submit( t, attr); }
-
-template<
-	typename Channel,
-	typename R
->
-async_handle< R > async_in_pool(
-	pool< Channel > & pool,
-	task< R > t)
-{ return pool.submit( t); }
-
-template<
-	typename Channel,
-	typename R,
-	typename Attr
->
-async_handle< R > async_in_pool(
-	pool< Channel > & pool,
-	task< R > t,
-	Attr const& attr)
-{ return pool.submit( t, attr); }
 
 namespace detail
 {
@@ -64,17 +33,55 @@ struct joiner
 };
 }
 
-template< typename R >
-async_handle< R > async_in_thread( task< R > t)
+struct own_thread
 {
-	detail::interrupter intr;
-	detail::thread_callable ca( t, intr);
+	template< typename R >
+	handle< R > operator()( task< R > t)
+	{
+		t();
+		detail::interrupter intr;
+		intr.reset();
+		return handle< R >(
+			t.get_id(),
+			t.get_future(),
+			intr);
+	}
+};
 
-	shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
-	intr.set( thrd);
+struct new_thread
+{
+	template< typename R >
+	handle< R > operator()( task< R > t)
+	{
+		detail::interrupter intr;
+		detail::thread_callable ca( t, intr);
+	
+		shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
+		intr.set( thrd);
+	
+		return handle< R >( t.get_id(), t.get_future(), intr);
+	}
+};
 
-	return async_handle< R >( t.get_id(), t.get_future(), intr);
-}
+struct default_pool
+{
+	template< typename R >
+	handle< R > operator()( task< R > t)
+	{ return get_default_pool().submit( t); }
+};
+
+template< typename Fn, typename R >
+handle< R > async( Fn fn, task< R > t)
+{ return fn( t); }
+
+template< typename R, typename Channel >
+handle< R > async( pool< Channel > & pool, task< R > t)
+{ return pool.submit( t); }
+
+template< typename R, typename Channel, typename Attr >
+handle< R > async( pool< Channel > & pool, task< R > t, Attr attr)
+{ return pool.submit( t, attr); }
+
 } }
 
 #endif // BOOST_TASK_ASYNC_H

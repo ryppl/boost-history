@@ -27,7 +27,7 @@
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/future.hpp>
-#include <boost/task/async_handle.hpp>
+#include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/task.hpp>
@@ -285,7 +285,7 @@ public:
 	{ return channel_.lower_bound( lwm); }
 
 	template< typename R >
-	async_handle< R > submit( task< R > t)
+	handle< R > submit( task< R > t)
 	{
 		detail::interrupter intr;
 		shared_future< R > fut( t.get_future() );
@@ -302,7 +302,7 @@ public:
 					w,
 					wcb) );
 			w->put( detail::pool_callable( t, intr) );
-			return async_handle< R >( t.get_id(), fut, intr);
+			return handle< R >( t.get_id(), fut, intr);
 		}
 		else
 		{
@@ -310,7 +310,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( detail::pool_callable( t, intr) );
-			return async_handle< R >( t.get_id(), fut, intr);
+			return handle< R >( t.get_id(), fut, intr);
 		}
 	}
 
@@ -318,7 +318,7 @@ public:
 		typename R,
 		typename Attr
 	>
-	async_handle< R > submit( task< R > t, Attr const& attr)
+	handle< R > submit( task< R > t, Attr const& attr)
 	{
 		detail::interrupter intr;
 		shared_future< R > fut( t.get_future() );
@@ -335,7 +335,7 @@ public:
 					w,
 					wcb) );
 			w->put( detail::pool_callable( t, intr) );
-			return async_handle< R >( t.get_id(), fut, intr);
+			return handle< R >( t.get_id(), fut, intr);
 		}
 		else
 		{
@@ -343,7 +343,7 @@ public:
 				throw task_rejected("pool is closed");
 
 			channel_.put( channel_item( detail::pool_callable( t, intr), attr) );
-			return async_handle< R >( t.get_id(), fut, intr);
+			return handle< R >( t.get_id(), fut, intr);
 		}
 	}
 };

@@ -45,11 +45,11 @@ private:
 		: t_( t), i_( i)
 		{}
 
+		~impl_wrapper()
+		{ i_.reset(); }
+
 		void run()
-		{
-			t_();
-			i_.reset();
-		}
+		{ t_(); }
 	};
 
 	shared_ptr< impl >	impl_;
