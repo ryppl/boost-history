@@ -42,14 +42,17 @@ public:
 		if ( n < cutof_) return serial_fib( n);
 		else
 		{
+			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
-				tsk::launch(
+				tsk::async(
+					boost::this_task::get_pool< pool_type >(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
-						n - 1) ) );
+						n - 1) ) ) ;
 			tsk::handle< long > h2(
-				tsk::launch(
+				tsk::async(
+					boost::this_task::get_pool< pool_type >(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -72,13 +75,14 @@ int main( int argc, char *argv[])
 		pool_type pool( tsk::poolsize( 5) );
 
 		std::vector< tsk::handle< long > > results;
-		results.reserve( 20);
+		results.reserve( 15);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 26; ++i)
+		for ( int i = 0; i < 15; ++i)
 			results.push_back(
-				tsk::launch(
+				tsk::async(
+					pool,
 					tsk::make_task(
 						& parallel_fib,
 						i) ) );

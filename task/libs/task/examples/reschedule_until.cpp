@@ -19,6 +19,7 @@ extern "C"
 #include <unistd.h>
 }
 
+#include <boost/assert.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/thread.hpp>
@@ -51,14 +52,17 @@ public:
 		if ( n < cutof_) return serial_fib( n);
 		else
 		{
+			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -140,7 +144,8 @@ int main( int argc, char *argv[])
 		int fd[2];
 		create_sockets( fd);
 
-		tsk::launch(
+		tsk::async(
+			tsk::default_pool(),
 			tsk::make_task(
 				& do_read,
 				fd[0]) );
@@ -149,7 +154,8 @@ int main( int argc, char *argv[])
 		boost::this_thread::sleep( pt::seconds( 1) );
 
 		for ( int i = 0; i < 15; ++i)
-			tsk::launch(
+			tsk::async(
+				tsk::default_pool(),
 				tsk::make_task(
 					& parallel_fib,
 					i) );

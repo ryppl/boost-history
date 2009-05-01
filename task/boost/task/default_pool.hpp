@@ -25,7 +25,7 @@ struct BOOST_TASK_DECL static_pool
 }
 
 inline
-default_pool_t & get_default_pool()
+default_pool_t & default_pool()
 { return detail::static_pool::instance; }
 } }
 

@@ -42,14 +42,16 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::launch(
+		tsk::async(
+			tsk::default_pool(),
 			tsk::make_task(
 				long_running_fn) );
-		std::cout << "poolsize == " << tsk::get_default_pool().size() << std::endl;
-		std::cout << "idle threads == " << tsk::get_default_pool().idle() << std::endl;
-		std::cout << "active threads == " << tsk::get_default_pool().active() << std::endl;
+		std::cout << "poolsize == " << tsk::default_pool().size() << std::endl;
+		std::cout << "idle threads == " << tsk::default_pool().idle() << std::endl;
+		std::cout << "active threads == " << tsk::default_pool().active() << std::endl;
 		tsk::handle< int > h(
-			tsk::launch(
+			tsk::async(
+			tsk::default_pool(),
 				tsk::make_task(
 					fibonacci_fn,
 					10) ) );

@@ -46,13 +46,15 @@ public:
 		else
 		{
 			tsk::handle< long > h1(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -75,7 +77,8 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tsk::launch(
+			tsk::async(
+				tsk::default_pool(),
 				tsk::make_task(
 					& parallel_fib,
 					i) );

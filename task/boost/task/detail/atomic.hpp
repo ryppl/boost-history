@@ -23,14 +23,14 @@ inline
 unsigned int atomic_fetch_add( volatile uint32_t * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return interprocess::detail::atomic_dec32( object);
+	return interprocess::detail::atomic_inc32( object);
 }
 
 inline
 unsigned int atomic_fetch_sub( volatile uint32_t * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return interprocess::detail::atomic_inc32( object);
+	return interprocess::detail::atomic_dec32( object);
 }
 } } }
 

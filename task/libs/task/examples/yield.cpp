@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/assert.hpp>
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -17,7 +18,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-typedef tsk::default_pool pool_type;
+typedef tsk::default_pool_t pool_type;
 
 long serial_fib( long n)
 {
@@ -39,21 +40,24 @@ public:
 
 	long execute( long n)
 	{
-		if ( n == 7)
+		if ( n == 4)
 			boost::this_task::yield();
 
 		if ( n < cutof_)
 			return serial_fib( n);
 		else
 		{
+			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
-				tsk::launch(
+				tsk::async(
+					tsk::default_pool(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -76,7 +80,8 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tsk::launch(
+			tsk::async(
+				tsk::default_pool(),
 				tsk::make_task(
 					& parallel_fib,
 					i) );

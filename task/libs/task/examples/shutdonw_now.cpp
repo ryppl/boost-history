@@ -45,7 +45,7 @@ int main( int argc, char *argv[])
 		> pool( tsk::poolsize( 1) );
 
 		tsk::handle< int > h(
-			tsk::launch(
+			tsk::async(
 				pool,
 				tsk::make_task(
 					fibonacci_fn,

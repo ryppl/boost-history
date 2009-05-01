@@ -63,13 +63,6 @@ struct new_thread
 	}
 };
 
-struct default_pool
-{
-	template< typename R >
-	handle< R > operator()( task< R > t)
-	{ return get_default_pool().submit( t); }
-};
-
 template< typename Fn, typename R >
 handle< R > async( Fn fn, task< R > t)
 { return fn( t); }

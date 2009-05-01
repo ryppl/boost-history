@@ -35,12 +35,38 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::handle< int > h(
-			tsk::launch(
+		tsk::handle< int > h1(
+			tsk::async(
+				tsk::own_thread(),
 				tsk::make_task(
 					fibonacci_fn,
 					10) ) );
-		std::cout << h.get() << std::endl;
+		tsk::handle< int > h2(
+			tsk::async(
+				tsk::new_thread(),
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		tsk::handle< int > h3(
+			tsk::async(
+				tsk::default_pool(),
+				tsk::make_task(
+					fibonacci_fn,
+					10) ) );
+		tsk::pool<
+			tsk::unbounded_channel< tsk::priority< int > >
+		> pool( tsk::poolsize( 3) );
+		tsk::handle< int > h4(
+			tsk::async(
+				pool,
+				tsk::make_task(
+					fibonacci_fn,
+					10),
+				2) );
+		std::cout << h1.get() << std::endl;
+		std::cout << h2.get() << std::endl;
+		std::cout << h3.get() << std::endl;
+		std::cout << h4.get() << std::endl;
 
 		return EXIT_SUCCESS;
 	}
