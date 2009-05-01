@@ -87,6 +87,7 @@ public:
 
 public:
 	enum { Padding = AllocT::Padding };
+	enum { BlockSize = m_cbBlock };
 
 public:
 	void* BOOST_MEMORY_CALL allocate(size_t cb)
