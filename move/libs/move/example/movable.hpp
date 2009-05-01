@@ -38,9 +38,6 @@ class movable
 
    bool moved() const //Observer
    {  return value_ == 0; }
-
-   friend bool operator < (const movable &l, const movable &r)
-   {  return l.value_ < r.value_; }
 };
 
 //]

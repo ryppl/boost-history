@@ -10,25 +10,27 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/move/move.hpp>
 #include <boost/container/vector.hpp>
+#include <boost/container/list.hpp>
+#include <boost/container/stable_vector.hpp>
 #include "../example/movable.hpp"
 
-int main()
+template<class Container>
+int move_test()
 {
-   namespace bc = ::boost::container;
    //Default construct 10 movable objects
-   bc::vector<movable> v(10);
+   Container v(10);
 
    //Test default constructed value
-   if(v[0].moved()){
+   if(v.begin()->moved()){
       return 1;
    }
 
    //Move values
-   bc::vector<movable> v2;
+   Container v2;
    std::copy(v.begin(), v.end(), boost::back_move_inserter(v2));
 
    //Test values have been moved
-   if(!v[0].moved()){
+   if(!v.begin()->moved()){
       return 1;
    }
 
@@ -36,9 +38,24 @@ int main()
       return 1;
    }
 
-   if(v2[0].moved()){
+   if(v2.begin()->moved()){
       return 1;
    }
+   return 0;
+}
 
+int main()
+{
+   namespace bc = ::boost::container;
+
+   if(move_test< bc::vector<movable> >()){
+      return 1;
+   }
+   if(move_test< bc::list<movable> >()){
+      return 1;
+   }
+   if(move_test< bc::stable_vector<movable> >()){
+      return 1;
+   }
    return 0;
 }

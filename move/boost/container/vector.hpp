@@ -477,7 +477,7 @@ class vector : private containers_detail::vector_alloc_holder<A>
    //!   throws or T's default or copy constructor throws.
    //! 
    //! <b>Complexity</b>: Linear to n.
-   vector(size_type n) 
+   explicit vector(size_type n) 
       :  base_t(allocator_type())
    {  this->resize(n); }
 

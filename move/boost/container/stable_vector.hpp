@@ -90,6 +90,8 @@ class clear_on_destroy
    }
 
    private:
+   clear_on_destroy(const clear_on_destroy &);
+   clear_on_destroy &operator=(const clear_on_destroy &);
    C &c_;
    bool do_clear_;
 };
@@ -226,6 +228,10 @@ struct node_type
    #include BOOST_PP_LOCAL_ITERATE()
 
    #else //#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+
+   node_type()
+      : value()
+   {}
 
    template<class ...Args>
    node_type(Args &&...args)
@@ -526,7 +532,16 @@ class stable_vector
       STABLE_VECTOR_CHECK_INVARIANT;
    }
 
-   stable_vector(size_type n,const T& t=T(),const Allocator& al=Allocator())
+   explicit stable_vector(size_type n)
+   : internal_data(Allocator()), impl(allocator_type())
+   {
+      stable_vector_detail::clear_on_destroy<stable_vector> cod(*this);
+      this->resize(n);
+      STABLE_VECTOR_CHECK_INVARIANT;
+      cod.release();
+   }
+
+   stable_vector(size_type n, const T& t, const Allocator& al=Allocator())
    : internal_data(al),impl(al)
    {
       stable_vector_detail::clear_on_destroy<stable_vector> cod(*this);
@@ -677,16 +692,12 @@ class stable_vector
          }
          //Now fill pool if data is not enough
          if((n - size) > this->internal_data.pool_size){
-            this->add_to_pool((n - size) - this->internal_data.pool_size, alloc_version());
+            this->add_to_pool((n - size) - this->internal_data.pool_size);
          }
       }
    }
 
-   template<class AllocatorVersion>
-   void clear_pool(AllocatorVersion,
-                  typename boost::container::containers_detail::enable_if_c
-                     <boost::container::containers_detail::is_same<AllocatorVersion, allocator_v1>
-                        ::value>::type * = 0)
+   void clear_pool(allocator_v1)
    {
       if(!impl.empty() && impl.back()){
          void_ptr &p1 = *(impl.end()-2);
@@ -703,11 +714,7 @@ class stable_vector
       }
    }
 
-   template<class AllocatorVersion>
-   void clear_pool(AllocatorVersion,
-      typename boost::container::containers_detail::enable_if_c
-         <boost::container::containers_detail::is_same<AllocatorVersion, allocator_v2>
-            ::value>::type * = 0)
+   void clear_pool(allocator_v2)
    {
 
       if(!impl.empty() && impl.back()){
@@ -725,11 +732,12 @@ class stable_vector
       this->clear_pool(alloc_version());
    }
 
-   template<class AllocatorVersion>
-   void add_to_pool(size_type n, AllocatorVersion,
-      typename boost::container::containers_detail::enable_if_c
-         <boost::container::containers_detail::is_same<AllocatorVersion, allocator_v1>
-            ::value>::type * = 0)
+   void add_to_pool(size_type n)
+   {
+      this->add_to_pool(n, alloc_version());
+   }
+
+   void add_to_pool(size_type n, allocator_v1)
    {
       size_type remaining = n;
       while(remaining--){
@@ -737,11 +745,7 @@ class stable_vector
       }
    }
 
-   template<class AllocatorVersion>
-   void add_to_pool(size_type n, AllocatorVersion,
-      typename boost::container::containers_detail::enable_if_c
-         <boost::container::containers_detail::is_same<AllocatorVersion, allocator_v2>
-            ::value>::type * = 0)
+   void add_to_pool(size_type n, allocator_v2)
    {
       void_ptr &p1 = *(impl.end()-2);
       void_ptr &p2 = impl.back();

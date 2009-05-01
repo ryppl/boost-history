@@ -10,6 +10,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/move/move.hpp>
 #include "../example/movable.hpp"
+#include <boost/static_assert.hpp>
 
 movable function(movable m)
 {
@@ -87,8 +88,13 @@ void limitations_test()
    function_ref(boost::move(m));
 }
 
+struct copyable
+{};
+
 int main()
 {
+   BOOST_STATIC_ASSERT((boost::has_nothrow_move<movable>::value == true));
+   BOOST_STATIC_ASSERT((boost::has_nothrow_move<copyable>::value == false));
    {
       movable m;
       movable m2(boost::move(m));

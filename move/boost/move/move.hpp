@@ -31,6 +31,8 @@
 #include <boost/type_traits/has_trivial_destructor.hpp>
 #include <boost/utility/addressof.hpp>
 
+/// @cond
+
 namespace boost {
 namespace move_detail {
 
@@ -52,8 +54,11 @@ class is_convertible
    enum { value = sizeof(dispatch(trigger())) == sizeof(true_t) };
 };
 
+
 }  //namespace move_detail {
 }  //namespace boost {
+
+/// @endcond
 
 #if !defined(BOOST_HAS_RVALUE_REFS) && !defined(BOOST_MOVE_DOXYGEN_INVOKED)
 
@@ -113,6 +118,10 @@ class is_movable< rv<T> >
    public:
    static const bool value = false;
 };
+
+template <class T> 
+struct has_nothrow_move : is_movable<T>
+{};
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -182,11 +191,10 @@ typename disable_if<boost::move_detail::is_rv<T>, const T &>::type
    {  return *static_cast<boost::rv<TYPE>* >(this);  }\
 //
 
+
 #define BOOST_RV_REF(TYPE)\
    boost::rv< TYPE >& \
 //
-
-/// @cond
 
 #define BOOST_RV_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
    boost::rv< TYPE<ARG1, ARG2> >& \
@@ -195,8 +203,6 @@ typename disable_if<boost::move_detail::is_rv<T>, const T &>::type
 #define BOOST_RV_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
    boost::rv< TYPE<ARG1, ARG2, ARG3> >& \
 //
-
-/// @endcond
 
 #define BOOST_FWD_REF(TYPE)\
    const TYPE & \
@@ -209,6 +215,25 @@ typename disable_if<boost::move_detail::is_rv<T>, const T &>::type
 
 namespace boost {
 
+/// @cond
+
+namespace move_detail {
+
+typedef char one;
+struct two {one _[2];};
+
+template <class T>
+struct internal_member_value_traits
+{
+   template <class U> static one test(...);
+   template <class U> static two test(typename U::boost_move_emulation_t* = 0);
+   static const bool value = sizeof(test<T>(0)) == sizeof(two);
+};
+
+}  //namespace move_detail {
+
+/// @endcond
+
 //////////////////////////////////////////////////////////////////////////////
 //
 //                               is_movable
@@ -216,15 +241,24 @@ namespace boost {
 //////////////////////////////////////////////////////////////////////////////
 
 //! For compilers with rvalue references, this traits class returns true
-//! if T && is convertible to T.
+//! if BOOST_ENABLE_MOVE_EMULATION is activated.
 //!
 //! For other compilers returns true if T is convertible to <i>boost::rv<T>&</i>
 template<class T>
 class is_movable
 {
    public:
-   static const bool value = move_detail::is_convertible<T&&, T>::value;
+//   static const bool value = move_detail::is_convertible<T&&, T>::value;
+   static const bool value = move_detail::internal_member_value_traits<T>::value;
 };
+
+//! For compilers with rvalue references, this traits class returns true
+//! if T && is convertible to T.
+//!
+//! For other compilers returns true if T has implemented move emulation.
+template <class T> 
+struct has_nothrow_move : is_movable<T>
+{};
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -277,16 +311,16 @@ T&& forward (typename move_detail::identity<T>::type&& t)
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//! This macro expands to nothing for compilers with rvalue references.
+//! This macro expands to a typedef named boost_move_emulation_t for compilers with rvalue references.
 //! Otherwise expands to:
 //! \code
 //! operator boost::rv<TYPE>&()
 //! {  return static_cast<boost::rv<TYPE>& >(*this);   }
 //! \endcode
 #define BOOST_ENABLE_MOVE_EMULATION(TYPE)\
+   typedef int boost_move_emulation_t;
+\
 //
-
-/// @cond
 
 #define BOOST_RV_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
    TYPE<ARG1, ARG2> && \
@@ -295,8 +329,6 @@ T&& forward (typename move_detail::identity<T>::type&& t)
 #define BOOST_RV_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
    TYPE<ARG1, ARG2, ARG3> && \
 //
-
-/// @endcond
 
 //! This macro expands to <i>T&&</i> for compilers with rvalue references.
 //! Otherwise expands to <i>boost::rv<T> &</i>.
