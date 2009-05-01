@@ -27,8 +27,9 @@ rule tp-test ( source )
 }
 
 test-suite thread_pool :
-    [ tp-test test_handle ]
-    [ tp-test test_in_thread ]
-    [ tp-test test_in_unbounded_pool ]
-    [ tp-test test_in_bounded_pool ]
+    [ tp-test test_own_thread ]
+    [ tp-test test_new_thread ]
+    [ tp-test test_default_pool ]
+    [ tp-test test_unbounded_pool ]
+    [ tp-test test_bounded_pool ]
     ;
