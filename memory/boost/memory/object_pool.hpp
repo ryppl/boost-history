@@ -144,7 +144,7 @@ public:
 	void BOOST_MEMORY_CALL destroy(Type* obj) {
 		mark_deallocated_(obj);
 		obj->~Type();
-		return PoolT::deallocate(obj);
+		PoolT::deallocate(obj);
 	}
 };
 
