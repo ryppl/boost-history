@@ -566,7 +566,7 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_memory(T const &rhs)
+   T* new_memory()
    {
       if (forced_to_abort()) 
       {
