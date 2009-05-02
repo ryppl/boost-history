@@ -65,11 +65,8 @@ static void test_priv_write_ptr()
 
             x = *tx;
             y = *tx;
-
             ++*tx;
-
             z = *tx;
-
             ++*tx;
          }
 
@@ -93,13 +90,9 @@ static void test_priv_read_ptr()
 
             x = *tx;
             y = *tx;
-
             ++*(tx.write_ptr());
-
             z = *tx;
-
             ++*(tx.write_ptr());
-
          }
 
       } end_atom
@@ -111,7 +104,6 @@ static void test_priv_read_ptr()
 static void test_no_private()
 {
    int x = 0, y = 0, z = 0;
-
    for (int i = 0; i < kMaxOuterLoops; ++i)
    {
       atomic(t)
@@ -120,11 +112,8 @@ static void test_no_private()
          {
             x = t.r(txInt);
             y = t.r(txInt);
-
             ++t.w(txInt);
-
             z = t.r(txInt);
-
             ++t.w(txInt);
          }
 
