@@ -27,7 +27,7 @@ namespace boost {
 namespace interthreads {
 
 
-    typedef asynchronous_executor_wait_decorator<async::basic_threader,thread_decorator> basic_threader_decorator;
+    typedef async::asynchronous_executor_wait_decorator<async::basic_threader,thread_decorator> basic_threader_decorator;
 
 }
 }

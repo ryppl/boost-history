@@ -26,8 +26,8 @@ namespace boost {
 namespace interthreads {
 
 
-    typedef asynchronous_executor_decorator<async::unique_threader,basic_thread_decorator> unique_threader_decorator;
-    typedef asynchronous_executor_decorator<async::shared_threader,basic_thread_decorator> shared_threader_decorator;
+    typedef async::asynchronous_executor_decorator<async::unique_threader,basic_thread_decorator> unique_threader_decorator;
+    typedef async::asynchronous_executor_decorator<async::shared_threader,basic_thread_decorator> shared_threader_decorator;
 
 }
 }
