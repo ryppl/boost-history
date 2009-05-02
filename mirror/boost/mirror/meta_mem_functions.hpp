@@ -205,20 +205,19 @@ public:
 		static mpl::true_ returns_something(T(*)(FunctionIndex));
 		static mpl::false_ returns_something(void(*)(FunctionIndex));
 
-		typedef BOOST_TYPEOF(
+		typedef BOOST_TYPEOF_TPL(
 			returns_something(&base_meta_data::get_result_of)
 		) non_void_rv;
 
 		template <typename Idx>
 		struct reflected_result
 		{
-			typedef BOOST_MIRRORED_CLASS(
-                        	BOOST_TYPEOF(
-					base_meta_data::get_result_of(
-						Idx()
-					)
-				)
-                	) type;
+			BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+				nested,
+				base_meta_data::get_result_of(Idx())
+			);
+			typedef typename nested::type fn_result_type;
+			typedef BOOST_MIRRORED_CLASS(fn_result_type) type;
 		};
 
 		template <typename T>
