@@ -14,14 +14,15 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction.hpp>
+#include "smart.h"
 #include "main.h"
 
 using namespace boost::stm;
 
-int kMaxOuterLoops = 10000;
-int kMaxInnerLoops = 50000;
+static int kMaxOuterLoops = 10000;
+static int kMaxInnerLoops = 50000;
 
-native_trans<int> txInt = 0, txInt2, txInt3 = 0;
+static native_trans<int> txInt = 0, txInt2, txInt3 = 0;
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
