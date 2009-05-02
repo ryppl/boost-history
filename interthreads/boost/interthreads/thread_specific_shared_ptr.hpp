@@ -36,7 +36,7 @@ namespace interthreads {
         typedef shared_ptr<T>               shared_ptr_type;
         typedef std::map<thread::id, shared_ptr_type> map_type;
         typedef mutex                       mutex_type;
-        typedef unique_lock<mutex_type> lock_type;
+        typedef unique_lock<mutex_type>     lock_type;
     private:
         typedef condition_variable          condition_type;
 
@@ -199,8 +199,7 @@ namespace interthreads {
             lock_type lock(monitor_);
             typename map_type::const_iterator i(tmap_.find(id));
             if ( i == tmap_.end()) {
-                mapchanged_.wait(lock);
-
+                // mapchanged_.wait(lock);
                 return shared_ptr_type();
             } else {
                 return i->second;

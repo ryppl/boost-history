@@ -15,9 +15,9 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interthreads/asynchronous_executor_decorator.hpp>
+#include <boost/async/asynchronous_executor_decorator.hpp>
 #include <boost/interthreads/thread_decorator.hpp>
-#include <boost/interthreads/threader.hpp>
+#include <boost/async/threader.hpp>
 
 
 #include <boost/config/abi_prefix.hpp>
@@ -26,8 +26,8 @@ namespace boost {
 namespace interthreads {
 
 
-    typedef asynchronous_executor_decorator<unique_threader,basic_thread_decorator> unique_threader_decorator;
-    typedef asynchronous_executor_decorator<shared_threader,basic_thread_decorator> shared_threader_decorator;
+    typedef asynchronous_executor_decorator<async::unique_threader,basic_thread_decorator> unique_threader_decorator;
+    typedef asynchronous_executor_decorator<async::shared_threader,basic_thread_decorator> shared_threader_decorator;
 
 }
 }

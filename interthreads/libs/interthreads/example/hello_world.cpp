@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/thread/mutex.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/interthreads/typeof/threader_decorator.hpp>
+//#include <boost/interthreads/typeof/threader_decorator.hpp>
 
 boost::mutex out_global_mutex;
 

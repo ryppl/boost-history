@@ -27,9 +27,9 @@ void sleep(int sec)
 #include <boost/interthreads/thread_decorator.hpp>
 #include <boost/interthreads/thread_specific_shared_ptr.hpp>
 #include <boost/thread/thread.hpp>
-#include <boost/interthreads/fork_all.hpp>
-#include <boost/interthreads/algorithm.hpp>
-#include <boost/interthreads/typeof/threader_decorator.hpp>
+//#include <boost/interthreads/fork_all.hpp>
+//#include <boost/interthreads/algorithm.hpp>
+//#include <boost/interthreads/typeof/threader_decorator.hpp>
 
 #include <iostream>
         
@@ -105,36 +105,12 @@ void my_thread() {
     }
 }
 
-void doit() {
-    bith::shared_threader_decorator ae;
-    BOOST_AUTO(handles, bith::fork_all(ae, my_thread, my_thread));
-#if 0
-    //bith::result_of::fork_all<bith::shared_threader_decorator, boost::fusion::tuple<void(*)(), void(*)()> >::type handles = 
-    {
-        const boost::shared_ptr<unsigned> shp1 = mono_thread_id::current_.wait_and_get(boost::fusion::at_c<0>(handles).get_id());
-        if (shp1.get()==0) {
-            boost::lock_guard<boost::mutex> lock(out_global_mutex);
-            std::cout << "ERROR 1" << std::endl;
-        }
-    }
-    {
-        const boost::shared_ptr<unsigned> shp1 = mono_thread_id::current_.wait_and_get(boost::fusion::at_c<1>(handles).get_id());
-        if (shp1.get()==0) {
-            boost::lock_guard<boost::mutex> lock(out_global_mutex);
-            std::cout << "ERROR 1" << std::endl;
-        }
-    }
-    //sleep(1);
-    //boost::fusion::for_each(handles, mono_thread_id_wait_and_get());
-#endif    
-    boost::fusion::for_each(handles, mono_thread_id_out());
-    bith::join_all(handles);
-}
 
-void doit_clasic() {
+void doit() {
     boost::thread th1(bith::make_decorator(my_thread));
     boost::thread th2(bith::make_decorator(my_thread));
-        
+
+#if 0    
     const boost::shared_ptr<unsigned> shp1 = mono_thread_id::current_.wait_and_get(th1.get_id());
     if (shp1.get()==0) {
         boost::lock_guard<boost::mutex> lock(out_global_mutex);
@@ -146,7 +122,7 @@ void doit_clasic() {
         boost::lock_guard<boost::mutex> lock(out_global_mutex);
         std::cout << "ERROR 2" << std::endl;
     }
-
+#endif
     {
         unsigned u = mono_thread_id::id(th1.get_id());
         boost::lock_guard<boost::mutex> lock(out_global_mutex);

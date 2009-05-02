@@ -15,9 +15,10 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#include <boost/interthreads/asynchronous_executor_wait_decorator.hpp>
-#include <boost/interthreads/wait_thread_decorator.hpp>
-#include <boost/interthreads/basic_threader.hpp>
+#include <boost/async/asynchronous_executor_wait_decorator.hpp>
+//#include <boost/async/wait_thread_decorator.hpp>
+#include <boost/async/basic_threader.hpp>
+#include <boost/interthreads/thread_decorator.hpp>
 
 
 #include <boost/config/abi_prefix.hpp>
@@ -26,7 +27,7 @@ namespace boost {
 namespace interthreads {
 
 
-    typedef asynchronous_executor_wait_decorator<basic_threader,thread_decorator> basic_threader_decorator;
+    typedef asynchronous_executor_wait_decorator<async::basic_threader,thread_decorator> basic_threader_decorator;
 
 }
 }

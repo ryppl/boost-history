@@ -29,8 +29,8 @@ void sleep(int sec)
 #include <boost/interthreads/thread_decorator.hpp>
 #include <boost/interthreads/thread_keep_alive.hpp>
 
-#include <boost/interthreads/typeof/threader_decorator.hpp>
-#include <boost/interthreads/algorithm.hpp>
+//#include <boost/interthreads/typeof/threader_decorator.hpp>
+//#include <boost/interthreads/algorithm.hpp>
 
 #include "./async_ostream.hpp"
 #include <boost/thread/thread.hpp>
@@ -87,8 +87,13 @@ int my_thread() {
 }
     
 int main() {
+    boost::thread th1(bith::make_decorator(my_thread));
+    boost::thread th2(bith::make_decorator(my_thread));
+    boost::thread th3(bith::make_decorator(my_thread11));
+
+    th1.join();
+    th2.join();
+    th3.join();
     
-    bith::shared_threader_decorator ae;
-    bith::wait_for_all(ae, my_thread, my_thread, my_thread11);
     return 0;
 }
