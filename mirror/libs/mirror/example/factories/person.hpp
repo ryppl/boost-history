@@ -69,8 +69,7 @@ BOOST_MIRROR_QREG_CLASS_NO_BASE(
 	(first_name)(family_name)(street)(number)(city)(postal_code)
 )
 BOOST_MIRROR_QREG_CONSTRUCTORS(
-        ::test::person,
-	(
+        ::test::person, (
 		((::boost::cts::bstring)(first_name))
 		((::boost::cts::bstring)(family_name))
 		((::boost::cts::bstring)(street))
@@ -80,28 +79,15 @@ BOOST_MIRROR_QREG_CONSTRUCTORS(
 	)
 )
 
-#define BOOST_MIRROR_TMP_IMPLEMENT_MEM_FN_GET_NAME(R, MEM_FN, I, CHAR_T) \
-	inline static const ::std::basic_string< CHAR_T >& \
-	get_function_name( \
-		mpl::false_, \
-		const ::std::char_traits< CHAR_T >, \
-		mpl::int_<0> \
-	) \
-	{ \
-		static ::std::basic_string< CHAR_T > result( \
-			BOOST_CTS_STRINGIZE_CHAR_T(CHAR_T, MEM_FN) \
-		); \
-		return result; \
-	}
-
-template <class Class>
-struct meta_mem_functions_base
-{
-	BOOST_CTS_FOR_EACH_CHAR_T(
-		BOOST_MIRROR_TMP_IMPLEMENT_MEM_FN_GET_NAME,
-		change_address
-	)
-};
+BOOST_MIRROR_REG_MEM_FUNCTIONS_BEGIN(::test::person)
+BOOST_MIRROR_REG_MEM_FUNCTION(
+	0, void, change_address, 
+	((::boost::cts::bstring)(street))
+	((::boost::cts::bstring)(number))
+	((::boost::cts::bstring)(city))
+	((::boost::cts::bstring)(postal_code))
+)
+BOOST_MIRROR_REG_MEM_FUNCTIONS_END 
 
 } // namespace mirror
 } // namespace boost

@@ -128,8 +128,14 @@ int main(void)
 	// TODO: remove this
 	//
 	typedef meta_member_functions<person> mem_fns;
+	typedef mem_fns::function<mpl::int_<0> > fn_0;
 	cts::bcout() <<
-		mem_fns::function<mpl::int_<0> >::base_name() <<
+		fn_0::result_type::base_name() << " " <<
+		fn_0::base_name() << "(" <<
+		fn_0::params::param<mpl::int_<0> >::type::base_name() << ", " <<
+		fn_0::params::param<mpl::int_<1> >::type::base_name() << ", " <<
+		fn_0::params::param<mpl::int_<2> >::type::base_name() << ", " <<
+		fn_0::params::param<mpl::int_<3> >::type::base_name() << ")"  <<
 		::std::endl;
 	//
 	// TODO: 
