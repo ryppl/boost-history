@@ -104,12 +104,14 @@ private:
 			else str_ref.append(wxT(", "));
 			// append the type name
 			str_ref.append(
-				Parameters::param<ParamIndex>::type::base_name()
+				Parameters::template param<ParamIndex>::
+				type::base_name()
 			);
 			// append the space
 			str_ref.append(wxT(" "));
 			str_ref.append(
-				Parameters::base_param_name(pi)
+				Parameters::template param<ParamIndex>::
+				base_name()
 			);
 		}
 	};

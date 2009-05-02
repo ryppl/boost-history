@@ -82,7 +82,7 @@ BOOST_MIRROR_QREG_CONSTRUCTORS(
 
 #define BOOST_MIRROR_TMP_IMPLEMENT_MEM_FN_GET_NAME(R, MEM_FN, I, CHAR_T) \
 	inline static const ::std::basic_string< CHAR_T >& \
-	get_name( \
+	get_function_name( \
 		mpl::false_, \
 		const ::std::char_traits< CHAR_T >, \
 		mpl::int_<0> \

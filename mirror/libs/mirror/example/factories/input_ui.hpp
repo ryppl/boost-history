@@ -37,9 +37,9 @@ struct input_ui
 				BOOST_CTS_LIT("Construct ") << 
 				BOOST_MIRRORED_TYPE(Product)::full_name() << 
 				BOOST_CTS_LIT(" ") << 
-				boost::mirror::meta_constructors<
-					Context
-				>::base_param_name(ci, pi) <<
+				boost::mirror::meta_constructors<Context>::
+				template constructor<ConstrIndex>::params::
+				template param<ParamIndex>::base_name() <<
 				::std::endl;
 		}
 	} b;
@@ -74,7 +74,9 @@ struct console_input_ui
 		{
 			if(ParamIndex::value > 0) 
 				boost::cts::bcout() << BOOST_CTS_LIT(", ");
-			::boost::cts::bcout() << MetaParams::base_param_name(pi);
+			::boost::cts::bcout() << 
+				MetaParams::
+				template param<ParamIndex>::base_name();
 		}
 	};
 	
@@ -86,18 +88,16 @@ struct console_input_ui
 			BOOST_CTS_LIT("Enter ") << 
 			BOOST_MIRRORED_TYPE(Product)::full_name() << 
 			BOOST_CTS_LIT(" ") << 
-			boost::mirror::meta_constructors<
-				Context
-			>::base_param_name(ci, pi) <<
+			boost::mirror::meta_constructors<Context>::
+			template constructor<ConstrIndex>::params::
+			template param<ParamIndex>::base_name() <<
 			BOOST_CTS_LIT(" for ") <<
 			BOOST_MIRRORED_TYPE(Context)::full_name() <<
 			BOOST_CTS_LIT("(");
 			//
-			boost::mirror::meta_constructors<
-                                Context
-                        >::template constructor<
-				ConstrIndex
-			>::params::for_each(constr_param_name_printer());
+			boost::mirror::meta_constructors<Context>::
+			template constructor<ConstrIndex>::params::
+			for_each(constr_param_name_printer());
 			//
 			::boost::cts::bcout() <<
 			BOOST_CTS_LIT(") = ") <<

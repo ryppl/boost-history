@@ -125,10 +125,15 @@ int main(void)
 		} while(insert_more != yes && insert_more != no);
 	}
 	//
+	// TODO: remove this
+	//
 	typedef meta_member_functions<person> mem_fns;
 	cts::bcout() <<
-		mem_fns::member_function<mpl::int_<0> >::base_name() <<
+		mem_fns::function<mpl::int_<0> >::base_name() <<
 		::std::endl;
+	//
+	// TODO: 
+	//
 	//
 	// print out all the persons in the list
 	cts::bcout() << "Persons:" << ::std::endl;

@@ -106,19 +106,6 @@ inline static const ::std::basic_string< CHAR_T >& get_param_name( \
  */
 #define BOOST_MIRROR_REG_CONSTRUCTORS_END \
         param_type_lists; \
-        template <class ConstrIndex, class ParamIndex> \
-        inline static const cts::bstring& base_param_name( \
-		ConstrIndex ci, \
-		ParamIndex pi \
-	) \
-        { \
-                return get_param_name( \
-                        mpl::false_(), \
-                        ::std::char_traits< cts::bchar >(), \
-                        ci, \
-                        pi \
-                ); \
-        } \
 };
 
 
@@ -350,39 +337,36 @@ struct meta_constructors : public meta_constructors_base<Class>
 			public:
 				typedef BOOST_MIRRORED_TYPE(param_type)
 					type;
+
+				template <class CharT>
+				inline static const ::std::basic_string<CharT>& 
+				get_name(
+					mpl::false_ full_or_base,
+					const ::std::char_traits<CharT>& traits
+				)
+				{
+					return meta_constructors::get_param_name(
+						full_or_base, 
+						traits,
+						ConstructorIndex(),
+						ParamIndex()
+					);
+				}
+
+				inline static const cts::bstring& base_name(void)
+				{
+	                                return meta_constructors::get_param_name(
+	                                        mpl::false_(),
+	                                        cts::bchar_traits(),
+	                                        ConstructorIndex(),
+	                                        ParamIndex()
+	                                );
+				}
 			};
 
 			typedef mpl::int_<
 				mpl::size< type_list>::value
 			> size;
-
-			template <class CharT, class ParamIndex>
-			inline static const ::std::basic_string<CharT>& 
-			get_param_name(
-				mpl::false_ full_or_base,
-				const ::std::char_traits<CharT>& traits,
-				ParamIndex
-			)
-			{
-				return meta_constructors::get_param_name(
-					full_or_base, 
-					traits,
-					ConstructorIndex(),
-					ParamIndex()
-				);
-			}
-
-			template <class ParamIndex>
-			inline static const cts::bstring& base_param_name(
-				ParamIndex
-			)
-			{
-				return meta_constructors::base_param_name(
-					ConstructorIndex(),
-					ParamIndex()
-				);
-			}
-
 
 			template <class Functor>
 			static void for_each(Functor f)

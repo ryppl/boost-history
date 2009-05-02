@@ -264,7 +264,7 @@ struct meta_member_functions : public meta_mem_functions_base<Class>
 {
 	typedef meta_mem_functions_base<Class> base_class;
 	template <class FunctionIndex>
-	struct member_function
+	struct function
 	{
 		// returns the name of the member function
 		template <bool FullOrBase, class CharT>
@@ -274,7 +274,7 @@ struct meta_member_functions : public meta_mem_functions_base<Class>
 			const ::std::char_traits<CharT>& traits
 		)
 		{
-			return meta_member_functions::get_name(
+			return meta_member_functions::get_function_name(
 				full_or_base,
 				traits,
 				FunctionIndex()
@@ -285,7 +285,7 @@ struct meta_member_functions : public meta_mem_functions_base<Class>
 		inline static const cts::bstring&
 		base_name(void)
 		{
-			return meta_member_functions::get_name(
+			return meta_member_functions::get_function_name(
                                 mpl::false_(),
                                 cts::bchar_traits(),
                                 FunctionIndex()

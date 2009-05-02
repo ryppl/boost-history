@@ -37,9 +37,9 @@ private:
 		assert(parent_data != 0);
 		// make a label for the static box sizer
 		wxString label(
-			BOOST_MIRRORED_CONSTRUCTORS(
-				Context
-			)::base_param_name(ci, pi)
+			BOOST_MIRRORED_CONSTRUCTORS(Context)::
+			template constructor<ConstrIndex>::params::
+			template param<ParamIndex>::base_name()
 		);
 		// the panel which will be the parent of
 		// all child widgets
