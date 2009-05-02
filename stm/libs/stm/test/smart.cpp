@@ -23,112 +23,13 @@ int kMaxInnerLoops = 50000;
 
 native_trans<int> txInt = 0, txInt2, txInt3 = 0;
 
-
-template <typename T>
-class tx_wptr
-{
-public:
- 
-   tx_wptr(boost::stm::transaction &t, T & tx_obj) : 
-      t_(t), tx_obj_(t_.write(tx_obj))
-   {}
-
-   T& operator*()
-   {
-      if (t_.forced_to_abort()) 
-      {
-         t_.lock_and_abort();
-         throw aborted_transaction_exception("aborting transaction");
-      }
-
-      return tx_obj_;
-   }
-
-   T* operator->()
-   {
-      if (t_.forced_to_abort()) 
-      {
-         t_.lock_and_abort();
-         throw aborted_transaction_exception("aborting transaction");
-      }
-
-      return &tx_obj_;
-   }
-
-#if 0
-   T& w()
-   {
-      if (t_.forced_to_abort()) 
-      {
-         t_.lock_and_abort();
-         throw aborted_transaction_exception("aborting transaction");
-      }
-      if (written_) return *tx_ptr_;
- 
-      // recheck initialization ...
-      initialize();
- 
-      if (written_) return *tx_ptr_;
- 
-      // if it's only been read, a write will construct a new obj
-      tx_ptr_ = &t_.write(*tx_ptr_);
-      written_ = true;
-      return *tx_ptr_;
-   }
- 
-   T const & r() const
-   {
-      if (t_.forced_to_abort()) 
-      {
-         t_.lock_and_abort();
-         throw aborted_transaction_exception("aborting transaction");
-      }
-      if (written_) return *tx_ptr_;
- 
-      // recheck initialization ...
-      initialize();
- 
-      if (written_) return *tx_ptr_;
- 
-      if (read_) return *tx_ptr_;
- 
-      t_.read(*tx_ptr_);
-      read_ = true;
-      return *tx_ptr_;
-   }
- 
-private:
- 
-   void initialize() const
-   {
-      // check transaction to see if tx_obj is
-      // already in a transaction for this thread
-      T* temp = t_.get_written(*tx_ptr_);
- 
-      // if we found something, store this as the tx_ptr_
-      if (0 != temp)
-      {
-         tx_ptr_ = temp;
-         written_ = true;
-      }
-      else
-      {
-         read_ = t_.has_been_read(*tx_ptr_);
-      }
-   }
-#endif
-   
-   mutable boost::stm::transaction &t_;
-   mutable T &tx_obj_;
-};
-
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
 static void test_nested()
 {
    atomic(t)
    {
-      tx_wptr<native_trans<int> > tx(t, txInt);
+      write_ptr<native_trans<int> > tx(t, txInt);
       ++*tx;
    } end_atom
 }
@@ -139,15 +40,17 @@ static void test_parent()
 {
    atomic(t)
    {
-      tx_wptr<native_trans<int> > tx(t, txInt);
+      read_ptr<native_trans<int> > tx(t, txInt);
       if (0 == *tx) test_nested();
-      cout << *tx << endl;
+      assert(*tx == 1);
+      cout << "*tx should be 1, output: " << *tx << endl;
+      cout << "*tx should be 1, output: " << *tx << endl;
    } end_atom
 }
 
 //----------------------------------------------------------------------------
 //----------------------------------------------------------------------------
-static void test()
+static void test_priv_write_ptr()
 {
    int x = 0, y = 0, z = 0;
 
@@ -157,7 +60,7 @@ static void test()
       {
          for (int j = 0; j < kMaxInnerLoops; ++j)
          {
-            tx_wptr<native_trans<int> > tx(t, txInt);
+            write_ptr< native_trans<int> > tx(t, txInt);
 
             x = *tx;
             y = *tx;
@@ -165,6 +68,37 @@ static void test()
             ++*tx;
 
             z = *tx;
+
+            ++*tx;
+         }
+
+      } end_atom
+   }
+}
+
+//----------------------------------------------------------------------------
+//----------------------------------------------------------------------------
+static void test_priv_read_ptr()
+{
+   int x = 0, y = 0, z = 0;
+
+   for (int i = 0; i < kMaxOuterLoops; ++i)
+   {
+      atomic(t)
+      {
+         for (int j = 0; j < kMaxInnerLoops; ++j)
+         {
+            read_ptr< native_trans<int> > tx(t, txInt);
+
+            x = *tx;
+            y = *tx;
+
+            ++*(tx.write_ptr());
+
+            z = *tx;
+
+            ++*(tx.write_ptr());
+
          }
 
       } end_atom
@@ -189,6 +123,8 @@ static void test_no_private()
             ++t.w(txInt);
 
             z = t.r(txInt);
+
+            ++t.w(txInt);
          }
 
       } end_atom
@@ -218,13 +154,13 @@ void test_smart()
    boost::stm::transaction::initialize();
    boost::stm::transaction::initialize_thread();
 
-   boost::stm::transaction::do_direct_updating();
+   //boost::stm::transaction::do_direct_updating();
+   boost::stm::transaction::do_deferred_updating();
 
-   test_parent();
+   //test_2();
+   //test_parent();
 
    int const kMaxTestLoops = 4;
-
-   test();
 
    for (int i = 0; i < kMaxTestLoops; ++i)
    {
@@ -240,12 +176,22 @@ void test_smart()
       cout << "no_privatization time: " << endTimer - startTimer << endl;
       cout << "                txInt: " << txInt << endl << endl;
 
+      txInt = 0;
 
       startTimer = time(NULL);
-      test();
+      test_priv_write_ptr();
       endTimer = time(NULL);
 
-      cout << "   privatization time: " << endTimer - startTimer << endl;
+      cout << "   privatization time w/ write_ptr: " << endTimer - startTimer << endl;
+      cout << "                txInt: " << txInt << endl << endl;
+
+      txInt = 0;
+
+      startTimer = time(NULL);
+      test_priv_read_ptr();
+      endTimer = time(NULL);
+
+      cout << "   privatization time w/ read_ptr: " << endTimer - startTimer << endl;
       cout << "                txInt: " << txInt << endl << endl;
 
       cout << "---------------------------------" << endl;
@@ -255,6 +201,5 @@ void test_smart()
    }
 
 }
-
 
 
