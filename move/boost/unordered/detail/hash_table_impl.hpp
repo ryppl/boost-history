@@ -181,9 +181,7 @@ namespace boost {
                     }
                 }
 
-#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
-                template <typename... Args>
-                void construct(Args&&... args)
+                void construct_preamble()
                 {
                     BOOST_ASSERT(!node_);
                     node_constructed_ = false;
@@ -194,6 +192,13 @@ namespace boost {
                     allocators_.node_alloc_.construct(node_, node());
                     node_constructed_ = true;
 
+                }
+
+#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+                template <typename... Args>
+                void construct(Args&&... args)
+                {
+                    construct_preamble();
                     new(node_->address()) value_type(std::forward<Args>(args)...);
                     value_constructed_ = true;
                 }
@@ -201,15 +206,7 @@ namespace boost {
                 template <typename V>
                 void construct(V const& v)
                 {
-                    BOOST_ASSERT(!node_);
-                    node_constructed_ = false;
-                    value_constructed_ = false;
-
-                    node_ = allocators_.node_alloc_.allocate(1);
-
-                    allocators_.node_alloc_.construct(node_, node());
-                    node_constructed_ = true;
-
+                    construct_preamble();
                     new(node_->address()) value_type(v);
                     value_constructed_ = true;
                 }
@@ -1823,6 +1820,20 @@ namespace boost {
                     std::forward<Args>(args)...);
             }
 
+            // Insert (unique keys)
+            // (I'm using an overloaded emplace for both 'insert' and 'emplace')
+            // I'm just ignoring hints here for now.
+
+            // if hash function throws, basic exception safety
+            // strong otherwise
+            template<typename... Args>
+            iterator_base emplace_hint(iterator_base const&, Args&&... args)
+            {
+                return emplace_impl(
+                    extract_key(std::forward<Args>(args)...),
+                    std::forward<Args>(args)...);
+            }
+
             template<typename... Args>
             std::pair<iterator_base, bool> emplace_impl(key_type const& k, Args&&... args)
             {
@@ -1864,40 +1875,7 @@ namespace boost {
                 // It will be discarded if it isn't used
                 node_constructor a(data_.allocators_);
                 a.construct(std::forward<Args>(args)...);
-
-                // No side effects in this initial code
-                key_type const& k = extract_key(a.get()->value());
-                size_type hash_value = hash_function()(k);
-                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
-                link_ptr pos = find_iterator(bucket, k);
-                
-                if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
-                    // Found an existing key, return it (no throw).
-                    return std::pair<iterator_base, bool>(
-                        iterator_base(bucket, pos), false);
-                } else {
-                    // reserve has basic exception safety if the hash function
-                    // throws, strong otherwise.
-                    if(reserve_for_insert(size() + 1))
-                        bucket = data_.bucket_ptr_from_hash(hash_value);
-
-                    // Nothing after this point can throw.
-
-                    return std::pair<iterator_base, bool>(iterator_base(bucket,
-                        data_.link_node_in_bucket(a, bucket)), true);
-                }
-            }
-
-            // Emplace (unique keys)
-            // (I'm using an overloaded emplace for both 'insert' and 'emplace')
-
-            // if hash function throws, basic exception safety
-            // strong otherwise
-            template<typename... Args>
-            iterator_base emplace_hint(iterator_base const&, Args&&... args)
-            {
-                // Life is complicated - just call the normal implementation.
-                return emplace(std::forward<Args>(args)...).first;
+                return emplace_impl_with_node(a);
             }
 #else
 
@@ -1954,6 +1932,32 @@ namespace boost {
             }
 
 #endif
+
+            std::pair<iterator_base, bool> emplace_impl_with_node(node_constructor& a)
+            {
+                // No side effects in this initial code
+                key_type const& k = extract_key(a.get()->value());
+                size_type hash_value = hash_function()(k);
+                bucket_ptr bucket = data_.bucket_ptr_from_hash(hash_value);
+                link_ptr pos = find_iterator(bucket, k);
+                
+                if (BOOST_UNORDERED_BORLAND_BOOL(pos)) {
+                    // Found an existing key, return it (no throw).
+                    return std::pair<iterator_base, bool>(
+                        iterator_base(bucket, pos), false);
+                } else {
+                    // reserve has basic exception safety if the hash function
+                    // throws, strong otherwise.
+                    if(reserve_for_insert(size() + 1))
+                        bucket = data_.bucket_ptr_from_hash(hash_value);
+
+                    // Nothing after this point can throw.
+
+                    return std::pair<iterator_base, bool>(iterator_base(bucket,
+                        data_.link_node_in_bucket(a, bucket)), true);
+                }
+            }
+
 
             // Insert from iterators (unique keys)
 
