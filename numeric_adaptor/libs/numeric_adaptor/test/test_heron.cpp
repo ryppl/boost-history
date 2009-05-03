@@ -18,26 +18,26 @@
 template <class Policy>
 double heron()
 {
-	typedef numeric_adaptor<Policy> num;
-	
-	num a = 31622.77662;
-	num b = 0.000023;
-	num c = 31622.77661;
-	num s((a + b + c) / num(2.0));
-	return num::sqrt(s * (s - a) * (s - b) * (s - c));
+    typedef numeric_adaptor<Policy> num;
+
+    num a = 31622.77662;
+    num b = 0.000023;
+    num c = 31622.77661;
+    num s((a + b + c) / num(2.0));
+    return num::sqrt(s * (s - a) * (s - b) * (s - c));
 }
 
 int test_main(int, char*[])
 {
-   double epsilon = 0.0000001;
+    double epsilon = 0.0000001;
 
-	BOOST_CHECK_CLOSE(heron<ieee_policy<float> >(), 0.0, epsilon);
-	BOOST_CHECK_CLOSE(heron<ieee_policy<double> >(), 0.327490532778257, epsilon);
-	BOOST_CHECK_CLOSE(heron<ieee_policy<long double> >(), 0.327490459921098, epsilon);
-	BOOST_CHECK_CLOSE(heron<cln_ff_policy>(), 0.0, epsilon);
-	BOOST_CHECK_CLOSE(heron<cln_df_policy>(), 0.32749053277825713, epsilon);
-	//TODO cln_lf_policy
-	BOOST_CHECK_CLOSE(heron<gmp_policy>(), 0.327490459942623, epsilon);
+    BOOST_CHECK_CLOSE(heron<ieee_policy<float> >(), 0.0, epsilon);
+    BOOST_CHECK_CLOSE(heron<ieee_policy<double> >(), 0.327490532778257, epsilon);
+    BOOST_CHECK_CLOSE(heron<ieee_policy<long double> >(), 0.327490459921098, epsilon);
+    BOOST_CHECK_CLOSE(heron<cln_ff_policy>(), 0.0, epsilon);
+    BOOST_CHECK_CLOSE(heron<cln_df_policy>(), 0.32749053277825713, epsilon);
+    //TODO cln_lf_policy
+    BOOST_CHECK_CLOSE(heron<gmp_policy>(), 0.327490459942623, epsilon);
 
-	return 0;
+    return 0;
 };

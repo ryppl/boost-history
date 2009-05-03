@@ -22,16 +22,16 @@ namespace impl {
 template <typename ClnType>
 struct cln_policy: ieee_policy<ClnType>
 {
-	static inline void sqrt(ClnType& r, const ClnType& a)
-	{
-		r = cln::sqrt(a);
-	}
+    static inline void sqrt(ClnType& r, const ClnType& a)
+    {
+        r = cln::sqrt(a);
+    }
 
 template <typename CT>
-	static inline CT big_numeric_cast(const ClnType& b)
-	{
-		return cln::double_approx(b);
-	}
+    static inline CT big_numeric_cast(const ClnType& b)
+    {
+        return cln::double_approx(b);
+    }
 };
 
 

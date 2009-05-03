@@ -18,33 +18,33 @@
 template <typename T>
 struct ieee_policy
 {
-	typedef T type;
+    typedef T type;
 
-	static inline void init(type& value) {}
-	static inline void destruct(type& value) {}
+    static inline void init(type& value) {}
+    static inline void destruct(type& value) {}
 
-	template <typename CT>
-	static inline void set (type& value, const CT& v)	{ value = boost::numeric_cast<T>(v); }
+    template <typename CT>
+    static inline void set (type& value, const CT& v)	{ value = boost::numeric_cast<T>(v); }
 
-	static inline void copy(const type& source, type& dest) { dest = source; }
+    static inline void copy(const type& source, type& dest) { dest = source; }
 
-	static inline void add(type& r, const type& a, const type& b) { r = a + b; }
-	static inline void subtract(type& r, const type& a, const type& b) { r = a - b; }
-	static inline void multiply(type& r, const type& a, const type& b) { r = a * b; }
-	static inline void divide(type& r, const type& a, const type& b) { r = a / b; }
+    static inline void add(type& r, const type& a, const type& b) { r = a + b; }
+    static inline void subtract(type& r, const type& a, const type& b) { r = a - b; }
+    static inline void multiply(type& r, const type& a, const type& b) { r = a * b; }
+    static inline void divide(type& r, const type& a, const type& b) { r = a / b; }
 
-	static inline void sqrt(type& r, const type& a) { r = ::sqrt(a); }
+    static inline void sqrt(type& r, const type& a) { r = ::sqrt(a); }
 
-	template <typename CT>
-	static inline CT big_numeric_cast(const type& v)
-	{
-		return boost::numeric_cast<CT>(v);
-	}
+    template <typename CT>
+    static inline CT big_numeric_cast(const type& v)
+    {
+        return boost::numeric_cast<CT>(v);
+    }
 
-	static inline int compare(const type& a, const type& b)
-	{
-		return a < b ? -1 : a > b ? 1 : 0;
-	}
+    static inline int compare(const type& a, const type& b)
+    {
+        return a < b ? -1 : a > b ? 1 : 0;
+    }
 };
 
 
