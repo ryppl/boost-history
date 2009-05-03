@@ -34,10 +34,9 @@ int test_main(int, char*[])
 	BOOST_CHECK_CLOSE(heron<ieee_policy<float> >(), 0.0, epsilon);
 	BOOST_CHECK_CLOSE(heron<ieee_policy<double> >(), 0.327490532778257, epsilon);
 	BOOST_CHECK_CLOSE(heron<ieee_policy<long double> >(), 0.327490459921098, epsilon);
-	//BOOST_CHECK_CLOSE(heron<cln_policy<cln::cl_SF> >(), 0.327490532778257, epsilon);
-	BOOST_CHECK_CLOSE(heron<cln_policy<cln::cl_FF> >(), 0.0, epsilon);
-	BOOST_CHECK_CLOSE(heron<cln_policy<cln::cl_DF> >(), 0.32749053277825713, epsilon);
-	//BOOST_CHECK_CLOSE(heron<cln_policy<cln::cl_LF> >(), 0.0, epsilon);
+	BOOST_CHECK_CLOSE(heron<cln_ff_policy>(), 0.0, epsilon);
+	BOOST_CHECK_CLOSE(heron<cln_df_policy>(), 0.32749053277825713, epsilon);
+	//TODO cln_lf_policy
 	BOOST_CHECK_CLOSE(heron<gmp_policy>(), 0.327490459942623, epsilon);
 
 	return 0;

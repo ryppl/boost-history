@@ -16,6 +16,9 @@
 #include <cln/float.h>
 
 
+namespace impl {
+
+
 template <typename ClnType>
 struct cln_policy: ieee_policy<ClnType>
 {
@@ -30,6 +33,13 @@ template <typename CT>
 		return cln::double_approx(b);
 	}
 };
+
+
+} // namespace impl
+
+
+typedef impl::cln_policy<cln::cl_FF> cln_ff_policy;
+typedef impl::cln_policy<cln::cl_DF> cln_df_policy;
 
 
 #endif
