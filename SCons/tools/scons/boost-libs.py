@@ -18,9 +18,11 @@ def BoostLibrary(env, lib, sources):
 
 def BoostUseLib(env, lib):
     env.AppendUnique(
-        LIBPATH = ["$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src"],
+        LIBPATH = [env.Dir("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src")],
         LIBS = ["boost_" + lib + env["BOOST_SUFFIX"]]
     )
+    if env.get("BOOST_TEST"):
+        env.AppendUnique(RPATH = [env.Dir("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src")])
 
 def PythonExtension(env, lib, sources, **kw):
     if env["LINK_DYNAMIC"]:

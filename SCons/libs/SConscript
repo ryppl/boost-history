@@ -35,4 +35,6 @@ for variant in env["variant"]:
             if GetOption("test"):
                 for sconscript in test_sconscripts:
                     lib = str(sconscript.get_dir().up())
-                    env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/test/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+                    test_env = env.Clone(BOOST_LIB = lib.upper(), BOOST_TEST = True)
+                    test_env.BoostUseLib(lib)
+                    env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/test/SConscript", exports = { "env" : test_env })
