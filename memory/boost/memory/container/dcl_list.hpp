@@ -76,7 +76,7 @@ public:
 	}
 
 public:
-	bool BOOST_MEMORY_CALL empty() const
+	__forceinline bool BOOST_MEMORY_CALL empty() const
 	{
 		return m_next == this;
 	}
@@ -99,13 +99,13 @@ public:
 		m_prev = m_next = this;
 	}
 
-	void BOOST_MEMORY_CALL pop_front()
+	__forceinline void BOOST_MEMORY_CALL pop_front()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
 		static_cast<dcl_list_node_base_*>(m_next)->erase();
 	}
 
-	void BOOST_MEMORY_CALL pop_back()
+	__forceinline void BOOST_MEMORY_CALL pop_back()
 	{
 		BOOST_MEMORY_ASSERT(!empty());
 		static_cast<dcl_list_node_base_*>(m_prev)->erase();
@@ -130,14 +130,14 @@ public:
 	}
 
 public:
-	NodeT* BOOST_MEMORY_CALL next() { return (NodeT*)m_next; }
-	const NodeT* BOOST_MEMORY_CALL next() const { return (const NodeT*)m_next; }
+	__forceinline NodeT* BOOST_MEMORY_CALL next() { return (NodeT*)m_next; }
+	__forceinline const NodeT* BOOST_MEMORY_CALL next() const { return (const NodeT*)m_next; }
 
-	NodeT* BOOST_MEMORY_CALL prev() { return (NodeT*)m_prev; }
-	const NodeT* BOOST_MEMORY_CALL prev() const { return (const NodeT*)m_prev; }
+	__forceinline NodeT* BOOST_MEMORY_CALL prev() { return (NodeT*)m_prev; }
+	__forceinline const NodeT* BOOST_MEMORY_CALL prev() const { return (const NodeT*)m_prev; }
 
-	NodeT& BOOST_MEMORY_CALL data() { return *(NodeT*)this; }
-	const NodeT& BOOST_MEMORY_CALL data() const { return *(const NodeT*)this; }
+	__forceinline NodeT& BOOST_MEMORY_CALL data() { return *(NodeT*)this; }
+	__forceinline const NodeT& BOOST_MEMORY_CALL data() const { return *(const NodeT*)this; }
 };
 
 // -------------------------------------------------------------------------

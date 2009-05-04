@@ -45,18 +45,18 @@ protected:
 #pragma pack()
 
 protected:	
-	__forceinline size_t BOOST_MEMORY_CALL is_allocated_(void*p )
+	__forceinline static size_t BOOST_MEMORY_CALL is_allocated_(void*p)
 	{
 		return 1 & ((ChunkHeader*)p - 1)->tag;
 	}
 	
-	__forceinline void BOOST_MEMORY_CALL mark_allocated_(void* p)
+	__forceinline static void BOOST_MEMORY_CALL mark_allocated_(void* p)
 	{
 		BOOST_MEMORY_ASSERT(!is_allocated_(p));
 		++((ChunkHeader*)p - 1)->tag;
 	}
 
-	__forceinline void BOOST_MEMORY_CALL mark_deallocated_(void* p)
+	__forceinline static void BOOST_MEMORY_CALL mark_deallocated_(void* p)
 	{
 		BOOST_MEMORY_ASSERT(is_allocated_(p));
 		--((ChunkHeader*)p - 1)->tag;
@@ -85,11 +85,11 @@ public:
 	}
 
 private:
-	void BOOST_MEMORY_CALL do_clear_block_(MemBlock* const blk)
+	static void BOOST_MEMORY_CALL do_clear_block_(MemBlock* const blk, size_t cbChunk)
 	{
 		size_t nUsed = blk->nUsed;
 		char* p = blk->buffer + ChunkHeaderSize;
-		for (;; p += this->m_cbChunk)
+		for (;; p += cbChunk)
 		{
 			if (is_allocated_(p))
 			{
@@ -103,16 +103,18 @@ private:
 public:
 	void BOOST_MEMORY_CALL clear()
 	{
-		MemBlock* nextBlk;
-		for (MemBlock* blk = m_blks.first(); !m_blks.done(blk); blk = nextBlk)
+		MemBlock* blk = m_blks.first();
+
+		this->m_blks.clear();
+		this->m_freelist.clear();
+
+		for (MemBlock* nextBlk; !this->m_blks.done(blk); blk = nextBlk)
 		{
 			nextBlk = blk->next();
 			if (blk->nUsed)
-				do_clear_block_(blk);
+				do_clear_block_(blk, this->m_cbChunk);
 			this->m_alloc.deallocate(blk);
 		}
-		this->m_blks.clear();
-		this->m_freelist.clear();
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
