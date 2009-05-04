@@ -6,8 +6,10 @@ env.Append(
     )
 
 sconscripts = Glob("*/build/SConscript")
+test_sconscripts = Glob("*/test/SConscript")
 env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
 for variant in env["variant"]:
+    env["current_variant"] = variant
     env.SetProperty(profile = False)
     if variant == "release":
         env.SetProperty(optimize = "speed", debug = False)
@@ -16,16 +18,21 @@ for variant in env["variant"]:
     elif variant == "profile":
         env.SetProperty(optimize = "speed", profile = True, debug = True)
     for linking in env["link"]:
+        env["linking"] = linking
         if linking == "dynamic":
             env["LINK_DYNAMIC"] = True
         else:
             env["LINK_DYNAMIC"] = False
         for threading in env["threading"]:
+            env["current_threading"] = threading
             env.SetProperty(threading = threading)
 
-            target_dir = env["BOOST_BUILD_DIR"] + "/libs/" + variant + "/" + linking + "/threading-" + threading
-            VariantDir(src_dir = ".", variant_dir = target_dir, duplicate = False)
+            env.VariantDir(src_dir = ".", variant_dir = "$BOOST_CURRENT_VARIANT_DIR", duplicate = False)
             for sconscript in sconscripts:
                 lib = str(sconscript.get_dir().up())
                 VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
-                SConscript(target_dir + "/" + lib + "/src/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+                env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+            if GetOption("test"):
+                for sconscript in test_sconscripts:
+                    lib = str(sconscript.get_dir().up())
+                    env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/test/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })

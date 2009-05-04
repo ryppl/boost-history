@@ -18,7 +18,7 @@ def BoostLibrary(env, lib, sources):
 
 def BoostUseLib(env, lib):
     env.AppendUnique(
-        LIBPATH = env.Dir("#/" + env.Dir(".").path.replace("/" + env["BOOST_LIB"].lower() + "/", "/" + lib + "/")),
+        LIBPATH = ["$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src"],
         LIBS = ["boost_" + lib + env["BOOST_SUFFIX"]]
     )
 
@@ -55,7 +55,10 @@ def generate(env):
     env.AddMethod(BoostUseLib)
     env.AddMethod(PythonExtension)
 
-    env["INSTALL"] = boost_copy_func
+    env.Replace(
+        INSTALL = boost_copy_func,
+        BOOST_CURRENT_VARIANT_DIR = "$BOOST_BUILD_DIR/libs/$current_variant/$linking/threading-$current_threading"
+    )
 
     AddOption('--stage', dest='stage', action="store_true")
     AddOption('--install', dest='install', action="store_true")

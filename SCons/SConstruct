@@ -10,7 +10,7 @@ vars.AddVariables(
     PathVariable("stagedir", "If --stage is passed install only compiled library files in this location", "stage", PathVariable.PathAccept),
     PathVariable("prefix", "Install prefix", "/usr/local", PathVariable.PathAccept)
 )
-env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure"], variables = vars, config_log = "$BOOST_BUILD_DIR/config.log")
+env = Environment(toolpath = ["tools/scons"], tools = ["default", "boost-libs", "boost-build-variants", "boost-configure", "boost-tests"], variables = vars, config_log = "$BOOST_BUILD_DIR/config.log")
 vars.Save("build-config.py", env)
 Export("env")
 
