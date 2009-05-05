@@ -161,6 +161,10 @@ namespace ptr_container_detail
           : base_type( a )
         { }
 
+        ptr_sequence_adapter( ptr_sequence_adapter&& o)
+            : base_type( static_cast<base_type&&>(o) )
+        { }
+
         template< class SizeType >
         ptr_sequence_adapter( SizeType n, 
                               ptr_container_detail::fixed_length_sequence_tag tag )
@@ -224,12 +228,19 @@ namespace ptr_container_detail
           : base_type( clone )
         { }
 
-        ptr_sequence_adapter& operator=( const ptr_sequence_adapter r )
+        ptr_sequence_adapter& operator=( const ptr_sequence_adapter& o )
         {
+            ptr_sequence_adapter r(o);
             this->swap( r );
             return *this; 
         }
-        
+
+        ptr_sequence_adapter& operator=( ptr_sequence_adapter&& r )
+        {
+            base_type::operator=( std::move(r) );
+            return *this;
+        }
+
         template< class PtrContainer >
         ptr_sequence_adapter& operator=( std::auto_ptr<PtrContainer> clone )    
         {

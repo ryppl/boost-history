@@ -111,6 +111,15 @@ void ptr_map_test()
 
     BOOST_MESSAGE( "finished iterator test" );
 
+    C m1; m1.insert( a_key, new T );
+    C m2( std::move(m1) );
+    BOOST_CHECK_EQUAL( m1.size(), 0u );
+    BOOST_CHECK_EQUAL( m2.size(), 1u );
+    m1 = std::move(m2);
+    BOOST_CHECK_EQUAL( m1.size(), 1u );
+    BOOST_CHECK_EQUAL( m2.size(), 0u );
+    BOOST_MESSAGE( "finished moving test" );
+
     BOOST_DEDUCED_TYPENAME C::size_type s                 = c.size();
     BOOST_DEDUCED_TYPENAME C::size_type s2                = c.max_size();
     hide_warning(s2);

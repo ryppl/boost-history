@@ -37,6 +37,8 @@
 #include <boost/type_traits/is_integral.hpp>
 #include <typeinfo>
 #include <memory>
+#include <utility>
+#include <stdio.h>
 
 #if BOOST_WORKAROUND(BOOST_MSVC, >= 1400)  
 #pragma warning(push)  
@@ -318,6 +320,10 @@ namespace ptr_container_detail
         reversible_ptr_container()
         { }
 
+        reversible_ptr_container( reversible_ptr_container&& o )
+          : c_( std::move( o.c_ ) )
+        {  }
+
         template< class SizeType >
         reversible_ptr_container( SizeType n, unordered_associative_container_tag )
           : c_( n )
@@ -362,13 +368,20 @@ namespace ptr_container_detail
             return *this;
         }
 
-        reversible_ptr_container& operator=( reversible_ptr_container r ) // strong 
+        reversible_ptr_container& operator=( const reversible_ptr_container& o ) // strong 
         {
+            reversible_ptr_container r(o);
             swap( r );
             return *this;
         }
-        
-        // overhead: null-initilization of container pointer (very cheap compared to cloning)
+
+        reversible_ptr_container& operator=( reversible_ptr_container&& r ) // nothrow
+        {
+            c_ = std::move( r.c_ );
+            return *this;
+        }
+
+        // overhead: null-initialization of container pointer (very cheap compared to cloning)
         // overhead: 1 heap allocation (very cheap compared to cloning)
         template< class InputIterator >
         reversible_ptr_container( InputIterator first, 
@@ -701,17 +714,23 @@ namespace ptr_container_detail
        return std::auto_ptr<this_type>( new this_type( this->begin(), this->end() ) ); \
     }
 
-#define BOOST_PTR_CONTAINER_DEFINE_COPY_CONSTRUCTORS( PC, base_type ) \
-                                                                      \
-    template< class U >                                               \
-    PC( const PC<U>& r ) : base_type( r ) { }                         \
-                                                                      \
-    PC& operator=( PC r )                                             \
-    {                                                                 \
-        this->swap( r );                                              \
-        return *this;                                                 \
-    }                                                                 \
-                                                                           
+#define BOOST_PTR_CONTAINER_DEFINE_COPY_CONSTRUCTORS( PC, base_type )     \
+                                                                          \
+    template< class U >                                                   \
+    PC( const PC<U>& r ) : base_type( r ) { }                             \
+                                                                          \
+    PC& operator=( const PC& o )                                          \
+    {                                                                     \
+        PC r(o);                                                          \
+        this->swap( r );                                                  \
+        return *this;                                                     \
+    }                                                                     \
+    PC( PC&& r ) : base_type( static_cast<base_type&&>( r ) ) { }         \
+    PC& operator=( PC&& r ) {                                             \
+        base_type::operator=( std::move( r ) );                           \
+        return *this;                                                     \
+    }
+
 
 #define BOOST_PTR_CONTAINER_DEFINE_CONSTRUCTORS( PC, base_type )                       \
     typedef BOOST_DEDUCED_TYPENAME base_type::iterator        iterator;                \
@@ -724,8 +743,8 @@ namespace ptr_container_detail
     PC( InputIterator first, InputIterator last ) : base_type( first, last ) {}        \
     template< class InputIterator >                                                    \
     PC( InputIterator first, InputIterator last,                                       \
-        const allocator_type& a ) : base_type( first, last, a ) {}  
-                 
+        const allocator_type& a ) : base_type( first, last, a ) {}
+
 #define BOOST_PTR_CONTAINER_DEFINE_NON_INHERITED_MEMBERS( PC, base_type, this_type )           \
    BOOST_PTR_CONTAINER_DEFINE_CONSTRUCTORS( PC, base_type )                                    \
    BOOST_PTR_CONTAINER_DEFINE_RELEASE_AND_CLONE( PC, base_type, this_type )
