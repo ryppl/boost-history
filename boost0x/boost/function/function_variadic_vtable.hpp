@@ -12,7 +12,7 @@ namespace boost {
       template<typename R, typename ... Args>
       struct basic_vtable
       {
-        typedef typename function_return_type<R>::type result_type;
+        typedef R         result_type;
 
         typedef result_type (*invoker_type)(function_buffer&, Args...);
 
