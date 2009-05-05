@@ -205,6 +205,7 @@ int main( int, char*[] )
 
   path p1_move( "fe/fi/fo/fum" );
   path p2_move( std::move(p1_move) );
+  BOOST_TEST( p2_move.string() == "fe/fi/fo/fum" );
 
   path p3;
   BOOST_TEST( p1.string() != p3.string() );
