@@ -60,14 +60,14 @@ namespace boost
         BOOST_STATIC_CONSTANT(int, arity = sizeof...(Args));
 
         // add signature for boost::lambda
-        template<typename Args>
+        template<typename Argsx>
         struct sig
         {
             typedef result_type type;
         };
         // Note: argN_type typedefs are gone
 
-        function() : base_type() {}
+        function() : function_base() {}
 
         template<typename Functor>
         function(Functor f
@@ -134,12 +134,8 @@ namespace boost
             return *this;
         }
 
-        template<typename Functor>
-        typename enable_if_c<
-                                (boost::type_traits::ice_not<
-                             (is_integral<Functor>::value)>::value),
-                          self_type&>::type
-        operator=(Functor f, Allocator a)
+        template<typename Functor, typename Allocator>
+        void assign(Functor f, Allocator a)
         {
             this->clear();
             try {
@@ -148,7 +144,6 @@ namespace boost
                 vtable = 0;
                 throw;
             }
-            return *this;
         }
 
         self_type& operator=(clear_type*)
@@ -286,7 +281,7 @@ namespace boost
         // argument has its function object allocated on the heap,
         // move_assign will pass its buffer to *this, and set the
         // argument's buffer pointer to NULL.
-        void move_assign(BOOST_FUNCTION_FUNCTION& f)
+        void move_assign(self_type& f)
         {
             if (&f == this)
                 return;
@@ -315,20 +310,14 @@ namespace boost
         }
     };
 
-    template<typename Signature>
-    inline void swap(function<Signature>& f1, function<Signature>& f2)
-    {
-        f1.swap(f2);
-    }
-
     template<typename R, typename... Args>
     inline R
-    function<R, Args...>::operator()(Args ...args) const
+    function<R (Args...)>::operator()(Args ...args) const
     {
         if (this->empty())
             boost::throw_exception(bad_function_call());
 
-        return get_vtable()->invoker(this->functor, args...);
+        return R(get_vtable()->invoker(this->functor, args...));
     }
 
     // Poison comparisons between boost::function objects of the same type.
