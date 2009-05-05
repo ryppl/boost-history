@@ -257,8 +257,8 @@ namespace boost {
         };
 
         template<typename FunctionPtr,
-                 typename R, typename ... Args,
-                 typename Allocator>
+                 typename Allocator,
+                 typename R, typename ... Args>
         struct apply_a
         {
           typedef typename get_function_invoker<
@@ -292,8 +292,8 @@ namespace boost {
         };
 
         template<typename MemberPtr,
-                 typename R, typename ... Args,
-                 typename Allocator>
+                 typename Allocator,
+                 typename R, typename ... Args>
         struct apply_a
         {
           typedef typename get_member_invoker<
@@ -327,8 +327,8 @@ namespace boost {
         };
 
         template<typename FunctionObj,
-                 typename R, typename ... Args,
-                 typename Allocator>
+                 typename Allocator,
+                 typename R, typename ... Args>
         struct apply_a
         {
           typedef typename get_function_obj_invoker<
