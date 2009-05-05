@@ -27,7 +27,7 @@ namespace boost {
 
          {
            FunctionPtr f = reinterpret_cast<FunctionPtr>(function_ptr.func_ptr);
-           return (f(args...));
+           (f(args...));
          }
       };
 
@@ -66,7 +66,7 @@ namespace boost {
              f = reinterpret_cast<FunctionObj*>(&function_obj_ptr.data);
            else
              f = reinterpret_cast<FunctionObj*>(function_obj_ptr.obj_ptr);
-           return ((*f)(args...));
+           ((*f)(args...));
          }
       };
 
@@ -99,7 +99,7 @@ namespace boost {
          {
            FunctionObj* f = 
              reinterpret_cast<FunctionObj*>(function_obj_ptr.obj_ptr);
-           return ((*f)(args...));
+           ((*f)(args...));
          }
       };
 
@@ -133,7 +133,7 @@ namespace boost {
          {
            MemberPtr* f = 
              reinterpret_cast<MemberPtr*>(&function_obj_ptr.data);
-           return (boost::mem_fn(*f)(args...));
+           (boost::mem_fn(*f)(args...));
          }
       };
 
