@@ -10,7 +10,7 @@ namespace boost {
        * destructors, base classes, etc.
        */
       template<typename R, typename ... Args>
-      struct BOOST_FUNCTION_VTABLE
+      struct basic_vtable
       {
 #ifndef BOOST_NO_VOID_RETURNS
         typedef R         result_type;
