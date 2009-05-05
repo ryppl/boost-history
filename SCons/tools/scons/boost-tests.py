@@ -7,10 +7,10 @@ def exists(env):
 def generate(env):
     AddOption('--test', dest='test', action="store_true")
 
-    def BoostCompileTest(env, test, **kw):
-        env.Alias("test", env.Object(test, test + ".cpp"), **kw)
-    def BoostRunTest(env, test, **kw):
-        test_prog = env.Program(test, test + ".cpp", **kw)
+    def BoostCompileTest(env, test, source = None, **kw):
+        env.Alias("test", env.Object(test, (source is None) and (test + ".cpp") or source), **kw)
+    def BoostRunTest(env, test, source = None, **kw):
+        test_prog = env.Program(test, (source is None) and (test + ".cpp") or source, **kw)
         test = env.Command("$BOOST_LIB-"+test, test_prog, "./$SOURCE")
         env.Alias("test", test)
     def BoostRunTests(env, tests, **kw):

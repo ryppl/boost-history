@@ -1,0 +1,28 @@
+# vi: syntax=python:et:ts=4
+Import("env")
+
+regress_sources = Split("""
+    regress/basic_tests.cpp
+    regress/main.cpp
+    regress/test_alt.cpp
+    regress/test_anchors.cpp
+    regress/test_asserts.cpp
+    regress/test_backrefs.cpp
+    regress/test_deprecated.cpp
+    regress/test_emacs.cpp
+    regress/test_escapes.cpp
+    regress/test_grep.cpp
+    regress/test_locale.cpp
+    regress/test_mfc.cpp
+    regress/test_non_greedy_repeats.cpp
+    regress/test_perl_ex.cpp
+    regress/test_replace.cpp
+    regress/test_sets.cpp
+    regress/test_simple_repeats.cpp
+    regress/test_tricky_cases.cpp
+    regress/test_icu.cpp
+    regress/test_unicode.cpp
+    regress/test_overloads.cpp
+    regress/test_operators.cpp
+    """)
+env.BoostRunTest("regex_regress", regress_sources)
