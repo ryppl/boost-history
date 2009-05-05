@@ -109,6 +109,27 @@ public:
 
 #endif
 
+
+// Move support
+
+#if defined( BOOST_HAS_RVALUE_REFS )
+
+    weak_ptr( weak_ptr && r ): px( r.px ), pn() // never throws
+    {
+        pn.swap( r.pn );
+        r.px = 0;
+    }
+
+    weak_ptr & operator=( weak_ptr && r ) // never throws
+    {
+        this_type( static_cast< weak_ptr && >( r ) ).swap( *this );
+        return *this;
+    }
+
+#endif
+
+
+
     shared_ptr<T> lock() const // never throws
     {
         return shared_ptr<element_type>( *this, boost::detail::sp_nothrow_tag() );
