@@ -2,4 +2,17 @@
 Import("env")
 
 env.BoostUseLib("system")
-Alias("test", env.Program("path_test.cpp"))
+env.BoostRunTests(Split("""
+    path_test
+    operations_test 
+    fstream_test
+    convenience_test 
+    large_file_support_test
+    wide_test
+    """))
+env.BoostCompileTests(Split("""
+    deprecated_test
+    ../example/mbcopy
+    ../example/mbpath
+    ../example/simple_ls
+    """))
