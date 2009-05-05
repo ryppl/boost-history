@@ -14,7 +14,6 @@
 #include <utility>
 
 using namespace boost;
-using namespace std;
 
 int global_int;
 
@@ -26,8 +25,8 @@ struct generate_five_obj { int operator()() const { return 5; } };
 struct generate_three_obj { int operator()() const { return 3; } };
 static int generate_five() { return 5; }
 static int generate_three() { return 3; }
-static string identity_str(const string& s) { return s; }
-static string string_cat(const string& s1, const string& s2) { return s1+s2; }
+static std::string identity_str(const std::string& s) { return s; }
+static std::string string_cat(const std::string& s1, const std::string& s2) { return s1+s2; }
 static int sum_ints(int x, int y) { return x+y; }
 
 struct write_const_1_nonconst_2
@@ -525,15 +524,15 @@ test_zero_args()
 static void
 test_one_arg()
 {
-  negate<int> neg;
+  std::negate<int> neg;
 
   function<int (int)> f1(neg);
   BOOST_CHECK(f1(5) == -5);
 
-  function<string (string)> id(&identity_str);
+  function<std::string (std::string)> id(&identity_str);
   BOOST_CHECK(id("str") == "str");
 
-  function<string (const char*)> id2(&identity_str);
+  function<std::string (const char*)> id2(&identity_str);
   BOOST_CHECK(id2("foo") == "foo");
 
   add_to_obj add_to(5);
@@ -547,7 +546,8 @@ test_one_arg()
 static void
 test_two_args()
 {
-  function<string (const string&, const string&)> cat(&string_cat);
+  function<std::string (const std::string&, const std::string&)> 
+    cat(&string_cat);
   BOOST_CHECK(cat("str", "ing") == "string");
 
   function<int (short, short)> sum(&sum_ints);
@@ -607,12 +607,12 @@ struct add_with_throw_on_copy {
 
   add_with_throw_on_copy(const add_with_throw_on_copy&)
   {
-    throw runtime_error("But this CAN'T throw");
+    throw std::runtime_error("But this CAN'T throw");
   }
 
   add_with_throw_on_copy& operator=(const add_with_throw_on_copy&)
   {
-    throw runtime_error("But this CAN'T throw");
+    throw std::runtime_error("But this CAN'T throw");
   }
 };
 
@@ -624,7 +624,7 @@ test_ref()
     boost::function<int (int, int)> f(ref(atc));
     BOOST_CHECK(f(1, 3) == 4);
   }
-  catch(runtime_error e) {
+  catch(std::runtime_error e) {
     BOOST_ERROR("Nonthrowing constructor threw an exception");
   }
 }

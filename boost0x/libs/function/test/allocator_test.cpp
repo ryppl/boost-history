@@ -12,7 +12,6 @@
 #include <functional>
 #include <boost/function.hpp>
 
-using namespace std;
 using namespace boost;
 
 static int alloc_count = 0;

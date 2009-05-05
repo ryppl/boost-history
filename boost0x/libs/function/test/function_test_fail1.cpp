@@ -10,7 +10,6 @@
 #include <boost/test/minimal.hpp>
 #include <boost/function.hpp>
 
-using namespace std;
 using namespace boost;
 
 int

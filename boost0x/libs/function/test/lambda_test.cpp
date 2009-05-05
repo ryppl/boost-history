@@ -15,7 +15,6 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/function.hpp>
 
-using namespace std;
 using namespace boost;
 using namespace boost::lambda;
 
