@@ -12,11 +12,7 @@ namespace boost {
       template<typename R, typename ... Args>
       struct basic_vtable
       {
-#ifndef BOOST_NO_VOID_RETURNS
-        typedef R         result_type;
-#else
         typedef typename function_return_type<R>::type result_type;
-#endif // BOOST_NO_VOID_RETURNS
 
         typedef result_type (*invoker_type)(function_buffer&, Args...);
 
@@ -63,7 +59,6 @@ namespace boost {
         }
 
         // Member pointers
-#if BOOST_FUNCTION_NUM_ARGS > 0
         template<typename MemberPtr>
         bool assign_to(MemberPtr f, function_buffer& functor, member_ptr_tag)
         {
@@ -90,7 +85,6 @@ namespace boost {
             return false;
           }
         }
-#endif // BOOST_FUNCTION_NUM_ARGS > 0
 
         // Function objects
         // Assign to a function object using the small object optimization
