@@ -375,4 +375,7 @@ namespace boost {
           typedef reference_manager<typename RefWrapper::type> manager_type;
         };
       };
+    } // end namespace function
+  } // end namespace detail
+} // end namespaces boost
 
