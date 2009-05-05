@@ -30,6 +30,7 @@
 #include <iosfwd>    // needed by basic_path inserter and extractor
 #include <stdexcept>
 #include <cassert>
+#include <iostream>
 
 # ifndef BOOST_FILESYSTEM_NARROW_ONLY
 #   include <locale>
@@ -163,6 +164,8 @@ namespace boost
 
       // constructors/destructor
       basic_path() {}
+      basic_path( const path_type & p ) : m_path(p.m_path) {}
+      basic_path( path_type && p ) { m_path.clear(); m_path.swap(p.m_path); std::cout << "moving\n"; } // TODO: which swap()
       basic_path( const string_type & s ) { operator/=( s ); }
       basic_path( const value_type * s )  { operator/=( s ); }
 #     ifndef BOOST_NO_MEMBER_TEMPLATES
