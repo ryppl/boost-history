@@ -18,7 +18,7 @@ namespace boost {
       template<
          typename FunctionPtr,
          typename R,
-         typename ... Args
+         typename ... Args
          >
       struct void_function_invoker
       {
@@ -34,7 +34,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct function_obj_invoker
       {
@@ -53,7 +53,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct void_function_obj_invoker
       {
@@ -73,7 +73,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct function_ref_invoker
       {
@@ -89,7 +89,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct void_function_ref_invoker
       {
@@ -108,7 +108,7 @@ namespace boost {
       template<
          typename MemberPtr,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct function_mem_invoker
       {
@@ -124,7 +124,7 @@ namespace boost {
       template<
          typename MemberPtr,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct function_void_mem_invoker
       {
@@ -142,7 +142,7 @@ namespace boost {
       template<
          typename FunctionPtr,
          typename R,
-         typename ... Args
+         typename ... Args
       >
       struct get_function_invoker
       {
@@ -150,12 +150,12 @@ namespace boost {
                                 void_function_invoker<
                                 FunctionPtr,
                                 R,
-                               Args...
+                                Args...
                              >,
                              function_invoker<
                                 FunctionPtr,
                                 R,
-                               Args...
+                                Args...
                              >
                           >::type type;
       };
@@ -163,7 +163,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
         >
       struct get_function_obj_invoker
       {
@@ -171,12 +171,12 @@ namespace boost {
                                 void_function_obj_invoker<
                                 FunctionObj,
                                 R,
-                               Args...
+                                Args...
                              >,
                              function_obj_invoker<
                                 FunctionObj,
                                 R,
-                               Args...
+                                Args...
                              >
                           >::type type;
       };
@@ -184,7 +184,7 @@ namespace boost {
       template<
          typename FunctionObj,
          typename R,
-         typename ... Args
+         typename ... Args
         >
       struct get_function_ref_invoker
       {
@@ -192,12 +192,12 @@ namespace boost {
                                 BOOST_FUNCTION_VOID_FUNCTION_REF_INVOKER<
                                 FunctionObj,
                                 R,
-                               Args...
+                                Args...
                              >,
                              function_ref_invoker<
                                 FunctionObj,
                                 R,
-                               Args...
+                                Args...
                              >
                           >::type type;
       };
@@ -207,7 +207,7 @@ namespace boost {
       template<
          typename MemberPtr,
          typename R,
-         typename ... Args
+         typename ... Args
         >
       struct get_member_invoker
       {
@@ -215,12 +215,12 @@ namespace boost {
                                 function_void_mem_invoker<
                                 MemberPtr,
                                 R,
-                               Args...
+                                Args...
                              >,
                              function_mem_invoker<
                                 MemberPtr,
                                 R,
-                               Args...
+                                Args...
                              >
                           >::type type;
       };
@@ -249,7 +249,7 @@ namespace boost {
            typedef typename get_function_invoker<
                                  FunctionPtr,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -264,7 +264,7 @@ namespace boost {
            typedef typename get_function_invoker<
                                  FunctionPtr,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -284,7 +284,7 @@ namespace boost {
            typedef typename get_member_invoker<
                                  MemberPtr,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -299,7 +299,7 @@ namespace boost {
            typedef typename get_member_invoker<
                                  MemberPtr,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -319,7 +319,7 @@ namespace boost {
            typedef typename get_function_obj_invoker<
                                  FunctionObj,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -334,7 +334,7 @@ namespace boost {
            typedef typename get_function_obj_invoker<
                                  FunctionObj,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -353,7 +353,7 @@ namespace boost {
            typedef typename get_function_ref_invoker<
                                  typename RefWrapper::type,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 
@@ -368,7 +368,7 @@ namespace boost {
            typedef typename get_function_ref_invoker<
                                  typename RefWrapper::type,
                                  R,
-                                 Args...
+                                 Args...
                               >::type
              invoker_type;
 

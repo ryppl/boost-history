@@ -12,6 +12,14 @@
 
 #include <functional> // unary_function, binary_function
 
+#include <boost/config.hpp>
+
+#if defined(BOOST_HAS_VARIADIC_TMPL)
+
+#include <boost/function/function_variadic.hpp>
+
+#else
+
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/detail/workaround.hpp>
 
@@ -63,4 +71,6 @@
 #  define BOOST_PP_ITERATION_PARAMS_1 (3,(0,BOOST_FUNCTION_MAX_ARGS,<boost/function/detail/function_iterate.hpp>))
 #  include BOOST_PP_ITERATE()
 #  undef BOOST_PP_ITERATION_PARAMS_1
+#endif
+
 #endif
