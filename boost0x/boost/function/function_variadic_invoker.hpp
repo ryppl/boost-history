@@ -22,7 +22,7 @@ namespace boost {
          >
       struct void_function_invoker
       {
-         static BOOST_FUNCTION_VOID_RETURN_TYPE
+         static void
          invoke(function_buffer& function_ptr, Args... args)
 
          {
@@ -57,7 +57,7 @@ namespace boost {
       >
       struct void_function_obj_invoker
       {
-         static BOOST_FUNCTION_VOID_RETURN_TYPE
+         static void
          invoke(function_buffer& function_obj_ptr, Args... args)
 
          {
@@ -93,7 +93,7 @@ namespace boost {
       >
       struct void_function_ref_invoker
       {
-         static BOOST_FUNCTION_VOID_RETURN_TYPE
+         static void
          invoke(function_buffer& function_obj_ptr, Args... args)
 
          {
@@ -128,7 +128,7 @@ namespace boost {
       >
       struct function_void_mem_invoker
       {
-         static BOOST_FUNCTION_VOID_RETURN_TYPE
+         static void
          invoke(function_buffer& function_obj_ptr, Args... args)
 
          {
