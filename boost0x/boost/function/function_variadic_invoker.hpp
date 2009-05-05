@@ -189,7 +189,7 @@ namespace boost {
       struct get_function_ref_invoker
       {
          typedef typename mpl::if_c<(is_void<R>::value),
-                                BOOST_FUNCTION_VOID_FUNCTION_REF_INVOKER<
+                                void_function_ref_invoker<
                                 FunctionObj,
                                 R,
                                 Args...
