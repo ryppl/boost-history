@@ -209,6 +209,12 @@ struct meta_constructors : public meta_constructors_base<Class>
 	template <class ConstructorIndex>
 	struct constructor
 	 : detail::meta_function<meta_constructors, ConstructorIndex>
+	{
+		typedef BOOST_MIRRORED_CLASS(Class) result_type;
+	};
+
+	template <class FunctionIndex>
+	struct function : constructor<FunctionIndex>
 	{ };
 };
 

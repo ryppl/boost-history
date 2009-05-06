@@ -21,12 +21,17 @@ class wx_constructor_gui_utils
 {
 protected:
 	// makes the data
-	template <class CtrlMaker, class Context, class ConstrIndex, class ParamIndex>
+	template <
+		class CtrlMaker, 
+		class MetaFunctions, 
+		class FuncIndex, 
+		class ParamIndex
+	>
 	static inline typename CtrlMaker::result_type* make_ctl(
 		CtrlMaker make_ctl,
 		wx_constructor_gui_data* parent_data, 
-		Context* pc, 
-		ConstrIndex ci, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
 		ParamIndex pi
 	)
 	{
@@ -34,8 +39,8 @@ protected:
 		assert(parent_data != 0);
 		// make a label for the static box sizer
 		wxString label(
-			BOOST_MIRRORED_CONSTRUCTORS(Context)::
-			template constructor<ConstrIndex>::params::
+			MetaFunctions::
+			template function<FuncIndex>::params::
 			template param<ParamIndex>::base_name()
 		);
 		// the panel which will be the parent of

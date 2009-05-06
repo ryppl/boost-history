@@ -48,10 +48,13 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 #define BOOST_MIRROR_REG_PARAMLESS_MEM_FUNCTION( \
 	FUNC_INDEX, \
 	RET_VAL, \
-	FUNC_NAME \
+	FUNC_NAME, \
+	CONST_KW \
 ) \
         param_type_lists_ ## FUNC_INDEX ; \
 	static RET_VAL get_result_of(mpl::int_< FUNC_INDEX >); \
+	static inline RET_VAL (_detail_class::*)(void) CONST_KW \
+	get_address_of(mpl::int_< FUNC_INDEX >) {return &_detail_class::FUNC_NAME;}\
         BOOST_MIRROR_REG_META_FUNCTION_DEFINE_EMPTY_PARAM_TYPELIST(FUNC_INDEX)\
         BOOST_MIRROR_REG_META_FUNCTION_PUSH_BACK_PARAM_TYPES(\
                 FUNC_INDEX, \
@@ -98,10 +101,17 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
         PARAM_SEQ, \
+	CONST_KW, \
         TYPENAME_KW\
 ) \
         param_type_lists_ ## FUNC_INDEX ; \
 	static RET_VAL get_result_of(mpl::int_< FUNC_INDEX >); \
+	typedef RET_VAL (_detail_class::* BOOST_PP_CAT(pointer_to_, FUNC_INDEX))(\
+		BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES(PARAM_SEQ) \
+	) CONST_KW; \
+	static inline BOOST_PP_CAT(pointer_to_, FUNC_INDEX) \
+	get_address_of(mpl::int_< FUNC_INDEX >) \
+	{return &_detail_class::FUNC_NAME;}\
         BOOST_MIRROR_REG_META_FUNCTION_DEFINE_PARAM_TYPELIST( \
                 FUNC_INDEX, \
                 PARAM_SEQ \
@@ -124,9 +134,14 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
         PARAM_SEQ, \
+	CONST_KW, \
         TYPENAME_KW \
-) BOOST_MIRROR_REG_PARAMLESS_MEM_FUNCTION(FUNC_INDEX, RET_VAL, FUNC_NAME)
-
+) BOOST_MIRROR_REG_PARAMLESS_MEM_FUNCTION( \
+	FUNC_INDEX, \
+	RET_VAL, \
+	FUNC_NAME, \
+	CONST_KW \
+)
 /** expands into the member function registering macro
  */
 #define BOOST_MIRROR_REG_CLASS_OR_TEMPL_MEM_FUNCTION_0( \
@@ -134,12 +149,14 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
         PARAM_SEQ, \
+	CONST_KW, \
         TYPENAME_KW \
 ) BOOST_MIRROR_DO_REG_CLASS_OR_TEMPL_MEM_FUNCTION( \
         FUNC_INDEX, \
 	RET_VAL, \
 	FUNC_NAME, \
         PARAM_SEQ, \
+	CONST_KW, \
         TYPENAME_KW \
 )
 
@@ -148,11 +165,12 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
         PARAM_SEQ, \
+	CONST_KW, \
         TYPENAME_KW \
 ) BOOST_PP_CAT( \
         BOOST_MIRROR_REG_CLASS_OR_TEMPL_MEM_FUNCTION_, \
         BOOST_MIRROR_IS_VOID_FN_ARG_LIST(PARAM_SEQ) \
-) (FUNC_INDEX, RET_VAL, FUNC_NAME, PARAM_SEQ, TYPENAME_KW)
+) (FUNC_INDEX, RET_VAL, FUNC_NAME, PARAM_SEQ, CONST_KW, TYPENAME_KW)
 
 
 /** Registers a member function of a non-template class
@@ -167,6 +185,23 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
 	PARAM_SEQ, \
+	BOOST_PP_EMPTY(), \
+	BOOST_PP_EMPTY() \
+)
+
+/** Registers a const member function of a non-template class
+ */
+#define BOOST_MIRROR_REG_CONST_MEM_FUNCTION( \
+	FUNC_INDEX, \
+	RET_VAL, \
+	FUNC_NAME, \
+	PARAM_SEQ \
+) BOOST_MIRROR_REG_CLASS_OR_TEMPL_MEM_FUNCTION( \
+	FUNC_INDEX, \
+	RET_VAL, \
+	FUNC_NAME, \
+	PARAM_SEQ, \
+	const, \
 	BOOST_PP_EMPTY() \
 )
 
@@ -182,6 +217,7 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	RET_VAL, \
 	FUNC_NAME, \
 	PARAM_SEQ, \
+	BOOST_PP_EMPTY(), \
 	typename \
 )
 
@@ -233,6 +269,15 @@ public:
 			reflected_result<FunctionIndex>, 
 			reflected_type<void>
 		>::type result_type;
+
+		typedef BOOST_TYPEOF_TPL(
+			base_meta_data::get_address_of(FunctionIndex())
+		) pointer;
+
+		static inline pointer address(void)
+		{
+			return base_meta_data::get_address_of(FunctionIndex());
+		}
 	};
 };
 

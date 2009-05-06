@@ -138,6 +138,11 @@ int main(void)
 		fn_0::params::param<mpl::int_<3> >::type::base_name() << ")"  <<
 		::std::endl;
 	//
+	if(!persons.empty())
+	{
+		(persons.front().*fn_0::address())("a","b","c","d");
+	}
+	//
 	// TODO: 
 	//
 	//

@@ -70,22 +70,22 @@ BOOST_MIRROR_QREG_CLASS_NO_BASE(
 )
 BOOST_MIRROR_QREG_CONSTRUCTORS(
         ::test::person, (
-		((::boost::cts::bstring)(first_name))
-		((::boost::cts::bstring)(family_name))
-		((::boost::cts::bstring)(street))
-		((::boost::cts::bstring)(number))
-		((::boost::cts::bstring)(city))
-		((::boost::cts::bstring)(postal_code))
+		((const ::boost::cts::bstring&)(first_name))
+		((const ::boost::cts::bstring&)(family_name))
+		((const ::boost::cts::bstring&)(street))
+		((const ::boost::cts::bstring&)(number))
+		((const ::boost::cts::bstring&)(city))
+		((const ::boost::cts::bstring&)(postal_code))
 	)
 )
 
 BOOST_MIRROR_REG_MEM_FUNCTIONS_BEGIN(::test::person)
 BOOST_MIRROR_REG_MEM_FUNCTION(
 	0, void, change_address, 
-	((::boost::cts::bstring)(street))
-	((::boost::cts::bstring)(number))
-	((::boost::cts::bstring)(city))
-	((::boost::cts::bstring)(postal_code))
+	((const ::boost::cts::bstring&)(street))
+	((const ::boost::cts::bstring&)(number))
+	((const ::boost::cts::bstring&)(city))
+	((const ::boost::cts::bstring&)(postal_code))
 )
 BOOST_MIRROR_REG_MEM_FUNCTIONS_END 
 

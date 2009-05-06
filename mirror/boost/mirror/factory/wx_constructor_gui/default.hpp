@@ -25,11 +25,11 @@ private:
 	wx_constructor_gui_data data;
 	//
 	// makes the data
-	template <class Context, class ConstrIndex, class ParamIndex>
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
 	static inline wx_constructor_gui_data make_data(
 		wx_constructor_gui_data* parent_data, 
-		Context* pc, 
-		ConstrIndex ci, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
 		ParamIndex pi
 	)
 	{
@@ -37,8 +37,8 @@ private:
 		assert(parent_data != 0);
 		// make a label for the static box sizer
 		wxString label(
-			BOOST_MIRRORED_CONSTRUCTORS(Context)::
-			template constructor<ConstrIndex>::params::
+			MetaFunctions::
+			template constructor<FuncIndex>::params::
 			template param<ParamIndex>::base_name()
 		);
 		// the panel which will be the parent of
@@ -78,13 +78,13 @@ private:
 		Product 
 	>::type fact;
 public:
-	template <class Context, class ConstrIndex, class ParamIndex>
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
 	wx_constructor_gui(
 		wx_constructor_gui_data* parent_data, 
-		Context* pc, 
-		ConstrIndex ci, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
 		ParamIndex pi
-	): data(make_data(parent_data, pc, ci, pi))
+	): data(make_data(parent_data, mf, fi, pi))
 	 , fact(&data)
 	{ }
 

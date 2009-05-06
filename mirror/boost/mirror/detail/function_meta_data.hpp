@@ -265,6 +265,14 @@ inline static const ::std::basic_string< CHAR_T >& get_param_name( \
                 ) \
         )
 
+#define BOOST_MIRROR_REG_META_FUNCTIONS_IMPLEMENT_GET_SCOPE() \
+        template <class FunctionIndex> \
+        struct get_scope \
+        { \
+                typedef BOOST_MIRRORED_CLASS(_detail_class) type; \
+        }; 
+ 
+
 /** Begins the registering of template class' members
  */
 #define BOOST_MIRROR_REG_TEMPLATE_META_FUNCTIONS_BEGIN( \
@@ -277,14 +285,10 @@ struct META_FUNCTIONS_BASE< \
         TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
 > \
 { \
-        template <class FunctionIndex> \
-        struct get_scope \
-        { \
-                typedef TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) >\
-                        _templ; \
-                typedef BOOST_MIRRORED_CLASS(_templ) type; \
-        }; \
-        typedef mpl::vector0<>
+	typedef TEMPLATE < BOOST_PP_ENUM_PARAMS(TEMPL_ARG_COUNT, T) > \
+		_detail_class; \
+	BOOST_MIRROR_REG_META_FUNCTIONS_IMPLEMENT_GET_SCOPE() \
+	typedef mpl::vector0<>
 
 
 /** Begins the registering of class' constructors
@@ -293,23 +297,23 @@ struct META_FUNCTIONS_BASE< \
 template <> \
 struct META_FUNCTIONS_BASE < CLASS > \
 { \
-        template <class FunctionIndex> \
-        struct get_scope \
-        { \
-                typedef BOOST_MIRRORED_CLASS(CLASS) type; \
-        }; \
+	typedef CLASS _detail_class; \
+	BOOST_MIRROR_REG_META_FUNCTIONS_IMPLEMENT_GET_SCOPE() \
         typedef mpl::vector0<>
+
+#define BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES(PARAM_SEQ) \
+	BOOST_PP_SEQ_FOR_EACH_I( \
+        	BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_TYPE, \
+		0, \
+		PARAM_SEQ \
+	) 
 
 #define BOOST_MIRROR_REG_META_FUNCTION_DEFINE_PARAM_TYPELIST( \
 	FUNC_INDEX, \
 	PARAM_SEQ \
 ) \
 typedef BOOST_PP_CAT(mpl::vector, BOOST_PP_SEQ_SIZE(PARAM_SEQ)) < \
-	BOOST_PP_SEQ_FOR_EACH_I( \
-        	BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_TYPE, \
-		0, \
-		PARAM_SEQ \
-	) \
+BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES(PARAM_SEQ) \
 > BOOST_PP_CAT(BOOST_PP_CAT(function_, FUNC_INDEX), _params) ;
 
 #define BOOST_MIRROR_REG_META_FUNCTION_DEFINE_EMPTY_PARAM_TYPELIST(FUNC_INDEX) \

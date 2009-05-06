@@ -14,12 +14,30 @@
 #include <boost/mirror/meta_constructors.hpp>
 #include <boost/mpl/accumulate.hpp>
 #include <boost/mpl/push_back.hpp>
+#include  <boost/type_traits/remove_cv.hpp>
+#include  <boost/type_traits/remove_reference.hpp>
+
 #include <boost/mirror/detail/argument_type_list.hpp>
+
+#define BOOST_MIRROR_MAX_FUNC_PARAMS() 12
 
 
 namespace boost {
 namespace mirror {
 namespace detail {
+
+struct constructor_utils
+{
+	template <typename T>
+	struct adjust_product
+	{
+		typedef typename ::boost::remove_cv<
+			typename ::boost::remove_reference<
+				T
+			>::type
+		>::type type;
+	};
+};
 
 /** Forward declaration of the constructor template
  *  class.
@@ -45,7 +63,7 @@ template <
         TypeList,
         mpl::int_<0>,
         Index
->
+> : constructor_utils
 {
         template <typename Param>
         constructor(Param param)
@@ -59,13 +77,17 @@ template <
 
 
 #define BOOST_MIRROR_DECLARE_CONSTRUCTOR_PARAM_MANUFACTURER(Z, INDEX, TYPELIST)\
-Manufacturer<typename mpl::at<TYPELIST, mpl::int_<INDEX> >::type > _##INDEX;
+Manufacturer< \
+typename constructor_utils::template adjust_product< \
+                typename mpl::at<TYPELIST, mpl::int_<INDEX> >::type \
+        >::type \
+> _##INDEX;
 
 #define BOOST_MIRROR_INITIALIZE_CONSTRUCTOR_MANUFACTURER(Z, INDEX, PARAM)\
-        _##INDEX (PARAM, (Product*)0, ConstructorIndex(), mpl::int_<INDEX>())
+_##INDEX (PARAM, _meta_constructors, ConstructorIndex(), mpl::int_<INDEX>())
 
 #define BOOST_MIRROR_CALL_CONSTRUCTOR_MANUFACTURER(Z, INDEX, X)\
-        _##INDEX ()
+_##INDEX ()
 
 
 /** Constructor with arguments
@@ -82,8 +104,12 @@ template < \
         TypeList,  \
         mpl::int_< PARAM_COUNT >,  \
         ConstructorIndex \
-> \
+> : constructor_utils \
 { \
+	typedef typename constructor_utils::template adjust_product< \
+                Product \
+        >::type product; \
+	::boost::mirror::meta_constructors<product> _meta_constructors; \
         BOOST_PP_REPEAT( \
                 PARAM_COUNT,  \
                 BOOST_MIRROR_DECLARE_CONSTRUCTOR_PARAM_MANUFACTURER,  \
@@ -125,7 +151,12 @@ template < \
 #define BOOST_MIRROR_DO_IMPLEMENT_CONSTRUCTOR(Z, PARAM_COUNT, X) \
         BOOST_MIRROR_IMPLEMENT_CONSTRUCTOR(PARAM_COUNT)
 
-BOOST_PP_REPEAT_FROM_TO(1, 12, BOOST_MIRROR_DO_IMPLEMENT_CONSTRUCTOR, 0)
+BOOST_PP_REPEAT_FROM_TO(
+	1, 
+	BOOST_MIRROR_MAX_FUNC_PARAMS(), 
+	BOOST_MIRROR_DO_IMPLEMENT_CONSTRUCTOR, 
+	0
+)
 
 
 #undef BOOST_MIRROR_DO_IMPLEMENT_CONSTRUCTOR
@@ -147,7 +178,7 @@ template <
 #define BOOST_MIRROR_DECLARE_FACTORY_CONSTRUCTOR(Z, INDEX, CONSTR_LIST) \
 constructor< \
         Manufacturer, \
-        Product, \
+        typename constructor_utils::template adjust_product< Product >::type, \
         typename mpl::at< CONSTR_LIST, mpl::int_<INDEX> >::type, \
         mpl::int_< \
                 mpl::size< \
@@ -231,7 +262,11 @@ template < \
 #define BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY(Z, PARAM_COUNT, X) \
         BOOST_MIRROR_IMPLEMENT_BASE_FACTORY(PARAM_COUNT)
 
-BOOST_PP_REPEAT(12, BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY, 0)
+BOOST_PP_REPEAT(
+	BOOST_MIRROR_MAX_FUNC_PARAMS(), 
+	BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY, 
+	0
+)
 
 #undef BOOST_MIRROR_CALL_FACTORY_OP_NEW
 #undef BOOST_MIRROR_DO_IMPLEMENT_BASE_FACTORY
@@ -254,9 +289,13 @@ struct base_factory_remove_type_list_null_types
 template <
         template <class> class Manufacturer,
         class Product
-> struct make_base_factory
+> struct make_base_factory : constructor_utils
 {
-	typedef typename meta_constructors<Product>::param_type_lists
+	typedef typename constructor_utils::template adjust_product<
+		Product
+	>::type product;
+
+	typedef typename meta_constructors<product>::param_type_lists
 		raw_param_type_lists;
 
 	typedef typename mpl::accumulate<
@@ -272,7 +311,7 @@ template <
 
 	typedef base_factory<
 	        Manufacturer,
-	        Product,
+	        product,
 	        param_type_lists,
 	        mpl::int_< mpl::size< param_type_lists >::value >
 	> type;

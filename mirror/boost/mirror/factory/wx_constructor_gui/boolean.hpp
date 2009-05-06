@@ -38,13 +38,13 @@ private:
 	};
 
 public:
-	template <class Context, class ConstrIndex, class ParamIndex>
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
 	wx_constructor_gui(
 		wx_constructor_gui_data* parent_data, 
-		Context* pc, 
-		ConstrIndex ci, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
 		ParamIndex pi
-	): chb_ctl(make_ctl(chbctl_maker(), parent_data, pc, ci, pi))
+	): chb_ctl(make_ctl(chbctl_maker(), parent_data, mf, fi, pi))
 	{ }
 
 	inline bool operator()(void) const 

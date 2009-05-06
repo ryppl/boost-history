@@ -61,11 +61,11 @@ protected:
 		return text_ctl->GetValue();
 	}
 public:
-	template <class Context, class ConstrIndex, class ParamIndex>
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
 	wx_constructor_gui_basic(
 		wx_constructor_gui_data* parent_data, 
-		Context* pc, 
-		ConstrIndex ci, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
 		ParamIndex pi,
 		wxString pattern,
 		wxString message
@@ -74,7 +74,7 @@ public:
 			text_ctl_maker(pattern, message), 
 			parent_data, 
 			pc, 
-			ci, 
+			fi, 
 			pi
 		)
 	){ }
@@ -94,16 +94,16 @@ private: \
 	typedef wx_constructor_gui_basic< PRODUCT > \
 		base_class; \
 public: \
-	template <class Context, class ConstrIndex, class ParamIndex> \
+	template <class MetaFunctions, class FuncIndex, class ParamIndex> \
 	wx_constructor_gui( \
 		wx_constructor_gui_data* parent_data, \
-		Context* pc, \
-		ConstrIndex ci, \
+		MetaFunctions mf, \
+		FuncIndex fi, \
 		ParamIndex pi \
 	): base_class( \
 		parent_data, \
-		pc, \
-		ci, \
+		mf, \
+		fi, \
 		pi, \
 		wxT( PATTERN ), \
 		wxT( MESSAGE ) \

@@ -29,16 +29,16 @@ struct input_ui
 {
 	struct banner
 	{
-		template <class Context, class ConstrIndex, class ParamIndex>
-		banner(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
+		template <class MetaFunctions, class FuncIndex, class ParamIndex>
+		banner(int tabs, MetaFunctions mf, FuncIndex fi, ParamIndex pi)
 		{
 			::boost::cts::bcout() << 
 				::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
-				BOOST_CTS_LIT("Construct ") << 
+				BOOST_CTS_LIT("Get ") << 
 				BOOST_MIRRORED_TYPE(Product)::full_name() << 
 				BOOST_CTS_LIT(" ") << 
-				boost::mirror::meta_constructors<Context>::
-				template constructor<ConstrIndex>::params::
+				MetaFunctions::
+				template function<FuncIndex>::params::
 				template param<ParamIndex>::base_name() <<
 				::std::endl;
 		}
@@ -46,9 +46,9 @@ struct input_ui
 
 	typename ::boost::mirror::make_factory< input_ui, Product >::type f;
 
-	template <class Context, class ConstrIndex, class ParamIndex>
-	input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
-	 : b(tabs, pc, ci, pi)
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
+	input_ui(int tabs, MetaFunctions mf, FuncIndex fi, ParamIndex pi)
+	 : b(tabs, mf, fi, pi)
 	 , f(tabs)
 	{ }
 
@@ -80,23 +80,30 @@ struct console_input_ui
 		}
 	};
 	
-	template <class Context, class ConstrIndex, class ParamIndex>
-	console_input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi)
+	template <class MetaFunctions, class FuncIndex, class ParamIndex>
+	console_input_ui(
+		int tabs, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
+		ParamIndex pi
+	)
 	{
 			::boost::cts::bcout() <<
 			::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
 			BOOST_CTS_LIT("Enter ") << 
 			BOOST_MIRRORED_TYPE(Product)::full_name() << 
 			BOOST_CTS_LIT(" ") << 
-			boost::mirror::meta_constructors<Context>::
-			template constructor<ConstrIndex>::params::
+			MetaFunctions::
+			template function<FuncIndex>::params::
 			template param<ParamIndex>::base_name() <<
 			BOOST_CTS_LIT(" for ") <<
-			BOOST_MIRRORED_TYPE(Context)::full_name() <<
+			MetaFunctions::
+			template function<FuncIndex>::result_type::
+			full_name() <<
 			BOOST_CTS_LIT("(");
 			//
-			boost::mirror::meta_constructors<Context>::
-			template constructor<ConstrIndex>::params::
+			MetaFunctions::
+			template function<FuncIndex>::params::
 			for_each(constr_param_name_printer());
 			//
 			::boost::cts::bcout() <<
@@ -115,9 +122,9 @@ struct console_input_ui
 template <>  \
 struct input_ui< TYPE > : console_input_ui< TYPE > \
 { \
-	template <class Context, class ConstrIndex, class ParamIndex> \
-	input_ui(int tabs, Context* pc, ConstrIndex ci, ParamIndex pi) \
-	 : console_input_ui< TYPE >(tabs, pc, ci, pi) \
+	template <class MetaFunctions, class FuncIndex, class ParamIndex> \
+	input_ui(int tabs, MetaFunctions mf, FuncIndex fi, ParamIndex pi) \
+	 : console_input_ui< TYPE >(tabs, mf, fi, pi) \
 	{ } \
 }; 
 
@@ -146,8 +153,8 @@ struct input_ui<void>
 			names[factory_index]  << ::std::endl;
 	}
 
-	template <class Product, class ConstructorIndex>
-	inline int param(Product* pp, ConstructorIndex ci) const 
+	template <class Product, class FunctionIndex>
+	inline int param(Product* pp, FunctionIndex fi) const 
 	{
 		return tabs+1;
 	}
