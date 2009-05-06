@@ -70,10 +70,28 @@ public:
     weak_ptr( weak_ptr<Y> const & r )
 
 #endif
-    : pn(r.pn) // never throws
+    : px(r.lock().get()), pn(r.pn) // never throws
     {
-        px = r.lock().get();
     }
+
+#if defined( BOOST_HAS_RVALUE_REFS )
+
+    template<class Y>
+#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+
+    weak_ptr( weak_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+
+#else
+
+    weak_ptr( weak_ptr<Y> && r )
+
+#endif
+    : px(r.lock().get()), pn(std::move(r.pn)) // never throws
+    {
+        r.px = 0;
+    }
+
+#endif
 
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
@@ -99,6 +117,17 @@ public:
         return *this;
     }
 
+#if defined( BOOST_HAS_RVALUE_REFS )
+
+    template<class Y>
+    weak_ptr & operator=(weak_ptr<Y> && r)
+    {
+        this_type( static_cast< weak_ptr<Y> && >( r ) ).swap( *this );
+        return *this;
+    }
+
+#endif
+
     template<class Y>
     weak_ptr & operator=(shared_ptr<Y> const & r) // never throws
     {
@@ -108,27 +137,6 @@ public:
     }
 
 #endif
-
-
-// Move support
-
-#if defined( BOOST_HAS_RVALUE_REFS )
-
-    weak_ptr( weak_ptr && r ): px( r.px ), pn() // never throws
-    {
-        pn.swap( r.pn );
-        r.px = 0;
-    }
-
-    weak_ptr & operator=( weak_ptr && r ) // never throws
-    {
-        this_type( static_cast< weak_ptr && >( r ) ).swap( *this );
-        return *this;
-    }
-
-#endif
-
-
 
     shared_ptr<T> lock() const // never throws
     {
