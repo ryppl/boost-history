@@ -8,10 +8,10 @@
 // http://www.boost.org/LICENSE_1_0.txt
 //
 
-#if defined( BOOST_HAS_RVALUE_REFS )
-
 #include <boost/shared_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
+
+#if defined( BOOST_HAS_RVALUE_REFS )
 
 struct X
 {
