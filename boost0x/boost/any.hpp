@@ -75,8 +75,7 @@ namespace boost
 
         any & operator=(const any & rhs)
         {
-            any a(rhs);
-            a.swap(*this);
+            any(rhs).swap(*this);
             return *this;
         }
 
