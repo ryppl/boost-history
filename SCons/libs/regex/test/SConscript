@@ -26,3 +26,24 @@ regress_sources = Split("""
     regress/test_operators.cpp
     """)
 env.BoostRunTest("regex_regress", regress_sources)
+threaded_env = env.Clone()
+threaded_env.Append(CPPDEFINES = "TEST_THREADS", OBJPREFIX = "threaded_")
+threaded_env.BoostUseLib("thread")
+threaded_env.BoostRunTest("regex_regress_threaded", regress_sources)
+env.BoostRunTest("posix_api_check", "c_compiler_checks/posix_api_check.c")
+env.BoostCompileTest("wide_posix_api_check", "c_compiler_checks/wide_posix_api_check.c")
+env.BoostRunTest("posix_api_check_cpp", "c_compiler_checks/posix_api_check.cpp", OBJPREFIX = "cpp_")
+env.BoostRunTest("wide_posix_api_check_cpp", "c_compiler_checks/wide_posix_api_check.cpp", OBJPREFIX = "cpp_")
+env.BoostRunTests(Split("""
+    pathology/bad_expression_test
+    pathology/recursion_test
+    unicode/unicode_iterator_test
+    object_cache/object_cache_test
+    config_info/regex_config_info
+    collate_info/collate_info
+    """))
+threaded_env.BoostRunTest("static_mutex/static_mutex_test")
+env.BoostCompileTests(Split("""
+    concepts/concept_check
+    concepts/icu_concept_check
+    """))
