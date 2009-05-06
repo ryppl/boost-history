@@ -12,6 +12,7 @@
 
 #include <algorithm>
 #include <typeinfo>
+#include <utility>
 
 #include "boost/config.hpp"
 #include <boost/type_traits/remove_reference.hpp>
@@ -31,14 +32,25 @@ namespace boost
         }
 
         template<typename ValueType>
-        any(const ValueType & value)
-          : content(new holder<ValueType>(value))
+        any(ValueType && value)
+          : content(new holder<typename remove_reference<ValueType>::type>(std::forward<ValueType>(value)))
         {
         }
 
         any(const any & other)
           : content(other.content ? other.content->clone() : 0)
         {
+        }
+
+        any(any & other)
+          : content(other.content ? other.content->clone() : 0)
+        {
+        }
+
+        any(any && other)
+          : content(other.content)
+        {
+            other.content = 0;
         }
 
         ~any()
@@ -55,14 +67,22 @@ namespace boost
         }
 
         template<typename ValueType>
-        any & operator=(const ValueType & rhs)
+        any & operator=(ValueType && rhs)
         {
-            any(rhs).swap(*this);
+            any(std::forward<ValueType>(rhs)).swap(*this);
             return *this;
         }
 
-        any & operator=(any rhs)
+        any & operator=(const any & rhs)
         {
+            any a(rhs);
+            a.swap(*this);
+            return *this;
+        }
+
+        any & operator=(any && rhs)
+        {
+            clear();
             rhs.swap(*this);
             return *this;
         }
@@ -72,6 +92,11 @@ namespace boost
         bool empty() const
         {
             return !content;
+        }
+
+        void clear() {
+            delete content;
+            content = 0;
         }
 
         const std::type_info & type() const
@@ -108,6 +133,11 @@ namespace boost
 
             holder(const ValueType & value)
               : held(value)
+            {
+            }
+
+            holder(ValueType && value)
+              : held(std::forward<ValueType>(value))
             {
             }
 
@@ -194,6 +224,18 @@ namespace boost
         if(!result)
             boost::throw_exception(bad_any_cast());
         return *result;
+    }
+
+    template<typename ValueType>
+    ValueType any_cast(any && operand)
+    {
+        BOOST_STATIC_ASSERT(!is_reference<ValueType>::value);
+
+        ValueType * result = any_cast<ValueType>(&operand);
+        if(!result)
+            boost::throw_exception(bad_any_cast());
+
+        return std::move(*result);
     }
 
     template<typename ValueType>
