@@ -73,7 +73,7 @@ public:
 		make_ctl(
 			text_ctl_maker(pattern, message), 
 			parent_data, 
-			pc, 
+			mf, 
 			fi, 
 			pi
 		)

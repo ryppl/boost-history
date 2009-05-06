@@ -249,10 +249,10 @@ public:
 		struct reflected_result
 		{
 			BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-				nested,
+				nested_result,
 				base_meta_data::get_result_of(Idx())
 			);
-			typedef typename nested::type fn_result_type;
+			typedef typename nested_result::type fn_result_type;
 			typedef BOOST_MIRRORED_CLASS(fn_result_type) type;
 		};
 
@@ -261,6 +261,13 @@ public:
 		{
 			typedef BOOST_MIRRORED_CLASS(T) type;
 		};
+
+		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+			nested_pointer,
+			base_meta_data::get_address_of(FunctionIndex())
+		);
+
+		typedef typename nested_pointer::type pointer;
 		
 	public:
 		// meta-class reflecting the result type of this function
@@ -269,10 +276,6 @@ public:
 			reflected_result<FunctionIndex>, 
 			reflected_type<void>
 		>::type result_type;
-
-		typedef BOOST_TYPEOF_TPL(
-			base_meta_data::get_address_of(FunctionIndex())
-		) pointer;
 
 		static inline pointer address(void)
 		{

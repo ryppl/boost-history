@@ -140,7 +140,12 @@ int main(void)
 	//
 	if(!persons.empty())
 	{
-		(persons.front().*fn_0::address())("a","b","c","d");
+		(persons.front().*fn_0::address())(
+			BOOST_CTS_LIT("a"),
+			BOOST_CTS_LIT("b"),
+			BOOST_CTS_LIT("c"),
+			BOOST_CTS_LIT("d")
+		);
 	}
 	//
 	// TODO: 
