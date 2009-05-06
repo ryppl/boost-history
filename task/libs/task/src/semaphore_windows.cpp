@@ -12,6 +12,8 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 
+#include "boost/task/utility.hpp"
+
 namespace boost { namespace task
 {
 semaphore::semaphore( int value)
@@ -34,8 +36,18 @@ semaphore::post()
 void
 semaphore::wait()
 {
-	if ( ::WaitForSingleObject( handle_, INFINITE) != WAIT_OBJECT_0)
-		throw system::system_error( ::GetLastError(), system::system_category);
+	if ( this_task::runs_in_pool() )
+	{
+		// TODO: use semaphore::try_wait(), create a fiber and do a reschedule until
+		// semaphore::try_wait() returns true
+		if ( ::WaitForSingleObject( handle_, INFINITE) != WAIT_OBJECT_0)
+			throw system::system_error( ::GetLastError(), system::system_category);
+	}
+	else
+	{
+		if ( ::WaitForSingleObject( handle_, INFINITE) != WAIT_OBJECT_0)
+			throw system::system_error( ::GetLastError(), system::system_category);
+	}
 }
 
 bool 

@@ -15,6 +15,8 @@ namespace boost { namespace task
 {
 namespace detail
 {
+//TODO: use interlocked_exchange on Windows
+// and inline assembler on otherplatforms (XCHG etc.)
 inline
 void atomic_exchange( volatile uint32_t * object, uint32_t desired)
 { interprocess::detail::atomic_write32( object, desired); }

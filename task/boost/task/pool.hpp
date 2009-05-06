@@ -287,31 +287,12 @@ public:
 	template< typename R >
 	handle< R > submit( task< R > t)
 	{
-		detail::interrupter intr;
-		shared_future< R > fut( t.get_future() );
-		detail::worker * w( detail::worker::tss_get() );
-		if ( w)
-		{
-			function< bool() > wcb(
-				bind(
-					& shared_future< R >::is_ready,
-					fut) );
-			t.set_wait_callback(
-				bind(
-					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
-					w,
-					wcb) );
-			w->put( detail::pool_callable( t, intr) );
-			return handle< R >( t.get_id(), fut, intr);
-		}
-		else
-		{
-			if ( closed_() )
-				throw task_rejected("pool is closed");
+		if ( closed_() )
+			throw task_rejected("pool is closed");
 
-			channel_.put( detail::pool_callable( t, intr) );
-			return handle< R >( t.get_id(), fut, intr);
-		}
+		detail::interrupter intr;
+		channel_.put( detail::pool_callable( t, intr) );
+		return handle< R >( t.get_id(), t.get_future(), intr);
 	}
 
 	template<
@@ -320,31 +301,12 @@ public:
 	>
 	handle< R > submit( task< R > t, Attr const& attr)
 	{
-		detail::interrupter intr;
-		shared_future< R > fut( t.get_future() );
-		detail::worker * w( detail::worker::tss_get() );
-		if ( w)
-		{
-			function< bool() > wcb(
-				bind(
-					& shared_future< R >::is_ready,
-					fut) );
-			t.set_wait_callback(
-				bind(
-					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
-					w,
-					wcb) );
-			w->put( detail::pool_callable( t, intr) );
-			return handle< R >( t.get_id(), fut, intr);
-		}
-		else
-		{
-			if ( closed_() )
-				throw task_rejected("pool is closed");
+		if ( closed_() )
+			throw task_rejected("pool is closed");
 
-			channel_.put( channel_item( detail::pool_callable( t, intr), attr) );
-			return handle< R >( t.get_id(), fut, intr);
-		}
+		detail::interrupter intr;
+		channel_.put( channel_item( detail::pool_callable( t, intr), attr) );
+		return handle< R >( t.get_id(), t.get_future(), intr);
 	}
 };
 }}

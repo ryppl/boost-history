@@ -6,9 +6,29 @@
 ]
 
 [section:pool Pool]
+
+The CLR thread pool has the correct internal logic and a simple interface (QueueUserWorkItem) for scheduling work items to be executed by the threads it manages. This appears to be the answer to achieving fine grained parallelism.
+
+A thread pool basically has two functions:  It maintains a queue (or queues) of work to be done, and a collection of threads which execute work from the queue(s).  So designing a thread pool really comes down to a) finding ways to enqueue and dequeue work items very quickly (to keep the overhead of using the thread pool to a minimum) and b) developing an algorithm for choosing an optimal number of threads to service the queues.
+
+ThreadPool.QueueUserWorkItem conveys basically zero information about each work item, aside from that it exists.  This places some important constraints on the execution of these items.  For example, the thread pool does not know whether individual work items are related or not, so it has to assume they are all completely independent, implying that we cannot reorder work to optimize its execution, as independent work items typically must be executed in FIFO order to ensure fairness.
+
+In prior versions of the CLR, this queue was a simple linked list, protected by a Monitor lock.  This incurs some overhead: we must allocate nodes for the list (and pay the cost of the GC having to traverse the list each time a GC occurs), and we must pay the cost of acquiring that lock every time we enqueue or dequeue a work item.
+
+We can improve this situation in a couple of ways:  we can implement a more efficient FIFO queue, and we can enhance the API to allow the user to give us more information, allowing us to turn to even more efficient queuing strategies.
+
+Recall that the overhead of the existing FIFO queue comes from the expense of allocating and traversing the data structure, and the cost of acquiring the lock on each enqueue and dequeue operation.  For 4.0, we are switching to a lock-free data structure with much lower synchronization overhead.
+
+However, we are still restricted in what we can do here – we still have very little information about the work we’re executing, and so we still need to use the same basic strategy to execute it.  We can trim overhead here and there, but QUWI will probably never be a great way to execute very fine-grained workloads.  We need a new API.
+
+Since a child task is just a piece of a larger task, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is “work stealing.” 
+
 The pool manages internaly __worker_threads__ and submitted __actions__ are stored in a __channel__ (__global_queue__) for processing by the __worker_threads__ (using a __work_stealing__ algorithm). Each submitted __action__ gets associated with a __task__ object that will be returned. The __task__ object acts as a proxy for a result that is initially not known and gets evaluated later by a __worker_thread__.
 
 [heading Work-Stealing]
+The most important aspect of work-stealing is that it enables very fast enqueue and dequeue in the typical case, often requiring no synchronization at all.  This virtually eliminates a large part of the overhead of QUWI, when working with child tasks.  We still do need to allocate memory for the Task itself, and for the work-stealing queue, but like the improvements to the FIFO queue these data structures have been optimized for good GC performance.  Parent tasks are fast; child tasks are much faster.
+
+
 Traditional thread poola do not scale because they use a single global queue protected by a global lock. The frequency at which __worker_threads__ aquire the global lock becomes a limiting factor for the throughput if:
 
 *  the __actions__ become smaller

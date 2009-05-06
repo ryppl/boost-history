@@ -7,12 +7,16 @@
 #ifndef BOOST_TASK_ASYNC_H
 #define BOOST_TASK_ASYNC_H
 
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
 #include <boost/task/default_pool.hpp>
 #include <boost/task/detail/interrupter.hpp>
+#include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/thread_callable.hpp>
+#include <boost/task/detail/worker.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/pool.hpp>
@@ -60,6 +64,32 @@ struct new_thread
 		intr.set( thrd);
 	
 		return handle< R >( t.get_id(), t.get_future(), intr);
+	}
+};
+
+struct as_sub_task
+{
+	template< typename R >
+	handle< R > operator()( task< R > t)
+	{
+		detail::worker * w( detail::worker::tss_get() );
+		if ( w)
+		{
+			shared_future< R > fut( t.get_future() );
+			function< bool() > wcb(
+				bind(
+					& shared_future< R >::is_ready,
+					fut) );
+			t.set_wait_callback(
+				bind(
+					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
+					w,
+					wcb) );
+			w->put( detail::pool_callable( t, intr) );
+			return handle< R >( t.get_id(), fut, intr);
+		}
+		else
+			return new_thread()( t);
 	}
 };
 

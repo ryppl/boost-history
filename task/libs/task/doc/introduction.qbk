@@ -1,24 +1,34 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
-[section Introduction]
-__boost_threadpool__ is designed for effectively utilize the available hardware and provide a way for efficient asynchronous processing of independent time consuming operations (__actions__) in the same process.
-A __threadpool__ contains a number of __worker_threads__ to perform __actions__ in parallel, which are usually managed by a scheduler. If a __worker_thread__ completes its __action__, it will take the next __action__ from the scheduler until all __actions__ have been completed. The __worker_thread__ then sleeps until there are new __actions__ available.
-Using a pool of __worker_threads__  over creating a new thread for each __action__ may result in better performance and better system stability because the overhead for thread creation and destruction is negated.
 
-__boost_threadpool__ uses a __work_stealing__ algorithm and supports __fork_join__ parallelism (recursively splitting of __actions__ into sub-actions that are solved in parallel, waiting for them to complete, and then joining results).
+[section:motivation Motivation]
 
-In order to use the classes and functions described here, you can either include the specific headers specified by the descriptions of each class or function, or include the master library header:
+In order to take advantage of the technological evolution from single-core to many-core architectures multi-core machines requires to partition the compute bound work into smaller chunks that can run in parallel.
 
-    #include <boost/tp/tp.hpp>
+The goal of parallel programming is to write once and have our code scale well as the hardware underneath it gets better, i.e. see incremental benefits when running our app on machines with more cores without changing the code.
 
-which includes all the other headers in turn.
+Had we partitioned the work into much smaller chunks, when a core is finished with the item it executes, it would be able to start working on another chunk hence achieving the desired load balancing.
 
-[note
-__boost_threadpool__ uses a modified version of the futures library, N2561 C++0x proposal, from Anthony Williams ([@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html]).]
+__boost_task__ provides a framework to utilize the available hardware and provide a way for efficient asynchronous processing of time consuming operations in the same process.
+
+[note Equating multithreading to parallelism is not accurate. You can have multithreading on a single-core machine, but you can only have parallelism on a multi-core machine. the portions of your code that can truly run at the same time.]
+
+[heading Executing a task]
+
+	std::string echo( std::string const& msg)
+	{ return msg; }
+
+	boost::task::handle< std::string > h(
+		boost::task::async(
+			boost::task::new_thread(),
+			boost::task::make_task(
+				echo,
+				"Hello World!") ) );
+	std::cout << h.get() << std::endl;
 
 [endsect]

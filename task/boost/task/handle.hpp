@@ -114,10 +114,10 @@ public:
 	{ fut_.wait(); }
 
     template< typename Duration >
-    bool timed_wait( Duration const& rel_time) const
+    bool wait_for( Duration const& rel_time) const
 	{ return fut_.timed_wait( rel_time); }
 
-    bool timed_wait_until( system_time const& abs_time) const
+    bool wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
 
 	void swap( handle< R > & other)
@@ -217,10 +217,10 @@ public:
 	{ fut_.wait(); }
 
     template< typename Duration >
-    bool timed_wait( Duration const& rel_time) const
+    bool wait_for( Duration const& rel_time) const
 	{ return fut_.timed_wait( rel_time); }
 
-    bool timed_wait_until( system_time const& abs_time) const
+    bool wait_until( system_time const& abs_time) const
 	{ return fut_.timed_wait_until( abs_time); }
 
 	void swap( handle< void > & other)
