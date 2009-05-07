@@ -1,111 +1,174 @@
+//#include <boost/config.hpp>
+
+#if defined(BOOST_MSVC)
+
+#pragma warning(disable: 4786)  // identifier truncated in debug info
+#pragma warning(disable: 4710)  // function not inlined
+#pragma warning(disable: 4711)  // function selected for automatic inline expansion
+#pragma warning(disable: 4514)  // unreferenced inline removed
+#pragma warning(disable: 4355)  // 'this' : used in base member initializer list
+#pragma warning(disable: 4511)  // copy constructor could not be generated
+#pragma warning(disable: 4512)  // assignment operator could not be generated
+
+#if (BOOST_MSVC >= 1310)
+#pragma warning(disable: 4675)  // resolved overload found with Koenig lookup
+#endif
+
+#endif
+
 //
-//  shared_ptr_move_test.cpp
+//  intrusive_ptr_test.cpp
 //
-//  Copyright (c) 2007 Peter Dimov
+//  Copyright (c) 2002-2005 Peter Dimov
 //
-// Distributed under the Boost Software License, Version 1.0.
-// See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt
+// Distributed under the Boost Software License, Version 1.0. (See
+// accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/intrusive_ptr.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/intrusive_ptr.hpp>
+#include <boost/detail/atomic_count.hpp>
+#include <boost/config.hpp>
+#include <algorithm>
+#include <functional>
 
 #if defined( BOOST_HAS_RVALUE_REFS )
 
-struct X
+namespace N
 {
-    static long instances;
 
-    X()
+class base
+{
+private:
+
+    boost::detail::atomic_count use_count_;
+
+    base(base const &);
+    base & operator=(base const &);
+
+protected:
+
+    base(): use_count_(0)
     {
         ++instances;
     }
 
-    ~X()
+    virtual ~base()
     {
         --instances;
     }
 
-private:
+public:
 
-    X( X const & );
-    X & operator=( X const & );
+    static long instances;
+
+    long use_count() const
+    {
+        return use_count_;
+    }
+
+#if !defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+
+    inline friend void intrusive_ptr_add_ref(base * p)
+    {
+        ++p->use_count_;
+    }
+
+    inline friend void intrusive_ptr_release(base * p)
+    {
+        if(--p->use_count_ == 0) delete p;
+    }
+
+#else
+
+    void add_ref()
+    {
+        ++use_count_;
+    }
+
+    void release()
+    {
+        if(--use_count_ == 0) delete this;
+    }
+
+#endif
 };
 
-long X::instances = 0;
+long base::instances = 0;
+
+} // namespace N
+
+#if defined(BOOST_NO_ARGUMENT_DEPENDENT_LOOKUP)
+
+namespace boost
+{
+
+inline void intrusive_ptr_add_ref(N::base * p)
+{
+    p->add_ref();
+}
+
+inline void intrusive_ptr_release(N::base * p)
+{
+    p->release();
+}
+
+} // namespace boost
+
+#endif
+
+//
+
+struct X: public virtual N::base
+{
+};
+
+struct Y: public X
+{
+};
 
 int main()
 {
-    BOOST_TEST( X::instances == 0 );
+    BOOST_TEST( N::base::instances == 0 );
 
     {
-        boost::shared_ptr<X> p_( new X );
-        boost::intrusive_ptr<X> p( p_ );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p.use_count() == 1 );
+        boost::intrusive_ptr<X> p( new X );
+        BOOST_TEST( N::base::instances == 1 );
 
         boost::intrusive_ptr<X> p2( static_cast< boost::intrusive_ptr<X> && >( p ) );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p2.use_count() == 1 );
-        BOOST_TEST( p.expired() );
+        BOOST_TEST( N::base::instances == 1 );
+        BOOST_TEST( p.get() == 0 );
 
-        boost::intrusive_ptr<void> p3( static_cast< boost::intrusive_ptr<X> && >( p2 ) );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p3.use_count() == 1 );
-        BOOST_TEST( p2.expired() );
-
-        p_.reset();
-        BOOST_TEST( X::instances == 0 );
-        BOOST_TEST( p3.expired() );
+        p2.reset();
+        BOOST_TEST( N::base::instances == 0 );
     }
 
     {
-        boost::shared_ptr<X> p_( new X );
-        boost::intrusive_ptr<X> p( p_ );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p.use_count() == 1 );
+        boost::intrusive_ptr<X> p( new X );
+        BOOST_TEST( N::base::instances == 1 );
 
         boost::intrusive_ptr<X> p2;
         p2 = static_cast< boost::intrusive_ptr<X> && >( p );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p2.use_count() == 1 );
-        BOOST_TEST( p.expired() );
+        BOOST_TEST( N::base::instances == 1 );
+        BOOST_TEST( p.get() == 0 );
 
-        boost::intrusive_ptr<void> p3;
-        p3 = static_cast< boost::intrusive_ptr<X> && >( p2 );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p3.use_count() == 1 );
-        BOOST_TEST( p2.expired() );
-
-        p_.reset();
-        BOOST_TEST( X::instances == 0 );
-        BOOST_TEST( p3.expired() );
+        p2.reset();
+        BOOST_TEST( N::base::instances == 0 );
     }
 
     {
-        boost::shared_ptr<X> p_( new X );
-        boost::intrusive_ptr<X> p( p_ );
-        BOOST_TEST( X::instances == 1 );
-        BOOST_TEST( p.use_count() == 1 );
+        boost::intrusive_ptr<X> p( new X );
+        BOOST_TEST( N::base::instances == 1 );
 
-        boost::shared_ptr<X> p_2( new X );
-        boost::intrusive_ptr<X> p2( p_2 );
-        BOOST_TEST( X::instances == 2 );
+        boost::intrusive_ptr<X> p2( new X );
+        BOOST_TEST( N::base::instances == 2 );
         p2 = static_cast< boost::intrusive_ptr<X> && >( p );
-        BOOST_TEST( X::instances == 2 );
-        BOOST_TEST( p2.use_count() == 1 );
-        BOOST_TEST( p.expired() );
-        BOOST_TEST( p2.lock() != p_2 );
+        BOOST_TEST( N::base::instances == 1 );
+        BOOST_TEST( p.get() == 0 );
 
-        boost::shared_ptr<void> p_3( new X );
-        boost::intrusive_ptr<void> p3( p_3 );
-        BOOST_TEST( X::instances == 3 );
-        p3 = static_cast< boost::intrusive_ptr<X> && >( p2 );
-        BOOST_TEST( X::instances == 3 );
-        BOOST_TEST( p3.use_count() == 1 );
-        BOOST_TEST( p2.expired() );
-        BOOST_TEST( p3.lock() != p_3 );
+        p2.reset();
+        BOOST_TEST( N::base::instances == 0 );
     }
 
     return boost::report_errors();
