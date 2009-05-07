@@ -88,8 +88,22 @@ public:
 #endif
     : px(r.lock().get()), pn(std::move(r.pn)) // never throws
     {
-        r.px = 0;
+        //not necesary to set r.px = 0 as r.pn.pi_ == 0
     }
+
+	// for better efficiency in the T == Y case
+    weak_ptr( weak_ptr && r ): px( r.px ), pn(std::move(r.pn)) // never throws
+    {
+        //not necesary to set r.px = 0 as r.pn.pi_ == 0
+    }
+
+	// for better efficiency in the T == Y case
+    weak_ptr & operator=( weak_ptr && r ) // never throws
+    {
+        this_type( static_cast< weak_ptr && >( r ) ).swap( *this );
+        return *this;
+    }
+
 
 #endif
 
