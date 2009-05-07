@@ -58,7 +58,7 @@ message(STATUS " And/or check the archives:")
 message(STATUS "     http://news.gmane.org/gmane.comp.lib.boost.cmake")
 message(STATUS "")
 message(STATUS "##########################################################################")
-message(FATAL_ERROR "Magic variable CMAKE_IS_EXPERIMENTAL unset.")
+message(FATAL_ERROR "Guard variable CMAKE_IS_EXPERIMENTAL unset.")
 endif (NOT CMAKE_IS_EXPERIMENTAL)
 
 ##########################################################################
