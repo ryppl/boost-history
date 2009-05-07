@@ -7,6 +7,9 @@
 
 [section:changes  Appendix A: History]
 
+[section [*Version 0.4.3, May 9, 2009] Adaptation to Boost 1.39
+[endsect]
+
 [section [*Version 0.4.2, Mars 9, 2009] Adaptation to the Boost.ThreadPoold Version 0.23]
 
 [*New Features:]
