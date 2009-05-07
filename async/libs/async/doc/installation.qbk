@@ -30,7 +30,7 @@ __Boost_Async__ is a header only library.
 [/=========================]
 
 
-[*Boost.Async] depends on Boost. You must use either Boost version 1.38.x
+[*Boost.Async] depends on Boost. You must use either Boost version 1.39.x
 or the version in SVN trunk. In particular, __Boost_Async__ depends on:
 
 [variablelist

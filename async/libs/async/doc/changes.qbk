@@ -7,6 +7,10 @@
 
 [section:changes  Appendix A: History]
 
+[section [*Version 0.2, May 07, 2009] Adaptation to Boost 1.39]
+
+[endsect]
+
 [section [*Version 0.1, April 29, 2009] Extraction of the AE/ACT frameworks from Boost.Async]
 
 [*Features:]
