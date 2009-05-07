@@ -349,9 +349,9 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     interval_type right_resid;  
     cur_itv.left_subtract(right_resid, x_rest);
 
-    this->_map.erase(it);
-    fill(value_type(common,   cmb_val));
-    fill(value_type(right_resid, cur_val));
+	this->_map.erase(it);
+	fill(value_type(common,   cmb_val));
+	fill(value_type(right_resid, cur_val));
 }
 
 

@@ -91,7 +91,7 @@ void SetGentorT<SetTV>::some(SetTV& x)
         DomainTD key;
         domainGentor()->some(key);
         x += key;
-        m_sample.push_back(key);
+//JODO URG REV        m_sample.push_back(key);
     }
 }
 

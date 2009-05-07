@@ -142,9 +142,19 @@ public:
     /** <tt>*this</tt> is subset of <tt>super</tt> */
     bool contained_in(const interval& super)const ;
 
+    /** <tt>sub</tt> is proper subset of <tt>*this</tt> and does not touch the borders of <tt>*this</tt> */
+	bool free_contains(const interval& sub)const;
+
+    /** <tt>sub</tt> is proper subset of <tt>*this</tt> */
+	bool proper_contains(const interval& sub)const;
+
     /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
     bool is_disjoint(const interval& x2)const
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
+
+    /**  <tt>*this</tt> and <tt>x2</tt> have a non empty intersection */
+	bool intersects(const interval& x2)const
+    { return !is_disjoint(x2); }
 
     //==========================================================================
     //= Size
@@ -186,6 +196,12 @@ public:
         minimum of lower bounds to the 
         maximum of upper bounds */
     interval& extend(const interval& x2);
+
+	interval& left_extend(const interval& x2);
+	interval& right_extend(const interval& x2);
+
+	interval& left_set(const interval& x2);
+	interval& right_set(const interval& x2);
 
     /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
         Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
@@ -306,6 +322,10 @@ interval.is_right(open_bounded);   //[x, y) or (x, y)
 
     /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> */
     bool exclusive_less(const interval& x2)const;
+
+    /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> 
+	    and there is at least one element in between. */
+    bool distant_less(const interval& x2)const;
 
     /** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
     interval& set(const DomainT& low, const DomainT& up, bound_type bounds) 
@@ -539,6 +559,24 @@ bool interval<DomainT,Compare>::exclusive_less(const interval& x2)const
            ::type::open_bound_less_equal(_upb, x2._lwb);
 }
 
+template <class DomainT, ITL_COMPARE Compare>
+bool interval<DomainT,Compare>::distant_less(const interval& x2)const
+{
+    using namespace boost::mpl;
+    if(is_right(open_bounded)   && x2.is_left(closed_bounded)) return domain_less(_upb, x2._lwb); //_upb < x2._lwb;
+    if(is_right(closed_bounded) && x2.is_left(open_bounded) )  return domain_less(_upb, x2._lwb); //_upb < x2._lwb;
+    if(is_right(open_bounded)   && x2.is_left(open_bounded) )  return domain_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
+
+    //CL if(is_right(closed_bounded) && x2.is_left(closed_bounded)) return domain_less(succ(_upb), x2._lwb); //succ(_upb) < x2._lwb
+    return 
+        if_<
+            bool_<is_continuous<DomainT>::value>, 
+            continuous_type<interval<DomainT,Compare> >, 
+            discrete_type<interval<DomainT,Compare> > 
+           >
+           ::type::open_bound_less(_upb, x2._lwb);
+}
+
 
 template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::lower_less(const interval& x2)const
@@ -727,7 +765,7 @@ bool interval<DomainT,Compare>::contains(const DomainT& x)const
     if(is_right(closed_bounded) && is_left(closed_bounded)) return domain_less_equal(_lwb, x) && domain_less_equal(x, _upb);
     if(is_right(closed_bounded) && is_left(open_bounded)  ) return domain_less(_lwb, x)       && domain_less_equal(x, _upb);
     if(is_right(open_bounded)   && is_left(closed_bounded)) return domain_less_equal(_lwb, x) && domain_less(x, _upb);
-                                                  return domain_less(_lwb, x)       && domain_less(x, _upb);
+                                                            return domain_less(_lwb, x)       && domain_less(x, _upb);
 }
 
 template <class DomainT, ITL_COMPARE Compare>
@@ -738,6 +776,13 @@ template <class DomainT, ITL_COMPARE Compare>
 bool interval<DomainT,Compare>::contains(const interval& sub)const
 { return lower_less_equal(sub) && sub.upper_less_equal(*this); }
 
+template <class DomainT, ITL_COMPARE Compare>
+bool interval<DomainT,Compare>::free_contains(const interval& sub)const
+{ return lower_less(sub) && sub.upper_less(*this); }
+
+template <class DomainT, ITL_COMPARE Compare>
+bool interval<DomainT,Compare>::proper_contains(const interval& sub)const
+{ return contains(sub) && (lower_less(sub) || sub.upper_less(*this)); }
 
 template <class DomainT, ITL_COMPARE Compare>
 interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<DomainT,Compare>& x2)
@@ -752,6 +797,70 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<Doma
     {
         set_lwb(lwb_min(x2));
         set_upb(upb_max(x2));
+        return *this; 
+    } 
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare>& interval<DomainT,Compare>::left_extend(const interval<DomainT,Compare>& x2)
+{
+    if(x2.empty()) return *this;
+    else if(empty())
+    {
+        *this = x2; 
+        return *this;
+    }
+    else 
+    {
+        set_lwb(lwb_min(x2));
+        return *this; 
+    } 
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare>& interval<DomainT,Compare>::right_extend(const interval<DomainT,Compare>& x2)
+{
+    if(x2.empty()) return *this;
+    else if(empty())
+    {
+        *this = x2; 
+        return *this;
+    }
+    else 
+    {
+        set_upb(upb_max(x2));
+        return *this; 
+    } 
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare>& interval<DomainT,Compare>::left_set(const interval<DomainT,Compare>& x2)
+{
+    if(x2.empty()) return *this;
+    else if(empty())
+    {
+        *this = x2; 
+        return *this;
+    }
+    else 
+    {
+        set_lwb(BoundT(x2._lwb, x2.boundtype()));
+        return *this; 
+    } 
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare>& interval<DomainT,Compare>::right_set(const interval<DomainT,Compare>& x2)
+{
+    if(x2.empty()) return *this;
+    else if(empty())
+    {
+        *this = x2; 
+        return *this;
+    }
+    else 
+    {
+        set_upb(BoundT(x2._upb, x2.boundtype()));
         return *this; 
     } 
 }

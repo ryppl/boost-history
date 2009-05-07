@@ -20,6 +20,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
+#include <boost/itl/tree/tree.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 
 
@@ -32,7 +33,7 @@ namespace boost{namespace itl
     template <> class RandomGentor<nat> : public NumberGentorT<nat> {};
     template <> class RandomGentor<double> : public NumberGentorT<double> {};
 
-    // ----- sets ----------------------------------------------------------------
+    // ----- sets --------------------------------------------------------------
     //template <class DomainT, template<class>class Set> 
     //class RandomGentor<Set<DomainT> > :
     //    public SetGentorT<Set<DomainT> > {};
@@ -53,7 +54,12 @@ namespace boost{namespace itl
     class RandomGentor<itl::split_interval_set<DomainT> > :
         public SetGentorT<itl::split_interval_set<DomainT> > {};
 
-    // ----- maps -------------------------------------------------------------
+	// ----- tree --------------------------------------------------------------
+    template <class DomainT> 
+    class RandomGentor<itl::tree<DomainT> > :
+        public SetGentorT<itl::tree<DomainT> > {};
+
+    // ----- maps --------------------------------------------------------------
     template <class DomainT, class Neutronizer> 
     class RandomGentor<itl::map<DomainT,itl::set<int>,Neutronizer> > : 
         public MapGentorT<itl::map<DomainT,itl::set<int>,Neutronizer> > {};
@@ -261,6 +267,24 @@ namespace boost{namespace itl
             interval<double> valRange = GentorProfileSgl::it()->range_interval_double();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength()); //JODO
+            gentor.setDomainGentor(itvGentor);
+        }
+    };
+
+
+    //--------------------------------------------------------------------------
+	// itl::tree
+    //--------------------------------------------------------------------------
+    template <> 
+	struct Calibrater<itl::tree<int>, RandomGentor>
+    {
+		static void apply(RandomGentor<itl::tree<int> >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            ItvGentorT<int>* itvGentor = new ItvGentorT<int>;
+            interval<int> valRange = GentorProfileSgl::it()->range_interval_int();
+            itvGentor->setValueRange(valRange.lower(), valRange.upper());
+            itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             gentor.setDomainGentor(itvGentor);
         }
     };

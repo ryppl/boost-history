@@ -137,7 +137,7 @@ private:
     /// Treatment of adjoint intervals on insertion
     void handle_neighbours(const iterator& it){}
 
-    void insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
+    void insert_rest(interval_type& x_itv, iterator& it, iterator& end_it);
     void subtract_rest(const interval_type& x_itv, iterator& it, iterator& end_it);
 } ;
 
@@ -215,42 +215,38 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(const interval_type& x_itv, iterator& it, iterator& end_it)
+void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& x_itv, iterator& it, iterator& end_it)
 {
-    iterator nxt_it = it; nxt_it++;
+	interval_type left_gap, cur_itv;
+	while(it != end_it && !x_itv.empty())
+	{
+        cur_itv = *it;
+		x_itv.right_subtract(left_gap, cur_itv);
+        add_(left_gap);
+		if(x_itv.contains(cur_itv))
+		{
+			x_itv.left_subtract(cur_itv);
+			++it;
+		}
+		else
+		{
+			interval_type intersec = cur_itv & x_itv;
+			interval_type right_over; 
+			cur_itv.left_subtract(right_over, x_itv);
+			this->_set.erase(it);
+			add_(intersec);
+			add_(right_over);
+			x_itv.clear();
+		}
+	}
 
-    interval_type cur_itv = *it;
-    
-    interval_type newGap; x_itv.right_subtract(newGap, cur_itv);
-    // this is a new Interval that is a gap in the current map
-    add_(newGap);
-
-    interval_type interSec = cur_itv & x_itv;
-
-    if(nxt_it==end_it)
-    {
-        interval_type endGap; x_itv.left_subtract(endGap, cur_itv);
-        // this is a new Interval that is a gap in the current map
-        add_(endGap);
-
-        // only for the last there can be a rightResid: a part of *it right of x
-        interval_type rightResid;  cur_itv.left_subtract(rightResid, x_itv);
-
-        this->_set.erase(it);
-        add_(interSec);
-        add_(rightResid);
-    }
-    else
-    {        
-        this->_set.erase(it);
-        add_(interSec);
-
-        // shrink interval
-        interval_type x_rest(x_itv);
-        x_rest.left_subtract(cur_itv);
-
-        insert_rest(x_rest, nxt_it, end_it);
-    }
+	if(!x_itv.empty())
+	{
+		interval_type right_gap; 
+		x_itv.left_subtract(right_gap, cur_itv);
+		// this is a new Interval that is a gap in the current map
+		add_(right_gap);
+	}
 }
 
 

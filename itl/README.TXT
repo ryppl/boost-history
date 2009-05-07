@@ -10,8 +10,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 
 Interval Template Library (Boost.Itl)
+=====================================
 
 Abstract:
+=========
 
 The Interval Template Library (Itl) provides intervals 
 and two kinds of interval containers: Interval_sets and 
@@ -33,7 +35,14 @@ intervals, that are stored in the interval_map. This
 feature is called aggregate on overlap.
 
 
+Portability:
+============
+
+* The Itl compiles with gcc-3.4.4, gcc-4.3.0 and msvc-9.0
+
+
 Content:
+========
 
 itl.html                html-documentation refering to 
                         libs/itl/doc/html/index.html

@@ -62,14 +62,6 @@ using namespace boost::itl;
 // implement operator += that performs a set union on overlap of intervals.
 typedef boost::itl::set<string> GuestSetT;
 
-// boost::posix_time::ptime is the domain type the the interval_map. 
-// It's key values are therefore time intervals: interval<ptime>. The content
-// is the set of names: GuestSetT.
-typedef interval_map<ptime, GuestSetT> BoostPartyAttendenceHistoryT;
-
-// A party's height shall be defined as the maximum height of all guests ;-)
-typedef interval_map<ptime, int, partial_absorber, less, inplace_max> BoostPartyHeightHistoryT;
-
 void boost_party()
 {
     GuestSetT mary_harry; 
@@ -83,7 +75,8 @@ void boost_party()
     GuestSetT peter; 
     peter.insert("Peter");
 
-    BoostPartyAttendenceHistoryT party;
+	// A party is an interval map that maps time intervals to sets of guests
+    interval_map<ptime, GuestSetT> party;
 
     party.add( // add and element
       make_pair( 
@@ -105,37 +98,8 @@ void boost_party()
           time_from_string("2008-05-21 00:30")), 
           peter);
 
-    //-------------------------------------------------------------------------
-    BoostPartyHeightHistoryT tallest_guest;
 
-    // adding an element can be done wrt. simple aggregate functions
-    // like e.g. min, max etc. in their 'inplace' or op= incarnation
-    tallest_guest.add(
-      make_pair( 
-        interval<ptime>::rightopen(
-          time_from_string("2008-05-20 19:30"), 
-          time_from_string("2008-05-20 23:00")), 
-          180)
-    );
-
-    tallest_guest.add(
-      make_pair( 
-        interval<ptime>::rightopen(
-          time_from_string("2008-05-20 20:10"), 
-          time_from_string("2008-05-21 00:00")), 
-          170)
-    );
-
-    tallest_guest.add(
-      make_pair( 
-        interval<ptime>::rightopen(
-          time_from_string("2008-05-20 22:15"), 
-          time_from_string("2008-05-21 00:30")), 
-          200)
-    );
-
-
-    BoostPartyAttendenceHistoryT::iterator it = party.begin();
+    interval_map<ptime, GuestSetT>::iterator it = party.begin();
     cout << "----- History of party guests -------------------------\n";
     while(it != party.end())
     {
@@ -143,19 +107,9 @@ void boost_party()
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
         cout << "[" << when.first() << " - " << when.upper() << ")"
-             << ": " << who.as_string() << endl;
+             << ": " << who << endl;
     }
 
-    BoostPartyHeightHistoryT::iterator height_ = tallest_guest.begin();
-    cout << "----- History of maximum guest height -----------------\n";
-    while(height_ != tallest_guest.end())
-    {
-        interval<ptime> when = height_->first;
-        // Of what height are the tallest guests within the time interval 'when' ?
-        int height = (*height_++).second;
-        cout << "[" << when.first() << " - " << when.upper() << ")"
-             << ": " << height <<" cm = " << height/30.48 << " ft" << endl;
-    }
 }
 
 
@@ -177,9 +131,6 @@ int main()
 [2008-May-20 22:15:00 - 2008-May-20 23:00:00): Diana Harry Mary Peter Susan
 [2008-May-20 23:00:00 - 2008-May-21 00:00:00): Diana Peter Susan
 [2008-May-21 00:00:00 - 2008-May-21 00:30:00): Peter
------ History of maximum guest height -----------------
-[2008-May-20 19:30:00 - 2008-May-20 22:15:00): 180 cm = 5.90551 ft
-[2008-May-20 22:15:00 - 2008-May-21 00:30:00): 200 cm = 6.56168 ft
 -----------------------------------------------------------------------------*/
 //]
 

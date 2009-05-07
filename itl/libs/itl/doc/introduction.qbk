@@ -8,6 +8,34 @@
 
 [section Introduction]
 
+Intervals are almost ubiquitous in software development. Yet they are
+very easily coded into user defined classes by a pair of numbers
+so they are only /implicitly/ used most of the time. The meaning of
+an interval is simple. They represent all the elements between their 
+lower and upper bound and thus a set. But unlike sets, intervals
+usually can not be added to a single new interval.
+If you want to add intervals to a collection of
+intervals that does still represent a set,
+you arrive at the idea of interval_sets that the *itl* provides. 
+
+Interval containers of the *itl* have been developed initially at 
+[@http://www.cortex-software.de/desktopdefault.aspx Cortex Software GmbH]
+to solve problems related to date interval
+computations in the context of a Hospital Information System.
+Time intervals with associated values like ['amount of invoice]
+or ['set of therapies] had to be maipulated in statistics,
+billing programs and therapy scheduling programs. 
+So the *itl* emerged out of those industrial use cases and
+extracts a generic library that helps to solve common
+problems from the time domain more easiely.
+
+From those use cases, specifically the computations for
+statistics, also stems the quite useful idea of ['aggregating
+associated] values, when ['intervals overlap]. This idea is
+fundamental for the way interval_maps of the *itl* are
+designed.
+
+
 [section Definition and Basic Example]
 
 The [*Interval Template Library (ITL)] provides __itvs__ and two kinds of 
@@ -46,8 +74,8 @@ interval_set<seconds> myTvProgram;
 myTVProgram.add(news).add(talk_show);
 
 // Iterating over elements (seconds) would be silly ...
-for(interval_set<seconds>::iterator telecast = myTvProgam.begin(); 
-    telecast != myTvProgam.end(); ++telecast)
+for(interval_set<seconds>::iterator telecast = myTvProgram.begin(); 
+    telecast != myTvProgram.end(); ++telecast)
 	//...so this iterates over intervals
    TV.switch_on(*telecast);
 ``
@@ -223,6 +251,14 @@ from additions and intersections. This is specifically useful, if we want
 to enrich an interval container with certain time grids, like e.g. months 
 or calendar weeks or both. See example [link boost_itl.examples.month_and_week_grid timegrids for months and weeks].
 
+[h4 Separating interval containers]
+
+__Sep_itv_set__ implements the separating style.
+This style preserves borders, that are never passed by an overlapping
+interval. So if all intervals that are inserted into an __sep_itv_set__ 
+are generated form a certain grid that never pass say month borders, then
+these borders are preserved in the __sep_itv_set__.
+ 
 [endsect]
 
 [endsect][/ Introduction]

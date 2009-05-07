@@ -15,6 +15,7 @@ Itl_xt    Extended by generalized crosstables (cubes) AND
 validate  A law based test automaton (LaBatea).
 
 Abstract:
+=========
 
 The Interval Template Library (Itl) provides intervals 
 and two kinds of interval containers: Interval_sets and 
@@ -41,7 +42,17 @@ But LaBatea has been used in the development of the
 itl as test automaton and for checkeing sematical 
 concepts.
 
+
+Portability:
+============
+
+* The Itl compiles with gcc-3.4.4, gcc-4.3.0 and msvc-9.0
+
+* Valitate (LaBatea) ONLY compiles with msvc! Prefer msvc-9.0
+  for efficiency reasons. 
+
 Content:
+========
 
 === Boost.Itl =================================================================
 itl.html                html-documentation refering to 

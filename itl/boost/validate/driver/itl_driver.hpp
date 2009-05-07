@@ -53,8 +53,8 @@ namespace boost{namespace itl
 
         void validate()
         {
-            srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
-            //srand(static_cast<unsigned>(1)); //Same numbers each run (std)
+            //srand(static_cast<unsigned>(time(NULL))); //Different numbers each run
+            srand(static_cast<unsigned>(1)); //Same numbers each run (std)
             //srand(static_cast<unsigned>(4711)); //Same numbers each run (varying)
 
             for(int idx=0; hasValidProfile(); idx++)

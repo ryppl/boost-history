@@ -45,6 +45,24 @@ exe boost_party
         <include>$(BOOST_ROOT)
     ;
 
+exe partys_height_average
+    :
+        partys_height_average/partys_height_average.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
+exe partys_tallest_guests
+    :
+        partys_tallest_guests/partys_tallest_guests.cpp
+		/boost/date_time//boost_date_time
+    :
+        <include>../../..
+        <include>$(BOOST_ROOT)
+    ;
+
 exe man_power
     :
         man_power/man_power.cpp

@@ -18,10 +18,13 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/pushouts.hpp>
+#include <boost/validate/laws/novial_tree.hpp>
+#include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
 #include <boost/validate/gentor/gentorprofile.hpp>
 #include <boost/validate/gentor/rangegentor.hpp>
 #include <boost/itl/interval_set.hpp>
+#include <boost/itl/interval_map.hpp>
 #include <boost/itl/functors.hpp>
 
 using namespace std;
@@ -43,12 +46,12 @@ void test_LawValidater()
     //map_cluster_star_pushout.setTrialsCount(1000);
     //map_cluster_star_pushout.run();
 
-    typedef InplaceFlip
-        <itl::interval_map<int, int, partial_enricher > >  TestLawT;
-    LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef InplaceFlip
+    //    <itl::interval_map<int, int, partial_enricher > >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef InplaceAssociativity
-    //    <itl::interval_map<int, int, partial_absorber>, inplace_et>  TestLawT;
+    //    <itl::split_interval_map<int, int, partial_enricher> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef InducedRelation
@@ -57,8 +60,15 @@ void test_LawValidater()
     //    Interval::Atomize, protonic_equal> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
+	//typedef Balance<itl::tree<int> >  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef InplaceNaturalInversion
+	    <itl::interval_map<int, int, partial_absorber > >  TestLawT;
+	LawValidater<TestLawT, RandomGentor> test_law;
+
     //-----------------------------------------------------------------------------
-    int test_count = 5000;
+    int test_count = 1000;
     ptime start, stop;
 
     test_law.setTrialsCount(test_count);

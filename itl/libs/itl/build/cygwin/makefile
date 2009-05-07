@@ -40,12 +40,12 @@ OBJ_PATH = $(BIN_PATH)/obj
 ITL_INCL = $(addprefix -I,$(ITL_SRC_PATH))
 BOOST_INCL = $(addprefix -I,$(BOOST_PATH))
 STD_INCL = -I/usr/include
-#GCC_INCL = $(addprefix -I,$(CMP_PATH))/include
+GCC_INCL = $(addprefix -I,$(CMP_PATH))/include
 #CONCEPTGCC_INCL = -I/opt/conceptgcc-boostcon/include
-CONCEPTGCC_INCL = -I/opt/conceptgcc-4.3.0-alpha-7/include/c++/4.3.0
+#CONCEPTGCC_INCL = -I/opt/conceptgcc-4.3.0-alpha-7/include/c++/4.3.0
 
-INCLUDE  = $(CONCEPTGCC_INCL) $(ITL_INCL) $(BOOST_INCL)
-#NCLUDE  = $(STD_INCL) $(ITL_INCL) $(BOOST_INCL)
+#INCLUDE  = $(CONCEPTGCC_INCL) $(ITL_INCL) $(BOOST_INCL)
+INCLUDE  = $(STD_INCL) $(ITL_INCL) $(BOOST_INCL)
 
 #--- libraries ----------------------------------------------------------------
 #LOAD_LIBS  = -L$(CMP_PATH)/lib
@@ -59,14 +59,15 @@ LOAD_FLAGS4BOOST = $(LOAD_FLAGS) -lboost_date_time-gcc-mt-s
 
 #--- compileflags ---------------------------------------------------
 #COMPILE_FLAGS = -O2 -DUSE_CONCEPTS
-COMPILE_FLAGS = -O2
+COMPILE_FLAGS = -O2 -std=gnu++0x
 
 #--- compiler -----------------------------------------------------------------
 #--- location of the compiler -------------------------------------------------
 #CMP_PATH = /opt/conceptgcc-boostcon
 #COMPILE = $(CMP_PATH)/bin/gcc
-COMPILE = /opt/conceptgcc-4.3.0-alpha-7/bin/gcc
 #COMPILE = gcc
+#COMPILE = /opt/conceptgcc-4.3.0-alpha-7/bin/gcc
+COMPILE = i686-pc-cygwin-g++-4.exe
 
 
 all:
@@ -112,6 +113,16 @@ devels:
 
 #--- projects -----------------------------------------------------------------
 #--- group examples -----------------------------------------------------------
+
+#--- project boostcon ---------------------------------------------------------
+EXAMPLE_DIR = example
+boostcon_PATH = $(ITL_EXAMPLE_PATH)/boostcon
+boostcon_MAIN = $(boostcon_PATH)/boostcon.cpp
+boostcon_SOURCES = $(boostcon_MAIN)
+boostcon_TARGET  = $(BIN_PATH)/boostcon$(EXE_TAG)
+
+boostcon:
+	$(COMPILE) $(COMPILE_FLAGS)  $(INCLUDE) $(boostcon_SOURCES) $(LOAD_FLAGS) -o $(boostcon_TARGET)
 
 #--- project party ---------------------------------------------------------
 EXAMPLE_DIR = example
