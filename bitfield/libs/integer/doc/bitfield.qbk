@@ -621,6 +621,8 @@ This file includes the customization for the endian types for the bitfield_defau
 [section Appendices]
 [/=================]
 [section:history Appendix A: History]
+[section [*Version 0.1.1, May 9, 2009] ['Adaptation to 1.39]]
+[endsect]
 [section [*Version 0.1.0, April 29, 2009] ['Announcement of Bitfield]]
 
 [*Features:]

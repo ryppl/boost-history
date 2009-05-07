@@ -17,26 +17,20 @@ if ! $(BOOST_ROOT)
 
 project :
     : requirements
-        <include>$(BOOST_ROOT)
         <include>../../..
-#        <include>/cvs/wss100/build_temp/botet/boost/boost_1_38_0/
-         <include>/home/Vicente/boost/boost_1_38_0/
-
-        <include>$(BOOST_SANDBOX)/endian
+#       <include>/cvs/wss100/build_temp/botet/boost/boost_1_38_0/
+        <include>/boost_1_39_0/
+        <include>/sandbox/endian
         
-        <threading>multi
-#        <target-os>cygwin
-        #<threadapi>pthread
-        <variant>debug
+#       <threading>multi
+#       <target-os>cygwin
+#       <threadapi>pthread
+#       <variant>debug
         
         #<library>/boost/test//boost_unit_test_framework/<link>static
-        #<library>/boost/thread//boost_thread/<link>static
-        #<library>$(BOOST_SANDBOX)/libs/chrono/build//boost_chrono/<link>static
         
-        #<library>$(BOOST_ROOT)/libs/test/build//boost_unit_test_framework/<link>static
-#        <library>/cvs/wss100/build_temp/botet/boost/boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
-#        <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
-#        <library>../../../../../boost_1_38_0/libs/system/build//boost_system/<link>static
+#        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
+#        <library>/sandbox/libs/endia/build//boost_endian/<link>static
       
 ;
 
