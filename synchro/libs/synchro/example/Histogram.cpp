@@ -16,8 +16,8 @@
 #if 0
 #include <boost/synchro/conc/conc_tuple.hpp>
 #else
-#include <boost/interthreads/algorithm.hpp>
-#include <boost/interthreads/typeof/threader.hpp>
+#include <boost/async/algorithm.hpp>
+#include <boost/async/typeof/threader.hpp>
 #endif
 
 namespace {
@@ -101,9 +101,9 @@ public:
         conc_();
         conc_.join();
         #else
-        boost::interthreads::shared_threader ae;
-        BOOST_AUTO(conc_, boost::interthreads::fork_all(ae, boost::bind(boost::ref(disp_)), boost::bind(boost::ref(updater_))));
-        boost::interthreads::join_all(conc_);
+        boost::async::shared_threader ae;
+        BOOST_AUTO(conc_, boost::async::fork_all(ae, boost::bind(boost::ref(disp_)), boost::bind(boost::ref(updater_))));
+        boost::async::join_all(conc_);
         #endif
         
     }
@@ -136,10 +136,10 @@ int main()
 
     conc.join();
     #else
-    boost::interthreads::shared_threader ae;
-    BOOST_AUTO(conc, boost::interthreads::fork_all(ae, boost::bind(boost::ref(histo)), boost::bind(boost::ref(snd))));
+    boost::async::shared_threader ae;
+    BOOST_AUTO(conc, boost::async::fork_all(ae, boost::bind(boost::ref(histo)), boost::bind(boost::ref(snd))));
     boost::this_thread::sleep(boost::posix_time::seconds(10));
-    boost::interthreads::join_all(conc);
+    boost::async::join_all(conc);
     #endif
 
     return 0;

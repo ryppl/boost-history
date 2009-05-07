@@ -16,8 +16,8 @@
 #include <boost/synchro/process/lockable_scope_traits.hpp>
 #include <boost/synchro/timeout_exception.hpp>
 #include <boost/synchro/detail/deleted_functions.hpp>
-#include <boost/conversion/chrono_time_point_to_posix_time_ptime.hpp>
-#include <boost/conversion/chrono_duration_to_posix_time_duration.hpp>
+#include <boost/conversion/boost/chrono_time_point_to_posix_time_ptime.hpp>
+#include <boost/conversion/boost/chrono_duration_to_posix_time_duration.hpp>
 
 namespace boost { namespace synchro {
 

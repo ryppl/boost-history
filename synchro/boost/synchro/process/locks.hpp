@@ -124,44 +124,44 @@ namespace boost { namespace synchro {
             this->base_type.swap(other);
         }
 #else
-        unique_locker(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<base_type>(other.get()))
+        unique_locker(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<base_type>(other.get()))
         {}
-        unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get()))
+        unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other)
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get()))
         {}
         // interprocess specific
-        unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other
+        unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other
                     , try_to_lock_t)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get())
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get())
                         , boost::interprocess::try_to_lock)
         {}
 
         // interprocess specific
-        unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other
+        unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other
                     , system_time const& target_time)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get())
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get())
                         , target_time)
         {}
 
-            operator interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> >()
+            operator interprocess::rv<unique_locker<Mutex, scope_tag_type> >()
         {
             return move();
         }
 
-        interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > move()
+        interprocess::rv<unique_locker<Mutex, scope_tag_type> > move()
         {
-            return interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> >(*this);
+            return interprocess::rv<unique_locker<Mutex, scope_tag_type> >(*this);
         }
 
-        unique_locker& operator=(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
+        unique_locker& operator=(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
         {
             unique_locker temp(other);
             swap(temp);
             return *this;
         }
 
-        unique_locker& operator=(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
+        unique_locker& operator=(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
         {
             unique_locker temp(other);
             swap(temp);
@@ -171,9 +171,9 @@ namespace boost { namespace synchro {
         {
             this->base_type.swap(other);
         }
-        void swap(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
+        void swap(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
         {
-            this->base_type.swap(interprocess::detail::moved_object<base_type>(other.get()));
+            this->base_type.swap(interprocess::rv<base_type>(other.get()));
         }
 #endif
 
@@ -313,44 +313,44 @@ namespace boost { namespace synchro {
             this->base_type.swap(other);
         }
 #else
-        try_unique_locker(interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<base_type>(other.get()))
+        try_unique_locker(interprocess::rv<try_unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<base_type>(other.get()))
         {}
-        try_unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get()))
+        try_unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other)
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get()))
         {}
         // interprocess specific
-        try_unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other
+        try_unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other
                     , try_to_lock_t)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get())
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get())
                         , boost::interprocess::try_to_lock)
         {}
 
         // interprocess specific
-        try_unique_locker(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> > other
+        try_unique_locker(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> > other
                     , system_time const& target_time)
-            : base_type(interprocess::detail::moved_object<upgrade_locker<Mutex,scope_tag_type> >(other.get())
+            : base_type(interprocess::rv<upgrade_locker<Mutex,scope_tag_type> >(other.get())
                         , target_time)
         {}
 
-            operator interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> >()
+            operator interprocess::rv<try_unique_locker<Mutex, scope_tag_type> >()
         {
             return move();
         }
 
-        interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> > move()
+        interprocess::rv<try_unique_locker<Mutex, scope_tag_type> > move()
         {
-            return interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> >(*this);
+            return interprocess::rv<try_unique_locker<Mutex, scope_tag_type> >(*this);
         }
 
-        try_unique_locker& operator=(interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> > other)
+        try_unique_locker& operator=(interprocess::rv<try_unique_locker<Mutex, scope_tag_type> > other)
         {
             try_unique_locker temp(other);
             swap(temp);
             return *this;
         }
 
-        try_unique_locker& operator=(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
+        try_unique_locker& operator=(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
         {
             try_unique_locker temp(other);
             swap(temp);
@@ -360,9 +360,9 @@ namespace boost { namespace synchro {
         {
             this->base_type.swap(other);
         }
-        void swap(interprocess::detail::moved_object<try_unique_locker<Mutex, scope_tag_type> > other)
+        void swap(interprocess::rv<try_unique_locker<Mutex, scope_tag_type> > other)
         {
-            this->base_type.swap(interprocess::detail::moved_object<base_type>(other.get()));
+            this->base_type.swap(interprocess::rv<base_type>(other.get()));
         }
 #endif
 
@@ -467,44 +467,44 @@ namespace boost { namespace synchro {
         }
 
 
-        shared_locker(interprocess::detail::moved_object<shared_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<base_type>(other.get()))
+        shared_locker(interprocess::rv<shared_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<base_type>(other.get()))
         {}
 
-        shared_locker(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<typename unique_lock_type<Mutex>::type>(other.get()))
+        shared_locker(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<typename unique_lock_type<Mutex>::type>(other.get()))
         {}
 
-        shared_locker(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<typename upgrade_lock_type<Mutex>::type>(other.get()))
+        shared_locker(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<typename upgrade_lock_type<Mutex>::type>(other.get()))
         {}
 
-        operator interprocess::detail::moved_object<shared_locker<Mutex,scope_tag_type> >()
+        operator interprocess::rv<shared_locker<Mutex,scope_tag_type> >()
         {
             return move();
         }
 
-        interprocess::detail::moved_object<shared_locker<Mutex, scope_tag_type> > move()
+        interprocess::rv<shared_locker<Mutex, scope_tag_type> > move()
         {
-            return interprocess::detail::moved_object<shared_locker<Mutex, scope_tag_type> >(*this);
+            return interprocess::rv<shared_locker<Mutex, scope_tag_type> >(*this);
         }
 
 
-        shared_locker& operator=(interprocess::detail::moved_object<shared_locker<Mutex, scope_tag_type> > other)
-        {
-            shared_locker temp(other);
-            swap(temp);
-            return *this;
-        }
-
-        shared_locker& operator=(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
+        shared_locker& operator=(interprocess::rv<shared_locker<Mutex, scope_tag_type> > other)
         {
             shared_locker temp(other);
             swap(temp);
             return *this;
         }
 
-        shared_locker& operator=(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
+        shared_locker& operator=(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
+        {
+            shared_locker temp(other);
+            swap(temp);
+            return *this;
+        }
+
+        shared_locker& operator=(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
         {
             shared_locker temp(other);
             swap(temp);
@@ -521,9 +521,9 @@ namespace boost { namespace synchro {
         {
             this->base_type.swap(other);
         }
-        void swap(boost::interprocess::detail::moved_object<shared_locker<Mutex, scope_tag_type> > other)
+        void swap(boost::interprocess::rv<shared_locker<Mutex, scope_tag_type> > other)
         {
-            this->base_type.swap(interprocess::detail::moved_object<base_type>(other.get()));
+            this->base_type.swap(interprocess::rv<base_type>(other.get()));
         }
 #endif
 
@@ -622,32 +622,32 @@ namespace boost { namespace synchro {
             this->lock_for(target_time);
         }
 
-        upgrade_locker(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<base_type>(other.get()))
+        upgrade_locker(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<base_type>(other.get()))
         {}
 
-        upgrade_locker(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<typename unique_lock_type<Mutex>::type>(other.get()))
+        upgrade_locker(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<typename unique_lock_type<Mutex>::type>(other.get()))
         {}
 
-        operator interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> >()
+        operator interprocess::rv<upgrade_locker<Mutex, scope_tag_type> >()
         {
             return move();
         }
 
-        interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > move()
+        interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > move()
         {
-            return interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> >(*this);
+            return interprocess::rv<upgrade_locker<Mutex, scope_tag_type> >(*this);
         }
 
-        upgrade_locker& operator=(interprocess::detail::moved_object<upgrade_locker<Mutex, scope_tag_type> > other)
+        upgrade_locker& operator=(interprocess::rv<upgrade_locker<Mutex, scope_tag_type> > other)
         {
             upgrade_locker temp(other);
             swap(temp);
             return *this;
         }
 
-        upgrade_locker& operator=(interprocess::detail::moved_object<unique_locker<Mutex, scope_tag_type> > other)
+        upgrade_locker& operator=(interprocess::rv<unique_locker<Mutex, scope_tag_type> > other)
         {
             upgrade_locker temp(other);
             swap(temp);
@@ -716,11 +716,11 @@ namespace boost { namespace synchro {
         ~upgrade_to_unique_locker()
         {}
 
-        upgrade_to_unique_locker(interprocess::detail::moved_object<upgrade_to_unique_locker<Mutex, scope_tag_type> > other)
-            : base_type(interprocess::detail::moved_object<base_type>(other.get()))
+        upgrade_to_unique_locker(interprocess::rv<upgrade_to_unique_locker<Mutex, scope_tag_type> > other)
+            : base_type(interprocess::rv<base_type>(other.get()))
         {}
 
-        upgrade_to_unique_locker& operator=(interprocess::detail::moved_object<upgrade_to_unique_locker<Mutex, scope_tag_type> > other)
+        upgrade_to_unique_locker& operator=(interprocess::rv<upgrade_to_unique_locker<Mutex, scope_tag_type> > other)
         {
             upgrade_to_unique_locker temp(other);
             swap(temp);

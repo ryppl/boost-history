@@ -18,34 +18,29 @@ if ! $(BOOST_ROOT)
 project :
     : requirements
         <include>$(BOOST_ROOT)
+        <include>/sandbox/async
+        <include>/sandbox/chrono
+        <include>/sandbox/conversion
         <include>../../..
-        <include>../../../../interthreads
-        <include>../../../../chrono
         
         <threading>multi
 #        <target-os>cygwin
         #<threadapi>pthread
-        <variant>debug
+#        <variant>debug
         
         #<library>/boost/test//boost_unit_test_framework/<link>static
         #<library>/boost/thread//boost_thread/<link>static
-        <library>../../../../chrono/libs/chrono/build//boost_chrono/<link>static
         
-        <library>../../../../../boost_1_38_0/libs/test/build//boost_unit_test_framework/<link>static
-        <library>../../../../../boost_1_38_0/libs/thread/build//boost_thread/<link>static
-        <library>../../../../../boost_1_38_0/libs/system/build//boost_system/<link>static
+        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
+        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+        <library>/sandbox/chrono/libs/chrono/build//boost_chrono/<link>static
+        <library>/boost_1_39_0/libs/system/build//boost_system/<link>static
       
 ;
 
-#exe helpers
-#    : ../example/IL_BancAccount.cpp
-#    : <define>BOOST_SYNCHRO_DO_NOT_COMPILE
-#    ;
-
-
      
 test-suite "sync_lock_traits" :
-     [ run thread_count.cpp ]
+#     [ run thread_count.cpp ]
      [ compile lockable_traits_test.cpp ]
      [ compile lockable_concepts_test.cpp ]
      [ compile locker_concepts_test.cpp ]

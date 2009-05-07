@@ -6,7 +6,10 @@
  /]
 
 [section:history Appendix A: History]
- 
+
+[section [*Version 0.3.2, May 08, 2009] ['Adaptation Boost 1.39 + Extraction of Boost.Conversion]]
+[endsect]
+
 [section [*Version 0.3.1, Mars 29, 2009] ['Language-like Synchronized Block Macros]]
 
 [*New Features:]

@@ -27,8 +27,8 @@ struct scope_traits<multi_process_tag>
 
     typedef boost::interprocess::lock_exception lock_error;
     template <typename T>
-    struct moved_object : boost::interprocess::detail::moved_object<T> {
-        moved_object(T& t_): boost::interprocess::detail::moved_object<T>(t_) {}
+    struct moved_object : boost::interprocess::rv<T> {
+        moved_object(T& t_): boost::interprocess::rv<T>(t_) {}
     };
 
     typedef boost::interprocess::defer_lock_type defer_lock_t;

@@ -12,7 +12,7 @@
 #define BOOST_SYNCHRO_CONC_SYSTEM__HPP
 
 #include <boost/synchro/semaphore.hpp>
-#include <boost/interthreads/fork.hpp>
+//#include <boost/async/fork.hpp>
 #include <boost/bind.hpp>
 #include <boost/ref.hpp>
 #include <typeinfo>
@@ -269,7 +269,7 @@ public:
 #endif
 }
 #if 0
-namespace interthreads {
+namespace async {
 namespace partial_specialization_workaround {
 template< typename AE, typename CC >
 struct fork<AE,CC&> {
