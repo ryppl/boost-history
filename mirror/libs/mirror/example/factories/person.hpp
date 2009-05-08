@@ -53,6 +53,14 @@ struct person
                 city.assign(_city);
                 postal_code.assign(_postal_code);
         }
+
+	inline ::boost::cts::bstring name_and_surname(void) const
+	{
+		::boost::cts::bstring result(first_name);
+		result.append(BOOST_CTS_LIT(" "));
+		result.append(family_name);
+		return result;
+	}
 };
 
 } // namespace test
@@ -86,6 +94,9 @@ BOOST_MIRROR_REG_MEM_FUNCTION(
 	((const ::boost::cts::bstring&)(number))
 	((const ::boost::cts::bstring&)(city))
 	((const ::boost::cts::bstring&)(postal_code))
+)
+BOOST_MIRROR_REG_CONST_MEM_FUNCTION(
+	1, ::boost::cts::bstring, name_and_surname, ((void))
 )
 BOOST_MIRROR_REG_MEM_FUNCTIONS_END 
 

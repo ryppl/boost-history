@@ -68,27 +68,6 @@ struct class_printer
 };
 
 
-/** A functor with one parameter. This functor is called
- *  by the mirror::function_caller, which also constructs
- *  and supplies all the necessary arguments (the single 
- *  one in this case).
- */
-template <class Class>
-struct back_inserter
-{
-	::std::list< Class >& container;	
-
-	back_inserter(::std::list< Class >& _container)
-	 : container(_container)
-	{ }
-
-	void operator()(const Class& inst)
-	{
-		container.push_back(inst);
-	}
-};
-
-
 int main(void)
 {
 	using namespace ::boost;
@@ -98,23 +77,30 @@ int main(void)
 	// a list of persons
 	::std::list< person > persons;
 	// 
-	// keep inserting while insert_more == 'y'
+	typedef meta_member_functions<person> mem_fns;
+	//
 	const cts::bchar yes = BOOST_CTS_LIT('y');
 	const cts::bchar no = BOOST_CTS_LIT('n');
 	cts::bchar insert_more = yes;
+	cts::bchar change_address = no;
+	// keep inserting while insert_more == 'y'
 	while(insert_more == yes)
 	{
-		// the name of the function argument.
-		// there is only one in this case
-	        const cts::bchar* param_names[] = {BOOST_CTS_LIT("Person")};
-		// create a functor caller, plug the input ui in
-		// and supply the parameter types and parameter names
-	        functor_caller<
-	                input_ui,
-	                mpl::vector1< person>
-	        > caller(param_names);
-		// call the back inserter by the means of the caller
-		caller(back_inserter<person>(persons));
+		factory<input_ui, person> fact;
+		persons.push_back(fact());
+		// check whether to insert more persons
+		do
+		{
+			cts::bcout() << 
+				BOOST_CTS_LIT("Change persons address ? (y/n) ") << 
+				::std::flush;
+			cts::bcin() >> change_address;
+		} while(change_address != yes && change_address != no);
+		if(change_address == yes)
+		{
+			functor_caller<input_ui, mem_fns, mpl::int_<0> > func(0);
+			func(persons.back());
+		}
 		// check whether to insert more persons
 		do
 		{
@@ -124,32 +110,6 @@ int main(void)
 			cts::bcin() >> insert_more;
 		} while(insert_more != yes && insert_more != no);
 	}
-	//
-	// TODO: remove this
-	//
-	typedef meta_member_functions<person> mem_fns;
-	typedef mem_fns::function<mpl::int_<0> > fn_0;
-	cts::bcout() <<
-		fn_0::result_type::base_name() << " " <<
-		fn_0::base_name() << "(" <<
-		fn_0::params::param<mpl::int_<0> >::type::base_name() << ", " <<
-		fn_0::params::param<mpl::int_<1> >::type::base_name() << ", " <<
-		fn_0::params::param<mpl::int_<2> >::type::base_name() << ", " <<
-		fn_0::params::param<mpl::int_<3> >::type::base_name() << ")"  <<
-		::std::endl;
-	//
-	if(!persons.empty())
-	{
-		(persons.front().*fn_0::address())(
-			BOOST_CTS_LIT("a"),
-			BOOST_CTS_LIT("b"),
-			BOOST_CTS_LIT("c"),
-			BOOST_CTS_LIT("d")
-		);
-	}
-	//
-	// TODO: 
-	//
 	//
 	// print out all the persons in the list
 	cts::bcout() << "Persons:" << ::std::endl;

@@ -215,7 +215,9 @@ struct meta_constructors : public meta_constructors_base<Class>
 
 	template <class FunctionIndex>
 	struct function : constructor<FunctionIndex>
-	{ };
+	{
+		typedef mpl::true_ is_constructor;
+ 	};
 };
 
 } // namespace mirror

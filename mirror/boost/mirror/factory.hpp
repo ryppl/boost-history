@@ -69,7 +69,7 @@ template <
         constructor(Param param)
         { }
 
-        inline Product operator()(void)
+        inline Product operator()(void) 
         {
                 return Product();
         }
@@ -81,13 +81,18 @@ Manufacturer< \
 typename constructor_utils::template adjust_product< \
                 typename mpl::at<TYPELIST, mpl::int_<INDEX> >::type \
         >::type \
-> _##INDEX;
+> BOOST_PP_CAT(_, INDEX);
 
 #define BOOST_MIRROR_INITIALIZE_CONSTRUCTOR_MANUFACTURER(Z, INDEX, PARAM)\
-_##INDEX (PARAM, _meta_constructors, ConstructorIndex(), mpl::int_<INDEX>())
+BOOST_PP_CAT(_, INDEX) ( \
+	PARAM, \
+	_meta_constructors, \
+	ConstructorIndex(), \
+	mpl::int_<INDEX>()\
+)
 
 #define BOOST_MIRROR_CALL_CONSTRUCTOR_MANUFACTURER(Z, INDEX, X)\
-_##INDEX ()
+BOOST_PP_CAT(_, INDEX) ()
 
 
 /** Constructor with arguments
@@ -231,8 +236,8 @@ template < \
         ) \
  \
         template <typename Param> \
-        base_factory(Param param, int factory_index) \
-         : manager(param, factory_index) \
+        base_factory(Param param) \
+         : manager(param) \
                 BOOST_PP_REPEAT( \
                         PARAM_COUNT,  \
                         BOOST_MIRROR_INITIALIZE_FACTORY_CONSTRUCTOR,  \
@@ -330,12 +335,12 @@ template <
         	base_class;
 
 	factory(void)
-	 : base_class(0, 0)
+	 : base_class(0)
 	{ }
 
         template <typename Param>
-        factory(Param param, int factory_index = 0)
-         : base_class(param, factory_index)
+        factory(Param param)
+         : base_class(param)
         { }
 };
 

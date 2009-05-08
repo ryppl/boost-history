@@ -57,8 +57,7 @@ private:
 	// the book ctrl
 	BookCtrl* book_ctl;
 	static inline BookCtrl* make_book_ctl(
-		wx_constructor_gui_data* parent_data,
-		int factory_index
+		wx_constructor_gui_data* parent_data
 	)
 	{
 		assert(parent_data != 0);
@@ -117,11 +116,9 @@ private:
 	};
 
 public:
-	wx_constructor_gui(
-		wx_constructor_gui_data* data, 
-		int factory_index
-	): parent_data(data)
-	 , book_ctl(make_book_ctl(parent_data, factory_index))
+	wx_constructor_gui( wx_constructor_gui_data* data)
+	 : parent_data(data)
+	 , book_ctl(make_book_ctl(parent_data))
 	{ }
 
 	template <class Product, class ConstructorIndex>

@@ -26,8 +26,7 @@ int main(void)
 	using namespace ::boost::mirror;
 	//
 	// create a factory plugged with the input ui
-	const cts::bchar* param_names[] = {BOOST_CTS_LIT("a tetrahedron")};
-	factory< ::test::input_ui, ::test::tetrahedron > f(param_names, 0);
+	factory< ::test::input_ui, ::test::tetrahedron > f;
 	// use the factory to construct a tetrahedron and calculate 
 	// it's volume and base area
 	::test::tetrahedron t(f());

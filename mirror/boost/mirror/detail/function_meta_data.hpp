@@ -216,6 +216,29 @@ inline static const ::std::basic_string< CHAR_T >& get_param_name( \
 ) BOOST_PP_COMMA_IF(PARAM_INDEX) BOOST_PP_SEQ_HEAD(TYPE_AND_NAME)
 
 
+/** Helper macro which expands into the type and name of the j-th parameter
+ *  preceeded by a comma if it is not the first parameter
+ */
+#define BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_TYPE_AND_NAME( \
+        R, X, \
+        PARAM_INDEX, \
+        TYPE_AND_NAME \
+) BOOST_PP_COMMA_IF(PARAM_INDEX) \
+	BOOST_PP_SEQ_HEAD(TYPE_AND_NAME) \
+	BOOST_PP_SEQ_TAIL(TYPE_AND_NAME)
+
+
+/** Helper macro which expands into the name of the j-th parameter
+ *  preceeded by a comma if it is not the first parameter
+ */
+#define BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_NAME( \
+        R, X, \
+        PARAM_INDEX, \
+        TYPE_AND_NAME \
+) BOOST_PP_COMMA_IF(PARAM_INDEX) \
+	BOOST_PP_SEQ_TAIL(TYPE_AND_NAME)
+
+
 
 /** Calls the BOOST_MIRROR_REG_META_FUNCTION_PARAM_NAME macro
  *  in repetitions.
@@ -304,6 +327,20 @@ struct META_FUNCTIONS_BASE < CLASS > \
 #define BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES(PARAM_SEQ) \
 	BOOST_PP_SEQ_FOR_EACH_I( \
         	BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_TYPE, \
+		0, \
+		PARAM_SEQ \
+	) 
+
+#define BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES_AND_NAMES(PARAM_SEQ) \
+	BOOST_PP_SEQ_FOR_EACH_I( \
+        	BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_TYPE_AND_NAME, \
+		0, \
+		PARAM_SEQ \
+	) 
+
+#define BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_NAMES(PARAM_SEQ) \
+	BOOST_PP_SEQ_FOR_EACH_I( \
+        	BOOST_MIRROR_REG_META_FUNCTION_EXTRACT_PARAM_NAME, \
 		0, \
 		PARAM_SEQ \
 	) 

@@ -52,9 +52,27 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	CONST_KW \
 ) \
         param_type_lists_ ## FUNC_INDEX ; \
-	static RET_VAL get_result_of(mpl::int_< FUNC_INDEX >); \
-	static inline RET_VAL (_detail_class::*)(void) CONST_KW \
-	get_address_of(mpl::int_< FUNC_INDEX >) {return &_detail_class::FUNC_NAME;}\
+	static RET_VAL get_result_of( mpl::int_< FUNC_INDEX >); \
+	struct BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	{ \
+	private: \
+		CONST_KW _detail_class& instance; \
+	public: \
+		inline BOOST_PP_CAT(wrapper_, FUNC_INDEX)( \
+			CONST_KW _detail_class& inst \
+		): instance(inst) \
+		{ } \
+		\
+		inline RET_VAL operator()(void) const \
+		{ \
+			return instance.FUNC_NAME(); \
+		} \
+	}; \
+	static BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	get_wrapper_of( mpl::int_< FUNC_INDEX >); \
+	static inline BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	wrap( mpl::int_< FUNC_INDEX >, CONST_KW _detail_class& inst) \
+	{return BOOST_PP_CAT(wrapper_, FUNC_INDEX)(inst);} \
         BOOST_MIRROR_REG_META_FUNCTION_DEFINE_EMPTY_PARAM_TYPELIST(FUNC_INDEX)\
         BOOST_MIRROR_REG_META_FUNCTION_PUSH_BACK_PARAM_TYPES(\
                 FUNC_INDEX, \
@@ -105,13 +123,31 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
         TYPENAME_KW\
 ) \
         param_type_lists_ ## FUNC_INDEX ; \
-	static RET_VAL get_result_of(mpl::int_< FUNC_INDEX >); \
-	typedef RET_VAL (_detail_class::* BOOST_PP_CAT(pointer_to_, FUNC_INDEX))(\
-		BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES(PARAM_SEQ) \
-	) CONST_KW; \
-	static inline BOOST_PP_CAT(pointer_to_, FUNC_INDEX) \
-	get_address_of(mpl::int_< FUNC_INDEX >) \
-	{return &_detail_class::FUNC_NAME;}\
+	static RET_VAL get_result_of( mpl::int_< FUNC_INDEX >); \
+	struct BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	{ \
+	private: \
+		CONST_KW _detail_class& instance; \
+	public: \
+		inline BOOST_PP_CAT(wrapper_, FUNC_INDEX)( \
+			CONST_KW _detail_class& inst \
+		): instance(inst) \
+		{ } \
+		\
+		inline RET_VAL operator()(\
+	BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES_AND_NAMES(PARAM_SEQ) \
+		) const \
+		{ \
+			return instance.FUNC_NAME( \
+		BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_NAMES(PARAM_SEQ) \
+			); \
+		} \
+	}; \
+	static BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	get_wrapper_of( mpl::int_< FUNC_INDEX >); \
+	static inline BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
+	wrap( mpl::int_< FUNC_INDEX >, CONST_KW _detail_class& inst) \
+	{return BOOST_PP_CAT(wrapper_, FUNC_INDEX)(inst);} \
         BOOST_MIRROR_REG_META_FUNCTION_DEFINE_PARAM_TYPELIST( \
                 FUNC_INDEX, \
                 PARAM_SEQ \
@@ -263,11 +299,11 @@ public:
 		};
 
 		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-			nested_pointer,
-			base_meta_data::get_address_of(FunctionIndex())
+			nested_wrapper,
+			base_meta_data::get_wrapper_of(FunctionIndex())
 		);
 
-		typedef typename nested_pointer::type pointer;
+		typedef typename nested_wrapper::type wrapper;
 		
 	public:
 		// meta-class reflecting the result type of this function
@@ -277,9 +313,11 @@ public:
 			reflected_type<void>
 		>::type result_type;
 
-		static inline pointer address(void)
+                typedef mpl::false_ is_constructor;
+
+		static inline wrapper wrap(Class& instance)
 		{
-			return base_meta_data::get_address_of(FunctionIndex());
+			return base_meta_data::wrap(FunctionIndex(), instance);
 		}
 	};
 };
