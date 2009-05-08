@@ -6,7 +6,7 @@
 
 namespace boost { namespace ftmpl {
 
-BOOST_FTMPL_VALUE_DEF( size_t, ::std::size_t )
+BOOST_FTMPL_VALUE_DEF( size_t_, ::std::size_t )
 
 } }
 

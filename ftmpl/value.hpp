@@ -26,7 +26,7 @@ using name ## _ ## t = value_t< type, Value >;
 #define BOOST_FTMPL_VALUE_DEF( name, type )                                    \
 BOOST_FTMPL_VALUE_ALIAS( name, type )                                    \
 template< type Value >                                                         \
-value_t< type, Value >& name();
+type_t< value_t< type, Value > >& name();
 
 BOOST_FTMPL_VALUE_DEF( bool_, bool )
 BOOST_FTMPL_VALUE_DEF( char_, char )
