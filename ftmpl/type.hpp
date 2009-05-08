@@ -15,15 +15,6 @@ type_t< T >& type( T& );
 template< typename T >
 type_t< T >& type( type_t< T >& );
 
-template< typename T >
-struct unwrap;
-
-template< typename T >
-struct unwrap< type_t< T >& >
-{
-    typedef T type;
-};
-
 } }
 
 
