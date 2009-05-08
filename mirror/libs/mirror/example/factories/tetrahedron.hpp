@@ -14,6 +14,8 @@
 
 #include <math.h>
 #include <boost/mirror/meta_class.hpp>
+#include <boost/mirror/meta_constructors.hpp>
+#include <boost/mirror/meta_mem_functions.hpp>
 	
 namespace test {
 	
@@ -105,6 +107,11 @@ struct tetrahedron
 	const vector& c(void) const {return base.c;}
 	const vector& d(void) const {return apex;}
 
+	void reset_apex(const vector& _apex)
+	{
+		apex = _apex;
+	}
+
 	double volume(void) const
 	{
 		return fabs(((a()-d())*((b()-d())%(c()-d()))))/6.0;
@@ -148,6 +155,11 @@ BOOST_MIRROR_QREG_CONSTRUCTORS(
 	::test::tetrahedron,
 	(((::test::triangle)(base))((::test::vector)(apex)))
 )
+BOOST_MIRROR_REG_MEM_FUNCTIONS_BEGIN(::test::tetrahedron)
+BOOST_MIRROR_REG_MEM_FUNCTION(
+	0, void, reset_apex, ((const ::test::vector&)(apex))
+)
+BOOST_MIRROR_REG_MEM_FUNCTIONS_END
 
 } // namespace mirror
 } // namespace boost

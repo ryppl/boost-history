@@ -11,6 +11,7 @@
 #define BOOST_MIRROR_FUNCTOR_CALL_HPP
 
 #include <boost/mirror/factory.hpp>
+#include <boost/mirror/meta_mem_functions.hpp>
 
 namespace boost {
 namespace mirror {

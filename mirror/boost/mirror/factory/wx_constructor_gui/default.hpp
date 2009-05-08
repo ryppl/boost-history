@@ -38,7 +38,7 @@ private:
 		// make a label for the static box sizer
 		wxString label(
 			MetaFunctions::
-			template constructor<FuncIndex>::params::
+			template function<FuncIndex>::params::
 			template param<ParamIndex>::base_name()
 		);
 		// the panel which will be the parent of

@@ -49,6 +49,11 @@ bool simple_gui_test_app::OnInit()
 		// if we were successful
 		if(t)
 		{
+			utils::wx_fn_call_dialog<T, 0> reset_apex(
+				0,
+				wxT("GUI test")
+			);
+			reset_apex.call_on(*t);
 			// show some info 
 			wxString message;
 			message.Printf(
