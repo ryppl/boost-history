@@ -86,6 +86,7 @@ int main(void)
 	{
 		factory<input_ui, person> fact;
 		persons.push_back(fact());
+		//
 		// check whether to insert more persons
 		do
 		{

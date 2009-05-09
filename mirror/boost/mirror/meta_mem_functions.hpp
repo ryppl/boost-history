@@ -11,7 +11,6 @@
 #define BOOST_MIRROR_META_MEM_FUNCTIONS_HPP
 
 #include <boost/mirror/meta_constructors.hpp>
-#include <boost/typeof/typeof.hpp>
 #include <boost/mpl/eval_if.hpp>
 
 namespace boost {
@@ -20,7 +19,10 @@ namespace mirror {
 /** Forward declaration of the meta-constructors base template
  */
 template <class Class /*, class VariantTag*/ >
-struct meta_mem_functions_base;
+struct meta_mem_functions_base
+{
+        typedef mpl::vector0<> param_type_lists;
+};
 
 /** Begins the registering of template class' member_functions
  */
@@ -51,7 +53,7 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	FUNC_NAME, \
 	CONST_KW \
 ) \
-        param_type_lists_ ## FUNC_INDEX ; \
+        BOOST_PP_CAT(param_type_lists_, FUNC_INDEX) ; \
 	static RET_VAL get_result_of( mpl::int_< FUNC_INDEX >); \
 	struct BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
 	{ \
@@ -122,7 +124,7 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 	CONST_KW, \
         TYPENAME_KW\
 ) \
-        param_type_lists_ ## FUNC_INDEX ; \
+        BOOST_PP_CAT(param_type_lists_, FUNC_INDEX) ; \
 	static RET_VAL get_result_of( mpl::int_< FUNC_INDEX >); \
 	struct BOOST_PP_CAT(wrapper_, FUNC_INDEX) \
 	{ \
@@ -297,14 +299,6 @@ public:
 		{
 			typedef BOOST_MIRRORED_CLASS(T) type;
 		};
-
-		BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
-			nested_wrapper,
-			base_meta_data::get_wrapper_of(FunctionIndex())
-		);
-
-		typedef typename nested_wrapper::type wrapper;
-		
 	public:
 		// meta-class reflecting the result type of this function
 		typedef typename mpl::eval_if<
@@ -314,11 +308,6 @@ public:
 		>::type result_type;
 
                 typedef mpl::false_ is_constructor;
-
-		static inline wrapper wrap(Class& instance)
-		{
-			return base_meta_data::wrap(FunctionIndex(), instance);
-		}
 	};
 };
 

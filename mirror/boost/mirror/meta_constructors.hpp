@@ -18,7 +18,10 @@ namespace mirror {
 /** Forward declaration of the meta-constructors base template
  */
 template <class Class /*, class VariantTag*/ >
-struct meta_constructors_base;
+struct meta_constructors_base
+{
+	typedef mpl::vector0<> param_type_lists;
+};
 
 /** Begins the registering of template class' constructors
  */
@@ -48,7 +51,7 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_constructors_base)
         { \
 		typedef typename get_scope<FunctionIndex>::type scope; \
 		return scope::get_name(full_or_base, traits); \
-        }
+        } 
 
 
 /** Ends the registering of (template) class' constructors
@@ -64,7 +67,19 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_constructors_base)
 /** Registers a single default constructor
  */
 #define BOOST_MIRROR_REG_DEFAULT_CONSTRUCTOR(CONSTR_INDEX) \
-        param_type_lists_ ## CONSTR_INDEX ; \
+        BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX) ; \
+	struct BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+	{ \
+		inline _detail_class operator()(void) const \
+		{ \
+			return _detail_class(); \
+		} \
+	}; \
+	static BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+	get_wrapper_of( mpl::int_< CONSTR_INDEX >); \
+	static inline BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+        wrap( mpl::int_< CONSTR_INDEX >) \
+	{return BOOST_PP_CAT(wrapper_, CONSTR_INDEX)();} \
 	BOOST_MIRROR_REG_META_FUNCTION_DEFINE_EMPTY_PARAM_TYPELIST(CONSTR_INDEX)\
 	BOOST_MIRROR_REG_META_FUNCTION_PUSH_BACK_PARAM_TYPES(\
 		CONSTR_INDEX, \
@@ -78,7 +93,23 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_constructors_base)
 	PARAM_SEQ, \
 	TYPENAME_KW\
 ) \
-        param_type_lists_ ## CONSTR_INDEX ; \
+        BOOST_PP_CAT(param_type_lists_, CONSTR_INDEX) ; \
+	        struct BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+        { \
+                inline _detail_class operator()( \
+	BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_TYPES_AND_NAMES(PARAM_SEQ) \
+		) const \
+                { \
+                        return _detail_class( \
+		BOOST_MIRROR_REG_META_FUNCTION_ENUM_PARAM_NAMES(PARAM_SEQ) \
+			); \
+                } \
+        }; \
+        static BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+        get_wrapper_of( mpl::int_< CONSTR_INDEX >); \
+        static inline BOOST_PP_CAT(wrapper_, CONSTR_INDEX) \
+        wrap( mpl::int_< CONSTR_INDEX >) \
+        {return BOOST_PP_CAT(wrapper_, CONSTR_INDEX)();} \
 	BOOST_MIRROR_REG_META_FUNCTION_DEFINE_PARAM_TYPELIST( \
 		CONSTR_INDEX, \
 		PARAM_SEQ \
@@ -203,7 +234,7 @@ BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::wstring)
 /** Template providing meta-data about the constructors
  *  of the Class.
  */
-template < class Class, class VariantTag> 
+template <class Class, class VariantTag> 
 struct meta_constructors : public meta_constructors_base<Class>
 {
 	template <class ConstructorIndex>
@@ -211,12 +242,12 @@ struct meta_constructors : public meta_constructors_base<Class>
 	 : detail::meta_function<meta_constructors, ConstructorIndex>
 	{
 		typedef BOOST_MIRRORED_CLASS(Class) result_type;
+		typedef mpl::true_ is_constructor;
 	};
 
 	template <class FunctionIndex>
 	struct function : constructor<FunctionIndex>
 	{
-		typedef mpl::true_ is_constructor;
  	};
 };
 

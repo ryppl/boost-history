@@ -15,6 +15,8 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/push_back.hpp>
 
+#include <boost/typeof/typeof.hpp>
+
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/seq/size.hpp>
@@ -46,6 +48,7 @@ namespace detail {
 template <class BaseMetaData, class FunctionIndex>
 struct meta_function
 {
+public:
 	typedef typename BaseMetaData::template get_scope<FunctionIndex>::type
 		scope;
 	// returns the name of the member function
@@ -153,7 +156,26 @@ struct meta_function
 		static inline void call_for_each(const Functor&, size)
 		{
 		}
+
 	};
+private:
+	BOOST_TYPEOF_NESTED_TYPEDEF_TPL(
+		nested_wrapper,
+		BaseMetaData::get_wrapper_of(FunctionIndex())
+	);
+
+	typedef typename nested_wrapper::type wrapper;
+public:
+	template <class Class>
+	static inline wrapper wrap(Class& instance)
+	{
+		return BaseMetaData::wrap(FunctionIndex(), instance);
+	}
+
+	static inline wrapper wrap(void)
+	{
+		return BaseMetaData::wrap(FunctionIndex());
+	}
 };
 
 /** Registers the parameter name of the j-th parameter
