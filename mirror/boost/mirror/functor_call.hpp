@@ -141,11 +141,44 @@ public:
 	 : base_class(param)
 	{ }
 
+	inline result operator()(void)
+	{
+		return base_class::call(meta_function::wrap());
+	}	
+
 	template <class Class>
 	inline result operator()(Class& instance)
 	{
 		return base_class::call(meta_function::wrap(instance));
 	}
+};
+
+template <
+	template <class> class Manufacturer,
+	class Class,
+	int FuncIndex
+> struct member_function_caller : public functor_caller<
+	Manufacturer,
+	meta_member_functions<Class>,
+	mpl::int_<FuncIndex>
+> 
+{
+private:
+	typedef functor_caller<
+	        Manufacturer,
+	        meta_member_functions<Class>,
+	        mpl::int_<FuncIndex>
+	> base_class;
+public:	
+	member_function_caller()
+	 : base_class(0)
+	{ }
+
+	template <class Param>
+	member_function_caller(Param param)
+	 : base_class(param)
+	{ }
+
 };
 
 } // namespace mirror

@@ -261,7 +261,7 @@ BOOST_MIRROR_REG_META_FUNCTIONS_BEGIN(CLASS, meta_mem_functions_base)
 /** Template providing meta-data about the member functions
  *  (methods) of the Class.
  */
-template <class Class /*, class VariantTag*/ >
+template < class Class, class VariantTag>
 struct meta_member_functions : public meta_mem_functions_base<Class>
 {
 private:

@@ -35,6 +35,8 @@
 // reflection of class member attributes
 #include <boost/mirror/meta_attributes.hpp>
 //
+#include <boost/mirror/meta_constructors.hpp>
+#include <boost/mirror/meta_mem_functions.hpp>
 // reflection of destructors
 #include <boost/mirror/meta_destructor.hpp>
 
@@ -79,6 +81,12 @@ struct meta_class_base
 	typedef meta_class_all_attributes<Class, VariantTag >
 		all_attributes;
 
+	typedef meta_constructors<Class, VariantTag>
+		constructors;
+
+	typedef meta_member_functions<Class, VariantTag>
+		member_functions;
+	
 	/** Meta data concerning the destructor of the reflected class
 	 *  EXPERIMENTAL
 	 */

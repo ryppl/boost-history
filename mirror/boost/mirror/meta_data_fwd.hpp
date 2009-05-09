@@ -150,8 +150,15 @@ struct meta_class;
 
 /** This is a forward declaration of the meta_constructors template
  */
-template <class Class /*, class VariantTag*/ >
-struct meta_constructors;
+template <
+        class Class,
+        class VariantTag = detail::default_meta_class_variant
+> struct meta_constructors;
+
+template <
+        class Class ,
+        class VariantTag = detail::default_meta_class_variant
+> struct meta_member_functions;
 
 #define BOOST_MIRRORED_CONSTRUCTORS(TYPE)\
 	meta_constructors< TYPE >

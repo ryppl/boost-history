@@ -203,7 +203,7 @@ BOOST_MIRROR_REGISTER_NATIVE_TYPE_CONSTRUCTORS(::std::wstring)
 /** Template providing meta-data about the constructors
  *  of the Class.
  */
-template <class Class /*, class VariantTag*/ >
+template < class Class, class VariantTag> 
 struct meta_constructors : public meta_constructors_base<Class>
 {
 	template <class ConstructorIndex>

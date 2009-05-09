@@ -77,8 +77,6 @@ int main(void)
 	// a list of persons
 	::std::list< person > persons;
 	// 
-	typedef meta_member_functions<person> mem_fns;
-	//
 	const cts::bchar yes = BOOST_CTS_LIT('y');
 	const cts::bchar no = BOOST_CTS_LIT('n');
 	cts::bchar insert_more = yes;
@@ -98,7 +96,7 @@ int main(void)
 		} while(change_address != yes && change_address != no);
 		if(change_address == yes)
 		{
-			functor_caller<input_ui, mem_fns, mpl::int_<0> > func(0);
+			member_function_caller<input_ui, person, 0> func;
 			func(persons.back());
 		}
 		// check whether to insert more persons
