@@ -11,8 +11,11 @@ namespace unnecessary_copy_tests
 {
     struct count_copies
     {
+        BOOST_ENABLE_MOVE_EMULATION(count_copies)
+
         static int copies;
         static int moves;
+
         count_copies() : tag_(0) { ++copies; }
         explicit count_copies(int tag) : tag_(tag) { ++copies; }
 
@@ -29,12 +32,12 @@ namespace unnecessary_copy_tests
             : tag_(x.tag_) { ++copies; }
 
         count_copies(count_copies const& x) : tag_(x.tag_) { ++copies; }
-#if defined(BOOST_HAS_RVALUE_REFS)
-        count_copies(count_copies&& x) : tag_(x.tag_) {
+
+        count_copies(BOOST_RV_REF(count_copies) x) : tag_(x.tag_) {
             x.tag_ = -1; ++moves;
         }
-#endif
-       int tag_;
+
+        int tag_;
     private:
        count_copies& operator=(count_copies const&);
     };
@@ -68,12 +71,22 @@ namespace unnecessary_copy_tests
 #define COPY_COUNT(n) \
     if(count_copies::copies != n) { \
         BOOST_ERROR("Wrong number of copies."); \
-        std::cerr<<"Number of copies: "<<count_copies::copies<<std::endl; \
+        std::cerr<<"Number of copies: "<<count_copies::copies<<" expecting: "<<n<<std::endl; \
     }
 #define MOVE_COUNT(n) \
     if(count_copies::moves != n) { \
         BOOST_ERROR("Wrong number of moves."); \
-        std::cerr<<"Number of moves: "<<count_copies::moves<<std::endl; \
+        std::cerr<<"Number of moves: "<<count_copies::moves<<" expecting: "<<n<<std::endl; \
+    }
+#define COPY_COUNT_RANGE(a, b) \
+    if(count_copies::copies < a || count_copies::copies > b) { \
+        BOOST_ERROR("Wrong number of copies."); \
+        std::cerr<<"Number of copies: "<<count_copies::copies<<" expecting: ["<<a<<", "<<b<<"]"<<std::endl; \
+    }
+#define MOVE_COUNT_RANGE(a, b) \
+    if(count_copies::moves < a || count_copies::moves > b) { \
+        BOOST_ERROR("Wrong number of moves."); \
+        std::cerr<<"Number of moves: "<<count_copies::copies<<" expecting: ["<<a<<", "<<b<<"]"<<std::endl; \
     }
 
 namespace unnecessary_copy_tests
@@ -95,11 +108,17 @@ namespace unnecessary_copy_tests
     boost::unordered_multiset<count_copies>* multiset;
     boost::unordered_map<int, count_copies>* map;
     boost::unordered_multimap<int, count_copies>* multimap;
+    
+#define UNORDERED_TEST_CONTAINERS (set)(multiset)(map)(multimap)
 
-    UNORDERED_TEST(unnecessary_copy_insert_test,
-            ((set)(multiset)(map)(multimap)))
+#if defined(BOOST_HAS_RVALUE_REFS)
+#   define UNORDRED_TEST_MOVABLE_CONTAINERS (set)(multiset)(map)(multimap)
+#else
+#   define UNORDRED_TEST_MOVABLE_CONTAINERS (set)(multiset)
+#endif
 
-#if defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL)
+    UNORDERED_TEST(unnecessary_copy_insert_test, (UNORDERED_TEST_CONTAINERS))
+
     template <class T>
     void unnecessary_copy_emplace_test(T*)
     {
@@ -127,16 +146,16 @@ namespace unnecessary_copy_tests
         T x;
         BOOST_DEDUCED_TYPENAME T::value_type a;
         COPY_COUNT(1); MOVE_COUNT(0);
-        x.emplace(std::move(a));
+        x.emplace(boost::move(a));
         COPY_COUNT(1); MOVE_COUNT(1);
     }
 
     UNORDERED_TEST(unnecessary_copy_emplace_test,
-            ((set)(multiset)(map)(multimap)))
+            (UNORDERED_TEST_CONTAINERS))
     UNORDERED_TEST(unnecessary_copy_emplace_rvalue_test,
-            ((set)(multiset)(map)(multimap)))
+            (UNORDRED_TEST_MOVABLE_CONTAINERS))
     UNORDERED_TEST(unnecessary_copy_emplace_move_test,
-            ((set)(multiset)(map)(multimap)))
+            (UNORDRED_TEST_MOVABLE_CONTAINERS))
 
     UNORDERED_AUTO_TEST(unnecessary_copy_emplace_set_test)
     {
@@ -152,9 +171,21 @@ namespace unnecessary_copy_tests
 
         // The container will have to create a copy in order to compare with
         // the existing element.
-        reset();
+        reset();        
         x.emplace();
+#if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(1); MOVE_COUNT(0);
+#else
+        // In this implementation a zero argument emplace will construct the
+        // object and then move it into place. This is the only way I could
+        // find to implement it so that it doesn't get instantiated for
+        // object with no zero argument constructors.
+#  if BOOST_WORKAROUND(__GNUC__, >= 4) && BOOST_WORKAROUND(__GNUC_MINOR__, >= 2)
+        COPY_COUNT(1); MOVE_COUNT(1);
+#  else
+        COPY_COUNT(1); MOVE_COUNT(2);
+#  endif
+#endif
 
         //
         // 1 argument
@@ -164,18 +195,40 @@ namespace unnecessary_copy_tests
         // without creating a new one.
         reset();
         x.emplace(a);
+#if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(0); MOVE_COUNT(0);
+#else
+        // TODO: When there isn't rvalue references the argument is passed by
+        // value (to allow for more efficient moves). Should I reconsider that?
+        COPY_COUNT(1); MOVE_COUNT(1);
+#endif
 
         // A new object is created by source, but it shouldn't be moved or
         // copied.
         reset();
         x.emplace(source<count_copies>());
+#if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(1); MOVE_COUNT(0);
+#else
+        // Because the argument is taken by value it's moved once into the
+        // parameter.
+#  if BOOST_WORKAROUND(__GNUC__, >= 4) && BOOST_WORKAROUND(__GNUC_MINOR__, >= 2)
+        COPY_COUNT(1); MOVE_COUNT(1);
+#  else
+        COPY_COUNT(1); MOVE_COUNT(3);
+#  endif
+#endif
 
         // No move should take place.
         reset();
-        x.emplace(std::move(a));
+        x.emplace(boost::move(a));
+#if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(0); MOVE_COUNT(0);
+#else
+        // Unavoidable without rvalue references.
+        // TODO: Or is it? If I used boost::rv it wouldn't happen, surely?
+        COPY_COUNT(0); MOVE_COUNT(1);
+#endif
 
         // Just in case a did get moved...
         count_copies b;
@@ -194,8 +247,10 @@ namespace unnecessary_copy_tests
         // the existing element.
         //
         // Note to self: If copy_count == 0 it's an error not an optimization.
+        // TODO: Devise a better test.
 
         reset();
+
         x.emplace(b, b);
         COPY_COUNT(1); MOVE_COUNT(0);
     }
@@ -232,24 +287,34 @@ namespace unnecessary_copy_tests
         x.emplace(source<std::pair<count_copies, count_copies> >());
         COPY_COUNT(2); MOVE_COUNT(0);
 
-        count_copies part;
-        reset();
-        std::pair<count_copies const&, count_copies const&> a_ref(part, part);
-        x.emplace(a_ref);
-        COPY_COUNT(0); MOVE_COUNT(0);
+        // TODO: This doesn't work on older versions of gcc.
+        //count_copies part;
+        //reset();
+        //std::pair<count_copies const&, count_copies const&> a_ref(part, part);
+        //x.emplace(a_ref);
+        //COPY_COUNT(0); MOVE_COUNT(0);
 
         // No move should take place.
+        // (since a is already in the container)
         reset();
-        x.emplace(std::move(a));
+        x.emplace(boost::move(a));
+#if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(0); MOVE_COUNT(0);
+#endif
 
-        // Just in case a did get moved
         std::pair<count_copies const, count_copies> b;
-
-        // This test requires a C++0x std::pair. Which gcc hasn't got yet.
-        //reset();
-        //x.emplace(b.first.tag_);
-        //COPY_COUNT(2); MOVE_COUNT(0);
+        reset();
+        x.emplace(b.first.tag_);
+#if defined(BOOST_HAS_RVALUE_REFS)
+#  if defined(__GLIBCPP__) || defined(__GLIBCXX__)
+        COPY_COUNT(2); MOVE_COUNT(1);
+#  else
+        COPY_COUNT(2); MOVE_COUNT(0);
+#  endif
+#else
+        // TODO: Why is this one 4?
+        COPY_COUNT(4); MOVE_COUNT(0);
+#endif
 
         //
         // 2 arguments
@@ -261,18 +326,27 @@ namespace unnecessary_copy_tests
 
         reset();
         x.emplace(source<count_copies>(), source<count_copies>());
-        COPY_COUNT(2); MOVE_COUNT(0);
+        COPY_COUNT(2);
+#if defined(BOOST_HAS_RVALUE_REFS)
+        MOVE_COUNT(0);
+#else
+        MOVE_COUNT_RANGE(0, 2);
+#endif
 
         // source<count_copies> creates a single copy.
         reset();
         x.emplace(b.first, source<count_copies>());
-        COPY_COUNT(1); MOVE_COUNT(0);
+        COPY_COUNT(1);
+#if defined(BOOST_HAS_RVALUE_REFS)
+        MOVE_COUNT(0);
+#else
+        MOVE_COUNT_RANGE(0, 1);
+#endif
 
         reset();
-        x.emplace(b.first.tag_, b.second.tag_);
-        COPY_COUNT(2); MOVE_COUNT(0);
+        x.emplace(count_copies(b.first.tag_), count_copies(b.second.tag_));
+        COPY_COUNT(2); MOVE_COUNT(0);        
     }
-#endif
 }
 
 RUN_TESTS()

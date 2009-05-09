@@ -13,6 +13,10 @@
 
 #include <boost/config.hpp>
 
+#if !defined(BOOST_UNORDERED_EMPLACE_LIMIT)
+#define BOOST_UNORDERED_EMPLACE_LIMIT 5
+#endif
+
 #include <cstddef>
 #include <boost/config/no_tr1/cmath.hpp>
 #include <algorithm>
@@ -32,13 +36,27 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #include <boost/mpl/not.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/utility/swap.hpp>
 #include <boost/preprocessor/seq/size.hpp>
 #include <boost/preprocessor/seq/enum.hpp>
+#include <boost/move/move.hpp>
 
 #include <boost/mpl/aux_/config/eti.hpp>
+
+#if !(defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL))
+
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition/enum.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/repeat_from_to.hpp>
+
+#define BOOST_UNORDERED_PARAMS_FWD_REF(z, n, data) BOOST_FWD_REF(Arg##n) arg##n
+#define BOOST_UNORDERED_PARAMS_FORWARD(z, n, data) boost::forward<Arg##n>(arg##n)
+
+#endif
 
 #if BOOST_WORKAROUND(__BORLANDC__, <= 0x0582)
 #define BOOST_UNORDERED_BORLAND_BOOL(x) (bool)(x)

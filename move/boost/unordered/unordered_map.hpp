@@ -1,4 +1,3 @@
-#include <iostream>
 
 // Copyright (C) 2003-2004 Jeremy B. Maitin-Shepard.
 // Copyright (C) 2005-2009 Daniel James.
@@ -14,10 +13,10 @@
 # pragma once
 #endif
 
+#include <boost/move/move.hpp>
 #include <boost/unordered/unordered_map_fwd.hpp>
 #include <boost/functional/hash.hpp>
 #include <boost/unordered/detail/hash_table.hpp>
-#include <boost/move/move.hpp>
 
 #if defined(BOOST_MSVC)
 #pragma warning(push)
@@ -226,6 +225,50 @@ namespace boost
         {
             return iterator(base.emplace_hint(get(hint), std::forward<Args>(args)...));
         }
+#else
+
+        std::pair<iterator, bool> emplace(value_type const& v = value_type())
+        {
+            return boost::unordered_detail::pair_cast<iterator, bool>(
+                base.emplace(v));
+        }
+
+        iterator emplace_hint(const_iterator hint, value_type const& v = value_type())
+        {
+            return iterator(base.emplace_hint(get(hint), v));
+        }
+
+#define BOOST_UNORDERED_EMPLACE(z, n, _)                                        \
+            template <                                                          \
+                BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                      \
+            >                                                                   \
+            std::pair<iterator, bool> emplace(                                  \
+                BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)         \
+            )                                                                   \
+            {                                                                   \
+                return boost::unordered_detail::pair_cast<iterator, bool>(      \
+                    base.emplace(                                               \
+                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                    ));                                                         \
+            }                                                                   \
+                                                                                \
+            template <                                                          \
+                BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                      \
+            >                                                                   \
+            iterator emplace_hint(const_iterator hint,                          \
+                BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)         \
+            )                                                                   \
+            {                                                                   \
+                return iterator(base.emplace_hint(get(hint),                    \
+                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                ));                                                             \
+            }
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_UNORDERED_EMPLACE_LIMIT,
+            BOOST_UNORDERED_EMPLACE, _)
+
+#undef BOOST_UNORDERED_EMPLACE
+
 #endif
 
         std::pair<iterator, bool> insert(const value_type& obj)
@@ -627,6 +670,50 @@ namespace boost
         {
             return iterator(base.emplace_hint(get(hint), std::forward<Args>(args)...));
         }
+#else
+
+        iterator emplace(value_type const& v = value_type())
+        {
+            return iterator(base.emplace(v));
+        }
+        
+        iterator emplace_hint(const_iterator hint, value_type const& v = value_type())
+        {
+            return iterator(base.emplace_hint(get(hint), v));
+        }
+
+
+#define BOOST_UNORDERED_EMPLACE(z, n, _)                                        \
+            template <                                                          \
+                BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                      \
+            >                                                                   \
+            iterator emplace(                                                   \
+                BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)         \
+            )                                                                   \
+            {                                                                   \
+                return iterator(                                                \
+                    base.emplace(                                               \
+                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                    ));                                                         \
+            }                                                                   \
+                                                                                \
+            template <                                                          \
+                BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                      \
+            >                                                                   \
+            iterator emplace_hint(const_iterator hint,                          \
+                BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)         \
+            )                                                                   \
+            {                                                                   \
+                return iterator(base.emplace_hint(get(hint),                    \
+                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                ));                                                             \
+            }
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_UNORDERED_EMPLACE_LIMIT,
+            BOOST_UNORDERED_EMPLACE, _)
+
+#undef BOOST_UNORDERED_EMPLACE
+
 #endif
 
         iterator insert(const value_type& obj)
