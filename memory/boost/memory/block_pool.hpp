@@ -47,7 +47,8 @@ public:
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* p) 	{ m_alloc->deallocate(p); }
 	__forceinline void BOOST_MEMORY_CALL swap(proxy_alloc& o)	{ std::swap(m_alloc, o.m_alloc); }
 	__forceinline size_t BOOST_MEMORY_CALL alloc_size(void* p) const { return m_alloc->alloc_size(p); }
-	__forceinline operator AllocT*() const { return m_alloc; }
+	__forceinline operator AllocT&() const { return *m_alloc; }
+	__forceinline AllocT* operator&() const { return m_alloc; }
 };
 
 // -------------------------------------------------------------------------
