@@ -23,8 +23,18 @@
 #include <boost/mpl/count_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/is_sequence.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/transform.hpp>
+#include <boost/mpl/find.hpp>
+#include <boost/mpl/insert.hpp>
+#include <boost/mpl/insert_range.hpp>
 
 #include <boost/type_traits/is_same.hpp>
+#include <boost/utility/enable_if.hpp>
+
+#include <boost/msm/common_types.hpp>
 
 namespace mpl = boost::mpl;
 BOOST_MPL_HAS_XXX_TRAIT_DEF(explicit_creation)

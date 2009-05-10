@@ -22,7 +22,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/contains.hpp>
-#include <boost/mpl/insert.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/front.hpp>
