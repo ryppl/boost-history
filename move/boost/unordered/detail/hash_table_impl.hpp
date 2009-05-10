@@ -266,48 +266,48 @@ namespace boost {
 
 #define BOOST_UNORDERED_CONSTRUCT_IMPL(z, n, _)                                 \
                 template <                                                      \
-                    BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                  \
+                    BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                         \
                 >                                                               \
                 void construct(                                                 \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)     \
+                    BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                       \
                 )                                                               \
                 {                                                               \
                     construct_preamble();                                       \
                     construct_impl(                                             \
                         (value_type*) 0,                                        \
-                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                        BOOST_UNORDERED_CALL_PARAMS(z, n)                       \
                     );                                                          \
                     value_constructed_ = true;                                  \
                 }                                                               \
                                                                                 \
                 template <                                                      \
                     typename T,                                                 \
-                    BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                  \
+                    BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                         \
                 >                                                               \
                 void construct_impl(                                            \
                     T*,                                                         \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)     \
+                    BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                       \
                 )                                                               \
                 {                                                               \
                     new(node_->address()) value_type(                           \
-                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                        BOOST_UNORDERED_CALL_PARAMS(z, n)                       \
                     );                                                          \
                 }                                                               \
                                                                                 \
                                                                                 
 #define BOOST_UNORDERED_CONSTRUCT_IMPL2(z, n, _)                                \
                 template <typename First, typename Second, typename Key,        \
-                    BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                  \
+                    BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                         \
                 >                                                               \
                 void construct_impl(                                            \
                     std::pair<First, Second>*,                                  \
                     BOOST_FWD_REF(Key) k,                                       \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)     \
+                    BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                       \
                 )                                                               \
                 {                                                               \
                     new(node_->address()) value_type(boost::forward<Key>(k),    \
                         Second(                                                 \
-                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _) \
+                        BOOST_UNORDERED_CALL_PARAMS(z, n)                       \
                         )                                                       \
                     );                                                          \
                 }
@@ -1812,29 +1812,29 @@ namespace boost {
 
 #define BOOST_UNORDERED_INSERT_IMPL(z, n, _)                                        \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             iterator_base emplace(                                                  \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 node_constructor a(data_.allocators_);                              \
                 a.construct(                                                        \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)         \
+                    BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
                 );                                                                  \
                 return emplace_impl(a);                                             \
             }                                                                       \
                                                                                     \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             iterator_base emplace_hint(iterator_base const& it,                     \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 node_constructor a(data_.allocators_);                              \
                 a.construct(                                                        \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)         \
+                    BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
                 );                                                                  \
                 return emplace_hint_impl(it, a);                                    \
             }
@@ -2072,38 +2072,38 @@ namespace boost {
 
 #define BOOST_UNORDERED_INSERT_IMPL(z, n, _)                                        \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             std::pair<iterator_base, bool> emplace(                                 \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 return emplace_impl(                                                \
                     extract_key(arg0, arg1),                                        \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)         \
+                    BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
                 );                                                                  \
             }                                                                       \
                                                                                     \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             iterator_base emplace_hint(iterator_base const& it,                     \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 return emplace_impl(                                                \
                     extract_key(arg0, arg1),                                        \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)         \
+                    BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
                 ).first;                                                            \
             }                                                                       \
             BOOST_UNORDERED_INSERT_IMPL2(z, n, _)
 
 #define BOOST_UNORDERED_INSERT_IMPL2(z, n, _)                                       \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             std::pair<iterator_base, bool> emplace_impl(key_type const& k,          \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 size_type hash_value = hash_function()(k);                          \
@@ -2116,7 +2116,7 @@ namespace boost {
                 } else {                                                            \
                     node_constructor a(data_.allocators_);                          \
                     a.construct(                                                    \
-                        BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)     \
+                        BOOST_UNORDERED_CALL_PARAMS(z, n)                           \
                     );                                                              \
                                                                                     \
                     if(reserve_for_insert(size() + 1))                              \
@@ -2128,15 +2128,15 @@ namespace boost {
             }                                                                       \
                                                                                     \
             template <                                                              \
-               BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)                           \
+               BOOST_UNORDERED_TEMPLATE_ARGS(z, n)                                  \
             >                                                                       \
             std::pair<iterator_base, bool> emplace_impl(no_key,                     \
-               BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)              \
+               BOOST_UNORDERED_FUNCTION_PARAMS(z, n)                                \
             )                                                                       \
             {                                                                       \
                 node_constructor a(data_.allocators_);                              \
                 a.construct(                                                        \
-                    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)         \
+                    BOOST_UNORDERED_CALL_PARAMS(z, n)                               \
                 );                                                                  \
                 return emplace_impl_with_node(a);                                   \
             }

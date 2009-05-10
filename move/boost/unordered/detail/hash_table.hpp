@@ -48,13 +48,22 @@
 
 #if !(defined(BOOST_HAS_RVALUE_REFS) && defined(BOOST_HAS_VARIADIC_TMPL))
 
-#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
-#define BOOST_UNORDERED_PARAMS_FWD_REF(z, n, data) BOOST_FWD_REF(Arg##n) arg##n
-#define BOOST_UNORDERED_PARAMS_FORWARD(z, n, data) boost::forward<Arg##n>(arg##n)
+#define BOOST_UNORDERED_TEMPLATE_ARGS(z, n) \
+    BOOST_PP_ENUM_PARAMS_Z(z, n, typename Arg)
+
+#define BOOST_UNORDERED_FUNCTION_PARAMS(z, n) \
+    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FWD_REF, _)
+#define BOOST_UNORDERED_PARAMS_FWD_REF(z, n, data) \
+    BOOST_FWD_REF(Arg##n) arg##n
+
+#define BOOST_UNORDERED_CALL_PARAMS(z, n) \
+    BOOST_PP_ENUM_##z(n, BOOST_UNORDERED_PARAMS_FORWARD, _)
+#define BOOST_UNORDERED_PARAMS_FORWARD(z, n, data) \
+    boost::forward<Arg##n>(arg##n)
 
 #endif
 

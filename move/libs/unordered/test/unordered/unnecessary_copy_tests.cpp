@@ -171,7 +171,7 @@ namespace unnecessary_copy_tests
 
         // The container will have to create a copy in order to compare with
         // the existing element.
-        reset();        
+        reset();
         x.emplace();
 #if defined(BOOST_HAS_RVALUE_REFS)
         COPY_COUNT(1); MOVE_COUNT(0);
