@@ -22,7 +22,6 @@
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/contains.hpp>
-#include <boost/mpl/insert.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/for_each.hpp>
 #include <boost/mpl/front.hpp>
@@ -979,10 +978,10 @@ private:
         // State is a sub fsm with exit pseudo states and gets a pointer to this fsm, so it can build a callback
         template <class StateType>
         typename ::boost::enable_if<
-            typename has_exit_pseudo_states<StateType>::type,BaseState* >::type
+            typename has_exit_pseudo_states<StateType>::type,pBaseState >::type
         new_state_helper(boost::msm::dummy<0> = 0) const
         {
-            return new StateType(containing_sm);
+            return pBaseState(new StateType(containing_sm));
         }
         // State is a sub fsm without exit pseudo states and does not get a callback to this fsm
 		// or state is a normal state and needs nothing except creation
@@ -992,22 +991,22 @@ private:
                                                     <typename has_exit_pseudo_states<StateType>::type>::type,
                                       typename boost::mpl::not_
                                                     <typename is_pseudo_exit<StateType>::type>::type
-                   >::type,BaseState*>::type
+                   >::type,pBaseState>::type
         new_state_helper( ::boost::msm::dummy<1> = 0) const
         {
-            return new StateType;
+            return pBaseState(new StateType);
         }
         // state is exit pseudo state and gets callback to target fsm
         template <class StateType>
-        typename ::boost::enable_if<typename is_pseudo_exit<StateType>::type,BaseState* >::type
+        typename ::boost::enable_if<typename is_pseudo_exit<StateType>::type,pBaseState >::type
         new_state_helper( ::boost::msm::dummy<2> = 0) const
         {
-            BaseState* to_return = new StateType();
+            pBaseState to_return (new StateType());
             execute_return (ContainingSM::*pf) (typename StateType::event const& evt)= 
                 &ContainingSM::process_event;
             ::boost::function<execute_return (typename StateType::event const&)> fct = 
                 ::boost::bind(pf,containing_sm,_1);
-            static_cast<StateType*>(to_return)->set_forward_fct(fct);
+            static_cast<StateType*>(to_return.get())->set_forward_fct(fct);
             return to_return;
         }
         // for every defined state in the sm
