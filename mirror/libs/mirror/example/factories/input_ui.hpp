@@ -13,6 +13,7 @@
 #define BOOST_MIRROR_EXAMPLES_FACTORIES_INPUT_UI_HPP
 
 #include <boost/char_type_switch/iostream.hpp>
+#include <boost/char_type_switch/sstream.hpp>
 
 #include <boost/mirror/factory.hpp>
 #include <boost/mirror/meta_type.hpp>
@@ -47,8 +48,13 @@ struct input_ui
 	typename ::boost::mirror::make_factory< input_ui, Product >::type f;
 
 	template <class MetaFunctions, class FuncIndex, class ParamIndex>
-	input_ui(int tabs, MetaFunctions mf, FuncIndex fi, ParamIndex pi)
-	 : b(tabs, mf, fi, pi)
+	input_ui(
+		int tabs, 
+		MetaFunctions mf, 
+		FuncIndex fi, 
+		ParamIndex pi, 
+		const Product* opt_default = (const Product*)0
+	): b(tabs, mf, fi, pi)
 	 , f(tabs)
 	{ }
 
@@ -85,37 +91,68 @@ struct console_input_ui
 		int tabs, 
 		MetaFunctions mf, 
 		FuncIndex fi, 
-		ParamIndex pi
+		ParamIndex pi,
+		const Product* opt_default
 	)
 	{
-			typedef typename MetaFunctions::
-                        template function<FuncIndex> meta_function;
-			//
+		typedef typename MetaFunctions::
+		template function<FuncIndex> meta_function;
+		//
+		::boost::cts::bcout() <<
+		::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
+		BOOST_CTS_LIT("Enter ") << 
+		BOOST_MIRRORED_TYPE(Product)::full_name() << 
+		BOOST_CTS_LIT(" ") << 
+		meta_function::params::
+		template param<ParamIndex>::base_name() <<
+		BOOST_CTS_LIT(" for ") <<
+		meta_function::result_type::full_name() << (
+			meta_function::is_constructor::value ?
+			::boost::cts::bstring() :
+			::boost::cts::bstring(BOOST_CTS_LIT(" "))
+		) << (
+			meta_function::is_constructor::value ?
+			::boost::cts::bstring() :
+			meta_function::base_name()
+		) << BOOST_CTS_LIT("(");
+		//
+		meta_function::params::
+		for_each(constr_param_name_printer());
+		//
+		::boost::cts::bcout() <<
+		BOOST_CTS_LIT(") "); 
+		if(opt_default)
+		{
 			::boost::cts::bcout() <<
-			::boost::cts::bstring(tabs, BOOST_CTS_LIT('\t')) << 
-			BOOST_CTS_LIT("Enter ") << 
-			BOOST_MIRRORED_TYPE(Product)::full_name() << 
-			BOOST_CTS_LIT(" ") << 
-			meta_function::params::
-			template param<ParamIndex>::base_name() <<
-			BOOST_CTS_LIT(" for ") <<
-			meta_function::result_type::full_name() << (
-				meta_function::is_constructor::value ?
-				::boost::cts::bstring() :
-				::boost::cts::bstring(BOOST_CTS_LIT(" "))
-			) << (
-				meta_function::is_constructor::value ?
-				::boost::cts::bstring() :
-				meta_function::base_name()
-			) << BOOST_CTS_LIT("(");
-			//
-			meta_function::params::
-			for_each(constr_param_name_printer());
-			//
-			::boost::cts::bcout() <<
-			BOOST_CTS_LIT(") = ") <<
-                        ::std::flush;
-		::boost::cts::bcin() >> x;
+			BOOST_CTS_LIT("[") << 
+			*opt_default <<
+			BOOST_CTS_LIT("]"); 
+			
+		}
+		::boost::cts::bcout() <<
+		BOOST_CTS_LIT(" = ") <<
+		::std::flush;
+		//
+		while(1)
+		{
+			::boost::cts::bstring input;
+			::std::getline(::boost::cts::bcin(), input);
+			if(input.empty())
+			{
+				if(opt_default)
+				{
+					x = *opt_default;
+					break;
+				}
+			}
+			else 
+			{
+				::boost::cts::bstringstream tmp(input);
+				tmp >> x;
+				break;
+				
+			}
+		}
 	}
 
 	inline Product operator()(void)
@@ -129,8 +166,13 @@ template <>  \
 struct input_ui< TYPE > : console_input_ui< TYPE > \
 { \
 	template <class MetaFunctions, class FuncIndex, class ParamIndex> \
-	input_ui(int tabs, MetaFunctions mf, FuncIndex fi, ParamIndex pi) \
-	 : console_input_ui< TYPE >(tabs, mf, fi, pi) \
+	input_ui( \
+		int tabs, \
+		MetaFunctions mf, \
+		FuncIndex fi, \
+		ParamIndex pi, \
+		const TYPE* opt_default = (const TYPE*)0 \
+	): console_input_ui< TYPE >(tabs, mf, fi, pi, opt_default) \
 	{ } \
 }; 
 

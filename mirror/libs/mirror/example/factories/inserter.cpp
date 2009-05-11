@@ -94,11 +94,23 @@ int main(void)
 				BOOST_CTS_LIT("Change persons address ? (y/n) ") << 
 				::std::flush;
 			cts::bcin() >> change_address;
+			cts::bcin().ignore();
 		} while(change_address != yes && change_address != no);
 		if(change_address == yes)
 		{
+			person& p(persons.back());
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
 			member_function_caller<input_ui, person, 0> func;
-			func(persons.back());
+#else
+			member_function_caller<input_ui, person, 0> func(
+				0,
+				p.street,
+				p.number,
+				p.city,
+				p.postal_code
+			);
+#endif
+			func(p);
 		}
 		// check whether to insert more persons
 		do
@@ -107,6 +119,7 @@ int main(void)
 				BOOST_CTS_LIT("Insert more ? (y/n) ") << 
 				::std::flush;
 			cts::bcin() >> insert_more;
+			cts::bcin().ignore();
 		} while(insert_more != yes && insert_more != no);
 	}
 	//
