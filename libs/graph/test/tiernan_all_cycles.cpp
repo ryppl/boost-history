@@ -1,4 +1,4 @@
-// (C) Copyright Andrew Sutton 2007
+// (C) Copyright 2007-2009 Andrew Sutton
 //
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0 (See accompanying file
@@ -35,7 +35,7 @@ struct cycle_validator
         // that the paths are valid.
         typename Path::const_iterator i, j, last = prior(p.end());
         for(i = p.begin(); i != last; ++i) {
-            j = next(i);
+            j = boost::next(i);
             BOOST_ASSERT(edge(*i, *j, g).second);
         }
         BOOST_ASSERT(edge(p.back(), p.front(), g).second);
