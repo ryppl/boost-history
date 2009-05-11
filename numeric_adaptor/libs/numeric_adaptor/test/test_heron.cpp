@@ -11,7 +11,10 @@
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/numeric_adaptor/numeric_adaptor.hpp>
 #include <boost/numeric_adaptor/ieee_policy.hpp>
+#ifndef NO_CLN
 #include <boost/numeric_adaptor/cln_policy.hpp>
+#endif
+
 #include <boost/numeric_adaptor/gmp_policy.hpp>
 
 
@@ -29,13 +32,17 @@ double heron()
 
 int test_main(int, char*[])
 {
+    std::cout << sizeof(long double) << std::endl;
+
     double epsilon = 0.0000001;
 
     BOOST_CHECK_CLOSE(heron<ieee_policy<float> >(), 0.0, epsilon);
     BOOST_CHECK_CLOSE(heron<ieee_policy<double> >(), 0.327490532778257, epsilon);
     BOOST_CHECK_CLOSE(heron<ieee_policy<long double> >(), 0.327490459921098, epsilon);
+#ifndef NO_CLN
     BOOST_CHECK_CLOSE(heron<cln_ff_policy>(), 0.0, epsilon);
     BOOST_CHECK_CLOSE(heron<cln_df_policy>(), 0.32749053277825713, epsilon);
+#endif
     //TODO cln_lf_policy
     BOOST_CHECK_CLOSE(heron<gmp_policy>(), 0.327490459942623, epsilon);
 

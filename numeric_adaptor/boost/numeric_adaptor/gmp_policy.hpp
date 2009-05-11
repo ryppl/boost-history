@@ -1,6 +1,6 @@
 // Numeric Adaptor Library
 //
-// Copyright Barend Gehrels 2009, Geodan Holding B.V. Amsterdam, the Netherlands.
+// Copyright Barend Gehrels 2009, Geodan, Amsterdam
 // Copyright Bruno Lalande 2009
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -28,8 +28,8 @@ struct gmp_policy
         mpf_clear(value);
     }
 
-    template <typename CT>
-    static inline void set(type& value, const CT& v)
+    template <typename OtherType>
+    static inline void set(type& value, const OtherType& v)
     {
         mpf_set_d(value, v);
     }
@@ -64,8 +64,23 @@ struct gmp_policy
         mpf_sqrt(r, a);
     }
 
-    template <typename CT>
-    static inline CT big_numeric_cast(const type& b)
+    static inline void cos(type& r, const type& a)
+    {
+        // COS is not available.
+        long double d = mpf_get_d(a);
+        mpf_set_d(r, std::cos(d));
+    }
+
+    static inline void sin(type& r, const type& a)
+    {
+        // SIN is not available.
+        long double d = mpf_get_d(a);
+        mpf_set_d(r, std::sin(d));
+    }
+
+
+    template <typename OtherType>
+    static inline OtherType big_numeric_cast(const type& b)
     {
         return mpf_get_d(b);
     }
