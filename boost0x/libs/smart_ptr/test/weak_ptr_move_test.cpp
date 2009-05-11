@@ -1,5 +1,5 @@
 //
-//  shared_ptr_move_test.cpp
+//  weak_ptr_move_test.cpp
 //
 //  Copyright (c) 2007 Peter Dimov
 //
@@ -45,12 +45,12 @@ int main()
         BOOST_TEST( X::instances == 1 );
         BOOST_TEST( p.use_count() == 1 );
 
-        boost::weak_ptr<X> p2( static_cast< boost::weak_ptr<X> && >( p ) );
+        boost::weak_ptr<X> p2( std::move( p ) );
         BOOST_TEST( X::instances == 1 );
         BOOST_TEST( p2.use_count() == 1 );
         BOOST_TEST( p.expired() );
 
-        boost::weak_ptr<void> p3( static_cast< boost::weak_ptr<X> && >( p2 ) );
+        boost::weak_ptr<void> p3( std::move( p2 ) );
         BOOST_TEST( X::instances == 1 );
         BOOST_TEST( p3.use_count() == 1 );
         BOOST_TEST( p2.expired() );
@@ -73,7 +73,7 @@ int main()
         BOOST_TEST( p.expired() );
 
         boost::weak_ptr<void> p3;
-        p3 = static_cast< boost::weak_ptr<X> && >( p2 );
+        p3 = std::move( p2 );
         BOOST_TEST( X::instances == 1 );
         BOOST_TEST( p3.use_count() == 1 );
         BOOST_TEST( p2.expired() );
@@ -92,7 +92,7 @@ int main()
         boost::shared_ptr<X> p_2( new X );
         boost::weak_ptr<X> p2( p_2 );
         BOOST_TEST( X::instances == 2 );
-        p2 = static_cast< boost::weak_ptr<X> && >( p );
+        p2 = std::move( p );
         BOOST_TEST( X::instances == 2 );
         BOOST_TEST( p2.use_count() == 1 );
         BOOST_TEST( p.expired() );
@@ -101,7 +101,7 @@ int main()
         boost::shared_ptr<void> p_3( new X );
         boost::weak_ptr<void> p3( p_3 );
         BOOST_TEST( X::instances == 3 );
-        p3 = static_cast< boost::weak_ptr<X> && >( p2 );
+        p3 = std::move( p2 );
         BOOST_TEST( X::instances == 3 );
         BOOST_TEST( p3.use_count() == 1 );
         BOOST_TEST( p2.expired() );

@@ -1,4 +1,4 @@
-//#include <boost/config.hpp>
+#include <boost/config.hpp>
 
 #if defined(BOOST_MSVC)
 
@@ -17,7 +17,7 @@
 #endif
 
 //
-//  intrusive_ptr_test.cpp
+//  intrusive_ptr_move_test.cpp
 //
 //  Copyright (c) 2002-2005 Peter Dimov
 //
@@ -136,7 +136,7 @@ int main()
         boost::intrusive_ptr<X> p( new X );
         BOOST_TEST( N::base::instances == 1 );
 
-        boost::intrusive_ptr<X> p2( static_cast< boost::intrusive_ptr<X> && >( p ) );
+        boost::intrusive_ptr<X> p2( std::move( p ) );
         BOOST_TEST( N::base::instances == 1 );
         BOOST_TEST( p.get() == 0 );
 
@@ -149,7 +149,7 @@ int main()
         BOOST_TEST( N::base::instances == 1 );
 
         boost::intrusive_ptr<X> p2;
-        p2 = static_cast< boost::intrusive_ptr<X> && >( p );
+        p2 = std::move( p );
         BOOST_TEST( N::base::instances == 1 );
         BOOST_TEST( p.get() == 0 );
 
@@ -163,7 +163,7 @@ int main()
 
         boost::intrusive_ptr<X> p2( new X );
         BOOST_TEST( N::base::instances == 2 );
-        p2 = static_cast< boost::intrusive_ptr<X> && >( p );
+        p2 = std::move( p );
         BOOST_TEST( N::base::instances == 1 );
         BOOST_TEST( p.get() == 0 );
 
