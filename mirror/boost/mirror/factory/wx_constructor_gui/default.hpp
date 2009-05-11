@@ -30,7 +30,8 @@ private:
 		wx_constructor_gui_data* parent_data, 
 		MetaFunctions mf, 
 		FuncIndex fi, 
-		ParamIndex pi
+		ParamIndex pi,
+		const Product* opt_default = (const Product*)0
 	)
 	{
 		// we need the parent data

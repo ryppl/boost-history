@@ -43,9 +43,12 @@ public:
 		wx_constructor_gui_data* parent_data, 
 		MetaFunctions mf, 
 		FuncIndex fi, 
-		ParamIndex pi
+		ParamIndex pi,
+		const bool* opt_default = (const bool*)0
 	): chb_ctl(make_ctl(chbctl_maker(), parent_data, mf, fi, pi))
-	{ }
+	{
+		if(opt_default) chb_ctl->SetValue(*opt_default);
+	}
 
 	inline bool operator()(void) const 
 	{

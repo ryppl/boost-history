@@ -60,6 +60,23 @@ protected:
 	{
 		return text_ctl->GetValue();
 	}
+
+	template <typename Default>
+	void init(const Default* opt_def)
+	{
+		if(opt_def) text_ctl->SetValue(*opt_def);
+	}
+
+	template <typename Default>
+	void init(const wxString& fmt, const Default* opt_def)
+	{
+		if(opt_def) text_ctl->SetValue(
+			wxString::Format(
+				fmt,
+				*opt_def
+			) 
+		);
+	}
 public:
 	template <class MetaFunctions, class FuncIndex, class ParamIndex>
 	wx_constructor_gui_basic(
@@ -67,6 +84,7 @@ public:
 		MetaFunctions mf, 
 		FuncIndex fi, 
 		ParamIndex pi,
+		Product const* opt_default,
 		wxString pattern,
 		wxString message
 	): text_ctl(
@@ -82,6 +100,7 @@ public:
 
 #define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI( \
 	PRODUCT, \
+	CONSTRUCTOR_BODY, \
 	FUNCTOR_BODY, \
 	PATTERN, \
 	MESSAGE \
@@ -99,21 +118,24 @@ public: \
 		wx_constructor_gui_data* parent_data, \
 		MetaFunctions mf, \
 		FuncIndex fi, \
-		ParamIndex pi \
+		ParamIndex pi, \
+		PRODUCT const* opt_default = (PRODUCT const*)0 \
 	): base_class( \
 		parent_data, \
 		mf, \
 		fi, \
 		pi, \
+		opt_default, \
 		wxT( PATTERN ), \
 		wxT( MESSAGE ) \
-	){ } \
+	) CONSTRUCTOR_BODY \
  \
 	inline PRODUCT operator()(void) FUNCTOR_BODY \
 };
 
 BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 	cts::bstring,
+	{init(opt_default);},
 	{return cts::bstring(get_text().c_str());},
 	"",
 	""
@@ -122,11 +144,13 @@ BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 #define BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
 	TYPE, \
 	TEMP_TYPE, \
+	FORMAT_STRING, \
 	CONVERSION, \
 	PATTERN, \
 	MESSAGE \
 ) BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI( \
 	TYPE, \
+	{init(wxT(FORMAT_STRING), opt_default);}, \
 	{ \
 		TEMP_TYPE result; \
 		if(!get_text().CONVERSION(&result)) \
@@ -141,6 +165,7 @@ BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
 		TYPE, \
 		unsigned long, \
+		"%ul", \
 		ToULong, \
 		"^[+]?[[:digit:]]+$", \
 		"invalid unsigned integer" \
@@ -150,6 +175,7 @@ BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
 		TYPE, \
 		long, \
+		"%dl", \
 		ToLong, \
 		"^[+-]?[[:digit:]]+$", \
 		"invalid integer" \
@@ -159,6 +185,7 @@ BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI(
 	BOOST_MIRROR_FACTORY_PLUGINS_SPECIALIZE_WX_CONSTR_GUI_WX_CONVERT( \
 		TYPE, \
 		double, \
+		"%f", \
 		ToDouble, \
 		"^[+-]?[[:digit:]]+\\.?[[:digit:]]*$", \
 		"invalid floating point number" \
