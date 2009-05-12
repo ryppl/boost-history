@@ -75,6 +75,7 @@ struct as_sub_task
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
+			detail::interrupter intr;
 			shared_future< R > fut( t.get_future() );
 			function< bool() > wcb(
 				bind(

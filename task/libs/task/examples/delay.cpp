@@ -47,14 +47,14 @@ public:
 		{
 			tsk::handle< long > h1(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),

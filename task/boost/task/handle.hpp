@@ -23,6 +23,7 @@ class pool;
 
 struct own_thread;
 struct new_thread;
+struct as_sub_task;
 
 template< typename R >
 class handle
@@ -32,6 +33,7 @@ private:
 	friend class pool;
 	friend struct own_thread;
 	friend struct new_thread;
+	friend struct as_sub_task;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >
@@ -136,6 +138,7 @@ private:
 	friend class pool;
 	friend struct own_thread;
 	friend struct new_thread;
+	friend struct as_sub_task;
 	template< typename Iterator >
 	friend void waitfor_all( Iterator begin, Iterator end);
 	template< typename T1, typename T2 >

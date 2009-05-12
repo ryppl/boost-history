@@ -27,45 +27,28 @@ long serial_fib( long n)
 		return serial_fib( n - 1) + serial_fib( n - 2);
 }
 
-class fib_task
+long parallel_fib( long n, long	cutof)
 {
-private:
-	long	cutof_;
-
-public:
-	fib_task( long cutof)
-	: cutof_( cutof)
-	{}
-
-	long execute( long n)
+	if ( n < cutof) return serial_fib( n);
+	else
 	{
-		if ( n < cutof_) return serial_fib( n);
-		else
-		{
-			BOOST_ASSERT( boost::this_task::runs_in_pool() );
-			tsk::handle< long > h1(
-				tsk::async(
-					boost::this_task::get_pool< pool_type >(),
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1) ) ) ;
-			tsk::handle< long > h2(
-				tsk::async(
-					boost::this_task::get_pool< pool_type >(),
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2) ) );
-			return h1.get() + h2.get();
-		}
+		BOOST_ASSERT( boost::this_task::runs_in_pool() );
+		tsk::handle< long > h1(
+			tsk::async(
+				tsk::as_sub_task(),
+				tsk::make_task(
+					parallel_fib,
+					n - 1,
+					cutof) ) ) ;
+		tsk::handle< long > h2(
+			tsk::async(
+				tsk::as_sub_task(),
+				tsk::make_task(
+					parallel_fib,
+					n - 2,
+					cutof) ) );
+		return h1.get() + h2.get();
 	}
-};
-
-long parallel_fib( long n)
-{
-	fib_task a( 5);
-	return a.execute( n);
 }
 
 int main( int argc, char *argv[])
@@ -79,13 +62,14 @@ int main( int argc, char *argv[])
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
-		for ( int i = 0; i < 15; ++i)
+		for ( int i = 0; i < 10; ++i)
 			results.push_back(
 				tsk::async(
 					pool,
 					tsk::make_task(
 						& parallel_fib,
-						i) ) );
+						i,
+						5) ) );
 
 		tsk::waitfor_all( results.begin(), results.end() );
 

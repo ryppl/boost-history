@@ -1,0 +1,76 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:overview Overview]
+
+[heading Description]
+
+__boost_task__ provides an abstraction for parallel execution of tasks - a task is a small unit of code that can be executed independently.
+
+* __task__, representing fine-grained work-item:
+	* get_id() returning an identifier
+	* operator() to execute the fine-grained work-item
+	* get_future() providing an __act__ in order to pass the result (values, exceptions) back to initiator
+
+* __handle__, __act__ of the asynchronously executed task:
+	* get_id() for identifying associated __task__
+	* interrupt(), interrupt_and_wait() allow to cancel an coop_task_link[cooperative task]
+	* interface of __act__:
+		* get() retrieve value or exception of task execution
+		* is_ready() test if task was executed
+		* wait(), wait_for() and wait_until() block until task is executed and the result is set
+
+* __async__, execute a task on behalf of __aes__
+
+* __ae__ models:
+	* __own_thread__: executes task in current thread.
+	* __new_thread__: executes task in a newly created thread (thread will be destroyed after)
+	* __default_pool__: task gets executed by a __worker_thread__ of the default __thread_pool__
+	* __as_sub_task__: executes task in newly created thread or in a pool depending on whether current task is already executed in a pool
+	* custom pool: task gets executed by a __worker_thread__ of a custom __thread_pool__
+
+
+References
+
+* N2185: Proposed Text for Parallel Task Execution [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html] written by Peter Dimov.
+
+* N2276: Thread Pools and Futures [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2276.html] written by Anthony Williams.
+
+* N2802: A plea to reconsider detach-on-destruction for thread objects [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html] written by Hans-J. Boehm.
+
+* C++task-force mailing list
+
+[note __boost_task__ uses __boost_future__ from Anthony Williams (will be integrated in some of the next releases of __boost__thread__).]
+
+In order to use the classes and functions described here, you can either include the specific headers specified by the descriptions of each class or function,
+or include the master library header:
+
+    #include <boost/task.hpp>
+
+which includes all the other headers in turn.
+
+
+[heading Tested Platforms]
+__boost_task__ has been tested on the following platforms and compilers:
+
+*  Linux 2.6.29.2 (amd64), GCC 4.3.2
+*  Linux 2.6.23.9 (i386), GCC 4.2.4
+*  FreeBSD 7.2 (amd64), GCC 4.2.1
+*  OpenSolaris 0811 (amd64), GCC 4.2.1
+*  Windows XP Professional (i386), MSVC 9.0
+
+
+[heading How to build]
+* define environment variable BOOST_SOURCE_ROOT pointing to the source directory of __boost__
+* extract archive of __boost_task__
+* call bjam in the directory of __boost_task__
+
+
+[include introduction.qbk]
+
+[endsect]
