@@ -19,16 +19,25 @@
 [def __tip__            [$images/tip.png]]
 
 [def __unicode_std__    [@http://www.unicode.org/versions/latest/ Unicode Standard]]
+[def __tr10__           [@http://unicode.org/reports/tr10/ Technical Standard #10 - Unicode Collation Algorithm]]
+[def __tr15__           [@http://unicode.org/reports/tr15/ Annex #15 - Normalization Forms]]
+[def __tr29__           [@http://unicode.org/reports/tr29/ Annex #29 - Text Segmentation]]
 [def __boost_range__    [@http://boost.org/libs/range/index.html Boost.Range]]
 
 [section Preface]
 
-[:Some introductory material]
+[:Unicode is the industry standard to consistently represent and manipulate text across most of the world's writing systems.]
 
 
 [heading Description]
 
-Some more detailed material
+This library aims at providing the foundation tools to accurately represent and deal with natural text in C++ in a portable
+and robust manner, so as to allow internationalized applications, by implementing parts of the __unicode_std__.
+
+This library is environment-independent and deliberately chooses not to relate to the standard C++ locale facilities
+as well as the standard string facilities, judged ill-suited to Unicode.
+
+The current version is locale-agnostic, but a subsystem for tailored locale behaviour may be added in the future.
 
 [heading How to use this manual]
 
@@ -47,31 +56,250 @@ icons precede some text to indicate:
 
 [endsect]
 
-[section Introduction]
+[section Introduction to Unicode]
 
-Some detailed introduction
+[section Character set]
+The Unicode character set is a mapping that associates *code points*, which are integers, to characters for any writing system or language.
+
+As of version 5.1, there are 100,507 characters, requiring a storage capacity of 17 bits per code point. The unicode standard however
+also reserves some code ranges, known as planes, meaning it really requires a storage capacity of 21 bits.
+
+Since microprocessors usually deal with integers whose capacity are multiples of 8 bits, a naive usage would be to use 32 bits per code point,
+which is quite a waste, especially since most daily-used characters lie in the Basic Multilingual Plane, which fits on 16 bits.
+
+That is why variable-width encodings were designed, where each code point is represented by a variable number of *code values*.
+[endsect]
+
+[section Encodings]
+
+The UTF-X family of encodings encode a single *code point* into a variable number of *code values*, each of which does X bits.
+
+[heading UTF-32]
+
+This encoding is fixed-width, each code value is simply a code point.
+
+[heading UTF-16]
+
+Every code point is encoded by one or two code values. If the code point lies within the BMP, it is represented by exactly that code point.
+Otherwise, the code point is represented by two values which both lie in the surrogate category of Unicode code points.
+
+This is the recommended encoding for dealing with Unicode.
+
+[heading UTF-8]
+
+This encoding was designed to be compatible with legacy, 8-bit based, text management.
+
+Every code point within ASCII is represented as exactly that ASCII character, others are represented as a variable-sized sequence from
+two to four bytes, all of which are non-ASCII.
 
 [endsect]
 
+[section Composite characters]
+
+Multiple *code points* may be combined to form a single *grapheme cluster*, which corresponds to what a human would call a character.
+
+Certain graphemes are only available as a combination of multiple code points, while some, the ones that are expected to be the most used,
+are also available as a single precomposed code point. The order of the combined code points may also vary, but all code points combinations
+leading to the same grapheme are still canonically equivalent.
+
+It is thus important to be able to apply algorithms with graphemes as the unit rather than code points to deal with graphemes not representable
+by a single code point.
+
+[endsect]
+
+[section Normalization]
+
+The Unicode standard defines four normalized forms in __tr15__ where *grapheme clusters* are either fully compressed or decompressed,
+using either canonical or compatiblity equivalence.
+
+The Normalized Form C is of a great interest, as it compresses every grapheme so that is uses as few code points as possible. It is also
+the normalized form assumed by the XML standard.
+[endsect]
+
+[section Other]
+[endsect]
+The Unicode standard also specifies various features such as a collation algorithm in __tr10__ for comparison and ordering of strings with
+a locale-specific criterion, as well as mechanisms to iterate over words, sentences and lines in __tr29__.
+
+Those features are not implemented by this library.
+[endsect]
+
+[section Core types]
+The library provides the following core types in the boost namespace:
+
+``uchar8_t
+uchar16_t
+uchar32_t``
+
+[^uchar/X/_t] is a /X/-bit character used as a *code value* in UTF-/X/.
+
+[endsect]
+
+[section Concepts]
+
+This library uses ranges to represent Unicode text, and thus refines the __boost_range__ concepts.
+
+[section =UnicodeRange=]
+refinement of =SinglePassRange=.
+
+A model of =UnicodeRange= is a range of Unicode *code values* whose *encoding is valid* and which is in *Normalized Form C*.
+As such, it does nothing more than a =SinglePassRange= except assume additional invariants.
+
+The encoding depends on the value type of the range: UTF-8 for =uchar8_t=, UTF-16 for =uchar16_t= and UTF-32 for =uchar32_t=.
+
+For any =X= model of =UnicodeRange=, the meta-function `boost::is_unicode_range<X>` evaluates to =true=.
+
+[endsect]
+[section =UnicodeCPRange=]
+refinement of =UnicodeRange=.
+
+An =UnicodeCPRange= is an =UnicodeRange= whose value type is =uchar32_t=. Every *code value* is thus a *code point*.
+
+For any =X= model of =UnicodeCPRange=, the meta-function `boost::is_unicode_cp_range<X>` evaluates to =true=.
+
+[endsect]
+[section =UnicodeGrapheme=]
+refinement of =SinglePassRange=.
+
+A model of =UnicodeGrapheme= is a range of Unicode *code points* that is a single *grapheme cluster* in *Normalized Form C*.
+
+For any =X= model of =UnicodeGrapheme=, the meta-function `boost::is_unicode_grapheme<X>` evaluates to =true=.
 
 
-[section First module]
+[endsect]
+[endsect]
 
-A first module
+[section Type erasure]
+Type erasure types can be constructed from objects of any type that model a certain concept. They wrap that object
+while erasing its type information.
 
-[heading Interesting point]
+``template<typename Value>
+struct unicode_range;``
 
-Bla bla
+`unicode_range<Value>` is a model of =UnicodeRange= whose value type is =Value=.
 
-[section First submodule]
+``struct unicode_grapheme;``
 
-bla bla bla
+`unicode_grapheme` is a model of =UnicodeGrapheme=.
+[endsect]
 
-[heading Another interesting point]
+[section Range adaptors]
 
-See also [link unicode.first_module.interesting_point that point].
+C++0x notation is used for simplification.
+
+All iterator adaptors have a =base()= member function returning the adapted iterator.
+
+[section Putting invariants in place]
+
+``template<SinglePassRange Range>
+unspecified assume_utf8(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-8 range in Normalization Form C. The behaviour is undefined if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
+
+
+``template<SinglePassRange Range>
+unspecified make_utf8(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-8 range in Normalization Form C. Iterating the range may throw an exception if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
+
+``template<SinglePassRange Range>
+unspecified assume_utf16(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-16 range in Normalization Form C. The behaviour is undefined if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
+
+``template<SinglePassRange Range>
+unspecified make_utf16(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-16 range in Normalization Form C. Iterating the range may throw an exception if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
+
+``template<SinglePassRange Range>
+unspecified assume_utf32(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-32 range in Normalization Form C. The behaviour is undefined if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar32_t=.
+
+``template<SinglePassRange Range>
+unspecified make_utf32(Range&& range);``
+
+Assumes range =range= is a properly encoded UTF-32 range in Normalization Form C. Iterating the range throws an exception if it isn't.
+
+Return type is a model of =UnicodeRange= whose value type is =uchar32_t=.
+
+[endsect]
+
+[section On-the-fly UTF conversion]
+
+[section Input]
+Read-only range adaptors.
+
+``template<UnicodeCPRange Range>
+unspecified as_utf16(Range&& range);``
+
+Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
+
+``template<UnicodeCPRange Range>
+unspecified as_utf8(Range&& range);``
+
+Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
+
+``template<UnicodeRange Range>
+unspecified as_code_points(Range&& range);``
+
+Return type is a model of =UnicodeCPRange=.
+[endsect]
+
+[section Output]
+Output iterators that convert any *code point* to a sequence of *code values*.
+
+``template<typename OutputIterator>
+struct utf8_output_iterator;``
+
+``template<typename OutputIterator>
+struct utf16_output_iterator;``
 
 [endsect]
 
 [endsect]
 
+[section Iterating Graphemes]
+``template<UnicodeCPRange Range>
+unspecified as_graphemes(Range&& range);``
+
+Return type is a read-only range whose value type is a model of =UnicodeGrapheme=.
+[endsect]
+
+[endsect]
+
+[section Character proprieties]
+
+The library provides ways to check for certain *code point* proprieties within the =boost::unicode= namespace.
+All functions take any integer and return a boolean.
+
+``is_surrogate
+is_high_surrogate
+is_low_surrogate
+
+is_prepend
+is_hangul_syllable
+is_control
+is_grapheme_extend
+is_spacing_mark``
+
+[endsect]
+
+[section Normalization]
+
+[section String algorithms]
+
+It is expected that algorithms would take models of =UnicodeRange= as input.
+
+[endsect]
