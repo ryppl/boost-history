@@ -11,7 +11,11 @@
 #define NUMERIC_ADAPTOR_GMP_POLICY_HPP_
 
 
+#include <string>
+
+
 #include <gmp.h>
+
 
 
 struct gmp_policy
@@ -33,6 +37,12 @@ struct gmp_policy
     {
         mpf_set_d(value, v);
     }
+
+    static inline void set(type& value, const std::string& v)
+    {
+        mpf_set_str(value, v.c_str(), 10);
+    }
+
 
     static inline void copy(const type& source, type& dest)
     {
@@ -84,6 +94,15 @@ struct gmp_policy
     {
         return mpf_get_d(b);
     }
+
+
+    static inline std::string as_string(type const& a)
+    {
+        mp_exp_t bexp;
+        std::string out = mpf_get_str (0, &bexp, 10, 0, a);
+        return out;
+    }
+
 
     static inline int compare(const type& a, const type& b)
     {

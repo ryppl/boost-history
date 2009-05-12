@@ -12,26 +12,25 @@
 
 
 #include <cmath>
+
+#include <string>
+
+#include <boost/numeric_adaptor/default_policy.hpp>
+
+
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/lexical_cast.hpp>
 
 
 template <typename T>
-struct ieee_policy
+struct ieee_policy : public default_policy<T>
 {
     typedef T type;
 
-    static inline void init(type& value) {}
-    static inline void destruct(type& value) {}
-
     template <typename OtherType>
-    static inline void set (type& value, const OtherType& v)   { value = boost::numeric_cast<T>(v); }
+    static inline void set(type& value, const OtherType& v)   { value = boost::numeric_cast<T>(v); }
 
-    static inline void copy(const type& source, type& dest) { dest = source; }
-
-    static inline void add(type& r, const type& a, const type& b) { r = a + b; }
-    static inline void subtract(type& r, const type& a, const type& b) { r = a - b; }
-    static inline void multiply(type& r, const type& a, const type& b) { r = a * b; }
-    static inline void divide(type& r, const type& a, const type& b) { r = a / b; }
+    static inline void set(type& value, const std::string& v) { value = boost::lexical_cast<T>(v); }
 
     static inline void sqrt(type& r, const type& a) { r = std::sqrt(a); }
     static inline void cos(type& r, const type& a) { r = std::cos(a); }
@@ -41,11 +40,6 @@ struct ieee_policy
     static inline OtherType big_numeric_cast(const type& v)
     {
         return boost::numeric_cast<OtherType>(v);
-    }
-
-    static inline int compare(const type& a, const type& b)
-    {
-        return a < b ? -1 : a > b ? 1 : 0;
     }
 };
 

@@ -20,19 +20,28 @@ struct numeric_adaptor
     }
 
     // Copy constructor
-    inline numeric_adaptor(const numeric_adaptor<Policy>& v)
+    inline numeric_adaptor(numeric_adaptor<Policy> const& v)
     {
         Policy::init(value);
         Policy::copy(v.value, value);
     }
 
-    // Constructor with a normal IEEE type
-    template <typename T>
-    inline numeric_adaptor(const T& v)
+    // Constructor from a string
+    inline numeric_adaptor(std::string const& v)
     {
         Policy::init(value);
-        Policy::template set<T>(value, v);
+        Policy::set(value, v);
     }
+
+
+    // Constructor with a normal IEEE type
+    template <typename FromType>
+    inline numeric_adaptor(FromType const& v)
+    {
+        Policy::init(value);
+        Policy::template set<FromType>(value, v);
+    }
+
 
     virtual ~numeric_adaptor()
     {
@@ -40,48 +49,54 @@ struct numeric_adaptor
     }
 
     // Assignment from other value
-    inline numeric_adaptor<Policy> operator=(const numeric_adaptor<Policy>& v)
+    inline numeric_adaptor<Policy> operator=(numeric_adaptor<Policy> const& v)
     {
         Policy::copy(v.value, this->value);
         return *this;
     }
 
     // Assignment from normal IEEE type
-    template <typename T>
-    inline numeric_adaptor<Policy> operator=(const T& v)
+    template <typename FromType>
+    inline numeric_adaptor<Policy> operator=(FromType const& v)
     {
-        Policy::template set<T>(this->value, v);
+        Policy::template set<FromType>(this->value, v);
         return *this;
     }
 
     // Cast to normal IEEE type
-    template <typename T>
-    inline operator T() const
+    template <typename ToType>
+    inline operator ToType() const
     {
-        return Policy::template big_numeric_cast<T>(value);
+        return Policy::template big_numeric_cast<ToType>(value);
+    }
+
+    // Overload for cast to string
+    inline operator std::string() const
+    {
+        return Policy::as_string(value);
     }
 
 
     // Comparisons
-    inline bool operator<(const numeric_adaptor<Policy>& other) const
+    inline bool operator<(numeric_adaptor<Policy> const& other) const
     {
         return Policy::compare(value, other.value) < 0;
     }
 
-    inline bool operator>(const numeric_adaptor<Policy>& other) const
+    inline bool operator>(numeric_adaptor<Policy> const& other) const
     {
         return Policy::compare(value, other.value) > 0;
     }
 
-    inline bool operator==(const numeric_adaptor<Policy>& other) const
+    inline bool operator==(numeric_adaptor<Policy> const& other) const
     {
         return Policy::compare(value, other.value) == 0;
     }
 
     // Operators
     friend inline numeric_adaptor<Policy> operator+(
-        const numeric_adaptor<Policy>& a,
-        const numeric_adaptor<Policy>& b)
+        numeric_adaptor<Policy> const& a,
+        numeric_adaptor<Policy> const& b)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -90,8 +105,8 @@ struct numeric_adaptor
     }
 
     friend inline numeric_adaptor<Policy> operator*(
-        const numeric_adaptor<Policy>& a,
-        const numeric_adaptor<Policy>& b)
+        numeric_adaptor<Policy> const& a,
+        numeric_adaptor<Policy> const& b)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -100,8 +115,8 @@ struct numeric_adaptor
     }
 
     friend inline numeric_adaptor<Policy> operator-(
-        const numeric_adaptor<Policy>& a,
-        const numeric_adaptor<Policy>& b)
+        numeric_adaptor<Policy> const& a,
+        numeric_adaptor<Policy> const& b)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -110,8 +125,8 @@ struct numeric_adaptor
     }
 
     friend inline numeric_adaptor<Policy> operator/(
-        const numeric_adaptor<Policy>& a,
-        const numeric_adaptor<Policy>& b)
+        numeric_adaptor<Policy> const& a,
+        numeric_adaptor<Policy> const& b)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -120,7 +135,7 @@ struct numeric_adaptor
     }
 
     // Functions
-    static inline numeric_adaptor<Policy> sqrt(const numeric_adaptor<Policy>& v)
+    static inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -128,7 +143,7 @@ struct numeric_adaptor
         return numeric_adaptor<Policy>(r, true);
     }
 
-    static inline numeric_adaptor<Policy> cos(const numeric_adaptor<Policy>& v)
+    static inline numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const& v)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -136,7 +151,7 @@ struct numeric_adaptor
         return numeric_adaptor<Policy>(r, true);
     }
 
-    static inline numeric_adaptor<Policy> sin(const numeric_adaptor<Policy>& v)
+    static inline numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const& v)
     {
         typename Policy::type r;
         Policy::init(r);
@@ -150,7 +165,7 @@ private :
 
     // Constructor with a type. Bool (or any other signature changing parameter)
     // is necessary for cases where type == OtherType
-    inline numeric_adaptor<Policy>(const typename Policy::type& v, bool)
+    inline numeric_adaptor<Policy>(typename Policy::type const& v, bool)
     {
         Policy::init(value);
         Policy::copy(v, value);

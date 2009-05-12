@@ -10,72 +10,81 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include "numeric_adaptor.hpp"
-#include "ieee_policy.hpp"
-#include "gmp_policy.hpp"
+#include <boost/numeric_adaptor/numeric_adaptor.hpp>
+#include <boost/numeric_adaptor/ieee_policy.hpp>
+
+#if ! defined(_MSC_VER)
+#  include <boost/numeric_adaptor/gmp_policy.hpp>
+#  include <boost/numeric_adaptor/cln_policy.hpp>
+#endif
 
 
-template <typename T, typename NUM>
-void sample(const std::string& header, T c1, T c2, T c4, T ta, T tb, T tc)
+template <typename T, typename Num>
+void sample(const std::string& header, T c1, T c2, T c4)
 {
-	std::cout << std::endl << "---" << header << std::endl;
-	NUM v1 = c1;
-	NUM v2 = c2;
-	NUM v3 = v1 + v2;
-	std::cout << T(v3) << std::endl;
+    std::cout << std::endl << "---" << header << std::endl;
+    Num v1 = c1;
+    Num v2 = c2;
+    Num v3 = v1 + v2;
+    std::cout << T(v3);
 
-	NUM v4 = c4;
-	NUM v5 = (v1 + v2) * v4;
-	std::cout << T(v5) << std::endl;
-	v5 = v1 + v2 * v4;
-	std::cout << T(v5) << std::endl;
+    Num v4 = c4;
+    Num v5 = (v1 + v2) * v4;
+    std::cout << "  " << T(v5);
+    v5 = v1 + v2 * v4;
+    std::cout << "  " << T(v5);
 
-	NUM v6 = NUM::sqrt(v3);
-	std::cout << T(v6) << std::endl;
+    Num v6 = Num::sqrt(v3);
+    std::cout << "  " << T(v6) << std::endl;
 
-	v6 = 4;
-	std::cout << T(v6) << std::endl;
+    // Conversion from int
+    v6 = 4;
+    std::cout << T(v6);
 
-	v6 = v2;
-	std::cout << T(v6) << std::endl;
-	std::cout << std::endl;
+    // Assignment from T
+    v6 = v2;
+    std::cout << "  " << T(v6) << std::endl;
 
-	if (v1 > v2)
-	{
-		std::cout << "v1 > v2" << std::endl;
-	}
-	if (v1 < v2)
-	{
-		std::cout << "v1 < v2" << std::endl;
-	}
-	if (v1 == v2)
-	{
-		std::cout << "v1 == v2" << std::endl;
-	}
+    if (v1 > v2)
+    {
+        std::cout << "v1 > v2" << std::endl;
+    }
+    if (v1 < v2)
+    {
+        std::cout << "v1 < v2" << std::endl;
+    }
+    if (v1 == v2)
+    {
+        std::cout << "v1 == v2" << std::endl;
+    }
 
-	// Test Heron formule
-	{
-		NUM a = ta;
-		NUM b = tb;
-		NUM c = tc;
-		NUM s((a + b + c) / NUM(2.0));
-		NUM area = NUM::sqrt(s * (s - a) * (s - b) * (s - c));
-		std::cout << "area: " << T(area) << std::endl;
-	}
+    Num v7 = Num::cos(v3);
+    std::cout << "cos: " << T(v7) << std::endl;
+    v7 = Num::sin(v3);
+    std::cout << "sin: " << T(v7) << std::endl;
 
 }
 
 
 int main()
 {
-	std::cout << std::setprecision(12);
-	double a = 31622.77662;
-	double b = 0.000023;
-	double c = 31622.77661;
+    std::cout << std::setprecision(12);
 
-	sample<float, numeric_adaptor<ieee_policy<float> > >("use float, calculate with float", 2.0, 3.0, 5.0, a, b, c);
-	sample<float, numeric_adaptor<ieee_policy<double> > >("use float, calculate with double", 2.0, 3.0, 5.0, a, b, c);
-	sample<double, numeric_adaptor<ieee_policy<long double> > >("use double, calculate with long double", 2.0, 3.0, 5.0, a, b, c);
-	sample<double, numeric_adaptor<gmp_policy> >("use double, calculate with gmp", 2.0, 3.0, 5.0, a, b, c);
-	return 0;
+    double a = 2.000000000002;
+    double b = 3.000000000003;
+    double c = 5.000000000005;
+
+    sample<float, numeric_adaptor<ieee_policy<float> > >("use float, calculate with float", a, b, c);
+    sample<float, numeric_adaptor<ieee_policy<double> > >("use float, calculate with double", a, b, c);
+
+    sample<double, numeric_adaptor<ieee_policy<double> > >("use double, calculate with double", a, b, c);
+
+#if ! defined(_MSC_VER)
+    sample<double, numeric_adaptor<gmp_policy> >("use double, calculate with gmp", a, b, c);
+    sample<double, numeric_adaptor<cln_policy> >("use double, calculate with CLN", a, b, c);
+#endif
+
+    sample<std::string, numeric_adaptor<ieee_policy<double> > >("use string, calculate with gmp","2.000000000002", "3.000000000003", "5.000000000005");
+
+    return 0;
 }
