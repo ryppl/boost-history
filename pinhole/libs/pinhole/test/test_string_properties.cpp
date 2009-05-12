@@ -57,8 +57,8 @@ BOOST_AUTO_TEST_CASE( TestGetSetString_Func )
 	testGroup.set_as_string( "String_Func", "second" );
     BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Func"), "second" );
 
-    testGroup.set_as_wstring( "String_Func", L"third" );
-    BOOST_CHECK( testGroup.get_as_wstring("String_Func") == L"third" );
+    testGroup.set_as_wstring("String_Func", L"third");
+    BOOST_CHECK( testGroup.get_as_string("String_Func") == "third" );
     BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Func"), "third" );
 }
 
@@ -103,7 +103,7 @@ BOOST_AUTO_TEST_CASE( TestGetSetWString_Var )
     BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Var"), "second" );
 
     testGroup.set_as_wstring("String_Var", L"third" );
-    BOOST_CHECK( testGroup.get_as_wstring("String_Var") == L"third" );
+    BOOST_CHECK( testGroup.get_as_wstring("String_Var") == L"third");
     BOOST_CHECK_EQUAL( testGroup.get_as_string("String_Var"), "third" );
 }
 
