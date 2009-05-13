@@ -6,8 +6,18 @@
 import os ;
 local BOOST_INCLUDES_PATH = [ os.environ BOOST_INCLUDES_PATH ] ;
 
-project fusion
-        : requirements <include>$(BOOST_INCLUDES_PATH)
-        : build-dir ../bin
-        : default-build debug <link>shared <runtime-link>shared <threading>multi
-        ;
+project
+    : requirements <include>.
+                   <include>$(BOOST_INCLUDES_PATH)
+                   <toolset>gcc-conceptgcc:<include>workaround/conceptgcc
+    : build-dir ../bin
+    : default-build debug <link>shared <runtime-link>shared <threading>multi
+    ;
+
+
+build-project workaround/conceptgcc/test/mini-fusion ;
+
+build-project libs/fusion/doc ;
+#build-project libs/fusion/example/extension ;
+#build-project libs/fusion/example/performance ;
+#build-project libs/fusion/test ;

@@ -4,8 +4,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 //Missing classes in ConceptGCC's <utility> implementation
-
-#pragma once
+#ifndef WORKAROUND_CONCEPTGCC_UTILITY
+#define WORKAROUND_CONCEPTGCC_UTILITY
 
 #include <type_traits>
 #include_next <utility>
@@ -28,7 +28,8 @@ namespace std
         typedef TrueType type;
     };
 
-    template<class TrueType, class FalseType>class conditional<false, TrueType, FalseType>
+    template<class TrueType, class FalseType>
+        class conditional<false, TrueType, FalseType>
     {
     public:
         typedef FalseType type;
@@ -43,12 +44,14 @@ namespace std
         };
     }
 
-    template<class Type> Type&& forward(typename detail::identity<Type>::type&& type)
+    template<class Type>
+        Type&& forward(typename detail::identity<Type>::type&& type)
     {
         return type;
     }
 
-    template<class Type> typename remove_reference<Type>::type&& move(Type&& type)
+    template<class Type>
+        typename remove_reference<Type>::type&& move(Type&& type)
     {
         return type;
     }
@@ -60,3 +63,5 @@ namespace std
         b = move(temp);
     }
 }
+
+#endif

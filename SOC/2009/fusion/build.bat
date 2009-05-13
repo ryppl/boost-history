@@ -5,9 +5,9 @@ rem (See accompanying file LICENSE_1_0.txt or copy at
 rem http://www.boost.org/LICENSE_1_0.txt)
 
 rem (re-)set environment variables
-set BOOST_ROOT=d:\projekte\libs\boost
-set BOOST_INCLUDES_PATH=D:\projekte\libs\boost\include\boost-1_38
-set HOME=
+rem bjam does not like backslahes!
+set BOOST_ROOT=d:/projekte/libs/boost
+set BOOST_INCLUDES_PATH=%BOOST_ROOT%/include/boost-1_39
 
 rem call toolset specific procedure
 if "%1" == "conceptgcc" (
@@ -30,19 +30,15 @@ if "%1" == "conceptgcc" (
 )
 
 rem compile...
-z:\projekte\cl_link_frontend\tools\bjam --toolset=%TOOLSET% mini-fusion %2 %3 %4 %5 %6 %7 %8 %9
+%BOOST_ROOT%\bjam --without-python --toolset=%TOOLSET% %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :conceptgcc
-rem set HOME to the current path so bjam uses our custom user-config.jam with the custom invocation commands for ConceptGCC
-set HOME=.
-rem Add the workaround folder to the include paths so our workaround stl include files are found
-set CPLUS_INCLUDE_PATH=./workaround/conceptgcc:
 rem ConceptGCC needs a cygwin path
-set BOOST_INCLUDES_PATH=/cygdrive/d/projekte/libs/boost/include/boost-1_38
+set BOOST_INCLUDES_PATH=/cygdrive/d/projekte/libs/boost/include/boost-1_39
 
 set PATH=C:\cygwin\opt\conceptgcc-4.3.0-alpha-7\bin;C:\cygwin\bin;%PATH%
-set TOOLSET=gcc
+set TOOLSET=gcc-conceptgcc
 goto :eof
 
 :gcc
