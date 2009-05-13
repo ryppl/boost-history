@@ -257,6 +257,24 @@ public:
 };
 
 // -------------------------------------------------------------------------
+// class scoped_object_pool
+
+template <class Type>
+class scoped_object_pool : public object_pool_traits<Type, NS_BOOST_MEMORY_POLICY::scoped>::type
+{
+private:
+	typedef typename object_pool_traits<Type, NS_BOOST_MEMORY_POLICY::scoped>::type Base;
+	typedef typename Base::alloc_type AllocT;
+	
+public:
+	__forceinline scoped_object_pool() {
+	}
+	__forceinline explicit scoped_object_pool(AllocT alloc) :
+		Base(alloc) {
+	}
+};
+
+// -------------------------------------------------------------------------
 // $Log: $
 
 NS_BOOST_MEMORY_END
