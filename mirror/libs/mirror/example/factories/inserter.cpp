@@ -14,7 +14,7 @@
 
 #include <boost/char_type_switch/iostream.hpp>
 
-#include <boost/mirror/functor_call.hpp>
+#include <boost/mirror/adv_func_call.hpp>
 #include <boost/mirror/meta_mem_functions.hpp>
 #include <boost/mirror/meta_class.hpp>
 #include <boost/mirror/algorithm/for_each.hpp>
@@ -111,6 +111,21 @@ int main(void)
 			);
 #endif
 			func(p);
+			//
+			// TODO: test
+			//
+			typedef BOOST_MIRRORED_CLASS(person)::member_functions meta_fns;
+			advanced_functor_caller<
+				input_ui, 
+				meta_fns, 
+				mpl::int_<0>, 
+				mpl::vector4<mpl::int_<0>, mpl::int_<0>, mpl::int_<1>, mpl::int_<2> >
+			> adv_func;
+			//
+			adv_func(p, BOOST_CTS_LIT("Zilina"), BOOST_CTS_LIT("010 07"));
+			//
+			// TODO:
+			//
 		}
 		// check whether to insert more persons
 		do

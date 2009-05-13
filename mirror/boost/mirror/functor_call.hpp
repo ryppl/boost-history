@@ -100,7 +100,8 @@ protected: \
 		0 \
 	) \
  \
-	typedef typename meta_function::result_type::reflected_type result_type;\
+	typedef typename meta_function::result_type::reflected_type \
+		result_type;\
  \
 	template <class FactoryParam> \
 	inline base_functor_caller(FactoryParam factory_param) \
