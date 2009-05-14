@@ -92,9 +92,16 @@ template < \
 	typedef Manufacturer< T > manufacturer; \
 	manufacturer m; \
 	\
-	template <typename Param> \
-	inline param_source_switch(Param param) \
-	 : m(param, MetaFunctions(), FunctionIndex(), ParamIndex()) \
+	template <typename FactoryParam> \
+	inline param_source_switch(FactoryParam factory_param) \
+	 : m(factory_param, MetaFunctions(), FunctionIndex(), ParamIndex()) \
+	{ } \
+	\
+	template <typename FactoryParam> \
+	inline param_source_switch( \
+		FactoryParam factory_param, \
+		const T* opt_def \
+	): m(factory_param, MetaFunctions(), FunctionIndex(), ParamIndex(), opt_def) \
 	{ } \
 	\
 	template < BOOST_PP_ENUM_PARAMS(ARITY, typename T) > \
@@ -139,8 +146,12 @@ template < \
 	        type::reflected_type \
 	>::type T; \
 	\
-	template <typename Param> \
-	inline param_source_switch(Param) \
+	template <typename FactoryParam> \
+	inline param_source_switch(FactoryParam) \
+	{ } \
+	\
+	template <typename FactoryParam> \
+	inline param_source_switch(FactoryParam, const void*) \
 	{ } \
 	\
 	template < BOOST_PP_ENUM_PARAMS(ARITY, typename T) > \
@@ -177,7 +188,7 @@ template <
 
 #define BOOST_MIRROR_ADV_FUNC_CALLER_DECLARE_PARAM_SOURCE( \
 	Z, PARAM_INDEX, ARITY \
-) param_source_switch< \
+) typedef param_source_switch< \
 	Manufacturer, \
 	MetaFunctions, \
 	FunctionIndex, \
@@ -191,11 +202,26 @@ template <
 		>::type, \
 		mpl::int_< 1 > \
 	>::type \
-> BOOST_PP_CAT(_, PARAM_INDEX);
+> BOOST_PP_CAT(src_, PARAM_INDEX); \
+BOOST_PP_CAT(src_, PARAM_INDEX) BOOST_PP_CAT(_, PARAM_INDEX);
 
 #define BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE( \
 	Z, PARAM_INDEX, _ \
-) , BOOST_PP_CAT(_, PARAM_INDEX)(param)
+) , BOOST_PP_CAT(_, PARAM_INDEX)(factory_param)
+
+#define BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE_W_DEF( \
+	Z, PARAM_INDEX, _ \
+) , BOOST_PP_CAT(_, PARAM_INDEX)( \
+	factory_param, \
+	& BOOST_PP_CAT(def_value_, PARAM_INDEX) \
+)
+
+#define BOOST_MIRROR_ADV_FUNC_CALLER_DECL_DEFAULT_PARAM(Z, INDEX, X) \
+        , typename ::boost::call_traits< \
+		typename BOOST_PP_CAT(src_, INDEX) ::T \
+	>::param_type \
+        BOOST_PP_CAT(def_value_, INDEX)
+
 
 #define BOOST_MIRROR_ADV_FUNC_CALLER_CALL_PARAM_SOURCE( \
 	Z, PARAM_INDEX, CALL_PARAMS \
@@ -227,12 +253,27 @@ protected: \
 		ARITY \
 	) \
 	\
-	template <class Param> \
-	inline advanced_functor_caller(Param param) \
+	template <class FactoryParam> \
+	inline advanced_functor_caller(FactoryParam factory_param) \
 	 : _dummy() \
 	BOOST_PP_REPEAT( \
 		PARAM_COUNT, \
 		BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE, \
+		_ \
+	){ } \
+	\
+	template <class FactoryParam> \
+	inline advanced_functor_caller( \
+		FactoryParam factory_param \
+		BOOST_PP_REPEAT( \
+			PARAM_COUNT, \
+			BOOST_MIRROR_ADV_FUNC_CALLER_DECL_DEFAULT_PARAM, \
+			_ \
+		) \
+	): _dummy() \
+	BOOST_PP_REPEAT( \
+		PARAM_COUNT, \
+		BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE_W_DEF, \
 		_ \
 	){ } \
 	\
@@ -288,6 +329,8 @@ BOOST_PP_REPEAT(
 	_
 )
 
+#undef BOOST_MIRROR_ADV_FUNC_CALLER_DECL_DEFAULT_PARAM
+#undef BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE_W_DEF
 #undef BOOST_MIRROR_ADV_FUNC_CALLER_INITIALIZE_PARAM_SOURCE
 #undef BOOST_MIRROR_ADV_FUNC_CALLER_DECLARE_PARAM_SOURCE
 #undef BOOST_MIRROR_DETAIL_IMPLEMENT_ADVANCED_FUNCTOR_CALLER_2
@@ -335,10 +378,59 @@ public:
 	 : base_class(0)
 	{ }
 
-	template <class Param>
-	inline advanced_functor_caller(Param param)
-	 : base_class(param)
+	template <class FactoryParam>
+	inline advanced_functor_caller(FactoryParam factory_param)
+	 : base_class(factory_param)
 	{ }
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+        template <class FactoryParam, class ...Defaults>
+	advanced_functor_caller(FactoryParam factory_param, Defaults ...defs)
+         : base_class(factory_param, defs...)
+        { }
+#endif
+
+};
+
+
+template <
+        template <class> class Manufacturer,
+        class Class,
+        int FuncIndex,
+	class ParamMapping_c
+> struct advanced_mem_func_caller : public advanced_functor_caller<
+        Manufacturer,
+        meta_member_functions<Class>,
+        mpl::int_<FuncIndex>,
+	typename ParamMapping_c::type
+>
+{
+private:
+	typedef advanced_functor_caller<
+	        Manufacturer,
+	        meta_member_functions<Class>,
+	        mpl::int_<FuncIndex>,
+	        typename ParamMapping_c::type
+	> base_class;
+public:
+	inline advanced_mem_func_caller(void)
+	 : base_class(0)
+	{ }
+
+	template <class FactoryParam>
+	inline advanced_mem_func_caller(FactoryParam factory_param)
+	 : base_class(factory_param)
+	{ }
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+        template <class FactoryParam, class ...Defaults>
+        inline advanced_mem_func_caller(
+                FactoryParam factory_param,
+                Defaults ...defs
+        ): base_class(factory_param, defs...)
+        { }
+#endif
+
 };
 
 

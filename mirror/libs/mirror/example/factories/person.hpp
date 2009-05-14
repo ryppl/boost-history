@@ -17,46 +17,53 @@
 
 namespace test {
 
+typedef ::boost::cts::bstring string;
+
 struct person
 {
-        ::boost::cts::bstring first_name;
-        ::boost::cts::bstring family_name;
-        ::boost::cts::bstring street;
-        ::boost::cts::bstring number;
-        ::boost::cts::bstring city;
-        ::boost::cts::bstring postal_code;
+        string first_name;
+        string family_name;
+        string street;
+        string number;
+        string city;
+        string postal_code;
+	string country;
 
         person(
-                const ::boost::cts::bstring& _first_name,
-                const ::boost::cts::bstring& _family_name,
-                const ::boost::cts::bstring& _street,
-                const ::boost::cts::bstring& _number,
-                const ::boost::cts::bstring& _city,
-                const ::boost::cts::bstring& _postal_code
+                const string& _first_name,
+                const string& _family_name,
+                const string& _street,
+                const string& _number,
+                const string& _city,
+                const string& _postal_code,
+		const string& _country
         ): first_name(_first_name)
          , family_name(_family_name)
          , street(_street)
          , number(_number)
          , city(_city)
          , postal_code(_postal_code)
+	 , country(_country)
         { }
 
         void change_address(
-                const ::boost::cts::bstring& _street,
-                const ::boost::cts::bstring& _number,
-                const ::boost::cts::bstring& _city,
-                const ::boost::cts::bstring& _postal_code
+                const string& _street,
+                const string& _number,
+                const string& _city,
+                const string& _postal_code,
+		const string& _country
         )
         {
                 street.assign(_street);
                 number.assign(_number);
                 city.assign(_city);
                 postal_code.assign(_postal_code);
+                country.assign(_country);
         }
 
-	inline ::boost::cts::bstring name_and_surname(void) const
+	inline string name_and_surname(void) const
 	{
-		::boost::cts::bstring result(first_name);
+		string result(first_name);
 		result.append(BOOST_CTS_LIT(" "));
 		result.append(family_name);
 		return result;
@@ -74,29 +81,31 @@ BOOST_MIRROR_REG_NAMESPACE( (test) )
 // tegister the class, it's attribs, constructors
 BOOST_MIRROR_QREG_CLASS_NO_BASE(
 	::test, person, 
-	(first_name)(family_name)(street)(number)(city)(postal_code)
+	(first_name)(family_name)(street)(number)(city)(postal_code)(country)
 )
 BOOST_MIRROR_QREG_CONSTRUCTORS(
         ::test::person, (
-		((const ::boost::cts::bstring&)(first_name))
-		((const ::boost::cts::bstring&)(family_name))
-		((const ::boost::cts::bstring&)(street))
-		((const ::boost::cts::bstring&)(number))
-		((const ::boost::cts::bstring&)(city))
-		((const ::boost::cts::bstring&)(postal_code))
+		((const ::test::string&)(first_name))
+		((const ::test::string&)(family_name))
+		((const ::test::string&)(street))
+		((const ::test::string&)(number))
+		((const ::test::string&)(city))
+		((const ::test::string&)(postal_code))
+		((const ::test::string&)(country))
 	)
 )
 
 BOOST_MIRROR_REG_MEM_FUNCTIONS_BEGIN(::test::person)
 BOOST_MIRROR_REG_MEM_FUNCTION(
 	0, void, change_address, 
-	((const ::boost::cts::bstring&)(street))
-	((const ::boost::cts::bstring&)(number))
-	((const ::boost::cts::bstring&)(city))
-	((const ::boost::cts::bstring&)(postal_code))
+	((const ::test::string&)(street))
+	((const ::test::string&)(number))
+	((const ::test::string&)(city))
+	((const ::test::string&)(postal_code))
+	((const ::test::string&)(country))
 )
 BOOST_MIRROR_REG_CONST_MEM_FUNCTION(
-	1, ::boost::cts::bstring, name_and_surname, ((void))
+	1, ::test::string, name_and_surname, ((void))
 )
 BOOST_MIRROR_REG_MEM_FUNCTIONS_END 
 

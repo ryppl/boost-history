@@ -205,6 +205,9 @@ public:
 	}
 };
 
+/** A template with more convenient interface, for calling member functions
+ *  of a class
+ */
 template <
 	template <class> class Manufacturer,
 	class Class,
@@ -222,19 +225,21 @@ private:
 	        mpl::int_<FuncIndex>
 	> base_class;
 public:	
-	member_function_caller()
+	inline member_function_caller(void)
 	 : base_class(0)
 	{ }
 
 	template <class FactoryParam>
-	member_function_caller(FactoryParam factory_param)
+	inline member_function_caller(FactoryParam factory_param)
 	 : base_class(factory_param)
 	{ }
 
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
 	template <class FactoryParam, class ...Defaults>
-	member_function_caller(FactoryParam factory_param, Defaults ...defs)
-	 : base_class(factory_param, defs...)
+	inline member_function_caller(
+		FactoryParam factory_param, 
+		Defaults ...defs
+	): base_class(factory_param, defs...)
 	{ }
 #endif
 

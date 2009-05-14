@@ -107,22 +107,33 @@ int main(void)
 				p.street,
 				p.number,
 				p.city,
-				p.postal_code
+				p.postal_code,
+				p.country
 			);
 #endif
 			func(p);
 			//
 			// TODO: test
 			//
-			typedef BOOST_MIRRORED_CLASS(person)::member_functions meta_fns;
-			advanced_functor_caller<
+			advanced_mem_func_caller<
 				input_ui, 
-				meta_fns, 
-				mpl::int_<0>, 
-				mpl::vector4<mpl::int_<0>, mpl::int_<0>, mpl::int_<1>, mpl::int_<2> >
+				person, 
+				0, 
+				mpl::vector_c<int, 0, 0, 1, 2, 3>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
 			> adv_func;
+#else
+			> adv_func(
+				0,
+				p.street,
+				p.number,
+				p.city,
+				p.postal_code,
+				p.country
+			);
+#endif
 			//
-			adv_func(p, BOOST_CTS_LIT("Zilina"), BOOST_CTS_LIT("010 07"));
+			adv_func(p, BOOST_CTS_LIT("Zilina"), BOOST_CTS_LIT("010 07"), BOOST_CTS_LIT("Slovakia"));
 			//
 			// TODO:
 			//
