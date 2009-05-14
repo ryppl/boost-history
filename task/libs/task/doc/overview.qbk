@@ -10,7 +10,7 @@
 
 [heading Description]
 
-__boost_task__ provides an abstraction for parallel execution of tasks - a task is a small unit of code that can be executed independently.
+__boost_task__ provides an abstraction for parallel execution of tasks (a task is a small unit of code that can be executed independently).
 
 * __task__, representing fine-grained work-item:
 	* get_id() returning an identifier

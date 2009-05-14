@@ -8,14 +8,18 @@
 
 [section:motivation Motivation]
 
-In order to take advantage of the technological evolution from single-core to many-core architectures multi-core machines,
-partitioning the compute bound work into smaller chunks that can run in parallel is required.
-The code can scale as the hardware gets better without changing the code (achieving desired load balancing).
+To speed-up computer-bound work and/or increase the computation-throughput is a common motivation for parallelizing a program.
+Especially for interactive applications that have to process user input while perfoming some background tasks responsivness
+is very important. 
+The ongoing evolution of many-core architectures support this naturaly by requiring partitioning the program into smaller chunks that can run in parallel.
+The code can scale as the hardware gets better without changing the code (and achieving desired load balancing).
 
-[note Equating multithreading to parallelism is not accurate. You can have multithreading on a single-core machine,
-but you can only have parallelism on a multi-core machine (portions of your code that can truly run at the same time).]
+[note
+  ["You can have multithreading on a single core machine, but you can only have parallelism on a multi core machine ... .
+  [footnote more to read at [@http://www.danielmoth.com/Blog/2008/11/threadingconcurrency-vs-parallelism.html]] ] -- Daniel Moth
+]
 
-__boost_task__ provides a framework to utilize the available hardware and provide a way for efficient asynchronous processing of time consuming operations in the same process.
+__boost_task__ provides a framework to utilize the available hardware and provide a way for efficient asynchronous processing of time consuming operations.
 
 The framework provides some __aes__, like __new_thread__, in order to launch __task__ in a new thread:
 

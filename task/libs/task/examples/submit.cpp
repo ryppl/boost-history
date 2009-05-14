@@ -53,7 +53,7 @@ int main( int argc, char *argv[])
 				tsk::make_task(
 					fibonacci_fn,
 					10) ) );
-		tsk::pool<
+		tsk::static_pool<
 			tsk::unbounded_channel< tsk::priority< int > >
 		> pool( tsk::poolsize( 3) );
 		tsk::handle< int > h4(

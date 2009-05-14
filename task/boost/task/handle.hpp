@@ -19,7 +19,7 @@ namespace boost { namespace task
 {
 
 template< typename Channel >
-class pool;
+class static_pool;
 
 struct own_thread;
 struct new_thread;
@@ -30,7 +30,7 @@ class handle
 {
 private:
 	template< typename Channel >
-	friend class pool;
+	friend class static_pool;
 	friend struct own_thread;
 	friend struct new_thread;
 	friend struct as_sub_task;
@@ -135,7 +135,7 @@ class handle< void >
 {
 private:
 	template< typename Channel >
-	friend class pool;
+	friend class static_pool;
 	friend struct own_thread;
 	friend struct new_thread;
 	friend struct as_sub_task;

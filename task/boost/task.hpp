@@ -16,11 +16,11 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/id.hpp>
 #include <boost/task/info.hpp>
-#include <boost/task/pool.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/semaphore.hpp>
+#include <boost/task/static_pool.hpp>
 #include <boost/task/smart.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/unbounded_channel.hpp>

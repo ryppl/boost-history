@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_POOL_H
-#define BOOST_TASK_POOL_H
+#ifndef BOOST_TASK_STATIC_POOL_H
+#define BOOST_TASK_STATIC_POOL_H
 
 #include <cstddef>
 #include <utility>
@@ -36,7 +36,7 @@
 namespace boost { namespace task
 {
 template< typename Channel >
-class pool : private noncopyable
+class static_pool : private noncopyable
 {
 private:
 	friend class detail::worker;
@@ -74,7 +74,7 @@ private:
 				asleep,
 				max_scns,
 				boost::bind(
-					& pool::worker_entry_,
+					& static_pool::worker_entry_,
 					this) ) );
 	}
 
@@ -98,7 +98,7 @@ private:
 				asleep,
 				max_scns,
 				boost::bind(
-					& pool::worker_entry_,
+					& static_pool::worker_entry_,
 					this,
 					n) ) );
 	}
@@ -120,7 +120,7 @@ private:
 	{ return detail::atomic_fetch_add( & state_, 1); }
 
 public:
-	explicit pool(
+	explicit static_pool(
 		poolsize const& psize,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20) )
@@ -141,7 +141,7 @@ public:
 		lk.unlock();
 	}
 
-	explicit pool(
+	explicit static_pool(
 		poolsize const& psize,
 		high_watermark const& hwm,
 		low_watermark const& lwm,
@@ -167,7 +167,7 @@ public:
 	}
 
 #ifdef BOOST_HAS_PROCESSOR_BINDINGS
-	explicit pool(
+	explicit static_pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20) )
 	:
@@ -189,7 +189,7 @@ public:
 		lk.unlock();
 	}
 
-	explicit pool(
+	explicit static_pool(
 		high_watermark const& hwm,
 		low_watermark const& lwm,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
@@ -216,7 +216,7 @@ public:
 	}
 #endif
 
-	~pool()
+	~static_pool()
 	{ shutdown(); }
 
 	std::size_t active()
@@ -311,5 +311,5 @@ public:
 };
 }}
 
-#endif // BOOST_TASK_POOL_H
+#endif // BOOST_TASK_STATIC_POOL_H
 

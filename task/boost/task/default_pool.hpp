@@ -9,14 +9,14 @@
 
 #include <boost/task/detail/config.hpp>
 #include <boost/task/fifo.hpp>
-#include <boost/task/pool.hpp>
+#include <boost/task/static_pool.hpp>
 #include <boost/task/unbounded_channel.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
-typedef pool< unbounded_channel< fifo > > default_pool_t;
+typedef static_pool< unbounded_channel< fifo > > default_pool_t;
 
 namespace detail
 {

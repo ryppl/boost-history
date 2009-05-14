@@ -8,23 +8,43 @@
 
 [section:todo Appendix C: Future development]
 
-[heading Event variable]
-A event variable is a bivalued variable (up/down) on which a task can wait for an event to be set or reset. The calling task will be suspended until the state of the event variable is that required by the caller.
 
-[heading Buffer]
-A bounded/unbounded buffer is shared between several tasks. The data must be placed in, and retrieved from, the buffer under mutual exclusion.
-Condition synchronisation is required because a calling task attempting to place data into the buffer. Whne the buffer is full, must be suspended until there is space int the buffer. Also a retrieving task must be suspended when the buffer is empty. The data, once read, is destroyed.
+[heading Concurrency and communication mechanisms]
 
-[heading Multicast]
-The data is sent to a specific group of tasks and all tasks in the group should receive the data. Only when all tasks have received one item of data then another item is allowed to be transmitted.
+* Event variable: A event variable is a bivalued variable (up/down) on which a task can wait for an event to be set or reset. The calling task will be suspended until the state of the event variable is that required by the caller.
 
-[heading Rendezvous]
-A rendezvous uses direct naming and synchronous communication between tasks. One task that executes its command first will be delayed until the other tasks is ready to rendezvous.
+* Buffer: A bounded/unbounded buffer is shared between several tasks. The data must be placed in, and retrieved from, the buffer under mutual exclusion.
+Condition synchronisation is required because a calling task attempting to place data into the buffer. When the buffer is full, the task must be suspended until there is space int the buffer.
+Also a retrieving task must be suspended when the buffer is empty. The data, once read, is destroyed.
 
-[heading Protected resource]
-A protected resource is a passive entity that controls access to the internal states (to the controled real resources).
+* Multicast: The data is sent to a specific group of tasks and all tasks in the group should receive the data. Only when all tasks have received one item of data then another item is allowed to be transmitted.
 
-[heading Task groups]
-A task group defines a graph of inter-dependent tasks that can mostly be run in parallel. THe tasks in the group have dependencies or communicate with each other.
+* Rendezvous: A rendezvous uses direct naming and synchronous communication between tasks. One task that executes its command first will be delayed until the other tasks is ready to rendezvous.
+
+* Protected resource: A protected resource is a passive entity that controls access to the internal states (to the controled real resources).
+
+* Task groups: A task group defines a graph of interdependent tasks that can mostly be run in parallel. The tasks in the group have dependencies or communicate with each other.
+
+[heading Support of explicit processor bindig]
+__aes__ related to a __thread_pool__ (like __default__threadpool__) could support explicit processor binding.
+
+The framework supports the possibility of an __ae__ executing the submitted task in an new spawned process or a pool of processes.
+__handle__ is still capable to manage the task inside the spawned process (works as a __act__ too).
+
+[heading Interdepended task]
+
+[heading Actor framework]
+
+- Microsoft's terminology: is ['agents]
+- if the solution can be modeled in terms of interactive components
+- coordinate parallel (interdepended) tasks
+- 'disciplined' access to shared state that prevents common programming errors
+
+[heading Optimizations]
+ 
+* two-lock-queue as global queue
+
+* maybe lock-free-queue as global queue too (how to provide the scheduling policies fifo, priority, smart?)
+
 
 [endsect]

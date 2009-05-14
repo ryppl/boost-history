@@ -32,7 +32,7 @@ public:
 	// check size, active, idle
 	void test_case_1()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 3),
@@ -46,7 +46,7 @@ public:
 	// check submit
 	void test_case_2()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -64,7 +64,7 @@ public:
 	// check runs in pool
 	void test_case_3()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -81,7 +81,7 @@ public:
 	// executed twice
 	void test_case_4()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -106,7 +106,7 @@ public:
 	// check shutdown
 	void test_case_5()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -126,7 +126,7 @@ public:
 	// check runtime_error throw inside task
 	void test_case_6()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -149,7 +149,7 @@ public:
 	// check shutdown with task_rejected exception
 	void test_case_7()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -175,7 +175,7 @@ public:
 	// check shutdown_now with thread_interrupted exception
 	void test_case_8()
 	{
-		tsk::pool<
+		tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool(
 			tsk::poolsize( 1),
@@ -205,7 +205,7 @@ public:
 	// check pending
 	void test_case_9()
 	{
-		typedef tsk::pool<
+		typedef tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool_type;
 		pool_type pool(
@@ -247,7 +247,7 @@ public:
 	// check interruption
 	void test_case_10()
 	{
-		typedef tsk::pool<
+		typedef tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool_type;
 		pool_type pool(
@@ -290,7 +290,7 @@ public:
 	// check fifo scheduling
 	void test_case_11()
 	{
-		typedef tsk::pool<
+		typedef tsk::static_pool<
 			tsk::bounded_channel< tsk::fifo >
 		> pool_type;
 		pool_type pool(
@@ -326,7 +326,7 @@ public:
 	// check priority scheduling
 	void test_case_12()
 	{
-		typedef tsk::pool<
+		typedef tsk::static_pool<
 			tsk::bounded_channel< tsk::priority< int > >
 		> pool_type;
 		pool_type pool(
@@ -365,7 +365,7 @@ public:
 	// check smart scheduling
 	void test_case_13()
 	{
-		typedef tsk::pool<
+		typedef tsk::static_pool<
 			tsk::bounded_channel< tsk::smart< int, std::less< int >, tsk::replace_oldest, tsk::take_oldest > >
 		> pool_type;
 		pool_type pool(

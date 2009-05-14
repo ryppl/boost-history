@@ -19,7 +19,7 @@
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/future.hpp>
-#include <boost/task/pool.hpp>
+#include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>
 
 namespace boost { namespace task
@@ -99,11 +99,11 @@ handle< R > async( Fn fn, task< R > t)
 { return fn( t); }
 
 template< typename R, typename Channel >
-handle< R > async( pool< Channel > & pool, task< R > t)
+handle< R > async( static_pool< Channel > & pool, task< R > t)
 { return pool.submit( t); }
 
 template< typename R, typename Channel, typename Attr >
-handle< R > async( pool< Channel > & pool, task< R > t, Attr attr)
+handle< R > async( static_pool< Channel > & pool, task< R > t, Attr attr)
 { return pool.submit( t, attr); }
 
 } }
