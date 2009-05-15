@@ -1,0 +1,5 @@
+List all breaking changes done to the interface during the update here.
+
+- Template parameters.
+Template parameters have been reordered, and an allocator parameter has been
+added.
