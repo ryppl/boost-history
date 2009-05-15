@@ -127,10 +127,10 @@ namespace boost { namespace property_tree { namespace ini_parser
                                            stream.getloc());
                     Str data = detail::trim(line.substr(eqpos + 1, Str::npos),
                                             stream.getloc());
-                    if (container->find(key) != container->end())
+                    if (container.find(key) != container.end())
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error(
                             "duplicate key name", "", line_no));
-                    container->push_back(std::make_pair(key, Ptree(data)));
+                    container.push_back(std::make_pair(key, Ptree(data)));
                 }
             }
         }

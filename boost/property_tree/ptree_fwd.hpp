@@ -31,7 +31,7 @@ namespace boost { namespace property_tree
               class Allocator = std::allocator<Data>,
               class Path = basic_path<Key>,
               class Translate = translator>
-        basic_ptree;
+        class basic_ptree;
 
     class ptree_error;
     class ptree_bad_data;

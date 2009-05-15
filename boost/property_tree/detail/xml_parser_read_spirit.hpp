@@ -37,7 +37,7 @@ namespace boost { namespace property_tree { namespace xml_parser
         typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
         typedef typename Ptree::path_type Path;
-        typedef boost::spirit::position_iterator<typename std::vector<Ch>::const_iterator> It;
+        typedef boost::spirit::classic::position_iterator<typename std::vector<Ch>::const_iterator> It;
 
         int flags;
         std::vector<Ptree *> stack;
@@ -131,7 +131,8 @@ namespace boost { namespace property_tree { namespace xml_parser
     // Grammar
         
     template<class Ptree>
-    struct xml_grammar: public boost::spirit::grammar<xml_grammar<Ptree> >
+    struct xml_grammar :
+        public boost::spirit::classic::grammar<xml_grammar<Ptree> >
     {
         
         typedef context<Ptree> context_t;
@@ -143,9 +144,9 @@ namespace boost { namespace property_tree { namespace xml_parser
         {
             
             typedef typename ScannerT::value_t char_t;
-            typedef boost::spirit::chset<char_t> chset_t;
+            typedef boost::spirit::classic::chset<char_t> chset_t;
 
-            boost::spirit::rule<ScannerT>
+            boost::spirit::classic::rule<ScannerT>
                 prolog, element, Misc, PEReference, Reference, PITarget, CData,
                 doctypedecl, XMLDecl, SDDecl, VersionInfo, EncodingDecl, VersionNum,
                 Eq, DeclSep, ExternalID, markupdecl, NotationDecl, EntityDecl,
@@ -162,7 +163,7 @@ namespace boost { namespace property_tree { namespace xml_parser
             definition(const xml_grammar &self)
             {
                 
-                using namespace boost::spirit;
+                using namespace boost::spirit::classic;
                 
                 // XML Char sets
                 chset_t Char("\x9\xA\xD\x20-\x7F");
@@ -678,7 +679,7 @@ namespace boost { namespace property_tree { namespace xml_parser
 
             }
 
-            const boost::spirit::rule<ScannerT> &start() const
+            const boost::spirit::classic::rule<ScannerT> &start() const
             {
                 return document;
             }
@@ -695,7 +696,7 @@ namespace boost { namespace property_tree { namespace xml_parser
     {
 
         typedef typename Ptree::key_type::value_type Ch;
-        typedef boost::spirit::position_iterator<typename std::vector<Ch>::const_iterator> It;
+        typedef boost::spirit::classic::position_iterator<typename std::vector<Ch>::const_iterator> It;
 
         BOOST_ASSERT(validate_flags(flags));
 
@@ -718,7 +719,8 @@ namespace boost { namespace property_tree { namespace xml_parser
         g.c.flags = flags;
 
         // Parse into local
-        boost::spirit::parse_info<It> result = boost::spirit::parse(begin, end, g);
+        boost::spirit::classic::parse_info<It> result =
+            boost::spirit::classic::parse(begin, end, g);
         if (!result.full || g.c.stack.size() != 1)
             BOOST_PROPERTY_TREE_THROW(xml_parser_error("xml parse error", 
                                              detail::narrow(result.stop.get_position().file.c_str()), 

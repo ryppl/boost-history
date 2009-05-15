@@ -64,8 +64,8 @@ namespace boost { namespace property_tree
      * @tparam Path Path type
      * @tparam Translate Utility that converts between key and std::string
      */
-    template<class Key, class Data, class KeyCompare, class Allocator
-              class Path, class Translate>
+    template<class Key, class Data, class KeyCompare, class Allocator,
+             class Path, class Translate>
     class basic_ptree
     {
 #if defined(BOOST_PROPERTY_TREE_DOXYGEN_INVOKED)
@@ -96,7 +96,7 @@ namespace boost { namespace property_tree
          */
         typedef std::pair<key_type, self_type> value_type;
 
-        typedef typename allocator_type::template rebind<value_type>::type
+        typedef typename allocator_type::template rebind<value_type>::other
             value_allocator_type;
 
     private:
@@ -117,7 +117,7 @@ namespace boost { namespace property_tree
         // Construction & destruction
 
         /** Creates an empty property tree. */
-        expicit basic_ptree(allocator_type alloc = allocator_type());
+        explicit basic_ptree(allocator_type alloc = allocator_type());
 
         /**
          * Creates a property_tree with the given data.
@@ -900,8 +900,8 @@ namespace boost { namespace property_tree
          *         child exists at the indicated location then NULL is returned.
          */
         template<class D, class C, class A, class X>
-        basic_ptree<D, Key, C, A, basic_path<Key>, X> *get_child(
-                    basic_ptree<D, Key, C, A, basic_path<Key>, X> &root) const;
+        basic_ptree<Key, D, C, A, basic_path<Key>, X> *get_child(
+                    basic_ptree<Key, D, C, A, basic_path<Key>, X> &root) const;
 
         /**
          * Extract the child subtree of the given property tree at the location
@@ -913,9 +913,9 @@ namespace boost { namespace property_tree
          *         If no child exists at the indicated location then NULL is
          *         returned.
          */
-        template<class C, class D, class X> 
-        const basic_ptree<D, Key, C, A, basic_path<Key>, X> *get_child(
-              const basic_ptree<D, Key, C, A, basic_path<Key>, X> &root) const;
+        template<class D, class C, class A, class X>
+        const basic_ptree<Key, D, C, A, basic_path<Key>, X> *get_child(
+              const basic_ptree<Key, D, C, A, basic_path<Key>, X> &root) const;
 
         /**
          * Insert or replace in the given property tree at the location
@@ -934,9 +934,9 @@ namespace boost { namespace property_tree
          *         return NULL.
          */
         template<class D, class C, class A, class X>
-        basic_ptree<D, Key, C, A, basic_path<Key>, X> *put_child(
-                    basic_ptree<D, Key, C, A, basic_path<Key>, X> &root,
-                    const basic_ptree<D, Key, C, A, basic_path<Key>, X> &child,
+        basic_ptree<Key, D, C, A, basic_path<Key>, X> *put_child(
+                    basic_ptree<Key, D, C, A, basic_path<Key>, X> &root,
+                    const basic_ptree<Key, D, C, A, basic_path<Key>, X> &child,
                     bool do_not_replace) const;
 
     private:

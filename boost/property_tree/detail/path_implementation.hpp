@@ -88,10 +88,10 @@ namespace boost { namespace property_tree
 
     template<class Key>
     template<class D, class C, class A, class X>
-    basic_ptree<D, Key, C, A, basic_path<Key>, X> *
-        basic_path<Key>::get_child(basic_ptree<D, Key, C, A, basic_path<Key>, X> &root) const
+    basic_ptree<Key, D, C, A, basic_path<Key>, X> *
+        basic_path<Key>::get_child(basic_ptree<Key, D, C, A, basic_path<Key>, X> &root) const
     {
-        typedef basic_ptree<D, Key, C, A, basic_path<Key>, X> ptree_type;
+        typedef basic_ptree<Key, D, C, A, basic_path<Key>, X> ptree_type;
         ptree_type *pt = &root;
         for (typename std::vector<Key>::const_iterator it = m_path.begin(); it != m_path.end(); ++it)
         {
@@ -106,10 +106,10 @@ namespace boost { namespace property_tree
 
     template<class Key>
     template<class D, class C, class A, class X>
-    const basic_ptree<D, Key, C, A, basic_path<Key>, X> *
-        basic_path<Key>::get_child(const basic_ptree<D, Key, C, A, basic_path<Key>, X> &root) const
+    const basic_ptree<Key, D, C, A, basic_path<Key>, X> *
+        basic_path<Key>::get_child(const basic_ptree<Key, D, C, A, basic_path<Key>, X> &root) const
     {
-        typedef basic_ptree<D, Key, C, A, basic_path<Key>, X> ptree_type;
+        typedef basic_ptree<Key, D, C, A, basic_path<Key>, X> ptree_type;
         basic_path<Key> *nc_this = const_cast<basic_path<Key> *>(this);
         ptree_type &nc_root = const_cast<ptree_type &>(root);
         return nc_this->get_child(nc_root);
@@ -117,9 +117,9 @@ namespace boost { namespace property_tree
 
     template<class Key>
     template<class D, class C, class A, class X>
-    basic_ptree<D, Key, C, A, basic_path<Key>, X> *
-        basic_path<Key>::put_child(basic_ptree<D, Key, C, A, basic_path<Key>, X> &root, 
-                                   const basic_ptree<D, Key, C, A, basic_path<Key>, X> &child, 
+    basic_ptree<Key, D, C, A, basic_path<Key>, X> *
+        basic_path<Key>::put_child(basic_ptree<Key, D, C, A, basic_path<Key>, X> &root, 
+                                   const basic_ptree<Key, D, C, A, basic_path<Key>, X> &child, 
                                    bool do_not_replace) const
     {
         if (m_path.empty())
@@ -129,7 +129,7 @@ namespace boost { namespace property_tree
         else
         {
             
-            typedef basic_ptree<D, Key, C, A, basic_path<Key>, X> ptree_type;
+            typedef basic_ptree<Key, D, C, A, basic_path<Key>, X> ptree_type;
             typedef typename std::vector<Key>::const_iterator path_iterator;
             
             ptree_type *pt = &root;

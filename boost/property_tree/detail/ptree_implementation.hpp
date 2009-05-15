@@ -46,15 +46,18 @@ namespace boost { namespace property_tree
     // Construction & destruction
 
     template<class D, class K, class C, class A, class P, class X>
-    basic_ptree<D, K, C, A, P, X>::basic_ptree()
+    basic_ptree<D, K, C, A, P, X>::basic_ptree(allocator_type)
     {
+        // FIXME: use allocator
         BOOST_PROPERTY_TREE_DEBUG_INCREMENT_INSTANCES_COUNT();
     }
 
     template<class D, class K, class C, class A, class P, class X>
-    basic_ptree<D, K, C, A, P, X>::basic_ptree(const data_type &rhs):
-        m_data(rhs)
+    basic_ptree<D, K, C, A, P, X>::basic_ptree(const data_type &rhs,
+                                               allocator_type alloc)
+        : m_data(rhs)
     {
+        // FIXME: use allocator
         BOOST_PROPERTY_TREE_DEBUG_INCREMENT_INSTANCES_COUNT();
     }
 
