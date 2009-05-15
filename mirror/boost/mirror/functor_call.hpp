@@ -205,6 +205,46 @@ public:
 	}
 };
 
+/** A template with more cdd.onvenient interface, for calling constructors
+ *  of a class
+ */
+template <
+	template <class> class Manufacturer,
+	class Class,
+	int FuncIndex
+> struct constructor_caller : public functor_caller<
+	Manufacturer,
+	meta_constructors<Class>,
+	mpl::int_<FuncIndex>
+> 
+{
+private:
+	typedef functor_caller<
+	        Manufacturer,
+	        meta_constructors<Class>,
+	        mpl::int_<FuncIndex>
+	> base_class;
+public:	
+	inline constructor_caller(void)
+	 : base_class(0)
+	{ }
+
+	template <class FactoryParam>
+	inline constructor_caller(FactoryParam factory_param)
+	 : base_class(factory_param)
+	{ }
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+	template <class FactoryParam, class ...Defaults>
+	inline constructor_caller(
+		FactoryParam factory_param, 
+		Defaults ...defs
+	): base_class(factory_param, defs...)
+	{ }
+#endif
+
+};
+
 /** A template with more convenient interface, for calling member functions
  *  of a class
  */

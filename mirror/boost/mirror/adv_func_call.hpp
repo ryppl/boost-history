@@ -302,6 +302,17 @@ protected: \
 		); \
 	} \
 public: \
+	template <BOOST_PP_ENUM_PARAMS(ARITY, typename T) > \
+        inline result_type operator()( \
+		BOOST_PP_ENUM_BINARY_PARAMS(ARITY, const T, & p) \
+	) \
+	{ \
+		return call( \
+			_meta_function::wrap(), \
+			BOOST_PP_ENUM_PARAMS(ARITY, p) \
+		); \
+	} \
+	\
 	template <class Class, BOOST_PP_ENUM_PARAMS(ARITY, typename T) > \
         inline result_type operator()( \
 		Class& instance, \
@@ -393,6 +404,49 @@ public:
 };
 
 
+/** A more convenient interface for calling constructors
+ */ 
+template <
+        template <class> class Manufacturer,
+        class Class,
+        int FuncIndex,
+	class ParamMapping_c
+> struct advanced_constructor_caller : public advanced_functor_caller<
+        Manufacturer,
+        meta_constructors<Class>,
+        mpl::int_<FuncIndex>,
+	typename ParamMapping_c::type
+>
+{
+private:
+	typedef advanced_functor_caller<
+	        Manufacturer,
+	        meta_constructors<Class>,
+	        mpl::int_<FuncIndex>,
+	        typename ParamMapping_c::type
+	> base_class;
+public:
+	inline advanced_constructor_caller(void)
+	 : base_class(0)
+	{ }
+
+	template <class FactoryParam>
+	inline advanced_constructor_caller(FactoryParam factory_param)
+	 : base_class(factory_param)
+	{ }
+
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+        template <class FactoryParam, class ...Defaults>
+        inline advanced_constructor_caller(
+                FactoryParam factory_param,
+                Defaults ...defs
+        ): base_class(factory_param, defs...)
+        { }
+#endif
+};
+
+/** A more convenient interface for calling member functions 
+ */ 
 template <
         template <class> class Manufacturer,
         class Class,
