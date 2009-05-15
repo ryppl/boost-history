@@ -1,43 +1,31 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
+
 
 [section:task Task]
 
-Even without parent/child relationships, Task is a major improvement over QUWI.  QUWI returns nothing of use to the caller; it simply queues a delegate, and leaves it up to the implementation of that delegate to coordinate its activities with the rest of the application.  QUWI provides no means of waiting for the completion of the work item, for handling exceptions, or getting the result of a computation.  Task provides all of this in a very easy-to-use form, while adding very little overhead vs. QUWI. 
+A task is a chunk of code that can be executed independently.
 
-The fact that Task has a Wait method is not just a convenience; it eliminates one of the most common problems people face when using QUWI.  It is fairly common for one work item to need to wait for the execution of another work item to complete.  If the second work item has not yet begun executing, it will be sitting in the queue waiting for a worker thread to pick it up.  It is possible that there are no available worker threads – maybe they’re all waiting for other work items to complete!  This can cause deadlock in the worst case, and very slow execution in the best, as the thread pool may be slow to add more worker threads to pick up these work items.  Task.Wait, on the other hand, knows it’s waiting for another task, and is tightly integrated with the thread pool such that it is able to determine whether the task has started executing, and if not it executes it immediately, in-line on the current thread.  This greatly improves performance and eliminates the possibility of deadlock in this situation.
-
-For new code, Task is now the preferred way to queue work to the thread pool.
-
-Top-level Tasks have no parent.  These are Tasks created by non-thread-pool threads, or with certain options specified at Task-creation time.  These tasks are queued to the same FIFO queue we use for QUWI, and thus benefit from the improvements we’ve made there – but they are also subject to the same limitations.  Tasks queued in this way are simply a better QUWI – but now the fun starts:  A parent task can create child tasks.  This happens whenever a Task creates another Task (unless it overrides this behavior).  These children are implicitly treated as sub-tasks of the larger task.  We assume that sub-tasks can be executed in any order – fairness is not necessary – because all that matters is that the overall operation be completed as fast as possible.  This lets us throw those FIFO restrictions out the window, and opens up the possibility for much more efficient work scheduling strategies.
-
-Since a child task is just a piece of a larger task, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is “work stealing.” 
+__task__ represents a __callable__ object containing the unit of code to be execute by a link_ae[__ae__]. It returns a link_act[__act__] allowing to wait for the completion of the computation of the task, for getting the result of a computation or for transfering exceptions.
 
 
-For each submitted __action__ a new task object will be created and returned by the pool.
+[heading:create_task Creation]
+
+__fn_make_task__ can be used to create __task__.
 The __task__ object acts as a proxy for a result that is initially not known and gets evaluated later by a __worker_thread__. It transports the result (value or exception) of the __action__ back to the caller.
 
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool( boost::tp::poolsize( 10) );
+    boost::task::task< int > t1(
+      boost::task::make_task(
+	  parallel_fib,
+	  10) );    
 
-    // task calculates fibonacci(10)
-    // scheduled in unbounded channel with FIFO ordering
-    boost::tp::task< int > t(
-    pool.submit(
-      boost::bind(
-      fibonacci_fn,
-      10) ) );
+[heading:cooperative_task Interruption]
 
-    std::cout << t.get() << std::endl; // 55
-
-
-[heading Interruption]
-The returned __task__ object provides the possiblity to interrupt an __action__ if it is cooperative.
+__task__ object provides the possiblity to interrupt an __action__ if it is cooperative.
 An __action__ is known as cooperative if it includes interruption points in its code:
 
 * `boost::thread::join()`
@@ -88,7 +76,9 @@ A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >
     // throws boost::thread_interrupted exception
     std::cout << t.get() << std::endl;
 
-[heading Exceptions in tasks]
+
+[heading:task_exceptions Exceptions]
+
 Exceptions thrown inside an __action__ are transported by the associated task object.
 Exceptions rethrown by type:
 
@@ -131,5 +121,12 @@ Exceptions derived from `std::exception` will be rethrown as `std::runtime_error
           throwing_fn) ) );
 
     std::cout << t.get() << std::endl; // will rethrow an std::runtime_error
+
+[heading:parent_tasks Parent-tasks]
+
+Top-level Tasks have no parent.  These are Tasks created by non-thread-pool threads, or with certain options specified at Task-creation time.  These tasks are queued to the same FIFO queue we use for QUWI, and thus benefit from the improvements we’ve made there – but they are also subject to the same limitations.  Tasks queued in this way are simply a better QUWI – but now the fun starts:  A parent task can create child tasks.  This happens whenever a Task creates another Task (unless it overrides this behavior).  These children are implicitly treated as sub-tasks of the larger task.  We assume that sub-tasks can be executed in any order – fairness is not necessary – because all that matters is that the overall operation be completed as fast as possible.  This lets us throw those FIFO restrictions out the window, and opens up the possibility for much more efficient work scheduling strategies.
+
+Since a child task is just a piece of a larger task, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is link_work_stealing[__work_stealing__].
+
 
 [endsect]

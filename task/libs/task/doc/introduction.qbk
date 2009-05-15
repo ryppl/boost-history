@@ -9,37 +9,70 @@
 [section:motivation Motivation]
 
 To speed-up computer-bound work and/or increase the computation-throughput is a common motivation for parallelizing a program.
-Especially for interactive applications that have to process user input while perfoming some background tasks responsivness
-is very important. 
-The ongoing evolution of many-core architectures support this naturaly by requiring partitioning the program into smaller chunks that can run in parallel.
-The code can scale as the hardware gets better without changing the code (and achieving desired load balancing).
+Especially for interactive applications that have to process user input while performing some background tasks responsivness is very important.
+Parallelizing a program requires partitioning the program into smaller chunks that can run in parallel. The code can scale as the hardware 
+gets better without changing the code.
+
+The evolution from one-core to many-core architectures and the usage of threads (of course processes fit too) support this paradigm.
 
 [note
-  ["You can have multithreading on a single core machine, but you can only have parallelism on a multi core machine ... .
-  [footnote more to read at [@http://www.danielmoth.com/Blog/2008/11/threadingconcurrency-vs-parallelism.html]] ] -- Daniel Moth
+  ["You can have multithreading on a single core machine, but you can only have parallelism on a multi core machine ... .] -- Daniel Moth
+  [footnote more to read at Daniel's [@http://www.danielmoth.com/Blog/2008/11/threadingconcurrency-vs-parallelism.html [blog]]]
 ]
 
 __boost_task__ provides a framework to utilize the available hardware and provide a way for efficient asynchronous processing of time consuming operations.
+The framework provides some link_ae[__aes__], like __new_thread__, in order to execute the task asynchronously in another execution context (__boost_task__
+uses preemptible threads for this purpose).
 
-The framework provides some __aes__, like __new_thread__, in order to launch __task__ in a new thread:
+	void print( std::string const& msg)
+	{ printf("%s\n", msg.c_str() ); }
+
+	void main()
+	{
+		boost::task::async(			// dispatchs task
+			boost::task::new_thread(),	// asynchronous executor
+			boost::task::make_task(		// task, to be executed asynchronously
+				print,
+				"Hello World!") ) );
+	}
+
+In order to manage the task __assync__ returns a handle __handle__ (associated with the submitted task). It functions as a __act__ - that means it transfers
+the result of the execution back to the caller thread.
 
 	std::string echo( std::string const& msg)
 	{ return msg; }
 
 	void main()
 	{
-		boost::task::handle< std::string > h(
-			boost::task::async(
-				boost::task::new_thread(),
-				boost::task::make_task(
+		boost::task::handle< std::string > h(		// get handle associated with the task
+			boost::task::async(			
+				boost::task::new_thread(),	// asynchronous executor
+				boost::task::make_task(		// task, to be executed asynchronously
 					echo,
 					"Hello World!") ) );
-		std::cout << h.get() << std::endl;
+		std::cout << h.get() << std::endl;		// wait until task is finished and return the result
 	}
 
-__handle__ manages the __task__ and allows to transfer the result to the caller thread.
+The task can also be interrupted via __handle__ if it is a so-called link_coop_task[__coop_task__].
 
-With __runs_in_pool__ the task can detect if it is running inside a __thread_pool__ (executed by a __worker_thread__) at runtime.
+	void long_running(  boost::posix_time::time_duration const& rel_time)
+	{ boost::this_thread::sleep( rel_time);
+
+	void main()
+	{
+		boost::task::handle< std::string > h(		// get handle associated with the task
+			boost::task::async(			
+				boost::task::new_thread(),	// asynchronous executor
+				boost::task::make_task(		// long runing task, to be executed asynchronously
+					long_running,
+					boost::posix_time::millisec( 500) ) ) );
+		h.interrupt();					// interrupt execution of task
+		std::cout << h.get() << std::endl;		// wait until task is finished, will throw an exeception
+	}
+
+
+Beside __new_thread__ (which creates a new task for each submitted task) __boost_task__ provides link_pool[__thread_pools__] to prevent the overhead of thread creation
+and destruction for each task. __default_pool__ submitts the tasks to the default __thread_pool__  which contains a fixed number of pre-spawned __worker_threads__ (custom __thread_pools__ are supported too).
 
 	long serial_fib( long n)
 	{
@@ -52,59 +85,49 @@ With __runs_in_pool__ the task can detect if it is running inside a __thread_poo
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			boost::task::handle< long > h1, h2;
-			if ( boost::this_task::runs_in_pool() )
-			{
-				// task is executed inside a thread-pool
-				// the sub-tasks are submitted to the thread-local
-				// worker-queue for speed improvments
-				h1 = boost::task::async(
-					boost::this_task::as_sub_task(),
-					boost::task::make_task(
-						parallel_fib,
-						n - 1,
-						cutof) );
-				h2 = boost::task::async(
-					boost::this_task::as_sub_task(),
-					boost::task::make_task(
-						parallel_fib,
-						n - 2,
-						cutof) );
-			}
-			else
-			{
-				// task is not running inside a thread-pool
-				// the sub-tasks are executed in new threads
-				h1 = boost::task::async(
-					boost::this_task::new_thread(),
-					tsk::make_task(
-						parallel_fib,
-						n - 1,
-						cutof) );
-				h2 = boost::task::async(
-					boost::this_task::new_thread(),
-					boost::task::make_task(
-						parallel_fib,
-						n - 2,
-						cutof) );
-			}
+			// submit a sub-task to pool calculating fibonacci(n-1)
+			h1 = boost::task::async(
+				boost::this_task::get_pool(),
+				boost::task::make_task(
+					parallel_fib,
+					n - 1,
+					cutof) );
+			// submit a sub-task to pool calculating fibonacci(n-2)
+			h2 = boost::task::async(
+				boost::this_task::get_pool(),
+				boost::task::make_task(
+					parallel_fib,
+					n - 2,
+					cutof) );
+			// calculate fibonacci(n) from the results of both sub-tasks
 			return h1.get() + h2.get();
 		}
 	}
 
 	void main()
 	{
-		boost::task::handle< long > h(
+		boost::task::handle< long > h(			// handle for fibonacci calculation
 			boost::task::async(
-				// boost::task::new_thread(),
-				boost::task::default_pool(),
-				boost::task::make_task(
-					parallel_fib,
+				boost::task::default_pool(),	// access the default thread-pool
+				boost::task::make_task(		// calculate fibonacci number 10
+					parallel_fib,		// for numbers < 5 do inline recursive calculation
 					10,
-					5) ) );
+					5) ) );  
 		std::cout << h.get() << std::endl;
 	}
 };
+
+With function __fn_runs_in_pool__ a task can detect if it is executed inside a __thread_pool__.
+__sub_tasks__ arecreated by __as_sub_task__. Where the __sub_task__ is executed by a new thread if the parent task
+is not executed inside a __thread_pool__. In the other case the __sub_task__ is put into the local __worker_queue__
+which enables link_work_stealing[__work_stealing__] and link_forkjoin[inline execution] of tasks.
+
+	boost::task::async(
+		boost::task::as_sub_task(),	// sub-task executed in a new thread or inside
+		boost::task::make_task(		// the thread-pool depending upon the parent
+			parallel_fib,		// task is executed inside a thread-pool or not
+			10,
+			5) ) ); 
 
 
 [endsect]

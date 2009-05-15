@@ -7,6 +7,8 @@
 
 [section:pool Pool]
 
+It is fairly common for one work item to need to wait for the execution of another work item to complete.  If the second work item has not yet begun executing, it will be sitting in the queue waiting for a worker thread to pick it up.  It is possible that there are no available worker threads – maybe they’re all waiting for other work items to complete!  This can cause deadlock in the worst case, and very slow execution in the best, as the thread pool may be slow to add more worker threads to pick up these work items.  Task.Wait, on the other hand, knows it’s waiting for another task, and is tightly integrated with the thread pool such that it is able to determine whether the task has started executing, and if not it executes it immediately, in-line on the current thread.  This greatly improves performance and eliminates the possibility of deadlock in this situation.
+
 The CLR thread pool has the correct internal logic and a simple interface (QueueUserWorkItem) for scheduling work items to be executed by the threads it manages. This appears to be the answer to achieving fine grained parallelism.
 
 A thread pool basically has two functions:  It maintains a queue (or queues) of work to be done, and a collection of threads which execute work from the queue(s).  So designing a thread pool really comes down to a) finding ways to enqueue and dequeue work items very quickly (to keep the overhead of using the thread pool to a minimum) and b) developing an algorithm for choosing an optimal number of threads to service the queues.
