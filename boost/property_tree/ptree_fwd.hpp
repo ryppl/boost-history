@@ -20,9 +20,14 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////////
     // Classes
 
-    template<class C, class K, class P, class D, class X> class basic_ptree;
     template<class Key> class basic_path;
     class translator;
+    //template<class C, class K, class P, class D, class X> class basic_ptree;
+    template <class Key, class Data,
+              class KeyCompare = std::less<Key>,
+              class Path = basic_path<Key>,
+              class Translate = translator>
+        basic_ptree;
 
     class ptree_error;
     class ptree_bad_data;
@@ -41,13 +46,17 @@ namespace boost { namespace property_tree
      * A property tree that uses a path type based upon std::string.
      * Comparisons of keys are performed in a case-sensitive manner.
      */
-    typedef basic_ptree<std::less<std::string>, std::string, path, std::string, translator> ptree;
+    //typedef basic_ptree<std::less<std::string>, std::string, path, std::string, translator> ptree;
+    typedef basic_ptree<std::string, std::string> ptree;
 
     /**
      * A property tree that uses a path type based upon std::string.
      * Comparisons of keys are performed in a case-insensitive manner.
      */
-    typedef basic_ptree<detail::less_nocase<std::string>, std::string, path, std::string, translator> iptree;
+    //typedef basic_ptree<detail::less_nocase<std::string>, std::string, path, std::string, translator> iptree;
+    typedef basic_ptree<std::string, std::string,
+                        detail::less_nocase<std::string> >
+        iptree;
 
 #ifndef BOOST_NO_CWCHAR
     /**
@@ -55,14 +64,18 @@ namespace boost { namespace property_tree
      * Comparisons of keys are performed in a case-sensitive manner.
      * @note The type only exists if the platform supports @c wchar_t.
      */
-    typedef basic_ptree<std::less<std::wstring>, std::wstring, wpath, std::wstring, translator> wptree;
+    //typedef basic_ptree<std::less<std::wstring>, std::wstring, wpath, std::wstring, translator> wptree;
+    typedef basic_ptree<std::wstring, std::wstring> wptree;
 
     /**
      * A property tree that uses a wide-character path type based upon std::wstring.
      * Comparisons of keys are performed in a case-insensitive manner.
      * @note The type only exists if the platform supports @c wchar_t.
      */
-    typedef basic_ptree<detail::less_nocase<std::wstring>, std::wstring, wpath, std::wstring, translator> wiptree;
+    //typedef basic_ptree<detail::less_nocase<std::wstring>, std::wstring, wpath, std::wstring, translator> wiptree;
+    typedef basic_ptree<std::wstring, std::wstring,
+                        detail::less_nocase<std::wstring> >
+        wiptree;
 #endif
 
     ///////////////////////////////////////////////////////////////////////////
@@ -73,8 +86,9 @@ namespace boost { namespace property_tree
      * @param pt1 Reference to first property tree involved in swap.
      * @param pt2 Reference to second property tree involved in swap.
      */
-    template<class C, class K, class P, class D, class X>
-    void swap(basic_ptree<C, K, P, D, X> &pt1, basic_ptree<C, K, P, D, X> &pt2);
+    template<class K, class D, class C, class P, class X>
+    void swap(basic_ptree<K, D, C, P, X> &pt1,
+              basic_ptree<K, D, C, P, X> &pt2);
 
     /**
      * Reference to empty property tree. Can be used as a default value of get_child.

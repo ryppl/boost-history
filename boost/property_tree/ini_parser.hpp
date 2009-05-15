@@ -55,18 +55,22 @@ namespace boost { namespace property_tree { namespace ini_parser
 
     /**
      * Read INI from a the given stream and translate it to a property tree.
-     * @note Clears existing contents of property tree.  In case of error the property tree unmodified.
-     * @throw ini_parser_error In case of error deserializing the property tree.
+     * @note Clears existing contents of property tree.  In case of error
+     *       the property tree is not modified.
+     * @throw ini_parser_error If a format violation is found.
      * @param stream Stream from which to read in the property tree.
      * @param[out] pt The property tree to populate.
      */
     template<class Ptree>
-    void read_ini(std::basic_istream<typename Ptree::key_type::value_type> &stream, 
+    void read_ini(std::basic_istream<
+                    typename Ptree::key_type::value_type> &stream,
                   Ptree &pt)
     {
-
         typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
+        const Ch semicolon = stream.widen(';');
+        const Ch lbracket = stream.widen('[');
+        const Ch rbracket = stream.widen(']');
 
         Ptree local;
         unsigned long line_no = 0;
@@ -87,15 +91,14 @@ namespace boost { namespace property_tree { namespace ini_parser
             line = detail::trim(line, stream.getloc());
             if (!line.empty())
             {
-            
                 // Comment, section or key?
-                if (line[0] == Ch(';'))
+                if (line[0] == semicolon)
                 {
                     // Ignore comments
                 }
-                else if (line[0] == Ch('['))
+                else if (line[0] == lbracket)
                 {
-                    typename Str::size_type end = line.find(Ch(']'));
+                    typename Str::size_type end = line.find(rbracket);
                     if (end == Str::npos)
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error("unmatched '['", "", line_no));
                     Str key = detail::trim(line.substr(1, end - 1), stream.getloc());
@@ -105,8 +108,7 @@ namespace boost { namespace property_tree { namespace ini_parser
                 }
                 else
                 {
-                    if (!section)
-                        BOOST_PROPERTY_TREE_THROW(ini_parser_error("section expected", "", line_no));
+                    Ptree &container = section ? *section : local;
                     typename Str::size_type eqpos = line.find(Ch('='));
                     if (eqpos == Str::npos)
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error("'=' character not found in line", "", line_no));
@@ -114,9 +116,9 @@ namespace boost { namespace property_tree { namespace ini_parser
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error("key expected", "", line_no));
                     Str key = detail::trim(line.substr(0, eqpos), stream.getloc());
                     Str data = detail::trim(line.substr(eqpos + 1, Str::npos), stream.getloc());
-                    if (section->find(key) != section->end())
+                    if (container->find(key) != container->end())
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error("duplicate key name", "", line_no));
-                    section->push_back(std::make_pair(key, Ptree(data)));
+                    container->push_back(std::make_pair(key, Ptree(data)));
                 }
             }
         }

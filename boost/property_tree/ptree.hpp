@@ -49,17 +49,18 @@ namespace boost { namespace property_tree
     /**
      * Class template implementing property tree.
      *
-     * A property tree can have data associated with it
-     * along with a sequence of @c (key,basic_ptree) children.
-     * Iterators provide bidirectional iterative access into children sequence.
+     * A property tree can have data associated with it along with a
+     * sequence of @c (key,basic_ptree) children.
+     * Iterators provide bidirectional iterative access into child sequence.
      *
-     * @tparam C Key comparison type
-     * @tparam K Key type
-     * @tparam P Path type
-     * @tparam D Data type
-     * @tparam X Translator type to use for converting values to and from std::string
+     * @tparam Key Key type
+     * @tparam Data Data type
+     * @tparam KeyCompare Key comparison predicate
+     * @tparam Path Path type
+     * @tparam Translate Utility that converts between key and std::string
      */
-    template<class C, class K, class P, class D, class X>
+    template<class Key, class Data, class KeyCompare,
+              class Path, class Translate>
     class basic_ptree
     {
 #if defined(BOOST_PROPERTY_TREE_DOXYGEN_INVOKED)
@@ -68,17 +69,18 @@ namespace boost { namespace property_tree
         // Internal types
         /**
          * Simpler way to refer to this basic_ptree<C,K,P,D,X> type.
-         * Do not use in client code; exposed only for documentation purposes.
+         * Note that this is private, and made public only for doxygen.
          */
-        typedef basic_ptree<C, K, P, D, X> self_type; 
+        typedef basic_ptree<Key, Data, KeyCompare, Path, Translate>
+            self_type; 
 
     public:
         // Basic types
-        typedef C key_compare;
-        typedef K key_type;
-        typedef P path_type;
-        typedef D data_type;
-        typedef X translator_type;
+        typedef KeyCompare key_compare;
+        typedef Key key_type;
+        typedef Path path_type;
+        typedef Data data_type;
+        typedef Translate translator_type;
 
         /**
          * Property tree stores a sequence of values of this type.
