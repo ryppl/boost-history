@@ -28,16 +28,16 @@ struct ieee_policy : public default_policy<T>
     typedef T type;
 
     template <typename OtherType>
-    static inline void set(type& value, const OtherType& v)   { value = boost::numeric_cast<T>(v); }
+    static inline void set(type& value, OtherType const& v)   { value = v; } //boost::numeric_cast<T>(v); }
 
-    static inline void set(type& value, const std::string& v) { value = boost::lexical_cast<T>(v); }
+    static inline void set(type& value, std::string const& v) { value = boost::lexical_cast<T>(v); }
 
-    static inline void sqrt(type& r, const type& a) { r = std::sqrt(a); }
-    static inline void cos(type& r, const type& a) { r = std::cos(a); }
-    static inline void sin(type& r, const type& a) { r = std::sin(a); }
+    static inline void sqrt(type& r, type const& a) { r = std::sqrt(a); }
+    static inline void cos(type& r, type const& a) { r = std::cos(a); }
+    static inline void sin(type& r, type const& a) { r = std::sin(a); }
 
     template <typename OtherType>
-    static inline OtherType big_numeric_cast(const type& v)
+    static inline OtherType big_numeric_cast(type const& v)
     {
         return boost::numeric_cast<OtherType>(v);
     }

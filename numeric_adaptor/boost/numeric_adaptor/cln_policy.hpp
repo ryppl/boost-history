@@ -37,7 +37,7 @@ struct cln_policy : public default_policy<cln::cl_F>
         // Conversions from the C built-in type `double' are provided for the
         // classes cl_DF, cl_F, cl_R, cl_N and cl_number
 
-        value = cln::cl_float(v, cln::float_format(40));
+        value = cln::cl_float(v, cln::float_format(256));
     }
 
     static inline void set(type& value, std::string const& v)

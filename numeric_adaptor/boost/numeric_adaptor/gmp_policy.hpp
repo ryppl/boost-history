@@ -12,6 +12,7 @@
 
 
 #include <string>
+#include <cstring>
 
 
 #include <gmp.h>
@@ -98,8 +99,24 @@ struct gmp_policy
 
     static inline std::string as_string(type const& a)
     {
-        mp_exp_t bexp;
-        std::string out = mpf_get_str (0, &bexp, 10, 0, a);
+        mp_exp_t exponent;
+        static char s[1024];
+        mpf_get_str (s, &exponent, 10, sizeof(s) - 1, a);
+
+        std::string out;
+        out.reserve(100);
+
+        // TODO: this is probably not working well for large numbers -> add e0X
+
+        register int i = 0;
+        for (register const char* ptr = s; *ptr; ptr++, i++)
+        {
+            if (i == exponent)
+            {
+                out += ".";
+            }
+            out += *ptr;
+        }
         return out;
     }
 
