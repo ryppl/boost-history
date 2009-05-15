@@ -8,7 +8,8 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 
-/// This header contains definition of basic_ptree class template and supporting definitions.
+/// This header contains definition of basic_ptree class template and
+/// supporting definitions.
 
 #ifndef BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
@@ -27,7 +28,8 @@
 #include <boost/throw_exception.hpp>
 
 #ifdef BOOST_PROPERTY_TREE_DEBUG
-#   include <boost/detail/lightweight_mutex.hpp>   // For syncing debug instances counter
+// For syncing debug instances counter
+#   include <boost/detail/lightweight_mutex.hpp>
 #endif
 
 #include <functional>               // for std::less

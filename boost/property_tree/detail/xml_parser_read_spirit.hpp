@@ -19,8 +19,8 @@
 #include <boost/property_tree/detail/xml_parser_error.hpp>
 #include <boost/property_tree/detail/xml_parser_flags.hpp>
 #include <boost/property_tree/detail/xml_parser_utils.hpp>
-#include <boost/spirit.hpp>
-#include <boost/spirit/iterator/position_iterator.hpp>
+#include <boost/spirit/include/classic_spirit.hpp>
+#include <boost/spirit/include/classic_position_iterator.hpp>
 #include <string>
 #include <locale>
 #include <istream>

@@ -29,7 +29,8 @@ namespace boost { namespace property_tree { namespace detail
         }
         inline bool operator()(const T &t1, const T &t2) const
         {
-            return std::lexicographical_compare(t1.begin(), t1.end(), t2.begin(), t2.end(), *this);
+            return std::lexicographical_compare(t1.begin(), t1.end(),
+                                                t2.begin(), t2.end(), *this);
         }
     };
 
@@ -51,7 +52,6 @@ namespace boost { namespace property_tree { namespace detail
     template<class Ch>
     std::string narrow(const Ch *text)
     {
-        std::locale loc;
         std::string result;
         while (*text)
         {
@@ -66,17 +66,17 @@ namespace boost { namespace property_tree { namespace detail
 
     // Remove trailing and leading spaces
     template<class Ch>
-    std::basic_string<Ch> trim(const std::basic_string<Ch> &s, 
+    std::basic_string<Ch> trim(const std::basic_string<Ch> &s,
                                const std::locale &loc = std::locale())
     {
         typename std::basic_string<Ch>::const_iterator first = s.begin();
         typename std::basic_string<Ch>::const_iterator end = s.end();
-        while (first != end && std::isspace(*first, loc)) 
+        while (first != end && std::isspace(*first, loc))
             ++first;
         if (first == end)
             return std::basic_string<Ch>();
         typename std::basic_string<Ch>::const_iterator last = end;
-        do --last; while (std::isspace(*last, loc)); 
+        do --last; while (std::isspace(*last, loc));
         if (first != s.begin() || last + 1 != end)
             return std::basic_string<Ch>(first, last + 1);
         else
