@@ -10,23 +10,56 @@
 
 A task is a chunk of code that can be executed independently.
 
-__task__ represents a __callable__ object containing the unit of code to be execute by a link_ae[__ae__]. It returns a link_act[__act__] allowing to wait for the completion of the computation of the task, for getting the result of a computation or for transfering exceptions.
+__task__ represents a __callable__ object containing the unit of code to be execute by a link_ae[__ae__]. Function __fn_get_future__ returns a link_act[__act__] allowing to wait for the completion of the computation of the task, for getting the result of a computation or for transfering exceptions.
+Each __task__ has a unique identifier 
 
 
 [heading:create_task Creation]
 
-__fn_make_task__ can be used to create __task__.
-The __task__ object acts as a proxy for a result that is initially not known and gets evaluated later by a __worker_thread__. It transports the result (value or exception) of the __action__ back to the caller.
+__fn_make_task__ can be used to create __task__ by passing free-functions or member-functions of objects and its arguments: __fn_make_task__ accepts up to ten
+arguments per default (can be overriden by defining BOOST_TASK_MAKE_TASK_MAX_ARITY with the new value).
 
-    boost::task::task< int > t1(
+* create task from free-function with arguments:
+
+    boost::task::task< int > t(
       boost::task::make_task(
 	  parallel_fib,
-	  10) );    
+	  10) );
 
-[heading:cooperative_task Interruption]
+* create task from member-function with arguments:
 
-__task__ object provides the possiblity to interrupt an __action__ if it is cooperative.
-An __action__ is known as cooperative if it includes interruption points in its code:
+    struct X
+    {
+      void f( int i);
+    };
+
+    X x;
+    boost::task::task< int > t(
+      boost::task::make_task(
+	  & X::f,
+	  x,
+	  10) );
+  
+It is possible to create __task__ from a __callable__ too:
+
+    struct Y
+    {
+	std::string operator()();
+    };
+    
+    Y y;
+    boost::task::task< std::string > t( y);
+    
+
+[heading:cooperative_task Cooperative task amd interruption]
+
+Sometimes it is desired to stop a running task if it is no longer needed. In this case the thread is not killed -
+it stops only at well-defined points (__interruption__points__) its execution.
+In the context of task-interruption a task is known as cooperative if it checks for an interruption request between 
+two __interruption__points__ via __fn__interruption_requested__
+[footnote see [@http://www.ddj.com/architect/207100682 'Interrupt Politely'], Herb Sutter].
+
+__interruption__points__ are:
 
 * `boost::thread::join()`
 * `boost::thread::timed_join()`
@@ -38,49 +71,64 @@ An __action__ is known as cooperative if it includes interruption points in its 
 * `boost::this_thread::sleep()`
 * `boost::this_thread::interruption_point()`
 
-[important Interruption must not be disabled for the __worker_thread__ (class ['boost::this_thread::disable_interruption]).]
+A __interruption__point__ throws __task_interrupted__ if an interruption was requested.
 
-The __action__ will be interrupted even if it is pending (interruption is remembered).
-A ['boost::thread_interrupted] exception will be thrown by `boost::tp::task< T >::get()` if the __action__ was interrupted.
-``
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool( boost::tp::poolsize( 10) );
+	long cooperative( long n)
+	{
+		boost::this_thread::interruption_point(); // interruption point
+		
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			if ( boost::this_thread::interruption_requested() )	// check if interruption was requested
+				return;
+				
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		
+		boost::this_thread::interruption_point();  // interruption point
+		
+		return k1;
+	}
 
-    // submit a long running task
-    boost::tp::task< int > t(
-      pool.submit(
-        boost::bind(
-          long_running_fn) ) );
-
-    // interrupt task
-    t.interrupt();
-
-    // throws boost::thread_interrupted exception
-    std::cout << t.get() << std::endl;
-``
-
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool( boost::tp::poolsize( 10) );
-
-    // submit a long running task
-    boost::tp::task< int > t(
-      pool.submit(
-        boost::bind(
-          long_running_fn) ) );
-
-    // interrupt task and wait for its termination
-    t.interrupt_and_wait();
-
-    // throws boost::thread_interrupted exception
-    std::cout << t.get() << std::endl;
+	void main()
+	{
+		boost::task::handle< long > h(			// get handle associated with the task
+			boost::task::async(			
+				boost::task::new_thread(),	// asynchronous executor
+				boost::task::make_task(		// task, to be executed asynchronously
+					cooperative,
+					10) ) );
+		std::cout << h.get() << std::endl;		// throws boost::task::task_interrupted
+	}
 
 
 [heading:task_exceptions Exceptions]
 
-Exceptions thrown inside an __action__ are transported by the associated task object.
-Exceptions rethrown by type:
+Exceptions thrown by __task__ are transported by the __act__.
+
+	void throwing()
+	{
+		...
+		throw std::domain_error("domain error");
+		...
+	}
+
+	void main()
+	{
+		boost::task::handle< void > h(			// get handle associated with the task
+			boost::task::async(			
+				boost::task::new_thread(),	// asynchronous executor
+				boost::task::make_task(		// task, to be executed asynchronously
+					throwing) ) );
+		std::cout << h.wait() << std::endl;		// throws std::domain_error
+	}
+
+Exceptions rethrown by type are:
 
 *  `std::bad_alloc`
 *  `std::bad_cast`
@@ -96,37 +144,60 @@ Exceptions rethrown by type:
 *  `std::range_error`
 *  `std::runtime_error`
 *  `std::underflow_error`
-*  `boost::broken_promise`
 *  `boost::future_already_set`
 *  `boost::future_cancel`
 *  `boost::exception`
 *  `boost::invalid_thread_argument`
 *  `boost::lock_error`
-*  `boost::thread_exception`
-*  `boost::thread_interrupted`
-*  `boost::thread_permission_error`
-*  `boost::thread_resource_error`
-*  `boost::unsupported_thread_option`
+*  `boost::task::task_interrupted`
+*  `boost::broken_task`
 
-Exceptions derived from `std::exception` will be rethrown as `std::runtime_error` in all other cases a `std::bad_exception` is thrown.
-
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool( boost::tp::poolsize( 10) );
-
-    // task will throw an exception derived from std::exception
-    boost::tp::task< int > t(
-      pool.submit(
-        boost::bind(
-          throwing_fn) ) );
-
-    std::cout << t.get() << std::endl; // will rethrow an std::runtime_error
 
 [heading:parent_tasks Parent-tasks]
 
-Top-level Tasks have no parent.  These are Tasks created by non-thread-pool threads, or with certain options specified at Task-creation time.  These tasks are queued to the same FIFO queue we use for QUWI, and thus benefit from the improvements we’ve made there – but they are also subject to the same limitations.  Tasks queued in this way are simply a better QUWI – but now the fun starts:  A parent task can create child tasks.  This happens whenever a Task creates another Task (unless it overrides this behavior).  These children are implicitly treated as sub-tasks of the larger task.  We assume that sub-tasks can be executed in any order – fairness is not necessary – because all that matters is that the overall operation be completed as fast as possible.  This lets us throw those FIFO restrictions out the window, and opens up the possibility for much more efficient work scheduling strategies.
+Top-level tasks have no parent. A parent task can create child tasks when it creates another task by using __as_sub_task__ as __ae__.  These children are implicitly treated as __sub_tasks__ of the larger task.  It is assumed that that __sub_tasks__ can be executed in any order because only overall operation
+speed matters (enabling strategies for fast execution of unordered work-items as link_work_stealing[__work_stealing__]).
 
-Since a child task is just a piece of a larger task, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is link_work_stealing[__work_stealing__].
+	long serial_fib( long n)
+	{
+		if( n < 2) return n;
+		else return serial_fib( n - 1) + serial_fib( n - 2);
+	}
 
+	long parallel_fib( long n, long cutof)
+	{
+		if ( n < cutof) return serial_fib( n);
+		else
+		{
+			// submit a sub-task to pool calculating fibonacci(n-1)
+			h1 = boost::task::async(
+				boost::task::as_sub_task(),	// execute a sub-task
+				boost::task::make_task(
+					parallel_fib,
+					n - 1,
+					cutof) );
+			// submit a sub-task to pool calculating fibonacci(n-2)
+			h2 = boost::task::async(
+				boost::task::as_sub_task(),	// execute a sub-task
+				boost::task::make_task(
+					parallel_fib,
+					n - 2,
+					cutof) );
+			// calculate fibonacci(n) from the results of both sub-tasks
+			return h1.get() + h2.get();
+		}
+	}
+
+	void main()
+	{
+		boost::task::handle< long > h(			// handle for fibonacci calculation
+			boost::task::async(
+				boost::task::default_pool(),	// access the default thread-pool
+				boost::task::make_task(		// calculate fibonacci number 10
+					parallel_fib,		// for numbers < 5 do inline recursive calculation
+					10,
+					5) ) );  
+		std::cout << h.get() << std::endl;
+	}
 
 [endsect]

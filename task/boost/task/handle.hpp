@@ -205,6 +205,8 @@ public:
 		{ fut_.get(); }
 		catch ( broken_promise const&)
 		{ throw broken_task(); }
+		catch ( promise_already_satisfied const&)
+		{ throw task_already_executed(); }
 	}
 
 	bool is_ready() const

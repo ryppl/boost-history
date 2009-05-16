@@ -115,7 +115,7 @@ and destruction for each task. __default_pool__ submitts the tasks to the defaul
 					5) ) );  
 		std::cout << h.get() << std::endl;
 	}
-};
+
 
 With function __fn_runs_in_pool__ a task can detect if it is executed inside a __thread_pool__.
 __sub_tasks__ arecreated by __as_sub_task__. Where the __sub_task__ is executed by a new thread if the parent task
