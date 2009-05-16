@@ -1,4 +1,4 @@
-//  boost process_timer.cpp  ------------------------------------------------------//
+//  boost process_timer.cpp  -----------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
 
@@ -7,7 +7,7 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-//---------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)

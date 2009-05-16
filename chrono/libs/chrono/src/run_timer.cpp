@@ -1,4 +1,4 @@
-//  boost run_timer.cpp  -----------------------------------------------------//
+//  boost run_timer.cpp  ---------------------------------------------------------------//
 
 //  Copyright Beman Dawes 1994, 2006, 2008
 
@@ -7,7 +7,7 @@
 
 //  See http://www.boost.org/libs/chrono for documentation.
 
-//----------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
 // define BOOST_CHRONO_SOURCE so that <boost/chrono/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
@@ -90,7 +90,7 @@ namespace boost
 {
   namespace chrono
   {
-    //  run_timer::report  --------------------------------------------------------//
+    //  run_timer::report  -------------------------------------------------------------//
 
     void run_timer::report( system::error_code & ec )
     {
@@ -120,7 +120,7 @@ namespace boost
       }
     }
 
-    //  run_timer::test_report  ---------------------------------------------------//
+    //  run_timer::test_report  --------------------------------------------------------//
 
     void run_timer::test_report( duration real_, duration user_, duration system_ )
     {
