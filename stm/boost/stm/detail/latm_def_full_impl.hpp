@@ -72,7 +72,7 @@ inline bool boost::stm::transaction::def_do_core_full_pthread_lock_mutex
    // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
    // so we can abort all the in-flight transactions
    //--------------------------------------------------------------------------
-   if (0 == latmLockedLocks_.size()) 
+   if (latmLockedLocks_.empty()) 
    {
       lock_general_access();
       lock_inflight_access();
@@ -256,7 +256,7 @@ inline int boost::stm::transaction::def_full_pthread_unlock_mutex(Mutex *mutex)
 
    latmLockedLocks_.erase(mutex);
 
-   if (0 == latmLockedLocks_.size()) unlock_inflight_access();
+   if (latmLockedLocks_.empty()) unlock_inflight_access();
 
    latmLockedLocksOfThreadMap_.erase(mutex);
    unlock(&latmMutex_);
