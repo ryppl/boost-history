@@ -79,7 +79,7 @@ inline bool boost::stm::transaction::def_do_core_tm_conflicting_lock_pthread_loc
    {
       // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
       // so we can abort all the in-flight transactions
-      if (0 == latmLockedLocks_.size()) 
+      if (latmLockedLocks_.empty()) 
       {
          var_auto_lock<PLOCK> autlock(general_lock(), inflight_lock(), 0);
 
@@ -264,7 +264,7 @@ def_tm_conflicting_lock_pthread_unlock_mutex(Mutex *mutex)
    {
       latmLockedLocks_.erase(mutex);
 
-      if (0 == latmLockedLocks_.size()) unlock_inflight_access();
+      if (latmLockedLocks_.empty()) unlock_inflight_access();
    }
 
    latmLockedLocksOfThreadMap_.erase(mutex);
