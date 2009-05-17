@@ -83,12 +83,12 @@ public:
 	void interrupt_and_wait()
 	{ intr_.interrupt_and_wait(); }
 
-	void interrupt_and_wait( system_time const& abs_time)
-	{ intr_.interrupt_and_wait( abs_time); }
+	void interrupt_and_wait_until( system_time const& abs_time)
+	{ intr_.interrupt_and_wait_until( abs_time); }
 
 	template< typename Duration >
-	void interrupt_and_wait( Duration const& rel_time)
-	{ intr_.interrupt_and_wait( rel_time); }
+	void interrupt_and_wait_for( Duration const& rel_time)
+	{ intr_.interrupt_and_wait_for( rel_time); }
 
 	bool interruption_requested()
 	{ return intr_.interruption_requested(); }
@@ -221,12 +221,12 @@ public:
 	void wait() const
 	{ fut_.wait(); }
 
-    template< typename Duration >
-    bool wait_for( Duration const& rel_time) const
-	{ return fut_.timed_wait( rel_time); }
+	void interrupt_and_wait_until( system_time const& abs_time)
+	{ intr_.interrupt_and_wait_until( abs_time); }
 
-    bool wait_until( system_time const& abs_time) const
-	{ return fut_.timed_wait_until( abs_time); }
+	template< typename Duration >
+	void interrupt_and_wait_for( Duration const& rel_time)
+	{ intr_.interrupt_and_wait_for( rel_time); }
 
 	void swap( handle< void > & other)
 	{

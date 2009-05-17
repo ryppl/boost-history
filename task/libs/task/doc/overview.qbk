@@ -11,17 +11,17 @@
 __boost_task__ provides an framework for parallel execution of tasks (a task is a small unit of code that can be executed independently).
 
 * __task__, __callable__ representing a fine-grained work-item:
-	* get_id() returning an identifier
-	* operator() to execute the fine-grained work-item
-	* get_future() providing an __act__ in order to pass the result (values, exceptions) back to initiator
+	* __fn_get_id__ returning an identifier
+	* __fn_operator__ to execute the fine-grained work-item
+	* __fn_get_future__ providing an __act__ in order to pass the result (values, exceptions) back to initiator
 
 * __handle__, __act__ of the asynchronously executed task:
-	* get_id() for identifying associated __task__
-	* interrupt(), interrupt_and_wait() allow to cancel an coop_task_link[cooperative task]
+	* __fn_get_id__ for identifying associated __task__
+	* __fn_interrupt__, interrupt_and_wait() allow to cancel an coop_task_link[cooperative task]
 	* interface of __act__:
-		* get() retrieve value or exception of task execution
-		* is_ready() test if task was executed
-		* wait(), wait_for() and wait_until() block until task is executed and the result is set
+		* __fn_get__ retrieve value or exception of task execution
+		* __fn_is_ready__ test if task was executed
+		* __fn_wait__, wait_for() and wait_until() block until task is executed and the result is set
 
 * __async__, executes a task on behalf of __aes__
 

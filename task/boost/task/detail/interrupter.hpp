@@ -50,10 +50,10 @@ private:
 
 		void interrupt_and_wait();
 
-		void interrupt_and_wait( system_time const& abs_time);
+		void interrupt_and_wait_until( system_time const& abs_time);
 
 		template< typename DurationType >
-		void interrupt_and_wait( DurationType const& rel_time)
+		void interrupt_and_wait_for( DurationType const& rel_time)
 		{
 			unique_lock< mutex > lk( mtx_);
 			interrupt_();
@@ -76,11 +76,11 @@ public:
 
 	void interrupt_and_wait();
 
-	void interrupt_and_wait( system_time const& abs_time);
+	void interrupt_and_wait_until( system_time const& abs_time);
 
 	template< typename DurationType >
-	void interrupt_and_wait( DurationType const& rel_time)
-	{ impl_->interrupt_and_wait( rel_time); }
+	void interrupt_and_wait_for( DurationType const& rel_time)
+	{ impl_->interrupt_and_wait_for( rel_time); }
 
 	bool interruption_requested();
 

@@ -10,11 +10,11 @@
 
 A task is a chunk of code that can be executed independently.
 
-__task__ represents a __callable__ object containing the unit of code to be execute by a link_ae[__ae__]. Function __fn_get_future__ returns a link_act[__act__] allowing to wait for the completion of the computation of the task, for getting the result of a computation or for transfering exceptions.
+__task__ represents a __callable__ (provides __fn_operator__) object containing the unit of code to be execute by a link_ae[__ae__]. Function __fn_get_future__ returns a link_act[__act__] allowing to wait for the completion of the computation of the task, for getting the result of a computation or for transfering exceptions.
 Each __task__ has a unique identifier 
 
 
-[heading:create_task Creation]
+[heading:create Creation]
 
 __fn_make_task__ can be used to create __task__ by passing free-functions or member-functions of objects and its arguments: __fn_make_task__ accepts up to ten
 arguments per default (can be overriden by defining BOOST_TASK_MAKE_TASK_MAX_ARITY with the new value).
@@ -51,7 +51,7 @@ It is possible to create __task__ from a __callable__ too:
     boost::task::task< std::string > t( y);
     
 
-[heading:cooperative_task Cooperative task amd interruption]
+[heading:cooperative Cooperative task amd interruption]
 
 Sometimes it is desired to stop a running task if it is no longer needed. In this case the thread is not killed -
 it stops only at well-defined points (__interruption__points__) its execution.
@@ -107,7 +107,7 @@ A __interruption__point__ throws __task_interrupted__ if an interruption was req
 	}
 
 
-[heading:task_exceptions Exceptions]
+[heading:exceptions Exceptions]
 
 Exceptions thrown by __task__ are transported by the __act__.
 
@@ -153,7 +153,7 @@ Exceptions rethrown by type are:
 *  `boost::broken_task`
 
 
-[heading:parent_tasks Parent-tasks]
+[heading:parent Parent-tasks]
 
 Top-level tasks have no parent. A parent task can create child tasks when it creates another task by using __as_sub_task__ as __ae__.  These children are implicitly treated as __sub_tasks__ of the larger task.  It is assumed that that __sub_tasks__ can be executed in any order because only overall operation
 speed matters (enabling strategies for fast execution of unordered work-items as link_work_stealing[__work_stealing__]).

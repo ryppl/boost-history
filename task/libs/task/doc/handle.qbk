@@ -1,1 +1,33 @@
- 
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:handle Handle] 
+
+__handle__ represents a __act__. It is associated by a __task__ (uniquely identified) and is returned by __fn_async__.
+
+[heading:act_interface Asynchronous completion token interface]
+
+__handle__ implements an interface in order to check the state of computation and result transfer
+
+* __fn_get_id__:
+* __fn_is_ready__:
+* __fn_has_value__:
+* __fn_has_exception__:
+* __fn_get__:
+* __fn_wait__:
+* __fn_wait_for__:
+* __fn_wait_until__:
+
+[heading:task_interruption Task interruption]
+
+* __fn_interrupt__:
+* __fn_interupt_and_wait_for__:
+* __fn_interrupt_and_wait_until__:
+* __fn_interruption_requested__:
+
+[endsect]
