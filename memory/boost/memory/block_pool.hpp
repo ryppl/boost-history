@@ -29,7 +29,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class proxy_alloc
 
-template <class AllocT, class TlsAllocT>
+template <class AllocT, class TlsAllocT = void>
 class proxy_alloc
 {
 private:
@@ -54,6 +54,8 @@ public:
 // -------------------------------------------------------------------------
 // class block_pool
 
+#pragma pack(1)
+
 template <class PolicyT>
 class block_pool_
 {
@@ -61,11 +63,9 @@ private:
 	typedef typename PolicyT::alloc_type AllocT;
 	enum { m_cbBlock = PolicyT::MemBlockBytes - AllocT::Padding };
 
-#pragma pack(1)
 	struct Block {
 		Block* next;
 	};
-#pragma pack()
 
 	Block* m_freeList;
 
@@ -143,6 +143,8 @@ public:
 };
 
 typedef block_pool_<NS_BOOST_MEMORY_POLICY::sys> block_pool;
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // class tls_block_pool

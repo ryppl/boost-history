@@ -25,6 +25,8 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class fixed_alloc
 
+#pragma pack(1)
+
 #ifndef ROUND
 #define ROUND(x, y)		(((x)+((y)-1)) & ~((y)-1))
 #endif
@@ -49,7 +51,6 @@ public:
 	typedef AllocT alloc_type;
 	typedef size_t size_type;
 
-#pragma pack(1)
 protected:
 	struct MemBlock;
 	friend struct MemBlock;
@@ -78,8 +79,6 @@ protected:
 
 	enum { ChunkHeaderSize = sizeof(ChunkHeader) };
 	enum { MinElemBytes = sizeof(FreeChunk) };
-
-#pragma pack()
 
 	dcl_list<FreeChunk> m_freelist;
 	dcl_list<MemBlock> m_blks;
@@ -197,6 +196,8 @@ public:
 			do_deallocate_block_(blk);
 	}
 };
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // $Log: $
