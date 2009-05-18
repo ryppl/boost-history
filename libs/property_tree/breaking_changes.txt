@@ -1,5 +1,27 @@
 List all breaking changes done to the interface during the update here.
 
-- Template parameters.
-Template parameters have been reordered, and an allocator parameter has been
-added.
+- Template parameters
+Template parameters have been thoroughly changed.
+Impact: If you were using a custom instantiation of basic_ptree, you have to
+  change your code.
+
+- put*
+The put and put_child functions of basic_ptree had add and add_child split from
+them, by splitting the functionality of the third parameter.
+Impact: If you were using the third parameter of these functions, you have to
+  change your code.
+
+- Custom paths
+Custom paths have been thoroughly changed.
+Impact: If you were using custom paths, you have to change your code. If you
+  referred to the basic_path template by name, you have to change your code.
+
+- Translators
+Translators have been thoroughly changed.
+Impact: If you were using translators at all, you probably have to change your
+  code.
+
+- find
+find() returns an assoc_iterator.
+Impact: If you use find, you may have to change your code.
+Rationale: equal_range() also returns assoc_iterators.

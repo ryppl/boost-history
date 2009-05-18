@@ -23,15 +23,49 @@ namespace boost { namespace property_tree
     ///////////////////////////////////////////////////////////////////////////
     // Classes
 
-    template<class Key> class basic_path;
-    class translator;
-    //template<class C, class K, class P, class D, class X> class basic_ptree;
     template <class Key, class Data,
               class KeyCompare = std::less<Key>,
-              class Allocator = std::allocator<Data>,
-              class Path = basic_path<Key>,
-              class Translate = translator>
-        class basic_ptree;
+              class Allocator = std::allocator<Data>>
+    class basic_ptree;
+
+    struct id_translator;
+
+    template <typename String, typename Translator>
+    class string_path;
+
+    // We'll want to do this with concepts in C++0x.
+#if 0
+    concept PropertyTreePath<Path> {
+      // The key type for which this path works.
+      typedef key_type;
+      // Return the key and index that the first segment of the path name.
+      // Split the head off the state.
+      std::pair<key_type, std::size_t> Path::reduce();
+
+      // Return true if the path is empty.
+      bool Path::empty();
+
+      // Return true if the path contains a single element.
+      bool Path::single();
+    }
+    concept PropertyTreeKey<Key> {
+        PropertyTreePath path;
+        requires SameType<Key, PropertyTreePath<path>::key_type>;
+    }
+#endif
+    /// If you want to use a custom key type, specialize this struct for it
+    /// and give it a 'type' typedef that specifies your path type. The path
+    /// type must conform to the Path concept described in the documentation.
+    /// This is already specialized for std::basic_string.
+    template <typename Key>
+    struct path_of;
+
+    /// Specialize this struct to specify a default translator between the data
+    /// in a tree whose data_type is TreeData, and the external data_type
+    /// specified in a get_value, get, put_value or put operation.
+    /// This is already specialized for TreeData being std::basic_string.
+    template <typename TreeData, typename External>
+    struct translator_between;
 
     class ptree_error;
     class ptree_bad_data;
@@ -41,20 +75,20 @@ namespace boost { namespace property_tree
     // Typedefs
 
     /** Implements a path using a std::string as the key. */
-    typedef basic_path<std::string> path;
+    typedef string_path<std::string, id_translator> path;
 
     /** Implements a path using a std::wstring as the key. */
-    typedef basic_path<std::wstring> wpath;
+    typedef string_path<std::wstring, id_translator> wpath;
 
     /**
-     * A property tree that uses a path type based upon std::string.
-     * Comparisons of keys are performed in a case-sensitive manner.
+     * A property tree with std::string for key and data, and default
+     * comparison.
      */
     typedef basic_ptree<std::string, std::string> ptree;
 
     /**
-     * A property tree that uses a path type based upon std::string.
-     * Comparisons of keys are performed in a case-insensitive manner.
+     * A property tree with std::string for key and data, and case-insensitive
+     * comparison.
      */
     typedef basic_ptree<std::string, std::string,
                         detail::less_nocase<std::string> >
@@ -62,15 +96,15 @@ namespace boost { namespace property_tree
 
 #ifndef BOOST_NO_CWCHAR
     /**
-     * A property tree that uses a wide-character path type based upon std::wstring.
-     * Comparisons of keys are performed in a case-sensitive manner.
+     * A property tree with std::wstring for key and data, and default
+     * comparison.
      * @note The type only exists if the platform supports @c wchar_t.
      */
     typedef basic_ptree<std::wstring, std::wstring> wptree;
 
     /**
-     * A property tree that uses a wide-character path type based upon std::wstring.
-     * Comparisons of keys are performed in a case-insensitive manner.
+     * A property tree with std::wstring for key and data, and case-insensitive
+     * comparison.
      * @note The type only exists if the platform supports @c wchar_t.
      */
     typedef basic_ptree<std::wstring, std::wstring,
@@ -83,12 +117,10 @@ namespace boost { namespace property_tree
 
     /**
      * Swap two property tree instances.
-     * @param pt1 Reference to first property tree involved in swap.
-     * @param pt2 Reference to second property tree involved in swap.
      */
-    template<class K, class D, class C, class A, class P, class X>
-    void swap(basic_ptree<K, D, C, A, P, X> &pt1,
-              basic_ptree<K, D, C, A, P, X> &pt2);
+    template<class K, class D, class C, class A>
+    void swap(basic_ptree<K, D, C, A> &pt1,
+              basic_ptree<K, D, C, A> &pt2);
 
     /**
      * Reference to empty property tree. Can be used as a default value of
@@ -96,11 +128,11 @@ namespace boost { namespace property_tree
      */
     template<class Ptree> const Ptree &empty_ptree();
 
-    /** Join two path objects. */
-    path operator /(const path &p1, const path &p2);
-
-    /** Join two wide-path objects. */
-    wpath operator /(const wpath &p1, const wpath &p2);
+    /** Join two string_path objects. */
+    template <typename String, typename Translator>
+    string_path<String, Translator> operator /(
+                                  const string_path<String, Translator> &p1,
+                                  const string_path<String, Translator> &p2);
 
 } }
 
