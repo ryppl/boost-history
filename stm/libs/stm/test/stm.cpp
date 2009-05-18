@@ -29,6 +29,7 @@
 #include "testLL_latm.h"
 #include "testHT_latm.h"
 #include "smart.h"
+#include "pointer_test.h"
 #if 0
 #include "testLinkedListWithLocks.h"
 #include "testHashMapAndLinkedListsWithLocks.h"
@@ -178,6 +179,7 @@ int main(int argc, char **argv)
       else if ("ll" == bench) TestLinkedListSetsWithLocks();
       else if ("smart" == bench) test_smart();
 #if 0
+      else if ("pointer" == bench) pointer_test();
       else if ("linkedlist_w_locks" == bench) TestLinkedListWithLocks();
       else if ("hashmap_w_locks" == bench) TestHashMapWithLocks();
       else if ("list_hash_w_locks" == bench) TestHashMapAndLinkedListWithLocks();
