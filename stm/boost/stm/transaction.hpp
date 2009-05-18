@@ -462,7 +462,11 @@ public:
    size_t const writes() const { return writeListRef_->size(); }
    size_t const reads() const { return reads_; }
 
-   template <typename T> T const * read_ptr(T const * in) { return &read(*in); }
+   template <typename T> T const * read_ptr(T const * in) 
+   { 
+      if (NULL == in) return NULL;
+      return &read(*in); 
+   }
    template <typename T> T const & r(T const & in) { return read(in); }
 
    //--------------------------------------------------------------------------
@@ -520,7 +524,11 @@ public:
    }
 
    //--------------------------------------------------------------------------
-   template <typename T> T* write_ptr(T* in) { return &write(*in); }
+   template <typename T> T* write_ptr(T* in) 
+   { 
+      if (NULL == in) return NULL;
+      return &write(*in); 
+   }
    template <typename T> T& w(T& in) { return write(in); }
 
    //--------------------------------------------------------------------------
@@ -566,7 +574,34 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T* new_memory()
+   T* new_shared_memory(T*)
+   {
+      if (forced_to_abort()) 
+      {
+         if (!directUpdating_) 
+         {
+            deferred_abort(true);
+            throw aborted_tx("");
+         }
+
+#ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
+         cm_->abort_on_new(*this);
+#endif
+      }
+
+      make_irrevocable();
+
+      T *newNode = new T;
+      newNode->transaction_thread(threadId_);
+      newNode->new_memory(1);
+      newMemoryList().push_back(newNode);
+
+      return newNode;
+   }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* new_memory(T*)
    {
       if (forced_to_abort()) 
       {
@@ -583,7 +618,7 @@ public:
       T *newNode = new T();
       newNode->transaction_thread(threadId_);
       newNode->new_memory(1);
-      newMemoryList().push_front(newNode);
+      newMemoryList().push_back(newNode);
 
       return newNode;
    }
@@ -624,7 +659,10 @@ public:
    void no_throw_end();
 
    void force_to_abort() 
-   { 
+   {
+      // can't abort irrevocable transactions
+      if (irrevocable()) return;
+
       *forcedToAbortRef_ = true; 
 
 #ifdef PERFORMING_COMPOSITION
