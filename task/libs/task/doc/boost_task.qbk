@@ -41,6 +41,7 @@
 [def __as_sub_task__ `boost::task::as_sub_task`]
 [def __bounded_channel__ `boost::task::bounded_channel`]
 [def __default_pool__ `boost::task::default_pool`]
+[def __dynamic_pool__ `boost::task::dynamic_pool`]
 [def __handle__ `boost::task::handle`]
 [def __new_thread__ `boost::task::new_thread`]
 [def __own_thread__ `boost::task::own_thread`]

@@ -8,26 +8,119 @@
 
 [section:handle Handle] 
 
-__handle__ represents a __act__. It is associated by a __task__ (uniquely identified) and is returned by __fn_async__.
+__handle__ represents an __act__. It will be returned by __fn_async__ and is associated with the submitted __task__.
+
 
 [heading:act_interface Asynchronous completion token interface]
 
 __handle__ implements an interface in order to check the state of computation and result transfer
 
-* __fn_get_id__:
-* __fn_is_ready__:
-* __fn_has_value__:
-* __fn_has_exception__:
-* __fn_get__:
-* __fn_wait__:
-* __fn_wait_for__:
-* __fn_wait_until__:
+* __fn_get_id__: return id of the associated task-id
+
+* __fn_is_ready__: test if result is set
+
+* __fn_has_value__: test if value-result is set
+
+* __fn_has_exception__: test if exception-result is set
+
+* __fn_get__: return value-result
+
+* __fn_wait__: wait until result is set
+
+* __fn_wait_for__: wait until result is set or time-duration has elapsed
+
+* __fn_wait_until__: wait until result ist set or time-point has elapsed
+
+
+	long fibonacci( long n)
+	{
+		boost::this_thread::interruption_point(); // interruption point
+		
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			if ( boost::this_thread::interruption_requested() )	// check if interruption was requested
+				return;
+
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		
+		boost::this_thread::interruption_point();  // interruption point
+		
+		return k1;
+	}
+
+	void main()
+	{
+		boost::task::handle< long > h(
+			boost::task::async(
+				boost::task::new_thread(),
+				boost::task::make_task(
+					fibonacci,
+					10) ) );
+		std::cout << "id == " << h.get_id() << "\n";
+		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
+		h.wait();
+		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
+		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
+	}
+
 
 [heading:task_interruption Task interruption]
 
-* __fn_interrupt__:
-* __fn_interupt_and_wait_for__:
-* __fn_interrupt_and_wait_until__:
-* __fn_interruption_requested__:
+* __fn_interrupt__: interrupt __task__ and return immediately
+
+* __fn_interrupt_and_wait__: interrupt and wait until __task__ was removed from __worker_thread__
+
+* __fn_interrupt_and_wait_for__: interrupt and wait until __task__ was removed from __worker_thread__ or time duration has elapsed
+
+* __fn_interrupt_and_wait_until__: interrupt and wait until __task__ was removed from __worker_thread__ or time point has elapsed
+
+* __fn_interruption_requested__: return bool if interruption was requested
+
+
+	long cooperative( long n)
+	{
+		boost::this_thread::interruption_point(); // interruption point
+		
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			if ( boost::this_thread::interruption_requested() )	// check if interruption was requested
+				return;
+				
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		
+		boost::this_thread::interruption_point();  // interruption point
+		
+		return k1;
+	}
+
+	void main()
+	{
+		boost::task::handle< long > h(			// get handle associated with the task
+			boost::task::async(			
+				boost::task::new_thread(),	// asynchronous executor
+				boost::task::make_task(		// task, to be executed asynchronously
+					cooperative,
+					10) ) );
+		h.interrupt_and_wait();
+		std::cout << "id == " << h.get_id() << "\n";
+		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
+		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
+		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
+		std::cout << h.get() << std::endl;		// throws boost::task::task_interrupted
+	}
+
 
 [endsect]
