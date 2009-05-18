@@ -178,8 +178,8 @@ int main(int argc, char **argv)
       else if ("ht" == bench) TestHashTableSetsWithLocks();
       else if ("ll" == bench) TestLinkedListSetsWithLocks();
       else if ("smart" == bench) test_smart();
-#if 0
       else if ("pointer" == bench) pointer_test();
+#if 0
       else if ("linkedlist_w_locks" == bench) TestLinkedListWithLocks();
       else if ("hashmap_w_locks" == bench) TestHashMapWithLocks();
       else if ("list_hash_w_locks" == bench) TestHashMapAndLinkedListWithLocks();
