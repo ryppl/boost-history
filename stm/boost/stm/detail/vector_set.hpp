@@ -47,6 +47,7 @@ public:
    typename vector_set<T>::const_iterator end() const { return elements_.end(); }
 
    size_t size() { return elements_.size(); }
+   bool empty() { return elements_.empty(); }
 
    //-----------------------------------------------------------------------
    //-----------------------------------------------------------------------
