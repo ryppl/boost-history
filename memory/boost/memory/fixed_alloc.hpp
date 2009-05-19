@@ -114,6 +114,11 @@ public:
 		clear();
 	}
 
+	size_type BOOST_MEMORY_CALL element_size() const
+	{
+		return m_cbChunk - ChunkHeaderSize;
+	}
+
 	alloc_type BOOST_MEMORY_CALL get_alloc() const
 	{
 		return m_alloc;
