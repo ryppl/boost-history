@@ -45,53 +45,69 @@ struct gmp_policy
     }
 
 
-    static inline void copy(const type& source, type& dest)
+    static inline void copy(type const& source, type& dest)
     {
         mpf_set(dest, source);
     }
 
-    static inline void add(type& r, const type& a, const type& b)
+    static inline void add(type& r, type const& a, type const& b)
     {
         mpf_add(r, a, b);
     }
 
-    static inline void subtract(type& r, const type& a, const type& b)
+    static inline void subtract(type& r, type const& a, type const& b)
     {
         mpf_sub(r, a, b);
     }
 
-    static inline void multiply(type& r, const type& a, const type& b)
+    static inline void multiply(type& r, type const& a, type const& b)
     {
         mpf_mul(r, a, b);
     }
 
-    static inline void divide(type& r, const type& a, const type& b)
+    static inline void divide(type& r, type const& a, type const& b)
     {
         mpf_div(r, a, b);
     }
 
-    static inline void sqrt(type& r, const type& a)
+    static inline void abs(type& r, type const& a)
+    {
+        mpf_abs(r, a);
+    }
+
+    static inline void sqrt(type& r, type const& a)
     {
         mpf_sqrt(r, a);
     }
 
-    static inline void cos(type& r, const type& a)
+    static inline void cos(type& r, type const& a)
     {
-        // COS is not available.
+        // COS is not available in GMP
         long double d = mpf_get_d(a);
         mpf_set_d(r, std::cos(d));
     }
 
-    static inline void sin(type& r, const type& a)
+    static inline void sin(type& r, type const& a)
     {
-        // SIN is not available.
+        // SIN is not available in GMP
         long double d = mpf_get_d(a);
         mpf_set_d(r, std::sin(d));
     }
 
+    static inline void hypot(type& r, type const& a, type const& b)
+    {
+        mpf_mul(r, a, a);
+        type t;
+        mpf_init(t);
+        mpf_mul(t, b, b);
+        mpf_add(t, r, t);
+        mpf_sqrt(r, t);
+        mpf_clear(t);
+    }
+
 
     template <typename OtherType>
-    static inline OtherType big_numeric_cast(const type& b)
+    static inline OtherType big_numeric_cast(type const& b)
     {
         return mpf_get_d(b);
     }
@@ -121,7 +137,7 @@ struct gmp_policy
     }
 
 
-    static inline int compare(const type& a, const type& b)
+    static inline int compare(type const& a, type const& b)
     {
         return mpf_cmp(a, b);
     }

@@ -18,33 +18,36 @@
 #  include <boost/numeric_adaptor/cln_policy.hpp>
 #endif
 
-
+template <typename T, typename N>
+inline T get(N const& bn)
+{
+    return bn.template get<T>();
+}
 
 template <typename T, typename Num>
-void sample1(const std::string& header, T const& c1, T const& c2, T const& c4)
+void sample1(const std::string& header, T const& t_a, T const& t_b, T const& t_c)
 {
     std::cout << std::endl << "---" << header << std::endl;
-    Num v1 = c1;
-    Num v2 = c2;
-    Num v3 = v1 + v2;
+    Num a = t_a;
+    Num b = t_b;
+    Num a_plus_b = a + b;
 
-    // NOTE: strings can NOT be casted / streamed in one line for GCC/Comeau (for MSVC/DMC it is OK)
-    // See http://www.codeguru.com/forum/showthread.php?p=1842725
-    T t3 = v3;
-    std::cout << "a + b: " << t3 << std::endl;
+    //T t3 = a_plus_b; // does NOT compile for strings
+    std::cout << "a + b:     " << a_plus_b.template get<T>() << std::endl;
 
-    Num v4 = c4;
-    Num v5 = (v1 + v2) * v4;
-    T t5 = v5;
-    std::cout << "  " << t5;
-    v5 = v1 + v2 * v4;
-    T t5a = v5;
-    std::cout << "  " << t5a;
+    Num c = t_c;
+    Num par = (a + b) * c;
+    std::cout << "(a + b) c: " << par.template get<T>() << std::endl;
+    par = a + b * c;
+    std::cout << "a + bc:    " << par.template get<T>() << std::endl;
 
-    Num v6 = Num::sqrt(v3);
-    T t6 = v6;
-    std::cout << "  " << t6 << std::endl;
+    Num sqrt_a_plus_b = Num::sqrt(a_plus_b);
+    std::cout << "sqrt(a+b): " << sqrt_a_plus_b.template get<T>() << std::endl;
 
+    // Calc the hypot function
+    Num hypot_b_c = Num::hypot(b, c);
+    std::cout << "hypot:     " << hypot_b_c.template get<T>() << std::endl;
+    std::cout << "hypot2:    " << get<T>(Num::sqrt(b * b + c * c)) << std::endl;
 }
 
 
@@ -81,6 +84,8 @@ void sample2(const std::string& header, T const& c1, T const& c2, T const& c4)
 
     Num v7 = Num::cos(v1);
     std::cout << "cos: " << T(v7) << std::endl;
+    v7 = Num::abs(v7);
+    std::cout << "abs: " << T(v7) << std::endl;
     v7 = Num::sin(v1);
     std::cout << "sin: " << T(v7) << std::endl;
 
@@ -98,7 +103,7 @@ void long_double_issue()
 int main()
 {
     mpf_set_default_prec(128);
-    std::cout << std::setprecision(12);
+    std::cout << std::setprecision(18);
 
     long_double_issue();
 
@@ -119,11 +124,24 @@ int main()
     sample2<float, numeric_adaptor<ieee_policy<double> > >("use float, calculate with double", a, b, c);
     sample2<double, numeric_adaptor<ieee_policy<double> > >("use double, calculate with double", a, b, c);
 
+
 #if ! defined(_MSC_VER)
     sample2<double, numeric_adaptor<gmp_policy> >("use double, calculate with gmp", a, b, c);
     sample2<double, numeric_adaptor<cln_policy> >("use double, calculate with CLN", a, b, c);
 #endif
 
+
+    {
+        double a = -3;
+        double b = -4;
+        std::cout << hypot(a, b) << std::endl;
+        std::cout << boost::math::hypot(a, b) << std::endl;
+
+        double rat = a / b;
+        double h = b * sqrt(1 + rat*rat);
+        std::cout << h << std::endl;
+
+    }
 
     return 0;
 }

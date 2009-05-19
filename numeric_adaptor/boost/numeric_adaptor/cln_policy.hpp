@@ -46,6 +46,11 @@ struct cln_policy : public default_policy<cln::cl_F>
         value = v.c_str();
     }
 
+    static inline void abs(type& r, type const& a)
+    {
+        r = cln::abs(a);
+    }
+
 
     static inline void sqrt(type& r, type const& a)
     {
@@ -60,6 +65,11 @@ struct cln_policy : public default_policy<cln::cl_F>
     static inline void sin(type& r, type const& a)
     {
         r = cln::sin(a);
+    }
+
+    static inline void hypot(type& r, type const& a, type const& b)
+    {
+        r = cln::sqrt(a * a + b * b);
     }
 
 

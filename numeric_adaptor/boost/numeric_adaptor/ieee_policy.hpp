@@ -17,9 +17,10 @@
 
 #include <boost/numeric_adaptor/default_policy.hpp>
 
-
 #include <boost/numeric/conversion/cast.hpp>
 #include <boost/lexical_cast.hpp>
+
+#include <boost/math/special_functions/hypot.hpp>
 
 
 template <typename T>
@@ -35,6 +36,13 @@ struct ieee_policy : public default_policy<T>
     static inline void sqrt(type& r, type const& a) { r = std::sqrt(a); }
     static inline void cos(type& r, type const& a) { r = std::cos(a); }
     static inline void sin(type& r, type const& a) { r = std::sin(a); }
+    static inline void tan(type& r, type const& a) { r = std::tan(a); }
+    static inline void atan(type& r, type const& a) { r = std::atan(a); }
+    static inline void abs(type& r, type const& a) { r = std::abs(a); }
+    static inline void hypot(type& r, type const& a, type const& b)
+    {
+        r = boost::math::hypot(a, b);
+    }
 
     template <typename OtherType>
     static inline OtherType big_numeric_cast(type const& v)

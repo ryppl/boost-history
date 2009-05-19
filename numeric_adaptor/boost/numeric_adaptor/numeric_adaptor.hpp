@@ -11,9 +11,10 @@
 #define NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP_
 
 
+#include <boost/static_assert.hpp>
 
 
-template <typename Policy, typename ToType>
+template <typename Policy, typename ToType, bool IsCasted>
 struct caster
 {
     static inline ToType cast(typename Policy::type const& value)
@@ -22,26 +23,27 @@ struct caster
     }
 };
 
-// specialization for strings
-/*
+// specialization for strings: casting is not possible, getting is OK
 template <typename Policy>
-struct caster<Policy, std::string>
+struct caster<Policy, std::string, true>
+{
+    struct CAST_TO_STRING_IS_NOT_POSSIBLE {};
+
+    // PROHIBITED!
+    static inline CAST_TO_STRING_IS_NOT_POSSIBLE cast(typename Policy::type const& )
+    {
+    }
+};
+
+template <typename Policy>
+struct caster<Policy, std::string, false>
 {
     static inline std::string cast(typename Policy::type const& value)
     {
         return Policy::as_string(value);
     }
 };
-*/
 
-template <typename Policy>
-struct caster<Policy, std::basic_string<char, std::char_traits<char>, std::allocator<char> > >
-{
-    static inline std::basic_string<char, std::char_traits<char>, std::allocator<char> > cast(typename Policy::type const& value)
-    {
-        return Policy::as_string(value);
-    }
-};
 
 
 
@@ -67,6 +69,11 @@ struct numeric_adaptor
         Policy::set(value, v);
     }
 
+    inline numeric_adaptor(const char* v)
+    {
+        Policy::init(value);
+        Policy::set(value, std::string(v));
+    }
 
     // Constructor with a normal IEEE type
     template <typename FromType>
@@ -97,11 +104,18 @@ struct numeric_adaptor
         return *this;
     }
 
-    // Cast to normal IEEE type or to std::string
+    // Cast to normal IEEE type but NOT to std::string because of compilation problems
     template <typename ToType>
     inline operator ToType() const
     {
-        return caster<Policy, ToType>::cast(value);
+        return caster<Policy, ToType, true>::cast(value);
+    }
+
+    // tuple/fusion/variant-like get template function
+    template <typename ToType>
+    inline ToType get() const
+    {
+        return caster<Policy, ToType, false>::cast(value);
     }
 
 
@@ -163,6 +177,14 @@ struct numeric_adaptor
     }
 
     // Functions
+    static inline numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const& v)
+    {
+        typename Policy::type r;
+        Policy::init(r);
+        Policy::abs(r, v.value);
+        return numeric_adaptor<Policy>(r, true);
+    }
+
     static inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
     {
         typename Policy::type r;
@@ -187,11 +209,37 @@ struct numeric_adaptor
         return numeric_adaptor<Policy>(r, true);
     }
 
+    static inline numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const& v)
+    {
+        typename Policy::type r;
+        Policy::init(r);
+        Policy::tan(r, v.value);
+        return numeric_adaptor<Policy>(r, true);
+    }
+
+    static inline numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const& v)
+    {
+        typename Policy::type r;
+        Policy::init(r);
+        Policy::atan(r, v.value);
+        return numeric_adaptor<Policy>(r, true);
+    }
+
+
+    static inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
+                numeric_adaptor<Policy> const& b)
+    {
+        typename Policy::type r;
+        Policy::init(r);
+        Policy::hypot(r, a.value, b.value);
+        return numeric_adaptor<Policy>(r, true);
+    }
+
 
 private :
     typename Policy::type value;
 
-    // Constructor with a type. Bool (or any other signature changing parameter)
+    // Construct from a policy-type. Bool (or any other signature changing parameter)
     // is necessary for cases where type == OtherType
     inline numeric_adaptor<Policy>(typename Policy::type const& v, bool)
     {
