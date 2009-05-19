@@ -46,6 +46,7 @@ public:
    typename vector_map<T,U>::iterator end() { return pairs_.end(); }
 
    size_t size() { return pairs_.size(); }
+   bool empty() { return pairs_.empty(); }
 
    T& first(size_t const val) { return pairs_[val].first; }
    U& second(size_t const val) { return pairs_[val].second; }
