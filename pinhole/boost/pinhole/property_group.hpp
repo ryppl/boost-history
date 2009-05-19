@@ -1,6 +1,6 @@
 // Pinhole property_group.hpp file
 //
-// Copyright Jared McIntyre 2007.
+// Copyright Jared McIntyre 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -29,20 +29,20 @@
     #pragma warning(pop)
 #endif
 
-#define BOOST_SETTER(c) boost::bind(c, this, _1)
+#define BOOST_SETTER(c) std::tr1::bind(c, this, std::tr1::placeholders::_1)
 #if defined(BOOST_MSVC) && (_MSC_VER > 1310) && (_MSC_VER <= 1400)
-    #define BOOST_GETTER(c) boost::bind(boost::mem_fn(c), this)
+    #define BOOST_GETTER(c) std::tr1::bind(std::tr1::mem_fn(c), this)
 #else
-    #define BOOST_GETTER(c) boost::bind(c, this)
+    #define BOOST_GETTER(c) std::tr1::bind(c, this)
 #endif
-#define BOOST_ACTION(c) boost::bind(c, this)
+#define BOOST_ACTION(c) std::tr1::bind(c, this)
 
 namespace boost { namespace pinhole
 {
     template<typename T>
     struct property_system_var_setter
     {
-        typedef T result_type;
+        typedef void result_type;
         
         property_system_var_setter(T &t) : var(t){}
             
@@ -57,7 +57,7 @@ namespace boost { namespace pinhole
     template<typename T>
     inline std::tr1::function<void (const T&)> property_system_var_setter_builder(T &t)
     {
-        return std::tr1::bind<void>(property_system_var_setter<T>(t), _1);
+        return std::tr1::bind<void>(property_system_var_setter<T>(t), std::tr1::placeholders::_1);
     }
 
     #define BOOST_SETTER_VAR(c) boost::pinhole::property_system_var_setter_builder(c)
@@ -141,11 +141,15 @@ namespace boost { namespace pinhole
             {
                 m_parent->remove_child(this);
             }
+            else if( m_manager != NULL )
+            {
+                m_manager->remove_property_group(this);
+            }
             
             if ( m_manager != NULL )
             {
                 // Unregister this group with this property manager...
-                m_manager->unregister_property_group( this, m_category_collection );
+                m_manager->unregister_property_group( this );
             }
             
             // cleanup all the property_manager classes
@@ -191,16 +195,20 @@ namespace boost { namespace pinhole
         */
         void set_parent(property_group* new_parent)
         {
-            if( m_manager )
-            {
-                // Register this group with this property manager...
-                m_manager->unregister_property_group(this, m_category_collection);
-                m_manager.reset();
-            }
-            
             if ( NULL != m_parent )
             {
                 m_parent->remove_child(this);
+            }
+            else if( m_manager != NULL )
+            {
+                m_manager->remove_property_group(this);
+            }
+
+            if( m_manager )
+            {
+                // Register this group with this property manager...
+                m_manager->unregister_property_group(this);
+                m_manager.reset();
             }
             
             m_parent = new_parent;
@@ -218,6 +226,7 @@ namespace boost { namespace pinhole
             else
             {
                 m_manager = property_manager::instance();
+                m_manager->add_property_group(this);
             }
 
             if( m_manager )
@@ -303,6 +312,16 @@ namespace boost { namespace pinhole
             }
 
             /**
+             * Returns whether the property exists.
+             * @retval true Property exists.
+             * @retval false Property does not exist.
+             */
+            bool is_valid_property( const std::string &property ) const
+            {
+                return m_properties.find(property) != m_properties.end();
+            }
+
+            /**
              * Gets a property's value by it's type.
              * @param property The name of the property.
              * @return The value of the property.
@@ -315,7 +334,7 @@ namespace boost { namespace pinhole
             {
                 // The system does not allow you to use pointers as property
                 // types due to the ambiguity of their use.
-                BOOST_STATIC_ASSERT(false == boost::is_pointer<Return_Type>::value);
+                BOOST_STATIC_ASSERT(false == std::tr1::is_pointer<Return_Type>::value);
                 
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
@@ -351,7 +370,7 @@ namespace boost { namespace pinhole
             {
                 // The system does not allow you to use pointers as property
                 // types due to the ambiguity of their use.
-                BOOST_STATIC_ASSERT(false == boost::is_pointer<Set_Type>::value);
+                BOOST_STATIC_ASSERT(false == std::tr1::is_pointer<Set_Type>::value);
                 
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
@@ -590,6 +609,16 @@ namespace boost { namespace pinhole
             }
 
             /**
+            * Returns whether the action exists.
+            * @retval true Action exists.
+            * @retval false Action does not exist.
+            */
+            bool is_valid_action( const std::string &action ) const
+            {
+                return m_actions.find(action) != m_actions.end();
+            }
+
+            /**
              * Triggers an action.
              * @param action The name of the action.
              * @throw std::out_of_range The property requested does not exist.
@@ -694,7 +723,7 @@ namespace boost { namespace pinhole
          */
         void add_action( std::string name, 
                          std::string description,
-                         boost::function<void ()> action )
+                         std::tr1::function<void ()> action )
         {
             detail::action_info *action_info = new detail::action_info();
             
@@ -712,13 +741,7 @@ namespace boost { namespace pinhole
         void add_category( const std::string &category_name )
         {
             m_category_collection.insert( category_name );
-            
-            // notify the Property Manager of this new category if we are a root
-            // element (and therefore managed by the manager directly.
-            if ( m_manager && NULL == m_parent )
-            {
-                m_manager->add_category( category_name, this );
-            }
+            m_manager->add_category( category_name );
         }
 
     protected:
@@ -739,8 +762,8 @@ namespace boost { namespace pinhole
         template<typename Value_Type>
         void internal_add_property( const std::string &name, 
                                     const std::string &description,
-                                    boost::function<void (const Value_Type&)> setter, 
-                                    boost::function<Value_Type ()> getter,
+                                    std::tr1::function<void (const Value_Type&)> setter, 
+                                    std::tr1::function<Value_Type ()> getter,
                                     boost::any &metadata )
         {
             property_collection::iterator previousInstance = m_properties.find(name);
@@ -796,6 +819,7 @@ namespace boost { namespace pinhole
             else
             {
                 m_manager = property_manager::instance();
+                m_manager->add_property_group( this );
             }
 
             if ( m_manager != NULL )
@@ -803,7 +827,7 @@ namespace boost { namespace pinhole
                 // Register this group with this property manager...
                 m_manager->register_property_group( this );
             }
-            
+
             add_category( "All" );
         }        
 

@@ -1,74 +1,20 @@
 // Pinhole Find.hpp file
 //
-// Copyright Jared McIntyre 2007-2008.
+// Copyright Jared McIntyre 2007-2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FIND
-#define BOOST_FIND
+#ifndef BOOST_PINHOLE_FIND
+#define BOOST_PINHOLE_FIND
 
 #include <vector>
+#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\detail\path.hpp>
+#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\detail\tokenizer.hpp>
+#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\path_filtered_iterator.hpp>
 
 namespace boost { namespace pinhole
 {
-    namespace detail
-    {
-        inline
-        boost::pinhole::property_group*
-            search_single_property_group_based_on_name( boost::pinhole::children_collection* current_property_group_collection,
-                                                        const std::string& property_group_name)
-        {
-            boost::pinhole::property_group* property_group_found = 0;
-            for( children_collection::iterator iter = current_property_group_collection->begin(); iter != current_property_group_collection->end(); iter++)
-            {
-                boost::pinhole::property_group* current_property_group = *iter;
-                if(current_property_group->get_name() == property_group_name)
-                {
-                    if(property_group_found != 0)
-                    {
-                        std::string strError = "Multiple " + property_group_name + " are found in property_manager::selectSingleNode";
-                        throw multiple_property_groups(strError.c_str());
-                    }
-                    property_group_found = current_property_group;
-                }
-            }
-            if(property_group_found == 0)
-            {
-                throw no_metadata_defined_error();
-            }
-            return property_group_found;
-        }
-
-        inline
-        boost::pinhole::property_group*
-            search_single_property_group_based_on_property_value( boost::pinhole::children_collection* current_property_group_collection, 
-                                                                  const std::string& property_group_name, 
-                                                                  const std::string& property_name,
-                                                                  const std::string& property_value )
-        {
-            boost::pinhole::property_group* property_group_found = 0;
-            for(boost::pinhole::children_collection::iterator iter = current_property_group_collection->begin(); iter != current_property_group_collection->end(); iter++)
-            {
-                boost::pinhole::property_group* current_property_group = *iter;
-                if((current_property_group->get_name() == property_group_name) && (current_property_group->get_as_string(property_name) == property_value))
-                {
-                    if(property_group_found != 0)
-                    {
-                        std::string strError = "Multiple " + property_group_name + "." + property_name + "=" + property_value + " are found in property_manager::selectSingleNode";
-                        throw multiple_property_groups(strError.c_str());
-                    }
-                    property_group_found = current_property_group;
-                }
-            }
-            if(property_group_found == 0)
-            {
-                throw no_metadata_defined_error();
-            }
-            return property_group_found;
-        }
-    }
-
     /** 
      * Returns a property_group based on a path that describes where that property_group
      * exists within the property group hierarchy. This path can either be from the
@@ -99,14 +45,16 @@ namespace boost { namespace pinhole
      */
     inline boost::pinhole::property_group* select_single_node(boost::pinhole::property_group* current_property_group, const std::string& path)
     {
-        boost::pinhole::children_collection* current_property_group_collection = NULL;
+        std::pair<boost::pinhole::children_collection::iterator,boost::pinhole::children_collection::iterator> range;
+
         if( NULL != current_property_group )
         {
-            current_property_group_collection = &current_property_group->get_children_collection();
+            range.first  = current_property_group->get_children_collection().begin();
+            range.second = current_property_group->get_children_collection().end();
         }
-        else if( path.length() > 0 && path[0] != '/' )
+        else
         {
-            throw boost::pinhole::invalid_path("A relative path was requested, but no property_group to search from was given.");
+            detail::ThrowIfPathIsRelative(path);
         }
         boost::pinhole::children_collection* root_property_group_collection = 0; //The root collection might not be needed if it is not referred.
         
@@ -133,21 +81,17 @@ namespace boost { namespace pinhole
                         if(strItem.empty()) //It is "/"
                         {
                             boost::pinhole::property_manager::instance_type manager = boost::pinhole::property_manager::instance();
-                            root_property_group_collection = new boost::pinhole::children_collection();
-                            boost::pinhole::property_manager::iterator iter    = manager->begin();
-                            boost::pinhole::property_manager::iterator iterEnd = manager->end();
-                            for( ; iter != iterEnd; iter++)
-                            {
-                                root_property_group_collection->push_back(*iter);
-                            }
-                            current_property_group_collection = root_property_group_collection; //From now on, we only care about current_property_group_collection.
+                            range.first  = manager->begin();
+                            range.second = manager->end();
                         }
                         else
                         {
                             //strItem here must be a property group name.
                             //If multiple or none is found ,exception will be thrown.
-                            current_property_group = detail::search_single_property_group_based_on_name(current_property_group_collection, strItem);
-                            current_property_group_collection = &current_property_group->get_children_collection();
+                            current_property_group = detail::search_single_property_group_based_on_name(range.first, range.second, strItem);
+                            
+                            range.first  = current_property_group->get_children_collection().begin();
+                            range.second = current_property_group->get_children_collection().end();
                         }
                     }
                         break;
@@ -161,8 +105,10 @@ namespace boost { namespace pinhole
                         
                         std::string property_value = properties[2];
                         boost::trim(property_value);
-                        current_property_group = detail::search_single_property_group_based_on_property_value(current_property_group_collection, property_group_name, property_name, property_value);
-                        current_property_group_collection = &current_property_group->get_children_collection();
+                        current_property_group = detail::search_single_property_group_based_on_property_value(range.first, range.second, property_group_name, property_name, property_value);
+                        
+                        range.first  = current_property_group->get_children_collection().begin();
+                        range.second = current_property_group->get_children_collection().end();
                     }
                         break;
                     default:
@@ -209,6 +155,48 @@ namespace boost { namespace pinhole
     inline property_group* select_single_node(const std::string& path)
     {
         return select_single_node(NULL, path);
+    }
+
+    typedef boost::iterator_range< boost::pinhole::path_filtered_iterator > path_filtered_range;
+    typedef boost::iterator_range< boost::pinhole::const_path_filtered_iterator > const_path_filtered_range;
+
+    inline path_filtered_range get_path_filtered_range(const std::string& path)
+    {
+        detail::ThrowIfPathIsRelative(path);
+
+        return path_filtered_range( path_filtered_iterator( path, property_manager::instance()->begin(), property_manager::instance()->end() ),
+                                    path_filtered_iterator( property_manager::instance()->end() ) );
+    }
+
+    inline const_path_filtered_range get_const_path_filtered_range(const std::string& path)
+    {
+
+        detail::ThrowIfPathIsRelative(path);
+
+        return const_path_filtered_range( const_path_filtered_iterator( path, property_manager::instance()->begin(), property_manager::instance()->end() ),
+                                          const_path_filtered_iterator( property_manager::instance()->end() ) );
+    }
+
+    inline path_filtered_range get_path_filtered_range(const std::string& path, property_group& group)
+    {
+        if( path.length() > 0 && path[0] == '/' )
+        {
+            return get_path_filtered_range(path);
+        }
+
+        return path_filtered_range( path_filtered_iterator( path, group.get_children_collection().begin(), group.get_children_collection().end() ),
+                                    path_filtered_iterator( group.get_children_collection().end() ) );
+    }
+
+    inline const_path_filtered_range get_const_path_filtered_range(const std::string& path, property_group& group)
+    {
+        if( path.length() > 0 && path[0] == '/' )
+        {
+            return get_const_path_filtered_range(path);
+        }
+
+        return const_path_filtered_range( const_path_filtered_iterator( path, group.get_children_collection().begin(), group.get_children_collection().end() ),
+                                          const_path_filtered_iterator( group.get_children_collection().end() ) );
     }
 }}
 

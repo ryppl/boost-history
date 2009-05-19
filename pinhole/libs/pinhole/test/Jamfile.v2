@@ -1,6 +1,6 @@
 # Boost.Pinhole Library 
 
-# Copyright Jared McIntyre 2007-2008. Use, modification and
+# Copyright Jared McIntyre 2007-2009. Use, modification and
 # distribution is subject to the Boost Software License, Version
 # 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -30,6 +30,10 @@ project
   
   [ run test_actions.cpp  ]
   
+  [ run test_tokenizer.cpp ]
+  [ run test_depth_first_iterator.cpp ]
+  [ run test_path_filtered_iterator.cpp ]
+  [ run test_category_iterator.cpp ]
   [ run test_find.cpp  ]
  ;
 }

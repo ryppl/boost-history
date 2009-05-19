@@ -1,6 +1,6 @@
 // Boost.Pinhole library
 
-// Copyright Jared McIntyre 2007-2008. Use, modification and
+// Copyright Jared McIntyre 2007-2009. Use, modification and
 // distribution is subject to the Boost Software License, Version
 // 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -118,35 +118,40 @@ public:
         uiChildCount                       = 0;
         uiRegisterPropertyGroupCallCount   = 0;
         uiUnRegisterPropertyGroupCallCount = 0;
-        uiAddCategoryCallCount             = 0;
     }
     virtual void register_property_group( property_group *pPropertyGroup )
     {
         ++uiRegisterPropertyGroupCallCount;
 
-        if( NULL == pPropertyGroup->get_parent() )
-        {
-            ++uiChildCount;
-        }
-
         property_manager::register_property_group( pPropertyGroup );
     }
-    virtual void unregister_property_group( property_group *pPropertyGroup, category_collection &categories )
+    virtual void unregister_property_group( property_group *pPropertyGroup )
     {
         ++uiUnRegisterPropertyGroupCallCount;
 
-        if( NULL == pPropertyGroup->get_parent() )
-        {
-            --uiChildCount;
-        }
-
-        property_manager::unregister_property_group( pPropertyGroup, categories );
+        property_manager::unregister_property_group( pPropertyGroup );
     }
-    virtual void add_category( const string &sCategoryName, property_group *pPropertyGroup )
+
+    /**
+    * Adds a root property group.
+    */
+    virtual void add_property_group( property_group *group )
+    {
+        ++uiChildCount;
+
+        property_manager::add_property_group( group );
+    }
+    virtual void remove_property_group( property_group *group )
+    {
+        --uiChildCount;
+
+        m_property_group_collection.remove( group );
+    }
+    virtual void add_category( const string &sCategoryName )
     {
         ++uiAddCategoryCallCount;
 
-        property_manager::add_category( sCategoryName, pPropertyGroup );
+        property_manager::add_category( sCategoryName );
     }
 
     unsigned int uiChildCount;

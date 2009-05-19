@@ -10,6 +10,6 @@
 
 #include "pinhole/config.hpp"
 #include "pinhole/property_group.hpp"
-#include "pinhole/find.hpp"
+#include "pinhole/value.hpp"
 
 #endif //BOOST_PROPERTY_PINHOLE

@@ -10,6 +10,7 @@
 
 #include "exceptions.hpp"
 #include "map_key_value_iterators.hpp"
+#include "category_iterator.hpp"
 #include <set>
 #include <string>
 
@@ -37,23 +38,13 @@ namespace boost { namespace pinhole
         static event_source* instance()
         {
             static boost::shared_ptr<boost::pinhole::event_source> instance;
-            
+
             if ( !instance )  // is it the first call?
             {  
                 instance.reset( new event_source ); // create sole instance
             }
             
             return instance.get(); // address of sole instance
-        }
-        
-        void raise_on_add_event( property_group *group )
-        {
-            add_event( group );
-        }
-        
-        void raise_on_remove_event( property_group *group )
-        {
-            remove_event( group );
         }
         
         #if defined(BOOST_MSVC)
@@ -65,6 +56,15 @@ namespace boost { namespace pinhole
         #if defined(BOOST_MSVC)
             #pragma warning(pop)
         #endif
+        void raise_on_add_event( property_group *group )
+        {
+            add_event( group );
+        }
+        
+        void raise_on_remove_event( property_group *group )
+        {
+            remove_event( group );
+        }
         
     private :
         
@@ -76,9 +76,18 @@ namespace boost { namespace pinhole
     {
     public:
         typedef std::tr1::shared_ptr<property_manager> instance_type;
-        typedef std::multimap<std::string, property_group*> category_to_property_group_map;
-        typedef map_value_iterator<category_to_property_group_map::iterator> iterator;
-        typedef map_value_iterator<category_to_property_group_map::const_iterator> const_iterator;
+
+    private:
+        static void deleter(property_manager* manager)
+        {
+            delete manager;
+        }
+        
+    public:
+        typedef boost::pinhole::children_collection::iterator iterator;
+        typedef boost::pinhole::children_collection::const_iterator const_iterator;
+        typedef boost::pinhole::category_iterator<boost::pinhole::children_collection::iterator> filtered_iterator;
+        typedef boost::pinhole::category_iterator<boost::pinhole::children_collection::const_iterator> const_filtered_iterator;
         
         static instance_type instance()
         {
@@ -99,14 +108,31 @@ namespace boost { namespace pinhole
         {
             internal_instance().reset();
         }
-              
+        
+    protected:
+        property_manager(){;}
+    
+    // TODO: This needs to be protected so no-one will deal with it, but
+    // checked_delete can't be made a friend in gcc, so I can't shared_ptr
+    // to work.
+    public:
+        virtual ~property_manager()
+        {
+            children_collection::iterator itr     = m_property_group_collection.begin();
+            children_collection::iterator itr_end = m_property_group_collection.end();
+            for( ; itr != itr_end; ++itr )
+            {
+                event_source::instance()->raise_on_remove_event((*itr));
+            }
+        }
+        
+    public:        
         /**
          * Retrieves an iterator pointing to the first property group.
          */
         iterator begin()
         {
-            return iterator( m_property_group_collection.lower_bound("All"),
-                             m_property_group_collection.upper_bound("All") );
+            return m_property_group_collection.begin();
         }
         
         /**
@@ -114,8 +140,7 @@ namespace boost { namespace pinhole
          */
         const_iterator begin() const
         {
-            return const_iterator( m_property_group_collection.lower_bound("All"),
-                                   m_property_group_collection.upper_bound("All") );
+            return m_property_group_collection.begin();
         }
         
         /**
@@ -123,7 +148,7 @@ namespace boost { namespace pinhole
          */
         iterator end()
         {
-            return iterator( m_property_group_collection.upper_bound("All") );
+            return m_property_group_collection.end();
         }
         
         /**
@@ -131,7 +156,7 @@ namespace boost { namespace pinhole
          */
         const_iterator end() const
         {
-            return const_iterator( m_property_group_collection.upper_bound("All") );
+            return m_property_group_collection.end();
         }
         
         /**
@@ -139,39 +164,39 @@ namespace boost { namespace pinhole
          */
         size_t count() const
         {
-            return m_property_group_collection.count("All");
+            return m_property_group_collection.size();
         }
         
         /**
          * Retrieves an iterator pointing to the first property group for a specified category.
          */
-        iterator begin(const std::string& strCategory)
+        filtered_iterator begin(const std::string& strCategory)
         {
-            return iterator( m_property_group_collection.lower_bound(strCategory) );
+            return make_category_iterator( strCategory, m_property_group_collection.begin(), m_property_group_collection.end() );
         }
         
         /**
          * Retrieves an iterator pointing to the first property group for a specified category.
          */
-        const_iterator begin(const std::string& strCategory) const
+        const_filtered_iterator begin(const std::string& strCategory) const
         {
-            return const_iterator( m_property_group_collection.lower_bound(strCategory) );
+            return make_category_iterator( strCategory, m_property_group_collection.begin(), m_property_group_collection.end() );
         }
         
         /**
          * Retrieves an iterator pointing to the end of the root property list for a specified category.
          */
-        iterator end(const std::string& strCategory)
+        filtered_iterator end(const std::string& strCategory)
         {
-            return iterator( m_property_group_collection.upper_bound(strCategory) );
+            return make_category_iterator( strCategory, m_property_group_collection.end(), m_property_group_collection.end() );
         }
         
         /**
          * Retrieves an iterator pointing to the end of the root property list for a specified category.
          */
-        const_iterator end(const std::string& strCategory) const
+        const_filtered_iterator end(const std::string& strCategory) const
         {
-            return  const_iterator( m_property_group_collection.upper_bound(strCategory) );
+            return make_category_iterator( strCategory, m_property_group_collection.end(), m_property_group_collection.end() );
         }
         
         /**
@@ -179,7 +204,7 @@ namespace boost { namespace pinhole
          */
         size_t count(const std::string& strCategory) const
         {
-            return m_property_group_collection.count(strCategory);
+            return std::distance(begin(strCategory), end(strCategory));
         }
         
         /**
@@ -192,27 +217,16 @@ namespace boost { namespace pinhole
         }
 
     protected:
-        
-        property_manager(){;}
-        
-        virtual ~property_manager()
-        {
-            category_to_property_group_map::iterator itr     = m_property_group_collection.begin();
-            category_to_property_group_map::iterator itr_end = m_property_group_collection.end();
-            for( ; itr != itr_end; ++itr )
-            {
-                event_source::instance()->raise_on_remove_event((*itr).second);
-            }
-        }
-        
+
         /** Provides direct access to the shared_ptr that owns the property_manager singleton. */
         static boost::shared_ptr<boost::pinhole::property_manager>& internal_instance()
         {
-            static boost::shared_ptr<boost::pinhole::property_manager> instance;
-            
+            static boost::shared_ptr<boost::pinhole::property_manager>
+                instance(new boost::pinhole::property_manager);
+
             return instance;
         }
-        
+
         /**
          * Register's group with the property_manager.
          */
@@ -224,65 +238,47 @@ namespace boost { namespace pinhole
         /**
          * Unregister's group from the property_manager.
          */
-        virtual void unregister_property_group( property_group *group, category_collection &categories )
+        virtual void unregister_property_group( property_group *group )
         {
-                category_collection::const_iterator categoryItr = categories.begin();
-                category_collection::const_iterator categoryEnd = categories.end();
-                for ( ; categoryItr != categoryEnd; ++categoryItr )
-                {
-                    remove_category( *categoryItr, group );
-                }
-                
-                event_source::instance()->raise_on_remove_event( group );
+            event_source::instance()->raise_on_remove_event( group );
+        }
+        
+        /**
+         * Adds a root property group.
+         */
+        virtual void add_property_group( property_group *group )
+        {
+            m_property_group_collection.push_back( group );
+        }
+
+        /**
+        * Removes a root property group.
+        */
+        virtual void remove_property_group( property_group *group )
+        {
+            m_property_group_collection.remove( group );
         }
         
         /**
          * Adds a new category for the property group.
          */
-        virtual void add_category( const std::string &category_name, property_group *group )
+        virtual void add_category( const std::string &category_name )
         {
             m_category_collection.insert( category_name );
-            m_property_group_collection.insert( make_pair( category_name, group ) );
         }
         
-        virtual void remove_category( const std::string &category_name, property_group *group )
-        {
-            category_to_property_group_map::iterator pgItr;
-            for ( pgItr = m_property_group_collection.find( category_name ); 
-                  pgItr != m_property_group_collection.end(); )
-            {
-                if ( pgItr->second == group )
-                {
-                    m_property_group_collection.erase( pgItr++ );
-                }
-                else
-                {
-                    pgItr++;
-                }
-            }
-        }
-        
+    protected:
         #if defined(BOOST_MSVC)
             #pragma warning(push)
             #pragma warning( disable: 4251 )
         #endif
-            category_to_property_group_map m_property_group_collection;
+            boost::pinhole::children_collection m_property_group_collection;
             category_collection m_category_collection;
         #if defined(BOOST_MSVC)
             #pragma warning(pop)
         #endif
-    
-    private:
-        
-        // This allows us make the destructor protected. I can't make checked_delete a friend
-        // in gcc, so shared_ptr couldn't access the desctructor directly.
-        static void deleter(property_manager* manager)
-        {
-            delete manager;
-        }
-        
             
-        friend class boost::pinhole::property_group;
+        friend class property_group;
     };
 }}
 
