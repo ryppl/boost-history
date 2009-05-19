@@ -58,7 +58,7 @@ namespace projection
 
 			/* note: following terms based upon 5 deg. intervals in degrees. */
 			static struct COEFS {
-				float c0, c1, c2, c3;
+				double c0, c1, c2, c3;
 			} X[] = {
 			1,	-5.67239e-12,	-7.15511e-05,	3.11028e-06,
 			0.9986,	-0.000482241,	-2.4897e-05,	-1.33094e-06,

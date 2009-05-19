@@ -37,75 +37,75 @@
 
 namespace projection
 {
-	namespace impl
-	{
-		namespace gauss
-		{
-			static const int MAX_ITER = 20;
+    namespace impl
+    {
+        namespace gauss
+        {
+            static const int MAX_ITER = 20;
 
-			struct GAUSS
-			{
-				double C;
-				double K;
-				double e;
-				double ratexp;
-			};
+            struct GAUSS
+            {
+                double C;
+                double K;
+                double e;
+                double ratexp;
+            };
 
-			static const double DEL_TOL = 1e-14;
-			inline double srat(double esinp, double exp)
-			{
-				return(pow((1.-esinp)/(1.+esinp), exp));
-			}
-
-
-			GAUSS gauss_ini(double e, double phi0, double &chi, double &rc)
-			{
-				double sphi, cphi, es;
-				GAUSS en;
-				es = e * e;
-				en.e = e;
-				sphi = sin(phi0);
-				cphi = cos(phi0);  cphi *= cphi;
-				rc = sqrt(1. - es) / (1. - es * sphi * sphi);
-				en.C = sqrt(1. + es * cphi * cphi / (1. - es));
-				chi = asin(sphi / en.C);
-				en.ratexp = 0.5 * en.C * e;
-				en.K = tan(.5 * chi + impl::FORTPI) / (
-					pow(tan(.5 * phi0 + impl::FORTPI), en.C) *
-					srat(en.e * sphi, en.ratexp)  );
-				return en;
-			}
+            static const double DEL_TOL = 1e-14;
+            inline double srat(double esinp, double exp)
+            {
+                return(pow((1.-esinp)/(1.+esinp), exp));
+            }
 
 
-			template <typename T>
-			inline void gauss(const GAUSS& en, T& lam, T& phi)
-			{
-				phi = 2. * atan( en.K *
-					pow(tan(.5 * phi + FORTPI), en.C) *
-					srat(en.e * sin(phi), en.ratexp) ) - HALFPI;
-				lam *= en.C;
-			}
+            inline GAUSS gauss_ini(double e, double phi0, double &chi, double &rc)
+            {
+                double sphi, cphi, es;
+                GAUSS en;
+                es = e * e;
+                en.e = e;
+                sphi = sin(phi0);
+                cphi = cos(phi0);  cphi *= cphi;
+                rc = sqrt(1. - es) / (1. - es * sphi * sphi);
+                en.C = sqrt(1. + es * cphi * cphi / (1. - es));
+                chi = asin(sphi / en.C);
+                en.ratexp = 0.5 * en.C * e;
+                en.K = tan(.5 * chi + impl::FORTPI) / (
+                    pow(tan(.5 * phi0 + impl::FORTPI), en.C) *
+                    srat(en.e * sphi, en.ratexp)  );
+                return en;
+            }
 
-			template <typename T>
-			inline void inv_gauss(const GAUSS& en, T& lam, T& phi)
-			{
-				lam /= en.C;
-				double num = pow(tan(.5 * phi + FORTPI)/en.K, 1./en.C);
-				int i;
-				for (i = MAX_ITER; i; --i)
-				{
-					double elp_phi = 2. * atan(num * srat(en.e * sin(phi), -.5 * en.e))
-						- HALFPI;
-					if (fabs(elp_phi - phi) < DEL_TOL) break;
-					phi = elp_phi;
-				}
-				/* convergence failed */
-				if (!i)
-					throw proj_exception(-17);
-			}
 
-		}
-	}
+            template <typename T>
+            inline void gauss(const GAUSS& en, T& lam, T& phi)
+            {
+                phi = 2. * atan( en.K *
+                    pow(tan(.5 * phi + FORTPI), en.C) *
+                    srat(en.e * sin(phi), en.ratexp) ) - HALFPI;
+                lam *= en.C;
+            }
+
+            template <typename T>
+            inline void inv_gauss(const GAUSS& en, T& lam, T& phi)
+            {
+                lam /= en.C;
+                double num = pow(tan(.5 * phi + FORTPI)/en.K, 1./en.C);
+                int i;
+                for (i = MAX_ITER; i; --i)
+                {
+                    double elp_phi = 2. * atan(num * srat(en.e * sin(phi), -.5 * en.e))
+                        - HALFPI;
+                    if (fabs(elp_phi - phi) < DEL_TOL) break;
+                    phi = elp_phi;
+                }
+                /* convergence failed */
+                if (!i)
+                    throw proj_exception(-17);
+            }
+
+        }
+    }
 
 
 

@@ -43,118 +43,118 @@
 
 namespace projection
 {
-	namespace impl
-	{
+    namespace impl
+    {
 
 
-		/* SEC_TO_RAD = Pi/180/3600 */
-		const double SEC_TO_RAD = 4.84813681109535993589914102357e-6;
+        /* SEC_TO_RAD = Pi/180/3600 */
+        const double SEC_TO_RAD = 4.84813681109535993589914102357e-6;
 
-		/************************************************************************/
-		/*                            pj_datum_set()                            */
-		/************************************************************************/
+        /************************************************************************/
+        /*                            pj_datum_set()                            */
+        /************************************************************************/
 
-		void pj_datum_set(std::vector<pvalue>& pvalues, parameters& projdef)
+        inline void pj_datum_set(std::vector<pvalue>& pvalues, parameters& projdef)
 
-		{
-			std::string name, towgs84, nadgrids;
+        {
+            std::string name, towgs84, nadgrids;
 
-			projdef.datum_type = PJD_UNKNOWN;
+            projdef.datum_type = PJD_UNKNOWN;
 
-			/* -------------------------------------------------------------------- */
-			/*      Is there a datum definition in the parameter list?  If so,     */
-			/*      add the defining values to the parameter list.  Note that       */
-			/*      this will append the ellipse definition as well as the          */
-			/*      towgs84= and related parameters.  It should also be pointed     */
-			/*      out that the addition is permanent rather than temporary        */
-			/*      like most other keyword expansion so that the ellipse           */
-			/*      definition will last into the pj_ell_set() function called      */
-			/*      after this one.                                                 */
-			/* -------------------------------------------------------------------- */
-			name = pj_param(pvalues, "sdatum").s;
-			if(! name.empty())
-			{
-				/* find the datum definition */
-				const int n = sizeof(pj_datums) / sizeof(pj_datums[0]);
-				int index = -1;
-				for (int i = 0; i < n && index == -1; i++)
-				{
-					if(pj_datums[i].id == name)
-					{
-						index = i;
-					}
-				}
+            /* -------------------------------------------------------------------- */
+            /*      Is there a datum definition in the parameter list?  If so,     */
+            /*      add the defining values to the parameter list.  Note that       */
+            /*      this will append the ellipse definition as well as the          */
+            /*      towgs84= and related parameters.  It should also be pointed     */
+            /*      out that the addition is permanent rather than temporary        */
+            /*      like most other keyword expansion so that the ellipse           */
+            /*      definition will last into the pj_ell_set() function called      */
+            /*      after this one.                                                 */
+            /* -------------------------------------------------------------------- */
+            name = pj_param(pvalues, "sdatum").s;
+            if(! name.empty())
+            {
+                /* find the datum definition */
+                const int n = sizeof(pj_datums) / sizeof(pj_datums[0]);
+                int index = -1;
+                for (int i = 0; i < n && index == -1; i++)
+                {
+                    if(pj_datums[i].id == name)
+                    {
+                        index = i;
+                    }
+                }
 
-				if (index == -1) { throw proj_exception(-9); }
+                if (index == -1) { throw proj_exception(-9); }
 
-				if(! pj_datums[index].ellipse_id.empty())
-				{
-					std::string entry("ellps=");
-					entry +=pj_datums[index].ellipse_id;
-					pvalues.push_back(pj_mkparam(entry));
-				}
+                if(! pj_datums[index].ellipse_id.empty())
+                {
+                    std::string entry("ellps=");
+                    entry +=pj_datums[index].ellipse_id;
+                    pvalues.push_back(pj_mkparam(entry));
+                }
 
-				if(! pj_datums[index].defn.empty())
-				{
-					pvalues.push_back(pj_mkparam(pj_datums[index].defn));
-				}
-			}
+                if(! pj_datums[index].defn.empty())
+                {
+                    pvalues.push_back(pj_mkparam(pj_datums[index].defn));
+                }
+            }
 
-		/* -------------------------------------------------------------------- */
-		/*      Check for nadgrids parameter.                                   */
-		/* -------------------------------------------------------------------- */
-			nadgrids = pj_param(pvalues, "snadgrids").s;
-			towgs84 = pj_param(pvalues, "stowgs84").s;
-			if(! nadgrids.empty())
-			{
-				/* We don't actually save the value separately.  It will continue
-				   to exist int he param list for use in pj_apply_gridshift.c */
+        /* -------------------------------------------------------------------- */
+        /*      Check for nadgrids parameter.                                   */
+        /* -------------------------------------------------------------------- */
+            nadgrids = pj_param(pvalues, "snadgrids").s;
+            towgs84 = pj_param(pvalues, "stowgs84").s;
+            if(! nadgrids.empty())
+            {
+                /* We don't actually save the value separately.  It will continue
+                   to exist int he param list for use in pj_apply_gridshift.c */
 
-				projdef.datum_type = PJD_GRIDSHIFT;
-			}
+                projdef.datum_type = PJD_GRIDSHIFT;
+            }
 
-		/* -------------------------------------------------------------------- */
-		/*      Check for towgs84 parameter.                                    */
-		/* -------------------------------------------------------------------- */
-			else if(! towgs84.empty())
-			{
-				int parm_count = 0;
+        /* -------------------------------------------------------------------- */
+        /*      Check for towgs84 parameter.                                    */
+        /* -------------------------------------------------------------------- */
+            else if(! towgs84.empty())
+            {
+                int parm_count = 0;
 
-				int n = sizeof(projdef.datum_params) / sizeof(projdef.datum_params[0]);
+                int n = sizeof(projdef.datum_params) / sizeof(projdef.datum_params[0]);
 
-				/* parse out the pvalues */
-				std::vector<std::string> parm;
-				boost::split(parm, towgs84, boost::is_any_of(" ,"));
-				for (std::vector<std::string>::const_iterator it = parm.begin();
-					it != parm.end() && parm_count < n;
-					it++, parm_count++)
-				{
-					projdef.datum_params[parm_count++] = atof(it->c_str());
-				}
+                /* parse out the pvalues */
+                std::vector<std::string> parm;
+                boost::split(parm, towgs84, boost::is_any_of(" ,"));
+                for (std::vector<std::string>::const_iterator it = parm.begin();
+                    it != parm.end() && parm_count < n;
+                    ++it)
+                {
+                    projdef.datum_params[parm_count++] = atof(it->c_str());
+                }
 
-				if( projdef.datum_params[3] != 0.0
-					|| projdef.datum_params[4] != 0.0
-					|| projdef.datum_params[5] != 0.0
-					|| projdef.datum_params[6] != 0.0 )
-				{
-					projdef.datum_type = PJD_7PARAM;
+                if( projdef.datum_params[3] != 0.0
+                    || projdef.datum_params[4] != 0.0
+                    || projdef.datum_params[5] != 0.0
+                    || projdef.datum_params[6] != 0.0 )
+                {
+                    projdef.datum_type = PJD_7PARAM;
 
-					/* transform from arc seconds to radians */
-					projdef.datum_params[3] *= SEC_TO_RAD;
-					projdef.datum_params[4] *= SEC_TO_RAD;
-					projdef.datum_params[5] *= SEC_TO_RAD;
-					/* transform from parts per million to scaling factor */
-					projdef.datum_params[6] =
-						(projdef.datum_params[6]/1000000.0) + 1;
-				}
-				else
-					projdef.datum_type = PJD_3PARAM;
+                    /* transform from arc seconds to radians */
+                    projdef.datum_params[3] *= SEC_TO_RAD;
+                    projdef.datum_params[4] *= SEC_TO_RAD;
+                    projdef.datum_params[5] *= SEC_TO_RAD;
+                    /* transform from parts per million to scaling factor */
+                    projdef.datum_params[6] =
+                        (projdef.datum_params[6]/1000000.0) + 1;
+                }
+                else
+                    projdef.datum_type = PJD_3PARAM;
 
-				/* Note that pj_init() will later switch datum_type to
-				   PJD_WGS84 if shifts are all zero, and ellipsoid is WGS84 or GRS80 */
-			}
+                /* Note that pj_init() will later switch datum_type to
+                   PJD_WGS84 if shifts are all zero, and ellipsoid is WGS84 or GRS80 */
+            }
 
-		}
-	}
+        }
+    }
 }
 #endif

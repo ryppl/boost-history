@@ -41,107 +41,107 @@
 
 namespace projection
 {
-	namespace impl
-	{
+    namespace impl
+    {
 
-		/* set ellipsoid parameters a and es */
-		static const double SIXTH =  .1666666666666666667; /* 1/6 */
-		static const double RA4 = .04722222222222222222; /* 17/360 */
-		static const double RA6 = .02215608465608465608; /* 67/3024 */
-		static const double RV4 = .06944444444444444444; /* 5/72 */
-		static const double RV6 = .04243827160493827160; /* 55/1296 */
+        /* set ellipsoid parameters a and es */
+        static const double SIXTH =  .1666666666666666667; /* 1/6 */
+        static const double RA4 = .04722222222222222222; /* 17/360 */
+        static const double RA6 = .02215608465608465608; /* 67/3024 */
+        static const double RV4 = .06944444444444444444; /* 5/72 */
+        static const double RV6 = .04243827160493827160; /* 55/1296 */
 
-		void /* initialize geographic shape parameters */
-		pj_ell_set(std::vector<pvalue>& parameters, double &a, double &es)
-		{
-			int i;
-			double b=0.0, e;
-			std::string name;
+        inline void /* initialize geographic shape parameters */
+        pj_ell_set(std::vector<pvalue>& parameters, double &a, double &es)
+        {
+            int i;
+            double b=0.0, e;
+            std::string name;
 
-				/* check for varying forms of ellipsoid input */
-			a = es = 0.;
-			/* R takes precedence */
-			if (pj_param(parameters, "tR").i)
-				a = pj_param(parameters, "dR").f;
-			else { /* probable elliptical figure */
+                /* check for varying forms of ellipsoid input */
+            a = es = 0.;
+            /* R takes precedence */
+            if (pj_param(parameters, "tR").i)
+                a = pj_param(parameters, "dR").f;
+            else { /* probable elliptical figure */
 
-				/* check if ellps present and temporarily append its values to pl */
-				name = pj_param(parameters, "sellps").s;
-				if (! name.empty())
-				{
-					const int n = sizeof(pj_ellps) / sizeof(pj_ellps[0]);
-					int index = -1;
-					for (int i = 0; i < n && index == -1; i++)
-					{
-						if(pj_ellps[i].id == name)
-						{
-							index = i;
-						}
-					}
+                /* check if ellps present and temporarily append its values to pl */
+                name = pj_param(parameters, "sellps").s;
+                if (! name.empty())
+                {
+                    const int n = sizeof(pj_ellps) / sizeof(pj_ellps[0]);
+                    int index = -1;
+                    for (int i = 0; i < n && index == -1; i++)
+                    {
+                        if(pj_ellps[i].id == name)
+                        {
+                            index = i;
+                        }
+                    }
 
-					if (index == -1) { throw proj_exception(-9); }
+                    if (index == -1) { throw proj_exception(-9); }
 
-					parameters.push_back(pj_mkparam(pj_ellps[index].major));
-					parameters.push_back(pj_mkparam(pj_ellps[index].ell));
-				}
-				a = pj_param(parameters, "da").f;
-				if (pj_param(parameters, "tes").i) /* eccentricity squared */
-					es = pj_param(parameters, "des").f;
-				else if (pj_param(parameters, "te").i) { /* eccentricity */
-					e = pj_param(parameters, "de").f;
-					es = e * e;
-				} else if (pj_param(parameters, "trf").i) { /* recip flattening */
-					es = pj_param(parameters, "drf").f;
-					if (!es) {
-						throw proj_exception(-10);
-					}
-					es = 1./ es;
-					es = es * (2. - es);
-				} else if (pj_param(parameters, "tf").i) { /* flattening */
-					es = pj_param(parameters, "df").f;
-					es = es * (2. - es);
-				} else if (pj_param(parameters, "tb").i) { /* minor axis */
-					b = pj_param(parameters, "db").f;
-					es = 1. - (b * b) / (a * a);
-				}     /* else es == 0. and sphere of radius a */
-				if (!b)
-					b = a * sqrt(1. - es);
-				/* following options turn ellipsoid into equivalent sphere */
-				if (pj_param(parameters, "bR_A").i) { /* sphere--area of ellipsoid */
-					a *= 1. - es * (SIXTH + es * (RA4 + es * RA6));
-					es = 0.;
-				} else if (pj_param(parameters, "bR_V").i) { /* sphere--vol. of ellipsoid */
-					a *= 1. - es * (SIXTH + es * (RV4 + es * RV6));
-					es = 0.;
-				} else if (pj_param(parameters, "bR_a").i) { /* sphere--arithmetic mean */
-					a = .5 * (a + b);
-					es = 0.;
-				} else if (pj_param(parameters, "bR_g").i) { /* sphere--geometric mean */
-					a = sqrt(a * b);
-					es = 0.;
-				} else if (pj_param(parameters, "bR_h").i) { /* sphere--harmonic mean */
-					a = 2. * a * b / (a + b);
-					es = 0.;
-				} else if ((i = pj_param(parameters, "tR_lat_a").i) || /* sphere--arith. */
-					pj_param(parameters, "tR_lat_g").i) { /* or geom. mean at latitude */
-					double tmp;
+                    parameters.push_back(pj_mkparam(pj_ellps[index].major));
+                    parameters.push_back(pj_mkparam(pj_ellps[index].ell));
+                }
+                a = pj_param(parameters, "da").f;
+                if (pj_param(parameters, "tes").i) /* eccentricity squared */
+                    es = pj_param(parameters, "des").f;
+                else if (pj_param(parameters, "te").i) { /* eccentricity */
+                    e = pj_param(parameters, "de").f;
+                    es = e * e;
+                } else if (pj_param(parameters, "trf").i) { /* recip flattening */
+                    es = pj_param(parameters, "drf").f;
+                    if (!es) {
+                        throw proj_exception(-10);
+                    }
+                    es = 1./ es;
+                    es = es * (2. - es);
+                } else if (pj_param(parameters, "tf").i) { /* flattening */
+                    es = pj_param(parameters, "df").f;
+                    es = es * (2. - es);
+                } else if (pj_param(parameters, "tb").i) { /* minor axis */
+                    b = pj_param(parameters, "db").f;
+                    es = 1. - (b * b) / (a * a);
+                }     /* else es == 0. and sphere of radius a */
+                if (!b)
+                    b = a * sqrt(1. - es);
+                /* following options turn ellipsoid into equivalent sphere */
+                if (pj_param(parameters, "bR_A").i) { /* sphere--area of ellipsoid */
+                    a *= 1. - es * (SIXTH + es * (RA4 + es * RA6));
+                    es = 0.;
+                } else if (pj_param(parameters, "bR_V").i) { /* sphere--vol. of ellipsoid */
+                    a *= 1. - es * (SIXTH + es * (RV4 + es * RV6));
+                    es = 0.;
+                } else if (pj_param(parameters, "bR_a").i) { /* sphere--arithmetic mean */
+                    a = .5 * (a + b);
+                    es = 0.;
+                } else if (pj_param(parameters, "bR_g").i) { /* sphere--geometric mean */
+                    a = sqrt(a * b);
+                    es = 0.;
+                } else if (pj_param(parameters, "bR_h").i) { /* sphere--harmonic mean */
+                    a = 2. * a * b / (a + b);
+                    es = 0.;
+                } else if ((i = pj_param(parameters, "tR_lat_a").i) || /* sphere--arith. */
+                    pj_param(parameters, "tR_lat_g").i) { /* or geom. mean at latitude */
+                    double tmp;
 
-					tmp = sin(pj_param(parameters, i ? "rR_lat_a" : "rR_lat_g").f);
-					if (fabs(tmp) > HALFPI) {
-						throw proj_exception(-11);
-					}
-					tmp = 1. - es * tmp * tmp;
-					a *= i ? .5 * (1. - es + tmp) / ( tmp * sqrt(tmp)) :
-						sqrt(1. - es) / tmp;
-					es = 0.;
-				}
-			}
-			/* some remaining checks */
-			if (es < 0.)
-				{ throw proj_exception(-12); }
-			if (a <= 0.)
-				{ throw proj_exception(-13); }
-		}
-	}
+                    tmp = sin(pj_param(parameters, i ? "rR_lat_a" : "rR_lat_g").f);
+                    if (fabs(tmp) > HALFPI) {
+                        throw proj_exception(-11);
+                    }
+                    tmp = 1. - es * tmp * tmp;
+                    a *= i ? .5 * (1. - es + tmp) / ( tmp * sqrt(tmp)) :
+                        sqrt(1. - es) / tmp;
+                    es = 0.;
+                }
+            }
+            /* some remaining checks */
+            if (es < 0.)
+                { throw proj_exception(-12); }
+            if (a <= 0.)
+                { throw proj_exception(-13); }
+        }
+    }
 }
 #endif

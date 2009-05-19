@@ -38,32 +38,32 @@
 
 namespace projection
 {
-	namespace impl
-	{
-		namespace phi2
-		{
-			static const double TOL = 1.0e-10;
-			static const int N_ITER = 15;
-		}
+    namespace impl
+    {
+        namespace phi2
+        {
+            static const double TOL = 1.0e-10;
+            static const int N_ITER = 15;
+        }
 
-		double pj_phi2(double ts, double e)
-		{
-			double eccnth, Phi, con, dphi;
-			int i;
+        inline double pj_phi2(double ts, double e)
+        {
+            double eccnth, Phi, con, dphi;
+            int i;
 
-			eccnth = .5 * e;
-			Phi = HALFPI - 2. * atan (ts);
-			i = phi2::N_ITER;
-			do {
-				con = e * sin (Phi);
-				dphi = HALFPI - 2. * atan (ts * pow((1. - con) /
-				   (1. + con), eccnth)) - Phi;
-				Phi += dphi;
-			} while ( fabs(dphi) > phi2::TOL && --i);
-			if (i <= 0)
-				throw proj_exception(-18);
-			return Phi;
-		}
-	}
+            eccnth = .5 * e;
+            Phi = HALFPI - 2. * atan (ts);
+            i = phi2::N_ITER;
+            do {
+                con = e * sin (Phi);
+                dphi = HALFPI - 2. * atan (ts * pow((1. - con) /
+                   (1. + con), eccnth)) - Phi;
+                Phi += dphi;
+            } while ( fabs(dphi) > phi2::TOL && --i);
+            if (i <= 0)
+                throw proj_exception(-18);
+            return Phi;
+        }
+    }
 }
 #endif

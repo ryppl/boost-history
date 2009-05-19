@@ -38,43 +38,43 @@
 
 namespace projection
 {
-	namespace impl
-	{
-		namespace aasincos
-		{
-			static const double ONE_TOL= 1.00000000000001;
-			//static const double TOL = 0.000000001;
-			static const double ATOL = 1e-50;
-		}
+    namespace impl
+    {
+        namespace aasincos
+        {
+            static const double ONE_TOL= 1.00000000000001;
+            //static const double TOL = 0.000000001;
+            static const double ATOL = 1e-50;
+        }
 
-			double
-		aasin(double v) {
-			double av;
+        inline double
+        aasin(double v) {
+            double av;
 
-			if ((av = fabs(v)) >= 1.) {
-				if (av > aasincos::ONE_TOL)
-					throw proj_exception(-19);
-				return (v < 0. ? -HALFPI : HALFPI);
-			}
-			return asin(v);
-		}
-			double
-		aacos(double v) {
-			double av;
+            if ((av = fabs(v)) >= 1.) {
+                if (av > aasincos::ONE_TOL)
+                    throw proj_exception(-19);
+                return (v < 0. ? -HALFPI : HALFPI);
+            }
+            return asin(v);
+        }
+        inline double
+        aacos(double v) {
+            double av;
 
-			if ((av = fabs(v)) >= 1.) {
-				if (av > aasincos::ONE_TOL)
-					throw proj_exception(-19);
-				return (v < 0. ? PI : 0.);
-			}
-			return acos(v);
-		}
-			double
-		asqrt(double v) { return ((v <= 0) ? 0. : sqrt(v)); }
-			double
-		aatan2(double n, double d) {
-			return ((fabs(n) < aasincos::ATOL && fabs(d) < aasincos::ATOL) ? 0. : atan2(n,d));
-		}
-	}
+            if ((av = fabs(v)) >= 1.) {
+                if (av > aasincos::ONE_TOL)
+                    throw proj_exception(-19);
+                return (v < 0. ? PI : 0.);
+            }
+            return acos(v);
+        }
+        inline double
+        asqrt(double v) { return ((v <= 0) ? 0. : sqrt(v)); }
+        inline double
+        aatan2(double n, double d) {
+            return ((fabs(n) < aasincos::ATOL && fabs(d) < aasincos::ATOL) ? 0. : atan2(n,d));
+        }
+    }
 }
 #endif

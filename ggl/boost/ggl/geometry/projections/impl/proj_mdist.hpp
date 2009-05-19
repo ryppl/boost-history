@@ -37,95 +37,95 @@
 
 namespace projection
 {
-	namespace impl
-	{
-		static const int MDIST_MAX_ITER = 20;
+    namespace impl
+    {
+        static const int MDIST_MAX_ITER = 20;
 
-		struct MDIST
-		{
-			int nb;
-			double es;
-			double E;
-			double b[MDIST_MAX_ITER];
-		};
+        struct MDIST
+        {
+            int nb;
+            double es;
+            double E;
+            double b[MDIST_MAX_ITER];
+        };
 
-		void proj_mdist_ini(double es, MDIST& b)
-		{
-			double numf, numfi, twon1, denf, denfi, ens, T, twon;
-			double den, El, Es;
-			double E[MDIST_MAX_ITER];
-			int i, j;
+        inline void proj_mdist_ini(double es, MDIST& b)
+        {
+            double numf, numfi, twon1, denf, denfi, ens, T, twon;
+            double den, El, Es;
+            double E[MDIST_MAX_ITER];
+            int i, j;
 
-			/* generate E(e^2) and its terms E[] */
-			ens = es;
-			numf = twon1 = denfi = 1.;
-			denf = 1.;
-			twon = 4.;
-			Es = El = E[0] = 1.;
-			for (i = 1; i < MDIST_MAX_ITER ; ++i)
-			{
-				numf *= (twon1 * twon1);
-				den = twon * denf * denf * twon1;
-				T = numf/den;
-				Es -= (E[i] = T * ens);
-				ens *= es;
-				twon *= 4.;
-				denf *= ++denfi;
-				twon1 += 2.;
-				if (Es == El) /* jump out if no change */
-					break;
-				El = Es;
-			}
-			b.nb = i - 1;
-			b.es = es;
-			b.E = Es;
-			/* generate b_n coefficients--note: collapse with prefix ratios */
-			b.b[0] = Es = 1. - Es;
-			numf = denf = 1.;
-			numfi = 2.;
-			denfi = 3.;
-			for (j = 1; j < i; ++j)
-			{
-				Es -= E[j];
-				numf *= numfi;
-				denf *= denfi;
-				b.b[j] = Es * numf / denf;
-				numfi += 2.;
-				denfi += 2.;
-			}
-		}
-		inline double proj_mdist(double phi, double sphi, double cphi, const MDIST& b)
-		{
-			double sc, sum, sphi2, D;
-			int i;
+            /* generate E(e^2) and its terms E[] */
+            ens = es;
+            numf = twon1 = denfi = 1.;
+            denf = 1.;
+            twon = 4.;
+            Es = El = E[0] = 1.;
+            for (i = 1; i < MDIST_MAX_ITER ; ++i)
+            {
+                numf *= (twon1 * twon1);
+                den = twon * denf * denf * twon1;
+                T = numf/den;
+                Es -= (E[i] = T * ens);
+                ens *= es;
+                twon *= 4.;
+                denf *= ++denfi;
+                twon1 += 2.;
+                if (Es == El) /* jump out if no change */
+                    break;
+                El = Es;
+            }
+            b.nb = i - 1;
+            b.es = es;
+            b.E = Es;
+            /* generate b_n coefficients--note: collapse with prefix ratios */
+            b.b[0] = Es = 1. - Es;
+            numf = denf = 1.;
+            numfi = 2.;
+            denfi = 3.;
+            for (j = 1; j < i; ++j)
+            {
+                Es -= E[j];
+                numf *= numfi;
+                denf *= denfi;
+                b.b[j] = Es * numf / denf;
+                numfi += 2.;
+                denfi += 2.;
+            }
+        }
+        inline double proj_mdist(double phi, double sphi, double cphi, const MDIST& b)
+        {
+            double sc, sum, sphi2, D;
+            int i;
 
-			sc = sphi * cphi;
-			sphi2 = sphi * sphi;
-			D = phi * b.E - b.es * sc / sqrt(1. - b.es * sphi2);
-			sum = b.b[i = b.nb];
-			while (i) sum = b.b[--i] + sphi2 * sum;
-			return(D + sc * sum);
-		}
-		inline double proj_inv_mdist(double dist, const MDIST& b)
-		{
-			static const double TOL = 1e-14;
-			double s, t, phi, k;
-			int i;
+            sc = sphi * cphi;
+            sphi2 = sphi * sphi;
+            D = phi * b.E - b.es * sc / sqrt(1. - b.es * sphi2);
+            sum = b.b[i = b.nb];
+            while (i) sum = b.b[--i] + sphi2 * sum;
+            return(D + sc * sum);
+        }
+        inline double proj_inv_mdist(double dist, const MDIST& b)
+        {
+            static const double TOL = 1e-14;
+            double s, t, phi, k;
+            int i;
 
-			k = 1./(1.- b.es);
-			i = MDIST_MAX_ITER;
-			phi = dist;
-			while ( i-- ) {
-				s = sin(phi);
-				t = 1. - b.es * s * s;
-				phi -= t = (proj_mdist(phi, s, cos(phi), b) - dist) *
-					(t * sqrt(t)) * k;
-				if (fabs(t) < TOL) /* that is no change */
-					return phi;
-			}
-				/* convergence failed */
-			throw proj_exception(-17);
-		}
-	}
+            k = 1./(1.- b.es);
+            i = MDIST_MAX_ITER;
+            phi = dist;
+            while ( i-- ) {
+                s = sin(phi);
+                t = 1. - b.es * s * s;
+                phi -= t = (proj_mdist(phi, s, cos(phi), b) - dist) *
+                    (t * sqrt(t)) * k;
+                if (fabs(t) < TOL) /* that is no change */
+                    return phi;
+            }
+                /* convergence failed */
+            throw proj_exception(-17);
+        }
+    }
 }
 #endif
