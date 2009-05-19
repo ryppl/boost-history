@@ -122,12 +122,6 @@ namespace boost { namespace property_tree
     void swap(basic_ptree<K, D, C, A> &pt1,
               basic_ptree<K, D, C, A> &pt2);
 
-    /**
-     * Reference to empty property tree. Can be used as a default value of
-     * get_child. See empty_ptree_trick.cpp for example of usage.
-     */
-    template<class Ptree> const Ptree &empty_ptree();
-
     /** Join two string_path objects. */
     template <typename String, typename Translator>
     string_path<String, Translator> operator /(

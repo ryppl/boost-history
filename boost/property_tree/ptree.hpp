@@ -307,6 +307,8 @@ namespace boost { namespace property_tree
 
         /** Add the node at the given path. Create any missing parents. If there
          * already is a node at the path, add another one with the same key.
+         * @param path Path to the child. The last fragment must not have an
+         *             index.
          * @return A reference to the inserted subtree.
          * @note Because of the way paths work, it is not generally guaranteed
          *       that a node newly created can be accessed using the same path.
@@ -322,37 +324,61 @@ namespace boost { namespace property_tree
             typename translator_between<data_type, Type>::type()) const;
 
         /** Take the value of this node and attempt to translate it to a
+         * @c Type object using the default translator.
+         * @throw ptree_bad_data if the conversion fails.
+         */
+        template<class Type>
+        Type get_value() const;
+
+        /** Take the value of this node and attempt to translate it to a
          * @c Type object using the supplied translator. Return @p default_value
          * if this fails.
          */
         template<class Type, class Translator>
-        Type get_value(const Type &default_value,
-                       Translator tr =
-            typename translator_between<data_type, Type>::type()) const;
+        Type get_value(const Type &default_value, Translator tr) const;
+
+        /** Take the value of this node and attempt to translate it to a
+         * @c Type object using the default translator. Return @p default_value
+         * if this fails.
+         */
+        template<class Type>
+        Type get_value(const Type &default_value) const;
 
         /** Take the value of this node and attempt to translate it to a
          * @c Type object using the supplied translator. Return boost::null if
          * this fails.
          */
         template<class Type, class Translator>
-        optional<Type> get_value_optional(Translator tr =
-            typename translator_between<data_type, Type>::type()) const;
+        optional<Type> get_value_optional(Translator tr) const;
+
+        /** Take the value of this node and attempt to translate it to a
+         * @c Type object using the default translator. Return boost::null if
+         * this fails.
+         */
+        template<class Type>
+        optional<Type> get_value_optional() const;
 
         /** Replace the value at this node with the given value, translated
          * to the tree's data type using the supplied translator.
          * @throw ptree_bad_data if the conversion fails.
         */
         template<class Type, class Translator>
-        void put_value(const Type &value,
-                       Translator tr =
-                       typename translator_between<data_type, Type>::type());
+        void put_value(const Type &value, Translator tr);
+
+        /** Replace the value at this node with the given value, translated
+         * to the tree's data type using the default translator.
+         * @throw ptree_bad_data if the conversion fails.
+        */
+        template<class Type>
+        void put_value(const Type &value);
 
         /** Shorthand for get_child(path).get_value(tr). */
         template<class Type, class Translator>
-        Type get(const path_type &path,
-                 Translator tr =
-                     typename translator_between<data_type, Type>::type()
-                ) const;
+        Type get(const path_type &path, Translator tr) const;
+
+        /** Shorthand for get_child(path).get_value\<Type\>(). */
+        template<class Type>
+        Type get(const path_type &path) const;
 
         /** Shorthand for get_child(path, empty_ptree())
          *                    .get_value(default_value, tr).
@@ -362,9 +388,15 @@ namespace boost { namespace property_tree
         template<class Type, class Translator>
         Type get(const path_type &path,
                  const Type &default_value,
-                 Translator tr =
-                     typename translator_between<data_type, Type>::type()
-                ) const;
+                 Translator tr) const;
+
+        /** Shorthand for get_child(path, empty_ptree())
+         *                    .get_value(default_value).
+         * That is, return the translated value if possible, and the default
+         * value if the node doesn't exist or conversion fails.
+         */
+        template<class Type>
+        Type get(const path_type &path, const Type &default_value) const;
 
         /** Shorthand for:
          * @code
@@ -374,10 +406,17 @@ namespace boost { namespace property_tree
          * @endcode
         */
         template<class Type, class Translator>
-        Type get_optional(const path_type &path,
-                          Translator tr =
-                            typename translator_between<data_type, Type>::type()
-                         ) const;
+        Type get_optional(const path_type &path, Translator tr) const;
+
+        /** Shorthand for:
+         * @code
+         * if(optional\<const self_type&\> node = get_child_optional(path))
+         *   return node->get_value_optional();
+         * return boost::null;
+         * @endcode
+        */
+        template<class Type>
+        Type get_optional(const path_type &path) const;
 
         /** Set the value of the node at the given path to the supplied value,
          * translated to the tree's data type. If the node doesn't exist, it is
@@ -386,24 +425,47 @@ namespace boost { namespace property_tree
          * @throw ptree_bad_data if the conversion fails.
         */
         template<class Type, class Translator>
-        self_type &put(const path_type &path,
-                       const Type &value,
-                       Translator tr =
-                           typename translator_between<data_type, Type>::type()
-                      );
+        self_type &put(const path_type &path, const Type &value, Translator tr);
+
+        /** Set the value of the node at the given path to the supplied value,
+         * translated to the tree's data type. If the node doesn't exist, it is
+         * created, including all its missing parents.
+         * @return The node that had its value changed.
+         * @throw ptree_bad_data if the conversion fails.
+        */
+        template<class Type>
+        self_type &put(const path_type &path, const Type &value);
 
         /** If the node identified by the path does not exist, create it,
          * including all its missing parents.
          * If the node already exists, add a sibling with the same key.
          * Set the newly created node's value to the given paremeter,
          * translated with the supplied translator.
+         * @param path Path to the child. The last fragment must not have an
+         *             index.
+         * @param value The value to add.
+         * @param tr The translator to use.
+         * @return The node that was added.
+         * @throw ptree_bad_data if the conversion fails.
         */
         template<class Type, class Translator>
         self_type &add(const path_type &path,
                        const Type &value,
-                       Translator tr =
-                           typename translator_between<data_type, Type>::type()
-                      );
+                       Translator tr);
+
+        /** If the node identified by the path does not exist, create it,
+         * including all its missing parents.
+         * If the node already exists, add a sibling with the same key.
+         * Set the newly created node's value to the given paremeter,
+         * translated with the supplied translator.
+         * @param path Path to the child. The last fragment must not have an
+         *             index.
+         * @param value The value to add.
+         * @return The node that was added.
+         * @throw ptree_bad_data if the conversion fails.
+        */
+        template<class Type>
+        self_type &add(const path_type &path, const Type &value);
 
     private:
         // Hold the data of this node
