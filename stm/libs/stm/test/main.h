@@ -25,7 +25,7 @@ enum eWorkType
 {
    kBalancedWork,
    kTxIntenseWork,
-   kLockIntenseWork,
+   kLockIntenseWork
 };
 
 extern eWorkType gWorkLoadType;
