@@ -29,7 +29,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class proxy_alloc
 
-template <class AllocT, class TlsAllocT = void>
+template <class AllocT, class TlsAllocT = int>
 class proxy_alloc
 {
 private:
