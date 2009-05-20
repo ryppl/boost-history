@@ -9,8 +9,8 @@
 #define BOOST_PATH_FILTERED_ITERATOR
 
 #include <string>
-#include <boost/../../boost_sandbox/pinhole/boost/pinhole/detail/depth_first_iterator_base.hpp>
-#include <boost/../../boost_sandbox/pinhole/boost/pinhole/detail/tokenizer.hpp>
+#include "detail/depth_first_iterator_base.hpp"
+#include "detail/tokenizer.hpp"
 
 namespace boost { namespace pinhole
 {
@@ -28,7 +28,7 @@ namespace boost { namespace pinhole
                 end_token     = token_path.tokens.end();
 
                 // required call by depth_first_iterator_base
-                MoveIteratorToValidPosition();
+                base_type::MoveIteratorToValidPosition();
             }
 
             explicit path_filter( std::string path, Iterator x, Iterator end ) :
@@ -39,7 +39,7 @@ namespace boost { namespace pinhole
                 end_token     = token_path.tokens.end();
 
                 // required call by depth_first_iterator_base
-                MoveIteratorToValidPosition();
+                base_type::MoveIteratorToValidPosition();
             }
 
             path_filter( const path_filter& other ) :

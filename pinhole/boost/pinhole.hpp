@@ -8,7 +8,6 @@
 #ifndef BOOST_PROPERTY_PINHOLE
 #define BOOST_PROPERTY_PINHOLE
 
-#include "pinhole/config.hpp"
 #include "pinhole/property_group.hpp"
 #include "pinhole/value.hpp"
 

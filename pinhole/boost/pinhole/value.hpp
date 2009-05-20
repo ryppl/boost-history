@@ -10,7 +10,7 @@
 
 #include <vector>
 #include <boost/foreach.hpp>
-#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\find.hpp>
+#include "find.hpp"
 
 namespace boost { namespace pinhole
 {

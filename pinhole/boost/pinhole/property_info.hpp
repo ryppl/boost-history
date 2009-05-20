@@ -12,8 +12,8 @@
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
-#include <boost/tr1/type_traits.hpp>
-#include <boost/tr1/functional.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/format.hpp>
@@ -207,7 +207,7 @@ namespace boost { namespace pinhole { namespace detail
         {
             typedef boost::archive::iterators::mb_from_wchar<std::wstring::const_iterator> translator;
 
-            std::wstring& value = getter();
+            const std::wstring& value = getter();
             return std::string( translator(value.begin()), translator(value.end()) );
         }
     };
@@ -223,7 +223,7 @@ namespace boost { namespace pinhole { namespace detail
         {
             typedef boost::archive::iterators::wchar_from_mb<std::string::const_iterator> translator;
 
-            std::string& value = getter();
+            const std::string& value = getter();
             return std::wstring( translator(value.begin()), translator(value.end()) );
         }
     };
@@ -283,13 +283,13 @@ namespace boost { namespace pinhole { namespace detail
     private:
 
     public:
-        typedef typename std::tr1::remove_reference<T>::type Value_Type;
-        typedef std::tr1::function<void (const Value_Type&)> setter_type;
-        typedef std::tr1::function<Value_Type ()> getter_type;
+        typedef typename boost::remove_reference<T>::type Value_Type;
+        typedef boost::function<void (const Value_Type&)> setter_type;
+        typedef boost::function<Value_Type ()> getter_type;
 
         // The system does not allow you to use pointers as property
         // types due to the ambiguity of their use.
-        BOOST_STATIC_ASSERT(false == std::tr1::is_pointer<Value_Type>::value);
+        BOOST_STATIC_ASSERT(false == boost::is_pointer<Value_Type>::value);
 
         setter_type setter;
         getter_type getter;

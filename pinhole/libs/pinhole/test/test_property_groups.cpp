@@ -8,8 +8,11 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
 #include <boost/test/unit_test.hpp>
-#include <boost/pinhole.hpp>
+#include <boost/pinhole/property_group.hpp>
+#include <boost/pinhole/property_manager.hpp>
 
 using namespace std;
 using namespace boost;
@@ -60,13 +63,11 @@ public:
     string m_string;
 };
 
+
 class TestPropertyGroup : public property_group
 {
 public:
-#if defined(BOOST_MSVC)
-#pragma warning(push)
-#pragma warning( disable: 4355 )
-#endif
+
     TestPropertyGroup() : property_group( PROPERTY_GROUP_NAME, NULL ), m_child1( this ), m_child2( this )
     {
         m_bool_var = false;
@@ -80,9 +81,6 @@ public:
         add_category(PROPERTY_GROUP_CATEGORY2);
         add_category(PROPERTY_GROUP_CATEGORY3);
     }
-#if defined(BOOST_MSVC)
-#pragma warning(pop)
-#endif
 
     TestPropertyChildGroup m_child1;
     TestPropertyChildGroup m_child2;
@@ -132,9 +130,7 @@ public:
         property_manager::unregister_property_group( pPropertyGroup );
     }
 
-    /**
-    * Adds a root property group.
-    */
+
     virtual void add_property_group( property_group *group )
     {
         ++uiChildCount;
@@ -178,7 +174,7 @@ class TestPropertyManagerGuard
         TestPropertyManager *p_manager;
 };
 
-BOOST_AUTO_TEST_CASE( TestPropertyParent )
+BOOST_AUTO_TEST_CASE( TestPropertyParen9t )
 {
     TestPropertyGroup testGroup;
     
@@ -417,20 +413,20 @@ BOOST_AUTO_TEST_CASE( TestAddDeletePropertyGroupsInManager )
     TestPropertyManagerGuard gaurd;
     TestPropertyManager *p_manager = gaurd.p_manager;
 
-    BOOST_CHECK_EQUAL( 0, p_manager->count() );
+    BOOST_CHECK_EQUAL( 0u, p_manager->count() );
 
     TestPropertyGroup *p_pg1 = new TestPropertyGroup();
     TestPropertyGroup *p_pg2 = new TestPropertyGroup();
 
-    BOOST_CHECK_EQUAL( 2, p_manager->count() );
+    BOOST_CHECK_EQUAL( 2u, p_manager->count() );
 
     delete( p_pg1 );
 
-    BOOST_CHECK_EQUAL( 1, p_manager->count() );
+    BOOST_CHECK_EQUAL( 1u, p_manager->count() );
 
     delete( p_pg2 );
 
-    BOOST_CHECK_EQUAL( 0, p_manager->count() );
+    BOOST_CHECK_EQUAL( 0u, p_manager->count() );
 }
 
 BOOST_AUTO_TEST_CASE( TestCategoryCollectionInManager )
@@ -443,17 +439,17 @@ BOOST_AUTO_TEST_CASE( TestCategoryCollectionInManager )
     TestPropertyGroup pg1;
     TestPropertyGroup pg2;
 
-    BOOST_CHECK_EQUAL( 4, pCategoryCollection->size() );
+    BOOST_CHECK_EQUAL( 4u, pCategoryCollection->size() );
 
     BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( "All" ) );
-    BOOST_CHECK_EQUAL( 2, p_manager->count("All") );
+    BOOST_CHECK_EQUAL( 2u, p_manager->count("All") );
 
     BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY1 ) );
-    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY1) );
+    BOOST_CHECK_EQUAL( 2u, p_manager->count(PROPERTY_GROUP_CATEGORY1) );
 
     BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY2 ) );
-    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY2) );
+    BOOST_CHECK_EQUAL( 2u, p_manager->count(PROPERTY_GROUP_CATEGORY2) );
 
     BOOST_CHECK( pCategoryCollection->end() != pCategoryCollection->find( PROPERTY_GROUP_CATEGORY3 ) );
-    BOOST_CHECK_EQUAL( 2, p_manager->count(PROPERTY_GROUP_CATEGORY3) );
+    BOOST_CHECK_EQUAL( 2u, p_manager->count(PROPERTY_GROUP_CATEGORY3) );
 }

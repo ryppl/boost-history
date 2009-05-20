@@ -24,45 +24,47 @@ BOOST_AUTO_TEST_CASE( TestTokenizer_ValidPaths )
 
     // empty path
 
-    BOOST_CHECK_EQUAL( process_path("", path), 0);
+    BOOST_CHECK_EQUAL( process_path("", path), 0u);
     BOOST_CHECK_EQUAL( path.relative_path, false );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 0 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 0u );
 
     // Simple relative path
 
-    BOOST_CHECK_EQUAL( process_path("relative/", path), 1);
+    BOOST_CHECK_EQUAL( process_path("relative/", path), 1u);
     BOOST_CHECK_EQUAL( path.relative_path, true );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 1 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name, "relative" );
     BOOST_CHECK( (*path.tokens.begin()).property.empty() );
     BOOST_CHECK( (*path.tokens.begin()).value.empty() );
 
-    BOOST_CHECK_EQUAL( process_path("relative", path), 1);
+    BOOST_CHECK_EQUAL( process_path("relative", path), 1u);
     BOOST_CHECK_EQUAL( path.relative_path, true );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 1 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name, "relative" );
     BOOST_CHECK( (*path.tokens.begin()).property.empty() );
     BOOST_CHECK( (*path.tokens.begin()).value.empty() );
 
     // Simple fixed path
 
-    BOOST_CHECK_EQUAL( process_path("/non-relative", path), 1);
-    BOOST_CHECK_EQUAL( path.tokens.size(), 1 );
+    BOOST_CHECK_EQUAL( process_path("/non-relative", path), 1u);
+    BOOST_CHECK_EQUAL( path.relative_path, false );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name, "non-relative" );
     BOOST_CHECK( (*path.tokens.begin()).property.empty() );
     BOOST_CHECK( (*path.tokens.begin()).value.empty() );
 
-    BOOST_CHECK_EQUAL( process_path("/non-relative/", path), 1);
-    BOOST_CHECK_EQUAL( path.tokens.size(), 1 );
+    BOOST_CHECK_EQUAL( process_path("/non-relative/", path), 1u);
+    BOOST_CHECK_EQUAL( path.relative_path, false );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name, "non-relative" );
     BOOST_CHECK( (*path.tokens.begin()).property.empty() );
     BOOST_CHECK( (*path.tokens.begin()).value.empty() );
 
     // multiple tokens
 
-    BOOST_CHECK_EQUAL( process_path("first/second/third/fourth/fifth/", path), 5);
+    BOOST_CHECK_EQUAL( process_path("first/second/third/fourth/fifth/", path), 5u);
     BOOST_CHECK_EQUAL( path.relative_path, true );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 5 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 5u );
     int ct=0;
     BOOST_FOREACH( const boost::pinhole::detail::token_path::token& token, path.tokens )
     {
@@ -80,18 +82,18 @@ BOOST_AUTO_TEST_CASE( TestTokenizer_ValidPaths )
 
     // simple property values
 
-    BOOST_CHECK_EQUAL( process_path("name.property=value", path), 1);
+    BOOST_CHECK_EQUAL( process_path("name.property=value", path), 1u);
     BOOST_CHECK_EQUAL( path.relative_path, true );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 1 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name,     "name" );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).property, "property" );
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).value,    "value" );
 
     // multiple property values
 
-    BOOST_CHECK_EQUAL( process_path("/first.a1=b2/second.c=d/third.f3=g4/fourth.h=/fifth.5=6", path), 5);
+    BOOST_CHECK_EQUAL( process_path("/first.a1=b2/second.c=d/third.f3=g4/fourth.h=/fifth.5=6", path), 5u);
     BOOST_CHECK_EQUAL( path.relative_path, false );
-    BOOST_CHECK_EQUAL( path.tokens.size(), 5 );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 5u );
     ct=0;
     BOOST_FOREACH( const boost::pinhole::detail::token_path::token& token, path.tokens )
     {
@@ -131,12 +133,12 @@ BOOST_AUTO_TEST_CASE( TestTokenizer_ValidPaths )
 
     // spaces
 
-    BOOST_CHECK_EQUAL( process_path(" relat ive ", path), 1);
+    BOOST_CHECK_EQUAL( process_path(" relat ive ", path), 1u);
     BOOST_CHECK_EQUAL( (*path.tokens.begin()).name, " relat ive " );
     BOOST_CHECK( (*path.tokens.begin()).property.empty() );
     BOOST_CHECK( (*path.tokens.begin()).value.empty() );
 
-    BOOST_CHECK_EQUAL( process_path(" relat ive / more spaces ", path), 2);
+    BOOST_CHECK_EQUAL( process_path(" relat ive / more spaces ", path), 2u);
     ct=0;
     BOOST_FOREACH( const boost::pinhole::detail::token_path::token& token, path.tokens )
     {
@@ -155,7 +157,7 @@ BOOST_AUTO_TEST_CASE( TestTokenizer_ValidPaths )
         ++ct;
     }
 
-    BOOST_CHECK_EQUAL( process_path(" relat ive . som eSpaces = a value / more spaces . mor eSpaces = another value ", path), 2);
+    BOOST_CHECK_EQUAL( process_path(" relat ive . som eSpaces = a value / more spaces . mor eSpaces = another value ", path), 2u);
     ct=0;
     BOOST_FOREACH( const boost::pinhole::detail::token_path::token& token, path.tokens )
     {

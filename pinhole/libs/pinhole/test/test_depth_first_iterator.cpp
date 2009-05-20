@@ -121,7 +121,6 @@ BOOST_AUTO_TEST_CASE( TestComplexPath_RootSearch )
         int ct=0;
         for( ; itr != itrEnd; ++itr, ++ct )
         {
-            property_group* prop = (*itr);
             switch( ct )
             {
                 case  0:

@@ -9,7 +9,7 @@
 #define BOOST_DEPTH_FIRST_ITERATOR
 
 #include <string>
-#include <boost/../../boost_sandbox/pinhole/boost/pinhole/detail/depth_first_iterator_base.hpp>
+#include "detail/depth_first_iterator_base.hpp"
 
 namespace boost { namespace pinhole
 {
@@ -27,7 +27,7 @@ namespace boost { namespace pinhole
             base_type(x, end)
         {
             // required call by depth_first_iterator_base
-            MoveIteratorToValidPosition();
+            base_type::MoveIteratorToValidPosition();
         }
 
         inline bool visit_children(property_group* property)

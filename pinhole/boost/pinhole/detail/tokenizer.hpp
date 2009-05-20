@@ -9,8 +9,8 @@
 #define BOOST_PINHOLE_TOKENIZER
 
 #include <vector>
-#include <boost/../../boost_sandbox/pinhole/boost/pinhole/exceptions.hpp>
-#include <boost/algorithm/string/find.hpp>
+#include "../exceptions.hpp"
+#include"../find.hpp"
 
 namespace boost { namespace pinhole
 {
@@ -62,7 +62,8 @@ namespace boost { namespace pinhole
 
             size_t itemCount = 0;
 
-            string_split_iterator splitItr= boost::make_split_iterator( std::make_pair(itr, itrEnd), boost::first_finder("/", is_equal()));
+            string_range range(itr, itrEnd);
+            string_split_iterator splitItr= boost::make_split_iterator( range, boost::first_finder("/", is_equal()));
             while( splitItr!=string_split_iterator() )
             {
                 boost::pinhole::detail::token_path::token newToken;
@@ -81,7 +82,8 @@ namespace boost { namespace pinhole
                     string_range dot_delim = boost::find_first( strSubToken, "." );
                     if( dot_delim )
                     {
-                        string_range equal_delim = boost::find_first( string_range(dot_delim.end(), strSubToken.end()), "=" );
+                        string_range sub_range(dot_delim.end(), strSubToken.end());
+                        string_range equal_delim = boost::find_first( sub_range, "=" );
                         if( equal_delim )
                         {
                             if( dot_delim.end() == equal_delim.begin() )

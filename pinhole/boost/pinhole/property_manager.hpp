@@ -8,17 +8,16 @@
 #ifndef BOOST_PROPERTY_MANAGER
 #define BOOST_PROPERTY_MANAGER
 
+#include "types.hpp"
 #include "exceptions.hpp"
 #include "map_key_value_iterators.hpp"
 #include "category_iterator.hpp"
-#include <set>
-#include <string>
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
-#include <boost/tr1/memory.hpp>
+#include <boost/bind.hpp>
 #include <boost/signals.hpp>
 #include <boost/algorithm/string.hpp>
 #if defined(BOOST_MSVC)
@@ -32,7 +31,7 @@ namespace boost { namespace pinhole
     typedef std::set<std::string> category_collection;
     typedef std::list<property_group*> children_collection;
     
-    class BOOST_PINHOLE_DECL event_source
+    class event_source
     {
     public :
         static event_source* instance()
@@ -72,10 +71,10 @@ namespace boost { namespace pinhole
         
     };
 
-    class BOOST_PINHOLE_DECL property_manager
+    class property_manager
     {
     public:
-        typedef std::tr1::shared_ptr<property_manager> instance_type;
+        typedef boost::shared_ptr<property_manager> instance_type;
 
     private:
         static void deleter(property_manager* manager)

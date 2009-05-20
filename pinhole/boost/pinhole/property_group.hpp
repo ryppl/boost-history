@@ -8,34 +8,33 @@
 #ifndef BOOST_PROPERTY_GROUP
 #define BOOST_PROPERTY_GROUP
 
+#include "types.hpp"
 #include "map_key_value_iterators.hpp"
 #include "property_info.hpp"
 #include "action_info.hpp"
 #include "property_manager.hpp"
-#include <set>
-#include <list>
 #include <sstream>
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning( disable: 4561)
 #endif
-#include <boost/tr1/memory.hpp>
-#include <boost/tr1/type_traits.hpp>
-#include <boost/tr1/functional.hpp>
+#include <boost/bind.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/function.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/any.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
 #endif
 
-#define BOOST_SETTER(c) std::tr1::bind(c, this, std::tr1::placeholders::_1)
+#define BOOST_SETTER(c) boost::bind(c, this, _1)
 #if defined(BOOST_MSVC) && (_MSC_VER > 1310) && (_MSC_VER <= 1400)
-    #define BOOST_GETTER(c) std::tr1::bind(std::tr1::mem_fn(c), this)
+    #define BOOST_GETTER(c) boost::bind(boost::mem_fn(c), this)
 #else
-    #define BOOST_GETTER(c) std::tr1::bind(c, this)
+    #define BOOST_GETTER(c) boost::bind(c, this)
 #endif
-#define BOOST_ACTION(c) std::tr1::bind(c, this)
+#define BOOST_ACTION(c) boost::bind(c, this)
 
 namespace boost { namespace pinhole
 {
@@ -55,9 +54,9 @@ namespace boost { namespace pinhole
     };
 
     template<typename T>
-    inline std::tr1::function<void (const T&)> property_system_var_setter_builder(T &t)
+    inline boost::function<void (const T&)> property_system_var_setter_builder(T &t)
     {
-        return std::tr1::bind<void>(property_system_var_setter<T>(t), std::tr1::placeholders::_1);
+        return boost::bind<void>(property_system_var_setter<T>(t), _1);
     }
 
     #define BOOST_SETTER_VAR(c) boost::pinhole::property_system_var_setter_builder(c)
@@ -78,9 +77,9 @@ namespace boost { namespace pinhole
     };
 
     template<typename T>
-    inline std::tr1::function<T ()> property_system_var_getter_builder(T &t)
+    inline boost::function<T ()> property_system_var_getter_builder(T &t)
     {
-        return std::tr1::bind<T>(property_system_var_getter<T>(t));
+        return boost::bind<T>(property_system_var_getter<T>(t));
     }
 
     #define BOOST_GETTER_VAR(c) boost::pinhole::property_system_var_getter_builder(c)
@@ -88,13 +87,6 @@ namespace boost { namespace pinhole
     struct no_setter_struct {};
     
     #define BOOST_SETTER_NONE boost::pinhole::no_setter_struct()
-
-    class property_group;
-
-    typedef std::set<std::string> category_collection; 
-    typedef std::list<property_group*> children_collection;
-    typedef std::map<std::string, detail::property_info_base*> property_collection;
-    typedef std::map<std::string, detail::action_info*> action_collection;
 
     /**
      * Manages a list of properties for an object. A property is defined by a
@@ -334,7 +326,7 @@ namespace boost { namespace pinhole
             {
                 // The system does not allow you to use pointers as property
                 // types due to the ambiguity of their use.
-                BOOST_STATIC_ASSERT(false == std::tr1::is_pointer<Return_Type>::value);
+                BOOST_STATIC_ASSERT(false == boost::is_pointer<Return_Type>::value);
                 
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
@@ -370,7 +362,7 @@ namespace boost { namespace pinhole
             {
                 // The system does not allow you to use pointers as property
                 // types due to the ambiguity of their use.
-                BOOST_STATIC_ASSERT(false == std::tr1::is_pointer<Set_Type>::value);
+                BOOST_STATIC_ASSERT(false == boost::is_pointer<Set_Type>::value);
                 
                 property_collection::const_iterator itemItr = m_properties.find(property);
                 
@@ -723,7 +715,7 @@ namespace boost { namespace pinhole
          */
         void add_action( std::string name, 
                          std::string description,
-                         std::tr1::function<void ()> action )
+                         boost::function<void ()> action )
         {
             detail::action_info *action_info = new detail::action_info();
             
@@ -762,8 +754,8 @@ namespace boost { namespace pinhole
         template<typename Value_Type>
         void internal_add_property( const std::string &name, 
                                     const std::string &description,
-                                    std::tr1::function<void (const Value_Type&)> setter, 
-                                    std::tr1::function<Value_Type ()> getter,
+                                    boost::function<void (const Value_Type&)> setter, 
+                                    boost::function<Value_Type ()> getter,
                                     boost::any &metadata )
         {
             property_collection::iterator previousInstance = m_properties.find(name);

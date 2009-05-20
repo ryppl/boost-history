@@ -12,8 +12,8 @@
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
-#include <boost/tr1/type_traits.hpp>
-#include <boost/tr1/functional.hpp>
+#include <boost/type_traits.hpp>
+#include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
@@ -27,7 +27,7 @@ namespace boost { namespace pinhole { namespace detail
         template<typename type> struct Internal;
 
     public:
-        typedef std::tr1::function<void ()> action_type;
+        typedef boost::function<void ()> action_type;
         
         virtual ~action_info(){;}
 

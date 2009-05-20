@@ -10,8 +10,8 @@
 
 #include <exception>
 #include <stdexcept>
-#include <string>
-#include <boost/../../boost_sandbox/pinhole/boost/pinhole/property_group.hpp>
+
+#include "../property_group.hpp"
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)

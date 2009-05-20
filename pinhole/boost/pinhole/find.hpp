@@ -9,9 +9,9 @@
 #define BOOST_PINHOLE_FIND
 
 #include <vector>
-#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\detail\path.hpp>
-#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\detail\tokenizer.hpp>
-#include <boost\..\..\boost_sandbox\pinhole\boost\pinhole\path_filtered_iterator.hpp>
+
+#include "./detail/path.hpp"
+#include "path_filtered_iterator.hpp"
 
 namespace boost { namespace pinhole
 {
