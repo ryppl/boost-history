@@ -1,1 +1,61 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:new_thread __new_thread__]
+
+_new_thread__ creates a new __thread__ and executes the task in this thread (asynchronous). The created thread gets joined by handle.
+
+[caution Always store the returned __act__ in a variable because __handle__ joins the thread in its destructor (if the last reference gets out of scope). ]
+
+Points of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed.
+
+``
+	long fibonacci( long n)
+	{
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		return k1;
+	}
+
+	void main()
+	{
+		boost::task::handle< long > h(
+			boost::task::async(
+				boost::task::new_thread(),
+				boost::task::make_task(
+					fibonacci,
+					10) ) );
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
+	}
+``
+
+
+In the example below both `a_function` and `another_function` are executed synchron (see link_own_thread[__own_thread__] for synchronous execution)!
+
+``
+      boost::task::async(
+		boost::task::new_thread(),
+		boost::task::make_task(
+			a_function) ) );
+
+      boost::task::async(
+		boost::task::new_thread(),
+		boost::task::make_task(
+			another_function) ) );
+``
+
+[endsect] 
+ 
  

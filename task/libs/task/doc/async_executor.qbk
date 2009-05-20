@@ -8,16 +8,10 @@
 
 [section:async_executor Asynchronous executor]
 
-Often you will see mentioned ‘synchronous’ or ‘asynchronous’ when talking about methods. Here I explain what this means, how to use them, and what are the benefits of the two.
-Usually the methods are synchronous. That means that you call them, they gets executed. And when they finish you get the control back.
-The asynchronous methods are different. You call them. They start executing, but return the control over the execution back to the thread which called them while they continue to execute in different thread.
+In contrast to synchronous methods asynchronous methods do not block the program flow when a time consuming operation is executed.
+The application continues executing the current context and when the result of the asynchronous method is required the __act__ can be used.
 
-The synchronous methods are easier to use and write and that’s why most of the methods are such. But when dealing with something which execution may last long often it is more convenient to use asynchronous functions.
-For example some internet components are asynchronous. Asynchronous is the function for shutting down Windows. This way you can close your application before the actual shutdown.
-
-Asynchronous methods have the advantage to not interrupt the program flow when a time consuming operation is needed. They are used a bit harder and have to be used carefully. You can not be sure that the execution of a method is finished, and the result is ready to use (unless you do checks).
-A good use is to call an asynchronous method, continue executing the application, and when the results of the method execution must be used, a loop like the one shown above should be made to wait for the results.
-
+An __ae__ executes a __task__ asynchronously and provides a link_handle(__act__) to manage the __task__.
 
 [include own_thread.qbk]
 [include new_thread.qbk]

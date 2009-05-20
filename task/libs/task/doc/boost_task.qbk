@@ -30,6 +30,7 @@
 [template link_channel[link_text] [link boost_task.async_executor.pool.channel [link_text]]]
 [template link_forkjoin[link_text] [link boost_task.async_executor.pool.forkjoin [link_text]]]
 [template link_handle[link_text] [link boost_task.async_completion_token.handle [link_text]]]
+[template link_own_thread[link_text] [link boost_task.async_executor.own_thread [link_text]]]
 [template link_pool[link_text] [link boost_task.async_executor.pool [link_text]]]
 [template link_task[link_text] [link boost_task.task [link_text]]]
 [template link_work_stealing[link_text] [link boost_task.async_executor.pool.work_stealing [link_text]]]

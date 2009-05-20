@@ -1,1 +1,44 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:as_sub_task __as_sub_task__]
+
+__as_sub_task__ is a conveniet way to execute a __sub_task__. If the parent task is executed inside a __thread_pool__ the __sub_task__ is put into the local-queue of the
+__worker_thread__ in the other case the __sub_task__ will be executed in a new thread.
+
+
+``
+	boost::task::handle< long > h(
+		boost::task::async(
+			boost::task::as_sub_task(),
+			boost::task::make_task(
+				fibonacci,
+				10) ) );
+``
+
+is equivalent to:
+
+
+``
+	if ( boost::this_task::runs_in_pool() )
+	{
+		// put the sub-task into worker-threads local-queue
+	}
+	else
+	{
+		boost::task::async(
+			boost::task::new_thread(),
+			boost::task::make_task(...) );
+	}
+``
+
+
+[endsect] 
+ 
+ 
  

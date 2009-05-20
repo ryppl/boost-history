@@ -39,7 +39,7 @@ References
 
 * N2276: Thread Pools and Futures [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2276.html] written by Anthony Williams.
 
-* N2802: A plea to reconsider detach-on-destruction for thread objects [http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html] written by Hans-J. Boehm.
+* N2802: A plea to reconsider detach-on-destruction for thread objects [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html] written by Hans-J. Boehm.
 
 * C++task-force mailing list
 
@@ -56,7 +56,7 @@ which includes all the other headers in turn.
 [heading Tested Platforms]
 __boost_task__ has been tested on the following platforms and compilers:
 
-*  Linux 2.6.29.2 (amd64), GCC 4.3.3
+*  Debian GNU/Linux 2.6.29.2 (amd64), GCC 4.3.3
 *  FreeBSD 7.2 (amd64), GCC 4.2.1
 *  OpenSolaris 0811 (amd64), SUN 
 *  Windows XP Professional (i386), MSVC 9.0
