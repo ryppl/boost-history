@@ -10,7 +10,7 @@
 
 __own_thread__ executes the task in the current thread (synchronous execution - concerns of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] do not aply). 
 
-
+``
 	long fibonacci( long n)
 	{
 		if ( n == 0) return 0;
@@ -35,7 +35,7 @@ __own_thread__ executes the task in the current thread (synchronous execution - 
 					10) ) );
 		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
-
+``
 
 [endsect] 
  

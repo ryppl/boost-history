@@ -24,6 +24,7 @@ __boost_task__ provides a framework to utilize the available hardware and provid
 The framework provides some link_ae[__aes__], like __new_thread__, in order to execute the task asynchronously in another execution context (__boost_task__
 uses preemptible threads for this purpose).
 
+``
 	void print( std::string const& msg)
 	{ printf("%s\n", msg.c_str() ); }
 
@@ -35,10 +36,12 @@ uses preemptible threads for this purpose).
 				print,
 				"Hello World!") ) );
 	}
+``
 
 In order to manage the task __assync__ returns a handle __handle__ (associated with the submitted task). It functions as a __act__ - that means it transfers
 the result of the execution back to the caller thread.
 
+``
 	std::string echo( std::string const& msg)
 	{ return msg; }
 
@@ -52,9 +55,11 @@ the result of the execution back to the caller thread.
 					"Hello World!") ) );
 		std::cout << h.get() << std::endl;		// wait until task is finished and return the result
 	}
+``
 
 The task can also be interrupted via __handle__ if it is a so-called link_coop_task[__coop_task__].
 
+``
 	void long_running(  boost::posix_time::time_duration const& rel_time)
 	{ boost::this_thread::sleep( rel_time);
 
@@ -69,11 +74,12 @@ The task can also be interrupted via __handle__ if it is a so-called link_coop_t
 		h.interrupt();					// interrupt execution of task
 		std::cout << h.get() << std::endl;		// wait until task is finished, will throw an exeception
 	}
-
+``
 
 Beside __new_thread__ (which creates a new task for each submitted task) __boost_task__ provides link_pool[__thread_pools__] to prevent the overhead of thread creation
 and destruction for each task. __default_pool__ submitts the tasks to the default __thread_pool__  which contains a fixed number of pre-spawned __worker_threads__ (custom __thread_pools__ are supported too).
 
+``
 	long serial_fib( long n)
 	{
 		if( n < 2) return n;
@@ -115,19 +121,20 @@ and destruction for each task. __default_pool__ submitts the tasks to the defaul
 					5) ) );  
 		std::cout << h.get() << std::endl;
 	}
-
+``
 
 With function __fn_runs_in_pool__ a task can detect if it is executed inside a __thread_pool__.
 __sub_tasks__ arecreated by __as_sub_task__. Where the __sub_task__ is executed by a new thread if the parent task
 is not executed inside a __thread_pool__. In the other case the __sub_task__ is put into the local __worker_queue__
 which enables link_work_stealing[__work_stealing__] and link_forkjoin[inline execution] of tasks.
 
+``
 	boost::task::async(
 		boost::task::as_sub_task(),	// sub-task executed in a new thread or inside
 		boost::task::make_task(		// the thread-pool depending upon the parent
 			parallel_fib,		// task is executed inside a thread-pool or not
 			10,
 			5) ) ); 
-
+``
 
 [endsect]

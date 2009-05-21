@@ -31,7 +31,10 @@ struct joiner
 {
 	void operator()( thread * thrd)
 	{
-		thrd->join();
+		try
+		{ thrd->join(); }
+		catch (...)
+		{}
 		delete thrd;
 	}
 };

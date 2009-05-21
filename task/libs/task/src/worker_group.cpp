@@ -52,7 +52,12 @@ void
 worker_group::join_all()
 {
 	BOOST_FOREACH( worker w, cont_)
-	{ w.join(); }
+	{
+		try
+		{ w.join(); }
+		catch (...)
+		{}
+	}
 }
 
 void

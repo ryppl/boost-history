@@ -21,35 +21,40 @@ arguments per default (can be overriden by defining BOOST_TASK_MAKE_TASK_MAX_ARI
 
 * create task from free-function with arguments:
 
-    boost::task::task< int > t(
-      boost::task::make_task(
-	  parallel_fib,
-	  10) );
+``
+	boost::task::task< int > t(
+		boost::task::make_task(
+			parallel_fib,
+			10) );
+``
 
 * create task from member-function with arguments:
 
-    struct X
-    {
-      void f( int i);
-    };
+``
+	struct X
+	{
+		void f( int i);
+	};
 
-    X x;
-    boost::task::task< int > t(
-      boost::task::make_task(
-	  & X::f,
-	  x,
-	  10) );
-  
+	X x;
+	boost::task::task< int > t(
+		boost::task::make_task(
+			& X::f,
+			x,
+			10) );
+``
+
 It is possible to create __task__ from a __callable__ too:
 
-    struct Y
-    {
-	std::string operator()();
-    };
+``
+	struct Y
+	{
+		std::string operator()();
+	};
     
-    Y y;
-    boost::task::task< std::string > t( y);
-    
+	Y y;
+	boost::task::task< std::string > t( y);
+``
 
 [heading:cooperative Cooperative task amd interruption]
 
@@ -73,6 +78,7 @@ __interruption__points__ are:
 
 A __interruption__point__ throws __task_interrupted__ if an interruption was requested.
 
+``
 	long cooperative( long n)
 	{
 		boost::this_thread::interruption_point(); // interruption point
@@ -105,12 +111,13 @@ A __interruption__point__ throws __task_interrupted__ if an interruption was req
 					10) ) );
 		std::cout << h.get() << std::endl;		// throws boost::task::task_interrupted
 	}
-
+``
 
 [heading:exceptions Exceptions]
 
 Exceptions thrown by __task__ are transported by the __act__.
 
+``
 	void throwing()
 	{
 		...
@@ -127,6 +134,7 @@ Exceptions thrown by __task__ are transported by the __act__.
 					throwing) ) );
 		std::cout << h.wait() << std::endl;		// throws std::domain_error
 	}
+``
 
 Exceptions rethrown by type are:
 
@@ -158,6 +166,7 @@ Exceptions rethrown by type are:
 Top-level tasks have no parent. A parent task can create child tasks when it creates another task by using __as_sub_task__ as __ae__.  These children are implicitly treated as __sub_tasks__ of the larger task.  It is assumed that that __sub_tasks__ can be executed in any order because only overall operation
 speed matters (enabling strategies for fast execution of unordered work-items as link_work_stealing[__work_stealing__]).
 
+``
 	long serial_fib( long n)
 	{
 		if( n < 2) return n;
@@ -199,5 +208,6 @@ speed matters (enabling strategies for fast execution of unordered work-items as
 					5) ) );  
 		std::cout << h.get() << std::endl;
 	}
+``
 
 [endsect]

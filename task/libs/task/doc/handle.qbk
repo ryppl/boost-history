@@ -31,7 +31,7 @@ __handle__ implements an interface in order to check the state of computation an
 
 * __fn_wait_until__: wait until result ist set or time-point has elapsed
 
-
+``
 	long fibonacci( long n)
 	{
 		boost::this_thread::interruption_point(); // interruption point
@@ -69,7 +69,7 @@ __handle__ implements an interface in order to check the state of computation an
 		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
 		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
-
+``
 
 [heading:task_interruption Task interruption]
 
@@ -83,7 +83,7 @@ __handle__ implements an interface in order to check the state of computation an
 
 * __fn_interruption_requested__: return bool if interruption was requested
 
-
+``
 	long cooperative( long n)
 	{
 		boost::this_thread::interruption_point(); // interruption point
@@ -121,6 +121,6 @@ __handle__ implements an interface in order to check the state of computation an
 		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
 		std::cout << h.get() << std::endl;		// throws boost::task::task_interrupted
 	}
-
+``
 
 [endsect]

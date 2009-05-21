@@ -7,56 +7,51 @@
 
 [section:pool Pool]
 
-It is fairly common for one work item to need to wait for the execution of another work item to complete.  If the second work item has not yet begun executing, it will be sitting in the queue waiting for a worker thread to pick it up.  It is possible that there are no available worker threads – maybe they’re all waiting for other work items to complete!  This can cause deadlock in the worst case, and very slow execution in the best, as the thread pool may be slow to add more worker threads to pick up these work items.  Task.Wait, on the other hand, knows it’s waiting for another task, and is tightly integrated with the thread pool such that it is able to determine whether the task has started executing, and if not it executes it immediately, in-line on the current thread.  This greatly improves performance and eliminates the possibility of deadlock in this situation.
+A __thread_pool__ maintains a queue (or queues) of work to be done, and a collection of __worker_threads__ which execute work from the queue(s).
 
-The CLR thread pool has the correct internal logic and a simple interface (QueueUserWorkItem) for scheduling work items to be executed by the threads it manages. This appears to be the answer to achieving fine grained parallelism.
+Since a __sub_task__ is just a piece of a larger __task__, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is __work_stealing__. 
 
-A thread pool basically has two functions:  It maintains a queue (or queues) of work to be done, and a collection of threads which execute work from the queue(s).  So designing a thread pool really comes down to a) finding ways to enqueue and dequeue work items very quickly (to keep the overhead of using the thread pool to a minimum) and b) developing an algorithm for choosing an optimal number of threads to service the queues.
-
-ThreadPool.QueueUserWorkItem conveys basically zero information about each work item, aside from that it exists.  This places some important constraints on the execution of these items.  For example, the thread pool does not know whether individual work items are related or not, so it has to assume they are all completely independent, implying that we cannot reorder work to optimize its execution, as independent work items typically must be executed in FIFO order to ensure fairness.
-
-In prior versions of the CLR, this queue was a simple linked list, protected by a Monitor lock.  This incurs some overhead: we must allocate nodes for the list (and pay the cost of the GC having to traverse the list each time a GC occurs), and we must pay the cost of acquiring that lock every time we enqueue or dequeue a work item.
-
-We can improve this situation in a couple of ways:  we can implement a more efficient FIFO queue, and we can enhance the API to allow the user to give us more information, allowing us to turn to even more efficient queuing strategies.
-
-Recall that the overhead of the existing FIFO queue comes from the expense of allocating and traversing the data structure, and the cost of acquiring the lock on each enqueue and dequeue operation.  For 4.0, we are switching to a lock-free data structure with much lower synchronization overhead.
-
-However, we are still restricted in what we can do here – we still have very little information about the work we’re executing, and so we still need to use the same basic strategy to execute it.  We can trim overhead here and there, but QUWI will probably never be a great way to execute very fine-grained workloads.  We need a new API.
-
-Since a child task is just a piece of a larger task, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is “work stealing.” 
-
-The pool manages internaly __worker_threads__ and submitted __actions__ are stored in a __channel__ (__global_queue__) for processing by the __worker_threads__ (using a __work_stealing__ algorithm). Each submitted __action__ gets associated with a __task__ object that will be returned. The __task__ object acts as a proxy for a result that is initially not known and gets evaluated later by a __worker_thread__.
 
 [heading Work-Stealing]
+
 The most important aspect of work-stealing is that it enables very fast enqueue and dequeue in the typical case, often requiring no synchronization at all.  This virtually eliminates a large part of the overhead of QUWI, when working with child tasks.  We still do need to allocate memory for the Task itself, and for the work-stealing queue, but like the improvements to the FIFO queue these data structures have been optimized for good GC performance.  Parent tasks are fast; child tasks are much faster.
 
 
-Traditional thread poola do not scale because they use a single global queue protected by a global lock. The frequency at which __worker_threads__ aquire the global lock becomes a limiting factor for the throughput if:
+Traditional thread pool do not scale because they use a single global queue protected by a global lock. The frequency at which __worker_threads__ aquire the global lock becomes a limiting factor for the throughput if:
 
-*  the __actions__ become smaller
+
+*  the __tasks__ become smaller
+
 *  more processors are added
+
 
 A work-stealing algorithm can be used to solve this problem. It uses a special kind of queue which has two ends, and allows lock-free pushes and pops from the ['private end] (accessed by the __worker_thread__ owning the queue), but requires synchronization from the ['public end] (accessed by the other __worker_threads__). Synchronization is necessary when the queue is sufficiently small that private and public operations could conflict.
 
 The pool contains one global queue (__bounded_channel__ or __unbounded_channel__) protected by a global lock and each __worker_thread__ has its own private worker queue. If work is enqueued by a __worker_thread__ the __action__ is stored in the worker queue. If the work is enqueued by a application thread it goes into the global queue. When __worker_threads__ are looking for work, they have following search order:
 
+
 *  look into the private worker queue - __actions__ can be dequeued without locks
+
 *  look in the global queue - locks are used for synchronization
+
 *  check other worker queues ('stealing' __actions__ from private worker queues of other __worker_threads__) - requires locks
 
-For a lot of recursively queued __actions__, the use of a worker queue per thread substantially reduces the synchronization necessary to complete the work.  There are also fewer cache effects due to sharing of the global queue information.
+
+For a lot of recursively queued __tasks__, the use of a worker queue per thread substantially reduces the synchronization necessary to complete the work.  There are also fewer cache effects due to sharing of the global queue information.
 
 Operations on the private worker queue are executed in LIFO order and operations on worker queues of other __worker_threads__ in FIFO order (steals).
 
+
 *  There are chances that memory is still hot in the cache, if the __actions__ are pushed in LIFO order into the private worker queue.
-*  If a __worker_thread__ steals work in FIFO order, increases the chances that a larger 'chunk' of work will be stolen (the need for other steals will be possibly reduced). Because the __actions__ are stored in LIFO order, the oldest items are closer to the ['public end] of the queue (forming a tree). Stealing such an older __action__ also steals a (probably) larger subtree of __actions__ unfolded if the stolen work item get executed.
 
-[note __Actions__ submitted by a __worker_thread__ are stored into its private worker queue in LIFO order, thatswhy priorities and timeouts specified at the submit-function get ignored.]
+*  If a __worker_thread__ steals work in FIFO order, increases the chances that a larger 'chunk' of work will be stolen (the need for other steals will be possibly reduced). Because the __tasks__ are stored in LIFO order, the oldest items are closer to the ['public end] of the queue (forming a tree). Stealing such an older __task__ also steals a (probably) larger subtree of __tasks__ unfolded if the stolen work item get executed.
 
-[important Because of the work-stealing algorithm the execution order of __actions__ may be not strict as in the global queue.]
+
+[important Because of the work-stealing algorithm the execution order of __tasks__ may be not strict as in the global queue.]
 
 
 [heading Creation]
+
 The first template argument specifies the channel type and the scheduling policy.
 
     boost::tp::pool<
@@ -79,6 +74,7 @@ This pool uses a __bounded_channel__ which schedules __actions__ by integer atrr
 
 
 [heading Shutdown]
+
 If `boost::tp::pool< Channel >::shutdown()` is called - the the pool is set closed and all __worker_threads__ are joined until all pending __actions__ are processed. No futher __actions__ can be submitted by application threads.
 
 [note The deconstructor calls `boost::tp::pool< Channel >::shutdown()` if the pool was not shutdown yet.]
@@ -110,14 +106,19 @@ The function `boost::tp::pool< Channel >::shutdown_now()` closes the pool, inter
 
 
 [heading Default pool]
+
 The free function `boost::tp::get_default_pool()` returns a reference to the default __threadpool__ instance. The default __threadpool__ is
 of type `boost::tp::pool< boost::tp::unbounded_channel< boost::tp::fifo > >` and will contain as many __worker_threads__ as 
 `boost::thread::hardware_concurrency()` returns. 
 
+
 [heading Launch in pool]
+
 The free function `boost::tp::launch_in_pool( Act const& act)` submits the __action__ to the default pool and returns a task object.
 
+
 [heading Meta functions]
+
 If the __threadpool__ supports priorities `boost::tp::has_priority< pool_type >` evaluates to `true`. The priority type is determined by `boost::tp::priority_type< pool_type >`.
 
     typedef boost::tp::pool<
@@ -131,7 +132,9 @@ The support of fibers can be tested with meta-function `boost::tp::has_fibers< p
 
     std::cout << std::boolalpha <<  boost::tp::has_fibers< pool_type >::value << std::endl;
 
+
 [heading Processor binding]
+
 For some applications it is convenient to bind the worker threads of the pool to processors of the system. For this purpose BOOST_BIND_WORKER_TO_PROCESSORS must be defined. Without the poolsize in the construtor the __threadpool__ will contain as many
 __worker_threads__ as processors (== __hardware_concurrency__) are available and each __worker_thread__ is bound to one processor.
 
