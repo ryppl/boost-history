@@ -1,4 +1,4 @@
-// (C) Copyright Andrew Sutton 2007
+// (C) Copyright 2007-2009 Andrew Sutton
 //
 // Use, modification and distribution are subject to the
 // Boost Software License, Version 1.0 (See accompanying file
@@ -9,7 +9,6 @@
 #include <algorithm>
 #include <vector>
 #include <map>
-#include <tr1/unordered_map>
 
 #include <boost/graph/graph_utility.hpp>
 #include <boost/graph/undirected_graph.hpp>
@@ -21,6 +20,9 @@
 
 using namespace std;
 using namespace boost;
+
+// TODO: This is probably not a very good test. We should be able to define
+// an identity test - something like find the clique of K5.
 
 struct clique_validator
 {
@@ -52,7 +54,7 @@ void test()
     // Generate random graphs with 15 vertices and 15% probability
     // of edge connection.
     static const size_t N = 20;
-    static const float P = 0.1;
+    static const double P = 0.1;
 
     boost::minstd_rand rng;
     Graph g(er(rng, N, P), er(), N);
