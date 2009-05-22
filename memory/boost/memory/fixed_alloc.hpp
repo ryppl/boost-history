@@ -36,6 +36,14 @@ NS_BOOST_MEMORY_BEGIN
 #define MIN(x, y)		((x) < (y) ? (x) : (y))
 #endif
 
+#ifndef BOOST_MEMORY_DBG_FILL
+#if defined(_DEBUG)
+#define BOOST_MEMORY_DBG_FILL(p, cb)	memset(p, 0xcd, cb)
+#else
+#define BOOST_MEMORY_DBG_FILL(p, cb)
+#endif
+#endif
+
 template <class PolicyT>
 class fixed_alloc
 {
@@ -187,6 +195,8 @@ public:
 		void* p = &m_freelist.front();
 		++chunkHeader_(p)->nUsed;
 		m_freelist.pop_front();
+		
+		BOOST_MEMORY_DBG_FILL(p, element_size());
 		return p;
 	}
 
@@ -195,6 +205,7 @@ public:
 		MemBlock* const blk = chunkHeader_(p);
 
 		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= m_nMaxPerBlock);
+		BOOST_MEMORY_DBG_FILL(p, element_size());
 
 		m_freelist.push_front((FreeChunk*)p);
 		if (--blk->nUsed == 0 && blk != m_lastBlock)

@@ -194,6 +194,7 @@ public:
 	}
 
 	__forceinline void BOOST_MEMORY_CALL destroy(Type* obj) {
+		PoolT::deallocate(obj);
 	}
 };
 
