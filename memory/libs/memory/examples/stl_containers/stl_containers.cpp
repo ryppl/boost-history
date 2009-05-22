@@ -17,7 +17,6 @@
 #include <cstdio>
 
 #include <boost/memory.hpp>
-#include <boost/memory/linklib.hpp>
 
 using NS_BOOST_MEMORY::stl_allocator;
 
@@ -28,7 +27,8 @@ enum { Count = 100 };
 void testDeque()
 {
 	printf("\n===== Deque (scoped_alloc) =====\n");
-	NS_BOOST_MEMORY::scoped_alloc alloc;
+	NS_BOOST_MEMORY::block_pool recycle;
+	NS_BOOST_MEMORY::scoped_alloc alloc(recycle);
 	std::deque<int, stl_allocator<int> > s(alloc);
 	for (int i = 0; i < Count; ++i)
 		s.push_back(i);
@@ -37,7 +37,8 @@ void testDeque()
 void testList()
 {
 	printf("\n===== List (scoped_alloc) =====\n");
-	NS_BOOST_MEMORY::scoped_alloc alloc;
+	NS_BOOST_MEMORY::block_pool recycle;
+	NS_BOOST_MEMORY::scoped_alloc alloc(recycle);
 	std::list<int, stl_allocator<int> > s(alloc);
 	for (int i = 0; i < Count; ++i)
 		s.push_back(i);
@@ -46,7 +47,8 @@ void testList()
 void testSet()
 {
 	printf("\n===== Set (scoped_alloc) =====\n");
-	NS_BOOST_MEMORY::scoped_alloc alloc;
+	NS_BOOST_MEMORY::block_pool recycle;
+	NS_BOOST_MEMORY::scoped_alloc alloc(recycle);
 	std::set<int, std::less<int>, stl_allocator<int> > s(std::less<int>(), alloc);
 	for (int i = 0; i < Count; ++i)
 		s.insert(i);
@@ -55,7 +57,8 @@ void testSet()
 void testMap()
 {
 	printf("\n===== Map (scoped_alloc) =====\n");
-	NS_BOOST_MEMORY::scoped_alloc alloc;
+	NS_BOOST_MEMORY::block_pool recycle;
+	NS_BOOST_MEMORY::scoped_alloc alloc(recycle);
 	std::map<int, int, std::less<int>, stl_allocator<int> > s(std::less<int>(), alloc);
 	for (int i = 0; i < Count; ++i)
 		s.insert(std::pair<int, int>(i, i));

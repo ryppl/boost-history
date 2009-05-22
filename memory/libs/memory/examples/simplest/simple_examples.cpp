@@ -10,7 +10,6 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <boost/memory.hpp>
-#include <boost/memory/linklib.hpp>
 
 // -------------------------------------------------------------------------
 
@@ -45,29 +44,12 @@ void testScopedAlloc()
 	int* e = BOOST_MEMORY_NEW(*suballoc, int);
 }
 
-void testTlsScopedAlloc()
-{
-	NS_BOOST_MEMORY::scoped_alloc alloc;
-	// same as: NS_BOOST_MEMORY::scoped_alloc(boost::memory::tls_block_pool::instance());
-	
-	int* intObj = BOOST_MEMORY_NEW(alloc, int);
-	int* intObjWithArg = BOOST_MEMORY_NEW(alloc, int)(10);
-	int* intArray = BOOST_MEMORY_NEW_ARRAY(alloc, int, 100);
-	int* intBuf = BOOST_MEMORY_ALLOC(alloc, int);
-	int* intArrayBuf = BOOST_MEMORY_ALLOC_ARRAY(alloc, int, 100);
-	
-	NS_BOOST_MEMORY::scoped_alloc* suballoc = BOOST_MEMORY_NEW(alloc, NS_BOOST_MEMORY::scoped_alloc);
-
-	int* e = BOOST_MEMORY_NEW(*suballoc, int);
-}
-
 int main()
 {
 	NS_BOOST_MEMORY::enableMemoryLeakCheck();
 
 	testAutoAlloc();
 	testScopedAlloc();
-	testTlsScopedAlloc();
 
 	return 0;
 }

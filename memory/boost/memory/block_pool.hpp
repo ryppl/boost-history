@@ -16,10 +16,6 @@
 #include "system_alloc.hpp"
 #endif
 
-#ifndef BOOST_MEMORY_THREAD_TLS_HPP
-#include "thread/tls.hpp"
-#endif
-
 #if !defined(_CLIMITS_) && !defined(_CLIMITS)
 #include <climits> // INT_MAX
 #endif
@@ -29,7 +25,7 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class proxy_alloc
 
-template <class AllocT, class TlsAllocT = int>
+template <class AllocT>
 class proxy_alloc
 {
 private:
@@ -37,7 +33,6 @@ private:
 
 public:
 	proxy_alloc(AllocT& alloc) : m_alloc(&alloc) {}
-	proxy_alloc() : m_alloc(&TlsAllocT::instance()) {}
 
 public:
 	enum { Padding = AllocT::Padding };
@@ -147,48 +142,9 @@ typedef block_pool_<NS_BOOST_MEMORY_POLICY::sys> block_pool;
 #pragma pack()
 
 // -------------------------------------------------------------------------
-// class tls_block_pool
-
-typedef tls_object<block_pool> tls_block_pool_t;
-
-STDAPI_(tls_block_pool_t*) boost_TlsBlockPool();
-
-template <class Unused>
-class tls_block_pool_
-{
-private:
-	static tls_block_pool_t* g_blockPool;
-	
-public:
-	tls_block_pool_() {
-		init();
-	}
-	~tls_block_pool_() {
-		term();
-	}
-
-	static void BOOST_MEMORY_CALL init() {
-		g_blockPool->init();
-	}
-
-	static void BOOST_MEMORY_CALL term() {
-		g_blockPool->term();
-	}
-
-	static block_pool& BOOST_MEMORY_CALL instance() {
-		return g_blockPool->get();
-	}
-};
-
-template <class Unused>
-tls_block_pool_t* tls_block_pool_<Unused>::g_blockPool = boost_TlsBlockPool();
-
-typedef tls_block_pool_<int> tls_block_pool;
-
-// -------------------------------------------------------------------------
 // class pool
 
-typedef proxy_alloc<block_pool, tls_block_pool> proxy_block_pool;
+typedef proxy_alloc<block_pool> proxy_block_pool;
 
 NS_BOOST_MEMORY_POLICY_BEGIN
 

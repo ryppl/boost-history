@@ -12,23 +12,7 @@
 #ifndef BOOST_MEMORY_BASIC_HPP
 #define BOOST_MEMORY_BASIC_HPP
 
-// -------------------------------------------------------------------------
-
-#if !defined(_NEW_) && !defined(_NEW)
-#include <new>	// new
-#endif
-
-#if !defined(_CSTDIO_) && !defined(_CSTDIO)
-#include <cstdio>
-#endif
-
-#if !defined(_INC_MALLOC) && !defined(_MALLOC_H)
-#include <malloc.h>	// _alloca
-#endif
-
-#ifndef BOOST_DETAIL_DEBUG_HPP
-#include <boost/detail/debug.hpp>
-#endif
+// =========================================================================
 
 #pragma pack() // default pack
 #if defined(_MSC_VER)
@@ -36,13 +20,9 @@
 #endif
 // warning: identifier was truncated to '255' characters in the debug information
 
-// =========================================================================
-
 #ifndef BOOST_MEMORY_CALL
 #define BOOST_MEMORY_CALL
 #endif
-
-// -------------------------------------------------------------------------
 
 #ifndef NS_BOOST_MEMORY_BEGIN
 #define NS_BOOST_MEMORY_BEGIN	namespace boost { namespace memory {
@@ -50,17 +30,39 @@
 #define NS_BOOST_MEMORY			boost::memory
 #endif
 
-// -------------------------------------------------------------------------
+// =========================================================================
+// BOOST_MEMORY_ASSERT - diagnost
+
+#if defined(_MSC_VER) && !defined(_INC_CRTDBG)
+#include <crtdbg.h> // _CrtSetDbgFlag, _ASSERTE
+#endif
 
 #ifndef BOOST_MEMORY_ASSERT
-#define BOOST_MEMORY_ASSERT(e)	BOOST_DETAIL_ASSERT(e)
+	#if defined(ASSERT)
+		#define BOOST_MEMORY_ASSERT(e)		ASSERT(e)
+	#elif defined(_ASSERTE)
+		#define BOOST_MEMORY_ASSERT(e)		_ASSERTE(e)
+	#elif defined(BOOST_ASSERT)
+		#define BOOST_MEMORY_ASSERT(e)		BOOST_ASSERT(e)
+	#else
+		#ifdef _DEBUG
+		#ifndef assert
+		#include <cassert>
+		#endif
+		#define BOOST_MEMORY_ASSERT(e)		assert(e)
+		#else
+		#define BOOST_MEMORY_ASSERT(e)
+		#endif
+	#endif
 #endif
+
+// -------------------------------------------------------------------------
 
 #ifndef BOOST_MEMORY_STATIC_ASSERT
 #if defined(BOOST_STATIC_ASSERT)
 #define BOOST_MEMORY_STATIC_ASSERT(e)	BOOST_STATIC_ASSERT(e)
 #else
-#define BOOST_MEMORY_STATIC_ASSERT(e)	BOOST_DETAIL_ASSERT(e)
+#define BOOST_MEMORY_STATIC_ASSERT(e)	BOOST_MEMORY_ASSERT(e)
 #endif
 #endif
 
@@ -102,6 +104,10 @@
 
 // =========================================================================
 // NEW, NEW_ARRAY, ALLOC, ALLOC_ARRAY
+
+#if !defined(_NEW_) && !defined(_NEW)
+#include <new>	// new
+#endif
 
 NS_BOOST_MEMORY_BEGIN
 
@@ -191,8 +197,16 @@ inline void BOOST_MEMORY_CALL enableMemoryLeakCheck()
 
 NS_BOOST_MEMORY_END
 
-// -------------------------------------------------------------------------
+// =========================================================================
 // function swap_object
+
+#if !defined(_CSTRING_) && !defined(_CSTRING)
+#include <cstring> // memcpy
+#endif
+
+#if !defined(_INC_MALLOC) && !defined(_MALLOC_H)
+#include <malloc.h>	// _alloca
+#endif
 
 NS_BOOST_MEMORY_BEGIN
 

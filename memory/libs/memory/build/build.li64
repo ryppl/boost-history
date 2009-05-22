@@ -1,3 +1,0 @@
-ln -s -f Makefile.li64 Makefile
-make CFG=Release
-
