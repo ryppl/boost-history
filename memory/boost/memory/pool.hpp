@@ -33,6 +33,11 @@ class pool_alloc : private fixed_alloc<PolicyT>
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
 
+	pool_alloc(const pool_alloc& o);
+	void operator=(const pool_alloc& o);
+
+	void swap(pool_alloc& o); // NO SWAP: dcl_list
+
 public:
 	typedef typename PoolT::alloc_type alloc_type;
 	typedef typename PoolT::size_type size_type;
@@ -49,6 +54,9 @@ public:
 	__forceinline explicit pool_alloc(alloc_type alloc, size_type cbElem)
 		: PoolT(cbElem), m_alloc(alloc) {
 	}
+	__forceinline ~pool_alloc() {
+		PoolT::clear(m_alloc);
+	}
 	
 	__forceinline alloc_type BOOST_MEMORY_CALL get_alloc() const {
 		return m_alloc;
@@ -58,10 +66,6 @@ public:
 		PoolT::clear(m_alloc);
 	}
 	
-	__forceinline void BOOST_MEMORY_CALL swap(pool_alloc& o) {
-		swap_object(this, &o);
-	}
-
 	__forceinline void* BOOST_MEMORY_CALL allocate() {
 		return PoolT::allocate(m_alloc);
 	}

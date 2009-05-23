@@ -33,6 +33,11 @@ class norm_object_pool_ : private fixed_alloc<PolicyT>
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
 
+	norm_object_pool_(const norm_object_pool_& o);
+	void operator=(const norm_object_pool_& o);
+	
+	void swap(norm_object_pool_& o); // NO SWAP: dcl_list
+	
 public:
 	typedef typename PoolT::alloc_type alloc_type;
 	typedef typename PoolT::size_type size_type;
@@ -124,10 +129,6 @@ public:
 		}
 	}
 
-	__forceinline void BOOST_MEMORY_CALL swap(norm_object_pool_& o) {
-		swap_object(this, &o);
-	}
-
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
@@ -174,6 +175,11 @@ class pod_object_pool_ : private fixed_alloc<PolicyT>
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
 
+	pod_object_pool_(const pod_object_pool_& o);
+	void operator=(const pod_object_pool_& o);
+	
+	void swap(pod_object_pool_& o); // NO SWAP: dcl_list
+
 public:
 	typedef typename PoolT::alloc_type alloc_type;
 	typedef typename PoolT::size_type size_type;
@@ -191,6 +197,11 @@ public:
 	explicit pod_object_pool_(alloc_type alloc)
 		: PoolT(sizeof(Type)), m_alloc(alloc) {
 	}
+	
+	~pod_object_pool_()
+	{
+		PoolT::clear(m_alloc);
+	}
 
 	alloc_type BOOST_MEMORY_CALL get_alloc() const
 	{
@@ -200,10 +211,6 @@ public:
 	void BOOST_MEMORY_CALL clear()
 	{
 		PoolT::clear(m_alloc);
-	}
-
-	__forceinline void BOOST_MEMORY_CALL swap(pod_object_pool_& o) {
-		swap_object(this, &o);
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
