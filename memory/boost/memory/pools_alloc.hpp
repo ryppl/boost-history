@@ -82,7 +82,7 @@ public:
 
 #pragma pack(1)
 
-template <class PolicyT>
+template <class PolicyT, int nPool = 16>
 class pools_alloc
 {
 private:
@@ -103,7 +103,7 @@ public:
 
 private:
 	enum { ALIGN_BITS = 3 };
-	enum { NPOOL = 16 };
+	enum { NPOOL = nPool };
 	enum { ALIGN = 1 << ALIGN_BITS };
 	enum { MIN_BYTES = ALIGN };
 	enum { MAX_BYTES = ALIGN * NPOOL };
