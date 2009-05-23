@@ -80,6 +80,7 @@ public:
 
 public:
 	typedef system_alloc alloc_type;
+	typedef system_alloc system_alloc_type;
 };
 
 class stdlib : public sys

@@ -10,6 +10,7 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <boost/memory.hpp>
+#include <boost/memory/pools_alloc.hpp>
 
 // -------------------------------------------------------------------------
 
@@ -114,10 +115,24 @@ void testObjectPool()
 		printf("ERROR: memory leaks!\n");
 }
 
+void testScopedPools()
+{
+	size_t i;
+	boost::memory::block_pool recycle;
+	boost::memory::pools_alloc<boost::memory::policy::scoped> alloc(recycle);
+
+	void* p[22];
+	for (i = 0; i < countof(p); ++i)
+		p[i] = alloc.allocate(i * 7);
+	for (i = 3; i < countof(p) - 2; ++i)
+		alloc.deallocate(p[i], i * 7);
+}
+
 int main()
 {
 	NS_BOOST_MEMORY::enableMemoryLeakCheck();
 
+	testScopedPools();
 	testPool();
 	testScopedPool();
 	testObjectPool();

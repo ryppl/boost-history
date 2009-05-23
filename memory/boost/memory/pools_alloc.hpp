@@ -37,15 +37,16 @@ private:
 	void swap(simple_alloc& o); // NO SWAP: dcl_list
 
 public:
-	typedef typename PolicyT::alloc_type alloc_type;
+	typedef typename PolicyT::system_alloc_type alloc_type;
+	typedef size_t size_type;
 	
 private:
-	struct Chunk {};	
-	typedef dcl_list_node<Chunk> MemHeader;
-	
-	dcl_list<Chunk> m_chunks;
+	struct MemHeader : dcl_list_node<MemHeader> {};
+
+	dcl_list<MemHeader> m_chunks;
 
 public:
+	simple_alloc() {}
 	~simple_alloc() {
 		clear();
 	}
@@ -60,15 +61,15 @@ public:
 		}
 		m_chunks.clear();
 	}
-	
+
 	void* BOOST_MEMORY_CALL allocate(size_type cb) {
 		MemHeader* p = (MemHeader*)alloc_type::allocate(cb + sizeof(MemHeader));
 		m_chunks.push_front(p);
 		return p + 1;
 	}
-	
-	void BOOST_MEMORY_CALL deallocate(void* p) {
-		MemHeader* p = (MemHeader*)p - 1;
+
+	void BOOST_MEMORY_CALL deallocate(void* ptr) {
+		MemHeader* p = (MemHeader*)ptr - 1;
 		p->erase();
 		alloc_type::deallocate(p);
 	}
@@ -157,7 +158,7 @@ public:
 private:
 	void BOOST_MEMORY_CALL do_clear_()
 	{
-		char* pEnd = p + POOLS_TOTAL_BYTES;
+		char* pEnd = m_pools + POOLS_TOTAL_BYTES;
 		for (char* p = m_pools; p != pEnd; p += POOL_BYTES)
 		{
 			((FixedAllocT*)p)->clear(m_alloc);
@@ -176,11 +177,11 @@ public:
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
 		if (index < NPOOL)
-			return ((FixedAllocT*)p + index)->allocate(m_alloc);
+			return ((FixedAllocT*)m_pools + index)->allocate(m_alloc);
 		else if (cb != 0)
 			return m_large_alloc.allocate(cb);
 		else
-			return &cb;
+			return this + 1;
 	}
 
 public:
@@ -188,7 +189,7 @@ public:
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
 		if (index < NPOOL)
-			((FixedAllocT*)p + index)->deallocate(m_alloc, p);
+			((FixedAllocT*)m_pools + index)->deallocate(m_alloc, p);
 		else if (cb != 0)
 			m_large_alloc.deallocate(p);
 	}
@@ -202,7 +203,7 @@ public:
 		if (oldIndex == newIndex && oldIndex < NPOOL)
 			return p;
 		void* p2 = allocate(newSize);
-		memcpy(p2, p, oldSize);
+		memcpy(p2, p, MIN(oldSize, newSize));
 		deallocate(p, oldSize);
 		return p2;
 	}
