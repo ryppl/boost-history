@@ -172,16 +172,25 @@ public:
 		m_large_alloc.clear();
 	}
 
+private:
+	void* BOOST_MEMORY_CALL do_allocate_(size_type cb)
+	{
+		BOOST_MEMORY_ASSERT(cb == 0 || cb > MAX_BYTES);
+		
+		if (cb != 0)
+			return m_large_alloc.allocate(cb);
+		else
+			return this + 1;
+	}
+
 public:
 	void* BOOST_MEMORY_CALL allocate(size_type cb)
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
 		if (index < (size_type)NPOOL)
 			return ((FixedAllocT*)m_pools + index)->allocate(m_alloc);
-		else if (cb != 0)
-			return m_large_alloc.allocate(cb);
 		else
-			return this + 1;
+			return do_allocate_(cb);
 	}
 
 public:
