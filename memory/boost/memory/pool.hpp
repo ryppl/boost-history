@@ -1,5 +1,5 @@
 //
-//  boost/memory/pool.hpp
+//  boost/memory/pool_alloc.hpp
 //
 //  Copyright (c) 2004 - 2008 xushiwei (xushiweizh@gmail.com)
 //
@@ -25,8 +25,56 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class pool, scoped_pool
 
-typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
-typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
+#pragma pack(1)
+
+template <class PolicyT>
+class pool_alloc : private fixed_alloc<PolicyT>
+{
+private:
+	typedef fixed_alloc<PolicyT> PoolT;
+
+public:
+	typedef typename PoolT::alloc_type alloc_type;
+	typedef typename PoolT::size_type size_type;
+	
+	using PoolT::element_size;
+
+private:
+	alloc_type m_alloc;
+	
+public:
+	__forceinline explicit pool_alloc(size_type cbElem)
+		: PoolT(cbElem) {
+	}
+	__forceinline explicit pool_alloc(alloc_type alloc, size_type cbElem)
+		: PoolT(cbElem), m_alloc(alloc) {
+	}
+	
+	__forceinline alloc_type BOOST_MEMORY_CALL get_alloc() const {
+		return m_alloc;
+	}
+
+	__forceinline void BOOST_MEMORY_CALL clear() {
+		PoolT::clear(m_alloc);
+	}
+	
+	__forceinline void BOOST_MEMORY_CALL swap(pool_alloc& o) {
+		swap_object(this, &o);
+	}
+
+	__forceinline void* BOOST_MEMORY_CALL allocate() {
+		return PoolT::allocate(m_alloc);
+	}
+
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* p) {
+		return PoolT::deallocate(m_alloc, p);
+	}
+};
+
+typedef pool_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
+typedef pool_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // $Log: $

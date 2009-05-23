@@ -25,6 +25,8 @@ NS_BOOST_MEMORY_BEGIN
 // =========================================================================
 // class stdlib_alloc
 
+#pragma pack(1)
+
 #if defined(__GNUG__)
 #define _msize	malloc_usable_size
 #endif
@@ -52,6 +54,8 @@ public:
 		return _msize(p);
 	}
 };
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // class system_alloc

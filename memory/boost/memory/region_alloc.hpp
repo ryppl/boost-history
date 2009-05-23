@@ -21,6 +21,8 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class region_alloc
 
+#pragma pack(1)
+
 template <class PolicyT>
 class region_alloc
 {
@@ -35,7 +37,6 @@ public:
 
 	typedef AllocT alloc_type;
 
-#pragma pack(1)
 private:
 	struct MemBlock;
 	friend struct MemBlock;
@@ -53,7 +54,6 @@ private:
 		DestroyNode* pPrev;
 		destructor_t fnDestroy;
 	};
-#pragma pack()
 	
 	char* m_begin;
 	char* m_end;
@@ -224,6 +224,8 @@ public:
 		// no action
 	}
 };
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // $Log: region_alloc.hpp,v $

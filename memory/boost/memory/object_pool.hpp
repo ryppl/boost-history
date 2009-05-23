@@ -25,14 +25,23 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class norm_object_pool_
 
+#pragma pack(1)
+
 template <class Type, class PolicyT>
 class norm_object_pool_ : private fixed_alloc<PolicyT>
 {
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
-	typedef typename PoolT::alloc_type AllocT;
 
-#pragma pack(1)
+public:
+	typedef typename PoolT::alloc_type alloc_type;
+	typedef typename PoolT::size_type size_type;
+	
+	using PoolT::element_size;
+
+private:
+	alloc_type m_alloc;
+	
 protected:
 	struct ChunkHeader
 	{
@@ -42,7 +51,6 @@ protected:
 			size_t tag;
 		};
 	};
-#pragma pack()
 
 protected:	
 	__forceinline static size_t BOOST_MEMORY_CALL is_allocated_(void*p)
@@ -63,18 +71,12 @@ protected:
 	}
 	
 public:
-	typedef AllocT alloc_type;
-	
-public:
-	using PoolT::get_alloc;
-
-public:
 	norm_object_pool_() : PoolT(sizeof(Type))
 	{
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
 	
-	explicit norm_object_pool_(AllocT alloc) : PoolT(alloc, sizeof(Type))
+	explicit norm_object_pool_(alloc_type alloc) : PoolT(sizeof(Type)), m_alloc(alloc)
 	{
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
@@ -82,6 +84,11 @@ public:
 	~norm_object_pool_()
 	{
 		clear();
+	}
+
+	alloc_type BOOST_MEMORY_CALL get_alloc() const
+	{
+		return m_alloc;
 	}
 
 private:
@@ -117,11 +124,15 @@ public:
 		}
 	}
 
+	__forceinline void BOOST_MEMORY_CALL swap(norm_object_pool_& o) {
+		swap_object(this, &o);
+	}
+
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type) && fn == BOOST_MEMORY_DESTRUCTOR(Type));
-		void* p = PoolT::allocate();
+		void* p = PoolT::allocate(m_alloc);
 		mark_allocated_(p);
 		return p;
 	}
@@ -129,7 +140,7 @@ public:
 	
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type) && fn == BOOST_MEMORY_DESTRUCTOR(Type));
-		return PoolT::allocate();
+		return PoolT::allocate(m_alloc);
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
@@ -138,7 +149,7 @@ public:
 	}
 
 	Type* BOOST_MEMORY_CALL construct() {
-		Type* p = new(PoolT::allocate()) Type;
+		Type* p = new(PoolT::allocate(m_alloc)) Type;
 		mark_allocated_(p);
 		return p;
 	}
@@ -146,57 +157,80 @@ public:
 	void BOOST_MEMORY_CALL destroy(Type* obj) {
 		mark_deallocated_(obj);
 		obj->~Type();
-		PoolT::deallocate(obj);
+		PoolT::deallocate(m_alloc, obj);
 	}
 };
 
+#pragma pack()
+
 // -------------------------------------------------------------------------
 // class pod_object_pool_
+
+#pragma pack(1)
 
 template <class Type, class PolicyT>
 class pod_object_pool_ : private fixed_alloc<PolicyT>
 {
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
-	typedef typename PoolT::alloc_type AllocT;
 
 public:
-	typedef AllocT alloc_type;
+	typedef typename PoolT::alloc_type alloc_type;
+	typedef typename PoolT::size_type size_type;
 
+	using PoolT::element_size;
+
+private:
+	alloc_type m_alloc;
+	
 public:
-	using PoolT::get_alloc;
-	using PoolT::clear;
+	pod_object_pool_()
+		: PoolT(sizeof(Type)) {
+	}
 
-public:
-	pod_object_pool_() : PoolT(sizeof(Type)) {}
+	explicit pod_object_pool_(alloc_type alloc)
+		: PoolT(sizeof(Type)), m_alloc(alloc) {
+	}
 
-	explicit pod_object_pool_(AllocT alloc)
-		: PoolT(alloc, sizeof(Type)) {
+	alloc_type BOOST_MEMORY_CALL get_alloc() const
+	{
+		return m_alloc;
+	}
+	
+	void BOOST_MEMORY_CALL clear()
+	{
+		PoolT::clear(m_alloc);
+	}
+
+	__forceinline void BOOST_MEMORY_CALL swap(pod_object_pool_& o) {
+		swap_object(this, &o);
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-		return PoolT::allocate();
+		return PoolT::allocate(m_alloc);
 	}
 #endif
 
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-		return PoolT::allocate();
+		return PoolT::allocate(m_alloc);
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
 	}
 
 	__forceinline Type* BOOST_MEMORY_CALL construct() {
-		return new (PoolT::allocate()) Type;
+		return new (PoolT::allocate(m_alloc)) Type;
 	}
 
 	__forceinline void BOOST_MEMORY_CALL destroy(Type* obj) {
-		PoolT::deallocate(obj);
+		PoolT::deallocate(m_alloc, obj);
 	}
 };
+
+#pragma pack()
 
 // -------------------------------------------------------------------------
 // class object_pool_traits

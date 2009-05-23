@@ -25,6 +25,8 @@ NS_BOOST_MEMORY_BEGIN
 // -------------------------------------------------------------------------
 // class proxy_alloc
 
+#pragma pack(1)
+
 template <class AllocT>
 class proxy_alloc
 {
@@ -46,13 +48,15 @@ public:
 	__forceinline AllocT* operator&() const { return m_alloc; }
 };
 
+#pragma pack()
+
 // -------------------------------------------------------------------------
 // class block_pool
 
 #pragma pack(1)
 
 template <class PolicyT>
-class block_pool_
+class block_alloc
 {
 private:
 	typedef typename PolicyT::alloc_type AllocT;
@@ -68,16 +72,16 @@ private:
 	const int m_nFreeLimit;
 
 private:
-	block_pool_(const block_pool_&);
-	void operator=(const block_pool_&);
+	block_alloc(const block_alloc&);
+	void operator=(const block_alloc&);
 
 public:
-	block_pool_(int cbFreeLimit = INT_MAX)
+	block_alloc(int cbFreeLimit = INT_MAX)
 		: m_freeList(NULL), m_nFree(0),
 		  m_nFreeLimit(cbFreeLimit / m_cbBlock)
 	{
 	}
-	~block_pool_()
+	~block_alloc()
 	{
 		clear();
 	}
@@ -137,7 +141,7 @@ public:
 	}
 };
 
-typedef block_pool_<NS_BOOST_MEMORY_POLICY::sys> block_pool;
+typedef block_alloc<NS_BOOST_MEMORY_POLICY::sys> block_pool;
 
 #pragma pack()
 
