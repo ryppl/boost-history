@@ -176,7 +176,7 @@ public:
 	void* BOOST_MEMORY_CALL allocate(size_type cb)
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
-		if (index < NPOOL)
+		if (index < (size_type)NPOOL)
 			return ((FixedAllocT*)m_pools + index)->allocate(m_alloc);
 		else if (cb != 0)
 			return m_large_alloc.allocate(cb);
@@ -188,7 +188,7 @@ public:
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
-		if (index < NPOOL)
+		if (index < (size_type)NPOOL)
 			((FixedAllocT*)m_pools + index)->deallocate(m_alloc, p);
 		else if (cb != 0)
 			m_large_alloc.deallocate(p);
@@ -200,7 +200,7 @@ public:
 		const size_type oldIndex = (oldSize - 1) >> ALIGN_BITS;
 		const size_type newIndex = (newSize - 1) >> ALIGN_BITS;
 		
-		if (oldIndex == newIndex && oldIndex < NPOOL)
+		if (oldIndex == newIndex && oldIndex < (size_type)NPOOL)
 			return p;
 		void* p2 = allocate(newSize);
 		memcpy(p2, p, MIN(oldSize, newSize));
