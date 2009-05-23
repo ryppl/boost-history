@@ -128,8 +128,8 @@ public:
 
 	pointer allocate(size_type count, const void* = NULL)
 		{ return (pointer)m_alloc->allocate(count * sizeof(Type)); }
-	void deallocate(void* p, size_type cb)
-		{ m_alloc->deallocate(p, cb); }
+	void deallocate(void* p, size_type count)
+		{ m_alloc->deallocate(p, count * sizeof(Type)); }
 	void construct(pointer p, const Type& val)
 		{ new(p) Type(val); }
 	void destroy(pointer p)
