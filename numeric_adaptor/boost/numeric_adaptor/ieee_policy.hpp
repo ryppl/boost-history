@@ -23,6 +23,9 @@
 #include <boost/math/special_functions/hypot.hpp>
 
 
+namespace numeric_adaptor {
+
+
 template <typename T>
 struct ieee_policy : public default_policy<T>
 {
@@ -50,6 +53,9 @@ struct ieee_policy : public default_policy<T>
         return boost::numeric_cast<OtherType>(v);
     }
 };
+
+
+} // namespace numeric_adaptor
 
 
 #endif

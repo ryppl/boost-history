@@ -14,6 +14,9 @@
 #include <boost/static_assert.hpp>
 
 
+namespace numeric_adaptor {
+
+
 template <typename Policy, typename ToType, bool IsCasted>
 struct caster
 {
@@ -247,6 +250,9 @@ private :
         Policy::copy(v, value);
     }
 };
+
+
+} // namespace numeric_adaptor
 
 
 #endif

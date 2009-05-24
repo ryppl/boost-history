@@ -12,6 +12,10 @@
 
 #include <sstream>
 
+
+namespace numeric_adaptor {
+
+
 template <typename T>
 struct default_policy
 {
@@ -44,6 +48,9 @@ struct default_policy
         return out.str();
     }
 };
+
+
+} //  namespace numeric_adaptor
 
 
 #endif

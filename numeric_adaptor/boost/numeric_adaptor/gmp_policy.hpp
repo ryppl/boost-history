@@ -14,9 +14,10 @@
 #include <string>
 #include <cstring>
 
-
 #include <gmp.h>
 
+
+namespace numeric_adaptor {
 
 
 struct gmp_policy
@@ -142,6 +143,9 @@ struct gmp_policy
         return mpf_cmp(a, b);
     }
 };
+
+
+} // namespace numeric_adaptor
 
 
 #endif

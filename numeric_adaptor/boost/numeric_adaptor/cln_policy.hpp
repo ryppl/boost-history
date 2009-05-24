@@ -18,6 +18,7 @@
 #include <cln/float.h>
 
 
+namespace numeric_adaptor {
 
 
 /*
@@ -96,7 +97,7 @@ struct cln_policy : public default_policy<cln::cl_F>
 };
 
 
-
+} // namespace numeric_adaptor
 
 
 #endif
