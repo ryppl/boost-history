@@ -16,6 +16,10 @@
 #include "fixed_alloc.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_POOLS_ALLOC_HPP
+#include "pools_alloc.hpp"
+#endif
+
 #ifndef BOOST_MEMORY_BLOCKPOOL_HPP
 #include "block_pool.hpp"
 #endif
@@ -27,6 +31,12 @@ NS_BOOST_MEMORY_BEGIN
 
 typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pool;
 typedef fixed_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pool;
+
+// -------------------------------------------------------------------------
+// class pools, scoped_pools
+
+typedef pools_alloc<NS_BOOST_MEMORY_POLICY::stdlib> pools;
+typedef pools_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pools;
 
 // -------------------------------------------------------------------------
 // $Log: $

@@ -10,7 +10,6 @@
 //  See http://www.boost.org/libs/memory/index.htm for documentation.
 //
 #include <boost/memory.hpp>
-#include <boost/memory/pools_alloc.hpp>
 
 // -------------------------------------------------------------------------
 
@@ -119,7 +118,7 @@ void testScopedPools()
 {
 	size_t i;
 	boost::memory::block_pool recycle;
-	boost::memory::pools_alloc<boost::memory::policy::scoped> alloc(recycle);
+	boost::memory::scoped_pools alloc(recycle);
 
 	void* p[22];
 	for (i = 0; i < countof(p); ++i)

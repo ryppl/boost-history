@@ -17,7 +17,6 @@
 #include <cstdio>
 
 #include <boost/memory.hpp>
-#include <boost/memory/pools_alloc.hpp>
 
 using NS_BOOST_MEMORY::stl_allocator;
 
@@ -67,13 +66,11 @@ void testMap()
 
 void testPoolsAllocSet()
 {
-	typedef NS_BOOST_MEMORY::block_pool block_pool;
-	typedef NS_BOOST_MEMORY::pools_alloc<NS_BOOST_MEMORY_POLICY::scoped> scoped_pools;
-	typedef NS_BOOST_MEMORY::stl_allocator<int, scoped_pools> allocator;
+	typedef NS_BOOST_MEMORY::stl_allocator<int, NS_BOOST_MEMORY::scoped_pools> allocator;
 	
 	printf("\n===== Set (pools_alloc) =====\n");
-	block_pool recycle;
-	scoped_pools alloc(recycle);
+	NS_BOOST_MEMORY::block_pool recycle;
+	NS_BOOST_MEMORY::scoped_pools alloc(recycle);
 	std::set<int, std::less<int>, allocator> s(std::less<int>(), alloc);
 	for (int i = 0; i < Count; ++i)
 		s.insert(i);
