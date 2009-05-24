@@ -43,9 +43,7 @@ public:
 	typedef typename PoolT::size_type size_type;
 	
 	using PoolT::element_size;
-
-private:
-	alloc_type m_alloc;
+	using PoolT::get_alloc;
 	
 protected:
 	struct ChunkHeader
@@ -81,7 +79,7 @@ public:
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
 	
-	explicit norm_object_pool_(alloc_type alloc) : PoolT(sizeof(Type)), m_alloc(alloc)
+	explicit norm_object_pool_(alloc_type alloc) : PoolT(m_alloc, sizeof(Type))
 	{
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
@@ -89,11 +87,6 @@ public:
 	~norm_object_pool_()
 	{
 		clear();
-	}
-
-	alloc_type BOOST_MEMORY_CALL get_alloc() const
-	{
-		return m_alloc;
 	}
 
 private:
@@ -133,7 +126,7 @@ public:
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, destructor_t fn)
 	{
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type) && fn == BOOST_MEMORY_DESTRUCTOR(Type));
-		void* p = PoolT::allocate(m_alloc);
+		void* p = PoolT::allocate();
 		mark_allocated_(p);
 		return p;
 	}
@@ -141,7 +134,7 @@ public:
 	
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, destructor_t fn) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type) && fn == BOOST_MEMORY_DESTRUCTOR(Type));
-		return PoolT::allocate(m_alloc);
+		return PoolT::allocate();
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, destructor_t fn) {
@@ -150,7 +143,7 @@ public:
 	}
 
 	Type* BOOST_MEMORY_CALL construct() {
-		Type* p = new(PoolT::allocate(m_alloc)) Type;
+		Type* p = new(PoolT::allocate()) Type;
 		mark_allocated_(p);
 		return p;
 	}
@@ -158,7 +151,7 @@ public:
 	void BOOST_MEMORY_CALL destroy(Type* obj) {
 		mark_deallocated_(obj);
 		obj->~Type();
-		PoolT::deallocate(m_alloc, obj);
+		PoolT::deallocate(obj);
 	}
 };
 
@@ -185,9 +178,8 @@ public:
 	typedef typename PoolT::size_type size_type;
 
 	using PoolT::element_size;
-
-private:
-	alloc_type m_alloc;
+	using PoolT::get_alloc;
+	using PoolT::clear;
 	
 public:
 	pod_object_pool_()
@@ -195,45 +187,30 @@ public:
 	}
 
 	explicit pod_object_pool_(alloc_type alloc)
-		: PoolT(sizeof(Type)), m_alloc(alloc) {
-	}
-	
-	~pod_object_pool_()
-	{
-		PoolT::clear(m_alloc);
-	}
-
-	alloc_type BOOST_MEMORY_CALL get_alloc() const
-	{
-		return m_alloc;
-	}
-	
-	void BOOST_MEMORY_CALL clear()
-	{
-		PoolT::clear(m_alloc);
+		: PoolT(alloc, sizeof(Type)) {
 	}
 
 #if defined(BOOST_MEMORY_NO_STRICT_EXCEPTION_SEMANTICS)
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb, int fnZero) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-		return PoolT::allocate(m_alloc);
+		return PoolT::allocate();
 	}
 #endif
 
 	__forceinline void* BOOST_MEMORY_CALL unmanaged_alloc(size_t cb, int fnZero) {
 		BOOST_MEMORY_ASSERT(cb == sizeof(Type));
-		return PoolT::allocate(m_alloc);
+		return PoolT::allocate();
 	}
 
 	__forceinline void BOOST_MEMORY_CALL manage(void* p, int fnZero) {
 	}
 
 	__forceinline Type* BOOST_MEMORY_CALL construct() {
-		return new (PoolT::allocate(m_alloc)) Type;
+		return new (PoolT::allocate()) Type;
 	}
 
 	__forceinline void BOOST_MEMORY_CALL destroy(Type* obj) {
-		PoolT::deallocate(m_alloc, obj);
+		PoolT::deallocate(obj);
 	}
 };
 

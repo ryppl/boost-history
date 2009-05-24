@@ -51,6 +51,8 @@ private:
 	fixed_alloc(const fixed_alloc&);
 	void operator=(const fixed_alloc&);
 
+	void swap(fixed_alloc& o); // NO SWAP: dcl_list
+
 public:
 	typedef typename PolicyT::alloc_type alloc_type;
 	typedef size_t size_type;
@@ -89,38 +91,54 @@ protected:
 	dcl_list<FreeChunk> m_freelist;
 	dcl_list<MemBlock> m_blks;
 	size_type m_cbChunk;
+	size_type m_nChunkPerBlock;
 	MemBlock* m_lastBlock;
+	alloc_type m_alloc;
 
-public:
-	explicit fixed_alloc(size_type cbElem)
+private:
+	void BOOST_MEMORY_CALL init_(size_type cbElem)
 	{
 		cbElem = ROUND(cbElem, sizeof(void*));
 		m_cbChunk = MAX(cbElem, MinElemBytes) + ChunkHeaderSize;
 		m_lastBlock = NULL;
+		m_nChunkPerBlock = BlockSize/m_cbChunk;
 
-		BOOST_MEMORY_ASSERT(BlockSize/m_cbChunk > 0);
+		BOOST_MEMORY_ASSERT(m_nChunkPerBlock > 0);
+	}
+	
+public:
+	explicit fixed_alloc(size_type cbElem)
+	{
+		init_(cbElem);
 	}
 
-#if defined(_DEBUG)
+	fixed_alloc(alloc_type alloc, size_type cbElem) : m_alloc(alloc)
+	{
+		init_(cbElem);
+	}
+
 	~fixed_alloc()
 	{
-		BOOST_MEMORY_ASSERT(m_blks.empty());
-		BOOST_MEMORY_ASSERT(m_freelist.empty());
+		clear();
 	}
-#endif
 
 	size_type BOOST_MEMORY_CALL element_size() const
 	{
 		return m_cbChunk - ChunkHeaderSize;
 	}
 
-	void BOOST_MEMORY_CALL clear(alloc_type alloc)
+	alloc_type BOOST_MEMORY_CALL get_alloc() const
+	{
+		return m_alloc;
+	}
+
+	void BOOST_MEMORY_CALL clear()
 	{
 		MemBlock* nextBlk;
 		for (MemBlock* blk = this->m_blks.first(); !this->m_blks.done(blk); blk = nextBlk)
 		{
 			nextBlk = blk->next();
-			alloc.deallocate(blk);
+			m_alloc.deallocate(blk);
 		}
 		this->m_blks.clear();
 		this->m_freelist.clear();
@@ -132,16 +150,16 @@ private:
 		return ((ChunkHeader*)p - 1)->pBlock;
 	}
 
-	void BOOST_MEMORY_CALL do_allocate_block_(alloc_type alloc)
+	void BOOST_MEMORY_CALL do_allocate_block_()
 	{
-		MemBlock* const blk = (MemBlock*)alloc.allocate(sizeof(MemBlock));
+		MemBlock* const blk = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
 		m_blks.push_front(blk);
 		m_lastBlock = blk;
 
 		blk->nUsed = 0;
 
 		char* p = blk->buffer + ChunkHeaderSize;
-		for (size_type i = BlockSize/m_cbChunk; i--; p += m_cbChunk)
+		for (size_type i = m_nChunkPerBlock; i--; p += m_cbChunk)
 		{
 			chunkHeader_(p) = blk;
 			m_freelist.push_front((FreeChunk*)p);
@@ -150,24 +168,24 @@ private:
 		BOOST_MEMORY_ASSERT(!m_freelist.empty());
 	}
 
-	void BOOST_MEMORY_CALL do_deallocate_block_(alloc_type alloc, MemBlock* const blk)
+	void BOOST_MEMORY_CALL do_deallocate_block_(MemBlock* const blk)
 	{
 		char* p = blk->buffer + ChunkHeaderSize;
-		for (size_type i = BlockSize/m_cbChunk; i--; p += m_cbChunk)
+		for (size_type i = m_nChunkPerBlock; i--; p += m_cbChunk)
 		{
 			((FreeChunk*)p)->erase();
 		}
 
 		blk->erase();
 
-		alloc.deallocate(blk);
+		m_alloc.deallocate(blk);
 	}
 
 public:
-	__forceinline void* BOOST_MEMORY_CALL allocate(alloc_type alloc)
+	__forceinline void* BOOST_MEMORY_CALL allocate()
 	{
 		if (m_freelist.empty())
-			do_allocate_block_(alloc);
+			do_allocate_block_();
 
 		void* p = &m_freelist.front();
 		++chunkHeader_(p)->nUsed;
@@ -177,16 +195,16 @@ public:
 		return p;
 	}
 
-	__forceinline void BOOST_MEMORY_CALL deallocate(alloc_type alloc, void* const p)
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p)
 	{
 		MemBlock* const blk = chunkHeader_(p);
 
-		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= BlockSize/m_cbChunk);
+		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= m_nChunkPerBlock);
 		BOOST_MEMORY_DBG_FILL(p, element_size());
 
 		m_freelist.push_front((FreeChunk*)p);
 		if (--blk->nUsed == 0 && blk != m_lastBlock)
-			do_deallocate_block_(alloc, blk);
+			do_deallocate_block_(blk);
 	}
 };
 

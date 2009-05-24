@@ -37,13 +37,15 @@ public:
 	proxy_alloc(AllocT& alloc) : m_alloc(&alloc) {}
 
 public:
+	typedef size_t size_type;
+	
 	enum { Padding = AllocT::Padding };
 
 public:
-	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb)	{ return m_alloc->allocate(cb); }
-	__forceinline void BOOST_MEMORY_CALL deallocate(void* p) 	{ m_alloc->deallocate(p); }
-	__forceinline void BOOST_MEMORY_CALL swap(proxy_alloc& o)	{ std::swap(m_alloc, o.m_alloc); }
-	__forceinline size_t BOOST_MEMORY_CALL alloc_size(void* p) const { return m_alloc->alloc_size(p); }
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_type cb)	{ return m_alloc->allocate(cb); }
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* p) 		{ m_alloc->deallocate(p); }
+	__forceinline void BOOST_MEMORY_CALL swap(proxy_alloc& o)		{ std::swap(m_alloc, o.m_alloc); }
+	__forceinline size_type BOOST_MEMORY_CALL alloc_size(void* p) const { return m_alloc->alloc_size(p); }
 	__forceinline operator AllocT&() const { return *m_alloc; }
 	__forceinline AllocT* operator&() const { return m_alloc; }
 };

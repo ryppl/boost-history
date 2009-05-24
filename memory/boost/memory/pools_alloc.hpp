@@ -92,12 +92,12 @@ private:
 	void swap(pools_alloc& o); // NO SWAP: dcl_list
 
 private:
-	typedef fixed_alloc<PolicyT> FixedAllocT;
 	typedef simple_alloc<PolicyT> LargeAllocT;
 
 public:
-	typedef typename FixedAllocT::alloc_type alloc_type;
-	typedef typename FixedAllocT::size_type size_type;
+	typedef fixed_alloc<PolicyT> pool_type;
+	typedef typename pool_type::alloc_type alloc_type;
+	typedef typename pool_type::size_type size_type;
 
 	enum { MemBlockSize = PolicyT::MemBlockBytes - alloc_type::Padding };
 
@@ -108,7 +108,7 @@ private:
 	enum { MIN_BYTES = ALIGN };
 	enum { MAX_BYTES = ALIGN * NPOOL };
 	
-	enum { POOL_BYTES = sizeof(FixedAllocT) };
+	enum { POOL_BYTES = sizeof(pool_type) };
 	enum { POOLS_TOTAL_BYTES = POOL_BYTES * NPOOL };
 
 	//
@@ -116,33 +116,32 @@ private:
 	// pool 1: ALIGN + 1 ~ 2*ALIGN
 	// pool 2: ...
 	//
-	char m_pools[POOLS_TOTAL_BYTES];
-	
-	alloc_type m_alloc;
+	char m_pools[POOLS_TOTAL_BYTES];	
 	LargeAllocT m_large_alloc;
 
-private:
-	void BOOST_MEMORY_CALL init_()
+public:
+	pools_alloc()
 	{
 		BOOST_MEMORY_ASSERT(ALIGN >= sizeof(void*));
 		
 		char* p = m_pools;
 		for (size_t cb = MIN_BYTES; cb <= MAX_BYTES; cb += ALIGN)
 		{
-			new(p) FixedAllocT(cb);
+			new(p) pool_type(cb);
 			p += POOL_BYTES;
 		}
 	}
 	
-public:
-	pools_alloc()
+	explicit pools_alloc(alloc_type alloc)
 	{
-		init_();
-	}
-	
-	explicit pools_alloc(alloc_type alloc) : m_alloc(alloc)
-	{
-		init_();
+		BOOST_MEMORY_ASSERT(ALIGN >= sizeof(void*));
+		
+		char* p = m_pools;
+		for (size_t cb = MIN_BYTES; cb <= MAX_BYTES; cb += ALIGN)
+		{
+			new(p) pool_type(alloc, cb);
+			p += POOL_BYTES;
+		}
 	}
 
 	~pools_alloc()
@@ -152,19 +151,33 @@ public:
 
 	alloc_type BOOST_MEMORY_CALL get_alloc() const
 	{
-		return m_alloc;
+		return ((pool_type*)m_pools)->get_alloc();
 	}
-	
+
+	pool_type& BOOST_MEMORY_CALL get_pool(size_type cb) const
+	{
+		BOOST_MEMORY_ASSERT(has_pool(cb));
+
+		const size_type index = (cb - 1) >> ALIGN_BITS;
+		return *((pool_type*)m_pools + index);
+	}
+
+	bool BOOST_MEMORY_CALL has_pool(size_type cb) const
+	{
+		const size_type index = (cb - 1) >> ALIGN_BITS;
+		return index < (size_type)NPOOL;
+	}
+
 private:
 	void BOOST_MEMORY_CALL do_clear_()
 	{
 		char* pEnd = m_pools + POOLS_TOTAL_BYTES;
 		for (char* p = m_pools; p != pEnd; p += POOL_BYTES)
 		{
-			((FixedAllocT*)p)->clear(m_alloc);
+			((pool_type*)p)->clear();
 		}
 	}
-	
+
 public:
 	void BOOST_MEMORY_CALL clear()
 	{
@@ -188,7 +201,7 @@ public:
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
 		if (index < (size_type)NPOOL)
-			return ((FixedAllocT*)m_pools + index)->allocate(m_alloc);
+			return ((pool_type*)m_pools + index)->allocate();
 		else
 			return do_allocate_(cb);
 	}
@@ -198,7 +211,7 @@ public:
 	{
 		const size_type index = (cb - 1) >> ALIGN_BITS;
 		if (index < (size_type)NPOOL)
-			((FixedAllocT*)m_pools + index)->deallocate(m_alloc, p);
+			((pool_type*)m_pools + index)->deallocate(p);
 		else if (cb != 0)
 			m_large_alloc.deallocate(p);
 	}
