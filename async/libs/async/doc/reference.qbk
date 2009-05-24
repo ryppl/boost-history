@@ -67,6 +67,8 @@
 
 [section AE/ACT Models Reference]
 
+[include reference/future_traits.qbk]
+[include reference/immediate.qbk]
 [include reference/basic_threader.qbk]
 [include reference/launcher.qbk]
 [include reference/threader.qbk]

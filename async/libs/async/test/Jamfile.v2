@@ -52,6 +52,7 @@ rule async-run ( sources * )
     test-suite "tests"
         :
 #           [ async-run test_basic_threader.cpp ]
+           [ async-run test_inmediate.cpp ]
            [ async-run test_launcher.cpp ]
            [ async-run test_threader.cpp ]
            [ async-run test_thread_pool.cpp ]

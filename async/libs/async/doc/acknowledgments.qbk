@@ -5,10 +5,11 @@
   http://www.boost.org/LICENSE_1_0.txt).
 ]
 
-[section:acknowledgements  Appendix D: Acknowledgments]
+[section:acknowledgments  Appendix D: Acknowledgments]
 
 The Threader|Joiner design has been taken from [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
-Many thanks to Kevlin Henney to make evident to me the separation between asynchonous executors, and asynchronous completion tokens.
+Many thanks to Kevlin Henney to make evident to me the separation between asynchronous executors, and asynchronous completion tokens.
+Thanks to Alan Patterson for the idea of the immediate executor.
 
 You can help me to make this library better! Any feedback is very welcome.
 

@@ -72,7 +72,7 @@ table
 
 [variablelist
 [[Effects:] [Blocks until the `act` completes.]]
-[[Sychronization:][The completion of `act` happens before wait() returns.]]
+[[Synchronization:][The completion of `act` happens before wait() returns.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
 [[Postconditions:] [is_ready(act) == true.]]
 [[Thread safety:][unsafe]]
@@ -88,7 +88,7 @@ table
 
 [variablelist
 [[Effects:] [Blocks until the `act` completes or `abs_time` is not reached.]]
-[[Sychronization:][The completion of the `act` happens before wait() returns.]]
+[[Synchronization:][The completion of the `act` happens before wait() returns.]]
 [[Returns:] [true only if the function returns because `act` is ready.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
 [[Postconditions:] [is_ready() == true.]]
@@ -102,7 +102,7 @@ table
 
 [variablelist
 [[Effects:] [blocks until the `act` completes or `rel_time` has elapsed.]]
-[[Sychronization:][The completion of the `act` happens before wait() returns.]]
+[[Synchronization:][The completion of the `act` happens before wait() returns.]]
 [[Returns:] [true only if the function returns because `act` is ready.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
 [[Postconditions:] [is_ready() == true.]]
@@ -123,7 +123,7 @@ table
 [/=============================]
 [section:FutureBasedACT Concept `FutureBasedACT` ]
 [/=============================]
-The completion of the __FutureBasedACT__ is undefined at this level but occurs usualy after a set_calue or set_exception on the associated promise.
+The completion of the __FutureBasedACT__ is undefined at this level but occurs usually after a set_value or set_exception on the associated promise.
 
 
 [heading Description]
@@ -144,7 +144,7 @@ An __FutureBasedACT__ is a __ACT__ that associates a value expected on the its c
 
 [heading Expression requirements]
 
-A type models an __FutureBasedACT__ if, in adition to being an __ACT__, 
+A type models an __FutureBasedACT__ if, in addition to being an __ACT__, 
 the following expressions are valid:
 
 [table
@@ -170,7 +170,7 @@ the following expressions are valid:
 
 [variablelist
 [[Effects:] [Retrieves the value returned by the Nullary function.]]
-[[Sychronization:][The completion of the `act` happens before get() returns.]]
+[[Synchronization:][The completion of the `act` happens before get() returns.]]
 [[Returns:] [Depending on the nature of the ACT returns a `act_traits<ACT>::move_dest_type`.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
 [[Postconditions:] [if `act_traits<ACT>::move_result` is `true` it is unspecified what happens when `get()` is called a second time on the same shared_joiner.]]
@@ -214,7 +214,7 @@ the following expressions are valid:
 [section:ThreadBasedACT Concept `ThreadBasedACT` ]
 [/=============================]
 
-The completion of the __ThreadBasedACT__ is undefined at this level but occurs usualy after a function finish.
+The completion of the __ThreadBasedACT__ is undefined at this level but occurs usually after a function finish.
 
 [heading Description]
 
@@ -234,7 +234,7 @@ An __ThreadBasedACT__ is a __ACT__ that provides a thread like interface.
 ]
 
 [heading Expression requirements]
-A type models an __FutureBasedACT__ if, in adition to being an __ACT__, 
+A type models an __FutureBasedACT__ if, in addition to being an __ACT__, 
 the following expressions are valid:
 
 [table
@@ -253,9 +253,9 @@ the following expressions are valid:
 [table
     [[Expression]                          [Semantics]]
     [[`b = joinable(cact)`]                [true if `cact` refers to a 'thread of execution', false  otherwise]]
-    [[`join(act)`]                         [waits for the assoiated 'thread of execution' to complete]]
-    [[`b = join_until(act, abs_time)`]     [waits for the assoiated 'thread of execution' to complete or the time `wait_until` has been reach.]]
-    [[`b = join_for(act, rel_time)`]       [waits for the assoiated 'thread of execution' to complete or the specified duration `rel_time` has elapsed ]]
+    [[`join(act)`]                         [waits for the associated 'thread of execution' to complete]]
+    [[`b = join_until(act, abs_time)`]     [waits for the associated 'thread of execution' to complete or the time `wait_until` has been reach.]]
+    [[`b = join_for(act, rel_time)`]       [waits for the associated 'thread of execution' to complete or the specified duration `rel_time` has elapsed ]]
     [[`detach(act)`]                       [the associated 'thread of execution' becomes detached, and no longer has an associated one]]
     [[`interrupt(act)`]                    [request that the associated 'thread of execution' be interrupted the next time it enters 
     one of the predefined interruption points with interruption enabled, or if it is currently blocked in a call to one of the 
@@ -264,7 +264,7 @@ the following expressions are valid:
     [[`id = get_id(cact)`]                 [an instance of `act_traits<__ACT__>::id_type` that represents the associated 'thread of execution'.]]
 ]
 
-[heading Expresion `b=joinable(act)`]
+[heading Expression `b=joinable(act)`]
 [/==========================================================================================]
 
 [variablelist
@@ -273,7 +273,7 @@ the following expressions are valid:
 ]
 
 
-[heading Expresion `join()`]
+[heading Expression `join()`]
 [/==========================================================================================]
 
 [variablelist
@@ -285,7 +285,7 @@ the following expressions are valid:
 [[Notes:] [`join()` is one of the predefined __interruption_points__.]]
 ]
 
-[heading Expresion `b=join_until(act)|b=join_for(act)`]
+[heading Expression `b=join_until(act)|b=join_for(act)`]
 [/==========================================================================================]
 
     bool join_until(const system_time& wait_until);
@@ -306,7 +306,7 @@ unchanged.]]
 [[Notes:] [`join_until()` is one of the predefined __interruption_points__.]]
 ]
 
-[heading Expresion `detach(act)`]
+[heading Expression `detach(act)`]
 [/==========================================================================================]
 
 [variablelist
@@ -315,7 +315,7 @@ unchanged.]]
 [[Throws:] [Nothing]]
 ]
 
-[heading Expresion `get_id(cact)`]
+[heading Expression `get_id(cact)`]
 [/==========================================================================================]
 
 
@@ -325,7 +325,7 @@ Otherwise returns a default-constructed `act_traits<__ACT__>::id_type`.]]
 [[Throws:] [Nothing]]
 ]
 
-[heading Expresion `interrupt(act)`]
+[heading Expression `interrupt(act)`]
 [/==========================================================================================]
 
 
@@ -336,7 +336,7 @@ predefined __interruption_points__ with interruption enabled .]]
 [[Throws:] [Nothing]]
 ]
 
-[heading Expresion `h = native_handle(act)`]
+[heading Expression `h = native_handle(act)`]
 [/==========================================================================================]
 
 
@@ -433,7 +433,7 @@ An __IAE__ is __AE__ that works well with the default implementation of __fork__
 ]
 
 [heading Expression requirements]
-A type models an __IAE__ if, in adition to being an __AE__, 
+A type models an __IAE__ if, in addition to being an __AE__, 
 the following expressions are valid:
 
 [table

@@ -18,23 +18,24 @@ Boost.Async is a C++ library to allow the calling of functions and functors in a
 * An asynchronous execution framework working with __AE__ and __ACT__. It includes some generic functions and several __AE__ and __ACT__:
     * fork and fork_all to execute asynchronously functions
     * fork_after: request an __AE__ to execute a function asynchronously once each one of __ACT__ in the dependency tuple parameter are ready. It is similar to the async_with_dependencies proposed Peter Dimov.
-    * generic get, join, ... free functions to synchroyze on an __ACT__
-    * generic get_all, join_all, ... free functions to synchroyze on multiple __ACT__
+    * generic get, join, ... free functions to synchronize on an __ACT__
+    * generic get_all, join_all, ... free functions to synchronize on multiple __ACT__
     * generic wait_for_all, wait_for_any to execute asynchronously functions and wait for the completion of all or any of them.
 
 * Some __AE__ and __ACT__ models
+    * immediate executors: executes synchronously a function on the current thread. Often used for test purposes
     * basic_threader: can be seen as a thread factory executing asynchronously a function on the returned thread.
-    * launchers: Lanchers can be seen as a future factory executing asynchronously a function on a hiden thread.
+    * launchers: Lanchers can be seen as a future factory executing asynchronously a function on a hidden thread.
     * threader/joiner: A Threader runs a unary function in its own thread. A Threader can be seen as a Joiner
     factory executing asynchronously a function on a thread encapsulated on the returned Joiner. The joiner is used
-    to synchronise with and pick up the result from a function or to manage the encapsulated thread.
+    to synchronize with and pick up the result from a function or to manage the encapsulated thread.
     * __tp_pool__ and __tp_task__ customization as an __AE__ and an __ACT__ respectively. __tp_pool__ can be seen as
     a __tp_task__ factory executing asynchronously a function on a pool of threads.
     * a generic asynchronous_executor_decorator which allows to decorate the function to be evaluated asynchronously.
 
 References
 
-* threader/joiner are based on the original idea of Kevlin Henney [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
+* The threader-joiner classes are based on the original idea of Kevlin Henney [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf N1833 - Preliminary Threading Library Proposal for TR2]
 
 
 [/====================================]

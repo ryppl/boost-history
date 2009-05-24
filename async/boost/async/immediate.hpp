@@ -1,5 +1,5 @@
-#ifndef BOOST_ASYNC_LAUNCHER__HPP
-#define BOOST_ASYNC_LAUNCHER__HPP
+#ifndef BOOST_ASYNC_IMMEDIATE__HPP
+#define BOOST_ASYNC_IMMEDIATE__HPP
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -15,7 +15,6 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/thread/detail/move.hpp>
-#include <boost/thread/thread.hpp>
 #include <boost/futures/future.hpp>
 #include <boost/utility/result_of.hpp>
 
@@ -29,16 +28,7 @@
 namespace boost {
 namespace async {
 
-class launcher {
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR
-private:
-    thread::native_handle_attr_type attr_;
-public:
-    thread::native_handle_attr_type& attr() {
-        return attr_;
-    }
-#endif
-
+class unique_immediate {
 public:
     template <typename T>
     struct handle {
@@ -49,29 +39,23 @@ public:
     unique_future<typename boost::result_of<F()>::type>
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
-        packaged_task<result_type> tsk(f);
-        unique_future<result_type> act = tsk.get_future();
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        thread th(attr(), boost::move(tsk));
+#if 0        
+        promise<result_type> prom;
+        unique_future<result_type> act;
+        act=prom.get_future();
+        prom.set_value(f());
 #else
-        thread th(boost::move(tsk));
-#endif
+        packaged_task<result_type> tsk(f);
+        unique_future<result_type> act(tsk.get_future());
+        tsk();
+#endif           
         return boost::move(act);
     }
 
 };
 
 
-class shared_launcher {
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR
-private:
-    thread::native_handle_attr_type attr_;
-public:
-    thread::native_handle_attr_type& attr() {
-        return attr_;
-    }
-#endif
-
+class shared_immediate {
 public:
     template <typename T>
     struct handle {
@@ -82,20 +66,23 @@ public:
     shared_future<typename boost::result_of<F()>::type>
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
+#if 0        
+        promise<result_type> prom;
+        shared_future<result_type> act;
+        act=prom.get_future();
+        prom.set_value(f());
+#else
         packaged_task<result_type> tsk(f);
         shared_future<result_type> act(tsk.get_future());
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        thread th(attr(), boost::move(tsk));
-#else
-        thread th(boost::move(tsk));
-#endif
+        tsk();
+#endif        
         return act;
     }
 
 };
 
 template <>
-struct get_future<launcher> {
+struct get_future<unique_immediate> {
     template <typename T>
     struct future_type {
         typedef unique_future<T> type;
@@ -105,7 +92,7 @@ struct get_future<launcher> {
 };
 
 template <>
-struct get_future<shared_launcher> {
+struct get_future<shared_immediate> {
     template <typename T>
     struct future_type {
         typedef shared_future<T> type;
@@ -113,7 +100,6 @@ struct get_future<shared_launcher> {
     template <typename T>
     shared_future<T>& operator()(shared_future<T>& f) { return f; }
 };
-
 
 
 }

@@ -76,7 +76,7 @@ In addition it depends on the following libraries that are not yet accepted on B
 ]
 ]
 
-And also will depend on a near future, conditionaly, on the following libraries that are even not submited to Boost.
+And also will depend on a near future, conditionally, on the following libraries that are even not submitted to Boost.
 [variablelist
 [
     [[@https://svn.boost.org/svn/boost/sandbox/chrono/ [*Boost.Chrono]]] [for time and duration]

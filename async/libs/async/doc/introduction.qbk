@@ -61,7 +61,7 @@ the future interface. Some asynchronous completion tokens handle allow to recove
 the function, others allow to manage the underlying thread of execution.
 
 It seems natural to make a generic __fork__ function that will evaluate a function asynchronously
-with respect to the calling thread and returns an ACT handle. The following metafunction
+with respect to the calling thread and returns an ACT handle. The following meta-function
 associates an ACT handle to an asynchronous executor.
 
     template <typename AE, typename T>
@@ -263,6 +263,7 @@ associated files included on the threadpool sub-directory.
 
         BOOST_AUTO(fm1, basync::fork(ae, f, 1.0, 1000000 ));
 
+As a extreme case the library provides a immediate executor which allows to execute synchronously the function on the current thread. This can be used for test purposes. Note that this executor can not be used when there are dependencies between the children __ACT__ and the parent __ACT__.
 
 The library allows also to fork several functions at one time
 
@@ -348,9 +349,10 @@ does.
 
 So the user can do the following
 
-    result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type res = basync::fork_all(ae, f, g, h);
-    result_of::get_all<result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type>::type values
-        = basync::get_all(handles);
+    result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type res = 
+        basync::fork_all(ae, f, g, h);
+    result_of::get_all<result_of::fork_all<AE, int(*)(), int(*)(), int(*)()>::type>::type values = 
+        basync::get_all(handles);
 
 or using a typedef
 
@@ -371,14 +373,17 @@ or using BOOST_AUTO
 Last but not least the library provides also some sugaring functions like
 wait_for_all that forks and wait for the completion of all the functions.
 
-    result_of::wait_for_all<AE, int(*)(), int(*)(), int(*)()>::type res = basync::wait_for_all(ae, f, g, h);
+    result_of::wait_for_all<AE, int(*)(), int(*)(), int(*)()>::type res = 
+        basync::wait_for_all(ae, f, g, h);
     std::cout << get<1>(res) - get<0>(res) + get<2>(res) << std::endl;
 
 and wait_for_any, which works only with functions that return the same type or are convertible to the same
 type, and return the index and the value of any of the completed functions.
 
-    result_of::wait_for_any<AE, int(*)(), int(*)(), int(*)()>::type res = basync::wait_for_any(ae, f, g, h);
-    std::cout << "function " << res.first << " finshed first with result=" << res.second << std::endl;
+    result_of::wait_for_any<AE, int(*)(), int(*)(), int(*)()>::type res = 
+        basync::wait_for_any(ae, f, g, h);
+    std::cout << "function " << res.first 
+        << " finshed first with result=" << res.second << std::endl;
 
 The current implementation use the wait_for_any function so any AE must provide a way to get a
 unique|shared_future from its __ACT__.
@@ -391,8 +396,6 @@ The library defines a functor allowing the user to specialize it
         shared_future<T>& operator()(typename asynchronous_completion_token<AE,T>::type& act)
         { return act.get_future(); }
     };
-
-Future versions will use the set_once synchronization.
 
 Resuming a simple way to define a new AsynchronousExecutor is to define a class as
 
@@ -420,6 +423,8 @@ where Kevlin Henney introduces the concept of threader as an asynchronous execut
 asynchronously and returns an asynchronous completion token joiner, able to join but also to get the value of the function result.
 
 The main specificity is that here we make a difference between unique_joiner (move-only) and shared_joiner and as consequence unique_threader and shared_threader.
+
+The second specificity concerns the fact joiners can detach, terminate, ... on destruction.
 
 
 [endsect]

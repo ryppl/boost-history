@@ -16,7 +16,7 @@ This section do includes complete examples using the library.
 [section Parallel sort]
 [/==================================]
 
-Next follows a generic algorithm based on partitioning od a given problem in smaler problems, and compose a solution from the solution of the smaller problems. 
+Next follows a generic algorithm based on partitioning of a given problem in smaller problems, and compose a solution from the solution of the smaller problems. 
 
     template <
         typename DirectSolver,

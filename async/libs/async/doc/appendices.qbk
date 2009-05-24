@@ -15,7 +15,7 @@
 
 [include implementation.qbk]
 
-[include acknowledgements.qbk]
+[include acknowledgments.qbk]
 
 [include tests.qbk]
 [include tickets.qbk]
@@ -82,7 +82,7 @@ Even if the current release include some test there is yet a long way before bee
 
 [section For later releases]
 
-[heading Use C++0x variadic templates on compilers supporting it and use the preprocesor otherwise]
+[heading Use C++0x variadic templates on compilers supporting it and use the preprocessor otherwise]
 
 [heading Use C++0x Concepts on compilers supporting them and use the Boost.ConceptCheck or Boost.ConceptTraits otherwise]
 

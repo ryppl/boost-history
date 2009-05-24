@@ -83,7 +83,7 @@ An __FutureBasedACT__ is a __ACT__ that associates a value expected on the its c
 ]
 
 [heading Expression requirements]
-A type models an __FutureBasedACT__ if, in adition to being an __ACT__,
+A type models an __FutureBasedACT__ if, in addition to being an __ACT__,
 the following expressions are valid:
 
 [table
@@ -128,7 +128,7 @@ An __FutureBasedACT__ is a __ACT__ that associates a value expected on the its c
 ]
 
 [heading Expression requirements]
-A type models an __FutureBasedACT__ if, in adition to being an __ACT__,
+A type models an __FutureBasedACT__ if, in addition to being an __ACT__,
 the following expressions are valid:
 
 [table
@@ -235,7 +235,7 @@ An __IAE__ is __AE__ that works well with the default implementation of __fork__
 ]
 
 [heading Expression requirements]
-A type models an __IAE__ if, in adition to being an __AE__,
+A type models an __IAE__ if, in addition to being an __AE__,
 the following expressions are valid:
 
 [table

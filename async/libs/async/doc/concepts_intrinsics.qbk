@@ -58,7 +58,7 @@ table
 
 [variablelist
 [[Effects:] [Blocks until the Nullary function ends.]]
-[[Sychronization:][The completion of the call to the operator()() the Nullary function happens before wait() returns.]]
+[[Synchronization:][The completion of the call to the operator()() the Nullary function happens before wait() returns.]]
 [[Throws:] [the stored exception, if an exception was stored and not retrieved before.]]
 [[Postconditions:] [is_ready(act) == true.]]
 [[Thread safety:][unsafe]]
@@ -98,7 +98,7 @@ i.e. `<boost/async/future_based_act.hpp>`
 
 [heading Expression requirements]
 
-A type models an __FutureBasedACT__ if, in adition to being an __ACT__,
+A type models an __FutureBasedACT__ if, in addition to being an __ACT__,
 the following expressions are valid:
 
 [table
@@ -156,7 +156,7 @@ i.e. `<boost/async/thread_based_act.hpp>`
 ]
 
 [heading Expression requirements]
-A type models an __IntrinsicThreadBasedACT__ if, in adition to being an __ThreadBasedACT__,
+A type models an __IntrinsicThreadBasedACT__ if, in addition to being an __ThreadBasedACT__,
 the following expressions are valid:
 
 [table
@@ -174,9 +174,9 @@ the following expressions are valid:
 [table
     [[Expression]                           [Semantics]]
     [[`b = act.joinable()`]                 [true if *this refers to a thread of execution, false  otherwise]]
-    [[`act.join()`]                         [waits for the assoiated thread of execution to complete]]
-    [[`b = act.join_until(abs_time)`]       [waits for the assoiated thread of execution to complete or the time wait_until has been reach.]]
-    [[`b = act.join_for(rel_time)`]         [waits for the assoiated thread of execution to complete or the specified duration rel_time has elapsed ]]
+    [[`act.join()`]                         [waits for the associated thread of execution to complete]]
+    [[`b = act.join_until(abs_time)`]       [waits for the associated thread of execution to complete or the time wait_until has been reach.]]
+    [[`b = act.join_for(rel_time)`]         [waits for the associated thread of execution to complete or the specified duration rel_time has elapsed ]]
     [[`act.detach()`]                       [the associated thread of execution becomes detached, and no longer has an associated one]]
     [[`act.interrupt()`]                    [request that the associated thread of execution be interrupted the next time it enters
     one of the predefined interruption points with interruption enabled, or if it is currently blocked in a call to one of the
@@ -270,7 +270,7 @@ An __IAE__ is __AE__ that works well with the default implementation of __fork__
 ]
 
 [heading Expression requirements]
-A type models an __IAE__ if, in adition to being an __AE__,
+A type models an __IAE__ if, in addition to being an __AE__,
 the following expressions are valid:
 
 [table
