@@ -1,148 +1,71 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
-[section:pool Pool]
 
-A __thread_pool__ maintains a queue (or queues) of work to be done, and a collection of __worker_threads__ which execute work from the queue(s).
+[section:pool Thread pool]
 
-Since a __sub_task__ is just a piece of a larger __task__, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is __work_stealing__. 
+A __thread_pool__ maintains a queue (or queues) of __work_items__ to be done, and a pool of __worker_threads__ which execute __work_items__ from the queue(s).
 
+Instead of creating a new thread and quickly throwing it away after the task is done, the overhead related to thread creation and destruction can be avoided by running the __work_item__ on a __thread_pool__ (reusing an existing __worker__thread__ instead).
 
-[heading Work-Stealing]
-
-The most important aspect of work-stealing is that it enables very fast enqueue and dequeue in the typical case, often requiring no synchronization at all.  This virtually eliminates a large part of the overhead of QUWI, when working with child tasks.  We still do need to allocate memory for the Task itself, and for the work-stealing queue, but like the improvements to the FIFO queue these data structures have been optimized for good GC performance.  Parent tasks are fast; child tasks are much faster.
+__boost_task__ provides __fn_async__ with support of
 
 
-Traditional thread pool do not scale because they use a single global queue protected by a global lock. The frequency at which __worker_threads__ aquire the global lock becomes a limiting factor for the throughput if:
+``
+	std::string echo( std::string const& msg)
+	{ return msg; }
+
+	void main()
+	{
+		boost::task::handle< std::string > h(
+			boost::task::async(
+				boost::task::default_pool(),
+				boost::task::make_task(
+					echo,
+					"Hello World!") ) );
+		std::cout << h.get() << std::endl;
+	}
+``
+
+executing a __task__ in __default_pool__ (using __fn_default_pool__)
 
 
-*  the __tasks__ become smaller
+``
+	std::string echo( std::string const& msg)
+	{ return msg; }
 
-*  more processors are added
+	boost::task::static_pool<
+		boost::task::unbounded_channel<
+			boost::task::fifo
+		>
+	> pool( boost::task::poolsize( 5) );
 
+	void main()
+	{
+		boost::task::handle< std::string > h(
+			boost::task::async(
+				pool,
+				boost::task::make_task(
+					echo,
+					"Hello World!") ) );
+		std::cout << h.get() << std::endl;
+	}
+``
 
-A work-stealing algorithm can be used to solve this problem. It uses a special kind of queue which has two ends, and allows lock-free pushes and pops from the ['private end] (accessed by the __worker_thread__ owning the queue), but requires synchronization from the ['public end] (accessed by the other __worker_threads__). Synchronization is necessary when the queue is sufficiently small that private and public operations could conflict.
-
-The pool contains one global queue (__bounded_channel__ or __unbounded_channel__) protected by a global lock and each __worker_thread__ has its own private worker queue. If work is enqueued by a __worker_thread__ the __action__ is stored in the worker queue. If the work is enqueued by a application thread it goes into the global queue. When __worker_threads__ are looking for work, they have following search order:
-
-
-*  look into the private worker queue - __actions__ can be dequeued without locks
-
-*  look in the global queue - locks are used for synchronization
-
-*  check other worker queues ('stealing' __actions__ from private worker queues of other __worker_threads__) - requires locks
-
-
-For a lot of recursively queued __tasks__, the use of a worker queue per thread substantially reduces the synchronization necessary to complete the work.  There are also fewer cache effects due to sharing of the global queue information.
-
-Operations on the private worker queue are executed in LIFO order and operations on worker queues of other __worker_threads__ in FIFO order (steals).
-
-
-*  There are chances that memory is still hot in the cache, if the __actions__ are pushed in LIFO order into the private worker queue.
-
-*  If a __worker_thread__ steals work in FIFO order, increases the chances that a larger 'chunk' of work will be stolen (the need for other steals will be possibly reduced). Because the __tasks__ are stored in LIFO order, the oldest items are closer to the ['public end] of the queue (forming a tree). Stealing such an older __task__ also steals a (probably) larger subtree of __tasks__ unfolded if the stolen work item get executed.
+and a custom __thread_pool__ (passing pool instance as an argument to __fn_async__).
 
 
-[important Because of the work-stealing algorithm the execution order of __tasks__ may be not strict as in the global queue.]
+[include static_pool.qbk]
+[include channel.qbk]
+[include scheduler.qbk]
+[include shutdown.qbk]
+[include work_stealing.qbk]
+[include fork_join.qbk]
 
-
-[heading Creation]
-
-The first template argument specifies the channel type and the scheduling policy.
-
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool(
-      boost::tp::poolsize( 6),
-      boost::posix_time::posix_time::milliseconds( 50),
-      boost::tp::scanns(10) );
-
-In the example above a __threadpool__ is created with a __unbounded_channel__, scheduling __actions__ in ['FIFO] order. The pool contains six __worker_threads__ going to sleep for 50 millisec after 10 iterations without geting an __action__ from the __global_queue__, from its local __worker_queue__ or local queues of other __worker_threads__.
-
-    boost::tp::pool<
-      boost::tp::bounded_channel< boost::tp::priority < int > >
-    > pool(
-      boost::tp::poolsize( 10),
-      boost::tp::high_watermark( 10),
-      boost::tp::low_watermark( 5) );
-
-This pool uses a __bounded_channel__ which schedules __actions__ by integer atrributes. A maximum of 10 __actions__ can be queued in the __global_queue__ without blocking the inserting thread.
-
-
-[heading Shutdown]
-
-If `boost::tp::pool< Channel >::shutdown()` is called - the the pool is set closed and all __worker_threads__ are joined until all pending __actions__ are processed. No futher __actions__ can be submitted by application threads.
-
-[note The deconstructor calls `boost::tp::pool< Channel >::shutdown()` if the pool was not shutdown yet.]
-
-    boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool( boost::tp::poolsize( 1) );
-
-    boost::tp::task< int > t1(
-      pool.submit(
-      boost::bind(
-        fibonacci_fn,
-        10) ) );
-    boost::tp::task< int > t2(
-      pool.submit(
-        boost::bind(
-          fibonacci_fn,
-          10) ) );
-
-    pool.shutdown();
-
-    std::cout << t1.result().get() << std::endl; // 55
-    std::cout << t2.result().get() << std::endl; // 55
-
-[heading Shutdown immediatly]
-The function `boost::tp::pool< Channel >::shutdown_now()` closes the pool, interrupts and then joins all __worker_threads__. All pending (unprocessed) __actions__ will be returned.
-
-[important Pending __actions__ in the local __worker_queues__ are not returned if `boost::tp::pool< Channel >::shutdown_now()` was called.]
-
-
-[heading Default pool]
-
-The free function `boost::tp::get_default_pool()` returns a reference to the default __threadpool__ instance. The default __threadpool__ is
-of type `boost::tp::pool< boost::tp::unbounded_channel< boost::tp::fifo > >` and will contain as many __worker_threads__ as 
-`boost::thread::hardware_concurrency()` returns. 
-
-
-[heading Launch in pool]
-
-The free function `boost::tp::launch_in_pool( Act const& act)` submits the __action__ to the default pool and returns a task object.
-
-
-[heading Meta functions]
-
-If the __threadpool__ supports priorities `boost::tp::has_priority< pool_type >` evaluates to `true`. The priority type is determined by `boost::tp::priority_type< pool_type >`.
-
-    typedef boost::tp::pool<
-      boost::tp::unbounded_channel<  boost::tp::priority< int > >
-    > pool_type;
-
-    std::cout << std::boolalpha <<  boost::tp::has_priority< pool_type >::value << std::endl;
-    std::cout << typeid(  boost::tp::priority_type< pool_type >::type).name() << std::endl;
-
-The support of fibers can be tested with meta-function `boost::tp::has_fibers< pool_type >`.
-
-    std::cout << std::boolalpha <<  boost::tp::has_fibers< pool_type >::value << std::endl;
-
-
-[heading Processor binding]
-
-For some applications it is convenient to bind the worker threads of the pool to processors of the system. For this purpose BOOST_BIND_WORKER_TO_PROCESSORS must be defined. Without the poolsize in the construtor the __threadpool__ will contain as many
-__worker_threads__ as processors (== __hardware_concurrency__) are available and each __worker_thread__ is bound to one processor.
-
-	boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool;
-
-The code above will create a pool with two __worker_threads__ on a dual core system (each bound to one core).
 
 [endsect]
 

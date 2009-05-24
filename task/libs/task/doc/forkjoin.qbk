@@ -1,11 +1,13 @@
-[/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
+
 [section:forkjoin Fork/Join]
+
 Fork/Join algorithms are recursive divide-and-conquer algorithms which repeatedly splitt __sub_actions__ until they become small enough to solve using simple, short sequential methods, so that they run in parallel on multiple cores.
 
 The fork operation creates a new __sub_action__ (which can run in parallel) in the pool. The current __actions__ is not proceeded in the join operation until the forked __sub_actions__ have completed. In the meantime the __worker_thread__ executes other __actions__ from its local __worker_queue__.
@@ -99,4 +101,6 @@ The fork operation creates a new __sub_action__ (which can run in parallel) in t
 	
 		return EXIT_FAILURE;
 	}
+
+
 [endsect]

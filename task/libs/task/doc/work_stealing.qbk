@@ -1,0 +1,41 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:work_stealing Work-Stealing]
+
+The most important aspect of work-stealing is that it enables very fast enqueue and dequeue in the typical case, often requiring no synchronization at all.  This virtually eliminates a large part of the overhead of QUWI, when working with child tasks.  We still do need to allocate memory for the Task itself, and for the work-stealing queue, but like the improvements to the FIFO queue these data structures have been optimized for good GC performance.  Parent tasks are fast; child tasks are much faster.
+
+Traditional thread pool do not scale because they use a single global queue protected by a global lock. The frequency at which __worker_threads__ aquire the global lock becomes a limiting factor for the throughput if:
+
+*  the __tasks__ become smaller
+
+*  more processors are added
+
+A work-stealing algorithm can be used to solve this problem. It uses a special kind of queue which has two ends, and allows lock-free pushes and pops from the ['private end] (accessed by the __worker_thread__ owning the queue), but requires synchronization from the ['public end] (accessed by the other __worker_threads__). Synchronization is necessary when the queue is sufficiently small that private and public operations could conflict.
+
+The pool contains one global queue (__bounded_channel__ or __unbounded_channel__) protected by a global lock and each __worker_thread__ has its own private worker queue. If work is enqueued by a __worker_thread__ the __action__ is stored in the worker queue. If the work is enqueued by a application thread it goes into the global queue. When __worker_threads__ are looking for work, they have following search order:
+
+*  look into the private worker queue - __actions__ can be dequeued without locks
+
+*  look in the global queue - locks are used for synchronization
+
+*  check other worker queues ('stealing' __actions__ from private worker queues of other __worker_threads__) - requires locks
+
+For a lot of recursively queued __tasks__, the use of a worker queue per thread substantially reduces the synchronization necessary to complete the work.  There are also fewer cache effects due to sharing of the global queue information.
+
+Operations on the private worker queue are executed in LIFO order and operations on worker queues of other __worker_threads__ in FIFO order (steals).
+
+*  There are chances that memory is still hot in the cache, if the __actions__ are pushed in LIFO order into the private worker queue.
+
+*  If a __worker_thread__ steals work in FIFO order, increases the chances that a larger 'chunk' of work will be stolen (the need for other steals will be possibly reduced). Because the __tasks__ are stored in LIFO order, the oldest items are closer to the ['public end] of the queue (forming a tree). Stealing such an older __task__ also steals a (probably) larger subtree of __tasks__ unfolded if the stolen work item get executed.
+
+Since a __sub_task__ is just a piece of a larger __task__, we don’t need to worry about execution order.  We just need to execute these things quickly.  One well-known strategy for fast execution of unordered work items is __work_stealing__.
+
+
+[endsect]
+

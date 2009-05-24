@@ -1,19 +1,21 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
+
 
 [section:reference Reference]
 
-[include pool_ref.qbk]
-[include task_ref.qbk]
-[include this_task_ref.qbk]
-[include poolsize_ref.qbk]
-[include scanns_ref.qbk]
-[include watermark_ref.qbk]
-[include exceptions_ref.qbk]
-[include meta_ref.qbk]
+[include ref_async.qbk]
+[include ref_static_pool.qbk]
+[include ref_task.qbk]
+[include ref_handle.qbk]
+[include ref_utilities.qbk]
+[include ref_meta_functions.qbk]
+[include ref_exceptions.qbk]
+[include ref_watermark.qbk]
+
 
 [endsect]

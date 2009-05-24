@@ -95,6 +95,8 @@
 [def __thread_pools__ ['thread-pools]]
 [def __sub_task__ ['sub-task]]
 [def __sub_tasks__ ['sub-tasks]]
+[def __work_item__ ['work-item]]
+[def __work_items__ ['work-items]]
 [def __work_stealing__ ['work-stealing]]
 [def __worker_queue__ ['worker-queue]]
 [def __worker_thread__ ['worker-thread]]

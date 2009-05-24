@@ -1,0 +1,26 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:meta_functions Meta functions]
+
+If the __threadpool__ supports priorities `boost::tp::has_priority< pool_type >` evaluates to `true`. The priority type is determined by `boost::tp::priority_type< pool_type >`.
+
+    typedef boost::tp::pool<
+      boost::tp::unbounded_channel<  boost::tp::priority< int > >
+    > pool_type;
+
+    std::cout << std::boolalpha <<  boost::tp::has_priority< pool_type >::value << std::endl;
+    std::cout << typeid(  boost::tp::priority_type< pool_type >::type).name() << std::endl;
+
+The support of fibers can be tested with meta-function `boost::tp::has_fibers< pool_type >`.
+
+    std::cout << std::boolalpha <<  boost::tp::has_fibers< pool_type >::value << std::endl;
+
+
+[endsect]
+

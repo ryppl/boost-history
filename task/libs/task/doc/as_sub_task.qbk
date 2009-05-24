@@ -8,7 +8,7 @@
 
 [section:as_sub_task __as_sub_task__]
 
-__as_sub_task__ is a conveniet way to execute a __sub_task__. If the parent task is executed inside a __thread_pool__ the __sub_task__ is put into the local-queue of the
+__as_sub_task__ is a convenient way to execute a __sub_task__. If the parent task is executed inside a __thread_pool__ the __sub_task__ is put into the local-queue of the
 __worker_thread__ in the other case the __sub_task__ will be executed in a new thread.
 
 

@@ -9,10 +9,9 @@
 [section Appendices]
 
 [include rationale.qbk]
-
 [include acknowledgements.qbk]
-
 [include todo.qbk]
+
 
 [endsect]
 

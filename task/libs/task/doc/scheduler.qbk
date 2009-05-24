@@ -1,25 +1,21 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
+
 [section:scheduling Scheduling]
+
 The scheduling policy determines how __actions__ are scheduled inside the __channel__.
+
 
 [heading fifo]
 
     struct fifo
 
 First inserted pending __action__ get taken first.
-
-
-[heading lifo]
-
-    struct lifo
-
-Last inserted pending __action__ get taken first.
 
 
 [heading priority]
