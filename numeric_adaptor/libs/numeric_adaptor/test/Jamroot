@@ -15,4 +15,4 @@ project : requirements <include>../../.. <library>gmp <library>cln ;
 import testing ;
 
 run test_heron.cpp : gmp ;
-run test_cast.cpp : gmp ;
+run test_conversions.cpp : gmp ;
