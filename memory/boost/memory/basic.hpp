@@ -208,6 +208,10 @@ NS_BOOST_MEMORY_END
 #include <malloc.h>	// _alloca
 #endif
 
+#if !defined(_alloca) && !defined(_MSC_VER)
+#define _alloca alloca
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 inline void swap(void* a, void* b, size_t cb)
