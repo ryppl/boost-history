@@ -26,6 +26,12 @@ void test_all()
     BOOST_CHECK_EQUAL(float(n), 1234.5);
     BOOST_CHECK_EQUAL(double(n), 1234.5);
     BOOST_CHECK_EQUAL(n.template get<std::string>(), "1234.5");
+
+    num n2 = "1234.5";
+    BOOST_CHECK_EQUAL(double(n2), 1234.5);
+
+    num n3("1234.5");
+    BOOST_CHECK_EQUAL(double(n3), 1234.5);
 }
 
 int test_main(int, char*[])
