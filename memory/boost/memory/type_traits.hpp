@@ -16,6 +16,10 @@
 #include "basic.hpp"
 #endif
 
+#ifndef _STDLIB_H
+#include <stdlib.h>
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 // =========================================================================

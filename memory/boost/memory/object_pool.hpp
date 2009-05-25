@@ -32,6 +32,7 @@ class norm_object_pool_ : private fixed_alloc<PolicyT>
 {
 private:
 	typedef fixed_alloc<PolicyT> PoolT;
+	typedef typename PoolT::MemBlock MemBlock;
 
 	norm_object_pool_(const norm_object_pool_& o);
 	void operator=(const norm_object_pool_& o);
@@ -79,7 +80,7 @@ public:
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
 	
-	explicit norm_object_pool_(alloc_type alloc) : PoolT(m_alloc, sizeof(Type))
+	explicit norm_object_pool_(alloc_type alloc) : PoolT(alloc, sizeof(Type))
 	{
 		BOOST_MEMORY_STATIC_ASSERT(sizeof(ChunkHeader) == sizeof(typename PoolT::ChunkHeader));
 	}
@@ -93,7 +94,7 @@ private:
 	static void BOOST_MEMORY_CALL do_clear_block_(MemBlock* const blk, size_t cbChunk)
 	{
 		size_t nUsed = blk->nUsed;
-		char* p = blk->buffer + ChunkHeaderSize;
+		char* p = blk->buffer + PoolT::ChunkHeaderSize;
 		for (;; p += cbChunk)
 		{
 			if (is_allocated_(p))
@@ -108,7 +109,7 @@ private:
 public:
 	void BOOST_MEMORY_CALL clear()
 	{
-		MemBlock* blk = m_blks.first();
+		MemBlock* blk = this->m_blks.first();
 
 		this->m_blks.clear();
 		this->m_freelist.clear();

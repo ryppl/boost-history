@@ -20,6 +20,10 @@
 #include <climits> // INT_MAX
 #endif
 
+#if !defined(_ALGORITHM_) && !defined(_ALGORITHM)
+#include <algorithm> // std::swap
+#endif
+
 NS_BOOST_MEMORY_BEGIN
 
 // -------------------------------------------------------------------------
