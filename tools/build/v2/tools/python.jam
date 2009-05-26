@@ -486,7 +486,7 @@ local rule probe ( python-cmd )
             python-cmd = \"$(python-cmd)\" ;
         }
         local full-cmd =
-            $(python-cmd)" -c \"from sys import *; print '"$(format:J=\\n)"' % ("$(exprs:J=,)")\"" ;
+            $(python-cmd)" -c \"from sys import *; print('"$(format:J=\\n)"' % ("$(exprs:J=,)"))\"" ;
 
         local output = [ shell-cmd $(full-cmd) ] ;
         if $(output)
