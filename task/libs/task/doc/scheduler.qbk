@@ -8,31 +8,25 @@
 
 [section:scheduling Scheduling]
 
-The scheduling policy determines how __actions__ are scheduled inside the __channel__.
+The scheduling policy determines how __tasks__ are scheduled inside the __channel__.
 
 
 [heading fifo]
 
-    struct fifo
-
-First inserted pending __action__ get taken first.
+First inserted pending __task__ gets taken first.
 
 
 [heading priority]
-
-    template< typename Attr, typename Ord = std::less< Attr > > struct priority
 
 Each pending task is associated with a priority attribute which is used for ordering __actions__.
 
 
 [heading smart]
 
-    template< typename Attr, typename Ord, typename Enq, typename Deq > struct smart
-
 Each pending __actions__ is associated with an attribute. The scheduler gets an put- and take-policy
 as template arguments. The corresponding policy get applied for each insertion and removal.
 
-__boost_threadpool__ provides ['boost::tp::replace_oldest] as put policy and ['boost::tp::take_oldest] as take
+__boost_task__ provides ['boost::tp::replace_oldest] as put policy and ['boost::tp::take_oldest] as take
 policy. Both policies allow the replacement of old __actions__ in the scheduler by new ones.
 
     // creates a pool with unbounded channel

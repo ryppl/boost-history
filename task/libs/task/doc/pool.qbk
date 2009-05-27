@@ -8,11 +8,11 @@
 
 [section:pool Thread pool]
 
+Instead of creating a new thread and quickly throwing it away after the task is done, the overhead related to thread creation and destruction can be avoided by running the __work_items__ on a __thread_pool__ (reusing an existing __worker__thread__ instead).
+
 A __thread_pool__ maintains a queue (or queues) of __work_items__ to be done, and a pool of __worker_threads__ which execute __work_items__ from the queue(s).
 
-Instead of creating a new thread and quickly throwing it away after the task is done, the overhead related to thread creation and destruction can be avoided by running the __work_item__ on a __thread_pool__ (reusing an existing __worker__thread__ instead).
-
-__boost_task__ provides __fn_async__ with support of
+__boost_task__ provides __fn_async__ with support of executing an __task__ in __default_pool__ (using __fn_default_pool__):
 
 
 ``
@@ -31,7 +31,7 @@ __boost_task__ provides __fn_async__ with support of
 	}
 ``
 
-executing a __task__ in __default_pool__ (using __fn_default_pool__)
+and a custom __thread_pool__ (passing pool instance as an argument to __fn_async__):
 
 
 ``
@@ -55,14 +55,18 @@ executing a __task__ in __default_pool__ (using __fn_default_pool__)
 		std::cout << h.get() << std::endl;
 	}
 ``
+.
 
-and a custom __thread_pool__ (passing pool instance as an argument to __fn_async__).
-
+[important __tasks__ should not be too small (performance overhead dominates) and avoid blocking 
+__tasks__[footnote see [@http://www.ddj.com/go-parallel/article/showArticle.jhtml?articleID=216500409 
+'Use Thread Pools Correctly'], Herb Sutter].]
 
 [include static_pool.qbk]
 [include channel.qbk]
 [include scheduler.qbk]
 [include shutdown.qbk]
+[include default_pool.qbk]
+[include processor_binding.qbk]
 [include work_stealing.qbk]
 [include fork_join.qbk]
 

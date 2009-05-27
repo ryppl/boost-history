@@ -1,0 +1,22 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:processor_binding Processor binding]
+
+For some applications it is convenient to bind the worker threads of the pool to processors of the system. For this purpose BOOST_BIND_WORKER_TO_PROCESSORS must be defined. Without the poolsize in the construtor the __threadpool__ will contain as many
+__worker_threads__ as processors (== __hardware_concurrency__) are available and each __worker_thread__ is bound to one processor.
+
+	boost::tp::pool<
+      boost::tp::unbounded_channel< boost::tp::fifo >
+    > pool;
+
+The code above will create a pool with two __worker_threads__ on a dual core system (each bound to one core).
+
+
+[endsect]
+
