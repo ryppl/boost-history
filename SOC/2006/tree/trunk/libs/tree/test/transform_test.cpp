@@ -34,7 +34,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_descending, Order, orders)
     typename container_type::const_iterator cie = order_index.end();
     mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
     
-    boost::tree::transform(Order(), fbt1.descending_root(), mc, std::bind2nd(std::plus<int>(),0));
+    boost::tree::transform(Order(), fbt1.root(), mc, std::bind2nd(std::plus<int>(),0));
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_ascending, Order, orders)
@@ -49,7 +49,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_transform_ascending, Order, orders)
     typename container_type::const_iterator cie = order_index.end();
     mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
     
-    boost::tree::transform(Order(), fbt1.ascending_root(), mc, std::bind2nd(std::plus<int>(),0));
+    fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag> fabt1(fbt1);
+    boost::tree::transform(Order(), fabt1.root(), mc, std::bind2nd(std::plus<int>(),0));
 }
 
 BOOST_AUTO_TEST_SUITE_END()

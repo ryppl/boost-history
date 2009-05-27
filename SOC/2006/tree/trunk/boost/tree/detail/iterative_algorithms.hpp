@@ -28,6 +28,21 @@ namespace boost {
 namespace tree {
 namespace detail {
 
+// .base() !!!
+template <class Order, class Cursor, class Op>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((AscendingCursor<Cursor>)), // FIXME: Also RootTrackingCursor? 
+    (Op)) // return type
+for_each(Order, Cursor s, Cursor s2, Op f, ascending_vertical_traversal_tag)
+{
+    while (s!=s2) {
+        f(*s);
+        successor(Order(), s);
+    }
+    return f;
+}
+
 template <class Order, class Cursor, class Op>
 BOOST_CONCEPT_REQUIRES(
     ((DescendingCursor<Cursor>))
@@ -36,14 +51,10 @@ BOOST_CONCEPT_REQUIRES(
 for_each(Order, Cursor is, Op f, ascending_vertical_traversal_tag)
 {
     root_tracking_cursor<Cursor> s(is);
-    root_tracking_cursor<Cursor> s2(s);
+    root_tracking_cursor<Cursor> s2(is);
     to_first(Order(), s);
     to_last(Order(), s2);
-    while (s!=s2) {
-        f(*s);
-        successor(Order(), s);
-    }
-    return f;
+    return detail::for_each(Order(), s, s2, f, ascending_vertical_traversal_tag());
 }
 
 template <class Order, class InCursor, class OutCursor, class Op>

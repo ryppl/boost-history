@@ -156,7 +156,7 @@ BOOST_CONCEPT_ASSERT((DescendingCursor< typename Hierarchy::const_cursor >));
      */
     cursor insert(cursor pos, value_type const& val)
     {
-        return cursor(h.insert(base_cursor(pos), val));
+        return cursor(h.insert(pos.base(), val));
     }
 
     /**

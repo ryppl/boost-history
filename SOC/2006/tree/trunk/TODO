@@ -14,6 +14,8 @@
 [section TODO]
 
 General:
+* Subforest algorithms: with a first and last parameter (which, for binary tree based
+  forests, should be passed through to the corresponding binary cursor algorithms.
 * Do we need to_{left|right}most_ancestor?
 * Do we need multiway and plain cursor "flavor" tags (for algorithms)?
 * In case of forest cursor, is_leaf() should really be empty().

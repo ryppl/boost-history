@@ -23,9 +23,15 @@ struct fake_ascending_binary_cursor;
 template <class T>
 struct fake_root_tracking_binary_cursor;
 
+using boost::tree::descending_vertical_traversal_tag;
+using boost::tree::ascending_vertical_traversal_tag;
+
+template <class T, class VT = descending_vertical_traversal_tag>
+struct fake_binary_tree;
+
 /// See http://en.wikipedia.org/wiki/Binary_Tree#Methods_for_storing_binary_trees
 template <class T>
-struct fake_binary_tree {
+struct fake_binary_tree<T, descending_vertical_traversal_tag> {
     typedef std::vector<T> children_type;
     typedef typename children_type::size_type size_type;
     typedef typename children_type::value_type value_type;
@@ -38,13 +44,15 @@ struct fake_binary_tree {
 
     typedef descending_cursor cursor;
     typedef const_descending_cursor const_cursor;
-
+    
+protected:
     typedef fake_ascending_binary_cursor<T> ascending_cursor;
-    typedef fake_ascending_binary_cursor<T const> const_ascending_cursor;
+    typedef fake_ascending_binary_cursor<T> const_ascending_cursor; //FIXME
 
     typedef fake_root_tracking_binary_cursor<T> root_tracking_cursor;
-    typedef fake_root_tracking_binary_cursor<T const> const_root_tracking_cursor;
-        
+    typedef fake_root_tracking_binary_cursor<T> const_root_tracking_cursor; //FIXME
+
+public:        
     fake_binary_tree(size_type s = 0) : m_data(s)
     { }
     
@@ -63,9 +71,15 @@ struct fake_binary_tree {
         return const_descending_cursor(*this, 0);
     }
 
+protected:
     ascending_cursor ascending_root()
     {
         return ascending_cursor(*this, 0);
+    }
+
+    const_ascending_cursor ascending_root() const
+    {
+        return const_ascending_cursor(*this, 0);
     }
 
     root_tracking_cursor root_tracking_root()
@@ -73,6 +87,12 @@ struct fake_binary_tree {
         return root_tracking_cursor(*this, 0);
     }
 
+    const_root_tracking_cursor root_tracking_root() const
+    {
+        return const_root_tracking_cursor(*this, 0);
+    }
+
+public:
     descending_cursor insert(descending_cursor c, value_type const& v)
     {
         if (c.m_pos >= m_data.size())
@@ -114,13 +134,61 @@ struct fake_binary_tree {
 };
 
 template <class T>
-bool operator==(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
+struct fake_binary_tree<T, ascending_vertical_traversal_tag>
+: fake_binary_tree<T, descending_vertical_traversal_tag> {
+    typedef typename fake_binary_tree<T>::size_type size_type;
+    typedef typename fake_binary_tree<T>::ascending_cursor cursor;
+    typedef typename fake_binary_tree<T>::const_ascending_cursor const_cursor;
+    
+    fake_binary_tree(size_type s = 0)
+    : fake_binary_tree<T, descending_vertical_traversal_tag>(s) { }
+    
+    fake_binary_tree(fake_binary_tree<T, descending_vertical_traversal_tag> const& f)
+    : fake_binary_tree<T, descending_vertical_traversal_tag>(f) { }
+
+    cursor root()
+    {
+        return fake_binary_tree<T, descending_vertical_traversal_tag>::ascending_root();
+    }
+
+    const_cursor root() const
+    {
+        return fake_binary_tree<T, descending_vertical_traversal_tag>::ascending_root();
+    }
+};
+
+template <class T>
+struct fake_root_tracking_binary_tree
+: fake_binary_tree<T, descending_vertical_traversal_tag> {
+    typedef typename fake_binary_tree<T>::size_type size_type;
+    typedef typename fake_binary_tree<T>::root_tracking_cursor cursor;
+    typedef typename fake_binary_tree<T>::const_root_tracking_cursor const_cursor;
+    
+    fake_root_tracking_binary_tree(size_type s = 0)
+    : fake_binary_tree<T, descending_vertical_traversal_tag>(s) { }
+    
+    fake_root_tracking_binary_tree(fake_binary_tree<T, descending_vertical_traversal_tag> const& f)
+    : fake_binary_tree<T, descending_vertical_traversal_tag>(f) { }
+
+    cursor root()
+    {
+        return fake_binary_tree<T, descending_vertical_traversal_tag>::root_tracking_root();
+    }
+
+    const_cursor root() const
+    {
+        return fake_binary_tree<T, descending_vertical_traversal_tag>::root_tracking_root();
+    }
+};
+
+template <class T, class VT>
+bool operator==(fake_binary_tree<T, VT> const& x, fake_binary_tree<T, VT> const& y)
 {
     return (x.m_data == y.m_data);
 }
 
-template <class T>
-bool operator!=(fake_binary_tree<T> const& x, fake_binary_tree<T> const& y)
+template <class T, class VT>
+bool operator!=(fake_binary_tree<T, VT> const& x, fake_binary_tree<T, VT> const& y)
 {
     return !(x == y);
 }

@@ -24,6 +24,24 @@ using namespace boost_concepts;
 
 //#ifdef BOOST_RECURSIVE_ORDER_ALGORITHMS
 
+template <class Cursor, class Op>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (void)) // return type
+for_each_recursive(preorder, Cursor s, Cursor t2, Op& f)
+{
+    Cursor t = s.end();
+    for (s.to_begin(); s != t; ++s) {
+        f(*s);
+        if (!s.is_leaf() || s == t2)
+            for_each_recursive(preorder(), s, t2, f);
+    }
+    
+    // Multiway cursor
+    if (!s.is_leaf() || s == t2)
+        for_each_recursive(preorder(), s, t2, f);
+}
+
 /**
  * @if maint
  * Helper function for for_each, using a reference parameter in order to
@@ -46,6 +64,27 @@ for_each_recursive(preorder, Cursor s, Op& f)
     // Multiway cursor
     if (!s.is_leaf())
         for_each_recursive(preorder(), s, f);
+}
+
+template <class Cursor, class Op>
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>)),
+    (Op)) // return type
+for_each(preorder, Cursor s, Cursor t2, Op f, descending_vertical_traversal_tag)
+{
+    Cursor t = s.end();
+    --t2; // Bit tweaky.
+    for (s.to_begin(); s != t ; ++s) {
+        f(*s);
+        if (!s.is_leaf() || s == t2)
+            for_each_recursive(preorder(), s, t2, f);
+    }
+    
+    // Multiway cursor
+    if (!s.is_leaf() || s == t2)
+        for_each_recursive(preorder(), s, t2, f);
+    
+    return f;
 }
 
 /**

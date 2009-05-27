@@ -14,7 +14,8 @@
 
 #include <boost/tree/cursor.hpp>
 #include <boost/tree/cursor_adaptor.hpp>
-//#include <boost/tree/inorder_algorithms.hpp>
+
+#include <boost/tree/detail/iterative_algorithms.hpp>
 
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -128,6 +129,21 @@ private:
 };
 
 } // namespace detail
+
+template <class BinaryCursor, class Op>
+Op for_each(preorder, boost::tree::detail::forest_cursor<BinaryCursor> s, boost::tree::detail::forest_cursor<BinaryCursor> t, Op f)
+{
+    return detail::for_each(preorder(), s.base(), t.base(), f
+                          , typename cursor_vertical_traversal<BinaryCursor>::type());
+}
+
+template <class BinaryCursor, class Op>
+Op for_each(postorder, boost::tree::detail::forest_cursor<BinaryCursor> s, boost::tree::detail::forest_cursor<BinaryCursor> t, Op f)
+{
+    return detail::for_each(inorder(), s.base(), t.base(), f
+                          , typename cursor_vertical_traversal<BinaryCursor>::type());
+}
+
 } // namespace tree
 } // namespace boost
 

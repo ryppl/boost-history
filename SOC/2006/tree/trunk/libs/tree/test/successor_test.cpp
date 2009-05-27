@@ -19,15 +19,17 @@ BOOST_FIXTURE_TEST_SUITE(cursor_algorithms_test, fake_binary_tree_fixture<int>)
 
 BOOST_AUTO_TEST_CASE( test_leftmost )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
+    fake_root_tracking_binary_tree<int> frbt1(fbt1);
+    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
     to_leftmost(c);
     BOOST_CHECK(c.is_leaf());
-    BOOST_CHECK(c == fbt1.root_tracking_root().begin().begin().begin());
+    BOOST_CHECK(c == frbt1.root().begin().begin().begin());
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
 {
-    fake_binary_tree<int>::root_tracking_cursor c = fbt1.root_tracking_root();
+    fake_root_tracking_binary_tree<int> frbt1(fbt1);
+    fake_root_tracking_binary_tree<int>::cursor c = frbt1.root();
     to_first(Order(), c);
     // Replace by a fake_to_first function for dependency minimization's sake?
     // preorder: fbt1.root_tracking_root().begin();
@@ -50,7 +52,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_successor, Order, orders )
 
 BOOST_AUTO_TEST_CASE( test_successor_ascending )
 {
-    fake_binary_tree<int>::ascending_cursor c = fbt1.ascending_root();
+    fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag> fabt1(fbt1);
+    fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag>::cursor c = fabt1.root();
     c.to_begin().to_end().to_begin().to_begin();
     BOOST_CHECK_EQUAL(*c, 4);
     boost::tree::successor(ascending(), c);

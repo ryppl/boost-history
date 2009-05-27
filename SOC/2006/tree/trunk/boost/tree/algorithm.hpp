@@ -149,6 +149,27 @@ Op for_each(Order, Cursor s, Op f)
 }
 
 /**
+ * @brief   Apply a function to every element of a subforest, 
+ *          in the order specified by the first parameter.
+ * @param s A cursor.
+ * @param t A cursor.
+ * @param f A unary function object.
+ * @return  @p f
+ *
+ * Applies the function object @p f to each element in the @p subforest
+ * given by the range spanned by the s and t cursor arguments. 
+ * @p f must not modify the order of the sequence.
+ * If @p f has a return value it is ignored.
+ */
+//template <class Order, class Cursor, class Op>
+//Op for_each(Order, Cursor s, Cursor t, Op f)
+//{
+//    return detail::for_each(Order(), s, t, f
+//                          , typename cursor_vertical_traversal<Cursor>::type());
+//}
+//
+
+/**
  * @brief       Performs an operation on a subtree, by traversing it  
  *              in the order specified by the first parameter.
  * @param s     An input cursor.

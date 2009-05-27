@@ -72,6 +72,47 @@ successor(preorder, Cursor& c)
 }
 
 /**
+ * @brief    Preorder successor
+ * @param c    Cursor to be set to its preorder successor
+ */
+template <typename Cursor>
+inline
+BOOST_CONCEPT_REQUIRES(
+    ((DescendingCursor<Cursor>))
+    ((RootTrackingCursor<Cursor>)),
+    (void)) // return type
+successor(preorder, Cursor& c, Cursor& r)
+{
+    // If we have a left child, go there.
+    if (!c.is_leaf()) {
+        c.to_begin();
+        return;
+    }
+    
+    // No left child. So if we have a right child, go there.
+    if (!(++c).is_leaf()) {
+        c.to_begin();
+        return;
+    }
+    
+    // (Here's where we'd need to check if this is the end().)
+    
+    // No children at all.
+    // As we've already visited all the ancestors, we'll move upwards until
+    // we find an ancestor that has a right child.
+    while (!c.is_root()) { // Doesn't work with subtrees!    
+        c.to_parent();
+        if (!c.is_root() && !index(c)) {
+            if (!(++c).is_leaf()) {
+                c.to_begin();
+                return;
+            }
+        }
+    }
+    return;
+}
+
+/**
  * @brief    Preorder predecessor
  * @param c    Cursor to be set to its preorder predecessor
  */

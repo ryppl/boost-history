@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_descending, Order, orders )
     typename container_type::const_iterator cie = order_index.end();
     mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
 
-    boost::tree::copy(Order(), fbt1.descending_root(), mc);
+    boost::tree::copy(Order(), fbt1.root(), mc);
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_ascending, Order, orders )
@@ -46,8 +46,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( test_copy_ascending, Order, orders )
     typename container_type::const_iterator ci = order_index.begin();
     typename container_type::const_iterator cie = order_index.end();
     mock_binary_cursor< typename container_type::const_iterator > mc(ci, cie);
-    
-    boost::tree::copy(Order(), fbt1.ascending_root(), mc);
+
+    fake_binary_tree<int, boost::tree::ascending_vertical_traversal_tag> fabt1(fbt1);
+    boost::tree::copy(Order(), fabt1.root(), mc);
 }
 
 BOOST_AUTO_TEST_SUITE_END()
