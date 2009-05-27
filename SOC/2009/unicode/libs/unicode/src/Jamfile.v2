@@ -9,6 +9,7 @@
 project
     : requirements 
       <include>../../..
+      <include>$(BOOST_ROOT)
     ;
 
 lib boost-unicode : src.cpp ;

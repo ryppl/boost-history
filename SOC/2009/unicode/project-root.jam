@@ -6,5 +6,8 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #==============================================================================
 
+import os ;
+constant BOOST_ROOT : [ os.environ BOOST_ROOT ] ;
+
 build-project libs/unicode/doc ;
 build-project libs/unicode/example ;
