@@ -40,7 +40,7 @@ namespace cgi {
     * with the same data `foo=bar`.
     */
     template<typename MapT>
-    bool has_key(MapT& data, common::name const& name)
+    bool has_key(MapT& data, typename MapT::key_type const& name)
     {
         if (!data.empty())
             for(typename MapT::const_iterator iter = data.begin(), end = data.end();

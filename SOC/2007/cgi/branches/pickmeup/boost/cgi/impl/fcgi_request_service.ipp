@@ -31,6 +31,12 @@ namespace cgi {
 
    namespace detail {
      
+     /// Helper class to asynchronously load a request.
+     /**
+      * This is just a function object that can be posted to another
+      * thread to do the actual work of loading. It's operator()() does
+      * the work.
+      */
      template<typename T, typename Handler>
      struct async_load_helper
      {
@@ -264,63 +270,6 @@ namespace cgi {
       //#     error "Not implemented"
       // **FIXME** should use form_parser, when it's ready.
       // Only works with url-encoded forms (ie. not with multipart forms)
-    /*
-      std::string name;
-      std::string str;
-
-      char ch;
-      char ch1;
-      while( impl.client_.bytes_left_ )
-      {
-        ch = getchar();
-        --impl.client_.bytes_left_;
-
-        switch(ch)
-        {
-        case '%': // unencode a hex character sequence
-          if (impl.client_.bytes_left_ >= 2)
-          {
-            ch = getchar();
-            ch1 = getchar();
-            if (std::isxdigit(ch) && std::isxdigit(ch1))
-            {
-              str.append(1, detail::hex_to_char(ch, ch1));
-            }
-            else // we don't have a hex sequence
-            {
-              str.append(1, '%').append(1, ch).append(1, ch1);
-            }
-            impl.client_.bytes_left_ -= 2;
-          }
-          else // There aren't enough characters to make a hex sequence
-          {
-            str.append(1, '%');
-            --impl.client_.bytes_left_;
-          }
-          break;
-        case '+':
-            str.append(1, ' ');
-            break;
-        case ' ': // skip spaces
-            break;
-        case '=': // the name is complete, now get the corresponding value
-            name.swap(str);
-            break;
-        case '&': // we now have the name/value pair, so save it
-            // **FIXME** have to have .c_str() ?
-            ::cgi::common::post_vars(impl.vars_)[name.c_str()] = str;
-            str.clear();
-            name.clear();
-           break;
-        default:
-            str.append(1, ch);
-        }
-      }
-      // save the last param (it won't have a trailing &)
-      if( !name.empty() )
-          // **FIXME** have to have .c_str() ?
-          ::cgi::common::post_vars(impl.vars_)[name.c_str()] = str;
-    */
 
       impl.fp_.reset
       (

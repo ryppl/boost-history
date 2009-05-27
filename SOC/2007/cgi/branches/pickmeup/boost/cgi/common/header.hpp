@@ -72,8 +72,13 @@ namespace cgi {
 
 
    //{ Some shortcuts, to cut down on typing errors.
-   template<typename CharT, typename StringT> basic_header<CharT>
-     content_type(StringT const& str)
+   template<
+      typename CharT
+    , typename Traits
+    , typename Alloc
+    >
+   basic_header<CharT>
+     content_type(std::basic_string<CharT,Traits,Alloc> const& str)
    {
      return basic_header<CharT>("Content-type", str);
    }
@@ -92,6 +97,13 @@ namespace cgi {
 
    template<typename CharT, typename T> basic_header<CharT>
      content_length(const T& t)
+   {
+     return basic_header<CharT>("Content-length",
+              boost::lexical_cast<std::basic_string<CharT> >(t));
+   }
+
+   template<typename CharT> basic_header<CharT>
+     content_length(const CharT * t)
    {
      return basic_header<CharT>("Content-length",
               boost::lexical_cast<std::basic_string<CharT> >(t));

@@ -63,6 +63,9 @@ namespace cgi {
     : public boost::mpl::if_<
                  is_async<typename RequestService::protocol_type>
                , basic_io_object<RequestService>
+                 // A basic_sync_io_object is a little more lightweight
+                 // than a basic_io_object. It can't handle asynchonous
+                 // operations as a consequence.
                , detail::basic_sync_io_object<RequestService>
                >::type
   {
@@ -127,7 +130,7 @@ namespace cgi {
     {
       set_protocol_service(s);
       const parse_options opts = parse_post_now ? parse_post : parse_env;
-      if(load_now) load(opts, ec);//this->service.load(this->implementation, false, ec);
+      if (load_now) load(opts, ec);//this->service.load(this->implementation, false, ec);
     }
 
     /// Make a new mutiplexed request from an existing connection.
@@ -347,8 +350,12 @@ namespace cgi {
     string_type& auth_type()
     { return env_("AUTH_TYPE"); }
 
-    string_type& content_length()
-    { return env_("CONTENT_LENGTH"); }
+    /// Get the content length as a long.
+    long content_length()
+    { return boost::lexical_cast<long>(env_("CONTENT_LENGTH")); }
+
+    //string_type& content_length()
+    //{ return env_("CONTENT_LENGTH"); }
 
     string_type& content_type()
     { return env_("CONTENT_TYPE"); }
@@ -377,11 +384,26 @@ namespace cgi {
     string_type& remote_user()
     { return env_("REMOTE_USER"); }
 
+    string_type& method()
+    { return env_("REQUEST_METHOD"); }
+
     string_type& request_method()
     { return env_("REQUEST_METHOD"); }
 
+    string_type& url()
+    { return env_("REQUEST_URL"); }
+
+    string_type& request_url()
+    { return env_("REQUEST_URL"); }
+
     string_type& script_name()
     { return env_("SCRIPT_NAME"); }
+
+    string_type& script_url()
+    { return env_("SCRIPT_URL"); }
+
+    string_type& script_uri()
+    { return env_("SCRIPT_URI"); }
 
     string_type& server_name()
     { return env_("SERVER_NAME"); }

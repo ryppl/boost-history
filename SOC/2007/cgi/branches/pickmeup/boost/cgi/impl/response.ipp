@@ -300,6 +300,14 @@ namespace cgi {
     return rdbuf()->size();
   }
 
+  template<typename T> BOOST_CGI_INLINE  
+  typename basic_response<T>::string_type
+    basic_response<T>::str() const
+  {
+    return string_type(boost::asio::buffer_cast<const char_type *>(buffer_->data()));
+  }
+
+
   /// Add a header after appending the CRLF sequence.
   template<typename T> BOOST_CGI_INLINE
   basic_response<T>&
@@ -407,7 +415,7 @@ namespace cgi {
   /// Generic ostream template
   template<typename T, typename U> BOOST_CGI_INLINE
   cgi::common::basic_response<T>&
-    operator<< (cgi::common::basic_response<T>& resp, const U& u)
+    operator<< (cgi::common::basic_response<T>& resp, U const& u)
   {
     resp.ostream()<< u;
     return resp;
@@ -428,10 +436,10 @@ namespace cgi {
    * effects; for instance, it won't write any data to the client.
    * ]
    */
-  template<typename T> BOOST_CGI_INLINE
-  cgi::common::basic_response<T>&
-    operator<< (cgi::common::basic_response<T>& resp
-               , cgi::common::basic_header<T> const& hdr)
+  template<typename CharT> BOOST_CGI_INLINE
+  cgi::common::basic_response<CharT>&
+    operator<< (cgi::common::basic_response<CharT>& resp
+               , cgi::common::basic_header<CharT> const& hdr)
   {
     if (hdr.content.empty()) {
       resp.end_headers();

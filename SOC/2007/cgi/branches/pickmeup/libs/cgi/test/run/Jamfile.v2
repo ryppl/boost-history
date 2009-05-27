@@ -5,10 +5,10 @@ import testing ;
 
 project boost/cgi/tests/run
   : requirements
-    <library>/boost/test//boost_unit_test_framework/
-    <library>/boost/system/
-    <library>/boost/thread/
-    <library>/boost/regex/
+    #<library>/boost/test//boost_unit_test_framework/
+    #<library>/boost/system/
+    #<library>/boost/thread/
+    #<library>/boost/regex/
   ;
 
 #local rule run-test( name )
@@ -29,6 +29,7 @@ test-suite run_test_suite
     [ run name_test.cpp ]
     [ run map_test.cpp ]
     [ run parse_options.cpp ]
+    #[ run has_key.cpp ]
   ;
 
 test-suite wget_test

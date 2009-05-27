@@ -33,6 +33,7 @@ namespace cgi {
   class basic_response
   {
   public:
+    typedef basic_response<T>              self_type;
     typedef T                              char_type;
     typedef typename std::basic_string<T>  string_type;
     typedef typename std::basic_ostream<T> ostream_type;
@@ -136,6 +137,13 @@ namespace cgi {
     /// Add a header after appending the CRLF sequence.
     basic_response<char_type>&
       set_header(const string_type& value);
+      
+    /// Get the contents of the response as a string.
+    /**
+     * This copies the contents of the response into a string.
+     * Headers aren't included in the dump.
+     */
+    string_type str() const;
 
     /// Format and add a header given name and value, appending CRLF.
     basic_response<char_type>&
@@ -157,6 +165,29 @@ namespace cgi {
 
     /// Get the headers
     std::vector<string_type>& headers();
+    
+    //friend std::basic_ostream<char_type>& operator<<(std::basic_ostream<char_type>&, self_type& resp);
+    /*
+    friend self_type& operator<<(self_type& self, basic_cookie<char_type> const&);
+    friend self_type& operator<<(self_type& self, basic_header<char_type> const&);
+    friend self_type& operator<<(self_type& self, basic_response<char_type> const&);
+    friend self_type& operator<<(self_type& self, http::status_code);
+    */
+    
+    /*
+    template<typename T>
+    std::basic_ostream<string_type>& operator<<(T& t)
+    {
+      ostream_<< t;
+      return ostream_;
+    }
+    
+    template<typename T>
+    self_type& operator<<(const T& t) {
+      ostream_<< t;
+      return *this;
+    }
+    */
 
   protected:
     // Vector of all the headers, each followed by a CRLF
@@ -182,13 +213,30 @@ namespace cgi {
    typedef basic_response<char>    response;
    typedef basic_response<wchar_t> wresponse; // **FIXME** (untested)
 
+  /*
+  std::basic_ostream<char_type>& operator<<(std::basic_ostream<char_type>&, self_type& resp)
+  {
+    os<< "**response**";  
+    return os;
+  }
+  
+  template<typename CharT>
+  basic_response<CharT>&
+    basic_response<CharT>::operator<< (ostream_type& (*func)(ostream_type&))
+  {  
+    ostream_<< func; return *this;
+  }
+  */
+
  } // namespace common
 } // namespace cgi
+
+
 
   /// Generic ostream template
   template<typename CharT, typename T>
   cgi::common::basic_response<CharT>&
-    operator<< (cgi::common::basic_response<CharT>& resp, const T& t);
+    operator<< (cgi::common::basic_response<CharT>& resp, T const& t);
 
   template<typename CharT>
   cgi::common::basic_response<CharT>&
@@ -206,10 +254,11 @@ namespace cgi {
    * http://tinyurl.com/33znkj), but this is outside the scope of this
    * library.
    */
-  template<typename charT, typename T>
+  template<typename charT>
   cgi::common::basic_response<charT>&
     operator<< (cgi::common::basic_response<charT>&
-               , cgi::common::basic_cookie<T>&);
+               , cgi::common::basic_cookie<charT>);
+               
 /*
   template<typename charT, typename T>
   cgi::common::basic_response<charT>&
@@ -225,11 +274,20 @@ namespace cgi {
   cgi::common::basic_response<charT>&
     operator<< (cgi::common::basic_response<charT>&
                , cgi::common::basic_response<charT>&);
+/*        
+inline std::ostream& operator<<(
+std::ios& (*func)(std::ios&)
+){return std::cout << func;};
+inline std::ostream& operator<<(
+std::ios_base& (*func)(std::ios_base&)
+){return std::cout << func;};
+};
+*/ 
 
 #include "boost/cgi/detail/pop_options.hpp"
 
-//#if !defined(BOOST_CGI_BUILD_LIB)
+#if !defined(BOOST_CGI_BUILD_LIB)
 #  include "boost/cgi/impl/response.ipp"
-//#endif
+#endif
 
 #endif // CGI_RESPONSE_HPP_INCLUDED__

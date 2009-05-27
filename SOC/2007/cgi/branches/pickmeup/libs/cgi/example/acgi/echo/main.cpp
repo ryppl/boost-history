@@ -94,11 +94,27 @@ int main()
     try {
 
       boost::system::error_code ec;
-      req.load(parse_all, ec); // parse everything.
+      
+      // This spits out a form with a file upload facility (these aren't
+      // stored, just parsed. Before parsing the POST'd form data, first
+      // check that the content-length isn't too long.
+      req.load(parse_env);
+      
+      response resp;
+
+      if (req.content_length() > 1000L)
+      {
+        resp<< "You're only allowed to upload 1k of data";
+        // Exit the application here.
+        return_(resp, req, 0);
+      }
+      
+      // If execution reaches here we can parse all other
+      // request data (cookies, get, post).
+      req.load(parse_all, ec);
 
       if (ec)
       {
-        response resp;
         resp<< content_type("text/html")
             << "Error " << ec.value() << ": " << ec.message() << "<p />"
                "--Original message follows--"
@@ -118,7 +134,7 @@ int main()
              "<body>"
                "Request ID = " << req.id() << "<br />"
                "Process ID = " << process_id() << "<br />"
-               "<form method=POST enctype='multipart/form-data'>"
+               "<form method=POST enctype='application/x-www-form-urlencoded'>"
                  "<input type=text name=name value='"
           <<         (has_key(req[post],"name") ? req[post]["name"] : "")
           <<      "' />"

@@ -16,6 +16,7 @@ namespace cgi {
      { null
      , unloaded
      , activated
+     , accepted = activated
      , loaded
      , ok = loaded
      , aborted

@@ -56,6 +56,8 @@ namespace cgi {
 // guaranteed by the CGI spec to be kept, but you might want to use them.
 // You just have to define `BOOST_CGI_KEEP_EMPTY_VARS` (**FIXME** currently
 // on by default).
+// Note that you'll want to check that your server keeps empty query string 
+// parameters.
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
          if (name.empty())
            destination.insert(std::make_pair(common::name(current_token.c_str()), ""));

@@ -1,4 +1,4 @@
- //           -- detail/save_environment.hpp --
+//           -- detail/save_environment.hpp --
 //
 //           Copyright (c) Darren Garvey 2007.
 // Distributed under the Boost Software License, Version 1.0.
@@ -36,8 +36,9 @@ namespace cgi {
 	* macro: BOOST_CGI_KEEP_EMPTY_VARS
     */
    template<typename MapT>
-   void save_environment(MapT& env_map, char** env = 
-#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1500))
+   void save_environment(MapT& env_map, char** env =
+    // Windows calls the environment environ_
+#if BOOST_WINDOWS
 	_environ
 #else
 	 environ

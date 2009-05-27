@@ -38,6 +38,7 @@ namespace cgi {
   template<typename CharT>
   struct basic_cookie
   {
+    typedef basic_cookie<CharT>               self_type;
     typedef CharT                             char_type;
     typedef typename std::basic_string<CharT> string_type;
 
@@ -135,6 +136,8 @@ namespace cgi {
       if ( http_only      ) str += "; HttpOnly";
       return str;
     }
+    
+    //friend std::ostream& operator<<(std::ostream& os, self_type const& ck);
   };
 
  } // namespace common

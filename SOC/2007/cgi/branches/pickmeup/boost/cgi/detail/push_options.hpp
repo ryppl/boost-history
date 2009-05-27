@@ -26,6 +26,12 @@
 #  endif
 #endif
 
+#ifdef BOOST_CGI_EXPORTS
+#   define BOOST_CGI_API __declspec(dllexport)
+#else
+#   define BOOST_CGI_API __declspec(dllimport)
+#endif // BOOST_CGI_EXPORTS
+
 /// Keep empty query string variables.
 /** Empty query string parameters (eg.
  *   `empty` in /path/to/script?empty&foo=bar)

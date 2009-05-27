@@ -104,7 +104,7 @@ namespace cgi {
      */
     bool is_open(implementation_type& impl)
     {
-      return impl.status() >= common::aborted;
+      return impl.status() >= common::accepted && impl.status() <= common::aborted;
     }
 
     /// Return the connection associated with the request
