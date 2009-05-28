@@ -13,19 +13,18 @@
 #include <boost/numeric_adaptor/numeric_adaptor.hpp>
 #include <boost/numeric_adaptor/ieee_policy.hpp>
 
-#if ! defined(_MSC_VER)
+#if defined(HAVE_GMP)
 #  include <boost/numeric_adaptor/gmp_policy.hpp>
+#endif
+
+#if defined(HAVE_CLN)
 #  include <boost/numeric_adaptor/cln_policy.hpp>
 #endif
 
-template <typename T, typename N>
-inline T get(N const& bn)
-{
-    return bn.template get<T>();
-}
+
 
 template <typename T, typename Num>
-void sample1(const std::string& header, T const& t_a, T const& t_b, T const& t_c)
+void sample1(std::string const& header, T const& t_a, T const& t_b, T const& t_c)
 {
     std::cout << std::endl << "---" << header << std::endl;
     Num a = t_a;
@@ -33,28 +32,28 @@ void sample1(const std::string& header, T const& t_a, T const& t_b, T const& t_c
     Num a_plus_b = a + b;
 
     //T t3 = a_plus_b; // does NOT compile for strings
-    std::cout << "a + b:     " << a_plus_b.template get<T>() << std::endl;
+    std::cout << "a + b:     " << T(a_plus_b) << std::endl;
 
     Num c = t_c;
     Num par = (a + b) * c;
-    std::cout << "(a + b) c: " << par.template get<T>() << std::endl;
+    std::cout << "(a + b) c: " << T(par) << std::endl;
     par = a + b * c;
-    std::cout << "a + bc:    " << par.template get<T>() << std::endl;
+    std::cout << "a + bc:    " << T(par) << std::endl;
 
     Num sqrt_a_plus_b = Num::sqrt(a_plus_b);
-    std::cout << "sqrt(a+b): " << sqrt_a_plus_b.template get<T>() << std::endl;
+    std::cout << "sqrt(a+b): " << T(sqrt_a_plus_b) << std::endl;
 
     // Calc the hypot function
     Num hypot_b_c = Num::hypot(b, c);
-    std::cout << "hypot:     " << hypot_b_c.template get<T>() << std::endl;
-    std::cout << "hypot2:    " << get<T>(Num::sqrt(b * b + c * c)) << std::endl;
+    std::cout << "hypot:     " << T(hypot_b_c) << std::endl;
+    std::cout << "hypot2:    " << T(Num::sqrt(b * b + c * c)) << std::endl;
 }
 
 
 
 
 template <typename T, typename Num>
-void sample2(const std::string& header, T const& c1, T const& c2, T const& c4)
+void sample2(
 {
     std::cout << std::endl << "---" << header << std::endl;
 
@@ -94,7 +93,7 @@ void sample2(const std::string& header, T const& c1, T const& c2, T const& c4)
 void long_double_issue()
 {
     long double ld = 2.0000000002;
-    std::cout << "Strange: " << sizeof(long double) << " " << ld << std::endl;
+    std::cout << "Strange: " << sizeof(long double) << " " << double(ld) << std::endl;
     double d = 2.0000000002;
     std::cout << "OK: " << sizeof(double) << " " << d << std::endl;
 }
@@ -102,6 +101,9 @@ void long_double_issue()
 
 int main()
 {
+
+    using namespace boost::numeric_adaptor;
+
     mpf_set_default_prec(128);
     std::cout << std::setprecision(18);
 
