@@ -10,22 +10,26 @@
 #include <boost/test/included/test_exec_monitor.hpp>
 #include <boost/numeric_adaptor/numeric_adaptor.hpp>
 #include <boost/numeric_adaptor/ieee_policy.hpp>
-#ifndef NO_CLN
-#include <boost/numeric_adaptor/cln_policy.hpp>
+
+#if defined(HAVE_GMP)
+#  include <boost/numeric_adaptor/gmp_policy.hpp>
 #endif
-#include <boost/numeric_adaptor/gmp_policy.hpp>
+
+#if defined(HAVE_CLN)
+#  include <boost/numeric_adaptor/cln_policy.hpp>
+#endif
 
 
 template <typename Policy>
 void test_all()
 {
-    typedef numeric_adaptor::numeric_adaptor<Policy> num;
+    typedef boost::numeric_adaptor::numeric_adaptor<Policy> num;
 
     num n = 1234.5;
     BOOST_CHECK_EQUAL(int(n), 1234);
     BOOST_CHECK_EQUAL(float(n), 1234.5);
     BOOST_CHECK_EQUAL(double(n), 1234.5);
-    BOOST_CHECK_EQUAL(n.template get<std::string>(), "1234.5");
+    BOOST_CHECK_EQUAL(std::string(n), "1234.5");
 
     num n2 = "1234.5";
     BOOST_CHECK_EQUAL(double(n2), 1234.5);
@@ -36,7 +40,15 @@ void test_all()
 
 int test_main(int, char*[])
 {
-    test_all<numeric_adaptor::ieee_policy<double> >();
+    using namespace boost::numeric_adaptor;
+    test_all<ieee_policy<double> >();
+#if defined(HAVE_GMP)
+    test_all<gmp_policy>();
+#endif
+
+#if defined(HAVE_CLN)
+    test_all<cln_policy>();
+#endif
 
     return 0;
 };
