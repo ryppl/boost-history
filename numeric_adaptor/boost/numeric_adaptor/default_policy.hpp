@@ -7,13 +7,14 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_DEFAULT_POLICY_HPP_
-#define NUMERIC_ADAPTOR_DEFAULT_POLICY_HPP_
+#ifndef NUMERIC_ADAPTOR_DEFAULT_POLICY_HPP
+#define NUMERIC_ADAPTOR_DEFAULT_POLICY_HPP
 
 #include <sstream>
+#include <iomanip>
 
 
-namespace numeric_adaptor {
+namespace boost { namespace numeric_adaptor {
 
 
 template <typename T>
@@ -44,13 +45,13 @@ struct default_policy
     static inline std::string as_string(T const& a)
     {
         std::ostringstream out;
-        out << a;
+        out << std::setprecision(20) << a;
         return out.str();
     }
 };
 
 
-} //  namespace numeric_adaptor
+}} //  namespace boost::numeric_adaptor
 
 
 #endif

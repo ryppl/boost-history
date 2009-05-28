@@ -7,43 +7,23 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP_
-#define NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP_
+#ifndef NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP
+#define NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP
 
 
 #include <boost/static_assert.hpp>
 
+#include <string>
 
-namespace numeric_adaptor {
+namespace boost { namespace numeric_adaptor {
 
 
-template <typename Policy, typename ToType, bool IsCasted>
-struct caster
+template <typename Base, typename T>
+struct enable_cast
 {
-    static inline ToType cast(typename Policy::type const& value)
+    inline operator T()
     {
-        return Policy::template big_numeric_cast<ToType>(value);
-    }
-};
-
-// specialization for strings: casting is not possible, getting is OK
-template <typename Policy>
-struct caster<Policy, std::string, true>
-{
-    struct CAST_TO_STRING_IS_NOT_POSSIBLE {};
-
-    // PROHIBITED!
-    static inline CAST_TO_STRING_IS_NOT_POSSIBLE cast(typename Policy::type const& )
-    {
-    }
-};
-
-template <typename Policy>
-struct caster<Policy, std::string, false>
-{
-    static inline std::string cast(typename Policy::type const& value)
-    {
-        return Policy::as_string(value);
+        return static_cast<Base*>(this)->template big_numeric_cast<T>();
     }
 };
 
@@ -51,7 +31,14 @@ struct caster<Policy, std::string, false>
 
 
 template <typename Policy>
-struct numeric_adaptor
+struct numeric_adaptor :
+    enable_cast<numeric_adaptor<Policy>, char>,
+    enable_cast<numeric_adaptor<Policy>, int>,
+    enable_cast<numeric_adaptor<Policy>, short int>,
+    enable_cast<numeric_adaptor<Policy>, long int>,
+    enable_cast<numeric_adaptor<Policy>, float>,
+    enable_cast<numeric_adaptor<Policy>, double>,
+    enable_cast<numeric_adaptor<Policy>, long double>
 {
     inline numeric_adaptor()
     {
@@ -107,18 +94,16 @@ struct numeric_adaptor
         return *this;
     }
 
-    // Cast to normal IEEE type but NOT to std::string because of compilation problems
-    template <typename ToType>
-    inline operator ToType() const
+    template <class ToType>
+    inline ToType big_numeric_cast()
     {
-        return caster<Policy, ToType, true>::cast(value);
+        return Policy::template big_numeric_cast<ToType>(this->value);
     }
 
     // tuple/fusion/variant-like get template function
-    template <typename ToType>
-    inline ToType get() const
+    inline operator std::string()
     {
-        return caster<Policy, ToType, false>::cast(value);
+        return Policy::as_string(this->value);
     }
 
 
@@ -252,7 +237,7 @@ private :
 };
 
 
-} // namespace numeric_adaptor
+}} // namespace boost::numeric_adaptor
 
 
 #endif

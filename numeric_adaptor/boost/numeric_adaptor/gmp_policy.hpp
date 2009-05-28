@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_GMP_POLICY_HPP_
-#define NUMERIC_ADAPTOR_GMP_POLICY_HPP_
+#ifndef NUMERIC_ADAPTOR_GMP_POLICY_HPP
+#define NUMERIC_ADAPTOR_GMP_POLICY_HPP
 
 
 #include <string>
@@ -17,7 +17,7 @@
 #include <gmp.h>
 
 
-namespace numeric_adaptor {
+namespace boost { namespace numeric_adaptor {
 
 
 struct gmp_policy
@@ -145,7 +145,7 @@ struct gmp_policy
 };
 
 
-} // namespace numeric_adaptor
+}} // namespace boost::numeric_adaptor
 
 
 #endif

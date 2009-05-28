@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_CLN_POLICY_HPP_
-#define NUMERIC_ADAPTOR_CLN_POLICY_HPP_
+#ifndef NUMERIC_ADAPTOR_CLN_POLICY_HPP
+#define NUMERIC_ADAPTOR_CLN_POLICY_HPP
 
 #include <string>
 
@@ -18,7 +18,7 @@
 #include <cln/float.h>
 
 
-namespace numeric_adaptor {
+namespace boost { namespace numeric_adaptor {
 
 
 /*
@@ -32,19 +32,21 @@ struct cln_policy : public default_policy<cln::cl_F>
 {
     typedef cln::cl_F type;
 
-    template <typename OtherType>
-    static inline void set(type& value, OtherType const& v)
+    template <typename FromType>
+    static inline void set(type& value, FromType const& v)
     {
         // Conversions from the C built-in type `double' are provided for the
         // classes cl_DF, cl_F, cl_R, cl_N and cl_number
-
         value = cln::cl_float(v, cln::float_format(256));
     }
 
     static inline void set(type& value, std::string const& v)
     {
-        // CLN documentation 4.1.3:
-        value = v.c_str();
+        // CLN documentation 4.1.3 + 5.1 ("A precision specifier of the form prec may be appended")
+        std::string copy(v);
+        copy += "_256";
+        value = copy.c_str();
+        //value = cln::cl_float(atof(v.c_str()), cln::float_format(256));
     }
 
     static inline void abs(type& r, type const& a)
@@ -74,8 +76,8 @@ struct cln_policy : public default_policy<cln::cl_F>
     }
 
 
-    template <typename OtherType>
-    static inline OtherType big_numeric_cast(type const& b)
+    template <typename ToType>
+    static inline ToType big_numeric_cast(type const& b)
     {
         /*
             Conversions from the classes cl_I, cl_RA, cl_SF, cl_FF,
@@ -91,13 +93,13 @@ struct cln_policy : public default_policy<cln::cl_F>
             0 is returned. If abs(x) is too large (overflow),
             an IEEE infinity is returned.
         */
-        return OtherType(double_approx(b));
+        return ToType(double_approx(b));
     }
 
 };
 
 
-} // namespace numeric_adaptor
+}} // namespace boost::numeric_adaptor
 
 
 #endif

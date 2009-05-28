@@ -7,8 +7,8 @@
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_IEEE_POLICY_HPP_
-#define NUMERIC_ADAPTOR_IEEE_POLICY_HPP_
+#ifndef NUMERIC_ADAPTOR_IEEE_POLICY_HPP
+#define NUMERIC_ADAPTOR_IEEE_POLICY_HPP
 
 
 #include <cmath>
@@ -23,7 +23,7 @@
 #include <boost/math/special_functions/hypot.hpp>
 
 
-namespace numeric_adaptor {
+namespace boost { namespace numeric_adaptor {
 
 
 template <typename T>
@@ -55,7 +55,7 @@ struct ieee_policy : public default_policy<T>
 };
 
 
-} // namespace numeric_adaptor
+}} // namespace boost::numeric_adaptor
 
 
 #endif
