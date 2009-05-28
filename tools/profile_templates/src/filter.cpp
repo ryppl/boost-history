@@ -1,6 +1,6 @@
 // filter.cpp
 //
-// Copyright (c) 2008
+// Copyright (c) 2008-2009
 // Steven Watanabe
 // 
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -36,13 +36,14 @@ void copy_flat_only() {
                 }
                 ++counter;
 #ifdef _MSC_VER
-                int instantiations = counter / 2;
-#else
-                int instantiations = counter;
-#endif
-                if(instantiations % 100 == 0) {
-                    std::fprintf(stderr, "On Instantiation %d\n", instantiations);
+                if(counter % 400 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", counter/4);
                 }
+#else
+                if(counter % 200 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", counter/2);
+                }
+#endif
             }
             buffer.clear();
             matched = false;
@@ -59,7 +60,7 @@ void copy_flat_only() {
 }
 
 void copy_call_graph() {
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && 0
     std::string buffer;
     int ch;
     int pos = 0;
@@ -72,8 +73,8 @@ void copy_call_graph() {
                 for(std::size_t i = 0; i < buffer.size(); ++i) {
                     std::putchar(buffer[i]);
                 }
-                if(++counter % 100 == 0) {
-                    std::fprintf(stderr, "On Instantiation %d\n", counter);
+                if(++counter % 200 == 0) {
+                    std::fprintf(stderr, "On Instantiation %d\n", counter/2);
                 }
                 buffer.clear();
                 matched = false;
@@ -123,7 +124,7 @@ void copy_call_graph() {
             pos = 0;
         }
     }
-#elif defined(__GNUC__)
+#elif defined(__GNUC__) || 1
     // trying to figure out what we should copy is too hard.
     int ch;
     while((ch = std::getchar()) != EOF) {

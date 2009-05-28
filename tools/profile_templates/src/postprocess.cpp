@@ -1,6 +1,6 @@
 // postprocess.cpp
 //
-// Copyright (c) 2008
+// Copyright (c) 2008-2009
 // Steven Watanabe
 // 
 // Distributed under the Boost Software License, Version 1.0. (See
@@ -10,6 +10,7 @@
 #include <boost/regex.hpp>
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
+#include <boost/numeric/conversion/cast.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -23,7 +24,10 @@
 
 #ifdef _MSC_VER
 
-boost::regex warning_message("(.*) : warning C4150: deletion of pointer to incomplete type 'template_profiler::incomplete'; no destructor called");
+#pragma warning(disable:4512)
+
+boost::regex enter_message("(.*) : warning C4150: deletion of pointer to incomplete type 'template_profiler::incomplete_enter'; no destructor called");
+boost::regex exit_message("(.*) : warning C4150: deletion of pointer to incomplete type 'template_profiler::incomplete_exit'; no destructor called");
 boost::regex call_graph_line("        (.*)\\((\\d+)\\) : see reference to .*");
 boost::regex split_file_and_line("(.*)\\((\\d+)\\)");
 
@@ -31,13 +35,15 @@ boost::regex split_file_and_line("(.*)\\((\\d+)\\)");
 
 #if (__GNUC__ < 4) || (__GNUC_MINOR__ < 3)
 
-boost::regex warning_message("(.*): warning: division by zero in .template_profiler::value / 0.");
+boost::regex enter_message("(.*): warning: division by zero in .template_profiler::enter_value / 0.");
+boost::regex exit_message("(.*): warning: division by zero in .template_profiler::exit_value / 0.");
 boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
 boost::regex split_file_and_line("(.*):(\\d+)");
 
 #else
 
-boost::regex warning_message("(.*): warning: .int template_profiler::f\\(int\\).*");
+boost::regex enter_message("(.*): warning: .int template_profiler::enter\\(int\\).*");
+boost::regex exit_message("(.*): warning: .int template_profiler::exit\\(int\\).*");
 boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
 boost::regex split_file_and_line("(.*):(\\d+)");
 
@@ -94,6 +100,62 @@ std::ostream& operator<<(std::ostream& os, const print_line_id& arg) {
     return(os);
 }
 
+class instantiation_state {
+public:
+    instantiation_state(std::map<const line_id*, node_info>& g) : graph(g) {}
+    void finish_instantiation() {
+        std::cerr << "finish_instantiation, state.size(): " << state.size() << std::endl;
+        if(state.empty() || !state.back()) {
+            std::cerr << "attempt to finish unstarted instantiation: " << state.size() << std::endl;
+            std::exit(1);
+        }
+        state.pop_back();
+        pending_children.pop_back();
+    }
+    void add_instantiation(const line_id* new_line, std::size_t backtrace_size) {
+        if(backtrace_size == 0) {
+            std::cerr << "non-template" << std::endl;
+            // top level non-template
+            backtrace_size = state.size() + 1;
+        } else {
+            ++backtrace_size;
+        }
+        std::cerr << "backtrace size: " << backtrace_size << ", state.size(): " << state.size() << std::endl;
+        if(backtrace_size < state.size()) {
+            std::cerr << "Instantiation not exited." << std::endl;
+            std::exit(1);
+        }
+        ++graph[new_line].count;
+        std::cerr << "Adding lines" << std::endl;
+        BOOST_FOREACH(const line_id* line, state) {
+            if(line) {
+                add_child(line, new_line);
+            }
+        }
+        state.resize(backtrace_size);
+        pending_children.resize(backtrace_size);
+        state.back() = new_line;
+        BOOST_FOREACH(const line_id* child, pending_children.back()) {
+            add_child(new_line, child);
+        }
+        BOOST_FOREACH(std::vector<const line_id*>& v, pending_children) {
+            v.push_back(new_line);
+        }
+    }
+private:
+    void add_child(const line_id* parent, const line_id* child) {
+        std::cerr << "parent: " << parent << ", child: " << child << std::endl;
+        if(parent != child) {
+            ++graph[parent].children[child];
+            ++graph[child].parents[child];
+            ++graph[parent].total_with_children;
+        }
+    }
+    std::vector<const line_id*> state;
+    std::vector<std::vector<const line_id*> > pending_children;
+    std::map<const line_id*, node_info>& graph;
+};
+
 int main(int argc, char** argv) {
     const char* input_file_name = 0;
     bool use_call_graph = false;
@@ -113,13 +175,13 @@ int main(int argc, char** argv) {
     std::map<std::string, int> messages;
     std::string line;
     int total_matches = 0;
-    std::ptrdiff_t max_match_length = 0;
+    int max_match_length = 0;
     {
         std::ifstream input(input_file_name);
         while(std::getline(input, line)) {
             boost::smatch match;
-            if(boost::regex_match(line, match, warning_message)) {
-                max_match_length = (std::max)(max_match_length, match[1].length());
+            if(boost::regex_match(line, match, enter_message)) {
+                max_match_length = boost::numeric_cast<int>((std::max)(max_match_length, match[1].length()));
                 ++messages[match[1]];
                 ++total_matches;
             }
@@ -135,7 +197,9 @@ int main(int argc, char** argv) {
     std::for_each(copy.begin(), copy.end(), p);
 
     if(use_call_graph) {
+        std::size_t backtrace_depth = 0;
         std::map<const line_id*, node_info> graph;
+        instantiation_state state(graph);
         std::set<line_id> lines;
         typedef std::pair<std::string, int> raw_line;
         BOOST_FOREACH(const raw_line& l, messages) {
@@ -145,76 +209,61 @@ int main(int argc, char** argv) {
         }
         const line_id* current_instantiation = 0;
         std::ifstream input(input_file_name);
+        int line_number = 0;
 #if defined(_MSC_VER)
         // msvc puts the warning first and follows it with the backtrace.
         while(std::getline(input, line)) {
+            std::cerr << line_number++ << std::endl;
             boost::smatch match;
-            if(boost::regex_match(line, match, warning_message)) {
+            if(boost::regex_match(line, match, enter_message)) {
+                // commit the current instantiation
+                if(current_instantiation) {
+                    state.add_instantiation(current_instantiation, backtrace_depth);
+                }
+                // start a new instantiation
                 std::string file_and_line(match[1].str());
                 boost::regex_match(file_and_line, match, split_file_and_line);
                 std::string file = match[1];
                 int line = boost::lexical_cast<int>(match[2].str());
                 current_instantiation = &*lines.find(line_id(file, line));
-                ++graph[current_instantiation].total_with_children;
-                ++graph[current_instantiation].count;
             } else if(boost::regex_match(line, match, call_graph_line)) {
-                std::string file = match[1];
-                int line = boost::lexical_cast<int>(match[2].str());
-                std::set<line_id>::const_iterator pos = lines.lower_bound(line_id(file, line));
-                if(pos != lines.end()) {
-                    if(*pos != line_id(file, line) && pos != lines.begin() && boost::prior(pos)->first == file) {
-                        --pos;
-                    }
-                } else if(pos != lines.begin()) {
-                    --pos;
-                } else {
-                    break;
+                ++backtrace_depth;
+            } else if(boost::regex_match(line, match, exit_message)) {
+                // commit the current instantiation
+                if(current_instantiation) {
+                    state.add_instantiation(current_instantiation, backtrace_depth);
                 }
-                const line_id* parent = &*pos;
-                ++graph[current_instantiation].parents[parent];
-                ++graph[parent].children[current_instantiation];
-                ++graph[parent].total_with_children;
+
+                state.finish_instantiation();
+                if(backtrace_depth) {
+                    --backtrace_depth;
+                }
+                current_instantiation = 0;
             }
+        }
+        // commit the current instantiation
+        if(current_instantiation) {
+            state.add_instantiation(current_instantiation, backtrace_depth);
         }
 #elif defined(__GNUC__)
         // gcc puts the backtrace first, and then the warning.
-        // so we have to buffer the backtrace until we reach the
-        // warning.
-        std::vector<std::string> pending_lines;
         while(std::getline(input, line)) {
             boost::smatch match;
-            if(boost::regex_match(line, match, warning_message)) {
+            if(boost::regex_match(line, match, enter_message)) {
                 std::string file_and_line(match[1].str());
                 boost::regex_match(file_and_line, match, split_file_and_line);
                 std::string file = match[1];
                 int line = boost::lexical_cast<int>(match[2].str());
                 current_instantiation = &*lines.find(line_id(file, line));
-                ++graph[current_instantiation].total_with_children;
-                ++graph[current_instantiation].count;
-                BOOST_FOREACH(const std::string& line, pending_lines) {
-                    boost::regex_match(line, match, call_graph_line);
-                    std::string file = match[1];
-                    int line = boost::lexical_cast<int>(match[2].str());
-                    std::set<line_id>::const_iterator pos = lines.lower_bound(line_id(file, line));
-                    if(pos != lines.end()) {
-                        if(*pos != line_id(file, line) && pos != lines.begin() && boost::prior(pos)->first == file) {
-                            --pos;
-                        }
-                    } else if(pos != lines.begin()) {
-                        --pos;
-                    } else {
-                        break;
-                    }
-                    const line_id* parent = &*pos;
-                    ++graph[current_instantiation].parents[parent];
-                    ++graph[parent].children[current_instantiation];
-                    ++graph[parent].total_with_children;
-                }
-                pending_lines.clear();
+                ++backtrace_depth;
+                std::cerr << backtrace_depth << std::endl;
+                state.add_instantiation(current_instantiation, backtrace_depth);
+                backtrace_depth = 0;
             } else if(boost::regex_match(line, match, call_graph_line)) {
-                pending_lines.push_back(line);
-            } else {
-                pending_lines.clear();
+                ++backtrace_depth;
+            } else if(boost::regex_match(line, match, exit_message)) {
+                state.finish_instantiation();
+                backtrace_depth = 0;
             }
         }
 #else
