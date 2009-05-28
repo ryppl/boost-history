@@ -41,7 +41,9 @@ References
 
 * N2802: A plea to reconsider detach-on-destruction for thread objects [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html] written by Hans-J. Boehm.
 
-* C++task-force mailing list
+* mailing list C++task-force
+
+* [@http://herbsutter.wordpress.com 'Sutter’s Mill'] by Herb Sutter
 
 [note __boost_task__ uses __boost_future__ from Anthony Williams (will be integrated in some of the next releases of __boost__thread__).]
 

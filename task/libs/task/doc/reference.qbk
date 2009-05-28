@@ -8,10 +8,10 @@
 
 [section:reference Reference]
 
-[include ref_async.qbk]
-[include ref_static_pool.qbk]
 [include ref_task.qbk]
 [include ref_handle.qbk]
+[include ref_async.qbk]
+[include ref_static_pool.qbk]
 [include ref_utilities.qbk]
 [include ref_meta_functions.qbk]
 [include ref_exceptions.qbk]

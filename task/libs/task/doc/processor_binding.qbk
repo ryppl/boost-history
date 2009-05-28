@@ -8,14 +8,16 @@
 
 [section:processor_binding Processor binding]
 
-For some applications it is convenient to bind the worker threads of the pool to processors of the system. For this purpose BOOST_BIND_WORKER_TO_PROCESSORS must be defined. Without the poolsize in the construtor the __threadpool__ will contain as many
-__worker_threads__ as processors (== __hardware_concurrency__) are available and each __worker_thread__ is bound to one processor.
+For some applications it is convenient to bind the __worker_threads__ to processors of the system. For this purpose BOOST_HAS_PROCESSOR_BINDINGS must be defined so that for each core a 
+__worker_thread__ is created an bound the the core. __pool_size__ must not be given to the constructor.
 
-	boost::tp::pool<
-      boost::tp::unbounded_channel< boost::tp::fifo >
-    > pool;
+``
+	boost::task::static_pool<
+		boost::task::unbounded_channel< boost::tp::fifo >
+	> pool;		// constructs thread-pool with worker-threads as hardware_concurrency() returns
+``
 
-The code above will create a pool with two __worker_threads__ on a dual core system (each bound to one core).
+The constructor takes additional arguments for the link_work_stealing[work-stealing algorithm] and link_channel[high-] and link_channel[low-watermark] too.
 
 
 [endsect]

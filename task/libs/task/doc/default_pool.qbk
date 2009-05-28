@@ -8,9 +8,43 @@
 
 [section:default_pool Default pool]
 
-The free function `boost::tp::get_default_pool()` returns a reference to the default __threadpool__ instance. The default __threadpool__ is
-of type `boost::tp::pool< boost::tp::unbounded_channel< boost::tp::fifo > >` and will contain as many __worker_threads__ as 
-`boost::thread::hardware_concurrency()` returns. 
+The library provides a default-pool accessible via __fn_default_pool__. The function returns a reference to __full_default_pool__. The static instance of __default_pool__ contains as many __worker_threads__ as 
+__hardware_concurrency__ returns, queues unlimited amount of __tasks__ and schedules the __tasks__ in FIFO-order. 
+
+
+``
+	long fibonacci_fn( long n)
+	{
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		return k1;
+	}
+
+	void main()
+	{
+		std::cout << "worker-threads running in default-pool == " << boost::task::default_pool().size() << "\n";
+
+		boost::task::handle< long > h1(
+			boost::task::async(
+				boost::task::default_pool(),	// asynchronous executor == default-pool
+				boost::task::make_task( fibonacci_fn, 10) ) );
+
+		boost::task::handle< long > h2(
+			boost::task::async(
+				boost::task::default_pool(),	// asynchronous executor == default-pool
+				boost::task::make_task( fibonacci_fn, 5) ) );
+
+		std::cout << "fibonacci(10) == " << h1.get() << "\n";
+		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
+	}
+``
 
 
 [endsect]

@@ -91,21 +91,21 @@ and destruction for each task. __default_pool__ submitts the tasks to the defaul
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// submit a sub-task to pool calculating fibonacci(n-1)
+			// fork a sub-task calculating fibonacci(n-1)
 			h1 = boost::task::async(
 				boost::this_task::get_pool(),
 				boost::task::make_task(
 					parallel_fib,
 					n - 1,
 					cutof) );
-			// submit a sub-task to pool calculating fibonacci(n-2)
+			// fork a sub-task calculating fibonacci(n-2)
 			h2 = boost::task::async(
 				boost::this_task::get_pool(),
 				boost::task::make_task(
 					parallel_fib,
 					n - 2,
 					cutof) );
-			// calculate fibonacci(n) from the results of both sub-tasks
+			// join the results of both sub-tasks
 			return h1.get() + h2.get();
 		}
 	}

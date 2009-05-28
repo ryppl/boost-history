@@ -36,6 +36,7 @@
 [template link_work_stealing[link_text] [link boost_task.async_executor.pool.work_stealing [link_text]]]
 
 [def __thread__ `boost::thread`]
+[def __thread_id__ `boost::thread::id`]
 
 [def __hardware_concurrency__ `boost::thread::hardware_concurrency()`]
 
@@ -44,15 +45,24 @@
 [def __default_pool__ `boost::task::default_pool`]
 [def __dynamic_pool__ `boost::task::dynamic_pool`]
 [def __handle__ `boost::task::handle`]
+[def __hase_priority__ `boost::task::has_priority`]
 [def __hwm__ `boost::task::high_watermark`]
+[def __id__ `boost::task::id`]
 [def __lwm__ `boost::task::low_watermark`]
 [def __new_thread__ `boost::task::new_thread`]
 [def __own_thread__ `boost::task::own_thread`]
-[def __task__ `boost::task::task`]
-[def __task_interrupted__ `boost::task::task_interrupted`]
+[def __pool_size__ `boost::task::poolsize`]
+[def __priority__ `boost::task::priority`]
+[def __priority_type__ `boost::task::priority_type`]
+[def __replace_oldest__ `boost::task::replace_oldest`]
 [def __static_pool__ `boost::task::static_pool`]
 [def __system_time__ `boost::task::system_time`]
+[def __take_oldest__ `boost::task::take_oldest`]
+[def __task__ `boost::task::task`]
+[def __task_interrupted__ `boost::task::task_interrupted`]
 [def __unbounded_channel__ `boost::task::unbounded_channel`]
+
+[def __full_default_pool__ `boost::task::static_pool< boost::task::unbounded_channel< boost::task::fifo > >`]
 
 [def __fn_delay__ `boost::this_task::delay()`]
 [def __fn_get_pool__ `boost::this_task::get_pool()`]
@@ -84,6 +94,8 @@
 [def __fn_operator__ `operator()()`]
 [def __fn_pending__ `pending()()`]
 [def __fn_size__ size()`]
+[def __fn_shutdown__ shutdown()`]
+[def __fn_shutdown_now__ shutdown_now()`]
 [def __fn_wait__ `wait()`]
 [def __fn_wait_for__ `wait_for()`]
 [def __fn_wait_until__ `wait_until()`]

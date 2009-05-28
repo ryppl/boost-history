@@ -12,7 +12,7 @@ _new_thread__ creates a new __thread__ and executes the task in this thread (asy
 
 [caution Always store the returned __act__ in a variable because __handle__ joins the thread in its destructor (if the last reference gets out of scope). ]
 
-Points of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed.
+The topic of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed.
 
 ``
 	long fibonacci( long n)

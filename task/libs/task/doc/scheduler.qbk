@@ -18,16 +18,44 @@ First inserted pending __task__ gets taken first.
 
 [heading priority]
 
-Each pending task is associated with a priority attribute which is used for ordering __actions__.
+Each __task__ is submitted to the pool with a priority attribute. The type and ordering of the priority is user-defined.
+
+``
+	boost::task::static_pool<
+		boost::task::unbounded_channel<		// allow unlimited tasks to be queue in global-queue
+			boost::task::priority< int > >	// tasks with lower priority are scheduled first
+	> pool( boost::task::poolsize( 5) );
+
+	boost::task::async(
+		pool,					// thread-pool
+		boost::task::make_task( some_fn),	// task to be executed
+		5);					// priority is 5
+
+	boost::task::async(
+		pool,					// thread-pool
+		boost::task::make_task( another_fn),	// task to be executed
+		3);					// priority is 3
+``
+
+In this example the __tasks__ get scheduled by the assigned integer (third argument of __fn_async__). The __task__ with the lowest priority
+gets scheduled first (taken by a __worker_thread__). The ordering can be changed by the second argument of __priority__ (the default is `std::less< Attr >`).
+
+``
+	boost::task::static_pool<
+		boost::task::unbounded_channel<
+			boost::task::priority< int, std::greater< int > > >	// tasks with higher priority are scheduled first
+
+	> pool( boost::task::poolsize( 5) );
+``
 
 
 [heading smart]
 
-Each pending __actions__ is associated with an attribute. The scheduler gets an put- and take-policy
-as template arguments. The corresponding policy get applied for each insertion and removal.
+Each inserted __task__ is associated with an attribute. The scheduler gets an put- and take-policy
+as template arguments. The corresponding policy gets applied for each insertion and removal.
 
-__boost_task__ provides ['boost::tp::replace_oldest] as put policy and ['boost::tp::take_oldest] as take
-policy. Both policies allow the replacement of old __actions__ in the scheduler by new ones.
+__boost_task__ provides __replace_oldest__ as put- policy and __take_oldest__ as take-policy. 
+Both policies allow the replacement of older (pending) __tasks__ in the scheduler by new ones.
 
     // creates a pool with unbounded channel
     // tasks are processed depending on the associated attributed
@@ -35,40 +63,53 @@ policy. Both policies allow the replacement of old __actions__ in the scheduler 
     // will be replaced by the new task
     // this example would execute add( 1, 2) and add( 5, 6)
     // add( 2, 3) is removed (if pending when add( 5, 6) is submitted)
-    boost::tp::pool<
-      boost::tp::unbounded_channel<
-        boost::tp::smart<
-          int,
-          std::less< int >,
-          boost::tp::replace_oldest,
-          boost::tp::take_oldest
-        >
-      >
-    > pool( boost::tp::poolsize( 1) );
 
-    pool.submit(
-      boost::bind(
-        add_fn,
-        1,
-        2),
-        0);
+``
+	long fibonacci_fn( long n)
+	{
+		if ( n == 0) return 0;
+		if ( n == 1) return 1;
+		long k1( 1), k2( 0);
+		for ( int i( 2); i <= n; ++i)
+		{
+			long tmp( k1);
+			k1 = k1 + k2;
+			k2 = tmp;
+		}
+		return k1;
+	}
 
-    // replaced by later task with same attribute
-    // if still pending in pool
-    pool.submit(
-      boost::bind(
-        add_fn,
-        3,
-        4),
-        1);
+	typedef boost::task::static_pool<
+		boost::task::unbounded_channel<
+			boost::task::smart<
+				int,
+				std::less< int >,
+				boost::task::replace_oldest,
+				boost::task::take_oldest
+			>
+		>
+	> pool_type;
 
-    // will replace previous pending action
-    pool.submit(
-      boost::bind(
-        add_fn,
-        5,
-        6),
-        1);
+	void main()
+	{
+		pool_type pool( boost::task::poolsize( 1) );
+
+		...
+
+		// replaced by later task with same attribute == 2
+		// if still pending in pool
+		boost::task::async(
+			pool,
+			boost::task::make_task( fibonacci_fn, 10),
+			2);	// attribute is 2
+
+		// will replace previous pending task with attribute == 2
+		boost::task::async(
+			pool,
+			boost::task::make_task( fibonacci_fn, 5),
+			2);	// attribute is 2 too
+	}
+``
 
 
 [endsect]

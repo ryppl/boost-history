@@ -8,18 +8,18 @@
 
 [section:meta_functions Meta functions]
 
-If the __threadpool__ supports priorities `boost::tp::has_priority< pool_type >` evaluates to `true`. The priority type is determined by `boost::tp::priority_type< pool_type >`.
+If the __thread_pool__ supports priorities __hase_priority__ evaluates to `true` at compile-time. The type of the priority is determined by __priority_type__.
 
-    typedef boost::tp::pool<
-      boost::tp::unbounded_channel<  boost::tp::priority< int > >
-    > pool_type;
 
-    std::cout << std::boolalpha <<  boost::tp::has_priority< pool_type >::value << std::endl;
-    std::cout << typeid(  boost::tp::priority_type< pool_type >::type).name() << std::endl;
+``
+	typdef boost::task::static_pool<
+		boost::task::unbounded_channel<
+			boost::task::priority< int > >	// pool with priority scheduling; integer as priority type
+	> pool_type;
 
-The support of fibers can be tested with meta-function `boost::tp::has_fibers< pool_type >`.
-
-    std::cout << std::boolalpha <<  boost::tp::has_fibers< pool_type >::value << std::endl;
+	std::cout << std::boolalpha << boost::task::has_priority< pool_type >::value << "\n";
+	std::cout << typeid( boost::task::priority_type< pool_type >::type).name() << std::endl;
+``
 
 
 [endsect]
