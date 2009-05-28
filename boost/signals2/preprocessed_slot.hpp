@@ -1,6 +1,6 @@
 // Boost.Signals2 library
 
-// Copyright Frank Mori Hess 2007-2008.
+// Copyright Frank Mori Hess 2007-2009.
 // Copyright Timmo Stange 2007.
 // Copyright Douglas Gregor 2001-2004. Use, modification and
 // distribution is subject to the Boost Software License, Version
@@ -9,69 +9,36 @@
 
 // For more information, see http://www.boost.org
 
-#ifndef BOOST_SIGNALS2_SLOT_HPP
-#define BOOST_SIGNALS2_SLOT_HPP
+#ifndef BOOST_SIGNALS2_PREPROCESSED_SLOT_HPP
+#define BOOST_SIGNALS2_PREPROCESSED_SLOT_HPP
 
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
 #include <boost/preprocessor/repetition.hpp>
-#include <boost/ref.hpp>
-#include <boost/signals2/detail/signals_common.hpp>
-#include <boost/signals2/detail/signals_common_macros.hpp>
-#include <boost/signals2/detail/tracked_objects_visitor.hpp>
-#include <boost/signals2/slot_base.hpp>
-#include <boost/type_traits.hpp>
-#include <boost/visit_each.hpp>
-#include <boost/weak_ptr.hpp>
-
+#include <boost/signals2/detail/preprocessed_arg_type.hpp>
+#include <boost/type_traits/function_traits.hpp>
 
 #ifndef BOOST_SIGNALS2_SLOT_MAX_BINDING_ARGS
 #define BOOST_SIGNALS2_SLOT_MAX_BINDING_ARGS 10
 #endif
-// const ArgTypeN & argN
-#define BOOST_SIGNALS2_SLOT_BINDING_ARG_DECL(z, n, data) \
-    const BOOST_PP_CAT(ArgType, n) & BOOST_PP_CAT(arg, n)
 
-namespace boost
-{
-  namespace signals2
-  {
-    namespace detail
-    {
-      // Get the slot so that it can be copied
-      template<typename F>
-      typename F::weak_signal_type
-      get_invocable_slot(const F &signal, signal_tag)
-      { return typename F::weak_signal_type(signal); }
 
-      template<typename F>
-      const F&
-      get_invocable_slot(const F& f, reference_tag)
-      { return f; }
-
-      template<typename F>
-      const F&
-      get_invocable_slot(const F& f, value_tag)
-      { return f; }
-
-      // Determines the type of the slot - is it a signal, a reference to a
-      // slot or just a normal slot.
-      template<typename F>
-      typename get_slot_tag<F>::type
-      tag_type(const F&)
-      {
-        typedef typename get_slot_tag<F>::type
-          the_tag_type;
-        the_tag_type tag = the_tag_type();
-        return tag;
-      }
-    }
+// template<typename Func, typename BindArgT0, typename BindArgT1, ..., typename BindArgTN-1> slotN(...
+#define BOOST_SIGNALS2_SLOT_N_BINDING_CONSTRUCTOR(z, n, data) \
+  template<typename Func, BOOST_SIGNALS2_PREFIXED_ARGS_TEMPLATE_DECL(n, BindArg)> \
+  BOOST_SIGNALS2_SLOT_CLASS_NAME(BOOST_SIGNALS2_NUM_ARGS)( \
+    const Func &func, BOOST_SIGNALS2_PREFIXED_FULL_REF_ARGS(n, const BindArg)) \
+  { \
+    init_slot_function(boost::bind(func, BOOST_SIGNALS2_SIGNATURE_ARG_NAMES(n))); \
   }
-} // end namespace boost
+#define BOOST_SIGNALS2_SLOT_N_BINDING_CONSTRUCTORS \
+  BOOST_PP_REPEAT_FROM_TO(1, BOOST_SIGNALS2_SLOT_MAX_BINDING_ARGS, BOOST_SIGNALS2_SLOT_N_BINDING_CONSTRUCTOR, ~)
+
 
 #define BOOST_PP_ITERATION_LIMITS (0, BOOST_PP_INC(BOOST_SIGNALS2_MAX_ARGS))
 #define BOOST_PP_FILENAME_1 <boost/signals2/detail/slot_template.hpp>
 #include BOOST_PP_ITERATE()
+
+#undef BOOST_SIGNALS2_SLOT_N_BINDING_CONSTRUCTOR
+#undef BOOST_SIGNALS2_SLOT_N_BINDING_CONSTRUCTORS
 
 namespace boost
 {
@@ -86,15 +53,16 @@ namespace boost
       typedef typename detail::slotN<boost::function_traits<Signature>::arity,
         Signature, SlotFunction>::type base_type;
     public:
+      typedef Signature signature_type;
       template<typename F>
       slot(const F& f): base_type(f)
       {}
       // bind syntactic sugar
-// template<typename F, typename ArgType0, typename ArgType1, ..., typename ArgTypen-1> slot(...
+// template<typename F, typename BindArgT0, typename BindArgT1, ..., typename BindArgTn-1> slot(...
 #define BOOST_SIGNALS2_SLOT_BINDING_CONSTRUCTOR(z, n, data) \
-  template<typename F, BOOST_PP_ENUM_PARAMS(n, typename ArgType)> \
-  slot(const F &f, BOOST_PP_ENUM(n, BOOST_SIGNALS2_SLOT_BINDING_ARG_DECL, ~)): \
-    base_type(f, BOOST_PP_ENUM_PARAMS(n, arg)) \
+  template<typename Func, BOOST_SIGNALS2_PREFIXED_ARGS_TEMPLATE_DECL(n, BindArg)> \
+    slot(const Func &func, BOOST_SIGNALS2_PREFIXED_FULL_REF_ARGS(n, const BindArg)): \
+    base_type(func, BOOST_SIGNALS2_SIGNATURE_ARG_NAMES(n)) \
   {}
       BOOST_PP_REPEAT_FROM_TO(1, BOOST_SIGNALS2_SLOT_MAX_BINDING_ARGS, BOOST_SIGNALS2_SLOT_BINDING_CONSTRUCTOR, ~)
 #undef BOOST_SIGNALS2_SLOT_BINDING_CONSTRUCTOR
@@ -102,4 +70,4 @@ namespace boost
   } // namespace signals2
 }
 
-#endif // BOOST_SIGNALS2_SLOT_HPP
+#endif // BOOST_SIGNALS2_PREPROCESSED_SLOT_HPP
