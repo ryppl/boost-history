@@ -11,10 +11,10 @@ namespace boost { namespace task
 {
 namespace detail
 {
-struct has_priority
+struct has_attribute
 {};
 
-struct has_no_priority
+struct has_no_attribute
 {};
 } } }
 

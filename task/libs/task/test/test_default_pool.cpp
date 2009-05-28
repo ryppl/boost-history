@@ -82,12 +82,7 @@ public:
 				tsk::default_pool(),
 				tsk::make_task(
 					throwing_fn) ) );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( std::runtime_error const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), std::runtime_error);
 	}
 
 	// check interrupt
@@ -101,12 +96,7 @@ public:
 					pt::seconds( 3) ) ) );
 		h.interrupt();
 		BOOST_CHECK( h.interruption_requested() );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check interrupt_and_wait
@@ -124,12 +114,7 @@ public:
 		BOOST_CHECK( finished);
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.interruption_requested() );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check waitfor_all()

@@ -82,16 +82,26 @@ public:
 				tsk::own_thread(),
 				tsk::make_task(
 					throwing_fn) ) );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( std::runtime_error const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), std::runtime_error);
+	}
+
+	// check task_uninitialized
+	void test_case_5()
+	{
+		tsk::handle< int > h;
+		BOOST_CHECK_THROW( h.get(), tsk::task_uninitialized);
+		BOOST_CHECK_THROW( h.wait(), tsk::task_uninitialized);
+		BOOST_CHECK_THROW( h.wait_for( pt::seconds( 1) ), tsk::task_uninitialized);
+		BOOST_CHECK_THROW(
+		  h.wait_until( boost::get_system_time() + pt::seconds( 1) ),
+		  tsk::task_uninitialized);
+		BOOST_CHECK( ! h.is_ready() );
+		BOOST_CHECK( ! h.has_value() );
+		BOOST_CHECK( ! h.has_exception() );
 	}
 
 	// check interrupt
-	void test_case_5()
+	void test_case_6()
 	{
 		tsk::handle< void > h(
 			tsk::async(
@@ -101,16 +111,11 @@ public:
 					pt::seconds( 3) ) ) );
 		h.interrupt();
 		BOOST_CHECK( h.interruption_requested() );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( ! thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check interrupt_and_wait
-	void test_case_6()
+	void test_case_7()
 	{
 		bool finished( false);
 		tsk::handle< void > h(
@@ -124,16 +129,11 @@ public:
 		BOOST_CHECK( ! finished);
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.interruption_requested() );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( ! thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check waitfor_all()
-	void test_case_7()
+	void test_case_8()
 	{
 		std::vector< tsk::handle< int > > vec;
 		for ( int i = 0; i <= 5; ++i)
@@ -159,7 +159,7 @@ public:
 	}
 
 	// check waitfor_any()
-	void test_case_8()
+	void test_case_9()
 	{
 		tsk::handle< void > h1(
 			tsk::async(
@@ -193,6 +193,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_6, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_7, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_8, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_9, instance) );
 
 	return test;
 }

@@ -57,7 +57,7 @@ private:
 
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
-	id						id_;
+	id				id_;
 
 	handle(
 		id const& id__,
@@ -97,6 +97,8 @@ public:
 	{
 		try
 		{ return fut_.get(); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
 		{ throw broken_task(); }
 		catch ( promise_already_satisfied const&)
@@ -113,14 +115,29 @@ public:
 	{ return fut_.has_exception(); }
 
 	void wait() const
-	{ fut_.wait(); }
+	{
+		try
+		{ fut_.wait(); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
     template< typename Duration >
     bool wait_for( Duration const& rel_time) const
-	{ return fut_.timed_wait( rel_time); }
+	{
+		try
+		{ return fut_.timed_wait( rel_time); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
     bool wait_until( system_time const& abs_time) const
-	{ return fut_.timed_wait_until( abs_time); }
+	{
+		try
+		{ return fut_.timed_wait_until( abs_time); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
 	void swap( handle< R > & other)
 	{
@@ -174,7 +191,6 @@ private:
 	id_( id__)
 	{}
 
-
 public:
 	handle()
 	: fut_(), intr_(), id_()
@@ -189,12 +205,12 @@ public:
 	void interrupt_and_wait()
 	{ intr_.interrupt_and_wait(); }
 
-	void interrupt_and_wait( system_time const& abs_time)
-	{ intr_.interrupt_and_wait( abs_time); }
+	void interrupt_and_wait_until( system_time const& abs_time)
+	{ intr_.interrupt_and_wait_until( abs_time); }
 
 	template< typename Duration >
-	void interrupt_and_wait( Duration const& rel_time)
-	{ intr_.interrupt_and_wait( rel_time); }
+	void interrupt_and_wait_for( Duration const& rel_time)
+	{ intr_.interrupt_and_wait_for( rel_time); }
 
 	bool interruption_requested()
 	{ return intr_.interruption_requested(); }
@@ -203,6 +219,8 @@ public:
 	{
 		try
 		{ fut_.get(); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
 		catch ( broken_promise const&)
 		{ throw broken_task(); }
 		catch ( promise_already_satisfied const&)
@@ -219,14 +237,29 @@ public:
 	{ return fut_.has_exception(); }
 
 	void wait() const
-	{ fut_.wait(); }
+	{
+		try
+		{ fut_.wait(); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
-	void interrupt_and_wait_until( system_time const& abs_time)
-	{ intr_.interrupt_and_wait_until( abs_time); }
+    template< typename Duration >
+    bool wait_for( Duration const& rel_time) const
+	{
+		try
+		{ return fut_.timed_wait( rel_time); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
-	template< typename Duration >
-	void interrupt_and_wait_for( Duration const& rel_time)
-	{ intr_.interrupt_and_wait_for( rel_time); }
+    bool wait_until( system_time const& abs_time) const
+	{
+		try
+		{ return fut_.timed_wait_until( abs_time); }
+		catch ( future_uninitialized const&)
+		{ throw task_uninitialized(); }
+	}
 
 	void swap( handle< void > & other)
 	{

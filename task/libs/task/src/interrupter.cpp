@@ -116,7 +116,7 @@ interrupter::interrupt_and_wait()
 
 void
 interrupter::interrupt_and_wait_until( system_time const& abs_time)
-{ impl_->interrupt_and_wait( abs_time); }
+{ impl_->interrupt_and_wait_until( abs_time); }
 
 bool
 interrupter::interruption_requested()

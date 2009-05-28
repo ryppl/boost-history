@@ -15,7 +15,7 @@
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/id.hpp>
-#include <boost/task/info.hpp>
+#include <boost/task/meta.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>

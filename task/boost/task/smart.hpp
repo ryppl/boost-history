@@ -15,7 +15,7 @@
 #include <boost/multi_index/ordered_index.hpp>
 
 #include <boost/task/detail/pool_callable.hpp>
-#include <boost/task/detail/info.hpp>
+#include <boost/task/detail/meta.hpp>
 
 namespace boost { namespace task
 {
@@ -27,7 +27,7 @@ template<
 >
 struct smart
 {
-	typedef detail::has_priority	priority_tag_type;
+	typedef detail::has_attribute	attribute_tag_type;
 	typedef Attr					attribute_type;
 
 	class impl

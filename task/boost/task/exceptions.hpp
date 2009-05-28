@@ -44,6 +44,14 @@ public:
 	{}
 };
 
+class task_uninitialized : public std::logic_error
+{
+public:
+    task_uninitialized()
+	: std::logic_error("task uninitialized")
+	{}
+};
+
 class task_already_executed : public std::logic_error
 {
 public:

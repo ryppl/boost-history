@@ -17,6 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/barrier.hpp>
+#include <boost/type_traits/is_same.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/task.hpp>
@@ -120,12 +121,7 @@ public:
 				tsk::make_task(
 					throwing_fn) ) );
 		pool.shutdown();
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( std::runtime_error const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), std::runtime_error);
 	}
 
 	// check shutdown with task_rejected exception
@@ -136,19 +132,14 @@ public:
 		> pool( tsk::poolsize( 1) );
 		pool.shutdown();
 		BOOST_CHECK( pool.closed() );
-		bool thrown( false);
-		try
-		{
+		BOOST_CHECK_THROW(
 			tsk::async(
 				pool,
 				tsk::make_task(
 					boost::bind(
 						fibonacci_fn,
-						10) ) );
-		}
-		catch ( tsk::task_rejected const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+						10) ) ),
+			tsk::task_rejected);
 	}
 
 	// check shutdown_now with thread_interrupted exception
@@ -170,12 +161,7 @@ public:
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 1) );
 		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check pending
@@ -248,12 +234,7 @@ public:
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);
 		BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 1) );
-		bool thrown( false);
-		try
-		{ h.get(); }
-		catch ( tsk::task_interrupted const&)
-		{ thrown = true; }
-		BOOST_CHECK( thrown);
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check fifo scheduling
@@ -262,6 +243,7 @@ public:
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool_type;
+		BOOST_CHECK( ! tsk::has_attribute< pool_type >::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
 		tsk::async(
@@ -295,6 +277,12 @@ public:
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::priority< int > >
 		> pool_type;
+		BOOST_CHECK( tsk::has_attribute< pool_type >::value);
+		BOOST_CHECK(
+			boost::is_same<
+				tsk::attribute_type< pool_type >::type,
+				int
+			>::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
 		tsk::async(
@@ -331,6 +319,12 @@ public:
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::smart< int, std::less< int >, tsk::replace_oldest, tsk::take_oldest > >
 		> pool_type;
+		BOOST_CHECK( tsk::has_attribute< pool_type >::value);
+		BOOST_CHECK(
+			boost::is_same<
+				tsk::attribute_type< pool_type >::type,
+				int
+			>::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
 		pool.submit(
@@ -376,7 +370,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_1, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_2, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_3, instance) );
-//	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_4, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_4, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_5, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_6, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_7, instance) );

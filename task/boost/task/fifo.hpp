@@ -11,13 +11,13 @@
 #include <list>
 
 #include <boost/task/detail/pool_callable.hpp>
-#include <boost/task/detail/info.hpp>
+#include <boost/task/detail/meta.hpp>
 
 namespace boost { namespace task
 {
 struct fifo
 {
-	typedef detail::has_no_priority	priority_tag_type;
+	typedef detail::has_no_attribute	attribute_tag_type;
 
 	class impl
 	{
