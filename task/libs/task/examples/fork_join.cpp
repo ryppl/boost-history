@@ -58,7 +58,7 @@ int main( int argc, char *argv[])
 		pool_type pool( tsk::poolsize( 5) );
 
 		std::vector< tsk::handle< long > > results;
-		results.reserve( 15);
+		results.reserve( 10);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
@@ -79,7 +79,7 @@ int main( int argc, char *argv[])
 			std::vector< tsk::handle< long > >::iterator i( results.begin() );
 			i != e;
 			++i)
-			std::cout << "fibonacci " << k++ << " == " << i->get() << std::endl;
+			std::cout << "fibonacci(" << k++ << ") == " << i->get() << std::endl;
 
 		pt::ptime stop( pt::microsec_clock::universal_time() );
 		std::cout << ( stop - start).total_milliseconds() << " milli seconds" << std::endl;

@@ -75,7 +75,7 @@ public:
 void parallel_fib( long n)
 {
 	fib_task a( 5);
-	printf("%d -> %d\n", n, a.execute( n) );
+	printf("fibonacci(%d) == %ld\n", n, a.execute( n) );
 }
 
 bool has_bytes( int fd)

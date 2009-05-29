@@ -69,7 +69,7 @@ void parallel_fib( long n)
 {
 	fib_task a( 5);
 	long result = a.execute( n);
-	printf("n == %d, fibonnaci == %d\n", n, result);
+	printf("fibonnaci(%ld) == %ld\n", n, result);
 }
 
 int main( int argc, char *argv[])
