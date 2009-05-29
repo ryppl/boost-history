@@ -18,7 +18,7 @@ template< typename Pool >
 struct has_attribute : public mpl::bool_<
 	is_same<
 		detail::has_attribute,
-		typename Pool::scheduler_type::attribute_tag_type
+		typename Pool::channel::scheduler_type::attribute_tag_type
 	>::value
 >
 {};
@@ -26,7 +26,7 @@ struct has_attribute : public mpl::bool_<
 template< typename Pool >
 struct attribute_type
 {
-	typedef typename Pool::scheduler_type::attribute_type	type;
+	typedef typename Pool::channel::scheduler_type::attribute_type	type;
 };
 } }
 

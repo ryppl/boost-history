@@ -31,12 +31,16 @@ namespace boost { namespace task
 template< typename Channel >
 class static_pool;
 
+struct as_sub_task;
+
 template< typename R >
 class task
 {
 private:
 	template< typename Channel >
 	friend class static_pool;
+
+	friend struct as_sub_task;
 
 	struct impl
 	{
@@ -140,6 +144,8 @@ class task< void >
 private:
 	template< typename Channel >
 	friend class static_pool;
+
+	friend struct as_sub_task;
 
 	struct impl
 	{

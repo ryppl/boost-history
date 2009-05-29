@@ -38,10 +38,18 @@ namespace boost { namespace task
 template< typename Channel >
 class static_pool : private noncopyable
 {
+public:
+	typedef Channel		channel;
+
 private:
+	template< typename Pool >
+	friend struct has_attribute;
+
+	template< typename Pool >
+	friend struct attribute_type;
+
 	friend class detail::worker;
 
-	typedef Channel					channel;
 	typedef typename channel::item	channel_item;
 
 	detail::worker_group	wg_;

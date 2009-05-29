@@ -312,11 +312,8 @@ public:
 			tsk::bounded_channel< tsk::priority< int > >
 		> pool_type;
 		BOOST_CHECK( tsk::has_attribute< pool_type >::value);
-		BOOST_CHECK(
-			boost::is_same<
-				tsk::attribute_type< pool_type >::type,
-				int
-			>::value);
+		typedef boost::is_same< tsk::attribute_type< pool_type >::type, int > type;
+		BOOST_CHECK( type::value);
 		pool_type pool(
 			tsk::poolsize( 1),
 			tsk::high_watermark( 10),
@@ -357,11 +354,8 @@ public:
 			tsk::bounded_channel< tsk::smart< int, std::less< int >, tsk::replace_oldest, tsk::take_oldest > >
 		> pool_type;
 		BOOST_CHECK( tsk::has_attribute< pool_type >::value);
-		BOOST_CHECK(
-			boost::is_same<
-				tsk::attribute_type< pool_type >::type,
-				int
-			>::value);
+		typedef boost::is_same< tsk::attribute_type< pool_type >::type, int > type;
+		BOOST_CHECK( type::value);
 		pool_type pool(
 			tsk::poolsize( 1),
 			tsk::high_watermark( 10),

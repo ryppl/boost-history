@@ -129,7 +129,7 @@ public:
 		BOOST_CHECK( ! finished);
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.interruption_requested() );
-		BOOST_CHECK_NO_THROW( h.get(), tsk::task_interrupted);
+		BOOST_CHECK_NO_THROW( h.get() );
 	}
 
 	// check waitfor_all()
