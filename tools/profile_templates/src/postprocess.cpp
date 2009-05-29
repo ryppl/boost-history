@@ -11,6 +11,7 @@
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/numeric/conversion/cast.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -102,58 +103,51 @@ std::ostream& operator<<(std::ostream& os, const print_line_id& arg) {
 
 class instantiation_state {
 public:
-    instantiation_state(std::map<const line_id*, node_info>& g) : graph(g) {}
+    instantiation_state() : current(&root) {}
     void finish_instantiation() {
-        std::cerr << "finish_instantiation, state.size(): " << state.size() << std::endl;
-        if(state.empty() || !state.back()) {
-            std::cerr << "attempt to finish unstarted instantiation: " << state.size() << std::endl;
-            std::exit(1);
+        // be at least somewhat resilient to errors
+        if(current != &root) {
+            current = current->up;
         }
-        state.pop_back();
-        pending_children.pop_back();
     }
-    void add_instantiation(const line_id* new_line, std::size_t backtrace_size) {
-        if(backtrace_size == 0) {
-            std::cerr << "non-template" << std::endl;
-            // top level non-template
-            backtrace_size = state.size() + 1;
-        } else {
-            ++backtrace_size;
-        }
-        std::cerr << "backtrace size: " << backtrace_size << ", state.size(): " << state.size() << std::endl;
-        if(backtrace_size < state.size()) {
-            std::cerr << "Instantiation not exited." << std::endl;
-            std::exit(1);
-        }
-        ++graph[new_line].count;
-        std::cerr << "Adding lines" << std::endl;
-        BOOST_FOREACH(const line_id* line, state) {
-            if(line) {
-                add_child(line, new_line);
-            }
-        }
-        state.resize(backtrace_size);
-        pending_children.resize(backtrace_size);
-        state.back() = new_line;
-        BOOST_FOREACH(const line_id* child, pending_children.back()) {
-            add_child(new_line, child);
-        }
-        BOOST_FOREACH(std::vector<const line_id*>& v, pending_children) {
-            v.push_back(new_line);
-        }
+    void add_instantiation(const line_id* new_line, std::size_t /*backtrace_size*/) {
+        // don't try to deal with metafunction forwarding
+        node* child(new node(new_line, current));
+        current->children.push_back(child);
+        current = child;
+    }
+    void get_graph(std::map<const line_id*, node_info>& graph) const {
+        get_graph_impl(graph, &root);
     }
 private:
-    void add_child(const line_id* parent, const line_id* child) {
-        std::cerr << "parent: " << parent << ", child: " << child << std::endl;
-        if(parent != child) {
+    static void add_child(std::map<const line_id*, node_info>& graph, const line_id* parent, const line_id* child) {
+        if(parent && child && parent != child) {
             ++graph[parent].children[child];
-            ++graph[child].parents[child];
+            ++graph[child].parents[parent];
             ++graph[parent].total_with_children;
         }
     }
-    std::vector<const line_id*> state;
-    std::vector<std::vector<const line_id*> > pending_children;
-    std::map<const line_id*, node_info>& graph;
+    struct node {
+        node(const line_id* i = 0, node* u = 0) : id(i), up(u), depth(up?up->depth+1:0) {
+        }
+        boost::ptr_vector<node> children;
+        const line_id* id;
+        node* up;
+        int depth;
+    };
+    static void get_graph_impl(std::map<const line_id*, node_info>& graph, const node* root) {
+        BOOST_FOREACH(const node& child, root->children) {
+            get_graph_impl(graph, &child);
+        }
+        if(root->id != 0) {
+            ++graph[root->id].count;
+        }
+        for(node* parent = root->up; parent != 0; parent = parent->up) {
+            add_child(graph, parent->id, root->id);
+        }
+    }
+    node* current;
+    node root;
 };
 
 int main(int argc, char** argv) {
@@ -199,7 +193,7 @@ int main(int argc, char** argv) {
     if(use_call_graph) {
         std::size_t backtrace_depth = 0;
         std::map<const line_id*, node_info> graph;
-        instantiation_state state(graph);
+        instantiation_state state;
         std::set<line_id> lines;
         typedef std::pair<std::string, int> raw_line;
         BOOST_FOREACH(const raw_line& l, messages) {
@@ -209,11 +203,9 @@ int main(int argc, char** argv) {
         }
         const line_id* current_instantiation = 0;
         std::ifstream input(input_file_name);
-        int line_number = 0;
 #if defined(_MSC_VER)
         // msvc puts the warning first and follows it with the backtrace.
         while(std::getline(input, line)) {
-            std::cerr << line_number++ << std::endl;
             boost::smatch match;
             if(boost::regex_match(line, match, enter_message)) {
                 // commit the current instantiation
@@ -269,6 +261,7 @@ int main(int argc, char** argv) {
 #else
     #error Unsupported compiler
 #endif
+        state.get_graph(graph);
         typedef std::pair<const line_id*, node_info> call_graph_node_t;
         std::vector<call_graph_node_t> call_graph;
         std::copy(graph.begin(), graph.end(), std::back_inserter(call_graph));
