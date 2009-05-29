@@ -97,9 +97,9 @@ struct as_sub_task
 	}
 };
 
-template< typename Fn, typename R >
-handle< R > async( Fn fn, task< R > t)
-{ return fn( t); }
+template< typename AE, typename R >
+handle< R > async( AE ae, task< R > t)
+{ return ae( t); }
 
 template< typename R, typename Channel >
 handle< R > async( static_pool< Channel > & pool, task< R > t)

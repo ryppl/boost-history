@@ -1,0 +1,33 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:own_thread Class `own_thread`]
+
+``
+	#include <boost/task/async.hpp>
+
+	struct own_thread
+	{
+		template< typename R >
+		handle< R > operator()( task< R > t);
+	};
+``
+
+[section:operator Member function `operator()( task< R > t)`]
+
+	template< typename R >
+	handle< R > operator()( task< R > t)
+
+[variablelist
+[[Effects:] [executes task in the current thread an returns an handle associated with the task]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[endsect]

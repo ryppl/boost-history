@@ -1,0 +1,59 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section::async Function `async()`]
+
+[section:async_default Templated non-member function `async( AE, task< R >)`]
+
+``
+	#include <boost/task/async.hpp>
+
+	template< typename AE, typename R >
+	handle< R > async( AE ae, task< R > t);
+``
+
+[variablelist
+[[Effects:] [executes task in an asyncrounous executer and returns a handle associated with the task]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:async_pool Templated non-member function `async( pool< Channel > &, task< R >)`]
+
+``
+	#include <boost/task/async.hpp>
+
+	template< typename R, typename Channel >
+	handle< R > async( pool< Channel > & ae, task< R > t);
+``
+
+[variablelist
+[[Effects:] [executes task in a thread-pool and returns a handle associated with the task]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:async_pool_attr Templated non-member function `async( pool< Channel > &, task< R >, Attr)`]
+
+``
+	#include <boost/task/async.hpp>
+
+	template< typename R, typename Channel, typename Attr >
+	handle< R > async( pool< Channel > & ae, task< R > t, Attr attr);
+``
+
+[variablelist
+[[Effects:] [executes atrributed task in a thread-pool and returns a handle associated with the task]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[endsect]

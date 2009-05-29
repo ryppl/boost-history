@@ -22,14 +22,14 @@ interrupter::impl::interrupt_()
 	}
 }
 
-interrupter::impl::impl()
+interrupter::impl::impl( setting s)
 :
 interruption_requested_( false),
 done_( false),
 cond_(),
 mtx_(),
 thrd_()
-{}
+{ if ( s == dont_wait) reset(); }
 
 interrupter::impl::~impl()
 { reset(); }
@@ -48,11 +48,6 @@ void
 interrupter::impl::reset()
 {
 	unique_lock< mutex > lk( mtx_);
-// 	BOOST_ASSERT( thrd_);
-// 	try
-// 	{ thrd_.reset(); }
-// 	catch (...)
-// 	{ printf("exception\n"); }
 	try
 	{ this_thread::interruption_point(); }
 	catch ( thread_interrupted const&)
@@ -94,8 +89,8 @@ interrupter::impl::interruption_requested()
 	return interruption_requested_;
 }
 
-interrupter::interrupter()
-: impl_( new impl() )
+interrupter::interrupter( setting s)
+: impl_( new impl( s) )
 {}
 
 void

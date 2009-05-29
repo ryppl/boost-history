@@ -1,38 +1,41 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
+
 
 [section:high_watermark Class `high_watermark`]
 
-    #include <boost/tp/watermark.hpp>
+``
+	#include <boost/task/watermark.hpp>
 
-    class high_watermark
-    {
-    public:
-      explicit high_watermark( std::size_t value);
+	class high_watermark
+	{
+	public:
+		explicit high_watermark( std::size_t value);
 
-      operator std::size_t () const;
-    };
+		operator std::size_t () const;
+	};
+``
 
 [section:constructor Constructor]
 
-    explicit high_watermark( std::size_t value);
+	explicit high_watermark( std::size_t value)
 
 [variablelist
-[[Effects:] [Constructs a `boost::tp::high_watermark` instance.]]
-[[Throws:] [`boost::tp::invalid_watermark`]]
+[[Effects:] [constructs a `boost::tp::high_watermark` instance]]
+[[Throws:] [`boost::task::invalid_watermark`]]
 ]
 [endsect]
 
 [section:operator Member function `operator std::size_t()`]
 
-    operator std::size_t () const;
+	operator std::size_t () const
 
 [variablelist
-[[Effects:] [Returns high watermark.]]
+[[Effects:] [returns high watermark]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
@@ -42,34 +45,37 @@
 
 [section:low_watermark Class `low_watermark`]
 
-    #include <boost/tp/watermark.hpp>
+``
+	#include <boost/task/watermark.hpp>
 
-    class low_watermark
-    {
-    public:
-      explicit low_watermark( std::size_t value);
+	class low_watermark
+	{
+	public:
+		explicit low_watermark( std::size_t value);
 
-      operator std::size_t () const;
-    };
+		operator std::size_t () const;
+	};
+``
 
 [section:constructor Constructor]
 
-    explicit low_watermark( std::size_t value);
+	explicit low_watermark( std::size_t value)
 
 [variablelist
-[[Effects:] [Constructs a `boost::tp::low_watermark` instance.]]
-[[Throws:] [`boost::tp::invalid_watermark`]]
+[[Effects:] [constructs a `boost::task::low_watermark` instance]]
+[[Throws:] [`boost::task::invalid_watermark`]]
 ]
 [endsect]
 
 [section:operator Member function `operator std::size_t()`]
 
-    operator std::size_t () const;
+	operator std::size_t () const
 
 [variablelist
-[[Effects:] [Returns low watermark.]]
+[[Effects:] [returns low watermark]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
+
 
 [endsect]

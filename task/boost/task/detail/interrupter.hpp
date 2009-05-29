@@ -25,6 +25,13 @@ namespace detail
 {
 class BOOST_TASK_DECL interrupter
 {
+public:
+	enum setting
+	{
+		wait_for,
+		dont_wait
+	};
+
 private:
 	class impl : private noncopyable
 	{
@@ -38,7 +45,7 @@ private:
 		void interrupt_();
 
 	public:
-		impl();
+		impl( setting);
 
 		~impl();
 
@@ -66,7 +73,7 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	interrupter();
+	interrupter( setting = wait_for);
 
 	void set( shared_ptr< thread > const& thrd);
 

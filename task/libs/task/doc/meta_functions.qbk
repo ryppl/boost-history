@@ -8,7 +8,7 @@
 
 [section:meta_functions Meta functions]
 
-If the __thread_pool__ supports priorities __hase_priority__ evaluates to `true` at compile-time. The type of the priority is determined by __priority_type__.
+If the __thread_pool__ supports attributes (like priorities) __hase_attribute__ evaluates to `true` at compile-time (derived from boost::mpl::bool_). The type of the attribute is determined by __attribute_type__.
 
 
 ``
@@ -17,8 +17,8 @@ If the __thread_pool__ supports priorities __hase_priority__ evaluates to `true`
 			boost::task::priority< int > >	// pool with priority scheduling; integer as priority type
 	> pool_type;
 
-	std::cout << std::boolalpha << boost::task::has_priority< pool_type >::value << "\n";
-	std::cout << typeid( boost::task::priority_type< pool_type >::type).name() << std::endl;
+	std::cout << std::boolalpha << boost::task::has_attribute< pool_type >::value << "\n";
+	std::cout << typeid( boost::task::attribute_type< pool_type >::type).name() << std::endl;
 ``
 
 

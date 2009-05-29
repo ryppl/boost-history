@@ -1,160 +1,84 @@
 [/
-  (C) Copyright 2008 Oliver Kowalke.
-  Distributed under the Boost Software License, Version 1.0.
-  (See accompanying file LICENSE_1_0.txt or copy at
-  http://www.boost.org/LICENSE_1_0.txt).
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
 ]
 
 [section:task Class template `task`]
 
-    #include <boost/tp/task.hpp>
+``
+	#include <boost/task/task.hpp>
 
-    template< typename R >
-    class task
-    {
-    public:
-      template< typename Pool >
-      task(
-        Pool * pool,
-        future< R > const& fut,
-        detail::interrupter const& intr);
+	template< typename R >
+	class task
+	{
+	public:
+		template< typename Fn >
+		task( Fn const& fn);
 
-      void interrupt();
-      void interrupt_and_wait();
-      void interrupt_and_wait( system_time const& abs_time);
-      template< typename Duration >
-      void interrupt_and_wait( Duration const& rel_time);
-      bool interrupt_requested();
+		const id get_id() const;
 
-      R get() const;
+		shared_future< R > & get_future();
 
-      bool is_ready() const;
-      bool has_value() const;
-      bool has_exception() const;
+		void swap( task< R > & other) // throw();
 
-      void wait() const; 
-      template< typename Duration >
-      bool timed_wait( Duration const& rel_time) const;
-      bool timed_wait_until( system_time const& abs_time) const; 
-    };
+		void operator()() // throw();
+	}
+``
 
 [section:constructor Constructor]
 
-    template< typename Pool >
-    task(
-      Pool * pool,
-      future< R > const& fut,
-      detail::interrupter const& intr);
+	template< typename Fn >
+	task( Fn const& fn)
 
 [variablelist
-[[Effects:] [Constructs a `boost::tp::task< R >` instance.]]
-[[Throws:] [Nothing]]
-[[Notes:] [task objects should only be constructed by the pool.]]
-]
-[endsect]
-
-
-[section:interrupt Member function `interrupt()`]
-
-    void interrupt();
-
-[variablelist
-[[Effects:] [Associated __action__ will be interrupted the next time it enters a __interruption_point__ if interruption is not disabled. The function returns immediatly.]]
+[[Effects:] [constructs a `boost::tp::task< R >` from a function object]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
 
 
-[section:interrupt_and_wait Member function `interrupt_and_wait()`]
+[section:get_id Member function `get_id()`]
 
-    void interrupt_and_wait();
-
-    void interrupt_and_wait( system_time const& abs_time);
-
-    template< typename DurationTime >
-    void interrupt_and_wait( DurationTime const& rel_time);
+	const id get_id() const
 
 [variablelist
-[[Effects:] [Associated __action__ will be interrupted the next time it enters one __interruption_point__ if interruption is not disabled. The function waits until the __action__ has terminated or the specified duration td has elapsed.]]
+[[Effects:] [returns task identifier]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
 
 
-[section:get Member function `get()`]
+[section:get_future Member function `get_future()`]
 
-    R get() const;
+	shared_future< R > & get_future()
 
 [variablelist
-[[Effects:] [Returns fulfilled value or throws fulfilled exception.]]
-[[Throws:] [`boost::future::broken_promise`]]
+[[Effects:] [returns a future assiciated with the task]]
+[[Throws:] [???]]
 ]
 [endsect]
 
 
-[section:is_read Member function `is_ready()`]
+[section:swap Member function `swap()`]
 
-    bool is_ready() const;
+	void swap( task< R > & other)
 
 [variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled.]]
+[[Effects:] [swaps the task]]
 [[Throws:] [Nothing]]
 ]
 [endsect]
 
 
-[section:has_value Member function `has_value()`]
+[section:operator() Member function `operator()()`]
 
-    bool has_value() const;
+	void operator()()
 
 [variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled (is ready) and has a value.]]
+[[Effects:] [executes tasks internal function object]]
 [[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:has_exception Member function `has_exception()`]
-
-    bool has_exception() const;
-
-[variablelist
-[[Effects:] [Queries if the __action__ has been fulfilled (is ready) and has an exception.]]
-[[Throws:] [Nothing]]
-]
-[endsect]
-
-
-[section:wait Member function `wait()`]
-
-    void wait() const;
-
-[variablelist
-[[Effects:] [Waits until the result is ready.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
-]
-[endsect]
-
-
-[section:timed_wait Member function `timed_wait()`]
-
-    template< typename Duration >
-    bool timed_wait( Duration const& wait_duration);
-
-[variablelist
-[[Effects:] [Waits until the result is ready, or returns false if the time specified by wait_duration has elapsed.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
-]
-[endsect]
-
-
-[section:timed_wait_until Member function `timed_wait_until()`]
-
-    bool timed_wait_until( system_time const& wait_timeout);
-
-[variablelist
-[[Effects:] [Waits until the result is ready, or returns false if the time point specified by wait_timeout has passed.]]
-[[Throws:] [Throws thread_interrupted if the result is not ready at the point of the call, and the current thread is interrupted.]]
 ]
 [endsect]
 

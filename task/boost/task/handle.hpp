@@ -71,7 +71,7 @@ private:
 
 public:
 	handle()
-	: fut_(), intr_(), id_()
+	: fut_(), intr_( detail::interrupter::dont_wait), id_()
 	{}
 
 	const id get_id() const
@@ -193,7 +193,7 @@ private:
 
 public:
 	handle()
-	: fut_(), intr_(), id_()
+	: fut_(), intr_( detail::interrupter::dont_wait), id_()
 	{}
 
 	const id get_id() const

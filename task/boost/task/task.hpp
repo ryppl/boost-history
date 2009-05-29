@@ -28,10 +28,16 @@
 namespace boost { namespace task
 {
 
+template< typename Channel >
+class static_pool;
+
 template< typename R >
 class task
 {
 private:
+	template< typename Channel >
+	friend class static_pool;
+
 	struct impl
 	{
 		promise< R >			prom;
@@ -105,6 +111,10 @@ private:
 
 	shared_ptr< impl >	impl_;
 
+	template< typename F >
+	void set_wait_callback( F const& f)
+	{ impl_->prom.set_wait_callback( f); }
+
 public:
 	template< typename Fn >
 	task( Fn const& fn)
@@ -122,16 +132,15 @@ public:
 
 	void operator()() // throw()
 	{ ( * impl_)(); }
-
-	template< typename F >
-	void set_wait_callback( F const& f)
-	{ impl_->prom.set_wait_callback( f); }
 };
 
 template<>
 class task< void >
 {
 private:
+	template< typename Channel >
+	friend class static_pool;
+
 	struct impl
 	{
 		promise< void >			prom;
@@ -208,6 +217,10 @@ private:
 
 	shared_ptr< impl >	impl_;
 
+	template< typename F >
+	void set_wait_callback( F const& f)
+	{ impl_->prom.set_wait_callback( f); }
+
 public:
 	template< typename Fn >
 	task( Fn const& fn)
@@ -225,10 +238,6 @@ public:
 
 	void operator()() // throw()
 	{ ( * impl_)(); }
-
-	template< typename F >
-	void set_wait_callback( F const& f)
-	{ impl_->prom.set_wait_callback( f); }
 };
 
 template< typename Fn >
