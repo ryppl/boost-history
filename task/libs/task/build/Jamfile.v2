@@ -1,10 +1,8 @@
 # Boost System Library Build Jamfile
 
 # (C) Copyright Oliver Kowalke 2009
-
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or www.boost.org/LICENSE_1_0.txt)
-
 # See library home page at http://www.boost.org/libs/system
 
 import os ;
@@ -12,10 +10,12 @@ import feature ;
 import indirect ;
 import path ;
 
-project boost/tp
+project boost/task
     : source-location ../src
+    : requirements <threading>multi
       <link>static:<define>BOOST_TASK_BUILD_LIB=1
       <link>shared:<define>BOOST_TASK_BUILD_DLL=1
+    : default-build <threading>multi
     ;
 
 local rule default_taskapi ( )

@@ -111,7 +111,7 @@ public:
 					pt::seconds( 3) ) ) );
 		h.interrupt();
 		BOOST_CHECK( h.interruption_requested() );
-		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
+		BOOST_CHECK_NO_THROW( h.get() );
 	}
 
 	// check interrupt_and_wait
@@ -129,7 +129,7 @@ public:
 		BOOST_CHECK( ! finished);
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.interruption_requested() );
-		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
+		BOOST_CHECK_NO_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check waitfor_all()

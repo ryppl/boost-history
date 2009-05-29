@@ -66,7 +66,7 @@ __boost_task__ has been tested on the following platforms and compilers:
 
 
 [heading How to build]
-* define environment variable BOOST_SOURCE_ROOT pointing to the source directory of __boost__
+* define environment variable BOOST_BUILD_PATH pointing to the source directory of __boost__
 * extract archive of __boost_task__
 * call bjam in the directory of __boost_task__
 
