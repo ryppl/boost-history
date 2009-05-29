@@ -7,13 +7,10 @@
  *
  */
 
-
-
 #ifndef FUNCTION_GRAPH_HPP_
 #define FUNCTION_GRAPH_HPP_
 
 #include <boost/function.hpp>
-#include <boost/function_types/function_arity.hpp>
 #include <boost/mpl/if.hpp>
 
 namespace boost { namespace graph {
@@ -52,7 +49,7 @@ struct function_graph_base {
  * variant will be instantiated for meaningless types such as graph<int>.
  * Obviously, that should fail.
  */
-template <typename T> struct functon_graph { };
+template <typename T> struct function_graph { };
 
 /**
  * @note [asutton] This specialization will be instantiated whenever the
@@ -61,7 +58,7 @@ template <typename T> struct functon_graph { };
  * the compiler will match the version above, causing compiler errors.
  */
 template <typename Edge, typename Vertex>
-struct function_graph< function<Edge(Vertex, Vertex)> >
+struct function_graph< boost::function<Edge(Vertex, Vertex)> >
     : function_graph_base< function<Edge(Vertex, Vertex)> >
 { };
 
@@ -69,9 +66,9 @@ struct function_graph< function<Edge(Vertex, Vertex)> >
  * @note This specialization will match any function of the form E(V,V) and
  * generates the graph over an adapted boost function. Note that functions of
  * the form E(U,V) will match the empty class causing compiler errors.
- *
+ */
 template <typename Edge, typename Vertex>
-struct fucntion_graph<Edge(Vertex, Vertex)>
+struct function_graph<Edge(Vertex, Vertex)>
     : function_graph_base< function<Edge(Vertex, Vertex)> >
 { };
 
