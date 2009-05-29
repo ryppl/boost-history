@@ -55,14 +55,14 @@ public:
 			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -153,7 +153,7 @@ int main( int argc, char *argv[])
 		do_write( fd[1], "Hello ");
 		boost::this_thread::sleep( pt::seconds( 1) );
 
-		for ( int i = 0; i < 15; ++i)
+		for ( int i = 0; i < 10; ++i)
 			tsk::async(
 				tsk::default_pool(),
 				tsk::make_task(

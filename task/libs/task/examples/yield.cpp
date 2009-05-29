@@ -50,14 +50,14 @@ public:
 			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
 						n - 1) ) );
 			tsk::handle< long > h2(
 				tsk::async(
-					tsk::default_pool(),
+					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
@@ -72,7 +72,7 @@ void parallel_fib( long n)
 {
 	fib_task a( 5);
 	long result = a.execute( n);
-	printf("n == %d, fibonnaci == %ld\n", n, result);
+	printf("n == %d, fibonnaci == %d\n", n, result);
 }
 
 int main( int argc, char *argv[])
