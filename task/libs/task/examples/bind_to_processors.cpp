@@ -46,17 +46,17 @@ public:
 			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
 				tsk::async(
-					boost::this_task::get_pool< pool_type >(),
+					boost::task::as_sub_task(), // do not use this_task::get_pool() because it doesn't create as sub-task
 					tsk::make_task(
 						& fib_task::execute,
-						boost::ref( * this),
+						this,
 						n - 1) ) ) ;
 			tsk::handle< long > h2(
 				tsk::async(
-					boost::this_task::get_pool< pool_type >(),
+					boost::task::as_sub_task(), // do not use this_task::get_pool() because it doesn't create as sub-task
 					tsk::make_task(
 						& fib_task::execute,
-						boost::ref( * this),
+						this,
 						n - 2) ) );
 			return h1.get() + h2.get();
 		}
