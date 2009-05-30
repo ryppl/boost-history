@@ -72,6 +72,7 @@ long parallel_fib( long n)
 
 int main( int argc, char *argv[])
 {
+# if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	try
 	{
 		pool_type pool;
@@ -109,5 +110,8 @@ int main( int argc, char *argv[])
 	catch ( ... )
 	{ std::cerr << "unhandled" << std::endl; }
 
+# endif
+
 	return EXIT_FAILURE;
 }
+

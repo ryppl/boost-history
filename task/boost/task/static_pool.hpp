@@ -86,7 +86,7 @@ private:
 					this) ) );
 	}
 
-#ifdef BOOST_HAS_PROCESSOR_BINDINGS
+# if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	void worker_entry_( std::size_t n)
 	{
 		this_thread::bind_to_processor( n);
@@ -110,7 +110,7 @@ private:
 					this,
 					n) ) );
 	}
-#endif
+# endif
 
 	std::size_t active_() const
 	{ return active_worker_; }
@@ -174,7 +174,7 @@ public:
 		lk.unlock();
 	}
 
-#ifdef BOOST_HAS_PROCESSOR_BINDINGS
+# ifdef BOOST_HAS_PROCESSOR_BINDINGS
 	explicit static_pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20) )

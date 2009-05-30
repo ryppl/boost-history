@@ -25,7 +25,7 @@
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_solaris.hpp>
 # else
-#   define BOOST_HAS_PROCESSOR_BINDINGS 0
+#   undef BOOST_HAS_PROCESSOR_BINDINGS
 # endif
 
 #endif // BOOST_TASK_DETAIL_BIND_PROCESSOR_H
