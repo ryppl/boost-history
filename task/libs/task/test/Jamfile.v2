@@ -9,27 +9,27 @@
 # bring in rules for testing
 import testing ;
 
-project
+project boost/task/test
     : requirements
-         <library>../../test/build//boost_unit_test_framework
-         <library>../../thread/build//boost_thread
-         <library>../../system/build//boost_system
-         <library>../../task/build//boost_task
-         <link>static
-         <threading>multi
+        <library>../../test/build//boost_unit_test_framework
+        <library>../../thread/build//boost_thread
+        <library>../../task/build//boost_task
+        <library>../../system/build//boost_system
+        <link>static
+        <threading>multi
     ;
 
-rule tp-test ( source )
+rule task-test ( source )
 {
     return
         [ run $(source).cpp ]
     ;
 }
 
-test-suite thread_pool :
-    [ tp-test test_own_thread ]
-    [ tp-test test_new_thread ]
-    [ tp-test test_default_pool ]
-    [ tp-test test_unbounded_pool ]
-    [ tp-test test_bounded_pool ]
+test-suite task :
+    [ task-test test_own_thread ]
+    [ task-test test_new_thread ]
+    [ task-test test_default_pool ]
+    [ task-test test_unbounded_pool ]
+    [ task-test test_bounded_pool ]
     ;
