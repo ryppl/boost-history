@@ -348,23 +348,21 @@ inline void boost::stm::transaction::unlock_general_access()
 //--------------------------------------------------------------------------
 inline void boost::stm::transaction::lockThreadMutex(size_t threadId)
 {
-   ThreadMutexContainer::iterator i = threadMutexes_.find(threadId);
-   lock(i->second);
+   lock(mutex(threadId));
 }
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline void boost::stm::transaction::unlockThreadMutex(size_t threadId)
 {
-   ThreadMutexContainer::iterator i = threadMutexes_.find(threadId);
-   unlock(i->second);
+   unlock(mutex(threadId));
 }
 
 //--------------------------------------------------------------------------
 //--------------------------------------------------------------------------
 inline void boost::stm::transaction::lock_all_mutexes_but_this(size_t threadId)
 {
-   for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
+    for (ThreadMutexContainer::iterator i = threadMutexes_.begin();
       i != threadMutexes_.end(); ++i)
    {
       if (i->first == threadId) continue;
@@ -392,7 +390,6 @@ inline void boost::stm::transaction::lock_all_mutexes()
    {
       lock(i->second);
    }
-
    hasMutex_ = 1;
 }
 
@@ -409,8 +406,7 @@ inline void boost::stm::transaction::unlock_all_mutexes()
    {
       unlock(i->second);
    }
-
-   hasMutex_ = 0;
+   hasMutex_ = 0;  
 }
 
 //--------------------------------------------------------------------------
@@ -427,14 +423,43 @@ inline void boost::stm::transaction::unlock_all_mutexes()
 inline boost::stm::transaction::transaction() :
    threadId_(THREAD_ID),
 #if USE_SINGLE_THREAD_CONTEXT_MAP
-   context_(*threadMemContainer_.find(threadId_)->second),
+////////////////////////////////////////   
+   context_(*tss_context_map_.find(threadId_)->second),
+
+#ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+   write_list_ref_(&context_.writeMem),
+   bloomRef_(&context_.bloom),
+   wbloomRef_(&context_.wbloom),
+   newMemoryListRef_(&context_.newMem),
+   deletedMemoryListRef_(&context_.delMem),
+   txTypeRef_(&context_.txType),
+#ifdef USING_SHARED_FORCED_TO_ABORT
+   forcedToAbortRef_(&context_.abort),
+#else
+   forcedToAbortRef_(false),
 #endif
+#endif   
+   mutexRef_(threadMutexes_.find(threadId_)->second),
+
+#if PERFORMING_LATM
+   blockedRef_(blocked(threadId_)),
+#endif
+
+#if PERFORMING_LATM
+#if USING_TRANSACTION_SPECIFIC_LATM
+   conflictingMutexRef_(*threadConflictingMutexes_.find(threadId_)->second),
+#endif
+   obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
+   currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
+#endif
+   
+////////////////////////////////////////   
+#else
+////////////////////////////////////////   
 #ifndef DISABLE_READ_SETS
    readListRef_(*threadReadLists_.find(threadId_)->second),
 #endif
-
-#ifndef USE_SINGLE_THREAD_CONTEXT_MAP
-   writeListRef_(threadWriteLists_.find(threadId_)->second),
+   write_list_ref_(threadWriteLists_.find(threadId_)->second),
    bloomRef_(threadBloomFilterLists_.find(threadId_)->second),
 #if PERFORMING_WRITE_BLOOM
    wbloomRef_(threadWBloomFilterLists_.find(threadId_)->second),
@@ -448,36 +473,31 @@ inline boost::stm::transaction::transaction() :
 #else
    forcedToAbortRef_(false),
 #endif
-#else // USE_SINGLE_THREAD_CONTEXT_MAP
-   writeListRef_(&context_.writeMem),
-   wbloomRef_(&context_.wbloom),
-   bloomRef_(&context_.bloom),
-   newMemoryListRef_(&context_.newMem),
-   deletedMemoryListRef_(&context_.delMem),
-   txTypeRef_(&context_.txType),
-   forcedToAbortRef_(&context_.abort),
-#endif
 
    mutexRef_(threadMutexes_.find(threadId_)->second),
 
 #if PERFORMING_LATM
-   blockedRef_(*threadBlockedLists_.find(threadId_)->second),
+   blockedRef_(blocked(threadId_)),
 #endif
+
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
    conflictingMutexRef_(*threadConflictingMutexes_.find(threadId_)->second),
 #endif
-#if PERFORMING_LATM
    obtainedLocksRef_(*threadObtainedLocks_.find(threadId_)->second),
    currentlyLockedLocksRef_(*threadCurrentlyLockedLocks_.find(threadId_)->second),
 #endif
+
+////////////////////////////////////////   
 #endif
+
+
    hasMutex_(0), priority_(0),
    state_(e_no_state),
    reads_(0),
    startTime_(time(NULL))
 {
-   if (directUpdating_) doIntervalDeletions();
+   if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }
 #endif
@@ -515,7 +535,7 @@ inline std::string boost::stm::transaction::outputBlockedThreadsAndLockedLocks()
       // list, then allow the thread to make forward progress again
       // by turning its "blocked" but only if it does not appear in the
       // locked_locks_thread_id_map
-      o << iter->first << " blocked: " << *threadBlockedLists_[iter->first] << endl;
+      o << iter->first << " blocked: " << blocked(iter->first) << endl;
       o << "\t";
 
       for (MutexSet::iterator inner = iter->second->begin(); inner != iter->second->end(); ++inner)
@@ -574,7 +594,7 @@ inline bool boost::stm::transaction::restart()
    // restart() interface
    //-----------------------------------------------------------------------
 #if PERFORMING_COMPOSITION
-#if USING_SHARED_FORCED_TO_ABORT
+#ifdef USING_SHARED_FORCED_TO_ABORT
    lock_inflight_access();
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
@@ -702,7 +722,7 @@ inline void boost::stm::transaction::end()
    // in case this is called multiple times
    if (!in_flight()) return;
 
-   if (directUpdating_)
+   if (direct_updating())
    {
 #if PERFORMING_VALIDATION
       validating_direct_end_transaction();
@@ -730,7 +750,7 @@ inline void boost::stm::transaction::end()
 //-----------------------------------------------------------------------------
 inline void boost::stm::transaction::lock_and_abort()
 {
-   if (directUpdating_)
+   if (direct_updating())
    {
       bool wasWriting = isWriting() ? true : false;
 
@@ -859,12 +879,12 @@ inline void boost::stm::transaction::invalidating_deferred_end_transaction()
       {
          tx_type(eNormalTx);
 #if PERFORMING_LATM
-         conflictingMutexRef_.clear();
+         get_tx_conflicting_locks().clear();
          clear_latm_obtained_locks();
 #endif
          state_ = e_committed;
       }
-      ++globalClock_;
+      ++global_clock();
 
       return;
    }
@@ -920,7 +940,7 @@ inline void boost::stm::transaction::invalidating_deferred_end_transaction()
          invalidating_deferred_commit();
       }
 
-      ++globalClock_;
+      ++global_clock();
    }
 }
 
@@ -1063,7 +1083,7 @@ inline void boost::stm::transaction::validating_deferred_end_transaction()
          {
             tx_type(eNormalTx);
 #if PERFORMING_LATM
-            conflictingMutexRef_.clear();
+            get_tx_conflicting_locks().clear();
             clear_latm_obtained_locks();
 #endif
             state_ = e_committed;
@@ -1242,7 +1262,7 @@ inline void boost::stm::transaction::direct_abort
          transactionsInFlight_.erase(this);
       }
 
-#if USING_SHARED_FORCED_TO_ABORT
+#ifdef USING_SHARED_FORCED_TO_ABORT
       if (!other_in_flight_same_thread_transactions())
       {
          unforce_to_abort();
@@ -1291,7 +1311,7 @@ inline void boost::stm::transaction::deferred_abort
       // if I'm the last transaction of this thread, reset abort to false
       transactionsInFlight_.erase(this);
 
-#if USING_SHARED_FORCED_TO_ABORT
+#ifdef USING_SHARED_FORCED_TO_ABORT
       if (!other_in_flight_same_thread_transactions())
       {
          unforce_to_abort();
@@ -1320,7 +1340,7 @@ inline void boost::stm::transaction::invalidating_direct_commit()
 
       bookkeeping_.inc_commits();
 
-      if (0 != transactionsInFlight_.size())
+      if (!transactionsInFlight_.empty())
       {
          forceOtherInFlightTransactionsReadingThisWriteMemoryToAbort();
       }
@@ -1336,7 +1356,7 @@ inline void boost::stm::transaction::invalidating_direct_commit()
 
       tx_type(eNormalTx);
 #if PERFORMING_LATM
-      conflictingMutexRef_.clear();
+      get_tx_conflicting_locks().clear();
       clear_latm_obtained_locks();
 #endif
       state_ = e_committed;
@@ -1414,7 +1434,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
       {
          static int stalling_ = 0;
 
-         bool wait = stalling_ * stalls_ < globalClock_;
+         bool wait = stalling_ * stalls_ < global_clock();
          transaction *stallingOn = NULL;
          //int iter = 1;
 
@@ -1422,7 +1442,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
          while (!forceOtherInFlightTransactionsAccessingThisWriteMemoryToAbort(wait, stallingOn))
          {
             ++stalling_;
-            size_t local_clock = globalClock_;
+            size_t local_clock = global_clock();
 
             unlock_inflight_access();
             unlock_general_access();
@@ -1430,7 +1450,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
 
             for (;;)
             {
-               while (local_clock == globalClock_)// && sleepTime < maxSleep)
+               while (local_clock == global_clock())// && sleepTime < maxSleep)
                {
                   SLEEP(1);
                }
@@ -1449,8 +1469,8 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
                if (transactionsInFlight_.end() == transactionsInFlight_.find(stallingOn))
                {
                   --stalling_;
-                  wait = stalling_ * stalls_ < globalClock_;
-                  //std::cout << "stalling : stalls : commits: " << stalling_ << " : " << stalls_ << " : " << globalClock_ << std::endl;
+                  wait = stalling_ * stalls_ < global_clock();
+                  //std::cout << "stalling : stalls : commits: " << stalling_ << " : " << stalls_ << " : " << global_clock() << std::endl;
                   //set_priority(priority() + reads());
                   break;
                }
@@ -1481,7 +1501,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
 
       deferredCommitWriteState();
 
-      if (0 != newMemoryList().size())
+      if (!newMemoryList().empty())
       {
          bookkeeping_.inc_new_mem_commits_by(newMemoryList().size());
          deferredCommitTransactionNewMemory();
@@ -1498,7 +1518,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
       //-----------------------------------------------------------------------
       unlock_all_mutexes();
 
-      if (0 != deletedMemoryList().size())
+      if (!deletedMemoryList().empty())
       {
          bookkeeping_.inc_del_mem_commits_by(deletedMemoryList().size());
          deferredCommitTransactionDeletedMemory();
@@ -1508,7 +1528,7 @@ inline void boost::stm::transaction::invalidating_deferred_commit()
       bookkeeping_.inc_commits();
       tx_type(eNormalTx);
 #if PERFORMING_LATM
-      conflictingMutexRef_.clear();
+      get_tx_conflicting_locks().clear();
       clear_latm_obtained_locks();
 #endif
       state_ = e_committed;
@@ -1570,7 +1590,7 @@ inline void boost::stm::transaction::validating_direct_commit()
 
       bookkeeping_.inc_commits();
 
-      if (0 != transactionsInFlight_.size())
+      if (!transactionsInFlight_.empty())
       {
          forceOtherInFlightTransactionsReadingThisWriteMemoryToAbort();
       }
@@ -1582,9 +1602,9 @@ inline void boost::stm::transaction::validating_direct_commit()
       bookkeeping_.inc_new_mem_commits_by(newMemoryList().size());
       directCommitTransactionNewMemory();
 
-      txTypeRef_ = eNormalTx;
+      tx_type_ref() = eNormalTx;
 #if PERFORMING_LATM
-      conflictingMutexRef_.clear();
+      get_tx_conflicting_locks().clear();
       clear_latm_obtained_locks();
 #endif
       state_ = e_committed;
@@ -1668,7 +1688,7 @@ inline void boost::stm::transaction::validating_deferred_commit()
          deferredCommitWriteState();
       }
 
-      if (0 != newMemoryList().size())
+      if (!newMemoryList().empty())
       {
          bookkeeping_.inc_new_mem_commits_by(newMemoryList().size());
          deferredCommitTransactionNewMemory();
@@ -1681,7 +1701,7 @@ inline void boost::stm::transaction::validating_deferred_commit()
       //-----------------------------------------------------------------------
       unlock_all_mutexes_but_this(threadId_);
 
-      if (0 != deletedMemoryList().size())
+      if (!deletedMemoryList().empty())
       {
          bookkeeping_.inc_del_mem_commits_by(deletedMemoryList().size());
          deferredCommitTransactionDeletedMemory();
@@ -1689,9 +1709,9 @@ inline void boost::stm::transaction::validating_deferred_commit()
 
       // finally set the state to committed
       bookkeeping_.inc_commits();
-      txTypeRef_ = eNormalTx;
+      tx_type_ref() = eNormalTx;
 #if PERFORMING_LATM
-      conflictingMutexRef_.clear();
+      get_tx_conflicting_locks().clear();
       clear_latm_obtained_locks();
 #endif
       state_ = e_committed;
@@ -1841,7 +1861,7 @@ inline void boost::stm::transaction::directCommitTransactionDeletedMemory() thro
 {
    using namespace boost::stm;
 
-   if (deletedMemoryList().size() > 0)
+   if (!deletedMemoryList().empty())
    {
       var_auto_lock<PLOCK> a(&deletionBufferMutex_, NULL);
       deletionBuffer_.insert( std::pair<size_t, MemoryContainerList>
@@ -2125,7 +2145,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
 #endif
    }
 
-   if (aborted.size() > 0)
+   if (!aborted.empty())
    {
       // ok, forced to aborts are allowed, do them
       for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end(); ++k)

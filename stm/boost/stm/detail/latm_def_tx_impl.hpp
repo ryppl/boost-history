@@ -80,7 +80,7 @@ inline bool boost::stm::transaction::def_do_core_tx_conflicting_lock_pthread_loc
       if (t->threadId_ == THREAD_ID) continue;
 
       // if this mutex has a conflict with an inflight tx
-      if (t->conflictingMutexRef_.find(mutex) != t->conflictingMutexRef_.end())
+      if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
       {
          if (txIsIrrevocable || (!t->irrevocable() && 
             cm_->allow_lock_to_abort_tx(lockWaitTime, lockAborted, txIsIrrevocable, *t)))
@@ -91,7 +91,7 @@ inline bool boost::stm::transaction::def_do_core_tx_conflicting_lock_pthread_loc
       }
    }
 
-   if (0 != txList.size()) 
+   if (!txList.empty()) 
    {
 #if LOGGING_BLOCKS
       logFile_ << "----------------------\nbefore locked mutex: " << mutex << endl << endl;
@@ -118,7 +118,7 @@ inline bool boost::stm::transaction::def_do_core_tx_conflicting_lock_pthread_loc
          {
             if (0 == thread_id_occurance_in_locked_locks_map(*it))
             {
-               *threadBlockedLists_.find(*it)->second = false;
+               blocked(*it) = false;
             }
          }
          throw; 

@@ -415,6 +415,43 @@ public:
    virtual void perform_irrevocable_tx_wait_priority_promotion(boost::stm::transaction &);
 };
 
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+    template<typename Lockable>
+    class lock_guard2
+    {
+    private:
+        Lockable& m;
+        //bool owns_;
+
+        explicit lock_guard2(lock_guard2&);
+        lock_guard2& operator=(lock_guard2&);
+    public:
+        inline explicit lock_guard2(Lockable& m_):
+            m(m_)
+        {
+            lock();
+        }
+        inline ~lock_guard2()
+        {
+            //unlock();
+        }
+        //inline bool owns_lock() { return owns_;}
+        inline void lock() {
+            //if (owns_) 
+                stm::lock(m);
+            //owns_=true;
+        }
+        inline void unlock() {
+            //if (owns_) 
+                stm::unlock(m);
+            //owns_=false;
+        }
+        //inline void release() {
+        //    owns_=false;
+        //}
+    };
+
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------

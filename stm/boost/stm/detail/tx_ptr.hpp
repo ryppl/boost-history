@@ -27,11 +27,11 @@ class read_ptr
 {
 public:
  
-   read_ptr(transaction &t, T const &tx_obj) : 
+   inline read_ptr(transaction &t, T const &tx_obj) : 
       t_(t), tx_ptr_(&const_cast<T&>(t_.read(tx_obj))), written_(false)
    {}
 
-   T* get() const
+   const T* get() const
    {
       if (t_.forced_to_abort()) 
       {
@@ -54,10 +54,10 @@ public:
       return tx_ptr_;
    }
 
-   T const & operator*() const { return *get(); }
-   T const * operator->() const { return get(); }
+   inline T const & operator*() const { return *get(); }
+   inline T const * operator->() const { return get(); }
 
-   transaction &trans() { return t_; }
+   inline transaction &trans() { return t_; }
 
    T* write_ptr()
    {
@@ -101,11 +101,11 @@ class write_ptr
 {
 public:
  
-   write_ptr(transaction &t, T & tx_obj) : 
+   inline write_ptr(transaction &t, T & tx_obj) : 
       t_(t), tx_obj_(t_.write(tx_obj))
    {}
 
-   T& operator*()
+   inline T& operator*()
    {
       if (t_.forced_to_abort()) 
       {
@@ -115,7 +115,7 @@ public:
       return tx_obj_;
    }
 
-   T* operator->()
+   inline T* operator->()
    {
       if (t_.forced_to_abort()) 
       {

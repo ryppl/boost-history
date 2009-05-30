@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -140,8 +140,11 @@ public:
 
    typedef std::map<size_t, MutexSet* > ThreadMutexSetContainer;
    typedef std::map<size_t, boost::stm::bloom_filter*> ThreadBloomFilterList;
-   typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
-
+#ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
+typedef std::map<size_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
+#else
+typedef std::map<size_t, boost::stm::bit_vector*> ThreadBitVectorList;
+#endif
    typedef std::pair<size_t, int*> thread_bool_pair;
 #ifndef MAP_THREAD_BOOL_CONTAINER
    typedef boost::stm::vector_map<size_t, int*> ThreadBoolContainer;
@@ -157,6 +160,7 @@ public:
    typedef InflightTxes in_flight_transaction_container;
    typedef in_flight_transaction_container in_flight_trans_cont;
 
+#ifdef USE_SINGLE_THREAD_CONTEXT_MAP
    struct tx_context
    {
       MemoryContainerList newMem;
@@ -169,7 +173,8 @@ public:
       int abort;
    };
 
-   typedef std::map<size_t, tx_context*> ThreadMemContainer;
+   typedef std::map<size_t, tx_context*> tss_context_map_type;
+#endif
 
    //--------------------------------------------------------------------------
    // transaction static methods
@@ -177,67 +182,67 @@ public:
    static void initialize();
    static void initialize_thread();
    static void terminate_thread();
-   static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
-   static base_contention_manager* get_contention_manager() { return cm_; }
+   inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
+   inline static base_contention_manager* get_contention_manager() { return cm_; }
 
-   static void enableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(true); }
-   static void disableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(false); }
+   inline static void enableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(true); }
+   inline static void disableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(false); }
 
-   static const transaction_bookkeeping & bookkeeping() { return bookkeeping_; }
+   inline static const transaction_bookkeeping & bookkeeping() { return bookkeeping_; }
 
-   static bool early_conflict_detection() { return !directLateWriteReadConflict_ && direct_updating(); }
-   static bool late_conflict_detection() { return directLateWriteReadConflict_ || !direct_updating(); }
+   inline static bool early_conflict_detection() { return !directLateWriteReadConflict_ && direct_updating(); }
+   inline static bool late_conflict_detection() { return directLateWriteReadConflict_ || !direct_updating(); }
 
-   static bool enable_dynamic_priority_assignment()
+   inline static bool enable_dynamic_priority_assignment()
    {
       return dynamicPriorityAssignment_ = true;
    }
 
-   static bool disable_dynamic_priority_assignment()
+   inline static bool disable_dynamic_priority_assignment()
    {
       return dynamicPriorityAssignment_ = false;
    }
 
-   static bool using_move_semantics() { return usingMoveSemantics_; }
-   static bool using_copy_semantics() { return !using_move_semantics(); }
+   inline static bool using_move_semantics() { return usingMoveSemantics_; }
+   inline static bool using_copy_semantics() { return !using_move_semantics(); }
 
-   static void enable_move_semantics()
+   inline static void enable_move_semantics()
    {
-      if (!kDracoMoveSemanticsCompiled) 
+      if (!kDracoMoveSemanticsCompiled)
          throw "move semantics off - rebuild with #define BUILD_MOVE_SEMANTICS 1";
       usingMoveSemantics_ = true;
    }
 
-   static void disable_move_semantics()
+   inline static void disable_move_semantics()
    {
       usingMoveSemantics_ = false;
    }
 
-   static bool doing_dynamic_priority_assignment()
+   inline static bool doing_dynamic_priority_assignment()
    {
       return dynamicPriorityAssignment_;
    }
 
    static bool do_early_conflict_detection()
    {
-      if (transactionsInFlight_.size() > 0) return false;
+      if (!transactionsInFlight_.empty()) return false;
       if (deferred_updating()) return false;
       else return !(directLateWriteReadConflict_ = false);
    }
 
    static bool do_late_conflict_detection()
    {
-      if (transactionsInFlight_.size() > 0) return false;
+      if (!transactionsInFlight_.empty()) return false;
       else return directLateWriteReadConflict_ = true;
    }
 
-   static std::string consistency_checking_string()
+   inline static std::string consistency_checking_string()
    {
       if (validating()) return "val";
       else return "inval";
    }
 
-   static bool validating() 
+   inline static bool validating()
    {
 #ifdef PERFORMING_VALIDATION
       return true;
@@ -245,18 +250,20 @@ public:
       return false;
    }
 
-   static bool invalidating() { return !validating(); }
+   inline static bool invalidating() { return !validating(); }
 
-   static bool direct_updating() { return directUpdating_; }
-   static bool deferred_updating() { return !directUpdating_; }
+   inline static bool direct_updating() { return direct_updating_; }
+   inline static bool& direct_updating_ref() { return direct_updating_; }
+   inline static bool deferred_updating() { return !direct_updating_; }
 
    //--------------------------------------------------------------------------
    // make all transactions direct as long as no transactions are in flight
    //--------------------------------------------------------------------------
    static bool do_direct_updating()
    {
-      if (transactionsInFlight_.size() > 0) return false;
-      else return directUpdating_ = true;
+      if (!transactionsInFlight_.empty()) return false;
+      else direct_updating_ref() = true;
+      return true;
    }
 
    //--------------------------------------------------------------------------
@@ -264,20 +271,20 @@ public:
    //--------------------------------------------------------------------------
    static bool do_deferred_updating()
    {
-      if (transactionsInFlight_.size() > 0) return false;
-      else directUpdating_ = false;
+      if (!transactionsInFlight_.empty()) return false;
+      else direct_updating_ref() = false;
       return true;
    }
 
    static std::string update_policy_string()
    {
-      return directUpdating_ ? "dir" : "def";
+      return direct_updating() ? "dir" : "def";
    }
 
    //--------------------------------------------------------------------------
    // Lock Aware Transactional Memory support methods
    //--------------------------------------------------------------------------
-   static LatmType const latm_protection() { return eLatmType_; }
+   inline static LatmType const latm_protection() { return eLatmType_; }
    static std::string const latm_protection_str();
    static void do_full_lock_protection();
    static void do_tm_lock_protection();
@@ -286,63 +293,63 @@ public:
    static bool doing_full_lock_protection();
    static bool doing_tm_lock_protection();
    static bool doing_tx_lock_protection();
-   
- 
+
+
 #ifdef WIN32
    template <typename T>
-   static int lock_(T *lock) { throw "unsupported lock type"; }
+   inline static int lock_(T *lock) { throw "unsupported lock type"; }
 
    template <typename T>
-   static int trylock_(T *lock) { throw "unsupported lock type"; }
+   inline static int trylock_(T *lock) { throw "unsupported lock type"; }
 
    template <typename T>
-   static int unlock_(T *lock) { throw "unsupported lock type"; }
+   inline static int unlock_(T *lock) { throw "unsupported lock type"; }
 
    template <>
-   static int lock_(Mutex &lock) { return pthread_lock(&lock); }
+   inline static int lock_(Mutex &lock) { return pthread_lock(&lock); }
 
    template <>
-   static int lock_(Mutex *lock) { return pthread_lock(lock); }
+   inline static int lock_(Mutex *lock) { return pthread_lock(lock); }
 
    template <>
-   static int trylock_(Mutex &lock) { return pthread_trylock(&lock); }
+   inline static int trylock_(Mutex &lock) { return pthread_trylock(&lock); }
 
    template <>
-   static int trylock_(Mutex *lock) { return pthread_trylock(lock); }
+   inline static int trylock_(Mutex *lock) { return pthread_trylock(lock); }
 
    template <>
-   static int unlock_(Mutex &lock) { return pthread_unlock(&lock); }
+   inline static int unlock_(Mutex &lock) { return pthread_unlock(&lock); }
 
    template <>
-   static int unlock_(Mutex *lock) { return pthread_unlock(lock); }
+   inline static int unlock_(Mutex *lock) { return pthread_unlock(lock); }
 #else
-   static int lock_(PLOCK &lock) { return pthread_lock(&lock); }
-   static int lock_(PLOCK *lock) { return pthread_lock(lock); }
+   inline static int lock_(PLOCK &lock) { return pthread_lock(&lock); }
+   inline static int lock_(PLOCK *lock) { return pthread_lock(lock); }
 
-   static int trylock_(PLOCK &lock) { return pthread_trylock(&lock); }
-   static int trylock_(PLOCK *lock) { return pthread_trylock(lock); }
+   inline static int trylock_(PLOCK &lock) { return pthread_trylock(&lock); }
+   inline static int trylock_(PLOCK *lock) { return pthread_trylock(lock); }
 
-   static int unlock_(PLOCK &lock) { return pthread_unlock(&lock); }
-   static int unlock_(PLOCK *lock) { return pthread_unlock(lock); }
+   inline static int unlock_(PLOCK &lock) { return pthread_unlock(&lock); }
+   inline static int unlock_(PLOCK *lock) { return pthread_unlock(lock); }
 #endif
-   
+
    static int pthread_lock(Mutex *lock);
    static int pthread_trylock(Mutex *lock);
    static int pthread_unlock(Mutex *lock);
-   
+
 
 
    //--------------------------------------------------------------------------
 #if PERFORMING_LATM
    //--------------------------------------------------------------------------
-   static void tm_lock_conflict(Mutex &lock)
+   inline static void tm_lock_conflict(Mutex &lock)
    {
       tm_lock_conflict(&lock);
    }
    static void tm_lock_conflict(Mutex *lock);
 
    static void clear_tm_conflicting_locks();
-   static MutexSet get_tm_conflicting_locks() { return tmConflictingLocks_; }
+   inline static MutexSet get_tm_conflicting_locks() { return tmConflictingLocks_; }
 
    void must_be_in_conflicting_lock_set(Mutex *inLock);
    static void must_be_in_tm_conflicting_lock_set(Mutex *inLock);
@@ -350,20 +357,20 @@ public:
 #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
 
-   void lock_conflict(Mutex &lock)
+   inline void lock_conflict(Mutex &lock)
    { add_tx_conflicting_lock(&lock); }
 
-   void lock_conflict(Mutex *lock)
+   inline void lock_conflict(Mutex *lock)
    { add_tx_conflicting_lock(lock); }
 
-   void add_tx_conflicting_lock(Mutex &lock)
+   inline void add_tx_conflicting_lock(Mutex &lock)
    {
       add_tx_conflicting_lock(&lock);
    }
    void add_tx_conflicting_lock(Mutex *lock);
 
    void clear_tx_conflicting_locks();
-   MutexSet get_tx_conflicting_locks() { return conflictingMutexRef_; }
+   //MutexSet get_tx_conflicting_locks() { return conflictingMutexRef_; }
 #endif
 
    void add_to_obtained_locks(Mutex* );
@@ -383,7 +390,6 @@ public:
    transaction();
    ~transaction();
 
-   int const forced_to_abort() const { return *forcedToAbortRef_; }
 
    bool check_throw_before_restart() const
    {
@@ -407,9 +413,9 @@ public:
       return true;
    }
 
-   bool committed() const { return state() == e_committed || state() == e_hand_off; }
-   bool aborted() const { return state() == e_aborted; }
-   bool in_flight() const { return state() == e_in_flight; }
+   inline bool committed() const { return state() == e_committed || state() == e_hand_off; }
+   inline bool aborted() const { return state() == e_aborted; }
+   inline bool in_flight() const { return state() == e_in_flight; }
 
    //--------------------------------------------------------------------------
    //--------------------------------------------------------------------------
@@ -456,26 +462,27 @@ public:
    //
    //--------------------------------------------------------------------------
 #ifndef DISABLE_READ_SETS
-   size_t const read_set_size() const { return readListRef_.size(); }
+   inline size_t const read_set_size() const { return readListRef_.size(); }
 #endif
 
-   size_t const writes() const { return writeListRef_->size(); }
-   size_t const reads() const { return reads_; }
+   inline size_t const writes() const { return write_list()->size(); }
+   inline size_t const reads() const { return reads_; }
 
-   template <typename T> T const * read_ptr(T const * in) 
-   { 
+   template <typename T> T const * read_ptr(T const * in)
+   {
       if (NULL == in) return NULL;
-      return &read(*in); 
+      return &read(*in);
    }
    template <typename T> T const & r(T const & in) { return read(in); }
 
+
    //--------------------------------------------------------------------------
-   // attempts to find the written value of T based on 
+   // attempts to find the written value of T based on
    //--------------------------------------------------------------------------
    template <typename T>
    T* get_written(T const & in)
    {
-      if (directUpdating_)
+      if (direct_updating())
       {
          if (in.transaction_thread() == threadId_) return (T*)(&in);
          else return NULL;
@@ -491,7 +498,7 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   bool has_been_read(T const & in)
+   inline bool has_been_read(T const & in)
    {
 #ifndef DISABLE_READ_SETS
       ReadContainer::iterator i = readList().find
@@ -507,9 +514,9 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T const & read(T const & in)
+   inline T const & read(T const & in)
    {
-      if (directUpdating_)
+      if (direct_updating())
       {
 #if PERFORMING_VALIDATION
          throw "direct updating not implemented for validation yet";
@@ -524,18 +531,18 @@ public:
    }
 
    //--------------------------------------------------------------------------
-   template <typename T> T* write_ptr(T* in) 
-   { 
+   template <typename T> T* write_ptr(T* in)
+   {
       if (NULL == in) return NULL;
-      return &write(*in); 
+      return &write(*in);
    }
    template <typename T> T& w(T& in) { return write(in); }
 
    //--------------------------------------------------------------------------
    template <typename T>
-   T& write(T& in)
+   inline T& write(T& in)
    {
-      if (directUpdating_)
+      if (direct_updating())
       {
 #if PERFORMING_VALIDATION
          throw "direct updating not implemented for validation yet";
@@ -551,9 +558,9 @@ public:
 
    //--------------------------------------------------------------------------
    template <typename T>
-   void delete_memory(T &in)
+   inline void delete_memory(T &in)
    {
-      if (directUpdating_)
+      if (direct_updating())
       {
 #if PERFORMING_VALIDATION
          throw "direct updating not implemented for validation yet";
@@ -576,9 +583,9 @@ public:
    template <typename T>
    T* new_shared_memory(T*)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
-         if (!directUpdating_) 
+         if (!direct_updating())
          {
             deferred_abort(true);
             throw aborted_tx("");
@@ -603,9 +610,9 @@ public:
    template <typename T>
    T* new_memory(T*)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
-         if (!directUpdating_) 
+         if (!direct_updating())
          {
             deferred_abort(true);
             throw aborted_tx("");
@@ -627,9 +634,9 @@ public:
    template <typename T>
    T* new_memory_copy(T const &rhs)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
-         if (!directUpdating_) 
+         if (!direct_updating())
          {
             deferred_abort(true);
             throw aborted_tx("");
@@ -646,10 +653,33 @@ public:
       return newNode;
    }
 
+    void throw_if_forced_to_abort_on_new() {
+        if (forced_to_abort()) {
+            if (!direct_updating()) {
+                deferred_abort(true);
+                throw aborted_tx("");
+            }
+#ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
+            cm_->abort_on_new(*this);
+#endif
+        }
+    }
+
+   template <typename T>
+   T* as_new(T *newNode)
+   {
+      //std::auto_ptr<T> newNode(ptr);
+      newNode->transaction_thread(threadId_);
+      newNode->new_memory(1);
+      newMemoryList().push_back(newNode);
+
+      return newNode;
+   }
+
    void begin();
    bool restart();
 
-   bool restart_if_not_inflight()
+   inline bool restart_if_not_inflight()
    {
       if (in_flight()) return true;
       else return restart();
@@ -658,53 +688,54 @@ public:
    void end();
    void no_throw_end();
 
-   void force_to_abort() 
+   void force_to_abort()
    {
       // can't abort irrevocable transactions
       if (irrevocable()) return;
 
-      *forcedToAbortRef_ = true; 
+      forced_to_abort_ref() = true;
 
 #ifdef PERFORMING_COMPOSITION
 #ifndef USING_SHARED_FORCED_TO_ABORT
       // now set all txes of this threadid that are in-flight to force to abort
-      for (InflightTxes::iterator j = transactionsInFlight_.begin(); 
+      for (InflightTxes::iterator j = transactionsInFlight_.begin();
       j != transactionsInFlight_.end(); ++j)
       {
          transaction *t = (transaction*)*j;
 
          // if this is a parent or child tx, it must abort too
-         if (t->threadId_ == this->threadId_) t->forcedToAbortRef_ = true;
+         if (t->threadId_ == this->threadId_) t->forced_to_abort_ref() = true;
       }
 #endif
 #endif
    }
 
-   void unforce_to_abort() { *forcedToAbortRef_ = false; }
+   inline void unforce_to_abort() { forced_to_abort_ref() = false; }
 
    //--------------------------------------------------------------------------
    void lock_and_abort();
 
-   size_t writeListSize() const { return writeListRef_->size(); }
+   inline size_t writeListSize() const { return write_list()->size(); }
 
-   size_t const &priority() const { return priority_; }
-   void set_priority(uint32 const &rhs) const { priority_ = rhs; }
-   void raise_priority() 
-   { 
-      if (priority_ < size_t(-1)) 
+   inline size_t const &priority() const { return priority_; }
+   inline void set_priority(uint32 const &rhs) const { priority_ = rhs; }
+   inline void raise_priority()
+   {
+      if (priority_ < size_t(-1))
       {
-         ++priority_; 
+         ++priority_;
       }
    }
 
-   static InflightTxes const & in_flight_transactions() { return transactionsInFlight_; }
+   inline static InflightTxes const & in_flight_transactions() { return transactionsInFlight_; }
 
    void make_irrevocable();
    void make_isolated();
    bool irrevocable() const;
    bool isolated() const;
 
-   size_t const & thread_id() const { return threadId_; }
+   typedef size_t thread_id_t;
+   inline size_t const & thread_id() const { return threadId_; }
 
 private:
 
@@ -712,7 +743,7 @@ private:
    static std::string outputBlockedThreadsAndLockedLocks();
 #endif
    //--------------------------------------------------------------------------
-   int const& hasLock() const { return hasMutex_; }
+   inline int const& hasLock() const { return hasMutex_; }
    void lock_tx();
    void unlock_tx();
 
@@ -725,14 +756,9 @@ private:
    static void lock_general_access();
    static void unlock_general_access();
 
-   static PLOCK* latm_lock() { return &latmMutex_; }
-   static PLOCK* general_lock() { return &transactionMutex_; }
-   static PLOCK* inflight_lock() { return &transactionsInFlightMutex_; }
-
-#if PERFORMING_LATM
-   void block() { blockedRef_ = true; }
-   void unblock() { blockedRef_ = false; }
-#endif
+   inline static PLOCK* latm_lock() { return &latmMutex_; }
+   inline static PLOCK* general_lock() { return &transactionMutex_; }
+   inline static PLOCK* inflight_lock() { return &transactionsInFlightMutex_; }
 
    bool irrevocableTxInFlight();
    bool isolatedTxInFlight();
@@ -787,14 +813,14 @@ private:
 
          if (in.transaction_thread() != boost::stm::kInvalidThread)
          {
-            lockThreadMutex(in.transaction_thread());
+            //lockThreadMutex(in.transaction_thread());
+            //lock_guard2<Mutex> guard(mutex(in.transaction_thread()));
+            Mutex& m=mutex(in.transaction_thread());
+            stm::lock(m);
 
-            ThreadWriteContainer::iterator writeIter = 
-               threadWriteLists_.find(in.transaction_thread());
-         
-            WriteContainer::iterator readMem = writeIter->second->find((base_transaction_object*)&in);
-
-            if (readMem == writeIter->second->end()) 
+            WriteContainer* c = write_lists(in.transaction_thread());
+            WriteContainer::iterator readMem = c->find((base_transaction_object*)&in);
+            if (readMem == c->end())
             {
                std::cout << "owner did not contain item in write list" << std::endl;
             }
@@ -807,7 +833,9 @@ private:
 #endif
             unlock(&transactionMutex_);
             unlock_tx();
-            unlockThreadMutex(in.transaction_thread());
+            //unlockThreadMutex(in.transaction_thread());
+            stm::unlock(m);
+            //guard.unlock();
 
             ++reads_;
             return *static_cast<T*>(readMem->second);
@@ -825,7 +853,7 @@ private:
          ++reads_;
          return in;
       }
-      else 
+      else
       {
          //--------------------------------------------------------------------
          // if we want direct write-read conflict to be done early, bail
@@ -865,13 +893,13 @@ private:
 #endif
       }
       //-----------------------------------------------------------------------
-      // first we globally lock all threads before we poke at this global 
-      // memory - since we need to ensure other threads don't try to 
+      // first we globally lock all threads before we poke at this global
+      // memory - since we need to ensure other threads don't try to
       // manipulate this at the same time we are going to
       //-----------------------------------------------------------------------
       lock(&transactionMutex_);
 
-      // we currently don't allow write stealing in direct update. if another 
+      // we currently don't allow write stealing in direct update. if another
       // tx beat us to the memory, we abort
       if (in.transaction_thread() != boost::stm::kInvalidThread)
       {
@@ -911,7 +939,7 @@ private:
          unlock(&transactionMutex_);
          cm_->abort_on_write(*this, (base_transaction_object&)(in));
       }
-      else 
+      else
       {
          in.transaction_thread(threadId_);
          unlock(&transactionMutex_);
@@ -931,28 +959,28 @@ private:
    template <typename T>
    T const & deferred_read(T const & in)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
          deferred_abort(true);
          throw aborted_tx("");
       }
 
       //----------------------------------------------------------------
-      // always check if the writeList size is 0 first, since if it is 
+      // always check if the writeList size is 0 first, since if it is
       // it can save construction of an iterator and search setup.
       //----------------------------------------------------------------
 #if PERFORMING_WRITE_BLOOM
-      if (0 == writeList().size() || 
-         (writeList().size() > 16 && 
+      if (writeList().empty() ||
+         (writeList().size() > 16 &&
          !wbloom().exists((size_t)&in))) return insert_and_return_read_memory(in);
 #else
-      if (0 == writeList().size()) return insert_and_return_read_memory(in);
+      if (writeList().empty()) return insert_and_return_read_memory(in);
 #endif
 
       WriteContainer::iterator i = writeList().find
          ((base_transaction_object*)(&in));
       //----------------------------------------------------------------
-      // always check to see if read memory is in write list since it is 
+      // always check to see if read memory is in write list since it is
       // possible to have already written to memory being read now
       //----------------------------------------------------------------
       if (i == writeList().end()) return insert_and_return_read_memory(in);
@@ -992,13 +1020,13 @@ private:
    template <typename T>
    T& deferred_write(T& in)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
          deferred_abort(true);
          throw aborted_tx("");
       }
       //----------------------------------------------------------------
-      // if transactionThread_ is not invalid, then already writing to 
+      // if transactionThread_ is not invalid, then already writing to
       // non-global memory - so succeed.
       //----------------------------------------------------------------
       if (in.transaction_thread() != boost::stm::kInvalidThread) return in;
@@ -1036,13 +1064,13 @@ private:
    template <typename T>
    void deferred_delete_memory(T &in)
    {
-      if (forced_to_abort()) 
+      if (forced_to_abort())
       {
          deferred_abort(true);
          throw aborted_tx("");
       }
       //-----------------------------------------------------------------------
-      // if this memory is true memory, not transactional, we add it to our 
+      // if this memory is true memory, not transactional, we add it to our
       // deleted list and we're done
       //-----------------------------------------------------------------------
       if (in.transaction_thread() != boost::stm::kInvalidThread)
@@ -1054,7 +1082,7 @@ private:
       }
       //-----------------------------------------------------------------------
       // this isn't real memory, it's transactional memory. But the good news is,
-      // the real version has to be in our write list somewhere, find it, add 
+      // the real version has to be in our write list somewhere, find it, add
       // both items to the deletion list and exit
       //-----------------------------------------------------------------------
       else
@@ -1082,9 +1110,9 @@ private:
    void verifyWrittenMemoryIsValidWithGlobalMemory();
 
    //--------------------------------------------------------------------------
-   void abort() throw() { directUpdating_ ? direct_abort() : deferred_abort(); }
-   void deferred_abort(bool const &alreadyRemovedFromInflightList = false) throw();
-   void direct_abort(bool const &alreadyRemovedFromInflightList = false) throw();
+   inline void abort() throw() { direct_updating() ? direct_abort() : deferred_abort(); }
+   inline void deferred_abort(bool const &alreadyRemovedFromInflightList = false) throw();
+   inline void direct_abort(bool const &alreadyRemovedFromInflightList = false) throw();
 
    //--------------------------------------------------------------------------
    void validating_deferred_commit();
@@ -1100,42 +1128,19 @@ private:
 
    //--------------------------------------------------------------------------
    // side-effect: this unlocks all mutexes including its own. this is a slight
-   // optimization over unlock_all_mutexes_but_this() as it doesn't have an 
-   // additional "if" to slow down performance. however, as it will be 
+   // optimization over unlock_all_mutexes_but_this() as it doesn't have an
+   // additional "if" to slow down performance. however, as it will be
    // releasing its own mutex, it must reset hasMutex_
    //--------------------------------------------------------------------------
    void lock_all_mutexes();
    void unlock_all_mutexes();
 
-   transaction_state const & state() const { return state_; }
-
-#if PERFORMING_LATM
-   int const blocked() const { return blockedRef_; }
-#endif
-   WriteContainer& writeList() { return *writeListRef_; }
-#ifndef DISABLE_READ_SETS
-   ReadContainer& readList() { return readListRef_; }
-#endif
-
-   bloom_filter& bloom() { return *bloomRef_; }
-#if PERFORMING_WRITE_BLOOM
-   bloom_filter& wbloom() { return *wbloomRef_; }
-   //bit_vector& sm_wbv() { return sm_wbv_; }
-#endif
 
 #ifndef DISABLE_READ_SETS
-   bool isReading() const { return 0 != readListRef_.size(); }
+   inline bool isReading() const { return !readListRef_.empty(); }
 #endif
-   bool isWriting() const { return 0 != writeListRef_->size(); }
-   bool is_only_reading() const { return !isWriting(); }
-
-   MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
-   MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
-
-   TxType const tx_type() const { return *txTypeRef_; }
-   void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
-
-   Mutex * mutex() { return mutexRef_; }
+   inline bool isWriting() const { return !write_list()->empty(); }
+   inline bool is_only_reading() const { return !isWriting(); }
 
    // undefined and hidden - never allow these - bad things would happen
    transaction& operator=(transaction const &);
@@ -1280,17 +1285,14 @@ private:
    static transaction_bookkeeping bookkeeping_;
    static base_contention_manager *cm_;
 
-#if PERFORMING_LATM
-   static ThreadMutexSetContainer threadConflictingMutexes_;
-   static ThreadMutexSetContainer threadObtainedLocks_;
-   static ThreadMutexSetContainer threadCurrentlyLockedLocks_;
-#endif
 
-   static ThreadMutexContainer threadMutexes_;
-   static ThreadBoolContainer threadBlockedLists_;
 
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
-   static ThreadWriteContainer threadWriteLists_;
+    static ThreadWriteContainer threadWriteLists_;
+    inline static WriteContainer* write_lists(thread_id_t id) {
+        ThreadWriteContainer::iterator iter = threadWriteLists_.find(id);
+        return iter->second;
+    }
    static ThreadReadContainer threadReadLists_;
    static ThreadBloomFilterList threadBloomFilterLists_;
    static ThreadBloomFilterList threadWBloomFilterLists_;
@@ -1299,12 +1301,18 @@ private:
    static ThreadTxTypeContainer threadTxTypeLists_;
    static ThreadBoolContainer threadForcedToAbortLists_;
 #else
-   static ThreadMemContainer threadMemContainer_;
+    static tss_context_map_type tss_context_map_;
+    inline static WriteContainer* write_lists(thread_id_t thid) {
+        tss_context_map_type::iterator iter = tss_context_map_.find(thid);
+        return &(iter->second->writeMem);
+    }
 #endif
 
    //--------------------------------------------------------------------------
-   static bool directUpdating_;
-   static size_t globalClock_;
+   static bool direct_updating_;
+   static size_t global_clock_;
+   inline static size_t& global_clock() {return global_clock_;}
+
    static size_t stalls_;
 
    //--------------------------------------------------------------------------
@@ -1321,23 +1329,180 @@ private:
 
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
-   // threadId_ MUST ALWAYS THE FIRST MEMBER OF THIS CLASS. THE MEMBER 
+   // threadId_ MUST ALWAYS THE FIRST MEMBER OF THIS CLASS. THE MEMBER
    // INITIALIZATION IS ORDER DEPENDENT UPON threadId_!!
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
    size_t threadId_;
 
-
-#ifdef USE_SINGLE_THREAD_CONTEXT_MAP
-   tx_context &context_;
-#endif
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
-   // threadId_ MUST ALWAYS THE FIRST MEMBER OF THIS CLASS. THE MEMBER 
+   // threadId_ MUST ALWAYS THE FIRST MEMBER OF THIS CLASS. THE MEMBER
    // INITIALIZATION IS ORDER DEPENDENT UPON threadId_!!
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
-   mutable WriteContainer *writeListRef_;
+
+#ifdef USE_SINGLE_THREAD_CONTEXT_MAP
+    tx_context &context_;
+
+#ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+    mutable WriteContainer *write_list_ref_;
+    inline WriteContainer *write_list() {return write_list_ref_;}
+    inline const WriteContainer *write_list() const {return write_list_ref_;}
+
+    mutable bloom_filter *bloomRef_;
+#if PERFORMING_WRITE_BLOOM
+    mutable bloom_filter *wbloomRef_;
+    //mutable bit_vector &sm_wbv_;
+#endif
+
+    inline bloom_filter& bloom() { return *bloomRef_; }
+#if PERFORMING_WRITE_BLOOM
+    inline bloom_filter& wbloom() { return *wbloomRef_; }
+    //bit_vector& sm_wbv() { return sm_wbv_; }
+#endif
+    MemoryContainerList *newMemoryListRef_;
+    inline MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
+
+    MemoryContainerList *deletedMemoryListRef_;
+    inline MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
+
+    TxType *txTypeRef_;
+    inline TxType const tx_type() const { return *txTypeRef_; }
+    inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
+    inline TxType&  tx_type_ref() { return *txTypeRef_; }
+#else // BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+    inline WriteContainer *write_list() {return &context_.writeMem;}
+    inline const WriteContainer *write_list() const {return &context_.writeMem;}
+
+    inline bloom_filter& bloom() { return context_.bloom; }
+#if PERFORMING_WRITE_BLOOM
+    inline bloom_filter& wbloom() { return context_.wbloom; }
+    //bit_vector& sm_wbv() { return sm_wbv_; }
+#endif
+    inline MemoryContainerList& newMemoryList() { return context_.newMem; }
+    inline MemoryContainerList& deletedMemoryList() { return context_.delMem; }
+    inline TxType const tx_type() const { return context_.txType; }
+    inline void tx_type(TxType const &rhs) { context_.txType = rhs; }
+    inline TxType&  tx_type_ref() { return context_.txType; }
+#endif
+
+#ifdef USING_SHARED_FORCED_TO_ABORT
+#ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
+    int *forcedToAbortRef_;
+public:
+    inline int const forced_to_abort() const { return *forcedToAbortRef_; }
+private:
+    inline int& forced_to_abort_ref() { return *forcedToAbortRef_; }
+#else
+public:
+    inline int const forced_to_abort() const { return context_.abort; }
+private:
+    inline int& forced_to_abort_ref() { return context_.abort; }
+#endif
+#else
+   int forcedToAbortRef_;
+public:
+    inline int const forced_to_abort() const { return forcedToAbortRef_; }
+private:
+    inline int& forced_to_abort_ref() { return forcedToAbortRef_; }
+#endif
+
+    static ThreadMutexContainer threadMutexes_;
+    Mutex *mutexRef_;
+    inline Mutex * mutex() { return mutexRef_; }
+    inline static Mutex& mutex(thread_id_t id) {
+        ThreadMutexContainer::iterator i = threadMutexes_.find(id);
+        return *(i->second);
+    }
+
+   static ThreadBoolContainer threadBlockedLists_;
+#if PERFORMING_LATM
+   int &blockedRef_;
+   inline void block() { blockedRef_ = true; }
+   inline void unblock() { blockedRef_ = false; }
+   inline int const blocked() const { return blockedRef_; }
+   inline static int& blocked(thread_id_t id) { return *threadBlockedLists_.find(id)->second; }
+#endif
+
+
+#if PERFORMING_LATM
+    static ThreadMutexSetContainer threadConflictingMutexes_;
+    static ThreadMutexSetContainer threadObtainedLocks_;
+    static ThreadMutexSetContainer threadCurrentlyLockedLocks_;
+
+#if USING_TRANSACTION_SPECIFIC_LATM
+    MutexSet &conflictingMutexRef_;
+    inline MutexSet& get_tx_conflicting_locks() { return conflictingMutexRef_; }
+    inline MutexSet& get_tx_conflicting_locks(thread_id_t id) {
+       return *threadConflictingMutexes_.find(threadId_)->second;
+    }
+    static void thread_conflicting_mutexes_set_all(int b) {
+        for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
+            threadConflictingMutexes_.end() != iter; ++iter)
+        {
+            blocked(iter->first) = b;
+        }
+    }
+
+    static void thread_conflicting_mutexes_set_all_cnd(Mutex *mutex, int b) {
+        for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
+            threadConflictingMutexes_.end() != iter; ++iter)
+        {
+        // if this mutex is found in the transaction's conflicting mutexes
+        // list, then allow the thread to make forward progress again
+        // by turning its "blocked" but only if it does not appear in the
+        // locked_locks_thread_id_map
+            if (iter->second->find(mutex) != iter->second->end() &&
+                0 == thread_id_occurance_in_locked_locks_map(iter->first))
+            {
+                blocked(iter->first) = false;
+            }
+        }
+   }
+#endif
+
+    MutexSet &obtainedLocksRef_;
+    inline MutexSet &obtainedLocksRef() {return obtainedLocksRef_;}
+    inline static MutexSet &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
+
+    void block_if_conflict_mutex() {
+        //--------------------------------------------------------------------------
+        // iterate through all currently locked locks
+        //--------------------------------------------------------------------------
+        for (ThreadMutexSetContainer::iterator i = threadObtainedLocks_.begin();
+        threadObtainedLocks_.end() != i; ++i)
+        {
+            // if these are locks obtained by this thread (in a parent tx), don't block
+            if (i->first == THREAD_ID) continue;
+
+            for (MutexSet::iterator j = i->second->begin(); j != i->second->end(); ++j)
+            {
+                //-----------------------------------------------------------------------
+                // iterate through this transaction's conflicting mutex ref - if one of
+                // the obtained locked locks is in this tx's conflicting mutex set,
+                // we need to block this tx
+                //-----------------------------------------------------------------------
+                if (get_tx_conflicting_locks().find(*j) != get_tx_conflicting_locks().end())
+                {
+                    this->block(); break;
+                }
+            }
+        }
+   }
+
+   MutexSet &currentlyLockedLocksRef_;
+   inline MutexSet &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
+   inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
+#endif
+
+////////////////////////////////////////
+#else   // USE_SINGLE_THREAD_CONTEXT_MAP
+////////////////////////////////////////
+
+   mutable WriteContainer *write_list_ref_;
+   inline WriteContainer *write_list() {return write_list_ref_;}
+   inline const WriteContainer *write_list() const {return write_list_ref_;}
 #ifndef DISABLE_READ_SETS
    mutable ReadContainer &readListRef_;
 #endif
@@ -1347,35 +1512,148 @@ private:
    //mutable bit_vector &sm_wbv_;
 #endif
 
+   inline bloom_filter& bloom() { return *bloomRef_; }
+#if PERFORMING_WRITE_BLOOM
+   inline bloom_filter& wbloom() { return *wbloomRef_; }
+   //bit_vector& sm_wbv() { return sm_wbv_; }
+#endif
    MemoryContainerList *newMemoryListRef_;
-   MemoryContainerList *deletedMemoryListRef_;
-   TxType *txTypeRef_;
+   inline MemoryContainerList& newMemoryList() { return *newMemoryListRef_; }
 
-#if USING_SHARED_FORCED_TO_ABORT
+   MemoryContainerList *deletedMemoryListRef_;
+   inline MemoryContainerList& deletedMemoryList() { return *deletedMemoryListRef_; }
+
+   TxType *txTypeRef_;
+   inline TxType const tx_type() const { return *txTypeRef_; }
+   inline void tx_type(TxType const &rhs) { *txTypeRef_ = rhs; }
+   inline TxType&  tx_type_ref() { return *txTypeRef_; }
+
+#ifdef USING_SHARED_FORCED_TO_ABORT
    int *forcedToAbortRef_;
+public:
+    inline int const forced_to_abort() const { return *forcedToAbortRef_; }
+private:
+    inline int& forced_to_abort_ref() { return *forcedToAbortRef_; }
 #else
    int forcedToAbortRef_;
+public:
+    inline int const forced_to_abort() const { return forcedToAbortRef_; }
+private:
+    inline int& forced_to_abort_ref() { return forcedToAbortRef_; }
 #endif
 
-   Mutex *mutexRef_;
+    static ThreadMutexContainer threadMutexes_;
+    Mutex *mutexRef_;
+    inline Mutex * mutex() { return mutexRef_; }
+    inline static Mutex& mutex(thread_id_t id) {
+        ThreadMutexContainer::iterator i = threadMutexes_.find(id);
+        return *(i->second);
+    }
 
+   static ThreadBoolContainer threadBlockedLists_;
 #if PERFORMING_LATM
    int &blockedRef_;
+   inline void block() { blockedRef_ = true; }
+   inline void unblock() { blockedRef_ = false; }
+   inline int const blocked() const { return blockedRef_; }
+   inline static int& blocked(thread_id_t id) { return *threadBlockedLists_.find(id)->second; }
 #endif
 
+
 #if PERFORMING_LATM
+    static ThreadMutexSetContainer threadConflictingMutexes_;
+    static ThreadMutexSetContainer threadObtainedLocks_;
+    static ThreadMutexSetContainer threadCurrentlyLockedLocks_;
+
 #if USING_TRANSACTION_SPECIFIC_LATM
-   MutexSet &conflictingMutexRef_;
+    MutexSet &conflictingMutexRef_;
+    inline MutexSet& get_tx_conflicting_locks() { return conflictingMutexRef_; }
+    inline MutexSet& get_tx_conflicting_locks(thread_id_t id) {
+       return *threadConflictingMutexes_.find(threadId_)->second;
+    }
+    static void thread_conflicting_mutexes_set_all(int b) {
+        for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
+            threadConflictingMutexes_.end() != iter; ++iter)
+        {
+            blocked(iter->first) = b;
+        }
+    }
+
+    static void thread_conflicting_mutexes_set_all_cnd(Mutex *mutex, int b) {
+        for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
+            threadConflictingMutexes_.end() != iter; ++iter)
+        {
+        // if this mutex is found in the transaction's conflicting mutexes
+        // list, then allow the thread to make forward progress again
+        // by turning its "blocked" but only if it does not appear in the
+        // locked_locks_thread_id_map
+            if (iter->second->find(mutex) != iter->second->end() &&
+                0 == thread_id_occurance_in_locked_locks_map(iter->first))
+            {
+                blocked(iter->first) = false;
+            }
+        }
+   }
 #endif
-   MutexSet &obtainedLocksRef_;
+
+    MutexSet &obtainedLocksRef_;
+    inline MutexSet &obtainedLocksRef() {return obtainedLocksRef_;}
+    inline static MutexSet &obtainedLocksRef(thread_id_t id) {return *threadObtainedLocks_.find(id)->second;}
+
+    void block_if_conflict_mutex() {
+        //--------------------------------------------------------------------------
+        // iterate through all currently locked locks
+        //--------------------------------------------------------------------------
+        for (ThreadMutexSetContainer::iterator i = threadObtainedLocks_.begin();
+        threadObtainedLocks_.end() != i; ++i)
+        {
+            // if these are locks obtained by this thread (in a parent tx), don't block
+            if (i->first == THREAD_ID) continue;
+
+            for (MutexSet::iterator j = i->second->begin(); j != i->second->end(); ++j)
+            {
+                //-----------------------------------------------------------------------
+                // iterate through this transaction's conflicting mutex ref - if one of
+                // the obtained locked locks is in this tx's conflicting mutex set,
+                // we need to block this tx
+                //-----------------------------------------------------------------------
+                if (get_tx_conflicting_locks().find(*j) != get_tx_conflicting_locks().end())
+                {
+                    this->block(); break;
+                }
+            }
+        }
+   }
+
+
+
    MutexSet &currentlyLockedLocksRef_;
+   inline MutexSet &currentlyLockedLocksRef() {return currentlyLockedLocksRef_;}
+   inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
+
+
+////////////////////////////////////////
+#endif
+
+
+
+   // transaction specific data
    int hasMutex_;
    mutable size_t priority_;
    transaction_state state_;
    size_t reads_;
-
    mutable size_t startTime_;
+
+   inline transaction_state const & state() const { return state_; }
+
+   inline WriteContainer& writeList() { return *write_list(); }
+#ifndef DISABLE_READ_SETS
+   inline ReadContainer& readList() { return readListRef_; }
+#endif
+
+
+
 };
 
 #if 0
@@ -1407,7 +1685,7 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 // optimize the if away
 //---------------------------------------------------------------------------
 #define use_atomic(T) if (0 != rand()+1) for (transaction T; !T.committed() && T.restart(); T.end())
-#define try_atomic(T) if (0 != rand()+1) for (transaction T; !T.committed() && T.restart(); T.no_throw_end()) try 
+#define try_atomic(T) if (0 != rand()+1) for (transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
 #define atomic(T)     if (0 != rand()+1) for (transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
 
 

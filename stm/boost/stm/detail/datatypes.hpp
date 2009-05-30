@@ -33,7 +33,6 @@
 #ifndef BOOST_STM_dataTypes_header_file
 #define BOOST_STM_dataTypes_header_file
 
-//#include <boost/thread/thread.hpp>
  
 /////////////////////////////////////////////////////////////////////////////
 #ifdef WIN32
@@ -45,7 +44,6 @@
 #endif
 
 #include <stdlib.h>
-//#include <boost/thread/thread.hpp>
 #include <pthread.h>
 
 #ifndef BOOST_STM_USE_BOOST_THREAD_ID

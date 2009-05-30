@@ -19,8 +19,8 @@
 
 using namespace boost::stm;
 
-static int kMaxOuterLoops = 10000;
-static int kMaxInnerLoops = 50000;
+static int kMaxOuterLoops = 2*1000;
+static int kMaxInnerLoops = 2*5000;
 
 static native_trans<int> txInt = 0, txInt2, txInt3 = 0;
 
@@ -150,7 +150,7 @@ void test_smart()
    //test_2();
    //test_parent();
 
-   int const kMaxTestLoops = 4;
+   int const kMaxTestLoops = 1;
 
    for (int i = 0; i < kMaxTestLoops; ++i)
    {

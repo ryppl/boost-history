@@ -72,7 +72,7 @@ inline bool boost::stm::transaction::dir_do_core_full_pthread_lock_mutex
    // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
    // so we can abort all the in-flight transactions
    //--------------------------------------------------------------------------
-   if (0 == latmLockedLocks_.size()) 
+   if (latmLockedLocks_.empty()) 
    {
       lock_general_access();
       lock_inflight_access();
@@ -104,13 +104,7 @@ inline bool boost::stm::transaction::dir_do_core_full_pthread_lock_mutex
       //-----------------------------------------------------------------------
       // block all threads, since we have to unlock the in-flight mutex
       //-----------------------------------------------------------------------
-      for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
-         threadConflictingMutexes_.end() != iter; ++iter)
-      {
-         // no more locked LATM locks, clear everyone
-         *threadBlockedLists_.find(iter->first)->second = true;
-         //*threadBlockedLists_[iter->first] = true;
-      }
+      thread_conflicting_mutexes_set_all(true);
 
       unlock_general_access();
       unlock_inflight_access();
@@ -119,7 +113,7 @@ inline bool boost::stm::transaction::dir_do_core_full_pthread_lock_mutex
       // now we must stall until all in-flight transactions are gone, otherwise 
       // global memory may still be in an inconsistent state
       //-----------------------------------------------------------------------
-      while (transactionsInFlight_.size() != 0) { SLEEP(10); }
+      while (!transactionsInFlight_.empty()) { SLEEP(10); }
    }
 
    try { latmLockedLocks_.insert(mutex); }
@@ -272,16 +266,11 @@ inline int boost::stm::transaction::dir_full_pthread_unlock_mutex(Mutex *mutex)
 
    latmLockedLocks_.erase(mutex);
 
-   if (0 == latmLockedLocks_.size())
+   if (latmLockedLocks_.empty())
    {
       lock_general_access();
 
-      for (ThreadMutexSetContainer::iterator iter = threadConflictingMutexes_.begin();
-         threadConflictingMutexes_.end() != iter; ++iter)
-      {
-         // no more locked LATM locks, clear everyone
-         *threadBlockedLists_.find(iter->first)->second = false;
-      }
+      thread_conflicting_mutexes_set_all(false);
 
       unlock_general_access();
    }

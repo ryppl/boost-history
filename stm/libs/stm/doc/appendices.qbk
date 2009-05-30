@@ -41,7 +41,7 @@
 * [*DONE] Replace Sleep by boost::this_thread::sleep
 * [*DONE] Replace pthread_mutex by boost::mutex
 * Replace THREAD_ID by boost::thread_id
-* Replace auto_lock by boost::interthreads::unique_locker and redefine use_lock macros 
+* Replace auto_lock by boost::synchro::unique_locker and redefine use_lock macros 
 * Redifine var_auto_lock
 * Add an scoped guard for transaction::lock/unlock
 * use lock_guard when lock/unlock

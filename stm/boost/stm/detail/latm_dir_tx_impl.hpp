@@ -84,7 +84,7 @@ inline bool boost::stm::transaction::dir_do_core_tx_conflicting_lock_pthread_loc
       // if this tx is part of this thread, skip it (it's an LiT)
       if (t->threadId_ == THREAD_ID) continue;
 
-      if (t->conflictingMutexRef_.find(mutex) != t->conflictingMutexRef_.end())
+      if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
       {
          if (txIsIrrevocable || (!t->irrevocable() && 
             cm_->allow_lock_to_abort_tx(lockWaitTime, lockAborted, txIsIrrevocable, *t)))
@@ -100,7 +100,7 @@ inline bool boost::stm::transaction::dir_do_core_tx_conflicting_lock_pthread_loc
       }
    }
 
-   if (0 != txList.size()) 
+   if (!txList.empty()) 
    {
       for (std::list<transaction*>::iterator it = txList.begin(); txList.end() != it; ++it)
       {
@@ -124,7 +124,7 @@ inline bool boost::stm::transaction::dir_do_core_tx_conflicting_lock_pthread_loc
          {
             if (0 == thread_id_occurance_in_locked_locks_map(*it))
             {
-               *threadBlockedLists_.find(*it)->second = false;
+               blocked(*it) = false;
             }
          }
          throw; 
@@ -149,7 +149,7 @@ inline bool boost::stm::transaction::dir_do_core_tx_conflicting_lock_pthread_loc
          {
             transaction *t = (transaction*)*i;
 
-            if (t->conflictingMutexRef_.find(mutex) != t->conflictingMutexRef_.end())
+            if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
             {
                conflictingTxInFlight = true;
             }
