@@ -47,4 +47,11 @@ Also a retrieving task must be suspended when the buffer is empty. The data, onc
 * maybe lock-free-queue as global queue too (how to provide the scheduling policies fifo, priority, smart?)
 
 
+[heading Actor framework]
+
+* framework support of communication and synchronisation between tasks
+* so called actors provide the required mechanisms
+* for a detailed explanation read Micorsoft proposal of [@http://msdn.microsoft.com/en-us/devlabs/dd795202.aspx Axum] 
+
+
 [endsect]

@@ -75,7 +75,7 @@ private:
 			try
 			{ impl::prom.set_value( fn_() ); }
 			catch ( promise_already_satisfied const&)
-			{ /*FIXME: should we absorb promise_already_satisfied? */ }
+			{ throw task_already_executed(); }
 			catch ( thread_interrupted const&)
 			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
 			catch ( boost::exception const& e)
@@ -183,7 +183,7 @@ private:
 				impl::prom.set_value();
 			}
 			catch ( promise_already_satisfied const&)
-			{ /*FIXME: should we absorb promise_already_satisfied? */ }
+			{ throw task_already_executed(); }
 			catch ( thread_interrupted const&)
 			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
 			catch ( boost::exception const& e)

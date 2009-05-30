@@ -56,23 +56,19 @@ public:
 	}
 
 	// executed twice
-	void test_case_3()
-	{
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::handle< int > h1(
-			tsk::async(
-				tsk::own_thread(),
-				t) );
-		BOOST_CHECK_EQUAL( h1.get(), 55);
-		tsk::handle< int > h2(
-			tsk::async(
-				tsk::own_thread(),
-				t) );
-		BOOST_CHECK_EQUAL( h2.get(), 55);
-	}
+// 	void test_case_3()
+// 	{
+// 		tsk::task< int > t(
+// 			tsk::make_task(
+// 				fibonacci_fn,
+// 				10) );
+// 		tsk::handle< int > h1(
+// 			tsk::async(
+// 				tsk::own_thread(),
+// 				t) );
+// 		BOOST_CHECK_EQUAL( h1.get(), 55);
+// 		BOOST_CHECK_THROW( tsk::async( tsk::own_thread(), t), tsk::task_already_executed);
+// 	}
 
 	// check runtime_error throw inside task
 	void test_case_4()
@@ -187,7 +183,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	boost::shared_ptr< test_own_thread > instance( new test_own_thread() );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_1, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_2, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_3, instance) );
+// 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_3, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_4, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_5, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_own_thread::test_case_6, instance) );

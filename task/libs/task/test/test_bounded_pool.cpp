@@ -80,29 +80,29 @@ public:
 	}
 
 	// executed twice
-	void test_case_4()
-	{
-		tsk::static_pool<
-			tsk::bounded_channel< tsk::fifo >
-		> pool(
-			tsk::poolsize( 1),
-			tsk::high_watermark( 10),
-			tsk::low_watermark( 10) );
-		tsk::task< int > t(
-			tsk::make_task(
-				fibonacci_fn,
-				10) );
-		tsk::handle< int > h1(
-			tsk::async(
-				pool,
-				t) );
-		BOOST_CHECK_EQUAL( h1.get(), 55);
-		tsk::handle< int > h2(
-			tsk::async(
-				pool,
-				t) );
-		BOOST_CHECK_EQUAL( h2.get(), 55);
-	}
+// 	void test_case_4()
+// 	{
+// 		tsk::static_pool<
+// 			tsk::bounded_channel< tsk::fifo >
+// 		> pool(
+// 			tsk::poolsize( 1),
+// 			tsk::high_watermark( 10),
+// 			tsk::low_watermark( 10) );
+// 		tsk::task< int > t(
+// 			tsk::make_task(
+// 				fibonacci_fn,
+// 				10) );
+// 		tsk::handle< int > h1(
+// 			tsk::async(
+// 				pool,
+// 				t) );
+// 		BOOST_CHECK_EQUAL( h1.get(), 55);
+// 		BOOST_CHECK_THROW(
+// 			tsk::async(
+// 				pool,
+// 				t),
+// 			tsk::task_already_executed);
+// 	}
 
 	// check shutdown
 	void test_case_5()
@@ -405,7 +405,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_1, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_2, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_3, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_4, instance) );
+// 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_4, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_5, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_6, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_bounded_pool::test_case_7, instance) );

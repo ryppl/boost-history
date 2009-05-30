@@ -60,7 +60,7 @@ __boost_task__ has been tested on the following platforms and compilers:
 
 *  Debian GNU/Linux 2.6.29.2 (x86_64), GCC 4.3.3
 *  Ubuntu GNU/Linux 2.6.28.11 (x86), GCC 4.3.3
-*  FreeBSD 7.2 (x86), GCC 4.2.1
+*  FreeBSD 7.2 (x86), GCC 4.2.1 (requires static boost libs for tests)
 *  OpenSolaris 0811 (x86_64), SunCC 5.10
 *  Windows XP Professional (x86), MSVC 9.0
 

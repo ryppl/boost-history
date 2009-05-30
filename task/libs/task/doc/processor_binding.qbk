@@ -8,8 +8,7 @@
 
 [section:processor_binding Processor binding]
 
-For some applications it is convenient to bind the __worker_threads__ to processors of the system. For this purpose BOOST_HAS_PROCESSOR_BINDINGS must be defined so that for each core a 
-__worker_thread__ is created an bound the the core. __pool_size__ must not be given to the constructor.
+For some applications it is convenient to bind the __worker_threads__ to processors/cores of the system. For this purpose __pool_size__ must not be given to the constructor so that a __worker_thread__ is created an bound the the core.
 
 ``
 	boost::task::static_pool<
@@ -18,6 +17,8 @@ __worker_thread__ is created an bound the the core. __pool_size__ must not be gi
 ``
 
 The constructor takes additional arguments for the link_work_stealing[work-stealing algorithm] and link_channel[high-] and link_channel[low-watermark] too.
+
+[note __boost_task__ does only provide this feature for Windows, Linux, AIX, HP-UX and Solaris.]
 
 
 [endsect]

@@ -174,7 +174,7 @@ public:
 		lk.unlock();
 	}
 
-# ifdef BOOST_HAS_PROCESSOR_BINDINGS
+# if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit static_pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20) )
@@ -222,7 +222,7 @@ public:
 			create_worker_( psize, asleep, max_scns, i);
 		lk.unlock();
 	}
-#endif
+# endif
 
 	~static_pool()
 	{ shutdown(); }
