@@ -19,7 +19,7 @@ namespace boost { namespace task
 semaphore::semaphore( int value)
 : handle_()
 {
-	if ( ( handle_ = ::CreateSemaphore( 0, value, std::numeric_limits< int >::max(), 0) ) == 0)
+	if ( ( handle_ = ::CreateSemaphore( 0, value, (std::numeric_limits< int >::max)(), 0) ) == 0)
 		throw system::system_error( ::GetLastError(), system::system_category);
 }
 
@@ -71,7 +71,7 @@ semaphore::value()
 	int value( 0);
 	if ( ::WaitForSingleObject( handle_, 0) != WAIT_TIMEOUT)
 	{
-		if ( ! ::ReleaseSemaphore( handle_, 1, & value) )
+		if ( ! ::ReleaseSemaphore( handle_, 1, ( LPLONG) & value) )
 			throw system::system_error( ::GetLastError(), system::system_category);
 		++ value;
 	}

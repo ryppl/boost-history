@@ -13,11 +13,13 @@
 
 #include <boost/task/detail/worker.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace this_task
 {
 namespace detail
 {
-struct time_reached
+struct BOOST_TASK_DECL time_reached
 {
 	system_time	abs_time;
 
@@ -29,7 +31,7 @@ struct time_reached
 	{ return get_system_time() >= abs_time; }
 };
 
-class once_false
+class BOOST_TASK_DECL once_false
 {
 private:
 	bool	result_;
@@ -69,11 +71,11 @@ Pool & get_pool()
 }
 
 inline
-bool runs_in_pool()
+BOOST_TASK_DECL bool runs_in_pool()
 { return task::detail::worker::tss_get() != 0; }
 
 inline
-thread::id worker_id()
+BOOST_TASK_DECL thread::id worker_id()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
@@ -81,7 +83,7 @@ thread::id worker_id()
 }
 
 inline
-void delay( system_time abs_time)
+BOOST_TASK_DECL void delay( system_time abs_time)
 {
 	if ( runs_in_pool() )
 	{
@@ -97,7 +99,7 @@ void delay( Duration const& rel_time)
 { delay( get_system_time() + rel_time); }
 
 inline
-void yield()
+BOOST_TASK_DECL void yield()
 {
 	if ( runs_in_pool() )
 	{
@@ -109,7 +111,7 @@ void yield()
 }
 
 inline
-void interrupt()
+BOOST_TASK_DECL void interrupt()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
@@ -117,5 +119,7 @@ void interrupt()
 	this_thread::interruption_point();
 }
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_UTILITY_H

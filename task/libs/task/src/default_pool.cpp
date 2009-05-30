@@ -15,6 +15,6 @@ namespace boost { namespace task
 namespace detail
 {
 default_pool_t
-static_pool::instance( poolsize( thread::hardware_concurrency() ) );
+static_pool::instance = default_pool_t( poolsize( thread::hardware_concurrency() ) );
 }
 } }
