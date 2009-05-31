@@ -44,7 +44,9 @@ using namespace nMain;
 ///////////////////////////////////////////////////////////////////////////////
 static void* TestLinkedListInserts(void *threadId)
 {
-   list_node<list_node_type> node;
+#ifdef BOOST_STM_LL_USES_NODE
+    list_node<list_node_type> node;
+#endif    
    transaction::initialize_thread();
 
    int start = *(int*)threadId;
@@ -65,8 +67,13 @@ static void* TestLinkedListInserts(void *threadId)
    int i;
    for (i = startingValue; i < endingValue; ++i)
    {
+#ifdef BOOST_STM_LL_USES_NODE
+      //list_node<list_node_type> node(i);
       node.value() = i;
       llist->insert(node);
+#else       
+      llist->insert(i);
+#endif       
    }
 
    if (kDoMove)
@@ -78,6 +85,7 @@ static void* TestLinkedListInserts(void *threadId)
          node1.value() = j;
          //node2.value() = -j;
          llist->move(node1, node2);
+          
       }
 
    }
@@ -100,8 +108,13 @@ static void* TestLinkedListInserts(void *threadId)
    {
       for (i = startingValue; i < endingValue; ++i)
       {
+         //list_node<list_node_type> node(i);
+#ifdef BOOST_STM_LL_USES_NODE
          node.value() = i;
          llist->remove(node);
+#else
+         llist->remove(i);
+#endif          
       }
    }
 
