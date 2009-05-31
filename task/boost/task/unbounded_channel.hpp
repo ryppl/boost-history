@@ -21,6 +21,8 @@
 #include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/exceptions.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template< typename SchedulingPolicy >
@@ -273,5 +275,7 @@ public:
 	}
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_UNBOUNDED_CHANNEL_H

@@ -10,6 +10,8 @@
 #include <iostream>
 #include <string>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template< typename R >
@@ -59,6 +61,8 @@ public:
 	{ id_.swap( other.id_); }
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_ID_H
 

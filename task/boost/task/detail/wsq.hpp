@@ -12,7 +12,6 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
-#include <boost/task/detail/config.hpp>
 #include <boost/task/detail/pool_callable.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -21,7 +20,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class BOOST_TASK_DECL wsq : private noncopyable
+class wsq : private noncopyable
 {
 private:
 	const int						initial_size_;

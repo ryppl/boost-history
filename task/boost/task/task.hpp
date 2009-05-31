@@ -25,6 +25,8 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/id.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 
@@ -274,5 +276,7 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAKE_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK
 # undef BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS
 
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_TASK_H

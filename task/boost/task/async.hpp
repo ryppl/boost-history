@@ -22,6 +22,8 @@
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 
@@ -110,5 +112,7 @@ handle< R > async( static_pool< Channel > & pool, task< R > t, Attr attr)
 { return pool.submit( t, attr); }
 
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_ASYNC_H

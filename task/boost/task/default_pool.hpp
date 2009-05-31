@@ -20,7 +20,7 @@ typedef static_pool< unbounded_channel< fifo > > default_pool_t;
 
 namespace detail
 {
-struct BOOST_TASK_DECL static_pool
+struct static_pool
 { static default_pool_t instance; };
 }
 

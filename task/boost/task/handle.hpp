@@ -15,6 +15,8 @@
 #include <boost/task/exceptions.hpp>
 #include <boost/task/id.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 
@@ -317,5 +319,7 @@ unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t
 { return wait_for_any( t1.fut_, t2.fut_, t3.fut_, t4.fut_, t5.fut_); }
 
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_HANDLE_H

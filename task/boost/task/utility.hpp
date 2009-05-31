@@ -19,7 +19,7 @@ namespace boost { namespace this_task
 {
 namespace detail
 {
-struct BOOST_TASK_DECL time_reached
+struct time_reached
 {
 	system_time	abs_time;
 
@@ -31,7 +31,7 @@ struct BOOST_TASK_DECL time_reached
 	{ return get_system_time() >= abs_time; }
 };
 
-class BOOST_TASK_DECL once_false
+class once_false
 {
 private:
 	bool	result_;
@@ -71,11 +71,11 @@ Pool & get_pool()
 }
 
 inline
-BOOST_TASK_DECL bool runs_in_pool()
+bool runs_in_pool()
 { return task::detail::worker::tss_get() != 0; }
 
 inline
-BOOST_TASK_DECL thread::id worker_id()
+thread::id worker_id()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
@@ -83,7 +83,7 @@ BOOST_TASK_DECL thread::id worker_id()
 }
 
 inline
-BOOST_TASK_DECL void delay( system_time abs_time)
+void delay( system_time abs_time)
 {
 	if ( runs_in_pool() )
 	{
@@ -99,7 +99,7 @@ void delay( Duration const& rel_time)
 { delay( get_system_time() + rel_time); }
 
 inline
-BOOST_TASK_DECL void yield()
+void yield()
 {
 	if ( runs_in_pool() )
 	{
@@ -111,7 +111,7 @@ BOOST_TASK_DECL void yield()
 }
 
 inline
-BOOST_TASK_DECL void interrupt()
+void interrupt()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);

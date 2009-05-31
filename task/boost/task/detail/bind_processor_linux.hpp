@@ -17,6 +17,8 @@ extern "C"
 #include <boost/thread.hpp>
 #include <boost/system/system_error.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace this_thread
 {
 	inline
@@ -56,5 +58,7 @@ namespace boost { namespace this_thread
 						boost::system::system_category) );
 	}
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_BIND_PRCESSOR_LINUX_H

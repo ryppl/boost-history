@@ -12,6 +12,8 @@
 
 #include <boost/task/detail/meta.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template< typename Pool >
@@ -29,6 +31,8 @@ struct attribute_type
 	typedef typename Pool::channel::scheduler_type::attribute_type	type;
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_META_H
 

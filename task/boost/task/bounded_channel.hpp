@@ -22,6 +22,8 @@
 #include <boost/task/exceptions.hpp>
 #include <boost/task/watermark.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template< typename SchedulingPolicy >
@@ -387,5 +389,7 @@ public:
 	}
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_BOUNDED_CHANNEL_H

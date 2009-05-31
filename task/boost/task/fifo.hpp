@@ -13,6 +13,8 @@
 #include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/meta.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 struct fifo
@@ -63,5 +65,7 @@ struct fifo
 	};
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_FIFO_H

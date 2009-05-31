@@ -33,6 +33,8 @@
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template< typename Channel >
@@ -318,6 +320,8 @@ public:
 	}
 };
 }}
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_STATIC_POOL_H
 

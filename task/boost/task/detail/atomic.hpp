@@ -11,6 +11,8 @@
 #include <boost/cstdint.hpp>
 #include <boost/interprocess/detail/atomic.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 namespace detail
@@ -35,6 +37,8 @@ unsigned int atomic_fetch_sub( volatile uint32_t * object, uint32_t operand)
 	return interprocess::detail::atomic_dec32( object);
 }
 } } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_DETAIL_ATOMIC_H
 

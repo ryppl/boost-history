@@ -17,6 +17,8 @@
 #include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/meta.hpp>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 template<
@@ -164,5 +166,7 @@ struct take_oldest
 	}
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_SMART_H

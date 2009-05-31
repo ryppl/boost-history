@@ -10,6 +10,8 @@
 #include <stdexcept>
 #include <string>
 
+#include <boost/config/abi_prefix.hpp>
+
 namespace boost { namespace task
 {
 class invalid_poolsize : public std::invalid_argument
@@ -79,5 +81,7 @@ public:
 	{}
 };
 } }
+
+#include <boost/config/abi_suffix.hpp>
 
 #endif // BOOST_TASK_EXCEPTIONS_H
