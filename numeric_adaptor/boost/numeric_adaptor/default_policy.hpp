@@ -20,7 +20,7 @@ namespace boost { namespace numeric_adaptor {
 template <typename T>
 struct default_policy
 {
-    typedef T type;
+    typedef T value_type;
 
     // Default no initialization or pre-destruction is necessary
     static inline void init(T& value) {}
@@ -30,15 +30,24 @@ struct default_policy
     static inline void copy(T const& source, T& dest) { dest = source; }
 
     // The default policy uses the default operators +, -, *, /
-    static inline void add(type& r, const type& a, const type& b) { r = a + b; }
-    static inline void add(type& a, const type& b) { a += b; }
-    static inline void subtract(type& r, const type& a, const type& b) { r = a - b; }
-    static inline void subtract(type& a, const type& b) { a -= b; }
-    static inline void multiply(type& r, const type& a, const type& b) { r = a * b; }
-    static inline void multiply(type& a, const type& b) { a *= b; }
-    static inline void divide(type& r, const type& a, const type& b) { r = a / b; }
-    static inline void divide(type& a, const type& b) { a /= b; }
-    static inline void neg(type& r, const type& n) { r = -n; }
+    static inline void add(value_type& r, const value_type& a, const value_type& b)
+    { r = a + b; }
+    static inline void add(value_type& a, const value_type& b)
+    { a += b; }
+    static inline void subtract(value_type& r, const value_type& a, const value_type& b)
+    { r = a - b; }
+    static inline void subtract(value_type& a, const value_type& b)
+    { a -= b; }
+    static inline void multiply(value_type& r, const value_type& a, const value_type& b)
+    { r = a * b; }
+    static inline void multiply(value_type& a, const value_type& b)
+    { a *= b; }
+    static inline void divide(value_type& r, const value_type& a, const value_type& b)
+    { r = a / b; }
+    static inline void divide(value_type& a, const value_type& b)
+    { a /= b; }
+    static inline void neg(value_type& r, const value_type& n)
+    { r = -n; }
 
     // Default use the comparison operators
     static inline int compare(T const& a, T const& b)

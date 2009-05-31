@@ -128,7 +128,7 @@ struct numeric_adaptor :
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::add(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
@@ -144,7 +144,7 @@ struct numeric_adaptor :
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::multiply(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
@@ -160,7 +160,7 @@ struct numeric_adaptor :
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::subtract(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
@@ -176,7 +176,7 @@ struct numeric_adaptor :
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::divide(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
@@ -190,7 +190,7 @@ struct numeric_adaptor :
 
     friend inline numeric_adaptor<Policy> operator-(numeric_adaptor<Policy> const& n)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::neg(r, n.value);
         return numeric_adaptor<Policy>(r, true);
@@ -199,7 +199,7 @@ struct numeric_adaptor :
     // Functions
     static inline numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::abs(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -207,7 +207,7 @@ struct numeric_adaptor :
 
     static inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::sqrt(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -215,7 +215,7 @@ struct numeric_adaptor :
 
     static inline numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::cos(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -223,7 +223,7 @@ struct numeric_adaptor :
 
     static inline numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::sin(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -231,7 +231,7 @@ struct numeric_adaptor :
 
     static inline numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::tan(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -239,7 +239,7 @@ struct numeric_adaptor :
 
     static inline numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const& v)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::atan(r, v.value);
         return numeric_adaptor<Policy>(r, true);
@@ -249,7 +249,7 @@ struct numeric_adaptor :
     static inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
                 numeric_adaptor<Policy> const& b)
     {
-        typename Policy::type r;
+        typename Policy::value_type r;
         Policy::init(r);
         Policy::hypot(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
@@ -257,11 +257,11 @@ struct numeric_adaptor :
 
 
 private :
-    typename Policy::type value;
+    typename Policy::value_type value;
 
     // Construct from a policy-type. Bool (or any other signature changing parameter)
     // is necessary for cases where type == OtherType
-    inline numeric_adaptor<Policy>(typename Policy::type const& v, bool)
+    inline numeric_adaptor<Policy>(typename Policy::value_type const& v, bool)
     {
         Policy::init(value);
         Policy::copy(v, value);

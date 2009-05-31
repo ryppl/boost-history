@@ -22,7 +22,7 @@ namespace boost { namespace numeric_adaptor {
 
 struct gmp_policy
 {
-    typedef mpf_t type;
+    typedef mpf_t value_type;
 
     static inline void init(type& value)
     {

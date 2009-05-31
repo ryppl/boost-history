@@ -30,7 +30,7 @@ namespace boost { namespace numeric_adaptor {
 */
 struct cln_policy : public default_policy<cln::cl_F>
 {
-    typedef cln::cl_F type;
+    typedef cln::cl_F value_type;
 
     template <typename FromType>
     static inline void set(type& value, FromType const& v)
