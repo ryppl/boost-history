@@ -10,13 +10,15 @@
 #include <boost/cstdint.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
 namespace detail
 {
-class guard : private noncopyable
+class BOOST_TASK_DECL guard : private noncopyable
 {
 private:
 	volatile uint32_t	&	active_worker_;

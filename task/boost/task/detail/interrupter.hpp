@@ -15,13 +15,15 @@
 #include <boost/thread/thread_time.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
 namespace detail
 {
-class interrupter
+class BOOST_TASK_DECL interrupter
 {
 public:
 	enum setting

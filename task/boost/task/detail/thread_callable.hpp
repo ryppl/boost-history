@@ -11,6 +11,7 @@
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/semaphore.hpp>
 #include <boost/task/task.hpp>
@@ -21,7 +22,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class thread_callable
+class BOOST_TASK_DECL thread_callable
 {
 private:
 	struct impl

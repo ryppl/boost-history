@@ -17,6 +17,7 @@
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/detail/config.hpp>
 #include <boost/task/detail/pool_callable.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/interrupter.hpp>
@@ -31,7 +32,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class worker
+class BOOST_TASK_DECL worker
 {
 private:
 	static thread_specific_ptr< worker >	tss_;
