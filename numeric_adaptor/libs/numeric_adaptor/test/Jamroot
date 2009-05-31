@@ -14,5 +14,6 @@ project : requirements <include>../../.. <library>gmp <library>cln ;
 
 import testing ;
 
-run test_heron.cpp : gmp ;
-run test_conversions.cpp : gmp ;
+run test_heron.cpp ;
+run test_arithmetic.cpp ;
+run test_conversions.cpp ;

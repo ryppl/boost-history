@@ -31,10 +31,14 @@ struct default_policy
 
     // The default policy uses the default operators +, -, *, /
     static inline void add(type& r, const type& a, const type& b) { r = a + b; }
+    static inline void add(type& a, const type& b) { a += b; }
     static inline void subtract(type& r, const type& a, const type& b) { r = a - b; }
+    static inline void subtract(type& a, const type& b) { a -= b; }
     static inline void multiply(type& r, const type& a, const type& b) { r = a * b; }
+    static inline void multiply(type& a, const type& b) { a *= b; }
     static inline void divide(type& r, const type& a, const type& b) { r = a / b; }
-
+    static inline void divide(type& a, const type& b) { a /= b; }
+    static inline void neg(type& r, const type& n) { r = -n; }
 
     // Default use the comparison operators
     static inline int compare(T const& a, T const& b)

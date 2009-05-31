@@ -134,6 +134,12 @@ struct numeric_adaptor :
         return numeric_adaptor<Policy>(r, true);
     }
 
+    numeric_adaptor<Policy>& operator+=(numeric_adaptor<Policy> const& other)
+    {
+        Policy::add(value, other.value);
+        return *this;
+    }
+
     friend inline numeric_adaptor<Policy> operator*(
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
@@ -142,6 +148,12 @@ struct numeric_adaptor :
         Policy::init(r);
         Policy::multiply(r, a.value, b.value);
         return numeric_adaptor<Policy>(r, true);
+    }
+
+    numeric_adaptor<Policy>& operator*=(numeric_adaptor<Policy> const& other)
+    {
+        Policy::multiply(value, other.value);
+        return *this;
     }
 
     friend inline numeric_adaptor<Policy> operator-(
@@ -154,6 +166,12 @@ struct numeric_adaptor :
         return numeric_adaptor<Policy>(r, true);
     }
 
+    numeric_adaptor<Policy>& operator-=(numeric_adaptor<Policy> const& other)
+    {
+        Policy::subtract(value, other.value);
+        return *this;
+    }
+
     friend inline numeric_adaptor<Policy> operator/(
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
@@ -161,6 +179,20 @@ struct numeric_adaptor :
         typename Policy::type r;
         Policy::init(r);
         Policy::divide(r, a.value, b.value);
+        return numeric_adaptor<Policy>(r, true);
+    }
+
+    numeric_adaptor<Policy>& operator/=(numeric_adaptor<Policy> const& other)
+    {
+        Policy::divide(value, other.value);
+        return *this;
+    }
+
+    friend inline numeric_adaptor<Policy> operator-(numeric_adaptor<Policy> const& n)
+    {
+        typename Policy::type r;
+        Policy::init(r);
+        Policy::neg(r, n.value);
         return numeric_adaptor<Policy>(r, true);
     }
 

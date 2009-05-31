@@ -51,9 +51,16 @@ struct gmp_policy
         mpf_set(dest, source);
     }
 
+    // TODO should we add specific overloads for function like mpf_add_ui?
+
     static inline void add(type& r, type const& a, type const& b)
     {
         mpf_add(r, a, b);
+    }
+
+    static inline void add(type& a, type const& b)
+    {
+        mpf_add(a, a, b);
     }
 
     static inline void subtract(type& r, type const& a, type const& b)
@@ -61,14 +68,34 @@ struct gmp_policy
         mpf_sub(r, a, b);
     }
 
+    static inline void subtract(type& a, type const& b)
+    {
+        mpf_sub(a, a, b);
+    }
+
     static inline void multiply(type& r, type const& a, type const& b)
     {
         mpf_mul(r, a, b);
     }
 
+    static inline void multiply(type& a, type const& b)
+    {
+        mpf_mul(a, a, b);
+    }
+
     static inline void divide(type& r, type const& a, type const& b)
     {
         mpf_div(r, a, b);
+    }
+
+    static inline void divide(type& a, type const& b)
+    {
+        mpf_div(a, a, b);
+    }
+
+    static inline void neg(type& r, type const& n)
+    {
+        mpf_neg(r, n);
     }
 
     static inline void abs(type& r, type const& a)
