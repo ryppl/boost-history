@@ -1,3 +1,4 @@
+# Boost.Task Library Examples Jamfile
 
 #          Copyright Oliver Kowalke 2009.
 # Distributed under the Boost Software License, Version 1.0.
@@ -9,8 +10,9 @@
 project boost/task/example
     : requirements
         <library>../../thread/build//boost_thread
-        <library>../../task/build//boost_task
         <library>../../system/build//boost_system
+        <library>../build//boost_task
+        <link>static
         <threading>multi
     ;
 

@@ -1,20 +1,18 @@
-# Boost.ThreadPool Library Test Jamfile
+# Boost.Task Library Tests Jamfile
 
-# Copyright (C) 2008 Oliver Kowalke
+#          Copyright Oliver Kowalke 2009.
+# Distributed under the Boost Software License, Version 1.0.
+#    (See accompanying file LICENSE_1_0.txt or copy at
+#          http://www.boost.org/LICENSE_1_0.txt)
 
-# Use, modification and distribution is subject to the Boost Software License, 
-# Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at 
-# http://www.boost.org/LICENSE_1_0.txt) 
-
-# bring in rules for testing
 import testing ;
 
 project boost/task/test
     : requirements
         <library>../../test/build//boost_unit_test_framework
         <library>../../thread/build//boost_thread
-        <library>../../task/build//boost_task
         <library>../../system/build//boost_system
+        <library>../build//boost_task
         <link>static
         <threading>multi
     ;
