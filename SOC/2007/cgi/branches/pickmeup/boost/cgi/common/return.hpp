@@ -26,13 +26,13 @@ namespace cgi {
 
    template<typename Response, typename Request>
    boost::system::error_code
-     return_helper(Response& resp, Request& req, int program_status)
+     return_helper(Response& response, Request& request, int program_status)
    {
      boost::system::error_code ec;
-     resp.send(req.client(), ec);
+     response.send(request.client(), ec);
      if (ec) return ec;
 
-     req.close(resp.status(), program_status);
+     request.close(response.status(), program_status);
 
      return ec;
    }
@@ -46,16 +46,16 @@ namespace cgi {
 #  define BOOST_CGI_RETURN_ERROR_INCREMENT 100
 #endif
 
-#define BOOST_CGI_RETURN(resp, req, status)                     \
-          if ( ::cgi::common::return_helper(resp, req, status)) \
-            /** error **/                                       \
-            return status + BOOST_CGI_RETURN_ERROR_INCREMENT;   \
+#define BOOST_CGI_RETURN(response, request, status)                     \
+          if ( ::cgi::common::return_helper(response, request, status)) \
+            /** error **/                                               \
+            return status + BOOST_CGI_RETURN_ERROR_INCREMENT;           \
           return status;
 
 namespace cgi {
  namespace common {
 
-#define return_(resp, req, status) BOOST_CGI_RETURN(resp, req, status)
+#define return_(response, request, status) BOOST_CGI_RETURN(response, request, status)
 
  } // namespace common
 } // namespace cgi

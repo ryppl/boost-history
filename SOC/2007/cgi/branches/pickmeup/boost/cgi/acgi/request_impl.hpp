@@ -23,8 +23,9 @@ namespace cgi {
     : public detail::cgi_request_impl_base<common::async_stdio_connection>
   {
   public:
-    typedef ::cgi::acgi::service            protocol_service_type;
-    typedef common::async_stdio_connection  connection_type;
+    typedef ::cgi::acgi::service                 protocol_service_type;
+    typedef protocol_service_type::protocol_type protocol_type;
+    typedef common::async_stdio_connection       connection_type;
     typedef
       ::cgi::common::basic_client<
         connection_type, common::tags::acgi

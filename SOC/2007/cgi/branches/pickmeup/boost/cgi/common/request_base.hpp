@@ -76,7 +76,24 @@ namespace cgi {
         return boost::asio::buffer(&post_buffer_[bufsz], size);
       }
     };
-     
+    
+    /// Load the base_environment into the current environment.
+    /**
+     * Parsed the base_environment and add it to the current request's
+     * environment. This overwrites any environment variables with the existing
+     * key.
+	 *
+     * If `is_command_line` is true, then the first argument is skipped as this
+     * is the name of the program and ignored. Using it actually causes a crash
+     * on Windows (MSVC 9) anyway: I'm not exactly sure why.
+     */
+    template<typename ImplType>
+    void load_environment(ImplType& impl, char** base_environment, bool is_command_line)
+    {
+      if (is_command_line) ++base_environment;
+      detail::save_environment(env_vars(impl.vars_), base_environment);
+    }
+
     /// Read some data into the internal buffer.
     template<typename ImplType>
     std::size_t

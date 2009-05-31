@@ -37,18 +37,21 @@ namespace cgi {
     */
    template<typename MapT>
    void save_environment(MapT& env_map, char** env =
-    // Windows calls the environment environ_
-#if BOOST_WINDOWS
-	_environ
-#else
-	 environ
-#endif
-	   )
+       // Windows calls the environment environ_
+#      if BOOST_WINDOWS
+         _environ
+#      else
+	     environ
+#      endif
+     )
    {
+    
+     BOOST_ASSERT(env && "Trying to save environment, but the passed in environment is empty / invalid.");
+
      std::string sa;
      std::string sb;
 
-     for(; *env; ++env)
+     for(; env && *env; ++env)
      {
        int i=0;
        int j=strlen(*env);
@@ -76,30 +79,5 @@ namespace cgi {
 
  } // namespace detail
 } // namespace cgi
-
-/* Alternative version which doesn't copy the 'value' of the variable
- ******************************************************************************
-   void save_environment(std::map<std::string,const char*>& env_map
-                        , char** env = ::environ)
-   {
-     for(; *env; ++env)
-     {
-       int i=0;
-       int j=strlen(*env);
-       for(; i < j; ++i)
-         if ((*env)[i] == '=')
-           break;
-
-       // Note: empty variables are not guaranteed to be set by the server, so
-       // we are free to ignore them too.
-       if ((*env)[i+1] != '\0')
-       {
-         std::string sa(*env, i);
-         env_map[sa] = (*env+i+1);
-       }
-     }
-   }
- ******************************************************************************
- */
 
 #endif // CGI_DETAIL_SAVE_ENVIRONMENT_HPP_INCLUDED__

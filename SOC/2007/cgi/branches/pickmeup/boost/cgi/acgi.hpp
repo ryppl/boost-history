@@ -14,9 +14,6 @@
 #include "boost/cgi/detail/common_headers.hpp"
 
 namespace cgi {
-#ifndef CGI_NO_IMPLICIT_TYPEDEFS
-  //typedef acgi_request request;
-#endif
  namespace acgi {
 
    using namespace ::cgi::common; // import common namespace elements.

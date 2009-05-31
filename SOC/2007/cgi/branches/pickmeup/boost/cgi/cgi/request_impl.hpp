@@ -44,6 +44,7 @@ namespace cgi {
     typedef common::basic_client<
                 common::stdio_connection, common::tags::cgi
             > client_type;
+    typedef common::tags::cgi protocol_type;
 
     /// Constructor
     /**

@@ -86,51 +86,41 @@ namespace cgi {
     typedef typename implementation_type::client_type    client_type;
     typedef typename implementation_type::buffer_type    buffer_type;
 
-
-    /*
-    // Throws
-    basic_request(bool load_now, bool parse_post = true)
+    basic_request(const parse_options opts = parse_none
+                 , char** base_env = NULL)
       : detail::basic_sync_io_object<service_type>()
     {
-      if (load_now) load(parse_post);//this->service.load(this->implementation, true, ec);
-    }
-    */
-
-    basic_request(const parse_options opts = parse_none)
-      : detail::basic_sync_io_object<service_type>()
-    {
-      if (opts > parse_none) load(opts);//this->service.load(this->implementation, true, ec);
+      if (opts > parse_none) load(opts, base_env);
     }
 
     // Won't throw
     basic_request(boost::system::error_code& ec
-                 , const bool load_now = true
-                 , const bool parse_post_now = true)
+                 , const parse_options opts = parse_none
+                 , char** base_env = NULL)
       : detail::basic_sync_io_object<service_type>()
     {
-        const parse_options opts = parse_post_now ? parse_post : parse_env;
-        if (load_now) load(opts, ec);//this->service.load(this->implementation, true, ec);
+        if (opts > parse_none) load(opts, ec);
     }
 
-		// Throws
-    basic_request(protocol_service_type& s, const bool load_now = false
-                 , const bool parse_post_now = false)
+    // Throws
+    basic_request(protocol_service_type& s
+                 , const parse_options opts = parse_none
+                 , char** base_env = NULL)
       : basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
-      const parse_options opts = parse_post_now ? parse_post : parse_env;
-      if (load_now) load(opts);//this->service.load(this->implementation, false, ec);
+      if (opts > parse_none) load(opts, base_env);
     }
 
-		// Won't throw
+    // Won't throw
     basic_request(protocol_service_type& s
                  , boost::system::error_code& ec
-                 , const bool load_now = false, const bool parse_post_now = false)
+                 , const parse_options opts = parse_none
+                 , char** base_env = NULL)
       : basic_io_object<service_type>(s.io_service())
     {
       set_protocol_service(s);
-      const parse_options opts = parse_post_now ? parse_post : parse_env;
-      if (load_now) load(opts, ec);//this->service.load(this->implementation, false, ec);
+      if (opts > parse_none) load(opts, ec, base_env);
     }
 
     /// Make a new mutiplexed request from an existing connection.
@@ -182,34 +172,35 @@ namespace cgi {
      * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
      */
     // Throwing semantics
-    void load(parse_options parse_opts = parse_env)
+    void load(parse_options parse_opts = parse_env, char** base_env = NULL)
     {
       boost::system::error_code ec;
       this->service.load(this->implementation, parse_opts, ec);
+      if (!ec && base_env)
+        load(base_env);
       detail::throw_error(ec);
     }
 
-    // Error-code semantics (**FIXME**)
+    // Error-code semantics
     boost::system::error_code
-      load(parse_options parse_opts, boost::system::error_code& ec)
+      load(parse_options parse_opts, boost::system::error_code& ec
+          , char** base_environment = NULL, bool is_command_line = true)
     {
-      return this->service.load(this->implementation, parse_opts, ec);
-    }
-/*
-    // Error-code semantics (**FIXME**)
-    boost::system::error_code
-      load(bool parse_stdin, boost::system::error_code& ec)
-    {
-      return this->service.load(this->implementation, parse_stdin, ec);
+      boost::system::error_code& ec (
+          this->service.load(this->implementation, parse_opts, ec));
+      if (base_environment)
+        this->service.load_environment(this->implementation, base_environment
+                                      , is_command_line);
+      return ec;      
     }
 
-    // Error-code semantics (**FIXME**)
-    boost::system::error_code
-      load(boost::system::error_code& ec, bool parse_stdin = false)
+    void load(char** base_environment, bool is_command_line = true)
     {
-      return this->service.load(this->implementation, parse_stdin, ec);
+      this->service.load_environment(this->implementation
+                                    , base_environment
+                                    , is_command_line);
     }
-*/
+
     /// Get the buffer containing the POST data.
     /**
      * **FIXME**
@@ -291,8 +282,8 @@ namespace cgi {
 
     /// Get the client connection associated with the request
     /**
-     * You use the client for read/write calls. Y
-		 */
+     * You use the client for read/write calls.
+     */
     client_type& client()
     {
       return this->service.client(this->implementation);
@@ -488,6 +479,10 @@ namespace cgi {
      *
      * request req(...);
      * req[get] -> returns a -> get_map&
+     * // similarly
+     * req[post] -> returns a -> post_map&
+     * // but, once gotcha is:
+     * req[cookies] -> returns a ->cookie_map&
      *
      * You can use this just like a std::map<>`
      *
@@ -509,6 +504,11 @@ namespace cgi {
     BOOST_CGI_DETAIL_MAP_ACCESS(session)
 
     /// Get a `common::form_map&` of either the GET or POST variables.
+    /**
+     * Note that this dynamically finds the correct data map, so is
+     * less efficient than the `get` or `post` accessors. The latter
+     * is looked up statically.
+     */
     form_map& operator[](common::form_data_type const&)
     {
       if (request_method() == "GET")

@@ -24,6 +24,7 @@
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/common/is_async.hpp"
 #include "boost/cgi/common/role_type.hpp"
 #include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
@@ -45,6 +46,8 @@ namespace cgi {
     typedef cgi_service_impl_base<RequestImplType> self_type;
     typedef common::request_base<self_type>        base_type;
     typedef ::cgi::common::map                     map_type;
+    typedef typename
+      RequestImplType::protocol_type               protocol_type;
 
     struct implementation_type
       : RequestImplType
