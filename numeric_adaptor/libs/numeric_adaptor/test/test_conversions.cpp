@@ -27,6 +27,9 @@ void test_all()
 
     num n = 1234.5;
     BOOST_CHECK_EQUAL(int(n), 1234);
+    BOOST_CHECK_EQUAL((unsigned int)(n), 1234);
+    BOOST_CHECK_EQUAL((unsigned short)(n), 1234);
+    BOOST_CHECK_EQUAL((unsigned long)(n), 1234);
     BOOST_CHECK_EQUAL(float(n), 1234.5);
     BOOST_CHECK_EQUAL(double(n), 1234.5);
     BOOST_CHECK_EQUAL(std::string(n), "1234.5");

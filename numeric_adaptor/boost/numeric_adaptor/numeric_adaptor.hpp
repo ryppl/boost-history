@@ -33,9 +33,13 @@ struct enable_cast
 template <typename Policy>
 struct numeric_adaptor :
     enable_cast<numeric_adaptor<Policy>, char>,
+    enable_cast<numeric_adaptor<Policy>, unsigned char>,
     enable_cast<numeric_adaptor<Policy>, int>,
+    enable_cast<numeric_adaptor<Policy>, unsigned int>,
     enable_cast<numeric_adaptor<Policy>, short int>,
+    enable_cast<numeric_adaptor<Policy>, unsigned short int>,
     enable_cast<numeric_adaptor<Policy>, long int>,
+    enable_cast<numeric_adaptor<Policy>, unsigned long int>,
     enable_cast<numeric_adaptor<Policy>, float>,
     enable_cast<numeric_adaptor<Policy>, double>,
     enable_cast<numeric_adaptor<Policy>, long double>
