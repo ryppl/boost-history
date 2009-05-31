@@ -12,12 +12,16 @@
 #include <stdexcept>
 #include <string>
 
+#include "boost/task/detail/config.hpp"
+
+# if defined(BOOST_POSIX_API)
 extern "C"
 {
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <unistd.h>
 }
+# endif
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
@@ -78,6 +82,7 @@ void parallel_fib( long n)
 	printf("fibonacci(%d) == %ld\n", n, a.execute( n) );
 }
 
+# if defined(BOOST_POSIX_API)
 bool has_bytes( int fd)
 {
 	char buffer[1];
@@ -136,9 +141,11 @@ void create_sockets( int fd[2])
 		::exit( 1);
 	}
 }
+# endif
 
 int main( int argc, char *argv[])
 {
+# if defined(BOOST_POSIX_API)
 	try
 	{
 		int fd[2];
@@ -168,6 +175,8 @@ int main( int argc, char *argv[])
 	{ std::cerr << "exception: " << e.what() << std::endl; }
 	catch ( ... )
 	{ std::cerr << "unhandled" << std::endl; }
+
+# endif
 
 	return EXIT_FAILURE;
 }
