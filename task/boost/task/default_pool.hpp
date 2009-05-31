@@ -14,6 +14,11 @@
 
 #include <boost/config/abi_prefix.hpp>
 
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable:4251 4275 4231 4660)
+#endif
+
 namespace boost { namespace task
 {
 typedef static_pool< unbounded_channel< fifo > > default_pool_t;
@@ -28,6 +33,10 @@ inline
 default_pool_t & default_pool()
 { return detail::static_pool::instance; }
 } }
+
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 
 #include <boost/config/abi_suffix.hpp>
 

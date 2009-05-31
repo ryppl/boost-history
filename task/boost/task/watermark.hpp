@@ -13,6 +13,11 @@
 
 #include <boost/config/abi_prefix.hpp>
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4251 4275)
+# endif
+
 namespace boost { namespace task
 {
 class BOOST_TASK_DECL high_watermark
@@ -37,6 +42,10 @@ public:
 	operator std::size_t () const;
 };
 }}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #include <boost/config/abi_suffix.hpp>
 
