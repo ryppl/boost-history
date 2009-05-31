@@ -16,7 +16,7 @@
 
 #ifdef BOOST_MSVC
 #pragma warning(push)
-#pragma warning(disable:4251 4275 4231 4660)
+#pragma warning(disable:4251 4275)
 #endif
 
 namespace boost { namespace task
