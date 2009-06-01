@@ -8,12 +8,13 @@
 
 [section:channel Channel]
 
-The channel synchronizes the access between non-pool threads (application threads)  and __worker_threads__ and implements a queuing policy (limitation of queued _tasks__).
+The channel synchronizes the access between non-pool threads (application threads)  and __worker_threads__ and implements
+a queuing policy (limitation of queued tasks).
 
 
 [heading __bounded_channel__]
 
-__bounded_channel__ contains a single lock in order to synchronize access to the queue. The number of pending __tasks__ is limited in order to prevent resource exhaustion.
+__bounded_channel__ contains a single lock in order to synchronize access to the queue. The number of pending tasks is limited in order to prevent resource exhaustion.
 For this purpose a high- and low-watermark has to be passed at construction.
 __hwm__ sets the maximum of pending tasks. If this limited is reached all threads which submit a task will be set to sleep (blocked). If it is equal to __lwm__ everytime a 
 sleeping producer thread will be woken up and puts its task if one worker thread has taken a task from the channel.
@@ -23,8 +24,8 @@ the amount of pending tasks reaches __lwm__.
 
 [heading __unbounded_channel__]
 
-__unbounded_channel__ contains a single lock in order to synchronize access to the queue. An unlimited number of __tasks__ can be queued into this channel.
-The insertion of an __task__ will never block. If the channel becomes empty __worker_threads__ will be set to sleep until new __tasks__ are enqueued.
+__unbounded_channel__ contains a single lock in order to synchronize access to the queue. An unlimited number of tasks can be queued into this channel.
+The insertion of an __task__ will never block. If the channel becomes empty __worker_threads__ will be set to sleep until new tasks are enqueued.
 
 
 [endsect]

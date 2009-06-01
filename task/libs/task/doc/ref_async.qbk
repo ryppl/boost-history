@@ -6,7 +6,7 @@
 ]
 
 
-[section::async Function `async()`]
+[section:async Function `async()`]
 
 [section:async_default Templated non-member function `async( AE, task< R >)`]
 

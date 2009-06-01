@@ -72,7 +72,7 @@
 [endsect]
 
 
-[section:operator() Member function `operator()()`]
+[section:operator Member function `operator()()`]
 
 	void operator()()
 

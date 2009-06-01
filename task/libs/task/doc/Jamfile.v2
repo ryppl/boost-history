@@ -8,5 +8,5 @@
 
 using quickbook ;
 
-xml threadpool : threadpool.qbk ;
-boostbook standalone : threadpool ;
+xml task : boost_task.qbk ;
+boostbook standalone : task ;

@@ -8,10 +8,14 @@
 
 [section:handle Handle] 
 
+The __act__ dispatches tasks in response to the completion of asynchronous operations. __act__ uniquely identifies
+the task and state necessary to process the result of the operation [footnote see [@http://www.cs.wustl.edu/~schmidt/PDF/ACT.pdf
+'Asynchronous Completion Token'], Douglas Schmidt]. 
+
 __handle__ represents an __act__. It will be returned by __fn_async__ and is associated with the submitted __task__.
 
 
-[heading:act_interface Asynchronous completion token interface]
+[heading Asynchronous completion token interface]
 
 __handle__ implements an interface in order to check the state of computation and result transfer
 
@@ -71,7 +75,7 @@ __handle__ implements an interface in order to check the state of computation an
 	}
 ``
 
-[heading:task_interruption Task interruption]
+[heading Task interruption]
 
 * __fn_interrupt__: interrupt __task__ and return immediately
 

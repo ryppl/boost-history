@@ -6,13 +6,15 @@
 ]
 
 
-[section:new_thread __new_thread__]
+[section:new_thread Execute in new thread]
 
-_new_thread__ creates a new __thread__ and executes the task in this thread (asynchronous). The created thread gets joined by handle.
+__new_thread__ creates a new __thread__ and executes the task in this thread (asynchronous). The created thread gets joined by
+handle (so [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed).
 
-[caution Always store the returned __act__ in a variable because __handle__ joins the thread in its destructor (if the last reference gets out of scope). ]
+[caution Always store the returned __act__ in a variable because __handle__ joins the thread in its destructor (if the last
+reference gets out of scope). ]
 
-The topic of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed.
+
 
 ``
 	long fibonacci( long n)
@@ -42,18 +44,19 @@ The topic of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.htm
 ``
 
 
-In the example below both `a_function` and `another_function` are executed synchron (see link_own_thread[__own_thread__] for synchronous execution)!
+In the example below both `a_function()` and `another_function()` are executed synchron (see [link_own_thread __own_thread__]
+for synchronous execution)!
 
 ``
-      boost::task::async(
-		boost::task::new_thread(),
-		boost::task::make_task(
-			a_function) ) );
-
-      boost::task::async(
-		boost::task::new_thread(),
-		boost::task::make_task(
-			another_function) ) );
+    boost::task::async(
+            boost::task::new_thread(),
+            boost::task::make_task(
+                    a_function) ) );
+    
+    boost::task::async(
+            boost::task::new_thread(),
+            boost::task::make_task(
+                    another_function) ) );
 ``
 
 [endsect] 

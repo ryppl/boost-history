@@ -8,14 +8,14 @@
 
 [section:pool_shutdown Pool shutdown]
 
-__boost_task__ allows to shutdown a __thread_pool__ explicitly via functions __fn_shutdown__ and __fn_shutdown_now__.
-The destructor of the pool calls __fn_shutdown__ if not already done so that all __worker_threads__ are joined and the topic of 
+__boost_task__ allows to shutdown a __thread_pool__ explicitly via functions __fn_shutdown__ and __fn_shutdown_now__. The
+destructor of the pool calls __fn_shutdown__ if not already done so that all __worker_threads__ are joined and the topic of 
 [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed.
 
 [heading Shutdown]
 
-If __fn_shutdown__ is called - the the pool is set the closed state and all __worker_threads__ are joined until all pending __tasks__ are processed.
-No futher __tasks__ can be submitted.
+If __fn_shutdown__ is called - the the pool is set the closed state and all __worker_threads__ are joined until all pending tasks are processed.
+No futher tasks can be submitted.
 
 [note The deconstructor calls __fn_shutdown__ if the pool was not shutdown yet.]
 
@@ -67,7 +67,7 @@ No futher __tasks__ can be submitted.
 
 [heading Shutdown immediatly]
 
-The function __fn_shutdown_now__ closes the pool, interrupts and then joins all __worker_threads__. Pending __tasks__ are unprocessed.
+The function __fn_shutdown_now__ closes the pool, interrupts and then joins all __worker_threads__. Pending tasks are unprocessed.
 
 
 ``

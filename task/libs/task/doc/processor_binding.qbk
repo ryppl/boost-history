@@ -18,7 +18,7 @@ For some applications it is convenient to bind the __worker_threads__ to process
 
 The constructor takes additional arguments for the link_work_stealing[work-stealing algorithm] and link_channel[high-] and link_channel[low-watermark] too.
 
-[note __boost_task__ does only provide this feature for Windows, Linux, AIX, HP-UX and Solaris.]
+[note __boost_task__ does provide this feature only for Windows, Linux, AIX, HP-UX and Solaris.]
 
 
 [endsect]

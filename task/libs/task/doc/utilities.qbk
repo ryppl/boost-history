@@ -14,15 +14,15 @@ runs in a __thread_pool__).
 
 [heading reschedule_until]
 
-In the function `boost::this_task::reschedule_until( Pred const&)` allows to synchronize the task with other
-asynchronous events without blocking the __worker_threads__ (bool Pred::operator()() must not block).
-The current task will be rescheduled until the passed predicate becomes true.
+In the function `boost::this_task::reschedule_until( Pred const&)` allows to synchronize the task with other asynchronous events
+without blocking the __worker_threads__ (bool Pred::operator()() must not block). The current task will be rescheduled until the
+passed predicate becomes true.
 
 
 [heading get_pool]
 
-The pool in which the current code (__task__) is executed can be accessed via __fn_get_pool__. If hte code is not executed by
-a __worker_thread__ an assertion is raised.
+The pool in which the current code (__task__) is executed can be accessed via __fn_get_pool__. If hte code is not executed by a
+__worker_thread__ an assertion is raised.
 
 
 [heading runs_in_pool]

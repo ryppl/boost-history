@@ -1,0 +1,226 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Asynchronous completion token</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.0">
+<link rel="home" href="../index.html" title="Chapter 1. Boost.Task">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Task">
+<link rel="prev" href="callable.html" title="Callable">
+<link rel="next" href="async_executor.html" title="Asynchronous executor">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="callable.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="async_executor.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Asynchronous completion token">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_task.async_completion_token"></a><a class="link" href="async_completion_token.html" title="Asynchronous completion token"> Asynchronous completion
+    token</a>
+</h2></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="async_completion_token.html#boost_task.async_completion_token.handle"> Handle</a></span></dt></dl></div>
+<p>
+      The <span class="emphasis"><em>asynchronous-completion-token</em></span> dispatches processing
+      actions (<span class="underline">_tasks</span>_) in response to the
+      completion of asynchronous operations. <span class="emphasis"><em>asynchronous-completion-token</em></span>
+      uniquely identifies the task and state necessary to process the result of the
+      operation
+      <sup>[<a name="id638673" href="#ftn.id638673" class="footnote">3</a>]</sup>
+      .
+    </p>
+<div class="section" title="Handle">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_task.async_completion_token.handle"></a><a class="link" href="async_completion_token.html#boost_task.async_completion_token.handle" title="Handle"> Handle</a>
+</h3></div></div></div>
+<p>
+        <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span></code> represents an <span class="emphasis"><em>asynchronous-completion-token</em></span>.
+        It will be returned by <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">()</span></code> and is associated with the submitted <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code>.
+      </p>
+<a name="boost_task.async_completion_token.handle._act_interface_asynchronous_completion_token_interface"></a><h5>
+<a name="id638788"></a>
+        <a class="link" href="async_completion_token.html#boost_task.async_completion_token.handle._act_interface_asynchronous_completion_token_interface">:act_interface
+        Asynchronous completion token interface</a>
+      </h5>
+<p>
+        <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span></code> implements an interface in order
+        to check the state of computation and result transfer
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">get_id</span><span class="special">()</span></code>:
+          return id of the associated task-id
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">is_ready</span><span class="special">()</span></code>:
+          test if result is set
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">has_value</span><span class="special">()</span></code>:
+          test if value-result is set
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">has_exception</span><span class="special">()</span></code>:
+          test if exception-result is set
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code>:
+          return value-result
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">wait</span><span class="special">()</span></code>:
+          wait until result is set
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">wait_for</span><span class="special">()</span></code>:
+          wait until result is set or time-duration has elapsed
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">wait_until</span><span class="special">()</span></code>:
+          wait until result ist set or time-point has elapsed
+        </li>
+</ul></div>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">long</span> <span class="identifier">fibonacci</span><span class="special">(</span> <span class="keyword">long</span> <span class="identifier">n</span><span class="special">)</span>
+<span class="special">{</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_point</span><span class="special">();</span> <span class="comment">// interruption point
+</span>	
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">1</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+	<span class="keyword">long</span> <span class="identifier">k1</span><span class="special">(</span> <span class="number">1</span><span class="special">),</span> <span class="identifier">k2</span><span class="special">(</span> <span class="number">0</span><span class="special">);</span>
+	<span class="keyword">for</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">(</span> <span class="number">2</span><span class="special">);</span> <span class="identifier">i</span> <span class="special">&lt;=</span> <span class="identifier">n</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>
+	<span class="special">{</span>
+		<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()</span> <span class="special">)</span>	<span class="comment">// check if interruption was requested
+</span>			<span class="keyword">return</span><span class="special">;</span>
+
+		<span class="keyword">long</span> <span class="identifier">tmp</span><span class="special">(</span> <span class="identifier">k1</span><span class="special">);</span>
+		<span class="identifier">k1</span> <span class="special">=</span> <span class="identifier">k1</span> <span class="special">+</span> <span class="identifier">k2</span><span class="special">;</span>
+		<span class="identifier">k2</span> <span class="special">=</span> <span class="identifier">tmp</span><span class="special">;</span>
+	<span class="special">}</span>
+	
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_point</span><span class="special">();</span>  <span class="comment">// interruption point
+</span>	
+	<span class="keyword">return</span> <span class="identifier">k1</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>
+		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
+				<span class="identifier">fibonacci</span><span class="special">,</span>
+				<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"id == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">h</span><span class="special">.</span><span class="identifier">wait</span><span class="special">();</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"has value == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">has_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"has exception == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">has_exception</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+      </p>
+<a name="boost_task.async_completion_token.handle._task_interruption_task_interruption"></a><h5>
+<a name="id639994"></a>
+        <a class="link" href="async_completion_token.html#boost_task.async_completion_token.handle._task_interruption_task_interruption">:task_interruption
+        Task interruption</a>
+      </h5>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">interrupt</span><span class="special">()</span></code>:
+          interrupt <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code> and return immediately
+        </li>
+<li class="listitem">
+          __fn_interrupt_and<span class="underline">wait</span>_: interrupt
+          and wait until <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code> was removed from <span class="emphasis"><em>worker-thread</em></span>
+</li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">interrupt_and_wait_for</span><span class="special">()</span></code>: interrupt and wait until <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code> was removed from <span class="emphasis"><em>worker-thread</em></span>
+          or time duration has elapsed
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">interrupt_and_wait_until</span><span class="special">()</span></code>: interrupt and wait until <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code> was removed from <span class="emphasis"><em>worker-thread</em></span>
+          or time point has elapsed
+        </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()</span></code>:
+          return bool if interruption was requested
+        </li>
+</ul></div>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">long</span> <span class="identifier">cooperative</span><span class="special">(</span> <span class="keyword">long</span> <span class="identifier">n</span><span class="special">)</span>
+<span class="special">{</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_point</span><span class="special">();</span> <span class="comment">// interruption point
+</span>	
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">1</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+	<span class="keyword">long</span> <span class="identifier">k1</span><span class="special">(</span> <span class="number">1</span><span class="special">),</span> <span class="identifier">k2</span><span class="special">(</span> <span class="number">0</span><span class="special">);</span>
+	<span class="keyword">for</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">(</span> <span class="number">2</span><span class="special">);</span> <span class="identifier">i</span> <span class="special">&lt;=</span> <span class="identifier">n</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>
+	<span class="special">{</span>
+		<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()</span> <span class="special">)</span>	<span class="comment">// check if interruption was requested
+</span>			<span class="keyword">return</span><span class="special">;</span>
+			
+		<span class="keyword">long</span> <span class="identifier">tmp</span><span class="special">(</span> <span class="identifier">k1</span><span class="special">);</span>
+		<span class="identifier">k1</span> <span class="special">=</span> <span class="identifier">k1</span> <span class="special">+</span> <span class="identifier">k2</span><span class="special">;</span>
+		<span class="identifier">k2</span> <span class="special">=</span> <span class="identifier">tmp</span><span class="special">;</span>
+	<span class="special">}</span>
+	
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_point</span><span class="special">();</span>  <span class="comment">// interruption point
+</span>	
+	<span class="keyword">return</span> <span class="identifier">k1</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>			<span class="comment">// get handle associated with the task
+</span>		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>			
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>	<span class="comment">// asynchronous executor
+</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// task, to be executed asynchronously
+</span>				<span class="identifier">cooperative</span><span class="special">,</span>
+				<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+	<span class="identifier">h</span><span class="special">.</span><span class="identifier">interrupt_and_wait</span><span class="special">();</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"id == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"has value == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">has_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"has exception == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">has_exception</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>		<span class="comment">// throws boost::task::task_interrupted
+</span><span class="special">}</span>
+</pre>
+<p>
+      </p>
+</div>
+<div class="footnotes">
+<br><hr width="100" align="left">
+<div class="footnote"><p><sup>[<a name="ftn.id638673" href="#id638673" class="para">3</a>] </sup>
+          see <a href="http://www.cs.wustl.edu/~schmidt/PDF/ACT.pdf" target="_top">'Asynchronous
+          Completion Token'</a>, Douglas Schmidt
+        </p></div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Oliver Kowalke<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="callable.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="async_executor.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

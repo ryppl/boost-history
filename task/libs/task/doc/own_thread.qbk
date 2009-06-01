@@ -6,7 +6,7 @@
 ]
 
 
-[section:own_thread __own_thread__]
+[section:own_thread Execute in own thread]
 
 __own_thread__ executes the task in the current thread (synchronous execution - concerns of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] do not aply). 
 
