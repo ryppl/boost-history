@@ -35,13 +35,23 @@ struct function_graph_base {
     typedef typename function_type::first_argument_type vertex_type;
     //typedef typename function_type::second_argument_type second_vertex_type;
     
+    /** Constructor - Default */
+    function_graph_base()
+    { }
+    
+    /** Constructors to allow for initialization of edge */
+    function_graph_base(function_type const& f)
+        : edge_(f)
+    { }
+    
     // Allow access to the function edge_ holds, not edge_ itself.
     edge_type edge(vertex_type v1, vertex_type v2)
     { return edge_(v1, v2); }
     
     // Set the edge_ function
-    void set_edge_function(function_type edge_function)
+    void set_function(function_type edge_function)
     { edge_ = edge_function; }
+    
     function_type edge_;
 };
 
@@ -54,7 +64,7 @@ struct function_graph_base {
  * variant will be instantiated for meaningless types such as graph<int>.
  * Obviously, that should fail.
  */
-//template <typename T> struct function_graph { };
+template <typename T> struct function_graph { };
 
 /**
  * function_graph is a class designed to handle implicit graphs and more.
@@ -65,11 +75,10 @@ struct function_graph_base {
  * is part of the interface. Paired with it is the default constructor.
  */
 template <typename Edge, typename Vertex>
-struct function_graph //<function<Edge(Vertex, Vertex)> >
-    : private function_graph_base <function <Edge(Vertex, Vertex)> >
+struct function_graph <function<Edge(Vertex, Vertex)> >
+    : public function_graph_base <function <Edge(Vertex, Vertex)> >
 {
-    typedef function_graph_base <function<Edge(Vertex, Vertex)> > Base;
-    
+    typedef function_graph_base <function <Edge(Vertex, Vertex)> > Base;
 public:
 
     typedef typename Base::function_type function_type;
@@ -79,26 +88,22 @@ public:
 
     /** 
      * Constructor: default 
-     * @note Exists only when set_edge is used
      */
     function_graph()
     { }
     
     /** Constructor: takes a boost::function or functor */
     function_graph(function_type const& f)
-        //: edge_(f)
-    { edge_ = f;}
+        : Base(f)
+    { }
     
     
     /** Set the function of the implicit graph */    
-    using Base::set_edge_function;
+    using Base::set_function;
     
     /** Edge function from Base */
     using Base::edge;
-
-private:
-    Base::edge_;
-
+    
 private:
 };
 
@@ -108,12 +113,13 @@ private:
  * the form E(U,V) will match the empty class causing compiler errors.
  */
 
-/*template <typename Edge, typename Vertex>
+template <typename Edge, typename Vertex>
 struct function_graph<Edge(Vertex, Vertex)>
     : private function_graph_base< function<Edge(Vertex, Vertex)> >
-{ };*/
+{ };
 
 }   // graph namespace
 }   // boost namespace
 
 #endif /*FUNCTION_GRAPH_HPP_*/
+
