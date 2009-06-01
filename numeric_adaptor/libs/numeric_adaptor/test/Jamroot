@@ -10,7 +10,11 @@
 lib gmp : : <name>gmp ;
 lib cln : : <name>cln ;
 
-project : requirements <include>../../.. <library>gmp <library>cln ;
+project : requirements
+    <include>../../..
+    <library>gmp <define>HAVE_GMP
+    <library>cln <define>HAVE_CLN
+;
 
 import testing ;
 

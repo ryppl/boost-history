@@ -33,14 +33,14 @@ struct cln_policy : public default_policy<cln::cl_F>
     typedef cln::cl_F value_type;
 
     template <typename FromType>
-    static inline void set(type& value, FromType const& v)
+    static inline void set(value_type& value, FromType const& v)
     {
         // Conversions from the C built-in type `double' are provided for the
         // classes cl_DF, cl_F, cl_R, cl_N and cl_number
         value = cln::cl_float(v, cln::float_format(256));
     }
 
-    static inline void set(type& value, std::string const& v)
+    static inline void set(value_type& value, std::string const& v)
     {
         // CLN documentation 4.1.3 + 5.1 ("A precision specifier of the form prec may be appended")
         std::string copy(v);
@@ -49,35 +49,35 @@ struct cln_policy : public default_policy<cln::cl_F>
         //value = cln::cl_float(atof(v.c_str()), cln::float_format(256));
     }
 
-    static inline void abs(type& r, type const& a)
+    static inline void abs(value_type& r, value_type const& a)
     {
         r = cln::abs(a);
     }
 
 
-    static inline void sqrt(type& r, type const& a)
+    static inline void sqrt(value_type& r, value_type const& a)
     {
         r = cln::sqrt(a);
     }
 
-    static inline void cos(type& r, type const& a)
+    static inline void cos(value_type& r, value_type const& a)
     {
         r = cln::cos(a);
     }
 
-    static inline void sin(type& r, type const& a)
+    static inline void sin(value_type& r, value_type const& a)
     {
         r = cln::sin(a);
     }
 
-    static inline void hypot(type& r, type const& a, type const& b)
+    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {
         r = cln::sqrt(a * a + b * b);
     }
 
 
     template <typename ToType>
-    static inline ToType big_numeric_cast(type const& b)
+    static inline ToType big_numeric_cast(value_type const& b)
     {
         /*
             Conversions from the classes cl_I, cl_RA, cl_SF, cl_FF,

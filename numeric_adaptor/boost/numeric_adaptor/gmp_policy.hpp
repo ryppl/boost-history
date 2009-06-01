@@ -24,108 +24,108 @@ struct gmp_policy
 {
     typedef mpf_t value_type;
 
-    static inline void init(type& value)
+    static inline void init(value_type& value)
     {
         mpf_init(value);
     }
 
-    static inline void destruct(type& value)
+    static inline void destruct(value_type& value)
     {
         mpf_clear(value);
     }
 
     template <typename OtherType>
-    static inline void set(type& value, const OtherType& v)
+    static inline void set(value_type& value, const OtherType& v)
     {
         mpf_set_d(value, v);
     }
 
-    static inline void set(type& value, const std::string& v)
+    static inline void set(value_type& value, const std::string& v)
     {
         mpf_set_str(value, v.c_str(), 10);
     }
 
 
-    static inline void copy(type const& source, type& dest)
+    static inline void copy(value_type const& source, value_type& dest)
     {
         mpf_set(dest, source);
     }
 
     // TODO should we add specific overloads for function like mpf_add_ui?
 
-    static inline void add(type& r, type const& a, type const& b)
+    static inline void add(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_add(r, a, b);
     }
 
-    static inline void add(type& a, type const& b)
+    static inline void add(value_type& a, value_type const& b)
     {
         mpf_add(a, a, b);
     }
 
-    static inline void subtract(type& r, type const& a, type const& b)
+    static inline void subtract(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_sub(r, a, b);
     }
 
-    static inline void subtract(type& a, type const& b)
+    static inline void subtract(value_type& a, value_type const& b)
     {
         mpf_sub(a, a, b);
     }
 
-    static inline void multiply(type& r, type const& a, type const& b)
+    static inline void multiply(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_mul(r, a, b);
     }
 
-    static inline void multiply(type& a, type const& b)
+    static inline void multiply(value_type& a, value_type const& b)
     {
         mpf_mul(a, a, b);
     }
 
-    static inline void divide(type& r, type const& a, type const& b)
+    static inline void divide(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_div(r, a, b);
     }
 
-    static inline void divide(type& a, type const& b)
+    static inline void divide(value_type& a, value_type const& b)
     {
         mpf_div(a, a, b);
     }
 
-    static inline void neg(type& r, type const& n)
+    static inline void neg(value_type& r, value_type const& n)
     {
         mpf_neg(r, n);
     }
 
-    static inline void abs(type& r, type const& a)
+    static inline void abs(value_type& r, value_type const& a)
     {
         mpf_abs(r, a);
     }
 
-    static inline void sqrt(type& r, type const& a)
+    static inline void sqrt(value_type& r, value_type const& a)
     {
         mpf_sqrt(r, a);
     }
 
-    static inline void cos(type& r, type const& a)
+    static inline void cos(value_type& r, value_type const& a)
     {
         // COS is not available in GMP
         long double d = mpf_get_d(a);
         mpf_set_d(r, std::cos(d));
     }
 
-    static inline void sin(type& r, type const& a)
+    static inline void sin(value_type& r, value_type const& a)
     {
         // SIN is not available in GMP
         long double d = mpf_get_d(a);
         mpf_set_d(r, std::sin(d));
     }
 
-    static inline void hypot(type& r, type const& a, type const& b)
+    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_mul(r, a, a);
-        type t;
+        value_type t;
         mpf_init(t);
         mpf_mul(t, b, b);
         mpf_add(t, r, t);
@@ -135,13 +135,13 @@ struct gmp_policy
 
 
     template <typename OtherType>
-    static inline OtherType big_numeric_cast(type const& b)
+    static inline OtherType big_numeric_cast(value_type const& b)
     {
         return mpf_get_d(b);
     }
 
 
-    static inline std::string as_string(type const& a)
+    static inline std::string as_string(value_type const& a)
     {
         mp_exp_t exponent;
         static char s[1024];
@@ -165,7 +165,7 @@ struct gmp_policy
     }
 
 
-    static inline int compare(type const& a, type const& b)
+    static inline int compare(value_type const& a, value_type const& b)
     {
         return mpf_cmp(a, b);
     }
