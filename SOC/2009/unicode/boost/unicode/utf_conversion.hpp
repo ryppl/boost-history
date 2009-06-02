@@ -1,48 +1,32 @@
-#ifndef BOOST_UNICODE_ITERATOR_HPP
-#define BOOST_UNICODE_ITERATOR_HPP
+#ifndef BOOST_UTF_CONVERSION_HPP
+#define BOOST_UTF_CONVERSION_HPP
 
-#include <boost/cstdint.hpp>
 #include <boost/assert.hpp>
-#include <boost/static_assert.hpp>
 #include <boost/throw_exception.hpp>
 #include <stdexcept>
 #ifndef BOOST_NO_STD_LOCALE
 #include <sstream>
 #include <ios>
 #endif
-#include <limits.h> // CHAR_BIT
 
-#include <boost/iterator/pack_iterator.hpp>
+#include <boost/iterator/pipe_iterator.hpp>
+#include <boost/unicode/unicode_properties.hpp>
 
 namespace boost
 {
 
 namespace detail
 {
-	
-static const ::boost::uint16_t high_surrogate_base = 0xD7C0u;
-static const ::boost::uint16_t low_surrogate_base = 0xDC00u;
-static const ::boost::uint32_t ten_bit_mask = 0x3FFu;
+    
+static const char16 high_surrogate_base = 0xD7C0u;
+static const char16 low_surrogate_base = 0xDC00u;
+static const char32 ten_bit_mask = 0x3FFu;
 
-inline bool is_high_surrogate(::boost::uint16_t v)
-{
-   return (v & 0xFC00u) == 0xd800u;
-}
-inline bool is_low_surrogate(::boost::uint16_t v)
-{
-   return (v & 0xFC00u) == 0xdc00u;
-}
-template <class T>
-inline bool is_surrogate(T v)
-{
-   return (v & 0xF800u) == 0xd800;
-}
-
-inline unsigned utf8_byte_count(boost::uint8_t c)
+inline unsigned utf8_byte_count(uint8_t c)
 {
    // if the most significant bit with a zero in it is in position
    // 8-N then there are N bytes in this UTF-8 sequence:
-   boost::uint8_t mask = 0x80u;
+   uint8_t mask = 0x80u;
    unsigned result = 0;
    while(c & mask)
    {
@@ -52,45 +36,46 @@ inline unsigned utf8_byte_count(boost::uint8_t c)
    return (result == 0) ? 1 : ((result > 4) ? 4 : result);
 }
 
-inline unsigned utf8_trailing_byte_count(boost::uint8_t c)
+inline unsigned utf8_trailing_byte_count(uint8_t c)
 {
    return utf8_byte_count(c) - 1;
 }
 
-inline void invalid_code_point(::boost::uint32_t val)
+inline void invalid_code_point(char32 val)
 {
 #ifndef BOOST_NO_STD_LOCALE
 	std::stringstream ss;
-	ss << "Invalid UTF-32 code point U+" << std::showbase << std::hex << val << " encountered while trying to encode UTF-16 sequence";
+	ss << "Invalid UTF-32 code point U+" << std::showbase << std::hex << (uint_least32_t)val << " encountered while trying to encode UTF-16 sequence";
 	std::out_of_range e(ss.str());
 #else
 	std::out_of_range e("Invalid UTF-32 code point encountered while trying to encode UTF-16 sequence");
 #endif
-	boost::throw_exception(e);
+	throw_exception(e);
 }
 
-template<typename Range>
-inline void invalid_utf_sequence(const Range& r)
+template<typename Iterator>
+inline void invalid_utf_sequence(Iterator begin, Iterator end)
 {
 #ifndef BOOST_NO_STD_LOCALE
 	std::stringstream ss;
 	ss << "Invalid UTF sequence " << std::showbase << std::hex;
-	for(typename boost::range_iterator<const Range>::type it = boost::begin(r); it != boost::end(r); ++it)
+	for(Iterator it = begin; it != end; ++it)
 		ss << *it << " ";
 	ss << "encountered while trying to decode UTF-32 sequence";
 	std::out_of_range e(ss.str());
 #else
 	std::out_of_range e("Invalid UTF sequence encountered while trying to decode UTF-32 sequence");
 #endif
-	boost::throw_exception(e);
+	throw_exception(e);
 }
 
 struct u16_packer
 {
-	typedef boost::uint16_t output_type;
+	typedef char16 output_type;
+    static const int max_output = 2;
 	
 	template<typename OutputIterator>
-	OutputIterator operator()(boost::uint32_t v, OutputIterator out)
+	OutputIterator operator()(char32 v, OutputIterator out)
 	{
 		if(v >= 0x10000u)
 		{
@@ -101,8 +86,8 @@ struct u16_packer
 			output_type hi = static_cast<output_type>(v >> 10) + detail::high_surrogate_base;
 			output_type lo = static_cast<output_type>(v & detail::ten_bit_mask) + detail::low_surrogate_base;
 			
-			BOOST_ASSERT(detail::is_high_surrogate(hi));
-			BOOST_ASSERT(detail::is_low_surrogate(lo));
+			BOOST_ASSERT(unicode::is_high_surrogate(hi));
+			BOOST_ASSERT(unicode::is_low_surrogate(lo));
 			
 			*out++ = hi;
 			*out++ = lo;
@@ -113,7 +98,7 @@ struct u16_packer
 			output_type cp = static_cast<output_type>(v);
 
 			// value must not be a surrogate:
-			if(detail::is_surrogate(cp))
+			if(unicode::is_surrogate(cp))
 				detail::invalid_code_point(v);
 				
 			*out++ = cp;
@@ -125,70 +110,63 @@ struct u16_packer
 
 struct u16_unpacker
 {
-	typedef boost::uint32_t output_type;
+	typedef char32 output_type;
+    static const int max_output = 1;
 	
-	template<typename Range, typename It>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		It
-	>
-	left(const Range& in, It out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	ltr(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		typename boost::range_iterator<const Range>::type it(boost::begin(in));
+		In it = begin;
+		char32 value = *it;
 		
-		boost::uint32_t value = *it;
-		
-		if(detail::is_high_surrogate(value))
+		if(unicode::is_high_surrogate(value))
 		{
-			if(++it == boost::end(in))
-				detail::invalid_utf_sequence(in);
+			if(++it == end)
+				detail::invalid_utf_sequence(begin, end);
 			
 			// precondition; next value must have be a low-surrogate:
-         	boost::uint16_t lo = *it;
-         	if(!detail::is_low_surrogate(lo))
+         	char16 lo = *it;
+         	if(!unicode::is_low_surrogate(lo))
             	detail::invalid_code_point(lo);
 				
          	value = code_point(value, lo);
       	}
       	// postcondition; result must not be a surrogate:
-      	if(detail::is_surrogate(value))
-			detail::invalid_code_point(static_cast<boost::uint16_t>(value));
+      	if(unicode::is_surrogate(value))
+			detail::invalid_code_point(static_cast<char16>(value));
 		
 		*out++ = value;
 				
 		return std::make_pair(++it, out);
 	}
 	
-	template<typename Range, typename OutputIterator>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		OutputIterator
-	>
-	right(const Range& in, OutputIterator out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	rtl(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		typename boost::range_iterator<const Range>::type it = --boost::end(in);
+		In it = --end;
+		char32 value = *it;
 		
-		boost::uint32_t value = *it;
-		
-		if(detail::is_low_surrogate(value))
+		if(unicode::is_low_surrogate(value))
 		{
-			if(it == boost::begin(in))
-				invalid_utf_sequence(in);
+			if(it == begin)
+				invalid_utf_sequence(begin, end);
 			--it;
 			
-			boost::uint16_t hi = *it;
-         	if(!detail::is_high_surrogate(hi))
+			char16 hi = *it;
+         	if(!unicode::is_high_surrogate(hi))
             	invalid_code_point(hi);
 			
 			value = code_point(hi, value);
       	}
       	// postcondition; result must not be a surrogate:
-      	if(detail::is_surrogate(value))
-			invalid_code_point(static_cast<boost::uint16_t>(value));
+      	if(unicode::is_surrogate(value))
+			invalid_code_point(static_cast<char16>(value));
 			
 		*out++ = value;
 		
@@ -196,19 +174,20 @@ struct u16_unpacker
 	}
 	
 private:
-	boost::uint32_t code_point(boost::uint16_t hi, boost::uint16_t lo)
+	char32 code_point(char16 hi, char16 lo)
 	{
 		return   ((hi - detail::high_surrogate_base) << 10)
-		       | (static_cast<boost::uint32_t>(static_cast<boost::uint16_t>(lo)) & detail::ten_bit_mask);
+		       | (static_cast<char32>(static_cast<char16>(lo)) & detail::ten_bit_mask);
 	}
 };
 
 struct u8_packer
 {
-	typedef boost::uint8_t output_type;
+	typedef char output_type;
+    static const int max_output = 4;
 	
 	template<typename OutputIterator>
-	OutputIterator operator()(boost::uint32_t c, OutputIterator out)
+	OutputIterator operator()(char32 c, OutputIterator out)
 	{
 		if(c > 0x10FFFFu)
 			detail::invalid_code_point(c);
@@ -242,40 +221,36 @@ struct u8_packer
 
 struct u8_unpacker
 {
-	typedef boost::uint32_t output_type;
+	typedef char32 output_type;
+    static const int max_output = 1;
 	
-	template<typename Range, typename It>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		It
-	>
-	left(const Range& in, It out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	ltr(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		typename boost::range_iterator<const Range>::type it(boost::begin(in));
-		
-		boost::uint32_t value = *it;
+		In it = begin;
+		char32 value = *it;
 		
 		if((value & 0xC0u) == 0x80u)
-			detail::invalid_utf_sequence(in);
+			detail::invalid_utf_sequence(begin, end);
 			
 		// see how many extra byts we have:
 		unsigned extra = detail::utf8_trailing_byte_count(value);
 		// extract the extra bits, 6 from each extra byte:
-		
 		for(unsigned c = 0; c < extra; ++c)
 		{
-			if(++it == boost::end(in))
-				detail::invalid_utf_sequence(in);
+			if(++it == end)
+				detail::invalid_utf_sequence(begin, end);
 			
 			value <<= 6;
-			value += static_cast<boost::uint8_t>(*it) & 0x3Fu;
+			value += static_cast<unsigned char>(*it) & 0x3Fu;
 		}
 		
 		// we now need to remove a few of the leftmost bits, but how many depends
 		// upon how many extra bytes we've extracted:
-		static const boost::uint32_t masks[4] = 
+		static const char32 masks[4] = 
 		{
 			0x7Fu,
 			0x7FFu,
@@ -285,33 +260,29 @@ struct u8_unpacker
 		value &= masks[extra];
 		
 		// check the result:
-		if(value > static_cast<boost::uint32_t>(0x10FFFFu))
-			invalid_utf_sequence(in);
+		if(value > static_cast<char32>(0x10FFFFu))
+			invalid_utf_sequence(begin, end);
 		
 		*out++ = value;
 				
 		return std::make_pair(++it, out);
 	}
 	
-	template<typename Range, typename OutputIterator>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		OutputIterator
-	>
-	right(const Range& in, OutputIterator out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	rtl(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		typename boost::range_iterator<const Range>::type it = --boost::end(in);
-		
-		boost::uint32_t value = *it;
+		In it = --end;
+		char32 value = *it;
 		
 		// Keep backtracking until we don't have a trailing character:
 		unsigned count = 0;
 		while((*it & 0xC0u) == 0x80u)
 		{					
-			if(count >= 4 || it == boost::begin(in))
-				invalid_utf_sequence(in);
+			if(count >= 4 || it == begin)
+				invalid_utf_sequence(begin, end);
 				
 			--it;
 			++count;
@@ -319,9 +290,9 @@ struct u8_unpacker
 
 		// now check that the sequence was valid:
 		if(count != detail::utf8_trailing_byte_count(value))
-			invalid_utf_sequence(in);
+			invalid_utf_sequence(begin, end);
 		
-		out = left(std::make_pair(it, boost::end(in)), out).second;
+		out = ltr(it, end, out).second;
 		return std::make_pair(it, out);
 	}
 };
@@ -330,41 +301,53 @@ struct u8_unpacker
 
 template<typename Range>
 std::pair<
-	pack_iterator<typename boost::range_iterator<const Range>::type, packer<detail::u16_packer> >,
-	pack_iterator<typename boost::range_iterator<const Range>::type, packer<detail::u16_packer> >
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u16_packer> >,
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u16_packer> >
 > make_u32_to_u16_range(const Range& range)
 {
-	return make_pack_range(range, make_packer(detail::u16_packer()));
+	return make_pipe_range(range, make_one_many_pipe(detail::u16_packer()));
 }
 
 template<typename Range>
 std::pair<
-	pack_iterator<typename boost::range_iterator<const Range>::type, detail::u16_unpacker>,
-	pack_iterator<typename boost::range_iterator<const Range>::type, detail::u16_unpacker>
+	pipe_iterator<typename range_iterator<const Range>::type, detail::u16_unpacker>,
+	pipe_iterator<typename range_iterator<const Range>::type, detail::u16_unpacker>
 > make_u16_to_u32_range(const Range& range)
 {
-	return make_pack_range(range, detail::u16_unpacker());
+	return make_pipe_range(range, detail::u16_unpacker());
 }
 
 template<typename Range>
 std::pair<
-	pack_iterator<typename boost::range_iterator<const Range>::type, packer<detail::u8_packer> >,
-	pack_iterator<typename boost::range_iterator<const Range>::type, packer<detail::u8_packer> >
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u8_packer> >,
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u8_packer> >
 > make_u32_to_u8_range(const Range& range)
 {
-	return make_pack_range(range, make_packer(detail::u8_packer()));
+	return make_pipe_range(range, make_one_many_pipe(detail::u8_packer()));
 }
 
 template<typename Range>
 std::pair<
-	pack_iterator<typename boost::range_iterator<const Range>::type, detail::u8_unpacker>,
-	pack_iterator<typename boost::range_iterator<const Range>::type, detail::u8_unpacker>
+	pipe_iterator<typename range_iterator<const Range>::type, detail::u8_unpacker>,
+	pipe_iterator<typename range_iterator<const Range>::type, detail::u8_unpacker>
 > make_u8_to_u32_range(const Range& range)
 {
-	return make_pack_range(range, detail::u8_unpacker());
+	return make_pipe_range(range, detail::u8_unpacker());
 }
 
-//TODO: output iterators
+template<typename OutputIterator>
+pipe_output_iterator<OutputIterator, one_many_pipe<detail::u8_packer> >
+make_u8_output_iterator(OutputIterator out)
+{
+	return make_pipe_output_iterator(out, make_one_many_pipe(detail::u8_packer()));
+}
+
+template<typename OutputIterator>
+pipe_output_iterator<OutputIterator, one_many_pipe<detail::u16_packer> >
+make_u16_output_iterator(OutputIterator out)
+{
+	return make_pipe_output_iterator(out, make_one_many_pipe(detail::u16_packer()));
+}
 
 } // namespace boost
 

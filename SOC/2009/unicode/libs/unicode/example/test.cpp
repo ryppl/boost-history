@@ -37,4 +37,6 @@ int main()
 	
 	BOOST_FOREACH(char cp, make_reverse_range(boost::make_u32_to_u8_range(v)))
 		std::cout << std::hex << (int)(unsigned char)cp << std::endl;
+        
+    std::cout << "\n" << boost::unicode::get_name(0xE9) << std::endl;
 }
