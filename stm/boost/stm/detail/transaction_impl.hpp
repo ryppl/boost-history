@@ -2033,6 +2033,23 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
 
    if (writes() > 3) allow_stall = false;
 
+   //--------------------------------------------------------------------------
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // Sebastian's account code to break ... we need to investigate why and fix it.
+   //
+   // Until such time, stalling txes for increased concurrency MUST be disabled.
+   //--------------------------------------------------------------------------
+
+   allow_stall = false;
+
+   //--------------------------------------------------------------------------
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // Sebastian's account code to break ... we need to investigate why and fix it.
+   //
+   // Until such time, stalling txes for increased concurrency MUST be disabled.
+   //--------------------------------------------------------------------------
+
+
    // warm up the cache with this transaction's bloom filter
 #if PERFORMING_WRITE_BLOOM
    bloom_filter &wbloom = this->wbloom();
