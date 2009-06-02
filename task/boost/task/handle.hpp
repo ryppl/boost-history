@@ -124,8 +124,8 @@ public:
 		{ throw task_uninitialized(); }
 	}
 
-    template< typename Duration >
-    bool wait_for( Duration const& rel_time) const
+	template< typename Duration >
+	bool wait_for( Duration const& rel_time) const
 	{
 		try
 		{ return fut_.timed_wait( rel_time); }
@@ -133,140 +133,22 @@ public:
 		{ throw task_uninitialized(); }
 	}
 
-    bool wait_until( system_time const& abs_time) const
+	bool wait_until( system_time const& abs_time) const
 	{
 		try
 		{ return fut_.timed_wait_until( abs_time); }
 		catch ( future_uninitialized const&)
 		{ throw task_uninitialized(); }
 	}
+
+	shared_future< R > & get_future()
+	{ return fut_; }
 
 	void swap( handle< R > & other)
 	{
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
 		id_.swap( other.id_);
-	}
-};
-
-template<>
-class handle< void >
-{
-private:
-	template< typename Channel >
-	friend class static_pool;
-	friend struct own_thread;
-	friend struct new_thread;
-	friend struct as_sub_task;
-	template< typename Iterator >
-	friend void waitfor_all( Iterator begin, Iterator end);
-	template< typename T1, typename T2 >
-	friend void waitfor_all( T1 & t1, T2 & t2);
-	template< typename T1, typename T2, typename T3 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
-	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
-	template< typename Iterator >
-	friend Iterator waitfor_any( Iterator begin, Iterator end);
-	template< typename T1, typename T2 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2);
-	template< typename T1, typename T2, typename T3 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
-	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
-
-	shared_future< void >	fut_;
-	detail::interrupter		intr_;
-	id						id_;
-
-	handle(
-		id const& id__,
-		shared_future< void > const& fut,
-		detail::interrupter const& intr)
-	:
-	fut_( fut),
-	intr_( intr),
-	id_( id__)
-	{}
-
-public:
-	handle()
-	: fut_(), intr_( detail::interrupter::dont_wait), id_()
-	{}
-
-	const id get_id() const
-	{ return id_; }
-
-	void interrupt()
-	{ intr_.interrupt(); }
-
-	void interrupt_and_wait()
-	{ intr_.interrupt_and_wait(); }
-
-	void interrupt_and_wait_until( system_time const& abs_time)
-	{ intr_.interrupt_and_wait_until( abs_time); }
-
-	template< typename Duration >
-	void interrupt_and_wait_for( Duration const& rel_time)
-	{ intr_.interrupt_and_wait_for( rel_time); }
-
-	bool interruption_requested()
-	{ return intr_.interruption_requested(); }
-
-	void get()
-	{
-		try
-		{ fut_.get(); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-		catch ( broken_promise const&)
-		{ throw broken_task(); }
-		catch ( promise_already_satisfied const&)
-		{ throw task_already_executed(); }
-	}
-
-	bool is_ready() const
-	{ return fut_.is_ready(); }
-
-	bool has_value() const
-	{ return fut_.has_value(); }
-
-	bool has_exception() const
-	{ return fut_.has_exception(); }
-
-	void wait() const
-	{
-		try
-		{ fut_.wait(); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-	}
-
-    template< typename Duration >
-    bool wait_for( Duration const& rel_time) const
-	{
-		try
-		{ return fut_.timed_wait( rel_time); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-	}
-
-    bool wait_until( system_time const& abs_time) const
-	{
-		try
-		{ return fut_.timed_wait_until( abs_time); }
-		catch ( future_uninitialized const&)
-		{ throw task_uninitialized(); }
-	}
-
-	void swap( handle< void > & other)
-	{
-		fut_.swap( other.fut_);
-		intr_.swap( other.intr_);
 	}
 };
 
