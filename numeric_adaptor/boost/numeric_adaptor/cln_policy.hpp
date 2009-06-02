@@ -85,8 +85,8 @@ struct cln_policy : public default_policy<cln::cl_F>
             to the C built-in types `float' and `double' are provided
             through the functions
 
-            float float_approx (type const& x)
-            double double_approx (type const& x)
+            float float_approx (value_type const& x)
+            double double_approx (value_type const& x)
 
             Returns an approximation of x of C type ctype. If abs(x) is
             too close to 0 (underflow),

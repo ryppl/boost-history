@@ -29,26 +29,26 @@ namespace boost { namespace numeric_adaptor {
 template <typename T>
 struct ieee_policy : public default_policy<T>
 {
-    typedef T type;
+    typedef T value_type;
 
     template <typename OtherType>
-    static inline void set(type& value, OtherType const& v)   { value = v; } //boost::numeric_cast<T>(v); }
+    static inline void set(value_type& value, OtherType const& v)   { value = v; } //boost::numeric_cast<T>(v); }
 
-    static inline void set(type& value, std::string const& v) { value = boost::lexical_cast<T>(v); }
+    static inline void set(value_type& value, std::string const& v) { value = boost::lexical_cast<T>(v); }
 
-    static inline void sqrt(type& r, type const& a) { r = std::sqrt(a); }
-    static inline void cos(type& r, type const& a) { r = std::cos(a); }
-    static inline void sin(type& r, type const& a) { r = std::sin(a); }
-    static inline void tan(type& r, type const& a) { r = std::tan(a); }
-    static inline void atan(type& r, type const& a) { r = std::atan(a); }
-    static inline void abs(type& r, type const& a) { r = std::abs(a); }
-    static inline void hypot(type& r, type const& a, type const& b)
+    static inline void sqrt(value_type& r, value_type const& a) { r = std::sqrt(a); }
+    static inline void cos(value_type& r, value_type const& a) { r = std::cos(a); }
+    static inline void sin(value_type& r, value_type const& a) { r = std::sin(a); }
+    static inline void tan(value_type& r, value_type const& a) { r = std::tan(a); }
+    static inline void atan(value_type& r, value_type const& a) { r = std::atan(a); }
+    static inline void abs(value_type& r, value_type const& a) { r = std::abs(a); }
+    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {
         r = boost::math::hypot(a, b);
     }
 
     template <typename OtherType>
-    static inline OtherType big_numeric_cast(type const& v)
+    static inline OtherType big_numeric_cast(value_type const& v)
     {
         return boost::numeric_cast<OtherType>(v);
     }
