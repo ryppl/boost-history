@@ -32,8 +32,6 @@ struct enable_cast
 
 template <typename Policy>
 struct numeric_adaptor :
-    enable_cast<numeric_adaptor<Policy>, char>,
-    enable_cast<numeric_adaptor<Policy>, unsigned char>,
     enable_cast<numeric_adaptor<Policy>, int>,
     enable_cast<numeric_adaptor<Policy>, unsigned int>,
     enable_cast<numeric_adaptor<Policy>, short int>,
