@@ -23,7 +23,7 @@ NS_BOOST_MEMORY_BEGIN
 
 #pragma pack(1)
 
-template <class PolicyT>
+template <class PolicyT, int m_fPreAlloc = 1>
 class region_alloc
 {
 private:
@@ -68,10 +68,17 @@ private:
 
 	void BOOST_MEMORY_CALL init_()
 	{
-		MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
-		pNew->pPrev = NULL;
-		m_begin = pNew->buffer;
-		m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+		if (m_fPreAlloc)
+		{
+			MemBlock* pNew = (MemBlock*)m_alloc.allocate(sizeof(MemBlock));
+			pNew->pPrev = NULL;
+			m_begin = pNew->buffer;
+			m_end = (char*)pNew + m_alloc.alloc_size(pNew);
+		}
+		else
+		{
+			m_begin = m_end = (char*)HeaderSize;
+		}
 	}
 
 public:
