@@ -43,8 +43,8 @@ boost::regex split_file_and_line("(.*):(\\d+)");
 
 #else
 
-boost::regex enter_message("(.*): warning: .int template_profiler::enter\\(int\\).*");
-boost::regex exit_message("(.*): warning: .int template_profiler::exit\\(int\\).*");
+boost::regex enter_message("(.*): warning: .+int template_profiler::enter\\(int\\).*");
+boost::regex exit_message("(.*): warning: .+int template_profiler::exit\\(int\\).*");
 boost::regex call_graph_line("(.*):(\\d+):   instantiated from .*");
 boost::regex split_file_and_line("(.*):(\\d+)");
 
