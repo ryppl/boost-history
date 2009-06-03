@@ -32,8 +32,6 @@
 #   define BOOST_TASK_MACOS
 # elif defined(__IBMCPP__) || defined(_AIX)
 #   define BOOST_TASK_AIX
-# elif defined(__QNXNTO__)
-#   define BOOST_TASK_QNXNTO
 # endif
 
 #endif // BOOST_TASK_DETAIL_PLATFORM_H

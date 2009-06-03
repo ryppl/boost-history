@@ -10,6 +10,8 @@
 
 __new_thread__ creates a new __thread__ and executes the task in this thread (asynchronous). The created thread gets joined by
 handle (so [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed).
+The returned __handle__ joins the thread in its destructor (if the last reference gets out of scope) and thus provides one possible
+solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html N2880].
 
 [caution Always store the returned __act__ in a variable because __handle__ joins the thread in its destructor (if the last
 reference gets out of scope). ]

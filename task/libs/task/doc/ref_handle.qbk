@@ -38,6 +38,8 @@
 
 		void wait() const;
 
+		shared_future< R > & get_future();
+
 		void swap( handle< R > & other);
 	};
 ``
@@ -170,6 +172,17 @@
 
 [variablelist
 [[Effects:] [checks if task is done and an exception is set]]
+[[Throws:] [Nothing]]
+]
+[endsect]
+
+
+[section:get_future Member function `get_future()`]
+
+	shared_future< R > & get_future()
+
+[variablelist
+[[Effects:] [returns a reference to the internal shared_future< R >]]
 [[Throws:] [Nothing]]
 ]
 [endsect]

@@ -7,38 +7,43 @@
 #ifndef BOOST_TASK_DETAIL_ATOMIC_H
 #define BOOST_TASK_DETAIL_ATOMIC_H
 
-#include <boost/assert.hpp>
-#include <boost/cstdint.hpp>
-#include <boost/interprocess/detail/atomic.hpp>
+// MS compatible compilers support #pragma once
+#if defined(_MSC_VER) && (_MSC_VER >= 1020)
+# pragma once
+#endif
 
-#include <boost/config/abi_prefix.hpp>
+#include <boost/config.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
-//TODO: use interlocked_exchange on Windows
-// and inline assembler on otherplatforms (XCHG etc.)
-inline
-void atomic_exchange( volatile uint32_t * object, uint32_t desired)
-{ interprocess::detail::atomic_write32( object, desired); }
+#include <boost/task/detail/has_sync.hpp>
 
-inline
-unsigned int atomic_fetch_add( volatile uint32_t * object, uint32_t operand)
-{
-	BOOST_ASSERT( operand == 1);
-	return interprocess::detail::atomic_inc32( object);
-}
+# if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__CYGWIN__)
+#include <boost/task/detail/atomic_interlocked.hpp>
 
-inline
-unsigned int atomic_fetch_sub( volatile uint32_t * object, uint32_t operand)
-{
-	BOOST_ASSERT( operand == 1);
-	return interprocess::detail::atomic_dec32( object);
-}
-} } }
+# elif defined( __GNUC__ ) && ( defined( __i386__ ) || defined( __x86_64__ ) )
+#include <boost/task/detail/atomic_gcc_x86.hpp>
 
-#include <boost/config/abi_suffix.hpp>
+# elif defined( __GNUC__ ) && ( defined(__PPC__) || defined(__ppc__) )
+#include <boost/task/detail/atomic_gcc_ppc.hpp>
+
+# elif defined( BOOST_TASK_HAS_SYNC)
+#include <boost/task/detail/atomic_sync.hpp>
+
+# elif defined(__GLIBCPP__) || defined(__GLIBCXX__)
+#include <boost/task/detail/atomic_gcc.hpp>
+
+# elif defined(BOOST_TASK_AIX)
+#include <boost/task/detail/atomic_aix.hpp>
+
+# elif defined(BOOST_TASK_HPUX)
+#include <boost/task/detail/atomic_hpux.hpp>
+
+# elif defined(BOOST_TASK_SOLARIS)
+#include <boost/task/detail/atomic_solaris.hpp>
+
+# else
+#include <boost/task/detail/atomic_interprocess.hpp>
+
+# endif
 
 #endif // BOOST_TASK_DETAIL_ATOMIC_H
 

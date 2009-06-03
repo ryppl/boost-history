@@ -32,6 +32,11 @@ __boost_task__ provides an framework for parallel execution of tasks (a task is 
 	* __as_sub_task__: executes task in newly created thread or in a pool of __worker_threads__ depending on whether current task is already executed in a pool
 	* custom pool: task gets executed by a __worker_thread__ of a custom __thread_pool__
 
+* support of forking and joining sub-tasks
+	* better performance
+	* no deadlock because of inline-execution of sub-tasks
+	* automatically detects if code runs in a __thread_pool__ so the appropriate mechanism for executing the sub-tasks is choosen
+
 
 References
 
@@ -40,6 +45,8 @@ References
 * N2276: Thread Pools and Futures [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2276.html] written by Anthony Williams.
 
 * N2802: A plea to reconsider detach-on-destruction for thread objects [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html] written by Hans-J. Boehm.
+
+* N2880: C++ object lifetime interactions with the threads API [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html] written by Hans-J. Boehm and Lawrence Crowl.
 
 * [@http://herbsutter.wordpress.com 'Sutter’s Mill'] by Herb Sutter
 
@@ -50,10 +57,18 @@ References
 In order to use the classes and functions described here, you can either include the specific headers specified by the descriptions of each class or function,
 or include the master library header:
 
+``
     #include <boost/task.hpp>
+``
 
 which includes all the other headers in turn.
 
+Used namespaces are:
+
+``
+    namespace boost::task
+    namespace boost::this_task
+``
 
 [heading Tested Platforms]
 
@@ -62,7 +77,7 @@ __boost_task__ has been tested on the following platforms and compilers:
 *  Debian GNU/Linux 2.6.29.2 (x86_64), GCC 4.3.3
 *  Ubuntu GNU/Linux 2.6.28.11 (x86), GCC 4.3.3
 *  FreeBSD 7.2 (x86), GCC 4.2.1
-*  OpenSolaris 0811 (x86_64), SunCC 5.10
+[/ *  OpenSolaris 0811 (x86_64), SunCC 5.10 ]
 *  Windows XP Professional (x86), MSVC 9.0
 
 
