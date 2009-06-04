@@ -55,10 +55,10 @@ public:
 			tsk::low_watermark( 10) );
 		tsk::handle< int > h(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				pool) );
 		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
@@ -73,9 +73,8 @@ public:
 			tsk::low_watermark( 10) );
 		tsk::handle< bool > h(
 			tsk::async(
-				pool,
-				tsk::make_task(
-					runs_in_pool_fn) ) );
+				tsk::make_task( runs_in_pool_fn),
+				pool) );
 		BOOST_CHECK_EQUAL( h.get(), true);
 	}
 
@@ -115,10 +114,10 @@ public:
 			tsk::low_watermark( 10) );
 		tsk::handle< int > h(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				pool) );
 		pool.shutdown();
 		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( h.get(), 55);
@@ -135,9 +134,8 @@ public:
 			tsk::low_watermark( 10) );
 		tsk::handle< void > h(
 			tsk::async(
-				pool,
-				tsk::make_task(
-					throwing_fn) ) );
+				tsk::make_task( throwing_fn),
+				pool) );
 		pool.shutdown();
 		BOOST_CHECK_THROW( h.get(), std::runtime_error);
 	}
@@ -155,11 +153,11 @@ public:
 		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_THROW(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					boost::bind(
 						fibonacci_fn,
-						10) ) ),
+						10) ),
+				pool),
 			tsk::task_rejected);
 	}
 
@@ -174,10 +172,10 @@ public:
 			tsk::low_watermark( 1) );
 		tsk::handle< void > h(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					delay_fn,
-					pt::millisec( 500) ) ) );
+					pt::millisec( 500) ),
+				pool) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		pool.shutdown_now();
@@ -201,26 +199,26 @@ public:
 		boost::barrier b( 2);
 		tsk::handle< void > h1(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					barrier_fn,
-					boost::ref( b) ) ) );
+					boost::ref( b) ),
+				pool) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 0) );
 		tsk::handle< int > h2(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				pool) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 1) );
 		tsk::handle< int > h3(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				pool) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 2) );
 		b.wait();
@@ -242,24 +240,24 @@ public:
 			tsk::low_watermark( 10) );
 		boost::barrier b( 2);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				barrier_fn,
-				boost::ref( b) ) );
+				boost::ref( b) ),
+			pool);
 		std::vector< int > buffer;
 		tsk::handle< void > h(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					buffer_fibonacci_fn,
 					boost::ref( buffer),
-					10) ) );
+					10),
+				pool) );
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				0) );
+				0),
+			pool);
 		h.interrupt();
 		b.wait();
 		pool.shutdown();
@@ -281,23 +279,23 @@ public:
 			tsk::low_watermark( 10) );
 		boost::barrier b( 2);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				barrier_fn,
-				boost::ref( b) ) );
+				boost::ref( b) ),
+			pool);
 		std::vector< int > buffer;
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				10) );
+				10),
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				0) );
+				0),
+			pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 55);
@@ -320,26 +318,26 @@ public:
 			tsk::low_watermark( 10) );
 		boost::barrier b( 2);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				barrier_fn,
 				boost::ref( b) ),
-			0);
+			0,
+			pool);
 		std::vector< int > buffer;
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10),
-			1);
+			1,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0),
-			0);
+			0,
+			pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);
@@ -362,33 +360,33 @@ public:
 			tsk::low_watermark( 10) );
 		boost::barrier b( 2);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				barrier_fn,
 				boost::ref( b) ),
-			0);
+			0,
+			pool);
 		std::vector< int > buffer;
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				10),
-			2);
+			2,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				0),
-			1);
+			1,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
 				1),
-			2);
+			2,
+			pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);

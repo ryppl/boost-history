@@ -13,6 +13,7 @@ extern "C"
 }
 
 #include <boost/assert.hpp>
+#include <boost/cstdint.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 

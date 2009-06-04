@@ -9,19 +9,19 @@
 
 #include <boost/task/detail/config.hpp>
 
-# if defined(BOOST_TASK_WIN32)
+# if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_windows.hpp>
-# elif defined(BOOST_TASK_LINUX)
+# elif defined(linux) || defined(__linux) || defined(__linux__)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_linux.hpp>
-# elif defined(BOOST_TASK_AIX)
+# elif defined(__IBMCPP__) || defined(_AIX)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_aix.hpp>
-# elif defined(BOOST_TASK_HPUX)
+# elif defined(__hpux)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_hpux.hpp>
-# elif defined(BOOST_TASK_SOLARIS)
+# elif defined(sun) || defined(__sun)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_solaris.hpp>
 # else

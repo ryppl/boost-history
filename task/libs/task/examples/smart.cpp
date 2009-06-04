@@ -60,28 +60,28 @@ int main( int argc, char *argv[])
 		> pool( tsk::poolsize( 1) );
 
 		tsk::async(
-			pool,
 			tsk::make_task(
 				long_running_fn),
-			0);
+			0,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				fibonacci_fn,
 				0),
-			1);
+			1,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				fibonacci_fn,
 				1),
-			2);
+			2,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				fibonacci_fn,
 				10),
-			2);
+			2,
+			pool);
 
 		return EXIT_SUCCESS;
 	}

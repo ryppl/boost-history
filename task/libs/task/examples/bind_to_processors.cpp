@@ -46,18 +46,18 @@ public:
 			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
 				tsk::async(
-					boost::task::as_sub_task(), // do not use this_task::get_pool() because it doesn't create as sub-task
 					tsk::make_task(
 						& fib_task::execute,
 						this,
-						n - 1) ) ) ;
+						n - 1),
+					boost::task::as_sub_task() ) ); // do not use this_task::get_pool() because it doesn't create as sub-task
 			tsk::handle< long > h2(
 				tsk::async(
-					boost::task::as_sub_task(), // do not use this_task::get_pool() because it doesn't create as sub-task
 					tsk::make_task(
 						& fib_task::execute,
 						this,
-						n - 2) ) );
+						n - 2),
+					boost::task::as_sub_task() ) ); // do not use this_task::get_pool() because it doesn't create as sub-task
 			return h1.get() + h2.get();
 		}
 	}
@@ -85,10 +85,10 @@ int main( int argc, char *argv[])
 		for ( int i = 0; i < 10; ++i)
 			results.push_back(
 				tsk::async(
-					pool,
 					tsk::make_task(
 						& parallel_fib,
-						i) ) );
+						i),
+					pool) );
 
 		tsk::waitfor_all( results.begin(), results.end() );
 

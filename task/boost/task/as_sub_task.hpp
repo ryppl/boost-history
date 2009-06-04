@@ -1,0 +1,56 @@
+
+//          Copyright Oliver Kowalke 2009.
+// Distributed under the Boost Software License, Version 1.0.
+//    (See accompanying file LICENSE_1_0.txt or copy at
+//          http://www.boost.org/LICENSE_1_0.txt)
+
+#ifndef BOOST_TASK_AS_SUB_TASK_H
+#define BOOST_TASK_AS_SUB_TASK_H
+
+#include <boost/bind.hpp>
+#include <boost/function.hpp>
+
+#include <boost/task/detail/interrupter.hpp>
+#include <boost/task/detail/worker.hpp>
+#include <boost/task/future.hpp>
+#include <boost/task/handle.hpp>
+#include <boost/task/new_thread.hpp>
+#include <boost/task/task.hpp>
+
+#include <boost/config/abi_prefix.hpp>
+
+namespace boost { namespace task
+{
+
+struct as_sub_task
+{
+	template< typename R >
+	handle< R > operator()( task< R > t)
+	{
+		detail::worker * w( detail::worker::tss_get() );
+		if ( w)
+		{
+			detail::interrupter intr;
+			shared_future< R > fut( t.get_future() );
+			function< bool() > wcb(
+				bind(
+					& shared_future< R >::is_ready,
+					fut) );
+			t.set_wait_callback(
+				bind(
+					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
+					w,
+					wcb) );
+			w->put( detail::pool_callable( t, intr) );
+			return handle< R >( t.get_id(), fut, intr);
+		}
+		else
+			return new_thread()( t);
+	}
+};
+
+} }
+
+#include <boost/config/abi_suffix.hpp>
+
+#endif // BOOST_TASK_AS_SUB_TASK_H

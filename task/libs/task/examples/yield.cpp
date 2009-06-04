@@ -50,18 +50,18 @@ public:
 			BOOST_ASSERT( boost::this_task::runs_in_pool() );
 			tsk::handle< long > h1(
 				tsk::async(
-					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
-						n - 1) ) );
+						n - 1),
+					tsk::as_sub_task() ) );
 			tsk::handle< long > h2(
 				tsk::async(
-					tsk::as_sub_task(),
 					tsk::make_task(
 						& fib_task::execute,
 						boost::ref( * this),
-						n - 2) ) );
+						n - 2),
+					tsk::as_sub_task() ) );
 			return h1.get() + h2.get();
 		}
 	}
@@ -81,10 +81,10 @@ int main( int argc, char *argv[])
 	{
 		for ( int i = 0; i < 10; ++i)
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					& parallel_fib,
-					i) );
+					i),
+				tsk::default_pool() );
 
 		return EXIT_SUCCESS;
 	}

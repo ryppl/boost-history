@@ -1,0 +1,8 @@
+* boost.task-0.2:
+-----------------
+- detail/atomic.hpp splitt into several headers for different platforms
+	- xchg for gcc && x86
+	- lwarx for gcc && powrepc
+- new function shared_future< R > handle< R >::get_future()
+- new_thread, own_thread and as_sub_task in separat headers
+- async() with as_sub_task as default async. executor

@@ -34,28 +34,28 @@ int main( int argc, char *argv[])
 		> pool( tsk::poolsize( 1) );
 
 		tsk::async(
-			pool,
 			tsk::make_task(
 				long_running_fn),
-			0);
+			0,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				print_fn,
 				"This"),
-			0);
+			0,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				print_fn,
 				"a text.\n"),
-			2);
+			2,
+			pool);
 		tsk::async(
-			pool,
 			tsk::make_task(
 				print_fn,
 				" is "),
-			1);
+			1,
+			pool);
 
 		return EXIT_SUCCESS;
 	}

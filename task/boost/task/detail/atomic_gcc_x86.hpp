@@ -7,6 +7,9 @@
 #ifndef BOOST_TASK_DETAIL_ATOMIC_GCC_X86_H
 #define BOOST_TASK_DETAIL_ATOMIC_GCC_X86_H
 
+#include <boost/assert.hpp>
+#include <boost/cstdint.hpp>
+
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task

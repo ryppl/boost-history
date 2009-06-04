@@ -35,18 +35,18 @@ long parallel_fib( long n, long	cutof)
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
 		tsk::handle< long > h1(
 			tsk::async(
-				tsk::as_sub_task(),
 				tsk::make_task(
 					parallel_fib,
 					n - 1,
-					cutof) ) ) ;
+					cutof),
+				tsk::as_sub_task() ) ) ;
 		tsk::handle< long > h2(
 			tsk::async(
-				tsk::as_sub_task(),
 				tsk::make_task(
 					parallel_fib,
 					n - 2,
-					cutof) ) );
+					cutof),
+				tsk::as_sub_task() ) );
 		return h1.get() + h2.get();
 	}
 }
@@ -65,11 +65,11 @@ int main( int argc, char *argv[])
 		for ( int i = 0; i < 10; ++i)
 			results.push_back(
 				tsk::async(
-					pool,
 					tsk::make_task(
 						& parallel_fib,
 						i,
-						5) ) );
+						5),
+					pool) );
 
 		tsk::waitfor_all( results.begin(), results.end() );
 

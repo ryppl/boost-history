@@ -38,8 +38,8 @@ public:
 				10) );
 		tsk::handle< int > h(
 			tsk::async(
-				tsk::default_pool(),
-				t) );
+				t,
+				tsk::default_pool() ) );
 		BOOST_CHECK_EQUAL( h.get_id(), t.get_id() );
 		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
@@ -49,9 +49,8 @@ public:
 	{
 		tsk::handle< bool > h(
 			tsk::async(
-				tsk::default_pool(),
-				tsk::make_task(
-					runs_in_pool_fn) ) );
+				tsk::make_task( runs_in_pool_fn),
+				tsk::default_pool() ) );
 		BOOST_CHECK_EQUAL( h.get(), true);
 	}
 
@@ -79,9 +78,8 @@ public:
 	{
 		tsk::handle< void > h(
 			tsk::async(
-				tsk::default_pool(),
-				tsk::make_task(
-					throwing_fn) ) );
+				tsk::make_task( throwing_fn),
+				tsk::default_pool() ) );
 		BOOST_CHECK_THROW( h.get(), std::runtime_error);
 	}
 
@@ -90,10 +88,10 @@ public:
 	{
 		tsk::handle< void > h(
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					delay_fn,
-					pt::seconds( 3) ) ) );
+					pt::seconds( 3) ),
+				tsk::default_pool() ) );
 		h.interrupt();
 		BOOST_CHECK( h.interruption_requested() );
 		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
@@ -105,11 +103,11 @@ public:
 		bool finished( false);
 		tsk::handle< void > h(
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					interrupt_fn,
 					pt::seconds( 3),
-					boost::ref( finished) ) ) );
+					boost::ref( finished) ),
+				tsk::default_pool() ) );
 		h.interrupt_and_wait();
 		BOOST_CHECK( finished);
 		BOOST_CHECK( h.is_ready() );
@@ -124,10 +122,10 @@ public:
 		for ( int i = 0; i <= 5; ++i)
 			vec.push_back(
 				tsk::async(
-					tsk::default_pool(),
 					tsk::make_task(
 						fibonacci_fn,
-						i) ) );
+						i),
+					tsk::default_pool() ) );
 		tsk::waitfor_all( vec.begin(), vec.end() );
 		BOOST_CHECK( vec[0].is_ready() );
 		BOOST_CHECK( vec[1].is_ready() );
@@ -148,16 +146,16 @@ public:
 	{
 		tsk::handle< void > h1(
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					delay_fn,
-					pt::seconds( 3) ) ) );
+					pt::seconds( 3) ),
+				tsk::default_pool() ) );
 		tsk::handle< int > h2(
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				tsk::default_pool() ) );
 		tsk::waitfor_any( h1, h2);
 		BOOST_CHECK( ! h1.is_ready() );
 		BOOST_CHECK( h2.is_ready() );

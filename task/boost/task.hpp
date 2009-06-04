@@ -7,6 +7,7 @@
 #ifndef BOOST_TASK_H
 #define BOOST_TASK_H
 
+#include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
 #include <boost/task/bounded_channel.hpp>
 #include <boost/task/default_pool.hpp>
@@ -16,6 +17,8 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/id.hpp>
 #include <boost/task/meta.hpp>
+#include <boost/task/new_thread.hpp>
+#include <boost/task/own_thread.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>

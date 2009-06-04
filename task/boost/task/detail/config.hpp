@@ -19,8 +19,6 @@
 #   pragma warn -8066 // Unreachable code
 # endif
 
-#include <boost/task/detail/platform.hpp>
-
 # if defined(BOOST_TASK_DYN_DLL) || defined(BOOST_ALL_DYN_LINK)
 #   undef  BOOST_TASK_USE_LIB
 #   define BOOST_TASK_USE_DLL

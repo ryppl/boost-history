@@ -44,15 +44,14 @@ int main( int argc, char *argv[])
 	try
 	{
 		tsk::async(
-			tsk::default_pool(),
-			tsk::make_task(
-				long_running_fn) );
+			tsk::make_task( long_running_fn),
+			tsk::default_pool() );
 		tsk::handle< int > h(
 			tsk::async(
-				tsk::default_pool(),
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				tsk::default_pool() ) );
 		std::cout << "pending tasks == " << tsk::default_pool().pending() << std::endl;
 		std::cout << h.get() << std::endl;
 

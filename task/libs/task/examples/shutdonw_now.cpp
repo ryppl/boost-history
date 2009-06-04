@@ -46,10 +46,10 @@ int main( int argc, char *argv[])
 
 		tsk::handle< int > h(
 			tsk::async(
-				pool,
 				tsk::make_task(
 					fibonacci_fn,
-					10) ) );
+					10),
+				pool) );
 
 		boost::this_thread::sleep( pt::milliseconds( 250) );
 

@@ -34,7 +34,10 @@ using __gnu_cxx::__exchange_and_add;
 
 inline
 void atomic_exchange( uint32_t volatile * object, uint32_t desired)
-{ * object = desired; }
+{
+  // inline asm xchg for i386 || x86_64?
+  * object = desired;
+}
 
 inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
