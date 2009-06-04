@@ -58,6 +58,20 @@ namespace boost
 
                 collation_data()    {   variable = false;   weight1 = 0;
                                         weight2 = 0; weight3 = 0; weight4 = 0;  };
+                                        
+                bool operator==(const collation_data& other) const
+                {
+                    return variable == other.variable
+                       &&  weight1 == other.weight1
+                       &&  weight2 == other.weight2
+                       &&  weight3 == other.weight3
+                       &&  weight4 == other.weight4;
+                }
+                
+                bool operator!=(const collation_data& other) const
+                {
+                    return !operator==(other);
+                }
 			};
 
             struct collation_entry
@@ -112,6 +126,8 @@ namespace boost
 					unknown_char (false),
                     sort_variable(false),
                     sort_type(sort_type::default_),
+                    sort_index_or_data1(0),
+                    sort_data2(0),
 					uppercase (0),
 					lowercase (0),
 					titlecase (0),

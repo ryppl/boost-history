@@ -9,22 +9,22 @@
 project
     : requirements 
       <include>../../..
-      <include>$(BOOST_ROOT)
+      <include>$(BOOST_ROOT)      
     ;
 
 exe data_parser : main.cpp
-	read_character_properties.cpp
-	read_character_properties_arabicshaping.cpp
-	read_character_properties_blocks.cpp
-	read_character_properties_grapheme_break.cpp
-	read_character_properties_helpers.cpp
-	read_character_properties_linebreak.cpp
-	read_character_properties_sentence.cpp
-	read_character_properties_specialcasing.cpp
-	read_character_properties_unicodedata.cpp
-	read_character_properties_word_break.cpp
-	read_collation_data.cpp
-	write_character_properties.cpp
+    read_character_properties.cpp
+    read_character_properties_arabicshaping.cpp
+    read_character_properties_blocks.cpp
+    read_character_properties_grapheme_break.cpp
+    read_character_properties_helpers.cpp
+    read_character_properties_linebreak.cpp
+    read_character_properties_sentence.cpp
+    read_character_properties_specialcasing.cpp
+    read_character_properties_unicodedata.cpp
+    read_character_properties_word_break.cpp
+    read_collation_data.cpp
+    write_character_properties.cpp
 
-	../src/unicode_properties.cpp
+    ../src/unicode_properties.cpp
 ;

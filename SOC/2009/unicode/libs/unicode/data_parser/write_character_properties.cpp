@@ -706,7 +706,8 @@ bool optimise_char_sort_data(const std::map <char32, character_properties> & pro
     {
         // compare two primitive structures
         // workaround for boost interop issues
-        if (memcmp(&(*iter_src), &(*iter_try), sizeof(collation_data)) != 0)
+        //if (memcmp(&(*iter_src), &(*iter_try), sizeof(collation_data)) != 0)
+        if(*iter_src != *iter_try)
         {
             return false;
         }
