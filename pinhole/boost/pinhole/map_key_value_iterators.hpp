@@ -8,19 +8,12 @@
 #ifndef BOOST_MAP_KEY_VALUE_ITERATORS
 #define BOOST_MAP_KEY_VALUE_ITERATORS
 
-#if defined(BOOST_MSVC)
-    #pragma warning(push)
-    #pragma warning(disable: 4561 4996)
-#endif
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/static_assert.hpp>
-#if defined(BOOST_MSVC)
-    #pragma warning(pop)
-#endif
 
 namespace boost { namespace pinhole
 {

@@ -68,8 +68,11 @@ class TestPropertyGroup : public property_group
 {
 public:
 
-    TestPropertyGroup() : property_group( PROPERTY_GROUP_NAME, NULL ), m_child1( this ), m_child2( this )
+    TestPropertyGroup() : property_group( PROPERTY_GROUP_NAME, NULL ), m_child1( NULL ), m_child2( NULL )
     {
+        m_child1.set_parent( this );
+        m_child2.set_parent( this );
+
         m_bool_var = false;
 
         add_property(PROP_STRING,   "PropString description", BOOST_SETTER(&TestPropertyGroup::SetString), BOOST_GETTER(&TestPropertyGroup::GetString));
