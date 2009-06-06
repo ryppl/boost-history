@@ -1,0 +1,51 @@
+[/
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[/========================]
+[section:overview Overview]
+[/========================]
+
+[/==================]
+[heading Description]
+[/==================]
+
+To date, C++ multi threaded programs that need to be efficient use the same mutexes, semaphores, and events that Dijkstra described 40 years ago. This unfortunate state of affairs makes multi threaded programs difficult to design, debug, ensure correct, optimize, maintain, and analyze formally. Consequently, building tools that automate detection of race conditions and deadlocks is highly desirable.
+
+This library is a porting to C++ of the Beta rendez-vous library. My main concen has been to boostify all these ideas in a coherent way.
+
+[*Boost.Rendez-Vous] provides:
+
+* A rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
+
+
+[/====================================]
+[heading How to Use This Documentation]
+[/====================================]
+
+This documentation makes use of the following naming and formatting conventions.
+
+* Code is in `fixed width font` and is syntax-highlighted.
+* Replaceable text that you will need to supply is in [~italics].
+* If a name refers to a free function, it is specified like this:
+  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
+  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
+
+[note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]
+
+Finally, you can mentally add the following to any code fragments in this document:
+
+    // Include all of Rendez-Vous files
+    #include <boost/rendez_vous.hpp>
+
+    // Create a namespace aliases
+    namespace brv = boost::rendez_vous;
+
+[include introduction.qbk]
+[endsect]

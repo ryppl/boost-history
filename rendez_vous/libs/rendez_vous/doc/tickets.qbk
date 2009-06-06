@@ -1,0 +1,45 @@
+[/
+  (C) Copyright 2008-2009 Vicente J Botet Escriba.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+[section  Appendix F: Tickets]
+
+
+[table
+[[Kind] [Identifier]     [Description]   [Resolution] [State]  [Tests] [Version]]
+[
+    [feature]
+    [v0.1#1]
+    [array_locker]
+    [See section]
+    [Open]
+    [See array_locker_tests]
+    [v0.2]
+]
+[
+    [bug]
+    [v0.2#1]
+    [sync_buffer_monitor_test fails]
+    [---]
+    [Open]
+    [sync_buffer_monitor_test]
+    [v0.2]
+]
+
+[
+    [bug]
+    [v0.2#2]
+    [HotelReservation fails]
+    [---]
+    [Open]
+    [HotelReservation example]
+    [v0.2]
+]
+]
+
+
+
+[endsect]

@@ -1,0 +1,20 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:intro Introduction]
+
+
+[section:conc Concurrent components]
+
+Concurrent components may interact in different ways: they may access the same objects by, for example, executing functions of these objects; or they may communicate directly by executing functions of each other.
+
+Concurrent execution of objects requires a mechanism for synchronizing the access to shared objects, just as direct communication between objects may require synchronization. The basic mechanism for synchronization in Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables. Mutexes and condition variables are, however, only useful for very simple synchronization problems. The Rendez-Vous library therefore introduce high-level abstractions for handling more complicated synchronization problems, including a so-called rendezvous mechanism for handling direct communication between objects. All the concurrency abstractions being introduced are defined by means of mutexes an conditions.
+
+[endsect]
+
+
+[endsect]
