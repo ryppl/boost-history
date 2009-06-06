@@ -57,8 +57,6 @@ This library is a compilation of what I have found in the literature not yet pre
 * High-level abstractions for handling more complicated synchronization problems, including
     * `monitor` for guaranteeing exclusive access to an object.
 
-* A rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
-
 * Language-like Synchronized Block Macros
 
 [/====================================]

@@ -36,11 +36,6 @@
 [table
     [[Name]                         [Kind]      [Description]   [Result] [Ticket]]
     [[BankAccount]                  [run]       [ tests]        [Pass]   [#]]
-    [[SingleBuf]                    [run]       [ tests]        [Pass]   [#]]
-    [[Master_Slave]                 [run]       [ tests]        [Pass]   [#]]
-    [[HotelReservation]             [run]       [ tests]        [Fail]   [v0.2#2]]
-    [[QualifiedSingleBuf]           [link]      [ tests]        [Pass]   [#]]
-    [[Histogram]                    [run]       [ tests]        [Pass]   [#]]
     [[IL_BancAccount]               [run]       [ tests]        [Pass]   [#]]
     [[IL_Lockable_BancAccount]      [run-fail]  [ tests]        [Pass]   [#]]
     [[IL_Rec_Lockable_BancAccount]  [run]       [ tests]        [Pass]   [#]]

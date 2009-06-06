@@ -20,6 +20,5 @@ Concurrent execution of objects requires a mechanism for synchronizing the acces
 [include tutorial/internal_locking.qbk]
 [include tutorial/volatile_locking_ptr.qbk]
 [include tutorial/external_locking.qbk]
-[include tutorial/rendezvous.qbk]
 
 [endsect]

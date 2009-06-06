@@ -59,11 +59,6 @@ test-suite "compile_fail_test"  :
     
 test-suite "examples" :
     [ run     ../example/BankAccount.cpp  ]
-    [ run     ../example/SingleBuf.cpp  ]
-    [ run     ../example/Master_Slave.cpp  ]
-##    [ run     ../example/HotelReservation.cpp  ]
-    [ link     ../example/QualifiedSingleBuf.cpp  ]
-    [ run     ../example/Histogram.cpp  ]
     [ run     ../example/IL_BancAccount.cpp  ]
     [ run-fail     ../example/IL_Lockable_BancAccount.cpp  ]
     [ run     ../example/IL_Rec_Lockable_BancAccount.cpp  ]

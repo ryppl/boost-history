@@ -93,8 +93,6 @@ In addition to the expressions defined in [concept], the following expressions m
 [import ../../../boost/synchro/lockers.hpp]
 [import ../../../boost/synchro/thread_synchronization_family.hpp]
 
-[import ../../../boost/synchro/conc/concurrent_component.hpp]
-
 [import ../../../boost/synchro/lockers/condition_locker.hpp]
 [import ../../../boost/synchro/lockers/externally_locked.hpp]
 [import ../../../boost/synchro/lockers/locking_ptr.hpp]
@@ -105,14 +103,9 @@ In addition to the expressions defined in [concept], the following expressions m
 
 [import ../example/BankAccount.cpp]
 [import ../example/EL_BancAccount.cpp]
-[import ../example/Histogram.cpp]
-[import ../example/HotelReservation.cpp]
 [import ../example/IL_BancAccount.cpp]
 [import ../example/IL_Lockable_BancAccount.cpp]
 [import ../example/IL_Rec_Lockable_BancAccount.cpp]
-[import ../example/Master_Slave.cpp]
-[import ../example/SingleBuf.cpp]
-[import ../example/QualifiedSingleBuf.cpp]
 
 
 

@@ -131,7 +131,6 @@
 
 [section High Level]
 [include reference/monitor.qbk]
-[include reference/concurrent_component.qbk]
 [endsect]
 
 

@@ -7,6 +7,9 @@
 
 [section:history Appendix A: History]
 
+[section [*Version 0.3.3, May 24, 2009] ['Extraction of Boost.Rendez-Vous]]
+[endsect]
+
 [section [*Version 0.3.2, May 08, 2009] ['Adaptation Boost 1.39 + Extraction of Boost.Conversion]]
 [endsect]
 
@@ -66,7 +69,6 @@
 
 * High-level abstractions for handling more complicated synchronization problems, including
     * `monitor` for guaranteeing exclusive access to an object, and
-    * a so-called rendezvous mechanism for handling direct communication between objects `concurrent_components` via `ports` using an accept-synchronize protocol based on the design of the concurrency library in the Beta language.
 
 
 [endsect]
