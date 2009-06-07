@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -49,9 +49,9 @@ public:
    /////////////////////////////////////////////////////////////////////////
    // do nothing for both of these interfaces
    /////////////////////////////////////////////////////////////////////////
-   void abort_on_write(boost::stm::transaction &t, 
+   void abort_on_write(boost::stm::transaction &t,
       boost::stm::base_transaction_object const &in) {}
-   void abort_on_read(boost::stm::transaction const &t, 
+   void abort_on_read(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in) {}
    void abort_on_delete(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in) {}
@@ -69,17 +69,17 @@ class ExceptAndBackOffOnAbortNoticeCM : public boost::stm::base_contention_manag
 public:
 
    ExceptAndBackOffOnAbortNoticeCM(int const initialSleepTime, int const sleepIncrease,
-      int const maxIncreases) 
-      : sleepTime_(initialSleepTime), kSleepFactorIncrease_(sleepIncrease), 
+      int const maxIncreases)
+      : sleepTime_(initialSleepTime), kSleepFactorIncrease_(sleepIncrease),
         kMaxIncreases_(maxIncreases), initialSleepTime_(initialSleepTime)
    {
       kMaxSleepTime_ = kSleepFactorIncrease_ * sleepTime_ * kMaxIncreases_;
    }
 
    ////////////////////////////////////////////////////////////////////////////
-   void abort_on_write(boost::stm::transaction &t, 
+   void abort_on_write(boost::stm::transaction &t,
       boost::stm::base_transaction_object const &in);
-   void abort_on_read(boost::stm::transaction const &t, 
+   void abort_on_read(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in);
    void abort_on_delete(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in);
@@ -101,22 +101,22 @@ public:
    // this code is only ever called if "validation" is on not "invalidation"
    // so don't worry about this code EVER stopping invalidation from committing
    //--------------------------------------------------------------------------
-   virtual bool abort_before_commit(boost::stm::transaction const &t) 
+   virtual bool abort_before_commit(boost::stm::transaction const &t)
    {
       using namespace boost::stm;
 
-      for (transaction::in_flight_trans_cont::const_iterator i = 
-           transaction::in_flight_transactions().begin(); 
+      for (transaction::in_flight_trans_cont::const_iterator i =
+           transaction::in_flight_transactions().begin();
       i != transaction::in_flight_transactions().end(); ++i)
       {
          if (t.priority() < (*i)->priority()) return true;
       }
 
-      return false; 
+      return false;
    }
 
    virtual bool permission_to_abort
-      (boost::stm::transaction const &lhs, boost::stm::transaction const &rhs) 
+      (boost::stm::transaction const &lhs, boost::stm::transaction const &rhs)
    {
       return true;
 #if 0
@@ -130,15 +130,15 @@ public:
    }
 
    virtual bool allow_lock_to_abort_tx
-   (int const & lockWaitTime, int const &lockAborted, 
+   (int const & lockWaitTime, int const &lockAborted,
    bool txTryingToAbortIsIrrevocable, boost::stm::transaction const &rhs)
    {
       if (txTryingToAbortIsIrrevocable) return true;
 
 #ifndef DISABLE_READ_SETS
-      if ((size_t)lockWaitTime > rhs.read_set_size() + 100 * rhs.writes()) 
+      if ((size_t)lockWaitTime > rhs.read_set_size() + 100 * rhs.writes())
 #else
-      if ((size_t)lockWaitTime > 100 * rhs.writes()) 
+      if ((size_t)lockWaitTime > 100 * rhs.writes())
 #endif
       {
          return true;

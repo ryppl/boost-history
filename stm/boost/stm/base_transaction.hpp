@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -57,7 +57,7 @@ typedef pthread_mutex_t PLOCK;
 typedef boost::mutex PLOCK;
 #endif
 
-    
+
 //-----------------------------------------------------------------------------
 // boolean which is used to invoke "begin_transaction()" upon transaction
 // object construction (so two lines of code aren't needed to make a
@@ -74,8 +74,8 @@ unsigned const kInvalidThread = 0xffffffff;
 // e_no_state    - initial state of transaction.
 // e_aborted     - aborted transaction.
 // e_committed   - transaction has committed.
-// e_hand_off    - transaction memory has been handed off to another 
-//                 transaction. This is the vital state for in-flight 
+// e_hand_off    - transaction memory has been handed off to another
+//                 transaction. This is the vital state for in-flight
 //                 transactions which are composed.
 // e_in_flight   - transaction currently in process.
 //-----------------------------------------------------------------------------
@@ -87,7 +87,7 @@ enum transaction_state
    e_hand_off,      // so is handoff in case bool conversion
    e_in_flight
 };
- 
+
 #if BUILD_MOVE_SEMANTICS
 template <class T>
 inline typename std::remove_reference<T>::type&& draco_move(T &&t)
@@ -104,7 +104,7 @@ class aborted_transaction_exception_no_unlocks {};
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-class aborted_transaction_exception : public std::exception 
+class aborted_transaction_exception : public std::exception
 {
 public:
    aborted_transaction_exception(char const * const what) : what_(what) {}
@@ -217,7 +217,7 @@ protected:
 #else
         boost::lock_guard<boost::mutex> lock(transactionObjectMutex_);
         memory_.returnChunk(mem, size);
-#endif       
+#endif
     }
 
    static void* retrieve_mem(size_t size)
@@ -229,7 +229,7 @@ protected:
 #else
         boost::lock_guard<boost::mutex> lock(transactionObjectMutex_);
         void *mem = memory_.retrieveChunk(size);
-#endif       
+#endif
 
       return mem;
    }
@@ -244,7 +244,7 @@ private:
    //
    // in direct environments, this flag means memory being written to directly
    //
-   // in deferred environments, this flag means this is memory that was copied 
+   // in deferred environments, this flag means this is memory that was copied
    // and being written to off to the side
    //
    // it's important to note the differences between as direct reads and writes
@@ -284,9 +284,9 @@ public:
 #endif
 
 #if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw () 
-   { 
-      return retrieve_mem(size); 
+   void* operator new(size_t size) throw ()
+   {
+      return retrieve_mem(size);
    }
 
    void operator delete(void* mem)
@@ -299,7 +299,7 @@ public:
 
 };
 
-template <typename T> class native_trans : 
+template <typename T> class native_trans :
 public transaction_object< native_trans<T> >
 {
 public:
@@ -322,8 +322,8 @@ public:
       return *this;
    }
 
-   native_trans operator+(native_trans const &rhs) 
-   { 
+   native_trans operator+(native_trans const &rhs)
+   {
       native_trans ret = *this;
       ret.value_ += rhs.value_;
       return ret;
@@ -331,8 +331,8 @@ public:
 
    //template <>
    operator T() const
-   { 
-      return this->value_; 
+   {
+      return this->value_;
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -374,7 +374,7 @@ public:
    virtual bool permission_to_abort
       (boost::stm::transaction const &lhs, boost::stm::transaction const &rhs) = 0;
 
-   virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted, 
+   virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
       bool txIsIrrevocable, boost::stm::transaction const &rhs) = 0;
 
    virtual int lock_sleep_time() { return 10; }
@@ -394,21 +394,21 @@ public:
    void abort_on_delete(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in);
 
-   void abort_on_read(boost::stm::transaction const &t, 
+   void abort_on_read(boost::stm::transaction const &t,
       boost::stm::base_transaction_object const &in);
-   void abort_on_write(boost::stm::transaction &t, 
+   void abort_on_write(boost::stm::transaction &t,
       boost::stm::base_transaction_object const &in);
 
    virtual bool abort_before_commit(boost::stm::transaction const &t)
    {
-      return false; 
+      return false;
    }
 
    virtual bool permission_to_abort
-      (boost::stm::transaction const &lhs, boost::stm::transaction const &rhs) 
+      (boost::stm::transaction const &lhs, boost::stm::transaction const &rhs)
    { return true; }
 
-   virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted, 
+   virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
       bool txIsIrrevocable, boost::stm::transaction const &rhs);
 
    virtual void perform_isolated_tx_wait_priority_promotion(boost::stm::transaction &);
@@ -438,12 +438,12 @@ public:
         }
         //inline bool owns_lock() { return owns_;}
         inline void lock() {
-            //if (owns_) 
+            //if (owns_)
                 stm::lock(m);
             //owns_=true;
         }
         inline void unlock() {
-            //if (owns_) 
+            //if (owns_)
                 stm::unlock(m);
             //owns_=false;
         }
@@ -470,7 +470,7 @@ public:
       va_list ap;
       va_start(ap, l);
 
-      while (l) 
+      while (l)
       {
          lockList_.push_back(l);
          l = va_arg(ap, lock_type*);
