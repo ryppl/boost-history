@@ -24,6 +24,7 @@
 [def __boost_thread__ [@http://www.boost.org/libs/thread [*Boost.Thread]]]
 [def __boost_future__ [@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html [*Boost.Future]]]
 
+[template link_async[link_text] [link boost_task.async [link_text]]]
 [template link_channel[link_text] [link boost_task.pool.channel [link_text]]]
 [template link_forkjoin[link_text] [link boost_task.pool.forkjoin [link_text]]]
 [template link_handle[link_text] [link boost_task.handle [link_text]]]
@@ -58,6 +59,9 @@
 [def __task__ `boost::task::task`]
 [def __task_interrupted__ `boost::task::task_interrupted`]
 [def __unbounded_channel__ `boost::task::unbounded_channel`]
+
+[def __waitfor_all__ `boost::task::waitfor_all()`]
+[def __waitfor_any__ `boost::task::waitfor_any()`]
 
 [def __full_default_pool__ `boost::task::static_pool< boost::task::unbounded_channel< boost::task::fifo > >`]
 
@@ -100,8 +104,8 @@
 [def __fn_wait_until__ `wait_until()`]
 
 [def __act__ ['asynchronous-completion-token]]
-[def __ae__ ['asynchronous-executor]]
-[def __aes__ ['asynchronous-executors]]
+[def __ep__ ['execution-policy]]
+[def __eps__ ['execution-policies]]
 [def __blocked__ ['blocked]]
 [def __callable__ ['callable]]
 [def __channel__ ['channel]]
@@ -127,6 +131,7 @@
 [include introduction.qbk]
 [include task.qbk]
 [include handle.qbk]
+[include async.qbk]
 [include own_thread.qbk]
 [include new_thread.qbk]
 [include pool.qbk]

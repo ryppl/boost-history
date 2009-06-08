@@ -28,18 +28,20 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 		{
 			// fork a sub-task calculating fibonacci(n-1)
 			h1 = boost::task::async(
-				boost::task::as_sub_task(),
 				boost::task::make_task(
 					parallel_fib,
 					n - 1,
-					cutof) );
+					cutof),
+				boost::task::as_sub_task() );
+
 			// fork a sub-task calculating fibonacci(n-2)
 			h2 = boost::task::async(
-				boost::task::as_sub_task(),
 				boost::task::make_task(
 					parallel_fib,
 					n - 2,
-					cutof) );
+					cutof),
+				boost::task::as_sub_task() );
+
 			// join the results of both sub-tasks
 			// if one of the both sub-tasks is not ready
 			// the worker-thread does not block, it executes other
@@ -50,13 +52,13 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 
 	void main()
 	{
-		boost::task::handle< long > h(			// handle for fibonacci calculation
+		boost::task::handle< long > h(				// handle for fibonacci calculation
 			boost::task::async(
-				boost::task::default_pool(),	// access the default thread-pool
-				boost::task::make_task(		// calculate fibonacci number 10
-					parallel_fib,		// for numbers < 5 do inline recursive calculation
+				boost::task::make_task(			// calculate fibonacci number 10
+					parallel_fib,			// for numbers < 5 do inline recursive calculation
 					10,
-					5) ) );  
+					5),
+				boost::task::default_pool() ) );	// access the default thread-pool
 		std::cout << h.get() << std::endl;
 	}
 ``

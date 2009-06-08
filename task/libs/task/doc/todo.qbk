@@ -45,7 +45,7 @@ switching/fibers).
 
 [heading Support of explicit processor bindig]
 
-* __aes__ related to a __thread_pool__ (like __default_pool__) could support explicit processor binding.
+* __eps__ related to a __thread_pool__ (like __default_pool__) could support explicit processor binding.
 
 
 [heading Optimizations]

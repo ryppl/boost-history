@@ -20,7 +20,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	explicit poolsize( std::size_t value)
 
@@ -30,10 +30,9 @@
 [[Postconditions:][operator std::size_t () > 0]]
 [[Throws:] [`boost::task::invalid_poolsize`]]
 ]
-[endsect]
 
 
-[section:operator Member function `operator std::size_t()`]
+[heading Member function `operator std::size_t()`]
 
 	operator std::size_t () const
 
@@ -41,6 +40,6 @@
 [[Effects:] [returns the value]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
+
 
 [endsect]

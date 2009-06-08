@@ -18,7 +18,7 @@
 	};
 ``
 
-[section:operator Member function `operator()( task< R > t)`]
+[heading Member function `operator()( task< R > t)`]
 
 	template< typename R >
 	handle< R > operator()( task< R > t)
@@ -27,7 +27,6 @@
 [[Effects:] [executes task in the current thread an returns an handle associated with the task]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
 [endsect]

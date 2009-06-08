@@ -30,19 +30,10 @@
       <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span></code>
       creates a new <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code> and executes the task in this thread
       (asynchronous). The created thread gets joined by handle (so <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html" target="_top">N2802</a>
-      should be addressed).
+      should be addressed). The returned <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span></code> joins the thread in its destructor
+      (if the last reference gets out of scope) and thus provides one possible solution
+      of <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html" target="_top">N2880</a>.
     </p>
-<div class="caution" title="Caution"><table border="0" summary="Caution">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../../doc/html/images/caution.png"></td>
-<th align="left">Caution</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-        Always store the returned <span class="emphasis"><em>asynchronous-completion-token</em></span>
-        in a variable because <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span></code>
-        joins the thread in its destructor (if the last reference gets out of scope).
-      </p></td></tr>
-</table></div>
 <p>
       
 </p>
@@ -64,15 +55,26 @@
 <span class="special">{</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>
 			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">fibonacci</span><span class="special">,</span>
-				<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+				<span class="number">10</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
     </p>
+<div class="caution" title="Caution"><table border="0" summary="Caution">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Caution]" src="../../../doc/html/images/caution.png"></td>
+<th align="left">Caution</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        Always store the returned <span class="emphasis"><em>asynchronous-completion-token</em></span>
+        in a variable because <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span></code>
+        joins the thread in its destructor (if the last reference gets out of scope).
+      </p></td></tr>
+</table></div>
 <p>
       In the example below both <code class="computeroutput"><span class="identifier">a_function</span><span class="special">()</span></code> and <code class="computeroutput"><span class="identifier">another_function</span><span class="special">()</span></code> are executed synchron (see <a class="link" href="own_thread.html" title="Execute in own thread"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">own_thread</span></code></a>
       for synchronous execution)!
@@ -81,14 +83,12 @@
       
 </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
-                <span class="identifier">a_function</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">a_function</span><span class="special">),</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
+   
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>
-        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
-                <span class="identifier">another_function</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">another_function</span><span class="special">),</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
 <p>
     </p>

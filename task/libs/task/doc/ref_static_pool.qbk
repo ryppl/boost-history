@@ -65,7 +65,7 @@
 	};
 ``
 
-[section:constructor_unbounded_channel_hw Constructor (unbounded channel)]
+[heading Constructor (unbounded channel)]
 
 	explicit static_pool(
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
@@ -77,10 +77,9 @@
 [[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
 [[Notes:] [constructor has to be called if a unbounded-channel is used]]
 ]
-[endsect]
 
 
-[section:constructor_unbounded_channel Constructor (unbounded channel)]
+[heading Constructor (unbounded channel/poolsize)]
 
 	explicit static_pool(
 		poolsize const& psize,
@@ -92,10 +91,9 @@
 [[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
 [[Notes:] [constructor has to be called if a unbounded-channel is used]]
 ]
-[endsect]
 
 
-[section:constructor_bounded_channel_hw Constructor (bounded channel)]
+[heading Constructor (bounded channel)]
 
 	explicit static_pool(
 		high_watermark const& hwm,
@@ -109,10 +107,9 @@
 [[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
 [[Notes:] [Constructor has to be called if a bounded-channel is used.]]
 ]
-[endsect]
 
 
-[section:constructor_bounded_channel Constructor (bounded channel)]
+[heading Constructor (bounded channel/poolsize)]
 
 	explicit static_pool(
 		poolsize const& psize,
@@ -126,10 +123,9 @@
 [[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
 [[Notes:] [constructor has to be called if a bounded-channel is used]]
 ]
-[endsect]
 
 
-[section:destructor Destructor]
+[heading Destructor]
 
 	~static_pool()
 
@@ -137,10 +133,9 @@
 [[Effects:] [calls `:shutdown()` if not already called]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:size Member function `size()`]
+[heading Member function `size()`]
 
 	std::size_t size()
 
@@ -148,10 +143,9 @@
 [[Effects:] [returns how many worker-threads are running in the pool]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:active Member function `active()`]
+[heading Member function `active()`]
 
 	std::size_t active()
 
@@ -159,10 +153,9 @@
 [[Effects:] [returns how many worker-threads are active (executing an task)]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:idle Member function `idle()`]
+[heading Member function `idle()`]
 
 	std::size_t idle()
 
@@ -171,10 +164,9 @@
 [[Throws:] [Nothing]]
 [[Notes:] [The value is the difference of `size()` and `active()`]]
 ]
-[endsect]
 
 
-[section:shutdown Member function `shutdown()`]
+[heading Member function `shutdown()`]
 
 	void shutdown()
 
@@ -183,10 +175,9 @@
 [[Throws:] [Nothing]]
 [[Notes:] [all pending tasks are processed]]
 ]
-[endsect]
 
 
-[section:shutdown_now Member function `shutdown_now()`]
+[heading Member function `shutdown_now()`]
 
 	void shutdown_now()
 
@@ -195,10 +186,9 @@
 [[Throws:] [Nothing]]
 [[Notes:] [pending tasks are not processed but returned]]
 ]
-[endsect]
 
 
-[section:losed Member function `closed()`]
+[heading Member function `closed()`]
 
 	bool closed()
 
@@ -206,10 +196,9 @@
 [[Effects:] [queries if the pool is closed (pool is shutdown)]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:clear Member function `clear()`]
+[heading Member function `clear()`]
 
 	void clear()
 
@@ -217,10 +206,9 @@
 [[Effects:] [removes all pending tasks from the channel]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:empty Member function `empty()`]
+[heading Member function `empty()`]
 
 	bool empty()
 
@@ -228,10 +216,9 @@
 [[Effects:] [queries if the channel is empty]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:pending Member function `pending()`]
+[heading Member function `pending()`]
 
 	std::size_t pending()
 
@@ -239,10 +226,9 @@
 [[Effects:] [queries how many tasks are pending (still unprocessed) in the global-queue (channel)]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:get_upper_bound Member function `upper_bound()`]
+[heading Member function `upper_bound()`]
 
 	std::size_t upper_bound()
 
@@ -252,10 +238,9 @@
 [[Throws:] [Nothing]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
-[endsect]
 
 
-[section:set_upper_bound Member function `upper_bound( high_watermark const& hwm)`]
+[heading Member function `upper_bound( high_watermark const& hwm)`]
 
 	void upper_bound( high_watermark const& hwm)
 
@@ -266,10 +251,9 @@
 [[Throws:] [`boost::task::invalid_watermark`]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
-[endsect]
 
 
-[section:get_lower_bound Member function `lower_bound()`]
+[heading Member function `lower_bound()`]
 
 	std::size_t lower_bound();
 
@@ -279,10 +263,9 @@
 [[Throws:] [Nothing]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
-[endsect]
 
 
-[section:set_lower_bound Member function `lower_bound( low_watermark const& lwm)`]
+[heading Member function `lower_bound( low_watermark const& lwm)`]
 
 	void lower_bound( low_watermark const& lwm)
 
@@ -293,10 +276,9 @@
 [[Throws:] [`boost::task::invalid_watermark`]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
-[endsect]
 
 
-[section:submit Member function `submit( Act const& act)`]
+[heading Member function `submit( Act const& act)`]
 
 	template< typename R >
 	handle< R > submit( task< R > const& t)
@@ -306,10 +288,9 @@
 [[Effects:] [submits an task to the pool and returns an associated handle]]
 [[Throws:] [`boost::task::task_rejected`]]
 ]
-[endsect]
 
 
-[section:submit_attr Member function `submit( Act const& act, Attr const& attr)`]
+[heading Member function `submit( Act const& act, Attr const& attr)`]
 
 	template< typename R, typename Attr >
 	handle< R > submit( task< R > const& t, Attr const& attr)
@@ -319,7 +300,6 @@
 [[Effects:] [submits an task to the pool and returns an associated handle - task is scheduled by the attribute]]
 [[Throws:] [`boost::task::task_rejected`]]
 ]
-[endsect]
 
 
 [endsect]

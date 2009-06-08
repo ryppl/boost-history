@@ -17,7 +17,7 @@
       operator std::size_t () const;
     };
 
-[section:constructor Constructor]
+[heading Constructor]
 
     explicit stacksize( std::size_t value);
 
@@ -27,9 +27,8 @@
 [[Postconditions:][operator std::size_t () > 0]]
 [[Throws:] [`boost::tp::invalid_stacksize`]]
 ]
-[endsect]
 
-[section:operator Member function `operator std::size_t()`]
+[heading Member function `operator std::size_t()`]
 
     operator std::size_t () const;
 
@@ -37,6 +36,6 @@
 [[Effects:] [Returns stack size.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
+
 
 [endsect]

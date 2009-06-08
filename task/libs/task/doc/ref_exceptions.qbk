@@ -18,7 +18,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	invalid_poolsize( std::string const& msg);
 
@@ -26,7 +26,6 @@
 [[Effects:] [Constructs a `boost::task::invalid_poolsize` instance.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 
@@ -43,7 +42,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+heading Constructor]
 
 	invalid_scanns( std::string const& msg)
 
@@ -51,7 +50,6 @@
 [[Effects:] [Constructs a `boost::task::invalid_scanns` instance.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 
@@ -68,7 +66,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	invalid_timeduration( std::string const& msg)
 
@@ -76,7 +74,6 @@
 [[Effects:] [Constructs a `boost::task::invalid_timeduration` instance.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 
@@ -93,7 +90,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	invalid_watermark( std::string const& msg)
 
@@ -101,7 +98,6 @@
 [[Effects:] [Constructs a `boost::task::invalid_watermark` instance.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 
@@ -118,7 +114,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	task_rejected( std::string const& msg)
 
@@ -126,7 +122,6 @@
 [[Effects:] [Constructs a `boost::task::task_rejected` instance.]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 

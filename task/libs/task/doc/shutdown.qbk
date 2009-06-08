@@ -17,8 +17,6 @@ destructor of the pool calls __fn_shutdown__ if not already done so that all __w
 If __fn_shutdown__ is called - the the pool is set the closed state and all __worker_threads__ are joined until all pending tasks are processed.
 No futher tasks can be submitted.
 
-[note The deconstructor calls __fn_shutdown__ if the pool was not shutdown yet.]
-
 
 ``
 	long fibonacci_fn( long n)
@@ -49,13 +47,13 @@ No futher tasks can be submitted.
 
 		boost::task::handle< long > h1(
 			boost::task::async(
-				pool,	// asynchronous executor
-				boost::task::make_task( fibonacci_fn, 10) ) );
+				boost::task::make_task( fibonacci_fn, 10),
+				pool) );	// execution-policy
 
 		boost::task::handle< long > h2(
 			boost::task::async(
-				pool,	// asynchronous executor
-				boost::task::make_task( fibonacci_fn, 5) ) );
+				boost::task::make_task( fibonacci_fn, 5),
+				pool) );	// execution-policy
 
 		pool.shutdown();
 
@@ -63,6 +61,8 @@ No futher tasks can be submitted.
 		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
 	}
 ``
+
+[note The deconstructor calls __fn_shutdown__ if the pool was not shutdown yet.]
 
 
 [heading Shutdown immediatly]
@@ -99,13 +99,13 @@ The function __fn_shutdown_now__ closes the pool, interrupts and then joins all 
 
 		boost::task::handle< long > h1(
 			boost::task::async(
-				pool,	// asynchronous executor
-				boost::task::make_task( fibonacci_fn, 10) ) );
+				boost::task::make_task( fibonacci_fn, 10),
+				pool) );	// execution-policy
 
 		boost::task::handle< long > h2(
 			boost::task::async(
-				pool,	// asynchronous executor
-				boost::task::make_task( fibonacci_fn, 5) ) );
+				boost::task::make_task( fibonacci_fn, 5),
+				pool) );	// execution-policy
 
 		pool.shutdown_now();
 

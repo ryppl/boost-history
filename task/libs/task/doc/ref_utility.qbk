@@ -6,8 +6,6 @@
 ]
 
 
-[section:utility Utilities]
-
 [section:reschedule_until Non-member function `reschedule_until()`]
 
 ``
@@ -131,5 +129,3 @@
 
 [endsect]
 
-
-[endsect]

@@ -20,7 +20,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	explicit high_watermark( std::size_t value)
 
@@ -28,9 +28,9 @@
 [[Effects:] [constructs a `boost::tp::high_watermark` instance]]
 [[Throws:] [`boost::task::invalid_watermark`]]
 ]
-[endsect]
 
-[section:operator Member function `operator std::size_t()`]
+
+[heading Member function `operator std::size_t()`]
 
 	operator std::size_t () const
 
@@ -38,7 +38,6 @@
 [[Effects:] [returns high watermark]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 [endsect]
 
@@ -57,7 +56,7 @@
 	};
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	explicit low_watermark( std::size_t value)
 
@@ -65,9 +64,9 @@
 [[Effects:] [constructs a `boost::task::low_watermark` instance]]
 [[Throws:] [`boost::task::invalid_watermark`]]
 ]
-[endsect]
 
-[section:operator Member function `operator std::size_t()`]
+
+[heading Member function `operator std::size_t()`]
 
 	operator std::size_t () const
 
@@ -75,7 +74,6 @@
 [[Effects:] [returns low watermark]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
 [endsect]

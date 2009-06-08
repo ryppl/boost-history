@@ -24,10 +24,18 @@
 		void swap( task< R > & other) // throw();
 
 		void operator()() // throw();
-	}
+	};
+
+	template< typename Fn, typename A0 >
+	task< R >::type > make_task( Fn fn, A0 a0);
+
+	...
+
+	template< typename Fn, typename A0, ..., typename A10 >
+	task< R >::type > make_task( Fn fn, A0 a0, ..., A10 a10);
 ``
 
-[section:constructor Constructor]
+[heading Constructor]
 
 	template< typename Fn >
 	task( Fn const& fn)
@@ -36,10 +44,9 @@
 [[Effects:] [constructs a `boost::tp::task< R >` from a function object]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:get_id Member function `get_id()`]
+[heading function `get_id()`]
 
 	const id get_id() const
 
@@ -47,10 +54,9 @@
 [[Effects:] [returns task identifier]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:get_future Member function `get_future()`]
+[heading Member function `get_future()`]
 
 	shared_future< R > & get_future()
 
@@ -58,10 +64,9 @@
 [[Effects:] [returns a future assiciated with the task]]
 [[Throws:] [???]]
 ]
-[endsect]
 
 
-[section:swap Member function `swap()`]
+[heading Member function `swap()`]
 
 	void swap( task< R > & other)
 
@@ -69,10 +74,9 @@
 [[Effects:] [swaps the task]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
 
 
-[section:operator Member function `operator()()`]
+[heading Member function `operator()()`]
 
 	void operator()()
 
@@ -80,7 +84,22 @@
 [[Effects:] [executes tasks internal function object]]
 [[Throws:] [Nothing]]
 ]
-[endsect]
+
+
+[heading Free function `make_task()`]
+
+	template< typename Fn, typename A0 >
+	task< R >::type > make_task( Fn fn, A0 a0);
+
+	...
+
+	template< typename Fn, typename A0, ..., typename A10 >
+	task< R >::type > make_task( Fn fn, A0 a0, ..., A10 a10);
+
+[variablelist
+[[Effects:] [creates an task from function object and arguments]]
+[[Throws:] [Nothing]]
+]
 
 
 [endsect]

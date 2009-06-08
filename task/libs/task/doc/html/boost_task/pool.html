@@ -61,10 +61,10 @@
 <span class="special">{</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">(),</span>
 			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">echo</span><span class="special">,</span>
-				<span class="string">"Hello World!"</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+				<span class="string">"Hello World!"</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -90,15 +90,14 @@
 <span class="special">{</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">pool</span><span class="special">,</span>
 			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">echo</span><span class="special">,</span>
-				<span class="string">"Hello World!"</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+				<span class="string">"Hello World!"</span><span class="special">),</span>
+			<span class="identifier">pool</span><span class="special">)</span> <span class="special">);</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
-      .
     </p>
 <div class="important" title="Important"><table border="0" summary="Important">
 <tr>
@@ -108,7 +107,7 @@
 <tr><td align="left" valign="top"><p>
         Tasks should not be too small (performance overhead dominates) and avoid
         blocking tasks
-        <sup>[<a name="id575100" href="#ftn.id575100" class="footnote">4</a>]</sup>
+        <sup>[<a name="id598556" href="#ftn.id598556" class="footnote">5</a>]</sup>
         .
       </p></td></tr>
 </table></div>
@@ -184,7 +183,7 @@
         policy (limitation of queued tasks).
       </p>
 <a name="boost_task.pool.channel._code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__task__phrase__phrase_role__special______phrase__phrase_role__identifier__bounded_channel__phrase___code_"></a><h5>
-<a name="id575703"></a>
+<a name="id599159"></a>
         <a class="link" href="pool.html#boost_task.pool.channel._code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__task__phrase__phrase_role__special______phrase__phrase_role__identifier__bounded_channel__phrase___code_"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">bounded_channel</span></code></a>
       </h5>
 <p>
@@ -201,7 +200,7 @@
         will be woken up if the amount of pending tasks reaches <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">low_watermark</span></code>.
       </p>
 <a name="boost_task.pool.channel._code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__task__phrase__phrase_role__special______phrase__phrase_role__identifier__unbounded_channel__phrase___code_"></a><h5>
-<a name="id575935"></a>
+<a name="id599391"></a>
         <a class="link" href="pool.html#boost_task.pool.channel._code__phrase_role__identifier__boost__phrase__phrase_role__special______phrase__phrase_role__identifier__task__phrase__phrase_role__special______phrase__phrase_role__identifier__unbounded_channel__phrase___code_"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">unbounded_channel</span></code></a>
       </h5>
 <p>
@@ -220,7 +219,7 @@
         The scheduling policy determines how tasks are scheduled inside the <span class="emphasis"><em>channel</em></span>.
       </p>
 <a name="boost_task.pool.scheduling.fifo"></a><h5>
-<a name="id576076"></a>
+<a name="id599532"></a>
         <a class="link" href="pool.html#boost_task.pool.scheduling.fifo">fifo</a>
       </h5>
 <p>
@@ -228,7 +227,7 @@
         gets taken first.
       </p>
 <a name="boost_task.pool.scheduling.priority"></a><h5>
-<a name="id576127"></a>
+<a name="id599583"></a>
         <a class="link" href="pool.html#boost_task.pool.scheduling.priority">priority</a>
       </h5>
 <p>
@@ -244,14 +243,14 @@
 </span><span class="special">&gt;</span> <span class="identifier">pool</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">poolsize</span><span class="special">(</span> <span class="number">5</span><span class="special">)</span> <span class="special">);</span>
 
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-	<span class="identifier">pool</span><span class="special">,</span>					<span class="comment">// thread-pool
-</span>	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">some_fn</span><span class="special">),</span>	<span class="comment">// task to be executed
-</span>	<span class="number">5</span><span class="special">);</span>					<span class="comment">// priority is 5
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">some_fn</span><span class="special">),</span>	<span class="comment">// task to be executed
+</span>	<span class="number">5</span><span class="special">,</span>					<span class="comment">// priority is 5
+</span>	<span class="identifier">pool</span><span class="special">);</span>					<span class="comment">// thread-pool
 </span>
 <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-	<span class="identifier">pool</span><span class="special">,</span>					<span class="comment">// thread-pool
-</span>	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">another_fn</span><span class="special">),</span>	<span class="comment">// task to be executed
-</span>	<span class="number">3</span><span class="special">);</span>					<span class="comment">// priority is 3
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">another_fn</span><span class="special">),</span>	<span class="comment">// task to be executed
+</span>	<span class="number">3</span><span class="special">,</span>					<span class="comment">// priority is 3
+</span>	<span class="identifier">pool</span><span class="special">);</span>					<span class="comment">// thread-pool
 </span></pre>
 <p>
       </p>
@@ -275,7 +274,7 @@
 <p>
       </p>
 <a name="boost_task.pool.scheduling.smart"></a><h5>
-<a name="id576914"></a>
+<a name="id600370"></a>
         <a class="link" href="pool.html#boost_task.pool.scheduling.smart">smart</a>
       </h5>
 <p>
@@ -326,16 +325,17 @@
 	<span class="comment">// replaced by later task with same attribute == 2
 </span>	<span class="comment">// if still pending in pool
 </span>	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-		<span class="identifier">pool</span><span class="special">,</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">),</span>
-		<span class="number">2</span><span class="special">);</span>	<span class="comment">// attribute is 2
-</span>
+		<span class="number">2</span><span class="special">,</span>	<span class="comment">// attribute is 2
+</span>		<span class="identifier">pool</span><span class="special">);</span>
+
 	<span class="comment">// will replace previous pending task with attribute == 2
 </span>	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
 		<span class="identifier">pool</span><span class="special">,</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">),</span>
-		<span class="number">2</span><span class="special">);</span>	<span class="comment">// attribute is 2 too
-</span><span class="special">}</span>
+		<span class="number">2</span><span class="special">,</span>	<span class="comment">// attribute is 2 too
+</span>		<span class="identifier">pool</span><span class="special">);</span>
+<span class="special">}</span>
 </pre>
 <p>
       </p>
@@ -352,7 +352,7 @@
         should be addressed.
       </p>
 <a name="boost_task.pool.pool_shutdown.shutdown"></a><h5>
-<a name="id578010"></a>
+<a name="id601477"></a>
         <a class="link" href="pool.html#boost_task.pool.pool_shutdown.shutdown">Shutdown</a>
       </h5>
 <p>
@@ -361,15 +361,6 @@
         are joined until all pending tasks are processed. No futher tasks can be
         submitted.
       </p>
-<div class="note" title="Note"><table border="0" summary="Note">
-<tr>
-<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/html/images/note.png"></td>
-<th align="left">Note</th>
-</tr>
-<tr><td align="left" valign="top"><p>
-          The deconstructor calls <code class="computeroutput"><span class="identifier">shutdown</span><span class="special">()</span></code> if the pool was not shutdown yet.
-        </p></td></tr>
-</table></div>
 <p>
         
 </p>
@@ -401,14 +392,14 @@
 
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h1</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">pool</span><span class="special">,</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">),</span>
+			<span class="identifier">pool</span><span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h2</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">pool</span><span class="special">,</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">),</span>
+			<span class="identifier">pool</span><span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>
 	<span class="identifier">pool</span><span class="special">.</span><span class="identifier">shutdown</span><span class="special">();</span>
 
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
@@ -417,8 +408,17 @@
 </pre>
 <p>
       </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          The deconstructor calls <code class="computeroutput"><span class="identifier">shutdown</span><span class="special">()</span></code> if the pool was not shutdown yet.
+        </p></td></tr>
+</table></div>
 <a name="boost_task.pool.pool_shutdown.shutdown_immediatly"></a><h5>
-<a name="id579109"></a>
+<a name="id602564"></a>
         <a class="link" href="pool.html#boost_task.pool.pool_shutdown.shutdown_immediatly">Shutdown
         immediatly</a>
       </h5>
@@ -457,14 +457,14 @@
 
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h1</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">pool</span><span class="special">,</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">),</span>
+			<span class="identifier">pool</span><span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h2</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">pool</span><span class="special">,</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">),</span>
+			<span class="identifier">pool</span><span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>
 	<span class="identifier">pool</span><span class="special">.</span><span class="identifier">shutdown_now</span><span class="special">();</span>
 
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>		<span class="comment">// may throw broken_task or task_interrupted
@@ -508,14 +508,14 @@
 
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h1</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">(),</span>	<span class="comment">// asynchronous executor == default-pool
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">10</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy == default-pool
+</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h2</span><span class="special">(</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">(),</span>	<span class="comment">// asynchronous executor == default-pool
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span> <span class="identifier">fibonacci_fn</span><span class="special">,</span> <span class="number">5</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy == default-pool
+</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
 	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(5) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
@@ -670,18 +670,20 @@
 	<span class="special">{</span>
 		<span class="comment">// fork a sub-task calculating fibonacci(n-1)
 </span>		<span class="identifier">h1</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">(),</span>
 			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">parallel_fib</span><span class="special">,</span>
 				<span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span>
-				<span class="identifier">cutof</span><span class="special">)</span> <span class="special">);</span>
+				<span class="identifier">cutof</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">()</span> <span class="special">);</span>
+
 		<span class="comment">// fork a sub-task calculating fibonacci(n-2)
 </span>		<span class="identifier">h2</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">(),</span>
 			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">parallel_fib</span><span class="special">,</span>
 				<span class="identifier">n</span> <span class="special">-</span> <span class="number">2</span><span class="special">,</span>
-				<span class="identifier">cutof</span><span class="special">)</span> <span class="special">);</span>
+				<span class="identifier">cutof</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">()</span> <span class="special">);</span>
+
 		<span class="comment">// join the results of both sub-tasks
 </span>		<span class="comment">// if one of the both sub-tasks is not ready
 </span>		<span class="comment">// the worker-thread does not block, it executes other
@@ -692,14 +694,14 @@
 
 <span class="keyword">void</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>			<span class="comment">// handle for fibonacci calculation
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>				<span class="comment">// handle for fibonacci calculation
 </span>		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">(),</span>	<span class="comment">// access the default thread-pool
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// calculate fibonacci number 10
-</span>				<span class="identifier">parallel_fib</span><span class="special">,</span>		<span class="comment">// for numbers &lt; 5 do inline recursive calculation
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>			<span class="comment">// calculate fibonacci number 10
+</span>				<span class="identifier">parallel_fib</span><span class="special">,</span>			<span class="comment">// for numbers &lt; 5 do inline recursive calculation
 </span>				<span class="number">10</span><span class="special">,</span>
-				<span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>  
-	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+				<span class="number">5</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// access the default thread-pool
+</span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -707,7 +709,7 @@
 </div>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id575100" href="#id575100" class="para">4</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id598556" href="#id598556" class="para">5</a>] </sup>
             see <a href="http://www.ddj.com/go-parallel/article/showArticle.jhtml?articleID=216500409" target="_top">'Use
             Thread Pools Correctly'</a>, Herb Sutter
           </p></div>

@@ -25,10 +25,10 @@ __boost_task__ provides __fn_async__ with support of executing an __task__ in __
 	{
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::task::default_pool(),
 				boost::task::make_task(
 					echo,
-					"Hello World!") ) );
+					"Hello World!"),
+				boost::task::default_pool() ) );
 		std::cout << h.get() << std::endl;
 	}
 ``
@@ -50,14 +50,13 @@ and a custom __thread_pool__ (passing pool instance as an argument to __fn_async
 	{
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				pool,
 				boost::task::make_task(
 					echo,
-					"Hello World!") ) );
+					"Hello World!"),
+				pool) );
 		std::cout << h.get() << std::endl;
 	}
 ``
-.
 
 [important Tasks should not be too small (performance overhead dominates) and avoid blocking 
 tasks[footnote see [@http://www.ddj.com/go-parallel/article/showArticle.jhtml?articleID=216500409 

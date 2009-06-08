@@ -32,35 +32,18 @@
       task is executed inside a <span class="emphasis"><em>thread-pool</em></span> the <span class="emphasis"><em>sub-task</em></span>
       is put into the local-queue of the <span class="emphasis"><em>worker-thread</em></span> in the
       other case the <span class="emphasis"><em>sub-task</em></span> will be executed in a new thread.
+      <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span></code>
+      is used as default <span class="emphasis"><em>execution-policy</em></span> for <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">()</span></code>,
     </p>
 <p>
       
 </p>
 <pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">(),</span>
 		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 			<span class="identifier">fibonacci</span><span class="special">,</span>
-			<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-</pre>
-<p>
-    </p>
-<p>
-      is equivalent to:
-    </p>
-<p>
-      
-</p>
-<pre class="programlisting"><span class="keyword">if</span> <span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span><span class="special">::</span><span class="identifier">runs_in_pool</span><span class="special">()</span> <span class="special">)</span>
-<span class="special">{</span>
-	<span class="comment">// put the sub-task into worker-threads local-queue
-</span><span class="special">}</span>
-<span class="keyword">else</span>
-<span class="special">{</span>
-	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>
-		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(...)</span> <span class="special">);</span>
-<span class="special">}</span>
+			<span class="number">10</span><span class="special">),</span>
+		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>
 </pre>
 <p>
     </p>

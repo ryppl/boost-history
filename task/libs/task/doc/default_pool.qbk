@@ -34,13 +34,13 @@ __hardware_concurrency__ returns, queues unlimited amount of tasks and schedules
 
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::task::default_pool(),	// asynchronous executor == default-pool
-				boost::task::make_task( fibonacci_fn, 10) ) );
+				boost::task::make_task( fibonacci_fn, 10),
+				boost::task::default_pool() ) );	// execution-policy == default-pool
 
 		boost::task::handle< long > h2(
 			boost::task::async(
-				boost::task::default_pool(),	// asynchronous executor == default-pool
-				boost::task::make_task( fibonacci_fn, 5) ) );
+				boost::task::make_task( fibonacci_fn, 5),
+				boost::task::default_pool() ) );	// execution-policy == default-pool
 
 		std::cout << "fibonacci(10) == " << h1.get() << "\n";
 		std::cout << "fibonacci(5) == " << h2.get() << std::endl;

@@ -27,7 +27,7 @@
 </h3></div></div>
 <div><p class="copyright">Copyright © 2009 Oliver Kowalke</p></div>
 <div><div class="legalnotice" title="Legal Notice">
-<a name="id530548"></a><p>
+<a name="id549287"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -40,6 +40,7 @@
 <dt><span class="section"><a href="boost_task/motivation.html"> Motivation</a></span></dt>
 <dt><span class="section"><a href="boost_task/task.html"> Task</a></span></dt>
 <dt><span class="section"><a href="boost_task/handle.html"> Handle</a></span></dt>
+<dt><span class="section"><a href="boost_task/async.html"> Asynchronous execution</a></span></dt>
 <dt><span class="section"><a href="boost_task/own_thread.html"> Execute in own thread</a></span></dt>
 <dt><span class="section"><a href="boost_task/new_thread.html"> Execute in new thread</a></span></dt>
 <dt><span class="section"><a href="boost_task/pool.html"> Thread-pool</a></span></dt>
@@ -60,11 +61,29 @@
 <dd><dl>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.task"> Class template <code class="computeroutput"><span class="identifier">task</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.handle"> Class template <code class="computeroutput"><span class="identifier">handle</span></code></a></span></dt>
-<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.async"> Function <code class="computeroutput"><span class="identifier">async</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.async"> Non-member function <code class="computeroutput"><span class="identifier">async</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;,</span>
+      <span class="identifier">EP</span><span class="special">)</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.async1"> Non-member function <code class="computeroutput"><span class="identifier">async</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;,</span>
+      <span class="identifier">pool</span><span class="special">&lt;</span>
+      <span class="identifier">Channel</span> <span class="special">&gt;</span>
+      <span class="special">&amp;)</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.async2"> Non-member function <code class="computeroutput"><span class="identifier">async</span><span class="special">(</span> <span class="identifier">task</span><span class="special">&lt;</span> <span class="identifier">R</span> <span class="special">&gt;,</span>
+      <span class="identifier">Attr</span><span class="special">,</span> <span class="identifier">pool</span><span class="special">&lt;</span> <span class="identifier">Channel</span> <span class="special">&gt;</span> <span class="special">&amp;)</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.own_thread"> Class <code class="computeroutput"><span class="identifier">own_thread</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.new_thread"> Class <code class="computeroutput"><span class="identifier">new_thread</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.static_pool"> Class template <code class="computeroutput"><span class="identifier">static_pool</span></code></a></span></dt>
-<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.utility"> Utilities</a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.reschedule_until"> Non-member function
+      <code class="computeroutput"><span class="identifier">reschedule_until</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.get_pool"> Non-member function
+      <code class="computeroutput"><span class="identifier">get_pool</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.runs_in_pool"> Non-member function
+      <code class="computeroutput"><span class="identifier">runs_in_pool</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.worker_id"> Non-member function
+      <code class="computeroutput"><span class="identifier">worker_id</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.delay"> Non-member function <code class="computeroutput"><span class="identifier">delay</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.yield"> Non-member function <code class="computeroutput"><span class="identifier">yield</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.interrupt"> Non-member function
+      <code class="computeroutput"><span class="identifier">interrupt</span><span class="special">()</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.has_attribute"> Meta function <code class="computeroutput"><span class="identifier">has_attribute</span></code></a></span></dt>
 <dt><span class="section"><a href="boost_task/reference.html#boost_task.reference.attribute_type"> Meta function
       <code class="computeroutput"><span class="identifier">attribute_type</span></code></a></span></dt>
@@ -145,14 +164,22 @@
               </li>
 </ul></div>
 </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">get_future</span><span class="special">()</span></code>
+            returns reference to internal future
+          </li>
+<li class="listitem">
+            functions <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">waitfor_all</span><span class="special">()</span></code>/<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">waitfor_any</span><span class="special">()</span></code>
+            to wait for all or any handles
+          </li>
 </ul></div>
 </li>
 <li class="listitem">
 <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">()</span></code>,
-        executes a task on behalf of <span class="emphasis"><em>asynchronous-executors</em></span>
-</li>
+        executes a task on behalf of <span class="emphasis"><em>execution-policies</em></span> asynchronously
+      </li>
 <li class="listitem">
-<span class="emphasis"><em>asynchronous-executor</em></span> models:
+<span class="emphasis"><em>execution-policy</em></span> models:
         <div class="itemizedlist"><ul class="itemizedlist" type="circle">
 <li class="listitem">
 <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">own_thread</span></code>: executes task in current
@@ -173,14 +200,110 @@
           </li>
 <li class="listitem">
             custom pool: task gets executed by a <span class="emphasis"><em>worker-thread</em></span>
-            of a custom <span class="emphasis"><em>thread-pool</em></span>
+            of a custom <span class="emphasis"><em>thread-pool</em></span> (for instance with priority
+            scheduling)
+          </li>
+</ul></div>
 </li>
+<li class="listitem">
+<span class="emphasis"><em>thread-pools</em></span> with work-stealing algorithm
+      </li>
+<li class="listitem">
+        support of forking and joining sub-tasks
+        <div class="itemizedlist"><ul class="itemizedlist" type="circle">
+<li class="listitem">
+            better performance
+          </li>
+<li class="listitem">
+            no deadlock because of inline-execution of sub-tasks
+          </li>
+<li class="listitem">
+            automatically detects if code runs in a <span class="emphasis"><em>thread-pool</em></span>
+            so the appropriate mechanism for executing the sub-tasks is choosen
+          </li>
 </ul></div>
 </li>
 </ul></div>
 <p>
-      References
+      In order to use the classes and functions described here, you can either include
+      the specific headers specified by the descriptions of each class or function,
+      or include the master library header:
     </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
+<p>
+    </p>
+<p>
+      which includes all the other headers in turn.
+    </p>
+<p>
+      Used namespaces are:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span>
+<span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_task</span>
+</pre>
+<p>
+    </p>
+<a name="boost_task.overview.example"></a><h4>
+<a name="id582635"></a>
+      <a class="link" href="index.html#boost_task.overview.example">Example</a>
+    </h4>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">long</span> <span class="identifier">fibonacci</span><span class="special">(</span> <span class="keyword">long</span> <span class="identifier">n</span><span class="special">)</span>
+<span class="special">{</span>
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">0</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+	<span class="keyword">if</span> <span class="special">(</span> <span class="identifier">n</span> <span class="special">==</span> <span class="number">1</span><span class="special">)</span> <span class="keyword">return</span> <span class="number">1</span><span class="special">;</span>
+	<span class="keyword">long</span> <span class="identifier">k1</span><span class="special">(</span> <span class="number">1</span><span class="special">),</span> <span class="identifier">k2</span><span class="special">(</span> <span class="number">0</span><span class="special">);</span>
+	<span class="keyword">for</span> <span class="special">(</span> <span class="keyword">int</span> <span class="identifier">i</span><span class="special">(</span> <span class="number">2</span><span class="special">);</span> <span class="identifier">i</span> <span class="special">&lt;=</span> <span class="identifier">n</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>
+	<span class="special">{</span>
+		<span class="keyword">long</span> <span class="identifier">tmp</span><span class="special">(</span> <span class="identifier">k1</span><span class="special">);</span>
+		<span class="identifier">k1</span> <span class="special">=</span> <span class="identifier">k1</span> <span class="special">+</span> <span class="identifier">k2</span><span class="special">;</span>
+		<span class="identifier">k2</span> <span class="special">=</span> <span class="identifier">tmp</span><span class="special">;</span>
+	<span class="special">}</span>
+	<span class="keyword">return</span> <span class="identifier">k1</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h1</span><span class="special">(</span>
+		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
+				<span class="identifier">fibonacci</span><span class="special">,</span>
+				<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h2</span><span class="special">(</span>
+		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
+				<span class="identifier">fibonacci</span><span class="special">,</span>
+				<span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h1: id == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h2: id == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h1: is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h2: is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">waitfor_all</span><span class="special">(</span> <span class="identifier">h1</span><span class="special">,</span> <span class="identifier">h2</span><span class="special">);</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h1: is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h2: is ready == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">is_ready</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h1: has value == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">has_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h2: has value == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">has_value</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h1: has exception == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">has_exception</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"h2: has exception == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">boolalpha</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">has_exception</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="string">"\n"</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(10) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"fibonacci(5) == "</span> <span class="special">&lt;&lt;</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<a name="boost_task.overview.references"></a><h4>
+<a name="id584217"></a>
+      <a class="link" href="index.html#boost_task.overview.references">References</a>
+    </h4>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
         N2185: Proposed Text for Parallel Task Execution <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html" target="_top">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2007/n2185.html</a>
@@ -193,6 +316,10 @@
 <li class="listitem">
         N2802: A plea to reconsider detach-on-destruction for thread objects <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html" target="_top">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html</a>
         written by Hans-J. Boehm.
+      </li>
+<li class="listitem">
+        N2880: C++ object lifetime interactions with the threads API <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html" target="_top">http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html</a>
+        written by Hans-J. Boehm and Lawrence Crowl.
       </li>
 <li class="listitem">
 <a href="http://herbsutter.wordpress.com" target="_top">'Sutter&#8217;s Mill'</a> by
@@ -212,18 +339,8 @@
         integrated in some of the next releases of <a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Thread</strong></span></a>).
       </p></td></tr>
 </table></div>
-<p>
-      In order to use the classes and functions described here, you can either include
-      the specific headers specified by the descriptions of each class or function,
-      or include the master library header:
-    </p>
-<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">task</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
-</pre>
-<p>
-      which includes all the other headers in turn.
-    </p>
 <a name="boost_task.overview.tested_platforms"></a><h4>
-<a name="id563818"></a>
+<a name="id584318"></a>
       <a class="link" href="index.html#boost_task.overview.tested_platforms">Tested Platforms</a>
     </h4>
 <p>
@@ -241,20 +358,18 @@
         FreeBSD 7.2 (x86), GCC 4.2.1
       </li>
 <li class="listitem">
-        OpenSolaris 0811 (x86_64), SunCC 5.10
-      </li>
-<li class="listitem">
         Windows XP Professional (x86), MSVC 9.0
       </li>
 </ul></div>
 <a name="boost_task.overview.how_to_build"></a><h4>
-<a name="id563862"></a>
+<a name="id584359"></a>
       <a class="link" href="index.html#boost_task.overview.how_to_build">How to build</a>
     </h4>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
         download the sources form <a href="http://www.boostpro.com/vault/index.php" target="_top">boost-vault</a>
-        (section <span class="emphasis"><em>Concurrent Programing</em></span>) or <a href="https://svn.boost.org/svn/boost/sandbox/task/" target="_top">boost-sandbox</a>
+        (section <span class="emphasis"><em>Concurrent Programing</em></span>) or the latest development
+        version from <a href="https://svn.boost.org/svn/boost/sandbox/task/" target="_top">boost-sandbox</a>
 </li>
 <li class="listitem">
         extract the archive into the boost-source directory
@@ -269,7 +384,7 @@
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: June 01, 2009 at 12:11:54 GMT</small></p></td>
+<td align="left"><p><small>Last revised: June 08, 2009 at 19:40:04 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

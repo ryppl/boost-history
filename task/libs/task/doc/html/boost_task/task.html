@@ -32,13 +32,13 @@
 <p>
       <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code>
       represents a <span class="emphasis"><em>callable</em></span> (provides <code class="computeroutput"><span class="keyword">operator</span><span class="special">()()</span></code>) object containing the unit of code to
-      be execute by a <span class="emphasis"><em>asynchronous-executor</em></span>. Function <code class="computeroutput"><span class="identifier">get_future</span><span class="special">()</span></code>
+      be execute by a <span class="emphasis"><em>execution-policy</em></span>. Function <code class="computeroutput"><span class="identifier">get_future</span><span class="special">()</span></code>
       returns a <span class="emphasis"><em>asynchronous-completion-token</em></span> allowing to wait
       for the completion of the computation of the task, for getting the result of
       a computation or for transfering exceptions. Each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">task</span></code> has a unique identifier.
     </p>
 <a name="boost_task.task.creation"></a><h4>
-<a name="id566445"></a>
+<a name="id586937"></a>
       <a class="link" href="task.html#boost_task.task.creation">Creation</a>
     </h4>
 <p>
@@ -98,7 +98,7 @@
 <p>
     </p>
 <a name="boost_task.task.cooperative_task_and_interruption"></a><h4>
-<a name="id567014"></a>
+<a name="id587506"></a>
       <a class="link" href="task.html#boost_task.task.cooperative_task_and_interruption">Cooperative
       task and interruption</a>
     </h4>
@@ -108,7 +108,7 @@
       its execution. In the context of task-interruption a task is known as cooperative
       if it checks for an interruption request between two <span class="emphasis"><em>interruption-points</em></span>
       via <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruption_requested</span><span class="special">()</span></code>
-      <sup>[<a name="id567065" href="#ftn.id567065" class="footnote">2</a>]</sup>
+      <sup>[<a name="id587556" href="#ftn.id587556" class="footnote">2</a>]</sup>
       .
     </p>
 <p>
@@ -157,17 +157,17 @@
 <span class="special">{</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>			<span class="comment">// get handle associated with the task
 </span>		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>			
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// task, to be executed asynchronously
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// task, to be executed asynchronously
 </span>				<span class="identifier">cooperative</span><span class="special">,</span>
-				<span class="number">10</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>		<span class="comment">// throws boost::task::task_interrupted
+				<span class="number">10</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>		<span class="comment">// throws boost::task::task_interrupted
 </span><span class="special">}</span>
 </pre>
 <p>
     </p>
 <a name="boost_task.task.exceptions"></a><h4>
-<a name="id568131"></a>
+<a name="id588622"></a>
       <a class="link" href="task.html#boost_task.task.exceptions">Exceptions</a>
     </h4>
 <p>
@@ -187,10 +187,10 @@
 <span class="special">{</span>
 	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">void</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>			<span class="comment">// get handle associated with the task
 </span>		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>			
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">(),</span>	<span class="comment">// asynchronous executor
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// task, to be executed asynchronously
-</span>				<span class="identifier">throwing</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>
-	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">wait</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>		<span class="comment">// throws std::domain_error
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// task, to be executed asynchronously
+</span>				<span class="identifier">throwing</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">new_thread</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// execution-policy
+</span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">wait</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>		<span class="comment">// throws std::domain_error
 </span><span class="special">}</span>
 </pre>
 <p>
@@ -222,12 +222,12 @@
 <li class="listitem"><code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">broken_task</span></code></li>
 </ul></div>
 <a name="boost_task.task.parent_task"></a><h4>
-<a name="id568934"></a>
+<a name="id589426"></a>
       <a class="link" href="task.html#boost_task.task.parent_task">Parent task</a>
     </h4>
 <p>
       Top-level tasks have no parent. A parent task can create child tasks when it
-      creates another task by using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span></code> as <span class="emphasis"><em>asynchronous-executor</em></span>.
+      creates another task by using <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span></code> as <span class="emphasis"><em>execution-policy</em></span>.
       These children are implicitly treated as <span class="emphasis"><em>sub-tasks</em></span> of
       the larger task. It is assumed that that <span class="emphasis"><em>sub-tasks</em></span> can
       be executed in any order because only overall operation speed matters (enabling
@@ -250,18 +250,18 @@
 	<span class="special">{</span>
 		<span class="comment">// submit a sub-task to pool calculating fibonacci(n-1)
 </span>		<span class="identifier">h1</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">(),</span>	<span class="comment">// execute a sub-task
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">parallel_fib</span><span class="special">,</span>
 				<span class="identifier">n</span> <span class="special">-</span> <span class="number">1</span><span class="special">,</span>
 				<span class="identifier">cutof</span><span class="special">)</span> <span class="special">);</span>
+
 		<span class="comment">// submit a sub-task to pool calculating fibonacci(n-2)
 </span>		<span class="identifier">h2</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">as_sub_task</span><span class="special">(),</span>	<span class="comment">// execute a sub-task
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>
 				<span class="identifier">parallel_fib</span><span class="special">,</span>
 				<span class="identifier">n</span> <span class="special">-</span> <span class="number">2</span><span class="special">,</span>
 				<span class="identifier">cutof</span><span class="special">)</span> <span class="special">);</span>
+
 		<span class="comment">// calculate fibonacci(n) from the results of both sub-tasks
 </span>		<span class="keyword">return</span> <span class="identifier">h1</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">+</span> <span class="identifier">h2</span><span class="special">.</span><span class="identifier">get</span><span class="special">();</span>
 	<span class="special">}</span>
@@ -269,21 +269,21 @@
 
 <span class="keyword">void</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>			<span class="comment">// handle for fibonacci calculation
+	<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">handle</span><span class="special">&lt;</span> <span class="keyword">long</span> <span class="special">&gt;</span> <span class="identifier">h</span><span class="special">(</span>				<span class="comment">// handle for fibonacci calculation
 </span>		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">async</span><span class="special">(</span>
-			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">(),</span>	<span class="comment">// access the default thread-pool
-</span>			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>		<span class="comment">// calculate fibonacci number 10
-</span>				<span class="identifier">parallel_fib</span><span class="special">,</span>		<span class="comment">// for numbers &lt; 5 do inline recursive calculation
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">make_task</span><span class="special">(</span>			<span class="comment">// calculate fibonacci number 10
+</span>				<span class="identifier">parallel_fib</span><span class="special">,</span>			<span class="comment">// for numbers &lt; 5 do inline recursive calculation
 </span>				<span class="number">10</span><span class="special">,</span>
-				<span class="number">5</span><span class="special">)</span> <span class="special">)</span> <span class="special">);</span>  
-	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+				<span class="number">5</span><span class="special">),</span>
+			<span class="identifier">boost</span><span class="special">::</span><span class="identifier">task</span><span class="special">::</span><span class="identifier">default_pool</span><span class="special">()</span> <span class="special">)</span> <span class="special">);</span>	<span class="comment">// access the default thread-pool
+</span>	<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">h</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
 <p>
     </p>
 <div class="footnotes">
 <br><hr width="100" align="left">
-<div class="footnote"><p><sup>[<a name="ftn.id567065" href="#id567065" class="para">2</a>] </sup>
+<div class="footnote"><p><sup>[<a name="ftn.id587556" href="#id587556" class="para">2</a>] </sup>
           see <a href="http://www.ddj.com/architect/207100682" target="_top">'Interrupt Politely'</a>,
           Herb Sutter
         </p></div>
