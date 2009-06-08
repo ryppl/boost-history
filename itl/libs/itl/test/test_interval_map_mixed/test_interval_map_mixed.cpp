@@ -1212,6 +1212,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_erase_if_4_integral_ty
     BOOST_CHECK_EQUAL( split_A, split_B );
 }
 
+/*
 BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_plus_overload_4_bicremental_types, T, bicremental_types)
 {
     typedef int U;
@@ -1276,3 +1277,4 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_map_mixed_infix_et_overload_4_bi
     BOOST_CHECK_EQUAL(join_a & split_a, split_b);
 }
 
+*/
