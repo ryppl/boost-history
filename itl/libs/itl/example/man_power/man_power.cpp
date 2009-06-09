@@ -12,7 +12,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     Interval sets and maps can be filled and manipulated using
     set style operation like union (+=), difference (-=) and intersection
-    (*=).
+    (&=).
 
     In this example 'man_power' a number of those operations are
     demonstrated in the process of calculation the available working 

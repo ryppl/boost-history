@@ -8,15 +8,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#include <stdio.h>
-#include <iostream>
-#include <boost/itl/type_traits/to_string.hpp>
-#include <boost/itl/split_interval_map.hpp>
-
-using namespace std;
-using namespace boost::itl;
-
-
 /** Example overlap_counter.cpp \file overlap_counter.cpp
 
     The most basic application of an interval_map is a counter counting
@@ -32,6 +23,15 @@ using namespace boost::itl;
 
     \include overlap_counter/overlap_counter.cpp
 */
+//[example_overlap_counter
+#include <stdio.h>
+#include <iostream>
+#include <boost/itl/type_traits/to_string.hpp>
+#include <boost/itl/split_interval_map.hpp>
+
+using namespace std;
+using namespace boost::itl;
+
 
 /*  A interval_map<int, int> is a map<Interval<int>, int> that maps intervals
     to int values. On overlap of intervals it sums up the associated int 
@@ -102,3 +102,4 @@ int main()
 // in interval [6,8): 3 intervals overlap
 // in interval [8,9): 2 intervals overlap
 // -----------------------------------------------------------
+//]

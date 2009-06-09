@@ -52,29 +52,26 @@ void partys_height()
 {
     PartyHeightHistoryT tallest_guest;
 
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          180) // Mary & Harry: Harry is 1,80 m tall.
-    );
+        180); // Mary & Harry: Harry is 1,80 m tall.
 
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          170) // Diana & Susan: Diana is 1,70 m tall.
-    );
+        170); // Diana & Susan: Diana is 1,70 m tall.
 
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          200) // Peters height is 2,00 m
-    );
+        200); // Peters height is 2,00 m
 
     PartyHeightHistoryT::iterator height_ = tallest_guest.begin();
     cout << "-------------- History of maximum guest height -------------------\n";
@@ -96,34 +93,31 @@ void partys_split_height()
 
     // adding an element can be done wrt. simple aggregate functions
     // like e.g. min, max etc. in their 'inplace' or op= incarnation
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          180) // Mary & Harry: Harry is 1,80 m tall.
-    );
+        180); // Mary & Harry: Harry is 1,80 m tall.
 
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          170) // Diana & Susan: Diana is 1,70 m tall.
-    );
+        170); // Diana & Susan: Diana is 1,70 m tall.
 
-    tallest_guest.add(
+    tallest_guest +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          200) // Peters height is 2,00 m
-    );
+        200); // Peters height is 2,00 m
 
     PartyHeightSplitHistoryT::iterator height_ = tallest_guest.begin();
     cout << "\n";
     cout << "-------- Split History of maximum guest height -------------------\n";
-	cout << "--- Same map as above but split for every interval insertion.  ---\n";
+    cout << "--- Same map as above but split for every interval insertion.  ---\n";
     while(height_ != tallest_guest.end())
     {
         interval<ptime> when = height_->first;

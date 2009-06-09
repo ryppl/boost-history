@@ -83,20 +83,21 @@ void boost_party()
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 19:30"), 
           time_from_string("2008-05-20 23:00")), 
-          mary_harry));
+        mary_harry));
 
     party += // element addition can also be done via operator +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 20:10"), 
           time_from_string("2008-05-21 00:00")), 
-          diana_susan);
+        diana_susan);
+
     party +=
       make_pair( 
         interval<ptime>::rightopen(
           time_from_string("2008-05-20 22:15"), 
           time_from_string("2008-05-21 00:30")), 
-          peter);
+        peter);
 
 
     interval_map<ptime, GuestSetT>::iterator it = party.begin();

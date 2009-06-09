@@ -33,8 +33,11 @@ test-suite "itl"
       
       # maps
       [ run test_interval_map/test_interval_map.cpp ]
+      [ run test_interval_map_infix/test_interval_map_infix.cpp ]
       [ run test_split_interval_map/test_split_interval_map.cpp ]
+      [ run test_split_interval_map_infix/test_split_interval_map_infix.cpp ]
       [ run test_interval_map_mixed/test_interval_map_mixed.cpp ]
+      [ run test_interval_map_infix_mixed/test_interval_map_infix_mixed.cpp ]
       [ run test_itl_map/test_itl_map.cpp ]
 
       # handcoded tests using laws (not LaBatea) -------------------------------

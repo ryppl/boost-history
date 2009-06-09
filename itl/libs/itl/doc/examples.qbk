@@ -12,7 +12,7 @@
 
 [table Overview over Itl Examples
 	[[level]   [example] [classes] [features]]
-	[[flagship][[link boost_itl.examples.party Party]]
+	[[intro][[link boost_itl.examples.party Party]]
 		[__itv_map__][Generates an attendance history of a party
 	                  by inserting into an __itv_map__. 
 					  Demonstrating 
@@ -22,9 +22,19 @@
 	               Closed and open interval borders]]
 	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
 		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__]
-	                               [basic charactersistics of interval container]]
-	[[basic]   [[link boost_itl.examples.overlap_counter overlap counter]][__itv_map__][The most simple application of an interval map: Counting
-	                                          the overlaps of added intervals.]]
+	                               [basic characteristics of interval container]]
+	[[basic]   [[link boost_itl.examples.overlap_counter Overlap counter]]
+	    [__itv_map__][The most simple application of an interval map: 
+	                  Counting the overlaps of added intervals.]]
+	[[advanced][[link boost_itl.examples.partys_height_average Party's height average]]
+	    [__itv_map__][Using aggregate on overlap the average of party guests is computed.  
+	                  Associated values are user defined class objects, that implement
+	                  an appropriate `operator +=` for the aggregation.]]
+	[[advanced][[link boost_itl.examples.partys_tallest_guests Party's tallest guests]]
+	    [__itv_map__,\n__spl_itv_map__]
+	                 [Using aggregate on overlap the height of the party's tallest guests is computed.  
+	                  Associated values are aggregated via a maximum functor, that can 
+	                  be chosen as template parameter of an interval_map class template.]]
 	[[advanced][[link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]
 	                            [__spl_itv_set__]
 								             [Shows how the ['*border preserving*]
@@ -34,7 +44,7 @@
 		[__itv_set__,\n__itv_map__]
 		[Set style operations on __itv_sets__ and __itv_maps__ like union, difference
 	     and intersection can be used to obtain calculations in a flexible way. Example
-	     [*man_power] demontrates such operations in the process of calculating the
+	     [*man_power] demonstrates such operations in the process of calculating the
 	     available man-power of a company in a given time interval.]]
 	[[advanced][[link boost_itl.examples.user_groups User groups]][__itv_map__]
 		[Example [*user_groups] shows how interval_maps can be unified or 
@@ -112,6 +122,77 @@ in the introductory [link boost_itl.introduction.interval_combining_styles Inter
 [example_interval_container]
 [endsect]
 
+[section Overlap counter]
+
+Example [*overlap counter] provides the simplest application
+of an interval_map that maps intervals to integers. 
+An interval_map<int,int> serves as an overlap counter
+if we only add interval value pairs that carry 1 as
+associated value.
+
+Doing so, the associated values that are accumulated in
+the interval_map are just the number of overlaps of all added
+intervals.
+
+[import ../example/overlap_counter/overlap_counter.cpp]
+[example_overlap_counter]
+[endsect]
+
+[section:partys_height_average Party's height average]
+
+In the example `partys_height_average.cpp` we compute yet another aggregation:
+The average height of guests. This is done by defining a `class counted_sum` 
+that sums up heights and counts the numer of guests
+via an `operator +=`.
+
+Based on the `operator +=` we can aggregate counted sums on addition
+of interval value pairs into an interval_map.
+
+[import ../example/partys_height_average/partys_height_average.cpp]
+[example_partys_height_average]
+
+Required for `class counted_sum` is a default constructor 
+`counted_sum()`and
+an `operator ==` to test equality.
+To enable additive aggregation on overlap also
+an `operator +=` is needed.
+
+Note that no `operator -=` for a subtraction of `counted_sum` values
+is defined. So you can only add to the 
+`interval_map<ptime, counted_sum>`
+but not subtract from it.
+
+In many real world applications only addition is needed and user 
+defined classes will work fine, if they only implement 
+`operator +=`. Only if any of the `operator`s `-=` or `-`
+is called on the interval_map, the user defined class has to
+implement it's own `operator -=` to provide the subractive
+aggreagtion on overlap.
+
+[endsect]
+
+
+[section:partys_tallest_guests Party's tallest guests]
+
+Defining `operator +=` (and `-=`) is proably the most important
+method to implement arbitrary kinds of user defined aggregations.
+An alternative way to choose a desired aggregation is to
+instantiate an interval_map class template with an 
+appropriate ['*aggregation functor*]. For the most common 
+kinds of aggregation the [*itl]
+provides the such functors as shown in the example.
+
+Example `partys_tallest_guests.cpp` also demonstrates 
+the difference between an __itv_map__
+that joins intervals for equal associated values and a
+__spl_itv_map__ that preserves all borders of inserted
+intervals.
+
+[import ../example/partys_tallest_guests/partys_tallest_guests.cpp]
+[example_partys_tallest_guests]
+
+[endsect]
+
 [section Time grids for months and weeks]
 
 A __spl_itv_set__ preserves all interval borders on insertion
@@ -139,7 +220,7 @@ representing a month and week time grid.
 
 __Itv_sets__ and __itv_maps__ can be filled and manipulated using
 set style operations such as union `+=`, difference `-=` and 
-intersection `*=`.
+intersection `&=`.
 
 In this example [*man power] a number of those operations are
 demonstrated in the process of calculation the available working 
@@ -163,10 +244,10 @@ health inshurance and financial data.
 The membership for each user in one of the user groups has a time
 interval of validity. The group membership begins and ends.
 
-* Using a union operation `+=` we can have an overview over the unified
+* Using a union operation `+` we can have an overview over the unified
   user groups and the memebership dates of employees.
 
-* Computing an intersection `*=` shows who is member of both med_users 
+* Computing an intersection `&` shows who is member of both med_users 
   and admin_users at what times.
 
 [import ../example/user_groups/user_groups.cpp]

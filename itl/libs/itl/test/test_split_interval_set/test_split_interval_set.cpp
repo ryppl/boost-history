@@ -5,7 +5,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#define BOOST_TEST_MODULE itl::interval_set unit test
+#define BOOST_TEST_MODULE itl::split_interval_set unit test
 #include <string>
 #include <boost/mpl/list.hpp>
 #include <boost/test/unit_test.hpp>

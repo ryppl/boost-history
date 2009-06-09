@@ -20,19 +20,20 @@ you arrive at the idea of interval_sets that the *itl* provides.
 
 Interval containers of the *itl* have been developed initially at 
 [@http://www.cortex-software.de/desktopdefault.aspx Cortex Software GmbH]
-to solve problems related to date interval
+to solve problems related to date and time interval
 computations in the context of a Hospital Information System.
 Time intervals with associated values like ['amount of invoice]
 or ['set of therapies] had to be maipulated in statistics,
 billing programs and therapy scheduling programs. 
-So the *itl* emerged out of those industrial use cases and
-extracts a generic library that helps to solve common
-problems from the time domain more easiely.
+So the *itl* emerged out of those industrial use cases.
+It extracts generic code that helps to solve common
+problems from the date and time problem domain and can be
+beneficial in other fields as well.
 
 From those use cases, specifically the computations for
 statistics, also stems the quite useful idea of ['aggregating
 associated] values, when ['intervals overlap]. This idea is
-fundamental for the way interval_maps of the *itl* are
+fundamental for the way *itl's* interval_maps are
 designed.
 
 
