@@ -23,8 +23,8 @@ namespace detail {
 /** Edge type */
 template <typename Result, typename Vertex>
 struct func_graph_edge {
-    typedef typename Result result_type;
-    typedef typename Vertex vertex_descriptor;
+    typedef Result result_type;
+    typedef Vertex vertex_descriptor;
 
     func_graph_edge(result_type rslt,
                     vertex_descriptor src,
@@ -32,16 +32,10 @@ struct func_graph_edge {
         : result(rslt), source(src), target(trg)
     { }
 
-    vertex_descriptor source() const
-    { return source; }
-
-    vertex_descriptor target() const
-    { return target; }
-
     result_type result;
     vertex_descriptor source;
     vertex_descriptor target;
-}
+};
 
 }   // detail namespace
 
@@ -55,8 +49,9 @@ struct function_graph_base {
 
     typedef Func function_type;
     typedef typename function_type::first_argument_type vertex_type;
-    typedef typename func_graph_edge<function_type::result_type,
-                                     vertex_type> edge_type;
+    typedef typename function_type::result_type result_type;
+    typedef typename detail::func_graph_edge<result_type,
+                                             vertex_type> edge_type;
 
     /** Constructor - Default */
     function_graph_base()
@@ -68,7 +63,7 @@ struct function_graph_base {
     { }
 
     // Allow access to the function edge_ holds, not edge_ itself.
-    edge_type edge (vertex_type v1, vertex_type v2) const
+    result_type edge (vertex_type v1, vertex_type v2) const
     { return edge_(v1, v2); }
 
     function_type edge_;
@@ -91,16 +86,17 @@ template <typename T> struct function_graph { };
  * set_edge is part of the interface. Paired with it is the default constructor.
  */
 template <typename Result, typename Vertex>
-struct function_graph <function <Result(Vertex, Vertex)> >
-    : public function_graph_base <function <Result(Vertex, Vertex)> >
+struct function_graph<function<Result(Vertex, Vertex)> >
+    : public function_graph_base<function<Result(Vertex, Vertex)> >
 {
-    friend 
-    typedef function_graph_base <function <Result(Vertex, Vertex)> > Base;
+    typedef function_graph_base<function<Result(Vertex, Vertex)> > Base;
+    typedef function_graph<function<Result(Vertex, Vertex)> > This;
 public:
 
     typedef typename Base::function_type function_type;
     typedef typename Base::vertex_type vertex_descriptor;
     typedef typename Base::edge_type edge_descriptor;
+    typedef typename Base::result_type result_type;
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
@@ -134,10 +130,22 @@ struct function_graph <Result(Vertex, Vertex)>
 
 
 /**
- * source is part of the incedence graph concept. It returns the
+ * source(e, g) and target(e, g) are part of the incedence graph concept.
  */
 
+template <typename Result, typename Vertex>
+Vertex source(detail::func_graph_edge<Result, Vertex> const& e,
+              function_graph<function<Result(Vertex, Vertex)> > const& g)
+{
+    return e.source;
+}
 
+template <typename Result, typename Vertex>
+Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
+              function_graph<function<Result(Vertex, Vertex)> > const& g)
+{
+    return e.target;
+}
 
 
 
@@ -150,37 +158,29 @@ struct function_graph <Result(Vertex, Vertex)>
 // Method of dealing with the different types of edge returns.
 namespace detail {
 
-// Defaults to a function that always returns a value (ie, a complete graph)
-//template <typename Edge>
-//std::pair<Edge, bool> get_edge_pair(Edge const& edge)
-//{ return std::make_pair(edge, true); }
+// Defaults to a function that always returns an object (ie, a complete graph)
+template <typename Result>
+bool edge_exists(Result const& result)
+{ return true; }
 // Functions returning a boolean result are redundant
-//template<>
-//std::pair<bool, bool> get_edge_pair<bool>(bool const& edge)
-//{ return std::make_pair(edge, edge); }
-// optional is being considered
-/*
 template<>
-std::pair<Edge, bool> get_edge_pair<optional<?> >(optional<?> edge);*/
-    
-
+bool edge_exists<bool>(bool const& result)
+{ return result; }
 
 }   // detail namespace
 
-template <typename Edge, typename Vertex>
-std::pair<typename function_graph<function<Edge(Vertex, Vertex)> >
-          ::edge_descriptor,
-          bool>
-edge(typename function_graph<function<Edge(Vertex, Vertex)> >
-     ::vertex_descriptor u,
-     typename function_graph<function<Edge(Vertex, Vertex)> >
-     ::vertex_descriptor v,
-     function_graph<function<Edge(Vertex, Vertex)> > const& g)
+#define FUNC_GRAPH function_graph<function<Result(Vertex, Vertex)> >
+
+template <typename Result, typename Vertex>
+std::pair<typename FUNC_GRAPH::edge_descriptor, bool>
+edge(typename FUNC_GRAPH::vertex_descriptor u,
+     typename FUNC_GRAPH::vertex_descriptor v,
+     FUNC_GRAPH const& g)
 {
-    typedef typename function_graph<function<Edge(Vertex, Vertex)> > graph;
-    typedef typename graph::edge_descriptor;
-    edge_descriptor e = graph.edge(u, v);
-    return detail::get_edge_pair<edge_descriptor>(e);
+    typedef FUNC_GRAPH graph_type;
+    typedef typename FUNC_GRAPH::edge_descriptor edge_descriptor;
+    edge_descriptor e(g.edge(u, v), u, v);
+    return std::make_pair(e, detail::edge_exists(e.result));
 }
 
 }   // boost namespace
