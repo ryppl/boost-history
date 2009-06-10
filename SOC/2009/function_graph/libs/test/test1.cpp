@@ -4,43 +4,92 @@
 
 #include <iostream>
 #include <boost/function.hpp>
+#include <boost/optional.hpp>
 #include <functional>
 #include <algorithm>
 #include <vector>
 #include <utility>
 #include "function_graph.hpp"
 #include <cassert>
+#include <cmath>
 
+
+////////
+// Boolean function
 template <typename T>
 struct less_than {
     bool operator() (T a, T b) { return a < b; }
 };
 
+////////
+// Normal function
+template <typename T>
+struct sum {
+    int operator() (T a, T b) { return a + b; }
+};
+
+////////
+// optional<T> function - returns difference if a and b differ by less than 5
+struct difference_within_five {
+    boost::optional<int> operator() (int a, int b) {
+        int diff_check = a - b;
+        
+        boost::optional<int> difference;
+        if(diff_check < 5) difference = diff_check;
+        //std::cerr << a << ":" << b << ":" << diff_check << ":" << difference << "\n";
+        return difference;
+    }
+};
+
+
 int main()
 {
     ////////
-    // Create a boost function and function graph.
-    typedef boost::function<bool(int,int)> function_type;
-    typedef boost::function_graph<function_type> graph;
-    typedef graph::edge_descriptor edge_descriptor;
-    function_type f = less_than<int>();
-    graph funcGraph(f);
-    graph::vertex_descriptor x = 1;
-    graph::vertex_descriptor y = 2;
+    // Create typedefs for functions and function graphs
+    typedef boost::function<bool(int,int)> function_boolean;
+    typedef boost::function_graph<function_boolean> graph_boolean;
+
+    typedef boost::function<int(int,int)> function_normal;
+    typedef boost::function_graph<function_normal> graph_normal;
+
+    typedef boost::function<boost::optional<int>(int,int)> function_optional;
+    typedef boost::function_graph<function_optional> graph_optional;
+
 
     ////////
-    // Assert an edge taken from 
-    // Note that edge().first is the edge object
-    graph::edge_descriptor e = edge(x, y, funcGraph).first;
-    assert(source(e,funcGraph) == x);
-    assert(target(e,funcGraph) == y);
+    // Create functions, graphs and edges
+    function_boolean f = less_than<int>();
+    graph_boolean funcGraph_boolean(f);
+    graph_boolean::vertex_descriptor x = 1;
+    graph_boolean::vertex_descriptor y = 2;
+
+    function_normal g = sum<int>();
+    graph_normal funcGraph_normal(g);
+    graph_normal::vertex_descriptor u = 1;
+    graph_normal::vertex_descriptor v = 2;
+
+    function_optional h = difference_within_five();
+    graph_optional funcGraph_optional(h);
+    graph_optional::vertex_descriptor r = 1;
+    graph_optional::vertex_descriptor s = 2;
+
 
     ////////
-    // Check the adjacency matrix edge
-    /*std::pair<edge_descriptor, bool> edge_pair = boost::edge(1, 2, funcGraph);
-    std::cout << edge_pair.first << "\n";*/
+    // Assert all edges
+    graph_boolean::edge_descriptor e1 = edge(x, y, funcGraph_boolean).first;
+    assert(source(e1, funcGraph_boolean) == x);
+    assert(target(e1, funcGraph_boolean) == y);
+    assert(e1.result == (1 < 2));
 
-    
+    graph_normal::edge_descriptor e2 = edge(u, v, funcGraph_normal).first;
+    assert(source(e2, funcGraph_normal) == u);
+    assert(target(e2, funcGraph_normal) == v);
+    assert(e2.result == (u + v));
+
+    graph_optional::edge_descriptor e3 = edge(r, s, funcGraph_optional).first;
+    assert(source(e3, funcGraph_optional) == r);
+    assert(target(e3, funcGraph_optional) == s);
+    assert(e2.result == -1);
     
     return 0;
 }

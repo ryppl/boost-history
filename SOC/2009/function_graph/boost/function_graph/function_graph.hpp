@@ -155,19 +155,28 @@ Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
  * specialization to account for functions that use bool and optional<T>.
  */
 
-// Method of dealing with the different types of edge returns.
-namespace detail {
+#define FG_EDGE_BOOL detail::func_graph_edge<Result, Vertex>
 
-// Defaults to a function that always returns an object (ie, a complete graph)
-template <typename Result>
-bool edge_exists(Result const& result)
-{ return true; }
-// Functions returning a boolean result are redundant
-template<>
-bool edge_exists<bool>(bool const& result)
-{ return result; }
+template <typename Vertex, typename Result>
+std::pair<FG_EDGE_BOOL, bool> bind_edge(Result const& x, Vertex u, Vertex v)
+{ return std::make_pair(FG_EDGE_BOOL(x, u, v), true); }
 
-}   // detail namespace
+#undef FG_EDGE_BOOL
+#define FG_EDGE_BOOL detail::func_graph_edge<bool, Vertex>
+
+template <typename Vertex>
+std::pair<FG_EDGE_BOOL, bool> bind_edge(bool x, Vertex u, Vertex v)
+{ return std::make_pair(typename FG_EDGE_BOOL(x, u, v), x); }
+
+#undef FG_EDGE_BOOL
+#define FG_EDGE_BOOL detail::func_graph_edge<optional<OptType>, Vertex>
+
+template <typename OptType, typename Vertex>
+std::pair<FG_EDGE_BOOL, bool>
+bind_edge(optional<OptType> const& x, Vertex u, Vertex v)
+{ return std::make_pair(FG_EDGE_BOOL(x, u, v), (bool)x); }
+
+#undef FG_EDGE_BOOL
 
 #define FUNC_GRAPH function_graph<function<Result(Vertex, Vertex)> >
 
@@ -178,9 +187,9 @@ edge(typename FUNC_GRAPH::vertex_descriptor u,
      FUNC_GRAPH const& g)
 {
     typedef FUNC_GRAPH graph_type;
-    typedef typename FUNC_GRAPH::edge_descriptor edge_descriptor;
-    edge_descriptor e(g.edge(u, v), u, v);
-    return std::make_pair(e, detail::edge_exists(e.result));
+    typedef typename FUNC_GRAPH::result_type result_type;
+    result_type result = g.edge(u, v);
+    return bind_edge(result, u, v);
 }
 
 }   // boost namespace
