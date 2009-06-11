@@ -154,125 +154,103 @@ bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interva
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& x)
+void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    if(x.empty()) return;
+    if(addend.empty()) return;
 
-    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(x);
+    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(addend);
 
     if(!insertion.WAS_SUCCESSFUL)
     {
-        iterator fst_it = this->_set.lower_bound(x);
-        iterator end_it = this->_set.upper_bound(x);
+        iterator fst_it = this->_set.lower_bound(addend);
+        iterator end_it = this->_set.upper_bound(addend);
+		iterator lst_it = end_it; lst_it--;
+		iterator pre_it = fst_it;
+		if(pre_it != this->_set.begin())
+			--pre_it;
 
-        if(fst_it == this->_set.end())
-            fst_it = end_it;
+		// handle the beginning of the sequence of intervals of *this
+		// overlapped by insertee inverval 'addend'
+		interval_type leadGap = right_subtract(addend, *fst_it);
+        // this is a new interval that is a gap in the current map
+		if(!leadGap.empty())
+			this->_set.insert(pre_it, leadGap);
+		else
+		{
+			interval_type leftResid = right_subtract(*fst_it, addend);
+			if(!leftResid.empty())
+			{
+				fst_it->left_subtract(leftResid);
+				this->_set.insert(pre_it, leftResid);
+			}
+		}
 
-        iterator cur_it       = fst_it ;
-        interval_type cur_itv = *cur_it;
+		// handle the ending of the sequence of intervals of *this
+		// overlapped by insertee inverval 'addend'
+		interval_type endGap = left_subtract(addend, *lst_it);
 
-        interval_type leadGap; x.right_subtract(leadGap, cur_itv);
-        // this is a new Interval that is a gap in the current map
-        add_(leadGap);
-
-        // only for the first there can be a leftResid: a part of *it left of x
-        interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
-
-        // handle special case for first
-        interval_type interSec = cur_itv & x;
-
+		if(!endGap.empty())
+			this->_set.insert(lst_it, endGap);
+		else
+		{
+			//CL lst_it->left_subtract(rightResid, x);
+			interval_type rightResid = left_subtract(*lst_it, addend);
+			if(!rightResid.empty())
+			{
+				lst_it->right_subtract(rightResid);
+				this->_set.insert(lst_it, rightResid);
+			}
+		}
+        
         iterator snd_it = fst_it; snd_it++;
-        if(snd_it == end_it) 
-        {
-            // first == last
-
-            interval_type endGap; x.left_subtract(endGap, cur_itv);
-            // this is a new Interval that is a gap in the current map
-            add_(endGap);
-
-            // only for the last there can be a rightResid: a part of *it right of x
-            interval_type rightResid;  (*cur_it).left_subtract(rightResid, x);
-
-            this->_set.erase(cur_it);
-            add_(leftResid);
-            add_(interSec);
-            add_(rightResid);
-        }
-        else
-        {
-            this->_set.erase(cur_it);
-            add_(leftResid);
-            add_(interSec);
-
-            // shrink interval
-            interval_type x_rest(x);
-            x_rest.left_subtract(cur_itv);
-
-            insert_rest(x_rest, snd_it, end_it);
-        }
+        interval_type addend_rest = left_subtract(addend, *fst_it);
+        insert_rest(addend_rest, snd_it, end_it);
     }
 }
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& x_itv, iterator& it, iterator& end_it)
+void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& addend, iterator& it, iterator& end_it)
 {
 	interval_type left_gap, cur_itv;
-	while(it != end_it && !x_itv.empty())
+	iterator pred_it = it; --pred_it;
+	while(it != end_it)
 	{
         cur_itv = *it;
-		x_itv.right_subtract(left_gap, cur_itv);
-        add_(left_gap);
-		if(x_itv.contains(cur_itv))
-		{
-			x_itv.left_subtract(cur_itv);
-			++it;
-		}
-		else
-		{
-			interval_type intersec = cur_itv & x_itv;
-			interval_type right_over; 
-			cur_itv.left_subtract(right_over, x_itv);
-			this->_set.erase(it);
-			add_(intersec);
-			add_(right_over);
-			x_itv.clear();
-		}
-	}
+		left_gap = right_subtract(addend, cur_itv);
+		if(!left_gap.empty())
+			this->_set.insert(pred_it, left_gap);
 
-	if(!x_itv.empty())
-	{
-		interval_type right_gap; 
-		x_itv.left_subtract(right_gap, cur_itv);
-		// this is a new Interval that is a gap in the current map
-		add_(right_gap);
+		pred_it = it;
+		addend.left_subtract(cur_itv);
+		++it;
 	}
 }
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& x)
+void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-    if(x.empty()) return;
+    if(minuend.empty()) return;
     if(this->_set.empty()) return;
 
     iterator fst_it;
-    if(x.exclusive_less(*(this->_set.begin())))
+    if(minuend.exclusive_less(*(this->_set.begin())))
         return;
-    if(x.lower() < this->_set.begin()->upper())
+    if(minuend.lower() < this->_set.begin()->upper())
         fst_it = this->_set.begin();
     else
-        fst_it = this->_set.lower_bound(x);
+        fst_it = this->_set.lower_bound(minuend);
 
     if(fst_it==this->_set.end()) return;
-    iterator end_it = this->_set.upper_bound(x);
+    iterator end_it = this->_set.upper_bound(minuend);
     if(fst_it==end_it) return;
 
     iterator cur_it = fst_it ;
     interval_type cur_itv   = *cur_it ;
 
-    // only for the first there can be a leftResid: a part of *it left of x
-    interval_type leftResid;  cur_itv.right_subtract(leftResid, x);
+    // only for the first there can be a leftResid: a part of *it left of minuend
+    interval_type leftResid;  cur_itv.right_subtract(leftResid, minuend);
 
     // handle special case for first
 
@@ -280,8 +258,8 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_t
     if(snd_it == end_it) 
     {
         // first == last
-        // only for the last there can be a rightResid: a part of *it right of x
-        interval_type rightResid;  (*cur_it).left_subtract(rightResid, x);
+        // only for the last there can be a rightResid: a part of *it right of minuend
+        interval_type rightResid;  (*cur_it).left_subtract(rightResid, minuend);
 
         this->_set.erase(cur_it);
         add_(leftResid);
@@ -292,7 +270,7 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_t
         // first AND NOT last
         this->_set.erase(cur_it);
         add_(leftResid);
-        subtract_rest(x, snd_it, end_it);
+        subtract_rest(minuend, snd_it, end_it);
     }
     return;
 }
@@ -323,7 +301,6 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_rest(const int
         this->_set.insert(rightResid);
     }
 }
-
 
 //==============================================================================
 //= Equivalences and Orderings

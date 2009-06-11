@@ -155,58 +155,59 @@ bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const inte
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& x)
+void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
-    if(x.empty()) return;
+    if(addend.empty()) return;
 
-    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(x);
+    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(addend);
 
     if(insertion.WAS_SUCCESSFUL)
         handle_neighbours(insertion.ITERATOR);
     else
     {
-        typename ImplSetT::iterator fst_it = this->_set.lower_bound(x);
-        typename ImplSetT::iterator end_it = this->_set.upper_bound(x);
+        iterator fst_it = this->_set.lower_bound(addend),
+                 end_it = this->_set.upper_bound(addend);
+        iterator lst_it = end_it; --lst_it;
+        iterator snd_it = fst_it; ++snd_it;
 
-        typename ImplSetT::iterator it=fst_it, nxt_it=fst_it, victim;
-        interval_type leftResid;  (*it).right_subtract(leftResid,x);
-        interval_type rightResid;
+        interval_type leftResid  = right_subtract(*fst_it, addend);
+        interval_type rightResid =  left_subtract(*lst_it, addend);
 
-        while(it!=end_it)
-        { 
-            if((++nxt_it)==end_it) 
-                (*it).left_subtract(rightResid,x);
-            victim = it; it++; this->_set.erase(victim);
-        }
+		this->_set.erase(snd_it, end_it);
 
-        interval_type extended = x;
+        interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);
-        extended.extend(rightResid);
-        add_(extended);
+
+		*fst_it = extended;
     }
 }
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& x)
+void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
-    if(x.empty()) return;
-    typename ImplSetT::iterator fst_it = this->_set.lower_bound(x);
+    if(minuend.empty()) return;
+    iterator fst_it = this->_set.lower_bound(minuend);
     if(fst_it==this->_set.end()) return;
-    typename ImplSetT::iterator end_it = this->_set.upper_bound(x);
+    iterator end_it = this->_set.upper_bound(minuend);
+    iterator snd_it = fst_it; ++snd_it;
+    iterator lst_it = end_it; --lst_it;
+	iterator pre_it = fst_it;
+	if(pre_it != this->_set.begin())
+		--pre_it;
 
-    typename ImplSetT::iterator it=fst_it, nxt_it=fst_it, victim;
-    interval_type leftResid; (*it).right_subtract(leftResid,x);
-    interval_type rightResid;
+    interval_type leftResid = right_subtract(*fst_it, minuend);
+    interval_type rightResid; 
+	if(fst_it != end_it)
+		rightResid = left_subtract(*lst_it, minuend);
 
-    while(it!=end_it)
-    { 
-        if((++nxt_it)==end_it) (*it).left_subtract(rightResid,x);
-        victim = it; it++; this->_set.erase(victim);
-    }
+	this->_set.erase(fst_it, end_it);
 
-    add_(leftResid);
-    add_(rightResid);
+	if(!leftResid.empty())
+		pre_it = this->_set.insert(pre_it, leftResid);
+
+	if(!rightResid.empty())
+		this->_set.insert(pre_it, rightResid);
 }
 
 //-----------------------------------------------------------------------------

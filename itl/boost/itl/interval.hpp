@@ -1019,6 +1019,23 @@ struct exclusive_less {
 };
 
 
+//==============================================================================
+//= Subtraction
+//==============================================================================
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare> right_subtract(interval<DomainT,Compare>  left, 
+                                   const interval<DomainT,Compare>& right_subtrahend)
+{
+	return left.right_subtract(right_subtrahend);
+}
+
+template <class DomainT, ITL_COMPARE Compare>
+interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right, 
+                                  const interval<DomainT,Compare>& left_subtrahend)
+{
+	return right.left_subtract(left_subtrahend);
+}
+
 // ----------------------------------------------------------------------------
 // operators
 // ----------------------------------------------------------------------------
