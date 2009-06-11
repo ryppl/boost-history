@@ -192,9 +192,6 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
     iterator end_it = this->_set.upper_bound(minuend);
     iterator snd_it = fst_it; ++snd_it;
     iterator lst_it = end_it; --lst_it;
-	iterator pre_it = fst_it;
-	if(pre_it != this->_set.begin())
-		--pre_it;
 
     interval_type leftResid = right_subtract(*fst_it, minuend);
     interval_type rightResid; 
@@ -204,10 +201,10 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const valu
 	this->_set.erase(fst_it, end_it);
 
 	if(!leftResid.empty())
-		pre_it = this->_set.insert(pre_it, leftResid);
+		this->_set.insert(leftResid);
 
 	if(!rightResid.empty())
-		this->_set.insert(pre_it, rightResid);
+		this->_set.insert(rightResid);
 }
 
 //-----------------------------------------------------------------------------

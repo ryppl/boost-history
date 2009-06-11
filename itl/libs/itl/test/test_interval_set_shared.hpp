@@ -321,6 +321,7 @@ void interval_set_isolate_4_bicremental_continuous_types()
     IntervalSet<T> iso_set = IntervalSet<T>(I0_4I);
     IntervalSet<T> gap_set;
     gap_set.add(C0_2D).add(C2_4D);
+    BOOST_CHECK_EQUAL( true, true );
     iso_set -= gap_set;
     
     BOOST_CHECK_EQUAL( iso_set.cardinality(), static_cast<size_T>(3) );

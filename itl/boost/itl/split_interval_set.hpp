@@ -228,79 +228,30 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_ty
 }
 
 
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(minuend.empty()) return;
-    if(this->_set.empty()) return;
-
-    iterator fst_it;
-    if(minuend.exclusive_less(*(this->_set.begin())))
-        return;
-    if(minuend.lower() < this->_set.begin()->upper())
-        fst_it = this->_set.begin();
-    else
-        fst_it = this->_set.lower_bound(minuend);
-
+    iterator fst_it = this->_set.lower_bound(minuend);
     if(fst_it==this->_set.end()) return;
     iterator end_it = this->_set.upper_bound(minuend);
-    if(fst_it==end_it) return;
+    iterator snd_it = fst_it; ++snd_it;
+    iterator lst_it = end_it; --lst_it;
 
-    iterator cur_it = fst_it ;
-    interval_type cur_itv   = *cur_it ;
+    interval_type leftResid = right_subtract(*fst_it, minuend);
+    interval_type rightResid; 
+	if(fst_it != end_it)
+		rightResid = left_subtract(*lst_it, minuend);
 
-    // only for the first there can be a leftResid: a part of *it left of minuend
-    interval_type leftResid;  cur_itv.right_subtract(leftResid, minuend);
+	this->_set.erase(fst_it, end_it);
+	
+	if(!leftResid.empty())
+		this->_set.insert(leftResid);
 
-    // handle special case for first
-
-    iterator snd_it = fst_it; snd_it++;
-    if(snd_it == end_it) 
-    {
-        // first == last
-        // only for the last there can be a rightResid: a part of *it right of minuend
-        interval_type rightResid;  (*cur_it).left_subtract(rightResid, minuend);
-
-        this->_set.erase(cur_it);
-        add_(leftResid);
-        add_(rightResid);
-    }
-    else
-    {
-        // first AND NOT last
-        this->_set.erase(cur_it);
-        add_(leftResid);
-        subtract_rest(minuend, snd_it, end_it);
-    }
-    return;
+	if(!rightResid.empty())
+		this->_set.insert(rightResid);
 }
 
-
-
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_rest(const interval_type& x_itv, iterator& snd_it, iterator& end_it)
-{
-    iterator it=snd_it, nxt_it=snd_it; nxt_it++;
-
-    while(nxt_it!=end_it)
-    {
-        { iterator victim; victim=it; it++; this->_set.erase(victim); }
-        nxt_it=it; nxt_it++;
-    }
-
-    // it refers the last overlaying intervals of x_itv
-    const interval_type&  cur_itv = *it ;
-
-    interval_type rightResid; cur_itv.left_subtract(rightResid, x_itv);
-
-    if(rightResid.empty())
-        this->_set.erase(it);
-    else
-    {
-        this->_set.erase(it);
-        this->_set.insert(rightResid);
-    }
-}
 
 //==============================================================================
 //= Equivalences and Orderings
