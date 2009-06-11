@@ -12,8 +12,10 @@
 #define BOOST_PROPERTY_TREE_PTREE_FWD_HPP_INCLUDED
 
 #include <boost/config.hpp>
+#include <boost/optional/optional_fwd.hpp>
 #include <functional>           // for std::less
 #include <memory>               // for std::allocator
+#include <string>
 
 namespace boost { namespace property_tree
 {
@@ -21,14 +23,12 @@ namespace boost { namespace property_tree
         template <typename T> struct less_nocase;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
     // Classes
 
-    template <class Key, class Data,
-              class KeyCompare = std::less<Key>,
-              class Allocator = std::allocator<Data>>
+    template < class Key, class Data, class KeyCompare = std::less<Key> >
     class basic_ptree;
 
+    template <typename T>
     struct id_translator;
 
     template <typename String, typename Translator>
@@ -36,22 +36,32 @@ namespace boost { namespace property_tree
 
     // We'll want to do this with concepts in C++0x.
 #if 0
-    concept PropertyTreePath<Path> {
-      // The key type for which this path works.
-      typedef key_type;
-      // Return the key and index that the first segment of the path name.
-      // Split the head off the state.
-      std::pair<key_type, std::size_t> Path::reduce();
+    concept PropertyTreePath<class Path> {
+        // The key type for which this path works.
+        typename key_type;
+        // Return the key that the first segment of the path names.
+        // Split the head off the state.
+        key_type Path::reduce();
 
-      // Return true if the path is empty.
-      bool Path::empty();
+        // Return true if the path is empty.
+        bool Path::empty() const;
 
-      // Return true if the path contains a single element.
-      bool Path::single();
+        // Return true if the path contains a single element.
+        bool Path::single() const;
+
+        // Dump as a std::string, for exception messages.
+        std::string Path::dump() const;
     }
-    concept PropertyTreeKey<Key> {
+    concept PropertyTreeKey<class Key> {
         PropertyTreePath path;
         requires SameType<Key, PropertyTreePath<path>::key_type>;
+    }
+    concept PropertyTreeTranslator<class Tr> {
+        typename internal_type;
+        typename external_type;
+
+        boost::optional<external_type> Tr::get_value(internal_type);
+        boost::optional<internal_type> Tr::put_value(external_type);
     }
 #endif
     /// If you want to use a custom key type, specialize this struct for it
@@ -62,24 +72,23 @@ namespace boost { namespace property_tree
     struct path_of;
 
     /// Specialize this struct to specify a default translator between the data
-    /// in a tree whose data_type is TreeData, and the external data_type
+    /// in a tree whose data_type is Internal, and the external data_type
     /// specified in a get_value, get, put_value or put operation.
-    /// This is already specialized for TreeData being std::basic_string.
-    template <typename TreeData, typename External>
+    /// This is already specialized for Internal being std::basic_string.
+    template <typename Internal, typename External>
     struct translator_between;
 
     class ptree_error;
     class ptree_bad_data;
     class ptree_bad_path;
 
-    ///////////////////////////////////////////////////////////////////////////
     // Typedefs
 
     /** Implements a path using a std::string as the key. */
-    typedef string_path<std::string, id_translator> path;
+    typedef string_path<std::string, id_translator<std::string> > path;
 
     /** Implements a path using a std::wstring as the key. */
-    typedef string_path<std::wstring, id_translator> wpath;
+    typedef string_path<std::wstring, id_translator<std::wstring> > wpath;
 
     /**
      * A property tree with std::string for key and data, and default
@@ -113,22 +122,21 @@ namespace boost { namespace property_tree
         wiptree;
 #endif
 
-    ///////////////////////////////////////////////////////////////////////////
     // Free functions
 
     /**
      * Swap two property tree instances.
      */
-    template<class K, class D, class C, class A>
-    void swap(basic_ptree<K, D, C, A> &pt1,
-              basic_ptree<K, D, C, A> &pt2);
-
-    /** Join two string_path objects. */
-    template <typename String, typename Translator>
-    string_path<String, Translator> operator /(
-                                  const string_path<String, Translator> &p1,
-                                  const string_path<String, Translator> &p2);
+    template<class K, class D, class C>
+    void swap(basic_ptree<K, D, C> &pt1,
+              basic_ptree<K, D, C> &pt2);
 
 } }
+
+
+#if !defined(BOOST_PROPERTY_TREE_DOXYGEN_INVOKED)
+    // Throwing macro to avoid no return warnings portably
+#   define BOOST_PROPERTY_TREE_THROW(e) { throw_exception(e); std::exit(1); }
+#endif
 
 #endif

@@ -38,14 +38,13 @@ namespace boost { namespace property_tree
      * @param file_version file_version for the archive.
      * @post @c ar will contain the serialized form of @c t.
      */
-    template<class Archive, class D, class K,
-             class C, class A, class P, class X>
+    template<class Archive, class K, class D, class C>
     inline void save(Archive &ar,
-                     const basic_ptree<D, K, C, A, P, X> &t,
+                     const basic_ptree<K, D, C> &t,
                      const unsigned int file_version)
     {
         using namespace boost::serialization;
-        stl::save_collection<Archive, basic_ptree<D, K, C, A, P, X> >(ar, t);
+        stl::save_collection<Archive, basic_ptree<K, D, C> >(ar, t);
         ar << make_nvp("data", t.data());
     }
 
@@ -62,24 +61,23 @@ namespace boost { namespace property_tree
      * @param file_version file_version for the archive.
      * @post @c t will contain the de-serialized data from @c ar.
      */
-    template<class Archive, class D, class K,
-             class C, class A, class P, class X>
+    template<class Archive, class K, class D, class C>
     inline void load(Archive &ar,
-                     basic_ptree<D, K, C, A, P, X> &t,
+                     basic_ptree<K, D, C> &t,
                      const unsigned int file_version)
     {
         using namespace boost::serialization;
         // Load children
         stl::load_collection<Archive,
-                             basic_ptree<D, K, C, A, P, X>,
+                             basic_ptree<K, D, C>,
                              stl::archive_input_seq<Archive,
-                                 basic_ptree<D, K, C, A, P, X> >,
+                                 basic_ptree<K, D, C> >,
                              stl::no_reserve_imp<
-                                 basic_ptree<D, K, C, A, P, X> >
+                                 basic_ptree<K, D, C> >
                             >(ar, t);
 
         // Load data (must be after load_collection, as it calls clear())
-        ar >> serialization::make_nvp("data", t.data());
+        ar >> make_nvp("data", t.data());
     }
 
     /**
@@ -90,10 +88,9 @@ namespace boost { namespace property_tree
      * @param t The property tree to load or save.
      * @param file_version file_version for the archive.
      */
-    template<class Archive, class D, class K,
-             class C, class A, class P, class X>
+    template<class Archive, class K, class D, class C>
     inline void serialize(Archive &ar,
-                          basic_ptree<D, K, C, A, P, X> &t,
+                          basic_ptree<K, D, C> &t,
                           const unsigned int file_version)
     {
         using namespace boost::serialization;

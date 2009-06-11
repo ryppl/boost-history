@@ -11,6 +11,9 @@
 #define BOOST_PROPERTY_TREE_DETAIL_PTREE_UTILS_HPP_INCLUDED
 
 #include <boost/limits.hpp>
+#include <boost/type_traits/integral_constant.hpp>
+#include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/and.hpp>
 #include <string>
 #include <algorithm>
 #include <locale>
@@ -33,6 +36,21 @@ namespace boost { namespace property_tree { namespace detail
                                                 t2.begin(), t2.end(), *this);
         }
     };
+
+    template <typename Ch>
+    struct is_character : public boost::false_type {};
+    template <>
+    struct is_character<char> : public boost::true_type {};
+    template <>
+    struct is_character<wchar_t> : public boost::true_type {};
+
+
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(internal_type)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(external_type)
+    template <typename T>
+    struct is_translator : public boost::mpl::and_<
+        has_internal_type<T>, has_external_type<T> > {};
+
 
 
     // Naively convert narrow string to another character type

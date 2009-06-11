@@ -9,28 +9,24 @@
 // For more information, see www.boost.org
 // ----------------------------------------------------------------------------
 
-/// This header contains definition of basic_ptree class template and
-/// supporting definitions.
-
 #ifndef BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 #define BOOST_PROPERTY_TREE_PTREE_HPP_INCLUDED
 
 #include <boost/property_tree/ptree_fwd.hpp>
+#include <boost/property_tree/string_path.hpp>
+#include <boost/property_tree/stream_translator.hpp>
+#include <boost/property_tree/exceptions.hpp>
 #include <boost/property_tree/detail/ptree_utils.hpp>
 
 #include <boost/multi_index_container.hpp>
+#include <boost/multi_index/indexed_by.hpp>
 #include <boost/multi_index/sequenced_index.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 #include <boost/multi_index/member.hpp>
-
+#include <boost/utility/enable_if.hpp>
+#include <boost/throw_exception.hpp>
 #include <boost/optional.hpp>
-
 #include <utility>                  // for std::pair
-
-#if !defined(BOOST_PROPERTY_TREE_DOXYGEN_INVOKED)
-    // Throwing macro to avoid no return warnings portably
-#   define BOOST_PROPERTY_TREE_THROW(e) { throw_exception(e); std::exit(1); }
-#endif
 
 namespace boost { namespace property_tree
 {
@@ -44,13 +40,11 @@ namespace boost { namespace property_tree
      * Key equivalency is defined by @p KeyCompare, a predicate defining a
      * strict weak ordering.
      *
-     * All data structures are allocated with some version of @p Allocator.
-     *
      * Property tree defines a Container-like interface to the (key-node) pairs
      * of its direct sub-nodes. The iterators are bidirectional. The sequence
      * of nodes is held in insertion order, not key order.
      */
-    template<class Key, class Data, class KeyCompare, class Allocator>
+    template<class Key, class Data, class KeyCompare>
     class basic_ptree
     {
 #if defined(BOOST_PROPERTY_TREE_DOXYGEN_INVOKED)
@@ -61,60 +55,41 @@ namespace boost { namespace property_tree
          * Simpler way to refer to this basic_ptree\<C,K,P,A\> type.
          * Note that this is private, and made public only for doxygen.
          */
-        typedef basic_ptree<Key, Data, KeyCompare, Allocator> self_type;
+        typedef basic_ptree<Key, Data, KeyCompare> self_type;
 
     public:
         // Basic types
         typedef Key                                  key_type;
         typedef Data                                 data_type;
         typedef KeyCompare                           key_compare;
-        typedef Allocator                            allocator_type;
 
         // Container view types
-        typedef std::pair<Key, self_type>            value_type;
-        typedef typename Allocator::size_type        size_type;
+        typedef std::pair<const Key, self_type>      value_type;
+        typedef std::size_t                          size_type;
 
-    private:
-        struct by_name {};
-        // The actual child container.
-        typedef multi_index_container<value_type,
-            indexed_by<
-                multi_index::sequenced<>,
-                multi_index::ordered_non_unique<multi_index::tag<by_name>,
-                    multi_index::member<value_type, key_type,
-                                        &value_type::first>,
-                    key_compare
-                >
-            >
-        > base_container;
-        // The by-name lookup index.
-        typedef typename base_container::template index<by_name>::type
-            by_name_index;
-
-    public:
-        // More container view types
-        typedef typename base_container::iterator         iterator;
-        typedef typename base_container::const_iterator   const_iterator;
-        typedef typename base_container::reverse_iterator reverse_iterator;
-        typedef typename base_container::const_reverse_iterator
-                                                        const_reverse_iterator;
+        // The problem with the iterators is that I can't make them complete
+        // until the container is complete. Sucks. Especially for the reverses.
+        class iterator;
+        class const_iterator;
+        class reverse_iterator;
+        class const_reverse_iterator;
 
         // Associative view types
-        typedef typename by_name_index::iterator          assoc_iterator;
-        typedef typename by_name_index::const_iterator    const_assoc_iterator;
+        class assoc_iterator;
+        class const_assoc_iterator;
 
         // Property tree view types
         typedef typename path_of<Key>::type          path_type;
 
 
-        // The big four
+        // The big five
 
         /** Creates a node with no children and default-constructed data. */
-        explicit basic_ptree(allocator_type alloc = allocator_type());
+        basic_ptree();
         /** Creates a node with no children and a copy of the given data. */
-        explicit basic_ptree(const data_type &data,
-                             allocator_type alloc = allocator_type());
+        explicit basic_ptree(const data_type &data);
         basic_ptree(const self_type &rhs);
+        ~basic_ptree();
         /** Basic guarantee only. */
         self_type &operator =(const self_type &rhs);
 
@@ -238,8 +213,9 @@ namespace boost { namespace property_tree
         /** Count the number of direct children with the given key. */
         size_type count(const key_type &key) const;
 
-        /** Erase all direct children with the given key. */
-        void erase(const key_type &key);
+        /** Erase all direct children with the given key and return the count.
+         */
+        size_type erase(const key_type &key);
 
         /** Get the iterator that points to the same element as the argument.
          * @note A valid assoc_iterator range (a, b) does not imply that
@@ -251,7 +227,7 @@ namespace boost { namespace property_tree
          * @note A valid const_assoc_iterator range (a, b) does not imply that
          *       (to_iterator(a), to_iterator(b)) is a valid range.
          */
-        const_iterator to_iterator(const_assoc_iterator it);
+        const_iterator to_iterator(const_assoc_iterator it) const;
 
         // Property tree view
 
@@ -321,8 +297,8 @@ namespace boost { namespace property_tree
          * @throw ptree_bad_data if the conversion fails.
          */
         template<class Type, class Translator>
-        Type get_value(Translator tr =
-            typename translator_between<data_type, Type>::type()) const;
+        typename boost::enable_if<detail::is_translator<Translator>, Type>::type
+        get_value(Translator tr) const;
 
         /** Take the value of this node and attempt to translate it to a
          * @c Type object using the default translator.
@@ -338,12 +314,29 @@ namespace boost { namespace property_tree
         template<class Type, class Translator>
         Type get_value(const Type &default_value, Translator tr) const;
 
+        /** Make get_value do the right thing for string literals. */
+        template <class Ch, class Translator>
+        typename boost::enable_if<
+            detail::is_character<Ch>,
+            std::basic_string<Ch>
+        >::type
+        get_value(const Ch *default_value, Translator tr) const;
+
         /** Take the value of this node and attempt to translate it to a
          * @c Type object using the default translator. Return @p default_value
          * if this fails.
          */
         template<class Type>
-        Type get_value(const Type &default_value) const;
+        typename boost::disable_if<detail::is_translator<Type>, Type>::type
+        get_value(const Type &default_value) const;
+
+        /** Make get_value do the right thing for string literals. */
+        template <class Ch>
+        typename boost::enable_if<
+            detail::is_character<Ch>,
+            std::basic_string<Ch>
+        >::type
+        get_value(const Ch *default_value) const;
 
         /** Take the value of this node and attempt to translate it to a
          * @c Type object using the supplied translator. Return boost::null if
@@ -375,7 +368,8 @@ namespace boost { namespace property_tree
 
         /** Shorthand for get_child(path).get_value(tr). */
         template<class Type, class Translator>
-        Type get(const path_type &path, Translator tr) const;
+        typename boost::enable_if<detail::is_translator<Translator>, Type>::type
+        get(const path_type &path, Translator tr) const;
 
         /** Shorthand for get_child(path).get_value\<Type\>(). */
         template<class Type>
@@ -391,13 +385,30 @@ namespace boost { namespace property_tree
                  const Type &default_value,
                  Translator tr) const;
 
+        /** Make get do the right thing for string literals. */
+        template <class Ch, class Translator>
+        typename boost::enable_if<
+            detail::is_character<Ch>,
+            std::basic_string<Ch>
+        >::type
+        get(const path_type &path, const Ch *default_value, Translator tr)const;
+
         /** Shorthand for get_child(path, empty_ptree())
          *                    .get_value(default_value).
          * That is, return the translated value if possible, and the default
          * value if the node doesn't exist or conversion fails.
          */
         template<class Type>
-        Type get(const path_type &path, const Type &default_value) const;
+        typename boost::disable_if<detail::is_translator<Type>, Type>::type
+        get(const path_type &path, const Type &default_value) const;
+
+        /** Make get do the right thing for string literals. */
+        template <class Ch>
+        typename boost::enable_if<
+            detail::is_character<Ch>,
+            std::basic_string<Ch>
+        >::type
+        get(const path_type &path, const Ch *default_value) const;
 
         /** Shorthand for:
          * @code
@@ -405,9 +416,10 @@ namespace boost { namespace property_tree
          *   return node->get_value_optional(tr);
          * return boost::null;
          * @endcode
+         * That is, return the value if it exists and can be converted, or nil.
         */
         template<class Type, class Translator>
-        Type get_optional(const path_type &path, Translator tr) const;
+        optional<Type> get_optional(const path_type &path, Translator tr) const;
 
         /** Shorthand for:
          * @code
@@ -417,7 +429,7 @@ namespace boost { namespace property_tree
          * @endcode
         */
         template<class Type>
-        Type get_optional(const path_type &path) const;
+        optional<Type> get_optional(const path_type &path) const;
 
         /** Set the value of the node at the given path to the supplied value,
          * translated to the tree's data type. If the node doesn't exist, it is
@@ -471,14 +483,9 @@ namespace boost { namespace property_tree
     private:
         // Hold the data of this node
         data_type m_data;
-        // Hold the children
-        base_container m_children;
-
-        // Convenience
-        by_name_index& assoc() { return m_children.get<by_name>(); }
-        const by_name_index& assoc() const {
-            return m_children.get<by_name>();
-        }
+        // Hold the children - this is a void* because we can't complete the
+        // container type within the class.
+        void* m_children;
 
         // Getter tree-walk. Not const-safe! Gets the node the path refers to,
         // or null. Destroys p's value.
@@ -488,11 +495,18 @@ namespace boost { namespace property_tree
         // path, creating nodes as necessary. p is the path to the remaining
         // child.
         self_type& force_path(path_type& p);
+
+        // This struct contains typedefs for the concrete types.
+        struct subs;
+        friend struct subs;
+        friend class iterator;
+        friend class const_iterator;
+        friend class reverse_iterator;
+        friend class const_reverse_iterator;
     };
 
-} }
+}}
 
-// Include implementations
 #include <boost/property_tree/detail/ptree_implementation.hpp>
 
 #endif
