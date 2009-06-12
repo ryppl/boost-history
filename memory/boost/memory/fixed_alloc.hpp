@@ -202,7 +202,7 @@ public:
 		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= m_nChunkPerBlock);
 		BOOST_MEMORY_DBG_FILL(p, element_size());
 
-		m_freelist.push_front((FreeChunk*)p);
+		m_freelist.push_back((FreeChunk*)p); // NOTE: we don't use push_front! why?
 		if (--blk->nUsed == 0 && blk != m_lastBlock)
 			do_deallocate_block_(blk);
 	}
