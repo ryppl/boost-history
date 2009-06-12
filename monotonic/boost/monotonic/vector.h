@@ -35,12 +35,6 @@ namespace boost
 			template <class II>
 			vector(II F, II L, Allocator const &A)
 				: Vector(F,L,A) { }
-
-			void set_storage(storage_base &store)
-			{
-				this->allocator()
-				this->get_allocator().storage = &store;//(store);
-			}
 		};
 	}
 }
