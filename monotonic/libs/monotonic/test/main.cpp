@@ -7,6 +7,7 @@
 #include <boost/monotonic/set.h>
 
 #include <boost/timer.hpp>
+#include <boost/foreach.hpp>
 #include <iostream>
 
 using namespace std;
@@ -189,9 +190,136 @@ void test_alignment()
 	test_loop_std<short>();
 }
 
+template <class List>
+double test_list_speed_impl(size_t count, List &l0, List &l1, List &l2, List &both)
+{
+	boost::timer timer;
+	std::generate_n(std::back_inserter(l0), count, rand);
+	std::generate_n(std::back_inserter(l1), count, rand);
+	std::generate_n(std::back_inserter(l2), count, rand);
+	BOOST_FOREACH(int n, l0)
+	{
+		BOOST_FOREACH(int m, l1)
+		{
+			BOOST_FOREACH(int p, l2)
+			{
+				if (m == n && m == p)
+					both.push_back(m);
+			}
+		}
+	}
+	double elapsed = timer.elapsed();
+	cout << "test_list_speed[" << count << "]" << elapsed << endl;
+	return elapsed;
+}
+
+void test_list_speed()
+{
+	monotonic::inline_storage<1000000> *s = new monotonic::inline_storage<1000000>();
+	size_t count = 50;
+	double mt = 0;
+	double st = 0;
+
+	for (size_t n = 0; n < 10; ++n, count += 100)
+	{
+		srand(42);
+		// use monotonic::
+		boost::timer t0;
+		{
+			monotonic::list<int> l0(*s), l1(*s), l2(*s), both(*s);
+			mt += test_list_speed_impl(count, l0, l1, l2, both);
+		}
+		mt += t0.elapsed();
+
+		srand(42);
+		// use std::
+		boost::timer t1;
+		{
+			std::list<int> l0, l1, l2, both;
+			st += test_list_speed_impl(count, l0, l1, l2, both);
+		}
+		st += t1.elapsed();
+
+		s->reset();
+	}
+	cout << "test_list_speed: mono: " << mt << endl;
+	cout << "test_list_speed: std : " << st << endl;
+
+	delete s;
+}
+
+void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
+{
+	typedef monotonic::list<int> List;
+	typedef monotonic::map<int, List> Map;
+	Map map(storage);
+	for (size_t n = 0; n < count; ++n)
+	{
+		int random = rand();
+		Map::iterator iter = map.find(random);
+		if (iter == map.end())
+		{
+			map.insert(make_pair(random, List(storage)));
+		}
+		else
+		{
+			iter->second.push_back(n);
+		}
+	}
+}
+
+void test_map_list_impl_std(size_t count)
+{
+	typedef std::list<int> List;
+	typedef std::map<int, List> Map;
+	Map map;
+	for (size_t n = 0; n < count; ++n)
+	{
+		int random = rand();
+		Map::iterator iter = map.find(random);
+		if (iter == map.end())
+		{
+			map.insert(make_pair(random, List()));
+		}
+		else
+		{
+			iter->second.push_back(n);
+		}
+	}
+}
+
+// the purpose of this test is to simulate a `realtime system`
+// which does an amount of work each frame, then does a similar 
+// amount of work the next frame.
+void test_map_list_realtime()
+{
+	monotonic::inline_storage<100000> storage;
+	const size_t outter_loops = 500;
+	const size_t inner_loops = 500;
+
+	boost::timer t0;
+	for (int n = 0; n < outter_loops; ++n)
+	{
+		test_map_list_impl_mono(inner_loops, storage);	
+		storage.reset();
+	}
+	double e0 = t0.elapsed();
+	cout << "test_map_list: mono: " << e0 << endl;
+
+	boost::timer t1;
+	for (int n = 0; n < outter_loops; ++n)
+	{
+		test_map_list_impl_std(inner_loops);	
+	}
+	double e1 = t1.elapsed();
+	cout << "test_map_list: std: " << e1 << endl;
+}
+
 int main()
 {
+	test_map_list_realtime();
 	test_alignment();
+	test_list_speed();
 
 	test_copy();
 	test_ctors();
