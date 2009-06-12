@@ -6,6 +6,7 @@
 #pragma once
 
 #include <limits>
+#include <stdlib.h>
 #include <boost/monotonic/storage.h>
 
 namespace boost
