@@ -13,6 +13,43 @@
 using namespace std;
 using namespace boost;
 
+void test_basic()
+{
+	monotonic::inline_storage<1000*sizeof(int)> storage1;   // create local storage on the stack
+	monotonic::vector<int> v1(storage1);   // create a vector that uses this storage
+
+	for(int i = 0; i < 100; ++i)
+		v1.push_back(i);
+
+	size_t len = storage1.remaining();
+	monotonic::vector<int> copy(v1);
+	size_t len2 = storage1.remaining();
+
+	assert(copy == v1);
+	assert(len - len2 == 100*sizeof(int));
+
+
+	// create the storage that will be used for the various monotonic containers.
+	// while it is on the stack here, it could be on the heap as well.
+	monotonic::inline_storage<1000> storage;
+
+	// create a list that uses inline, monotonically-increasing storage
+	monotonic::list<int> list(storage);
+	list.push_back(100);
+	list.push_back(400);
+	list.erase(list.begin());
+
+	// a map from the same storage
+	monotonic::map<int, float> map(storage);
+	map[42] = 3.14f;
+	assert(map[42] == 3.14f);
+
+	// a set...
+	monotonic::set<float> set(storage);
+	set.insert(3.14f);
+	set.insert(-123.f);
+}
+
 void test_copy()
 {
 	monotonic::inline_storage<1000*sizeof(int)> storage;
@@ -209,7 +246,7 @@ double test_list_speed_impl(size_t count, List &l0, List &l1, List &l2, List &bo
 		}
 	}
 	double elapsed = timer.elapsed();
-	cout << "test_list_speed[" << count << "]" << elapsed << endl;
+	//cout << "test_list_speed[" << count << "]" << elapsed << endl;
 	return elapsed;
 }
 
@@ -248,6 +285,8 @@ void test_list_speed()
 	delete s;
 }
 
+// part of the test_map_list_realtime test.
+// this is to be like running part of a simulation.
 void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
 {
 	typedef monotonic::list<int> List;
@@ -269,6 +308,7 @@ void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
 	}
 }
 
+// same as test_map_list_impl_mono, but using std::containers
 void test_map_list_impl_std(size_t count)
 {
 	typedef std::list<int> List;
@@ -296,7 +336,7 @@ void test_map_list_impl_std(size_t count)
 void test_map_list_realtime()
 {
 	monotonic::inline_storage<1000000> storage;
-	const size_t outter_loops = 100*1000;
+	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 1000;
 
 	boost::timer t0;
@@ -314,53 +354,19 @@ void test_map_list_realtime()
 		test_map_list_impl_std(inner_loops);	
 	}
 	double e1 = t1.elapsed();
-	cout << "test_map_list: std: " << e1 << endl;
+	cout << "test_map_list:  std: " << e1 << endl;
 }
 
 int main()
 {
-	test_map_list_realtime();
-	test_alignment();
-	test_list_speed();
-
-	test_copy();
-	test_ctors();
 	test_speed();
 	test_speed_heap();
+	test_map_list_realtime();
+	test_alignment();
 
-	monotonic::inline_storage<1000*sizeof(int)> storage1;   // create local storage on the stack
-	monotonic::vector<int> v1(storage1);   // create a vector that uses this storage
-
-	for(int i = 0; i < 100; ++i)
-		v1.push_back(i);
-
-	size_t len = storage1.remaining();
-	monotonic::vector<int> copy(v1);
-	size_t len2 = storage1.remaining();
-
-	assert(copy == v1);
-	assert(len - len2 == 100*sizeof(int));
-
-
-	// create the storage that will be used for the various monotonic containers.
-	// while it is on the stack here, it could be on the heap as well.
-	monotonic::inline_storage<1000> storage;
-
-	// create a list that uses inline, monotonically-increasing storage
-	monotonic::list<int> list(storage);
-	list.push_back(100);
-	list.push_back(400);
-	list.erase(list.begin());
-
-	// a map from the same storage
-	monotonic::map<int, float> map(storage);
-	map[42] = 3.14f;
-	assert(map[42] == 3.14f);
-
-	// a set...
-	monotonic::set<float> set(storage);
-	set.insert(3.14f);
-	set.insert(-123.f);
+	test_basic();
+	test_copy();
+	test_ctors();
 
 }
 
