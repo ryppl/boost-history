@@ -5,7 +5,7 @@
 
 #pragma once
 
-#include <boost/cstdint.hpp>	
+#include <limits>
 #include <boost/monotonic/storage.h>
 
 namespace boost
@@ -29,7 +29,7 @@ namespace boost
 
 			size_t max_size() const
 			{
-				return INT_MAX;
+				return std::numeric_limits<std::size_t>::max();
 			}
 		};
 	}
