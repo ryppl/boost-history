@@ -221,60 +221,60 @@ tuple<char32, character_properties> read_one_character
 		// If none is indicated, it's a canonical decomposition_type.
 		(((str_p ("<font>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::font)] |
+				decomposition_type::dct_font)] |
 		str_p ("<noBreak>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::no_break)] |
+				decomposition_type::dct_no_break)] |
 		str_p ("<initial>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::initial)] |
+				decomposition_type::dct_initial)] |
 		str_p ("<medial>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::medial)] |
+				decomposition_type::dct_medial)] |
 		str_p ("<final>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::final)] |
+				decomposition_type::dct_final)] |
 		str_p ("<isolated>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::isolated)] |
+				decomposition_type::dct_isolated)] |
 		str_p ("<circle>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::circle)] |
+				decomposition_type::dct_circle)] |
 		str_p ("<super>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::super)] |
+				decomposition_type::dct_super)] |
 		str_p ("<sub>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::sub)] |
+				decomposition_type::dct_sub)] |
 		str_p ("<vertical>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::vertical)] |
+				decomposition_type::dct_vertical)] |
 		str_p ("<wide>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::wide)] |
+				decomposition_type::dct_wide)] |
 		str_p ("<narrow>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::narrow)] |
+				decomposition_type::dct_narrow)] |
 		str_p ("<small>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::small)] |
+				decomposition_type::dct_small)] |
 		str_p ("<square>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::square)] |
+				decomposition_type::dct_square)] |
 		str_p ("<fraction>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::fraction)] |
+				decomposition_type::dct_fraction)] |
 		str_p ("<compat>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::compat)] |
+				decomposition_type::dct_compat)] |
 		eps_p [assign_a (prop.decomposition_kind,
-			decomposition_type::canonical)]
+			decomposition_type::dct_canonical)]
 		) >>
 		// composition
 		+(hex_p [push_back_a (prop.decomposition)])
 		) |
 		// or no composition at all
-		eps_p [assign_a (prop.decomposition_kind, decomposition_type::none)]
+		eps_p [assign_a (prop.decomposition_kind, decomposition_type::dct_none)]
 		) >> ';' >>
 
 		// numeric type is skipped

@@ -178,24 +178,24 @@ namespace boost
 		{
 			enum type					// maximum 32 values (5 bits)
 			{
-				font = 0,
-				no_break,
-				initial,
-				medial,
-				final,
-				isolated,
-				circle,
-				super,
-				sub,
-				vertical,
-				wide,
-				narrow,
-				small,
-				square,
-				fraction,
-				compat,
-				canonical,
-				none,					// default value for unknown characters
+				dct_font = 0,
+				dct_no_break,
+				dct_initial,
+				dct_medial,
+				dct_final,
+				dct_isolated,
+				dct_circle,
+				dct_super,
+				dct_sub,
+				dct_vertical,
+				dct_wide,
+				dct_narrow,
+				dct_small,
+				dct_square,
+				dct_fraction,
+				dct_compat,
+				dct_canonical,
+				dct_none,					// default value for unknown characters
 
 				_count
 			};

@@ -619,6 +619,7 @@ void get_default_sort_characteristics(char32 cp, collation_entry & sort_entry)
 }
 
 bool decompose_for_sort(const character_properties & props_char, 
+                        char32 cp, 
                         const std::map <char32, character_properties> & props,
                                             std::vector<collation_data> & tbl_coll)
 {
@@ -640,24 +641,62 @@ bool decompose_for_sort(const character_properties & props_char,
         }
         else
         {
-            // no optimisation should have happened at this point so all entries
-            // should be set to indexed
-            //assert(iter_char->second.sort_type == sort_type::is_index);
-
-            if (iter_char->second.sort_data.size() > 1)
+            switch (iter_char->second.sort_type)
             {
-                // For simplicity we so not handle complex sort data
-                return false;
-            }
-            else if (iter_char->second.sort_data.size() == 0)
-            {
-                return decompose_for_sort(iter_char->second, props, tbl_coll);
-            }
+            case sort_type::zero_data1_data2_cp:
+                {
+                    collation_data sort_entry;
+                    sort_entry.variable = iter_char->second.sort_variable;
+                    sort_entry.weight1 = 0;
+                    sort_entry.weight2 = iter_char->second.sort_index_or_data1;
+                    sort_entry.weight3 = iter_char->second.sort_data2;
+                    sort_entry.weight4 = cp;
+                    tbl_coll.push_back(sort_entry);
+                }
+                break;
+            case sort_type::data1_0x0020_data2_cp:
+                {
+                    collation_data sort_entry;
+                    sort_entry.variable = iter_char->second.sort_variable;
+                    sort_entry.weight1 = iter_char->second.sort_index_or_data1;
+                    sort_entry.weight2 = 0x0020;
+                    sort_entry.weight3 = iter_char->second.sort_data2;
+                    sort_entry.weight4 = cp;
+                    tbl_coll.push_back(sort_entry);
+                }
+                break;
+            case sort_type::default_:
+                {
+                    collation_entry sort_entry;
+                    get_default_sort_characteristics(cp, sort_entry);
+                    // this optimisation requires default to be of size 1
+                    assert(sort_entry.data.size() == 1); 
+                    tbl_coll.push_back(sort_entry.data[0]);
+                }
+                break;
+            case sort_type::is_index:
+                {
+                    if (iter_char->second.sort_data.size() > 1)
+                    {
+                        // For simplicity we do not handle complex sort data
+                        return false;
+                    }
+                    else if (iter_char->second.sort_data.size() == 0)
+                    {
+                        return decompose_for_sort(iter_char->second, iter_char->first, props, tbl_coll);
+                    }
 
-            tbl_coll.reserve(tbl_coll.size() + iter_char->second.sort_data[0].data.size());
-            copy(iter_char->second.sort_data[0].data.begin(), 
-                                                iter_char->second.sort_data[0].data.end(), 
-                                                            back_inserter(tbl_coll));
+                    tbl_coll.reserve(tbl_coll.size() + iter_char->second.sort_data[0].data.size());
+                    copy(iter_char->second.sort_data[0].data.begin(), 
+                                                        iter_char->second.sort_data[0].data.end(), 
+                                                                    back_inserter(tbl_coll));
+                }
+                break;
+            default:
+                // invalid enum
+                assert(iter_char->second.sort_type == (size_t)-1);
+                break;
+            }
         }
     }
 
@@ -692,7 +731,7 @@ bool optimise_char_sort_data(const std::map <char32, character_properties> & pro
     std::vector<collation_data> tbl_coll;
     
     // check for decomp and return false if it is too complex to optimise
-    if (!decompose_for_sort(props_char_var, props, tbl_coll))
+    if (!decompose_for_sort(props_char_var, cp, props, tbl_coll))
         return true;
 
     std::vector<collation_data>::const_iterator iter_src = 

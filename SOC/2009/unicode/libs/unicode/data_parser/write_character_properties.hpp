@@ -17,7 +17,14 @@
 #include <vector>
 #include <map>
 #include <boost/spirit/include/classic.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(push)
+#pragma warning(disable : 4800 ) // 'int' : forcing value to bool 'true' or 'false' 
+#endif
 #include <boost/crc.hpp>
+#ifdef BOOST_MSVC
+#pragma warning(pop)
+#endif
 #include <boost/tuple/tuple.hpp>
 
 #include <boost/unicode/unicode_properties.hpp>
