@@ -180,7 +180,7 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
 			interval_type leftResid = right_subtract(*fst_it, addend);
 			if(!leftResid.empty())
 			{
-				fst_it->left_subtract(leftResid);
+				const_cast<value_type&>(*fst_it).left_subtract(leftResid);
 				this->_set.insert(pre_it, leftResid);
 			}
 		}
@@ -193,11 +193,10 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
 			this->_set.insert(lst_it, endGap);
 		else
 		{
-			//CL lst_it->left_subtract(rightResid, x);
 			interval_type rightResid = left_subtract(*lst_it, addend);
 			if(!rightResid.empty())
 			{
-				lst_it->right_subtract(rightResid);
+				const_cast<value_type&>(*lst_it).right_subtract(rightResid);
 				this->_set.insert(lst_it, rightResid);
 			}
 		}

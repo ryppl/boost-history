@@ -178,7 +178,7 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_typ
         interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);
 
-		*fst_it = extended;
+		const_cast<value_type&>(*fst_it) = extended;
     }
 }
 

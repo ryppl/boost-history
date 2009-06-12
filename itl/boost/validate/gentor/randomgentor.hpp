@@ -20,7 +20,9 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/split_interval_map.hpp>
+#ifdef USE_ITL_TREE
 #include <boost/itl/tree/tree.hpp>
+#endif
 #include <boost/validate/gentor/gentorprofile.hpp>
 
 
@@ -55,9 +57,11 @@ namespace boost{namespace itl
         public SetGentorT<itl::split_interval_set<DomainT> > {};
 
 	// ----- tree --------------------------------------------------------------
+#ifdef USE_ITL_TREE
     template <class DomainT> 
     class RandomGentor<itl::tree<DomainT> > :
         public SetGentorT<itl::tree<DomainT> > {};
+#endif
 
     // ----- maps --------------------------------------------------------------
     template <class DomainT, class Neutronizer> 
@@ -275,6 +279,7 @@ namespace boost{namespace itl
     //--------------------------------------------------------------------------
 	// itl::tree
     //--------------------------------------------------------------------------
+#ifdef USE_ITL_TREE
     template <> 
 	struct Calibrater<itl::tree<int>, RandomGentor>
     {
@@ -288,6 +293,7 @@ namespace boost{namespace itl
             gentor.setDomainGentor(itvGentor);
         }
     };
+#endif
 
     //----------------------------------------------------------------------------
     // itl::map<DomainT,CodomainT,Neutronizer>
