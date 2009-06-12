@@ -175,16 +175,13 @@ namespace boost { namespace property_tree { namespace info_parser
     }
 
     // Build ptree from info stream
-    template<class Ptree>
-    void read_info_internal(std::basic_istream<
-                                typename Ptree::key_type::value_type> &stream,
+    template<class Ptree, class Ch>
+    void read_info_internal(std::basic_istream<Ch> &stream,
                             Ptree &pt,
                             const std::string &filename,
                             int include_depth)
     {
-        // Character type
-        typedef typename Ptree::key_type::value_type Ch;
-
+        typedef std::basic_string<Ch> str_t;
         // Possible parser states
         enum state_t {
             s_key,              // Parser expects key
@@ -196,73 +193,72 @@ namespace boost { namespace property_tree { namespace info_parser
         state_t state = s_key;          // Parser state
         Ptree *last = NULL;             // Pointer to last created ptree
         // Define line here to minimize reallocations
-        std::basic_string<Ch> line;
+        str_t line;
 
         // Initialize ptree stack (used to handle nesting)
         std::stack<Ptree *> stack;
         stack.push(&pt);                // Push root ptree on stack initially
 
-        try
-        {
+        try {
             // While there are characters in the stream
-            while (stream.good())
-            {
-
+            while (stream.good()) {
                 // Read one line from stream
                 ++line_no;
                 std::getline(stream, line);
                 if (!stream.good() && !stream.eof())
                     BOOST_PROPERTY_TREE_THROW(info_parser_error(
-                        "read error", "", 0));
+                        "read error", filename, line_no));
                 const Ch *text = line.c_str();
 
                 // If directive found
                 skip_whitespace(text);
-                if (*text == Ch('#'))
-                {
-
+                if (*text == Ch('#')) {
                     // Determine directive type
                     ++text;     // skip #
                     std::basic_string<Ch> directive = read_word(text);
-                    if (directive == convert_chtype<Ch, char>("include"))
-                    {
+                    if (directive == convert_chtype<Ch, char>("include")) {
                         // #include
-                        if (include_depth > 100)
+                        if (include_depth > 100) {
                             BOOST_PROPERTY_TREE_THROW(info_parser_error(
                                 "include depth too large, "
-                                "probably recursive include", "", 0));
-                        std::basic_string<Ch> s = read_string(text, NULL);
+                                "probably recursive include",
+                                filename, line_no));
+                        }
+                        str_t s = read_string(text, NULL);
                         std::string inc_name =
                             convert_chtype<char, Ch>(s.c_str());
                         std::basic_ifstream<Ch> inc_stream(inc_name.c_str());
                         if (!inc_stream.good())
-                            BOOST_PROPERTY_TREE_THROW(info_parser_error("cannot open include file " + inc_name, "", 0));
-                        read_info_internal(inc_stream, *stack.top(), inc_name, include_depth + 1);
+                            BOOST_PROPERTY_TREE_THROW(info_parser_error(
+                                "cannot open include file " + inc_name,
+                                filename, line_no));
+                        read_info_internal(inc_stream, *stack.top(),
+                                           inc_name, include_depth + 1);
+                    } else {   // Unknown directive
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error(
+                            "unknown directive", filename, line_no));
                     }
-                    else    // Unknown directive
-                        BOOST_PROPERTY_TREE_THROW(info_parser_error("unknown directive", "", 0));
 
                     // Directive must be followed by end of line
                     skip_whitespace(text);
-                    if (*text != Ch('\0'))
-                        BOOST_PROPERTY_TREE_THROW(info_parser_error("expected end of line", "", 0));
+                    if (*text != Ch('\0')) {
+                        BOOST_PROPERTY_TREE_THROW(info_parser_error(
+                            "expected end of line", filename, line_no));
+                    }
 
                     // Go to next line
                     continue;
-
                 }
 
                 // While there are characters left in line
-                while (1)
-                {
+                while (1) {
 
                     // Stop parsing on end of line or comment
                     skip_whitespace(text);
-                    if (*text == Ch('\0') || *text == Ch(';'))
-                    {
+                    if (*text == Ch('\0') || *text == Ch(';')) {
                         if (state == s_data)    // If there was no data set state to s_key
                             state = s_key;
-                        break; 
+                        break;
                     }
 
                     // Process according to current parser state
@@ -292,7 +288,8 @@ namespace boost { namespace property_tree { namespace info_parser
                             else    // Key text found
                             {
                                 std::basic_string<Ch> key = read_key(text);
-                                last = &stack.top()->push_back(std::make_pair(key, Ptree()))->second;
+                                last = &stack.top()->push_back(
+                                    std::make_pair(key, Ptree()))->second;
                                 state = s_data;
                             }
 
@@ -377,7 +374,7 @@ namespace boost { namespace property_tree { namespace info_parser
         }
 
     }
-    
+
 } } }
 
 #endif

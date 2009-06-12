@@ -15,6 +15,7 @@
 #include <boost/property_tree/detail/xml_parser_flags.hpp>
 #include <boost/property_tree/detail/xml_parser_utils.hpp>
 #include <boost/property_tree/detail/rapidxml.hpp>
+#include <vector>
 
 namespace boost { namespace property_tree { namespace xml_parser
 {

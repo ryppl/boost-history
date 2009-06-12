@@ -2,7 +2,7 @@
 The INFO format was created specifically for the property tree library. It
 provides a simple, efficient format that can be used to serialize property
 trees that are otherwise only stored in memory. It can also be used for any
-other purpose, although the lack of widespread existing use prove to be an
+other purpose, although the lack of widespread existing use may prove to be an
 impediment.
 
 INFO provides several features that make it familiar to C++ programmers and
