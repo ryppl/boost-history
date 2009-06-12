@@ -1,0 +1,282 @@
+<HTML>
+<HEAD>
+<META NAME="GENERATOR" Content="Microsoft Visual Studio 10.0">
+<TITLE></TITLE>
+</HEAD>
+<BODY>
+
+
+
+    <div class="document">
+        <table class="docinfo" frame="void" rules="none">
+            <colgroup>
+                <col class="docinfo-name" />
+                <col class="docinfo-content" />
+            </colgroup>
+            <tbody valign="top">
+                <tr>
+                    <th class="docinfo-name">
+                        Authors:</th>
+                    <td>
+                        Christian Schladetsch (christian.schladetsch@gmail.com)</td>
+                </tr>
+                <tr>
+                    <th class="docinfo-name">
+                        Version:</th>
+                    <td>
+                        Unversioned, still just in vault</td>
+                </tr>
+                <tr class="field">
+                    <th class="docinfo-name">
+                        License:</th>
+                    <td class="field-body">
+                        None.</td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="boost-bloom-filter" class="section">
+            <h1>
+                Boost.Monotonic</h1>
+            <p>
+                Boost.Monotonic is an implementation of container allocators that use a given, 
+                fixed-size storage buffer.
+                This buffer can be on the heap, or the stack.</p>
+            <h2 id="Motivation">
+                Motivation
+            </h2>
+            <p>
+                We would like to use STL containers which take their storage from the stack. In 
+                this way, for example a std::map&lt;K,T&gt; can use storage from the stack rather than 
+                fragmenting the heap.             </p>
+            <p>
+                There are many uses for such a system, including per-frame containers and 
+                efficient containers for use in recursion.             </p>
+            <p>
+                It is the fastest allocation system theoretically possible, with the downside 
+                that the resident set size can only grow in size. Hence the proposed name of a 
+                &quot;monotonic&quot; allocator.
+            </p>
+            <h2 id="Proposal">
+                Proposal
+            </h2>
+            <p>
+                The source code resides at <a href="http://www.boostpro.com/vault/index.php?action=downloadfile&amp;filename=MonotonicAllocator.zip&amp;directory=&amp;" 
+                    target="_blank">http://www.boostpro.com/vault/<wbr>index.php?action=downloadfile&amp;<wbr>filename=MonotonicAllocator.<wbr>zip&amp;directory=&amp;</a>.</p>
+            <p>
+                This is a constant-time, stack-based STL-compliant allocator with the following 
+                properties:             </p>
+            <ul>
+                <li>Space for objects is pre-allocated. This can be on the heap <strong>or</strong> 
+                    on the stack. </li>
+                <li>Objects are initialised only as required. </li>
+                <li>De-allocating an object calls its destructor. </li>
+                <li>Object storage is not reclaimed until the underlying storage goes out of scope.
+                </li>
+            </ul>
+            <p>
+                The benefits of using a monotonic::allocator over other allocators are:
+            </p>
+            <ul>
+                <li>All storage is pre-allocated, similar to a pool </li>
+                <li>Storage can be on the stack:                     <ul>
+                        <li>Heap is not even used, let alone fragmented </li>
+                        <li>Cache coherency is high </li>
+                    </ul>
+                </li>
+                <li>Allocation is lightening-fast as it only involves advancing a pointer </li>
+                <li>Deallocation is even faster as it does absolutely nothing </li>
+                <li>Different containers can share the same storage </li>
+            </ul>
+            <p>
+                There are also limitations:             </p>
+            <ul>
+                <li>Containers must be constructed with either an allocator or storage. There are no 
+                    default allocators, and hence no default container constructors. </li>
+                <li>Storage grows monotonically: removing objects from a container does not 
+                    de-allocate memory </li>
+                <li>Stackspace is limited and putting large containers on the stack may exhaust 
+                    stack space
+                    <ul>
+                        <li>This can be addressed on a per-compiler basis </li>
+                        <li>The system can be used with the storage on the heap </li>
+                    </ul>
+                </li>
+            </ul>
+            <p>
+                TODO:
+            </p>
+            <ul>
+                <li>provide details on default stack-sizes on each target platform </li>
+                <li>provide details as details on how to increase this. </li>
+                <li>provide guidance on &#39;good&#39; sizes for containers that are stored on the stack
+                </li>
+            </ul>
+            <h3 id="Containers">
+                Containers
+            </h3>
+            <p>
+                The following containers are part of this proposal:             </p>
+            <ul>
+                <li>boost::monotonic::list&lt;T&gt; </li>
+                <li>boost::monotonic::vector&lt;T&gt; </li>
+                <li>boost::monotonic::map&lt;K,T&gt; </li>
+                <li>boost::monotonic::multi_map&lt;K,T&gt; </li>
+                <li>boost::monotonic::set&lt;T&gt; </li>
+                <li>boost::monotonic::multi_set&lt;T&gt; </li>
+                <li>boost::monotonic::ptr_list&lt;T&gt; </li>
+                <li>boost::monotonic::ptr_vector&lt;T&gt; </li>
+                <li>boost::monotonic::ptr_map&lt;K,T&gt; </li>
+                <li>boost::monotonic::ptr_set&lt;T&gt; </li>
+            </ul>
+            <p>
+                boost::unordered can have a similar treatment.</p>
+            <h2 id="Architecture">
+                Architecture
+            </h2>
+            <p>
+                The architecture is quite simple. There are three main components: the storage, 
+                the allocator and the container. The storage is based on boost::array&lt;char,N&gt; 
+                and is on the stack or the heap. The allocator is stored in the 
+                container, which is initialised with either an allocator or storage, as shown 
+                for example with monotonic::map:
+            </p>
+            <div class="code">
+                <pre>/// A std::map&lt;K,T,P&gt; that uses a monotonic allocator 
+template &lt;class K, class T, class P = std::less&lt;K&gt; &gt; 
+struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt; 
+{ 
+	typedef allocator&lt;K&gt; Allocator; 
+	typedef std::map&lt;K,T,P,Allocator &gt; Map; 
+	typedef P Predicate; 
+	map() { } 
+	map(storage_base &amp;S) : Map(Predicate(), Allocator(S)) { } 
+	map(Allocator const &amp;A) : Map(Predicate(), A) { } 
+	map(Predicate P, Allocator const &amp;A) : Map(P, A) { } </pre>
+                <pre>}; </pre>
+            </div>
+            <h2 id="ExampleUsage">
+                Example Usage
+            </h2>
+            <p>
+                Quite often, we need to create a temporary collection of objects which will 
+                exist only for the duration of a code block. A common pattern for this is to 
+                collect a set of objects from a container to do some work on:           </p>
+            <div class="code">
+                <pre><b><span class="code-type">void</span></b> <b><span class="code-func">MainLoop</span></b>()
+{
+    boost::monotonic::inline_storage&lt;100*<span class="code-lang"><b>sizeof</b>(Object)&gt; storage;   <i><span 
+                    class="code-comment">// create local storage on the stack
+</span></i>    boost::monotonic::vector&lt;Object&gt; deathrow(storage);   <i><span 
+                    class="code-comment">// create a std::vector that uses this storage</span></i></span></pre>
+                <pre><span class="code-lang"><span 
+                    class="code-comment">    foreach (object in world)
+    {
+         <b><span class="code-lang">if</span></b> (IsDead(object))
+              deathrow.push_back(object);           <i><span class="code-comment">// allocation is just advancing a pointer
+</span></i>    }
+    foreach (object in deathrow)
+    {
+        world.Remove(object);
+        object.Delete();
+    }
+    <span class="code-comment"><i>// storage is removed from stack; the heap is not touched
+</i></span>}
+</pre>
+            </div>
+            <p>
+                The same system can be used to store very large containers on the heap but still 
+                using a monotonic allocator:
+            </p>
+            <div class="code">
+                <pre><b><span class="code-type">void</span></b> <b><span class="code-func">InlineHeapStorage</span></b>()
+{
+     <i><span class="code-comment">// create inline storage on the heap
+</span></i>     <b><span class="code-keyword">std</span></b>::auto_ptr&lt;boost::monotonic::storage&lt;1000*1000*1000&gt; &gt; storage = <b><span 
+                    class="code-lang">new </b>boost::monotonic::storage&lt;1000*1000*1000&gt;();
+
+     <i><span class="code-comment">// create a hash-table-based mapping of ints to ints using a monotonic allocator
+</span></i>     boost::monotonic::unsorted_map&lt;<b><span class="code-type">int</b>, <b><span 
+                    class="code-type">int</span></b>&gt; table(*storage);
+
+     <i><span class="code-comment">// populate the container; no new heap allocations are performed
+</span></i>     <b><span class="code-lang">for</span></b> (<b><span class="code-type">int</span></b> n = 0; n &lt; 1000*1000; ++n)
+     {
+         <i><span class="code-comment">// storage created for the hash-table (including the lists) is pre-allocated
+</span></i>         <i><span class="code-comment">// and each allocation requires only a pointer advance
+</span></i>         table[rand()] = n;            
+     }
+}
+</pre>
+            </div>
+            <p>
+                Also, the stack-based allocation model can be used for per-frame allocation for 
+                temporary storage. By passing the storage down the call-stack (either explicitly 
+                as a parameter, or by storing within a visible member field), per-frame 
+                containers and other storage can be used without resorting to the heap. At the 
+                end of the frame, the storage is automatically released.
+            </p>
+            <div class="code">
+                <pre><b><span class="code-type">void</span></b> <b><span class="code-func">DoSomething</span></b>(boost::monotonic::storage_base &amp;storage)
+{      
+    boost::monotonic::vector&lt;Object&gt; vector(storage);
+    <span class="code-comment"><i>// populate and use vector</i>
+    DoSomethingElse(storage);
+}
+
+<b><span class="code-type">void</span></b> <b><span class="code-func">DoSDoSomethingElse</span></b>(boost::monotonic::storage_base &amp;storage)
+{
+    boost::monotonic::map&lt;<span class="code-type"><b>int</b>, Object&gt; map(storage);
+    <i><span class="code-comment">// populate and use map
+</span></i>}
+
+<b><span class="code-type">void</span></b> <b><span class="code-func">MainLoop</span></b>()
+{
+    <b><span class="code-lang">while</span></b> (!Finished())
+    {
+         boost::monotonic::inline_storage&lt;10*1000&gt; storage;
+         DoSomething(storage);
+         <span class="code-comment"><i>// storage is released, ready for next loop</i>
+    </span>}
+}
+</pre>
+            </div>
+            <p>
+                Recursion also benefits from using the stack to store containers. For example, 
+                assuming a cyclic graph of objects, we can avoid infinite recursion by using a 
+                stack-based set:
+            </p>
+            <div class="code">
+                <pre><b><span class="code-type">void</span></b> <b><span class="code-func">Object::Recurse</span></b>()
+{
+    boost::monotonic::inline_storage&lt;5000&gt; storage;    <i><span class="code-comment">// create storage on the stack for a set
+</span></i>    Recurse(boost::monotonic::set&lt;<b><span class="code-type">int</b>&gt;(storage));      <i><span 
+                    class="code-comment">// recurse, passing the set
+</span></i>}
+
+<b><span class="code-type">void</span></b> <b><span class="code-func">Object::Recurse</span></b>(boost::monotonic::set&lt;<b><span 
+                    class="code-type">int</b>&gt; &amp;set)
+{
+     <b><span class="code-lang">if</span></b> (set.find(handle) != set.end()) <b><span 
+                    class="code-lang">return</span></b>;  <i><span class="code-comment">// avoid infinite recursion
+</span></i>     set.insert(handle);                         <i><span class="code-comment">// add handle to set for testing later
+</span></i>     DoSomething();                              <i><span class="code-comment">// do something to this object
+</span></i>     foreach (child object in <b><span class="code-lang">this</span></b>)              <i><span 
+                    class="code-comment">// visit all child objects
+</span></i>         Recurse(set);
+}
+</pre>
+            </div>
+            <div id="reference" class="section">
+                <h2>
+                    References</h2>
+                <ul class="simple">
+                    <li>&lt;none&gt;</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+
+</BODY>
+</HTML>
