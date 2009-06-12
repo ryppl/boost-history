@@ -256,7 +256,7 @@ void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
 	size_t mod = count/10;
 	for (size_t n = 0; n < count; ++n)
 	{
-		int random = rand();
+		int random = rand() % mod;
 		Map::iterator iter = map.find(random);
 		if (iter == map.end())
 		{
@@ -296,7 +296,7 @@ void test_map_list_impl_std(size_t count)
 void test_map_list_realtime()
 {
 	monotonic::inline_storage<1000000> storage;
-	const size_t outter_loops = 1000;
+	const size_t outter_loops = 100*1000;
 	const size_t inner_loops = 1000;
 
 	boost::timer t0;
