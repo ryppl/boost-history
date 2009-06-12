@@ -253,6 +253,7 @@ void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
 	typedef monotonic::list<int> List;
 	typedef monotonic::map<int, List> Map;
 	Map map(storage);
+	size_t mod = count/10;
 	for (size_t n = 0; n < count; ++n)
 	{
 		int random = rand();
@@ -273,9 +274,10 @@ void test_map_list_impl_std(size_t count)
 	typedef std::list<int> List;
 	typedef std::map<int, List> Map;
 	Map map;
+	size_t mod = count/10;
 	for (size_t n = 0; n < count; ++n)
 	{
-		int random = rand();
+		int random = rand() % mod;
 		Map::iterator iter = map.find(random);
 		if (iter == map.end())
 		{
@@ -293,9 +295,9 @@ void test_map_list_impl_std(size_t count)
 // amount of work the next frame.
 void test_map_list_realtime()
 {
-	monotonic::inline_storage<100000> storage;
-	const size_t outter_loops = 500;
-	const size_t inner_loops = 500;
+	monotonic::inline_storage<1000000> storage;
+	const size_t outter_loops = 1000;
+	const size_t inner_loops = 1000;
 
 	boost::timer t0;
 	for (int n = 0; n < outter_loops; ++n)
