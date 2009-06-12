@@ -337,7 +337,7 @@ void test_map_list_realtime()
 {
 	monotonic::inline_storage<1000000> storage;
 	const size_t outter_loops = 10*1000;
-	const size_t inner_loops = 1000;
+	const size_t inner_loops = 10000;
 
 	boost::timer t0;
 	for (int n = 0; n < outter_loops; ++n)
@@ -363,11 +363,9 @@ int main()
 	test_speed_heap();
 	test_map_list_realtime();
 	test_alignment();
-
 	test_basic();
 	test_copy();
 	test_ctors();
-
 }
 
 //EOF
