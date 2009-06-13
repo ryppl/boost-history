@@ -246,6 +246,20 @@ namespace
 void test_alignment()
 {
 	monotonic::inline_storage<10000> storage;
+
+	// the two arguments to storage.allocate are the size, and the required alignment
+	void *P = storage.allocate(3, 4);
+	assert(P == storage.begin() + 0);
+	
+	P = storage.allocate(3, 4);
+	assert(P == storage.begin() + 4);
+	
+	P = storage.allocate(11, 4);
+	assert(P == storage.begin() + 8);
+
+	P = storage.allocate(11, 16);
+	assert(P == storage.begin() + 32);
+
 	typedef boost::array<char, 3> c0;
 	typedef boost::array<char, 6> c1;
 	typedef boost::array<char, 11> c2;

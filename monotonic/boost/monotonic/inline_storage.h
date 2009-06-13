@@ -42,6 +42,18 @@ namespace boost
 			{
 			}
 
+			buffer_type const &get_buffer()  const
+			{
+				return buffer;
+			}
+			const char *begin() const
+			{
+				return &buffer[0];
+			}
+			const char *end() const
+			{
+				return &buffer[N - 1];
+			}
 			void reset()
 			{
 				cursor = 0;
@@ -57,12 +69,15 @@ namespace boost
 				cursor = c;
 			}
 
-			/// allocate storage, given alignment mask
-			void *allocate(size_t num_bytes, size_t mask)
+			/// allocate storage, given alignment requirement
+			void *allocate(size_t num_bytes, size_t alignment)
 			{
 				// ensure we return a point on an aligned boundary
-				size_t extra = num_bytes & mask;
+				size_t extra = cursor & (alignment - 1);
+				if (extra > 0)
+					extra = alignment - extra;
 				size_t required = num_bytes + extra;
+				BOOST_ASSERT(cursor + required <= N);
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
 				buffer.uninitialized_resize(buffer.size() + required);
 #endif
