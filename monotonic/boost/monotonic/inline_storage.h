@@ -48,7 +48,7 @@ namespace boost
 			{
 				// ensure we return a point on an aligned boundary
 				//size_t extra = num_bytes % Alignment;
-				size_t extra = 0;//num_bytes & 15;
+				size_t extra = num_bytes & 15;
 				size_t required = num_bytes + extra;
 				char *ptr = &buffer[cursor];
 				cursor += required;
