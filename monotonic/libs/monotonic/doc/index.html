@@ -41,42 +41,71 @@
                 Boost.Monotonic is an implementation of an allocator that use a given, 
                 fixed-size storage buffer. This buffer can be on the heap, or the stack, and may 
                 be shared by multiple containers.</p>
+            <p>
+                The name &#39;monotonic&#39; has been criticised as being too general and not really 
+                indicative of the scope and purpose of the library. All alternative suggestions 
+                gratefully considered!</p>
             <h2 id="Motivation">
                 Motivation
             </h2>
             <p>
                 We would like to use STL containers which take their storage from the stack. In 
                 this way, for example a std::map&lt;K,T&gt; can use storage from the stack rather than 
-                fragmenting the heap.             </p>
+                fragmenting the heap.             Also, it would be great if the same storage 
+                could be used by different containers, and even better if we could chose to use 
+                the stack or the heap.</p>
             <p>
                 There are many uses for such a system, including per-frame containers, 
                 efficient use containers for use in recursion, and reducing or removing heap 
                 fragmentation.             </p>
             <p>
-                It is a fast allocation system, with the downside 
-                that the resident set size can only grow in size. Hence the proposed name of a 
+                This is part of what this library does, all in one little allocator and storage 
+                type.
+                It is a fast allocation system, O(1) to allocate and zero-cost to deallocate; hence the proposed name of a 
                 &quot;monotonic&quot; allocator.
             </p>
             <h2 id="Proposal">
+                Quick Example</h2>
+                <pre>void shared()<br />
+                {
+	// declare the storage that will be shared by the containers
+	// it is on the stack here, but can be put on the heap with `new`
+	boost::monotonic::inline_storage&lt;10000&gt; storage;<br />	{		boost::monotonic::map&lt;int, int&gt; map(storage);
+		map[1] = 2;
+		map[2] = 4;
+
+		boost::monotonic::vector&lt;char&gt; vec(storage);
+		vec.assign(&#39;x&#39;, 4);
+
+		boost::monotonic::list&lt;char&gt; list(storage);
+		std::copy(vec.begin(), vec.end(), std::back_inserter(list));
+
+		boost::monotonic::set&lt;std::pair&lt;const int, int&gt; set(storage);
+		std::copy(map.begin(), map.end(), std::inserter(set));
+	}
+}</pre>
+            <h2>
                 Proposal
             </h2>
             <p>
-                The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
+                The f="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
-                This is a constant-time, stack-based STL-compliant[1] allocator with the following 
+                This is This is a constant-time, stack-based STL-compliant[1] allocator and storage 
+                system with the following 
                 properties:             </p>
             <ul>
-                <li>Space for objects is pre-allocated. This can be on the heap <strong>or</strong> 
+                <li>Space for objects is pre-allocated. This can be on the heap or</strong> 
                     on the stack. </li>
                 <li>Objects are initialised only as required. </li>
-                <li>De-allocating an object calls its destructor. </li>
+                <li>De-allocDe-allocating an object calls its destructor iff it has one.</li>
                 <li>Object storage is not reclaimed until the underlying storage goes out of scope.
                 </li>
+                <li>Multiple different containers of any type can share the same storage via 
+                    different allocators.</li>
             </ul>
             <p>
                 The benefits of using a monotonic::allocator over other allocators are:
-            </p>
-            <ul>
+                      <ul>
                 <li>All storage is pre-allocated, similar to a pool </li>
                 <li>Storage can be on the stack:                     <ul>
                         <li>Heap is not even used, let alone fragmented </li>
@@ -139,13 +168,16 @@
             <p>
                 boost::unordered can have a similar treatment.</p>
             <p>
-                It has been strongly suggested that these convenience structures be removed from 
+                It has IIt has been strongly suggested that these convenience structures be removed from 
                 the proposal. For comparison, the following are two exactly equivalent types:</p>
+            <pre>typedef boost::monotonic::vector&lt;int&gt; Vector;
+typedef std::vector&lt;int, boost::monotonic::allocator&lt;int&gt; &gt; Vector;</pre>
             <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;
 typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
             <p>
-                The matter can be argued either way. The container-wrappers currently remain 
-                part of the proposal, but this may change.</p>
+                &nbsp;The matter can be argued either way. The container-wrappers currently remain 
+                part of the proposal, but this may well change. In the meantime, the user is 
+                quite capable of using either method:</p>
             <h2 id="Architecture">
                 Architecture
             </h2>
@@ -155,8 +187,7 @@ typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt
                 and is on the stack or the heap. The allocator is stored in the 
                 container, which is initialised with either an allocator or storage, as shown 
                 for example with monotonic::map:
-            </p>
-            <div class="code">
+                     <div class="code">
                 <pre>/// A std::map&lt;K,T,P&gt; that uses a monotonic allocator 
 template &lt;class K, class T, class P = std::less&lt;K&gt; &gt; 
 struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt; 
@@ -307,13 +338,16 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
                 <h2>
                     Notes</h2>
                 <p>
-                    [1] It can be argued that the proposed allocator is not in fact &quot;STL-compliant&quot;, 
-                    as it includes a pointer to storage used by the allocator. This can be addressed 
-                    either by changing the standard to allow an allocator to store a pointer, or by 
-                    removing this pointer and using a global pointer-to-storage.</p>
+                    [1] It ca[1] It can be argued that the proposed allocator is not in fact &quot;STL-compliant&quot;, 
+                    as it includes a pointer to storage used by the allocator. In truth, the 
+                    Standard doesn&#39;t state that allocators may not have any local data, only that 
+                    STL implementations are free to treat allocators of the same type as having the 
+                    same behavior. In practise, the distinction is largely academic and has had no 
+                    seen impact on this library. All modern STL implementation check for allocators 
+                    to do things like speed up swap methods etc. These all work with monotonic 
+                    allocator as well.</p>
                 <h2>
-                    References</h2>
-                <ul class="simple">
+                    References              <ul class="simple">
                     <li>Boost.AlignedMemory</li>
                     <li>Boost.AutoBuffer. A related service. Attempts to integrate this with STL has so 
                         far been unsuccessful. See libs/monotonic/test/main.cpp#test_auto_buffer</li>

@@ -10,6 +10,11 @@
 #include <boost/foreach.hpp>
 #include <iostream>
 
+#include <boost/range.hpp>
+#include <boost/iterator/counting_iterator.hpp>
+#include <boost/array.hpp>
+#include <boost/scoped_ptr.hpp>
+
 using namespace std;
 using namespace boost;
 
@@ -260,6 +265,7 @@ void test_alignment()
 	P = storage.allocate(11, 16);
 	assert(P == storage.begin() + 32);
 
+
 	typedef boost::array<char, 3> c0;
 	typedef boost::array<char, 6> c1;
 	typedef boost::array<char, 11> c2;
@@ -434,8 +440,50 @@ void test_map_list_realtime()
 	cout << "test_map_list:  std: " << e1 << endl;
 }
 
+template <class T>
+pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T end)
+{
+	typedef boost::counting_iterator<T> cit;
+	return std::make_pair(cit(start), cit(end));
+}
+
+
+void test_shared_allocators()
+{
+	monotonic::inline_storage<500> sa, sb;
+	typedef monotonic::allocator<int> Al;
+	{
+		std::vector<int, Al> v0(sa), v1(sa);
+		std::vector<int, Al> v2(sb), v3(sb);
+		std::list<int, Al> l0(sa), l1(sb);
+
+		assert(v0.get_allocator() == v1.get_allocator());
+		assert(v2.get_allocator() == v3.get_allocator());
+		assert(v0.get_allocator() != v2.get_allocator());
+		assert(v3.get_allocator() != v1.get_allocator());
+
+		for (int n = 0; n < 10; ++n) 
+			v0.push_back(n);
+
+		v1 = v0;
+		v1.swap(v2);	// swap from different allocators means they are copied
+		assert(v1.empty() && v3.empty() && v1 == v3);
+
+		assert(v2 == v0); // both are now [0..9]
+
+		v1.swap(v0);	// swap from same allocators means no copying
+		assert(v2 == v1);
+		assert(v0 == v3);
+
+		l0.assign(v0.begin(), v0.end());
+		l1 = l0;
+		assert(l0 == l1);
+	}
+}
+
 int main()
 {
+	test_shared_allocators();
 	test_alignment();
 	test_auto_buffer();
 	test_speed();
