@@ -142,8 +142,8 @@
                 It has been strongly suggested that these convenience structures be removed from 
                 the proposal. For comparison, the following are two exactly equivalent types:</p>
             <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;
-typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt;, 
-                std::less, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre><p>
+typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
+            &gt;<p>
                 The matter can be argued either way. The container-wrappers currently remain 
                 part of the proposal, but this may change.</p>
             <h2 id="Architecture">
