@@ -13,6 +13,11 @@
 #include <stdexcept>
 #include <vector>
 
+extern "C"
+{
+#include <unistd.h>
+}
+
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include <boost/function.hpp>
@@ -33,6 +38,9 @@ void barrier_fn(
 
 void delay_fn( pt::time_duration const& td)
 { boost::this_thread::sleep( td); }
+
+void non_interrupt_fn( int sec)
+{ ::sleep( sec); }
 
 void interrupt_fn( pt::time_duration const& td, bool & finished)
 {

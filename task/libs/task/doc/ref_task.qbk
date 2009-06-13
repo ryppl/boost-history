@@ -62,7 +62,7 @@
 
 [variablelist
 [[Effects:] [returns a future assiciated with the task]]
-[[Throws:] [???]]
+[[Throws:] [Nothing]]
 ]
 
 

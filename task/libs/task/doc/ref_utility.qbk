@@ -17,8 +17,8 @@
 
 [variablelist
 [[Effects:] [reschedules current task until passed callable predicate becomes ready] 
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [`boost::thread_interrupted`,`boost::system::system_error`]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -35,8 +35,8 @@
 
 [variablelist
 [[Effects:] [returns reference to the thread-pool where the current worker thread is executed] 
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -52,8 +52,8 @@
 
 [variablelist
 [[Effects:] [returns true if the current task is executed in a thread-pool]
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -69,8 +69,8 @@
 
 [variablelist
 [[Effects:] [returns returns the thread-id of the worker-thread]
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -89,8 +89,8 @@
 
 [variablelist
 [[Effects:] [delays the execution of the current task so that the worker-thread can process another task in the meantime]
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -106,8 +106,8 @@
 
 [variablelist
 [[Effects:] [yields the current task so that the worker-threadcan process another task in the meantime]
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]
@@ -123,8 +123,8 @@
 
 [variablelist
 [[Effects:] [task can request interruption for itself]
-[[Throws:] [Nothing.]]
-[[Note:] [This function resides in namespace `boost::this_task`.]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
 [endsect]

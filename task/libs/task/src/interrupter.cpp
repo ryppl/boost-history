@@ -73,13 +73,14 @@ interrupter::impl::interrupt_and_wait()
 		cond_.wait( lk);
 }
 
-void
+bool
 interrupter::impl::interrupt_and_wait_until( system_time const& abs_time)
 {
 	unique_lock< mutex > lk( mtx_);
 	interrupt_();
-	while ( ! done_)
-		cond_.timed_wait( lk, abs_time);
+	if ( ! done_)
+		return cond_.timed_wait( lk, abs_time);
+	return true;
 }
 
 bool
@@ -109,9 +110,9 @@ void
 interrupter::interrupt_and_wait()
 { impl_->interrupt_and_wait(); }
 
-void
+bool
 interrupter::interrupt_and_wait_until( system_time const& abs_time)
-{ impl_->interrupt_and_wait_until( abs_time); }
+{ return impl_->interrupt_and_wait_until( abs_time); }
 
 bool
 interrupter::interruption_requested()

@@ -1,8 +1,10 @@
 * boost.task-0.2:
 -----------------
-- detail/atomic.hpp splitt into several headers for different platforms
-	- xchg for gcc && x86
-	- lwarx for gcc && powrepc
-- new function shared_future< R > handle< R >::get_future()
-- new_thread, own_thread and as_sub_task in separat headers
-- async() with as_sub_task as default async. executor
+- detail/atomic.hpp with atomic_exchange (gcc + x86|ppc)
+- handle< R > with new function get_future() returning reference to internal shared future
+- moved execution-policies new_thread, own_thread and as_sub_task in separat headers
+- async() with as_sub_task as default execution-policy
+- functions interrupt_and_wait_until() and interrupt_and_wait_for() from handle< R > returning
+  boolean indicating if op. succeeded or timed out
+- tests updated
+- documentation updated

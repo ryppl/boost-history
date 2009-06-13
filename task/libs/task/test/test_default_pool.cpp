@@ -44,8 +44,46 @@ public:
 		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
-	// check runs in pool
+	// check assignment
 	void test_case_2()
+	{
+		tsk::handle< int > h1;
+		tsk::handle< int > h2(
+			tsk::async(
+				tsk::make_task(
+					fibonacci_fn,
+					10),
+				tsk::default_pool() ) );
+		h1 = h2;
+		BOOST_CHECK_EQUAL( h1.get_id(), h2.get_id() );
+		BOOST_CHECK_EQUAL( h1.get(), 55);
+		BOOST_CHECK_EQUAL( h2.get(), 55);
+	}
+
+	// check swap
+	void test_case_3()
+	{
+		tsk::handle< int > h1(
+			tsk::async(
+				tsk::make_task(
+					fibonacci_fn,
+					5),
+				tsk::default_pool() ) );
+		tsk::handle< int > h2(
+			tsk::async(
+				tsk::make_task(
+					fibonacci_fn,
+					10),
+				tsk::default_pool() ) );
+		BOOST_CHECK_EQUAL( h1.get(), 5);
+		BOOST_CHECK_EQUAL( h2.get(), 55);
+		BOOST_CHECK_NO_THROW( h1.swap( h2) );
+		BOOST_CHECK_EQUAL( h1.get(), 55);
+		BOOST_CHECK_EQUAL( h2.get(), 5);
+	}
+
+	// check runs in pool
+	void test_case_4()
 	{
 		tsk::handle< bool > h(
 			tsk::async(
@@ -54,27 +92,8 @@ public:
 		BOOST_CHECK_EQUAL( h.get(), true);
 	}
 
-	// executed twice
-// 	void test_case_3()
-// 	{
-// 		tsk::task< int > t(
-// 			tsk::make_task(
-// 				fibonacci_fn,
-// 				10) );
-// 		tsk::handle< int > h1(
-// 			tsk::async(
-// 				tsk::default_pool(),
-// 				t) );
-// 		BOOST_CHECK_EQUAL( h1.get(), 55);
-// 		BOOST_CHECK_THROW(
-// 			tsk::async(
-// 				tsk::default_pool(),
-// 				t),
-// 			tsk::task_already_executed);
-// 	}
-
 	// check runtime_error throw inside task
-	void test_case_4()
+	void test_case_5()
 	{
 		tsk::handle< void > h(
 			tsk::async(
@@ -84,7 +103,7 @@ public:
 	}
 
 	// check interrupt
-	void test_case_5()
+	void test_case_6()
 	{
 		tsk::handle< void > h(
 			tsk::async(
@@ -98,7 +117,7 @@ public:
 	}
 
 	// check interrupt_and_wait
-	void test_case_6()
+	void test_case_7()
 	{
 		bool finished( false);
 		tsk::handle< void > h(
@@ -111,12 +130,30 @@ public:
 		h.interrupt_and_wait();
 		BOOST_CHECK( finished);
 		BOOST_CHECK( h.is_ready() );
+		BOOST_CHECK( ! h.has_value() );
+		BOOST_CHECK( h.has_exception() );
 		BOOST_CHECK( h.interruption_requested() );
 		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
+	// check wait
+	void test_case_8()
+	{
+		tsk::handle< int > h(
+			tsk::async(
+				tsk::make_task(
+					fibonacci_fn,
+					10),
+				tsk::default_pool() ) );
+		h.wait();
+		BOOST_CHECK( h.is_ready() );
+		BOOST_CHECK( h.has_value() );
+		BOOST_CHECK( ! h.has_exception() );
+		BOOST_CHECK_EQUAL( h.get(), 55);
+	}
+
 	// check waitfor_all()
-	void test_case_7()
+	void test_case_9()
 	{
 		std::vector< tsk::handle< int > > vec;
 		for ( int i = 0; i <= 5; ++i)
@@ -142,7 +179,7 @@ public:
 	}
 
 	// check waitfor_any()
-	void test_case_8()
+	void test_case_10()
 	{
 		tsk::handle< void > h1(
 			tsk::async(
@@ -170,12 +207,14 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	boost::shared_ptr< test_default_pool > instance( new test_default_pool() );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_1, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_2, instance) );
-// 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_3, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_3, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_4, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_5, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_6, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_7, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_8, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_9, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_default_pool::test_case_10, instance) );
 
 	return test;
 }

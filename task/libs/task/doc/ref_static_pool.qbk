@@ -74,7 +74,7 @@
 [variablelist
 [[Preconditions:] [operating system provides functionality for processor pining]]
 [[Effects:] [constructs a pool - for each processor a worker-thread is created and bound to one processor - global-queue can queue an unlimited number of tasks]]
-[[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
+[[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
 [[Notes:] [constructor has to be called if a unbounded-channel is used]]
 ]
 
@@ -88,7 +88,7 @@
 
 [variablelist
 [[Effects:] [constructs a pool containing psize worker-threads - global-queue can queue an unlimited number of tasks]]
-[[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
+[[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
 [[Notes:] [constructor has to be called if a unbounded-channel is used]]
 ]
 
@@ -104,8 +104,8 @@
 [variablelist
 [[Preconditions:] [operating system provides functionality for processor pining]]
 [[Effects:] [constructs a pool - for each processor a worker-thread is created and bound to one processor - global-queue can only queue a limited number of tasks]]
-[[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
-[[Notes:] [Constructor has to be called if a bounded-channel is used.]]
+[[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
+[[Notes:] [constructor has to be called if a bounded-channel is used]]
 ]
 
 
@@ -120,7 +120,7 @@
 
 [variablelist
 [[Effects:] [constructs a pool containing psize worker-threads - global-queue can only queue a limited number of tasks]]
-[[Throws:] [`boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
+[[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
 [[Notes:] [constructor has to be called if a bounded-channel is used]]
 ]
 
@@ -130,8 +130,8 @@
 	~static_pool()
 
 [variablelist
-[[Effects:] [calls `:shutdown()` if not already called]]
-[[Throws:] [Nothing]]
+[[Effects:] [calls `shutdown()` if not already called]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -141,7 +141,7 @@
 
 [variablelist
 [[Effects:] [returns how many worker-threads are running in the pool]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -151,7 +151,7 @@
 
 [variablelist
 [[Effects:] [returns how many worker-threads are active (executing an task)]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -161,8 +161,8 @@
 
 [variablelist
 [[Effects:] [returns how many worker-threads are idle (not executing an task).]]
-[[Throws:] [Nothing]]
-[[Notes:] [The value is the difference of `size()` and `active()`]]
+[[Throws:] [nothing]]
+[[Notes:] [the value is the difference of `size()` and `active()`]]
 ]
 
 
@@ -172,7 +172,7 @@
 
 [variablelist
 [[Effects:] [deactivates the channel and joins all worker-threads - the pool is closed]]
-[[Throws:] [Nothing]]
+[[Throws:] [`boost::thread_interrupted`, `boost::system::system_error`]]
 [[Notes:] [all pending tasks are processed]]
 ]
 
@@ -183,7 +183,7 @@
 
 [variablelist
 [[Effects:] [deactivates the channel, send interruption request to all worker-threads and joins them - the pool is closed]]
-[[Throws:] [Nothing]]
+[[Throws:] [`boost::thread_interrupted`, `boost::system::system_error`]]
 [[Notes:] [pending tasks are not processed but returned]]
 ]
 
@@ -194,7 +194,7 @@
 
 [variablelist
 [[Effects:] [queries if the pool is closed (pool is shutdown)]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -204,7 +204,7 @@
 
 [variablelist
 [[Effects:] [removes all pending tasks from the channel]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -214,7 +214,7 @@
 
 [variablelist
 [[Effects:] [queries if the channel is empty]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -224,7 +224,7 @@
 
 [variablelist
 [[Effects:] [queries how many tasks are pending (still unprocessed) in the global-queue (channel)]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 ]
 
 
@@ -235,7 +235,7 @@
 [variablelist
 [[Preconditions:] [channel is of type bounded-channel]]
 [[Effects:] [returns the upper bound of the bounded-channel]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
 
@@ -260,7 +260,7 @@
 [variablelist
 [[Preconditions:] [channel is of type bounded-channel]]
 [[Effects:] [returns the lower bound of the bounded-channel]]
-[[Throws:] [Nothing]]
+[[Throws:] [nothing]]
 [[Notes:] [can only be used if a bounded-channel is used]]
 ]
 

@@ -17,7 +17,7 @@
 
 [variablelist
 [[Effects:] [executes task in an asyncrounous executer and returns a handle associated with the task]]
-[[Throws:] [Nothing]]
+[[Throws:] [`boost::thread_resource_error`]]
 ]
 
 [endsect]
@@ -34,7 +34,7 @@
 
 [variablelist
 [[Effects:] [executes task in a thread-pool and returns a handle associated with the task]]
-[[Throws:] [Nothing]]
+[[Throws:] [`boost::task::task_rejected`]]
 ]
 
 [endsect]
@@ -51,7 +51,7 @@
 
 [variablelist
 [[Effects:] [executes atrributed task in a thread-pool and returns a handle associated with the task]]
-[[Throws:] [Nothing]]
+[[Throws:] [`boost::task::task_rejected`]]
 ]
 
 [endsect]
