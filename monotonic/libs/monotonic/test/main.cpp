@@ -5,7 +5,6 @@
 #include <boost/monotonic/list.h>
 #include <boost/monotonic/map.h>
 #include <boost/monotonic/set.h>
-#include <boost/auto_buffer.hpp>
 
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
