@@ -5,6 +5,7 @@
 #include <boost/monotonic/list.h>
 #include <boost/monotonic/map.h>
 #include <boost/monotonic/set.h>
+#include <boost/auto_buffer.hpp>
 
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
@@ -12,6 +13,31 @@
 
 using namespace std;
 using namespace boost;
+
+// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/inline_storage.h> to
+// try this at home.
+void test_auto_buffer()
+{
+	monotonic::inline_storage<10> storage;
+
+	// this fails because the storage that the vector uses
+	// will be moved when the buffer resizes...
+	//monotonic::vector<int> vec(storage);
+	//for (size_t n = 0; n < 100; ++n)
+	//{
+	//	vec.push_back(n);
+	//}
+
+	// this fails because at the end of the buffer, just before
+	// it may be resized and possibly put onto heap, the following asserts
+	// on MSVC in <xtree>:
+	//		if (max_size() - 1 <= _Mysize)
+	//			_THROW(length_error, "map/set<T> too long");
+	//
+	//monotonic::map<int, int> map(storage);
+	//for (int n = 0; n < 100; ++n)
+	//	map[n] = n;
+}
 
 void test_basic()
 {
@@ -359,6 +385,7 @@ void test_map_list_realtime()
 
 int main()
 {
+	test_auto_buffer();
 	test_alignment();
 	test_speed();
 	test_speed_heap();

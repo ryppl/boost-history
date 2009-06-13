@@ -8,6 +8,15 @@
 #include <cassert>
 #include <boost/array.hpp>
 
+// define this to use boost::auto_buffer<> rather than boost::array for monotonic::inline_storage
+//#define BOOST_MONOTONIC_USE_AUTOBUFFER
+// this currently does not work, because resizing the underlying buffer breaks
+// containers that may reference the previously used memory
+
+#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
+#	include <boost/auto_buffer.hpp>
+#endif
+
 namespace boost
 {
 	namespace monotonic
@@ -16,12 +25,15 @@ namespace boost
 		template <size_t N>
 		struct inline_storage : storage_base
 		{
-			// how to determine alignment requirements?
-			BOOST_STATIC_CONSTANT(size_t, Alignment = 16);
+#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
+			typedef boost::auto_buffer<char, boost::store_n_bytes<N> > buffer_type;
+#else
+			typedef boost::array<char, N> buffer_type;
+#endif
 
 		private:
-			boost::array<char, N> buffer;	///< the storage
-			size_t cursor;					///< pointer to current index within storage for next allocation
+			buffer_type buffer;			///< the storage
+			size_t cursor;				///< pointer to current index within storage for next allocation
 
 		public:
 			inline_storage() : cursor(0)
@@ -47,9 +59,11 @@ namespace boost
 			void *allocate(size_t num_bytes, void const * = 0)
 			{
 				// ensure we return a point on an aligned boundary
-				//size_t extra = num_bytes % Alignment;
 				size_t extra = num_bytes & 15;
 				size_t required = num_bytes + extra;
+#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
+				buffer.uninitialized_resize(buffer.size() + required);
+#endif
 				char *ptr = &buffer[cursor];
 				cursor += required;
 				return ptr + extra;
