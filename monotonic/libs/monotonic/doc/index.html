@@ -38,7 +38,7 @@
             <h1>
                 Boost.Monotonic</h1>
             <p>
-                Boost.Monotonic is an implementation of an allocator that use a given, 
+                Boost.Monotonic is an implementation of an allocator that uses a given, 
                 fixed-size storage buffer. This buffer can be on the heap, or the stack, and may 
                 be shared by multiple containers.</p>
             <p>
@@ -66,11 +66,11 @@
             </p>
             <h2 id="Proposal">
                 Quick Example</h2>
-                <pre>void shared()<br />
-                {
+                <pre>void shared()<br />{
 	// declare the storage that will be shared by the containers
 	// it is on the stack here, but can be put on the heap with `new`
-	boost::monotonic::inline_storage&lt;10000&gt; storage;<br />	{		boost::monotonic::map&lt;int, int&gt; map(storage);
+	boost::monotonic::inline_storage&lt;10000&gt; storage;<br />			{		
+		boost::monotonic::map&lt;int, int&gt; map(storage);
 		map[1] = 2;
 		map[2] = 4;
 
@@ -88,7 +88,7 @@
                 Proposal
             </h2>
             <p>
-                The f="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
+                The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
                 This is This is a constant-time, stack-based STL-compliant[1] allocator and storage 
                 system with the following 
@@ -138,23 +138,42 @@
             <ul>
                 <li>provide details on default stack-sizes on each target platform </li>
                 <li>provide details as details on how to increase this. </li>
-                <li>provide guidance on &#39;good&#39; sizes for containers that are stored on the stack
+                <lprovide guidance on &#39;good&#39; sizes for containers that are stored on the stack
                 </li>
             </ul>
-            <h3 id="Containers">
-                Allocator</h3>
+            <h2 id="Architecture">
+                Architecture
+            </h2>
+            <p>
+                The architecture is quite simple. There are three main components: the storage, 
+                the allocator and the container. The storage is based on boost::array&lt;char,N&gt; 
+                and is on the stack or the heap. The allocator is stored in the container, which 
+                is initialised with either an allocator or storage.<h3 id="Containers">
+                Storage</h3>
+            <p>
+                The storage is provided via boost::monotonic::storage&lt;size_t num_bytes&gt;.;.</p>
+            <p>
+                Put it on the stack to use storage on the stack, or put it on the heap to use 
+                storage on the heap.</p>
+            <h3>
+              Allocator</h3>
             <p>
                 boost::monotonic::allocator&lt;T&gt; provides a means for a set of containers to share 
-                a memory buffer that may be on the stack or on the heap. Allocations performed 
-                by this allocator are aligned (thanks Artyom, Thorsten!); de-allocations 
+                monotonic::storage.</p>
+            <p>
+                &nbsp;Allocations performed 
+                by this allocator are correctly aligned for each container independantly (thanks 
+                Artyom, Thorsten!); de-allocations 
                 requested by this allocator do nothing.</p>
+            <p>
+                Allocators are initialised with storage.</p>
             <h3>
                 Containers
             </h3>
             <p>
-                The following container wrappers are part of this proposal:             </p>
+                The following container wrappers are, currently and precipitously, part of this proposal:             </p>
             <ul>
-                <li>boost::monotonic::list&lt;T&gt; </li>
+                <li>boost::monotonic::list&lt;T&gt; ; </li>
                 <li>boost::monotonic::vector&lt;T&gt; </li>
                 <li>boost::monotonic::map&lt;K,T&gt; </li>
                 <li>boost::monotonic::multi_map&lt;K,T&gt; </li>
@@ -163,51 +182,28 @@
                 <li>boost::monotonic::ptr_list&lt;T&gt; </li>
                 <li>boost::monotonic::ptr_vector&lt;T&gt; </li>
                 <li>boost::monotonic::ptr_map&lt;K,T&gt; </li>
-                <li>boost::monotonic::ptr_set&lt;T&gt; </li>
+                <lboost::monotonic::ptr_set&lt;T&gt; </li>
             </ul>
             <p>
                 boost::unordered can have a similar treatment.</p>
             <p>
-                It has IIt has been strongly suggested that these convenience structures be removed from 
-                the proposal. For comparison, the following are two exactly equivalent types:</p>
-            <pre>typedef boost::monotonic::vector&lt;int&gt; Vector;
+                Each of these are just the underlying container, which defaults to using 
+                boost::monotonic::allocator&lt;T&gt;.</p>
+            <p>
+                It has been strongly suggested that these convenience structures be removed from 
+                the proposal. For comparison, in the following Vector and Map are two exactly equivalent types:</p>
+            <pre>typedef boost::monotonic::vector&lt;int&gt; Vector;r;
 typedef std::vector&lt;int, boost::monotonic::allocator&lt;int&gt; &gt; Vector;</pre>
-            <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;
-typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
+            <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
             <p>
-                &nbsp;The matter can be argued either way. The container-wrappers currently remain 
-                part of the proposal, but this may well change. In the meantime, the user is 
-                quite capable of using either method:</p>
-            <h2 id="Architecture">
-                Architecture
-            </h2>
-            <p>
-                The architecture is quite simple. There are three main components: the storage, 
-                the allocator and the container. The storage is based on boost::array&lt;char,N&gt; 
-                and is on the stack or the heap. The allocator is stored in the 
-                container, which is initialised with either an allocator or storage, as shown 
-                for example with monotonic::map:
-                     <div class="code">
-                <pre>/// A std::map&lt;K,T,P&gt; that uses a monotonic allocator 
-template &lt;class K, class T, class P = std::less&lt;K&gt; &gt; 
-struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt; 
-{ 
-	typedef allocator&lt;K&gt; Allocator; 
-	typedef std::map&lt;K,T,P,Allocator &gt; Map; 
-	typedef P Predicate; 
-	map() { } 
-	map(storage_base &amp;S) : Map(Predicate(), Allocator(S)) { } 
-	map(Allocator const &amp;A) : Map(Predicate(), A) { } 
-	map(Predicate P, Allocator const &amp;A) : Map(P, A) { } 
-	// other parameter-forwarding ctors elided for brevity
-}; </pre>
-            </div>
+                The container-wrappers currently remain part of the proposal, but this may well 
+                change. In the meantime, the user is quite capable of using either method.</p>
             <h2 id="ExampleUsage">
                 Memory Fragmentation</h2>
             <p>
                 The proposed system can be used to reduce memory fragmentation, or remove it 
                 completely. For example:</p>
-                <pre>void Mainloop()
+                <pre>void Mainloop()()
 {
 	boost::monotonic::storage&lt;100000&gt; storage;
 	for (;;)
