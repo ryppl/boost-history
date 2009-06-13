@@ -245,11 +245,49 @@ namespace
 
 void test_alignment()
 {
+	monotonic::inline_storage<10000> storage;
+	typedef boost::array<char, 3> c0;
+	typedef boost::array<char, 6> c1;
+	typedef boost::array<char, 11> c2;
+	typedef boost::array<char, 31> c3;
+	typedef boost::array<char, 33> c4;
+	typedef boost::array<char, 57> c5;
+	typedef boost::array<char, 111> c6;
+
+	monotonic::vector<c0> v0(storage);
+	monotonic::vector<c1> v1(storage);
+	monotonic::vector<c2> v2(storage);
+	monotonic::vector<c3> v3(storage);
+	monotonic::vector<c4> v4(storage);
+	monotonic::vector<c5> v5(storage);
+	monotonic::vector<c6> v6(storage);
+
+	v0.resize(5);
+	v1.resize(5);
+	v2.resize(5);
+	v3.resize(5);
+	v4.resize(5);
+	v5.resize(5);
+	v6.resize(5);
+#define write_cn(n) \
+	BOOST_FOREACH(c ## n &c, v ## n) \
+		c = c ## n();
+	write_cn(0);
+	write_cn(1);
+	write_cn(2);
+	write_cn(3);
+	write_cn(4);
+	write_cn(5);
+	write_cn(6);
+#undef write_cn
+
+
 	test_loop_monotonic<char>();
 	test_loop_monotonic<long>();
 
 	test_loop_std<char>();
 	test_loop_std<short>();
+
 }
 
 template <class List>
@@ -384,8 +422,8 @@ void test_map_list_realtime()
 
 int main()
 {
-	test_auto_buffer();
 	test_alignment();
+	test_auto_buffer();
 	test_speed();
 	test_speed_heap();
 	test_map_list_realtime();

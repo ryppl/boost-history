@@ -26,7 +26,6 @@ namespace boost
 		template <size_t N>
 		struct inline_storage : storage_base
 		{
-			BOOST_STATIC_CONSTANT(size_t, mask = boost::aligned_storage<1>::alignment - 1);
 
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
 			typedef boost::auto_buffer<char, boost::store_n_bytes<N> > buffer_type;
@@ -58,11 +57,10 @@ namespace boost
 				cursor = c;
 			}
 
-			/// allocate storage. ignore hint.
-			void *allocate(size_t num_bytes, void const * = 0)
+			/// allocate storage, given alignment mask
+			void *allocate(size_t num_bytes, size_t mask)
 			{
 				// ensure we return a point on an aligned boundary
-				int n = mask;
 				size_t extra = num_bytes & mask;
 				size_t required = num_bytes + extra;
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER

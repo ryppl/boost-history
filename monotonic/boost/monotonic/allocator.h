@@ -97,11 +97,13 @@ namespace boost
 				return &x;
 			}
 
-			pointer allocate(size_type num, allocator<void>::const_pointer hint = 0)
+			BOOST_STATIC_CONSTANT(size_t, alignment_mask = boost::aligned_storage<sizeof(T)>::alignment - 1);
+
+			pointer allocate(size_type num, allocator<void>::const_pointer /*hint*/ = 0)
 			{
 				BOOST_ASSERT(num > 0);
 				BOOST_ASSERT(storage != 0);
-				return static_cast<T *>(storage->allocate(num*sizeof(T), hint));
+				return static_cast<T *>(storage->allocate(num*sizeof(T), alignment_mask));
 			}
 
 			void deallocate(pointer p, size_type n)

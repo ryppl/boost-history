@@ -9,10 +9,12 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// base structure for inline_storage<N>. should be removed.
+		/// base structure for inline_storage<N>
 		struct storage_base
 		{
-			virtual void *allocate(size_t num_bytes, void const *hint = 0) = 0;
+			// the number of bytes to allocate, and the bit-mask to use for correct byte-alignment
+			virtual void *allocate(size_t num_bytes, size_t mask) = 0;
+
 			virtual void deallocate(void *base, size_t num_bytes) = 0;
 			virtual size_t max_size() const = 0;
 			virtual size_t remaining() const = 0;
