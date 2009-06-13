@@ -121,7 +121,7 @@
 				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
-				DebugInformationFormat="3"
+				DebugInformationFormat="0"
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
@@ -215,6 +215,10 @@
 				</File>
 			</Filter>
 		</Filter>
+		<File
+			RelativePath="..\doc\index.html"
+			>
+		</File>
 		<File
 			RelativePath=".\main.cpp"
 			>

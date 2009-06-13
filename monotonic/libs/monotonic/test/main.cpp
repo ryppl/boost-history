@@ -343,7 +343,7 @@ void test_map_list_realtime()
 	for (int n = 0; n < outter_loops; ++n)
 	{
 		test_map_list_impl_mono(inner_loops, storage);	
-		storage.reset();
+		storage.reset(); ///<<< reset the memory usage to zero
 	}
 	double e0 = t0.elapsed();
 	cout << "test_map_list: mono: " << e0 << endl;
@@ -359,10 +359,10 @@ void test_map_list_realtime()
 
 int main()
 {
+	test_alignment();
 	test_speed();
 	test_speed_heap();
 	test_map_list_realtime();
-	test_alignment();
 	test_basic();
 	test_copy();
 	test_ctors();

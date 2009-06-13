@@ -24,13 +24,13 @@
                     <th class="docinfo-name">
                         Version:</th>
                     <td>
-                        Unversioned, still just in vault</td>
+                        0.1a</td>
                 </tr>
                 <tr class="field">
                     <th class="docinfo-name">
                         License:</th>
                     <td class="field-body">
-                        None.</td>
+                        Distributed under the Boost Software License, Version 1.0.</td>
                 </tr>
             </tbody>
         </table>
@@ -38,9 +38,9 @@
             <h1>
                 Boost.Monotonic</h1>
             <p>
-                Boost.Monotonic is an implementation of container allocators that use a given, 
-                fixed-size storage buffer.
-                This buffer can be on the heap, or the stack.</p>
+                Boost.Monotonic is an implementation of an allocator that use a given, 
+                fixed-size storage buffer. This buffer can be on the heap, or the stack, and may 
+                be shared by multiple containers.</p>
             <h2 id="Motivation">
                 Motivation
             </h2>
@@ -52,7 +52,7 @@
                 There are many uses for such a system, including per-frame containers and 
                 efficient containers for use in recursion.             </p>
             <p>
-                It is the fastest allocation system theoretically possible, with the downside 
+                It is a fast allocation system, with the downside 
                 that the resident set size can only grow in size. Hence the proposed name of a 
                 &quot;monotonic&quot; allocator.
             </p>
@@ -60,10 +60,9 @@
                 Proposal
             </h2>
             <p>
-                The source code resides at <a href="http://www.boostpro.com/vault/index.php?action=downloadfile&amp;filename=MonotonicAllocator.zip&amp;directory=&amp;" 
-                    target="_blank">http://www.boostpro.com/vault/<wbr>index.php?action=downloadfile&amp;<wbr>filename=MonotonicAllocator.<wbr>zip&amp;directory=&amp;</a>.</p>
+                The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
-                This is a constant-time, stack-based STL-compliant allocator with the following 
+                This is a constant-time, stack-based STL-compliant[1] allocator with the following 
                 properties:             </p>
             <ul>
                 <li>Space for objects is pre-allocated. This can be on the heap <strong>or</strong> 
@@ -83,7 +82,8 @@
                         <li>Cache coherency is high </li>
                     </ul>
                 </li>
-                <li>Allocation is lightening-fast as it only involves advancing a pointer </li>
+                <li>Allocation is lightening-fast as it only involves advancing a pointer and 
+                    possible alignment.</li>
                 <li>Deallocation is even faster as it does absolutely nothing </li>
                 <li>Different containers can share the same storage </li>
             </ul>
@@ -267,6 +267,13 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
 </pre>
             </div>
             <div id="reference" class="section">
+                <h2>
+                    Notes</h2>
+                <p>
+                    [1] It can be argued that the proposed allocator is not in fact &quot;STL-compliant&quot;, 
+                    as it includes a pointer to storage used by the allocator. This can be addressed 
+                    either by changing the standard to allow an allocator to store a pointer, or by 
+                    removing this pointer and using a global pointer-to-storage.</p>
                 <h2>
                     References</h2>
                 <ul class="simple">
