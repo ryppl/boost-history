@@ -49,8 +49,9 @@
                 this way, for example a std::map&lt;K,T&gt; can use storage from the stack rather than 
                 fragmenting the heap.             </p>
             <p>
-                There are many uses for such a system, including per-frame containers and 
-                efficient containers for use in recursion.             </p>
+                There are many uses for such a system, including per-frame containers, 
+                efficient use containers for use in recursion, and reducing or removing heap 
+                fragmentation.             </p>
             <p>
                 It is a fast allocation system, with the downside 
                 that the resident set size can only grow in size. Hence the proposed name of a 
@@ -112,6 +113,13 @@
                 </li>
             </ul>
             <h3 id="Containers">
+                Allocator</h3>
+            <p>
+                boost::monotonic::allocator&lt;T&gt; provides a means for a set of containers to share 
+                a memory buffer that may be on the stack or on the heap. Allocations performed 
+                by this allocator are aligned (thanks Artyom, Thorsten!); de-allocations 
+                requested by this allocator do nothing.</p>
+            <h3>
                 Containers
             </h3>
             <p>
@@ -155,6 +163,20 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
                 <pre>}; </pre>
             </div>
             <h2 id="ExampleUsage">
+                Memory Fragmentation</h2>
+            <p>
+                The proposed system can be used to reduce memory fragmentation, or remove it 
+                completely. For example:</p>
+                <pre>void Mainloop()
+{
+	boost::monotonic::storage&lt;100000&gt; storage;
+	for (;;)
+	{
+		DoStuff(storage);
+		storage.reset();
+	}
+}</pre>
+            <h2>
                 Example Usage
             </h2>
             <p>
@@ -277,7 +299,10 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
                 <h2>
                     References</h2>
                 <ul class="simple">
-                    <li>&lt;none&gt;</li>
+                    <li>Boost.AlignedMemory</li>
+                    <li>Boost.AutoBuffer (Proposed)</li>
+                    <li>Boost.IntrusiveContainer, for an alternative means of creating efficient 
+                        containers.</li>
                 </ul>
             </div>
         </div>
