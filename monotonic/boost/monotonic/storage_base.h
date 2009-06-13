@@ -5,33 +5,19 @@
 
 #pragma once
 
-#include <limits>
-#include <stdlib.h>
 #include <boost/monotonic/storage.h>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		/// base structure for all allocators. 
-		/// 
-		/// implements storage_interface using malloc and free
-		struct storage_base : storage_interface
+		/// base structure for inline_storage<N>. should be removed.
+		struct storage_base
 		{
-			void *allocate(size_t num_bytes, void const * = 0)
-			{
-				return malloc(num_bytes);
-			}
-
-			void deallocate(void *p, size_t /*n*/)
-			{
-				free(p);
-			}
-
-			size_t max_size() const
-			{
-				return std::numeric_limits<std::size_t>::max();
-			}
+			virtual void *allocate(size_t num_bytes, void const *hint = 0) = 0;
+			virtual void deallocate(void *base, size_t num_bytes) = 0;
+			virtual size_t max_size() const = 0;
+			virtual size_t remaining() const = 0;
 		};
 	}
 }

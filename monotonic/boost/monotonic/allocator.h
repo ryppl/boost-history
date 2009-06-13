@@ -54,7 +54,7 @@ namespace boost
 			};
 
 			/// the storage used by the allocator
-			storage_interface *storage;
+			storage_base *storage;
 
 		public:
 			allocator() throw() 
@@ -62,7 +62,7 @@ namespace boost
 			{
 			}
 
-			allocator(storage_interface &P) throw() 
+			allocator(storage_base &P) throw() 
 				: storage(&P)
 			{
 			}
