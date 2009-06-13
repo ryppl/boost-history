@@ -7,13 +7,17 @@
 
 #include <boost/monotonic/storage_base.h>
 #include <boost/monotonic/inline_storage.h>
+#include <boost/assert.hpp>
+#include <boost/swap.hpp>
+#include <boost/type_traits/has_trivial_constructor.hpp>
+#include <boost/type_traits/has_trivial_destructor.hpp>
 
 namespace boost
 {
 	namespace monotonic
 	{
 		/// forward declaration
-		template <class T> 
+		template <class> 
 		class allocator;
 
 		/// specialization for void
@@ -95,7 +99,8 @@ namespace boost
 
 			pointer allocate(size_type num, allocator<void>::const_pointer hint = 0)
 			{
-				assert(num > 0);
+				BOOST_ASSERT(num > 0);
+				BOOST_ASSERT(storage != 0);
 				return static_cast<T *>(storage->allocate(num*sizeof(T), hint));
 			}
 
@@ -106,6 +111,7 @@ namespace boost
 
 			size_type max_size() const throw()
 			{
+				BOOST_ASSERT(storage != 0);
 				return storage->max_size();
 			}
 
@@ -113,6 +119,7 @@ namespace boost
 			{
 				new (p) T();
 			}
+
 			void construct(pointer p, const T& val)
 			{
 				new (p) T(val);
@@ -122,12 +129,21 @@ namespace boost
 			{
 				if (!p)
 					return;
-				p->T::~T();
+				destroy(p, boost::has_trivial_destructor<T>());
+			}
+
+			void destroy(pointer p, const boost::false_type& )
+			{
+				(*p).~T();
+			}
+
+			void destroy(pointer, const boost::true_type& )
+			{ 
 			}
 
 			void swap(allocator<T> &other)
 			{
-				std::swap(storage, other.storage);
+				boost::swap(storage, other.storage);
 			}
 
 			friend bool operator==(allocator<T> const &A, allocator<T> const &B) { return A.storage == B.storage; }

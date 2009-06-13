@@ -7,6 +7,7 @@
 
 #include <cassert>
 #include <boost/array.hpp>
+#include <boost/aligned_storage.hpp>
 
 // define this to use boost::auto_buffer<> rather than boost::array for monotonic::inline_storage
 //#define BOOST_MONOTONIC_USE_AUTOBUFFER
@@ -25,6 +26,8 @@ namespace boost
 		template <size_t N>
 		struct inline_storage : storage_base
 		{
+			BOOST_STATIC_CONSTANT(size_t, mask = boost::aligned_storage<1>::alignment - 1);
+
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
 			typedef boost::auto_buffer<char, boost::store_n_bytes<N> > buffer_type;
 #else
@@ -59,7 +62,8 @@ namespace boost
 			void *allocate(size_t num_bytes, void const * = 0)
 			{
 				// ensure we return a point on an aligned boundary
-				size_t extra = num_bytes & 15;
+				int n = mask;
+				size_t extra = num_bytes & mask;
 				size_t required = num_bytes + extra;
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
 				buffer.uninitialized_resize(buffer.size() + required);
