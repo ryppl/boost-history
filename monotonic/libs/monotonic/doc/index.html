@@ -86,7 +86,7 @@
 		std::list&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; list(storage);
 		std::copy(vec.begin(), vec.end(), std::back_inserter(list));
 
-		typedef std::pair&lt;const int, int&gt; pair;
+		typedef std::pair&lt;int, int&gt; pair;
 		std::set&lt;pair, std::less&lt;pair&gt;, boost::monotonic::allocator&lt;pair&gt; &gt; set(storage);
 		std::copy(map.begin(), map.end(), std::inserter(set));
 	}
