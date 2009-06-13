@@ -67,21 +67,27 @@
             </p>
             <h2 id="Proposal">
                 Quick Example</h2>
+            <p>
+                The following example uses std::containers with the allocator in this library by 
+                explicitly declaring the allocator type. An optional and debatable extension to 
+                the library includes some basic wrapper types around the std::containers that 
+                simplifies the syntax somewhat.</p>
                 <pre>void shared()<br />{
-	// declare the storage that will be shared by the containers
-	// it is on the stack here, but can be put on the heap with `new`
-	boost::monotonic::inline_storage&lt;10000&gt; storage;<br />			{		
-		boost::monotonic::map&lt;int, int&gt; map(storage);
+	// declare the storage that will be shared by the various containers.
+	// storage is on the stack here, but can be put on the heap with `new`
+	boost::monotonic::inline_storage&lt;10000&gt; storage;<br />	{		
+		std::map&lt;int, int, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; map(storage);
 		map[1] = 2;
 		map[2] = 4;
 
-		boost::monotonic::vector&lt;char&gt; vec(storage);
+		std::vector&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; vec(storage);
 		vec.assign(&#39;x&#39;, 4);
 
-		boost::monotonic::list&lt;char&gt; list(storage);
+		std::list&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; list(storage);
 		std::copy(vec.begin(), vec.end(), std::back_inserter(list));
 
-		boost::monotonic::set&lt;std::pair&lt;const int, int&gt; set(storage);
+		typedef std::pair&lt;const int, int&gt; pair;
+		std::set&lt;pair, std::less&lt;pair&gt;, boost::monotonic::allocator&lt;pair&gt; &gt; set(storage);
 		std::copy(map.begin(), map.end(), std::inserter(set));
 	}
 }</pre>
@@ -89,7 +95,7 @@
                 Proposal
             </h2>
             <p>
-                The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
+                The e <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
                 This is This is a constant-time, stack-based STL-compliant[1] allocator and storage 
                 system with the following 
