@@ -123,7 +123,7 @@
                 Containers
             </h3>
             <p>
-                The following containers are part of this proposal:             </p>
+                The following container wrappers are part of this proposal:             </p>
             <ul>
                 <li>boost::monotonic::list&lt;T&gt; </li>
                 <li>boost::monotonic::vector&lt;T&gt; </li>
@@ -138,6 +138,14 @@
             </ul>
             <p>
                 boost::unordered can have a similar treatment.</p>
+            <p>
+                It has been strongly suggested that these convenience structures be removed from 
+                the proposal. For comparison, the following are two exactly equivalent types:</p>
+            <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;
+typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt;, 
+                std::less, boost::monotonic::allocator&lt;int&gt; &gt; Map;<p>
+                The matter can be argued either way. The container-wrappers currently remain 
+                part of the proposal, but this may change.</p>
             <h2 id="Architecture">
                 Architecture
             </h2>
@@ -159,8 +167,9 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
 	map() { } 
 	map(storage_base &amp;S) : Map(Predicate(), Allocator(S)) { } 
 	map(Allocator const &amp;A) : Map(Predicate(), A) { } 
-	map(Predicate P, Allocator const &amp;A) : Map(P, A) { } </pre>
-                <pre>}; </pre>
+	map(Predicate P, Allocator const &amp;A) : Map(P, A) { } 
+	// other parameter-forwarding ctors elided for brevity
+}; </pre>
             </div>
             <h2 id="ExampleUsage">
                 Memory Fragmentation</h2>
@@ -177,6 +186,12 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
 	}
 }</pre>
             <h2>
+                Performance</h2>
+            <p>
+                This is still under investigation. Results to follow. The code in the sandbox 
+                gives a favorable indication, but far more exhaustive testing is required before 
+                any claims can be confidently made.</p>
+            <h2>
                 Example Usage
             </h2>
             <p>
@@ -188,8 +203,8 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
 {
     boost::monotonic::inline_storage&lt;100*<span class="code-lang"><b>sizeof</b>(Object)&gt; storage;   <i><span 
                     class="code-comment">// create local storage on the stack
-</span></i>    boost::monotonic::vector&lt;Object&gt; deathrow(storage);   <i><span 
-                    class="code-comment">// create a std::vector that uses this storage</span></i></span></pre>
+</span></i>    boost::monotonic::list&lt;Object&gt; deathrow(storage);   <i><span 
+                    class="code-comment">// create a std::list that uses this storage</span></i></span></pre>
                 <pre><span class="code-lang"><span 
                     class="code-comment">    foreach (object in world)
     {
@@ -240,7 +255,7 @@ struct map : std::map&lt;K,T,P, allocator&lt;K&gt; &gt;
             <div class="code">
                 <pre><b><span class="code-type">void</span></b> <b><span class="code-func">DoSomething</span></b>(boost::monotonic::storage_base &amp;storage)
 {      
-    boost::monotonic::vector&lt;Object&gt; vector(storage);
+    boost::monotonic::list&lt;Object&gt; vector(storage);
     <span class="code-comment"><i>// populate and use vector</i>
     DoSomethingElse(storage);
 }
