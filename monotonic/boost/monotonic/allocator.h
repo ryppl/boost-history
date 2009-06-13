@@ -8,7 +8,7 @@
 #include <boost/monotonic/storage_base.h>
 #include <boost/monotonic/inline_storage.h>
 #include <boost/assert.hpp>
-#include <boost/swap.hpp>
+//#include <boost/swap.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
@@ -143,7 +143,7 @@ namespace boost
 
 			void swap(allocator<T> &other)
 			{
-				boost::swap(storage, other.storage);
+				std::swap(storage, other.storage);
 			}
 
 			friend bool operator==(allocator<T> const &A, allocator<T> const &B) { return A.storage == B.storage; }
