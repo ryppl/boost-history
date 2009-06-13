@@ -5,8 +5,6 @@
 
 #pragma once
 
-#include <boost/monotonic/storage.h>
-
 namespace boost
 {
 	namespace monotonic

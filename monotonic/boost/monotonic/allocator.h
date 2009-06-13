@@ -5,7 +5,6 @@
 
 #pragma once
 
-#include <boost/monotonic/storage.h>
 #include <boost/monotonic/storage_base.h>
 #include <boost/monotonic/inline_storage.h>
 
