@@ -9,7 +9,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>
-#include <boost/detail/detail/interlocked.hpp>
+#include <boost/detail/interlocked.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -19,20 +19,20 @@ namespace detail
 {
 inline
 void atomic_exchange( uint32_t volatile * object, uint32_t desired)
-{ BOOST_INTERLOCKED_EXCHANGE( object, desired); }
+{ BOOST_INTERLOCKED_EXCHANGE( reinterpret_cast< long volatile * >( object), desired); }
 
 inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return BOOST_INTERLOCKED_INCREMENT( object);
+	return BOOST_INTERLOCKED_INCREMENT( reinterpret_cast< long volatile * >( object) );
 }
 
 inline
 uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return BOOST_INTERLOCKED_DECREMENT( object);
+	return BOOST_INTERLOCKED_DECREMENT( reinterpret_cast< long volatile * >( object) );
 }
 } } }
 

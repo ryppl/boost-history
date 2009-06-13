@@ -13,9 +13,16 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/task/detail/config.hpp>
+
 extern "C"
 {
+#if defined( BOOST_POSIX_API)
 #include <unistd.h>
+# endif
+# if defined( BOOST_WINDOWS_API)
+#include <windows.h>
+# endif
 }
 
 #include <boost/bind.hpp>
@@ -40,7 +47,13 @@ void delay_fn( pt::time_duration const& td)
 { boost::this_thread::sleep( td); }
 
 void non_interrupt_fn( int sec)
-{ ::sleep( sec); }
+{
+# if defined( BOOST_WINDOWS_API)
+	::Sleep( sec * 1000);
+# else
+	::sleep( sec);
+# endif
+}
 
 void interrupt_fn( pt::time_duration const& td, bool & finished)
 {
