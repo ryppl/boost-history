@@ -1,4 +1,4 @@
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #include <boost/monotonic/vector.h>
@@ -210,7 +210,7 @@ namespace
 {
 
 	template<typename C>
-	struct Foo 
+	struct Foo
 	{
 		long ord;
 		C c;
@@ -224,7 +224,7 @@ namespace
 	{
 		boost::monotonic::inline_storage<100000> storage;
 		boost::monotonic::vector<Foo<C> > vec(storage);
-		Foo<C> orig = { 'A', 65 };      
+		Foo<C> orig = { 'A', 65 };
 		vec.assign(ELEM_COUNT, orig);
 		boost::timer timer;
 		for (int i = 0; i < LOOP_COUNT; ++i)
@@ -236,7 +236,7 @@ namespace
 	template <class C>
 	void test_loop_std()
 	{
-		Foo<C> orig = { 'A', 65 };      
+		Foo<C> orig = { 'A', 65 };
 		std::vector<Foo<C> > vec;
 		vec.assign(ELEM_COUNT, orig);
 		boost::timer timer;
@@ -255,10 +255,10 @@ void test_alignment()
 	// the two arguments to storage.allocate are the size, and the required alignment
 	void *P = storage.allocate(3, 4);
 	assert(P == storage.begin() + 0);
-	
+
 	P = storage.allocate(3, 4);
 	assert(P == storage.begin() + 4);
-	
+
 	P = storage.allocate(11, 4);
 	assert(P == storage.begin() + 8);
 
@@ -414,7 +414,7 @@ void test_map_list_impl_std(size_t count)
 }
 
 // the purpose of this test is to simulate a `realtime system`
-// which does an amount of work each frame, then does a similar 
+// which does an amount of work each frame, then does a similar
 // amount of work the next frame.
 void test_map_list_realtime()
 {
@@ -423,18 +423,18 @@ void test_map_list_realtime()
 	const size_t inner_loops = 10000;
 
 	boost::timer t0;
-	for (int n = 0; n < outter_loops; ++n)
+	for (size_t n = 0; n < outter_loops; ++n)
 	{
-		test_map_list_impl_mono(inner_loops, storage);	
+		test_map_list_impl_mono(inner_loops, storage);
 		storage.reset(); ///<<< reset the memory usage to zero
 	}
 	double e0 = t0.elapsed();
 	cout << "test_map_list: mono: " << e0 << endl;
 
 	boost::timer t1;
-	for (int n = 0; n < outter_loops; ++n)
+	for (size_t n = 0; n < outter_loops; ++n)
 	{
-		test_map_list_impl_std(inner_loops);	
+		test_map_list_impl_std(inner_loops);
 	}
 	double e1 = t1.elapsed();
 	cout << "test_map_list:  std: " << e1 << endl;
@@ -462,7 +462,7 @@ void test_shared_allocators()
 		assert(v0.get_allocator() != v2.get_allocator());
 		assert(v3.get_allocator() != v1.get_allocator());
 
-		for (int n = 0; n < 10; ++n) 
+		for (int n = 0; n < 10; ++n)
 			v0.push_back(n);
 
 		v1 = v0;
