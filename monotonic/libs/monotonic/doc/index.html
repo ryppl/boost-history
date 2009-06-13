@@ -38,9 +38,10 @@
             <h1>
                 Boost.Monotonic</h1>
             <p>
-                Boost.Monotonic is an implementation of an allocator that uses a given, 
-                fixed-size storage buffer. This buffer can be on the heap, or the stack, and may 
-                be shared by multiple containers.</p>
+                This proposal uses std::allocators and a common storage concept to provide 
+                correctly-aligned allocation of objects of different types from the same buffer. 
+                This buffer can be on the heap or on the stack. The allocation model is designed 
+                to be optimal-in-time.</p>
             <p>
                 The name &#39;monotonic&#39; has been criticised as being too general and not really 
                 indicative of the scope and purpose of the library. All alternative suggestions 
@@ -49,7 +50,7 @@
                 Motivation
             </h2>
             <p>
-                We would like to use STL containers which take their storage from the stack. In 
+                We would like to use the various STL containers which take their storage from the stack. In 
                 this way, for example a std::map&lt;K,T&gt; can use storage from the stack rather than 
                 fragmenting the heap.             Also, it would be great if the same storage 
                 could be used by different containers, and even better if we could chose to use 
@@ -59,8 +60,8 @@
                 efficient use containers for use in recursion, and reducing or removing heap 
                 fragmentation.             </p>
             <p>
-                This is what this library does, all in one little allocator and storage 
-                type.
+                This is what this library does, by collaborating various allocators with a 
+                common shared storage.
                 It is a fast allocation system, O(1) to allocate and zero-cost to deallocate; hence the proposed name of a 
                 &quot;monotonic&quot; allocator.
             </p>
