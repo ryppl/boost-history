@@ -25,6 +25,7 @@ rule task-test ( source )
 }
 
 test-suite task :
+    [ task-test test_futures ]
     [ task-test test_own_thread ]
     [ task-test test_new_thread ]
     [ task-test test_default_pool ]

@@ -1358,10 +1358,6 @@ namespace boost
         }
         
     };
-	
-	template< typename T >
-	detail::thread_move_t< packaged_task< T > > move( packaged_task< T > & t)
-	{ return detail::thread_move_t< packaged_task< T > >( t); }
 }
 
 #endif
