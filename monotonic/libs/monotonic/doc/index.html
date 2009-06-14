@@ -95,7 +95,7 @@
                 Proposal
             </h2>
             <p>
-                The e <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
+                                The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
                 This is a constant-time, STL-compliant[1] allocator and storage 
                 system with the following 
@@ -104,7 +104,7 @@
                 <li>Space for objects is pre-allocated. This can be on the heap <strong>or</strong> 
                     on the stack. </li>
                 <li>Objects are initialised only as required. </li>
-                <li>De-allocDe-allocating an object calls its destructor iff it has one.</li>
+                <li>De-allocating an object calls its destructor iff it has one.</li>
                 <li>Object storage is not reclaimed until the underlying storage goes out of scope.
                 </li>
                 <li>Multiple different containers of any type can share the same storage via 
@@ -174,8 +174,8 @@
                 requested by this allocator do nothing.</p>
             <p>
                 Allocators are initialised with storage. There is no overhead added to any 
-                memory allocation, other than the number of bytes required, plus whatever is 
-                required by the platform for correct alignment.</p>
+                memory allocation; the only bytes used are the number of bytes required, plus 
+                whatever is required by the platform for correct alignment.</p>
             <h3>
                 Containers
             </h3>
