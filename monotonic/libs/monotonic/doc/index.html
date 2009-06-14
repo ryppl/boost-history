@@ -188,8 +188,8 @@
             <p>
                 The following container wrappers are, currently and precipitously, part of this proposal:             </p>
             <ul>
-                <li>boost::monotonic::list&lt;T&gt; ; </li>
-                <li>boost::monotonic::vector&lt;T&gt; </li>
+                <li>bboost::monotonic::list&lt;T&gt;</li>
+                <li>boost::monotonic::vector&lt;T&gt; /li>
                 <li>boost::monotonic::map&lt;K,T&gt; </li>
                 <li>boost::monotonic::multi_map&lt;K,T&gt; </li>
                 <li>boost::monotonic::set&lt;T&gt; </li>
@@ -207,14 +207,15 @@
             <p>
                 It has been strongly suggested that these convenience structures be removed from 
                 the proposal. For comparison, in the following Vector and Map are two exactly equivalent types:</p>
-            <pre>typedef boost::monotonic::vector&lt;int&gt; Vector;r;
+            <pre>ttypedef boost::monotonic::vector&lt;int&gt; Vector;
 typedef std::vector&lt;int, boost::monotonic::allocator&lt;int&gt; &gt; Vector;</pre>
-            <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
+            <pre>typedef boost::monotonic::map&lt;int, boost::monotonic::list&lt;int&gt; &gt; Map;
+typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt; &gt;, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; Map;</pre>
             <p>
                 The container-wrappers currently remain part of the proposal, but this may well 
                 change. In the meantime, the user is quite capable of using either method.</p>
             <h2 id="ExampleUsage">
-                Memory Fragmentation</h2>
+                Memory Fragmentation/h2>
             <p>
                 The proposed system can be used to reduce memory fragmentation, or remove it 
                 completely. For example:</p>
