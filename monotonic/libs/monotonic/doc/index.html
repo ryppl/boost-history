@@ -66,9 +66,9 @@
                 efficient use containers for use in recursion, and reducing or removing heap 
                 fragmentation.             </p>
             <p>
-                This is what this library does, by collaborating multiple instances of the same 
-                type of allocator with a 
-                common shared storage.
+                This is what this library does, by collaborating multiple instances of 
+                monotonic::allocator&lt;T&gt; with a 
+                common montonic::storage&lt;N&gt;.
                 It is a fast allocation system, O(1) to allocate and zero-cost to deallocate; hence the proposed name of a 
                 &quot;monotonic&quot; allocator.             </p>
             <h2 id="Proposal">
