@@ -1,0 +1,82 @@
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+// the documentation is at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+
+// the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
+
+#include <boost/monotonic/vector.h>
+#include <boost/monotonic/list.h>
+#include <boost/monotonic/map.h>
+#include <boost/monotonic/set.h>
+
+#include <boost/timer.hpp>
+#include <boost/foreach.hpp>
+#include <iostream>
+
+#include <boost/range.hpp>
+#include <boost/iterator/counting_iterator.hpp>
+#include <boost/array.hpp>
+#include <boost/scoped_ptr.hpp>
+
+#include <boost/monotonic/rope.h>
+
+using namespace boost;
+using namespace std;
+
+void test_iter_range()
+{
+	std::vector<int> v(10);
+	boost::iter_range<std::vector<int> > r(v);
+	boost::const_iter_range<std::vector<int> > c(r);
+}
+void test_rope()
+{
+	monotonic::inline_storage<1000> storage;
+	{
+		typedef monotonic::rope<int, 2> Rope;
+		Rope rope(storage);
+		rope.push_back(0);
+		rope.push_back(1);
+		rope.push_back(2);
+		rope.push_back(3);
+
+		Rope::iterator A = rope.begin(), B = rope.end();
+		for (; A != B; ++A)
+		{
+			*A *= 2;
+		}
+		Rope::const_iterator C = rope.begin(), D = rope.end();
+		for (; C != D; ++C)
+		{
+			cout << *C;
+		}
+
+		//BOOST_FOREACH(int n, rope)
+		//{
+		//	cout << n << endl;
+		//}
+
+		//BOOST_FOREACH(int &n, rope)
+		//{
+		//	n *= 2;
+		//}
+		//BOOST_FOREACH(int n, rope)
+		//{
+		//	cout << n << endl;
+		//}
+
+
+		rope[0] = 0;
+		rope[1] = 1;
+		rope[2] = 2;
+		rope[3] = 3;
+		assert(*rope.begin() == 0);
+		assert(rope.at(0) == 0);
+		assert(rope.at(1) == 1);
+		assert(rope.at(2) == 2);
+		assert(rope.at(3) == 3);
+	}
+}
+
+//EOF

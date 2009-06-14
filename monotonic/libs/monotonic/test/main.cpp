@@ -429,8 +429,11 @@ void test_shared_allocators()
 	}
 }
 
+void test_rope();
+
 int main()
 {
+	test_rope();
 	test_shared_allocators();
 	test_alignment();
 	test_auto_buffer();

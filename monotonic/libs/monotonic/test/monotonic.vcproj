@@ -214,6 +214,14 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="utility"
+				>
+				<File
+					RelativePath="..\..\..\boost\utility\iter_range.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath="..\doc\index.html"
@@ -221,6 +229,10 @@
 		</File>
 		<File
 			RelativePath=".\main.cpp"
+			>
+		</File>
+		<File
+			RelativePath=".\rope.cpp"
 			>
 		</File>
 	</Files>
