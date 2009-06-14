@@ -43,6 +43,8 @@ public:
     typedef interval_base_map <split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>, 
                                DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> base_type;
 
+	typedef DomainT domain_type;
+	typedef CodomainT codomain_type;
     typedef Interval<DomainT,Compare> interval_type;
     typedef typename base_type::iterator iterator;
     typedef typename base_type::value_type value_type;
@@ -211,7 +213,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     if(Traits::absorbs_neutrons && value.CONT_VALUE == Combiner::neutron())
         return;
 
-	map_insert<Combiner>(value.KEY_VALUE, value.CONT_VALUE);
+	this->template map_insert<Combiner>(value.KEY_VALUE, value.CONT_VALUE);
 }
 
 
@@ -232,7 +234,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
     if(Traits::absorbs_neutrons && co_val==Combiner::neutron()) 
         return;
 
-    std::pair<iterator,bool> insertion = map_insert<Combiner>(inter_val, co_val);
+    std::pair<iterator,bool> insertion = this->template map_insert<Combiner>(inter_val, co_val);
 
     if(!insertion.WAS_SUCCESSFUL)
     {
@@ -318,7 +320,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 		if(!left_gap.empty())
 		{
 			pred_it = it; --pred_it;
-			map_insert<Combiner>(pred_it, left_gap, co_val);
+			this->template map_insert<Combiner>(pred_it, left_gap, co_val);
 		}
 
         if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
@@ -348,7 +350,7 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 	if(!end_gap.empty())
 	{
         fill_gap<Combiner>(value_type(end_gap, co_val));
-		combine<Combiner>(it, co_val);
+		this->template combine<Combiner>(it, co_val);
 	}
 	else
 	{
@@ -360,10 +362,10 @@ void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interva
 			const_cast<interval_type&>(it->KEY_VALUE) = right_resid;
 			iterator prior_ = it; --prior_;
 			iterator inserted_ = fill(prior_, common, it->CONT_VALUE);
-			combine<Combiner>(inserted_, co_val);
+			this->template combine<Combiner>(inserted_, co_val);
 		}
 		else
-			combine<Combiner>(it, co_val);
+			this->template combine<Combiner>(it, co_val);
 	}
 }
 
