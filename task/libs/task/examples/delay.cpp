@@ -25,50 +25,38 @@ long serial_fib( long n)
 		return serial_fib( n - 1) + serial_fib( n - 2);
 }
 
-class fib_task
+long parallel_fib_( long n, long cutof)
 {
-private:
-	long	cutof_;
-
-public:
-	fib_task( long cutof)
-	: cutof_( cutof)
-	{}
-
-	long execute( long n)
+	if ( n < cutof)
 	{
-		if ( n < cutof_)
-		{
-			if ( n == 0)
-				boost::this_task::delay( pt::seconds( 2) );
-			return serial_fib( n);
-		}
-		else
-		{
-			tsk::handle< long > h1(
-				tsk::async(
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1),
-					tsk::as_sub_task() ) );
-			tsk::handle< long > h2(
-				tsk::async(
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2),
-					tsk::as_sub_task() ) );
-			return h1.get() + h2.get();
-		}
+		if ( n == 0)
+			boost::this_task::delay( pt::seconds( 2) );
+		return serial_fib( n);
 	}
-};
-
+	else
+	{
+		BOOST_ASSERT( boost::this_task::runs_in_pool() );
+		tsk::handle< long > h1(
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 1,
+					cutof),
+				tsk::as_sub_task() ) ) ;
+		tsk::handle< long > h2(
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 2,
+					cutof),
+				tsk::as_sub_task() ) );
+		return h1.get() + h2.get();
+	}
+}
 
 void parallel_fib( long n)
 {
-	fib_task a( 5);
-	long result = a.execute( n);
+	long result = parallel_fib_( n, 5);
 	printf("fibonnaci(%ld) == %ld\n", n, result);
 }
 
