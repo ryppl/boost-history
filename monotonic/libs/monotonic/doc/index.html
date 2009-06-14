@@ -50,21 +50,27 @@
                 Motivation
             </h2>
             <p>
-                We would like to use the various STL containers which take their storage from the stack. In 
-                this way, for example a std::map&lt;K,T&gt; can use storage from the stack rather than 
-                fragmenting the heap.             Also, it would be great if the same storage 
-                could be used by different containers, and even better if we could chose to use 
-                the stack or the heap.</p>
+                We would sometimes like to use the various STL containers and use the stack for 
+                their storage. In 
+                this way, for example, a map&lt;K, list&lt; vector&lt;T&gt; &gt; &gt; can use storage from the stack 
+                for the map, the list and the vector, rather than 
+                fragmenting the heap.             </p>
             <p>
-                There are many uses for such a system, including per-frame containers, 
+                Also, it would be great if the same storage 
+                could be used by different containers, and even better if we could choose to use 
+                the stack or the heap, and better still if there was zero overhead for the 
+                memory allocations.</p>
+            <p>
+                There are many uses for such a system, including very fast and very small data 
+                structures, per-frame containers, 
                 efficient use containers for use in recursion, and reducing or removing heap 
                 fragmentation.             </p>
             <p>
-                This is what this library does, by collaborating various allocators with a 
+                This is what this library does, by collaborating multiple instances of the same 
+                type of allocator with a 
                 common shared storage.
                 It is a fast allocation system, O(1) to allocate and zero-cost to deallocate; hence the proposed name of a 
-                &quot;monotonic&quot; allocator.
-            </p>
+                &quot;monotonic&quot; allocator.             </p>
             <h2 id="Proposal">
                 Quick Example</h2>
             <p>
