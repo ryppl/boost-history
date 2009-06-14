@@ -623,6 +623,48 @@ public:
     sub_type& self() { return *that(); }
 
 protected:
+	template <class Combiner>
+	bool combine(iterator& it_, const codomain_type& co_val)
+	{ 
+		Combiner()(it_->CONT_VALUE, co_val);
+		if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
+		{ this->_map.erase(it_); it_ = _map.end(); return false; }
+		return true;
+	}
+
+	template <class Combiner>
+	std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
+	{
+	    if(Traits::is_total)
+		{
+			CodomainT added_val = Combiner::neutron();
+			Combiner()(added_val, co_val);
+			if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
+				return std::pair<iterator,bool>(this->_map.end(), false);
+			else
+				return this->_map.insert(value_type(inter_val, added_val));
+		}
+		else
+			return this->_map.insert(value_type(inter_val, co_val));
+	}
+
+	template <class Combiner>
+	iterator map_insert(iterator& prior_, const interval_type& inter_val, const codomain_type& co_val)
+	{
+	    if(Traits::is_total)
+		{
+			CodomainT added_val = Combiner::neutron();
+			Combiner()(added_val, co_val);
+			if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
+				return this->_map.end();
+			else
+				return this->_map.insert(prior_, value_type(inter_val, added_val));
+		}
+		else
+			return this->_map.insert(prior_, value_type(inter_val, co_val));
+	}
+
+protected:
     ImplMapT _map;
 } ;
 

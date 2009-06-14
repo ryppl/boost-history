@@ -234,15 +234,16 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
 {
     if(addend.empty()) return;
 
-    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(addend);
+    std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
     if(insertion.WAS_SUCCESSFUL)
         handle_neighbours(insertion.ITERATOR);
     else
     {
         iterator fst_it = this->_set.lower_bound(addend),
-                 end_it = this->_set.upper_bound(addend);
-        iterator lst_it = end_it; --lst_it;
+                 lst_it = insertion.ITERATOR,
+                 end_it = insertion.ITERATOR; end_it++;
+        //BOOST_ASSERT(end_it == this->_map.upper_bound(inter_val));
         iterator snd_it = fst_it; ++snd_it;
 
         interval_type leftResid  = right_subtract(*fst_it, addend);

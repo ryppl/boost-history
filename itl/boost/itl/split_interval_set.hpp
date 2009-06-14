@@ -158,13 +158,15 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
 {
     if(addend.empty()) return;
 
-    std::pair<typename ImplSetT::iterator,bool> insertion = this->_set.insert(addend);
+    std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
     if(!insertion.WAS_SUCCESSFUL)
     {
-        iterator fst_it = this->_set.lower_bound(addend);
-        iterator end_it = this->_set.upper_bound(addend);
-		iterator lst_it = end_it; lst_it--;
+        iterator fst_it = this->_set.lower_bound(addend),
+                 lst_it = insertion.ITERATOR,
+                 end_it = insertion.ITERATOR; end_it++;
+        //BOOST_ASSERT(end_it == this->_map.upper_bound(inter_val));
+
 		iterator pre_it = fst_it;
 		if(pre_it != this->_set.begin())
 			--pre_it;
