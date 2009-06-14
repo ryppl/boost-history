@@ -31,13 +31,13 @@
 # elif defined(__GLIBCPP__) || defined(__GLIBCXX__)
 #include <boost/task/detail/atomic_gcc.hpp>
 
-# elif defined(BOOST_TASK_AIX)
+# elif defined(__IBMCPP__) || defined(_AIX)
 #include <boost/task/detail/atomic_aix.hpp>
 
-# elif defined(BOOST_TASK_HPUX)
+# elif defined(__hpux)
 #include <boost/task/detail/atomic_hpux.hpp>
 
-# elif defined(BOOST_TASK_SOLARIS)
+# elif defined(sun) || defined(__sun)
 #include <boost/task/detail/atomic_solaris.hpp>
 
 # else
