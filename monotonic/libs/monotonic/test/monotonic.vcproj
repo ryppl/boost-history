@@ -198,6 +198,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\rope.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\set.h"
 					>
 				</File>

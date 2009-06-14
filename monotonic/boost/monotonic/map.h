@@ -21,21 +21,13 @@ namespace boost
 			typedef P Predicate;
 
 			map() { }
-			map(storage_base &S)
-				: Map(Predicate(), Allocator(S)) { }
 			map(Allocator const &A)
 				: Map(Predicate(), A) { }
 			map(Predicate Pr, Allocator const &A) 
 				: Map(Pr, A) { }
 			template <class II>
-			map(II F, II L, storage_base &S)
-				: Map(F,L,Predicate(),Allocator(S)) { }
-			template <class II>
-			map(II F, II L, Allocator const &A)
-				: Map(F,L,A) { }
-			template <class II>
-			map(II F, II L, Predicate const &Pr, storage_base &S)
-				: Map(F,L,Pr,Allocator(S)) { }
+			map(II F, II L, Allocator const &A, Predicate const &Pr = Predicate())
+				: Map(F,L,Pr,A) { }
 			template <class II>
 			map(II F, II L, Predicate const &Pr, Allocator const &A)
 				: Map(F,L,Pr,A) { }

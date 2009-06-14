@@ -20,13 +20,8 @@ namespace boost
 			typedef std::list<T, Allocator> List;
 
 			list() { }
-			list(storage_base &storage) 
-				: List(Allocator(storage)) { }
 			list(Allocator const &A) 
 				: List(A) { }
-			template <class II>
-			list(II F, II L, storage_base &S)
-				: List(F,L,Allocator(S)) { }
 			template <class II>
 			list(II F, II L, Allocator const &A)
 				: List(F,L,A) { }

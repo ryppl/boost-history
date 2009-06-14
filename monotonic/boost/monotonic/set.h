@@ -21,21 +21,13 @@ namespace boost
 			typedef std::set<T,P,allocator<T> > Set;
 
 			set() { }
-			set(storage_base &S) 
-				: Set(Predicate(), Allocator(S)) { }
 			set(Allocator const &A) 
 				: Set(Predicate(), A) { }	
 			set(Predicate Pr, Allocator const &A) 
 				: Set(Pr, A) { }
 			template <class II>
-			set(II F, II L, storage_base &S)
-				: Set(F,L,Predicate(),Allocator(S)) { }
-			template <class II>
 			set(II F, II L, Allocator const &A)
-				: Set(F,L,A) { }
-			template <class II>
-			set(II F, II L, Predicate const &Pr, storage_base &S)
-				: Set(F,L,Pr,Allocator(S)) { }
+				: Set(F,L,Predicate(),A) { }
 			template <class II>
 			set(II F, II L, Predicate const &Pr, Allocator const &A)
 				: Set(F,L,Pr,A) { }

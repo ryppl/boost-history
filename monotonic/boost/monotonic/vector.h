@@ -21,17 +21,10 @@ namespace boost
 			typedef std::vector<T,Allocator> Vector;
 
 			vector() { }
-			vector(storage_base &storage) 
-				: Vector(Allocator(storage)) { }
 			vector(Allocator const &A) 
 				: Vector(A) { }
-			vector(size_t N, T const &X, storage_base &S)
-				: Vector(N,X,Allocator(S)) { }
 			vector(size_t N, T const &X, Allocator const &A)
 				: Vector(N,X,A) { }
-			template <class II>
-			vector(II F, II L, storage_base &S)
-				: Vector(F,L,Allocator(S)) { }
 			template <class II>
 			vector(II F, II L, Allocator const &A)
 				: Vector(F,L,A) { }
