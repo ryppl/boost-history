@@ -47,7 +47,7 @@ private:
 	struct impl
 	{
 		promise< R >			prom;
-		shared_future< R >		fut;
+		unique_future< R >		fut;
 
 		impl()
 		:
@@ -130,8 +130,8 @@ public:
 	const id get_id() const
 	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
 
-	shared_future< R > & get_future()
-	{ return impl_->fut; }
+	shared_future< R > get_future()
+	{ return shared_future< R >( impl_->fut); }
 
 	void swap( task< R > & other) // throw()
 	{ impl_.swap( other.impl_); }
@@ -152,7 +152,7 @@ private:
 	struct impl
 	{
 		promise< void >			prom;
-		shared_future< void >	fut;
+		unique_future< void >	fut;
 
 		impl()
 		:
@@ -238,8 +238,8 @@ public:
 	const id get_id() const
 	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
 
-	shared_future< void > & get_future()
-	{ return impl_->fut; }
+	shared_future< void > get_future()
+	{ return shared_future< void >( impl_->fut); }
 
 	void swap( task< void > & other) // throw()
 	{ impl_.swap( other.impl_); }
