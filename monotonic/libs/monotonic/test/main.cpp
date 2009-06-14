@@ -1,6 +1,10 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
+// the documentation is at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+
+// the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
+
 #include <boost/monotonic/vector.h>
 #include <boost/monotonic/list.h>
 #include <boost/monotonic/map.h>
@@ -17,31 +21,6 @@
 
 using namespace std;
 using namespace boost;
-
-// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/inline_storage.h> to
-// try this at home.
-void test_auto_buffer()
-{
-	monotonic::inline_storage<10> storage;
-
-	// this fails because the storage that the vector uses
-	// will be moved when the buffer resizes...
-	//monotonic::vector<int> vec(storage);
-	//for (size_t n = 0; n < 100; ++n)
-	//{
-	//	vec.push_back(n);
-	//}
-
-	// this fails because at the end of the buffer, just before
-	// it may be resized and possibly put onto heap, the following asserts
-	// on MSVC in <xtree>:
-	//		if (max_size() - 1 <= _Mysize)
-	//			_THROW(length_error, "map/set<T> too long");
-	//
-	//monotonic::map<int, int> map(storage);
-	//for (int n = 0; n < 100; ++n)
-	//	map[n] = n;
-}
 
 void test_basic()
 {
@@ -206,6 +185,32 @@ void test_speed_heap()
 	}
 }
 
+// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/inline_storage.h> to
+// try this at home.
+void test_auto_buffer()
+{
+	monotonic::inline_storage<10> storage;
+
+	// this fails because the storage that the vector uses
+	// will be moved when the buffer resizes...
+	//monotonic::vector<int> vec(storage);
+	//for (size_t n = 0; n < 100; ++n)
+	//{
+	//	vec.push_back(n);
+	//}
+
+	// this fails because at the end of the buffer, just before
+	// it may be resized and possibly put onto heap, the following asserts
+	// on MSVC in <xtree>:
+	//		if (max_size() - 1 <= _Mysize)
+	//			_THROW(length_error, "map/set<T> too long");
+	//
+	//monotonic::map<int, int> map(storage);
+	//for (int n = 0; n < 100; ++n)
+	//	map[n] = n;
+}
+
+
 namespace
 {
 
@@ -310,63 +315,6 @@ void test_alignment()
 
 }
 
-template <class List>
-double test_list_speed_impl(size_t count, List &l0, List &l1, List &l2, List &both)
-{
-	boost::timer timer;
-	std::generate_n(std::back_inserter(l0), count, rand);
-	std::generate_n(std::back_inserter(l1), count, rand);
-	std::generate_n(std::back_inserter(l2), count, rand);
-	BOOST_FOREACH(int n, l0)
-	{
-		BOOST_FOREACH(int m, l1)
-		{
-			BOOST_FOREACH(int p, l2)
-			{
-				if (m == n && m == p)
-					both.push_back(m);
-			}
-		}
-	}
-	double elapsed = timer.elapsed();
-	//cout << "test_list_speed[" << count << "]" << elapsed << endl;
-	return elapsed;
-}
-
-void test_list_speed()
-{
-	monotonic::inline_storage<1000000> *s = new monotonic::inline_storage<1000000>();
-	size_t count = 50;
-	double mt = 0;
-	double st = 0;
-
-	for (size_t n = 0; n < 10; ++n, count += 100)
-	{
-		srand(42);
-		// use monotonic::
-		boost::timer t0;
-		{
-			monotonic::list<int> l0(*s), l1(*s), l2(*s), both(*s);
-			mt += test_list_speed_impl(count, l0, l1, l2, both);
-		}
-		mt += t0.elapsed();
-
-		srand(42);
-		// use std::
-		boost::timer t1;
-		{
-			std::list<int> l0, l1, l2, both;
-			st += test_list_speed_impl(count, l0, l1, l2, both);
-		}
-		st += t1.elapsed();
-
-		s->reset();
-	}
-	cout << "test_list_speed: mono: " << mt << endl;
-	cout << "test_list_speed: std : " << st << endl;
-
-	delete s;
-}
 
 // part of the test_map_list_realtime test.
 // this is to be like running part of a simulation.
