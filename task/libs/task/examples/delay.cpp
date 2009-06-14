@@ -69,7 +69,7 @@ int main( int argc, char *argv[])
 				tsk::make_task(
 					& parallel_fib,
 					i),
-				tsk::as_sub_task() );
+				tsk::default_pool() );
 
 		return EXIT_SUCCESS;
 	}
