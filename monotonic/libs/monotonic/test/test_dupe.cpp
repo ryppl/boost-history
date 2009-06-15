@@ -14,7 +14,7 @@ size_t test_dupe_impl(size_t count, size_t size, List list)
 
 pair<double,double> test_dupe(size_t num_tests, size_t count, size_t size)
 {
-	monotonic::inline_storage<1000000> storage;
+	monotonic::storage<1000000> storage;
 
 	boost::timer mono_timer;
 	for (size_t n = 0; n < num_tests; ++n)

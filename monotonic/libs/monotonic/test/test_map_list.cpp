@@ -25,7 +25,7 @@ void test_map_list_impl(size_t count, Map &map)
 // amount of work the next frame.
 void test_map_list_realtime()
 {
-	monotonic::inline_storage<1000000> storage;// = new monotonic::inline_storage<10000000>;
+	monotonic::storage<1000000> storage;// = new monotonic::storage<10000000>;
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 

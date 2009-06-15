@@ -9,7 +9,7 @@
 #include <boost/array.hpp>
 #include <boost/aligned_storage.hpp>
 
-// define this to use boost::auto_buffer<> rather than boost::array for monotonic::inline_storage
+// define this to use boost::auto_buffer<> rather than boost::array for monotonic::storage
 //#define BOOST_MONOTONIC_USE_AUTOBUFFER
 // this currently does not work, because resizing the underlying buffer breaks
 // containers that may reference the previously used memory
@@ -24,7 +24,7 @@ namespace boost
 	{
 		/// storage for an allocator that is on the stack or heap
 		template <size_t N>
-		struct inline_storage : storage_base
+		struct storage : storage_base
 		{
 
 #ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
@@ -40,7 +40,7 @@ namespace boost
 			size_t num_allocations;
 #endif
 		public:
-			inline_storage() 
+			storage() 
 				: cursor(0)
 #ifndef NDEBUG
 				, num_allocations(0)

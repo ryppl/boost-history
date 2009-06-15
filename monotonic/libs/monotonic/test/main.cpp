@@ -39,7 +39,7 @@ using namespace boost;
 
 void test_deque()
 {
-	monotonic::inline_storage<4000> storage;   // create local storage on the stack
+	monotonic::storage<4000> storage;   // create local storage on the stack
 	{
 		{
 			std::list<int, boost::monotonic::allocator<int> > list(storage);
@@ -79,7 +79,7 @@ void test_deque()
 
 void test_basic()
 {
-	monotonic::inline_storage<1000*sizeof(int)> storage1;   // create local storage on the stack
+	monotonic::storage<1000*sizeof(int)> storage1;   // create local storage on the stack
 	monotonic::vector<int> v1(storage1);   // create a vector that uses this storage
 
 	for(int i = 0; i < 100; ++i)
@@ -95,7 +95,7 @@ void test_basic()
 
 	// create the storage that will be used for the various monotonic containers.
 	// while it is on the stack here, it could be on the heap as well.
-	monotonic::inline_storage<1000> storage;
+	monotonic::storage<1000> storage;
 
 	// create a list that uses inline, monotonically-increasing storage
 	monotonic::list<int> list(storage);
@@ -116,7 +116,7 @@ void test_basic()
 
 void test_copy()
 {
-	monotonic::inline_storage<1000*sizeof(int)> storage;
+	monotonic::storage<1000*sizeof(int)> storage;
 	monotonic::vector<int> v1(storage);
 
 	for (int n = 0; n < 100; ++n)
@@ -132,7 +132,7 @@ void test_copy()
 
 void test_ctors()
 {
-	monotonic::inline_storage<1000*sizeof(int)> storage;
+	monotonic::storage<1000*sizeof(int)> storage;
 	string foo = "foo";
 	monotonic::vector<char> v1(foo.begin(), foo.end(), storage);
 	assert(v1.size() == 3);
@@ -161,7 +161,7 @@ void test_ctors()
 void test_speed()
 {
 	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
-	monotonic::inline_storage<1000000> storage;
+	monotonic::storage<1000000> storage;
 	map_with_list m(storage);
 	size_t count = 10000;
 	boost::timer timer;
@@ -201,7 +201,7 @@ void test_speed_heap()
 	size_t num_iterations = 100000;
 
 	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
-	monotonic::inline_storage<10000000> *storage = new monotonic::inline_storage<10000000>;
+	monotonic::storage<10000000> *storage = new monotonic::storage<10000000>;
 
 	// do the test with monotonic containers and heap-based storage
 	{
@@ -240,11 +240,11 @@ void test_speed_heap()
 	}
 }
 
-// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/inline_storage.h> to
+// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/storage.h> to
 // try this at home.
 void test_auto_buffer()
 {
-	monotonic::inline_storage<10> storage;
+	monotonic::storage<10> storage;
 
 	// this fails because the storage that the vector uses
 	// will be moved when the buffer resizes...
@@ -282,7 +282,7 @@ namespace
 	template<typename C>
 	void test_loop_monotonic()
 	{
-		boost::monotonic::inline_storage<100000> storage;
+		boost::monotonic::storage<100000> storage;
 		boost::monotonic::vector<Foo<C> > vec(storage);
 		Foo<C> orig = { 'A', 65 };
 		vec.assign(ELEM_COUNT, orig);
@@ -310,7 +310,7 @@ namespace
 
 void test_alignment()
 {
-	monotonic::inline_storage<10000> storage;
+	monotonic::storage<10000> storage;
 
 	// the two arguments to storage.allocate are the size, and the required alignment
 	void *P = storage.allocate(3, 4);
@@ -383,7 +383,7 @@ pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T
 
 void test_shared_allocators()
 {
-	monotonic::inline_storage<500> sa, sb;
+	monotonic::storage<500> sa, sb;
 	typedef monotonic::allocator<int> Al;
 	{
 		std::vector<int, Al> v0(sa), v1(sa);
