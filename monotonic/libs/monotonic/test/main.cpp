@@ -10,17 +10,71 @@
 #include <boost/monotonic/map.h>
 #include <boost/monotonic/set.h>
 
+#include <boost/iterator/counting_iterator.hpp>
+
+#include <boost/monotonic/rope.h>
+
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
 #include <iostream>
+#include <deque>
 
 #include <boost/range.hpp>
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/array.hpp>
 #include <boost/scoped_ptr.hpp>
 
+template <class T
+, size_t C = 64
+, class Al = std::allocator<T>
+, class Link = std::vector<T, Al>
+, class Links = std::deque<Link, Al>
+>
+struct chain;
+
+
 using namespace std;
 using namespace boost;
+
+void test_deque()
+{
+	monotonic::inline_storage<4000> storage;   // create local storage on the stack
+	{
+		{
+			std::list<int, boost::monotonic::allocator<int> > list(storage);
+			fill_n(back_inserter(list), 100, 42);
+			cout << "list: " << storage.used() << endl;
+		}
+		storage.reset();
+		{
+			std::deque<int, boost::monotonic::allocator<int> > deque(storage);
+			fill_n(back_inserter(deque), 100, 42);
+			cout << "deque: " << storage.used() << endl;
+		}
+		storage.reset();
+	
+		{
+			std::vector<int, boost::monotonic::allocator<int> > vector(storage);
+			fill_n(back_inserter(vector), 100, 42);
+			cout << "vector: " << storage.used() << endl;
+		}
+		storage.reset();
+
+		{
+			monotonic::chain<int> rope(storage);
+			fill_n(back_inserter(rope), 100, 42);
+			cout << "default chain: " << storage.used() << endl;
+		}
+		storage.reset();
+
+		{
+			monotonic::chain<int, 100> rope(storage);
+			fill_n(back_inserter(rope), 100, 42);
+			cout << "chain<100>: " << storage.used() << endl;
+		}
+		storage.reset();
+	}
+}
 
 void test_basic()
 {
@@ -430,16 +484,69 @@ void test_shared_allocators()
 }
 
 void test_rope();
+void test_chain();
+
+template <class List>
+void test_bubble_sort_impl(size_t length, List &list)
+{
+	for (size_t n = 0; n < length; ++n)
+		list.push_back(length - n);
+	bool swapped = false;
+	do
+	{
+		swapped = false;
+		List::iterator A = list.begin(), B = --list.end();
+		for (--B; A != B; ++A)
+		{
+			List::iterator C = A;
+			++C;
+			if (*A > *C)
+			{
+				std::swap(*A, *C);
+				swapped = true;
+			}
+		}
+	}
+	while (swapped);
+}
+
+void test_bubble_sort()
+{
+	monotonic::inline_storage<100000> storage;
+	const size_t count = 50000;
+	const size_t length = 20;
+
+	boost::timer mono_timer;
+	for (size_t n = 0; n < count; ++n)
+	{
+		test_bubble_sort_impl(length, std::list<int, monotonic::allocator<int> >(storage));
+		storage.reset();
+	}
+	double mono_total = mono_timer.elapsed();
+	cout << "mono bubble sort: " << 1000*1000*mono_total/count << "us" << endl;
+
+	boost::timer std_timer;
+	for (size_t n = 0; n < count; ++n)
+	{
+		test_bubble_sort_impl(length, std::list<int>());
+	}
+	double std_total = std_timer.elapsed();
+	cout << "std  bubble sort: " << 1000*1000*std_total/count << "us" << endl;
+}
 
 int main()
 {
+	test_bubble_sort();
+	//test_map_list_realtime();
+	return 0;
+	//test_chain();
+	test_deque();
 	//test_rope();
 	test_shared_allocators();
 	test_alignment();
 	test_auto_buffer();
 	test_speed();
 	test_speed_heap();
-	test_map_list_realtime();
 	test_basic();
 	test_copy();
 	test_ctors();

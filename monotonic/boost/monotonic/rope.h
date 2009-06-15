@@ -8,22 +8,31 @@
 #include <boost/monotonic/allocator.h>
 #include <boost/monotonic/storage_base.h>
 #include <boost/utility/iter_range.h>
-#include <boost/unordered_map.hpp>
+#include <boost/iterator.hpp>
+#include <boost/iterator/iterator_categories.hpp>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		/// a set of sequences that are tied together to present a contiguous sequence
+		/// a list of vectors that are tied together to present a contiguous sequence
 		///
 		/// this is to provide a sequence type that is 'between' a list and a vector. it
 		/// has slower access speed than a vector, but faster access speed than a list.
 		///
-		/// unlike a vector, a rope cannot be resize()d
-		template <class T, size_t ChunkSize = 32>
-		struct rope
+		/// unlike a vector, a chain cannot be resized
+		///
+		/// this has limited utility outside of the context of a monotonic allocator.
+		/// the reason to use it there is to avoid resizing a vector using a monotonic
+		/// allocator, which is very wasteful. so, the trade-off is slightly slower
+		/// access but ability to extend without resizing. then again, given that the
+		/// main reason to use a monotonic allocator is speed, there may be limited
+		/// application even there.
+		///
+		template <class T, size_t ChunkSize = 64>
+		struct chain
 		{
-			typedef rope<T,ChunkSize> Rope;
+			typedef chain<T, ChunkSize> Rope;
 			typedef allocator<T> Allocator;
 			typedef vector<T> Vector;
 			typedef list<Vector> Strands;
@@ -32,8 +41,12 @@ namespace boost
 			typedef const_iter_range<Vector> ConstVectorIterators;
 			typedef iter_range<Vector> VectorIterators;
 
+			typedef T value_type;
+			typedef T &reference;
+			typedef const T &const_reference;
+
 			template <class R, class S, class V, class Derived>
-			struct iterator_base //: TODO: add iterator category
+			struct iterator_base : boost::iterator<random_access_traversal_tag, T>
 			{
 				typedef R Rope;
 				typedef S StrandIterators;
@@ -43,7 +56,8 @@ namespace boost
 				VectorIterators vec;
 
 				iterator_base() { }
-				iterator_base(Rope &P) : parent(&P) { }
+				iterator_base(Rope &P) 
+					: parent(&P) { }
 				iterator_base(Rope &P, StrandIterators const &S)
 					: parent(&P), strand(S) { }
 				iterator_base(Rope &P, StrandIterators const &S, VectorIterators const &V) 
@@ -63,6 +77,12 @@ namespace boost
 						vec = *strand;
 					}
 					return This();
+				}
+				Derived operator++(int)
+				{
+					Derived tmp = This();
+					++*this;
+					return tmp;
 				}
 				bool operator==(iterator_base const &B) const
 				{
@@ -92,13 +112,14 @@ namespace boost
 					return *Parent::vec;
 				}
 			};
+			typedef iterator Iter;
 			struct const_iterator : iterator_base<Rope const, ConstStrandsIterators, ConstVectorIterators, const_iterator>
 			{
 				typedef iterator_base<Rope const, ConstStrandsIterators, ConstVectorIterators, const_iterator> Parent;
 				const_iterator() { }
 				const_iterator(Rope const &P) 
 					: Parent(P) { }
-				const_iterator(iterator const &X)
+				const_iterator(Iter const &X)
 					: Parent(*X.parent, X.strand, X.vec) 
 				{ }
 				const_iterator(Rope const &P, ConstStrandsIterators const &S)
@@ -116,19 +137,31 @@ namespace boost
 			Allocator alloc;
 
 		public:
-			rope() { }
-			rope(Allocator const &A) 
+			chain() { }
+			chain(Allocator const &A) 
 				: alloc(A), strands(A) { }
-			rope(size_t N, T const &X, Allocator const &A)
+			chain(size_t len, Allocator const &A)
 				: alloc(A), strands(A)
 			{
-				//TODO
+				// TODO
+			}
+			chain(size_t len, T const &X, Allocator const &A)
+				: alloc(A), strands(A)
+			{
+				strands.push_back(Vector(alloc));
+				strands.back().resize(len, X);
 			}
 			template <class II>
-			rope(II F, II L, Allocator const &A)
+			chain(II F, II L, Allocator const &A)
 				: alloc(A), strands(A)
 			{
-				//TODO
+				strands.push_back(Vector(alloc));
+				Vector &vec = strands.back();
+				size_t len = std::distance(F,L);
+				vec.resize(len);
+				Vector::iterator G = vec.begin();
+				for (size_t N = 0; N < len; ++F, ++G)
+					*G = *F;
 			}
 
 			size_t size() const
@@ -180,45 +213,45 @@ namespace boost
 				strands.back().push_back(X);
 			}
 
-			T &at(size_t N)
+			T &at(size_t index)
 			{
 				size_t offset = 0;
 				BOOST_FOREACH(Vector &vec, strands)
 				{
-					size_t local = N - offset;
+					size_t local = index - offset;
 					if (local < vec.size())
 					{
 						return vec.at(local);
 					}
 					offset += vec.size();
-					if (offset > N)
+					if (offset > index)
 						break;
 				}
-				throw std::out_of_range("rope");
+				throw std::out_of_range("chain");
 			}
-			T const &at(size_t N) const
+			T const &at(size_t index) const
 			{
 				size_t offset = 0;
 				BOOST_FOREACH(Vector const &vec, strands)
 				{
-					size_t local = N - offset;
+					size_t local = index - offset;
 					if (local < vec.size())
 					{
 						return vec.at(local);
 					}
 					offset += vec.size();
-					if (offset < N)
+					if (offset < index)
 						break;
 				}
-				throw std::out_of_range("rope");
+				throw std::out_of_range("chain");
 			}
-			T &operator[](size_t N)
+			T &operator[](size_t index)
 			{
-				return at(N);
+				return at(index);
 			}
-			T const &operator[](size_t N) const
+			T const &operator[](size_t index) const
 			{
-				return at(N);
+				return at(index);
 			}
 		};
 	}

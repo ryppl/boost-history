@@ -78,8 +78,8 @@ namespace boost
 			template <class U> 
 			allocator(const allocator<U> &Q) throw()
 			{
-				typedef typename allocator<T>::template rebind<U> Other;
-				typedef typename Other::other OtherStorage;
+				typedef BOOST_DEDUCED_TYPENAME allocator<T>::template rebind<U> Other;
+				typedef BOOST_DEDUCED_TYPENAME Other::other OtherStorage;
 				storage = OtherStorage(*Q.storage).storage;
 			}
 

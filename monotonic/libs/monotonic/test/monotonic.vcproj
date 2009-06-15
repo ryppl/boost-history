@@ -218,14 +218,42 @@
 				Name="utility"
 				>
 				<File
+					RelativePath="..\..\..\boost\utility\chain.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\utility\iter_range.h"
 					>
 				</File>
 			</Filter>
 		</Filter>
-		<File
-			RelativePath="..\doc\index.html"
+		<Filter
+			Name="doc"
 			>
+			<File
+				RelativePath="..\doc\index.html"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\chain.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
 		</File>
 		<File
 			RelativePath=".\main.cpp"

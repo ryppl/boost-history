@@ -78,6 +78,17 @@ namespace boost
 			: Parent(A,A) { }
 		iter_range(iterator A, iterator B) 
 			: Parent(A,B) { }
+		iter_range& operator++()
+		{
+			Parent::operator++();
+			return *this;
+		}
+		iter_range operator++(int)
+		{
+			iter_range tmp(*this);
+			Parent::operator++(0);
+			return tmp;
+		}
 		typename Value &operator*() const
 		{
 			return *first;
@@ -102,6 +113,17 @@ namespace boost
 			: Parent(A,A) { }
 		const_iter_range(const_iterator A, const_iterator B) 
 			: Parent(A,B) { }
+		const_iter_range& operator++()
+		{
+			Parent::operator++();
+			return *this;
+		}
+		const_iter_range operator++(int)
+		{
+			const_iter_range tmp(*this);
+			Parent::operator++(0);
+			return tmp;
+		}
 		typename const Value &operator*() const
 		{
 			return *first;

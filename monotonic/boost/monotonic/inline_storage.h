@@ -36,9 +36,15 @@ namespace boost
 		private:
 			buffer_type buffer;			///< the storage
 			size_t cursor;				///< pointer to current index within storage for next allocation
-
+#ifndef NDEBUG
+			size_t num_allocations;
+#endif
 		public:
-			inline_storage() : cursor(0)
+			inline_storage() 
+				: cursor(0)
+#ifndef NDEBUG
+				, num_allocations(0)
+#endif
 			{
 			}
 
@@ -57,6 +63,9 @@ namespace boost
 			void reset()
 			{
 				cursor = 0;
+#ifndef NDEBUG
+				num_allocations = 0;
+#endif
 			}
 
 			size_t get_cursor() const
@@ -72,6 +81,9 @@ namespace boost
 			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
+#ifndef NDEBUG
+				++num_allocations;
+#endif
 				// ensure we return a point on an aligned boundary
 				size_t extra = cursor & (alignment - 1);
 				if (extra > 0)
@@ -101,6 +113,16 @@ namespace boost
 			{
 				return N - cursor;
 			}
+			size_t used() const
+			{
+				return cursor;
+			}
+#ifndef NDEBUG
+			size_t get_num_allocs() const
+			{
+				return num_allocations;
+			}
+#endif
 		};
 	}
 }
