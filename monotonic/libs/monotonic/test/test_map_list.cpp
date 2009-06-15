@@ -1,10 +1,9 @@
 // part of the test_map_list_realtime test.
 // this is to be like running part of a simulation.
-void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
+template <class Map>
+void test_map_list_impl(size_t count, Map &map)
 {
-	typedef monotonic::list<int> List;
-	typedef monotonic::map<int, List> Map;
-	Map map(storage);
+	typedef typename Map::referent_type List;
 	size_t mod = count/10;
 	for (size_t n = 0; n < count; ++n)
 	{
@@ -12,29 +11,7 @@ void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
 		Map::iterator iter = map.find(random);
 		if (iter == map.end())
 		{
-			map.insert(make_pair(random, List(storage)));
-		}
-		else
-		{
-			iter->second.push_back(n);
-		}
-	}
-}
-
-// same as test_map_list_impl_mono, but using std::containers
-void test_map_list_impl_std(size_t count)
-{
-	typedef std::list<int> List;
-	typedef std::map<int, List> Map;
-	Map map;
-	size_t mod = count/10;
-	for (size_t n = 0; n < count; ++n)
-	{
-		int random = rand() % mod;
-		Map::iterator iter = map.find(random);
-		if (iter == map.end())
-		{
-			map.insert(make_pair(random, List()));
+			map.insert(make_pair(random, List(map.get_allocator())));
 		}
 		else
 		{
@@ -55,7 +32,9 @@ void test_map_list_realtime()
 	boost::timer t0;
 	for (size_t n = 0; n < outter_loops; ++n)
 	{
-		test_map_list_impl_mono(inner_loops, storage);
+		typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
+		Map map;
+		test_map_list_impl(inner_loops, map);
 		storage.reset(); ///<<< reset the memory usage to zero
 	}
 	double e0 = t0.elapsed();
@@ -64,7 +43,9 @@ void test_map_list_realtime()
 	boost::timer t1;
 	for (size_t n = 0; n < outter_loops; ++n)
 	{
-		test_map_list_impl_std(inner_loops);
+		typedef std::map<int, std::list<int> > Map;
+		Map map;
+		test_map_list_impl(inner_loops, map);
 	}
 	double e1 = t1.elapsed();
 	cout << "test_map_list:  std: " << e1 << endl;
