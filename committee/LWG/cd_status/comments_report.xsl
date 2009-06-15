@@ -19,6 +19,7 @@ those comments for which the "disp" attribute is empty.
 
 <xsl:param name="responsible" select="'all'"/>
 <xsl:param name="open_only" select="'no'"/>
+<xsl:param name="no_issue" select="'no'"/>
 
 <xsl:output method="html" encoding="us-ascii"/>
 
@@ -97,7 +98,7 @@ are printing all comments.
 
 ************************************************************ -->
 
- <xsl:if test="not($open_only='yes') or @disp=''">
+ <xsl:if test="(not($open_only='yes') or @disp='') and (not($no_issue='yes') or @issue='')">
 
  
 <!-- ************************************************************
