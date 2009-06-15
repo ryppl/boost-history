@@ -287,6 +287,18 @@
 				/>
 			</FileConfiguration>
 		</File>
+		<File
+			RelativePath=".\test_map_list.cpp"
+			>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

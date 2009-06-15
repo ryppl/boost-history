@@ -371,77 +371,7 @@ void test_alignment()
 }
 
 
-// part of the test_map_list_realtime test.
-// this is to be like running part of a simulation.
-void test_map_list_impl_mono(size_t count, monotonic::storage_base &storage)
-{
-	typedef monotonic::list<int> List;
-	typedef monotonic::map<int, List> Map;
-	Map map(storage);
-	size_t mod = count/10;
-	for (size_t n = 0; n < count; ++n)
-	{
-		int random = rand() % mod;
-		Map::iterator iter = map.find(random);
-		if (iter == map.end())
-		{
-			map.insert(make_pair(random, List(storage)));
-		}
-		else
-		{
-			iter->second.push_back(n);
-		}
-	}
-}
-
-// same as test_map_list_impl_mono, but using std::containers
-void test_map_list_impl_std(size_t count)
-{
-	typedef std::list<int> List;
-	typedef std::map<int, List> Map;
-	Map map;
-	size_t mod = count/10;
-	for (size_t n = 0; n < count; ++n)
-	{
-		int random = rand() % mod;
-		Map::iterator iter = map.find(random);
-		if (iter == map.end())
-		{
-			map.insert(make_pair(random, List()));
-		}
-		else
-		{
-			iter->second.push_back(n);
-		}
-	}
-}
-
-// the purpose of this test is to simulate a `realtime system`
-// which does an amount of work each frame, then does a similar
-// amount of work the next frame.
-void test_map_list_realtime()
-{
-	monotonic::inline_storage<1000000> storage;
-	const size_t outter_loops = 10*1000;
-	const size_t inner_loops = 10000;
-
-	boost::timer t0;
-	for (size_t n = 0; n < outter_loops; ++n)
-	{
-		test_map_list_impl_mono(inner_loops, storage);
-		storage.reset(); ///<<< reset the memory usage to zero
-	}
-	double e0 = t0.elapsed();
-	cout << "test_map_list: mono: " << e0 << endl;
-
-	boost::timer t1;
-	for (size_t n = 0; n < outter_loops; ++n)
-	{
-		test_map_list_impl_std(inner_loops);
-	}
-	double e1 = t1.elapsed();
-	cout << "test_map_list:  std: " << e1 << endl;
-}
+#include "test_map_list.cpp"
 
 template <class T>
 pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T end)
@@ -487,25 +417,15 @@ void test_shared_allocators()
 void test_rope();
 void test_chain();
 
-/*
-
-http://chart.apis.google.com/chart?chco=FF0000,00FF00&chs=250x100&cht=lc&chd=t:0.001,0.028,0.092,0.188,0.317|0.009,0.054,0.121,0.24,0.376&chds=0,0.376,0,0.376
-
-http://chart.apis.google.com/chart?chco=FF0000,00FF00&chs=250x100&cht=lc&chd=t:0.001,0.03,0.091,0.197,0.313,0.479,0.683,0.921,1.204,1.501|0.009,0.049,0.12,0.239,0.374,0.548,0.753,1.004,1.293,1.585&chds=0,1.585,0,1.585
-
-http://chart.apis.google.com/chart?chco=FF0000,00FF00&chs=250x100&cht=lc&chd=t:0.001,0.029,0.087,0.19,0.315,0.483,0.696,0.929,1.198,1.488,1.809,2.227,2.725,3.019,3.523,3.997,4.538,5.221,5.704,6.405|0.009,0.048,0.118,0.233,0.372,0.561,0.753,1.007,1.298,1.595,1.922,2.396,2.774,3.175,3.65,4.128,5.021,5.283,5.975,6.537&chds=0,6.537,0,6.537
-
-*/
-
 #include "test_bubble_sort.cpp"
 #include "test_dupe.cpp"
 
 int main()
 {
+	test_map_list_realtime();
 	test_dupe();
 	//graph_bubble_sort();
 	//test_bubble_sort();
-	//test_map_list_realtime();
 	return 0;
 	//test_chain();
 	test_deque();
