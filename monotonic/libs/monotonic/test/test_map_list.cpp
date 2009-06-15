@@ -25,7 +25,7 @@ void test_map_list_impl(size_t count, Map &map)
 // amount of work the next frame.
 void test_map_list_realtime()
 {
-	monotonic::inline_storage<1000000> storage;
+	monotonic::inline_storage<1000000> storage;// = new monotonic::inline_storage<10000000>;
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 
@@ -33,7 +33,7 @@ void test_map_list_realtime()
 	for (size_t n = 0; n < outter_loops; ++n)
 	{
 		typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
-		Map map;
+		Map map(std::less<int>(), storage);
 		test_map_list_impl(inner_loops, map);
 		storage.reset(); ///<<< reset the memory usage to zero
 	}
@@ -49,6 +49,7 @@ void test_map_list_realtime()
 	}
 	double e1 = t1.elapsed();
 	cout << "test_map_list:  std: " << e1 << endl;
+	//delete storage;
 }
 
 //EOF
