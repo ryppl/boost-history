@@ -498,10 +498,12 @@ http://chart.apis.google.com/chart?chco=FF0000,00FF00&chs=250x100&cht=lc&chd=t:0
 */
 
 #include "test_bubble_sort.cpp"
+#include "test_dupe.cpp"
 
 int main()
 {
-	graph_bubble_sort();
+	test_dupe();
+	//graph_bubble_sort();
 	//test_bubble_sort();
 	//test_map_list_realtime();
 	return 0;

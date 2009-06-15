@@ -1,3 +1,4 @@
+
 template <class List>
 void test_bubble_sort_impl(size_t length, List &list)
 {
@@ -17,6 +18,7 @@ void test_bubble_sort_impl(size_t length, List &list)
 				std::swap(*A, *C);
 				swapped = true;
 			}
+	
 		}
 	}
 	while (swapped);
@@ -24,7 +26,7 @@ void test_bubble_sort_impl(size_t length, List &list)
 
 pair<double,double> test_bubble_sort(size_t count = 50*1000, size_t length = 20)
 {
-	monotonic::inline_storage<100000> storage;
+	monotonic::inline_storage<100000> storage;// = new monotonic::inline_storage<100000>();
 	boost::timer mono_timer;
 	for (size_t n = 0; n < count; ++n)
 	{
@@ -46,10 +48,10 @@ pair<double,double> test_bubble_sort(size_t count = 50*1000, size_t length = 20)
 
 void graph_bubble_sort()
 {
-	const size_t count = 10000;
+	const size_t count = 50000;
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
-	for (size_t length = 3; length < 100; length += 10)
+	for (size_t length = 3; length < 150; length += 10)
 	{
 		results[length] = test_bubble_sort(count, length);
 	}
