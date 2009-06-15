@@ -263,6 +263,18 @@
 			RelativePath=".\rope.cpp"
 			>
 		</File>
+		<File
+			RelativePath=".\test_bubble_sort.cpp"
+			>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

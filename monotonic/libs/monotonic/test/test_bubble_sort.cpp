@@ -49,7 +49,7 @@ void graph_bubble_sort()
 	const size_t count = 10000;
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
-	for (size_t length = 3; length < 50; length += 10)
+	for (size_t length = 3; length < 100; length += 10)
 	{
 		results[length] = test_bubble_sort(count, length);
 	}
@@ -61,11 +61,14 @@ void graph_bubble_sort()
 	double m = 0;
 	BOOST_FOREACH(Results::value_type const &result, results)
 	{
-		cout << result.first << '\t' << result.second.first << '\t' << result.second.second << endl;
-		first << comma << result.second.first;
-		second << comma << result.second.second;
+		double mono_time = result.second.first;
+		double std_time = result.second.second;
+		double perc = mono_time/std_time;
+		cout << result.first << '\t' << mono_time << '\t' << std_time << '\t' << perc << "%" << endl;
+		first << comma << mono_time;
+		second << comma << std_time;
 		comma = ",";
-		m = max(m, max(result.second.first, result.second.second));
+		m = max(m, max(std_time, mono_time));
 	}
 	chart << first.str() << "|" << second.str() << "&chds=0," << m << ",0," << m;
 	cout << chart.str() << endl;
