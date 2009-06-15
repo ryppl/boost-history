@@ -12,7 +12,7 @@
 
 #include <boost/iterator/counting_iterator.hpp>
 
-#include <boost/monotonic/rope.h>
+#include <boost/monotonic/chain.h>
 
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
@@ -62,15 +62,15 @@ void test_deque()
 		storage.reset();
 
 		{
-			monotonic::chain<int> rope(storage);
-			fill_n(back_inserter(rope), 100, 42);
+			monotonic::chain<int> chain(storage);
+			fill_n(back_inserter(chain), 100, 42);
 			cout << "default chain: " << storage.used() << endl;
 		}
 		storage.reset();
 
 		{
-			monotonic::chain<int, 100> rope(storage);
-			fill_n(back_inserter(rope), 100, 42);
+			monotonic::chain<int, 100> chain(storage);
+			fill_n(back_inserter(chain), 100, 42);
 			cout << "chain<100>: " << storage.used() << endl;
 		}
 		storage.reset();
@@ -414,7 +414,7 @@ void test_shared_allocators()
 	}
 }
 
-void test_rope();
+void test_chain();
 void test_chain();
 
 #include "test_bubble_sort.cpp"
@@ -429,7 +429,7 @@ int main()
 	return 0;
 	//test_chain();
 	test_deque();
-	//test_rope();
+	//test_chain();
 	test_shared_allocators();
 	test_alignment();
 	test_auto_buffer();

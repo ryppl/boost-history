@@ -178,6 +178,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\chain.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.h"
 					>
 				</File>
@@ -195,10 +199,6 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\monotonic\ptr_list.h"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\rope.h"
 					>
 				</File>
 				<File

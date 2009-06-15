@@ -20,7 +20,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
-#include <boost/monotonic/rope.h>
+#include <boost/monotonic/chain.h>
 
 using namespace boost;
 using namespace std;
