@@ -1,6 +1,6 @@
 // Copyright (C) 2009 Christian Schladetsch
 //
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
@@ -10,6 +10,7 @@
 #include <boost/utility/iter_range.h>
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_categories.hpp>
+#include <boost/foreach.hpp>
 
 namespace boost
 {
@@ -56,11 +57,11 @@ namespace boost
 				VectorIterators vec;
 
 				iterator_base() { }
-				iterator_base(Rope &P) 
+				iterator_base(Rope &P)
 					: parent(&P) { }
 				iterator_base(Rope &P, StrandIterators const &S)
 					: parent(&P), strand(S) { }
-				iterator_base(Rope &P, StrandIterators const &S, VectorIterators const &V) 
+				iterator_base(Rope &P, StrandIterators const &S, VectorIterators const &V)
 					: parent(&P), strand(S), vec(V) { }
 				Derived &This()
 				{
@@ -97,11 +98,11 @@ namespace boost
 			{
 				typedef iterator_base<Rope, StrandsIterators, VectorIterators, iterator> Parent;
 				iterator() { }
-				iterator(Rope &P) 
+				iterator(Rope &P)
 					: Parent(P) { }
 				iterator(Rope &P, StrandsIterators const &S)
 					: Parent(P, S) { }
-				iterator(Rope &P, StrandsIterators const &S, VectorIterators const &V) 
+				iterator(Rope &P, StrandsIterators const &S, VectorIterators const &V)
 					: Parent(P, S, V) { }
 				T const &operator*() const
 				{
@@ -117,14 +118,14 @@ namespace boost
 			{
 				typedef iterator_base<Rope const, ConstStrandsIterators, ConstVectorIterators, const_iterator> Parent;
 				const_iterator() { }
-				const_iterator(Rope const &P) 
+				const_iterator(Rope const &P)
 					: Parent(P) { }
 				const_iterator(Iter const &X)
-					: Parent(*X.parent, X.strand, X.vec) 
+					: Parent(*X.parent, X.strand, X.vec)
 				{ }
 				const_iterator(Rope const &P, ConstStrandsIterators const &S)
 					: Parent(P, S) { }
-				const_iterator(Rope const &P, ConstStrandsIterators const &S, ConstVectorIterators const &V) 
+				const_iterator(Rope const &P, ConstStrandsIterators const &S, ConstVectorIterators const &V)
 					: Parent(P, S, V) { }
 				T const &operator*() const
 				{
@@ -133,12 +134,12 @@ namespace boost
 			};
 
 		private:
-			Strands strands;
 			Allocator alloc;
+			Strands strands;
 
 		public:
 			chain() { }
-			chain(Allocator const &A) 
+			chain(Allocator const &A)
 				: alloc(A), strands(A) { }
 			chain(size_t len, Allocator const &A)
 				: alloc(A), strands(A)
@@ -159,7 +160,7 @@ namespace boost
 				Vector &vec = strands.back();
 				size_t len = std::distance(F,L);
 				vec.resize(len);
-				Vector::iterator G = vec.begin();
+				typename Vector::iterator G = vec.begin();
 				for (size_t N = 0; N < len; ++F, ++G)
 					*G = *F;
 			}

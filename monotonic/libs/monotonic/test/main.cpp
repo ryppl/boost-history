@@ -52,7 +52,7 @@ void test_deque()
 			cout << "deque: " << storage.used() << endl;
 		}
 		storage.reset();
-	
+
 		{
 			std::vector<int, boost::monotonic::allocator<int> > vector(storage);
 			fill_n(back_inserter(vector), 100, 42);
@@ -495,10 +495,10 @@ void test_bubble_sort_impl(size_t length, List &list)
 	do
 	{
 		swapped = false;
-		List::iterator A = list.begin(), B = --list.end();
+		typename List::iterator A = list.begin(), B = --list.end();
 		for (--B; A != B; ++A)
 		{
-			List::iterator C = A;
+			typename List::iterator C = A;
 			++C;
 			if (*A > *C)
 			{
@@ -519,7 +519,8 @@ void test_bubble_sort()
 	boost::timer mono_timer;
 	for (size_t n = 0; n < count; ++n)
 	{
-		test_bubble_sort_impl(length, std::list<int, monotonic::allocator<int> >(storage));
+	    std::list<int, monotonic::allocator<int> > list(storage);
+		test_bubble_sort_impl(length, list);
 		storage.reset();
 	}
 	double mono_total = mono_timer.elapsed();
@@ -528,7 +529,8 @@ void test_bubble_sort()
 	boost::timer std_timer;
 	for (size_t n = 0; n < count; ++n)
 	{
-		test_bubble_sort_impl(length, std::list<int>());
+	    std::list<int> list;
+		test_bubble_sort_impl(length, list);
 	}
 	double std_total = std_timer.elapsed();
 	cout << "std  bubble sort: " << 1000*1000*std_total/count << "us" << endl;
