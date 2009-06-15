@@ -1,5 +1,4 @@
-// part of the test_map_list_realtime test.
-// this is to be like running part of a simulation.
+
 template <class Map>
 void test_map_list_impl(size_t count, Map &map)
 {
@@ -20,10 +19,7 @@ void test_map_list_impl(size_t count, Map &map)
 	}
 }
 
-// the purpose of this test is to simulate a `realtime system`
-// which does an amount of work each frame, then does a similar
-// amount of work the next frame.
-void test_map_list_realtime()
+void test_map_list()
 {
 	monotonic::storage<1000000> storage;// = new monotonic::storage<10000000>;
 	const size_t outter_loops = 10*1000;

@@ -422,7 +422,7 @@ void test_chain();
 
 int main()
 {
-	test_map_list_realtime();
+	test_map_list();
 	test_dupe();
 	//graph_bubble_sort();
 	//test_bubble_sort();
