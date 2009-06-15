@@ -3,12 +3,12 @@
 template <class Map>
 void test_map_list_impl(size_t count, Map &map)
 {
-	typedef typename Map::referent_type List;
+	typedef typename Map::mapped_type List;
 	size_t mod = count/10;
 	for (size_t n = 0; n < count; ++n)
 	{
 		int random = rand() % mod;
-		Map::iterator iter = map.find(random);
+		typename Map::iterator iter = map.find(random);
 		if (iter == map.end())
 		{
 			map.insert(make_pair(random, List(map.get_allocator())));
