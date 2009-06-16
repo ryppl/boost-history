@@ -68,7 +68,7 @@ BOOST_AUTO_TEST_CASE( test_copy )
 	size_t rem2 = storage.fixed_remaining();
 
 	BOOST_CHECK(v2 == v1);
-	BOOST_CHECK_EQUAL(rem1 - rem2, 12 + 100*sizeof(int));
+	//BOOST_CHECK_EQUAL(rem1 - rem2, 12 + 100*sizeof(int));
 }
 
 BOOST_AUTO_TEST_CASE(test_shared_allocators)
@@ -117,8 +117,7 @@ BOOST_AUTO_TEST_CASE(test_basic)
 	size_t len2 = storage1.fixed_remaining();
 
 	BOOST_CHECK(copy == v1);
-	BOOST_CHECK(len - len2 == 12 + 100*sizeof(int)); // 12 has no right being there, it is for the extra gunk in vector and is STL-impl-dependant
-
+	//BOOST_CHECK(len - len2 == 12 + 100*sizeof(int)); // 12 has no right being there, it is for the extra gunk in vector and is STL-impl-dependant
 
 	// create the storage that will be used for the various monotonic containers.
 	// while it is on the stack here, it could be on the heap as well.
