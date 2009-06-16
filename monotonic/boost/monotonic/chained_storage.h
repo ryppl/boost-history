@@ -1,6 +1,6 @@
 // Copyright (C) 2009 Christian Schladetsch
 //
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
@@ -15,21 +15,20 @@ namespace boost
 		///
 		/// allocation requests first use inline storage of N bytes.
 		/// once that is exhausted, later requests are serviced from the heap.
-		/// 
+		///
 		/// all allocations remain valid at all times.
-		template <size_t N, size_t MLS = N*2, class Al = std::allocator<char> >
+		template <size_t N, size_t MinLinkSize = N*2, class Al = std::allocator<char> >
 		struct chained_storage : storage_base
 		{
-			BOOST_STATIC_CONSTANT(size_t, MinLinkSize = MLS);
 			typedef Al Allocator;
-			typedef typename Allocator::rebind<char>::other CharAllocator;
+			typedef typename Allocator::template rebind<char>::other CharAllocator;
 			struct Link
 			{
 				size_t capacity, cursor;
 				char *buffer;
 				CharAllocator alloc;
-				Link(Allocator const &al, size_t N) 
-					: capacity(N), cursor(0), buffer(0), alloc(al)
+				Link(Allocator const &al, size_t cap)
+					: capacity(cap), cursor(0), buffer(0), alloc(al)
 				{
 				}
 				void Construct()
@@ -69,10 +68,10 @@ namespace boost
 			Allocator alloc;		// allocator for heap-based storage
 
 		public:
-			chained_storage() 
+			chained_storage()
 			{
 			}
-			chained_storage(Allocator const &A) 
+			chained_storage(Allocator const &A)
 				: alloc(A)
 			{
 			}
