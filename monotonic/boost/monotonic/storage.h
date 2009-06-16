@@ -5,8 +5,10 @@
 
 #pragma once
 
-#include <boost/monotonic/storage.h>
 #include <utility>
+#include <limits>
+#include <boost/monotonic/fixed_storage.h>
+#include <boost/foreach.hpp>
 
 namespace boost
 {
@@ -75,9 +77,9 @@ namespace boost
 			typedef std::vector<Link, Al> Chain;
 
 		private:
-			fixed_storage<InlineSize> fixed;		// the inline fixed_storage
-			Chain chain;			// heap-based fixed_storage
-			Allocator alloc;		// allocator for heap-based fixed_storage
+			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
+			Chain chain;						// heap-based storage
+			Allocator alloc;					// allocator for heap-based storage
 
 		public:
 			storage()
