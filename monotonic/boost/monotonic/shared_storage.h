@@ -37,7 +37,7 @@ namespace boost
 			void reset()
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.reset();
+				storage.reset();
 			}
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
