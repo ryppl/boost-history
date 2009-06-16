@@ -298,10 +298,10 @@ void run_all_tests()
 	test_speed_heap();
 }
 
-//int main()
-//{
-//	//test_map_list_heap_stack();
-//	run_all_tests();
-//}
+int main()
+{
+	//test_map_list_heap_stack();
+	run_all_tests();
+}
 
 //EOF
