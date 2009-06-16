@@ -44,10 +44,6 @@ namespace boost
 				mutex::scoped_lock lock(guard);
 				return storage.allocate(num_bytes, alignment);
 			}
-			void deallocate(void *, size_t)
-			{
-				// do nothing
-			}
 			size_t remaining() const
 			{
 				mutex::scoped_lock lock(guard);

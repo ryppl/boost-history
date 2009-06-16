@@ -116,11 +116,6 @@ namespace boost
 				return AddLink(size).Allocate(num_bytes, alignment);
 			}
 
-			void deallocate(void *, size_t)
-			{
-				// do nothing
-			}
-
 			size_t max_size() const
 			{
 				return std::numeric_limits<size_t>::max();

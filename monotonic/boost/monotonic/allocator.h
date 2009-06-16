@@ -8,7 +8,6 @@
 #include <boost/monotonic/storage_base.h>
 #include <boost/monotonic/storage.h>
 #include <boost/assert.hpp>
-//#include <boost/swap.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 

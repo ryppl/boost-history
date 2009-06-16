@@ -26,15 +26,11 @@ namespace boost
 		template <size_t N>
 		struct fixed_storage : storage_base
 		{
-
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-			typedef boost::auto_buffer<char, boost::store_n_bytes<N> > buffer_type;
-#else
-			typedef boost::array<char, N> buffer_type;
-#endif
+			BOOST_STATIC_ASSERT(N > 0);
+			typedef boost::array<char, N> Buffer;
 
 		private:
-			buffer_type buffer;			///< the storage
+			Buffer buffer;			///< the storage
 			size_t cursor;				///< pointer to current index within storage for next allocation
 #ifndef NDEBUG
 			size_t num_allocations;
@@ -48,7 +44,7 @@ namespace boost
 			{
 			}
 
-			buffer_type const &get_buffer()  const
+			Buffer const &get_buffer()  const
 			{
 				return buffer;
 			}
@@ -81,9 +77,6 @@ namespace boost
 			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-#ifndef NDEBUG
-				++num_allocations;
-#endif
 				// ensure we return a point on an aligned boundary
 				size_t extra = cursor & (alignment - 1);
 				if (extra > 0)
@@ -93,20 +86,14 @@ namespace boost
 				{
 					return 0;
 				}
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-				buffer.uninitialized_resize(buffer.size() + required);
+#ifndef NDEBUG
+				++num_allocations;
 #endif
 				char *ptr = &buffer[cursor];
 				cursor += required;
 				return ptr + extra;
 			}
 
-			/// no work is done to deallocate storage
-			void deallocate(void * /*p*/, size_t /*n*/)
-			{
-			}
-
-			/// the maximum size is determined at compile-time
 			size_t max_size() const
 			{
 				return N;
@@ -116,10 +103,12 @@ namespace boost
 			{
 				return N - cursor;
 			}
+
 			size_t used() const
 			{
 				return cursor;
 			}
+
 #ifndef NDEBUG
 			size_t get_num_allocs() const
 			{
@@ -127,7 +116,9 @@ namespace boost
 			}
 #endif
 		};
-	}
-}
+	
+	} // namespace monotonic
+
+} // namespace boost
 
 //EOF
