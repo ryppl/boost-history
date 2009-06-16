@@ -5,6 +5,9 @@
 
 #pragma once
 
+#include <vector>
+#include <utility>
+
 namespace boost
 {
 	namespace monotonic
