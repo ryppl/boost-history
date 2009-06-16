@@ -106,22 +106,19 @@ BOOST_AUTO_TEST_CASE(test_shared_allocators)
 
 BOOST_AUTO_TEST_CASE(test_basic)
 {
-	monotonic::storage<> storage1;
-	vector<int, monotonic::allocator<int> > v1(storage1);
+	monotonic::storage<> storage;
+	vector<int, monotonic::allocator<int> > v1(storage);
 
 	for(int i = 0; i < 100; ++i)
 		v1.push_back(i);
 
-	size_t len = storage1.fixed_remaining();
-	vector<int, monotonic::allocator<int> > copy(v1);
-	size_t len2 = storage1.fixed_remaining();
+	vector<int, monotonic::allocator<int> > copy(storage);
+	size_t len = storage.fixed_remaining();
+	copy = v1;
+	size_t len2 = storage.fixed_remaining();
 
 	BOOST_CHECK(copy == v1);
-	//BOOST_CHECK(len - len2 == 12 + 100*sizeof(int)); // 12 has no right being there, it is for the extra gunk in vector and is STL-impl-dependant
-
-	// create the storage that will be used for the various monotonic containers.
-	// while it is on the stack here, it could be on the heap as well.
-	monotonic::storage<> storage;
+	BOOST_CHECK(len - len2 == 100*sizeof(int));
 
 	// create a list that uses inline, monotonically-increasing storage
 	list<int, monotonic::allocator<int> > list(storage);
