@@ -182,6 +182,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\fixed_storage.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.h"
 					>
 				</File>
@@ -199,6 +203,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\monotonic\set.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\boost\monotonic\shared_storage.h"
 					>
 				</File>
 				<File
@@ -334,6 +342,18 @@
 					Name="VCCLCompilerTool"
 				/>
 			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\test_shared_storage.cpp"
+			>
 			<FileConfiguration
 				Name="Release|Win32"
 				ExcludedFromBuild="true"
