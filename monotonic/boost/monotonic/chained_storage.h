@@ -6,6 +6,7 @@
 #pragma once
 
 #include <boost/monotonic/storage.h>
+#include <utility>
 
 namespace boost
 {
@@ -46,6 +47,10 @@ namespace boost
 				{
 					alloc.deallocate(buffer, 1);
 				}
+				void reset()
+				{
+				    cursor = 0;
+				}
 				bool CanAllocate(size_t num_bytes) const
 				{
 					return capacity - cursor >= num_bytes;
@@ -63,8 +68,7 @@ namespace boost
 					return ptr + extra;
 				}
 			};
-			//typedef std::list<Link, Al> Chain;
-			typedef boost::array<Link, 200> Chain;
+			typedef std::vector<Link, Al> Chain;
 
 		private:
 			storage<N> fixed;		// the inline storage
@@ -73,7 +77,7 @@ namespace boost
 			size_t next_link;
 
 		public:
-			chained_storage() 
+			chained_storage()
 				: next_link(0)
 			{
 			}
@@ -85,35 +89,26 @@ namespace boost
 			void reset()
 			{
 				fixed.reset();
-				//chain.clear();
-				chain = Chain();
-				next_link = 0;
+				BOOST_FOREACH(Link &link, chain)
+				{
+				    link.reset();
+				}
 			}
 
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-				//if (void *ptr = fixed.allocate(num_bytes, alignment))
-				//{
-				//	return ptr;
-				//}
-				void *ptr;
-				ptr = chain[0].Allocate(num_bytes, alignment);
-				if (ptr)
+				if (void *ptr = fixed.allocate(num_bytes, alignment))
+				{
 					return ptr;
-				ptr = chain[1].Allocate(num_bytes, alignment);
-				if (ptr)
-					return ptr;
-				ptr = chain[2].Allocate(num_bytes, alignment);
-				if (ptr)
-					return ptr;
-				//BOOST_FOREACH(Link &link, chain)
-				//{
-				//	if (void *ptr = link.Allocate(num_bytes, alignment))
-				//	{
-				//		return ptr;
-				//	}
-				//}
-				size_t size = max(MinLinkSize, num_bytes*2);
+				}
+				BOOST_FOREACH(Link &link, chain)
+				{
+					if (void *ptr = link.Allocate(num_bytes, alignment))
+					{
+						return ptr;
+					}
+				}
+				size_t size = std::max(MinLinkSize, num_bytes*2);
 				return AddLink(size).Allocate(num_bytes, alignment);
 			}
 
@@ -148,16 +143,15 @@ namespace boost
 		private:
 			Link &AddLink(size_t size)
 			{
-				//chain.push_back(Link(alloc, size));
-				//Link &link = chain.back();
-				//link.Construct();
-				Link &link = chain[next_link++];
-				link = Link(alloc, size);
+				chain.push_back(Link(alloc, size));
+				Link &link = chain.back();
 				link.Construct();
 				return link;
 			}
 		};
-	}
-}
+
+	} // namespace monotonic
+
+} // namespace boost
 
 //EOF
