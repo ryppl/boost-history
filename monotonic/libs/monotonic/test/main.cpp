@@ -12,7 +12,6 @@
 
 #include <boost/iterator/counting_iterator.hpp>
 
-#include <boost/monotonic/chain.h>
 
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
@@ -24,6 +23,9 @@
 #include <boost/iterator/counting_iterator.hpp>
 #include <boost/array.hpp>
 #include <boost/scoped_ptr.hpp>
+
+#include <boost/monotonic/chain.h>
+#include <boost/monotonic/chained_storage.h>
 
 template <class T
 , size_t C = 64

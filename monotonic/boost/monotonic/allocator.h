@@ -113,7 +113,8 @@ namespace boost
 
 			size_type max_size() const throw()
 			{
-				BOOST_ASSERT(storage != 0);
+				if (!storage)
+					return 0;
 				return storage->max_size();
 			}
 

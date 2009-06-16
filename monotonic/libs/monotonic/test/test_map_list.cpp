@@ -24,9 +24,11 @@ pair<double,double> test_map_list(size_t outter_loops, size_t inner_loops, monot
 	boost::timer t0;
 	for (size_t n = 0; n < outter_loops; ++n)
 	{
-		typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
-		Map map(std::less<int>(), storage);
-		test_map_list_impl(inner_loops, map);
+		{
+			typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
+			Map map(std::less<int>(), storage);
+			test_map_list_impl(inner_loops, map);
+		}
 		storage.reset();
 	}
 	double e0 = t0.elapsed();
@@ -49,11 +51,12 @@ void test_map_list_heap_stack()
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 
-	monotonic::storage<1000000> storage;
+	monotonic::chained_storage<1000> storage;
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
 
 	// do a test with a large dataset on the heap
+	if (0)
 	{
 		const size_t buffer_size = 10*1000*1000;
 		monotonic::storage<buffer_size> *storage = new monotonic::storage<buffer_size>;

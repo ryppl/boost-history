@@ -17,11 +17,13 @@ namespace boost
 		/// once that is exhausted, later requests are serviced from the heap.
 		///
 		/// all allocations remain valid at all times.
-		template <size_t N, size_t MinLinkSize = N*2, class Al = std::allocator<char> >
+		template <size_t N, size_t MinLinkSize = N*1000, class Al = std::allocator<char> >
 		struct chained_storage : storage_base
 		{
 			typedef Al Allocator;
 			typedef typename Allocator::template rebind<char>::other CharAllocator;
+
+			/// a link in the chain of heap-based memory buffers
 			struct Link
 			{
 				size_t capacity, cursor;

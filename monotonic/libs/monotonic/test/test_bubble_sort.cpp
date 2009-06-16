@@ -30,8 +30,10 @@ pair<double,double> test_bubble_sort(size_t count = 50*1000, size_t length = 20)
 	boost::timer mono_timer;
 	for (size_t n = 0; n < count; ++n)
 	{
-		std::list<int, monotonic::allocator<int> > list(storage);
-		test_bubble_sort_impl(length, list);
+		{
+			std::list<int, monotonic::allocator<int> > list(storage);
+			test_bubble_sort_impl(length, list);
+		}
 		storage.reset();
 	}
 	double mono_total = mono_timer.elapsed();
