@@ -7,6 +7,7 @@
 
 #include <utility>
 #include <limits>
+#include <vector>
 #include <boost/monotonic/fixed_storage.h>
 #include <boost/foreach.hpp>
 

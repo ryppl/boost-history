@@ -79,87 +79,6 @@ void test_deque()
 	}
 }
 
-void test_basic()
-{
-	monotonic::storage<1000*sizeof(int)> storage1;
-	monotonic::vector<int> v1(storage1);
-
-	for(int i = 0; i < 100; ++i)
-		v1.push_back(i);
-
-	size_t len = storage1.remaining();
-	monotonic::vector<int> copy(v1);
-	size_t len2 = storage1.remaining();
-
-	assert(copy == v1);
-	assert(len - len2 == 100*sizeof(int));
-
-
-	// create the storage that will be used for the various monotonic containers.
-	// while it is on the stack here, it could be on the heap as well.
-	monotonic::storage<1000> storage;
-
-	// create a list that uses inline, monotonically-increasing storage
-	monotonic::list<int> list(storage);
-	list.push_back(100);
-	list.push_back(400);
-	list.erase(list.begin());
-
-	// a map from the same storage
-	monotonic::map<int, float> map(storage);
-	map[42] = 3.14f;
-	assert(map[42] == 3.14f);
-
-	// a set...
-	monotonic::set<float> set(storage);
-	set.insert(3.14f);
-	set.insert(-123.f);
-}
-
-void test_copy()
-{
-	monotonic::storage<1000*sizeof(int)> storage;
-	monotonic::vector<int> v1(storage);
-
-	for (int n = 0; n < 100; ++n)
-		v1.push_back(n);
-
-	size_t rem1 = storage.remaining();
-	monotonic::vector<int> v2(v1);
-	size_t rem2 = storage.remaining();
-
-	assert(v2 == v1);
-	assert(rem1 - rem2 == 100*sizeof(int));
-}
-
-void test_ctors()
-{
-	monotonic::storage<1000*sizeof(int)> storage;
-	string foo = "foo";
-	monotonic::vector<char> v1(foo.begin(), foo.end(), storage);
-	assert(v1.size() == 3);
-	assert(equal(v1.begin(), v1.end(), "foo"));
-
-	monotonic::vector<char> v2(6, 'x', storage);
-	assert(v2.size() == 6);
-	assert(equal(v2.begin(), v2.end(), "xxxxxx"));
-
-	monotonic::set<char> s2(foo.begin(), foo.end(), storage);
-	assert(s2.size() == 2);
-	assert(s2.find('f') != s2.end());
-	assert(s2.find('o') != s2.end());
-
-	vector<pair<int, string> > v;
-	v.push_back(make_pair(42,"foo"));
-	v.push_back(make_pair(123,"bar"));
-	monotonic::map<int, string> m1(v.begin(), v.end(), storage);
-	assert(m1.find(42) != m1.end());
-	assert(m1.find(123) != m1.end());
-
-	monotonic::list<int> l1(foo.begin(), foo.end(), storage);
-	assert(equal(l1.begin(), l1.end(), "foo"));
-}
-
 void test_speed()
 {
 	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
@@ -346,7 +265,6 @@ void test_alignment()
 }
 
 
-#include "test_map_list.cpp"
 
 template <class T>
 pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T end)
@@ -356,66 +274,34 @@ pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T
 }
 
 
-void test_shared_allocators()
-{
-	monotonic::storage<500> sa, sb;
-	typedef monotonic::allocator<int> Al;
-	{
-		std::vector<int, Al> v0(sa), v1(sa);
-		std::vector<int, Al> v2(sb), v3(sb);
-		std::list<int, Al> l0(sa), l1(sb);
-
-		assert(v0.get_allocator() == v1.get_allocator());
-		assert(v2.get_allocator() == v3.get_allocator());
-		assert(v0.get_allocator() != v2.get_allocator());
-		assert(v3.get_allocator() != v1.get_allocator());
-
-		for (int n = 0; n < 10; ++n)
-			v0.push_back(n);
-
-		v1 = v0;
-		v1.swap(v2);	// swap from different allocators means they are copied
-		assert(v1.empty() && v3.empty() && v1 == v3);
-
-		assert(v2 == v0); // both are now [0..9]
-
-		v1.swap(v0);	// swap from same allocators means no copying
-		assert(v2 == v1);
-		assert(v0 == v3);
-
-		l0.assign(v0.begin(), v0.end());
-		l1 = l0;
-		assert(l0 == l1);
-	}
-}
-
 void test_chain();
 void test_chain();
 
+#include "test_map_list.cpp"
 #include "test_bubble_sort.cpp"
 #include "test_dupe.cpp"
 #include "test_chained_storage.cpp"
 #include "test_shared_storage.cpp"
 
-int main()
+void run_all_tests()
 {
 	test_shared_storage();
 	test_chained_storage();
 	test_map_list_heap_stack();
 	test_dupe();
-	//graph_bubble_sort();
-	//test_bubble_sort();
-	return 0;
-	//test_chain();
+	graph_bubble_sort();
+	test_bubble_sort();
+	test_chain();
 	test_deque();
-	//test_chain();
-	test_shared_allocators();
 	test_alignment();
 	test_speed();
 	test_speed_heap();
-	test_basic();
-	test_copy();
-	test_ctors();
 }
+
+//int main()
+//{
+//	//test_map_list_heap_stack();
+//	run_all_tests();
+//}
 
 //EOF

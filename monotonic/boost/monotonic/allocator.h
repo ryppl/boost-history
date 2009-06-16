@@ -55,6 +55,7 @@ namespace boost
 				typedef allocator<U> other; 
 			};
 
+		private:
 			/// the storage used by the allocator
 			storage_base *storage;
 
@@ -79,7 +80,7 @@ namespace boost
 			{
 				typedef BOOST_DEDUCED_TYPENAME allocator<T>::template rebind<U> Other;
 				typedef BOOST_DEDUCED_TYPENAME Other::other OtherStorage;
-				storage = OtherStorage(*Q.storage).storage;
+				storage = OtherStorage(*Q.get_storage()).get_storage();
 			}
 
 			~allocator() throw()
@@ -146,6 +147,11 @@ namespace boost
 			void swap(allocator<T> &other)
 			{
 				std::swap(storage, other.storage);
+			}
+
+			storage_base *get_storage() const
+			{
+				return storage;
 			}
 
 			friend bool operator==(allocator<T> const &A, allocator<T> const &B) { return A.storage == B.storage; }

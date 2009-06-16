@@ -243,6 +243,18 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="test"
+			>
+			<File
+				RelativePath=".\Jamfile.v2"
+				>
+			</File>
+		</Filter>
+		<File
+			RelativePath=".\basic_tests.cpp"
+			>
+		</File>
 		<File
 			RelativePath=".\chain.cpp"
 			>

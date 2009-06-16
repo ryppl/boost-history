@@ -51,7 +51,7 @@ void test_map_list_heap_stack()
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 
-	monotonic::storage<1000000> storage;
+	monotonic::storage<> storage;
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
 
@@ -69,17 +69,6 @@ void test_map_list_heap_stack()
 		cout << result.first << '\t' << mono_time << '\t' << std_time << '\t' << perc << "%" << endl;
 	}
 
-	//cout << "stack:" << endl;
-	//{	
-	//	test_map_list(outter_loops, inner_loops, storage);
-	//}
-
-	//cout << "heap:" << endl;
-	//{
-	//	monotonic::storage<1000000> *storage = new monotonic::storage<1000000>;
-	//	test_map_list(outter_loops, inner_loops, *storage);
-	//	delete storage;
-	//}
 }
 
 //EOF

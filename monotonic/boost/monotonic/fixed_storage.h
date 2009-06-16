@@ -26,7 +26,6 @@ namespace boost
 		template <size_t N>
 		struct fixed_storage : storage_base
 		{
-			BOOST_STATIC_ASSERT(N > 0);
 			typedef boost::array<char, N> Buffer;
 
 		private:
