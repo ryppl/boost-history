@@ -115,7 +115,7 @@ namespace boost
 			{
 				if (!storage)
 					return 0;
-				return storage->max_size();
+				return storage->max_size()/(sizeof(T) + alignment);
 			}
 
 			void construct(pointer p)
