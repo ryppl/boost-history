@@ -109,24 +109,24 @@
                 system with the following 
                 properties:             </p>
             <ul>
-                <li>SSpace for objects is pre-allocated. This can be on the stack, on the heap, or 
+                <li>Space for objects is pre-allocated. This can be on the stack, on the heap, or 
                     spanning both. </li>
-                <li>Objects are initialised only as required. /li>
-                <li>DDe-allocating an object does nothing other than call its destructor iff it has one.</li>
+                <li>Objects are initialised only as required. </li>
+                <li>De-allocating an object does nothing other than call its destructor iff it has one.</li>
                 <li>Object storage is not reclaimed until the underlying storage goes out of scope.
                 </li>
                 <li>Multiple different containers of any type can share the same storage via 
                     different allocators.</li>
                 <li>Containers on the stack are thread-safe by default.</li>
                 <li>monotonic::shared_storage can be used otherwise for multi-threaded applications.</li>
-            </ul>
+            </ul></p>
             <p>
                 The benefits of using a monotonic::allocator over other allocators are:
-                      ul>
+                      <ul>
                 <li>All storage is pre-allocated, similar to a pool </li>
                 <li>Storage can be on the stack:                     <ul>
                         <li>Heap is not even used, let alone fragmented </li>
-                        <li>CCache coherency is high </li>
+                        <li>Cache coherency (and/or spatial locality) is high </li>
                     </ul>
                 </li>
                 <li>Allocations will first exhaust any reserved space on the stack before reverting 
@@ -134,10 +134,9 @@
                 <li>Allocation is lightening-fast as it only involves advancing a pointer and 
                     possible alignment.</li>
                 <li>Deallocation is even faster as it does absolutely nothing </li>
-                <li>Different containers can share the same storage /li>
-            </ul>
-            <p>
-                There are alsThere are also limitations:             </p>
+                <li>Different containers can share the same storage</li>
+                </ul>
+                    <p>There are also limitations:             </p>
             <ul>
                 <li>Containers must be constructed with either an allocator or storage. There are no 
                     default allocators, and hence no default container constructors. </li>
@@ -239,21 +238,21 @@ typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt
                 any claims can be confidently made.</p>
             <h2>
                 Example Usage
-                  <p>
+                 </h2> <p>
                 Quite often, we need to create a temporary collection of objects which will 
                 exist only for the duration of a code block. A common pattern for this is to 
                 collect a set of objects from a container to do some work on:           </p>
             <div class="code">
-                <pre><b><span class="code-type">void</span></b> <b><span class="code-func">MainLoop</span></b>()
+                <pre><b>void</b> <b>MainLoop</b>()
 {
-    boost::mo    boost::monotonic::storage&lt;<span class="code-lang">&gt; storage;   <i><span 
+    boost::monotonic::storage&lt;<span class="code-lang">&gt; storage;   <i><span 
                     class="code-comment">		// create local storage on the stack. default to 8k, will move to heap as required
 </span></i>    std::list&lt;Object, boost::monotonic::allocator&lt;Object&gt; &gt; deathrow(storage);   <i><span 
                     class="code-comment">// create a std::list that uses this storage</span></i></span></pre>
                 <pre><span class="code-lang"><span 
                     class="code-comment">    foreach (object in world)
     {
-         <b><span class="code-lang">ifIsDead(object))
+         <span class="code-lang">ifIsDead(object))
               deathrow.push_back(object);           <i><span class="code-comment">// allocation is just advancing a pointer
 </span></i>    }
     foreach (object in deathrow)
@@ -261,7 +260,7 @@ typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt
         world.Remove(object);
         object.Delete();
     }
-    <span class="code-comment"><i>// storage is// storage is freed
+    <span class="code-comment"><i>// storage is freed
 </i></span>}         </div>
             <p>
                 The same system can be used to store very large containers on the heap but still 
@@ -358,7 +357,7 @@ typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt
                     to do things like speed up swap methods etc. These all work with monotonic 
                     allocator as well.</p>
                 <h2>
-                    References</h2>
+                    References</h2><ul>
                     <li>Boost.AlignedStorage</li>
                     <li>Boost.AutoBuffer. A related service. Attempts to integrate this with STL has so 
                         far been unsuccessful. See libs/monotonic/test/main.cpp#test_auto_buffer</li>
