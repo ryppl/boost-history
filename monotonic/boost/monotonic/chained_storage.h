@@ -29,6 +29,9 @@ namespace boost
 				size_t capacity, cursor;
 				char *buffer;
 				CharAllocator alloc;
+				Link() : capacity(0), cursor(0), buffer(0)
+				{
+				}
 				Link(Allocator const &al, size_t cap)
 					: capacity(cap), cursor(0), buffer(0), alloc(al)
 				{
@@ -47,56 +50,69 @@ namespace boost
 				{
 					return capacity - cursor >= num_bytes;
 				}
-				void *Allocate(size_t num_bytes, size_t alignment)
+				inline void *Allocate(size_t num_bytes, size_t alignment)
 				{
 					size_t extra = cursor & (alignment - 1);
 					if (extra > 0)
 						extra = alignment - extra;
 					size_t required = num_bytes + extra;
-					if (!CanAllocate(required))
-					{
+					if (capacity - cursor < required)
 						return 0;
-					}
-					char *ptr = &buffer[cursor];
+					char *ptr = buffer + cursor;
 					cursor += required;
 					return ptr + extra;
 				}
 			};
-			typedef std::list<Link, Al> Chain;
+			//typedef std::list<Link, Al> Chain;
+			typedef boost::array<Link, 200> Chain;
 
 		private:
 			storage<N> fixed;		// the inline storage
 			Chain chain;			// heap-based storage
 			Allocator alloc;		// allocator for heap-based storage
+			size_t next_link;
 
 		public:
-			chained_storage()
+			chained_storage() 
+				: next_link(0)
 			{
 			}
 			chained_storage(Allocator const &A)
-				: alloc(A)
+				: alloc(A), next_link(0)
 			{
 			}
 
 			void reset()
 			{
 				fixed.reset();
-				chain.clear();
+				//chain.clear();
+				chain = Chain();
+				next_link = 0;
 			}
 
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-				if (void *ptr = fixed.allocate(num_bytes, alignment))
-				{
+				//if (void *ptr = fixed.allocate(num_bytes, alignment))
+				//{
+				//	return ptr;
+				//}
+				void *ptr;
+				ptr = chain[0].Allocate(num_bytes, alignment);
+				if (ptr)
 					return ptr;
-				}
-				BOOST_FOREACH(Link &link, chain)
-				{
-					if (void *ptr = link.Allocate(num_bytes, alignment))
-					{
-						return ptr;
-					}
-				}
+				ptr = chain[1].Allocate(num_bytes, alignment);
+				if (ptr)
+					return ptr;
+				ptr = chain[2].Allocate(num_bytes, alignment);
+				if (ptr)
+					return ptr;
+				//BOOST_FOREACH(Link &link, chain)
+				//{
+				//	if (void *ptr = link.Allocate(num_bytes, alignment))
+				//	{
+				//		return ptr;
+				//	}
+				//}
 				size_t size = max(MinLinkSize, num_bytes*2);
 				return AddLink(size).Allocate(num_bytes, alignment);
 			}
@@ -132,8 +148,11 @@ namespace boost
 		private:
 			Link &AddLink(size_t size)
 			{
-				chain.push_back(Link(alloc, size));
-				Link &link = chain.back();
+				//chain.push_back(Link(alloc, size));
+				//Link &link = chain.back();
+				//link.Construct();
+				Link &link = chain[next_link++];
+				link = Link(alloc, size);
 				link.Construct();
 				return link;
 			}
