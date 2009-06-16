@@ -1,133 +1,159 @@
 // Copyright (C) 2009 Christian Schladetsch
 //
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying 
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
 #pragma once
 
-#include <cassert>
-#include <boost/array.hpp>
-#include <boost/aligned_storage.hpp>
-
-// define this to use boost::auto_buffer<> rather than boost::array for monotonic::storage
-//#define BOOST_MONOTONIC_USE_AUTOBUFFER
-// this currently does not work, because resizing the underlying buffer breaks
-// containers that may reference the previously used memory
-
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-#	include <boost/auto_buffer.hpp>
-#endif
+#include <boost/monotonic/storage.h>
+#include <utility>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		/// storage for an allocator that is on the stack or heap
-		template <size_t N>
-		struct fixed_storage : storage_base
+		/// storage that spans the stack/heap boundary.
+		///
+		/// allocation requests first use inline fixed_storage of N bytes.
+		/// once that is exhausted, later requests are serviced from the heap.
+		///
+		/// all allocations remain valid at all times.
+		template <size_t InlineSize = 8*1024, size_t MinHeapSize = InlineSize*1000, class Al = std::allocator<char> >
+		struct storage : storage_base
 		{
+			typedef Al Allocator;
+			typedef typename Allocator::template rebind<char>::other CharAllocator;
 
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-			typedef boost::auto_buffer<char, boost::store_n_bytes<N> > buffer_type;
-#else
-			typedef boost::array<char, N> buffer_type;
-#endif
+			/// a link in the chain of heap-based memory buffers
+			struct Link
+			{
+				size_t capacity, cursor;
+				char *buffer;
+				CharAllocator alloc;
+				Link() : capacity(0), cursor(0), buffer(0)
+				{
+				}
+				Link(Allocator const &al, size_t cap)
+					: capacity(cap), cursor(0), buffer(0), alloc(al)
+				{
+				}
+				void Construct()
+				{
+					buffer = alloc.allocate(capacity);
+					if (buffer == 0)
+						capacity = 0;
+				}
+				~Link()
+				{
+					alloc.deallocate(buffer, 1);
+				}
+				void reset()
+				{
+				    cursor = 0;
+				}
+				size_t used() const
+				{
+					return cursor;
+				}
+				bool CanAllocate(size_t num_bytes) const
+				{
+					return capacity - cursor >= num_bytes;
+				}
+				inline void *Allocate(size_t num_bytes, size_t alignment)
+				{
+					size_t extra = cursor & (alignment - 1);
+					if (extra > 0)
+						extra = alignment - extra;
+					size_t required = num_bytes + extra;
+					if (capacity - cursor < required)
+						return 0;
+					char *ptr = buffer + cursor;
+					cursor += required;
+					return ptr + extra;
+				}
+			};
+			typedef std::vector<Link, Al> Chain;
 
 		private:
-			buffer_type buffer;			///< the storage
-			size_t cursor;				///< pointer to current index within storage for next allocation
-#ifndef NDEBUG
-			size_t num_allocations;
-#endif
+			fixed_storage<InlineSize> fixed;		// the inline fixed_storage
+			Chain chain;			// heap-based fixed_storage
+			Allocator alloc;		// allocator for heap-based fixed_storage
+
 		public:
-			fixed_storage() 
-				: cursor(0)
-#ifndef NDEBUG
-				, num_allocations(0)
-#endif
+			storage()
+			{
+			}
+			storage(Allocator const &A)
+				: alloc(A)
 			{
 			}
 
-			buffer_type const &get_buffer()  const
-			{
-				return buffer;
-			}
-			const char *begin() const
-			{
-				return &buffer[0];
-			}
-			const char *end() const
-			{
-				return &buffer[N - 1];
-			}
 			void reset()
 			{
-				cursor = 0;
-#ifndef NDEBUG
-				num_allocations = 0;
-#endif
+				fixed.reset();
+				BOOST_FOREACH(Link &link, chain)
+				{
+				    link.reset();
+				}
 			}
 
-			size_t get_cursor() const
-			{
-				return cursor;
-			}
-
-			void set_cursor(size_t c)
-			{
-				cursor = c;
-			}
-
-			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-#ifndef NDEBUG
-				++num_allocations;
-#endif
-				// ensure we return a point on an aligned boundary
-				size_t extra = cursor & (alignment - 1);
-				if (extra > 0)
-					extra = alignment - extra;
-				size_t required = num_bytes + extra;
-				if (cursor + required > N)
+				if (void *ptr = fixed.allocate(num_bytes, alignment))
 				{
-					return 0;
+					return ptr;
 				}
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-				buffer.uninitialized_resize(buffer.size() + required);
-#endif
-				char *ptr = &buffer[cursor];
-				cursor += required;
-				return ptr + extra;
+				BOOST_FOREACH(Link &link, chain)
+				{
+					if (void *ptr = link.Allocate(num_bytes, alignment))
+					{
+						return ptr;
+					}
+				}
+				size_t size = std::max(MinHeapSize, num_bytes*2);
+				return AddLink(size).Allocate(num_bytes, alignment);
 			}
 
-			/// no work is done to deallocate storage
-			void deallocate(void * /*p*/, size_t /*n*/)
+			void deallocate(void *, size_t)
 			{
+				// do nothing
 			}
 
-			/// the maximum size is determined at compile-time
 			size_t max_size() const
 			{
-				return N;
+				return std::numeric_limits<size_t>::max();
+			}
+
+			size_t fixed_remaining() const
+			{
+				return fixed.remaining();
 			}
 
 			size_t remaining() const
 			{
-				return N - cursor;
+				return max_size();
 			}
+
 			size_t used() const
 			{
-				return cursor;
+				size_t count = fixed.used();
+				BOOST_FOREACH(Link const &link, chain)
+					count += link.used();
+				return count;
 			}
-#ifndef NDEBUG
-			size_t get_num_allocs() const
+
+		private:
+			Link &AddLink(size_t size)
 			{
-				return num_allocations;
+				chain.push_back(Link(alloc, size));
+				Link &link = chain.back();
+				link.Construct();
+				return link;
 			}
-#endif
 		};
-	}
-}
+
+	} // namespace monotonic
+
+} // namespace boost
 
 //EOF
