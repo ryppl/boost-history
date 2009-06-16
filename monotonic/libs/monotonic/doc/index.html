@@ -72,7 +72,8 @@
                 This is what this library does, by collaborating multiple instances of 
                 monotonic::allocator&lt;T&gt; with a 
                 common montonic::storage&lt;&gt;.
-                It is a fast allocation system, O(1) to allocate and zero-cost to deallocate; hence the proposed name of a 
+                It is a fast allocation system, O(1) to allocate and zero-cost to deallocate 
+                because de-allocation is a no-op; hence the proposed name of a 
                 &quot;monotonic&quot; allocator.             </p>
             <h2 id="Proposal">
                 Quick Example</h2>
@@ -84,7 +85,8 @@
                 <pre>void shared()<br />{
 	// declare the storage that will be shared by the various containers.
 	// storage will use the stack at first, then transparently expand to the heap as needed
-	boost::monotonic::storage&lt;&gt; storage;<br />	{			std::map&lt;int, int, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; map(storage);
+	boost::monotonic::storage&lt;&gt; storage;<br />		{			
+		std::map&lt;int, int, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; map(storage);
 		map[1] = 2;
 		map[2] = 4;
 
@@ -119,7 +121,7 @@
                     different allocators.</li>
                 <li>Containers on the stack are thread-safe by default.</li>
                 <li>monotonic::shared_storage can be used otherwise for multi-threaded applications.</li>
-            </ul></p>
+            </ul>
             <p>
                 The benefits of using a monotonic::allocator over other allocators are:
                       <ul>
@@ -150,8 +152,9 @@
                 The architecture is quite simple. There are three main components: the storage, 
                 the allocator and the container. FixedStorage is based on boost::array&lt;char,N&gt; 
                 and is on the stack or the heap. Storage has-a FixedStorage, and a chain of 
-                larger memory buffers on the heap that are created as needed. The allocator is stored in the container, which 
-                is initialised with either an allocator or storage.<h3 id="Containers">
+                larger memory buffers on the heap that are created and cached as needed. The allocator is stored in 
+                your container, which 
+                is initialised with storage.<h3 id="Containers">
                 Fixed
                 Storage</h3>
             <p>
@@ -166,6 +169,11 @@
                 a chain. To service an incoming allocation request, the Storage first attempts 
                 to allocate from its FixedStorage. If that fails, it uses space from the first 
                 suitable buffer in the chain.</p>
+            <h3 id="Containers1">
+                Shared
+                Storage</h3>
+            <p>
+                This has a Storage that is protected by an internal mutex.</p>
             <h3>
               Allocator</h3>
             <p>
@@ -179,11 +187,13 @@
                 Allocators are initialised with storage. There is no overhead added to any 
                 memory allocation; the only bytes used are the number of bytes required, plus 
                 whatever is required by the platform for correct alignment.</p>
+            <p>
+                De-allocation from a monotonic::allocator is a no-op.</p>
             <h3>
                 Containers
             </h3>
             <p>
-                The followingThe following container wrappers are, currently and precipitously, part of this proposal:             </p>
+                The following container wrappers are, currently and precipitously, part of this proposal:             </p>
             <ul>
                 <li>boost::monotonic::list&lt;T&gt;</li>
                 <li>boost::monotonic::vector&lt;T&gt;<li>boost::monotonic::map&lt;K,T&gt;           <li>boost::monotonic::multi_map&lt;K,T&gt; </li>
