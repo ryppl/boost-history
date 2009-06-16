@@ -113,12 +113,12 @@ BOOST_AUTO_TEST_CASE(test_basic)
 		v1.push_back(i);
 
 	vector<int, monotonic::allocator<int> > copy(storage);
-	size_t len = storage.fixed_remaining();
+	size_t len = storage.used();
 	copy = v1;
-	size_t len2 = storage.fixed_remaining();
+	size_t len2 = storage.used();
 
 	BOOST_CHECK(copy == v1);
-	BOOST_CHECK(len - len2 == 100*sizeof(int));
+	BOOST_CHECK(len2 - len == 100*sizeof(int));
 
 	// create a list that uses inline, monotonically-increasing storage
 	list<int, monotonic::allocator<int> > list(storage);
