@@ -51,7 +51,7 @@ void test_map_list_heap_stack()
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 
-	monotonic::chained_storage<1000> storage;
+	monotonic::storage<1000000> storage;
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
 
