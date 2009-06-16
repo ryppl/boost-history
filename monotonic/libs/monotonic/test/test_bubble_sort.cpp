@@ -26,7 +26,7 @@ void test_bubble_sort_impl(size_t length, List &list)
 
 pair<double,double> test_bubble_sort(size_t count = 50*1000, size_t length = 20)
 {
-	monotonic::storage<100000> storage;// = new monotonic::storage<100000>();
+	monotonic::fixed_storage<100000> storage;// = new monotonic::storage<100000>();
 	boost::timer mono_timer;
 	for (size_t n = 0; n < count; ++n)
 	{

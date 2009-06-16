@@ -47,7 +47,7 @@ struct Foo : boost::noncopyable
 void test_rope()
 {
 	{
-		monotonic::storage<4000> storage;   // create local storage on the stack
+		monotonic::fixed_storage<4000> storage;   // create local storage on the stack
 		{
 			monotonic::chain<int, 100> rope(storage);
 			for (int n = 0; n < 200; ++n)
@@ -58,7 +58,7 @@ void test_rope()
 	}
 
 
-	monotonic::storage<1000> storage;
+	monotonic::fixed_storage<1000> storage;
 	{
 		typedef monotonic::chain<Foo, 2> Rope2;
 		Rope2 foo(4, storage);

@@ -41,7 +41,7 @@ using namespace boost;
 
 void test_deque()
 {
-	monotonic::storage<4000> storage;   // create local storage on the stack
+	monotonic::storage<4000> storage;
 	{
 		{
 			std::list<int, boost::monotonic::allocator<int> > list(storage);
@@ -81,8 +81,8 @@ void test_deque()
 
 void test_basic()
 {
-	monotonic::storage<1000*sizeof(int)> storage1;   // create local storage on the stack
-	monotonic::vector<int> v1(storage1);   // create a vector that uses this storage
+	monotonic::storage<1000*sizeof(int)> storage1;
+	monotonic::vector<int> v1(storage1);
 
 	for(int i = 0; i < 100; ++i)
 		v1.push_back(i);
@@ -203,7 +203,7 @@ void test_speed_heap()
 	size_t num_iterations = 100000;
 
 	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
-	monotonic::storage<10000000> *storage = new monotonic::storage<10000000>;
+	monotonic::storage<1000000> *storage = new monotonic::storage<1000000>;
 
 	// do the test with monotonic containers and heap-based storage
 	{
@@ -242,35 +242,8 @@ void test_speed_heap()
 	}
 }
 
-// #define BOOST_MONOTONIC_USE_AUTOBUFFER before including <boost/monotonic/storage.h> to
-// try this at home.
-void test_auto_buffer()
-{
-	monotonic::storage<10> storage;
-
-	// this fails because the storage that the vector uses
-	// will be moved when the buffer resizes...
-	//monotonic::vector<int> vec(storage);
-	//for (size_t n = 0; n < 100; ++n)
-	//{
-	//	vec.push_back(n);
-	//}
-
-	// this fails because at the end of the buffer, just before
-	// it may be resized and possibly put onto heap, the following asserts
-	// on MSVC in <xtree>:
-	//		if (max_size() - 1 <= _Mysize)
-	//			_THROW(length_error, "map/set<T> too long");
-	//
-	//monotonic::map<int, int> map(storage);
-	//for (int n = 0; n < 100; ++n)
-	//	map[n] = n;
-}
-
-
 namespace
 {
-
 	template<typename C>
 	struct Foo
 	{
@@ -284,7 +257,7 @@ namespace
 	template<typename C>
 	void test_loop_monotonic()
 	{
-		boost::monotonic::storage<100000> storage;
+		boost::monotonic::fixed_storage<100000> storage;
 		boost::monotonic::vector<Foo<C> > vec(storage);
 		Foo<C> orig = { 'A', 65 };
 		vec.assign(ELEM_COUNT, orig);
@@ -312,7 +285,7 @@ namespace
 
 void test_alignment()
 {
-	monotonic::storage<10000> storage;
+	monotonic::fixed_storage<10000> storage;
 
 	// the two arguments to storage.allocate are the size, and the required alignment
 	void *P = storage.allocate(3, 4);
@@ -436,7 +409,6 @@ int main()
 	//test_chain();
 	test_shared_allocators();
 	test_alignment();
-	test_auto_buffer();
 	test_speed();
 	test_speed_heap();
 	test_basic();

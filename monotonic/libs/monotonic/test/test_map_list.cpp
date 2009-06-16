@@ -55,16 +55,6 @@ void test_map_list_heap_stack()
 	typedef std::map<size_t, pair<double, double> > Results;
 	Results results;
 
-	// do a test with a large dataset on the heap
-	if (0)
-	{
-		const size_t buffer_size = 10*1000*1000;
-		monotonic::storage<buffer_size> *storage = new monotonic::storage<buffer_size>;
-		size_t num_loops = 100*1000;
-		results[num_loops] = test_map_list(outter_loops, num_loops, *storage);
-		delete storage;
-	}
-
 	for (size_t inner = 100; inner < inner_loops; inner += 1000)
 	{
 		results[inner] = test_map_list(outter_loops, inner, storage);

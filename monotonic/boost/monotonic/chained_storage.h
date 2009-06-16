@@ -14,12 +14,12 @@ namespace boost
 	{
 		/// storage that spans the stack/heap boundary.
 		///
-		/// allocation requests first use inline storage of N bytes.
+		/// allocation requests first use inline fixed_storage of N bytes.
 		/// once that is exhausted, later requests are serviced from the heap.
 		///
 		/// all allocations remain valid at all times.
-		template <size_t N, size_t MinLinkSize = N*1000, class Al = std::allocator<char> >
-		struct chained_storage : storage_base
+		template <size_t InlineSize = 8*1024, size_t MinHeapSize = InlineSize*1000, class Al = std::allocator<char> >
+		struct storage : storage_base
 		{
 			typedef Al Allocator;
 			typedef typename Allocator::template rebind<char>::other CharAllocator;
@@ -51,6 +51,10 @@ namespace boost
 				{
 				    cursor = 0;
 				}
+				size_t used() const
+				{
+					return cursor;
+				}
 				bool CanAllocate(size_t num_bytes) const
 				{
 					return capacity - cursor >= num_bytes;
@@ -71,18 +75,16 @@ namespace boost
 			typedef std::vector<Link, Al> Chain;
 
 		private:
-			storage<N> fixed;		// the inline storage
-			Chain chain;			// heap-based storage
-			Allocator alloc;		// allocator for heap-based storage
-			size_t next_link;
+			fixed_storage<InlineSize> fixed;		// the inline fixed_storage
+			Chain chain;			// heap-based fixed_storage
+			Allocator alloc;		// allocator for heap-based fixed_storage
 
 		public:
-			chained_storage()
-				: next_link(0)
+			storage()
 			{
 			}
-			chained_storage(Allocator const &A)
-				: alloc(A), next_link(0)
+			storage(Allocator const &A)
+				: alloc(A)
 			{
 			}
 
@@ -108,7 +110,7 @@ namespace boost
 						return ptr;
 					}
 				}
-				size_t size = std::max(MinLinkSize, num_bytes*2);
+				size_t size = std::max(MinHeapSize, num_bytes*2);
 				return AddLink(size).Allocate(num_bytes, alignment);
 			}
 
@@ -119,7 +121,7 @@ namespace boost
 
 			size_t max_size() const
 			{
-				return std::numeric_limits<size_t>::max(); //??
+				return std::numeric_limits<size_t>::max();
 			}
 
 			size_t fixed_remaining() const
@@ -129,14 +131,14 @@ namespace boost
 
 			size_t remaining() const
 			{
-				return max_size(); //??!!
+				return max_size();
 			}
 
 			size_t used() const
 			{
 				size_t count = fixed.used();
 				BOOST_FOREACH(Link const &link, chain)
-					count += link.used;
+					count += link.used();
 				return count;
 			}
 

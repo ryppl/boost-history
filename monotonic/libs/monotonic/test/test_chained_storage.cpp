@@ -3,7 +3,7 @@
 
 void test_chained_storage()
 {
-	monotonic::chained_storage<10> store;
+	monotonic::storage<10> store;
 	{
 		typedef std::vector<char, monotonic::allocator<char> > Vector;
 		Vector vec(store);
