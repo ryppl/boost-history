@@ -355,6 +355,14 @@
 			RelativePath=".\test_shared_storage.cpp"
 			>
 			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
 				Name="Release|Win32"
 				ExcludedFromBuild="true"
 				>
