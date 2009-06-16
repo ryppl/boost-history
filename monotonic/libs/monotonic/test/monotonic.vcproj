@@ -182,11 +182,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.h"
+					RelativePath="..\..\..\boost\monotonic\chained_storage.h"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\inline_storage.h"
+					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.h"
 					>
 				</File>
 				<File
@@ -203,6 +203,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\monotonic\set.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\boost\monotonic\storage.h"
 					>
 				</File>
 				<File
@@ -265,6 +269,26 @@
 		</File>
 		<File
 			RelativePath=".\test_bubble_sort.cpp"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\test_chained_storage.cpp"
 			>
 			<FileConfiguration
 				Name="Debug|Win32"

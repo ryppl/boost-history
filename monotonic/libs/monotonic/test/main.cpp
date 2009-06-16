@@ -419,9 +419,11 @@ void test_chain();
 
 #include "test_bubble_sort.cpp"
 #include "test_dupe.cpp"
+#include "test_chained_storage.cpp"
 
 int main()
 {
+	test_chained_storage();
 	test_map_list_heap_stack();
 	test_dupe();
 	//graph_bubble_sort();
