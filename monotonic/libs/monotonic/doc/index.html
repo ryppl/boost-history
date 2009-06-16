@@ -51,7 +51,9 @@
                 Motivation
             </h2>
             <p>
-                We would sometimes like for containers to use the stack for 
+                We want our code to be fast and not fragment the heap.</p>
+            <p>
+                We would sometimes like containers to use the stack for 
                 their storage. In 
                 this way, for example, a map&lt;K, list&lt; vector&lt;T&gt; &gt; &gt; can use storage from the stack 
                 for the map, the list and the vector, rather than 
