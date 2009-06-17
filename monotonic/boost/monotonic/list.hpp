@@ -7,28 +7,104 @@
 #define BOOST_MONOTONIC_LIST_H
 
 #include <list>
-#include <boost/monotonic/allocator.h>
+#include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/container.hpp>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		/// A std::list<T> that uses a monotonic allocator
+		/// A list that uses a monotonic allocator by default
 		template <class T>
-		struct list : std::list<T, allocator<T> >
+		struct list : detail::MonotonicContainer<list<T> >
 		{
 			typedef allocator<T> Allocator;
-			typedef std::list<T, Allocator> List;
+			typedef std::list<T, Allocator> List, Implementation;
+			typedef detail::MonotonicContainer<std::list<T, Allocator> > Parent;
+			typedef typename List::iterator iterator;
+			typedef typename List::const_iterator const_iterator;
+			typedef typename List::size_type size_type;
+			typedef typename List::value_type value_type;
+			typedef typename List::reference reference;
+			typedef typename List::const_reference const_reference;
+			typedef list<T> This;
 
+		private:
+			Implementation impl;
+
+		public:
 			list() { }
 			list(Allocator const &A) 
-				: List(A) { }
+				: impl(A) { }
 			template <class II>
 			list(II F, II L, Allocator const &A)
-				: List(F,L,A) { }
+				: impl(F,L,A) { }
+		
+			Allocator get_allocator()
+			{
+				return impl.get_allocator();
+			}
+			bool empty() const
+			{
+				return impl.empty();
+			}
+			size_type size() const
+			{
+				return impl.size();
+			}
+			void push_back(value_type const &value)
+			{
+				impl.push_back(value);
+			}
+			void pop_back()
+			{
+				impl.pop_back();
+			}
+			void push_front(value_type const &value)
+			{
+				impl.push_front(value);
+			}
+			void pop_front()
+			{
+				impl.pop_front();
+			}
+			iterator begin()
+			{
+				return impl.begin();
+			}
+			iterator end()
+			{
+				return impl.end();
+			}
+			const_iterator begin() const
+			{
+				return impl.begin();
+			}
+			const_iterator end() const
+			{
+				return impl.end();
+			}
+			value_type const &front() const
+			{
+				return impl.front();
+			}
+			value_type &front()
+			{
+				return impl.front();
+			}
+			value_type const &back() const
+			{
+				return impl.back();
+			}
+			value_type &back()
+			{
+				return impl.back();
+			}
 		};
-	}
-}
+
+	} // namespace monotonic
+
+} // namespace boost
 
 #endif // BOOST_MONOTONIC_LIST_H
 

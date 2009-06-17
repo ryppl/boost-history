@@ -177,8 +177,8 @@ namespace
 	template<typename C>
 	void test_loop_monotonic()
 	{
-		boost::monotonic::fixed_storage<100000> storage;
-		boost::monotonic::vector<Foo<C> > vec(storage);
+		boost::monotonic::storage<100000> storage;
+		std::vector<Foo<C>, monotonic::allocator<Foo<C> > > vec(storage);
 		Foo<C> orig = { 'A', 65 };
 		vec.assign(ELEM_COUNT, orig);
 		boost::timer timer;
@@ -283,13 +283,14 @@ void test_chain();
 #include "test_chained_storage.cpp"
 #include "test_shared_storage.cpp"
 
-namespace boost { namespace monotonic {
-
-static_storage_base<> static_storage;
-
-//storage<> static_storage_base<storage<> >::global;
-
-}}
+namespace boost 
+{ 
+	namespace monotonic 
+	{
+		static_storage_base<> static_storage;
+		//storage<> static_storage_base<storage<> >::global;
+	}
+}
 
 void test_static_storage()
 {
@@ -323,13 +324,54 @@ void run_all_tests()
 	//test_chain();
 	test_deque();
 	test_alignment();
-	test_speed();
-	test_speed_heap();
+	//test_speed();
+	//test_speed_heap();
 }
+
+void test_mono_map()
+{
+	monotonic::storage<> store;
+	{
+		typedef std::vector<std::list<int, monotonic::allocator<int> >, monotonic::allocator<std::list<int, monotonic::allocator<int> > > > Vector;
+		Vector vec(store);
+		vec.resize(1);
+		BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
+		vec[0].push_back(42);
+	}
+
+	{
+		typedef monotonic::map<int, monotonic::list<int> > Map;
+		Map map(store);
+		map[42].push_back(123);
+	}
+
+	{
+		typedef monotonic::map<int, monotonic::map<int, monotonic::list<int> > > Map;
+		Map map(store);
+		map[42][64].push_back(13);
+
+	}
+}
+
+#ifdef WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+//warning C4297: 'straight_to_debugger' : function assumed not to throw an exception but does
+#pragma warning(disable:4297)
+extern "C" void straight_to_debugger(unsigned int, EXCEPTION_POINTERS*)
+{
+	throw;
+}
+#endif
 
 int main()
 {
-	test_map_list_heap_stack();
+#ifdef WIN32
+	_set_se_translator(straight_to_debugger);
+#endif
+
+	test_mono_map();
+	//test_map_list_heap_stack();
 	//test_static_storage();
 	//run_all_tests();
 }

@@ -11,6 +11,7 @@
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
+#include <boost/monotonic/container.hpp>
 
 namespace boost
 {
@@ -108,7 +109,17 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
+				construct(ptr, detail::IsMonotonic<T>);
+			}
+
+			void construct(pointer ptr, const boost::false_type &)
+			{
 				new (ptr) value_type();
+			}
+
+			void construct(pointer ptr, const boost::true_type &)
+			{
+				new (ptr) value_type(*this);
 			}
 
 			void construct(pointer ptr, const T& val)

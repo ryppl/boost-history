@@ -24,8 +24,6 @@ struct Result
 	double mono;
 	double standard;
 	double static_monotonic;
-	Result() : mono(0), standard(0), static_monotonic(0) { }
-	Result(double a, double b, double c) : mono(a), standard(b), static_monotonic(c) { }
 };
 
 Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage_base &storage)
@@ -34,6 +32,21 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 	typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > MonoMap;
 
 	Result result;
+
+
+	// use monotonic allocator with supplied storage
+	{
+		boost::timer timer;
+		for (size_t n = 0; n < outter_loops; ++n)
+		{
+			{
+				MonoMap map(std::less<int>(), storage);
+				test_map_list_impl(inner_loops, map);
+			}
+			storage.reset();
+		}
+		result.mono = timer.elapsed();
+	}
 
 	// use standard allocator
 	{
@@ -63,19 +76,6 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 		result.static_monotonic = timer.elapsed();
 	}
 
-	// use monotonic allocator with supplied storage
-	{
-		boost::timer timer;
-		for (size_t n = 0; n < outter_loops; ++n)
-		{
-			{
-				MonoMap map(std::less<int>(), storage);
-				test_map_list_impl(inner_loops, map);
-			}
-			storage.reset();
-		}
-		result.mono = timer.elapsed();
-	}
 
 	cout << "test_map_list: " << inner_loops << ": " << result.mono << ", " << result.static_monotonic << ", " << result.standard  << endl;
 	return result;
@@ -86,10 +86,10 @@ void test_map_list_heap_stack()
 	const size_t outter_loops = 10*1000;
 	const size_t inner_loops = 10000;
 
-	monotonic::storage<> storage;
 	typedef std::map<size_t, Result > Results;
 	Results results;
 
+	monotonic::storage<> storage;
 	for (size_t inner = 100; inner < inner_loops; inner += 1000)
 	{
 		results[inner] = test_map_list(outter_loops, inner, storage);
