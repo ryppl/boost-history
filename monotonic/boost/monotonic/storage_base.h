@@ -23,6 +23,9 @@ namespace boost
 			
 			virtual size_t max_size() const = 0;
 			
+			/// return the number of bytes used
+			virtual size_t used() const = 0;
+
 			/// return the number of bytes remaining
 			virtual size_t remaining() const = 0;
 		};

@@ -22,7 +22,7 @@ namespace boost
 		/// once that is exhausted, later requests are serviced from the heap.
 		///
 		/// all allocations remain valid at all times.
-		template <size_t InlineSize = 8*1024, size_t MinHeapSize = InlineSize*1000, class Al = std::allocator<char> >
+		template <size_t InlineSize = 8*1024, size_t MinHeapIncrement = InlineSize*1000, class Al = std::allocator<char> >
 		struct storage : storage_base
 		{
 			typedef Al Allocator;
@@ -114,7 +114,7 @@ namespace boost
 						return ptr;
 					}
 				}
-				size_t size = std::max(MinHeapSize, num_bytes*2);
+				size_t size = std::max(MinHeapIncrement, num_bytes*2);
 				return AddLink(size).Allocate(num_bytes, alignment);
 			}
 

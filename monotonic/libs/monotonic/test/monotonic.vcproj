@@ -210,6 +210,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\static_storage.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\storage.h"
 					>
 				</File>
@@ -254,6 +258,14 @@
 		<File
 			RelativePath=".\basic_tests.cpp"
 			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|Win32"
 				ExcludedFromBuild="true"

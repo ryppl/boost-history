@@ -9,6 +9,7 @@
 #include <boost/monotonic/list.h>
 #include <boost/monotonic/map.h>
 #include <boost/monotonic/set.h>
+#include <boost/monotonic/static_storage.h>
 
 #include <boost/iterator/counting_iterator.hpp>
 
@@ -283,8 +284,33 @@ void test_chain();
 #include "test_chained_storage.cpp"
 #include "test_shared_storage.cpp"
 
+namespace boost { namespace monotonic {
+static_storage_base<storage<> > static_storage;
+}}
+
+void test_static_storage()
+{
+	// reset the global static storage to zero use
+	monotonic::static_storage.reset();
+
+	typedef std::list<int, monotonic::allocator<int> > List;
+	typedef std::map<int, List, std::less<int>, monotonic::allocator<int> > Map;
+	{
+		List list0, list1;
+		Map map;
+		list0.push_back(1);
+		list1.push_back(2);
+		list0.splice(list0.begin(), list1);
+		map[42] = list0;
+		map[123] = list1;
+	}
+	cout << monotonic::static_storage.used() << endl;
+	monotonic::static_storage.reset();
+}
+
 void run_all_tests()
 {
+	test_static_storage();
 	test_shared_storage();
 	test_chained_storage();
 	test_map_list_heap_stack();
@@ -300,8 +326,9 @@ void run_all_tests()
 
 int main()
 {
-	//test_map_list_heap_stack();
-	run_all_tests();
+	test_map_list_heap_stack();
+	//test_static_storage();
+	//run_all_tests();
 }
 
 //EOF

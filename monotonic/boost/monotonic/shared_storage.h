@@ -19,7 +19,7 @@ namespace boost
 			typedef storage<InlineSize, MinHeapSize, Al> Storage;
 		private:
 			Storage storage;
-			mutex guard;
+			mutable mutex guard;
 
 		public:
 			shared_storage()
