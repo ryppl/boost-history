@@ -7,6 +7,7 @@
 #define BOOST_MONOTONIC_SHARED_STORAGE_H
 
 #include <boost/monotonic/storage.h>
+#include <boost/monotonic/static_storage.h>
 #include <boost/thread/mutex.hpp>
 
 namespace boost
@@ -69,6 +70,13 @@ namespace boost
 
 		};
 
+		extern static_storage_base<
+			DefaultSizes::StaticInlineSize
+			, DefaultSizes::StaticMinHeapIncrement
+			, std::allocator<char>
+			, shared_storage> 
+		static_shared_storage;
+		
 	} // namespace monotonic
 
 } // namespace boost

@@ -3,10 +3,10 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_STATIC_STORAGE_BASE_H
+#define BOOST_MONOTONIC_STATIC_STORAGE_BASE_H
 
 #include <boost/monotonic/storage.h>
-//#include <boost/monotonic/shared_storage.h>
 
 namespace boost
 {
@@ -58,15 +58,10 @@ namespace boost
 		/// 'static_storage' will be used by a default-constructed monotonic::allocator
 		extern static_storage_base<> static_storage;
 
-		/*
-		extern static_storage_base<
-			DefaultSizes::StaticInlineSize
-			, DefaultSizes::StaticMinHeapIncrement
-			, std::allocator<char>
-			, shared_storage> 
-		static_shared_storage;
-		*/
-	}
-}
+	} // namespace monotonic
+
+} // namespace boost
+
+#endif // BOOST_MONOTONIC_STATIC_STORAGE_BASE_H
 
 //EOF
