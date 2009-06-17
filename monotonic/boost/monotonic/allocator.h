@@ -16,15 +16,13 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// forward declaration
+		/// a monotonic allocator always increases in size
 		template <class> 
-		class allocator;
+		struct allocator;
 
-		/// specialization for void
 		template <> 
-		class allocator<void>
+		struct allocator<void>
 		{
-		public:
 			typedef void* pointer;
 			typedef const void* const_pointer;
 
@@ -36,11 +34,10 @@ namespace boost
 			};
 		};
 
-		/// a monotonic allocator always increases in size
 		template <class T> 
-		class allocator 
+		struct allocator 
 		{
-		public:
+			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
 			typedef size_t size_type;
 			typedef ptrdiff_t difference_type;
 			typedef T *pointer;
@@ -48,8 +45,6 @@ namespace boost
 			typedef T &reference;
 			typedef const T &const_reference;
 			typedef T value_type;
-
-			/// rebind storage to a another type
 			template <class U> 
 			struct rebind 
 			{ 
@@ -57,7 +52,6 @@ namespace boost
 			};
 
 		private:
-			/// the storage used by the allocator
 			storage_base *storage;
 
 		public:
@@ -66,22 +60,20 @@ namespace boost
 			{
 			}
 
-			allocator(storage_base &P) throw() 
-				: storage(&P)
+			allocator(storage_base &store) throw() 
+				: storage(&store)
 			{
 			}
 
-			allocator(const allocator& Q) throw() 
-				: storage(Q.storage)
+			allocator(const allocator& alloc) throw() 
+				: storage(alloc.get_storage())
 			{
 			}
 
 			template <class U> 
-			allocator(const allocator<U> &Q) throw()
+			allocator(const allocator<U> &alloc) throw()
+				: storage(alloc.get_storage()) 
 			{
-				typedef BOOST_DEDUCED_TYPENAME allocator<T>::template rebind<U> Other;
-				typedef BOOST_DEDUCED_TYPENAME Other::other OtherStorage;
-				storage = OtherStorage(*Q.get_storage()).get_storage();
 			}
 
 			~allocator() throw()
@@ -98,16 +90,14 @@ namespace boost
 				return &x;
 			}
 
-			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
-
 			pointer allocate(size_type num, allocator<void>::const_pointer /*hint*/ = 0)
 			{
 				BOOST_ASSERT(num > 0);
 				BOOST_ASSERT(storage != 0);
-				return static_cast<T *>(storage->allocate(num*sizeof(T), alignment));
+				return static_cast<pointer>(storage->allocate(num*sizeof(value_type), alignment));
 			}
 
-			void deallocate(pointer p, size_type n)
+			void deallocate(pointer, size_type)
 			{
 				// do nothing
 			}
@@ -117,36 +107,36 @@ namespace boost
 				if (!storage)
 					return 0;
 				//return storage->max_size()/(sizeof(T) + alignment);
-				return storage->max_size()/sizeof(T);
+				return storage->max_size()/sizeof(value_type);
 			}
 
-			void construct(pointer p)
+			void construct(pointer ptr)
 			{
-				new (p) T();
+				new (ptr) value_type();
 			}
 
-			void construct(pointer p, const T& val)
+			void construct(pointer ptr, const T& val)
 			{
-				new (p) T(val);
+				new (ptr) value_type(val);
 			}
 
-			void destroy(pointer p)
+			void destroy(pointer ptr)
 			{
-				if (!p)
+				if (!ptr)
 					return;
-				destroy(p, boost::has_trivial_destructor<T>());
+				destroy(ptr, boost::has_trivial_destructor<value_type>());
 			}
 
-			void destroy(pointer p, const boost::false_type& )
+			void destroy(pointer ptr, const boost::false_type& )
 			{
-				(*p).~T();
+				(*ptr).~value_type();
 			}
 
 			void destroy(pointer, const boost::true_type& )
 			{ 
 			}
 
-			void swap(allocator<T> &other)
+			void swap(allocator<value_type> &other)
 			{
 				std::swap(storage, other.storage);
 			}
@@ -156,10 +146,19 @@ namespace boost
 				return storage;
 			}
 
-			friend bool operator==(allocator<T> const &A, allocator<T> const &B) { return A.storage == B.storage; }
-			friend bool operator!=(allocator<T> const &A, allocator<T> const &B) { return A.storage != B.storage; }
+			friend bool operator==(allocator<T> const &A, allocator<T> const &B) 
+			{ 
+				return A.storage == B.storage; 
+			}
+
+			friend bool operator!=(allocator<T> const &A, allocator<T> const &B) 
+			{ 
+				return A.storage != B.storage; 
+			}
 		};
-	}
-}
+	
+	} // namespace monotonic
+
+} // namespace boost
 
 //EOF

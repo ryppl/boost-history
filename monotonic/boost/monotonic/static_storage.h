@@ -23,7 +23,9 @@ namespace boost
 		template <size_t InlineSize, size_t MinHeapIncrement, class Al, template <size_t, size_t, class> class Storage>
 		struct static_storage_base : storage_base
 		{
-			typedef Storage<InlineSize, MinHeapIncrement, Al> StorageType;
+			typedef Al HeapAllocator;
+			typedef Storage<InlineSize, MinHeapIncrement, HeapAllocator> StorageType;
+
 		private:
 			StorageType global;
 
