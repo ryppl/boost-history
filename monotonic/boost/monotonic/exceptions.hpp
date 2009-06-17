@@ -7,7 +7,8 @@
 #define BOOST_MONOTONIC_EXCEPTIONS_HPP
 
 #include <boost/monotonic/config.hpp>
-#include <boost/exception.hpp>
+//#include <boost/exception.hpp>
+#include <stdexcept>
 
 namespace boost
 {
@@ -17,7 +18,7 @@ namespace boost
 		struct no_storage : std::exception
 		{
 			no_storage() { }
-			no_storage(const char *text) : std::exception(text) { }
+			//no_storage(const char *text) : std::exception(text) { }
 		};
 	
 	} // namespace monotonic

@@ -18,7 +18,7 @@ namespace boost
 		template <class K, class T, class P = std::less<K> >
 		struct map : detail::MonotonicContainer<map<K,T,P> >
 		{
-			typedef detail::MonotonicContainer<std::map<K,T,P, allocator<K> > > Parent;
+			typedef detail::MonotonicContainer<map<K,T,P> > Parent;
 			typedef detail::Creator<detail::IsMonotonic<T>::value, T> Creator;
 
 			typedef P Predicate;
@@ -103,7 +103,7 @@ namespace boost
 				iterator where = impl.lower_bound(key);
 				if (where == impl.end() || pred(key, where->first))
 				{
-					where = impl.insert(where, value_type(key, Creator::Create(GetStorage())));
+					where = impl.insert(where, value_type(key, Creator::Create(this->Parent::GetStorage())));
 				}
 				return where->second;
 			}

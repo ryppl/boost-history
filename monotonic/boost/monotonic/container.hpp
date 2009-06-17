@@ -35,12 +35,14 @@ namespace boost
 			{
 				typedef Impl Derived;
 
+				virtual ~MonotonicContainer() { }
 				storage_base &GetStorage() const
 				{
-					Derived const &self = static_cast<Derived const &>(*this);
+					Derived const &self = dynamic_cast<Derived const &>(*this);
 					storage_base *store = self.get_allocator().get_storage();
 					if (store == 0)
-						throw_exception(no_storage());
+						//throw_exception(no_storage());
+						throw no_storage();
 					return *store;
 				}
 			};

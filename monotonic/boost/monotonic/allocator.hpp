@@ -109,7 +109,7 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				construct(ptr, detail::IsMonotonic<T>);
+				construct(ptr, detail::IsMonotonic<T>());
 			}
 
 			void construct(pointer ptr, const boost::false_type &)
