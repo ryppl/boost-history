@@ -77,7 +77,7 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 		result.mono = timer.elapsed();
 	}
 
-	cout << "test_map_list: " << inner_loops << ": " << result.mono << ", " << result.standard << ", " << result.static_monotonic << endl;
+	cout << "test_map_list: " << inner_loops << ": " << result.mono << ", " << result.static_monotonic << ", " << result.standard  << endl;
 	return result;
 }
 
