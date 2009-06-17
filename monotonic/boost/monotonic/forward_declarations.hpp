@@ -16,7 +16,7 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// storage for an allocator that is on the stack or heap
+		/// fixed-sized storage for an allocator that is on the stack or heap
 		template <size_t InlineSize = DefaultSizes::InlineSize>
 		struct fixed_storage;
 
@@ -52,12 +52,14 @@ namespace boost
 		template <class> 
 		struct allocator;
 
-		/// a monotonic allocator has a shared storage buffer and a no-op deallocate() method
+		/// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method
 		/// defaults to use static_storage_base<..., shared_storage>
 		template <class> 
 		struct shared_allocator;
-	}
-}
+	
+	} // namespace monotonic
+
+} // namespace boost
 
 #endif // BOOST_MONOTONIC_FORWARD_DECLARATIONS_H
 
