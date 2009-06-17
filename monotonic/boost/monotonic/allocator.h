@@ -16,7 +16,7 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// a monotonic allocator always increases in size
+		/// a monotonic allocator has a no-op deallocate() method
 		template <class> 
 		struct allocator;
 
