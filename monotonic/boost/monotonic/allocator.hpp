@@ -31,6 +31,39 @@ namespace boost
 			};
 		};
 
+		namespace detail
+		{
+			template <bool is_mono_container>
+			struct Construct
+			{
+				template <class T, class Alloc>
+				static void Given(T *ptr, Alloc *allocator)
+				{
+					new (ptr) T();
+				}
+				template <class T, class Alloc>
+				static void Given(T *ptr, T const &val, Alloc *allocator)
+				{
+					new (ptr) T(val);
+				}
+			};
+			template <>
+			struct Construct<true>
+			{
+				template <class T, class Alloc>
+				static void Given(T *ptr, Alloc *allocator)
+				{
+					new (ptr) T(*allocator);
+				}
+				template <class T, class Alloc>
+				static void Given(T *ptr, T const &val, Alloc *allocator)
+				{
+					new (ptr) T(*allocator);
+					*ptr = val;
+				}
+			};
+		}
+
 		template <class T> 
 		struct allocator 
 		{
@@ -109,22 +142,12 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				construct(ptr, detail::IsMonotonic<T>());
-			}
-
-			void construct(pointer ptr, const boost::false_type &)
-			{
-				new (ptr) value_type();
-			}
-
-			void construct(pointer ptr, const boost::true_type &)
-			{
-				new (ptr) value_type(*this);
+				detail::Construct<detail::IsMonotonic<T>::value>::Given(ptr, this);
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				new (ptr) value_type(val);
+				detail::Construct<detail::IsMonotonic<T>::value>::Given(ptr, val, this);
 			}
 
 			void destroy(pointer ptr)
