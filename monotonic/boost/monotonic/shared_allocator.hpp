@@ -48,7 +48,7 @@ namespace boost
 
 			shared_storage_base *get_storage() const
 			{
-				return static_cast<shared_storage_base *>(alloc.get_storage());
+				return static_cast<shared_storage_base *>(Parent::get_storage());
 			}
 		};
 
