@@ -370,8 +370,8 @@ int main()
 	_set_se_translator(straight_to_debugger);
 #endif
 
-	test_mono_map();
-	//test_map_list_heap_stack();
+	//test_mono_map();
+	test_map_list_heap_stack();
 	//test_static_storage();
 	//run_all_tests();
 }
