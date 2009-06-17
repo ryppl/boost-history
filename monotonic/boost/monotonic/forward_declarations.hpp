@@ -10,7 +10,7 @@
 #include <limits>
 #include <vector>
 #include <boost/foreach.hpp>
-#include <boost/monotonic/config.h>
+#include <boost/monotonic/config.hpp>
 
 namespace boost
 {
@@ -48,8 +48,14 @@ namespace boost
 		struct static_storage_base;
 
 		/// a monotonic allocator has a storage buffer and a no-op deallocate() method
+		/// default to use static_storage_base<..., storage>
 		template <class> 
 		struct allocator;
+
+		/// a monotonic allocator has a shared storage buffer and a no-op deallocate() method
+		/// defaults to use static_storage_base<..., shared_storage>
+		template <class> 
+		struct shared_allocator;
 	}
 }
 
