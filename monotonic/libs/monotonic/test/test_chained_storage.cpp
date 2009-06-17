@@ -1,5 +1,5 @@
 
-#include <boost/monotonic/storage.h>
+#include <boost/monotonic/storage.hpp>
 
 void test_chained_storage()
 {

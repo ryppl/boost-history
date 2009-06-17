@@ -1,7 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 
-#include <boost/monotonic/allocator.h>
+#include <boost/monotonic/allocator.hpp>
 #include <string>
 #include <vector>
 #include <set>

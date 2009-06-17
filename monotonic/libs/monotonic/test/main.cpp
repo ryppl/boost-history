@@ -5,11 +5,11 @@
 
 // the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
-#include <boost/monotonic/vector.h>
-#include <boost/monotonic/list.h>
-#include <boost/monotonic/map.h>
-#include <boost/monotonic/set.h>
-#include <boost/monotonic/static_storage.h>
+#include <boost/monotonic/vector.hpp>
+#include <boost/monotonic/list.hpp>
+#include <boost/monotonic/map.hpp>
+#include <boost/monotonic/set.hpp>
+#include <boost/monotonic/static_storage.hpp>
 
 #include <boost/iterator/counting_iterator.hpp>
 
@@ -25,8 +25,8 @@
 #include <boost/array.hpp>
 #include <boost/scoped_ptr.hpp>
 
-#include <boost/monotonic/chain.h>
-#include <boost/monotonic/storage.h>
+#include <boost/monotonic/chain.hpp>
+#include <boost/monotonic/storage.hpp>
 
 template <class T
 , size_t C = 64

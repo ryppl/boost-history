@@ -174,63 +174,63 @@
 				Name="monotonic"
 				>
 				<File
-					RelativePath="..\..\..\boost\monotonic\allocator.h"
+					RelativePath="..\..\..\boost\monotonic\allocator.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\chain.h"
+					RelativePath="..\..\..\boost\monotonic\chain.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\config.h"
+					RelativePath="..\..\..\boost\monotonic\config.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\fixed_storage.h"
+					RelativePath="..\..\..\boost\monotonic\fixed_storage.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\forward_declarations.h"
+					RelativePath="..\..\..\boost\monotonic\forward_declarations.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.h"
+					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\list.h"
+					RelativePath="..\..\..\boost\monotonic\list.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\map.h"
+					RelativePath="..\..\..\boost\monotonic\map.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\ptr_list.h"
+					RelativePath="..\..\..\boost\monotonic\ptr_list.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\set.h"
+					RelativePath="..\..\..\boost\monotonic\set.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\shared_storage.h"
+					RelativePath="..\..\..\boost\monotonic\shared_storage.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\static_storage.h"
+					RelativePath="..\..\..\boost\monotonic\static_storage.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\storage.h"
+					RelativePath="..\..\..\boost\monotonic\storage.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\storage_base.h"
+					RelativePath="..\..\..\boost\monotonic\storage_base.hpp"
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\vector.h"
+					RelativePath="..\..\..\boost\monotonic\vector.hpp"
 					>
 				</File>
 			</Filter>
@@ -242,7 +242,7 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\utility\iter_range.h"
+					RelativePath="..\..\..\boost\utility\iter_range.hpp"
 					>
 				</File>
 			</Filter>

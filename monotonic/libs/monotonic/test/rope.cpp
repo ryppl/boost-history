@@ -5,10 +5,10 @@
 
 // the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
-#include <boost/monotonic/vector.h>
-#include <boost/monotonic/list.h>
-#include <boost/monotonic/map.h>
-#include <boost/monotonic/set.h>
+#include <boost/monotonic/vector.hpp>
+#include <boost/monotonic/list.hpp>
+#include <boost/monotonic/map.hpp>
+#include <boost/monotonic/set.hpp>
 
 #include <boost/timer.hpp>
 #include <boost/foreach.hpp>
@@ -20,7 +20,7 @@
 #include <boost/scoped_ptr.hpp>
 #include <boost/noncopyable.hpp>
 
-#include <boost/monotonic/chain.h>
+#include <boost/monotonic/chain.hpp>
 
 using namespace boost;
 using namespace std;
