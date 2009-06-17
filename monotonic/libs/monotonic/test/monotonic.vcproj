@@ -224,6 +224,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\shared_allocator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\shared_storage.hpp"
 					>
 				</File>
@@ -308,6 +312,18 @@
 					Name="VCCLCompilerTool"
 				/>
 			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="VCCLCompilerTool"
+				/>
+			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\compare_memory_pool.cpp"
+			>
 			<FileConfiguration
 				Name="Release|Win32"
 				ExcludedFromBuild="true"

@@ -27,6 +27,7 @@
 
 #include <boost/monotonic/chain.hpp>
 #include <boost/monotonic/storage.hpp>
+#include <boost/monotonic/shared_allocator.hpp>
 
 template <class T
 , size_t C = 64
@@ -282,6 +283,7 @@ void test_chain();
 #include "test_dupe.cpp"
 #include "test_chained_storage.cpp"
 #include "test_shared_storage.cpp"
+#include "compare_memory_pool.cpp"
 
 namespace boost 
 { 
@@ -389,6 +391,7 @@ int main()
 	_set_se_translator(straight_to_debugger);
 #endif
 
+	compare_memory_pool();
 	test_mono_map();
 	test_map_list_heap_stack();
 	//test_static_storage();

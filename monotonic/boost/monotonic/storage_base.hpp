@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_STORAGE_BASE_H
 #define BOOST_MONOTONIC_STORAGE_BASE_H
 
-#include <boost/monotonic/config.h>
+#include <boost/monotonic/config.hpp>
 
 namespace boost
 {
@@ -31,6 +31,12 @@ namespace boost
 
 			/// return the number of bytes remaining
 			virtual size_t remaining() const = 0;
+		};
+
+		struct shared_storage_base : storage_base
+		{
+			//virtual void lock() const = 0;
+			//virtual void unlock() const = 0;
 		};
 	
 	} // namespace monotonic
