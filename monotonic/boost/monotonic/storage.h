@@ -104,7 +104,7 @@ namespace boost
 			void release()
 			{
 				reset();
-				chain.swap(Chain());
+				chain.clear();
 			}
 
 			void *allocate(size_t num_bytes, size_t alignment)
