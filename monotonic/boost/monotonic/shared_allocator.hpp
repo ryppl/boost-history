@@ -23,25 +23,32 @@ namespace boost
 		template <class T> 
 		struct shared_allocator : allocator<T>
 		{
+			typedef allocator<T> Parent;
+
 			shared_allocator() throw() 
-				: storage(&static_shared_storage)
+				: Parent(&static_shared_storage)
 			{
 			}
 
 			shared_allocator(shared_storage_base &store) throw() 
-				: storage(&store)
+				: Parent(&store)
 			{
 			}
 
 			shared_allocator(const shared_allocator& alloc) throw() 
-				: storage(alloc.get_storage())
+				: Parent(alloc.get_storage())
 			{
 			}
 
 			template <class U> 
 			shared_allocator(const shared_allocator<U> &alloc) throw()
-				: storage(alloc.get_storage()) 
+				: Parent(alloc.get_storage()) 
 			{
+			}
+
+			shared_storage_base *get_storage() const
+			{
+				return static_cast<shared_storage_base *>(alloc.get_storage());
 			}
 		};
 
