@@ -42,17 +42,20 @@ int main( int argc, char *argv[])
 {
 	try
 	{
+		tsk::task< void > t1( long_running_fn);
+		tsk::task< int > t2(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::async(
-			tsk::make_task( long_running_fn),
+			boost::move( t1),
 			tsk::default_pool() );
 		std::cout << "poolsize == " << tsk::default_pool().size() << std::endl;
 		std::cout << "idle threads == " << tsk::default_pool().idle() << std::endl;
 		std::cout << "active threads == " << tsk::default_pool().active() << std::endl;
 		tsk::handle< int > h(
 			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
+				boost::move( t2),
 				tsk::default_pool() ) );
 		h.interrupt();
 		std::cout << h.get() << std::endl;

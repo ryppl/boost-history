@@ -13,7 +13,6 @@
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/id.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -59,25 +58,19 @@ private:
 
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
-	id				id_;
 
 	handle(
-		id const& id__,
-		shared_future< R > const& fut,
+		shared_future< R > fut,
 		detail::interrupter const& intr)
 	:
 	fut_( fut),
-	intr_( intr),
-	id_( id__)
+	intr_( intr)
 	{}
 
 public:
 	handle()
-	: fut_(), intr_( detail::interrupter::dont_wait), id_()
+	: fut_(), intr_( detail::interrupter::dont_wait)
 	{}
-
-	const id get_id() const
-	{ return id_; }
 
 	void interrupt()
 	{ intr_.interrupt(); }
@@ -160,7 +153,6 @@ public:
 	{
 		fut_.swap( other.fut_);
 		intr_.swap( other.intr_);
-		id_.swap( other.id_);
 	}
 };
 

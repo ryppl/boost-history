@@ -17,7 +17,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-long serial_fib( long n)
+int serial_fib( int n)
 {
 	if( n < 2)
 		return n;
@@ -25,7 +25,7 @@ long serial_fib( long n)
 		return serial_fib( n - 1) + serial_fib( n - 2);
 }
 
-long parallel_fib_( long n, long cutof)
+int parallel_fib_( int n, int cutof)
 {
 	if ( n < cutof)
 	{
@@ -36,28 +36,28 @@ long parallel_fib_( long n, long cutof)
 	else
 	{
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
-		tsk::handle< long > h1(
-			tsk::async(
-				tsk::make_task(
-					parallel_fib_,
-					n - 1,
-					cutof),
-				tsk::as_sub_task() ) ) ;
-		tsk::handle< long > h2(
-			tsk::async(
-				tsk::make_task(
-					parallel_fib_,
-					n - 2,
-					cutof),
-				tsk::as_sub_task() ) );
+		tsk::task< int > t1(
+			boost::bind(
+				parallel_fib_,
+				n - 1,
+				cutof) );
+		tsk::task< int > t2(
+			boost::bind(
+				parallel_fib_,
+				n - 2,
+				cutof) );
+		tsk::handle< int > h1(
+			tsk::async( boost::move( t1), tsk::as_sub_task() ) );
+		tsk::handle< int > h2(
+			tsk::async( boost::move( t2), tsk::as_sub_task() ) );
 		return h1.get() + h2.get();
 	}
 }
 
-void parallel_fib( long n)
+void parallel_fib( int n)
 {
-	long result = parallel_fib_( n, 5);
-	printf("fibonnaci(%ld) == %ld\n", n, result);
+	int result = parallel_fib_( n, 5);
+	printf("fibonnaci(%d) == %d\n", n, result);
 }
 
 int main( int argc, char *argv[])
@@ -65,11 +65,15 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tsk::async(
-				tsk::make_task(
+		{
+			tsk::task< void > t(
+				boost::bind(
 					& parallel_fib,
-					i),
+					i) );
+			tsk::async(
+				boost::move( t),
 				tsk::default_pool() );
+		}
 
 		return EXIT_SUCCESS;
 	}

@@ -7,6 +7,7 @@
 #ifndef BOOST_TASK_DETAIL_POOL_CALLABLE_H
 #define BOOST_TASK_DETAIL_POOL_CALLABLE_H
 
+#include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
@@ -43,15 +44,23 @@ private:
 	class impl_wrapper : public impl
 	{
 	private:
-		task< R >			t_;
+		task< R >		t_;
 		detail::interrupter	i_;
 
 	public:
+# if defined(BOOST_HAS_RVALUE_REFS)
 		impl_wrapper(
-			task< R > const& t,
+			task< R > && t,
 			detail::interrupter const& i)
 		: t_( t), i_( i)
 		{}
+# else
+		impl_wrapper(
+			boost::detail::thread_move_t< task< R > > t,
+			detail::interrupter const& i)
+		: t_( t), i_( i)
+		{}
+# endif
 
 		void run()
 		{ t_(); }
@@ -79,12 +88,21 @@ public:
 
 	pool_callable();
 
+# if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename R >
 	pool_callable(
-		task< R > const& t,
+		task< R > && t,
 		detail::interrupter const& i)
 	: impl_( new impl_wrapper<  R >( t, i) )
 	{}
+# else
+	template< typename R >
+	pool_callable(
+		boost::detail::thread_move_t< task< R > > t,
+		detail::interrupter const& i)
+	: impl_( new impl_wrapper<  R >( t, i) )
+	{}
+# endif
 
 	void operator()();
 

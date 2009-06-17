@@ -19,7 +19,7 @@ namespace tsk = boost::task;
 
 typedef tsk::static_pool< tsk::unbounded_channel< tsk::fifo > > pool_type;
 
-long serial_fib( long n)
+int serial_fib( int n)
 {
 	if( n < 2)
 		return n;
@@ -27,25 +27,29 @@ long serial_fib( long n)
 		return serial_fib( n - 1) + serial_fib( n - 2);
 }
 
-long parallel_fib( long n, long	cutof)
+int parallel_fib( int n, int	cutof)
 {
 	if ( n < cutof) return serial_fib( n);
 	else
 	{
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
-		tsk::handle< long > h1(
+		tsk::task< int > t1(
+			boost::bind(
+				parallel_fib,
+				n - 1,
+				cutof) );
+		tsk::task< int > t2(
+			boost::bind(
+				parallel_fib,
+				n - 2,
+				cutof) );
+		tsk::handle< int > h1(
 			tsk::async(
-				tsk::make_task(
-					parallel_fib,
-					n - 1,
-					cutof),
+				boost::move( t1),
 				tsk::as_sub_task() ) ) ;
-		tsk::handle< long > h2(
+		tsk::handle< int > h2(
 			tsk::async(
-				tsk::make_task(
-					parallel_fib,
-					n - 2,
-					cutof),
+				boost::move( t2),
 				tsk::as_sub_task() ) );
 		return h1.get() + h2.get();
 	}
@@ -57,26 +61,30 @@ int main( int argc, char *argv[])
 	{
 		pool_type pool( tsk::poolsize( 5) );
 
-		std::vector< tsk::handle< long > > results;
+		std::vector< tsk::handle< int > > results;
 		results.reserve( 10);
 
 		pt::ptime start( pt::microsec_clock::universal_time() );
 
 		for ( int i = 0; i < 10; ++i)
+		{
+			tsk::task< int > t(
+				boost::bind(
+					& parallel_fib,
+					i,
+					5) );
 			results.push_back(
 				tsk::async(
-					tsk::make_task(
-						& parallel_fib,
-						i,
-						5),
+					boost::move( t),
 					pool) );
+		}
 
 		tsk::waitfor_all( results.begin(), results.end() );
 
 		int k = 0;
-		std::vector< tsk::handle< long > >::iterator e( results.end() );
+		std::vector< tsk::handle< int > >::iterator e( results.end() );
 		for (
-			std::vector< tsk::handle< long > >::iterator i( results.begin() );
+			std::vector< tsk::handle< int > >::iterator i( results.begin() );
 			i != e;
 			++i)
 			std::cout << "fibonacci(" << k++ << ") == " << i->get() << std::endl;

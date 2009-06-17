@@ -20,7 +20,7 @@ namespace tsk = boost::task;
 
 typedef tsk::default_pool_t pool_type;
 
-long serial_fib( long n)
+int serial_fib( int n)
 {
 	if( n < 2)
 		return n;
@@ -28,51 +28,42 @@ long serial_fib( long n)
 		return serial_fib( n - 1) + serial_fib( n - 2);
 }
 
-class fib_task
+int parallel_fib_( int n, int cutof)
 {
-private:
-	long	cutof_;
+	if ( n == 4)
+		boost::this_task::yield();
 
-public:
-	fib_task( long cutof)
-	: cutof_( cutof)
-	{}
-
-	long execute( long n)
+		if ( n < cutof)
 	{
-		if ( n == 4)
-			boost::this_task::yield();
-
-		if ( n < cutof_)
-			return serial_fib( n);
-		else
-		{
-			BOOST_ASSERT( boost::this_task::runs_in_pool() );
-			tsk::handle< long > h1(
-				tsk::async(
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 1),
-					tsk::as_sub_task() ) );
-			tsk::handle< long > h2(
-				tsk::async(
-					tsk::make_task(
-						& fib_task::execute,
-						boost::ref( * this),
-						n - 2),
-					tsk::as_sub_task() ) );
-			return h1.get() + h2.get();
-		}
+		if ( n == 0)
+			boost::this_task::delay( pt::seconds( 2) );
+		return serial_fib( n);
 	}
-};
+	else
+	{
+		BOOST_ASSERT( boost::this_task::runs_in_pool() );
+		tsk::task< int > t1(
+			boost::bind(
+				parallel_fib_,
+				n - 1,
+				cutof) );
+		tsk::task< int > t2(
+			boost::bind(
+				parallel_fib_,
+				n - 2,
+				cutof) );
+		tsk::handle< int > h1(
+			tsk::async( boost::move( t1), tsk::as_sub_task() ) );
+		tsk::handle< int > h2(
+			tsk::async( boost::move( t2), tsk::as_sub_task() ) );
+		return h1.get() + h2.get();
+	}
+}
 
-
-void parallel_fib( long n)
+void parallel_fib( int n)
 {
-	fib_task a( 5);
-	long result = a.execute( n);
-	printf("fibonnaci(%ld) == %d\n", n, result);
+	int result = parallel_fib_( n, 5);
+	printf("fibonnaci(%d) == %d\n", n, result);
 }
 
 int main( int argc, char *argv[])
@@ -80,11 +71,15 @@ int main( int argc, char *argv[])
 	try
 	{
 		for ( int i = 0; i < 10; ++i)
-			tsk::async(
-				tsk::make_task(
+		{
+			tsk::task< void > t(
+				boost::bind(
 					& parallel_fib,
-					i),
+					i) );
+			tsk::async(
+				boost::move( t),
 				tsk::default_pool() );
+		}
 
 		return EXIT_SUCCESS;
 	}

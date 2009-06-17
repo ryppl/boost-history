@@ -33,27 +33,34 @@ int main( int argc, char *argv[])
 			tsk::unbounded_channel< tsk::priority< int > >
 		> pool( tsk::poolsize( 1) );
 
+		tsk::task< void > t1( long_running_fn);
+		tsk::task< void > t2(
+			boost::bind(
+				print_fn,
+				"This") );
+		tsk::task< void > t3(
+			boost::bind(
+				print_fn,
+				"a text.\n") );
+		tsk::task< void > t4(
+			boost::bind(
+				print_fn,
+				" is ") );
+
 		tsk::async(
-			tsk::make_task(
-				long_running_fn),
+			boost::move( t1),
 			0,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				print_fn,
-				"This"),
+			boost::move( t2),
 			0,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				print_fn,
-				"a text.\n"),
+			boost::move( t3),
 			2,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				print_fn,
-				" is "),
+			boost::move( t4),
 			1,
 			pool);
 

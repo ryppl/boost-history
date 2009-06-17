@@ -59,27 +59,34 @@ int main( int argc, char *argv[])
 			>
 		> pool( tsk::poolsize( 1) );
 
+		tsk::task< void > t1( long_running_fn);
+		tsk::task< void > t2(
+			boost::bind(
+				fibonacci_fn,
+				0) );
+		tsk::task< void > t3(
+			boost::bind(
+				fibonacci_fn,
+				1) );
+		tsk::task< void > t4(
+			boost::bind(
+				fibonacci_fn,
+				10) );
+
 		tsk::async(
-			tsk::make_task(
-				long_running_fn),
+			boost::move( t1),
 			0,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				fibonacci_fn,
-				0),
+			boost::move( t2),
 			1,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				fibonacci_fn,
-				1),
+			boost::move( t3),
 			2,
 			pool);
 		tsk::async(
-			tsk::make_task(
-				fibonacci_fn,
-				10),
+			boost::move( t4),
 			2,
 			pool);
 

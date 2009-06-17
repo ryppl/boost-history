@@ -7,275 +7,270 @@
 #ifndef BOOST_TASK_TASK_H
 #define BOOST_TASK_TASK_H
 
-#include <exception>
-#include <ios>
-#include <new>
-#include <stdexcept>
-#include <string>
-#include <typeinfo>
-
-#include <boost/lexical_cast.hpp>
-#include <boost/preprocessor/repetition.hpp>
+#include <boost/bind.hpp>
+#include <boost/config.hpp>
 #include <boost/thread.hpp>
-#include <boost/thread/thread_time.hpp>
-#include <boost/utility/result_of.hpp>
 
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/handle.hpp>
-#include <boost/task/id.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
-
 template< typename Channel >
 class static_pool;
 
 struct as_sub_task;
 
-template< typename R >
-class task
+namespace detail
 {
-private:
-	template< typename Channel >
-	friend class static_pool;
+template< typename R >
+class task_base
+{
+protected:
+	bool			done_;
 
-	friend struct as_sub_task;
+protected:
+	promise< R >	prom_;
 
-	struct impl
-	{
-		promise< R >			prom;
-		unique_future< R >		fut;
-
-		impl()
-		:
-		prom(),
-		fut( prom.get_future() )
-		{}
-
-		virtual ~impl()
-		{}
-
-		virtual void operator()() = 0;
-	};
-
-	template< typename Fn >
-	class impl_wrapper : public impl
-	{
-	private:
-		Fn		fn_;
-
-	public:
-		impl_wrapper( Fn const& fn)
-		: fn_( fn)
-		{}
-
-		void operator()() // throw()
-		{
-			try
-			{ impl::prom.set_value( fn_() ); }
-			catch ( promise_already_satisfied const&)
-			{ throw task_already_executed(); }
-			catch ( thread_interrupted const&)
-			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
-			catch ( boost::exception const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::ios_base::failure const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::domain_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::invalid_argument const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::length_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::out_of_range const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::logic_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::overflow_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::range_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::underflow_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::runtime_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_alloc const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_cast const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_typeid const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_exception const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch(...)
-			{ impl::prom.set_exception( current_exception() ); }
-		}
-	};
-
-	shared_ptr< impl >	impl_;
-
-	template< typename F >
-	void set_wait_callback( F const& f)
-	{ impl_->prom.set_wait_callback( f); }
+	virtual void do_run() = 0;
 
 public:
-	template< typename Fn >
-	task( Fn const& fn)
-	: impl_( new impl_wrapper< Fn >( fn) )
+	task_base()
+	: done_( false), prom_()
 	{}
 
-	const id get_id() const
-	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
+	virtual ~task_base() {}
 
-	shared_future< R > get_future()
-	{ return shared_future< R >( impl_->fut); }
+	void run()
+	{
+		if ( this->done_) throw task_already_executed();
+		do_run();
+		done_ = true;
+	}
 
-	void swap( task< R > & other) // throw()
-	{ impl_.swap( other.impl_); }
+	unique_future< R > get_future()
+	{ return prom_.get_future(); }
 
-	void operator()() // throw()
-	{ ( * impl_)(); }
+	template< typename Cb >
+	void set_wait_callback( Cb const& cb)
+	{ prom_.set_wait_callback( cb); }
 };
 
-template<>
-class task< void >
+template< typename R, typename Fn >
+class task_wrapper : public task_base< R >
 {
 private:
-	template< typename Channel >
-	friend class static_pool;
+	Fn		fn_;
 
-	friend struct as_sub_task;
-
-	struct impl
+	void do_run()
 	{
-		promise< void >			prom;
-		unique_future< void >	fut;
-
-		impl()
-		:
-		prom(),
-		fut( prom.get_future() )
-		{}
-
-		virtual ~impl()
-		{}
-
-		virtual void operator()() = 0;
-	};
-
-	template< typename Fn >
-	class impl_wrapper : public impl
-	{
-	private:
-		Fn		fn_;
-
-	public:
-		impl_wrapper( Fn const& fn)
-		: fn_( fn)
-		{}
-
-		void operator()() // throw()
-		{
-			try
-			{
-				fn_();
-				impl::prom.set_value();
-			}
-			catch ( promise_already_satisfied const&)
-			{ throw task_already_executed(); }
-			catch ( thread_interrupted const&)
-			{ impl::prom.set_exception( copy_exception( task_interrupted() ) ); }
-			catch ( boost::exception const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::ios_base::failure const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::domain_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::invalid_argument const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::length_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::out_of_range const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::logic_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::overflow_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::range_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::underflow_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::runtime_error const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_alloc const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_cast const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_typeid const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch ( std::bad_exception const& e)
-			{ impl::prom.set_exception( copy_exception( e) ); }
-			catch(...)
-			{ impl::prom.set_exception( current_exception() ); }
-		}
-	};
-
-	shared_ptr< impl >	impl_;
-
-	template< typename F >
-	void set_wait_callback( F const& f)
-	{ impl_->prom.set_wait_callback( f); }
+		try
+		{ this->prom_.set_value( fn_() ); }
+		catch ( promise_already_satisfied const&)
+		{ throw task_already_executed(); }
+		catch ( thread_interrupted const&)
+		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		catch ( boost::exception const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::ios_base::failure const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::domain_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::invalid_argument const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::length_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::out_of_range const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::logic_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::overflow_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::range_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::underflow_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::runtime_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_alloc const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_cast const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_typeid const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_exception const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch(...)
+		{ this->prom_.set_exception( current_exception() ); }
+	}
 
 public:
-	template< typename Fn >
-	task( Fn const& fn)
-	: impl_( new impl_wrapper< Fn >( fn) )
+	task_wrapper( Fn const& fn)
+	: task_base< R >(), fn_( fn)
 	{}
-
-	const id get_id() const
-	{ return id( lexical_cast< std::string >( impl_.get() ) ); }
-
-	shared_future< void > get_future()
-	{ return shared_future< void >( impl_->fut); }
-
-	void swap( task< void > & other) // throw()
-	{ impl_.swap( other.impl_); }
-
-	void operator()() // throw()
-	{ ( * impl_)(); }
 };
 
 template< typename Fn >
-task< typename result_of< Fn() >::type > make_task( Fn fn)
-{ return task< typename boost::result_of< Fn() >::type >( fn); }
+class task_wrapper< void, Fn > : public task_base< void >
+{
+private:
+	Fn		fn_;
 
-# ifndef BOOST_TASK_MAKE_TASK_MAX_ARITY
-#   define BOOST_TASK_MAKE_TASK_MAX_ARITY 10
+	void do_run()
+	{
+		try
+		{
+			fn_();
+			this->prom_.set_value();
+		}
+		catch ( promise_already_satisfied const&)
+		{ throw task_already_executed(); }
+		catch ( thread_interrupted const&)
+		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		catch ( boost::exception const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::ios_base::failure const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::domain_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::invalid_argument const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::length_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::out_of_range const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::logic_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::overflow_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::range_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::underflow_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::runtime_error const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_alloc const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_cast const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_typeid const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch ( std::bad_exception const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
+		catch(...)
+		{ this->prom_.set_exception( current_exception() ); }
+	}
+
+public:
+	task_wrapper( Fn const& fn)
+	: task_base< void >(), fn_( fn)
+	{}
+};
+}
+
+template< typename R >
+class task : private noncopyable
+{
+private:
+	template< typename Channel >
+	friend class static_pool;
+
+	friend struct as_sub_task;
+
+	shared_ptr< detail::task_base< R > >	task_;
+
+public:
+	task()
+	: task_()
+	{}
+	
+	template< typename Fn >
+	explicit task( Fn const& fn)
+	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	{}
+        
+	explicit task( R( * fn)())
+	: task_( new detail::task_wrapper< R, R( *)() >( fn) )
+	{}
+        
+	template< typename Fn >
+	explicit task( boost::detail::thread_move_t< Fn > fn)
+	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	{}
+
+# if defined(BOOST_HAS_RVALUE_REFS)
+	task( task && other)
+	: task_()
+	{ task_.swap( other.task_); }
+
+	task & operator=( task && other)
+	{
+	    task tmp( static_cast< task && >( other) );
+	    swap( tmp);
+	    return * this;
+	}
+
+	task && move()
+	{ return static_cast< task && >( * this); }
+# else
+	task( boost::detail::thread_move_t< task > other)
+	: task_()
+	{ task_.swap( other->task_); }
+
+	task & operator=( boost::detail::thread_move_t< task > other)
+	{
+	    task tmp( other);
+	    swap( tmp);
+	    return * this;
+	}
+
+	operator boost::detail::thread_move_t< task >()
+	{ return boost::detail::thread_move_t< task >( * this); }
 # endif
 
-# define BOOST_TASK_MAKE_TASK_FUNC_ARG(z, n, unused) \
-   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
-# define BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASK_MAKE_TASK_FUNC_ARG, ~)
+	unique_future< R > get_future()
+	{
+		if ( ! task_)
+			throw task_moved();
+		return task_->get_future();
+	}
 
-# define BOOST_TASK_MAKE_TASK_FUNCTION(z, n, unused)	\
-template<												\
-	typename Fn,										\
-	BOOST_PP_ENUM_PARAMS(n, typename A)					\
->														\
-task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >		\
-make_task( Fn fn, BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n))				\
-{ return make_task( boost::bind( fn, BOOST_PP_ENUM_PARAMS(n, a))); }
+	void swap( task & other) // throw()
+	{ task_.swap( other.task_); }
 
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAKE_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK_FUNCTION, ~)
+	void operator()()
+	{
+		if ( ! task_)
+			throw task_moved();
+		task_->run();
+	}
 
-# undef BOOST_TASK_MAKE_TASK_FUNCTION
-# undef BOOST_TASK_MAKE_TASK_FUNC_ARG
-# undef BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS
+	template< typename Cb >
+	void set_wait_callback( Cb const& cb)
+	{
+		if ( ! task_)
+			throw task_moved();
+		task_->set_wait_callback( cb);
+	}
+};
+}
 
-}}
+template< typename R >
+void swap( task::task< R > & l, task::task< R > & r)
+{ return l.swap( r); }
+
+# if defined(BOOST_HAS_RVALUE_REFS)
+template< typename R >
+task::task< R > && move( task::task< R > && t)
+{ return t; }
+# else
+template< typename R >
+boost::detail::thread_move_t< task::task< R > > move( task::task< R > & t)
+{ return t; }
+# endif
+}
 
 #include <boost/config/abi_suffix.hpp>
 

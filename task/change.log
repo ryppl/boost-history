@@ -6,5 +6,8 @@
 - async() with as_sub_task as default execution-policy
 - functions interrupt_and_wait_until() and interrupt_and_wait_for() from handle< R > returning
   boolean indicating if op. succeeded or timed out
+- move sematics for task< R >
+- move sematics for static_pool< R >
 - tests updated
+- examples updated
 - documentation updated

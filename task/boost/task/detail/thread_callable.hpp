@@ -7,6 +7,7 @@
 #ifndef BOOST_TASK_DETAIL_THREAD_CALLABLE_H
 #define BOOST_TASK_DETAIL_THREAD_CALLABLE_H
 
+#include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
@@ -44,11 +45,19 @@ private:
 		interrupter		i_;
 
 	public:
+# if defined(BOOST_HAS_RVALUE_REFS)
 		impl_wrapper(
-			task< R > const& t,
+			task< R > && t,
 			interrupter const& i)
 		: t_( t), i_( i)
 		{}
+# else
+		impl_wrapper(
+			boost::detail::thread_move_t< task< R > > t,
+			interrupter const& i)
+		: t_( t), i_( i)
+		{}
+# endif
 
 		~impl_wrapper()
 		{ i_.reset(); }
@@ -60,12 +69,21 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
+# if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename R >
 	thread_callable(
-		task< R > const& t,
+		task< R > && t,
 		interrupter const& i)
 	: impl_( new impl_wrapper<  R >( t, i) )
 	{}
+# else
+	template< typename R >
+	thread_callable(
+		boost::detail::thread_move_t< task< R > > t,
+		interrupter const& i)
+	: impl_( new impl_wrapper<  R >( t, i) )
+	{}
+# endif
 
 	void operator()();
 };

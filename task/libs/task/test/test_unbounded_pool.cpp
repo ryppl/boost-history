@@ -35,10 +35,27 @@ public:
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 3) );
-		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 3) );
-		BOOST_CHECK_EQUAL( pool.idle(), std::size_t( 3) );
-		BOOST_CHECK_EQUAL( pool.active(), std::size_t( 0) );
+		> pool1( tsk::poolsize( 3) );
+		BOOST_CHECK_EQUAL( pool1.size(), std::size_t( 3) );
+		BOOST_CHECK_EQUAL( pool1.idle(), std::size_t( 3) );
+		BOOST_CHECK_EQUAL( pool1.active(), std::size_t( 0) );
+
+		tsk::static_pool<
+			tsk::unbounded_channel< tsk::fifo >
+		> pool2;
+		BOOST_CHECK_THROW( pool2.size(), tsk::pool_moved);
+		BOOST_CHECK_THROW( pool2.idle(), tsk::pool_moved);
+		BOOST_CHECK_THROW( pool2.active(), tsk::pool_moved);
+
+		pool2 = boost::move( pool1);
+		
+		BOOST_CHECK_THROW( pool1.size(), tsk::pool_moved);
+		BOOST_CHECK_THROW( pool1.idle(), tsk::pool_moved);
+		BOOST_CHECK_THROW( pool1.active(), tsk::pool_moved);
+
+		BOOST_CHECK_EQUAL( pool2.size(), std::size_t( 3) );
+		BOOST_CHECK_EQUAL( pool2.idle(), std::size_t( 3) );
+		BOOST_CHECK_EQUAL( pool2.active(), std::size_t( 0) );
 	}
 
 	// check submit
@@ -47,70 +64,51 @@ public:
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< int > t(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::handle< int > h(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
-	// check id
+	// check assignment
 	void test_case_3()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
 		tsk::task< int > t(
-			tsk::make_task(
+			boost::bind(
 				fibonacci_fn,
 				10) );
-		tsk::handle< int > h(
-			tsk::async(
-				t,
-				pool) );
-		BOOST_CHECK_EQUAL( h.get_id(), t.get_id() );
-		BOOST_CHECK_EQUAL( h.get(), 55);
-	}
-
-	// check assignment
-	void test_case_4()
-	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 3) );
 		tsk::handle< int > h1;
 		tsk::handle< int > h2(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		h1 = h2;
-		BOOST_CHECK_EQUAL( h1.get_id(), h2.get_id() );
 		BOOST_CHECK_EQUAL( h1.get(), 55);
 		BOOST_CHECK_EQUAL( h2.get(), 55);
 	}
 
 	// check swap
-	void test_case_5()
+	void test_case_4()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< int > t1(
+			boost::bind(
+				fibonacci_fn,
+				5) );
+		tsk::task< int > t2(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::handle< int > h1(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					5),
-				pool) );
+			tsk::async( boost::move( t1), pool) );
 		tsk::handle< int > h2(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t2), pool) );
 		BOOST_CHECK_EQUAL( h1.get(), 5);
 		BOOST_CHECK_EQUAL( h2.get(), 55);
 		BOOST_CHECK_NO_THROW( h1.swap( h2) );
@@ -119,79 +117,77 @@ public:
 	}
 
 	// check runs in pool
+	void test_case_5()
+	{
+		tsk::static_pool<
+			tsk::unbounded_channel< tsk::fifo >
+		> pool( tsk::poolsize( 1) );
+		tsk::task< bool > t( runs_in_pool_fn);
+		tsk::handle< bool > h(
+			tsk::async( boost::move( t), pool) );
+		BOOST_CHECK_EQUAL( h.get(), true);
+	}
+
+	// check shutdown
 	void test_case_6()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		tsk::handle< bool > h(
-			tsk::async(
-				tsk::make_task( runs_in_pool_fn),
-				pool) );
-		BOOST_CHECK_EQUAL( h.get(), true);
-	}
-
-	// check shutdown
-	void test_case_7()
-	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 1) );
+		tsk::task< int > t(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::handle< int > h(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		pool.shutdown();
 		BOOST_CHECK( pool.closed() );
 		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check runtime_error throw inside task
-	void test_case_8()
+	void test_case_7()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
+		tsk::task< void > t( throwing_fn);
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task( throwing_fn),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		pool.shutdown();
 		BOOST_CHECK_THROW( h.get(), std::runtime_error);
 	}
 
 	// check shutdown with task_rejected exception
+	void test_case_8()
+	{
+		tsk::static_pool<
+			tsk::unbounded_channel< tsk::fifo >
+		> pool( tsk::poolsize( 1) );
+		tsk::task< int > t(
+			boost::bind(
+				boost::bind(
+					fibonacci_fn,
+					10) ) );
+		pool.shutdown();
+		BOOST_CHECK( pool.closed() );
+		BOOST_CHECK_THROW(
+			tsk::async( boost::move( t), pool),
+			tsk::task_rejected);
+	}
+
+	// check shutdown_now with thread_interrupted exception
 	void test_case_9()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
-		pool.shutdown();
-		BOOST_CHECK( pool.closed() );
-		BOOST_CHECK_THROW(
-			tsk::async(
-				tsk::make_task(
-					boost::bind(
-						fibonacci_fn,
-						10) ),
-				pool),
-			tsk::task_rejected);
-	}
-
-	// check shutdown_now with thread_interrupted exception
-	void test_case_10()
-	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 1) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::millisec( 500) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::millisec( 500) ),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.size(), std::size_t( 1) );
 		pool.shutdown_now();
@@ -203,35 +199,35 @@ public:
 	}
 
 	// check pending
-	void test_case_11()
+	void test_case_10()
 	{
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool_type;
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
+		tsk::task< void > t1(
+			boost::bind(
+				barrier_fn,
+				boost::ref( b) ) );
+		tsk::task< int > t2(
+			boost::bind(
+				fibonacci_fn,
+				10) );
+		tsk::task< int > t3(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::handle< void > h1(
-			tsk::async(
-				tsk::make_task(
-					barrier_fn,
-					boost::ref( b) ),
-				pool) );
+			tsk::async( boost::move( t1), pool) );
 		boost::this_thread::sleep( pt::millisec( 250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 0) );
 		tsk::handle< int > h2(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t2), pool) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 1) );
 		tsk::handle< int > h3(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t3), pool) );
 		boost::this_thread::sleep( pt::millisec(250) );
 		BOOST_CHECK_EQUAL( pool.pending(), std::size_t( 2) );
 		b.wait();
@@ -242,17 +238,17 @@ public:
 	}
 
 	// check wait
-	void test_case_12()
+	void test_case_11()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< int > t(
+			boost::bind(
+				fibonacci_fn,
+				10) );
 		tsk::handle< int > h(
-			tsk::async(
-				tsk::make_task(
-					fibonacci_fn,
-					10),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		h.wait();
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.has_value() );
@@ -261,17 +257,17 @@ public:
 	}
 
 	// check wait_for
-	void test_case_13()
+	void test_case_12()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::seconds( 1) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::seconds( 1) ),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		BOOST_CHECK( h.wait_for( pt::seconds( 3) ) );
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( h.has_value() );
@@ -279,20 +275,38 @@ public:
 	}
 
 	// check wait_for
+	void test_case_13()
+	{
+		tsk::static_pool<
+			tsk::unbounded_channel< tsk::fifo >
+		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::seconds( 3) ) );
+		tsk::handle< void > h(
+			tsk::async( boost::move( t), pool) );
+		BOOST_CHECK( ! h.wait_for( pt::seconds( 1) ) );
+		BOOST_CHECK( ! h.is_ready() );
+		BOOST_CHECK( ! h.has_value() );
+		BOOST_CHECK( ! h.has_exception() );
+	}
+
+	// check wait_until
 	void test_case_14()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::seconds( 1) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::seconds( 3) ),
-				pool) );
-		BOOST_CHECK( ! h.wait_for( pt::seconds( 1) ) );
-		BOOST_CHECK( ! h.is_ready() );
-		BOOST_CHECK( ! h.has_value() );
+			tsk::async( boost::move( t), pool) );
+		BOOST_CHECK( h.wait_until( boost::get_system_time() + pt::seconds( 3) ) );
+		BOOST_CHECK( h.is_ready() );
+		BOOST_CHECK( h.has_value() );
 		BOOST_CHECK( ! h.has_exception() );
 	}
 
@@ -302,30 +316,12 @@ public:
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::seconds( 3) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::seconds( 1) ),
-				pool) );
-		BOOST_CHECK( h.wait_until( boost::get_system_time() + pt::seconds( 3) ) );
-		BOOST_CHECK( h.is_ready() );
-		BOOST_CHECK( h.has_value() );
-		BOOST_CHECK( ! h.has_exception() );
-	}
-
-	// check wait_until
-	void test_case_16()
-	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 3) );
-		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::seconds( 3) ),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		BOOST_CHECK( ! h.wait_until( boost::get_system_time() + pt::seconds( 1) ) );
 		BOOST_CHECK( ! h.is_ready() );
 		BOOST_CHECK( ! h.has_value() );
@@ -333,37 +329,60 @@ public:
 	}
 
 	// check interrupt
-	void test_case_17()
+	void test_case_16()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				delay_fn,
+				pt::seconds( 3) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					delay_fn,
-					pt::seconds( 3) ),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		h.interrupt();
 		BOOST_CHECK( h.interruption_requested() );
 		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
 	}
 
 	// check interrupt_and_wait
+	void test_case_17()
+	{
+		tsk::static_pool<
+			tsk::unbounded_channel< tsk::fifo >
+		> pool( tsk::poolsize( 3) );
+		bool finished( false);
+		tsk::task< void > t(
+			boost::bind(
+				interrupt_fn,
+				pt::seconds( 1),
+				boost::ref( finished) ) );
+		tsk::handle< void > h(
+			tsk::async( boost::move( t), pool) );
+		h.interrupt_and_wait();
+		BOOST_CHECK( finished);
+		BOOST_CHECK( h.is_ready() );
+		BOOST_CHECK( ! h.has_value() );
+		BOOST_CHECK( h.has_exception() );
+		BOOST_CHECK( h.interruption_requested() );
+		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
+	}
+
+	// check interrupt_and_wait_for
 	void test_case_18()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
 		bool finished( false);
+		tsk::task< void > t(
+			boost::bind(
+				interrupt_fn,
+				pt::seconds( 1),
+				boost::ref( finished) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					interrupt_fn,
-					pt::seconds( 1),
-					boost::ref( finished) ),
-				pool) );
-		h.interrupt_and_wait();
+			tsk::async( boost::move( t), pool) );
+		BOOST_CHECK( h.interrupt_and_wait_for( pt::seconds( 3) ) );
 		BOOST_CHECK( finished);
 		BOOST_CHECK( h.is_ready() );
 		BOOST_CHECK( ! h.has_value() );
@@ -378,52 +397,29 @@ public:
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
-		bool finished( false);
+		tsk::task< void > t(
+			boost::bind(
+				non_interrupt_fn,
+				3) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					interrupt_fn,
-					pt::seconds( 1),
-					boost::ref( finished) ),
-				pool) );
-		BOOST_CHECK( h.interrupt_and_wait_for( pt::seconds( 3) ) );
-		BOOST_CHECK( finished);
-		BOOST_CHECK( h.is_ready() );
-		BOOST_CHECK( ! h.has_value() );
-		BOOST_CHECK( h.has_exception() );
-		BOOST_CHECK( h.interruption_requested() );
-		BOOST_CHECK_THROW( h.get(), tsk::task_interrupted);
+			tsk::async( boost::move( t), pool) );
+		BOOST_CHECK( ! h.interrupt_and_wait_for( pt::seconds( 1) ) );
 	}
 
-	// check interrupt_and_wait_for
+	// check interrupt_and_wait_until
 	void test_case_20()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
-		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					non_interrupt_fn,
-					3),
-				pool) );
-		BOOST_CHECK( ! h.interrupt_and_wait_for( pt::seconds( 1) ) );
-	}
-
-	// check interrupt_and_wait_until
-	void test_case_21()
-	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 3) );
 		bool finished( false);
+		tsk::task< void > t(
+			boost::bind(
+				interrupt_fn,
+				pt::seconds( 1),
+				boost::ref( finished) ) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					interrupt_fn,
-					pt::seconds( 1),
-					boost::ref( finished) ),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		BOOST_CHECK( h.interrupt_and_wait_until( boost::get_system_time() + pt::seconds( 3) ) );
 		BOOST_CHECK( finished);
 		BOOST_CHECK( h.is_ready() );
@@ -434,22 +430,22 @@ public:
 	}
 
 	// check interrupt_and_wait_until
-	void test_case_22()
+	void test_case_21()
 	{
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 3) );
+		tsk::task< void > t(
+			boost::bind(
+				non_interrupt_fn,
+				3) );
 		tsk::handle< void > h(
-			tsk::async(
-				tsk::make_task(
-					non_interrupt_fn,
-					3),
-				pool) );
+			tsk::async( boost::move( t), pool) );
 		BOOST_CHECK( ! h.interrupt_and_wait_until( boost::get_system_time() + pt::seconds( 1) ) );
 	}
 
 	// check fifo scheduling
-	void test_case_23()
+	void test_case_22()
 	{
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
@@ -457,24 +453,24 @@ public:
 		BOOST_CHECK( ! tsk::has_attribute< pool_type >::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		tsk::async(
-			tsk::make_task(
-				barrier_fn,
-				boost::ref( b) ),
-			pool);
 		std::vector< int > buffer;
-		tsk::async(
-			tsk::make_task(
+		tsk::task< void > t1(
+			boost::bind(
+				barrier_fn,
+				boost::ref( b) ) );
+		tsk::task< void > t2(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				10),
-			pool);
-		tsk::async(
-			tsk::make_task(
+				10) );
+		tsk::task< void > t3(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				0),
-			pool);
+				0) );
+		tsk::async( boost::move( t1), pool);
+		tsk::async( boost::move( t2), pool);
+		tsk::async( boost::move( t3), pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 55);
@@ -483,7 +479,7 @@ public:
 	}
 
 	// check priority scheduling
-	void test_case_24()
+	void test_case_23()
 	{
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::priority< int > >
@@ -493,27 +489,24 @@ public:
 		BOOST_CHECK( type::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		tsk::async(
-			tsk::make_task(
-				barrier_fn,
-				boost::ref( b) ),
-			0,
-			pool);
 		std::vector< int > buffer;
-		tsk::async(
-			tsk::make_task(
+		tsk::task< void > t1(
+			boost::bind(
+				barrier_fn,
+				boost::ref( b) ) );
+		tsk::task< void > t2(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				10),
-			1,
-			pool);
-		tsk::async(
-			tsk::make_task(
+				10) );
+		tsk::task< void > t3(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				0),
-			0,
-			pool);
+				0) );
+		tsk::async( boost::move( t1), 0, pool);
+		tsk::async( boost::move( t2), 1, pool);
+		tsk::async( boost::move( t3), 0, pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);
@@ -522,7 +515,7 @@ public:
 	}
 
 	// check smart scheduling
-	void test_case_25()
+	void test_case_24()
 	{
 		typedef tsk::static_pool<
 			tsk::unbounded_channel< tsk::smart< int, std::less< int >, tsk::replace_oldest, tsk::take_oldest > >
@@ -532,33 +525,30 @@ public:
 		BOOST_CHECK( type::value);
 		pool_type pool( tsk::poolsize( 1) );
 		boost::barrier b( 2);
-		pool.submit(
-			tsk::make_task(
-				barrier_fn,
-				boost::ref( b) ),
-			0);
 		std::vector< int > buffer;
-		tsk::async(
-			tsk::make_task(
+		tsk::task< void > t1(
+			boost::bind(
+				barrier_fn,
+				boost::ref( b) ) );
+		tsk::task< void > t2(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				10),
-			2,
-			pool);
-		tsk::async(
-			tsk::make_task(
+				10) );
+		tsk::task< void > t3(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				0),
-			1,
-			pool);
-		tsk::async(
-			tsk::make_task(
+				0) );
+		tsk::task< void > t4(
+			boost::bind(
 				buffer_fibonacci_fn,
 				boost::ref( buffer),
-				1),
-			2,
-			pool);
+				1) );
+		pool.submit( boost::move( t1), 0);
+		tsk::async( boost::move( t2), 2, pool);
+		tsk::async( boost::move( t3), 1, pool);
+		tsk::async( boost::move( t4), 2, pool);
 		b.wait();
 		pool.shutdown();
 		BOOST_CHECK_EQUAL( buffer[0], 0);
@@ -596,7 +586,6 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_22, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_23, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_24, instance) );
-	test->add( BOOST_CLASS_TEST_CASE( & test_unbounded_pool::test_case_25, instance) );
 
 	return test;
 }

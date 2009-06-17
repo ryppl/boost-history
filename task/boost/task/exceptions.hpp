@@ -62,6 +62,14 @@ public:
 	{}
 };
 
+class task_moved : public std::logic_error
+{
+public:
+    task_moved()
+	: std::logic_error("task moved")
+	{}
+};
+
 class broken_task : public std::logic_error
 {
 public:
@@ -78,6 +86,14 @@ class task_rejected : public std::runtime_error
 public:
     task_rejected( std::string const& msg)
 	: std::runtime_error( msg)
+	{}
+};
+
+class pool_moved : public std::logic_error
+{
+public:
+    pool_moved()
+	: std::logic_error("pool moved")
 	{}
 };
 } }

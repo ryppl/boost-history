@@ -8,7 +8,9 @@
 #define BOOST_TASK_AS_SUB_TASK_H
 
 #include <boost/bind.hpp>
+#include <boost/config.hpp>
 #include <boost/function.hpp>
+#include <boost/thread/detail/move.hpp>
 
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/worker.hpp>
@@ -21,17 +23,21 @@
 
 namespace boost { namespace task
 {
-
 struct as_sub_task
 {
 	template< typename R >
-	handle< R > operator()( task< R > t)
+# if defined(BOOST_HAS_RVALUE_REFS)
+	handle< R > operator()( task< R > && t_)
+# else
+	handle< R > operator()( boost::detail::thread_move_t< task< R > > t_)
+# endif
 	{
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			detail::interrupter intr;
+			task< R > t( t_);
 			shared_future< R > fut( t.get_future() );
+			detail::interrupter intr;
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
@@ -41,14 +47,13 @@ struct as_sub_task
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::pool_callable( t, intr) );
-			return handle< R >( t.get_id(), fut, intr);
+			w->put( detail::pool_callable( boost::move( t), intr) );
+			return handle< R >( fut, intr);
 		}
 		else
-			return new_thread()( t);
+			return new_thread()( t_);
 	}
 };
-
 } }
 
 #include <boost/config/abi_suffix.hpp>

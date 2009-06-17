@@ -7,6 +7,9 @@
 #ifndef BOOST_TASK_OWN_THREAD_H
 #define BOOST_TASK_OWN_THREAD_H
 
+#include <boost/config.hpp>
+#include <boost/thread/detail/move.hpp>
+
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/task.hpp>
@@ -15,22 +18,23 @@
 
 namespace boost { namespace task
 {
-
 struct own_thread
 {
 	template< typename R >
-	handle< R > operator()( task< R > t)
+# if defined(BOOST_HAS_RVALUE_REFS)
+	handle< R > operator()( task< R > && t_)
+# else
+	handle< R > operator()( boost::detail::thread_move_t< task< R > > t_)
+# endif
 	{
-		t();
+		task< R > t( t_);
+		shared_future< R > fut( t.get_future() );
 		detail::interrupter intr;
 		intr.reset();
-		return handle< R >(
-			t.get_id(),
-			t.get_future(),
-			intr);
+		t();
+		return handle< R >( fut, intr);
 	}
 };
-
 } }
 
 #include <boost/config/abi_suffix.hpp>

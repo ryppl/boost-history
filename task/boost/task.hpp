@@ -15,7 +15,6 @@
 #include <boost/task/fifo.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
-#include <boost/task/id.hpp>
 #include <boost/task/meta.hpp>
 #include <boost/task/new_thread.hpp>
 #include <boost/task/own_thread.hpp>
