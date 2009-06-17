@@ -218,6 +218,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\static_storage.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\static_storage.hpp"
 					>
 				</File>
