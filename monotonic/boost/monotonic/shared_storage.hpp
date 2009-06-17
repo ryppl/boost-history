@@ -21,7 +21,7 @@ namespace boost
 			typedef storage<InlineSize, MinHeapSize, Al> Storage;
 
 		private:
-			Storage storage;
+			Storage store;
 			mutable mutex guard;
 
 		public:
@@ -29,43 +29,43 @@ namespace boost
 			{
 			}
 			shared_storage(Al const &A)
-				: storage(A)
+				: store(A)
 			{
 			}
 			size_t used() const
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.used();
+				return store.used();
 			}
 			void reset()
 			{
 				mutex::scoped_lock lock(guard);
-				storage.reset();
+				store.reset();
 			}
 			void release()
 			{
 				mutex::scoped_lock lock(guard);
-				storage.release();
+				store.release();
 			}
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.allocate(num_bytes, alignment);
+				return store.allocate(num_bytes, alignment);
 			}
 			size_t remaining() const
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.remaining();
+				return store.remaining();
 			}
 			size_t fixed_remaining() const
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.fixed_remaining();
+				return store.fixed_remaining();
 			}
 			size_t max_size() const
 			{
 				mutex::scoped_lock lock(guard);
-				return storage.max_size();
+				return store.max_size();
 			}
 
 		};

@@ -5,8 +5,8 @@
 
 // the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
-//#include <boost/monotonic/shared_storage.hpp>
-//#include <boost/monotonic/shared_allocator.hpp>
+#include <boost/monotonic/shared_storage.hpp>
+#include <boost/monotonic/shared_allocator.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
 
