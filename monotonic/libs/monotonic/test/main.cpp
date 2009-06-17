@@ -276,7 +276,6 @@ pair<boost::counting_iterator<T>, boost::counting_iterator<T> > range(T start, T
 
 
 void test_chain();
-void test_chain();
 
 #include "test_map_list.cpp"
 #include "test_bubble_sort.cpp"
@@ -285,7 +284,11 @@ void test_chain();
 #include "test_shared_storage.cpp"
 
 namespace boost { namespace monotonic {
+
 static_storage_base<storage<> > static_storage;
+
+//storage<> static_storage_base<storage<> >::global;
+
 }}
 
 void test_static_storage()
@@ -317,7 +320,7 @@ void run_all_tests()
 	test_dupe();
 	graph_bubble_sort();
 	test_bubble_sort();
-	test_chain();
+	//test_chain();
 	test_deque();
 	test_alignment();
 	test_speed();

@@ -15,7 +15,7 @@ namespace boost
 		template <class Storage>
 		struct static_storage_base : storage_base
 		{
-			static Storage global;
+			Storage global;
 
 			void reset()
 			{
@@ -39,8 +39,6 @@ namespace boost
 			}
 		};
 
-		template <>
-		storage<> static_storage_base<storage<> >::global;
 
 		extern static_storage_base<storage<> > static_storage;
 		//extern static_storage_base<shared_storage<> > static_shared_storage;
