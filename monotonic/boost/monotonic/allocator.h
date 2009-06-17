@@ -16,7 +16,7 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// a monotonic allocator has a no-op deallocate() method
+		/// a monotonic allocator has a storage buffer and a no-op deallocate() method
 		template <class> 
 		struct allocator;
 
