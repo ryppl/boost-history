@@ -332,7 +332,10 @@ void test_mono_map()
 {
 	monotonic::storage<> store;
 	{
-		typedef std::vector<std::list<int, monotonic::allocator<int> >, monotonic::allocator<std::list<int, monotonic::allocator<int> > > > Vector;
+		typedef std::list<int, monotonic::allocator<int> > List;
+		typedef std::vector<List, monotonic::allocator<List> > Vector;
+		BOOST_STATIC_ASSERT(monotonic::detail::IsMonotonic<List>::value);
+		BOOST_STATIC_ASSERT(monotonic::detail::IsMonotonic<Vector>::value);
 		Vector vec(store);
 		vec.resize(1);
 		BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
@@ -340,16 +343,19 @@ void test_mono_map()
 	}
 
 	{
-		typedef monotonic::map<int, monotonic::list<int> > Map;
+		typedef monotonic::list<int> List;
+		BOOST_STATIC_ASSERT(monotonic::detail::IsMonotonic<List>::value);
+		typedef monotonic::map<int, List > Map;
 		Map map(store);
 		map[42].push_back(123);
+		BOOST_ASSERT(map[42].get_allocator().get_storage() == map.get_allocator().get_storage());
 	}
 
 	{
 		typedef monotonic::map<int, monotonic::map<int, monotonic::list<int> > > Map;
 		Map map(store);
 		map[42][64].push_back(13);
-
+		BOOST_ASSERT(map[42][64].get_allocator().get_storage() == map.get_allocator().get_storage());
 	}
 }
 
@@ -370,7 +376,7 @@ int main()
 	_set_se_translator(straight_to_debugger);
 #endif
 
-	//test_mono_map();
+	test_mono_map();
 	test_map_list_heap_stack();
 	//test_static_storage();
 	//run_all_tests();

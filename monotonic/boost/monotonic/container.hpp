@@ -18,27 +18,26 @@ namespace boost
 	{
 		namespace detail
 		{
-			template <bool, class T>
-			struct Creator;
+			struct MonotonicContainerBase { virtual ~MonotonicContainerBase() { } };
 
 			template <class Impl>
 			struct MonotonicContainer;
 
-			template <class>
-			struct IsMonotonic : boost::mpl::false_ { };
-
+			template <class T>
+			struct IsMonotonic : boost::mpl::bool_<is_convertible<T *, MonotonicContainerBase *>::value> { };
+			
 			template <class Impl>
 			struct IsMonotonic<MonotonicContainer<Impl> > : boost::mpl::true_ { };
 
 			template <class Impl>
-			struct MonotonicContainer
+			struct MonotonicContainer : MonotonicContainerBase
 			{
 				typedef Impl Derived;
 
 				virtual ~MonotonicContainer() { }
 				storage_base &GetStorage() const
 				{
-					Derived const &self = dynamic_cast<Derived const &>(*this);
+					Derived const &self = static_cast<Derived const &>(*this);
 					storage_base *store = self.get_allocator().get_storage();
 					if (store == 0)
 						//throw_exception(no_storage());
