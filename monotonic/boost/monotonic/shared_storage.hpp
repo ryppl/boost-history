@@ -6,8 +6,8 @@
 #ifndef BOOST_MONOTONIC_SHARED_STORAGE_H
 #define BOOST_MONOTONIC_SHARED_STORAGE_H
 
-#include <boost/monotonic/storage.h>
-#include <boost/monotonic/static_storage.h>
+#include <boost/monotonic/storage.hpp>
+#include <boost/monotonic/static_storage.hpp>
 #include <boost/thread/mutex.hpp>
 
 namespace boost

@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_INLINE_CLONE_ALLOCATOR_H
 #define BOOST_MONOTONIC_INLINE_CLONE_ALLOCATOR_H
 
-#include <boost/monotonic/allocator.h>
+#include <boost/monotonic/allocator.hpp>
 
 namespace boost
 {

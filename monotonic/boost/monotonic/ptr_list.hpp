@@ -7,8 +7,8 @@
 #define BOOST_MONOTONIC_PTR_LIST_H
 
 #include <boost/ptr_container/ptr_list.hpp>
-#include <boost/monotonic/allocator.h>
-#include <boost/monotonic/inline_clone_allocator.h>
+#include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/inline_clone_allocator.hpp>
 
 namespace boost
 {
