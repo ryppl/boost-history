@@ -12,14 +12,6 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// a globally available storage buffer
-		template <size_t InlineSize = 64*1024
-			, size_t MinHeapIncrement = 2*1024*1024
-			, class Al = std::allocator<char>
-			, template <size_t, size_t, class> class Storage = storage 
-		>
-		struct static_storage_base;
-
 		template <size_t InlineSize, size_t MinHeapIncrement, class Al, template <size_t, size_t, class> class Storage>
 		struct static_storage_base : storage_base
 		{
@@ -66,7 +58,14 @@ namespace boost
 		/// 'static_storage' will be used by a default-constructed monotonic::allocator
 		extern static_storage_base<> static_storage;
 
-		//extern static_storage_base<8*1024, 8*1024*1024, std::allocator<char>, shared_storage> static_shared_storage;
+		/*
+		extern static_storage_base<
+			DefaultSizes::StaticInlineSize
+			, DefaultSizes::StaticMinHeapIncrement
+			, std::allocator<char>
+			, shared_storage> 
+		static_shared_storage;
+		*/
 	}
 }
 

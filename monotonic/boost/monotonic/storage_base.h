@@ -3,10 +3,10 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_STORAGE_BASE_H
+#define BOOST_MONOTONIC_STORAGE_BASE_H
 
-#include <vector>
-#include <utility>
+#include <boost/monotonic/config.h>
 
 namespace boost
 {
@@ -32,7 +32,11 @@ namespace boost
 			/// return the number of bytes remaining
 			virtual size_t remaining() const = 0;
 		};
-	}
-}
+	
+	} // namespace monotonic
+
+} // namespace boost
+
+#endif // BOOST_MONOTONIC_STORAGE_BASE_H
 
 //EOF

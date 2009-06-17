@@ -3,30 +3,23 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_FIXED_STORAGE_H
+#define BOOST_MONOTONIC_FIXED_STORAGE_H
 
-#include <cassert>
 #include <boost/array.hpp>
 #include <boost/aligned_storage.hpp>
-
-// define this to use boost::auto_buffer<> rather than boost::array for monotonic::storage
-//#define BOOST_MONOTONIC_USE_AUTOBUFFER
-// this currently does not work, because resizing the underlying buffer breaks
-// containers that may reference the previously used memory
-
-#ifdef BOOST_MONOTONIC_USE_AUTOBUFFER
-#	include <boost/auto_buffer.hpp>
-#endif
+#include <boost/monotonic/forward_declarations.h>
+#include <boost/monotonic/storage_base.h>
 
 namespace boost
 {
 	namespace monotonic
 	{
 		/// storage for an allocator that is on the stack or heap
-		template <size_t N>
+		template <size_t InlineSize>
 		struct fixed_storage : storage_base
 		{
-			typedef boost::array<char, N> Buffer;
+			typedef boost::array<char, InlineSize> Buffer;
 
 		private:
 			Buffer buffer;			///< the storage
@@ -53,7 +46,7 @@ namespace boost
 			}
 			const char *end() const
 			{
-				return &buffer[N - 1];
+				return &buffer[InlineSize - 1];
 			}
 			void reset()
 			{
@@ -85,7 +78,7 @@ namespace boost
 				if (extra > 0)
 					extra = alignment - extra;
 				size_t required = num_bytes + extra;
-				if (cursor + required > N)
+				if (cursor + required > InlineSize)
 				{
 					return 0;
 				}
@@ -99,12 +92,12 @@ namespace boost
 
 			size_t max_size() const
 			{
-				return N;
+				return InlineSize;
 			}
 
 			size_t remaining() const
 			{
-				return N - cursor;
+				return InlineSize - cursor;
 			}
 
 			size_t used() const
@@ -123,5 +116,7 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#endif // BOOST_MONOTONIC_FIXED_STORAGE_H
 
 //EOF

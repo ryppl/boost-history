@@ -3,7 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_SHARED_STORAGE_H
+#define BOOST_MONOTONIC_SHARED_STORAGE_H
 
 #include <boost/monotonic/storage.h>
 #include <boost/thread/mutex.hpp>
@@ -13,10 +14,11 @@ namespace boost
 	namespace monotonic
 	{
 		/// thread-safe storage
-		template <size_t InlineSize = 8*1024, size_t MinHeapSize = InlineSize*1000, class Al = std::allocator<char> >
+		template <size_t InlineSize, size_t MinHeapSize, class Al>
 		struct shared_storage : storage_base
 		{
 			typedef storage<InlineSize, MinHeapSize, Al> Storage;
+
 		private:
 			Storage storage;
 			mutable mutex guard;
@@ -70,6 +72,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#endif // BOOST_MONOTONIC_SHARED_STORAGE_H
 
 //EOF
 

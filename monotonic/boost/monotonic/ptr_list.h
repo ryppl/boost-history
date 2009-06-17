@@ -3,7 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_PTR_LIST_H
+#define BOOST_MONOTONIC_PTR_LIST_H
 
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/monotonic/allocator.h>
@@ -40,5 +41,7 @@ namespace boost
 
 	}
 }
+
+#endif // BOOST_MONOTONIC_PTR_LIST_H
 
 //EOF

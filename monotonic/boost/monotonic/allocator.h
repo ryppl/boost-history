@@ -3,23 +3,20 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_ALLOCATOR_H
+#define BOOST_MONOTONIC_ALLOCATOR_H
 
-#include <boost/monotonic/storage_base.h>
-#include <boost/monotonic/storage.h>
-#include <boost/monotonic/static_storage.h>
 #include <boost/assert.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
+
+#include <boost/monotonic/storage.h>
+#include <boost/monotonic/static_storage.h>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		/// a monotonic allocator has a storage buffer and a no-op deallocate() method
-		template <class> 
-		struct allocator;
-
 		template <> 
 		struct allocator<void>
 		{
@@ -160,5 +157,7 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#endif // BOOST_MONOTONIC_ALLOCATOR_H
 
 //EOF

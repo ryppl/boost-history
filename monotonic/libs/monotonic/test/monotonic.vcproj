@@ -182,7 +182,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\config.h"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\fixed_storage.h"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\boost\monotonic\forward_declarations.h"
 					>
 				</File>
 				<File

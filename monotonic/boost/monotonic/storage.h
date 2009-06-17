@@ -3,14 +3,10 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_STORAGE_H
+#define BOOST_MONOTONIC_STORAGE_H
 
-#include <utility>
-#include <limits>
-#include <vector>
 #include <boost/monotonic/fixed_storage.h>
-#include <boost/foreach.hpp>
-#include <limits>
 
 namespace boost
 {
@@ -22,7 +18,7 @@ namespace boost
 		/// once that is exhausted, later requests are serviced from the heap.
 		///
 		/// all allocations remain valid at all times.
-		template <size_t InlineSize = 8*1024, size_t MinHeapIncrement = InlineSize*1000, class Al = std::allocator<char> >
+		template <size_t InlineSize, size_t MinHeapIncrement, class Al>
 		struct storage : storage_base
 		{
 			typedef Al Allocator;
@@ -160,5 +156,7 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#endif // BOOST_MONOTONIC_STORAGE_H
 
 //EOF

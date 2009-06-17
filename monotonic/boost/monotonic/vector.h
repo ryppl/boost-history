@@ -3,11 +3,11 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#pragma once
+#ifndef BOOST_MONOTONIC_VECTOR_H
+#define BOOST_MONOTONIC_VECTOR_H
 
 #include <vector>
 #include <boost/monotonic/allocator.h>
-#include <boost/monotonic/storage_base.h>
 
 namespace boost
 {
@@ -31,5 +31,7 @@ namespace boost
 		};
 	}
 }
+
+#endif // BOOST_MONOTONIC_VECTOR_H
 
 //EOF
