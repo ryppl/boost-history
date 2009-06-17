@@ -16,11 +16,11 @@ namespace boost
 	{
 		/// A list that uses a monotonic allocator by default
 		template <class T>
-		struct list : detail::MonotonicContainer<list<T> >
+		struct list : detail::monotonic_container<list<T> >
 		{
 			typedef allocator<T> Allocator;
 			typedef std::list<T, Allocator> List, Implementation;
-			typedef detail::MonotonicContainer<std::list<T, Allocator> > Parent;
+			typedef detail::monotonic_container<std::list<T, Allocator> > Parent;
 			typedef typename List::iterator iterator;
 			typedef typename List::const_iterator const_iterator;
 			typedef typename List::size_type size_type;

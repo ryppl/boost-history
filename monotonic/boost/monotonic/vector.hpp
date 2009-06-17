@@ -15,10 +15,10 @@ namespace boost
 	{
 		/// a vector that uses a monotonic allocator by default
 		template <class T>
-		struct vector : detail::MonotonicContainer<vector<T> >
+		struct vector : detail::monotonic_container<vector<T> >
 		{
-			typedef detail::MonotonicContainer<std::vector<T, allocator<T> > > Parent;
-			typedef detail::Creator<detail::IsMonotonic<T>::value, T> Creator;
+			typedef detail::monotonic_container<std::vector<T, allocator<T> > > Parent;
+			typedef detail::Creator<detail::is_monotonic<T>::value, T> Creator;
 			typedef allocator<T> Allocator;
 			typedef std::vector<T,Allocator> Vector;
 			typedef typename Vector::iterator iterator;

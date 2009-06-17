@@ -58,6 +58,8 @@ namespace boost
 				template <class T, class Alloc>
 				static void Given(T *ptr, T const &val, Alloc *allocator)
 				{
+					// unfortunately, there is no requirement for a container to 
+					// have a copy-ctor that also passes an allocator.
 					new (ptr) T(*allocator);
 					*ptr = val;
 				}
@@ -142,12 +144,12 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				detail::Construct<detail::IsMonotonic<T>::value>::Given(ptr, this);
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, this);
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				detail::Construct<detail::IsMonotonic<T>::value>::Given(ptr, val, this);
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, this);
 			}
 
 			void destroy(pointer ptr)
