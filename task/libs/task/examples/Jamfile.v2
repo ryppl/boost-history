@@ -7,6 +7,13 @@
 
 # For more information, see http://www.boost.org/
 
+import os ;
+
+if [ os.name ] = SOLARIS
+{
+	lib socket ;
+}
+
 project boost/task/example
     : requirements
         <library>../../thread/build//boost_thread
@@ -14,6 +21,7 @@ project boost/task/example
         <library>../build//boost_task
         <link>static
         <threading>multi
+	<os>SOLARIS:<library>socket
     ;
 
 exe bind_to_processors : bind_to_processors.cpp ;
