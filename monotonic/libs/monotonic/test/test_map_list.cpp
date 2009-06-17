@@ -30,49 +30,55 @@ struct Result
 
 Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage_base &storage)
 {
+	typedef std::map<int, std::list<int> > Map;
+	typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > MonoMap;
+
 	Result result;
 
-	// local monotonic allocator
-	boost::timer t0;
-	for (size_t n = 0; n < outter_loops; ++n)
+	// use standard allocator
 	{
+		boost::timer timer;
+		for (size_t n = 0; n < outter_loops; ++n)
 		{
-			typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
-			Map map(std::less<int>(), storage);
-			test_map_list_impl(inner_loops, map);
+			{
+				Map map;
+				test_map_list_impl(inner_loops, map);
+			}
 		}
-		storage.reset();
+		result.standard = timer.elapsed();
 	}
-	double e0 = t0.elapsed();
 
-	// standard allocator
-	boost::timer t1;
-	for (size_t n = 0; n < outter_loops; ++n)
+	// use static monotonic allocator
 	{
-		{
-			typedef std::map<int, std::list<int> > Map;
-			Map map;
-			test_map_list_impl(inner_loops, map);
-		}
-	}
-	double e1 = t1.elapsed();
-
-	// static monotonic allocator
-	boost::timer t2;
-	monotonic::static_storage.reset();
-	for (size_t n = 0; n < outter_loops; ++n)
-	{
-		{
-			typedef std::map<int, std::list<int, monotonic::allocator<int> >, std::less<int>, monotonic::allocator<int> > Map;
-			Map map;
-			test_map_list_impl(inner_loops, map);
-		}
+		boost::timer timer;
 		monotonic::static_storage.reset();
+		for (size_t n = 0; n < outter_loops; ++n)
+		{
+			{
+				MonoMap map;
+				test_map_list_impl(inner_loops, map);
+			}
+			monotonic::static_storage.reset();
+		}
+		result.static_monotonic = timer.elapsed();
 	}
-	double e2 = t2.elapsed();
 
-	cout << "test_map_list: " << inner_loops << ": " << e0 << ", " << e1 << ", " << e2 << endl;
-	return Result(e0, e1, e2);
+	// use monotonic allocator with supplied storage
+	{
+		boost::timer timer;
+		for (size_t n = 0; n < outter_loops; ++n)
+		{
+			{
+				MonoMap map(std::less<int>(), storage);
+				test_map_list_impl(inner_loops, map);
+			}
+			storage.reset();
+		}
+		result.mono = timer.elapsed();
+	}
+
+	cout << "test_map_list: " << inner_loops << ": " << result.mono << ", " << result.standard << ", " << result.static_monotonic << endl;
+	return result;
 }
 
 void test_map_list_heap_stack()
