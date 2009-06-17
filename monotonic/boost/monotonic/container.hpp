@@ -45,25 +45,7 @@ namespace boost
 				}
 			};
 
-			// TODO move to detail::Construct in allocator.hpp
-			template <bool is_monotonic_container, class T>
-			struct Creator
-			{
-				static T Create(storage_base &)
-				{
-					return T();
-				}
-			};
-			template <class T>
-			struct Creator<true, T>
-			{
-				static T Create(storage_base &storage)
-				{
-					return T(storage);
-				}
-			};
-
-			// match against the standard containers
+			// match against the standard containers for allocators
 
 			template <class T, class U>
 			struct is_monotonic<std::list<T, allocator<U> > > : mpl::true_ { };
@@ -76,6 +58,20 @@ namespace boost
 
 			template <class T, class Pred, class U>
 			struct is_monotonic<std::set<T, Pred, allocator<U> > > : mpl::true_ { };
+
+			// match against the standard containers for shared allocators
+
+			template <class T, class U>
+			struct is_monotonic<std::list<T, shared_allocator<U> > > : mpl::true_ { };
+
+			template <class T, class U>
+			struct is_monotonic<std::vector<T, shared_allocator<U> > > : mpl::true_ { };
+
+			template <class K, class T, class Pred, class U>
+			struct is_monotonic<std::map<K, T, Pred, shared_allocator<U> > > : mpl::true_ { };
+
+			template <class T, class Pred, class U>
+			struct is_monotonic<std::set<T, Pred, shared_allocator<U> > > : mpl::true_ { };
 		}
 	}
 }

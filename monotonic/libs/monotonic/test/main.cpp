@@ -5,11 +5,16 @@
 
 // the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
+//#include <boost/monotonic/shared_storage.hpp>
+//#include <boost/monotonic/shared_allocator.hpp>
+
+#include <boost/monotonic/static_storage.hpp>
+
 #include <boost/monotonic/vector.hpp>
 #include <boost/monotonic/list.hpp>
 #include <boost/monotonic/map.hpp>
 #include <boost/monotonic/set.hpp>
-#include <boost/monotonic/static_storage.hpp>
+
 
 #include <boost/iterator/counting_iterator.hpp>
 
@@ -333,16 +338,20 @@ void run_all_tests()
 void test_mono_map()
 {
 	monotonic::storage<> store;
-	{
-		typedef std::list<int, monotonic::allocator<int> > List;
-		typedef std::vector<List, monotonic::allocator<List> > Vector;
-		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
-		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Vector>::value);
-		Vector vec(store);
-		vec.resize(1);
-		BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
-		vec[0].push_back(42);
-	}
+	//monotonic::shared_storage<> shared_store;
+	//{
+	//	typedef std::list<int, monotonic::shared_allocator<int> > List;
+	//	typedef std::vector<List, monotonic::shared_allocator<List> > Vector;
+
+	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
+	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Vector>::value);
+
+	//	Vector vec(shared_store);
+	//	
+	//	vec.resize(1);
+	//	BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
+	//	vec[0].push_back(42);
+	//}
 
 	{
 		typedef std::list<int, monotonic::allocator<int> > List;

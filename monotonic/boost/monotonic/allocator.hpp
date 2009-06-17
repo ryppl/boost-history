@@ -64,10 +64,27 @@ namespace boost
 					*ptr = val;
 				}
 			};
+
+			template <bool is_monotonic_container, class T>
+			struct Creator
+			{
+				static T Create(storage_base &)
+				{
+					return T();
+				}
+			};
+			template <class T>
+			struct Creator<true, T>
+			{
+				static T Create(storage_base &storage)
+				{
+					return T(storage);
+				}
+			};
 		}
 
-		template <class T> 
-		struct allocator 
+		template <class T, class Derived>
+		struct allocator_base
 		{
 			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
 			typedef size_t size_type;
@@ -77,38 +94,30 @@ namespace boost
 			typedef T &reference;
 			typedef const T &const_reference;
 			typedef T value_type;
-			template <class U> 
-			struct rebind 
-			{ 
-				typedef allocator<U> other; 
-			};
+
 
 		private:
 			storage_base *storage;
 
 		public:
-			allocator() throw() 
+			allocator_base() throw() 
 				: storage(&static_storage)
 			{
 			}
 
-			allocator(storage_base &store) throw() 
+			allocator_base(storage_base &store) throw() 
 				: storage(&store)
 			{
 			}
 
-			allocator(const allocator& alloc) throw() 
+			allocator_base(const allocator_base& alloc) throw() 
 				: storage(alloc.get_storage())
 			{
 			}
 
-			template <class U> 
-			allocator(const allocator<U> &alloc) throw()
+			template <class U, class D> 
+			allocator_base(const allocator_base<U,D> &alloc) throw()
 				: storage(alloc.get_storage()) 
-			{
-			}
-
-			~allocator() throw()
 			{
 			}
 
@@ -144,12 +153,12 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, this);
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, this);
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
 			}
 
 			void destroy(pointer ptr)
@@ -177,15 +186,62 @@ namespace boost
 			{
 				return storage;
 			}
+			friend bool operator==(allocator_base<T,Derived> const &A, allocator_base<T,Derived> const &B) 
+			{ 
+				return A.storage == B.storage;
+			}
 
+			friend bool operator!=(allocator_base<T,Derived> const &A, allocator_base<T,Derived> const &B) 
+			{ 
+				return A.storage != B.storage;
+			}
+		};
+
+		template <class T> 
+		struct allocator : allocator_base<T, allocator<T> >
+		{
+			typedef allocator_base<T, allocator<T> > Parent;
+			using typename Parent::size_type;
+			using typename Parent::difference_type;
+			using typename Parent::pointer;
+			using typename Parent::const_pointer;
+			using typename Parent::reference;
+			using typename Parent::const_reference;
+			using typename Parent::value_type;
+
+			template <class U> 
+			struct rebind 
+			{ 
+				typedef allocator<U> other; 
+			};
+			allocator() throw() 
+				: Parent(static_storage)
+			{
+			}
+
+			allocator(storage_base &store) throw() 
+				: Parent(store)
+			{
+			}
+
+			allocator(const allocator& alloc) throw() 
+				: Parent(alloc)
+			{
+			}
+
+			template <class U> 
+			allocator(const allocator<U> &alloc) throw()
+				: Parent(alloc) 
+			{
+			}
 			friend bool operator==(allocator<T> const &A, allocator<T> const &B) 
 			{ 
-				return A.storage == B.storage; 
+				return operator==(static_cast<Parent const &>(A), static_cast<Parent const &>(B)); 
 			}
 
 			friend bool operator!=(allocator<T> const &A, allocator<T> const &B) 
 			{ 
-				return A.storage != B.storage; 
+				return operator!=(static_cast<Parent const &>(A), static_cast<Parent const &>(B)); 
 			}
 		};
 	
