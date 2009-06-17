@@ -23,7 +23,7 @@ namespace boost
 
 		private:
 			Buffer buffer;			///< the storage
-			size_t cursor;				///< pointer to current index within storage for next allocation
+			size_t cursor;			///< pointer to current index within storage for next allocation
 #ifndef NDEBUG
 			size_t num_allocations;
 #endif
@@ -73,7 +73,6 @@ namespace boost
 			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-				// ensure we return a point on an aligned boundary
 				size_t extra = cursor & (alignment - 1);
 				if (extra > 0)
 					extra = alignment - extra;

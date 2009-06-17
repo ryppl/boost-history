@@ -6,6 +6,10 @@
 #ifndef BOOST_MONOTONIC_FORWARD_DECLARATIONS_H
 #define BOOST_MONOTONIC_FORWARD_DECLARATIONS_H
 
+#include <utility>
+#include <limits>
+#include <vector>
+#include <boost/foreach.hpp>
 #include <boost/monotonic/config.h>
 
 namespace boost
@@ -16,12 +20,12 @@ namespace boost
 		template <size_t InlineSize = DefaultSizes::InlineSize>
 		struct fixed_storage;
 
-		/// storage that spans the stack/heap boundary.
+		/// storage that can span the stack/heap boundary.
 		///
-		/// allocation requests first use inline fixed_storage of N bytes.
+		/// allocation requests first use inline fixed_storage of InlineSize bytes.
 		/// once that is exhausted, later requests are serviced from the heap.
 		///
-		/// all allocations remain valid at all times.
+		/// all allocations remain valid until the storage goes out of scope.
 		template <
 			size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement

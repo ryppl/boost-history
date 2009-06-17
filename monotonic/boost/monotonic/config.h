@@ -6,11 +6,6 @@
 #ifndef BOOST_MONOTONIC_CONFIG_H
 #define BOOST_MONOTONIC_CONFIG_H
 
-#include <utility>
-#include <limits>
-#include <vector>
-#include <boost/foreach.hpp>
-
 namespace boost
 {
 	namespace monotonic
