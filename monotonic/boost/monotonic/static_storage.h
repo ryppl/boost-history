@@ -64,7 +64,7 @@ namespace boost
 		/// 'static_storage' will be used by a default-constructed monotonic::allocator
 		extern static_storage_base<> static_storage;
 
-		//extern static_storage_base<8*1024, 8*1024*1024, > static_shared_storage;
+		//extern static_storage_base<8*1024, 8*1024*1024, std::allocator<char>, shared_storage> static_shared_storage;
 	}
 }
 
