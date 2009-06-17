@@ -285,7 +285,7 @@ void test_chain();
 
 namespace boost { namespace monotonic {
 
-static_storage_base<storage<> > static_storage;
+static_storage_base<> static_storage;
 
 //storage<> static_storage_base<storage<> >::global;
 
