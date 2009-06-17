@@ -39,6 +39,11 @@ namespace boost
 				mutex::scoped_lock lock(guard);
 				storage.reset();
 			}
+			void release()
+			{
+				mutex::scoped_lock lock(guard);
+				storage.release();
+			}
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
 				mutex::scoped_lock lock(guard);

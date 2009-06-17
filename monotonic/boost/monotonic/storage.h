@@ -101,6 +101,12 @@ namespace boost
 				}
 			}
 
+			void release()
+			{
+				reset();
+				chain.swap(Chain());
+			}
+
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
 				if (void *ptr = fixed.allocate(num_bytes, alignment))

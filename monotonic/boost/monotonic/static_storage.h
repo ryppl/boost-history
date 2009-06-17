@@ -21,6 +21,10 @@ namespace boost
 			{
 				global.reset();
 			}
+			void release()
+			{
+				global.release();
+			}
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
 				return global.allocate(num_bytes, alignment);

@@ -18,6 +18,9 @@ namespace boost
 			// reset the number of bytes used to zero
 			virtual void reset() = 0;
 
+			// reset(), and release all heap-based storage
+			virtual void release() = 0;
+
 			// the number of bytes to allocate, and the alignment to use
 			virtual void *allocate(size_t num_bytes, size_t alignment) = 0;
 			

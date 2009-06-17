@@ -62,6 +62,10 @@ namespace boost
 				num_allocations = 0;
 #endif
 			}
+			void release()
+			{
+				reset();
+			}
 
 			size_t get_cursor() const
 			{
