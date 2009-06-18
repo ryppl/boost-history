@@ -9,6 +9,7 @@
 //#include <boost/monotonic/shared_storage.hpp>
 //#include <boost/monotonic/shared_allocator.hpp>
 
+#include <boost/monotonic/local.hpp>
 #include <boost/monotonic/static_storage.hpp>
 
 #include <boost/monotonic/vector.hpp>
@@ -49,37 +50,37 @@ using namespace boost;
 
 void test_deque()
 {
-	monotonic::storage<4000> storage;
+	monotonic::local<> storage;
 	{
 		{
-			std::list<int, boost::monotonic::allocator<int> > list(storage);
+			std::list<int, boost::monotonic::allocator<int> > list;
 			fill_n(back_inserter(list), 100, 42);
 			cout << "list: " << storage.used() << endl;
 		}
 		storage.reset();
 		{
-			std::deque<int, boost::monotonic::allocator<int> > deque(storage);
+			std::deque<int, boost::monotonic::allocator<int> > deque;
 			fill_n(back_inserter(deque), 100, 42);
 			cout << "deque: " << storage.used() << endl;
 		}
 		storage.reset();
 
 		{
-			std::vector<int, boost::monotonic::allocator<int> > vector(storage);
+			std::vector<int, boost::monotonic::allocator<int> > vector;
 			fill_n(back_inserter(vector), 100, 42);
 			cout << "vector: " << storage.used() << endl;
 		}
 		storage.reset();
 
 		{
-			monotonic::chain<int> chain(storage);
+			monotonic::chain<int> chain;
 			fill_n(back_inserter(chain), 100, 42);
 			cout << "default chain: " << storage.used() << endl;
 		}
 		storage.reset();
 
 		{
-			monotonic::chain<int, 100> chain(storage);
+			monotonic::chain<int, 100> chain;
 			fill_n(back_inserter(chain), 100, 42);
 			cout << "chain<100>: " << storage.used() << endl;
 		}
@@ -89,83 +90,41 @@ void test_deque()
 
 void test_speed()
 {
+	monotonic::local<monotonic::storage<1000000> > storage;
 	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
-	monotonic::storage<1000000> storage;
-	map_with_list m(storage);
-	size_t count = 10000;
-	boost::timer timer;
-	for (size_t i = 0; i < count; ++i)
 	{
-		int random = rand() % 100;
-		map_with_list::iterator iter = m.find(random);
-		if (iter == m.end())
-			m.insert(make_pair(random, monotonic::list<int>(storage)));
-		else
-			iter->second.push_back(i);
-	}
-	double elapsed = timer.elapsed();
-	cout << "monotonic: " << elapsed << endl;
-
-	// do the same thing, with std::containers
-	{
-		typedef std::map<int, std::list<int> > map_with_list;
 		map_with_list m;
+		size_t count = 10000;
 		boost::timer timer;
 		for (size_t i = 0; i < count; ++i)
 		{
 			int random = rand() % 100;
 			map_with_list::iterator iter = m.find(random);
 			if (iter == m.end())
-				m[random] = std::list<int>();
-			else
-				iter->second.push_back(i);
-		}
-		double elapsed = timer.elapsed();
-		cout << "std: " << elapsed << endl;
-	}
-}
-
-void test_speed_heap()
-{
-	size_t num_iterations = 100000;
-
-	typedef monotonic::map<int, monotonic::list<int> > map_with_list;
-	monotonic::storage<1000000> *storage = new monotonic::storage<1000000>;
-
-	// do the test with monotonic containers and heap-based storage
-	{
-		map_with_list m(*storage);
-		boost::timer timer;
-		for (size_t i = 0; i < num_iterations; ++i)
-		{
-			int random = rand() % 100;
-			map_with_list::iterator iter = m.find(random);
-			if (iter == m.end())
-				m.insert(make_pair(random, monotonic::list<int>(*storage)));
+				m.insert(make_pair(random, monotonic::list<int>()));
 			else
 				iter->second.push_back(i);
 		}
 		double elapsed = timer.elapsed();
 		cout << "monotonic: " << elapsed << endl;
-	}
-	delete storage;
 
-	// do the same thing, with std::containers
-	{
-		typedef std::map<int, std::list<int> > map_with_list;
-		map_with_list m;
-		boost::timer timer;
-		for (size_t i = 0; i < num_iterations; ++i)
+		// do the same thing, with std::containers
 		{
-			int random = rand() % 100;
-			map_with_list::iterator iter = m.find(random);
-			if (iter == m.end())
-				m[random] = std::list<int>();
-			else
-				iter->second.push_back(i);
+			typedef std::map<int, std::list<int> > map_with_list;
+			map_with_list m;
+			boost::timer timer;
+			for (size_t i = 0; i < count; ++i)
+			{
+				int random = rand() % 100;
+				map_with_list::iterator iter = m.find(random);
+				if (iter == m.end())
+					m[random] = std::list<int>();
+				else
+					iter->second.push_back(i);
+			}
+			double elapsed = timer.elapsed();
+			cout << "std: " << elapsed << endl;
 		}
-		double elapsed = timer.elapsed();
-		cout << "std: " << elapsed << endl;
 	}
 }
 
@@ -184,8 +143,8 @@ namespace
 	template<typename C>
 	void test_loop_monotonic()
 	{
-		boost::monotonic::storage<100000> storage;
-		std::vector<Foo<C>, monotonic::allocator<Foo<C> > > vec(storage);
+		monotonic::local<> storage;
+		std::vector<Foo<C>, monotonic::allocator<Foo<C> > > vec;
 		Foo<C> orig = { 'A', 65 };
 		vec.assign(ELEM_COUNT, orig);
 		boost::timer timer;
@@ -236,13 +195,13 @@ void test_alignment()
 	typedef boost::array<char, 57> c5;
 	typedef boost::array<char, 111> c6;
 
-	monotonic::vector<c0> v0(storage);
-	monotonic::vector<c1> v1(storage);
-	monotonic::vector<c2> v2(storage);
-	monotonic::vector<c3> v3(storage);
-	monotonic::vector<c4> v4(storage);
-	monotonic::vector<c5> v5(storage);
-	monotonic::vector<c6> v6(storage);
+	monotonic::vector<c0> v0;
+	monotonic::vector<c1> v1;
+	monotonic::vector<c2> v2;
+	monotonic::vector<c3> v3;
+	monotonic::vector<c4> v4;
+	monotonic::vector<c5> v5;
+	monotonic::vector<c6> v6;
 
 	v0.resize(5);
 	v1.resize(5);
@@ -295,7 +254,9 @@ namespace boost
 { 
 	namespace monotonic 
 	{
-		static_storage_base<> static_storage;
+		static_storage_base<> default_static_storage;
+		storage_base *static_storage = &default_static_storage;
+
 		//storage<> static_storage_base<storage<> >::global;
 	}
 }
@@ -303,7 +264,7 @@ namespace boost
 void test_static_storage()
 {
 	// reset the global static storage to zero use
-	monotonic::static_storage.reset();
+	boost::monotonic::get_storage().reset();
 
 	typedef std::list<int, monotonic::allocator<int> > List;
 	typedef std::map<int, List, std::less<int>, monotonic::allocator<int> > Map;
@@ -316,8 +277,8 @@ void test_static_storage()
 		map[42] = list0;
 		map[123] = list1;
 	}
-	cout << monotonic::static_storage.used() << endl;
-	monotonic::static_storage.reset();
+	cout << monotonic::get_storage().used() << endl;
+	boost::monotonic::get_storage().reset();
 }
 
 void run_all_tests()
@@ -338,7 +299,7 @@ void run_all_tests()
 
 void test_mono_map()
 {
-	monotonic::storage<> store;
+	monotonic::local<> store;
 /*
 // commented out till i add the required libraries for boost::mutex :/
 
@@ -358,31 +319,33 @@ void test_mono_map()
 	}
 */
 
-	{
-		typedef std::list<int, monotonic::allocator<int> > List;
-		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
-		typedef std::map<int, List, std::less<int>, monotonic::allocator<int> > Map;
-		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Map>::value);
-		Map map(less<int>(), store);
-		//map[42].push_back(123);
-		map.insert(make_pair(42, List(store)));
-		map[42].push_back(123);
-		BOOST_ASSERT(map[42].get_allocator().get_storage() == map.get_allocator().get_storage());
-	}
+	// this can't work in general:
+	//{
+	//	typedef std::list<int, monotonic::allocator<int> > List;
+	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
+	//	typedef std::map<int, List, std::less<int>, monotonic::allocator<int> > Map;
+	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Map>::value);
+	//	Map map(less<int>(), store);
+	//	//map[42].push_back(123);
+	//	map.insert(make_pair(42, List(store)));
+	//	map[42].push_back(123);
+	//	BOOST_ASSERT(map[42].get_allocator().get_storage() == map.get_allocator().get_storage());
+	//}
 
+	// but this can:
 	{
 		typedef monotonic::list<int> List;
 		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
 		typedef monotonic::map<int, List > Map;
 		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Map>::value);
-		Map map(store);
+		Map map;
 		map[42].push_back(123);
 		BOOST_ASSERT(map[42].get_allocator().get_storage() == map.get_allocator().get_storage());
 	}
 
 	{
 		typedef monotonic::map<int, monotonic::map<int, monotonic::list<int> > > Map;
-		Map map(store);
+		Map map;
 		map[42][64].push_back(13);
 		BOOST_ASSERT(map[42][64].get_allocator().get_storage() == map.get_allocator().get_storage());
 	}
@@ -399,6 +362,7 @@ extern "C" void straight_to_debugger(unsigned int, EXCEPTION_POINTERS*)
 }
 #endif
 
+
 int main()
 {
 #ifdef WIN32
@@ -406,10 +370,10 @@ int main()
 #endif
 
 	//test_chained_storage();
-	compare_memory_pool();
+	test_map_list_heap_stack();
+	//compare_memory_pool();
 	//test_mono_map();
 	//test_mono_map();
-	//test_map_list_heap_stack();
 	//test_static_storage();
 	//run_all_tests();
 }

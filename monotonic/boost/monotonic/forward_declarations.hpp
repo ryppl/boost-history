@@ -32,6 +32,9 @@ namespace boost
 			, class Al = std::allocator<char> >
 		struct storage;
 
+		template <class Storage = storage<> >
+		struct local;
+
 		/// thread-safe storage
 		template <
 			size_t InlineSize = DefaultSizes::InlineSize

@@ -66,7 +66,7 @@ namespace boost
 				template <class Storage>
 				static T Given(Storage &storage)
 				{
-					return T(storage);
+					return T();//storage);
 				}
 			};
 		}
@@ -130,12 +130,12 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
+				new (ptr) T();//detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
+				new (ptr) T(val);//detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
 			}
 
 			void destroy(pointer ptr)

@@ -56,7 +56,27 @@ namespace boost
 		};
 
 		/// 'static_storage' will be used by a default-constructed monotonic::allocator
-		extern static_storage_base<> static_storage;
+		extern static_storage_base<> default_static_storage;
+		extern storage_base *static_storage;
+
+		inline storage_base &get_storage()
+		{
+			return static_storage ? *static_storage : default_static_storage;
+		}
+		inline storage_base *set_storage(storage_base &store)
+		{
+			storage_base *old = static_storage;
+			static_storage = &store;
+			return old;
+		}
+		inline void reset_storage()
+		{
+			get_storage().reset();
+		}
+		inline void default_storage()
+		{
+			static_storage = &default_static_storage;
+		}
 		
 		/// TODO: this will be specialised for 
 		/// static_storage_base<..., shared_storage>, but to avoid having to link against boost::thread

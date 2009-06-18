@@ -40,7 +40,7 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 		for (size_t n = 0; n < outter_loops; ++n)
 		{
 			{
-				MonoMap map(std::less<int>(), storage);
+				MonoMap map;
 				test_map_list_impl(inner_loops, map);
 			}
 			storage.reset();
@@ -64,15 +64,17 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 	// use static monotonic allocator
 	{
 		boost::timer timer;
-		monotonic::static_storage.reset();
+		boost::monotonic::storage_base *current = &monotonic::get_storage();
+		boost::monotonic::default_storage();
 		for (size_t n = 0; n < outter_loops; ++n)
 		{
 			{
 				MonoMap map;
 				test_map_list_impl(inner_loops, map);
 			}
-			monotonic::static_storage.reset();
+			boost::monotonic::reset_storage();
 		}
+		boost::monotonic::set_storage(*current);
 		result.static_monotonic = timer.elapsed();
 	}
 
@@ -89,7 +91,7 @@ void test_map_list_heap_stack()
 	typedef std::map<size_t, Result > Results;
 	Results results;
 
-	monotonic::storage<> storage;
+	monotonic::local<> storage;
 	for (size_t inner = 100; inner < inner_loops; inner += 1000)
 	{
 		results[inner] = test_map_list(outter_loops, inner, storage);

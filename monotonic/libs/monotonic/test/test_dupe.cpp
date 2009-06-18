@@ -14,12 +14,12 @@ size_t test_dupe_impl(size_t count, size_t size, List list)
 
 pair<double,double> test_dupe(size_t num_tests, size_t count, size_t size)
 {
-	monotonic::storage<1000000> storage;
+	monotonic::local<> storage;
 
 	boost::timer mono_timer;
 	for (size_t n = 0; n < num_tests; ++n)
 	{
-		std::list<int, monotonic::allocator<int> > list(storage);
+		std::list<int, monotonic::allocator<int> > list;
 		test_dupe_impl(count, size, list);
 		storage.reset();
 	}

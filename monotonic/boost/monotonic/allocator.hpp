@@ -26,6 +26,9 @@ namespace boost
 			};
 		};
 
+		storage_base &get_storage();
+		storage_base *set_storage(storage_base &);
+
 		template <class T> 
 		struct allocator : allocator_base<T, allocator<T> >
 		{
@@ -45,11 +48,14 @@ namespace boost
 			};
 
 			allocator() throw() 
-				: Parent(static_storage) { }
+				: Parent(boost::monotonic::get_storage()) { }
 
+		private:
+			template <class T> struct local;
 			allocator(storage_base &store) throw() 
 				: Parent(store) { }
 
+		public:
 			allocator(const allocator& alloc) throw() 
 				: Parent(alloc) { }
 

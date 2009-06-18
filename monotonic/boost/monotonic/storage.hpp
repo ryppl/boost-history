@@ -172,6 +172,7 @@ namespace boost
 			}
 		};
 
+
 	} // namespace monotonic
 
 } // namespace boost

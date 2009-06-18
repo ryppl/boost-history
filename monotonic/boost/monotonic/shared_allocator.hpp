@@ -50,8 +50,8 @@ namespace boost
 			shared_allocator() throw() 
 				: Parent(static_shared_storage)	{ }
 
-			shared_allocator(shared_storage_base &store) throw() 
-				: Parent(store) { }
+			//shared_allocator(shared_storage_base &store) throw() 
+			//	: Parent(store) { }
 
 			shared_allocator(const shared_allocator& alloc) throw() 
 				: Parent(alloc) { }

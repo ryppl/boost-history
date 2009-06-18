@@ -47,9 +47,9 @@ struct Foo : boost::noncopyable
 void test_chain()
 {
 	{
-		monotonic::storage<> storage;
+		monotonic::local<> storage;
 		{
-			monotonic::chain<int, 100> rope(storage);
+			monotonic::chain<int, 100> rope;
 			for (int n = 0; n < 200; ++n)
 			{
 				rope.push_back(n);
@@ -58,13 +58,13 @@ void test_chain()
 	}
 
 
-	monotonic::storage<> storage;
+	monotonic::local<> storage;
 	{
 		typedef monotonic::chain<Foo, 2> Rope2;
-		Rope2 foo(4, storage);
+		Rope2 foo(4);
 
 		typedef monotonic::chain<int, 2> Rope;
-		Rope rope(storage);
+		Rope rope;
 		rope.push_back(0);
 		rope.push_back(1);
 		rope.push_back(2);

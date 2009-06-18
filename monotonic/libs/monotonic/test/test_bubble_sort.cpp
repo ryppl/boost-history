@@ -25,12 +25,12 @@ void test_bubble_sort_impl(size_t length, List &list)
 
 pair<double,double> test_bubble_sort(size_t count = 50*1000, size_t length = 20)
 {
-	monotonic::storage<> storage;
+	monotonic::local<> storage;
 	boost::timer mono_timer;
 	for (size_t n = 0; n < count; ++n)
 	{
 		{
-			std::list<int, monotonic::allocator<int> > list(storage);
+			std::list<int, monotonic::allocator<int> > list;
 			test_bubble_sort_impl(length, list);
 		}
 		storage.reset();
