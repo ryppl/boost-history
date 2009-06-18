@@ -96,15 +96,16 @@ void test_map_list_heap_stack()
 	}
 
 	cout << "test_map_list" << endl;
+	cout << "count\t" << "mono\t" << "mono_static\t" << "std\t" << "std/mono\t" << "std/mono_static" << endl;
 	BOOST_FOREACH(Results::value_type const &iter, results)
 	{
 		Result const &result = iter.second;
 		double mono_time = result.mono;
 		double std_time = result.standard;
 		double static_time = result.static_monotonic;
-		double perc1 = mono_time/std_time;
-		double perc2 = static_time/std_time;
-		cout << iter.first << '\t' << mono_time << '\t' << static_time << '\t' << std_time << '\t' << perc1 << "%\t" << perc2 << "%"<< endl;
+		double perc1 = 100.*std_time/mono_time;
+		double perc2 = 100.*std_time/static_time;
+		cout << iter.first << '\t' << mono_time << '\t' << static_time << "\t\t" << std_time << '\t' << perc1 << "%\t" << perc2 << "%"<< endl;
 	}
 }
 
