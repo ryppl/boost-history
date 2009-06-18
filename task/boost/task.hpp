@@ -10,7 +10,6 @@
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
 #include <boost/task/bounded_channel.hpp>
-#include <boost/task/default_pool.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/fifo.hpp>
 #include <boost/task/future.hpp>

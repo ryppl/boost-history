@@ -65,7 +65,8 @@ int main( int argc, char *argv[])
 		tsk::handle< int > h3(
 			tsk::async(
 				boost::move( t3),
-				tsk::default_pool() ) );
+				2,
+				pool) );
 		tsk::handle< int > h4(
 			tsk::async(
 				boost::move( t4),

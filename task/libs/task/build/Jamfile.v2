@@ -35,7 +35,6 @@ feature.set-default taskapi : [ default_taskapi ] ;
 
 alias task_sources
     : ## win32 sources ##
-	default_pool.cpp
 	guard.cpp
 	interrupter.cpp
 	pool_callable.cpp
@@ -53,7 +52,6 @@ alias task_sources
 
 alias task_sources
     : ## posix sources ##
-	default_pool.cpp
 	guard.cpp
 	interrupter.cpp
 	pool_callable.cpp

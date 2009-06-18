@@ -18,7 +18,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-typedef tsk::default_pool_t pool_type;
+typedef tsk::static_pool< tsk::unbounded_channel< tsk::fifo > > pool_type;
 
 int serial_fib( int n)
 {
@@ -70,6 +70,8 @@ int main( int argc, char *argv[])
 {
 	try
 	{
+		pool_type pool( pool_type::bind_to_processors() );
+
 		for ( int i = 0; i < 10; ++i)
 		{
 			tsk::task< void > t(
@@ -78,7 +80,7 @@ int main( int argc, char *argv[])
 					i) );
 			tsk::async(
 				boost::move( t),
-				tsk::default_pool() );
+				pool);
 		}
 
 		return EXIT_SUCCESS;
