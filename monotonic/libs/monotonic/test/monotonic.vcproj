@@ -180,6 +180,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\allocator_base.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\chain.hpp"
 					>
 				</File>

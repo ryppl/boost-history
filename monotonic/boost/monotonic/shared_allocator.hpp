@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_SHARED_ALLOCATOR_H
 #define BOOST_MONOTONIC_SHARED_ALLOCATOR_H
 
-#include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/allocator_base.hpp>
 
 namespace boost
 {
@@ -48,33 +48,26 @@ namespace boost
 			};
 
 			shared_allocator() throw() 
-				: Parent(static_shared_storage)
-			{
-			}
+				: Parent(static_shared_storage)	{ }
 
 			shared_allocator(shared_storage_base &store) throw() 
-				: Parent(store)
-			{
-			}
+				: Parent(store) { }
 
 			shared_allocator(const shared_allocator& alloc) throw() 
-				: Parent(alloc)
-			{
-			}
+				: Parent(alloc) { }
 
 			template <class U> 
 			shared_allocator(const shared_allocator<U> &alloc) throw()
-				: Parent(alloc) 
-			{
-			}
+				: Parent(alloc) { }
+
 			friend bool operator==(shared_allocator<T> const &A, shared_allocator<T> const &B) 
 			{ 
-				return operator==(static_cast<Parent const &>(A), static_cast<Parent const &>(B)); 
+				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}
 
 			friend bool operator!=(shared_allocator<T> const &A, shared_allocator<T> const &B) 
 			{ 
-				return operator!=(static_cast<Parent const &>(A), static_cast<Parent const &>(B)); 
+				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}
 		};
 

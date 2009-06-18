@@ -47,6 +47,10 @@ namespace boost
 		>
 		struct static_storage_base;
 
+		/// common to other monotonic allocators for type T of type Derived
+		template <class T, class Derived>
+		struct allocator_base;
+
 		/// a monotonic allocator has a storage buffer and a no-op deallocate() method
 		/// default to use static_storage_base<..., storage>
 		template <class> 

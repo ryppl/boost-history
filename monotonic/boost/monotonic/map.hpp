@@ -19,7 +19,7 @@ namespace boost
 		struct map : detail::monotonic_container<map<K,T,P> >
 		{
 			typedef detail::monotonic_container<map<K,T,P> > Parent;
-			typedef detail::Creator<detail::is_monotonic<T>::value, T> Creator;
+			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 
 			typedef P Predicate;
 			typedef allocator<K> Allocator;
@@ -103,7 +103,7 @@ namespace boost
 				iterator where = impl.lower_bound(key);
 				if (where == impl.end() || pred(key, where->first))
 				{
-					where = impl.insert(where, value_type(key, Creator::Create(this->Parent::get_storage())));
+					where = impl.insert(where, value_type(key, Create::Given(this->Parent::get_storage())));
 				}
 				return where->second;
 			}

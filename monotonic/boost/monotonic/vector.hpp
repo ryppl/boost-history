@@ -18,7 +18,7 @@ namespace boost
 		struct vector : detail::monotonic_container<vector<T> >
 		{
 			typedef detail::monotonic_container<std::vector<T, allocator<T> > > Parent;
-			typedef detail::Creator<detail::is_monotonic<T>::value, T> Creator;
+			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 			typedef allocator<T> Allocator;
 			typedef std::vector<T,Allocator> Vector;
 			typedef typename Vector::iterator iterator;
