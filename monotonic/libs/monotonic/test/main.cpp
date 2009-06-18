@@ -338,20 +338,20 @@ void run_all_tests()
 void test_mono_map()
 {
 	monotonic::storage<> store;
-	//monotonic::shared_storage<> shared_store;
-	//{
-	//	typedef std::list<int, monotonic::shared_allocator<int> > List;
-	//	typedef std::vector<List, monotonic::shared_allocator<List> > Vector;
+	monotonic::shared_storage<> shared_store;
+	{
+		typedef std::list<int, monotonic::shared_allocator<int> > List;
+		typedef std::vector<List, monotonic::shared_allocator<List> > Vector;
 
-	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
-	//	BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Vector>::value);
+		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<List>::value);
+		BOOST_STATIC_ASSERT(monotonic::detail::is_monotonic<Vector>::value);
 
-	//	Vector vec(shared_store);
-	//	
-	//	vec.resize(1);
-	//	BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
-	//	vec[0].push_back(42);
-	//}
+		Vector vec(shared_store);
+		
+		vec.resize(1);
+		BOOST_ASSERT(vec[0].get_allocator().get_storage() == vec.get_allocator().get_storage());
+		vec[0].push_back(42);
+	}
 
 	{
 		typedef std::list<int, monotonic::allocator<int> > List;
