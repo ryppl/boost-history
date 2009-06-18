@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_STORAGE_H
 #define BOOST_MONOTONIC_STORAGE_H
 
+#include <algorithm>
 #include <boost/monotonic/fixed_storage.hpp>
 
 namespace boost
@@ -43,13 +44,13 @@ namespace boost
 					if (buffer == 0)
 						capacity = 0;
 				}
-				~Link()
-				{
-					alloc.deallocate(buffer, 1);
-				}
 				void reset()
 				{
 				    cursor = 0;
+				}
+				void clear()
+				{
+					alloc.deallocate(buffer, 1);
 				}
 				size_t used() const
 				{
@@ -71,8 +72,12 @@ namespace boost
 					cursor += required;
 					return ptr + extra;
 				}
+				friend bool operator<(Link const &A, Link const &B)
+				{
+					return A.capacity < B.capacity;
+				}
 			};
-			typedef std::vector<Link, Al> Chain;
+			typedef std::vector<Link, Al> Chain;	// maintained a priority-queue
 
 		private:
 			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
@@ -87,6 +92,10 @@ namespace boost
 				: alloc(A)
 			{
 			}
+			~storage()
+			{
+				release();
+			}
 
 			void reset()
 			{
@@ -100,6 +109,10 @@ namespace boost
 			void release()
 			{
 				reset();
+				BOOST_FOREACH(Link &link, chain)
+				{
+					link.clear();
+				}
 				chain.clear();
 			}
 
@@ -109,9 +122,14 @@ namespace boost
 				{
 					return ptr;
 				}
-				BOOST_FOREACH(Link &link, chain)
+				if (!chain.empty())
 				{
-					if (void *ptr = link.Allocate(num_bytes, alignment))
+					if (void *ptr = chain.front().Allocate(num_bytes, alignment))
+					{
+						return ptr;
+					}
+					std::make_heap(chain.begin(), chain.end());
+					if (void *ptr = chain.front().Allocate(num_bytes, alignment))
 					{
 						return ptr;
 					}
@@ -149,6 +167,7 @@ namespace boost
 				chain.push_back(Link(alloc, size));
 				Link &link = chain.back();
 				link.Construct();
+				std::make_heap(chain.begin(), chain.end());
 				return link;
 			}
 		};

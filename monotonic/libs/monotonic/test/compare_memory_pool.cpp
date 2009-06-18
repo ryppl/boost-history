@@ -24,8 +24,15 @@ struct PoolResult
 
 PoolResult compare_memory_pool(size_t count, size_t length)
 {
-	typedef std::list<int, boost::pool_allocator<int> > pool_v;
-	typedef std::list<int, boost::fast_pool_allocator<int> > fast_pool_v;
+	typedef boost::fast_pool_allocator<int,
+		boost::default_user_allocator_new_delete,
+		boost::details::pool::null_mutex> fast_pool_alloc;
+	typedef boost::pool_allocator<int,
+		boost::default_user_allocator_new_delete,
+		boost::details::pool::null_mutex> pool_alloc;
+
+	typedef std::list<int, pool_alloc > pool_v;
+	typedef std::list<int, fast_pool_alloc > fast_pool_v;
 	typedef std::list<int, boost::monotonic::allocator<int> > mono_v;
 	typedef std::list<int > std_v;
 
@@ -37,7 +44,7 @@ PoolResult compare_memory_pool(size_t count, size_t length)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				pool_v pool;
+				fast_pool_v pool;
 				thrash_pool(length, pool);
 			}
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(int)>::release_memory();
@@ -98,7 +105,12 @@ void compare_memory_pool()
 	
 	typedef std::map<size_t, PoolResult> Results;
 	Results results;
-	for (size_t length = 10; length < max_length; length += 500)
+	results[5] = compare_memory_pool(count*10, 5);
+	results[20] = compare_memory_pool(count*10, 20);
+	results[50] = compare_memory_pool(count*10, 50);
+	results[100] = compare_memory_pool(count*10, 100);
+
+	for (size_t length = 10; length < max_length; length += 1000)
 	{
 		results[length] = compare_memory_pool(count, length);
 	}

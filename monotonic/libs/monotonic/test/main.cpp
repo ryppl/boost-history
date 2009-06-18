@@ -405,6 +405,7 @@ int main()
 	_set_se_translator(straight_to_debugger);
 #endif
 
+	//test_chained_storage();
 	compare_memory_pool();
 	//test_mono_map();
 	//test_mono_map();

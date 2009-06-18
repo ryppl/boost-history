@@ -15,9 +15,9 @@ namespace boost
 			enum
 			{
 				InlineSize = 8*1024,						///< buffer that is inline with the storage
-				MinHeapIncrement = 2*1024*1024,				///< the smallest new chunk-size for heap storage
-				StaticInlineSize = 64*1024,					///< inline size for a global store
-				StaticMinHeapIncrement = MinHeapIncrement,
+				MinHeapIncrement = 64*1024*1024,			///< the smallest new chunk-size for heap storage
+				StaticInlineSize = 64*1024,					///< inline size for a global store. this goes into your BSS
+				StaticMinHeapIncrement = 64*1024*1024,
 			};
 		};
 
