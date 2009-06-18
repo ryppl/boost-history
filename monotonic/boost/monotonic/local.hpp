@@ -12,6 +12,9 @@ namespace boost
 {
 	namespace monotonic
 	{
+		storage_base *set_storage(storage_base &new_storage);
+		void default_storage();
+
 		template <class Storage>
 		struct local : storage_base
 		{

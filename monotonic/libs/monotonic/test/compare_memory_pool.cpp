@@ -44,7 +44,7 @@ struct PoolResult
 template <class Fun>
 PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 {
-	cout << "compare_memory_pool: " << count << ", " << length << endl;
+	//cout << "compare_memory_pool: " << count << ", " << length << endl;
 	typedef std::list<int, boost::pool_allocator<int,
 		boost::default_user_allocator_new_delete,
 		boost::details::pool::null_mutex> > pool_v;
@@ -121,7 +121,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	}
 
 	// test std
-	if (0)
+	if (1)
 	{
 		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
@@ -134,7 +134,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.std_elapsed = timer.elapsed();
 	}
 
-	cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
+	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
 
@@ -159,6 +159,7 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 void compare_memory_pool()
 {
 	size_t num_outter_loops = 1000;
+/*
 	PoolResults r0 = compare_memory_pool(num_outter_loops, 10000, 10, thrash_pool());
 	cout << "thrash_pool" << endl;
 	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "local\t" << "mono\t" << "fp/mono\t" << "fp/local" << endl;
@@ -167,7 +168,7 @@ void compare_memory_pool()
 		PoolResult const &result = iter.second;
 		cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.local_mono_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << '\t' << 100.*result.fast_pool_elapsed/result.local_mono_elapsed << endl;
 	}
-
+*/
 	PoolResults r1 = compare_memory_pool(num_outter_loops, 1000, 10, thrash_pool_sort());
 	cout << "thrash_pool_sort" << endl;
 	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "local\t" << "mono\t" << "fp/mono\t" << "fp/local" << endl;

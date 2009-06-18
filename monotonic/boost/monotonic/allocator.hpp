@@ -51,7 +51,7 @@ namespace boost
 				: Parent(boost::monotonic::get_storage()) { }
 
 		private:
-			template <class T> struct local;
+			template <class Storage> struct local;
 			allocator(storage_base &store) throw() 
 				: Parent(store) { }
 
