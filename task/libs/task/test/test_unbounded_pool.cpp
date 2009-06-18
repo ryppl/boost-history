@@ -56,6 +56,14 @@ public:
 		BOOST_CHECK_EQUAL( pool2.size(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool2.idle(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool2.active(), std::size_t( 0) );
+
+		tsk::task< int > t(
+			boost::bind(
+				fibonacci_fn,
+				10) );
+		tsk::handle< int > h(
+			tsk::async( boost::move( t), pool2) );
+		BOOST_CHECK_EQUAL( h.get(), 55);
 	}
 
 	// check submit
