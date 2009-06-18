@@ -17,6 +17,9 @@
 #include <boost/monotonic/map.hpp>
 #include <boost/monotonic/set.hpp>
 
+#include <algorithm>
+#include <functional>
+
 
 #include <boost/iterator/counting_iterator.hpp>
 
@@ -370,8 +373,8 @@ int main()
 #endif
 
 	//test_chained_storage();
-	test_map_list_heap_stack();
-	//compare_memory_pool();
+	//test_map_list_heap_stack();
+	compare_memory_pool();
 	//test_mono_map();
 	//test_mono_map();
 	//test_static_storage();

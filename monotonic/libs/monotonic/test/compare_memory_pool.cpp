@@ -1,13 +1,15 @@
 #include <list>
+#include <numeric>
 #include <boost/pool/pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
 
 struct thrash_pool
 {
 	template <class Pool>
-	void operator()(size_t length, Pool &pool) const
+	int operator()(size_t length, Pool &pool) const
 	{
 		pool.resize(length*rand()/RAND_MAX);
+		return accumulate(pool.begin(), pool.end(), 0);
 	}
 };
 
@@ -102,7 +104,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 
 
 	// test local monotonic
-	if (0)
+	if (1)
 	{
 		srand(42);
 		monotonic::local<monotonic::storage<100000> > storage;
@@ -133,7 +135,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.std_elapsed = timer.elapsed();
 	}
 
-	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
+	cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
 
@@ -157,8 +159,8 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 
 void compare_memory_pool()
 {
-	size_t num_outter_loops = 1000;
-	PoolResults r0 = compare_memory_pool(num_outter_loops, 20000, 10, thrash_pool());
+	size_t num_outter_loops = 50000;
+	PoolResults r0 = compare_memory_pool(num_outter_loops, 1000, 10, thrash_pool());
 	cout << "thrash_pool" << endl;
 	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "mono\t" << "fp/mono\t" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, r0)
@@ -166,14 +168,14 @@ void compare_memory_pool()
 		PoolResult const &result = iter.second;
 		cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << endl;
 	}
-	//PoolResults r1 = compare_memory_pool(num_outter_loops, 1000, 10, thrash_pool_sort());
-	//cout << "thrash_pool_sort" << endl;
-	//cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "mono\t" << "fp/mono\t" << endl;
-	//BOOST_FOREACH(PoolResults::value_type const &iter, r1)
-	//{
-	//	PoolResult const &result = iter.second;
-	//	cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << endl;
-	//}
+	PoolResults r1 = compare_memory_pool(500, 500, 10, thrash_pool_sort());
+	cout << "thrash_pool_sort" << endl;
+	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "mono\t" << "fp/mono\t" << endl;
+	BOOST_FOREACH(PoolResults::value_type const &iter, r1)
+	{
+		PoolResult const &result = iter.second;
+		cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << endl;
+	}
 }
 
 //EOF
