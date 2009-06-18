@@ -7,21 +7,17 @@ void test_map_list_impl(size_t count, Map &map)
 	for (size_t n = 0; n < count; ++n)
 	{
 		int random = rand() % mod;
-		typename Map::iterator iter = map.find(random);
-		if (iter == map.end())
-		{
-			map.insert(make_pair(random, List(map.get_allocator())));
-		}
-		else
-		{
-			iter->second.push_back(n);
-		}
+		map[random].push_back(n);
 	}
+	//BOOST_FOREACH(typename Map::value_type &val, map)
+	//{
+	//	val.second.sort();
+	//}
 }
 
 struct Result
 {
-	double mono;
+	double local;
 	double standard;
 	double static_monotonic;
 };
@@ -45,7 +41,7 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 			}
 			storage.reset();
 		}
-		result.mono = timer.elapsed();
+		result.local = timer.elapsed();
 	}
 
 	// use standard allocator
@@ -79,7 +75,7 @@ Result test_map_list(size_t outter_loops, size_t inner_loops, monotonic::storage
 	}
 
 
-	cout << "test_map_list: " << inner_loops << ": " << result.mono << ", " << result.static_monotonic << ", " << result.standard  << endl;
+	cout << "test_map_list: " << inner_loops << ": " << result.local << ", " << result.static_monotonic << ", " << result.standard  << endl;
 	return result;
 }
 
@@ -91,18 +87,18 @@ void test_map_list_heap_stack()
 	typedef std::map<size_t, Result > Results;
 	Results results;
 
-	monotonic::local<> storage;
+	monotonic::local<monotonic::storage<1000000, 0> > storage;
 	for (size_t inner = 100; inner < inner_loops; inner += 1000)
 	{
 		results[inner] = test_map_list(outter_loops, inner, storage);
 	}
 
 	cout << "test_map_list" << endl;
-	cout << "count\t" << "mono\t" << "mono_static\t" << "std\t" << "std/mono\t" << "std/mono_static" << endl;
+	cout << "count\t" << "local\t" << "mono_static\t" << "std\t" << "std/local\t" << "std/mono_static" << endl;
 	BOOST_FOREACH(Results::value_type const &iter, results)
 	{
 		Result const &result = iter.second;
-		double mono_time = result.mono;
+		double mono_time = result.local;
 		double std_time = result.standard;
 		double static_time = result.static_monotonic;
 		double perc1 = 100.*std_time/mono_time;

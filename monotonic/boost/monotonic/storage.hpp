@@ -37,12 +37,17 @@ namespace boost
 				Link(Allocator const &al, size_t cap)
 					: capacity(cap), cursor(0), buffer(0), alloc(al)
 				{
+					Construct();
 				}
 				void Construct()
 				{
 					buffer = alloc.allocate(capacity);
 					if (buffer == 0)
 						capacity = 0;
+				}
+				size_t remaining() const
+				{
+					return capacity - cursor;
 				}
 				void reset()
 				{
@@ -74,7 +79,7 @@ namespace boost
 				}
 				friend bool operator<(Link const &A, Link const &B)
 				{
-					return A.capacity < B.capacity;
+					return A.remaining() < B.remaining();
 				}
 			};
 			typedef std::vector<Link, Al> Chain;	// maintained a priority-queue
@@ -134,8 +139,11 @@ namespace boost
 						return ptr;
 					}
 				}
-				size_t size = std::max(MinHeapIncrement, num_bytes*2);
-				return AddLink(size).Allocate(num_bytes, alignment);
+				AddLink(std::max(MinHeapIncrement, num_bytes*2));
+				void *ptr = chain.front().Allocate(num_bytes, alignment);
+				if (ptr == 0)
+					throw std::bad_alloc();
+				return ptr;
 			}
 
 			size_t max_size() const
@@ -162,13 +170,10 @@ namespace boost
 			}
 
 		private:
-			Link &AddLink(size_t size)
+			void AddLink(size_t size)
 			{
 				chain.push_back(Link(alloc, size));
-				Link &link = chain.back();
-				link.Construct();
-				std::make_heap(chain.begin(), chain.end());
-				return link;
+				std::push_heap(chain.begin(), chain.end());
 			}
 		};
 
