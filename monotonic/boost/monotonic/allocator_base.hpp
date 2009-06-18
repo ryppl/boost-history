@@ -54,7 +54,8 @@ namespace boost
 			template <bool is_monotonic_container, class T>
 			struct Create
 			{
-				static T Given(storage_base &)
+				template <class Storage>
+				static T Given(Storage &)
 				{
 					return T();
 				}
@@ -62,7 +63,8 @@ namespace boost
 			template <class T>
 			struct Create<true, T>
 			{
-				static T Given(storage_base &storage)
+				template <class Storage>
+				static T Given(Storage &storage)
 				{
 					return T(storage);
 				}
