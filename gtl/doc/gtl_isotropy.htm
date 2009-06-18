@@ -18,10 +18,10 @@
             <li><a href="index.htm">Polygon Library Main Page</a></li>
             <li><a href="gtl_design_overview.htm">Polygon 
 			Library Design Overview</a></li>
+			<li>Isotropy</li>
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
 			<li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -73,7 +73,7 @@ colors="#ffffff,#000000,#808080,#000000,#bbe0e3,#333399,#009999,#99cc00" />
 <p align="left">In computational geometry things are often symmetric and 
 invariant to direction and orientation.&nbsp; This invariance to direction is 
 called isotropy.&nbsp; In such situations it is convenient to parameterize 
-direction or orientation and write code that is invariant to direction or 
+direction or orientation and write code that is invariant to the direction or 
 orientation in which it is applied.&nbsp; To do this effectively we provide an 
 internally consistent set of isotropic data types in GTL to represent program 
 data that describes orientations and directions.&nbsp; These data types are:</p>
@@ -97,12 +97,35 @@ orientation_2d and pass a direction_1d:</p>
 <p align="left"><font face="Courier New">orientation_2d orient = HORIZONTAL;<br>
 direction_2d dir = orient.get_direction(direction_1d(HIGH));<br>
 assert(dir == EAST);</font></p>
+<p align="left">The motivation for providing isotropic data types is to 
+encourage programming at a higher level of abstraction where program behavior is 
+controlled by program data passed into function calls rather than flow control 
+syntax.&nbsp; Isotropic programming style is particularly applicable to working 
+with points, intervals and rectangles.&nbsp; Often times the implementation of 
+such logic is identical when implemented for the x or y coordinates, except that 
+the names of functions and data members are changed in a mechanical way leading 
+to code duplication and bloat that results in copy-paste programming errors and 
+maintenance problems where changes made to a given code block relating to x 
+coordiantes are not duplicated to the code block that refers to y.&nbsp; 
+Isotropy therefore represents an opportunity to refactor and improve the quality 
+of low level geometry code especially in regard to inter-relating coordinates, 
+points, intervals and rectangles.</p>
 <h2>direction_1d</h2>
 
 <p> 
 <p align="left">The direction_1d data type has two possible states.&nbsp; These 
 are the positive and negative directions on a continuum such as the number line.&nbsp;&nbsp; 
-These states can be described by one of several direction_1d_enum values:</p>
+These states can be described by one of several direction_1d_enum values:&nbsp; 
+We make clockwise and counterclockwise winding orientation of polygons a 
+direction 1d value instead of providing a separate winding_orientation data 
+type.&nbsp; This is because winding orientation can be thought of as positive 
+and negative directions in a 1d (although cyclic) space.&nbsp; We assign 
+counterclockwise to be the positive direction of travel in the 1d cyclic space 
+to conform with the mathematical convention frequently described as the &quot;right 
+hand rule&quot; which assigns positive normal value to counterclockwise and negative 
+normal value to clockwise as well as the common convention that counterclockwise 
+polygon winding corresponds to positive polygonal regions where as clockwise 
+polygon winding corresponds to hole (negative) polygonal regions.</p>
 <p align="left"><font face="Courier New">enum direction_1d_enum {LOW = 0, HIGH = 
 1,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 

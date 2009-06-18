@@ -22,8 +22,8 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
+			<li>Polygon 90 Concept</li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
 			<li><a href="gtl_polygon_45_concept.htm">Polygon 45 Concept</a></li>
 			<li><a href="gtl_polygon_45_with_holes_concept.htm">Polygon 45 With Holes Concept</a></li>
@@ -59,7 +59,7 @@
 </p><h1>Polygon 90 Concept</h1>
 
 <p> 
-<p>The polygon_90 concept type identifier is <font face="Courier New">
+<p>The polygon_90 concept tag is <font face="Courier New">
 polygon_90_concept</font></p>
 <p> 
 To register a user defined type as a model of  
@@ -259,6 +259,99 @@ input_end);<br>
 		object that models polygon_90.</td>
 	</tr>
 	</table>
+	<h1>Polygon 90 Data</h1>
+
+<p> 
+<p>The library provides a model of polygon 90 concept declared
+<font face="Courier New">
+template&lt;typename T&gt; poolygon_90_data </font>where T is the coordinate type.</p>
+<p>This data type is used internally when a Manhattan polygon is needed and is 
+available to the library user who finds it convenient to use a library polygon 
+data type instead of providing their own.&nbsp; The data type is implemented to 
+be convenient to use with the library traits.</p>
+<h2>Members</h2>
+<table border="1" width="100%" id="table2">
+	<tr>
+		<td width="586"><b><font face="Courier New">geometry_type</font></b></td>
+		<td><font face="Times New Roman">polygon_90_concept</font></td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">coordinate_type</font></b></td>
+		<td><font face="Times New Roman">T</font></td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">iterator_type</font></b></td>
+		<td>Iterator over vertices point_data&lt;T&gt; vertices of polygon</td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">compact_iterator_type</font></b></td>
+		<td><font face="Times New Roman">Iterator over non-redundant coordinates 
+		of the polygon, alternating x, y, x, y starting with an x, where each x 
+		corresponds to a vertical edge and each y corresponds to a horizontal 
+		edge.</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>polygon_90_data</b>()</font></td>
+		<td><font face="Times New Roman">Default constructs the </font>polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>polygon_90_data</b>(const 
+		poolygon_90_data* that)</font></td>
+		<td><font face="Times New Roman">Copy construct</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">polygon_90_data&amp; <b>operator=</b>(const 
+		poolygon_90_data&amp; that)</font></td>
+		<td>Assignment operator.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<b>&nbsp; 
+		<br> </b>polygon_90_data&amp; <b>operator=</b>(const T2&amp; that) const</font></td>
+		<td>Assign from an object that is a model of polygon 90.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">iterator_type <b>begin</b>() 
+		const</font></td>
+		<td>Get the begin iterator over vertices of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">iterator_type <b>end</b>() 
+		const</font></td>
+		<td>Get the end iterator over vertices of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">compact_iterator_type <b>
+		begin_compact</b>() const</font></td>
+		<td>Get the begin compact iterator over non-redundant coordinates of the 
+		polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">compact_iterator_type <b>
+		end_compact</b>() const</font></td>
+		<td>Get the end compact iterator over non-redundant coordinates of the 
+		polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">std::size_t <b>size</b>() const</font></td>
+		<td>Get the number of elements in the sequence stored to the polygon, 
+		usually equal to the number of edges of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename iT&gt;<b>&nbsp; 
+		<br> </b>void <b>set</b>(iT begin_points, iT end_points)</font></td>
+		<td>Sets the polygon to the iterator range of points.&nbsp; No check is 
+		performed to ensure the points describe a Manhattan figure, every other 
+		x and y value of the points is used to initialize the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename iT&gt;<b>&nbsp; 
+		<br> </b>void <b>set_compact</b>(iT begin_coords, iT end_coords)</font></td>
+		<td>Sets the polygon to the iterator range of coordinates.&nbsp; These 
+		coordinates correspond to the x values of vertical edges and y values of 
+		horizontal edges.&nbsp; It is expected that the sequence start with an x 
+		value and proceed x then y then x then y.</td>
+	</tr>
+</table>
 	<tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
     &nbsp;</td>

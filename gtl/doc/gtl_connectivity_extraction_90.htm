@@ -22,7 +22,6 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -33,6 +32,7 @@
 			<li><a href="gtl_polygon_90_set_concept.htm">Polygon 90 Set Concept</a></li>
 			<li><a href="gtl_polygon_45_set_concept.htm">Polygon 45 Set Concept</a></li>
 			<li><a href="gtl_polygon_set_concept.htm">Polygon Set Concept</a></li>
+			<li>Connectivity Extraction 90</li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
 			<li><a href="gtl_property_merge.htm">Property Merge</a></li>
@@ -72,7 +72,10 @@ work with, but potentially more expensive.&nbsp; Improving the interface to
 support more generic graph concepts is deferred to future work.<p>The following 
 is the declaration of the connectivity extraction algorithm.<p>
 <font face="Courier New">template &lt;typename coordinate_type&gt;<br>
-class connectivity_extraction_90;</font><h2>Member Functions</h2>
+class connectivity_extraction_90;</font><p>
+Example code <a href="gtl_connectivity_extraction_usage.htm">connectivity_extraction_usage.cpp</a> 
+		demonstrates using the connectivity extraction algorithm to build a 
+connectivity graph on geometry.<h2>Member Functions</h2>
 <table border="1" width="100%" id="table1">
 	<tr>
 		<td width="586"><b><font face="Courier New">connectivity_extraction_90</font></b><font face="Courier New">()</font></td>

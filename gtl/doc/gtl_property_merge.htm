@@ -22,7 +22,6 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -36,6 +35,7 @@
 			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
+			<li>Property Merge</li>
         </ul>
         <h3 class="navbar">Other Resources</h3>
         <ul>
@@ -70,9 +70,11 @@ inserted with the same property value.&nbsp; To store the result of this
 operation a fairly complex container is required.&nbsp; Resulting geometries are 
 associated with unique subsets of property values of the input geometry.&nbsp; 
 Two suitable containers for storing the result of a property merge operation 
-are:<p>&nbsp;std::map&lt;std::set&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; 
+are:<p>std::map&lt;std::set&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; 
 &gt;<br>
-std::map&lt;std::vector&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; &gt;<h2>Member Functions</h2>
+std::map&lt;std::vector&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; &gt;<p>
+Example code <a href="gtl_property_merge_usage.htm">property_merge_usage.cpp</a> 
+		demonstrates using the n-layer map-overlay algorithm on polygon data.<h2>Member Functions</h2>
 <table border="1" width="100%" id="table1">
 	<tr>
 		<td width="586"><b><font face="Courier New">property_merge</font></b><font face="Courier New">()</font></td>

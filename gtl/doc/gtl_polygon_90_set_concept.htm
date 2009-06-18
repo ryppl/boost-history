@@ -22,7 +22,6 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -30,6 +29,7 @@
 			<li><a href="gtl_polygon_45_with_holes_concept.htm">Polygon 45 With Holes Concept</a></li>
 			<li><a href="gtl_polygon_concept.htm">Polygon Concept</a></li>
 			<li><a href="gtl_polygon_with_holes_concept.htm">Polygon With Holes Concept</a></li>
+			<li>Polygon 90 Set Concept</li>
 			<li><a href="gtl_polygon_45_set_concept.htm">Polygon 45 Set Concept</a></li>
 			<li><a href="gtl_polygon_set_concept.htm">Polygon Set Concept</a></li>
 			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
@@ -59,17 +59,29 @@
 </p><h1>Polygon 90 Set Concept</h1>
 
 <p> 
-<p>The polygon 90 set concept type identifier is <font face="Courier New">
+<p>The polygon 90 set concept tag is <font face="Courier New">
 polygon_90_set_concept</font></p>
 <p> 
-<font face="Times New Roman">The semantic of a polygon_90_set is a zero or more 
-Manhattan geometry regions.</font><p>Mapping type traits for a user defined 
-polygon 90 set object is an advanced topic and covered by example code.&nbsp; 
-Users are recommended to use std::vector and std::list of user defined polygons 
+<font face="Times New Roman">The semantic of a polygon 90 set is zero or more 
+Manhattan geometry regions.</font><p> 
+<font face="Times New Roman">The motivation for providing the 
+polygon_90_set_concept is that it is a very common special case of planar 
+geometry which afford the implementation of a variety of optimizations on the 
+general planar geometry algorithms.&nbsp; Manhattan geometry processing by the 
+polygon_90_set_concept can be 100X faster than arbitrary angle polygon 
+manipulation.&nbsp; Because the performance benefits are so large and the 
+special case is important enough, the library provides these performance 
+benefits for those application domains that require them.</font><p>Users are recommended to use std::vector and std::list of user defined polygons 
 or library provided polygon_90_set_data&lt;coordinate_type&gt; objects.&nbsp; Lists 
 and vectors of models of polygon_90_concept or polygon_90_with_holes_concept or 
 rectangle_concept are automatically models of polygon_90_set_concept.</p>
 <h2>Operators</h2>
+<p>The return type of some operators is the <font face="Courier New">polygon_90_set_view</font> 
+operator template type.&nbsp; This type is itself a model of the polygon 90 set 
+concept, but furthermore can be used as an argument to the <font face="Courier New">polygon_90_set_data</font> 
+constructor and assignment operator.&nbsp; The operator template exists to 
+eliminate temp copies of intermediate results when Boolean operators are chained 
+together.</p>
 <table border="1" width="100%" id="table3">
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -588,7 +600,11 @@ template &lt;typename output_container&gt;<br>
 void <b>get</b>(output_container&amp; output) const</font></td>
 		<td>Expects a standard container of geometry objects.&nbsp; Will scan 
 		and eliminate overlaps.&nbsp; Converts polygon set geometry to objects 
-		of that type and appends them to the container.</td>
+		of that type and appends them to the container.&nbsp; Polygons will be 
+		output with counterclockwise winding, hole polygons will be output with 
+		clockwise winding.&nbsp; The last vertex of an output polygon is not the 
+		duplicate of the first, and the number of points is equal to the number 
+		of edges.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">
@@ -596,7 +612,9 @@ template &lt;typename output_container&gt;<br>
 void <b>get_polygons</b>(output_container&amp; output) const</font></td>
 		<td>Expects a standard container of polygon objects.&nbsp; Will scan and 
 		eliminate overlaps.&nbsp; Converts polygon set geometry to polygons and 
-		appends them to the container.</td>
+		appends them to the container.&nbsp; Polygons will have holes fractured 
+		out to the outer boundary along the positive direction of the scanline 
+		orientation of the polygon set.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">

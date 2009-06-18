@@ -15,15 +15,14 @@
     <div style="margin: 5px;">
         <h3 class="navbar">Contents</h3>
         <ul>
-            <li><a href="gtl_design_overview.htm">Polygon 
+            <li>Polygon Library Main Page</li>
+			<li><a href="gtl_design_overview.htm">Polygon 
 			Library Design Overview</a></li>
 			<li><a href="gtl_isotropy.htm">Isotropy</a></li>
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
             <li>
 			<a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li>
-			<a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -64,12 +63,25 @@
 <p>The boost polygon library provides algorithms focused on manipulating planar 
 polygon geometry data.&nbsp; Specific algorithms provided are the polygon set 
 operations (intersection, union, difference, disjoint-union) and related 
-algorithms such as polygon connectivity graph extraction and map-overlay.&nbsp; 
-These algorithms are of significant interest in GIS (Geospatial Information 
+algorithms such as polygon connectivity graph extraction, offsetting and map-overlay.&nbsp; 
+An example of the disjoint-union (XOR) of figure a and figure b is shown below 
+in figure c.&nbsp; 
+These so-called Boolean algorithms are of significant interest in GIS (Geospatial Information 
 Systems), VLSI CAD as well al other fields of CAD, and many more application 
-areas.</p>
-<p>The design philosophy behind the Polygon Library was to create an API for 
-invoking these library algorithms on user geometry data types that is maximally 
+areas, and providing them is the primary focus of this library.&nbsp; The 
+polygon library is not intended to cover all of computational geometry in its 
+scope, and provides a set of capabilities for working with coordinates, points, 
+intervals and rectangles that are needed to support implementing and interacting 
+with polygon data structures and algorithms.&nbsp; Specifically, 3d and 
+non-Cartesian/non-planar geometry is outside of the scope of the polygon 
+library.</p><img border="0" src="images/hand.png" width="837" height="277"><p>
+For additional detailed discussion of the library and its implementation 
+including benchmark comparisons with other open source alternatives please see 
+the <a href="GTL_boostcon2009.pdf">paper</a> and
+<a href="GTL_boostcon_draft03.htm">presentation</a> from
+<a href="http://www.boostcon.com/home">boostcon</a> 2009. </p>
+<p>The design philosophy behind the polygon library was to create an API for 
+invoking the library algorithms it provides on user geometry data types that is maximally 
 intuitive, minimally error-prone and easy to integrate into pre-existing 
 applications.&nbsp; C++-concepts based template meta-programming combined with 
 generic operator overloading meets these design goals without sacrificing the 
@@ -119,7 +131,7 @@ disjoint-union of that with polygon list <i>a</i> deflated by some integer amoun
 The end result is accumulated into a list of polygons with a union operation.&nbsp; 
 It is considerably more typing to describe this usage of the API than to code 
 it, and the description is not much clearer than the code itself.&nbsp; 
-Functions are named for what they do, or overloads of C++ operators that make it 
+Functions are named for what they do, or are overloads of C++ operators that make it 
 easy to infer from reading the code what to expect from it.&nbsp; Following the 
 principle of least astonishment, the inferred behavior should generally match 
 the actual behavior.&nbsp; Conventions such as argument ordering (output 

@@ -22,10 +22,10 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
+			<li>Polygon 45 Concept</li>
 			<li><a href="gtl_polygon_45_with_holes_concept.htm">Polygon 45 With Holes Concept</a></li>
 			<li><a href="gtl_polygon_concept.htm">Polygon Concept</a></li>
 			<li><a href="gtl_polygon_with_holes_concept.htm">Polygon With Holes Concept</a></li>
@@ -59,7 +59,7 @@
 </p><h1>Polygon 45 Concept</h1>
 
 <p> 
-<p>The polygon_45 concept type identifier is <font face="Courier New">
+<p>The polygon_45 concept tag is <font face="Courier New">
 polygon_45_concept</font></p>
 <p> 
 To register a user defined type as a model of  
@@ -250,6 +250,72 @@ input_end);<br>
 		object that models polygon_45.</td>
 	</tr>
 	</table>
+	<h1>Polygon 45 Data</h1>
+
+<p> 
+<p>The library provides a model of polygon 45 concept declared
+<font face="Courier New">
+template&lt;typename T&gt; poolygon_45_data </font>where T is the coordinate type.</p>
+<p>This data type is used internally when a 45-degree polygon is needed and is 
+available to the library user who finds it convenient to use a library polygon 
+data type instead of providing their own.&nbsp; The data type is implemented to 
+be convenient to use with the library traits.</p>
+<h2>Members</h2>
+<table border="1" width="100%" id="table2">
+	<tr>
+		<td width="586"><b><font face="Courier New">geometry_type</font></b></td>
+		<td><font face="Times New Roman">polygon_45_concept</font></td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">coordinate_type</font></b></td>
+		<td><font face="Times New Roman">T</font></td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">iterator_type</font></b></td>
+		<td>Iterator over vertices point_data&lt;T&gt; vertices of polygon</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>polygon_45_data</b>()</font></td>
+		<td><font face="Times New Roman">Default constructs the </font>polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>polygon_45_data</b>(const 
+		poolygon_45_data* that)</font></td>
+		<td><font face="Times New Roman">Copy construct</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">polygon_45_data&amp; <b>operator=</b>(const 
+		poolygon_45_data&amp; that)</font></td>
+		<td>Assignment operator.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<b>&nbsp; 
+		<br> </b>polygon_45_data&amp; <b>operator=</b>(const T2&amp; that) const</font></td>
+		<td>Assign from an object that is a model of polygon 45.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">iterator_type <b>begin</b>() 
+		const</font></td>
+		<td>Get the begin iterator over vertices of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">iterator_type <b>end</b>() 
+		const</font></td>
+		<td>Get the end iterator over vertices of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">std::size_t <b>size</b>() const</font></td>
+		<td>Get the number of elements in the sequence stored to the polygon, 
+		usually equal to the number of edges of the polygon.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename iT&gt;<b>&nbsp; 
+		<br> </b>void <b>set</b>(iT begin_points, iT end_points)</font></td>
+		<td>Sets the polygon to the iterator range of points.&nbsp; No check is 
+		performed to ensure the points describe corners that are multiples of 45 
+		degrees relative to the coordinate axis.</td>
+	</tr>
+</table>
 	<tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
     &nbsp;</td>

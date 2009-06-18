@@ -22,7 +22,6 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
 			<li><a href="gtl_rectangle_concept.htm">Rectangle Concept</a></li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
@@ -32,6 +31,7 @@
 			<li><a href="gtl_polygon_with_holes_concept.htm">Polygon With Holes Concept</a></li>
 			<li><a href="gtl_polygon_90_set_concept.htm">Polygon 90 Set Concept</a></li>
 			<li><a href="gtl_polygon_45_set_concept.htm">Polygon 45 Set Concept</a></li>
+			<li>Polygon Set Concept</li>
 			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
@@ -59,10 +59,10 @@
 </p><h1>Polygon Set Concept</h1>
 
 <p> 
-<p>The polygon set concept type identifier is <font face="Courier New">
+<p>The polygon set concept tag is <font face="Courier New">
 polygon_set_concept</font></p>
 <p> 
-<font face="Times New Roman">The semantic of a polygon_set is a zero or more 
+<font face="Times New Roman">The semantic of a polygon_set is zero or more 
 geometry regions.&nbsp; A Polygon Set Concept may be defined with floating point 
 coordinates, but a snap rounding distance of one integer unit will still be 
 applied, furthermore, geometry outside the domain where one integer unit is 
@@ -74,12 +74,18 @@ what the general algorithm would do, but obtained more efficiently.&nbsp; In the
 case that the data represented contains only Manhattan and 45-degree geometry a 
 runtime check will default to the faster 45-degree algorithm.&nbsp; The results 
 of which may differ slight from what the general algorithm would do because 
-non-integer intersections will be handled differently.</font><p>Mapping type traits for a user defined 
-polygon set object is an advanced topic and covered by example code.&nbsp; 
-Users are recommended to use std::vector and std::list of user defined polygons 
+non-integer intersections will be handled differently.</font><p>Users are recommended to use std::vector and std::list of user defined polygons 
 or library provided polygon_set_data&lt;coordinate_type&gt; objects.&nbsp; Lists 
 and vectors of models of polygon_concept or polygon_with_holes_concept are automatically models of polygon_set_concept.</p>
+<p>Example code <a href="gtl_custom_polygon_set.htm">custom_polygon_set.cpp</a> 
+		demonstrates mapping a user defined class to the library polygon_set_concept</p>
 <h2>Operators</h2>
+<p>The return type of some operators is the <font face="Courier New">polygon_set_view</font> 
+operator template type.&nbsp; This type is itself a model of the polygon 90 set 
+concept, but furthermore can be used as an argument to the <font face="Courier New">polygon_set_data</font> 
+constructor and assignment operator.&nbsp; The operator template exists to 
+eliminate temp copies of intermediate results when Boolean operators are chained 
+together.</p>
 <table border="1" width="100%" id="table5">
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
@@ -268,6 +274,9 @@ class polygon_set_data;</font></p>
 benefit from knowledge of the invariants enforced by the class are implemented 
 as member functions to provide them access to information about those 
 invariants.&nbsp; </p>
+<p>Example code <a href="gtl_polygon_set_usage.htm">polygon_set_usage.cpp</a> 
+demonstrates using 
+		the library provided polygon set data types and functions</p>
 <h2>Member Functions</h2>
 <table border="1" width="100%" id="table7">
 	<tr>
@@ -339,7 +348,14 @@ template &lt;typename output_container&gt;<br>
 void <b>get</b>(output_container&amp; output) const</font></td>
 		<td>Expects a standard container of polygons objects.&nbsp; Will scan 
 		and eliminate overlaps.&nbsp; Converts polygon set geometry to objects 
-		of the polygon type and appends them to the container.</td>
+		of the polygon type and appends them to the container.&nbsp; Polygons 
+		will be output with counterclockwise winding, hole polygons will be 
+		output with clockwise winding.&nbsp; The last vertex of an output 
+		polygon is the duplicate of the first, and the number of points is equal 
+		to the number of edges plus 1.&nbsp; If required by the output data 
+		type, polygons will have holes fractured out to the outer boundary along 
+		the positive y direction and off grid intersections on the outer 
+		boundary introduced by this fracture will be truncated downward.</td>
 	</tr>
 	<tr>
 		<td width="586">

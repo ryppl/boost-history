@@ -22,7 +22,7 @@
             <li><a href="gtl_coordinate_concept.htm">Coordinate Concept</a></li>
             <li><a href="gtl_interval_concept.htm">Interval Concept</a></li>
 			<li><a href="gtl_point_concept.htm">Point Concept</a></li>
-			<li><a href="gtl_point_3d_concept.htm">Point 3D Concept</a></li>
+			<li>Rectangle Concept</li>
 			<li><a href="gtl_polygon_90_concept.htm">Polygon 90 Concept</a></li>
 			<li><a href="gtl_polygon_90_with_holes_concept.htm">Polygon 90 With Holes Concept</a></li>
 			<li><a href="gtl_polygon_45_concept.htm">Polygon 45 Concept</a></li>
@@ -59,7 +59,7 @@
 </p><h1>Rectangle Concept</h1>
 
 <p> 
-<p>The rectangle concept type identifier is <font face="Courier New">
+<p>The rectangle concept tag is <font face="Courier New">
 rectangle_concept</font></p>
 <p> 
 To register a user defined type as a model of  
@@ -641,6 +641,85 @@ T(interval_horizontal, interval_vertical); }<br>
 		returns true.</td>
 	</tr>
 </table>
+	<h1>Rectangle Data</h1>
+
+<p> 
+<p>The library provides a model of rectangle concept declared
+<font face="Courier New">
+template&lt;typename T&gt; rectangle_data </font>where T is the coordinate type.</p>
+<p>This data type is used internally when a rectangle is needed and is available 
+to the library user who finds it convenient to use a library rectangle data type 
+instead of providing their own.&nbsp; The data type is implemented to be 
+convenient to use with the library traits.</p>
+<h2>Members</h2>
+<table border="1" width="100%" id="table2">
+	<tr>
+		<td width="586"><b><font face="Courier New">geometry_type</font></b></td>
+		<td><font face="Times New Roman">rectangle_concept</font></td>
+	</tr>
+	<tr>
+		<td width="586"><b><font face="Courier New">coordinate_type</font></b></td>
+		<td><font face="Times New Roman">T</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>interval_type</b></font></td>
+		<td><font face="Times New Roman">interval_data&lt;T&gt;</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>rectangle_data</b>(T xl, T 
+		yl, T xh, T yh)</font></td>
+		<td><font face="Times New Roman">Constructs a rectangle with four 
+		coordinates.</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
+		T2&gt;<b><br>
+		rectangle_data</b>(const T1&amp; horizontal_interval,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		const T2&amp; vertical_interval)</font></td>
+		<td><font face="Times New Roman">Constructs a rectangle with two objects 
+		that model interval.</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New"><b>rectangle_data</b>(const 
+		rectangle_data* that)</font></td>
+		<td><font face="Times New Roman">Copy construct</font></td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">rectangle_data&amp; <b>operator=</b>(const 
+		rectangle_data&amp; that)</font></td>
+		<td>Assignment operator.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<b> 
+		<br> </b>rectangle_data& <b> 
+		operator=</b>(const T2&amp; that) const</font></td>
+		<td>Assign from an object that is a model of rectangle.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<b> 
+		<br> </b>bool<b> 
+		operator==</b>(const T2&amp; that) const</font></td>
+		<td>Compare equality to an object that is a model of rectangle.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<b> 
+		<br> </b>bool<b> 
+		operator!=</b>(const T2&amp; that) const</font></td>
+		<td>Compare inequality to an object that is a model of rectangle.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">interval_data&lt;T&gt; <b>get</b>(orientation_2d 
+		orient) const</font></td>
+		<td>Get the interval in the given orientation.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T2&gt;<br>
+		void <b>set</b>(orientation_2d orient, const T2&amp; value)</font></td>
+		<td>Sets the interval in the given orientation to the value of an object 
+		that models interval.</td>
+	</tr>
+	</table>
 	<tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
     &nbsp;</td>
