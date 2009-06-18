@@ -24,7 +24,7 @@
 # elif defined(sun) || defined(__sun)
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_solaris.hpp>
-# elif (defined(__FreeBSD__) && (__FreeBSD__ >= 7.1))
+# elif (defined(__FreeBSD__) && (__FreeBSD_version >= 701000))
 #   define BOOST_HAS_PROCESSOR_BINDINGS 1
 #   include <boost/task/detail/bind_processor_freebsd.hpp>
 # else
