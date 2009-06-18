@@ -109,7 +109,7 @@ namespace boost
 				return &x;
 			}
 
-			pointer allocate(size_type num, allocator<void>::const_pointer /*hint*/ = 0)
+			pointer allocate(size_type num, const void * /*hint*/ = 0)
 			{
 				BOOST_ASSERT(num > 0);
 				BOOST_ASSERT(storage != 0);
