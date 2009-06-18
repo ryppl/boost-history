@@ -310,8 +310,8 @@ void write_complex_casing(
 std::fstream& operator << (std::fstream& file, const read_block& data)
 {
 	file << "\t{ ";
-	file << "0x" << data.first << ", ";
-	file << "0x" << data.last << ", ";
+	file << "0x" << std::hex << data.first << ", ";
+	file << "0x" << std::hex << data.last << ", ";
 	file << "\"" << data.name << "\" ";
 	file << "},\n";
 
@@ -437,7 +437,7 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
     
 	file << "\n\n#include <boost/assert.hpp>\n";
 	file << "#include <boost/static_assert.hpp>\n";
-	file << "#include <boost/unicode/unicode_properties.hpp>\n";
+	file << "#include <boost/unicode/ucd/properties.hpp>\n";
 	size_t n;
 	for (n = 0; n < nFiles; n++)
 	{
@@ -455,14 +455,14 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
 		file << tbl_block[n];
 	}
 
-    // write a terminating block
+    /*// write a terminating block
     read_block terminating_data;
     terminating_data.first = 0;
     terminating_data.last = 0;
     terminating_data.name = "";
-    file << terminating_data;
+    file << terminating_data;*/
 
-	file << "};\n\n\n";
+	file << "};\n\nconst size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
 
 	// ---- block table -------------------------------------------------------
 	
@@ -488,12 +488,12 @@ void write_block_enum(
 	const std::vector<read_block>& tbl_block, const char * dest_path_ucd_props)
 {
 	std::cout << " writing " << dest_path_ucd_props
-		<< "unicode_block_types.hpp" << std::endl;
+		<< "block_types.hpp" << std::endl;
 
 	// open file
 	std::stringstream fss;
 	fss << dest_path_ucd_props;
-	fss << "unicode_block_types.hpp";
+	fss << "block_types.hpp";
 
 	std::fstream file;
 	file.open(fss.str().c_str(), std::ios_base::out);
@@ -509,7 +509,7 @@ void write_block_enum(
 	
     file << "\n\n#ifndef BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
     file << "#define BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
-	file << "\n\nnamespace boost { namespace unicode { \n\n";
+	file << "\n\nnamespace boost { namespace unicode { namespace ucd { \n\n";
 
 	// ---- block table -------------------------------------------------------
 
@@ -517,6 +517,7 @@ void write_block_enum(
 	file << "\t\t{\n";
 	file << "\t\t\tenum type\n";
 	file << "\t\t\t{\n";
+    file << "\t\t\t\tnone = -1,\n\n";
 
 	for (size_t n = 0; n < tbl_block.size(); n++)
 	{
@@ -538,8 +539,10 @@ void write_block_enum(
 
 	file << "\t\t\t};\n";
 	file << "\t\t};\n";
+    
+    file << "\n\t\tconst char* as_string(block::type);\n\n";
 
-	file << "}}	// namespaces\n\n";
+	file << "}}} // namespaces\n\n";
     file << "#endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
 	
 	file.flush();
@@ -670,7 +673,7 @@ bool decompose_for_sort(const character_properties & props_char,
                     collation_entry sort_entry;
                     get_default_sort_characteristics(cp, sort_entry);
                     // this optimisation requires default to be of size 1
-                    assert(sort_entry.data.size() == 1); 
+                    //BUG assert(sort_entry.data.size() == 1); 
                     tbl_coll.push_back(sort_entry.data[0]);
                 }
                 break;
@@ -694,7 +697,7 @@ bool decompose_for_sort(const character_properties & props_char,
                 break;
             default:
                 // invalid enum
-                assert(iter_char->second.sort_type == (size_t)-1);
+                assert(iter_char->second.sort_type == (sort_type::type)-1);
                 break;
             }
         }

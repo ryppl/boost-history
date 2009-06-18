@@ -9,9 +9,10 @@
 
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
-#include <boost/unicode/unicode_properties.hpp>
+#include <boost/unicode/ucd/properties_types.hpp>
+#include <boost/unicode/ucd/detail/unichar_data.hpp>
 
-using namespace boost::unicode;
+using namespace boost::unicode::ucd;
 using namespace boost;
 
 #define element_count(tbl) (int)(sizeof(tbl)/ sizeof(tbl[0]))
@@ -55,9 +56,9 @@ static const char* g_category[] =
 
 BOOST_STATIC_ASSERT(element_count(g_category) == category::_count); // check g_category matched category
 
-const char* boost::unicode::as_string(boost::unicode::category::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::category::type type)
 {
-	if (type < 0 || type >= boost::unicode::category::_count)
+	if (type < 0 || type >= boost::unicode::ucd::category::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -82,9 +83,9 @@ static const char* g_join_type[] =
 
 BOOST_STATIC_ASSERT(element_count(g_join_type) == join_type::_count); // check g_join_type matched join_type
 
-const char* boost::unicode::as_string(boost::unicode::join_type::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::join_type::type type)
 {
-	if (type < 0 || type >= boost::unicode::join_type::_count)
+	if (type < 0 || type >= boost::unicode::ucd::join_type::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -123,9 +124,9 @@ static const char* g_bidi_class[] =
 
 BOOST_STATIC_ASSERT(element_count(g_bidi_class) == bidi_class::_count); // check g_bidi_class matched bidi_class
 
-const char* boost::unicode::as_string(boost::unicode::bidi_class::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type type)
 {
-	if (type < 0 || type >= boost::unicode::bidi_class::_count)
+	if (type < 0 || type >= boost::unicode::ucd::bidi_class::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -180,9 +181,9 @@ static const char* g_break_class[] =
 
 BOOST_STATIC_ASSERT(element_count(g_break_class) == break_class::_count); // check g_break_class matched break_class
 
-const char* boost::unicode::as_string(boost::unicode::break_class::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_class::type type)
 {
-	if (type < 0 || type >= boost::unicode::break_class::_count)
+	if (type < 0 || type >= boost::unicode::ucd::break_class::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -207,9 +208,9 @@ static const char* g_break_action[] =
 
 BOOST_STATIC_ASSERT(element_count(g_break_action) == break_action::_count); // check g_break_action matched break_action
 
-const char* boost::unicode::as_string(boost::unicode::break_action::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::type type)
 {
-	if (type < 0 || type >= boost::unicode::break_action::_count)
+	if (type < 0 || type >= boost::unicode::ucd::break_action::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -246,10 +247,10 @@ static const char* g_decomposition[] =
 
 BOOST_STATIC_ASSERT(element_count(g_decomposition) == decomposition_type::_count); // check g_decomposition matched decomposition
 
-const char* boost::unicode::as_string(
-	boost::unicode::decomposition_type::type type)
+const char* boost::unicode::ucd::as_string(
+	boost::unicode::ucd::decomposition_type::type type)
 {
-	if (type < 0 || type >= boost::unicode::decomposition_type::_count)
+	if (type < 0 || type >= boost::unicode::ucd::decomposition_type::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -278,10 +279,10 @@ static const char* g_grapheme_cluster_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_grapheme_cluster_break) == grapheme_cluster_break::_count); // check g_grapheme_cluster_break matched grapheme_cluster_break
 
-const char* boost::unicode::as_string(
-	boost::unicode::grapheme_cluster_break::type type)
+const char* boost::unicode::ucd::as_string(
+	boost::unicode::ucd::grapheme_cluster_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::grapheme_cluster_break::_count)
+	if (type < 0 || type >= boost::unicode::ucd::grapheme_cluster_break::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -308,10 +309,10 @@ static const char* g_word_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_word_break) == word_break::_count); // check g_word_break matched word_break
 
-const char* boost::unicode::as_string(
-	boost::unicode::word_break::type type)
+const char* boost::unicode::ucd::as_string(
+	boost::unicode::ucd::word_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::word_break::_count)
+	if (type < 0 || type >= boost::unicode::ucd::word_break::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -341,10 +342,10 @@ static const char* g_sentence_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_sentence_break) == sentence_break::_count); // check g_sentence_break matched sentence_break
 
-const char* boost::unicode::as_string(
-	boost::unicode::sentence_break::type type)
+const char* boost::unicode::ucd::as_string(
+	boost::unicode::ucd::sentence_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::sentence_break::_count)
+	if (type < 0 || type >= boost::unicode::ucd::sentence_break::_count)
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
@@ -371,7 +372,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::sort_type::type 
 	{
 		// we have taken the decision not to throw as these can be used at low level and
 		// there may be a high overhead catching for an invalid character
-		assert("oops - invalid enum");
+		BOOST_ASSERT("oops - invalid enum");
 		return stdErrorString;
 	}
 

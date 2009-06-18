@@ -9,13 +9,33 @@
 import boostbook : boostbook ;
 using quickbook ;
 
+import toolset ;
+toolset.using doxygen ;
+
 path-constant images : html ;
+
+import path ;
 
 boostbook quickbook
     :
-        users_manual.qbk
+        users_manual.qbk autodoc
     :
+		<format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/doc/html
         <format>pdf:<xsl:param>img.src.path=$(images)/
     ;
 
-
+doxygen autodoc 
+    :
+		[ path.glob-tree ../../../boost/unicode ../../../boost/iterator : *.hpp : .svn detail ]
+        ../../../boost/cuchar.hpp
+	:
+        <doxygen:param>EXTRACT_ALL=YES
+        <doxygen:param>"PREDEFINED=\"BOOST_UNICODE_DOXYGEN_INVOKED\""
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+	;

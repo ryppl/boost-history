@@ -1,112 +1,177 @@
-#ifndef BOOST_PACK_ITERATOR_HPP
-#define BOOST_BACK_ITERATOR_HPP
+#ifndef BOOST_PIPE_ITERATOR_HPP
+#define BOOST_PIPE_ITERATOR_HPP
 
 #include <boost/iterator/iterator_facade.hpp>
 #include <iterator>
 #include <vector>
 #include <utility>
-#include <boost/range.hpp>
 
-#include <iostream>
+#include <boost/range.hpp>
+#include <boost/assert.hpp>
+
+#include <boost/introspection/has_member_data.hpp>
+#include <boost/utility/enable_if.hpp>
 
 namespace boost
 {
+namespace detail
+{
+    BOOST_HAS_STATIC_MEMBER_DATA(const int, max_output)
+
+    template<typename P, typename Enable = void>
+    struct pipe_output_storage;
+
+    template<typename P>
+    struct pipe_output_storage<P, typename ::boost::disable_if< has_static_member_data_max_output<P> >::type>
+    {
+private:
+        typedef std::vector<typename P::output_type> Values;
+public:
+        typedef std::back_insert_iterator<Values> output_iterator;
+        
+        const typename P::output_value& operator[](size_t i) const
+        {
+            return values[i];
+        }
+        
+        size_t last_index() const
+        {
+            return values.size() - 1;
+        }
+        
+        output_iterator out()
+        {
+            values.clear();
+            return std::back_inserter(values);
+        }
+        
+        void update(output_iterator)
+        {
+        }
+        
+    private:
+        Values values;
+    };
+    
+    template<typename P>
+    struct pipe_output_storage<P, typename boost::enable_if< has_static_member_data_max_output<P> >::type>
+    {
+private:
+        typedef typename P::output_type Value;
+public:
+        typedef Value* output_iterator;
+        
+        const Value& operator[](size_t i) const
+        {
+            return values[i];
+        }
+        
+        size_t last_index() const
+        {
+            return last;
+        }
+        
+        output_iterator out()
+        {
+            return values;
+        }
+        
+        void update(output_iterator u)
+        {
+            last = u - values - 1;
+        }
+        
+    private:
+        Value values[P::max_output];
+        size_t last;
+    };
+}
 
 template<typename P>
-struct packer
+struct one_many_pipe : P
 {
-	packer(P p_) : p(p_)
+	one_many_pipe(P p_) : P(p_)
 	{
 	}
 	
-	typedef typename P::output_type output_type;
-	
-	template<typename Range, typename It>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		It
-	>
-	left(const Range& in, It out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	ltr(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		p(*boost::begin(in), out);
-		return std::make_pair(++boost::begin(in), out);
+		out = (*this)(*begin, out);
+		return std::make_pair(++begin, out);
 	}
 	
-	template<typename Range, typename OutputIterator>
-	std::pair<
-		typename boost::range_iterator<Range>::type,
-		OutputIterator
-	>
-	right(const Range& in, OutputIterator out)
+	template<typename In, typename Out>
+	std::pair<In, Out>
+	rtl(In begin, In end, Out out)
 	{
-		assert(!boost::empty(in));
+		BOOST_ASSERT(begin != end);
 		
-		p(*--boost::end(in), out);
-		return std::make_pair(--boost::end(in), out);
+		out = (*this)(*--end, out);
+		return std::make_pair(end, out);
 	}
-	
-private:
-	P p;
 };
 
 template<typename P>
-packer<P> make_packer(P p)
+one_many_pipe<P> make_one_many_pipe(P p)
 {
-	return packer<P>(p);
+	return one_many_pipe<P>(p);
 }
 
-template<typename It, typename Packer>
-struct pack_iterator
+template<typename It, typename Pipe>
+struct pipe_iterator
 	: boost::iterator_facade<
-		pack_iterator<It, Packer>,
-		typename Packer::output_type,
+		pipe_iterator<It, Pipe>,
+		typename Pipe::output_type,
 		std::bidirectional_iterator_tag,
-		const typename Packer::output_type
+		const typename Pipe::output_type
 	>
 {
-	typedef boost::iterator_facade<
-		pack_iterator<It, Packer>,
-		typename Packer::output_type,
-		std::bidirectional_iterator_tag,
-		const typename Packer::output_type
-	> base_type;
-	
-	pack_iterator(It begin_, It pos_, It end_, Packer p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
+	pipe_iterator(It begin_, It pos_, It end_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
 	{
-		if(pos != end)	
-			next_pos = p.left(std::make_pair(pos, end), std::back_inserter(values)).first;
+		if(pos != end)
+        {
+            std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+                p.ltr(pos, end, values.out());
+            next_pos = pair.first;
+            values.update(pair.second);
+        }
 	}
 	
 	It base() const
 	{
 		return pos;
 	}
-	
+
 private:
-	typedef typename Packer::output_type T;
+	typedef typename Pipe::output_type T;
 
 	friend class boost::iterator_core_access;
 
-	typename base_type::reference dereference() const
+	T dereference() const
 	{
 		return values[index];
 	}
 	
 	void increment()
 	{
-		if(index != values.size()-1)
+		if(index != values.last_index())
 		{
 			index++;
 		}
 		else
-		{
-			values.clear();
-			
+		{			
 			pos = next_pos;	
 			if(pos != end)
-				next_pos = p.left(std::make_pair(pos, end), std::back_inserter(values)).first;
+            {
+                std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+				    p.ltr(pos, end, values.out());
+                next_pos = pair.first;
+                values.update(pair.second);
+            }
 			index = 0;
 		}
 	}
@@ -118,16 +183,19 @@ private:
 			index--;
 		}
 		else
-		{	
-			values.clear();
-			
+		{
 			next_pos = pos;	
-			pos = p.right(std::make_pair(begin, pos), std::back_inserter(values)).first;
-			index = values.size()-1;
+            
+            std::pair<It, typename detail::pipe_output_storage<Pipe>::output_iterator> pair =
+                p.rtl(begin, pos, values.out());
+            pos = pair.first;
+            values.update(pair.second);
+            
+			index = values.last_index();
 		}
 	}
 	
-	bool equal(const pack_iterator& other) const
+	bool equal(const pipe_iterator& other) const
 	{
 		return pos == other.pos && index == other.index;
 	}
@@ -139,27 +207,70 @@ private:
 	It end;
 	size_t index;
 	
-	Packer p;
+	Pipe p;
 	
-	std::vector<T> values;
+	detail::pipe_output_storage<Pipe> values;
 };
 
 template<typename It, typename P>
-pack_iterator<It, P> make_pack_iterator(It begin, It pos, It end, P p)
+pipe_iterator<It, P> make_pipe_iterator(It begin, It pos, It end, P p)
 {
-	return pack_iterator<It, P>(begin, pos, end, p);
+	return pipe_iterator<It, P>(begin, pos, end, p);
 }
 
 template<typename Range, typename P>
 std::pair<
-	pack_iterator<typename boost::range_iterator<const Range>::type, P>,
-	pack_iterator<typename boost::range_iterator<const Range>::type, P>
-> make_pack_range(const Range& range, P p)
+	pipe_iterator<typename boost::range_iterator<const Range>::type, P>,
+	pipe_iterator<typename boost::range_iterator<const Range>::type, P>
+> make_pipe_range(const Range& range, P p)
 {
 	return std::make_pair(
-		make_pack_iterator(boost::begin(range), boost::begin(range), boost::end(range), p),
-		make_pack_iterator(boost::begin(range), boost::end(range), boost::end(range), p)
+		make_pipe_iterator(boost::begin(range), boost::begin(range), boost::end(range), p),
+		make_pipe_iterator(boost::begin(range), boost::end(range), boost::end(range), p)
 	);
+}
+
+template<typename It, typename Pipe>
+struct pipe_output_iterator
+{
+	pipe_output_iterator(It pos_, Pipe p_) : pos(pos_), p(p_)
+	{
+	}
+	
+	It base() const
+	{
+		return pos;
+	}
+	
+	pipe_output_iterator& operator*() const
+	{
+		return const_cast<pipe_output_iterator&>(*this);
+	}
+	
+	pipe_output_iterator& operator++()
+	{
+		return *this;
+	}
+	
+	pipe_output_iterator& operator++(int)
+	{
+		return *this;
+	}
+	
+	void operator=(typename Pipe::output_type val) const
+	{
+		pos = p.ltr(&val, &val + 1, pos).second;
+	}
+	
+private:	
+	It pos;
+	Pipe p;
+};
+
+template<typename OutputIterator, typename P>
+pipe_output_iterator<OutputIterator, P> make_pipe_output_iterator(OutputIterator out, P p)
+{
+	return pipe_output_iterator<OutputIterator, P>(out, p);
 }
 
 } // namespace boost

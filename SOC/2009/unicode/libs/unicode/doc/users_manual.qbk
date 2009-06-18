@@ -1,6 +1,6 @@
 [library Unicode
     [quickbook 1.3]
-    [version 1.0]
+    [version 0.1a2]
     [authors [Gaunard, Mathias]]
     [copyright 2009 Mathias Gaunard]
     [category string-text]
@@ -67,23 +67,26 @@ also reserves some code ranges, known as planes, meaning it really requires a st
 Since microprocessors usually deal with integers whose capacity are multiples of 8 bits, a naive usage would be to use 32 bits per code point,
 which is quite a waste, especially since most daily-used characters lie in the Basic Multilingual Plane, which fits on 16 bits.
 
-That is why variable-width encodings were designed, where each code point is represented by a variable number of *code values*.
+That is why variable-width encodings were designed, where each code point is represented by a variable number of *code units*, formely also known as code values.
 [endsect]
 
 [section Encodings]
 
-The UTF-X family of encodings encode a single *code point* into a variable number of *code values*, each of which does X bits.
+The UTF-X family of encodings encode a single *code point* into a variable number of *code units*, each of which does X bits.
 
 [heading UTF-32]
 
-This encoding is fixed-width, each code value is simply a code point.
+This encoding is fixed-width, each code unit is simply a code point.
+
+This encoding isn't really recommended
 
 [heading UTF-16]
 
-Every code point is encoded by one or two code values. If the code point lies within the BMP, it is represented by exactly that code point.
+Every code point is encoded by one or two code units. If the code point lies within the BMP, it is represented by exactly that code point.
 Otherwise, the code point is represented by two values which both lie in the surrogate category of Unicode code points.
 
-This is the recommended encoding for dealing with Unicode.
+This is the recommended encoding for dealing with Unicode internally for general purposes, since it has fairly low processing overhead
+compared to UTF-8 and doesn't waste as much memory as UTF-32.
 
 [heading UTF-8]
 
@@ -91,6 +94,8 @@ This encoding was designed to be compatible with legacy, 8-bit based, text manag
 
 Every code point within ASCII is represented as exactly that ASCII character, others are represented as a variable-sized sequence from
 two to four bytes, all of which are non-ASCII.
+
+This encoding is popular for data storage and interchange, but can also be useful for compatibility with byte-oriented string manipulation.
 
 [endsect]
 
@@ -116,190 +121,118 @@ The Normalized Form C is of a great interest, as it compresses every grapheme so
 the normalized form assumed by the XML standard.
 [endsect]
 
-[section Other]
-[endsect]
+[section Other operations]
 The Unicode standard also specifies various features such as a collation algorithm in __tr10__ for comparison and ordering of strings with
 a locale-specific criterion, as well as mechanisms to iterate over words, sentences and lines in __tr29__.
 
-Those features are not implemented by this library.
+Those features are not implemented by the current version of the library.
 [endsect]
 
-[section Core types]
-The library provides the following core types in the boost namespace:
+[section Character properties]
 
-``uchar8_t
-uchar16_t
-uchar32_t``
+Unicode also provides a database of character properties called the Unicode Character Database (UCD), which consists of a set of files describing
+the following properties:
 
-[^uchar/X/_t] is a /X/-bit character used as a *code value* in UTF-/X/.
+* Name.
+* General category (classification as letters, numbers, symbols, punctuation, etc.).
+* Other important general characteristics (white space, dash, ideographic, alphabetic, non character, deprecated, etc.).
+* Character shaping (bidi category, shaping, mirroring, width, etc.).
+* Case (upper, lower, title, folding; both simple and full).
+* Numeric values and types (for digits).
+* Script and block.
+* Normalization properties (decompositions, decomposition type, canonical combining class, composition exclusions, etc.).
+* Age (version of the standard in which the code point was first designated).
+* Boundaries (grapheme cluster, word, line and sentence).
+* Standardized variants.
 
-[endsect]
-
-[section Concepts]
-
-This library uses ranges to represent Unicode text, and thus refines the __boost_range__ concepts.
-
-[section =UnicodeRange=]
-refinement of =SinglePassRange=.
-
-A model of =UnicodeRange= is a range of Unicode *code values* whose *encoding is valid* and which is in *Normalized Form C*.
-As such, it does nothing more than a =SinglePassRange= except assume additional invariants.
-
-The encoding depends on the value type of the range: UTF-8 for =uchar8_t=, UTF-16 for =uchar16_t= and UTF-32 for =uchar32_t=.
-
-For any =X= model of =UnicodeRange=, the meta-function `boost::is_unicode_range<X>` evaluates to =true=.
-
-[endsect]
-[section =UnicodeCPRange=]
-refinement of =UnicodeRange=.
-
-An =UnicodeCPRange= is an =UnicodeRange= whose value type is =uchar32_t=. Every *code value* is thus a *code point*.
-
-For any =X= model of =UnicodeCPRange=, the meta-function `boost::is_unicode_cp_range<X>` evaluates to =true=.
-
-[endsect]
-[section =UnicodeGrapheme=]
-refinement of =SinglePassRange=.
-
-A model of =UnicodeGrapheme= is a range of Unicode *code points* that is a single *grapheme cluster* in *Normalized Form C*.
-
-For any =X= model of =UnicodeGrapheme=, the meta-function `boost::is_unicode_grapheme<X>` evaluates to =true=.
-
+The database is useful for Unicode implementation in general, as it is the base for most algorithms, but can also be of interest to the library user that wants to
+implement facilities not provided by the library core.
 
 [endsect]
 [endsect]
 
-[section Type erasure]
-Type erasure types can be constructed from objects of any type that model a certain concept. They wrap that object
-while erasing its type information.
+[section Linking the library]
 
-``template<typename Value>
-struct unicode_range;``
+As has been stated in [link unicode.introduction_to_unicode.character_properties Introduction to Unicode], several Unicode algorithms require the usage of a large
+database of information which, as of version 0.2 of this library, is 2.6 MB big on x86.
 
-`unicode_range<Value>` is a model of =UnicodeRange= whose value type is =Value=.
+For this reason, features that can avoid dependency on that database do so; it is not required for conversions for example. All algorithms that depend on the Unicode
+Character Database are documented as such. All other features are header-only.
 
-``struct unicode_grapheme;``
+[heading UCD generation]
 
-`unicode_grapheme` is a model of =UnicodeGrapheme=.
-[endsect]
+The Unicode Character Database can be generated using a parser present in the source distribution of this library to analyze
+[@http://www.unicode.org/Public/ the data provided by Unicode.org].
 
-[section Range adaptors]
+Note however that the parser itself needs to be updated whenever new properties are added, and the layout of the table adapted to accomodate for the storage
+required to encode those new properties; otherwise those properties will fallback to the default value.
 
-C++0x notation is used for simplification.
+[heading Binary compatibility]
 
-All iterator adaptors have a =base()= member function returning the adapted iterator.
+This library does not provide any kind of binary compatibility of the UCD so that applications compiled with version X of the library may actually
+link to version Y of the libray, with Y >= X, partially due to performance considerations.
 
-[section Putting invariants in place]
+This may change in the future once proper benchmarking has been done.
 
-``template<SinglePassRange Range>
-unspecified assume_utf8(Range&& range);``
+[heading Alternate databases]
 
-Assumes range =range= is a properly encoded UTF-8 range in Normalization Form C. The behaviour is undefined if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
-
-
-``template<SinglePassRange Range>
-unspecified make_utf8(Range&& range);``
-
-Assumes range =range= is a properly encoded UTF-8 range in Normalization Form C. Iterating the range may throw an exception if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
-
-``template<SinglePassRange Range>
-unspecified assume_utf16(Range&& range);``
-
-Assumes range =range= is a properly encoded UTF-16 range in Normalization Form C. The behaviour is undefined if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
-
-``template<SinglePassRange Range>
-unspecified make_utf16(Range&& range);``
-
-Assumes range =range= is a properly encoded UTF-16 range in Normalization Form C. Iterating the range may throw an exception if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
-
-``template<SinglePassRange Range>
-unspecified assume_utf32(Range&& range);``
-
-Assumes range =range= is a properly encoded UTF-32 range in Normalization Form C. The behaviour is undefined if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar32_t=.
-
-``template<SinglePassRange Range>
-unspecified make_utf32(Range&& range);``
-
-Assumes range =range= is a properly encoded UTF-32 range in Normalization Form C. Iterating the range throws an exception if it isn't.
-
-Return type is a model of =UnicodeRange= whose value type is =uchar32_t=.
+Future versions of this library may provide alternate implementations of this database as a thin layer over a database provided by another library or environment
+to prevent duplication of data.
 
 [endsect]
 
-[section On-the-fly UTF conversion]
+[section Conversions]
 
-[section Input]
-Read-only range adaptors.
+``auto concept Pipe<typename T>
+{
+    typename output_type = T::output_type;
+    static const int  T::max_output; // optional
 
-``template<UnicodeCPRange Range>
-unspecified as_utf16(Range&& range);``
+    template<typename In, typename Out>
+    std::pair<In, Out> T::ltr(In begin, In end, Out out);
+    
+    template<typename In, typename Out>
+    std::pair<In, Out> T::rtl(In begin, In end, Out out);
+};``
 
-Return type is a model of =UnicodeRange= whose value type is =uchar16_t=.
+models: [classref boost::unicode::u8_unpacker], [classref boost::unicode::u8_packer],
+[classref boost::unicode::u16_unpacker], [classref boost::unicode::u16_packer].
 
-``template<UnicodeCPRange Range>
-unspecified as_utf8(Range&& range);``
-
-Return type is a model of =UnicodeRange= whose value type is =uchar8_t=.
-
-``template<UnicodeRange Range>
-unspecified as_code_points(Range&& range);``
-
-Return type is a model of =UnicodeCPRange=.
-[endsect]
-
-[section Output]
-Output iterators that convert any *code point* to a sequence of *code values*.
-
-``template<typename OutputIterator>
-struct utf8_output_iterator;``
-
-``template<typename OutputIterator>
-struct utf16_output_iterator;``
+Then pipe_iterator for on-the-fly conversion.
 
 [endsect]
 
-[endsect]
+[section Boundaries]
 
-[section Iterating Graphemes]
-``template<UnicodeCPRange Range>
-unspecified as_graphemes(Range&& range);``
+``auto concept BoundaryChecker<typename T>
+{
+    template<typename Iterator>
+    bool T::operator()(Iterator begin, Iterator end, Iterator pos);
+};``
 
-Return type is a read-only range whose value type is a model of =UnicodeGrapheme=.
-[endsect]
+``auto concept BoundaryConsumer<typename T>
+{
+    template<typename Iterator>
+    Iterator T::ltr(Iterator begin, Iterator end);
+    
+    template<typename Iterator>
+    Iterator T::rtl(Iterator begin, Iterator end);
+}``
 
-[endsect]
+basically the same as Pipe without the output.
 
-[section Character proprieties]
+BoundaryConsumer can be defined in terms of BoundaryChecker.
 
-The library provides ways to check for certain *code point* proprieties within the =boost::unicode= namespace.
-All functions take any integer and return a boolean.
-
-``is_surrogate
-is_high_surrogate
-is_low_surrogate
-
-is_prepend
-is_hangul_syllable
-is_control
-is_grapheme_extend
-is_spacing_mark``
 
 [endsect]
 
-[section Normalization]
+[xinclude autodoc.xml]
 
-[section String algorithms]
+[section Acknowledgements]
 
-It is expected that algorithms would take models of =UnicodeRange= as input.
+Eric Niebler for mentoring this project, John Maddock for contributing preliminary on-the-fly UTF conversion, Graham Barnett and Rogier van Dalen for their work
+on Unicode character properties.
+
+Beman Dawes and other members of the mailing list for their suggestions and support.
 
 [endsect]

@@ -10,9 +10,12 @@
 #endif
 
 #include <boost/iterator/pipe_iterator.hpp>
-#include <boost/unicode/unicode_properties.hpp>
+#include <boost/unicode/surrogates.hpp>
 
 namespace boost
+{
+
+namespace unicode
 {
 
 namespace detail
@@ -68,6 +71,8 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 #endif
 	throw_exception(e);
 }
+
+} // namespace detail
 
 struct u16_packer
 {
@@ -155,18 +160,18 @@ struct u16_unpacker
 		if(unicode::is_low_surrogate(value))
 		{
 			if(it == begin)
-				invalid_utf_sequence(begin, end);
+				detail::invalid_utf_sequence(begin, end);
 			--it;
 			
 			char16 hi = *it;
          	if(!unicode::is_high_surrogate(hi))
-            	invalid_code_point(hi);
+            	detail::invalid_code_point(hi);
 			
 			value = code_point(hi, value);
       	}
       	// postcondition; result must not be a surrogate:
       	if(unicode::is_surrogate(value))
-			invalid_code_point(static_cast<char16>(value));
+			detail::invalid_code_point(static_cast<char16>(value));
 			
 		*out++ = value;
 		
@@ -297,56 +302,63 @@ struct u8_unpacker
 	}
 };
 
-} // namespace detail
+} // namespace unicode
 
+/** \brief test
+ * blabla
+ * \param range a big ass range
+ * \return something
+ * \throw bla
+ * \pre precondition
+ * \post postcondition **/
 template<typename Range>
 std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u16_packer> >,
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u16_packer> >
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u16_packer> >,
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u16_packer> >
 > make_u32_to_u16_range(const Range& range)
 {
-	return make_pipe_range(range, make_one_many_pipe(detail::u16_packer()));
+	return make_pipe_range(range, make_one_many_pipe(unicode::u16_packer()));
 }
 
 template<typename Range>
 std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, detail::u16_unpacker>,
-	pipe_iterator<typename range_iterator<const Range>::type, detail::u16_unpacker>
+	pipe_iterator<typename range_iterator<const Range>::type, unicode::u16_unpacker>,
+	pipe_iterator<typename range_iterator<const Range>::type, unicode::u16_unpacker>
 > make_u16_to_u32_range(const Range& range)
 {
-	return make_pipe_range(range, detail::u16_unpacker());
+	return make_pipe_range(range, unicode::u16_unpacker());
 }
 
 template<typename Range>
 std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u8_packer> >,
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<detail::u8_packer> >
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u8_packer> >,
+	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u8_packer> >
 > make_u32_to_u8_range(const Range& range)
 {
-	return make_pipe_range(range, make_one_many_pipe(detail::u8_packer()));
+	return make_pipe_range(range, make_one_many_pipe(unicode::u8_packer()));
 }
 
 template<typename Range>
 std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, detail::u8_unpacker>,
-	pipe_iterator<typename range_iterator<const Range>::type, detail::u8_unpacker>
+	pipe_iterator<typename range_iterator<const Range>::type, unicode::u8_unpacker>,
+	pipe_iterator<typename range_iterator<const Range>::type, unicode::u8_unpacker>
 > make_u8_to_u32_range(const Range& range)
 {
-	return make_pipe_range(range, detail::u8_unpacker());
+	return make_pipe_range(range, unicode::u8_unpacker());
 }
 
 template<typename OutputIterator>
-pipe_output_iterator<OutputIterator, one_many_pipe<detail::u8_packer> >
+pipe_output_iterator<OutputIterator, one_many_pipe<unicode::u8_packer> >
 make_u8_output_iterator(OutputIterator out)
 {
-	return make_pipe_output_iterator(out, make_one_many_pipe(detail::u8_packer()));
+	return make_pipe_output_iterator(out, make_one_many_pipe(unicode::u8_packer()));
 }
 
 template<typename OutputIterator>
-pipe_output_iterator<OutputIterator, one_many_pipe<detail::u16_packer> >
+pipe_output_iterator<OutputIterator, one_many_pipe<unicode::u16_packer> >
 make_u16_output_iterator(OutputIterator out)
 {
-	return make_pipe_output_iterator(out, make_one_many_pipe(detail::u16_packer()));
+	return make_pipe_output_iterator(out, make_one_many_pipe(unicode::u16_packer()));
 }
 
 } // namespace boost

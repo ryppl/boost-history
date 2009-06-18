@@ -27,7 +27,6 @@
 #endif
 #include <boost/tuple/tuple.hpp>
 
-#include <boost/unicode/unicode_properties.hpp>
 #include "read_character_properties.hpp"
 
 namespace boost { namespace unicode { namespace ucd {

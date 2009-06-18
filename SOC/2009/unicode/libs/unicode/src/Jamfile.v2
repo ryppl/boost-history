@@ -12,4 +12,4 @@ project
       <include>$(BOOST_ROOT)
     ;
 
-lib boost-unicode : unicode_properties.cpp ucd/uni_ucd_interface_impl_data.cpp ;
+lib boost-unicode : unicode_properties.cpp unicode_blocks.cpp ucd/uni_ucd_interface_impl_data.cpp ;

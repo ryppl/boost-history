@@ -23,12 +23,14 @@
 #define BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED
 
 
-namespace boost { namespace unicode { 
+namespace boost { namespace unicode { namespace ucd { 
 
 		struct block
 		{
 			enum type
 			{
+				none = -1,
+
 				basic_latin = 0x0,
 				latin_1_supplement = 0x80,
 				latin_extended_a = 0x100,
@@ -202,6 +204,9 @@ namespace boost { namespace unicode {
 				supplementary_private_use_area_b = 0x100000,
 			};
 		};
-}}	// namespaces
+
+		const char* as_string(block::type);
+
+}}} // namespaces
 
 #endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED

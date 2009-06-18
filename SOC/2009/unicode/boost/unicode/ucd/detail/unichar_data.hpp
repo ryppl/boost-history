@@ -1,48 +1,31 @@
-#ifndef BOOST_UNICODE_PROPRIETIES
-#define BOOST_UNICODE_PROPRIETIES
+#ifndef BOOST_UNICODE_UNICHAR_DATA_HPP
+#define BOOST_UNICODE_UNICHAR_DATA_HPP
 
-#include <boost/cuchar.hpp>
 #include <boost/assert.hpp>
-#include <boost/preprocessor/cat.hpp>
 #include <boost/mpl/int.hpp>
 
-#include <boost/unicode/unicode_properties_types.hpp>
+#include <boost/cuchar.hpp>
+#include <boost/unicode/ucd/properties_types.hpp>
 
 namespace boost
 {
 namespace unicode
 {
-
-inline bool is_high_surrogate(char32 v)
-{
-   return (v & 0xFC00u) == 0xd800u;
-}
-
-inline bool is_low_surrogate(char32 v)
-{
-   return (v & 0xFC00u) == 0xdc00u;
-}
-
-inline bool is_surrogate(char32 v)
-{
-   return (v & 0xF800u) == 0xd800;
-}
-
-namespace detail
-{
-    template<int X, int Y>
-    struct pow : boost::mpl::int_< X * pow<X, Y-1>::value >
-    {
-    };
-    
-    template<int X>
-    struct pow<X, 0> : boost::mpl::int_<1>
-    {
-    };
-}
-
 namespace ucd
 {
+    namespace detail
+    {
+        template<int X, int Y>
+        struct pow : boost::mpl::int_< X * pow<X, Y-1>::value >
+        {
+        };
+    
+        template<int X>
+        struct pow<X, 0> : boost::mpl::int_<1>
+        {
+        };
+    } // namespace detail
+
     /***************************************************************
     *** These structure are for internal use only and should not be
     **** used by any developer unless they are providing a custom
@@ -153,6 +136,8 @@ namespace ucd
     extern const boost::unicode::ucd::unichar_blocks_internal __uni_block_data[];
     extern const boost::unicode::ucd::unichar_sort_data_entry __uni_sort_entry[];
     
+    extern const size_t __uni_block_data_size;
+    
     inline const unichar_data_internal& get_data_internal(char32 ch)
     {
         BOOST_ASSERT(ch <= 0x10FFFD);
@@ -163,37 +148,6 @@ namespace ucd
     }
 
 } // namespace ucd
-
-#define BOOST_UNICODE_GET_PROPERTY_DEF(Name)                           \
-inline Name::type BOOST_PP_CAT(get_, Name)(char32 ch)                  \
-{                                                                      \
-    return (Name::type)ucd::get_data_internal(ch).Name;                \
-}
-
-BOOST_UNICODE_GET_PROPERTY_DEF(category)
-BOOST_UNICODE_GET_PROPERTY_DEF(join_type)
-BOOST_UNICODE_GET_PROPERTY_DEF(bidi_class)
-BOOST_UNICODE_GET_PROPERTY_DEF(decomposition_type)
-BOOST_UNICODE_GET_PROPERTY_DEF(break_class)
-BOOST_UNICODE_GET_PROPERTY_DEF(grapheme_cluster_break)
-BOOST_UNICODE_GET_PROPERTY_DEF(word_break)
-BOOST_UNICODE_GET_PROPERTY_DEF(sentence_break)
-
-inline bool is_unknown(char32 ch)
-{
-    return ucd::get_data_internal(ch).unknown_char;
-}
-
-inline const char* get_name(char32 ch)
-{
-    return ucd::get_data_internal(ch).name;
-}
-
-inline int get_combining_class(char32 ch)
-{
-    return ucd::get_data_internal(ch).combining;
-}
-
 } // namespace unicode
 } // namespace boost
 

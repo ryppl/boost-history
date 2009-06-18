@@ -22,7 +22,7 @@ UCA/allkeys.txt
 #include <vector>
 #include <map>
 
-#include <boost/unicode/unicode_properties.hpp>
+#include <boost/unicode/ucd/detail/unichar_data.hpp>
 #include "read_character_properties.hpp"
 
 namespace boost

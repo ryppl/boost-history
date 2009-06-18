@@ -1,6 +1,7 @@
 #include <iostream>
 #include <boost/foreach.hpp>
 #include <boost/unicode/utf_conversion.hpp>
+#include <boost/unicode/ucd/properties.hpp>
 
 template<typename Range>
 std::pair<
@@ -38,5 +39,6 @@ int main()
 	BOOST_FOREACH(char cp, make_reverse_range(boost::make_u32_to_u8_range(v)))
 		std::cout << std::hex << (int)(unsigned char)cp << std::endl;
         
-    std::cout << "\n" << boost::unicode::get_name(0xE9) << std::endl;
+    std::cout << "\n" << boost::unicode::ucd::get_name(0xE9) << std::endl;
+    std::cout << boost::unicode::ucd::as_string(boost::unicode::ucd::get_block(0xE9)) << std::endl;
 }
