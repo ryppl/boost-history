@@ -86,9 +86,6 @@ namespace boost
 			storage_base *storage;
 
 		public:
-			allocator_base() throw() 
-				: storage(&static_storage) { }
-
 			allocator_base(storage_base &store) throw() 
 				: storage(&store) { }
 
