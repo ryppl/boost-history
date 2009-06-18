@@ -44,7 +44,7 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		pool_type pool( pool_type::bind_to_processors() );
+		pool_type pool( tsk::poolsize( 5) );
 		
 		tsk::task< void > t1( long_running_fn);
 		tsk::task< int > t2(

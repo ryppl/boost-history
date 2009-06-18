@@ -146,7 +146,7 @@ int main( int argc, char *argv[])
 # if defined(BOOST_POSIX_API)
 	try
 	{
-		pool_type pool( pool_type::bind_to_processors() );
+		pool_type pool( tsk::poolsize( 5) );
 
 		int fd[2];
 		create_sockets( fd);
