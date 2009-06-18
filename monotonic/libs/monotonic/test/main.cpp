@@ -407,7 +407,8 @@ int main()
 
 	compare_memory_pool();
 	//test_mono_map();
-	test_map_list_heap_stack();
+	//test_mono_map();
+	//test_map_list_heap_stack();
 	//test_static_storage();
 	//run_all_tests();
 }
