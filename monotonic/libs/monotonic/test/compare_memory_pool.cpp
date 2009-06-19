@@ -7,9 +7,12 @@
 
 #include <iostream> 
 #include <iomanip> 
-#include <list>
 #include <numeric>
+
 #include <vector>
+#include <list>
+#include <map>
+#include <set>
 
 #include <boost/pool/pool_alloc.hpp>
 #undef max
