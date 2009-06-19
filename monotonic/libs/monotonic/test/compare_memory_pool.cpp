@@ -124,8 +124,8 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 
 	// test boost::fast_pool_allocator
 	{
-		boost::timer timer;
 		srand(42);
+		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
@@ -142,8 +142,8 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	// test boost::pool_allocator. 
 	if (1)
 	{
-		boost::timer timer;
 		srand(42);
+		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
