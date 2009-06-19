@@ -361,6 +361,14 @@
 			</FileConfiguration>
 		</File>
 		<File
+			RelativePath=".\results_gcc.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\results_msvc.txt"
+			>
+		</File>
+		<File
 			RelativePath=".\rope.cpp"
 			>
 			<FileConfiguration
