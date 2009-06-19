@@ -435,7 +435,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_front(const interval_type& inter_val, const CodomainT& co_val, const iterator& prior_, iterator& first_)
 {
 	// If the collision sequence has a right residual 'right_resid' is will
@@ -462,7 +462,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
-void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_main(interval_type& x_rest, const CodomainT& x_val, iterator& it, const iterator& lst_it)
 {
 	interval_type cur_interval;
@@ -478,7 +478,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
-void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
 {
     interval_type lead_gap = right_subtract(inter_val, it_->KEY_VALUE);
@@ -506,7 +506,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
-void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it)
 {
 	iterator prior_ = it; --prior_;
