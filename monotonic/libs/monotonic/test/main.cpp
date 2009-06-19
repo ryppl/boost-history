@@ -16,6 +16,7 @@
 #include <boost/monotonic/list.hpp>
 #include <boost/monotonic/map.hpp>
 #include <boost/monotonic/set.hpp>
+#include <boost/bind.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -368,6 +369,13 @@ extern "C" void straight_to_debugger(unsigned int, EXCEPTION_POINTERS*)
 
 int main()
 {
+	{
+		typedef std::list<int, monotonic::allocator<int> > List;
+		std::map<int, List, std::less<int>, monotonic::allocator<int> > map;
+		generate_n(inserter(map, map.begin()), 42, boost::bind(std::make_pair<int,List>, 123, List()));
+	}
+	monotonic::reset_storage();
+
 #ifdef WIN32
 	_set_se_translator(straight_to_debugger);
 #endif

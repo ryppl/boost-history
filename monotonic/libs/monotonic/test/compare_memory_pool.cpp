@@ -1,5 +1,8 @@
+#include <ios>
+#include <iomanip> 
 #include <list>
 #include <numeric>
+#include <vector>
 #include <boost/pool/pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
 
@@ -25,6 +28,28 @@ struct thrash_pool_sort
 	}
 };
 
+struct thrash_pool_iter
+{
+	struct Unaligned
+	{
+		int num;
+		char c;
+	};
+	template <class Pool>
+	int operator()(size_t length, Pool &pool) const
+	{
+		typedef typename Pool::allocator_type allocator;
+		std::vector<Unaligned, typename allocator::template rebind<Unaligned>::other> vec;
+		vec.resize(length);
+		int total = 0;
+		BOOST_FOREACH(Unaligned const &val, vec)
+		{
+			total += val.c;
+		}
+		return total;
+	}
+};
+
 struct PoolResult 
 {
 	double pool_elapsed;
@@ -34,9 +59,11 @@ struct PoolResult
 	double std_elapsed;
 	PoolResult()
 	{
-		pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = 0;
+		pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = -1;
 	}
 };
+
+typedef std::map<size_t, PoolResult> PoolResults;
 
 template <class Fun>
 PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
@@ -139,17 +166,10 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	return result;
 }
 
-typedef std::map<size_t, PoolResult> PoolResults;
-
 template <class Fun>
 PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iterations, Fun fun)
 {
 	PoolResults results;
-	results[5] = compare_memory_pool(count*100, 5, fun);
-	results[20] = compare_memory_pool(count*100, 20, fun);
-	results[50] = compare_memory_pool(count*100, 50, fun);
-	results[100] = compare_memory_pool(count*100, 100, fun);
-
 	for (size_t length = 10; length < max_length; length += max_length/num_iterations)
 	{
 		results[length] = compare_memory_pool(count, length, fun);
@@ -157,25 +177,28 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 	return results;
 }
 
-void compare_memory_pool()
+void PrintResults(PoolResults const &results)
 {
-	size_t num_outter_loops = 50000;
-	PoolResults r0 = compare_memory_pool(num_outter_loops, 1000, 10, thrash_pool());
-	cout << "thrash_pool" << endl;
-	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "mono\t" << "fp/mono\t" << endl;
-	BOOST_FOREACH(PoolResults::value_type const &iter, r0)
+	size_t w = 10;
+	cout << setw(0) << "count" << setw(w) << "fast_p" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fp/mono" << setw(w) << "fp/local" << endl;
+	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << endl;
-	}
-	PoolResults r1 = compare_memory_pool(500, 500, 10, thrash_pool_sort());
-	cout << "thrash_pool_sort" << endl;
-	cout << "count\t" << "fast_p\t" << "pool\t" << "std\t" << "mono\t" << "fp/mono\t" << endl;
-	BOOST_FOREACH(PoolResults::value_type const &iter, r1)
-	{
-		PoolResult const &result = iter.second;
-		cout << iter.first << '\t' << result.fast_pool_elapsed << '\t' << result.pool_elapsed << "\t" << result.std_elapsed << '\t' << result.mono_elapsed << '\t' << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%\t" << endl;
+		cout << setw(0) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.fast_pool_elapsed/result.local_mono_elapsed << "%" <<endl;
 	}
 }
 
+void compare_memory_pool()
+{
+	cout << "thrash_pool_iter" << endl;
+	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool_iter()));
+	cout << "thrash_pool" << endl;
+	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool()));
+	cout << "thrash_pool_sort" << endl;
+	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort()));
+}
+
 //EOF
+
+
+
