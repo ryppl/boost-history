@@ -94,8 +94,8 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.fast_pool_elapsed = timer.elapsed();
 	}
 
-	// test boost::pool_allocator. dont bother for larger sizes as it is known to be slow
-	if (1)//length < 3000)
+	// test boost::pool_allocator. 
+	if (1)
 	{
 		boost::timer timer;
 		srand(42);
@@ -134,7 +134,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	if (1)
 	{
 		srand(42);
-		monotonic::local<monotonic::storage<100000> > storage;
+		monotonic::local<> storage;
 		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
 		{
@@ -190,15 +190,13 @@ void PrintResults(PoolResults const &results)
 
 void compare_memory_pool()
 {
-	cout << "thrash_pool_iter" << endl;
-	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool_iter()));
 	cout << "thrash_pool" << endl;
 	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool()));
+	cout << "thrash_pool_iter" << endl;
+	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool_iter()));
 	cout << "thrash_pool_sort" << endl;
 	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort()));
 }
 
 //EOF
-
-
 
