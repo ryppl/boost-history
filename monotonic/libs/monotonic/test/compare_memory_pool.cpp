@@ -274,8 +274,9 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 }
 
 template <class Fun>
-PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iterations, Fun fun)
+PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun)
 {
+	cout << title << ": reps=" << count << ", len=" << max_length << ", iters=" << num_iterations;
 	PoolResults results;
 	for (size_t length = 10; length < max_length; length += max_length/num_iterations)
 	{
@@ -293,35 +294,30 @@ void PrintResults(PoolResults const &results)
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(6) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << endl;
+		cout << setw(6) << iter.first << setprecision(4) << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << endl;
 	}
+	cout << endl;
 }
 
 void compare_memory_pool()
 {
-	cout << "test_set_vector";
+	PrintResults(compare_memory_pool(100, 1000, 10, "thrash_pool_sort_list_int", thrash_pool_sort_list_int()));
+
 #ifdef WIN32
 	// boost::fast_pool seems bad at this test with MSVC, so do it less.
 	// this will result in less accurate results, but that doesnt matter because monotonic is orders of magnitudes faster
 	// than fast_pool here...
-	PrintResults(compare_memory_pool(10, 1000, 5, test_set_vector()));
+	PrintResults(compare_memory_pool(10, 1000, 5, "test_set_vector", test_set_vector()));
 #else
-	PrintResults(compare_memory_pool(500, 1000, 10, test_set_vector()));
+	PrintResults(compare_memory_pool(500, 1000, 10, "test_set_vector", test_set_vector()));
 #endif
-	cout << "test_dupe_list";
-	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_list()));
-	cout << "test_dupe_vector";
-	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_vector()));
-	cout << "thrash_pool";
-	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool()));
-	cout << "thrash_pool_iter";
-	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool_iter()));
-	cout << "thrash_pool_sort";
-	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_sort()));
-	cout << "thrash_pool_sort_list_int";
-	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_sort_list_int()));
-	cout << "thrash_pool_map_list_unaligned";
-	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_map_list_unaligned()));
+
+	PrintResults(compare_memory_pool(500, 2000, 10, "test_dupe_list", test_dupe_list()));
+	PrintResults(compare_memory_pool(500, 2000, 10, "test_dupe_vector", test_dupe_vector()));
+	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool", thrash_pool()));
+	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool_iter", thrash_pool_iter()));
+	PrintResults(compare_memory_pool(1000, 1000, 10, "thrash_pool_sort", thrash_pool_sort()));
+	PrintResults(compare_memory_pool(1000, 2000, 10, "thrash_pool_map_list_unaligned", thrash_pool_map_list_unaligned()));
 }
 
 //EOF
