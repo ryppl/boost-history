@@ -157,12 +157,17 @@ private:
     iterator fill_join_both(const value_type&);
 
     template<class Combiner>
-    void add_rest(const interval_type& x_itv, const CodomainT& x_val, 
-                  iterator& it, iterator& end_it);
+    void add_main(interval_type& inter_val, const CodomainT& co_val, 
+                  iterator& it_, const iterator& last_);
 
     template<class Combiner>
-    void add_rear(const interval_type& x_itv, const CodomainT& x_val, 
-                  iterator& it);
+    void add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
+
+    void add_front(const interval_type& inter_val, const CodomainT& co_val, 
+		             const iterator& prior_, iterator& first_);
+
+    template<class Combiner>
+    void add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
 
     template<class Combiner>
     void subtract_rest(const interval_type& x_itv, const CodomainT& x_val, 
@@ -413,107 +418,88 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     {
         // Detect the first and the end iterator of the collision sequence
         iterator fst_it = this->_map.lower_bound(inter_val),
-                 lst_it = insertion.ITERATOR,
-                 end_it = insertion.ITERATOR; end_it++;
+                 lst_it = insertion.ITERATOR;
         //assert(end_it == this->_map.upper_bound(inter_val));
 		iterator prior_ = fst_it;
 		if(prior_ != this->_map.begin())
 			--prior_;
 
-        interval_type fst_itv = (*fst_it).KEY_VALUE;
+		iterator it_ = fst_it;
+		interval_type rest_interval = inter_val;
 
-        // only for the first there can be a left_resid: a part of *it left of x
-        interval_type left_resid = right_subtract(fst_itv, inter_val);
-
-
-        iterator snd_it = fst_it; snd_it++; 
-
-        if(fst_it == lst_it) 
-        {
-            // first == last
-
-			if(!left_resid.empty())
-			{   //            [------------ . . .
-				// [left_resid---fst_it --- . . .
-				const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(left_resid);
-				//NOTE: Only splitting
-				iterator insertion_ = this->_map.insert(prior_, value_type(left_resid, fst_it->CONT_VALUE));
-				join_left(insertion_);
-			}
-
-			add_rear<Combiner>(inter_val, co_val, fst_it);
-        }
-        else
-        {
-			if(!left_resid.empty())
-			{   //            [------------ . . .
-				// [left_resid---fst_it --- . . .
-				const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(left_resid);
-				//NOTE: Only splitting
-				iterator insertion_ = this->_map.insert(prior_, value_type(left_resid, fst_it->CONT_VALUE));
-				join_left(insertion_);
-			}
-
-            interval_type lead_gap = right_subtract(inter_val, fst_itv);
-			if(!lead_gap.empty())
-				// [------ . . .
-				//     [-- it ...
-				fill_gap_join_left<Combiner>(prior_, value_type(lead_gap, co_val));
-
-			// . . . ------------ . . . addend interval
-			//      [-- fst_it --)      has a common part with the first overval
-			Combiner()(fst_it->CONT_VALUE, co_val);
-			if(Traits::absorbs_neutrons && fst_it->CONT_VALUE == Combiner::neutron())
-				this->_map.erase(fst_it);
-			else
-				join_left(fst_it);
-
-
-            // shrink interval
-            interval_type x_rest(inter_val);
-            x_rest.left_subtract(fst_itv);
-
-            add_rest<Combiner>(x_rest, co_val, snd_it, end_it);
-        }
+		add_front         (rest_interval, co_val, prior_, it_);
+        add_main<Combiner>(rest_interval, co_val, it_, lst_it);
+		add_rear<Combiner>(rest_interval, co_val, it_);
     }
 }
+
+
+template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::add_front(const interval_type& inter_val, const CodomainT& co_val, const iterator& prior_, iterator& first_)
+{
+	// If the collision sequence has a right residual 'right_resid' is will
+	// be split, to provide a standardized start of algorithms:
+	// The addend interval 'inver_val' covers the beginning of the collision sequence.
+
+    // only for the first there can be a left_resid: a part of *first_ left of inter_val
+    interval_type left_resid = right_subtract(first_->KEY_VALUE, inter_val);
+
+	if(!left_resid.empty())
+	{   //            [------------ . . .
+		// [left_resid---fst_it --- . . .
+		const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(left_resid);
+		//NOTE: Only splitting
+		iterator insertion_ = this->_map.insert(prior_, value_type(left_resid, first_->CONT_VALUE));
+		join_left(insertion_);
+	}
+
+	//POST:
+	// [----- inter_val ---- . . .
+	// ...[-- first_ --...
+}
+
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
 void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::add_rest(const interval_type& x_itv, const CodomainT& x_val, iterator& it, iterator& end_it)
+    ::add_main(interval_type& x_rest, const CodomainT& x_val, iterator& it, const iterator& lst_it)
 {
-    iterator nxt_it = it, prior_; nxt_it++;
-    interval_type x_rest = x_itv, left_gap, common, cur_itv;
-
-    while(nxt_it!=end_it)
+	interval_type cur_interval;
+    while(it!=lst_it)
     {
-        cur_itv = (*it).KEY_VALUE ;            
-        left_gap = right_subtract(x_rest, cur_itv);
-
-        Combiner()(it->CONT_VALUE, x_val);
-		if(!left_gap.empty())
-		{
-			prior_ = it; --prior_;
-			fill_gap_join_left<Combiner>(prior_, value_type(left_gap, x_val)); //A posteriori
-		}
-
-        if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
-            this->_map.erase(it++);
-        else
-        {
-            // after filling that gap there may be another joining opportunity
-            join_left(it);
-            it++;
-        }
-
+        cur_interval = it->KEY_VALUE ;
+		add_segment<Combiner>(x_rest, x_val, it);
         // shrink interval
-        x_rest.left_subtract(cur_itv);
-        nxt_it++;
+        x_rest.left_subtract(cur_interval);
     }
-
-    add_rear<Combiner>(x_rest, x_val, it);
 }
+
+
+template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+    template<class Combiner>
+void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
+{
+    interval_type lead_gap = right_subtract(inter_val, it_->KEY_VALUE);
+	if(!lead_gap.empty())
+	{
+		// [------ . . .
+		//     [-- it ...
+		iterator prior_ = it_; prior_--;
+		fill_gap_join_left<Combiner>(prior_, value_type(lead_gap, co_val));
+	}
+
+	// . . . ------------ . . . addend interval
+	//      [-- fst_it --)      has a common part with the first overval
+	Combiner()(it_->CONT_VALUE, co_val);
+	if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
+		this->_map.erase(it_++);
+	else
+		join_left(it_++);
+}
+
+
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
     template<class Combiner>
