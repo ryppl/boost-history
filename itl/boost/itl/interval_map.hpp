@@ -359,7 +359,7 @@ interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
         return this->_map.end();
 
 	std::pair<iterator,bool> insertion
-		= this->template map_insert<Combiner>(value.KEY_VALUE, co_val);
+		= this->template map_insert<Combiner>(value.KEY_VALUE, value.CONT_VALUE);
 
     join_neighbours(insertion.ITERATOR);
 
@@ -421,7 +421,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 			--prior_;
 
         interval_type fst_itv = (*fst_it).KEY_VALUE;
-        CodomainT cur_val     = (*fst_it).CONT_VALUE;
 
         // only for the first there can be a left_resid: a part of *it left of x
         interval_type left_resid = right_subtract(fst_itv, inter_val);
@@ -569,7 +568,6 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 		{
 			// [-------------)
 			//      [-- it ---right_resid)
-			//codomain_type cur_val = it->CONT_VALUE;
 			const_cast<interval_type&>(it->KEY_VALUE).right_subtract(right_resid);
 
 			//NOTE: This is NOT an insertion that has to take care for correct application of
