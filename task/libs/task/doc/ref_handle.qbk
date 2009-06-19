@@ -15,8 +15,6 @@
 	{
 		handle();
 
-		const id get_id() const;
-
 		void interrupt();
 
 		void interrupt_and_wait();
@@ -80,16 +78,6 @@
 
 [variablelist
 [[Effects:] [constructs an empty (invalid) handle]]
-[[Throws:] [Nothing]]
-]
-
-
-[heading Member function `get_id()`]
-
-	const id get_id() const
-
-[variablelist
-[[Effects:] [returns identifier of the associated task]]
 [[Throws:] [Nothing]]
 ]
 

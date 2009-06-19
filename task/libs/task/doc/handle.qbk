@@ -19,8 +19,6 @@ __handle__ represents an __act__. It will be returned by [link_async __fn_async_
 
 __handle__ implements an interface in order to check the state of computation and to transfer the result.
 
-* __fn_get_id__: return id of the associated __task_id__
-
 * __fn_is_ready__: test if result is set
 
 * __fn_has_value__: test if value-result is set
@@ -52,13 +50,16 @@ __handle__ implements an interface in order to check the state of computation an
 
 	void main()
 	{
+		boost::task::task< long > t(
+			boost::bind(
+				fibonacci,
+				10) );
+
 		boost::task::handle< long > h(
 			boost::task::async(
-				boost::task::make_task(
-					fibonacci,
-					10),
+				boost::move( t),
 				boost::task::new_thread() ) );
-		std::cout << "id == " << h.get_id() << "\n";
+
 		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
 		h.wait();
 		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
@@ -109,14 +110,18 @@ interruption requests [footnote see [@http://www.ddj.com/architect/207100682 'In
 
 	void main()
 	{
+		boost::task::task< long > t(
+			boost::bind(				// task, to be executed asynchronously
+				cooperative,
+				10) );
+
 		boost::task::handle< long > h(			// get handle associated with the task
 			boost::task::async(
-				boost::task::make_task(		// task, to be executed asynchronously
-					cooperative,
-					10),
+				boost::move( t),
 				boost::task::new_thread() ) );	// asynchronous executor
+
 		h.interrupt_and_wait();
-		std::cout << "id == " << h.get_id() << "\n";
+
 		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
 		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
 		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
@@ -139,11 +144,16 @@ __boost_task__ provides function __waitfor_all__ waits for all handles passed to
 		results.reserve( 10);
 
 		for ( int i = 0; i < 10; ++i)
+		{
+			boost::task::task< long > t(
+				boost::bind(
+					fibonacci,
+					10) );
+
 			results.push_back(
 				boost::task::async(
-					boost::task::make_task(
-						fibonacci,
-						10) ) ) );
+					boost::move( t) ) );
+		}
 
 		// wait until all tasks are ready
 		boost::task::waitfor_all( results.begin(), results.end() );
@@ -165,23 +175,28 @@ and __waitfor_any__ which returns if at least one of the passed handles becomes 
 ``
 	void main()
 	{
+		boost::task::task< long > t1(
+			boost::bind(
+				cooperative,
+				10) );
+		boost::task::task< long > t2(
+			boost::bind(
+				cooperative,
+				7) );
+		 boost::task::task< long > t3(
+			boost::bind(
+				cooperative,
+				5) );
+
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::task::make_task(
-					cooperative,
-					10) ) );
-
+				boost::move( t1) ) );
 		boost::task::handle< long > h2(
 			boost::task::async(
-				boost::task::make_task(
-					cooperative,
-					7) ) );
-
+				boost::move( t2) ) );
 		boost::task::handle< long > h3(
 			boost::task::async(
-				boost::task::make_task(
-					cooperative,
-					5) ) );
+				boost::move( t3) ) );
 
 		// wait for any task becomes ready
 		boost::task::waitfor_any( h1, h2, h3);

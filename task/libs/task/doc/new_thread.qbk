@@ -32,12 +32,16 @@ solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html
 
 	void main()
 	{
+		boost::task::task< long > t(
+			boost::bind(
+				fibonacci,
+				10) );
+
 		boost::task::handle< long > h(
 			boost::task::async(
-				boost::task::make_task(
-					fibonacci,
-					10),
+				boost::move( t),
 				boost::task::new_thread() ) );
+
 		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
@@ -50,14 +54,17 @@ In the example below both `a_function()` and `another_function()` are executed s
 for synchronous execution)!
 
 ``
+	boost::task::task< void > t1( a_function);
+	boost::task::task< void > t2( another_function);
+
 	boost::task::async(
-		boost::task::make_task( a_function),
+		boost::move( t1),
 		boost::task::new_thread() ) );
-    
 	boost::task::async(
-		boost::task::make_task( another_function),
+		boost::move( t2),
 		boost::task::new_thread() ) );
 ``
+
 
 [endsect] 
  

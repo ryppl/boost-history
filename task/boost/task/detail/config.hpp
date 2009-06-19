@@ -19,7 +19,7 @@
 #   pragma warn -8066 // Unreachable code
 # endif
 
-# if defined(BOOST_TASK_DYN_DLL) || defined(BOOST_ALL_DYN_LINK)
+# if defined(BOOST_ALL_DYN_LINK) || defined(BOOST_TASK_DYN_LINK)
 #   undef  BOOST_TASK_USE_LIB
 #   define BOOST_TASK_USE_DLL
 # endif

@@ -45,17 +45,21 @@ No futher tasks can be submitted.
 
 		...
 
+		boost::task::task< long > t1(
+			boost::bind( fibonacci_fn, 10) );
+		boost::task::task< long > t2(
+			boost::bind( fibonacci_fn, 5) );
+
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::task::make_task( fibonacci_fn, 10),
-				pool) );	// execution-policy
-
+				boost::move( t1),
+				pool) );
 		boost::task::handle< long > h2(
 			boost::task::async(
-				boost::task::make_task( fibonacci_fn, 5),
-				pool) );	// execution-policy
+				boost::move( t2),
+				pool) );
 
-		pool.shutdown();
+		pool.shutdown();	// waits until all pending tasks are finished
 
 		std::cout << "fibonacci(10) == " << h1.get() << "\n";
 		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
@@ -97,15 +101,19 @@ The function __fn_shutdown_now__ closes the pool, interrupts and then joins all 
 
 		...
 
+		boost::task::task< long > t1(
+			boost::bind( fibonacci_fn, 10) );
+		boost::task::task< long > t2(
+			boost::bind( fibonacci_fn, 5) );
+
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::task::make_task( fibonacci_fn, 10),
-				pool) );	// execution-policy
-
+				boost::move( t1),
+				pool) );
 		boost::task::handle< long > h2(
 			boost::task::async(
-				boost::task::make_task( fibonacci_fn, 5),
-				pool) );	// execution-policy
+				boost::move( t2),
+				pool) );
 
 		pool.shutdown_now();
 

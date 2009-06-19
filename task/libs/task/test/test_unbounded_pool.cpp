@@ -36,6 +36,7 @@ public:
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool1( tsk::poolsize( 3) );
+		BOOST_CHECK( pool1);
 		BOOST_CHECK_EQUAL( pool1.size(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool1.idle(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool1.active(), std::size_t( 0) );
@@ -43,16 +44,19 @@ public:
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
 		> pool2;
+		BOOST_CHECK( ! pool2);
 		BOOST_CHECK_THROW( pool2.size(), tsk::pool_moved);
 		BOOST_CHECK_THROW( pool2.idle(), tsk::pool_moved);
 		BOOST_CHECK_THROW( pool2.active(), tsk::pool_moved);
 
 		pool2 = boost::move( pool1);
-		
+
+		BOOST_CHECK( ! pool1);
 		BOOST_CHECK_THROW( pool1.size(), tsk::pool_moved);
 		BOOST_CHECK_THROW( pool1.idle(), tsk::pool_moved);
 		BOOST_CHECK_THROW( pool1.active(), tsk::pool_moved);
 
+		BOOST_CHECK( pool2);
 		BOOST_CHECK_EQUAL( pool2.size(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool2.idle(), std::size_t( 3) );
 		BOOST_CHECK_EQUAL( pool2.active(), std::size_t( 0) );

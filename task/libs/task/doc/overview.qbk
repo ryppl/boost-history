@@ -11,13 +11,11 @@
 __boost_task__ provides an framework for parallel execution of tasks (a task is a small unit of code that can be executed independently).
 
 * __task__, __callable__ representing a fine-grained work-item:
-	* __fn_get_id__ returning an identifier
 	* __fn_operator__ to execute the fine-grained work-item
 	* __fn_get_future__ providing an __act__ in order to pass the result (values, exceptions) back to initiator
 
 * __handle__, __act__ of the asynchronously executed task:
-	* __fn_get_id__ for identifying associated task
-	* __fn_interrupt__, interrupt_and_wait() allow to cancel an cooperative task
+	* __fn_interrupt__, __fn_interrupt_and_wait__, ... allow to cancel an cooperative task
 	* interface of __act__:
 		* __fn_get__ retrieve value or exception of task execution
 		* __fn_is_ready__ test if task was executed
@@ -30,11 +28,10 @@ __boost_task__ provides an framework for parallel execution of tasks (a task is 
 * __ep__ models:
 	* __own_thread__: executes task in current thread.
 	* __new_thread__: executes task in a newly created thread (thread will be destroyed after)
-	* __default_pool__: task gets executed by a __worker_thread__ of the default __thread_pool__
 	* __as_sub_task__: executes task in newly created thread or in a pool of __worker_threads__ depending on whether current task is already executed in a pool
-	* custom pool: task gets executed by a __worker_thread__ of a custom __thread_pool__ (for instance with priority scheduling)
+	* __thread_pool__: task gets executed by a __worker_thread__ of a custom __thread_pool__ (for instance with priority or smart scheduling)
 
-* __thread_pools__ with work-stealing algorithm
+* __thread_pools__ with work-stealing algorithm and for/join semantics
 
 * support of forking and joining sub-tasks
 	* better performance
@@ -78,18 +75,22 @@ Used namespaces are:
 
 	void main()
 	{
+		boost::task< long > t1(
+			boost::bind(
+				fibonacci,
+				10) );
+		boost::task< long > t2(
+			boost::bind(
+				fibonacci,
+				5) );
+
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::task::make_task(
-					fibonacci,
-					10) ) );
+				boost::move( t1), tsk::new_thread() );
 		boost::task::handle< long > h2(
 			boost::task::async(
-				boost::task::make_task(
-					fibonacci,
-					5) ) );
-		std::cout << "h1: id == " << h1.get_id() << "\n";
-		std::cout << "h2: id == " << h2.get_id() << "\n";
+				boost::move( t2), tsk::new_thread() );
+
 		std::cout << "h1: is ready == " << std::boolalpha << h1.is_ready() << "\n";
 		std::cout << "h2: is ready == " << std::boolalpha << h2.is_ready() << "\n";
 		boost::task::waitfor_all( h1, h2);
@@ -133,13 +134,12 @@ __boost_task__ has been tested on the following platforms and compilers:
 *  Windows XP Professional (x86), MSVC 9.0
 
 
-[heading How to build]
+[heading How to build and install]
 
 * download the sources form [@http://www.boostpro.com/vault/index.php boost-vault] (section ['Concurrent Programing]) or the latest development version from 
 [@https://svn.boost.org/svn/boost/sandbox/task/ boost-sandbox]
 * extract the archive into the boost-source directory
-* change directory to <boost-source>/libs/task/build
-* call `bjam toolset=<compiler-name>`
+* call `bjam toolset=<compiler-name> --with-task install` in order to install __boost_task__
 
 
 [endsect]

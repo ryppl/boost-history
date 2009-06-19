@@ -29,20 +29,34 @@ namespace tsk = boost::task;
 class test_task
 {
 public:
-	// check moved task
+	// check vaild task
 	void test_case_1()
 	{
 		tsk::task< int > t1(
 			boost::bind(
 				fibonacci_fn,
 				10) );
+		tsk::task< int > t2;
+		BOOST_CHECK( t1);
+		BOOST_CHECK( ! t2);
+	}
+
+	// check moved task
+	void test_case_2()
+	{
+		tsk::task< int > t1(
+			boost::bind(
+				fibonacci_fn,
+				10) );
+		BOOST_CHECK( t1);
 		tsk::task< int > t2( boost::move( t1) );
+		BOOST_CHECK( ! t1);
 		BOOST_CHECK_THROW( t1(), tsk::task_moved);
 		BOOST_CHECK_NO_THROW( t2() );
 	}
 
 	// check execute twice
-	void test_case_2()
+	void test_case_3()
 	{
 		tsk::task< int > t1(
 			boost::bind(
@@ -53,7 +67,7 @@ public:
 	}
 
 	// check swap
-	void test_case_3()
+	void test_case_4()
 	{
 		tsk::task< int > t1(
 			boost::bind(
@@ -76,6 +90,7 @@ boost::unit_test::test_suite * init_unit_test_suite( int, char* [])
 	test->add( BOOST_CLASS_TEST_CASE( & test_task::test_case_1, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_task::test_case_2, instance) );
 	test->add( BOOST_CLASS_TEST_CASE( & test_task::test_case_3, instance) );
+	test->add( BOOST_CLASS_TEST_CASE( & test_task::test_case_4, instance) );
 
 	return test;
 }

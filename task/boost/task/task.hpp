@@ -10,6 +10,7 @@
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
 #include <boost/thread.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
@@ -29,7 +30,7 @@ template< typename R >
 class task_base
 {
 protected:
-	bool			done_;
+	bool	done_;
 
 protected:
 	promise< R >	prom_;
@@ -179,28 +180,25 @@ private:
 
 	friend struct as_sub_task;
 
+	struct dummy;
+
 	shared_ptr< detail::task_base< R > >	task_;
 
 public:
 	task()
 	: task_()
 	{}
-	
-	template< typename Fn >
-	explicit task( Fn const& fn)
-	: task_( new detail::task_wrapper< R, Fn >( fn) )
-	{}
-        
+
 	explicit task( R( * fn)())
 	: task_( new detail::task_wrapper< R, R( *)() >( fn) )
 	{}
-        
+
+# if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename Fn >
-	explicit task( boost::detail::thread_move_t< Fn > fn)
+	task( Fn && fn)
 	: task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 
-# if defined(BOOST_HAS_RVALUE_REFS)
 	task( task && other)
 	: task_()
 	{ task_.swap( other.task_); }
@@ -215,6 +213,22 @@ public:
 	task && move()
 	{ return static_cast< task && >( * this); }
 # else
+#ifdef BOOST_NO_SFINAE
+	template< typename Fn >
+	explicit task( Fn fn)
+	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	{}
+#else
+	template< typename Fn >
+	explicit task( Fn fn, typename disable_if< boost::is_convertible< Fn &, boost::detail::thread_move_t< Fn > >, dummy * >::type = 0)
+	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	{}
+#endif
+	template< typename Fn >
+	task( boost::detail::thread_move_t< Fn > fn)
+	: task_( new detail::task_wrapper< R, Fn >( fn) )
+	{}
+
 	task( boost::detail::thread_move_t< task > other)
 	: task_()
 	{ task_.swap( other->task_); }
@@ -226,6 +240,9 @@ public:
 	    return * this;
 	}
 
+	boost::detail::thread_move_t< task > move()
+	{ return boost::detail::thread_move_t< task >( * this); }
+
 	operator boost::detail::thread_move_t< task >()
 	{ return boost::detail::thread_move_t< task >( * this); }
 # endif
@@ -236,9 +253,6 @@ public:
 			throw task_moved();
 		return task_->get_future();
 	}
-
-	void swap( task & other) // throw()
-	{ task_.swap( other.task_); }
 
 	void operator()()
 	{
@@ -254,6 +268,17 @@ public:
 			throw task_moved();
 		task_->set_wait_callback( cb);
 	}
+
+	typedef typename shared_ptr< detail::task_base< R > >::unspecified_bool_type	unspecified_bool_type;
+
+	operator unspecified_bool_type() const // throw()
+	{ return task_; }
+
+	bool operator!() const // throw()
+	{ return ! task_; }
+
+	void swap( task & other) // throw()
+	{ task_.swap( other.task_); }
 };
 }
 

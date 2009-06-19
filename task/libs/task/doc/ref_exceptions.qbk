@@ -125,3 +125,147 @@ heading Constructor]
 
 [endsect]
 
+
+[section:task_unitialized Class `task_unitialized`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class task_unitialized : public std::logic_error
+	{
+	public:
+		task_unitialized();
+	};
+``
+
+[heading Constructor]
+
+	task_unitialized()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::task_unitialized` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:task_already_executed Class `task_already_executed`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class task_already_executed : public std::logic_error
+	{
+	public:
+		task_already_executed();
+	};
+``
+
+[heading Constructor]
+
+	task_already_executed()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::task_already_executed` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:task_moved Class `task_moved`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class task_moved : public std::logic_error
+	{
+	public:
+		task_moved();
+	};
+``
+
+[heading Constructor]
+
+	task_moved()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::task_moved` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:broken_task Class `broken_task`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class broken_task : public std::logic_error
+	{
+	public:
+		broken_task();
+	};
+``
+
+[heading Constructor]
+
+	broken_task()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::broken_task` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:task_interrupted Class `task_interrupted`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class task_interrupted : public std::runtime_error
+	{
+	public:
+		task_interrupted();
+	};
+``
+
+[heading Constructor]
+
+	task_interrupted()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::task_interrupted` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+
+
+[section:pool_moved Class `pool_moved`]
+
+``
+	#include <boost/task/exceptions.hpp>
+
+	class pool_moved : public std::logic_error
+	{
+	public:
+		pool_moved();
+	};
+``
+
+[heading Constructor]
+
+	pool_moved()
+
+[variablelist
+[[Effects:] [Constructs a `boost::task::pool_moved` instance.]]
+[[Throws:] [Nothing]]
+]
+
+[endsect]
+

@@ -11,29 +11,41 @@
 	#include <boost/task/task.hpp>
 
 	template< typename R >
-	class task
+	class task : private noncopyable
 	{
 	public:
-		template< typename Fn >
-		task( Fn const& fn);
+		task();
 
-		const id get_id() const;
+		task( R( * fn)());
+
+		template< typename Fn >
+		task( Fn fn);
+
+		task( task && t);
+		task & operator=( task && t);
+
+		task && move();
 
 		shared_future< R > & get_future();
 
-		void swap( task< R > & other) // throw();
+		void operator()();
 
-		void operator()() // throw();
+		template< typename Cb >
+		void set_wait_callback( Cb const& cb);
+
+		void swap( task< R > & other); // throw()
 	};
-
-	template< typename Fn, typename A0 >
-	task< R >::type > make_task( Fn fn, A0 a0);
-
-	...
-
-	template< typename Fn, typename A0, ..., typename A10 >
-	task< R >::type > make_task( Fn fn, A0 a0, ..., A10 a10);
 ``
+
+[heading Default constructor]
+
+	task()
+
+[variablelist
+[[Effects:] [constructs an unitialized `boost::task::task< R >`]]
+[[Throws:] [Nothing]]
+]
+
 
 [heading Constructor]
 
@@ -41,17 +53,47 @@
 	task( Fn const& fn)
 
 [variablelist
-[[Effects:] [constructs a `boost::tp::task< R >` from a function object]]
+[[Effects:] [constructs a `boost::task::task< R >` from a function object]]
 [[Throws:] [Nothing]]
 ]
 
 
-[heading function `get_id()`]
+[heading Constructor]
 
-	const id get_id() const
+	task( R( * fn)());
 
 [variablelist
-[[Effects:] [returns task identifier]]
+[[Effects:] [constructs a `boost::task::task< R >` from a function pointer]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Move-copy constructor]
+
+	task( task &&)
+
+[variablelist
+[[Effects:] [constructs a `boost::task::task< R >` from another task taking over the ownership]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Move-assignment constructor]
+
+	task & operator=( task &&)
+
+[variablelist
+[[Effects:] [constructs a `boost::task::task< R >` from another task taking over the ownership]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `move()`]
+
+	task && move()
+
+[variablelist
+[[Effects:] [moves task releasing the ownership]]
 [[Throws:] [Nothing]]
 ]
 
@@ -66,16 +108,6 @@
 ]
 
 
-[heading Member function `swap()`]
-
-	void swap( task< R > & other)
-
-[variablelist
-[[Effects:] [swaps the task]]
-[[Throws:] [Nothing]]
-]
-
-
 [heading Member function `operator()()`]
 
 	void operator()()
@@ -86,18 +118,43 @@
 ]
 
 
-[heading Free function `make_task()`]
+[heading Member template-function `set_wait_callback( Cb cons&)`]
 
-	template< typename Fn, typename A0 >
-	task< R >::type > make_task( Fn fn, A0 a0);
-
-	...
-
-	template< typename Fn, typename A0, ..., typename A10 >
-	task< R >::type > make_task( Fn fn, A0 a0, ..., A10 a10);
+	template< typename Cb >
+	void set_wait_callback( Cb const cb&);
 
 [variablelist
-[[Effects:] [creates an task from function object and arguments]]
+[[Effects:] [stores callback function object which will be called if task would block]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `swap( task< R > &)`]
+
+	void swap( task< R > & other)
+
+[variablelist
+[[Effects:] [swaps the task]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading operator `operator unspecified_bool_type()`]
+
+	operator unspecified_bool_type() const // throw()
+
+[variablelist
+[[Effects:] [is task valid == does task own ownership]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading operator `operator!()`]
+
+	bool operator!() const // throw()
+
+[variablelist
+[[Effects:] [is task invalid == does task not own ownership]]
 [[Throws:] [Nothing]]
 ]
 

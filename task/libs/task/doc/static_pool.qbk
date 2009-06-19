@@ -9,6 +9,7 @@
 [section:static_pool Static thread-pool]
 
 __boost_task__ provides __static_pool__ - which contains an fixed set of pre-forked __worker_threads__ (the size of the pool doesn't change during its lifetime).
+__static_pool__ supports move semantics.
 
 
 ``

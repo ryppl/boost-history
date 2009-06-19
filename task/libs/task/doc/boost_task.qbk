@@ -41,12 +41,10 @@
 [def __as_sub_task__ `boost::task::as_sub_task`]
 [def __attribute_type__ `boost::task::attribute_type`]
 [def __bounded_channel__ `boost::task::bounded_channel`]
-[def __default_pool__ `boost::task::default_pool`]
 [def __dynamic_pool__ `boost::task::dynamic_pool`]
 [def __handle__ `boost::task::handle`]
 [def __has_attribute__ `boost::task::has_attribute`]
 [def __hwm__ `boost::task::high_watermark`]
-[def __id__ `boost::task::id`]
 [def __lwm__ `boost::task::low_watermark`]
 [def __new_thread__ `boost::task::new_thread`]
 [def __own_thread__ `boost::task::own_thread`]
@@ -63,8 +61,6 @@
 [def __waitfor_all__ `boost::task::waitfor_all()`]
 [def __waitfor_any__ `boost::task::waitfor_any()`]
 
-[def __full_default_pool__ `boost::task::static_pool< boost::task::unbounded_channel< boost::task::fifo > >`]
-
 [def __fn_delay__ `boost::this_task::delay()`]
 [def __fn_get_pool__ `boost::this_task::get_pool()`]
 [def __fn_tt_interrupt__ `boost::this_task::interrupt()`]
@@ -76,14 +72,13 @@
 [def __fn_yield__ `boost::this_task::yield()`]
 
 [def __fn_async__ `boost::task::async()`]
-[def __fn_default_pool__ `boost::task::default_pool()`]
 
 [def __fn_active__ `active()`]
+[def __fn_bind_to_processors__ `bind_to_processors()`]
 [def __fn_closed__ `close()`]
 [def __fn_clear__ `clear()`]
 [def __fn_empty__ `empty()`]
 [def __fn_get__ `get()`]
-[def __fn_get_id__ `get_id()`]
 [def __fn_get_future__ `get_future()`]
 [def __fn_has_value__ `has_value()`]
 [def __fn_has_exception__ `has_exception()`]
@@ -102,6 +97,7 @@
 [def __fn_wait__ `wait()`]
 [def __fn_wait_for__ `wait_for()`]
 [def __fn_wait_until__ `wait_until()`]
+
 
 [def __act__ ['asynchronous-completion-token]]
 [def __ep__ ['execution-policy]]

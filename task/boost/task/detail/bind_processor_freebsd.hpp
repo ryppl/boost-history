@@ -9,7 +9,8 @@
 
 extern "C"
 {
-
+#include <sys/param.h>
+#include <sys/cpuset.h>
 }
 
 #include <boost/assert.hpp>
@@ -26,21 +27,32 @@ namespace boost { namespace this_thread
 		BOOST_ASSERT( n >= 0);
 		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
 
-// 		if ( ::processor_bind( P_LWPID, P_MYID, static_cast< processorid_t >( n), 0) == -1)
-// 			throw boost::system::system_error(
-// 					boost::system::error_code(
-// 						errno,
-// 						boost::system::system_category) );
+		cpusetid_t cpusetid;
+		CPU_ZERO( & cpusetid);
+		CPU_SET( n, & cpusetid);
+
+		if ( ::cpuset_setid( CPU_WHICH_TID, -1, cpusetid) == -1)
+			throw boost::system::system_error(
+					boost::system::error_code(
+						errno,
+						boost::system::system_category) );
 	}
 
 	inline
 	void bind_to_any_processor()
 	{
-// 		if ( ::processor_bind( P_LWPID, P_MYID, PBIND_NONE, 0) == -1)
-// 			throw boost::system::system_error(
-// 					boost::system::error_code(
-// 						errno,
-// 						boost::system::system_category) );
+		cpusetid_t cpusetid;
+		CPU_ZERO( & cpusetid);
+
+		unsigned int max( boost::thread::hardware_concurrency() );
+		for ( unsigned int i( 0); i < max; ++i)
+			CPU_SET( i, & cpuset);
+		
+		if ( ::cpuset_setid( CPU_WHICH_TID, -1, cpusetid) == -1)
+			throw boost::system::system_error(
+					boost::system::error_code(
+						errno,
+						boost::system::system_category) );
 	}
 }}
 

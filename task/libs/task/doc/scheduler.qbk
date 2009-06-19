@@ -26,15 +26,17 @@ Each __task__ is submitted to the pool with a priority attribute. The type and o
 			boost::task::priority< int > >	// tasks with lower priority are scheduled first
 	> pool( boost::task::poolsize( 5) );
 
-	boost::task::async(
-		boost::task::make_task( some_fn),	// task to be executed
-		5,					// priority is 5
-		pool);					// thread-pool
+	boost::task::task< void > t1( some_fn);		// task to be executed
+	boost::task::task< void > t2( another_fn);	// task to be executed
 
 	boost::task::async(
-		boost::task::make_task( another_fn),	// task to be executed
-		3,					// priority is 3
-		pool);					// thread-pool
+		boost::move( t1),
+		5,			// priority is 5
+		pool);			// thread-pool
+	boost::task::async(
+		boost::move( t2),	// task to be executed
+		3,			// priority is 3
+		pool);			// thread-pool
 ``
 
 In this example the tasks get scheduled by the assigned integer (third argument of __fn_async__). The __task__ with the
@@ -90,18 +92,22 @@ replacement of older (pending) tasks in the scheduler by new ones.
 
 		...
 
+		boost::task::task< long > t1(
+			boost::bind( fibonacci_fn, 10) );
+		boost::task::task< long > t2(
+			boost::bind( fibonacci_fn, 5) );
+
 		// replaced by later task with same attribute == 2
 		// if still pending in pool
 		boost::task::async(
-			boost::task::make_task( fibonacci_fn, 10),
-			2,	// attribute is 2
+			boost::move( t1),
+			2,
 			pool);
 
 		// will replace previous pending task with attribute == 2
 		boost::task::async(
-			pool,
-			boost::task::make_task( fibonacci_fn, 5),
-			2,	// attribute is 2 too
+			boost::move( t2),
+			2,
 			pool);
 	}
 ``

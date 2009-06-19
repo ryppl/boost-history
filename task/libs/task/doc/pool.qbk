@@ -14,7 +14,7 @@ __worker_thread__ instead).
 
 A __thread_pool__ maintains a queue (or queues) of __work_items__ to be done, and a pool of __worker_threads__ which execute __work_items__ from the queue(s).
 
-__boost_task__ provides __fn_async__ with support of executing an __task__ in __default_pool__ (using __fn_default_pool__):
+__boost_task__ provides __fn_async__ with support of executing an __task__ in __thread_pool__:
 
 
 ``
@@ -23,50 +23,36 @@ __boost_task__ provides __fn_async__ with support of executing an __task__ in __
 
 	void main()
 	{
+		boost::task::static_pool<
+			boost::task::unbounded_channel<
+				boost::task::fifo
+			>
+		> pool( boost::task::poolsize( 5) );
+
+		boost::task::task< std::string > t(
+			boost::bind(
+				echo,
+				"Hello World!") );
+
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::task::make_task(
-					echo,
-					"Hello World!"),
-				boost::task::default_pool() ) );
-		std::cout << h.get() << std::endl;
-	}
-``
-
-and a custom __thread_pool__ (passing pool instance as an argument to __fn_async__):
-
-
-``
-	std::string echo( std::string const& msg)
-	{ return msg; }
-
-	boost::task::static_pool<
-		boost::task::unbounded_channel<
-			boost::task::fifo
-		>
-	> pool( boost::task::poolsize( 5) );
-
-	void main()
-	{
-		boost::task::handle< std::string > h(
-			boost::task::async(
-				boost::task::make_task(
-					echo,
-					"Hello World!"),
+				boost::move( t),
 				pool) );
+
 		std::cout << h.get() << std::endl;
 	}
 ``
+
 
 [important Tasks should not be too small (performance overhead dominates) and avoid blocking 
 tasks[footnote see [@http://www.ddj.com/go-parallel/article/showArticle.jhtml?articleID=216500409 
 'Use Thread Pools Correctly'], Herb Sutter].]
 
+
 [include static_pool.qbk]
 [include channel.qbk]
 [include scheduler.qbk]
 [include shutdown.qbk]
-[include default_pool.qbk]
 [include processor_binding.qbk]
 [include work_stealing.qbk]
 [include fork_join.qbk]

@@ -8,17 +8,21 @@
 
 [section:processor_binding Processor binding]
 
-For some applications it is convenient to bind the __worker_threads__ to processors/cores of the system. For this purpose __pool_size__ must not be given to the constructor so that a __worker_thread__ is created an bound the the core.
+For some applications it is convenient to bind the __worker_threads__ to processors/cores of the system. For this purpose __fn_bind_to_processors__ must
+be given to constructor instead __pool_size__ so that a __worker_thread__ is created an bound the the core.
 
 ``
-	boost::task::static_pool<
+	// constructs thread-pool with worker-threads as hardware_concurrency() returns
+	typedef boost::task::static_pool<
 		boost::task::unbounded_channel< boost::tp::fifo >
-	> pool;		// constructs thread-pool with worker-threads as hardware_concurrency() returns
+	> pool_type;
+
+	pool_type pool( pool_type::bind_to_processors() );
 ``
 
 The constructor takes additional arguments for the link_work_stealing[work-stealing algorithm] and link_channel[high-] and link_channel[low-watermark] too.
 
-[note __boost_task__ does provide this feature only for Windows, Linux, AIX, HP-UX and Solaris.]
+[note __boost_task__ does provide this feature only for Windows, Linux, AIX, HP-UX, Solaris and FreeBSD.]
 
 
 [endsect]

@@ -54,6 +54,11 @@ private:
 
 	friend class detail::worker;
 
+# if defined(BOOST_MSVC) && (BOOST_MSVC < 1500) // < MSVC 9.0
+	template< typename Pool >
+	friend class detail::worker::impl_pool;
+# endif
+
 	typedef typename channel::item	channel_item;
 	
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
@@ -64,6 +69,11 @@ private:
 	{
 	private:
 		friend class detail::worker;
+
+# if defined(BOOST_MSVC) && (BOOST_MSVC < 1500) // < MSVC 9.0
+		template< typename Pool >
+		friend class detail::worker::impl_pool;
+# endif
 	
 		detail::worker_group		wg_;
 		shared_mutex			mtx_wg_;
@@ -536,6 +546,14 @@ public:
 			throw pool_moved();
 		return pool_->submit( t, attr);
 	}
+
+	typedef typename shared_ptr< pool_base >::unspecified_bool_type	unspecified_bool_type;
+
+	operator unspecified_bool_type() const // throw()
+	{ return pool_; }
+
+	bool operator!() const // throw()
+	{ return ! pool_; }
 
 	void swap( static_pool & other) // throw()
 	{ pool_.swap( other.pool_); }

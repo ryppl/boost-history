@@ -6,51 +6,51 @@
 ]
 
 
-[section:async Non-member function `async( task< R >, EP)`]
+[section:async Non-member function `async( task< R > &&, EP)`]
 
 ``
 	#include <boost/task/async.hpp>
 
 	template< typename R, typename EP >
-	handle< R > async( task< R > t, EP ep);
+	handle< R > async( task< R > && t, EP ep);
 ``
 
 [variablelist
-[[Effects:] [executes task in an asyncrounous executer and returns a handle associated with the task]]
+[[Effects:] [moves task to an asyncrounous executer and returns a handle associated with the task]]
 [[Throws:] [`boost::thread_resource_error`]]
 ]
 
 [endsect]
 
 
-[section:async1 Non-member function `async( task< R >, pool< Channel > &)`]
+[section:async1 Non-member function `async( task< R > &&, pool< Channel > &)`]
 
 ``
 	#include <boost/task/async.hpp>
 
 	template< typename R, typename Channel >
-	handle< R > async( task< R > t, pool< Channel > & ep);
+	handle< R > async( task< R > && t, pool< Channel > & ep);
 ``
 
 [variablelist
-[[Effects:] [executes task in a thread-pool and returns a handle associated with the task]]
+[[Effects:] [moves task into a thread-pool and returns a handle associated with the task]]
 [[Throws:] [`boost::task::task_rejected`]]
 ]
 
 [endsect]
 
 
-[section:async2 Non-member function `async( task< R >, Attr, pool< Channel > &)`]
+[section:async2 Non-member function `async( task< R > &&, Attr, pool< Channel > &)`]
 
 ``
 	#include <boost/task/async.hpp>
 
 	template< typename R, typename Channel, typename Attr >
-	handle< R > async( task< R > t, Attr attr, pool< Channel > & ep);
+	handle< R > async( task< R > && t, Attr attr, pool< Channel > & ep);
 ``
 
 [variablelist
-[[Effects:] [executes atrributed task in a thread-pool and returns a handle associated with the task]]
+[[Effects:] [moves attributed task into a thread-pool and returns a handle associated with the task]]
 [[Throws:] [`boost::task::task_rejected`]]
 ]
 

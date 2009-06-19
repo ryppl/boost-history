@@ -8,8 +8,8 @@
 
 [section:async Asynchronous execution] 
 
-The function __fn_async__ passes the __task__ to the __ep__ which executes the __task__ (for this purpose __ep__ is 
-required to provide `handle< R > operator()( task< R > tsk)`).
+Function __fn_async__ applies the moved __task__ to the __ep__ which executes the __task__ (for this purpose __ep__ is 
+required to provide `handle< R > operator()( task< R > && tsk)`).
 __fn_async__ accepts two arguments - the first is an __task__ object and the second an __ep__. For the second argument 
 __as_sub_task__ is used per default. The function returns a __handle__ which controls the submitted __task__.
 
@@ -31,13 +31,14 @@ __as_sub_task__ is used per default. The function returns a __handle__ which con
 
 	void main()
 	{
-		boost::task::handle< long > h(			// get handle associated with the task
-			boost::task::async(			
-				boost::task::make_task(		// compute fibonacci(10) asynchron
-					fibonacci,
-					10) ) );
-		std::cout << "id == " << h.get_id() << "\n";
-		std::cout << "fibonacci(10) == " << h.get() << std::endl;	// throws boost::task::task_interrupted
+		boost::task< long > t(			// task -> compute fibonacci(10)
+			boost::bind(
+				fibonacci,
+				10) );
+		boost::task::handle< long > h(		// move the task to execution-policy functor
+			boost::task::async(		// and return a handle
+				 boost::move( t) );
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;	// access the result
 	}
 ``
 

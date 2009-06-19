@@ -27,12 +27,16 @@ __own_thread__ executes the task in the current thread (synchronous execution - 
 
 	void main()
 	{
+		boost::task::task< long > t(
+			boost::bind(
+				fibonacci,
+				10) );
+
 		boost::task::handle< long > h(
 			boost::task::async(
-				boost::task::make_task(
-					fibonacci,
-					10),
+				boost::move( t),
 				boost::task::own_thread() ) );
+
 		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``

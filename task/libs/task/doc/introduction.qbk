@@ -32,15 +32,18 @@ context (__boost_task__ uses preemptible threads for this purpose).
 
 	void main()
 	{
-		boost::task::async(                     // dispatchs task
-			boost::task::make_task(         // task, to be executed asynchronously
+		boost::task::task< void > t(         // task, to be executed asynchronously
+			boost::bind(
 				print,
-				"Hello World!"),
+				"Hello World!") );
+
+		boost::task::async(                     // dispatchs task,
+			boost::move( t),		// move task to executor
 			boost::task::new_thread() ) );	// execution-policy
 	}
 ``
 
-In order to manage the task __fn_async__ returns a handle __handle__ (associated with the submitted task). It functions as a __act__ -
+In order to manage the task __fn_async__ returns a __handle__ (associated with the submitted task). It functions as a __act__ -
 that means it transfers the result of the execution back to the caller thread.
 
 ``
@@ -49,12 +52,16 @@ that means it transfers the result of the execution back to the caller thread.
 
 	void main()
 	{
-		boost::task::handle< std::string > h(		// get handle associated with the task
-			boost::task::async(			
-				boost::task::make_task(		// task, to be executed asynchronously
-					echo,
-					"Hello World!"),
-				boost::task::new_thread() ) );	// execution-policy
+		boost::task::task< std::string > t(	// task returning the submitted string
+			boost::bind(
+				echo,
+				"Hello World!") );
+
+		boost::task::handle< std::string > h(
+			boost::task::async(
+				boost::move( t),		// move task to executor
+				boost::task::new_thread() ) );	// execute task in a new thread
+
 		std::cout << h.get() << std::endl;		// wait until task is finished and return the result
 	}
 ``
@@ -67,20 +74,24 @@ The task can also be interrupted via __handle__ if it is a so-called [link_task 
 
 	void main()
 	{
-		boost::task::handle< std::string > h(		// get handle associated with the task
+		boost::task::task< void > t(		// long runing task
+			boost::bind(
+				long_running,
+				boost::posix_time::millisec( 500) ) );
+
+		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::task::make_task(		// long runing task, to be executed asynchronously
-					long_running,
-					boost::posix_time::millisec( 500) ),
-					boost::task::new_thread() ) );	// execution-policy
+				boost::move( t),
+				boost::task::new_thread() ) );
+
 		h.interrupt();					// interrupt execution of task
-		std::cout << h.get() << std::endl;		// wait until task is finished, will throw an exeception
+
+		std::cout << h.get() << std::endl;		// wait until task is finished, will throw an task_interrupted exeception
 	}
 ``
 
-Beside __new_thread__ (which creates a new task for each submitted task) __boost_task__ provides [link_pool __thread_pools__]
-to prevent the overhead of thread creation and destruction for each task. __default_pool__ submitts the tasks to the default
-__thread_pool__  which contains a fixed number of pre-spawned __worker_threads__ (custom __thread_pools__ are supported too).
+Beside __new_thread__ (which creates a new task for each submitted task - the thread will be joined by __handle__) __boost_task__ provides [link_pool __thread_pools__]
+to prevent the overhead of thread creation and destruction of threads for each task (__thread_pools__ can be customized).
 
 ``
 	long serial_fib( long n)
@@ -95,20 +106,26 @@ __thread_pool__  which contains a fixed number of pre-spawned __worker_threads__
 		else
 		{
 			// fork a sub-task calculating fibonacci(n-1)
-			h1 = boost::task::async(
-				boost::task::make_task(
+			boost::task::task< long > t1(
+				boost::bind(
 					parallel_fib,
 					n - 1,
-					cutof),
-					boost::this_task::get_pool() );
-
+					cutof) );
 			// fork a sub-task calculating fibonacci(n-2)
-			h2 = boost::task::async(
-				boost::task::make_task(
+			boost::task::task< long > t2(
+				boost::bind(
 					parallel_fib,
 					n - 2,
-					cutof),
-				boost::this_task::get_pool() );
+					cutof) );
+
+			boost::task::handle< long > h1(
+				boost::task::async(
+					boost::move( t1),
+					boost::this_task::get_pool() ) );
+			boost::task::handle< long > h2(
+				boost::task::async(
+					boost::move( t2),
+					boost::this_task::get_pool() ) );
 
 			// join the results of both sub-tasks
 			return h1.get() + h2.get();
@@ -117,13 +134,23 @@ __thread_pool__  which contains a fixed number of pre-spawned __worker_threads__
 
 	void main()
 	{
-		boost::task::handle< long > h(				// handle for fibonacci calculation
+		boost::task::static_pool<
+			boost::task::unbounded_channel<
+				boost::task::fifo
+			>
+		> pool( boost::task::poolsize( 5) );
+
+		boost::task::task< long > t(		// task calculates fibonacci-number for 10
+			boost::bind(
+				parallel_fib,
+				10,
+				5) );
+
+		boost::task::handle< long > h(		// handle of async. executed task
 			boost::task::async(
-				boost::task::make_task(			// calculate fibonacci number 10
-					parallel_fib,			// for numbers < 5 do inline recursive calculation
-					10,
-					5),
-				boost::task::default_pool() ) );	// access the default thread-pool
+				boost::move( t),
+				boost::task::default_pool() ) );	// thread-pool
+
 		std::cout << h.get() << std::endl;
 	}
 ``
@@ -134,12 +161,16 @@ executed inside a __thread_pool__. In the other case the __sub_task__ is put int
 [link_work_stealing __work_stealing__] and [link_forkjoin inline execution] of tasks.
 
 ``
-	boost::task::async(
-		boost::task::make_task(		// the thread-pool depending upon the parent
-			parallel_fib,		// task is executed inside a thread-pool or not
+	boost::task::task< long > t(
+		boost::bind(
+			parallel_fib,
 			10,
-			5),
-		boost::task::as_sub_task() ) );	// sub-task executed in a new thread or inside
+			5) );
+
+	boost::task::async(
+		boost::move( t),
+		boost::task::as_sub_task() );	// sub-task executed in a new thread or inside a thread-pool
 ``
+
 
 [endsect]
