@@ -268,7 +268,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.std_elapsed = timer.elapsed();
 	}
 
-	cout << ".";
+	cout << "." << flush;
 	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
@@ -299,7 +299,14 @@ void PrintResults(PoolResults const &results)
 void compare_memory_pool()
 {
 	cout << "test_set_vector";
+#ifdef WIN32
+	// boost::fast_pool seems bad at this test with MSVC, so do it less.
+	// this will result in less accurate results, but that doesnt matter because monotonic is orders of magnitudes faster
+	// than fast_pool here...
+	PrintResults(compare_memory_pool(10, 1000, 5, test_set_vector()));
+#else
 	PrintResults(compare_memory_pool(500, 1000, 10, test_set_vector()));
+#endif
 	cout << "test_dupe_list";
 	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_list()));
 	cout << "test_dupe_vector";
