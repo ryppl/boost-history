@@ -496,7 +496,10 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 	if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
 		this->_map.erase(it_++);
 	else
-		join_left(it_++);
+	{
+		join_left(it_);
+		++it_;
+	}
 }
 
 
