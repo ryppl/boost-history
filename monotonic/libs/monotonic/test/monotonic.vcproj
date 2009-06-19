@@ -288,6 +288,14 @@
 				RelativePath=".\Jamfile.v2"
 				>
 			</File>
+			<File
+				RelativePath=".\results_gcc.txt"
+				>
+			</File>
+			<File
+				RelativePath=".\results_msvc.txt"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\basic_tests.cpp"
@@ -359,14 +367,6 @@
 					Name="VCCLCompilerTool"
 				/>
 			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\results_gcc.txt"
-			>
-		</File>
-		<File
-			RelativePath=".\results_msvc.txt"
-			>
 		</File>
 		<File
 			RelativePath=".\rope.cpp"

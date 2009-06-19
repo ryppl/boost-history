@@ -316,6 +316,7 @@ void PrintResults(PoolResults const &results)
 
 int main()
 {
+	boost::timer timer;
 	PrintResults(compare_memory_pool(100, 1000, 10, "thrash_pool_sort_list_int", thrash_pool_sort_list_int()));
 
 #ifdef WIN32
@@ -333,6 +334,8 @@ int main()
 	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool_iter", thrash_pool_iter()));
 	PrintResults(compare_memory_pool(1000, 1000, 10, "thrash_pool_sort", thrash_pool_sort()));
 	PrintResults(compare_memory_pool(1000, 2000, 10, "thrash_pool_map_list_unaligned", thrash_pool_map_list_unaligned()));
+
+	cout << "tests completed in " << setprecision(2) << timer.elapsed() << "s" << endl;
 
 	return 0;
 }
