@@ -20,35 +20,42 @@ bool operator<(Unaligned const &A, Unaligned const &B)
 	return A.c < B.c;
 }
 
+template <class Alloc, class T>
+struct Rebind
+{
+	typedef typename Alloc::template rebind<T>::other type;
+};
+
 struct thrash_pool
 {
-	template <class Pool>
-	int operator()(size_t length, Pool &pool) const
+	template <class Alloc>
+	int test(size_t length) const
 	{
-		pool.resize(length*rand()/RAND_MAX);
-		return accumulate(pool.begin(), pool.end(), 0);
+		std::vector<int, Rebind<Alloc, int>::type> vector;
+		vector.resize(length*rand()/RAND_MAX);
+		return accumulate(vector.begin(), vector.end(), 0);
 	}
 };
 
 struct thrash_pool_sort
 {
-	template <class Pool>
-	int operator()(size_t length, Pool &pool) const
+	template <class Alloc>
+	int test(size_t length) const
 	{
-		pool.resize(length*rand()/RAND_MAX);
-		generate_n(back_inserter(pool), length, rand);
-		sort(pool.begin(), pool.end());
+		std::vector<int, Rebind<Alloc, int>::type> vector;
+		vector.resize(length*rand()/RAND_MAX);
+		generate_n(back_inserter(vector), length, rand);
+		sort(vector.begin(), vector.end());
 		return 0;
 	}
 };
 
 struct thrash_pool_sort_list_int
 {
-	template <class Pool>
-	int operator()(size_t length, Pool &pool) const
+	template <class Alloc>
+	int test(size_t length) const
 	{
-		typedef typename Pool::allocator_type allocator;
-		std::list<int, typename allocator::template rebind<int>::other> list;
+		std::list<int, Rebind<Alloc, int>::type> list;
 		generate_n(back_inserter(list), length, rand);
 		list.sort();
 		return 0;
@@ -57,14 +64,13 @@ struct thrash_pool_sort_list_int
 
 struct thrash_pool_iter
 {
-	template <class Pool>
-	int operator()(size_t length, Pool &pool) const
+	template <class Alloc>
+	int test(size_t length) const
 	{
-		typedef typename Pool::allocator_type allocator;
-		std::vector<Unaligned, typename allocator::template rebind<Unaligned>::other> vec;
-		vec.resize(length);
+		std::vector<Unaligned, Rebind<Alloc, Unaligned>::type> vector;
+		vector.resize(length);
 		int total = 0;
-		BOOST_FOREACH(Unaligned const &val, vec)
+		BOOST_FOREACH(Unaligned const &val, vector)
 		{
 			total += val.c;
 		}
@@ -75,14 +81,13 @@ struct thrash_pool_iter
 
 struct thrash_pool_map_list_unaligned
 {
-	template <class Pool>
-	int operator()(size_t length, Pool &pool) const
+	template <class Alloc>
+	int test(size_t length) const
 	{
-		typedef typename Pool::allocator_type allocator;
 		std::map<int
-			, std::list<Unaligned, typename allocator::template rebind<Unaligned>::other>
+			, std::list<Unaligned, Rebind<Alloc, Unaligned>::type>
 			, std::less<int>
-			, typename allocator::template rebind<int>::other
+			, Rebind<Alloc, int>::type
 		> map;
 		size_t mod = length/10;
 		for (size_t n = 0; n < length; ++n)
@@ -91,6 +96,23 @@ struct thrash_pool_map_list_unaligned
 			map[random].push_back(n);
 		}
 		return 0;
+	}
+};
+
+struct test_dupe_list
+{
+	template <class Alloc>
+	int test(size_t count) const
+	{
+		size_t dummy = 0;
+		std::list<int, Rebind<Alloc, int>::type> list;
+		fill_n(back_inserter(list), size, 42);
+		for (size_t n = 0; n < count; ++n)
+		{
+			List dupe = list;
+			dummy += dupe.size();
+		}
+		return dummy;
 	}
 };
 
@@ -112,20 +134,16 @@ typedef std::map<size_t /*count*/, PoolResult> PoolResults;
 template <class Fun>
 PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 {
-	typedef std::vector<
-		int
-		, boost::fast_pool_allocator<int
-			, boost::default_user_allocator_new_delete
-			, boost::details::pool::null_mutex> > 
-		fast_pool_v;
-	typedef std::vector<
-		int
-		, boost::pool_allocator<int
-			, boost::default_user_allocator_new_delete
-			, boost::details::pool::null_mutex> > 
-		pool_v;
-	typedef std::vector<int, boost::monotonic::allocator<int> > mono_v;
-	typedef std::vector<int > std_v;
+	typedef boost::fast_pool_allocator<int
+		, boost::default_user_allocator_new_delete
+		, boost::details::pool::null_mutex>
+		fast_pool_alloc;
+	typedef boost::pool_allocator<int
+		, boost::default_user_allocator_new_delete
+		, boost::details::pool::null_mutex>
+		pool_alloc;
+	typedef monotonic::allocator<int> mono_alloc;
+	typedef std::allocator<int > std_alloc;
 
 	PoolResult result;
 
@@ -136,8 +154,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fast_pool_v pool;
-				fun(length, pool);
+				fun.test<fast_pool_alloc>(length);
 			}
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(Unaligned)>::release_memory();
@@ -153,8 +170,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				pool_v pool;
-				fun(length, pool);
+				fun.test<pool_alloc>(length);
 			}
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(Unaligned)>::release_memory();
@@ -170,8 +186,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				mono_v pool;
-				fun(length, pool);
+				fun.test<mono_alloc>(length);
 			}
 			boost::monotonic::reset_storage();
 		}
@@ -186,8 +201,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				mono_v pool;
-				fun(length, pool);
+				fun.test<mono_alloc>(length);
 			}
 			storage.reset();
 		}
@@ -201,8 +215,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				std_v pool;
-				fun(length, pool);
+				fun.test<std_alloc>(length);
 			}
 		}
 		result.std_elapsed = timer.elapsed();
