@@ -1,3 +1,10 @@
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+// the documentation is at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+
+// the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
+
 #include <iostream> 
 #include <iomanip> 
 #include <list>
@@ -5,7 +12,15 @@
 #include <vector>
 
 #include <boost/pool/pool_alloc.hpp>
+#undef max
+#undef min
 #include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/local.hpp>
+
+#include <boost/timer.hpp>
+
+using namespace std;
+using namespace boost;
 
 struct Unaligned
 {
@@ -276,7 +291,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 template <class Fun>
 PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun)
 {
-	cout << title << ": reps=" << count << ", len=" << max_length << ", iters=" << num_iterations;
+	cout << title << ": reps=" << count << ", len=" << max_length << ", steps=" << num_iterations;
 	PoolResults results;
 	for (size_t length = 10; length < max_length; length += max_length/num_iterations)
 	{
@@ -299,7 +314,7 @@ void PrintResults(PoolResults const &results)
 	cout << endl;
 }
 
-void compare_memory_pool()
+int main()
 {
 	PrintResults(compare_memory_pool(100, 1000, 10, "thrash_pool_sort_list_int", thrash_pool_sort_list_int()));
 
@@ -318,6 +333,18 @@ void compare_memory_pool()
 	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool_iter", thrash_pool_iter()));
 	PrintResults(compare_memory_pool(1000, 1000, 10, "thrash_pool_sort", thrash_pool_sort()));
 	PrintResults(compare_memory_pool(1000, 2000, 10, "thrash_pool_map_list_unaligned", thrash_pool_map_list_unaligned()));
+
+	return 0;
+}
+
+namespace boost 
+{ 
+	namespace monotonic 
+	{
+		// temp. hax to create global storage
+		static_storage_base<> default_static_storage;
+		storage_base *static_storage = &default_static_storage;
+	}
 }
 
 //EOF
