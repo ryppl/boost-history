@@ -6,6 +6,19 @@
 #include <boost/pool/pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
 
+struct Unaligned
+{
+	int num;
+	char c;
+	Unaligned() : num(0), c(0) { }
+	Unaligned(char C) : num(0), c(C) { }
+};
+
+bool operator<(Unaligned const &A, Unaligned const &B)
+{
+	return A.c < B.c;
+}
+
 struct thrash_pool
 {
 	template <class Pool>
@@ -28,13 +41,21 @@ struct thrash_pool_sort
 	}
 };
 
+struct thrash_pool_sort_list_int
+{
+	template <class Pool>
+	int operator()(size_t length, Pool &pool) const
+	{
+		typedef typename Pool::allocator_type allocator;
+		std::list<int, typename allocator::template rebind<int>::other> list;
+		generate_n(back_inserter(list), length, rand);
+		list.sort();
+		return 0;
+	}
+};
+
 struct thrash_pool_iter
 {
-	struct Unaligned
-	{
-		int num;
-		char c;
-	};
 	template <class Pool>
 	int operator()(size_t length, Pool &pool) const
 	{
@@ -47,6 +68,28 @@ struct thrash_pool_iter
 			total += val.c;
 		}
 		return total;
+	}
+};
+
+
+struct thrash_pool_map_list_unaligned
+{
+	template <class Pool>
+	int operator()(size_t length, Pool &pool) const
+	{
+		typedef typename Pool::allocator_type allocator;
+		std::map<int
+			, std::list<Unaligned, typename allocator::template rebind<Unaligned>::other>
+			, std::less<int>
+			, typename allocator::template rebind<int>::other
+		> map;
+		size_t mod = length/10;
+		for (size_t n = 0; n < length; ++n)
+		{
+			int random = rand() % mod;
+			map[random].push_back(n);
+		}
+		return 0;
 	}
 };
 
@@ -90,6 +133,8 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 				fun(length, pool);
 			}
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(int)>::release_memory();
+			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(Unaligned)>::release_memory();
+			// CJS ?? how to release memory created by a rebind<>'d fast_pool_allocator??
 		}
 		result.fast_pool_elapsed = timer.elapsed();
 	}
@@ -106,6 +151,8 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 				fun(length, pool);
 			}
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(int)>::release_memory();
+			boost::singleton_pool<boost::pool_allocator_tag, sizeof(Unaligned)>::release_memory();
+			// CJS ?? how to release memory created by a rebind<>'d pool_allocator??
 		}
 		result.pool_elapsed = timer.elapsed();
 	}
@@ -162,7 +209,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.std_elapsed = timer.elapsed();
 	}
 
-	cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
+	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
 
@@ -196,6 +243,12 @@ void compare_memory_pool()
 	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool_iter()));
 	cout << "thrash_pool_sort" << endl;
 	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort()));
+
+	cout << "thrash_pool_sort_list_int" << endl;
+	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort_list_int()));
+	cout << "thrash_pool_map_list_unaligned" << endl;
+	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_map_list_unaligned()));
+		
 }
 
 //EOF
