@@ -112,6 +112,19 @@ struct test_dupe_list
 	}
 };
 
+struct test_dupe_list_unaligned
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t count) const
+	{
+		typedef std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type> List;
+		List list;
+		fill_n(back_inserter(list), count, 42);
+		List dupe = list;
+		return dupe.size();
+	}
+};
+
 struct test_dupe_vector
 {
 	template <class Alloc>
@@ -126,6 +139,25 @@ struct test_dupe_vector
 			dummy += dupe.size();
 		}
 		return dummy;
+	}
+};
+
+struct test_set_vector
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t count) const
+	{
+		typedef std::vector<int, typename Rebind<Alloc, int>::type> Vector;
+		typedef std::set<Vector, std::less<Vector>, typename Rebind<Alloc, Vector>::type> Set;
+		Set set;
+		for (size_t n = 0; n < count; ++n)
+		{
+			size_t size = count*rand()/RAND_MAX;
+			Vector vector(size);
+			generate_n(vector.begin(), size, rand);
+			set.insert(vector);
+		}
+		return 0;
 	}
 };
 
@@ -234,6 +266,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		result.std_elapsed = timer.elapsed();
 	}
 
+	cout << ".";
 	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
@@ -246,6 +279,7 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 	{
 		results[length] = compare_memory_pool(count, length, fun);
 	}
+	cout << endl;
 	return results;
 }
 
@@ -262,19 +296,21 @@ void PrintResults(PoolResults const &results)
 
 void compare_memory_pool()
 {
-	cout << "test_dupe_list" << endl;
+	cout << "test_set_vector";
+	PrintResults(compare_memory_pool(50, 1000, 5, test_set_vector()));
+	cout << "test_dupe_list";
 	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_list()));
-	cout << "test_dupe_vector" << endl;
+	cout << "test_dupe_vector";
 	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_vector()));
-	cout << "thrash_pool" << endl;
+	cout << "thrash_pool";
 	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool()));
-	cout << "thrash_pool_iter" << endl;
+	cout << "thrash_pool_iter";
 	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool_iter()));
-	cout << "thrash_pool_sort" << endl;
+	cout << "thrash_pool_sort";
 	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_sort()));
-	cout << "thrash_pool_sort_list_int" << endl;
+	cout << "thrash_pool_sort_list_int";
 	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_sort_list_int()));
-	cout << "thrash_pool_map_list_unaligned" << endl;
+	cout << "thrash_pool_map_list_unaligned";
 	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_map_list_unaligned()));
 }
 
