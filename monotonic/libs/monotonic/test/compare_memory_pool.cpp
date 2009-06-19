@@ -119,6 +119,26 @@ struct thrash_pool_map_list_unaligned
 	}
 };
 
+struct thrash_pool_map_vector_unaligned
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t length) const
+	{
+		std::map<int
+			, std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type>
+			, std::less<int>
+			, typename Rebind<Alloc, int>::type
+		> map;
+		size_t mod = length/10;
+		for (size_t n = 0; n < length; ++n)
+		{
+			int random = rand() % mod;
+			map[random].push_back(n);
+		}
+		return 0;
+	}
+};
+
 struct test_dupe_list
 {
 	template <class Alloc>
@@ -322,6 +342,7 @@ void PrintResults(PoolResults const &results)
 int main()
 {
 	boost::timer timer;
+	PrintResults(compare_memory_pool(500, 500, 10, "thrash_pool_map_vector_unaligned", thrash_pool_map_vector_unaligned()));
 	PrintResults(compare_memory_pool(100, 1000, 10, "thrash_pool_sort_list_int", thrash_pool_sort_list_int()));
 
 #ifdef WIN32
