@@ -171,7 +171,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 				mono_v pool;
 				fun(length, pool);
 			}
-			boost::monotonic::get_storage().reset();
+			boost::monotonic::reset_storage();
 		}
 		result.mono_elapsed = timer.elapsed();
 	}
