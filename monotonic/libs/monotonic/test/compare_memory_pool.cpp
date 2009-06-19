@@ -31,7 +31,7 @@ struct thrash_pool
 	template <class Alloc>
 	int test(size_t length) const
 	{
-		std::vector<int, Rebind<Alloc, int>::type> vector;
+		std::vector<int, typename Rebind<Alloc, int>::type> vector;
 		vector.resize(length*rand()/RAND_MAX);
 		return accumulate(vector.begin(), vector.end(), 0);
 	}
@@ -42,7 +42,7 @@ struct thrash_pool_sort
 	template <class Alloc>
 	int test(size_t length) const
 	{
-		std::vector<int, Rebind<Alloc, int>::type> vector;
+		std::vector<int, typename Rebind<Alloc, int>::type> vector;
 		vector.resize(length*rand()/RAND_MAX);
 		generate_n(back_inserter(vector), length, rand);
 		sort(vector.begin(), vector.end());
@@ -55,7 +55,7 @@ struct thrash_pool_sort_list_int
 	template <class Alloc>
 	int test(size_t length) const
 	{
-		std::list<int, Rebind<Alloc, int>::type> list;
+		std::list<int, typename Rebind<Alloc, int>::type> list;
 		generate_n(back_inserter(list), length, rand);
 		list.sort();
 		return 0;
@@ -67,7 +67,7 @@ struct thrash_pool_iter
 	template <class Alloc>
 	int test(size_t length) const
 	{
-		std::vector<Unaligned, Rebind<Alloc, Unaligned>::type> vector;
+		std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type> vector;
 		vector.resize(length);
 		int total = 0;
 		BOOST_FOREACH(Unaligned const &val, vector)
@@ -85,9 +85,9 @@ struct thrash_pool_map_list_unaligned
 	int test(size_t length) const
 	{
 		std::map<int
-			, std::list<Unaligned, Rebind<Alloc, Unaligned>::type>
+			, std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type>
 			, std::less<int>
-			, Rebind<Alloc, int>::type
+			, typename Rebind<Alloc, int>::type
 		> map;
 		size_t mod = length/10;
 		for (size_t n = 0; n < length; ++n)
@@ -105,7 +105,7 @@ struct test_dupe_list
 	int test(size_t count) const
 	{
 		size_t dummy = 0;
-		std::list<int, Rebind<Alloc, int>::type> list;
+		std::list<int, typename Rebind<Alloc, int>::type> list;
 		fill_n(back_inserter(list), size, 42);
 		for (size_t n = 0; n < count; ++n)
 		{
