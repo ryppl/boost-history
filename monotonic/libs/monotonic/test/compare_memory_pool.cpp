@@ -22,7 +22,11 @@
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/local.hpp>
 
+
+#include <tbb/tbb_allocator.h>
 #include <boost/timer.hpp>
+
+
 
 using namespace std;
 using namespace boost;
@@ -172,13 +176,8 @@ struct test_dupe_vector
 	{
 		typedef std::vector<int, typename Rebind<Alloc, Unaligned>::type> Vector;
 		Vector vector(count*rand()/RAND_MAX);
-		int dummy = 0;
-		for (size_t n = 0; n < count; ++n)
-		{
-			Vector dupe = vector;
-			dummy += dupe.size();
-		}
-		return dummy;
+		Vector dupe = vector;
+		return dupe.size();
 	}
 };
 
@@ -210,9 +209,10 @@ struct PoolResult
 	double mono_elapsed;
 	double local_mono_elapsed;
 	double std_elapsed;
+	double tbb_elapsed;
 	PoolResult()
 	{
-		pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = -1;
+		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = -1;
 	}
 };
 
@@ -229,10 +229,24 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		, boost::default_user_allocator_new_delete
 		, boost::details::pool::null_mutex>
 		pool_alloc;
+	typedef tbb::tbb_allocator<int> tbb_allocator;
 	typedef monotonic::allocator<int> mono_alloc;
 	typedef std::allocator<int > std_alloc;
 
 	PoolResult result;
+
+	// test tbb_allocator
+	{
+		srand(42);
+		boost::timer timer;
+		for (size_t n = 0; n < count; ++n)
+		{
+			{
+				fun.test(tbb_allocator(), length);
+			}
+		}
+		result.tbb_elapsed = timer.elapsed();
+	}
 
 	// test boost::fast_pool_allocator
 	{
@@ -328,13 +342,13 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 
 void PrintResults(PoolResults const &results)
 {
-	size_t w = 10;
-	cout << setw(6) << "length" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/mono" << setw(w) << "pool/mono" << setw(w) << "std/mono" << endl;
+	size_t w = 8;
+	cout << setw(6) << "length" << setw(w) << "tbb" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;
 	cout << setw(0) << "------------------------------------------------------------------------------" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(6) << iter.first << setprecision(4) << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << endl;
+		cout << setw(6) << iter.first << setprecision(3) << setw(w) << result.tbb_elapsed << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.tbb_elapsed/result.mono_elapsed << "%" <<endl;
 	}
 	cout << endl;
 }
@@ -360,7 +374,6 @@ int main()
 	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool_iter", thrash_pool_iter()));
 	PrintResults(compare_memory_pool(1000, 1000, 10, "thrash_pool_sort", thrash_pool_sort()));
 	PrintResults(compare_memory_pool(1000, 2000, 10, "thrash_pool_map_list_unaligned", thrash_pool_map_list_unaligned()));
-
 	cout << "tests completed in " << setprecision(2) << timer.elapsed() << "s" << endl;
 
 	return 0;
