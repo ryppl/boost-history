@@ -106,7 +106,7 @@ struct PoolResult
 	}
 };
 
-typedef std::map<size_t, PoolResult> PoolResults;
+typedef std::map<size_t /*count*/, PoolResult> PoolResults;
 
 template <class Fun>
 PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
@@ -134,7 +134,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 			}
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(Unaligned)>::release_memory();
-			// CJS ?? how to release memory created by a rebind<>'d fast_pool_allocator??
+			// CJS ?? how to release memory created by a rebind<>'d fast_pool_allocator, such as xtree::rebind ??
 		}
 		result.fast_pool_elapsed = timer.elapsed();
 	}
@@ -152,7 +152,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 			}
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(Unaligned)>::release_memory();
-			// CJS ?? how to release memory created by a rebind<>'d pool_allocator??
+			// CJS ?? how to release memory created by a rebind<>'d pool_allocator, such as xtree::rebind ??
 		}
 		result.pool_elapsed = timer.elapsed();
 	}
@@ -227,11 +227,13 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 void PrintResults(PoolResults const &results)
 {
 	size_t w = 10;
-	cout << setw(0) << "count" << setw(w) << "fast_p" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fp/mono" << setw(w) << "fp/local" << endl;
+	//cout << setw(0) << "count" << setw(w) << "fast_p" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fp/mono" << setw(w) << "fp/local" << endl;
+	cout << setw(0) << "count" << setw(w) << "fast_p" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fp/mono" << setw(w) << "pool/mono" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(0) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.fast_pool_elapsed/result.local_mono_elapsed << "%" <<endl;
+		//cout << setw(0) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.fast_pool_elapsed/result.local_mono_elapsed << "%" <<endl;
+		cout << setw(0) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" <<endl;
 	}
 }
 
@@ -245,10 +247,9 @@ void compare_memory_pool()
 	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort()));
 
 	cout << "thrash_pool_sort_list_int" << endl;
-	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort_list_int()));
+	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_sort_list_int()));
 	cout << "thrash_pool_map_list_unaligned" << endl;
-	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_map_list_unaligned()));
-		
+	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_map_list_unaligned()));
 }
 
 //EOF
