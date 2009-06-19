@@ -104,12 +104,25 @@ struct test_dupe_list
 	template <class Alloc>
 	int test(Alloc alloc, size_t count) const
 	{
-		size_t dummy = 0;
-		std::list<int, typename Rebind<Alloc, int>::type> list;
-		fill_n(back_inserter(list), size, 42);
+		typedef std::list<int, typename Rebind<Alloc, int>::type> List;
+		List list;
+		fill_n(back_inserter(list), count, 42);
+		List dupe = list;
+		return dupe.size();
+	}
+};
+
+struct test_dupe_vector
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t count) const
+	{
+		typedef std::vector<int, typename Rebind<Alloc, Unaligned>::type> Vector;
+		Vector vector(count*rand()/RAND_MAX);
+		int dummy = 0;
 		for (size_t n = 0; n < count; ++n)
 		{
-			List dupe = list;
+			Vector dupe = vector;
 			dummy += dupe.size();
 		}
 		return dummy;
@@ -249,6 +262,10 @@ void PrintResults(PoolResults const &results)
 
 void compare_memory_pool()
 {
+	cout << "test_dupe_list" << endl;
+	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_list()));
+	cout << "test_dupe_vector" << endl;
+	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_vector()));
 	cout << "thrash_pool" << endl;
 	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool()));
 	cout << "thrash_pool_iter" << endl;
