@@ -26,12 +26,12 @@ namespace boost { namespace this_thread
 	{
 		BOOST_ASSERT( n >= 0);
 		BOOST_ASSERT( n < boost::thread::hardware_concurrency() );
-
-		cpusetid_t cpusetid;
-		CPU_ZERO( & cpusetid);
-		CPU_SET( n, & cpusetid);
-
-		if ( ::cpuset_setid( CPU_WHICH_TID, -1, cpusetid) == -1)
+	
+		cpuset_t cpuset;
+		CPU_ZERO( & cpuset);
+		CPU_SET( n, & cpuset);
+	
+		if ( ::cpuset_setaffinity( CPU_LEVEL_CPUSET, CPU_WHICH_TID, -1, sizeof( cpuset), & cpuset) == -1)
 			throw boost::system::system_error(
 					boost::system::error_code(
 						errno,
@@ -41,14 +41,14 @@ namespace boost { namespace this_thread
 	inline
 	void bind_to_any_processor()
 	{
-		cpusetid_t cpusetid;
-		CPU_ZERO( & cpusetid);
-
+		cpuset_t cpuset;
+		CPU_ZERO( & cpuset);
+	
 		unsigned int max( boost::thread::hardware_concurrency() );
 		for ( unsigned int i( 0); i < max; ++i)
 			CPU_SET( i, & cpuset);
 		
-		if ( ::cpuset_setid( CPU_WHICH_TID, -1, cpusetid) == -1)
+		if ( ::cpuset_setaffinity( CPU_LEVEL_CPUSET, CPU_WHICH_TID, -1, sizeof( cpuset), & cpuset) == -1)
 			throw boost::system::system_error(
 					boost::system::error_code(
 						errno,
