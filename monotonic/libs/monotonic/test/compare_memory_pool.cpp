@@ -29,7 +29,7 @@ struct Rebind
 struct thrash_pool
 {
 	template <class Alloc>
-	int test(size_t length) const
+	int test(Alloc alloc, size_t length) const
 	{
 		std::vector<int, typename Rebind<Alloc, int>::type> vector;
 		vector.resize(length*rand()/RAND_MAX);
@@ -40,7 +40,7 @@ struct thrash_pool
 struct thrash_pool_sort
 {
 	template <class Alloc>
-	int test(size_t length) const
+	int test(Alloc alloc, size_t length) const
 	{
 		std::vector<int, typename Rebind<Alloc, int>::type> vector;
 		vector.resize(length*rand()/RAND_MAX);
@@ -53,7 +53,7 @@ struct thrash_pool_sort
 struct thrash_pool_sort_list_int
 {
 	template <class Alloc>
-	int test(size_t length) const
+	int test(Alloc alloc, size_t length) const
 	{
 		std::list<int, typename Rebind<Alloc, int>::type> list;
 		generate_n(back_inserter(list), length, rand);
@@ -65,7 +65,7 @@ struct thrash_pool_sort_list_int
 struct thrash_pool_iter
 {
 	template <class Alloc>
-	int test(size_t length) const
+	int test(Alloc alloc, size_t length) const
 	{
 		std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type> vector;
 		vector.resize(length);
@@ -82,7 +82,7 @@ struct thrash_pool_iter
 struct thrash_pool_map_list_unaligned
 {
 	template <class Alloc>
-	int test(size_t length) const
+	int test(Alloc alloc, size_t length) const
 	{
 		std::map<int
 			, std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type>
@@ -102,7 +102,7 @@ struct thrash_pool_map_list_unaligned
 struct test_dupe_list
 {
 	template <class Alloc>
-	int test(size_t count) const
+	int test(Alloc alloc, size_t count) const
 	{
 		size_t dummy = 0;
 		std::list<int, typename Rebind<Alloc, int>::type> list;
@@ -154,7 +154,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test<fast_pool_alloc>(length);
+				fun.test(fast_pool_alloc(), length);
 			}
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::fast_pool_allocator_tag, sizeof(Unaligned)>::release_memory();
@@ -170,7 +170,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test<pool_alloc>(length);
+				fun.test(pool_alloc(), length);
 			}
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(int)>::release_memory();
 			boost::singleton_pool<boost::pool_allocator_tag, sizeof(Unaligned)>::release_memory();
@@ -186,7 +186,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test<mono_alloc>(length);
+				fun.test(mono_alloc(), length);
 			}
 			boost::monotonic::reset_storage();
 		}
@@ -201,7 +201,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test<mono_alloc>(length);
+				fun.test(mono_alloc(), length);
 			}
 			storage.reset();
 		}
@@ -215,7 +215,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test<std_alloc>(length);
+				fun.test(std_alloc(), length);
 			}
 		}
 		result.std_elapsed = timer.elapsed();
