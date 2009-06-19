@@ -149,6 +149,7 @@ struct test_set_vector
 	{
 		typedef std::vector<int, typename Rebind<Alloc, int>::type> Vector;
 		typedef std::set<Vector, std::less<Vector>, typename Rebind<Alloc, Vector>::type> Set;
+		int dummy = 0;
 		Set set;
 		for (size_t n = 0; n < count; ++n)
 		{
@@ -156,8 +157,9 @@ struct test_set_vector
 			Vector vector(size);
 			generate_n(vector.begin(), size, rand);
 			set.insert(vector);
+			dummy += set.size();
 		}
-		return 0;
+		return dummy;
 	}
 };
 
@@ -297,7 +299,7 @@ void PrintResults(PoolResults const &results)
 void compare_memory_pool()
 {
 	cout << "test_set_vector";
-	PrintResults(compare_memory_pool(50, 1000, 5, test_set_vector()));
+	PrintResults(compare_memory_pool(500, 1000, 10, test_set_vector()));
 	cout << "test_dupe_list";
 	PrintResults(compare_memory_pool(500, 2000, 10, test_dupe_list()));
 	cout << "test_dupe_vector";
