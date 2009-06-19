@@ -75,6 +75,15 @@ struct no_domain { };
 
 
 
+/** @name function_graph_in_edge_iterator
+ * Iterates through the in edges of a vertex
+ * @note The name of this data type is 31 characters long. I need some brevity.
+ */
+
+struct function_graph_in_edge_iterator { };
+
+
+
 /**
  * Empty function graph prevents instantiations such as function_graph<int> and
  * function_graph<bool (int, int)>.
@@ -111,7 +120,8 @@ public:
     typedef adjacency_matrix_tag traversal_category;
     typedef Range vertex_iterator_range_type;
     typedef typename range_iterator<vertex_iterator_range_type>::type
-                         vertex_iterator_type;
+                         vertex_iterator;
+    typedef function_graph_in_edge_iterator in_edge_iterator;
 
     /** Constructor: takes a functor and range */
     function_graph(function_type const& f, vertex_iterator_range_type const& r)
@@ -122,6 +132,7 @@ private:
     Range range_;
 };
 
+// Specialization: function_graph without range
 template <typename Result, typename Vertex>
 struct function_graph<function<Result(Vertex, Vertex)>, no_domain>
     : public function_graph_base<function<Result(Vertex, Vertex)> >
@@ -154,10 +165,10 @@ public:
 
 //@{
 template <typename Result, typename Vertex>
-function_graph<function<Result(Vertex, Vertex)> >
+function_graph<function<Result(Vertex, Vertex)>, no_domain>
     make_function_graph(function<Result(Vertex, Vertex)> const& f)
 {
-    return function_graph<function<Result(Vertex, Vertex)> >(f);
+    return function_graph<function<Result(Vertex, Vertex)>, no_domain>(f);
 }
 
 template <typename Result, typename Vertex, typename Range>
@@ -200,13 +211,34 @@ Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
 
 
 
+/** in_edges(v, g) is part of the bidirectional graph concept. */
+
+template <typename Result, typename Vertex, typename Range>
+std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
+          Range>::in_edge_iterator,
+          typename function_graph<function<Result(Vertex, Vertex)>,
+          Range>::in_edge_iterator>
+in_edges(typename function_graph<function<Result(Vertex, Vertex)>,
+         Range>::vertex_descriptor const& v,
+         function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
+{
+    std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
+              Range>::in_edge_iterator,
+              typename function_graph<function<Result(Vertex, Vertex)>,
+              Range>::in_edge_iterator> iter_range;
+    // Search for first and last in_edges
+    return iter_range;
+}
+
+
+
 /** vertices(g) is part of the vertex list concept. */
 
 template <typename Result, typename Vertex, typename Range>
 std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::iterator_type,
+          Range>::vertex_iterator,
           typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::iterator_type>
+          Range>::vertex_iterator>
 vertices(function_graph<function<Result(Vertex, Vertex)>, Range> const& g) {
     return std::make_pair(begin(g.range_), end(g.range_));
 }

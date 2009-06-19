@@ -34,11 +34,15 @@ int main()
 
     ////////
     // Create functions, graphs and edges
-    //G funcGraph = boost::make_function_graph(less_than<int>());
-    G funcGraph(less_than<int>());
+    G funcGraph(std::less<int>());
     GwithRange funcGraphWithRange(less_than<int>(),
                                   std::make_pair(vectorOfInts.begin(),
                                                  vectorOfInts.end()));
+    /*GwithRange funcGraphWithRange2 = boost::make_function_graph(less_than<int>(),
+                                  std::make_pair(vectorOfInts.begin(),
+                                                 vectorOfInts.end()));*/
+
+    
 
     return 0;
 }
