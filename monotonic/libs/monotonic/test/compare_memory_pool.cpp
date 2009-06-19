@@ -10,64 +10,39 @@
 #include <iostream> 
 #include <iomanip> 
 #include <numeric>
+#include <algorithm>
 
 #include <vector>
 #include <list>
 #include <map>
 #include <set>
+#include <bitset>
+#include <string>
 
-#include <boost/pool/pool_alloc.hpp>
-#undef max
-#undef min
-#include <boost/monotonic/allocator.hpp>
+#include <boost/timer.hpp>
 #include <boost/monotonic/local.hpp>
 
-
-#include <tbb/tbb_allocator.h>
-#include <boost/timer.hpp>
-
-
+#include "./AllocatorTypes.h"
 
 using namespace std;
 using namespace boost;
 
-struct Unaligned
-{
-	int num;
-	char c;
-	Unaligned() : num(0), c(0) { }
-	Unaligned(char C) : num(0), c(C) { }
-};
-
-bool operator<(Unaligned const &A, Unaligned const &B)
-{
-	return A.c < B.c;
-}
-
-template <class Alloc, class T>
-struct Rebind
-{
-	typedef typename Alloc::template rebind<T>::other type;
-};
-
-struct thrash_pool
+struct test_vector_accumulate
 {
 	template <class Alloc>
 	int test(Alloc alloc, size_t length) const
 	{
-		std::vector<int, typename Rebind<Alloc, int>::type> vector;
-		vector.resize(length*rand()/RAND_MAX);
+		std::vector<int, typename Rebind<Alloc, int>::type> vector(length*rand()/RAND_MAX);
 		return accumulate(vector.begin(), vector.end(), 0);
 	}
 };
 
-struct thrash_pool_sort
+struct test_vector_random_sort
 {
 	template <class Alloc>
 	int test(Alloc alloc, size_t length) const
 	{
-		std::vector<int, typename Rebind<Alloc, int>::type> vector;
-		vector.resize(length*rand()/RAND_MAX);
+		std::vector<int, typename Rebind<Alloc, int>::type> vector(length*rand()/RAND_MAX);
 		generate_n(back_inserter(vector), length, rand);
 		sort(vector.begin(), vector.end());
 		return 0;
@@ -86,24 +61,22 @@ struct thrash_pool_sort_list_int
 	}
 };
 
-struct thrash_pool_iter
+struct test_vector_accumulate_unaligned
 {
 	template <class Alloc>
 	int test(Alloc alloc, size_t length) const
 	{
-		std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type> vector;
-		vector.resize(length);
+		std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type> vector(length);
 		int total = 0;
 		BOOST_FOREACH(Unaligned const &val, vector)
 		{
-			total += val.c;
+			total += val.c[2];
 		}
 		return total;
 	}
 };
 
-
-struct thrash_pool_map_list_unaligned
+struct test_map_list
 {
 	template <class Alloc>
 	int test(Alloc alloc, size_t length) const
@@ -123,23 +96,29 @@ struct thrash_pool_map_list_unaligned
 	}
 };
 
-struct thrash_pool_map_vector_unaligned
+template <class Map>
+int test_map_vector_impl(size_t length)
+{
+	Map map;
+	size_t mod = length/10;
+	for (size_t n = 0; n < length; ++n)
+	{
+		int random = rand() % mod;
+		map[random].push_back(n);
+	}
+	return 0;
+}
+
+template <class Ty>
+struct test_map_vector
 {
 	template <class Alloc>
-	int test(Alloc alloc, size_t length) const
+	int test(Alloc, size_t length) const
 	{
-		std::map<int
-			, std::vector<Unaligned, typename Rebind<Alloc, Unaligned>::type>
+		return test_map_vector_impl<std::map<int
+			, std::vector<Ty, typename Rebind<Alloc, Ty>::type>
 			, std::less<int>
-			, typename Rebind<Alloc, int>::type
-		> map;
-		size_t mod = length/10;
-		for (size_t n = 0; n < length; ++n)
-		{
-			int random = rand() % mod;
-			map[random].push_back(n);
-		}
-		return 0;
+			, typename Rebind<Alloc, int>::type> >(length);
 	}
 };
 
@@ -149,19 +128,6 @@ struct test_dupe_list
 	int test(Alloc alloc, size_t count) const
 	{
 		typedef std::list<int, typename Rebind<Alloc, int>::type> List;
-		List list;
-		fill_n(back_inserter(list), count, 42);
-		List dupe = list;
-		return dupe.size();
-	}
-};
-
-struct test_dupe_list_unaligned
-{
-	template <class Alloc>
-	int test(Alloc alloc, size_t count) const
-	{
-		typedef std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type> List;
 		List list;
 		fill_n(back_inserter(list), count, 42);
 		List dupe = list;
@@ -202,6 +168,56 @@ struct test_set_vector
 	}
 };
 
+template <class Container>
+int bubble_sort(Container &cont)
+{
+	bool swapped;
+	do
+	{
+		swapped = false;
+		typename Container::iterator A = cont.begin(), B = --cont.end();
+		typename Container::iterator C = A;
+		for (++C, --B; A != B; ++A, ++C)
+		{
+			if (*C < *A)
+			{
+				std::swap(*A, *C);
+				swapped = true;
+			}
+		}
+	}
+	while (swapped);
+	return 0;
+}
+
+template <class Ty>
+struct test_sort_list
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t count) const
+	{
+		std::list<Ty, typename Rebind<Alloc, Ty>::type> list;
+		for (size_t n = 0; n < count; ++n)
+			list.push_back(count - n);
+		list.sort();
+		return 0;
+	}
+};
+
+template <class Ty>
+struct test_sort_vector
+{
+	template <class Alloc>
+	int test(Alloc, size_t count) const
+	{
+		std::vector<Ty, typename Rebind<Alloc, Ty>::type> vector(count);
+		for (size_t n = 0; n < count; ++n)
+			vector[n] = count - n;
+		sort(vector.begin(), vector.end());
+		return 0;
+	}
+};
+
 struct PoolResult 
 {
 	double pool_elapsed;
@@ -212,43 +228,39 @@ struct PoolResult
 	double tbb_elapsed;
 	PoolResult()
 	{
-		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = -1;
+		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = 0;
 	}
 };
 
 typedef std::map<size_t /*count*/, PoolResult> PoolResults;
 
 template <class Fun>
-PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
+PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 {
-	typedef boost::fast_pool_allocator<int
-		, boost::default_user_allocator_new_delete
-		, boost::details::pool::null_mutex>
-		fast_pool_alloc;
-	typedef boost::pool_allocator<int
-		, boost::default_user_allocator_new_delete
-		, boost::details::pool::null_mutex>
-		pool_alloc;
-	typedef tbb::tbb_allocator<int> tbb_allocator;
-	typedef monotonic::allocator<int> mono_alloc;
-	typedef std::allocator<int > std_alloc;
+	typedef Allocator<Type::FastPool, void> fast_pool_alloc;
+	typedef Allocator<Type::Pool, void> pool_alloc;
+	typedef Allocator<Type::Monotonic, void> mono_alloc;
+	typedef Allocator<Type::TBB, void> tbb_alloc;
+	typedef Allocator<Type::Standard, void> std_alloc;
 
 	PoolResult result;
 
 	// test tbb_allocator
+	if (types.Includes(Type::TBB))
 	{
 		srand(42);
 		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
 		{
 			{
-				fun.test(tbb_allocator(), length);
+				fun.test(tbb_alloc(), length);
 			}
 		}
 		result.tbb_elapsed = timer.elapsed();
 	}
 
 	// test boost::fast_pool_allocator
+	if (types.Includes(Type::FastPool))
 	{
 		srand(42);
 		boost::timer timer;
@@ -265,6 +277,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	}
 
 	// test boost::pool_allocator
+	if (types.Includes(Type::Pool))
 	{
 		srand(42);
 		boost::timer timer;
@@ -281,6 +294,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	}
 
 	// test monotonic
+	if (types.Includes(Type::Monotonic))
 	{
 		srand(42);
 		boost::timer timer;
@@ -295,9 +309,10 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	}
 
 	// test local monotonic
+	if (types.Includes(Type::Monotonic))
 	{
 		srand(42);
-		monotonic::local<> storage;
+		monotonic::local<monotonic::storage<100000> > storage;
 		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
 		{
@@ -310,6 +325,7 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 	}
 
 	// test std
+	if (types.Includes(Type::Standard))
 	{
 		srand(42);
 		boost::timer timer;
@@ -328,27 +344,29 @@ PoolResult compare_memory_pool(size_t count, size_t length, Fun fun)
 }
 
 template <class Fun>
-PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun)
+PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun, Type types = Type::All)
 {
 	cout << title << ": reps=" << count << ", len=" << max_length << ", steps=" << num_iterations;
 	PoolResults results;
 	for (size_t length = 10; length < max_length; length += max_length/num_iterations)
 	{
-		results[length] = compare_memory_pool(count, length, fun);
+		results[length] = run_test(count, length, fun, types);
 	}
 	cout << endl;
 	return results;
 }
 
-void PrintResults(PoolResults const &results)
+void print(PoolResults const &results)
 {
-	size_t w = 8;
-	cout << setw(6) << "length" << setw(w) << "tbb" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;
+	size_t w = 6;
+	//cout << setw(4) << "len" << setw(w) << "tbb" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono"  << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;
+	cout << setw(4) << "len" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "tbb" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
 	cout << setw(0) << "------------------------------------------------------------------------------" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(6) << iter.first << setprecision(3) << setw(w) << result.tbb_elapsed << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.tbb_elapsed/result.mono_elapsed << "%" <<endl;
+		//cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.tbb_elapsed << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  <<endl;
+		cout << setw(4) << iter.first << setprecision(4) << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.tbb_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << setprecision(3) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
 	}
 	cout << endl;
 }
@@ -356,24 +374,23 @@ void PrintResults(PoolResults const &results)
 int main()
 {
 	boost::timer timer;
-	PrintResults(compare_memory_pool(500, 500, 10, "thrash_pool_map_vector_unaligned", thrash_pool_map_vector_unaligned()));
-	PrintResults(compare_memory_pool(100, 1000, 10, "thrash_pool_sort_list_int", thrash_pool_sort_list_int()));
+	Type test_map_vector_types;
+	test_map_vector_types.Exclude(Type::FastPool);
 
-#ifdef WIN32
-	// boost::fast_pool seems bad at this test with MSVC, so do it less.
-	// this will result in less accurate results, but that doesnt matter because monotonic is orders of magnitudes faster
-	// than fast_pool here...
-	PrintResults(compare_memory_pool(10, 1000, 5, "test_set_vector", test_set_vector()));
-#else
-	PrintResults(compare_memory_pool(500, 1000, 10, "test_set_vector", test_set_vector()));
-#endif
+	print(run_tests(50, 200, 5, "set_vector", test_set_vector()));
+	print(run_tests(500, 200, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+	print(run_tests(500, 200, 10, "sort_list<int>", test_sort_list<int>()));
+	print(run_tests(2000, 2000, 10, "sort_vector<int>", test_sort_vector<int>()));
 
-	PrintResults(compare_memory_pool(500, 2000, 10, "test_dupe_list", test_dupe_list()));
-	PrintResults(compare_memory_pool(500, 2000, 10, "test_dupe_vector", test_dupe_vector()));
-	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool", thrash_pool()));
-	PrintResults(compare_memory_pool(50000, 2000, 10, "thrash_pool_iter", thrash_pool_iter()));
-	PrintResults(compare_memory_pool(1000, 1000, 10, "thrash_pool_sort", thrash_pool_sort()));
-	PrintResults(compare_memory_pool(1000, 2000, 10, "thrash_pool_map_list_unaligned", thrash_pool_map_list_unaligned()));
+	print(run_tests(500, 2000, 10, "dupe_list", test_dupe_list()));
+	print(run_tests(1000, 10000, 10, "dupe_vector", test_dupe_vector()));
+	print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
+	print(run_tests(1000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+
+	//PrintResults(compare_memory_pool(50000, 2000, 10, "vector_accumulate_unaligned", test_vector_accumulate_unaligned()));
+	//PrintResults(compare_memory_pool(100, 1000, 10, "map_vector<int>", test_map_vector<int>()));
+	//PrintResults(compare_memory_pool(100, 1000, 10, "map_vector<Unaligned>", test_map_vector<Unaligned>()));
+
 	cout << "tests completed in " << setprecision(2) << timer.elapsed() << "s" << endl;
 
 	return 0;
@@ -383,7 +400,6 @@ namespace boost
 { 
 	namespace monotonic 
 	{
-		// temp. hax to create global storage
 		static_storage_base<> default_static_storage;
 		storage_base *static_storage = &default_static_storage;
 	}

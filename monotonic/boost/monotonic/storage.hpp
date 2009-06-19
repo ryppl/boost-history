@@ -7,6 +7,7 @@
 #define BOOST_MONOTONIC_STORAGE_H
 
 #include <algorithm>
+//#include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/fixed_storage.hpp>
 
 namespace boost
@@ -82,15 +83,17 @@ namespace boost
 					return A.remaining() < B.remaining();
 				}
 			};
-			typedef std::vector<Link, Al> Chain;	// maintained a priority-queue
+			typedef std::vector<Link > Chain;	// maintained a priority-queue
+			typedef fixed_storage<8*1024> ChainStorage;			// local storage for the chain
 
 		private:
 			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
+			//ChainStorage chain_storage;			// use a seperate inline storage for the chains.
 			Chain chain;						// heap-based storage
 			Allocator alloc;					// allocator for heap-based storage
 
 		public:
-			storage()
+			storage()// : chain(chain_storage)
 			{
 			}
 			storage(Allocator const &A)
@@ -167,6 +170,11 @@ namespace boost
 				BOOST_FOREACH(Link const &link, chain)
 					count += link.used();
 				return count;
+			}
+
+			size_t num_links() const
+			{
+				return chain.size();
 			}
 
 		private:

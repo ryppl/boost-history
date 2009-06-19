@@ -382,7 +382,7 @@ int main()
 
 	//test_chained_storage();
 	//test_map_list_heap_stack();
-	compare_memory_pool();
+	compare();
 	//test_mono_map();
 	//test_mono_map();
 	//test_static_storage();
