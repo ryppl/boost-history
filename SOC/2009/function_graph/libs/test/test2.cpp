@@ -8,7 +8,7 @@
 #include <algorithm>
 #include <vector>
 //#include <utility>
-#include "function_graph_alt.hpp"
+#include "function_graph.hpp"
 #include <cmath>
 #include <boost/range.hpp>
 
@@ -27,22 +27,18 @@ int main()
     ////////
     // Create typedefs for functions and function graphs
     typedef boost::function<bool(int,int)> function_boolean;
-    typedef boost::function_graph<function_boolean> graph_boolean;
+    typedef std::pair<std::vector<unsigned int>::iterator,
+                      std::vector<unsigned int>::iterator> iterator_range;
+    typedef boost::function_graph<function_boolean> G;
+    typedef boost::function_graph<function_boolean, iterator_range> GwithRange;
 
     ////////
     // Create functions, graphs and edges
-    graph_boolean funcGraph_boolean(std::less<int>());
+    //G funcGraph = boost::make_function_graph(less_than<int>());
+    G funcGraph(less_than<int>());
+    GwithRange funcGraphWithRange(less_than<int>(),
+                                  std::make_pair(vectorOfInts.begin(),
+                                                 vectorOfInts.end()));
 
-    typedef std::pair<std::vector<unsigned int>::iterator,
-                      std::vector<unsigned int>::iterator> iter_pair;
-    
-    
-    boost::iterator_range<std::vector<unsigned int>::iterator>
-        rangeIter(vectorOfInts.begin(), vectorOfInts.end());
-    boost::iterator_range<std::vector<unsigned int>::iterator>
-        rangeIter2(vectorOfInts);
-    boost::iterator_range<std::vector<unsigned int>::iterator>
-        rangeIter3(std::make_pair(vectorOfInts.begin(), vectorOfInts.end()));
-    
     return 0;
 }

@@ -75,23 +75,6 @@ struct no_domain { };
 
 
 
-/** @name function_graph_range */
-template <typename Iterator>
-struct function_graph_range
-{
-    typedef Iterator iterator_type;
-    typedef typename iterator_range<iterator_type> iterator_range_type;
-
-    /** Constructor - takes a pair of iterators */
-    function_graph_range(iterator_range_type const& r)
-        : range_(r)
-    { }
-
-    iterator_range_type range_;
-};
-
-
-
 /**
  * Empty function graph prevents instantiations such as function_graph<int> and
  * function_graph<bool (int, int)>.
@@ -110,15 +93,13 @@ template <typename T, typename U = no_domain> struct function_graph { };
  * set_edge is part of the interface. Paired with it is the default constructor.
  */
 
-template <typename Result, typename Vertex, typename Iterator>
-struct function_graph<function<Result(Vertex, Vertex)>, Iterator>
-    : public function_graph_base<function<Result(Vertex, Vertex)> >,
-      public function_graph_range<Range>
+template <typename Result, typename Vertex, typename Range>
+struct function_graph<function<Result(Vertex, Vertex)>, Range>
+    : public function_graph_base<function<Result(Vertex, Vertex)> >
 {
 private:
     typedef function_graph_base<function<Result(Vertex, Vertex)> > Base;
     typedef function_graph<function<Result(Vertex, Vertex)> > This;
-    typedef function_graph_range<Iterator> RangeBase; //? not another Base
 
 public:
     typedef typename Base::function_type function_type;
@@ -128,13 +109,17 @@ public:
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
-    typedef typename RangeBase::iterator_range_type iterator_range_type;
-    typedef typename RangeBase::iterator_type iterator_type;
+    typedef Range vertex_iterator_range_type;
+    typedef typename range_iterator<vertex_iterator_range_type>::type
+                         vertex_iterator_type;
 
     /** Constructor: takes a functor and range */
-    function_graph(function_type const& f, iterator_range_type const& r)
-        : Base(f), Range(r)
+    function_graph(function_type const& f, vertex_iterator_range_type const& r)
+        : Base(f), range_(r)
     { }
+
+private:
+    Range range_;
 };
 
 template <typename Result, typename Vertex>
@@ -175,12 +160,12 @@ function_graph<function<Result(Vertex, Vertex)> >
     return function_graph<function<Result(Vertex, Vertex)> >(f);
 }
 
-template <typename Result, typename Vertex, typename Iterator>
-function_graph<function<Result(Vertex, Vertex)>, Iterator>
+template <typename Result, typename Vertex, typename Range>
+function_graph<function<Result(Vertex, Vertex)>, Range>
     make_function_graph(function<Result(Vertex, Vertex)> const& f,
-                        Iterator const& r)
+                        Range const& r)
 {
-    return function_graph<function<Result(Vertex, Vertex)>, Iterator>(f,r);
+    return function_graph<function<Result(Vertex, Vertex)>, Range>(f,r);
 }
 //@}
 
@@ -199,18 +184,16 @@ struct function_graph <Result(Vertex, Vertex)>
 
 /** source(e, g) and target(e, g) are part of the incedence graph concept. */
 
-template <typename Result, typename Vertex, typename Iterator>
+template <typename Result, typename Vertex, typename Range>
 Vertex source(detail::func_graph_edge<Result, Vertex> const& e,
-              function_graph<function<Result(Vertex, Vertex)>, Iterator > const&
-                  g)
+              function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
 {
     return e.source;
 }
 
-template <typename Result, typename Vertex, typename Iterator>
+template <typename Result, typename Vertex, typename Range>
 Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
-              function_graph<function<Result(Vertex, Vertex)>, Iterator > const&
-                  g)
+              function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
 {
     return e.target;
 }
@@ -219,7 +202,7 @@ Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
 
 /** vertices(g) is part of the vertex list concept. */
 
-template <typename Result, typename Vertex, typename Iterator>
+template <typename Result, typename Vertex, typename Range>
 std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
           Range>::iterator_type,
           typename function_graph<function<Result(Vertex, Vertex)>,
@@ -268,9 +251,9 @@ bind_edge(optional<OptType> const& x, Vertex u, Vertex v)
 
 }   // detail namespace
 
-#define FUNC_GRAPH function_graph<function<Result(Vertex, Vertex)>, Iterator>
+#define FUNC_GRAPH function_graph<function<Result(Vertex, Vertex)>, Range>
 
-template <typename Result, typename Vertex, typename Iterator>
+template <typename Result, typename Vertex, typename Range>
 std::pair<typename FUNC_GRAPH::edge_descriptor, bool>
 edge(typename FUNC_GRAPH::vertex_descriptor u,
      typename FUNC_GRAPH::vertex_descriptor v,
