@@ -304,8 +304,8 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 void PrintResults(PoolResults const &results)
 {
 	size_t w = 10;
-	cout << setw(6) << "count" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/mono" << setw(w) << "pool/mono" << setw(w) << "std/mono" << endl;
-	cout << setw(0) << "------------------------------------------------------------------------------";
+	cout << setw(6) << "length" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/mono" << setw(w) << "pool/mono" << setw(w) << "std/mono" << endl;
+	cout << setw(0) << "------------------------------------------------------------------------------" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
