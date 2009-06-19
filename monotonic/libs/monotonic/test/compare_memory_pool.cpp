@@ -240,16 +240,16 @@ void PrintResults(PoolResults const &results)
 void compare_memory_pool()
 {
 	cout << "thrash_pool" << endl;
-	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool()));
+	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool()));
 	cout << "thrash_pool_iter" << endl;
-	PrintResults(compare_memory_pool(50000, 1000, 10, thrash_pool_iter()));
+	PrintResults(compare_memory_pool(50000, 2000, 10, thrash_pool_iter()));
 	cout << "thrash_pool_sort" << endl;
-	PrintResults(compare_memory_pool(1000, 500, 10, thrash_pool_sort()));
+	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_sort()));
 
 	cout << "thrash_pool_sort_list_int" << endl;
-	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_sort_list_int()));
+	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_sort_list_int()));
 	cout << "thrash_pool_map_list_unaligned" << endl;
-	PrintResults(compare_memory_pool(1000, 1000, 10, thrash_pool_map_list_unaligned()));
+	PrintResults(compare_memory_pool(1000, 2000, 10, thrash_pool_map_list_unaligned()));
 }
 
 //EOF
