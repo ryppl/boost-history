@@ -288,11 +288,12 @@ PoolResults compare_memory_pool(size_t count, size_t max_length, size_t num_iter
 void PrintResults(PoolResults const &results)
 {
 	size_t w = 10;
-	cout << setw(0) << "count" << setw(w) << "fast_p" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fp/mono" << setw(w) << "pool/mono" << endl;
+	cout << setw(6) << "count" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono" << setw(w) /*<< "local" << setw(w)*/ << "fast/mono" << setw(w) << "pool/mono" << setw(w) << "std/mono" << endl;
+	cout << setw(0) << "------------------------------------------------------------------------------";
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(0) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" <<endl;
+		cout << setw(6) << setprecision(4) << iter.first << setw(w) <<result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed /*<< setw(w) << result.local_mono_elapsed*/ << setw(w) << 100.*result.fast_pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.pool_elapsed/result.mono_elapsed << "%" << setw(w) << 100.*result.std_elapsed/result.mono_elapsed << "%" << endl;
 	}
 }
 
