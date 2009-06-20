@@ -399,15 +399,16 @@ int main()
 	print(run_tests(5000000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
 	print(run_tests(2000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
 	print(run_tests(5000, 500, 10, "set_vector", test_set_vector()));
+	print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #else
-	print(run_tests(1000, 10000, 10, "dupe_vector", test_dupe_vector()));
-	print(run_tests(500, 2000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+	print(run_tests(10000, 10000, 10, "dupe_vector", test_dupe_vector()));
+	print(run_tests(1000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
 	print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
 	print(run_tests(1000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
 	print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
+	print(run_tests(50, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #endif
 
-	print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 	cout << "tests completed in " << timer.elapsed() << "s" << endl;
 
 	return 0;
