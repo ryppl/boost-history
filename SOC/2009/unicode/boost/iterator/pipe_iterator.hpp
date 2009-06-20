@@ -90,6 +90,8 @@ public:
 template<typename P>
 struct one_many_pipe : P
 {
+    one_many_pipe() {} // singular
+    
 	one_many_pipe(P p_) : P(p_)
 	{
 	}
@@ -130,6 +132,8 @@ struct pipe_iterator
 		const typename Pipe::output_type
 	>
 {
+    pipe_iterator() {} // singular
+    
 	pipe_iterator(It begin_, It pos_, It end_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
 	{
 		if(pos != end)
@@ -219,20 +223,45 @@ pipe_iterator<It, P> make_pipe_iterator(It begin, It pos, It end, P p)
 }
 
 template<typename Range, typename P>
-std::pair<
-	pipe_iterator<typename boost::range_iterator<const Range>::type, P>,
+boost::iterator_range<
 	pipe_iterator<typename boost::range_iterator<const Range>::type, P>
-> make_pipe_range(const Range& range, P p)
+> piped(const Range& range, P p)
 {
-	return std::make_pair(
+	return boost::make_iterator_range(
 		make_pipe_iterator(boost::begin(range), boost::begin(range), boost::end(range), p),
 		make_pipe_iterator(boost::begin(range), boost::end(range), boost::end(range), p)
 	);
 }
 
+template<typename Range, typename Pipe, typename OutputIterator>
+OutputIterator pipe(const Range& range, Pipe pipe, OutputIterator out)
+{
+    typedef typename boost::range_iterator<const Range>::type Iterator;
+    
+    Iterator begin = boost::begin(range);
+    Iterator end = boost::end(range);
+    
+    while(begin != end)
+    {
+        std::pair<Iterator, OutputIterator> p = pipe.ltr(begin, end, out);
+        begin = p.first;
+        out = p.second;
+    }
+    
+    return out;
+}
+
 template<typename It, typename Pipe>
 struct pipe_output_iterator
 {
+    typedef void                                   difference_type;
+    typedef void                                   value_type;
+    typedef pipe_output_iterator<It, Pipe>*        pointer;
+    typedef pipe_output_iterator<It, Pipe>&        reference;
+    typedef std::output_iterator_tag               iterator_category;
+
+    pipe_output_iterator() {} // singular
+    
 	pipe_output_iterator(It pos_, Pipe p_) : pos(pos_), p(p_)
 	{
 	}
@@ -242,9 +271,9 @@ struct pipe_output_iterator
 		return pos;
 	}
 	
-	pipe_output_iterator& operator*() const
+	const pipe_output_iterator& operator*() const
 	{
-		return const_cast<pipe_output_iterator&>(*this);
+		return *this;
 	}
 	
 	pipe_output_iterator& operator++()
@@ -257,18 +286,29 @@ struct pipe_output_iterator
 		return *this;
 	}
 	
-	void operator=(typename Pipe::output_type val) const
+    template<typename T>
+	void operator=(T val) const
 	{
 		pos = p.ltr(&val, &val + 1, pos).second;
 	}
+    
+    bool operator==(const pipe_output_iterator& other) const
+    {
+        return pos == other.pos;
+    }
+    
+    bool operator!=(const pipe_output_iterator& other) const
+    {
+        return pos != other.pos;
+    }
 	
 private:	
-	It pos;
-	Pipe p;
+	mutable It pos;
+	mutable Pipe p;
 };
 
 template<typename OutputIterator, typename P>
-pipe_output_iterator<OutputIterator, P> make_pipe_output_iterator(OutputIterator out, P p)
+pipe_output_iterator<OutputIterator, P> piped_output(OutputIterator out, P p)
 {
 	return pipe_output_iterator<OutputIterator, P>(out, p);
 }

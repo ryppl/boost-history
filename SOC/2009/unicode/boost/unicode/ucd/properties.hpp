@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <iostream>
 
+#define BOOST_UNICODE_UCD_VERSION_MAJOR 4
+#define BOOST_UNICODE_UCD_VERSION_MINOR 0
+
 namespace boost
 {
 namespace unicode

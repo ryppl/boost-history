@@ -154,7 +154,7 @@ implement facilities not provided by the library core.
 [section Linking the library]
 
 As has been stated in [link unicode.introduction_to_unicode.character_properties Introduction to Unicode], several Unicode algorithms require the usage of a large
-database of information which, as of version 0.2 of this library, is 2.6 MB big on x86.
+database of information which, as of version 0.1a2 of this library, is 2.6 MB big on x86.
 
 For this reason, features that can avoid dependency on that database do so; it is not required for conversions for example. All algorithms that depend on the Unicode
 Character Database are documented as such. All other features are header-only.
@@ -186,7 +186,7 @@ to prevent duplication of data.
 ``auto concept Pipe<typename T>
 {
     typename output_type = T::output_type;
-    static const int  T::max_output; // optional
+    static const int T::max_output; // optional
 
     template<typename In, typename Out>
     std::pair<In, Out> T::ltr(In begin, In end, Out out);
@@ -195,10 +195,39 @@ to prevent duplication of data.
     std::pair<In, Out> T::rtl(In begin, In end, Out out);
 };``
 
-models: [classref boost::unicode::u8_unpacker], [classref boost::unicode::u8_packer],
-[classref boost::unicode::u16_unpacker], [classref boost::unicode::u16_packer].
+models: [classref boost::unicode::u8_decoder],
+[classref boost::unicode::u16_decoder].
 
-Then pipe_iterator for on-the-fly conversion.
+``auto concept OneManyPipe<typename T>
+{
+    typename Input;
+
+    typename output_type = T::output_type;
+    static const int T::max_output; // optional
+    
+    template<typename Out>
+    Out T::operator()(Input input, Out out);
+};``
+
+models: [classref boost::unicode::u8_encoder],
+[classref boost::unicode::u16_encoder].
+
+May be converted to a =Pipe= by using [classref boost::one_many_pipe].
+
+A =Pipe= may then be used with [classref boost::pipe_iterator] to generate iterator/range
+adapters or [classref boost::pipe_output_iterator] to generate
+output iterators with on-the-fly conversion.
+Alternatively, the algorithm may be applied eagerly to the whole range using [funcref boost::pipe].
+
+The library provides several helpers for the UTF conversion codecs, which naming convention is as follows:
+
+* [funcref boost::u8_encode] is an eager encoding algorithm.
+* [funcref boost::u8_decode] is an eager decoding algorithm.
+* [funcref boost::u8_encoded] returns a range adapter that does on-the-fly encoding.
+* [funcref boost::u8_decoded] returns a range adapter that does on-the-fly decoding.
+* [funcref boost::u8_encoded_out] returns an output iterator adapter that will encode its output.
+* [funcref boost::u8_bounded] returns a range adapter that turns the range into a range of subranges,
+with each subrange being the consumed input for a decoding step.
 
 [endsect]
 
@@ -210,7 +239,7 @@ Then pipe_iterator for on-the-fly conversion.
     bool T::operator()(Iterator begin, Iterator end, Iterator pos);
 };``
 
-``auto concept BoundaryConsumer<typename T>
+``auto concept Consumer<typename T>
 {
     template<typename Iterator>
     Iterator T::ltr(Iterator begin, Iterator end);
@@ -219,10 +248,10 @@ Then pipe_iterator for on-the-fly conversion.
     Iterator T::rtl(Iterator begin, Iterator end);
 }``
 
-basically the same as Pipe without the output.
+Can be obtained by converting a =Pipe= with [classref boost::pipe_consumer] or a =BoundaryChecker= with =boost::boundary_consumer=.
 
-BoundaryConsumer can be defined in terms of BoundaryChecker.
-
+A =Consumer= may then be used with [classref boost::consumer_iterator] to generate iterator/range
+adapters with turns the range into a range of subranges, each subrange being one consumed input.
 
 [endsect]
 

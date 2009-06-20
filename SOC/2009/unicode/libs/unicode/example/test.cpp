@@ -1,7 +1,11 @@
 #include <iostream>
 #include <boost/foreach.hpp>
-#include <boost/unicode/utf_conversion.hpp>
+#include <boost/unicode/utf.hpp>
 #include <boost/unicode/ucd/properties.hpp>
+
+#include <boost/typeof/typeof.hpp>
+
+#include <algorithm>
 
 template<typename Range>
 std::pair<
@@ -14,6 +18,23 @@ std::pair<
 		boost::make_reverse_iterator(boost::begin(r))
 	);
 }
+
+template<typename Range, typename OutputIterator>
+void copy(const Range& range, OutputIterator out)
+{
+    std::copy(boost::begin(range), boost::end(range), out);
+}
+
+#define FOREACH_AUTO_BEGIN(name, range)                                \
+for(                                                                   \
+    BOOST_AUTO(_it_##__LINE__, boost::begin(range));                   \
+    _it_##__LINE__ != boost::end(range);                               \
+    ++_it_##__LINE__                                                   \
+)                                                                      \
+{                                                                      \
+    BOOST_AUTO(name, *_it_##__LINE__); 
+    
+#define FOREACH_AUTO_END }
 
 int main()
 {
@@ -36,8 +57,24 @@ int main()
 	v.push_back(0x7b);*/
 	
 	
-	BOOST_FOREACH(char cp, make_reverse_range(boost::make_u32_to_u8_range(v)))
+	BOOST_FOREACH(char cp, make_reverse_range(boost::u8_encoded(v)))
 		std::cout << std::hex << (int)(unsigned char)cp << std::endl;
+        
+    std::vector<char> v2;
+    copy(v, boost::u8_encoded_out(std::back_inserter(v2)));
+    
+    BOOST_FOREACH(char cp, boost::u8_decoded(v2))
+		std::cout << std::hex << (int)(unsigned char)cp << std::endl;
+        
+    std::cout << std::endl;
+    
+    BOOST_AUTO(range, boost::u8_bounded( boost::u8_encoded(v) ) );
+    FOREACH_AUTO_BEGIN(code_points, range)
+        FOREACH_AUTO_BEGIN(cu, code_points)
+            std::cout << ' ' << std::hex << (int)(unsigned char)cu;
+        FOREACH_AUTO_END
+        std::cout << ',';
+    FOREACH_AUTO_END
         
     std::cout << "\n" << boost::unicode::ucd::get_name(0xE9) << std::endl;
     std::cout << boost::unicode::ucd::as_string(boost::unicode::ucd::get_block(0xE9)) << std::endl;
