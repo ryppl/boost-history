@@ -237,11 +237,12 @@ typedef std::map<size_t /*count*/, PoolResult> PoolResults;
 template <class Fun>
 PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 {
-	typedef Allocator<Type::FastPool, void> fast_pool_alloc;
-	typedef Allocator<Type::Pool, void> pool_alloc;
-	typedef Allocator<Type::Monotonic, void> mono_alloc;
-	typedef Allocator<Type::TBB, void> tbb_alloc;
-	typedef Allocator<Type::Standard, void> std_alloc;
+	// boost::pool<void> fails trying to form reference to void
+	typedef Allocator<Type::FastPool, int> fast_pool_alloc;
+	typedef Allocator<Type::Pool, int> pool_alloc;
+	typedef Allocator<Type::Monotonic, int> mono_alloc;
+	typedef Allocator<Type::TBB, int> tbb_alloc;
+	typedef Allocator<Type::Standard, int> std_alloc;
 
 	PoolResult result;
 
@@ -358,15 +359,18 @@ PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, co
 
 void print(PoolResults const &results)
 {
-	size_t w = 6;
+	size_t w = 10;
 	//cout << setw(4) << "len" << setw(w) << "tbb" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono"  << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;
-	cout << setw(4) << "len" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "tbb" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
-	cout << setw(0) << "------------------------------------------------------------------------------" << endl;
+	//cout << setw(4) << "len" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "tbb" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
+	cout << setw(4) << "len" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
+	//cout << setw(0) << "------------------------------------------------------------------------------" << endl;
+	cout << setw(0) << "------------------------------------------------------" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
 		//cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.tbb_elapsed << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  <<endl;
-		cout << setw(4) << iter.first << setprecision(4) << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.tbb_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << setprecision(3) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
+		//cout << setw(4) << iter.first << setprecision(4) << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.tbb_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << setprecision(3) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
+		cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
 	}
 	cout << endl;
 }
@@ -375,23 +379,36 @@ int main()
 {
 	boost::timer timer;
 	Type test_map_vector_types;
-	test_map_vector_types.Exclude(Type::FastPool);
+	Type test_dupe_list_types;
 
-	print(run_tests(50, 200, 5, "set_vector", test_set_vector()));
-	print(run_tests(500, 200, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
-	print(run_tests(500, 200, 10, "sort_list<int>", test_sort_list<int>()));
-	print(run_tests(2000, 2000, 10, "sort_vector<int>", test_sort_vector<int>()));
+	///test_map_vector_types.Exclude(Type::FastPool);
+	///test_dupe_list_types.Exclude(Type::Pool);
+	size_t scale = 1;
+#ifndef WIN32
+	scale = 50;
+#else
+	// these are very slow with MSVC
+#endif
 
-	print(run_tests(500, 2000, 10, "dupe_list", test_dupe_list()));
+	print(run_tests(20000, 1000, 10, "sort_vector<int>", test_sort_vector<int>()));
+	print(run_tests(5000, 1000, 10, "sort_list<int>", test_sort_list<int>()));
+
+#ifndef WIN32
+	print(run_tests(1000000, 10000, 10, "dupe_vector", test_dupe_vector()));
+	print(run_tests(20000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+	print(run_tests(5000000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
+	print(run_tests(2000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+	print(run_tests(5000, 500, 10, "set_vector", test_set_vector()));
+#else
 	print(run_tests(1000, 10000, 10, "dupe_vector", test_dupe_vector()));
+	print(run_tests(500, 2000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
 	print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
 	print(run_tests(1000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+	print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
+#endif
 
-	//PrintResults(compare_memory_pool(50000, 2000, 10, "vector_accumulate_unaligned", test_vector_accumulate_unaligned()));
-	//PrintResults(compare_memory_pool(100, 1000, 10, "map_vector<int>", test_map_vector<int>()));
-	//PrintResults(compare_memory_pool(100, 1000, 10, "map_vector<Unaligned>", test_map_vector<Unaligned>()));
-
-	cout << "tests completed in " << setprecision(2) << timer.elapsed() << "s" << endl;
+	print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+	cout << "tests completed in " << timer.elapsed() << "s" << endl;
 
 	return 0;
 }
