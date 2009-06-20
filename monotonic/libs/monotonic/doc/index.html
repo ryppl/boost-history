@@ -50,8 +50,7 @@
 	    Fast allocation is the main motivation for this library. </p>
 	<p>
 		The reason why boost.monotonic is faster than other allocation systems is that it is not
-		a full allocator in the traditional set. It only provides new storage; it does not de-allocate. The user
-		must call monotonic::reset_storage() to reset the storage, or monotonic::release_storage()
+		a full allocator in the traditional sense. It only provides new storage; it does not de-allocate. Resources are freed when a local storage goes out of scope, or the user calls monotonic::reset_storage() to reset the storage, or monotonic::release_storage()
 		to return the allocated buffers back to the OS.
 	</p>
             <h2 id="Proposal">
