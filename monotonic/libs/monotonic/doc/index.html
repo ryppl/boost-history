@@ -60,33 +60,36 @@
                 explicitly declaring the allocator type. An optional and debatable extension to 
                 the library includes some basic wrapper types around the std::containers that 
                 simplifies the syntax somewhat.</p>
-                <pre>void shared()<br />{
+		<pre>void shared()
+{
 	// declare the storage that will be shared by the various containers.
 	// storage will use the stack at first, then transparently expand to the heap as needed
-	boost::monotonic::storage&lt;&gt; storage;<br />		{			
-		std::map&lt;int, int, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; map(storage);
+	boost::monotonic::storage&lt;&gt; storage;
+	{			
+		std::map&lt;int, int, std::less&lt;int&gt;, boost::monotonic::allocator&lt;int&gt; &gt; map;
 		map[1] = 2;
 		map[2] = 4;
 
-		std::vector&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; vec(storage);
+		std::vector&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; vec;
 		vec.assign(&#39;x&#39;, 4);
 
-		std::list&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; list(storage);
+		std::list&lt;char, boost::monotonic::allocator&lt;char&gt; &gt; list;
 		std::copy(vec.begin(), vec.end(), std::back_inserter(list));
 
 		typedef std::pair&lt;int, int&gt; pair;
-		std::set&lt;pair, std::less&lt;pair&gt;, boost::monotonic::allocator&lt;pair&gt; &gt; set(storage);
+		std::set&lt;pair, std::less&lt;pair&gt;, boost::monotonic::allocator&lt;pair&gt; &gt; set;
 		std::copy(map.begin(), map.end(), std::inserter(set));
 	}
-}</pre>
+	// all allocations are freed when storage leaves scope
+}
+</pre>
             <h2>
                 Proposal
             </h2>
             <p>
                                 The <a href="https://svn.boost.org/svn/boost/sandbox/monotonic">source code</a> resides in the boost sandbox.</p>
             <p>
-                This is a constant-time, STL-compliant[1] allocator and storage 
-                system with the following 
+                This is a constant-time, STL-compliant allocator and storage system with the following 
                 properties:             </p>
             <ul>
                 <li>Space for objects is pre-allocated. This can be on the stack, on the heap, or 
@@ -334,15 +337,12 @@ typedef std::map&lt;int, std::list&lt;int, boost::monotonic::allocator&lt;int&gt
                 <h2>
                     Notes</h2>
                 <p>
-                    [1] It can be argued that the proposed allocator is not in fact &quot;STL-compliant&quot;, 
+                    [1] It has been argued that the proposed allocator is not in fact &quot;STL-compliant&quot;, 
                     as it includes a pointer to storage used by the allocator. In truth, the 
                     Standard doesn&#39;t state that allocators may not have any local data, only that 
                     STL implementations are free to treat allocators of the same type as having the 
-                    same behavior. In practise, the distinction is largely academic and has had no 
-                    seen impact on this library. All modern STL implementation check for allocators 
-                    to do things like speed up swap methods etc. These all work with monotonic 
-                    allocator as well.</p>
-                <h2>
+                    same behavior. This proposal conforms to the standard.
+                    </p> <h2>
                     References</h2><ul>
                     <li>Boost.AlignedStorage</li>
                     <li>Boost.AutoBuffer. A related service. Attempts to integrate this with STL has so 
