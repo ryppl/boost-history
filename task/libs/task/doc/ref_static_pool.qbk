@@ -58,6 +58,8 @@
 		void shutdown();
 		void shutdown_now();
 
+		void interrupt_all_worker();
+
 		bool closed();
 		void clear();
 		bool empty();
@@ -240,6 +242,16 @@
 [[Effects:] [deactivates the channel, send interruption request to all worker-threads and joins them - the pool is closed]]
 [[Throws:] [`boost::thread_interrupted`, `boost::system::system_error`, `boost::task::pool_moved`]]
 [[Notes:] [pending tasks are not processed but returned]]
+]
+
+
+[heading Member function `interrupt_all_worker()`]
+
+	void interrupt_all_worker()
+
+[variablelist
+[[Effects:] [interrupts all worker-threads without invalidating the pool]]
+[[Throws:] [nothing]]
 ]
 
 

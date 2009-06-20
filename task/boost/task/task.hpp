@@ -9,8 +9,10 @@
 
 #include <boost/bind.hpp>
 #include <boost/config.hpp>
+#include <boost/preprocessor/repetition.hpp>
 #include <boost/thread.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/utility/result_of.hpp>
 
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
@@ -246,6 +248,32 @@ public:
 	operator boost::detail::thread_move_t< task >()
 	{ return boost::detail::thread_move_t< task >( * this); }
 # endif
+
+# ifndef BOOST_TASK_MAKE_TASK_MAX_ARITY
+#   define BOOST_TASK_MAKE_TASK_MAX_ARITY 10
+# endif
+
+# define BOOST_TASK_MAKE_TASK_FUNC_ARG(z, n, unused) \
+   BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
+# define BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASK_MAKE_TASK_FUNC_ARG, ~)
+
+# define BOOST_TASK_MAKE_TASK_FUNCTION(z, n, unused)	\
+template<												\
+	typename Fn,										\
+	BOOST_PP_ENUM_PARAMS(n, typename A)					\
+>														\
+explicit task( Fn fn, BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n))	\
+	: task_( new detail::task_wrapper<							\
+			typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type,	\
+			function< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type() >	\
+		>( bind( fn, BOOST_PP_ENUM_PARAMS(n, a)) ) )	\
+	{}
+
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAKE_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK_FUNCTION, ~)
+
+# undef BOOST_TASK_MAKE_TASK_FUNCTION
+# undef BOOST_TASK_MAKE_TASK_FUNC_ARG
+# undef BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS
 
 	unique_future< R > get_future()
 	{

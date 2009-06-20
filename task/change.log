@@ -8,7 +8,9 @@
   boolean indicating if op. succeeded or timed out
 - move sematics for task< R >
 - move sematics for static_pool< R >
-- default_pool) removed because thread_resource_error exceptions thrown by static pool
+- new function interrupt_all_worker() for static_pool< Channel > in order to interrupt all 
+  worker-threads without invalidating the pool
+- default_pool() removed because thread_resource_error exceptions thrown by static pool
 - tests updated
 - examples updated
 - documentation updated

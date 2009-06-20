@@ -32,10 +32,7 @@ public:
 	// check vaild task
 	void test_case_1()
 	{
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t1( fibonacci_fn, 10);
 		tsk::task< int > t2;
 		BOOST_CHECK( t1);
 		BOOST_CHECK( ! t2);
@@ -44,10 +41,7 @@ public:
 	// check moved task
 	void test_case_2()
 	{
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t1( fibonacci_fn, 10);
 		BOOST_CHECK( t1);
 		tsk::task< int > t2( boost::move( t1) );
 		BOOST_CHECK( ! t1);
@@ -58,10 +52,7 @@ public:
 	// check execute twice
 	void test_case_3()
 	{
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t1( fibonacci_fn, 10);
 		BOOST_CHECK_NO_THROW( t1() );
 		BOOST_CHECK_THROW( t1(), tsk::task_already_executed);
 	}
@@ -69,10 +60,7 @@ public:
 	// check swap
 	void test_case_4()
 	{
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t1( fibonacci_fn, 10);
 		tsk::task< int > t2;
 		BOOST_CHECK_NO_THROW( t1() );
 		BOOST_CHECK_THROW( t2(), tsk::task_moved);

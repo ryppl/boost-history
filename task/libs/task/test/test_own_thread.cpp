@@ -32,10 +32,7 @@ public:
 	// check assignment
 	void test_case_1()
 	{
-		tsk::task< int > t(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t( fibonacci_fn, 10);
 		tsk::handle< int > h1;
 		tsk::handle< int > h2(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
@@ -47,14 +44,8 @@ public:
 	// check swap
 	void test_case_2()
 	{
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				5) );
-		tsk::task< int > t2(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t1( fibonacci_fn, 5);
+		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::handle< int > h1(
 			tsk::async( boost::move( t1), tsk::own_thread() ) );
 		tsk::handle< int > h2(
@@ -102,10 +93,7 @@ public:
 	// check wait
 	void test_case_6()
 	{
-		tsk::task< int > t(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t( fibonacci_fn, 10);
 		tsk::handle< int > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		h.wait();
@@ -118,10 +106,7 @@ public:
 	// check wait_for
 	void test_case_7()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 1) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 1) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.wait_for( pt::seconds( 2) ) );
@@ -133,10 +118,7 @@ public:
 	// check wait_for
 	void test_case_8()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 2) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 2) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.wait_for( pt::seconds( 1) ) );
@@ -148,10 +130,7 @@ public:
 	// check wait_for
 	void test_case_9()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 1) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 1) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.wait_until( boost::get_system_time() + pt::seconds( 3) ) );
@@ -163,10 +142,7 @@ public:
 	// check wait_for
 	void test_case_10()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 2) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 2) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.wait_until( boost::get_system_time() + pt::seconds( 1) ) );
@@ -178,10 +154,7 @@ public:
 	// check interrupt
 	void test_case_11()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 3) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 3) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		h.interrupt();
@@ -194,10 +167,9 @@ public:
 	{
 		bool finished( false);
 		tsk::task< void > t(
-			boost::bind(
-				interrupt_fn,
-				pt::seconds( 3),
-				boost::ref( finished) ) );
+			interrupt_fn,
+			pt::seconds( 3),
+			boost::ref( finished) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		h.interrupt_and_wait();
@@ -212,10 +184,9 @@ public:
 	{
 		bool finished( false);
 		tsk::task< void > t(
-			boost::bind(
-				interrupt_fn,
-				pt::seconds( 1),
-				boost::ref( finished) ) );
+			interrupt_fn,
+			pt::seconds( 1),
+			boost::ref( finished) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.interrupt_and_wait_for( pt::seconds( 2) ) );
@@ -230,10 +201,7 @@ public:
 	// check interrupt_and_wait_for
 	void test_case_14()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				non_interrupt_fn,
-				2) );
+		tsk::task< void > t( non_interrupt_fn, 2);
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.interrupt_and_wait_for( pt::seconds( 1) ) );
@@ -245,10 +213,9 @@ public:
 	{
 		bool finished( false);
 		tsk::task< void > t(
-			boost::bind(
-				interrupt_fn,
-				pt::seconds( 1),
-				boost::ref( finished) ) );
+			interrupt_fn,
+			pt::seconds( 1),
+			boost::ref( finished) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.interrupt_and_wait_until( boost::get_system_time() + pt::seconds( 2) ) );
@@ -263,10 +230,7 @@ public:
 	// check interrupt_and_wait_until
 	void test_case_16()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				non_interrupt_fn,
-				2) );
+		tsk::task< void > t( non_interrupt_fn, 2);
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		BOOST_CHECK( h.interrupt_and_wait_until( boost::get_system_time() + pt::seconds( 1) ) );
@@ -279,10 +243,7 @@ public:
 		std::vector< tsk::handle< int > > vec;
 		for ( int i = 0; i <= 5; ++i)
 		{
-			tsk::task< int > t(
-				boost::bind(
-					fibonacci_fn,
-					i) );
+			tsk::task< int > t( fibonacci_fn, i);
 			vec.push_back(
 				tsk::async( boost::move( t), tsk::own_thread() ) );
 		}
@@ -304,14 +265,8 @@ public:
 	// check waitfor_any()
 	void test_case_18()
 	{
-		tsk::task< void > t1(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 3) ) );
-		tsk::task< int > t2(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< void > t1( delay_fn, pt::seconds( 3) );
+		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::handle< void > h1(
 			tsk::async( boost::move( t1), tsk::own_thread() ) );
 		tsk::handle< int > h2(
@@ -325,10 +280,7 @@ public:
 	// check interrupt + wait
 	void test_case_19()
 	{
-		tsk::task< void > t(
-			boost::bind(
-				delay_fn,
-				pt::seconds( 3) ) );
+		tsk::task< void > t( delay_fn, pt::seconds( 3) );
 		tsk::handle< void > h(
 			tsk::async( boost::move( t), tsk::own_thread() ) );
 		h.interrupt();

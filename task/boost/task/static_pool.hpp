@@ -261,7 +261,15 @@ private:
 			shared_lock< shared_mutex > lk( mtx_wg_);
 			return idle_();
 		}
-		
+
+		void interrupt_all_worker()
+		{
+			if ( closed_() ) return;
+
+			shared_lock< shared_mutex > lk( mtx_wg_);
+			wg_.interrupt_all();
+		}
+
 		void shutdown()
 		{
 			if ( closed_() || close_() > 1) return;
@@ -441,7 +449,14 @@ public:
 			throw pool_moved();
 		return pool_->idle();
 	}
-	
+
+	void interrupt_all_worker()
+	{
+		if ( ! pool_)
+			throw pool_moved();
+		pool_->interrupt_all_worker();
+	}
+
 	void shutdown()
 	{
 		if ( ! pool_)
