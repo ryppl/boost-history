@@ -246,7 +246,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 
 	PoolResult result;
 
-	// test tbb_allocator
 	if (types.Includes(Type::TBB))
 	{
 		srand(42);
@@ -260,7 +259,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.tbb_elapsed = timer.elapsed();
 	}
 
-	// test boost::fast_pool_allocator
 	if (types.Includes(Type::FastPool))
 	{
 		srand(42);
@@ -277,7 +275,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.fast_pool_elapsed = timer.elapsed();
 	}
 
-	// test boost::pool_allocator
 	if (types.Includes(Type::Pool))
 	{
 		srand(42);
@@ -294,7 +291,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.pool_elapsed = timer.elapsed();
 	}
 
-	// test monotonic
 	if (types.Includes(Type::Monotonic))
 	{
 		srand(42);
@@ -309,7 +305,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.mono_elapsed = timer.elapsed();
 	}
 
-	// test local monotonic
 	if (types.Includes(Type::Monotonic))
 	{
 		srand(42);
@@ -325,7 +320,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.local_mono_elapsed = timer.elapsed();
 	}
 
-	// test std
 	if (types.Includes(Type::Standard))
 	{
 		srand(42);
@@ -340,7 +334,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 	}
 
 	cout << "." << flush;
-	//cout << length << ": fast_pool, pool, std, mono, local: " << result.fast_pool_elapsed << ", " << result.pool_elapsed << ", " << result.std_elapsed << ", " << result.mono_elapsed << ", " << result.local_mono_elapsed << endl;
 	return result;
 }
 
