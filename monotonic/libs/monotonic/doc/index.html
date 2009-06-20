@@ -43,40 +43,17 @@
                 This buffer can be on the stack, on the heap, or spanning both the stack and the 
                 heap. The allocation model is designed 
                 to be optimal in time with also zero space overhead per allocation made.</p>
-            <p>
-                The name &#39;monotonic&#39; has been criticised as being too general and not really 
-                indicative of the scope and purpose of the library. All alternative suggestions 
-                gratefully considered!</p>
             <h2 id="Motivation">
                 Motivation
             </h2>
             <p>
-                We want our code to be fast and not fragment the heap.</p>
-            <p>
-                We would sometimes like containers to use the stack for 
-                their storage. In 
-                this way, for example, a map&lt;K, list&lt; vector&lt;T&gt; &gt; &gt; can use storage from the stack 
-                for the map, the list and the vector, rather than 
-                fragmenting the heap.             </p>
-            <p>
-                Also, it would be great if the same storage 
-                could be used by different containers, and even better if we could choose to use 
-                the stack or the heap, and better still if there was zero overhead for the 
-                memory allocations. Of course, we would like the storage to use the heap after&nbsp; 
-                the reserved stack-space is exhausted, and it has to be optionally thread-safe 
-                as well.</p>
-            <p>
-                There are many uses for such a system, including very fast and very small data 
-                structures, per-frame containers, 
-                efficient use containers for use in recursion, and reducing or removing heap 
-                fragmentation.             </p>
-            <p>
-                This is what this library does, by collaborating multiple instances of 
-                monotonic::allocator&lt;T&gt; with a 
-                common montonic::storage&lt;&gt;.
-                It is a fast allocation system, O(1) to allocate and zero-cost to deallocate 
-                because de-allocation is a no-op; hence the proposed name of a 
-                &quot;monotonic&quot; allocator.             </p>
+	    Fast allocation is the main motivation for this library. </p>
+	<p>
+		The reason why boost.monotonic is faster than other allocation systems is that it is not
+		a full allocator in the traditional set. It only provides new storage; it does not de-allocate. The user
+		must call monotonic::reset_storage() to reset the storage, or monotonic::release_storage()
+		to return the allocated buffers back to the OS.
+	</p>
             <h2 id="Proposal">
                 Quick Example</h2>
             <p>
