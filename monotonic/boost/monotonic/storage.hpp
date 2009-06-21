@@ -24,23 +24,23 @@ namespace boost
 		template <size_t InlineSize, size_t MinHeapIncrement, class Al>
 		struct storage : storage_base
 		{
-			typedef Al Allocator;
-			typedef typename Allocator::template rebind<char>::other CharAllocator;
-			typedef detail::Link<CharAllocator> Link;
-			typedef storage<InlineSize, MinHeapIncrement, Al> This;
-			typedef std::vector<Link> Chain;					
-			typedef detail::Pool<This> Pool;
-
-		private:
-			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
-			Chain chain;		// heap-based storage
-			Allocator alloc;	// allocator for heap-based storage
-
 			BOOST_STATIC_CONSTANT(size_t, NumPools = 8);
 			BOOST_STATIC_CONSTANT(size_t, ChunkShift = 4);
 			BOOST_STATIC_CONSTANT(size_t, ChunkSize = 1 << ChunkShift);
 
-			boost::array<Pool, NumPools> pools;
+			typedef storage<InlineSize, MinHeapIncrement, Al> This;
+			typedef Al Allocator;
+			typedef typename Allocator::template rebind<char>::other CharAllocator;
+			typedef detail::Link<CharAllocator> Link;
+			typedef detail::Pool<This> Pool;
+			typedef std::vector<Link> Chain;					
+			typedef boost::array<Pool, NumPools> Pools;
+
+		private:
+			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
+			Chain chain;						// heap-based storage
+			Allocator alloc;					// allocator for heap-based storage
+			Pools pools;						// pools of same-sized chunks
 
 			void create_pools()
 			{
