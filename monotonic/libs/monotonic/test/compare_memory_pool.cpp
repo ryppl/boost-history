@@ -492,7 +492,6 @@ namespace boost
 { 
 	namespace monotonic 
 	{
-		Pools pools;
 		static_storage_base<> default_static_storage;
 		storage_base *static_storage = &default_static_storage;
 	}

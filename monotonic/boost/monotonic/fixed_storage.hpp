@@ -11,7 +11,7 @@
 #include <boost/monotonic/forward_declarations.hpp>
 #include <boost/monotonic/exceptions.hpp>
 #include <boost/monotonic/storage_base.hpp>
-#include <boost/monotonic/storage_pool.hpp>
+//#include <boost/monotonic/storage_pool.hpp>
 
 //#define BOOST_MONOTONIC_STORAGE_EARLY_OUT
 

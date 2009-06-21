@@ -111,11 +111,11 @@ namespace boost
 			BOOST_STATIC_CONSTANT(size_t, NodeSize1 = (Size + MinSize)/MinSize);
 			BOOST_STATIC_CONSTANT(size_t, NodeSize = NodeSize1*MinSize);
 
-			typedef storage_pool<T, NodeSize> Pool;
+			//typedef storage_pool<T, NodeSize> Pool;
 
 		//private:
 			storage_base *storage;
-			static Pool pool;
+			//static Pool pool;
 
 		public:
 			allocator_base(storage_base &store) throw() 
@@ -214,8 +214,10 @@ namespace boost
 			}
 		};
 
+/*
 		template <class T, class Derived>
 		typename allocator_base<T, Derived>::Pool allocator_base<T, Derived>::pool;
+*/
 
 	} // namespace monotonic
 
