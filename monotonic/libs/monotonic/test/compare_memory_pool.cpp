@@ -351,17 +351,12 @@ PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, co
 void print(PoolResults const &results)
 {
 	size_t w = 10;
-	//cout << setw(4) << "len" << setw(w) << "tbb" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "mono"  << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;
-	//cout << setw(4) << "len" << setw(w) << "fastp" << setw(w) << "pool" << setw(w) << "std" << setw(w) << "tbb" << setw(w) << "mono" << setw(w) << "local" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
-	cout << setw(4) << "len" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << setw(w) << "tbb/l" << endl;
-	//cout << setw(0) << "------------------------------------------------------------------------------" << endl;
-	cout << setw(0) << "------------------------------------------------------" << endl;
+	cout << setw(4) << "len" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;//setw(w) << "tbb/l" << endl;
+	cout << setw(0) << "--------------------------------------------" << endl;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		//cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.tbb_elapsed << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  <<endl;
-		//cout << setw(4) << iter.first << setprecision(4) << setw(w) << result.fast_pool_elapsed << setw(w) << result.pool_elapsed << setw(w) << result.std_elapsed << setw(w) << result.tbb_elapsed << setw(w) << result.mono_elapsed << setw(w) << result.local_mono_elapsed << setw(w) << setprecision(3) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
-		cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
+		cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << endl;//setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
 	}
 	cout << endl;
 }
