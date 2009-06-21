@@ -450,7 +450,7 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
 	{   //            [------------ . . .
 		// [left_resid---fst_it --- . . .
 		iterator prior_ = first_;
-		if(prior_ != _map.begin())
+		if(prior_ != this->_map.begin())
 			--prior_;
 		const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(left_resid);
 		//NOTE: Only splitting
@@ -623,7 +623,7 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
     if(!left_resid.empty())
     {
 		iterator prior_ = it_;
-		if(prior_ != _map.begin())
+		if(prior_ != this->_map.begin())
 			--prior_;
 		const_cast<interval_type&>(it_->KEY_VALUE).left_subtract(left_resid);
 		this->_map.insert(prior_, value_type(left_resid, it_->CONT_VALUE));
