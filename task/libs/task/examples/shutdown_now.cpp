@@ -44,10 +44,7 @@ int main( int argc, char *argv[])
 			tsk::unbounded_channel< tsk::fifo >
 		> pool( tsk::poolsize( 1) );
 
-		tsk::task< int > t(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t( fibonacci_fn, 10);
 				
 		tsk::handle< int > h(
 			tsk::async(

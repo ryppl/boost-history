@@ -60,18 +60,9 @@ int main( int argc, char *argv[])
 		> pool( tsk::poolsize( 1) );
 
 		tsk::task< void > t1( long_running_fn);
-		tsk::task< void > t2(
-			boost::bind(
-				fibonacci_fn,
-				0) );
-		tsk::task< void > t3(
-			boost::bind(
-				fibonacci_fn,
-				1) );
-		tsk::task< void > t4(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< void > t2( fibonacci_fn, 0);
+		tsk::task< void > t3( fibonacci_fn, 1);
+		tsk::task< void > t4( fibonacci_fn, 10);
 
 		tsk::async(
 			boost::move( t1),

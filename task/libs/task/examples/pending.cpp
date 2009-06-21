@@ -51,10 +51,7 @@ int main( int argc, char *argv[])
 		tsk::async(
 			boost::move( t1),
 			pool);
-		tsk::task< int > t2(
-			boost::bind(
-				fibonacci_fn,
-				10) );
+		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::handle< int > h(
 			tsk::async(
 				boost::move( t2),

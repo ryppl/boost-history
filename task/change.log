@@ -11,6 +11,7 @@
 - new function interrupt_all_worker() for static_pool< Channel > in order to interrupt all 
   worker-threads without invalidating the pool
 - default_pool() removed because thread_resource_error exceptions thrown by static pool
+- support of processor-binding for FreeBSD 7.1 >
 - tests updated
 - examples updated
 - documentation updated

@@ -34,18 +34,9 @@ int main( int argc, char *argv[])
 		> pool( tsk::poolsize( 1) );
 
 		tsk::task< void > t1( long_running_fn);
-		tsk::task< void > t2(
-			boost::bind(
-				print_fn,
-				"This") );
-		tsk::task< void > t3(
-			boost::bind(
-				print_fn,
-				"a text.\n") );
-		tsk::task< void > t4(
-			boost::bind(
-				print_fn,
-				" is ") );
+		tsk::task< void > t2( print_fn, "This");
+		tsk::task< void > t3( print_fn, "a text.\n");
+		tsk::task< void > t4( print_fn, " is ");
 
 		tsk::async(
 			boost::move( t1),

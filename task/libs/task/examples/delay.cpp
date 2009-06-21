@@ -39,15 +39,13 @@ int parallel_fib_( int n, int cutof)
 	{
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
 		tsk::task< int > t1(
-			boost::bind(
-				parallel_fib_,
-				n - 1,
-				cutof) );
+			parallel_fib_,
+			n - 1,
+			cutof);
 		tsk::task< int > t2(
-			boost::bind(
-				parallel_fib_,
-				n - 2,
-				cutof) );
+			parallel_fib_,
+			n - 2,
+			cutof);
 		tsk::handle< int > h1(
 			tsk::async( boost::move( t1), tsk::as_sub_task() ) );
 		tsk::handle< int > h2(
@@ -71,9 +69,8 @@ int main( int argc, char *argv[])
 		for ( int i = 0; i < 10; ++i)
 		{
 			tsk::task< void > t(
-				boost::bind(
-					& parallel_fib,
-					i) );
+				& parallel_fib,
+				i);
 			tsk::async(
 				boost::move( t),
 				pool);

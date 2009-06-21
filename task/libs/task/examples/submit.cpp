@@ -39,23 +39,11 @@ int main( int argc, char *argv[])
 			tsk::unbounded_channel< tsk::priority< int > >
 		> pool( tsk::poolsize( 3) );
 		
-		tsk::task< int > t1(
-			boost::bind(
-				fibonacci_fn,
-				10) );
-		tsk::task< int > t2(
-			boost::bind(
-				fibonacci_fn,
-				10) );
-		tsk::task< int > t3(
-			boost::bind(
-				fibonacci_fn,
-				10) );
-		tsk::task< int > t4(
-			boost::bind(
-				fibonacci_fn,
-				10) );
-				
+		tsk::task< int > t1( fibonacci_fn, 10);
+		tsk::task< int > t2( fibonacci_fn, 10);
+		tsk::task< int > t3( fibonacci_fn, 10);
+		tsk::task< int > t4( fibonacci_fn, 10);
+
 		tsk::handle< int > h1(
 			tsk::async( boost::move( t1) ) );
 		tsk::handle< int > h2(
