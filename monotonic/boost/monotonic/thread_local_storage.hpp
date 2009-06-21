@@ -69,7 +69,7 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_SHARED_STORAGE_H
+#endif // BOOST_MONOTONIC_THREAD_LOCAL_STORAGE_HPP
 
 //EOF
 
