@@ -24,21 +24,6 @@
 
 #include "./AllocatorTypes.h"
 
-template <class List>
-void trace_ptrs(const char *t, List const &list)
-{
-	printf("%s\n", t);
-	typename List::const_iterator A = list.begin(), B = list.end(), C;
-	C = A;
-	C++;
-	for (; C != B; ++A, ++C)
-	{
-		char *p = (char *)&*C;
-		char *q = (char *)&*A;
-		printf("%p: %d\n", q, p - q);
-	}
-}
-
 using namespace std;
 using namespace boost;
 
