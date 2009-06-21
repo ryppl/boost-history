@@ -3,6 +3,9 @@ g++ (Ubuntu 4.3.3-5ubuntu4) 4.3.3
 results of running test at:
 https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/compare_memory_pool.cpp
 
+===================================================
+		SMALL
+===================================================
 list_create<int>: reps=50000, len=100, steps=10..........
 completed in 5.64s
  len    fast/m    pool/m     std/m     tbb/m
@@ -138,6 +141,9 @@ completed in 514s
   81   4.6e+03      1.25      1.75         1
   91   1.1e+03         2      2.25      1.25
 
+===================================================
+		MEDIUM
+===================================================
 list_create<int>: reps=10000, len=1000, steps=10..........
 completed in 27s
  len    fast/m    pool/m     std/m     tbb/m
