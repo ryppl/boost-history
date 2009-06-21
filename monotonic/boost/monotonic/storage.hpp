@@ -9,7 +9,7 @@
 #include <algorithm>
 //#include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/fixed_storage.hpp>
-#include <boost/monotonic/link.hpp>
+#include <boost/monotonic/detail/link.hpp>
 
 namespace boost
 {

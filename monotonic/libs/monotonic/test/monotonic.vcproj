@@ -263,10 +263,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\chain.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\boost\monotonic\config.hpp"
 					>
 				</File>
@@ -287,18 +283,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\inline_clone_allocator.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\link.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\list.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\boost\monotonic\local.hpp"
 					>
 				</File>
@@ -307,27 +291,11 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\map.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\ptr_list.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\set.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\boost\monotonic\shared_allocator.hpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\boost\monotonic\shared_storage.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\static_storage.h"
 					>
 				</File>
 				<File
@@ -346,17 +314,45 @@
 					RelativePath="..\..\..\boost\monotonic\thread_local_storage.hpp"
 					>
 				</File>
-				<File
-					RelativePath="..\..\..\boost\monotonic\vector.hpp"
-					>
-				</File>
 				<Filter
 					Name="extra"
 					>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\chain.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\inline_clone_allocator.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\list.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\map.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\ptr_list.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\set.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\extra\vector.hpp"
+						>
+					</File>
 				</Filter>
 				<Filter
 					Name="detail"
 					>
+					<File
+						RelativePath="..\..\..\boost\monotonic\detail\link.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
