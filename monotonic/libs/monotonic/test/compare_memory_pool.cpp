@@ -350,13 +350,15 @@ void print(PoolResults const &results)
 
 int main()
 {
+	cout << "results of running test at:" << endl;
+	cout << "https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/compare_memory_pool.cpp" << endl << endl;
 	boost::timer timer;
 	Type test_map_vector_types;
 	Type test_dupe_list_types;
 
 	bool run_large = 0;//true;
 	bool run_medium = 1;//true;
-	bool run_small = 0;//true;
+	bool run_small = 1;//true;
 
 	// large-size (~1000000 elements) containers
 	if (run_large)
@@ -385,31 +387,25 @@ int main()
 	// small-size (~100 elements) containers
 	if (run_small)
 	{
-		print(run_tests(5000, 100, 10, "list_sort<int>", test_list_sort<int>()));
-		print(run_tests(5000, 100, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(50000, 100, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(50000, 100, 10, "list_sort<int>", test_list_sort<int>()));
 		print(run_tests(200000, 100, 10, "sort_vector<int>", test_vector_sort<int>()));
 
 #ifndef WIN32
 		print(run_tests(1000000, 100, 10, "dupe_vector", test_dupe_vector()));
-		print(run_tests(200000, 100, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
-		print(run_tests(50000000, 100, 10, "vector_accumulate", test_vector_accumulate()));
-		print(run_tests(20000, 100, 10, "vector_random_sort", test_vector_random_sort()));
-		print(run_tests(50000, 10, 10, "set_vector", test_set_vector()));
-		print(run_tests(5000, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
-#else
-		print(run_tests(500000, 100, 10, "dupe_vector", test_dupe_vector()));
-		print(run_tests(50000, 100, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(20000, 100, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
 		print(run_tests(500000, 100, 10, "vector_accumulate", test_vector_accumulate()));
 		print(run_tests(2000, 100, 10, "vector_random_sort", test_vector_random_sort()));
-		print(run_tests(200, 50, 10, "set_vector", test_set_vector()));
-		print(run_tests(800, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+		print(run_tests(5000, 100, 10, "set_vector", test_set_vector()));
+		print(run_tests(5000, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+#else
 #endif
 	}
 
 	// medium-size (~1000 elements) containers
 	if (run_medium)
 	{
-		print(run_tests(1000, 1000, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(10000, 1000, 10, "list_create<int>", test_list_create<int>()));
 		print(run_tests(5000, 1000, 10, "list_sort<int>", test_list_sort<int>()));
 		print(run_tests(20000, 1000, 10, "sort_vector<int>", test_vector_sort<int>()));
 
@@ -430,7 +426,7 @@ int main()
 #endif
 	}
 
-	cout << "tests completed in " << timer.elapsed() << "s" << endl;
+	cout << "tests completed in " << setprecision(5) << timer.elapsed() << "s" << endl;
 
 	return 0;
 }

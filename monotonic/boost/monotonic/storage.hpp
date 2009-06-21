@@ -7,7 +7,6 @@
 #define BOOST_MONOTONIC_STORAGE_H
 
 #include <algorithm>
-//#include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/fixed_storage.hpp>
 #include <boost/monotonic/detail/link.hpp>
 
@@ -32,8 +31,8 @@ namespace boost
 
 		private:
 			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
-			Chain chain;						// heap-based storage
-			Allocator alloc;					// allocator for heap-based storage
+			Chain chain;		// heap-based storage
+			Allocator alloc;	// allocator for heap-based storage
 
 			BOOST_STATIC_CONSTANT(size_t, NumPools = 8);
 			BOOST_STATIC_CONSTANT(size_t, MinPoolSize = 8);
