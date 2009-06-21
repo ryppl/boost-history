@@ -373,18 +373,14 @@
 			</File>
 		</Filter>
 		<Filter
-			Name="test"
+			Name="results"
 			>
 			<File
-				RelativePath=".\Jamfile.v2"
+				RelativePath=".\results\gcc.txt"
 				>
 			</File>
 			<File
-				RelativePath=".\results_gcc.txt"
-				>
-			</File>
-			<File
-				RelativePath=".\results_msvc.txt"
+				RelativePath=".\results\msvc.txt"
 				>
 			</File>
 		</Filter>
@@ -430,6 +426,10 @@
 					Name="VCCLCompilerTool"
 				/>
 			</FileConfiguration>
+		</File>
+		<File
+			RelativePath=".\Jamfile.v2"
+			>
 		</File>
 	</Files>
 	<Globals>
