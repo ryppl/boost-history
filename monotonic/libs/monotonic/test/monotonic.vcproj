@@ -350,6 +350,10 @@
 					Name="detail"
 					>
 					<File
+						RelativePath="..\..\..\boost\monotonic\detail\construct.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\monotonic\detail\link.hpp"
 						>
 					</File>

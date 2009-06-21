@@ -6,14 +6,13 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 
-//#define BOOST_MONOTONIC_USE_POOLS
-
 #include <boost/assert.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
 #include <boost/monotonic/container.hpp>
+#include <boost/monotonic/detail/construct.hpp>
 
 #ifdef BOOST_MONOTONIC_USE_POOLS
 #	include <boost/monotonic/storage_pool.hpp>
@@ -23,73 +22,6 @@ namespace boost
 {
 	namespace monotonic
 	{
-		namespace detail
-		{
-			template <bool is_mono_container>
-			struct Construct
-			{
-				template <class T, class Alloc>
-				static void Given(T *ptr, Alloc *allocator)
-				{
-					new (ptr) T();
-				}
-				template <class T, class Alloc>
-				static void Given(T *ptr, T const &val, Alloc *allocator)
-				{
-					new (ptr) T(val);
-				}
-			};
-			template <>
-			struct Construct<true>
-			{
-				template <class T, class Alloc>
-				static void Given(T *ptr, Alloc *allocator)
-				{
-					new (ptr) T(*allocator);
-				}
-				template <class T, class Alloc>
-				static void Given(T *ptr, T const &val, Alloc *allocator)
-				{
-					// unfortunately, there is no requirement for a container to 
-					// have a copy-ctor that also passes an allocator.
-					new (ptr) T(*allocator);
-					*ptr = val;
-				}
-			};
-
-			template <bool is_monotonic_container, class T>
-			struct Create
-			{
-				template <class Storage>
-				static T Given(Storage &)
-				{
-					return T();
-				}
-			};
-			template <class T>
-			struct Create<true, T>
-			{
-				template <class Storage>
-				static T Given(Storage &storage)
-				{
-					return T();//storage);
-				}
-			};
-		}
-		namespace detail
-		{
-			template <size_t A, size_t B>
-			struct miniumum
-			{
-				BOOST_STATIC_CONSTANT(size_t, value = A < B ? A : B);
-			};
-			template <size_t A, size_t B>
-			struct maximum
-			{
-				BOOST_STATIC_CONSTANT(size_t, value = B < A ? A : B);
-			};
-		}
-
 		/// common to other monotonic allocators for type T of type Derived
 		template <class T, class Derived>
 		struct allocator_base
@@ -102,20 +34,9 @@ namespace boost
 			typedef const T &const_reference;
 			typedef T value_type;
 
-			BOOST_STATIC_CONSTANT(size_t, PoolSize = 1000);
 			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
-			BOOST_STATIC_CONSTANT(size_t, MinSize = 72);
-			BOOST_STATIC_CONSTANT(size_t, AlignedSize = alignment + sizeof(T));
-
-			BOOST_STATIC_CONSTANT(size_t, Size = sizeof(T));
-			BOOST_STATIC_CONSTANT(size_t, NodeSize1 = (Size + MinSize)/MinSize);
-			BOOST_STATIC_CONSTANT(size_t, NodeSize = NodeSize1*MinSize);
-
-			//typedef storage_pool<T, NodeSize> Pool;
-
 		//private:
 			storage_base *storage;
-			//static Pool pool;
 
 		public:
 			allocator_base(storage_base &store) throw() 
@@ -142,16 +63,7 @@ namespace boost
 			{
 				BOOST_ASSERT(num > 0);
 				BOOST_ASSERT(storage != 0);
-#ifdef BOOST_MONOTONIC_USE_POOLS
-				if (pointer ptr = pool.allocate(num))
-				{
-					return ptr;
-				}
-				pool.reserve_pool(storage, std::max<size_t>(8, std::max(num*2, pool.capacity()*2)));
-				return pool.allocate(num);
-#else
 				return reinterpret_cast<T *>(storage->allocate(num*sizeof(T), alignment));
-#endif
 			}
 
 			void deallocate(pointer, size_type)
@@ -213,11 +125,6 @@ namespace boost
 				return A.storage != B.storage;
 			}
 		};
-
-/*
-		template <class T, class Derived>
-		typename allocator_base<T, Derived>::Pool allocator_base<T, Derived>::pool;
-*/
 
 	} // namespace monotonic
 

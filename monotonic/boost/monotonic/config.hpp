@@ -6,6 +6,8 @@
 #ifndef BOOST_MONOTONIC_CONFIG_H
 #define BOOST_MONOTONIC_CONFIG_H
 
+//#define BOOST_MONOTONIC_USE_POOLS
+
 namespace boost
 {
 	namespace monotonic
