@@ -42,6 +42,13 @@ namespace boost
 			, class Al = std::allocator<char> >
 		struct shared_storage;
 
+		/// thread-local storage
+		template <
+			size_t InlineSize = DefaultSizes::InlineSize
+			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
+			, class Al = std::allocator<char> >
+		struct thread_local_storage;
+
 		/// a globally available storage buffer
 		template <size_t InlineSize = DefaultSizes::StaticInlineSize
 			, size_t MinHeapIncrement = DefaultSizes::StaticMinHeapIncrement
@@ -64,6 +71,11 @@ namespace boost
 		template <class> 
 		struct shared_allocator;
 	
+		/// a monotonic local_allocator has a shared storage buffer and a no-op deallocate() method
+		/// defaults to use static_storage_base<..., thread_local_storage>
+		template <class> 
+		struct local_allocator;
+
 	} // namespace monotonic
 
 } // namespace boost

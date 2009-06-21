@@ -303,6 +303,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\local_allocator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\map.hpp"
 					>
 				</File>
@@ -339,9 +343,21 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\thread_local_storage.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\vector.hpp"
 					>
 				</File>
+				<Filter
+					Name="extra"
+					>
+				</Filter>
+				<Filter
+					Name="detail"
+					>
+				</Filter>
 			</Filter>
 			<Filter
 				Name="utility"

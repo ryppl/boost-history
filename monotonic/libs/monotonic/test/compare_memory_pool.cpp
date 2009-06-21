@@ -22,6 +22,8 @@
 #include <boost/timer.hpp>
 #include <boost/monotonic/local.hpp>
 
+#include <boost/monotonic/local_allocator.hpp>
+
 #include "./AllocatorTypes.h"
 
 using namespace std;
@@ -187,7 +189,7 @@ struct test_list_sort
 };
 
 template <class Ty>
-struct test_sort_vector
+struct test_vector_sort
 {
 	template <class Alloc>
 	int test(Alloc, size_t count) const
@@ -360,7 +362,7 @@ int main()
 	if (run_large)
 	{
 		print(run_tests(10, 10000, 10, "list_create<int>", test_list_create<int>()));
-		print(run_tests(20, 1000000, 10, "vector_sort<int>", test_sort_vector<int>()));
+		print(run_tests(20, 1000000, 10, "vector_sort<int>", test_vector_sort<int>()));
 		print(run_tests(5, 100000, 10, "list_sort<int>", test_list_sort<int>()));
 
 #ifndef WIN32
@@ -385,7 +387,7 @@ int main()
 	{
 		print(run_tests(5000, 100, 10, "list_sort<int>", test_list_sort<int>()));
 		print(run_tests(5000, 100, 10, "list_create<int>", test_list_create<int>()));
-		print(run_tests(200000, 100, 10, "sort_vector<int>", test_sort_vector<int>()));
+		print(run_tests(200000, 100, 10, "sort_vector<int>", test_vector_sort<int>()));
 
 #ifndef WIN32
 		print(run_tests(1000000, 100, 10, "dupe_vector", test_dupe_vector()));
@@ -409,7 +411,7 @@ int main()
 	{
 		print(run_tests(1000, 1000, 10, "list_create<int>", test_list_create<int>()));
 		print(run_tests(5000, 1000, 10, "list_sort<int>", test_list_sort<int>()));
-		print(run_tests(20000, 1000, 10, "sort_vector<int>", test_sort_vector<int>()));
+		print(run_tests(20000, 1000, 10, "sort_vector<int>", test_vector_sort<int>()));
 
 #ifndef WIN32
 		print(run_tests(1000000, 10000, 10, "dupe_vector", test_dupe_vector()));

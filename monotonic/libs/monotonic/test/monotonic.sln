@@ -21,7 +21,6 @@ Global
 		{470832FD-33D6-4F31-AD06-BB7838371077}.Debug|Win32.ActiveCfg = Debug|Win32
 		{470832FD-33D6-4F31-AD06-BB7838371077}.Debug|Win32.Build.0 = Debug|Win32
 		{470832FD-33D6-4F31-AD06-BB7838371077}.Release|Win32.ActiveCfg = Release|Win32
-		{470832FD-33D6-4F31-AD06-BB7838371077}.Release|Win32.Build.0 = Release|Win32
 		{470832FD-33D6-4F31-AD06-BB7838371077}.ReleaseSym|Win32.ActiveCfg = ReleaseSym|Win32
 		{470832FD-33D6-4F31-AD06-BB7838371077}.ReleaseSym|Win32.Build.0 = ReleaseSym|Win32
 	EndGlobalSection
