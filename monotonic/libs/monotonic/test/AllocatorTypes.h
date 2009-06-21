@@ -33,6 +33,7 @@ struct Type
 	Type(unsigned bits = All) : flags(bits) { }
 	bool Includes(unsigned bit) const { return (flags & bit) != 0; }
 	void Exclude(unsigned bit) { flags &= ~bit; }
+	void Include(unsigned bit) { flags |= bit; }
 	std::string ToString() const;
 };
 

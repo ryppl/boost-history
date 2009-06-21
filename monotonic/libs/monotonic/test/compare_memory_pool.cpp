@@ -24,6 +24,21 @@
 
 #include "./AllocatorTypes.h"
 
+template <class List>
+void trace_ptrs(const char *t, List const &list)
+{
+	printf("%s\n", t);
+	typename List::const_iterator A = list.begin(), B = list.end(), C;
+	C = A;
+	C++;
+	for (; C != B; ++A, ++C)
+	{
+		char *p = (char *)&*C;
+		char *q = (char *)&*A;
+		printf("%p: %d\n", q, p - q);
+	}
+}
+
 using namespace std;
 using namespace boost;
 
@@ -45,18 +60,6 @@ struct test_vector_random_sort
 		std::vector<int, typename Rebind<Alloc, int>::type> vector(length*rand()/RAND_MAX);
 		generate_n(back_inserter(vector), length, rand);
 		sort(vector.begin(), vector.end());
-		return 0;
-	}
-};
-
-struct thrash_pool_sort_list_int
-{
-	template <class Alloc>
-	int test(Alloc alloc, size_t length) const
-	{
-		std::list<int, typename Rebind<Alloc, int>::type> list;
-		generate_n(back_inserter(list), length, rand);
-		list.sort();
 		return 0;
 	}
 };
@@ -101,6 +104,8 @@ int test_map_vector_impl(size_t length)
 {
 	Map map;
 	size_t mod = length/10;
+	if (mod == 0)
+		mod = 5;
 	for (size_t n = 0; n < length; ++n)
 	{
 		int random = rand() % mod;
@@ -168,30 +173,21 @@ struct test_set_vector
 	}
 };
 
-template <class Container>
-int bubble_sort(Container &cont)
+template <class Ty>
+struct test_list_create
 {
-	bool swapped;
-	do
+	template <class Alloc>
+	int test(Alloc alloc, size_t count) const
 	{
-		swapped = false;
-		typename Container::iterator A = cont.begin(), B = --cont.end();
-		typename Container::iterator C = A;
-		for (++C, --B; A != B; ++A, ++C)
-		{
-			if (*C < *A)
-			{
-				std::swap(*A, *C);
-				swapped = true;
-			}
-		}
+		std::list<Ty, typename Rebind<Alloc, Ty>::type> list;
+		fill_n(back_inserter(list), count, 42);
+		return 0;
 	}
-	while (swapped);
-	return 0;
-}
+};
+
 
 template <class Ty>
-struct test_sort_list
+struct test_list_sort
 {
 	template <class Alloc>
 	int test(Alloc alloc, size_t count) const
@@ -199,6 +195,7 @@ struct test_sort_list
 		std::list<Ty, typename Rebind<Alloc, Ty>::type> list;
 		for (size_t n = 0; n < count; ++n)
 			list.push_back(count - n);
+		//trace_ptrs("trace", list);
 		list.sort();
 		return 0;
 	}
@@ -307,17 +304,17 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 
 	if (types.Includes(Type::Monotonic))
 	{
-		srand(42);
-		monotonic::local<monotonic::storage<100000> > storage;
-		boost::timer timer;
-		for (size_t n = 0; n < count; ++n)
-		{
-			{
-				fun.test(mono_alloc(), length);
-			}
-			storage.reset();
-		}
-		result.local_mono_elapsed = timer.elapsed();
+		//srand(42);
+		//monotonic::local<monotonic::storage<100000> > storage;
+		//boost::timer timer;
+		//for (size_t n = 0; n < count; ++n)
+		//{
+		//	{
+		//		fun.test(mono_alloc(), length);
+		//	}
+		//	storage.reset();
+		//}
+		//result.local_mono_elapsed = timer.elapsed();
 	}
 
 	if (types.Includes(Type::Standard))
@@ -340,13 +337,14 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 template <class Fun>
 PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun, Type types = Type::All)
 {
+	boost::timer timer;
 	cout << title << ": reps=" << count << ", len=" << max_length << ", steps=" << num_iterations;
 	PoolResults results;
-	for (size_t length = 10; length < max_length; length += max_length/num_iterations)
+	for (size_t length = 1; length < max_length; length += max_length/num_iterations)
 	{
 		results[length] = run_test(count, length, fun, types);
 	}
-	cout << endl;
+	cout << endl << "completed in " << timer.elapsed() << "s" << endl;
 	return results;
 }
 
@@ -370,37 +368,120 @@ void print(PoolResults const &results)
 
 int main()
 {
+	if (0)
+	{
+		std::list<int, Allocator<Type::FastPool, int> > fp_list;
+		std::list<int, Allocator<Type::TBB, int> > tbb_list;
+		std::list<int, Allocator<Type::Monotonic, int> > m_list;
+
+		size_t ms = Allocator<Type::Monotonic, char>::NodeSize;
+		printf("ms=%d\n", ms);
+
+		fp_list.push_back(1);
+		fp_list.push_back(2);
+		fp_list.push_back(3);
+		tbb_list.push_back(1);
+		tbb_list.push_back(2);
+		tbb_list.push_back(3);
+		m_list.push_back(1);
+		m_list.push_back(2);
+		m_list.push_back(3);
+		trace_ptrs("fp", fp_list);
+		trace_ptrs("tbb", tbb_list);
+		trace_ptrs("mono", m_list);
+	}
+	//Type types = Type::None;
+	//types.Include(Type::TBB);
+	//types.Include(Type::Monotonic);
+
+	//print(run_tests(1, 10, 2, "list_create<int>", test_list_create<int>(), types));
+	//print(run_tests(100, 10, 2, "list_sort<int>", test_list_sort<int>(), types));
+	//return 0;
+	//print(run_tests(1, 10, 2, "list_create<int>", test_list_create<int>(), types));
+	//return 1;
+	//print(run_tests(5000, 100, 10, "list_create<int>", test_list_create<int>()));
+	//print(run_tests(1, 100, 10, "list_sort<int>", test_list_sort<int>()));
+	//return 0;
+
 	boost::timer timer;
 	Type test_map_vector_types;
 	Type test_dupe_list_types;
 
-	///test_map_vector_types.Exclude(Type::FastPool);
-	///test_dupe_list_types.Exclude(Type::Pool);
-	size_t scale = 1;
-#ifndef WIN32
-	scale = 50;
-#else
-	// these are very slow with MSVC
-#endif
+	bool run_large = 0;//true;
+	bool run_medium = 1;//true;
+	bool run_small = 0;//true;
 
-	print(run_tests(20000, 1000, 10, "sort_vector<int>", test_sort_vector<int>()));
-	print(run_tests(5000, 1000, 10, "sort_list<int>", test_sort_list<int>()));
+	// large-size (~1000000 elements) containers
+	if (run_large)
+	{
+		print(run_tests(10, 10000, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(20, 1000000, 10, "vector_sort<int>", test_sort_vector<int>()));
+		print(run_tests(5, 100000, 10, "list_sort<int>", test_list_sort<int>()));
 
 #ifndef WIN32
-	print(run_tests(1000000, 10000, 10, "dupe_vector", test_dupe_vector()));
-	print(run_tests(20000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
-	print(run_tests(5000000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
-	print(run_tests(2000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
-	print(run_tests(5000, 500, 10, "set_vector", test_set_vector()));
-	print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+		print(run_tests(1000000, 10000, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(20000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(5000000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(2000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(5000, 500, 10, "set_vector", test_set_vector()));
+		print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #else
-	print(run_tests(10000, 10000, 10, "dupe_vector", test_dupe_vector()));
-	print(run_tests(1000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
-	print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
-	print(run_tests(1000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
-	print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
-	print(run_tests(50, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+		print(run_tests(1000, 100000000, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(10, 10000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(500, 2000000, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(10, 100000, 5, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(2, 50000, 5, "set_vector", test_set_vector()));
+		print(run_tests(2, 1000000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #endif
+	}
+
+	// small-size (~100 elements) containers
+	if (run_small)
+	{
+		print(run_tests(5000, 100, 10, "list_sort<int>", test_list_sort<int>()));
+		print(run_tests(5000, 100, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(200000, 100, 10, "sort_vector<int>", test_sort_vector<int>()));
+
+#ifndef WIN32
+		print(run_tests(1000000, 100, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(200000, 100, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(50000000, 100, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(20000, 100, 10, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(50000, 10, 10, "set_vector", test_set_vector()));
+		print(run_tests(5000, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+#else
+		print(run_tests(500000, 100, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(50000, 100, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(500000, 100, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(2000, 100, 10, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(200, 50, 10, "set_vector", test_set_vector()));
+		print(run_tests(800, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+#endif
+	}
+
+	// medium-size (~1000 elements) containers
+	if (run_medium)
+	{
+		print(run_tests(1000, 1000, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(5000, 1000, 10, "list_sort<int>", test_list_sort<int>()));
+		print(run_tests(20000, 1000, 10, "sort_vector<int>", test_sort_vector<int>()));
+
+#ifndef WIN32
+		print(run_tests(1000000, 10000, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(20000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(5000000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(2000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(5000, 500, 10, "set_vector", test_set_vector()));
+		print(run_tests(500, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+#else
+		print(run_tests(10000, 10000, 10, "dupe_vector", test_dupe_vector()));
+		print(run_tests(1000, 1000, 10, "dupe_list", test_dupe_list(), test_dupe_list_types));
+		print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
+		print(run_tests(1000, 1000, 10, "vector_random_sort", test_vector_random_sort()));
+		print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
+		print(run_tests(50, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+#endif
+	}
 
 	cout << "tests completed in " << timer.elapsed() << "s" << endl;
 
@@ -411,6 +492,7 @@ namespace boost
 { 
 	namespace monotonic 
 	{
+		Pools pools;
 		static_storage_base<> default_static_storage;
 		storage_base *static_storage = &default_static_storage;
 	}

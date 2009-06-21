@@ -11,8 +11,9 @@
 #include <boost/monotonic/forward_declarations.hpp>
 #include <boost/monotonic/exceptions.hpp>
 #include <boost/monotonic/storage_base.hpp>
+#include <boost/monotonic/storage_pool.hpp>
 
-//#define BOOST_MONOTONIC_FIXED_EARLY_OUT
+//#define BOOST_MONOTONIC_STORAGE_EARLY_OUT
 
 namespace boost
 {
@@ -26,7 +27,7 @@ namespace boost
 
 		private:
 			Buffer buffer;			///< the storage
-#ifdef BOOST_MONOTONIC_FIXED_EARLY_OUT
+#ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 			/// if `full` is true, buffer has reached its capacity; used for early-out on allocation. 
 			/// this maybe should be removed, because although it may speed up allocation
 			/// a little when the buffer is full, it also slows it down a little when it is not
@@ -39,7 +40,7 @@ namespace boost
 		public:
 			fixed_storage() 
 				: cursor(0)
-#ifdef BOOST_MONOTONIC_FIXED_EARLY_OUT
+#ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 				, full(false)
 #endif
 #ifndef NDEBUG
@@ -63,7 +64,7 @@ namespace boost
 			void reset()
 			{
 				cursor = 0;
-#ifdef BOOST_MONOTONIC_FIXED_EARLY_OUT
+#ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 				full = false;
 #endif
 #ifndef NDEBUG
@@ -86,22 +87,30 @@ namespace boost
 			}
 
 			// testing performance against a fixed-size alignment
-			BOOST_STATIC_CONSTANT(size_t, alignment = 16);
+			BOOST_STATIC_CONSTANT(size_t, alignment = 64);
 
 			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t /*alignment*/)
 			{
-#ifdef BOOST_MONOTONIC_FIXED_EARLY_OUT
+				if (0)
+				{
+					void *ptr = &buffer[cursor];
+					cursor += 64;
+					return ptr;
+				}
+
+#ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 				if (full)
 					return 0;
 #endif
+
 				size_t extra = cursor & (alignment - 1);
 				if (extra > 0)
 					extra = alignment - extra;
 				size_t required = num_bytes + extra;
 				if (cursor + required > InlineSize)
 				{
-#ifdef BOOST_MONOTONIC_FIXED_EARLY_OUT
+#ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 					full = InlineSize - cursor < 16;
 #endif
 					return 0;

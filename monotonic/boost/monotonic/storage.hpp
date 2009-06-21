@@ -9,6 +9,7 @@
 #include <algorithm>
 //#include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/fixed_storage.hpp>
+#include <boost/monotonic/link.hpp>
 
 namespace boost
 {
@@ -25,80 +26,74 @@ namespace boost
 		{
 			typedef Al Allocator;
 			typedef typename Allocator::template rebind<char>::other CharAllocator;
-
-			/// a link in the chain of heap-based memory buffers
-			struct Link
-			{
-				size_t capacity, cursor;
-				char *buffer;
-				CharAllocator alloc;
-				Link() : capacity(0), cursor(0), buffer(0)
-				{
-				}
-				Link(Allocator const &al, size_t cap)
-					: capacity(cap), cursor(0), buffer(0), alloc(al)
-				{
-					Construct();
-				}
-				void Construct()
-				{
-					buffer = alloc.allocate(capacity);
-					if (buffer == 0)
-						capacity = 0;
-				}
-				size_t remaining() const
-				{
-					return capacity - cursor;
-				}
-				void reset()
-				{
-				    cursor = 0;
-				}
-				void clear()
-				{
-					alloc.deallocate(buffer, 1);
-				}
-				size_t used() const
-				{
-					return cursor;
-				}
-				bool CanAllocate(size_t num_bytes) const
-				{
-					return capacity - cursor >= num_bytes;
-				}
-				inline void *Allocate(size_t num_bytes, size_t alignment)
-				{
-					size_t extra = cursor & (alignment - 1);
-					if (extra > 0)
-						extra = alignment - extra;
-					size_t required = num_bytes + extra;
-					if (capacity - cursor < required)
-						return 0;
-					char *ptr = buffer + cursor;
-					cursor += required;
-					return ptr + extra;
-				}
-				friend bool operator<(Link const &A, Link const &B)
-				{
-					return A.remaining() < B.remaining();
-				}
-			};
-			typedef std::vector<Link > Chain;	// maintained a priority-queue
-			typedef fixed_storage<8*1024> ChainStorage;			// local storage for the chain
+			typedef detail::Link<CharAllocator> Link;
+			typedef storage<InlineSize, MinHeapIncrement, Al> This;
+			typedef std::vector<Link> Chain;					
 
 		private:
 			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
-			//ChainStorage chain_storage;			// use a seperate inline storage for the chains.
 			Chain chain;						// heap-based storage
 			Allocator alloc;					// allocator for heap-based storage
 
-		public:
-			storage()// : chain(chain_storage)
+			BOOST_STATIC_CONSTANT(size_t, NumPools = 8);
+			BOOST_STATIC_CONSTANT(size_t, MinPoolSize = 8);
+			BOOST_STATIC_CONSTANT(size_t, ChunkShift = 4);
+			BOOST_STATIC_CONSTANT(size_t, ChunkSize = 1 << ChunkShift);
+
+			template <class Storage>
+			struct Pool
 			{
+				char *first, *next, *last;
+				size_t bucket_size;
+				Pool() : first(0), next(0), last(0), bucket_size(0)
+				{
+				}
+				Pool(size_t bs) : first(0), next(0), last(0), bucket_size(bs)
+				{
+				}
+				void *allocate(Storage *storage)
+				{
+					if (next == last)
+						expand(storage);
+					void *ptr = next;
+					next += bucket_size;
+					return ptr;
+				}
+				void expand(Storage *storage)
+				{
+					size_t capacity = std::max(MinPoolSize*bucket_size, (last - first)*bucket_size*2);
+					void *ptr = storage->from_fixed(capacity, 16);
+					if (ptr == 0)
+					{
+						ptr = storage->from_heap(capacity, 16);
+					}
+					first = next = (char *)ptr;
+					last = first + capacity;
+				}
+				void reset()
+				{
+					first = next = last = 0;
+				}
+			};
+			boost::array<Pool<This>, NumPools> pools;
+
+			void create_pools()
+			{
+				for (size_t n = 0; n < NumPools; ++n)
+				{
+					pools[n] = Pool<This>(n*ChunkSize);
+				}
+			}
+
+		public:
+			storage()
+			{
+				create_pools();
 			}
 			storage(Allocator const &A)
 				: alloc(A)
 			{
+				create_pools();
 			}
 			~storage()
 			{
@@ -108,6 +103,10 @@ namespace boost
 			void reset()
 			{
 				fixed.reset();
+				BOOST_FOREACH(Pool<This> &pool, pools)
+				{
+					pool.reset();
+				}
 				BOOST_FOREACH(Link &link, chain)
 				{
 				    link.reset();
@@ -119,31 +118,49 @@ namespace boost
 				reset();
 				BOOST_FOREACH(Link &link, chain)
 				{
-					link.clear();
+					link.release();
 				}
 				chain.clear();
 			}
 
 			void *allocate(size_t num_bytes, size_t alignment)
 			{
-				if (void *ptr = fixed.allocate(num_bytes, alignment))
-				{
+				if (void *ptr = from_pool(num_bytes, alignment))
 					return ptr;
-				}
+				if (void *ptr = from_fixed(num_bytes, alignment))
+					return ptr;
+				return from_heap(num_bytes, alignment);
+			}
+
+			void *from_pool(size_t num_bytes, size_t alignment)
+			{
+				size_t bucket_num = (ChunkSize + num_bytes) >> ChunkShift;
+				if (bucket_num >= NumPools)
+					return 0;
+				return pools[bucket_num].allocate(this);
+			}
+			
+			void *from_fixed(size_t num_bytes, size_t alignment)
+			{
+				return fixed.allocate(num_bytes, alignment);
+			}
+			
+			void *from_heap(size_t num_bytes, size_t alignment)
+			{
 				if (!chain.empty())
 				{
-					if (void *ptr = chain.front().Allocate(num_bytes, alignment))
+					if (void *ptr = chain.front().allocate(num_bytes, alignment))
 					{
 						return ptr;
 					}
 					std::make_heap(chain.begin(), chain.end());
-					if (void *ptr = chain.front().Allocate(num_bytes, alignment))
+					if (void *ptr = chain.front().allocate(num_bytes, alignment))
 					{
 						return ptr;
 					}
 				}
 				AddLink(std::max(MinHeapIncrement, num_bytes*2));
-				void *ptr = chain.front().Allocate(num_bytes, alignment);
+				void *ptr = chain.front().allocate(num_bytes, alignment);
 				if (ptr == 0)
 					throw std::bad_alloc();
 				return ptr;
@@ -181,10 +198,9 @@ namespace boost
 			void AddLink(size_t size)
 			{
 				chain.push_back(Link(alloc, size));
-				std::push_heap(chain.begin(), chain.end());
+				std::make_heap(chain.begin(), chain.end());
 			}
 		};
-
 
 	} // namespace monotonic
 

@@ -77,16 +77,7 @@ namespace boost
 		{
 			static_storage = &default_static_storage;
 		}
-		
-		/// TODO: this will be specialised for 
-		/// static_storage_base<..., shared_storage>, but to avoid having to link against boost::thread
-		/// it is currently synonymous with unshared storage ATM
 
-		// BOOST_MONOTONIC_SHARED_STORAGE_DEFINED is just a hack to avoid having to link with boost::thread
-		// while allowing the possible inclusion of boost/monotonic/shared_storage.hpp for testing
-//#ifndef BOOST_MONOTONIC_SHARED_STORAGE_DEFINED
-//		extern static_storage_base<> static_shared_storage;
-//#endif
 
 	} // namespace monotonic
 

@@ -6,12 +6,18 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 
+//#define BOOST_MONOTONIC_USE_POOLS
+
 #include <boost/assert.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
 #include <boost/monotonic/container.hpp>
+
+#ifdef BOOST_MONOTONIC_USE_POOLS
+#	include <boost/monotonic/storage_pool.hpp>
+#endif
 
 namespace boost
 {
@@ -70,12 +76,24 @@ namespace boost
 				}
 			};
 		}
+		namespace detail
+		{
+			template <size_t A, size_t B>
+			struct miniumum
+			{
+				BOOST_STATIC_CONSTANT(size_t, value = A < B ? A : B);
+			};
+			template <size_t A, size_t B>
+			struct maximum
+			{
+				BOOST_STATIC_CONSTANT(size_t, value = B < A ? A : B);
+			};
+		}
 
 		/// common to other monotonic allocators for type T of type Derived
 		template <class T, class Derived>
 		struct allocator_base
 		{
-			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
 			typedef size_t size_type;
 			typedef ptrdiff_t difference_type;
 			typedef T *pointer;
@@ -84,19 +102,31 @@ namespace boost
 			typedef const T &const_reference;
 			typedef T value_type;
 
-		private:
+			BOOST_STATIC_CONSTANT(size_t, PoolSize = 1000);
+			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
+			BOOST_STATIC_CONSTANT(size_t, MinSize = 72);
+			BOOST_STATIC_CONSTANT(size_t, AlignedSize = alignment + sizeof(T));
+
+			BOOST_STATIC_CONSTANT(size_t, Size = sizeof(T));
+			BOOST_STATIC_CONSTANT(size_t, NodeSize1 = (Size + MinSize)/MinSize);
+			BOOST_STATIC_CONSTANT(size_t, NodeSize = NodeSize1*MinSize);
+
+			typedef storage_pool<T, NodeSize> Pool;
+
+		//private:
 			storage_base *storage;
+			static Pool pool;
 
 		public:
 			allocator_base(storage_base &store) throw() 
 				: storage(&store) { }
 
 			allocator_base(const allocator_base& alloc) throw() 
-				: storage(alloc.get_storage()) { }
+				: storage(alloc.storage) { }
 
 			template <class U, class D> 
 			allocator_base(const allocator_base<U,D> &alloc) throw()
-				: storage(alloc.get_storage()) { }
+				: storage(alloc.storage) { }
 
 			pointer address(reference x) const
 			{
@@ -112,7 +142,16 @@ namespace boost
 			{
 				BOOST_ASSERT(num > 0);
 				BOOST_ASSERT(storage != 0);
-				return static_cast<pointer>(storage->allocate(num*sizeof(value_type), alignment));
+#ifdef BOOST_MONOTONIC_USE_POOLS
+				if (pointer ptr = pool.allocate(num))
+				{
+					return ptr;
+				}
+				pool.reserve_pool(storage, std::max<size_t>(8, std::max(num*2, pool.capacity()*2)));
+				return pool.allocate(num);
+#else
+				return reinterpret_cast<T *>(storage->allocate(num*sizeof(T), alignment));
+#endif
 			}
 
 			void deallocate(pointer, size_type)
@@ -174,6 +213,9 @@ namespace boost
 				return A.storage != B.storage;
 			}
 		};
+
+		template <class T, class Derived>
+		typename allocator_base<T, Derived>::Pool allocator_base<T, Derived>::pool;
 
 	} // namespace monotonic
 
