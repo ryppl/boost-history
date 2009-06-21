@@ -8,6 +8,7 @@
 
 #include <algorithm>
 #include <boost/monotonic/fixed_storage.hpp>
+#include <boost/monotonic/detail/pool.hpp>
 #include <boost/monotonic/detail/link.hpp>
 
 namespace boost
@@ -28,6 +29,7 @@ namespace boost
 			typedef detail::Link<CharAllocator> Link;
 			typedef storage<InlineSize, MinHeapIncrement, Al> This;
 			typedef std::vector<Link> Chain;					
+			typedef detail::Pool<This> Pool;
 
 		private:
 			fixed_storage<InlineSize> fixed;	// the inline fixed-sized storage which may be on the stack
@@ -35,52 +37,16 @@ namespace boost
 			Allocator alloc;	// allocator for heap-based storage
 
 			BOOST_STATIC_CONSTANT(size_t, NumPools = 8);
-			BOOST_STATIC_CONSTANT(size_t, MinPoolSize = 8);
 			BOOST_STATIC_CONSTANT(size_t, ChunkShift = 4);
 			BOOST_STATIC_CONSTANT(size_t, ChunkSize = 1 << ChunkShift);
 
-			template <class Storage>
-			struct Pool
-			{
-				char *first, *next, *last;
-				size_t bucket_size;
-				Pool() : first(0), next(0), last(0), bucket_size(0)
-				{
-				}
-				Pool(size_t bs) : first(0), next(0), last(0), bucket_size(bs)
-				{
-				}
-				void *allocate(Storage *storage)
-				{
-					if (next == last)
-						expand(storage);
-					void *ptr = next;
-					next += bucket_size;
-					return ptr;
-				}
-				void expand(Storage *storage)
-				{
-					size_t capacity = std::max(MinPoolSize*bucket_size, (last - first)*bucket_size*2);
-					void *ptr = storage->from_fixed(capacity, 16);
-					if (ptr == 0)
-					{
-						ptr = storage->from_heap(capacity, 16);
-					}
-					first = next = (char *)ptr;
-					last = first + capacity;
-				}
-				void reset()
-				{
-					first = next = last = 0;
-				}
-			};
-			boost::array<Pool<This>, NumPools> pools;
+			boost::array<Pool, NumPools> pools;
 
 			void create_pools()
 			{
 				for (size_t n = 0; n < NumPools; ++n)
 				{
-					pools[n] = Pool<This>(n*ChunkSize);
+					pools[n] = Pool(n*ChunkSize);
 				}
 			}
 
@@ -102,7 +68,7 @@ namespace boost
 			void reset()
 			{
 				fixed.reset();
-				BOOST_FOREACH(Pool<This> &pool, pools)
+				BOOST_FOREACH(Pool&pool, pools)
 				{
 					pool.reset();
 				}

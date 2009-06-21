@@ -357,6 +357,10 @@
 						RelativePath="..\..\..\boost\monotonic\detail\link.hpp"
 						>
 					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\detail\pool.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 			<Filter

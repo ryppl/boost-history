@@ -20,6 +20,7 @@ namespace boost
 				MinHeapIncrement = 32*1024*1024,				///< the smallest new chunk-size for heap storage
 				StaticInlineSize = 1*1024*1024,					///< inline size for a global store. this goes into your BSS
 				StaticMinHeapIncrement = 32*1024*1024,
+				MinPoolSize = 8,
 			};
 		};
 
