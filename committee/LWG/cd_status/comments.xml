@@ -6558,7 +6558,7 @@ bullet is about destructors of stack objects during stack unwinding.
 </rationale>
 </comment>
 
-<comment nb="US" num="2" uknum="" type="ge/te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="2" uknum="" type="ge/te" owner="LWG" issue="N/A" disp="accepted" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6605,7 +6605,7 @@ Library
 </rationale>
 </comment>
 
-<comment nb="US" num="61" uknum="" type="te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="61" uknum="" type="te" owner="LWG" issue="N/A" disp="duplicate" date="" extdoc="">
 <section>
 17 onward
 </section>
@@ -6628,7 +6628,7 @@ Library
 </rationale>
 </comment>
 
-<comment nb="CA" num="2" uknum="" type="Ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="CA" num="2" uknum="" type="Ge" owner="LWG" issue="N/A" disp="accepted" date="" extdoc="">
 <section>
 17 Library
 </section>
@@ -6649,7 +6649,7 @@ Library
 </rationale>
 </comment>
 
-<comment nb="US" num="62" uknum="" type="ge" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="62" uknum="" type="ge" owner="LWG" issue="N/A" disp="duplicate" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -12612,7 +12612,7 @@ sequence containers.
 </rationale>
 </comment>
 
-<comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="241" uknum="286" type="Te" owner="LWG" issue="" disp="duplicate" date="" extdoc="">
 <section>
 23.2.1
 </section>
@@ -14530,7 +14530,7 @@ numbers]
 </rationale>
 </comment>
 
-<comment nb="UK" num="306" uknum="113" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
+<comment nb="UK" num="306" uknum="113" type="Te" owner="LWG" issue="N/A" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2836.pdf">
 <section>
 26.4
 </section>
@@ -14642,7 +14642,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27
 </section>
@@ -14775,7 +14775,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27.7.1
 </section>
@@ -14874,7 +14874,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27.7.2
 </section>
@@ -14998,7 +14998,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27.7.3
 </section>
@@ -15152,7 +15152,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27.7.4
 </section>
@@ -15294,7 +15294,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="1142" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -15312,7 +15312,7 @@ opened and we await a volunteer.
 </rationale>
 </comment>
 
-<comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="1142" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -15333,7 +15333,7 @@ opened and we await a volunteer.
 </rationale>
 </comment>
 
-<comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="1142" disp="" date="" extdoc="">
 <section>
 28
 </section>
@@ -15539,7 +15539,7 @@ is already covered by issue 909.
 </rationale>
 </comment>
 
-<comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="1143" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -15560,7 +15560,7 @@ N2427. Needs to also consider issues
 </rationale>
 </comment>
 
-<comment nb="UK" num="311" uknum="116" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="311" uknum="116" type="Te" owner="LWG" issue="1143" disp="duplicate" date="" extdoc="">
 <section>
 29
 </section>
@@ -15962,7 +15962,7 @@ attached note.
 </rationale>
 </comment>
 
-<comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -15980,7 +15980,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="320" uknum="117" type="Te" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30
 </section>
@@ -16185,7 +16185,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="77" uknum="" type="te" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30.2.1.2
 </section>
@@ -16247,7 +16247,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="US" num="98" uknum="" type="" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="98" uknum="" type="" owner="LWG" issue="" disp="duplicate" date="" extdoc="">
 <section>
 30.2.1.3,
         30.2.1.4
@@ -16469,7 +16469,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -16560,7 +16560,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -16853,7 +16853,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="1139" disp="" date="" extdoc="">
 <section>
 30.5.8
 </section>
