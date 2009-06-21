@@ -363,41 +363,6 @@ void print(PoolResults const &results)
 
 int main()
 {
-	if (0)
-	{
-		std::list<int, Allocator<Type::FastPool, int> > fp_list;
-		std::list<int, Allocator<Type::TBB, int> > tbb_list;
-		std::list<int, Allocator<Type::Monotonic, int> > m_list;
-
-		size_t ms = Allocator<Type::Monotonic, char>::NodeSize;
-		printf("ms=%d\n", ms);
-
-		fp_list.push_back(1);
-		fp_list.push_back(2);
-		fp_list.push_back(3);
-		tbb_list.push_back(1);
-		tbb_list.push_back(2);
-		tbb_list.push_back(3);
-		m_list.push_back(1);
-		m_list.push_back(2);
-		m_list.push_back(3);
-		trace_ptrs("fp", fp_list);
-		trace_ptrs("tbb", tbb_list);
-		trace_ptrs("mono", m_list);
-	}
-	//Type types = Type::None;
-	//types.Include(Type::TBB);
-	//types.Include(Type::Monotonic);
-
-	//print(run_tests(1, 10, 2, "list_create<int>", test_list_create<int>(), types));
-	//print(run_tests(100, 10, 2, "list_sort<int>", test_list_sort<int>(), types));
-	//return 0;
-	//print(run_tests(1, 10, 2, "list_create<int>", test_list_create<int>(), types));
-	//return 1;
-	//print(run_tests(5000, 100, 10, "list_create<int>", test_list_create<int>()));
-	//print(run_tests(1, 100, 10, "list_sort<int>", test_list_sort<int>()));
-	//return 0;
-
 	boost::timer timer;
 	Type test_map_vector_types;
 	Type test_dupe_list_types;
