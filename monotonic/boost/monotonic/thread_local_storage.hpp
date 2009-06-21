@@ -20,13 +20,16 @@ namespace boost
 		{
 			typedef storage<InlineSize, MinHeapSize, Al> AllocatorStorage;
 			typedef boost::thread_specific_ptr<AllocatorStorage> Storage;
+			typedef thread_local_storage<InlineSize, MinHeapSize, Al> This;
 
 		private:
 			Storage store;
+			static void no_delete(Storage *) { }
 
 		public:
-			thread_local_storage()
+			thread_local_storage() : store(&This::no_delete)
 			{
+				store.reset(&static_thread_local_storage);
 			}
 			size_t used() const
 			{
