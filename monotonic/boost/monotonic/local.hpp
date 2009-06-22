@@ -15,6 +15,8 @@ namespace boost
 		storage_base *set_storage(storage_base &new_storage);
 		void default_storage();
 
+		/// sets the global storage on construction, releases and returns to previous
+		/// storage on destruction
 		template <class Storage>
 		struct local : storage_base
 		{
@@ -30,6 +32,7 @@ namespace boost
 			}
 			~local()
 			{
+				release();
 				if (old)
 					set_storage(*old);
 				else
