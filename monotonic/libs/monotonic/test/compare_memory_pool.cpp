@@ -360,9 +360,9 @@ int main()
 	Type test_map_vector_types;
 	Type test_dupe_list_types;
 
-	bool run_small = 0;//true;
+	bool run_small = 1;//true;
 	bool run_medium = 1;//true;
-	bool run_large = 0;//true;
+	bool run_large = 1;//true;
 
 	// small-size (~100 elements) containers
 	if (run_small)
@@ -395,8 +395,8 @@ int main()
 	if (run_medium)
 	{
 		heading("MEDIUM");
-		//print(run_tests(10000, 1000, 10, "list_create<int>", test_list_create<int>()));
-		//print(run_tests(5000, 1000, 10, "list_sort<int>", test_list_sort<int>()));
+		print(run_tests(10000, 1000, 10, "list_create<int>", test_list_create<int>()));
+		print(run_tests(5000, 1000, 10, "list_sort<int>", test_list_sort<int>()));
 
 #ifndef WIN32
 		print(run_tests(1000000, 100000, 10, "vector_create<int>", test_vector_create()));
@@ -409,7 +409,7 @@ int main()
 #else
 		print(run_tests(1000, 100000, 10, "vector_create<int>", test_vector_create()));
 		print(run_tests(30000, 1000, 10, "vector_sort<int>", test_vector_sort<int>()));
-		print(run_tests(500, 10000, 10, "vector_dupe", test_vector_dupe()));
+		print(run_tests(5000, 10000, 10, "vector_dupe", test_vector_dupe()));
 		print(run_tests(500, 1000, 10, "list_dupe", test_list_dupe(), test_dupe_list_types));
 		print(run_tests(50000, 2000, 10, "vector_accumulate", test_vector_accumulate()));
 		print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
