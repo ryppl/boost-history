@@ -178,27 +178,25 @@ namespace boost
 			}
 
 			template <class Ty>
-			Ty *create()
+			Ty &create()
 			{
 				Ty *ptr = initialised_create<Ty>();
 				new (ptr) Ty();
-				return ptr;
+				return *ptr;
 			}
 
 			template <class Ty>
-			Ty *create(Ty const &X)
+			Ty &create(Ty const &X)
 			{
 				Ty *ptr = initialised_create<Ty>();
 				new (ptr) Ty(X);
-				return ptr;
+				return *ptr;
 			}
 
 			template <class Ty>
-			void destroy(Ty *ptr)
+			void destroy(Ty &object)
 			{
-				if (!ptr)
-					return;
-				ptr->~Ty();
+				object.~Ty();
 			}
 
 			template <size_t N>

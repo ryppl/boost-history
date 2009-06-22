@@ -445,14 +445,11 @@ void test_pools()
 		for (size_t n = 0; n < length; ++n)
 		{
 			// create a new int from storage
-			int *n0 = storage.create<int>();
-
-			// pass a ctor argument
-			int *n1 = storage.create<int>(42);
+			int &n0 = storage.create<int>();
 
 			// create a new string (uses correct alignment)
-			string *s1 = storage.create<string>("foo");
-			BOOST_ASSERT(*s1 == "foo");
+			string &s1 = storage.create<string>("foo");
+			BOOST_ASSERT(s1 == "foo");
 
 			// allocate 37 bytes with alignment 1
 			char *array0 = storage.allocate_bytes(37);
