@@ -291,6 +291,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\region_allocator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\shared_allocator.hpp"
 					>
 				</File>

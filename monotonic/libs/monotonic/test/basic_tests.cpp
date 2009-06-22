@@ -19,6 +19,19 @@ using namespace boost;
 #endif
 
 
+BOOST_AUTO_TEST_CASE(test_local_allocator)
+{
+	monotonic::storage<> storage;
+	monotonic::allocator_region<0>(storage);
+	typedef std::list<int, monotonic::region_allocator<0, int> > List;
+	{
+		List list;
+		generate_n(back_inserter(list), 10, rand);
+		list.sort();
+	}
+}
+
+
 BOOST_AUTO_TEST_CASE(test_local_storage)
 {
 	monotonic::storage<10*1024> storage;

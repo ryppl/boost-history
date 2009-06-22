@@ -66,6 +66,10 @@ namespace boost
 		template <class> 
 		struct allocator;
 
+		/// a monotonic region allocator uses a specified storage
+		template <size_t RegionNumber, class T> 
+		struct region_allocator;
+
 		/// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method
 		/// defaults to use static_storage_base<..., shared_storage>
 		template <class> 
