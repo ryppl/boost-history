@@ -342,6 +342,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\monotonic\extra\string.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\monotonic\extra\vector.hpp"
 						>
 					</File>

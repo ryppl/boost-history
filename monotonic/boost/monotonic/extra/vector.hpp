@@ -122,7 +122,24 @@ namespace boost
 			{
 				return impl.back();
 			}
+
+			void swap(vector &other)
+			{
+				impl.swap(other.impl);
+			}
 		};
+
+		template <class Ty>
+		bool operator==(vector<Ty> const &A, vector<Ty> const &B)
+		{
+			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
+		}
+		
+		template <class Ty>
+		bool operator<(vector<Ty> const &A, vector<Ty> const &B)
+		{
+			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
+		}
 
 	} // namespace monotonic
 

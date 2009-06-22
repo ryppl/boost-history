@@ -100,6 +100,11 @@ namespace boost
 			{
 				return impl.back();
 			}
+
+			void erase(iterator A)
+			{
+				impl.erase(A);
+			}
 		};
 
 	} // namespace monotonic
