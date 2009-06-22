@@ -68,12 +68,12 @@ not been constrained by ``LessThanComparable``::
       { ... }
   }
 
-We propose to allow ``concept_map``\ s to be explicitly “exported” to unconstrained
-contexts like this::
+We propose to allow ``concept_map``\ s to be explicitly “exported” to
+unconstrained contexts like this::
 
   export concept_map LessThanComparable<Num> { } // OK
   
-Then the unconstrained definition of ``f`` above will work as might be
+Then the unconstrained definition of ``f`` above will work as
 expected.  We also propose that concept maps generated with the
 “intentional concept mapping” syntax described in D2916=09-0106 (if it
 is accepted) be exported, so ``Num`` could be declared this way::
@@ -88,10 +88,60 @@ Motivation
 ==========
 
 The status quo creates a disturbing divide between constrained and
-unconstrained code.
+unconstrained code.  Does the original definition of ``Num`` model
+``LessThanComparable``?  In constrained code, yes; in unconstrained
+code, no.  In order to make ``Num`` model ``LessThanComparable``
+everywhere, one actually needs to duplicate all the default
+definitions that have already been supplied by the template for
+constrained code::
 
-* Divide between constrained and unconstrained code.
-* Is Num LessThanComparable?  In constrained code, yes.  In unconstrained code, no.
+  class Num
+  {
+      friend bool operator<(Num const& x, Num const& y)
+      { ... }
+      // copy-paste-munge from LessThanComparable
+      friend bool operator>(Num const& x, Num const& y) { return y < x; }
+      friend bool operator<=(Num const& x, Num const& y) { return !(y < x); }
+      friend bool operator>=(Num const& x, Num const& y) { return !(x < y); }
+  };
+
+Unlike an empty concept map, whose verbosity has caused some concern,
+this boilerplate code truly adds zero value (except inasmuch as it
+provides the desired operators for unconstrained code) and carries
+with it all the usual disadvantages of duplicated code.  
+
+Default implementations of associated functions arise in concepts like
+``LessThanComparable`` whose interfaces are **non-minimal**, i.e. they
+contain elements that can be implemented entirely in terms of other
+interface elements.  In C++03 the usual way to avoid repeating this
+boilerplate in each model of a concept is to capture the redundancy in
+a base class template::
+
+  // Derive your Model from this class (that's the Curiously Recurring
+  // Template Pattern, CRTP) to implement redundant interface elements
+  template <class Model>
+  struct less_than_comparable
+  {
+      friend bool operator>(Model const& x, Model const& y) { return y < x; }
+      friend bool operator<=(Model const& x, Model const& y) { return !(y < x); }
+      friend bool operator>=(Model const& x, Model const& y) { return !(x < y); }
+  };
+  
+  struct Num : less_than_comparable<Num>
+  {
+      friend bool operator<(Num const&, Num const&);
+  };
+
+  struct String : less_than_comparable<String>
+  {
+      friend bool operator<(String const&, String const&);
+  };
+
+If this proposal is accepted, all such CRTP base classes templates
+could be discarded, the redundant interface being implemented directly
+by the concept.  The Boost.Operators library, for example, could be
+eliminated for C++0x, and the Boost.Iterator library would shrink
+substantially.
 
 Rationales
 ==========
