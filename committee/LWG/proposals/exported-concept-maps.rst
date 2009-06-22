@@ -4,11 +4,22 @@ Exported Concept Maps
 
 :Authors: Dave Abrahams <dave@boostpro.com> and Doug Gregor <doug.gregor@gmail.com>
 :Number:  D2918=09-0108
-:Abstract:
 :Date: 2009-06-22
 
 :Abstract: We propose a mechanism that allows default associated
            functions to be used in unconstrained code.
+
+.. role:: ins
+   :class: ins
+
+.. role:: ins-emphasis
+   :class: ins emphasis
+
+.. role:: ins-pre
+   :class: ins pre
+
+.. role:: del
+   :class: del
 
 Summary
 =======
@@ -32,7 +43,7 @@ one of four required operators::
        { ... }
   };
   
-  concept_map LessThanComparable<Num>; // OK
+  concept_map LessThanComparable<Num> { }// OK
   
 Now all four operators required by ``LessThanComparable`` can be
 applied to ``Num`` in a constrained template where
@@ -60,7 +71,7 @@ not been constrained by ``LessThanComparable``::
 We propose to allow ``concept_map``\ s to be explicitly “exported” to unconstrained
 contexts like this::
 
-  export concept_map LessThanComparable<Num>; // OK
+  export concept_map LessThanComparable<Num> { } // OK
   
 Then the unconstrained definition of ``f`` above will work as might be
 expected.  We also propose that concept maps generated with the
@@ -98,8 +109,46 @@ increase the risk associated with declaring a ``concept_map``.
 Proposed Wording
 ================
 
+Modify the grammar in 14.10.2 [concept.map] as follows:
+
+  *concept-map-definition*: 
+    :ins:`export`\ |opt| *concept_map* ::\ |opt| *nested-name-specifier*\ |opt| *concept-id* { *concept-map-member-specification*\ |opt| } ;\ |opt|
+
+Modify paragraph 6 of [concept.map] as follows:
+
+6. A concept map member that satisfies a requirement member cannot be found by any form of name lookup (3.4) :ins:`unless it is a member of an exported concept map ([concept.map.export])`.
+
+Add a new paragraph at the end of [concept.map]:
+
+15. :ins:`A concept-map-definition that starts with` :ins-pre:`export` :ins:`defines an exported concept map ([concept.map.export]).`
+
+Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
+
+1. :ins:`An` :ins-emphasis:`exported concept map` :ins:`is a concept map for which each concept map member that satisfies a requirement member corresponding to an associated function requirement can be found by name lookup in the namespace enclosing the concept map. These concept map members are called` :ins-emphasis:`exported associated member function definitions`\ :ins:`. [Example:` ::
+
+    concept EQ<typename T> {
+      bool operator==(const T& x, const T& y);
+      bool operator!=(const T& x, const T& y) { return !(x == y); }
+    }
+
+    struct X { bool operator==(const X&) const; };
+  
+    export concept_map EQ<X> { }
+
+    bool f(X x, X y) { 
+      return x != y; // okay: name lookup finds EQ<X>::operator!=
+    }
+
+  :ins:`- end example]`
+
+2. Deal with template argument deduction issues for concept map templates.
+
+3. Deal with member function requirements.
+
 
 Acknowledgements
 ================
 
+
+.. |opt| replace:: :sub:`opt`
 
