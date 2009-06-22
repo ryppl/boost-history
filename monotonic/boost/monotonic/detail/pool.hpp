@@ -12,7 +12,7 @@ namespace boost
 	{
 		namespace detail
 		{
-			/// a pool of same-sized chunks in a storage block of the given type
+			/// a pool of same-sized chunks in a storage block
 			struct Pool
 			{
 				char *first, *next, *last;
