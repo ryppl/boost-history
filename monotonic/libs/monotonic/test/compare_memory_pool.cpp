@@ -3,9 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// the documentation is at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
-
-// the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
+// documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+// sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
 #include <iostream> 
 #include <iomanip> 
@@ -19,11 +18,6 @@
 #include <set>
 #include <bitset>
 #include <string>
-
-#include <boost/timer.hpp>
-#include <boost/monotonic/local.hpp>
-
-//#include <boost/monotonic/local_allocator.hpp>
 
 #include "./AllocatorTypes.h"
 #include "./PoolResult.h"
@@ -131,26 +125,6 @@ struct test_list_sort
 	}
 };
 
-struct test_map_list
-{
-	template <class Alloc>
-	int test(Alloc alloc, size_t length) const
-	{
-		std::map<int
-			, std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type>
-			, std::less<int>
-			, typename Rebind<Alloc, int>::type
-		> map;
-		size_t mod = length/10;
-		for (size_t n = 0; n < length; ++n)
-		{
-			int random = rand() % mod;
-			map[random].push_back(n);
-		}
-		return 0;
-	}
-};
-
 struct test_set_vector
 {
 	template <class Alloc>
@@ -200,54 +174,21 @@ struct test_map_vector
 	}
 };
 
-
-template <class Al>
-void *allocate_bytes(boost::pool<Al> &pool, size_t len)
+struct test_map_list_unaligned
 {
-	return pool.malloc(len);
-}
-
-template <size_t N, size_t M, class Al>
-void *allocate_bytes(boost::monotonic::storage<N,M,Al> &storage, size_t len)
-{
-	return storage.allocate(len, 1);
-}
-
-
-template <class Ty, class Al>
-Ty *allocate_object(boost::pool<Al> &pool)
-{
-	return pool.malloc(1);
-}
-
-template <class Ty>
-Ty *allocate_object(boost::monotonic::allocator<Ty> &alloc)
-{
-	return alloc.allocate(1);
-}
-
-struct test_pool_bytes_alloc
-{
-	template <class Storage>
-	int test(Storage &storage, size_t length)
+	template <class Alloc>
+	int test(Alloc alloc, size_t length) const
 	{
+		std::map<int
+			, std::list<Unaligned, typename Rebind<Alloc, Unaligned>::type>
+			, std::less<int>
+			, typename Rebind<Alloc, int>::type
+		> map;
+		size_t mod = length/10;
 		for (size_t n = 0; n < length; ++n)
 		{
-			::allocate_bytes(storage, length*rand()/RAND_MAX);
-		}
-		return 0;
-	}
-};
-
-template <class Ty>
-struct test_pool_object_alloc
-{
-	template <class Storage>
-	int test(Storage &storage, size_t length)
-	{
-		for (size_t n = 0; n < length; ++n)
-		{
-			::allocate_object(storage);
+			int random = rand() % mod;
+			map[random].push_back(n);
 		}
 		return 0;
 	}
@@ -256,7 +197,6 @@ struct test_pool_object_alloc
 template <class Fun>
 PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 {
-	// boost::pool<void> fails trying to form reference to void
 	typedef Allocator<Type::FastPool, int> fast_pool_alloc;
 	typedef Allocator<Type::Pool, int> pool_alloc;
 	typedef Allocator<Type::Monotonic, int> mono_alloc;
@@ -366,7 +306,7 @@ PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, co
 	{
 		results[length] = run_test(count, length, fun, types);
 	}
-	cout << endl << "completed in " << timer.elapsed() << "s" << endl;
+	cout << endl << "took " << timer.elapsed() << "s" << endl;
 	return results;
 }
 
@@ -417,15 +357,11 @@ void print_cumulative(std::vector<PoolResult> const &results)
 {
 	pair<PoolResult, PoolResult> dev_mean = standard_deviation_mean(results);
 	size_t w = 10;
-
 	cout << setw(w) << "scheme" << setw(w) << "mean" << setw(w) << "std-dev" << setw(w) << "min" << setw(w) << "max" << endl;
-	//cout << setw(0) << "------------------------------------------------------" << endl;
-
 	cout << setw(w) << "fast" << setprecision(3) << setw(w) << dev_mean.second.fast_pool_elapsed << setw(w) << dev_mean.first.fast_pool_elapsed << setw(w) << result_min.fast_pool_elapsed << setw(w) << result_max.fast_pool_elapsed << endl;
 	cout << setw(w) << "pool" << setprecision(3) << setw(w) << dev_mean.second.pool_elapsed << setw(w) << dev_mean.first.pool_elapsed << setw(w) << result_min.pool_elapsed << setw(w) << result_max.pool_elapsed << endl;
 	cout << setw(w) << "std" << setprecision(3) << setw(w) << dev_mean.second.std_elapsed << setw(w) << dev_mean.first.std_elapsed << setw(w) << result_min.std_elapsed << setw(w) << result_max.std_elapsed << endl;
 	cout << setw(w) << "tbb" << setprecision(3) << setw(w) << dev_mean.second.tbb_elapsed << setw(w) << dev_mean.first.tbb_elapsed << setw(w) << result_min.tbb_elapsed << setw(w) << result_max.tbb_elapsed << endl;
-
 	cout << endl;
 }
 
@@ -541,7 +477,7 @@ void test_pools()
 			// destroy objects. this only calls the destructors; it does not release memory
 			storage.destroy(s1);
 
-			cout << "storage.fixed, heap, total used: " << storage.fixed_used() << ", " << storage.heap_used() << ", " << storage.used() << endl;
+			//cout << "storage.fixed, heap, total used: " << storage.fixed_used() << ", " << storage.heap_used() << ", " << storage.used() << endl;
 		}
 		// storage is released. if this was only ever on the stack, no work is done
 	}
@@ -651,7 +587,7 @@ int main()
 	heading("FINAL SUMMARY", '*');
 	print_cumulative(cumulative);
 
-	cout << endl << "tests completed in " << setprecision(5) << timer.elapsed() << "s" << endl;
+	cout << endl << "took " << setprecision(3) << timer.elapsed()/60. << " minutes" << endl;
 
 	return 0;
 }
@@ -664,6 +600,5 @@ namespace boost
 		storage_base *static_storage = &default_static_storage;
 	}
 }
-
 
 //EOF

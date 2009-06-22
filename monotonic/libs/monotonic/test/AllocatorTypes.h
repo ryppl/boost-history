@@ -3,9 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// the documentation is at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
-
-// the sandbox is at https://svn.boost.org/svn/boost/sandbox/monotonic/
+// documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+// sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
 #pragma once
 
@@ -15,6 +14,8 @@
 #undef max
 #undef min
 #include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/local.hpp>
+
 #include <tbb/tbb_allocator.h>
 
 struct Type
