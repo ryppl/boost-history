@@ -12,15 +12,11 @@ namespace boost
 {
 	namespace monotonic
 	{
-		storage_base *set_storage(storage_base &new_storage);
-		void default_storage();
-
 		/// sets the global storage on construction, releases and returns to previous
 		/// storage on destruction
 		template <class Storage>
 		struct local : storage_base
 		{
-
 		private:
 			Storage store;
 			storage_base *old;
@@ -39,6 +35,14 @@ namespace boost
 					default_storage();
 			}
 
+			Storage &get_storage()
+			{
+				return store;
+			}
+			Storage const &get_storage() const
+			{
+				return store;
+			}
 			void reset()
 			{
 				store.reset();
