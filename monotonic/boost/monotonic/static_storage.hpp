@@ -69,6 +69,18 @@ namespace boost
 			return static_region_storage[Region];
 		}
 
+		template <size_t Region>
+		inline storage_base &reset_region()
+		{
+			return get_region_storage<Region>().reset();
+		}
+
+		template <size_t Region>
+		inline storage_base &release_region()
+		{
+			return get_region_storage<Region>().release();
+		}
+
 		inline storage_base &get_storage()
 		{
 			return static_storage ? *static_storage : default_static_storage;

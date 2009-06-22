@@ -66,7 +66,8 @@ namespace boost
 		template <class> 
 		struct allocator;
 
-		/// a monotonic region allocator uses a specified storage
+		/// a monotonic region allocator uses a specified storage. Each region uses independent
+		/// storage that may be used and reset.
 		template <class T, size_t Region = 0> 
 		struct region_allocator;
 
