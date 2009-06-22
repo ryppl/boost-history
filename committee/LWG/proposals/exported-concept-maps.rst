@@ -170,7 +170,7 @@ offending ``concept_map`` would have to be written in one of those.
 If one can assume the type author has control over definitions in his
 namespace, then any such semantic change would likely be intentional,
 but if lump everything together into the global namespace or start
-writing ``concept_map``s in namespaces they do not control, the
+writing ``concept_map``\s in namespaces they do not control, the
 potential for surprise is greater.
 
 We considered automatically exporting all ``concept_map``\ s, but that
@@ -218,9 +218,28 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
   :ins:`- end example]`
 
-2. :ins:`An exported associated function definition that corresponds to an associated non-member function requirement is visible in the namespace enclosing the exported concept map. [Note: the exported associated function definition can be found by any form of name lookup that would find a function declaration with the same name and signature, including unqualified name lookup (3.4.1), argument-dependent name lookup (3.4.2), and qualified name lookup into a namespace (3.4.3.2). --end note]`
+2. :ins:`The exported associated function definitions in an exported concept map or exported concept map template are only visible when the exported concept map (or concept map template) is visible via concept map lookup (14.11.1.1). [Example:` ::
 
-3. :ins:`An exported associated function definition that corresponds to an associatd member function requirement is visible in the class nominated by the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:` ::
+    struct Y { bool operator==(const Y&) const; };
+
+    namespace N {
+      export concept_map EQ<Y> { }; // okay
+
+      bool f(Y y1, Y y2) {
+        return y1 != y2; // okay: name lookup finds N::EQ<Y>::operator!=
+      }
+    }
+
+    bool g(Y y1, Y y2) {
+      return y1 != y2; // error: N::EQ<Y> is not visible to concept map lookup,
+                       // therefore N::EQ<Y>::operator!= is not visible.
+    }
+    
+  :ins:`- end example]`
+
+3. :ins:`An exported associated function definition that corresponds to an associated non-member function requirement is visible in the namespace enclosing the exported concept map. [Note: the exported associated function definition can be found by any form of name lookup that would find a function declaration with the same name and signature, including unqualified name lookup (3.4.1), argument-dependent name lookup (3.4.2), and qualified name lookup into a namespace (3.4.3.2). --end note]`
+
+4. :ins:`An exported associated function definition that corresponds to an associatd member function requirement is visible in the class nominated by the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:` ::
 
     concept C<typename T> {
       void T::f();
@@ -242,7 +261,7 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
   :ins:`- end example]`
 
-4. :ins:`An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments; the resulting concept map is an exported concept map whose exported associated function requirements are visible. Deduction of the concept map template's template arguments depending on the form of the associated function requirement:`
+5. :ins:`An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments; the resulting concept map is an exported concept map whose exported associated function requirements are visible. Deduction of the concept map template's template arguments depends on the form of the associated function requirement:`
 
   * :ins:`When the associated function requirement is an associated non-member function requirement, template argument deduction attempts to deduce the concept map template's template parameters from the` :ins-emphasis:`parameter-type-list` :ins:`of the associated non-member function requirement. [Example:` ::
 
@@ -274,16 +293,34 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
     :ins:`- end example]`
 
-  * :ins:`When the associated function requirement is an associated member function requirement, template argument deduction attempts to deduce the concet map template's template parameters from the nominated class of the associated member function requirement. [Example:` ::
+  * :ins:`When the associated function requirement is an associated member function requirement, template argument deduction attempts to deduce the concept map template's template parameters from the nominated class of the associated member function requirement. [Example:` ::
 
-      concept M<typename T, typename U> {
+      concept C<typename T> { }
+
+      concept M1<typename T> {
+        void T::f();
+      }
+
+      concept M2<typename T, typename U> {
         void T::f(U);
       }
 
-      template<typename T>
-      struct X { };
+      template<C T> struct X { };
 
-      template<typename.......FIXME
+      template<C T>
+      export concept_map M1<X<T>> {
+        void X<T>::f() { }
+      }
+
+      template<C T, typename U>
+      export concept_map M2<X<T>, U> {
+        void X<T>::f(U) { }
+      }
+
+      void f(X<int> x, int y) {
+        x.f(); // okay: template argument deduction deduces T=int  X<T>
+        x.f(y); // okay?
+      }
 
     :ins:`- end example]`
 
