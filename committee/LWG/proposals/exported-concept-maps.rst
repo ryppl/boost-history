@@ -109,9 +109,13 @@ concept for constrained code:
   };
 
 Unlike an empty concept map, whose verbosity has caused some concern,
-this boilerplate code truly adds zero value (except inasmuch as it
+this redundant code truly adds zero value (except inasmuch as it
 provides the desired operators for unconstrained code) and carries
-with it all the usual disadvantages of duplicated code.  
+with it all the usual disadvantages of duplicated code.  We hate the
+idea of being forced to regurgitate boilerplate just to reach the
+baseline of uniform behavior in constrained and unconstrained code,
+and we predict that most users writing models will have the same
+reaction (or worse).
 
 Default implementations of associated functions arise in concepts like
 ``LessThanComparable`` whose interfaces are **non-minimal**, i.e. they
