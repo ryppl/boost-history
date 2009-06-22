@@ -11,6 +11,7 @@
 #include <iomanip> 
 #include <numeric>
 #include <algorithm>
+#include <math.h>
 
 #include <vector>
 #include <list>
@@ -247,7 +248,7 @@ struct test_pool_object_alloc
 		{
 			::allocate_object(storage);
 		}
-		return n;
+		return 0;
 	}
 };
 
