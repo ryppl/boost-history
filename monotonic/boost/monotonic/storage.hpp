@@ -172,7 +172,7 @@ namespace boost
 			// ------------------------------------------------------------------------
 
 			template <class Ty>
-			Ty *initialised_create()
+			Ty *uninitialised_create()
 			{
 				return reinterpret_cast<Ty *>(allocate_bytes<sizeof(Ty)>());
 			}
@@ -180,7 +180,7 @@ namespace boost
 			template <class Ty>
 			Ty &create()
 			{
-				Ty *ptr = initialised_create<Ty>();
+				Ty *ptr = uninitialised_create<Ty>();
 				new (ptr) Ty();
 				return *ptr;
 			}
@@ -188,7 +188,7 @@ namespace boost
 			template <class Ty>
 			Ty &create(Ty const &X)
 			{
-				Ty *ptr = initialised_create<Ty>();
+				Ty *ptr = uninitialised_create<Ty>();
 				new (ptr) Ty(X);
 				return *ptr;
 			}
