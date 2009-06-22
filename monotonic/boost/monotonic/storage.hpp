@@ -112,6 +112,8 @@ namespace boost
 			
 			void *from_heap(size_t num_bytes, size_t alignment)
 			{
+				if (MinHeapIncrement == 0)
+					return 0;
 				if (!chain.empty())
 				{
 					if (void *ptr = chain.front().allocate(num_bytes, alignment))
