@@ -67,13 +67,14 @@ struct PoolResult
 
 	void update_min(PoolResult const &other)
 	{
-		if (other.fast_pool_elapsed > 0)
+		// reject very small mins as we sometimes have 0-element tests
+		if (other.fast_pool_elapsed > 0.01)
 			fast_pool_elapsed = std::min(fast_pool_elapsed, other.fast_pool_elapsed);
-		if (other.pool_elapsed > 0)
+		if (other.pool_elapsed > 0.01)
 			pool_elapsed = std::min(pool_elapsed, other.pool_elapsed);
-		if (other.tbb_elapsed > 0)
+		if (other.tbb_elapsed > 0.01)
 			tbb_elapsed = std::min(tbb_elapsed, other.tbb_elapsed);
-		if (other.std_elapsed > 0)
+		if (other.std_elapsed > 0.01)
 			std_elapsed = std::min(std_elapsed, other.std_elapsed);
 	}
 	void update_max(PoolResult const &other)
