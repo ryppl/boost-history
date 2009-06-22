@@ -395,6 +395,10 @@
 				RelativePath=".\results\msvc.txt"
 				>
 			</File>
+			<File
+				RelativePath=".\results\test_map_erase.txt"
+				>
+			</File>
 		</Filter>
 		<File
 			RelativePath=".\AllocatorTypes.h"
