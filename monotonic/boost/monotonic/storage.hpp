@@ -102,7 +102,7 @@ namespace boost
 				size_t bucket_num = (ChunkSize + num_bytes) >> ChunkShift;
 				if (bucket_num >= NumPools)
 					return 0;
-				return pools[bucket_num].allocate(this);
+				return pools[bucket_num].allocate(*this);
 			}
 			
 			void *from_fixed(size_t num_bytes, size_t alignment)

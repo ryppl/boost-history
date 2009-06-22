@@ -24,7 +24,7 @@ namespace boost
 				{
 				}
 				template <class Storage>
-				void *allocate(Storage *storage)
+				void *allocate(Storage &storage)
 				{
 					if (next == last)
 						expand(storage);
@@ -33,13 +33,13 @@ namespace boost
 					return ptr;
 				}
 				template <class Storage>
-				void expand(Storage *storage)
+				void expand(Storage &storage)
 				{
 					size_t capacity = std::max(DefaultSizes::MinPoolSize*bucket_size, (last - first)*bucket_size*2);
-					void *ptr = storage->from_fixed(capacity, 16);
+					void *ptr = storage.from_fixed(capacity, 16);
 					if (ptr == 0)
 					{
-						ptr = storage->from_heap(capacity, 16);
+						ptr = storage.from_heap(capacity, 16);
 					}
 					first = next = (char *)ptr;
 					last = first + capacity;
