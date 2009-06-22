@@ -47,7 +47,7 @@ concept even though it only supplies one of four required operators::
   
   concept_map LessThanComparable<Num> { } // OK
   
-The remaining three operators (>, <=, >=) are provided with default
+The remaining three operators (>, <=, >=) are provided by default
 definitions within the concept map. Now all four operators required by
 ``LessThanComparable`` can be 
 applied to ``Num`` in a constrained template where
@@ -182,7 +182,7 @@ If one can assume the type author has control over definitions in his
 namespace, then any such semantic change (e.g., introducing another concept 
 map into that namespace) would likely be intentional.
 However, if one lumps everything together into the global namespace or starts
-writing ``concept_map``\ s in namespaces they do not control, the
+writing ``concept_map``\ s in namespaces controlled by others, the
 potential for surprise is greater.
 
 We considered automatically exporting all ``concept_map``\s, to
