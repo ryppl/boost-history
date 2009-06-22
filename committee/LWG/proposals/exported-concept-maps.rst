@@ -3,7 +3,7 @@ Exported Concept Maps
 =====================
 
 :Authors: Dave Abrahams <dave@boostpro.com> and Doug Gregor <doug.gregor@gmail.com>
-:Number:  D2918=09-0108
+:Number:  N2918=09-0108
 :Date: 2009-06-22
 
 :Abstract: We propose a mechanism that allows default associated
@@ -74,7 +74,7 @@ not been constrained by ``LessThanComparable``:
       { … }
   }
 
-We propose to allow ``concept_map``\ s to be explicitly “exported” to
+We propose to allow ``concept_map``\s to be explicitly “exported” to
 unconstrained contexts like this::
 
   export concept_map LessThanComparable<Num> { } // OK
@@ -162,8 +162,10 @@ CRTP base class templates could be discarded, the redundant interface
 being implemented directly by the concept.  The Boost.Operators
 library, for example, could be eliminated for C++0x, and the
 Boost.Iterator library would shrink substantially—a massive reduction
-in verbosity that would make C++0x code that uses (exported) concept
-maps substantially shorter than the equivalent non-concepts code.
+in verbosity. More importantly, any concept with a rich interface
+(including defaults) will automatically provide the ability to export
+the interface, making it easier to implement well-behaved types that
+meet the requirements of certain concepts.
 
 
 Risks, Opportunities, and Rationale
@@ -171,7 +173,7 @@ Risks, Opportunities, and Rationale
 
 In general, adding definitions to a system increases complexity and
 the risk of unexpected effects (the safest code is no code).  Exported
-``concept_map``\ s, in particular, add candidates to overload sets.
+``concept_map``\s, in particular, add candidates to overload sets.
 These new definitions can potentially change the meaning of
 unconstrained code, which currently has no dependency on the
 ``concept_map``.  That risk is mitigated by the fact that the exported
@@ -182,7 +184,7 @@ If one can assume the type author has control over definitions in his
 namespace, then any such semantic change (e.g., introducing another concept 
 map into that namespace) would likely be intentional.
 However, if one lumps everything together into the global namespace or starts
-writing ``concept_map``\ s in namespaces controlled by others, the
+writing ``concept_map``\s in namespaces controlled by others, the
 potential for surprise is greater.
 
 We considered automatically exporting all ``concept_map``\s, to
@@ -253,7 +255,7 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
 3. :ins:`An exported associated function definition that corresponds to an associated non-member function requirement is visible in the namespace enclosing the exported concept map. [Note: the exported associated function definition can be found by any form of name lookup that would find a function declaration with the same name and signature, including unqualified name lookup (3.4.1), argument-dependent name lookup (3.4.2), and qualified name lookup into a namespace (3.4.3.2). --end note]`
 
-4. :ins:`An exported associated function definition that corresponds to an associatd member function requirement is visible in the class nominated by the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:` ::
+4. :ins:`An exported associated function definition that corresponds to an associated member function requirement is visible in the class nominated by the` :ins-emphasis:`nested-name-specifier` :ins:`in the declarator of the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:` ::
 
     concept C<typename T> {
       void T::f();
@@ -275,9 +277,9 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
   :ins:`- end example]`
 
-5. :ins:`An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments; the resulting concept map is an exported concept map whose exported associated function requirements are visible. Deduction of the concept map template's template arguments depends on the form of the associated function requirement:`
+5. :ins:`An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments. The resulting concept map is an exported concept map whose exported associated function requirements are visible within the enclosing namespace of the concept (for an associated non-member function requirement) or within the class nominated by an associated member function requirement.`
 
-  * :ins:`When the associated function requirement is an associated non-member function requirement, template argument deduction attempts to deduce the concept map template's template parameters from the` :ins-emphasis:`parameter-type-list` :ins:`of the associated non-member function requirement. [Example:` ::
+6. :ins:`Template argument deduction of the concept map template's template arguments from an exported associated function definition as if the associated function definition were a function template with the same template parameters and requirements as the concept map template. [Example:` ::
 
       concept EQ2<typename T, typename U> {
         bool operator==(const T&, const U&);
@@ -305,9 +307,16 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
                          // EQ2<ptr<int>, ptr<float>>::operator==(const ptr<int>& t, const ptr<float>& u)
       }
 
-    :ins:`- end example]`
+  :ins:`- end example]`
 
-  * :ins:`When the associated function requirement is an associated member function requirement, template argument deduction attempts to deduce the concept map template's template parameters from the nominated class of the associated member function requirement. [Example:` ::
+  :ins:`When the associated function requirement is an associated
+  member function requirement, an artificial first parameter is
+  introduced into the function template used for template argument
+  deduction. The type of the artificial first parameter is the type of
+  the` :ins-emphasis:`nested-name-specifier` :ins:`in the declarator
+  of the exported associated function definition. Tthe argument that 
+  corresponds to this artificial first parameter is the type of the 
+  implied object argument (13.3.1). [Example:` ::
 
       concept C<typename T> { }
 
@@ -331,16 +340,19 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
         void X<T>::f(U) { }
       }
 
-      void f(X<int> x, int y) {
-        x.f(); // okay: template argument deduction deduces T=int  X<T>
-        x.f(y); // okay?
+      void f(X<int> x, float y) {
+        x.f(); // okay: template argument deduction deduces that T=int by
+               // matching the artificial first parameter of type X<T>
+               // to the implied object argument of type X<int>.
+        x.f(y); // okay: template argument deduction for M1's X<T>::f
+                // succeeds with T=int, but the resulting visible
+                // function is not a viable overload candidate.
+                // template argument deduction with M2's X<T>::f
+                // succeeds with T=int and U=float, making M2<X<int>, float>'s 
+                // X<int>::f(float) visible (and viable).
       }
 
     :ins:`- end example]`
-
-
-Acknowledgements
-================
 
 Bibliography
 ============
