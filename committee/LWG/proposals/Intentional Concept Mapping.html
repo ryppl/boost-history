@@ -1,203 +1,286 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
-<meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
-<title>Intentional Concept Mapping</title>
-<style type="text/css">
+  <meta name="GENERATOR" content="Microsoft FrontPage 5.0" />
+  <meta name="ProgId" content="FrontPage.Editor.Document" />
+  <meta http-equiv="Content-Type" content="text/html; charset=us-ascii" />
+
+  <title>Intentional Concept Mapping</title>
+  <style type="text/css">
+/*<![CDATA[*/
   ins {background-color:#A0FFA0}
   del {background-color:#FFA0A0}
-</style>
+  /*]]>*/
+  </style>
 </head>
 
 <body>
+  <table border="0" cellpadding="0" cellspacing="0" style=
+  "border-collapse: collapse" bordercolor="#111111">
+    <tr>
+      <td valign="top">Document number:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br />
+      Date:<br />
+      Project:<br />
+      Reply-to:</td>
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
-  <tr>
-    <td valign="top">Document number:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-    Date:<br>
-    Project:<br>
-    Reply-to:</td>
-    <td>D2916=09-0106<br>
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2009-06-21<!--webbot bot="Timestamp" endspan i-checksum="12414" --><br>
-    Programming Language C++, Library Working Group<br>
-    David Abrahams &lt;dave at boostpro dot com<br>
-    Beman Dawes &lt;bdawes at acm dot org&gt;</td>
-  </tr>
-</table>
+      <td>D2916=09-0106<br />
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2009-06-21<!--webbot bot="Timestamp" endspan i-checksum="12414" --><br />
 
-<h1>Intentional Concept Mapping</h1>
-<h2>Introduction</h2>
-<p>Uses of C++0x concept maps include:</p>
-<ul>
-  <li>Declaring the intention that a class models a concept, expressed in code 
-  rather than in documentation.<br>
-&nbsp;</li>
-  <li>Declaring to users and maintainers of the type that modeling the concept 
-  is part of the type's public interface and not just happenstance; i.e. it is a 
-  property that can be counted on and must be preserved as the code evolves.</li>
-</ul>
-<p>As of CD1, this is expressed with concept maps that are often empty:</p>
-<blockquote>
-  <pre>class Endian
+      Programming Language C++, Library Working Group<br />
+      David Abrahams &lt;dave at boostpro dot com<br />
+      Beman Dawes &lt;bdawes at acm dot org&gt;</td>
+    </tr>
+  </table>
+
+  <h1>Intentional Concept Mapping</h1>
+
+  <h2>Introduction</h2>
+
+  <p>Uses of C++0x concept maps include:</p>
+
+  <ul>
+    <li>Declaring the intention that a class models a concept, expressed in
+    code rather than in documentation.<br />
+    &nbsp;</li>
+
+    <li>Declaring to users and maintainers of the type that modeling the
+    concept is part of the type's public interface and not just happenstance;
+    i.e. it is a property that can be counted on and must be preserved as the
+    code evolves.</li>
+  </ul>
+
+  <p>As of CD1, this is expressed with concept maps that are often empty:</p>
+
+  <blockquote>
+    <pre>
+class Endian
 {
   ...
-};</pre>
-  <pre>concept_map std::Regular&lt;Endian&gt; {}
+};
+</pre>
+    <pre>
+concept_map std::Regular&lt;Endian&gt; {}
 concept_map std::StandardLayoutType&lt;Endian&gt; {}
-concept_map std::TrivialType&lt;Endian&gt; {}</pre>
-</blockquote>
-<p>Although this formulation is technically sufficient and will ensure the type 
-models the concepts, it has some problems:</p>
-<ul>
-  <li>The location of the concept maps after the class definition subverts 
-  self-documentation, particularly for large classes, negating some of the value 
-  as documentation to users and maintainers.<br>
-&nbsp;</li>
-  <li>Specifying the concept maps after the class definition tends to push this 
-  important activity until later in the development cycle,&nbsp; yet from a 
-  design and testing standpoint it best occurs early on in the development 
-  cycle.<br>
-&nbsp;</li>
-  <li>The empty concept maps are excessively verbose.</li>
-</ul>
-<p>This paper proposes that the above could also be written as:</p>
-<blockquote>
-  <pre>class Endian -&gt; std::Regular, std::StandardLayoutType, std::TrivialType
+concept_map std::TrivialType&lt;Endian&gt; {}
+</pre>
+  </blockquote>
+
+  <p>Although this formulation is technically sufficient and will ensure the
+  type models the concepts, it has some problems:</p>
+
+  <ul>
+    <li>The location of the concept maps after the class definition subverts
+    self-documentation, particularly for large classes, negating some of the
+    value as documentation to users and maintainers.<br />
+    &nbsp;</li>
+
+    <li>Specifying the concept maps after the class definition tends to push
+    this important activity until later in the development cycle,&nbsp; yet
+    from a design and testing standpoint it best occurs early on in the
+    development cycle.<br />
+    &nbsp;</li>
+
+    <li>The empty concept maps are excessively verbose.</li>
+  </ul>
+
+  <p>This paper proposes that the above could also be written as:</p>
+
+  <blockquote>
+    <pre>
+class Endian -&gt; std::Regular, std::StandardLayoutType, std::TrivialType
 {
   ...
-};</pre>
-</blockquote>
-<h2>Syntax</h2>
-<p>The proposed wording uses <code>-&gt;</code> as a syntax marker for the 
-beginning of the list of concepts to be mapped. The authors are not wedded to
-<code>-&gt;</code> , and considered several alternate keyword and punctuation 
-possibilities.</p>
-<p>The first keyword considered was <code>requires</code>, but it was rejected 
-because when you write:</p>
-<blockquote>
-  <pre>template &lt;typename X&gt;
-&nbsp; requires&lt;EqualityComparable&lt;X&gt; &gt;
+};
+</pre>
+  </blockquote>
+
+  <h2>Syntax</h2>
+
+  <p>The proposed wording uses <code>-&gt;</code> as a syntax marker for the
+  beginning of the list of concepts to be mapped. The authors are not wedded
+  to <code>-&gt;</code> , and considered several alternate keyword and
+  punctuation possibilities.</p>
+
+  <p>The first keyword considered was <code>requires</code>, but it was
+  rejected because when you write:</p>
+
+  <blockquote>
+    <pre>
+template &lt;typename X&gt;
+  requires&lt;EqualityComparable&lt;X&gt; &gt;
 class Y
 {
    ...
-};</pre>
-</blockquote>
-<p>you're just constraining X, nothing more. &nbsp;It's pure requirement checking. 
-&nbsp;When you write:</p>
-<blockquote>
-  <pre>template &lt;typename X&gt;
+};
+</pre>
+  </blockquote>
+
+  <p>you're just constraining X, nothing more. &nbsp;It's pure requirement
+  checking. &nbsp;When you write:</p>
+
+  <blockquote>
+    <pre>
+template &lt;typename X&gt;
 class Y -&gt; EqualityComparable
 {
    ...
-};</pre>
-</blockquote>
-<p>you're generating a concept map for all specializations of Y, with all that 
-that implies (e.g. generation of defaults, Y&lt;T&gt; can be used where 
-EqualityComparable is required, etc):</p>
-<blockquote>
-  <pre>// implied by the above
+};
+</pre>
+  </blockquote>
+
+  <p>you're generating a concept map for all specializations of Y, with all
+  that that implies (e.g. generation of defaults, Y&lt;T&gt; can be used
+  where EqualityComparable is required, etc):</p>
+
+  <blockquote>
+    <pre>
+// implied by the above
 template &lt;typename T&gt;
-concept_map EqualityComparable&lt;Y&lt;T&gt; &gt; { };</pre>
-</blockquote>
-<p>A concept_map is fundamentally different from a requires clause in other 
-ways, too: the former can only occur in unconstrained contexts while the latter 
-can only occur in constrained ones.</p>
-<p>We welcome syntax suggestions from the committee.</p>
-<h2>Motivation</h2>
-<p>The critical motivation for this proposal is the desire to be able to say &quot;my 
-type models concepts XXX, YYY, and ZZZ, and is broken if it doesn't do that&quot;, 
-and do that in such a way that users and maintainers understand that this is 
-part of my&nbsp; type's public interface and not just happenstance.</p>
-<p>This proposal is not replacement for concept maps; we view concept maps - 
-even empty ones - as meeting critical needs. We wish to make empty concept maps 
-more convenient and less verbose, not replace them entirely..</p>
-<p>The motivating problem of not being able to say what we mean in the obvious 
-place is not solved by making more concepts <code>auto</code> or making <code>
-auto</code> the default. Those are important issues, but are orthogonal to the 
-intentional concept mapping concerns of this proposal.</p>
-<h2>Proposed Wording</h2>
-<p><i>Change 9 Classes [class] as indicated:</i></p>
-<blockquote>
-<p>A class is a type. Its name becomes a <i>class-name</i> (9.1) within its 
-scope.</p>
-  <blockquote>
-<p><i>class-name:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identifier<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simple-template-id</i></p>
+concept_map EqualityComparable&lt;Y&lt;T&gt; &gt; { };
+</pre>
   </blockquote>
-<p><i>Class-specifiers</i> and <i>elaborated-type-specifiers</i> (7.1.6.3) are 
-used to make <i>class-names</i>. An object of a class consists of a (possibly 
-empty) sequence of members and base class objects.</p>
+
+  <p>A concept_map is fundamentally different from a requires clause in other
+  ways, too: the former can only occur in unconstrained contexts while the
+  latter can only occur in constrained ones.</p>
+
+  <p>We welcome syntax suggestions from the committee.</p>
+
+  <h2>Motivation</h2>
+
+  <p>The critical motivation for this proposal is the desire to be able to
+  say "my type models concepts XXX, YYY, and ZZZ, and is broken if it doesn't
+  do that", and do that in such a way that users and maintainers understand
+  that this is part of my&nbsp; type's public interface and not just
+  happenstance.</p>
+
+  <p>This proposal is not replacement for concept maps; we view concept maps
+  - even empty ones - as meeting critical needs. We wish to make empty
+  concept maps more convenient and less verbose, not replace them
+  entirely..</p>
+
+  <p>The motivating problem of not being able to say what we mean in the
+  obvious place is not solved by making more concepts <code>auto</code> or
+  making <code>auto</code> the default. Those are important issues, but are
+  orthogonal to the intentional concept mapping concerns of this
+  proposal.</p>
+
+  <h2>Proposed Wording</h2>
+
+  <p><i>Change 9 Classes [class] as indicated:</i></p>
+
   <blockquote>
-<p><i>class-specifier:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-head </i><code>{</code><i> member-specification<sub>opt</sub>
-</i><code>}</code></p>
-<p><i>class-head:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key identifier<sub>opt</sub> attribute-specifier<sub>opt</sub>
-<ins>mapped-concept-clause<sub>opt</sub></ins> base-clause<sub>opt</sub><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key nested-name-specifier identifier 
-attribute-specifier<sub>opt</sub>
-<ins>mapped-concept-clause<sub>opt</sub></ins> base-clause<sub>opt</sub><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key nested-name-specifier<sub>opt</sub> 
-simple-template-id attribute-specifier<sub>opt</sub>
-<ins>mapped-concept-clause<sub>opt</sub></ins> base-clause<sub>opt</sub></i></p>
-<p><i>class-key:</i><br>
-<i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>class</code><br>
-<i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>struct</code><br>
-<i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>union</code></p>
+    <p>A class is a type. Its name becomes a <i>class-name</i> (9.1) within
+    its scope.</p>
+
+    <blockquote>
+      <p><i>class-name:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; identifier<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; simple-template-id</i></p>
+    </blockquote>
+
+    <p><i>Class-specifiers</i> and <i>elaborated-type-specifiers</i>
+    (7.1.6.3) are used to make <i>class-names</i>. An object of a class
+    consists of a (possibly empty) sequence of members and base class
+    objects.</p>
+
+    <blockquote>
+      <p><i>class-specifier:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-head</i> <code>{</code>
+      <i>member-specification<sub>opt</sub></i> <code>}</code></p>
+
+      <p><i>class-head:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key identifier<sub>opt</sub>
+      attribute-specifier<sub>opt</sub>
+      <ins>mapped-concept-clause<sub>opt</sub></ins>
+      base-clause<sub>opt</sub><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key nested-name-specifier
+      identifier attribute-specifier<sub>opt</sub>
+      <ins>mapped-concept-clause<sub>opt</sub></ins>
+      base-clause<sub>opt</sub><br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class-key
+      nested-name-specifier<sub>opt</sub> simple-template-id
+      attribute-specifier<sub>opt</sub>
+      <ins>mapped-concept-clause<sub>opt</sub></ins>
+      base-clause<sub>opt</sub></i></p>
+
+      <p><i>class-key:</i><br />
+      <i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> <code>class</code><br />
+      <i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> <code>struct</code><br />
+      <i>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> <code>union</code></p>
+    </blockquote>
   </blockquote>
-</blockquote>
-<p><i>After 9.9 
-Nested type names [class.nested.type], add:</i></p>
-<blockquote>
-<p><b>9.10 Intentional concept mapping [class.concept.mapping]</b></p>
+
+  <p><i>After 9.9 Nested type names [class.nested.type], add:</i></p>
+
   <blockquote>
-<p><i>mapped-concept-clause:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>-&gt;</code><i> mapped-concept-list</i></p>
-<p><i>mapped-concept-list:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mapped-concept<code>,</code>&nbsp; mapped-concept-list<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mapped-concept</i></p>
-<p><i>mapped-concept:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>
-<code>::</code><i><sub>opt</sub> nested-name-specifier<sub>opt</sub> 
-concept-name</i></p>
-  </blockquote>
-<p>A <i>concepts-clause</i> contains a list of concepts to map to. A concept is 
-mapped to for each <i>mapped-concept</i> as if by a <code>
-concept_map</code>([concept.map]). The <code>
-concept_map</code> acts as if appears immediately after the class being defined, 
-and is equivalent to:</p>
-  <blockquote>
-    <pre>concept_map <i>Concept</i>&lt;<i>Class</i>&gt; {};</pre>
-  </blockquote>
-    <p>where <i><code>Concept</code></i> is the <i>mapped-concept</i>, and <i> <code>Class</code></i> 
-    is the class where the <i>mapped-concept-clause</i> appears.</p>
+    <p><b>9.10 Intentional concept mapping [class.concept.mapping]</b></p>
+
+    <blockquote>
+      <p><i>mapped-concept-clause:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> <code>-&gt;</code>
+      <i>mapped-concept-list</i></p>
+
+      <p><i>mapped-concept-list:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mapped-concept<code>,</code>&nbsp;
+      mapped-concept-list<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; mapped-concept</i></p>
+
+      <p><i>mapped-concept:<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i> <code>::</code><i><sub>opt</sub>
+      nested-name-specifier<sub>opt</sub> concept-name</i></p>
+    </blockquote>
+
+    <p>A <i>concepts-clause</i> contains a list of concepts to map to. A
+    concept is mapped to for each <i>mapped-concept</i> as if by a
+    <code>concept_map</code>([concept.map]). The <code>concept_map</code>
+    acts as if appears immediately after the class being defined, and is
+    equivalent to:</p>
+
+    <blockquote>
+      <pre>
+concept_map <i>Concept</i>&lt;<i>Class</i>&gt; {};
+</pre>
+    </blockquote>
+
+    <p>where <i><code>Concept</code></i> is the <i>mapped-concept</i>, and
+    <i><code>Class</code></i> is the class where the
+    <i>mapped-concept-clause</i> appears.</p>
+
     <p><i>[Example:</i></p>
-  <blockquote>
-    <pre>template &lt;typename X&gt;
-&nbsp; class Y -&gt; EqualityComparable
-&nbsp; {
+
+    <blockquote>
+      <pre>
+template &lt;typename X&gt;
+  class Y -&gt; EqualityComparable
+  {
      ...
-&nbsp; };</pre>
-    <p>Generates a concept map for all specializations of Y, with all that that 
-    implies (e.g. generation of defaults, Y&lt;T&gt; can be used where 
-    EqualityComparable is required, etc):</p>
-    <pre>// implied by the above
+  };
+</pre>
+
+      <p>Generates a concept map for all specializations of Y, with all that
+      that implies (e.g. generation of defaults, Y&lt;T&gt; can be used where
+      EqualityComparable is required, etc):</p>
+      <pre>
+// implied by the above
 template &lt;typename T&gt;
-&nbsp; concept_map EqualityComparable&lt; Y&lt;T&gt; &gt; {};</pre>
-</blockquote>
-<p><i>--end example]</i></p>
-</blockquote>
-<h2>Acknowledgements</h2>
-<p>Several people on the committee reflectors suggested features similar to this 
-proposal, often with syntax using the <code>requires</code> keyword. Jerry 
-Schwarz, in committee message c++std-lib-23459, suggested syntax that mimics 
-inheritance.</p>
-<hr>
-<p>&nbsp;</p>
+  concept_map EqualityComparable&lt; Y&lt;T&gt; &gt; {};
+</pre>
+    </blockquote>
 
+    <p><i>--end example]</i></p>
+  </blockquote>
+
+  <h2>Acknowledgements</h2>
+
+  <p>Several people on the committee reflectors suggested features similar to
+  this proposal, often with syntax using the <code>requires</code> keyword.
+  Jerry Schwarz, in committee message c++std-lib-23459, suggested syntax that
+  mimics inheritance.</p>
+  <hr />
+
+  <p>&nbsp;</p>
 </body>
-
 </html>
