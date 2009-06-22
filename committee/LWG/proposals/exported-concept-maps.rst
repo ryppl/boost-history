@@ -25,17 +25,20 @@ Summary
 =======
 
 Concepts and concept maps can provide default implementations of
-associated functions.  For example, in the following code, ``Num``
-models the ``LessThanComparable`` concept even though it only supplies
-one of four required operators::
+associated functions:
+
+.. parsed-literal::
 
   concept LessThanComparable<typename T>
   {
       bool operator<(T const& x, T const& y);
-      bool operator>(T const& x, T const& y) { return y < x; }
-      bool operator<=(T const& x, T const& y) { return !(y < x); }
-      bool operator>=(T const& x, T const& y) { return !(x < y); }
+      bool operator>(T const& x, T const& y) **{ return y < x; }**
+      bool operator<=(T const& x, T const& y) **{ return !(y < x); }**
+      bool operator>=(T const& x, T const& y) **{ return !(x < y); }**
   }
+
+In the following code, ``Num`` models the ``LessThanComparable``
+concept even though it only supplies one of four required operators::
 
   class Num
   {
@@ -179,7 +182,7 @@ If one can assume the type author has control over definitions in his
 namespace, then any such semantic change (e.g., introducing another concept 
 map into that namespace) would likely be intentional.
 However, if one lumps everything together into the global namespace or starts
-writing ``concept_map``\s in namespaces they do not control, the
+writing ``concept_map``\ s in namespaces they do not control, the
 potential for surprise is greater.
 
 We considered automatically exporting all ``concept_map``\s, to
