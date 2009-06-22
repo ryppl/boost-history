@@ -343,7 +343,7 @@ int main()
 		print(run_tests(50000, 100, 10, "list_dupe", test_list_dupe(), test_dupe_list_types));
 		print(run_tests(500000, 100, 10, "vector_accumulate", test_vector_accumulate()));
 		print(run_tests(10000, 100, 10, "set_vector", test_set_vector()));
-		print(run_tests(10000, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+		print(run_tests(2000, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #else
 		print(run_tests(50000, 100, 10, "list_create<int>", test_list_create<int>()));
 		print(run_tests(5000, 100, 10, "list_sort<int>", test_list_sort<int>()));
