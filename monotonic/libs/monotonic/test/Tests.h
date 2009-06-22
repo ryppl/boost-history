@@ -202,7 +202,7 @@ struct test_map_erase
 		{
 			map.insert(random_pairs[length + n]);
 			int random_remove = random_numbers[n];
-			Map::iterator iter = map.lower_bound(random_remove);
+			typename Map::iterator iter = map.lower_bound(random_remove);
 			if (iter != map.end())
 				map.erase(iter);
 		}
