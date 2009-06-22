@@ -28,12 +28,12 @@ public:
         _rootChoice.setSize(RootType::Types_size);
         _rootChoice.setMaxWeights(100);
         _rootChoice[RootType::itl_set]               = 0;
-        _rootChoice[RootType::interval_set]          = 20;
-        _rootChoice[RootType::separate_interval_set] = 20;
-        _rootChoice[RootType::split_interval_set]    = 20;
+        _rootChoice[RootType::interval_set]          = 0;//20;
+        _rootChoice[RootType::separate_interval_set] = 0;//20;
+        _rootChoice[RootType::split_interval_set]    = 0;//20;
         _rootChoice[RootType::itl_map]               = 0;
-        _rootChoice[RootType::interval_map]          = 20;
-        _rootChoice[RootType::split_interval_map]    = 20;
+        _rootChoice[RootType::interval_map]          = 100;//20;
+        _rootChoice[RootType::split_interval_map]    = 0;//20;
         setRootTypeNames();
         _rootChoice.init();
 
@@ -100,24 +100,24 @@ public:
         //-----------------------------------------------------------------
         // Sets
         //-----------------------------------------------------------------
-        case RootType::interval_set:          return new interval_morphic_validater<interval_set<int> >;
-        case RootType::separate_interval_set: return new interval_morphic_validater<separate_interval_set<int> >;
-        case RootType::split_interval_set:    return new interval_morphic_validater<split_interval_set<int> >;
+        //case RootType::interval_set:          return new interval_morphic_validater<interval_set<int> >;
+        //case RootType::separate_interval_set: return new interval_morphic_validater<separate_interval_set<int> >;
+        //case RootType::split_interval_set:    return new interval_morphic_validater<split_interval_set<int> >;
         //-----------------------------------------------------------------
         // Maps
         //-----------------------------------------------------------------
-        case RootType::split_interval_map: {
-            switch(domainChoice) {
-            case DomainType::Int: 
-                switch(neutronizerChoice) {
-                NEURONIZER_CASES(interval_morphic_validater, split_interval_map, int, int)
-                default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
-                                            neutronizerChoice, _neutronizerChoice);
-                }
-            default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
-                                         domainChoice, _domainChoice);
-            }
-        }
+        //case RootType::split_interval_map: {
+        //    switch(domainChoice) {
+        //    case DomainType::Int: 
+        //        switch(neutronizerChoice) {
+        //        NEURONIZER_CASES(interval_morphic_validater, split_interval_map, int, int)
+        //        default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), 
+        //                                    neutronizerChoice, _neutronizerChoice);
+        //        }
+        //    default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: domainChoice:\n"), 
+        //                                 domainChoice, _domainChoice);
+        //    }
+        //}
         case RootType::interval_map: {
             switch(domainChoice) {
             case DomainType::Int: 

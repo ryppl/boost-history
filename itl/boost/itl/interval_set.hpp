@@ -267,7 +267,6 @@ void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& m
     iterator fst_it = this->_set.lower_bound(minuend);
     if(fst_it==this->_set.end()) return;
     iterator end_it = this->_set.upper_bound(minuend);
-    iterator snd_it = fst_it; ++snd_it;
     iterator lst_it = end_it; --lst_it;
 
     interval_type leftResid = right_subtract(*fst_it, minuend);
