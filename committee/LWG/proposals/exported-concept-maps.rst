@@ -120,7 +120,9 @@ reaction (or worse).
 Default implementations of associated functions arise in concepts like
 ``LessThanComparable`` whose interfaces are **non-minimal**, i.e. they
 contain elements that can be implemented entirely in terms of other
-interface elements.  In C++03 the usual way to avoid repeating this
+interface elements.  Such interfaces are quite common—in Boost you can
+find entire libraries devoted to implementing the redundant parts of
+non-minimal interfaces.  The usual way to avoid repeating this
 boilerplate in each model of a concept is to capture the redundancy in
 a base class template::
 
@@ -145,11 +147,14 @@ a base class template::
       friend bool operator<(String const&, String const&);
   };
 
-If this proposal is accepted, all such CRTP base classes templates
-could be discarded, the redundant interface being implemented directly
-by the concept.  The Boost.Operators library, for example, could be
-eliminated for C++0x, and the Boost.Iterator library would shrink
-substantially.
+In C++0x as defined today, one would need both the CRTP base *and* the
+``concept_map`` to achieve uniform behavior in constrained and
+unconstrained code.  If this proposal is accepted, though, all such
+CRTP base class templates could be discarded, the redundant interface
+being implemented directly by the concept.  The Boost.Operators
+library, for example, could be eliminated for C++0x, and the
+Boost.Iterator library would shrink substantially—a massive reduction
+in verbosity.
 
 Risks, Opportunities, and Rationale
 ===================================
