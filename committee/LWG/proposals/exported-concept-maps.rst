@@ -44,7 +44,9 @@ one of four required operators::
   
   concept_map LessThanComparable<Num> { } // OK
   
-Now all four operators required by ``LessThanComparable`` can be
+The remaining three operators (>, <=, >=) are provided with default
+definitions within the concept map. Now all four operators required by
+``LessThanComparable`` can be 
 applied to ``Num`` in a constrained template where
 ``LessThanComparable`` is required::
 
@@ -74,12 +76,14 @@ unconstrained contexts like this::
 
   export concept_map LessThanComparable<Num> { } // OK
   
-Then the unconstrained definition of ``f`` above will work as
+Here, the synthesized definitions for the >, <=, and >= operators are
+exported from the concept map so that they are visible to normal name
+lookup. Then, the unconstrained definition of ``f`` above will work as
 expected.  We also propose that concept maps generated with the
-“intentional concept mapping” syntax described in D2916=09-0106 (if it
+“intentional concept mapping” syntax described in N2916=09-0106 (if it
 is accepted) be exported, so ``Num`` could be declared this way:
 
-parsed-literal::
+.. parsed-literal::
 
   class Num **-> LessThanComparable**
   {
@@ -122,7 +126,8 @@ Default implementations of associated functions arise in concepts like
 contain elements that can be implemented entirely in terms of other
 interface elements.  Such interfaces are quite common—in Boost you can
 find entire libraries devoted to implementing the redundant parts of
-non-minimal interfaces.  The usual way to avoid repeating this
+non-minimal interfaces ([Operators]_, [Iterator]_).  The usual way to
+avoid repeating this
 boilerplate in each model of a concept is to capture the redundancy in
 a base class template::
 
@@ -154,7 +159,9 @@ CRTP base class templates could be discarded, the redundant interface
 being implemented directly by the concept.  The Boost.Operators
 library, for example, could be eliminated for C++0x, and the
 Boost.Iterator library would shrink substantially—a massive reduction
-in verbosity.
+in verbosity that would make C++0x code that uses (exported) concept
+maps substantially shorter than the equivalent non-concepts code.
+
 
 Risks, Opportunities, and Rationale
 ===================================
@@ -163,25 +170,29 @@ In general, adding definitions to a system increases complexity and
 the risk of unexpected effects (the safest code is no code).  Exported
 ``concept_map``\ s, in particular, add candidates to overload sets.
 These new definitions can potentially change the meaning of
-unconstrained code, which by currently has no dependency on the
+unconstrained code, which currently has no dependency on the
 ``concept_map``.  That risk is mitigated by the fact that the exported
-defaults are looked up only through associated namespaces, so the
-offending ``concept_map`` would have to be written in one of those.
+definitions are only found when the exported concept map is itself
+visible, so these exported definitions follow the same rules as scoped
+concept maps.
 If one can assume the type author has control over definitions in his
-namespace, then any such semantic change would likely be intentional,
-but if lump everything together into the global namespace or start
+namespace, then any such semantic change (e.g., introducing another concept 
+map into that namespace) would likely be intentional.
+However, if one lumps everything together into the global namespace or starts
 writing ``concept_map``\s in namespaces they do not control, the
 potential for surprise is greater.
 
-We considered automatically exporting all ``concept_map``\ s, but that
-could change the meaning of ordinary unconstrained code since
-``concept_map``\ s can be used for post-hoc adaptation, that would
-definitely cause problems
-
-We considered making “``export``” the default, but we believe that the
-“intentional concept mapping syntax” proposed by D2916=09-0106 covers
-a large majority of the cases, so there's no compelling reason to
-increase the risk associated with declaring a ``concept_map``.
+We considered automatically exporting all ``concept_map``\s, to
+provide the greatest consistency between constrained and unconstrained
+code. However, we do not recommend this approach because it is
+generally wrong when concept maps are used to adapt syntax, since
+syntax adaptations for the sake of concepts aren't typically meant to
+be part of the public interface of a type. More importantly, we found
+that those types whose public interface involves defaults from
+concepts maps were almost always good candidates for the “intentional
+concept mapping syntax” proposed by N2916=09-0106, which already
+explicitly ties the interface of a type to a particular set of
+concepts (including their defaults).
 
 Proposed Wording
 ================
@@ -328,6 +339,12 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 Acknowledgements
 ================
 
+Bibliography
+============
+
+.. [Operators] The Boost.Operators library. http://www.boost.org/doc/libs/1_39_0/libs/utility/operators.htm.
+
+.. [Iterator] The Boost.Iterator library. http://www.boost.org/doc/libs/1_39_0/libs/iterator/doc/index.html.
 
 .. |opt| replace:: :sub:`opt`
 
