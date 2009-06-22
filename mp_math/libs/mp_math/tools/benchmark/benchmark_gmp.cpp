@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -11,7 +11,7 @@ benchmark_gmp::benchmark_gmp()
   base(std::string("gmp"), gmp_version)
 {
   // init dst vector
-  std::fill(dst.begin(), dst.end(), mpz_class());
+  std::fill(dst.begin(), dst.end(), mp_int_type());
 }
 
 benchmark_gmp::~benchmark_gmp()
@@ -19,17 +19,17 @@ benchmark_gmp::~benchmark_gmp()
 
 void benchmark_gmp::clear_dst_vector()
 {
-  std::fill(dst.begin(), dst.end(), mpz_class());
+  std::fill(dst.begin(), dst.end(), mp_int_type());
 }
 
 void benchmark_gmp::construct_operand_1(const std::string& src, unsigned int i)
 {
-  src1[i] = mpz_class(src, 16);
+  src1[i].assign(src, std::ios::hex);
 }
 
 void benchmark_gmp::construct_operand_2(const std::string& src, unsigned int i)
 {
-  src2[i] = mpz_class(src, 16);
+  src2[i].assign(src, std::ios::hex);
 }
 
 #define bench_function_def(f)                                   \

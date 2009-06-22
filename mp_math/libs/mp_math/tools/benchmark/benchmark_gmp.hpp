@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -6,13 +6,22 @@
 #ifndef BOOST_MP_MATH_TOOLS_BENCHMARK_GMP_HPP
 #define BOOST_MP_MATH_TOOLS_BENCHMARK_GMP_HPP
 
-#include <gmpxx.h>
+#include <boost/mp_math/gmp.hpp>
+#include <boost/mp_math/integer.hpp>
 #include "benchmark.hpp"
 
 
-struct benchmark_gmp : benchmark<mpz_class>
+struct benchmark_gmp
+:
+  benchmark<
+    boost::mp_math::integer<
+      boost::mp_math::gmp_integer<>
+    >
+  >
 {
-  typedef benchmark<mpz_class> base;
+  typedef benchmark<
+    boost::mp_math::integer<boost::mp_math::gmp_integer<> >
+  > base;
 
   benchmark_gmp();
   ~benchmark_gmp();
@@ -38,36 +47,36 @@ struct benchmark_gmp : benchmark<mpz_class>
   {
     base& b;
     explicit ctor_dec_op(base& ba) : b(ba) {}
-    void operator()(unsigned int i) const { b.dst[i] = mpz_class(b.dec_str[i], 10); }
+    void operator()(unsigned int i) const { b.dst[i].assign(b.dec_str[i], std::ios::dec); }
   };
 
   struct ctor_hex_op
   {
     base& b;
     explicit ctor_hex_op(base& ba) : b(ba) {}
-    void operator()(unsigned int i) const { b.dst[i] = mpz_class(b.hex_str[i], 16); }
+    void operator()(unsigned int i) const { b.dst[i].assign(b.hex_str[i], std::ios::hex); }
   };
 
   struct to_dec_op
   {
     base& b;
     explicit to_dec_op(base& ba) : b(ba) {}
-    void operator()(unsigned int i) const { b.str = b.src1[i].get_str(10); }
+    void operator()(unsigned int i) const { b.str = b.src1[i].to_string<std::string>(std::ios::dec); }
   };
 
   struct to_hex_op
   {
     base& b;
     explicit to_hex_op(base& ba) : b(ba) {}
-    void operator()(unsigned int i) const { b.str = b.src1[i].get_str(16); }
+    void operator()(unsigned int i) const { b.str = b.src1[i].to_string<std::string>(std::ios::hex); }
   };
 
-  #define bench_functor(name,op)              \
-  struct name##_op {                          \
-    base& b;                                  \
-    explicit name##_op(base& ba) : b(ba) {}   \
-    void operator()(unsigned int i) const     \
-    { b.dst[i] = b.src1[i] op b.src2[i]; }    \
+  #define bench_functor(name,op)            \
+  struct name##_op {                        \
+    base& b;                                \
+    explicit name##_op(base& ba) : b(ba) {} \
+    void operator()(unsigned int i) const   \
+    { b.dst[i] = b.src1[i] op b.src2[i]; }  \
   }
 
   bench_functor(add,+);
@@ -91,12 +100,10 @@ struct benchmark_gmp : benchmark<mpz_class>
   struct modpow_op
   {
     base& b;
-    explicit modpow_op(base& ba) : b (ba) {}
+    explicit modpow_op(base& ba) : b(ba) {}
     void operator()(unsigned int i) const
     {
-      mpz_powm(
-          b.dst[i].get_mpz_t(),
-          b.src1[i].get_mpz_t(), b.src1[i].get_mpz_t(), b.src2[i].get_mpz_t());
+      b.dst[i] = boost::mp_math::modpow(b.src1[i], b.src1[i], b.src2[i]);
     }
   };
 };

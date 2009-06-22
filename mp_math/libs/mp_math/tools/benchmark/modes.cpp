@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -10,27 +10,26 @@
 #include <sstream>
 #include <stdexcept>
 #include <boost/random.hpp>
-#include <boost/mp_math/mp_int.hpp>
+#include <boost/mp_math/integer.hpp>
 
 #include "modes.hpp"
 
-std::string create_random_hex_string(unsigned size_in_bits)
+std::string create_random_hex_string(unsigned size_in_digits)
 {
   std::string s;
-  s.reserve(size_in_bits/4);
+  s.resize(size_in_digits);
 
   boost::mt19937 r;
   boost::uniform_smallint<char> u(0,15);
   boost::variate_generator<boost::mt19937&, boost::uniform_smallint<char> > vg(r, u);
-  // one hex digit occupies 4 bits
-  for (unsigned i = 0; i < (size_in_bits+3)/4; ++i)
+  for (unsigned i = 0; i < size_in_digits; ++i)
   {
     char tmp = vg();
     if (tmp < 10)
       tmp = '0' + tmp;
     else
       tmp = 'a' + (tmp-10);
-    s.push_back(tmp);
+    s[i] = tmp;
   }
   return s;
 }
@@ -38,15 +37,15 @@ std::string create_random_hex_string(unsigned size_in_bits)
 std::string create_random_dec_string(unsigned size_in_digits)
 {
   std::string s;
-  s.reserve(size_in_digits);
+  s.resize(size_in_digits);
 
   boost::mt19937 r;
   boost::uniform_smallint<char> u(0,9);
   boost::variate_generator<boost::mt19937&, boost::uniform_smallint<char> > vg(r, u);
-  
+
   for (unsigned i = 0; i < size_in_digits; ++i)
-    s.push_back('0' + vg());
-  
+    s[i]= '0' + vg();
+
   return s;
 }
 
@@ -63,11 +62,11 @@ void data_file::write(const std::string& prefix) const
     file << x_values.at(i) << "\t";
 
     std::list<column>::const_iterator it = cols.begin();
-    
+
     while (it != cols.end())
     {
       file << it->data.at(i);
-        
+
       if (++it != cols.end())
         file << "\t";
     }
@@ -97,7 +96,7 @@ void write_gnuplot_scripts(unsigned int x, unsigned int y,
             "set term png size " << x << "," << y << "\n"
             "set output \"" << modeprefix << df->op << ".png\"\n";
     file << "plot \\\n";
-    
+
     std::list<data_file::column>::const_iterator c = df->cols.begin();
     int count = 2;
     while (c != df->cols.end())
@@ -132,11 +131,11 @@ mode1::mode1(unsigned int num_input_samples,
   if (!iv_file.is_open())
     throw std::runtime_error("couldn't open file mode1_input_vecs.dat");
 
-  const unsigned long min_size = 
+  const unsigned long min_size =
     std::min(get_operand1_size(0),
              get_operand2_size(0));
-  
-  const unsigned long max_size = 
+
+  const unsigned long max_size =
     std::max(get_operand1_size(num_input_samples_),
              get_operand2_size(num_input_samples_));
 
@@ -144,7 +143,7 @@ mode1::mode1(unsigned int num_input_samples,
             << " operand indices for numbers between "
             << min_size << " and " << max_size << " bits."
             << std::endl;
-  
+
   const std::string hex_s = create_random_hex_string(max_size);
 
   std::cout << "creating input vectors";
@@ -161,19 +160,19 @@ mode1::mode1(unsigned int num_input_samples,
   {
     const unsigned long size1 = get_operand1_size(i);
     const unsigned long size2 = get_operand2_size(i);
-    
+
     // divide by 4 because hex_s has max/4 hex digits
     vec1.push_back(hex_s.substr(0, size1/4));
     vec2.push_back(hex_s.substr(0, size2/4));
-    
+
     // output the input sizes for a graph here
     iv_file << size1 << "\t" << size2 << "\n";
-    
+
     if (((i+1) % stepsize) == 0)
     {
       std::cout << ".";
       std::cout.flush();
-    }      
+    }
   }
 
   std::cout << std::endl;
@@ -184,9 +183,9 @@ mode1::mode1(unsigned int num_input_samples,
   for (unsigned int i = 0; i < num_input_samples_; ++i)
   {
     hex_str_vec.push_back(hex_s.substr(0, (get_operand1_size(i)+3)/4));
-    // use mp_int to ensure decimal string results in the same number of bits as
-    // the hex string
-    boost::mp_math::mp_int<> tmp(hex_str_vec.back(), std::ios::hex);
+    // use integer to ensure decimal string results in the same number of bits
+    // as the hex string
+    boost::mp_math::integer<> tmp(hex_str_vec.back(), std::ios::hex);
     dec_str_vec.push_back(tmp.to_string<std::string>());
   }
 }
@@ -194,7 +193,7 @@ mode1::mode1(unsigned int num_input_samples,
 void mode1::create_data_files(std::list<benchmark_result>& results)
 {
   std::list<benchmark_result>::const_iterator r = results.begin();
-  
+
   // expects result list to be sorted by op name
   while (r != results.end())
   {
@@ -210,7 +209,7 @@ void mode1::create_data_files(std::list<benchmark_result>& results)
 
       c.libname = r->libname;
       c.data = r->ops;
-      
+
       // scale from ops per sample_time to ops per millisecond
       for (std::vector<double>::iterator it = c.data.begin();
           it != c.data.end(); ++it)
@@ -269,13 +268,13 @@ void mode1::write_summary_file() const
 void mode1::write_results(unsigned int x, unsigned int y) const
 {
   write_input_vector_plotfile(x, y);
-  
+
   std::cout << "writing data files..." << std::endl;
   write_data_files("mode1_", dfiles_);
-  
+
   std::cout << "writing gnuplot scripts..." << std::endl;
   write_gnuplot_scripts(x, y, "mode1_", "operand index", "ops/msec", dfiles_);
-  
+
   write_summary_file();
 }
 
@@ -293,7 +292,7 @@ unsigned long mode1::get_operand2_size(unsigned int sample_number) const
   // modified sine curve
   const double pi = 3.141592654;
   const double sample_num_to_rad = num_input_samples_ / (4.5 * pi);
-  
+
   // scale sample_number into the range [0...4.5*PI]
   const double x = sample_number / sample_num_to_rad;
 
@@ -309,7 +308,7 @@ unsigned long mode1::get_operand2_size(unsigned int sample_number) const
 
   // we want to scale the curve at the point p1 to be above y_top at x = 2.5*pi
   const double p1 = 2.5 * pi;
-  
+
   // here we use a function of the form y = -ax^2 + b to scale the curve at (and
   // around) p1
   const double a = 1.0/(p1 * p1);
@@ -319,7 +318,7 @@ unsigned long mode1::get_operand2_size(unsigned int sample_number) const
   // stop scaling once we're past p1 and 'adjust' falls below 1.0
   if (x > p1 && adjust < 1.0)
     adjust = 1.0;
-  
+
   return static_cast<unsigned long>(y_bottom * adjust * y_val + y_bottom);
 }
 
@@ -331,19 +330,21 @@ mode2::mode2(unsigned int pow_from, unsigned int pow_to, unsigned int stepsize)
   pow_step_(stepsize)
 {
   const unsigned long max_size = 1UL << pow_to;
-  
+
+  // one hex digit occupies 4 bits
   const std::string hex_s = create_random_hex_string((max_size+3)/4);
 
-  for (; pow_from < pow_to; pow_from += stepsize)
+  for (; pow_from <= pow_to; pow_from += stepsize)
   {
     const unsigned long size = 1UL << pow_from;
-    
+
     vec1.push_back(hex_s.substr(0, size/4));
-    
+
     hex_str_vec.push_back(hex_s.substr(0, (size+3)/4));
-    
-    boost::mp_math::mp_int<> tmp(hex_str_vec.back(), std::ios::hex);
-    dec_str_vec.push_back(tmp.to_string<std::string>());
+
+    // FIXME: this is unusably slow
+    //boost::mp_math::mp_int<> tmp(hex_str_vec.back(), std::ios::hex);
+    //dec_str_vec.push_back(tmp.to_string<std::string>());
   }
 
   vec2 = vec1;
@@ -353,13 +354,13 @@ mode2::mode2(unsigned int pow_from, unsigned int pow_to, unsigned int stepsize)
 void mode2::create_data_files(std::list<benchmark_result>& results)
 {
   std::list<benchmark_result>::const_iterator r = results.begin();
-  
+
   // expects result list to be sorted by op name
   while (r != results.end())
   {
     data_file d;
-    
-    for (unsigned i = pow_from_; i < pow_to_; i += pow_step_)
+
+    for (unsigned i = pow_from_; i <= pow_to_; i += pow_step_)
       d.x_values.push_back(i);
 
     std::list<benchmark_result>::const_iterator cur = r;
@@ -369,7 +370,7 @@ void mode2::create_data_files(std::list<benchmark_result>& results)
 
       c.libname = r->libname;
       c.data = r->ops;
-      
+
       // scale from ops per sample_time to seconds per op
       for (std::vector<double>::iterator it = c.data.begin();
           it != c.data.end(); ++it)
@@ -378,7 +379,7 @@ void mode2::create_data_files(std::list<benchmark_result>& results)
         *it = 1.0 / *it;
       }
 
-      c.sum = std::accumulate(r->ops.begin(), r->ops.end(), 0.);
+      c.sum = std::accumulate(c.data.begin(), c.data.end(), 0.);
       d.cols.push_back(c);
       ++r;
     }
@@ -416,11 +417,14 @@ void mode2::write_results(unsigned int x, unsigned int y) const
 {
   std::cout << "writing data files..." << std::endl;
   write_data_files("mode2_", dfiles_);
-  
+
   std::cout << "writing gnuplot scripts..." << std::endl;
   write_gnuplot_scripts(x, y, "mode2_", "operand size (2^x)", "seconds/op",
                         dfiles_);
 
   write_summary_file();
 }
+
+// TODO add mode 3 where user can specify the bits per operand directly
+// ./benchmark -m3 --op1_bits=23456789 --op2_bits=1234567
 

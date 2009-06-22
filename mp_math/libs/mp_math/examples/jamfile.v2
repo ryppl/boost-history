@@ -1,0 +1,40 @@
+# Copyright Kevin Sopp 2009.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+project
+  :
+    requirements
+    <include>../../../..
+    <include>.
+    <link>static
+  ;
+
+
+exe drops_in_the_ocean
+  :
+    drops_in_the_ocean.cpp
+  :
+    <variant>release
+  ;
+
+exe answer
+  :
+    answer.cpp
+  :
+    <variant>release
+  ;
+
+
+lib gmp_library   : : <name>gmp ;
+
+exe gmp
+  :
+    gmp.cpp
+    gmp_library
+  :
+    <variant>release
+  ;
+
+

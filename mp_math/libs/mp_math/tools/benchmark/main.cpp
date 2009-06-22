@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -18,7 +18,7 @@
 #include "modes.hpp"
 
 
-const char* version = "0.4";
+const char* version = "0.5";
 
 
 struct config
@@ -97,9 +97,9 @@ double config::estimated_run_time() const
 {
   const double mode1_time =
     sample_time * num_input_samples * ops.size() * libs.size();
-  
+
   const double mode2_time = 0.05 * ops.size() * libs.size();
-  
+
   double sum = 0.0;
   if (mode == 0 || mode == 1)
     sum += mode1_time;
@@ -115,7 +115,7 @@ double calibrate_sample_time(double max_error)
   const int vec_length = 10;
   long vec[vec_length];
   double st = 0.01;
-  
+
   int verified = 0;
   for (;;)
   {
@@ -140,7 +140,7 @@ double calibrate_sample_time(double max_error)
     average_deviation /= vec_length;
 
     const double error = (double)average_deviation / (double)average_value;
-    
+
     std::cout << "sample-time = " << st
               << ", current error = " << error;
     if (verified)
@@ -159,7 +159,7 @@ double calibrate_sample_time(double max_error)
     if (error / max_error > 2.0)
       st += 0.01;
     else
-      st += 0.002; 
+      st += 0.002;
     if (st >= 0.05)
       return 0.05;
   }
@@ -171,7 +171,7 @@ double calibrate_sample_time(double max_error)
 int main(int argc, char** argv)
 {
   typedef config::string_list string_list;
-  
+
   std::ios::sync_with_stdio(false);
 
   try
@@ -204,16 +204,16 @@ int main(int argc, char** argv)
           "1 = run benchmark meant to test small numbers\n"
           "2 = run benchmark meant to test large numbers")
 
-    ("ops", 
+    ("ops",
         value(&c.ops_string),
           "the operations to benchmark")
-    
+
     ("libs",
         value(&c.libs_string),
           "the libraries to benchmark")
-    
+
     ("list-ops",  "lists available operations")
-    
+
     ("list-libs", "lists available libraries")
 
     ("x",
@@ -235,16 +235,16 @@ int main(int argc, char** argv)
         value(&c.max_error)->default_value(0.1, "0.1"),
           "this value is used to calculate the sample time, you should not "
           "need to modify it")
-    
+
     ("sample-time,s",
         value(&c.sample_time)->default_value(0.035, "0.035"),
           "directly specify the sample time in seconds, it is used to reduce "
           "the error of the measurements")
-    
+
     ("range-beg,a",
         value(&c.range.first)->default_value(32),
           "range of numbers, measured in bits")
-    
+
     ("range-end,b",
         value(&c.range.second)->default_value(3072),
           "range of numbers, measured in bits")
@@ -327,7 +327,7 @@ int main(int argc, char** argv)
   const std::time_t time = std::time(0);
   char timestring[32];
   std::strftime(timestring, 32, "%Y %m %d %H:%M", std::localtime(&time));
-  
+
   boost::filesystem::create_directory(timestring);
   boost::filesystem::current_path(timestring);
 
@@ -348,7 +348,7 @@ int main(int argc, char** argv)
     std::cout << "calibrating sample time..." << std::endl;
     c.sample_time = calibrate_sample_time(c.max_error);
   }
-    
+
   std::cout << "Sample time is: " << c.sample_time << " sec" <<  std::endl;
 
   const unsigned long runtime =

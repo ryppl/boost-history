@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -6,13 +6,13 @@
 #ifndef BOOST_MP_MATH_TOOLS_BENCHMARK_MP_MATH_HPP
 #define BOOST_MP_MATH_TOOLS_BENCHMARK_MP_MATH_HPP
 
-#include <boost/mp_math/mp_int.hpp>
+#include <boost/mp_math/integer.hpp>
 #include "benchmark.hpp"
 
 
-struct benchmark_mp_math : benchmark<boost::mp_math::mp_int<> >
+struct benchmark_mp_math : benchmark<boost::mp_math::integer<> >
 {
-  typedef benchmark<boost::mp_math::mp_int<> > base;
+  typedef benchmark<boost::mp_math::integer<> > base;
 
   benchmark_mp_math();
   virtual ~benchmark_mp_math();
@@ -62,12 +62,12 @@ struct benchmark_mp_math : benchmark<boost::mp_math::mp_int<> >
     void operator()(unsigned int i) const { b.str = b.src1[i].to_string<std::string>(std::ios::hex); }
   };
 
-  #define bench_functor(name,op)              \
-  struct name##_op {                          \
-    base& b;                                  \
-    explicit name##_op(base& ba) : b(ba) {}   \
-    void operator()(unsigned int i) const     \
-    { b.dst[i] = b.src1[i]; b.dst[i] op##= b.src2[i]; } \
+  #define bench_functor(name,op)            \
+  struct name##_op {                        \
+    base& b;                                \
+    explicit name##_op(base& ba) : b(ba) {} \
+    void operator()(unsigned int i) const   \
+    { b.dst[i] = b.src1[i] op b.src2[i]; }  \
   }
 
   bench_functor(add,+);
@@ -84,8 +84,7 @@ struct benchmark_mp_math : benchmark<boost::mp_math::mp_int<> >
     explicit square_op(base& ba) : b(ba) {}
     void operator()(unsigned int i) const
     {
-      b.dst[i] = b.src1[i];
-      b.dst[i].sqr();
+      b.dst[i] = b.src1[i] * b.src1[i];
     }
   };
 
