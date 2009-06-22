@@ -324,7 +324,7 @@ void test_pools()
 			// destroy objects. this only calls the destructors; it does not release memory
 			storage.destroy(s1);
 
-			//cout << "storage.fixed, heap, total used: " << storage.fixed_used() << ", " << storage.heap_used() << ", " << storage.used() << endl;
+			cout << "storage.fixed, heap, total used: " << storage.fixed_used() << ", " << storage.heap_used() << ", " << storage.used() << endl;
 		}
 		// storage is released. if this was only ever on the stack, no work is done
 	}
@@ -337,7 +337,8 @@ int main()
 		cout << "results of running test at:" << endl;
 		cout << "https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/compare_memory_pool.cpp" << endl << endl;
 
-		test_pools();
+		//test_pools();
+		//return 0;
 
 		boost::timer timer;
 		Type test_map_vector_types;
@@ -347,7 +348,11 @@ int main()
 		bool run_medium = 1;//true;
 		bool run_large = 1;//true;
 
-		//print(run_tests(1000, 100, 10, "test_map_erase<int>", test_map_erase()));
+		// test for Luke
+		//Type types = Type::None;
+		//types.Include(Type::TBB);
+		//types.Include(Type::Monotonic);
+		//print(run_tests(2, 10000, 2, "test_map_erase<int>", test_map_erase(), types));
 		//return 0;
 
 		// small-size (~100 elements) containers
