@@ -198,6 +198,59 @@ struct test_map_vector
 	}
 };
 
+
+template <class Al>
+void *allocate_bytes(boost::pool<Al> &pool, size_t len)
+{
+	return pool.malloc(len);
+}
+
+template <size_t N, size_t M, class Al>
+void *allocate_bytes(boost::monotonic::storage<N,M,Al> &storage, size_t len)
+{
+	return storage.allocate(len, 1);
+}
+
+
+template <class Ty, class Al>
+Ty *allocate_object(boost::pool<Al> &pool)
+{
+	return pool.malloc(1);
+}
+
+template <class Ty>
+Ty *allocate_object(boost::monotonic::allocator<Ty> &alloc)
+{
+	return alloc.allocate(1);
+}
+
+struct test_pool_bytes_alloc
+{
+	template <class Storage>
+	int test(Storage &storage, size_t length)
+	{
+		for (size_t n = 0; n < length; ++n)
+		{
+			::allocate_bytes(storage, length*rand()/RAND_MAX);
+		}
+		return 0;
+	}
+};
+
+template <class Ty>
+struct test_pool_object_alloc
+{
+	template <class Storage>
+	int test(Storage &storage, size_t length)
+	{
+		for (size_t n = 0; n < length; ++n)
+		{
+			::allocate_object(storage);
+		}
+		return n;
+	}
+};
+
 struct PoolResult 
 {
 	double pool_elapsed;
@@ -351,6 +404,74 @@ void heading(const char *text)
 	cout << "===================================================" << endl;
 }
 
+#ifdef WIN32
+//warning C4996: 'std::fill_n': Function call with parameters that may be unsafe
+#pragma warning(disable:4996)
+#endif
+
+void test_pools()
+{
+	size_t length = 1;
+
+	{
+		boost::pool<> storage(sizeof(int));
+		for (size_t n = 0; n < length; ++n)
+		{
+			int *p = reinterpret_cast<int *>(storage.malloc());
+		}
+	}
+	{
+		boost::object_pool<int> storage;
+		for (size_t n = 0; n < length; ++n)
+		{
+			int *p = storage.malloc();
+		}
+	}
+
+	if (0)
+	{
+		boost::object_pool<string> storage;
+		for (size_t n = 0; n < length; ++n)
+		{
+			string *p = storage.malloc();
+		}
+		// crashes when storage is released?
+	}
+
+	{
+		// storage starts on the stack, then merges into the heap as needed
+		monotonic::storage<> storage;
+		for (size_t n = 0; n < length; ++n)
+		{
+			// create a new int from storage
+			int *n0 = storage.create<int>();
+
+			// pass a ctor argument
+			int *n1 = storage.create<int>(42);
+
+			// create a new string (uses correct alignment)
+			string *s1 = storage.create<string>("foo");
+			BOOST_ASSERT(*s1 == "foo");
+
+			// allocate 37 bytes with alignment 1
+			char *array0 = storage.allocate_bytes(37);
+			fill_n(array0, 37, 42);
+
+			// allocate 2537 bytes with 64-byte alignment
+			char *array1 = storage.allocate_bytes(2537, 64);
+			fill_n(array1, 2537, 123);
+
+			// allocate 1283 bytes with machine alignment
+			char *array2 = storage.allocate_bytes<1283>();
+			fill_n(array2, 1283, 42);
+
+			// destroy objects. this only calls the destructors; it does not release memory
+			storage.destroy(s1);
+		}
+		// storage is released. if this was only ever on the stack, no work is done
+	}
+}
+
 int main()
 {
 	cout << "results of running test at:" << endl;
@@ -363,6 +484,8 @@ int main()
 	bool run_small = 1;//true;
 	bool run_medium = 1;//true;
 	bool run_large = 1;//true;
+
+	test_pools();
 
 	// small-size (~100 elements) containers
 	if (run_small)

@@ -88,7 +88,7 @@ namespace boost
 				chain.clear();
 			}
 
-			void *allocate(size_t num_bytes, size_t alignment)
+			void *allocate(size_t num_bytes, size_t alignment = 1)
 			{
 				if (void *ptr = from_pool(num_bytes, alignment))
 					return ptr;
@@ -157,6 +157,49 @@ namespace boost
 			size_t num_links() const
 			{
 				return chain.size();
+			}
+
+			// ------------------------------------------------------------------------
+
+			template <class Ty>
+			Ty *initialised_create()
+			{
+				return reinterpret_cast<Ty *>(allocate_bytes<sizeof(Ty)>());
+			}
+
+			template <class Ty>
+			Ty *create()
+			{
+				Ty *ptr = initialised_create<Ty>();
+				new (ptr) Ty();
+				return ptr;
+			}
+
+			template <class Ty>
+			Ty *create(Ty const &X)
+			{
+				Ty *ptr = initialised_create<Ty>();
+				new (ptr) Ty(X);
+				return ptr;
+			}
+
+			template <class Ty>
+			void destroy(Ty *ptr)
+			{
+				if (!ptr)
+					return;
+				ptr->~Ty();
+			}
+
+			template <size_t N>
+			char *allocate_bytes()
+			{
+				return allocate_bytes(N, boost::aligned_storage<N>::alignment);
+			}
+
+			char *allocate_bytes(size_t num_bytes, size_t alignment = 1)
+			{
+				return reinterpret_cast<char *>(allocate(num_bytes, alignment));
 			}
 
 		private:

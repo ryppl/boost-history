@@ -10,6 +10,7 @@
 #pragma once
 
 #include <memory>
+#include <boost/pool/object_pool.hpp>
 #include <boost/pool/pool_alloc.hpp>
 #undef max
 #undef min
