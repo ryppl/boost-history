@@ -443,6 +443,10 @@
 			RelativePath=".\Jamfile.v2"
 			>
 		</File>
+		<File
+			RelativePath=".\PoolResult.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>

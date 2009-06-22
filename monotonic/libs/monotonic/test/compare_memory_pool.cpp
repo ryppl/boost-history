@@ -26,6 +26,7 @@
 //#include <boost/monotonic/local_allocator.hpp>
 
 #include "./AllocatorTypes.h"
+#include "./PoolResult.h"
 
 using namespace std;
 using namespace boost;
@@ -252,115 +253,6 @@ struct test_pool_object_alloc
 	}
 };
 
-struct PoolResult 
-{
-	//boost::array<double, Type:: elapsed[;
-	double pool_elapsed;
-	double fast_pool_elapsed;
-	double mono_elapsed;
-	double local_mono_elapsed;
-	double std_elapsed;
-	double tbb_elapsed;
-	PoolResult(double D = 0)
-	{
-		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = D;
-	}
-
-	PoolResult& operator+=(PoolResult const &A)
-	{
-		pool_elapsed += A.pool_elapsed;
-		fast_pool_elapsed += A.fast_pool_elapsed;
-		mono_elapsed += A.mono_elapsed;
-		local_mono_elapsed += A.local_mono_elapsed;
-		std_elapsed += A.std_elapsed;
-		tbb_elapsed += A.tbb_elapsed;
-		return *this;
-	}
-	PoolResult& operator-=(PoolResult const &A)
-	{
-		pool_elapsed -= A.pool_elapsed;
-		fast_pool_elapsed -= A.fast_pool_elapsed;
-		mono_elapsed -= A.mono_elapsed;
-		local_mono_elapsed -= A.local_mono_elapsed;
-		std_elapsed -= A.std_elapsed;
-		tbb_elapsed -= A.tbb_elapsed;
-		return *this;
-	}
-	PoolResult& operator*=(PoolResult const &A)
-	{
-		pool_elapsed *= A.pool_elapsed;
-		fast_pool_elapsed *= A.fast_pool_elapsed;
-		mono_elapsed *= A.mono_elapsed;
-		local_mono_elapsed *= A.local_mono_elapsed;
-		std_elapsed *= A.std_elapsed;
-		tbb_elapsed *= A.tbb_elapsed;
-		return *this;
-	}
-	PoolResult& operator*=(double A)
-	{
-		pool_elapsed *= A;
-		fast_pool_elapsed *= A;
-		mono_elapsed *= A;
-		local_mono_elapsed *= A;
-		std_elapsed *= A;
-		tbb_elapsed *= A;
-		return *this;
-	}
-
-	void update_min(PoolResult const &other)
-	{
-		if (other.fast_pool_elapsed > 0)
-			fast_pool_elapsed = std::min(fast_pool_elapsed, other.fast_pool_elapsed);
-		if (other.pool_elapsed > 0)
-			pool_elapsed = std::min(pool_elapsed, other.pool_elapsed);
-		if (other.tbb_elapsed > 0)
-			tbb_elapsed = std::min(tbb_elapsed, other.tbb_elapsed);
-		if (other.std_elapsed > 0)
-			std_elapsed = std::min(std_elapsed, other.std_elapsed);
-	}
-	void update_max(PoolResult const &other)
-	{
-		fast_pool_elapsed = std::max(fast_pool_elapsed, other.fast_pool_elapsed);
-		pool_elapsed = std::max(pool_elapsed, other.pool_elapsed);
-		tbb_elapsed = std::max(tbb_elapsed, other.tbb_elapsed);
-		std_elapsed = std::max(std_elapsed, other.std_elapsed);
-	}
-};
-
-PoolResult sqrt(PoolResult const &A)
-{
-	PoolResult R(A);
-	R.fast_pool_elapsed = sqrt(R.fast_pool_elapsed); 
-	R.mono_elapsed = sqrt(R.mono_elapsed); 
-	R.local_mono_elapsed = sqrt(R.local_mono_elapsed); 
-	R.std_elapsed = sqrt(R.std_elapsed); 
-	R.tbb_elapsed = sqrt(R.tbb_elapsed); 
-	return R;
-}
-
-PoolResult operator*(PoolResult const &A, PoolResult const &B)
-{
-	PoolResult R(A);
-	R *= B;
-	return R;
-}
-
-PoolResult operator+(PoolResult const &A, PoolResult const &B)
-{
-	PoolResult R(A);
-	R += B;
-	return R;
-}
-
-PoolResult operator-(PoolResult const &A, PoolResult const &B)
-{
-	PoolResult R(A);
-	R -= B;
-	return R;
-}
-
-typedef std::map<size_t /*count*/, PoolResult> PoolResults;
-
 template <class Fun>
 PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 {
@@ -464,6 +356,24 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 	return result;
 }
 
+template <class Fun>
+PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun, Type types = Type::All)
+{
+	boost::timer timer;
+	cout << title << ": reps=" << count << ", len=" << max_length << ", steps=" << num_iterations;
+	PoolResults results;
+	for (size_t length = 1; length < max_length; length += max_length/num_iterations)
+	{
+		results[length] = run_test(count, length, fun, types);
+	}
+	cout << endl << "completed in " << timer.elapsed() << "s" << endl;
+	return results;
+}
+
+std::vector<PoolResult> cumulative;
+PoolResult result_min, result_max;
+bool first_result = true;
+
 
 template <class II>
 typename boost::iterator_value<II>::type calc_mean(II first, II last, size_t num)
@@ -503,29 +413,6 @@ std::pair<typename Cont::value_type, typename Cont::value_type> standard_deviati
 	return standard_deviation_mean(cont.begin(), cont.end());
 }
 
-template <class Fun>
-PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun, Type types = Type::All)
-{
-	boost::timer timer;
-	cout << title << ": reps=" << count << ", len=" << max_length << ", steps=" << num_iterations;
-	PoolResults results;
-	for (size_t length = 1; length < max_length; length += max_length/num_iterations)
-	{
-		results[length] = run_test(count, length, fun, types);
-	}
-	cout << endl << "completed in " << timer.elapsed() << "s" << endl;
-	return results;
-}
-
-struct OverallResult
-{
-	std::vector<PoolResult> cumulative;
-};
-
-std::vector<PoolResult> cumulative;
-PoolResult result_min, result_max;
-bool first_result = true;
-
 void print_cumulative(std::vector<PoolResult> const &results)
 {
 	pair<PoolResult, PoolResult> dev_mean = standard_deviation_mean(results);
@@ -557,11 +444,7 @@ void print(PoolResults const &results)
 			cout << setw(w) << "mono = 0s" << endl;
 			continue;
 		}
-		PoolResult ratio;
-		ratio.fast_pool_elapsed = result.fast_pool_elapsed/result.mono_elapsed;
-		ratio.pool_elapsed = result.pool_elapsed/result.mono_elapsed;
-		ratio.std_elapsed = result.std_elapsed/result.mono_elapsed;
-		ratio.tbb_elapsed = result.tbb_elapsed/result.mono_elapsed;
+		PoolResult ratio = result*(1./result.mono_elapsed);
 		ratio.mono_elapsed = 1;
 
 		if (first_result)
