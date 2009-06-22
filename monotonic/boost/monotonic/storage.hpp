@@ -32,7 +32,7 @@ namespace boost
 			typedef Al Allocator;
 			typedef typename Allocator::template rebind<char>::other CharAllocator;
 			typedef detail::Link<CharAllocator> Link;
-			typedef detail::Pool<This> Pool;
+			typedef detail::Pool Pool;
 			typedef std::vector<Link> Chain;					
 			typedef boost::array<Pool, NumPools> Pools;
 

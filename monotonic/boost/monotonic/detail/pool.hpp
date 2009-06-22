@@ -13,7 +13,6 @@ namespace boost
 		namespace detail
 		{
 			/// a pool of same-sized chunks in a storage block of the given type
-			template <class Storage>
 			struct Pool
 			{
 				char *first, *next, *last;
@@ -24,6 +23,7 @@ namespace boost
 				Pool(size_t bs) : first(0), next(0), last(0), bucket_size(bs)
 				{
 				}
+				template <class Storage>
 				void *allocate(Storage *storage)
 				{
 					if (next == last)
@@ -32,6 +32,7 @@ namespace boost
 					next += bucket_size;
 					return ptr;
 				}
+				template <class Storage>
 				void expand(Storage *storage)
 				{
 					size_t capacity = std::max(DefaultSizes::MinPoolSize*bucket_size, (last - first)*bucket_size*2);
