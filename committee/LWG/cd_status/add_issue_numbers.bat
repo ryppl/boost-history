@@ -1,23 +1,15 @@
-grep " Response to " lwg-active.html >i1
+grep -E "(<p><b>Addresses )|(name=)" lwg-active.html >i1
+change i1 "\r\n<p><b>Addresses " "$"
+grep "\$" <i1 >i2
 
-np++ i1
+np++ i2
 
-sed --file=generate.sed <i1 >temp.sed
+sed --file=generate.sed <i2 >temp.sed
 
-copy /y comments.xml temp1.xml
+del comments.xml.bak 2>nul
+ren comments.xml comments.xml.bak
 
-change temp1.xml "\n  nb=\q" " nb=\q"
-change temp1.xml "\n  num=\q" " num=\q"
-change temp1.xml "\n  uknum=\q" " uknum=\q"
-change temp1.xml "\n  type=\q" " type=\q"
-change temp1.xml "\n  owner=\q" " owner=\q"
-change temp1.xml "\n  issue=\q" " issue=\q"
-change temp1.xml "\n  disp=\q" " disp=\q"
-change temp1.xml "\n  date=\q" " date=\q"
-change temp1.xml "\n  extdoc=\q" " extdoc=\q"
-change temp1.xml "\n>\n<section>" ">\n<section>"
-
-sed --file=temp.sed <temp1.xml >comments_with_numbers.xml
+sed --file=temp.sed <comments.xml.bak >comments.xml
 
 
 
