@@ -146,12 +146,22 @@ namespace boost
 				return max_size();
 			}
 
-			size_t used() const
+			size_t fixed_used() const
 			{
-				size_t count = fixed.used();
+				return fixed.used();
+			}
+
+			size_t heap_used() const
+			{
+				size_t count = 0;
 				BOOST_FOREACH(Link const &link, chain)
 					count += link.used();
 				return count;
+			}
+
+			size_t used() const
+			{
+				return fixed_used() + heap_used();
 			}
 
 			size_t num_links() const

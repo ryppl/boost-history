@@ -439,8 +439,9 @@ void test_pools()
 	}
 
 	{
-		// storage starts on the stack, then merges into the heap as needed
-		monotonic::storage<> storage;
+		length = 4;
+		// storage starts on the stack (in this case, 10k of it), then merges into the heap as needed
+		monotonic::storage<10*1024> storage;
 		for (size_t n = 0; n < length; ++n)
 		{
 			// create a new int from storage
@@ -467,6 +468,8 @@ void test_pools()
 
 			// destroy objects. this only calls the destructors; it does not release memory
 			storage.destroy(s1);
+
+			cout << "storage.fixed, heap, total used: " << storage.fixed_used() << ", " << storage.heap_used() << ", " << storage.used() << endl;
 		}
 		// storage is released. if this was only ever on the stack, no work is done
 	}
