@@ -451,6 +451,10 @@
 			RelativePath=".\TestPoolAlloc.h"
 			>
 		</File>
+		<File
+			RelativePath=".\Tests.h"
+			>
+		</File>
 	</Files>
 	<Globals>
 	</Globals>
