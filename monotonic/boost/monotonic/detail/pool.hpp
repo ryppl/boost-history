@@ -26,14 +26,14 @@ namespace boost
 				template <class Storage>
 				void *allocate(Storage &storage)
 				{
-					if (next == last)
-						expand(storage);
+					if (next == last && !expand(storage))
+						return 0;
 					void *ptr = next;
 					next += bucket_size;
 					return ptr;
 				}
 				template <class Storage>
-				void expand(Storage &storage)
+				bool expand(Storage &storage)
 				{
 					size_t capacity = std::max(DefaultSizes::MinPoolSize*bucket_size, (last - first)*bucket_size*2);
 					void *ptr = storage.from_fixed(capacity, 16);
@@ -41,10 +41,11 @@ namespace boost
 					{
 						ptr = storage.from_heap(capacity, 16);
 						if (ptr == 0)
-							throw std::bad_alloc("monotonic::pool");
+							return false;
 					}
 					first = next = (char *)ptr;
 					last = first + capacity;
+					return true;
 				}
 				void reset()
 				{
