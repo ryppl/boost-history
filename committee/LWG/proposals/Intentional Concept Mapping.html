@@ -75,10 +75,11 @@ concept_map std::TrivialType&lt;Endian&gt; {}
     self-documentation, particularly for large classes, negating some of the
     value as documentation for users and maintainers.</li>
 
-    <li>The location of the concept maps after the class definition tends to
-    tends to push the important activity of constraining the class until
-    later in the class' development cycle, but it best occurs early (probably
-    first).</li>
+    <li>The location of the concept maps after the class definition
+    tends to tends to push the important activity of constraining the
+    class in code until later in its development cycle, even though
+    such concept maps are best written early (usually before the body
+    of the class is filled in).</li>
 
     <li>Empty concept maps are excessively verbose.</li>
   </ul>
@@ -95,14 +96,20 @@ concept_map std::TrivialType&lt;Endian&gt; {}
 
   <h2>Syntax</h2>
 
-  <p>The proposed wording uses <code>-&gt;</code> as a syntax marker for the
-  beginning of the list of concepts to be mapped. The authors are not wedded
-  to <code>-&gt;</code>, and considered several alternate keyword and
-  punctuation possibilities.</p>
+  <p>The proposed wording uses <code>-&gt;</code> as a syntax marker
+  for the beginning of the list of concepts to be mapped. The authors
+  considered several alternate keyword and punctuation possibilities
+  and are not wedded to the use of <code>-&gt;</code>.  We welcome
+  syntax suggestions from the committee (keeping in mind the usual
+  "bicycle shed" caveat, of course!)</p>
 
-  <p>We did consider using <code>requires</code>, but it was rejected on the
-  grounds that it would make a <code>concept_map</code> look too much like a
-  requires clause in a region of code where either could appear, but a
+  <p>We describe here our rationale for rejecting the use
+  of <code>requires</code> as a marker only because we consider the
+  argument sufficiently subtle to be a potential time-waster for the
+  committee.  The problem is that using <code>requires</code> makes
+  a <code>concept_map</code> look too much like a
+  <code>requires</code> clause in a region of code where either one
+  could appear.  A
   <code>concept_map</code> is fundamentally different from a
   <code>requires</code> clause. When you write:</p>
       <blockquote>
@@ -132,10 +139,7 @@ Y&lt;T&gt; can be used where EqualityComparable is required, etc):
 template &lt;typename T&gt;
 concept_map EqualityComparable&lt;Y&lt;T&gt; &gt; { };
 </pre>
-
       </blockquote>
-
-  <p>We welcome syntax suggestions from the committee.</p>
 
   <h2>Motivation</h2>
 
@@ -149,10 +153,15 @@ concept_map EqualityComparable&lt;Y&lt;T&gt; &gt; { };
   concept maps&#8212;even empty ones&#8212;as meeting critical
   needs. We wish to make empty concept maps more convenient, more
   expressive, and less verbose in the common case where one is
-  intentionally creating a model of a known concept, however empty
-  <code>concept_map</code>s will still be needed for post-hoc
-  adaptation of types to concepts, an important function
+  intentionally creating a model of a known concept.  Empty
+  <code>concept_map</code>s will still be needed in their current form
+  for nonintrusive post-hoc adaptation of types to concepts, an important function
   of <code>concept_map</code>s in general.</p>
+
+  <p>Another important motivation for this proposal is that it
+  provides a powerful platform for the common case of exported concept
+  maps as proposed by <a href="N2918.html">N2918=09-0108</a>, with
+  zero syntactic overhead.</p>
 
   <h2>Proposed Wording</h2>
 
@@ -223,7 +232,7 @@ concept_map EqualityComparable&lt;Y&lt;T&gt; &gt; { };
     <p>A <i>mapped-concept-clause</i> contains a list of concepts to map to.
     A concept is "mapped to" for each <i>mapped-concept</i> as if by a
     <code>concept_map</code>([concept.map]). The <code>concept_map</code>
-    acts as if appears immediately after the class being defined, and is
+    acts as if it appears immediately after the class being defined, and is
     equivalent to:</p>
     <pre>concept_map <i>Concept</i>&lt;<i>Class</i>&gt; {};
 </pre>
