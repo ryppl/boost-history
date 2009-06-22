@@ -253,17 +253,110 @@ struct test_pool_object_alloc
 
 struct PoolResult 
 {
+	//boost::array<double, Type:: elapsed[;
 	double pool_elapsed;
 	double fast_pool_elapsed;
 	double mono_elapsed;
 	double local_mono_elapsed;
 	double std_elapsed;
 	double tbb_elapsed;
-	PoolResult()
+	PoolResult(double D = 0)
 	{
-		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = 0;
+		tbb_elapsed = pool_elapsed = fast_pool_elapsed = mono_elapsed = local_mono_elapsed = std_elapsed = D;
+	}
+
+	PoolResult& operator+=(PoolResult const &A)
+	{
+		pool_elapsed += A.pool_elapsed;
+		fast_pool_elapsed += A.fast_pool_elapsed;
+		mono_elapsed += A.mono_elapsed;
+		local_mono_elapsed += A.local_mono_elapsed;
+		std_elapsed += A.std_elapsed;
+		tbb_elapsed += A.tbb_elapsed;
+		return *this;
+	}
+	PoolResult& operator-=(PoolResult const &A)
+	{
+		pool_elapsed -= A.pool_elapsed;
+		fast_pool_elapsed -= A.fast_pool_elapsed;
+		mono_elapsed -= A.mono_elapsed;
+		local_mono_elapsed -= A.local_mono_elapsed;
+		std_elapsed -= A.std_elapsed;
+		tbb_elapsed -= A.tbb_elapsed;
+		return *this;
+	}
+	PoolResult& operator*=(PoolResult const &A)
+	{
+		pool_elapsed *= A.pool_elapsed;
+		fast_pool_elapsed *= A.fast_pool_elapsed;
+		mono_elapsed *= A.mono_elapsed;
+		local_mono_elapsed *= A.local_mono_elapsed;
+		std_elapsed *= A.std_elapsed;
+		tbb_elapsed *= A.tbb_elapsed;
+		return *this;
+	}
+	PoolResult& operator*=(double A)
+	{
+		pool_elapsed *= A;
+		fast_pool_elapsed *= A;
+		mono_elapsed *= A;
+		local_mono_elapsed *= A;
+		std_elapsed *= A;
+		tbb_elapsed *= A;
+		return *this;
+	}
+
+	void update_min(PoolResult const &other)
+	{
+		if (other.fast_pool_elapsed > 0)
+			fast_pool_elapsed = std::min(fast_pool_elapsed, other.fast_pool_elapsed);
+		if (other.pool_elapsed > 0)
+			pool_elapsed = std::min(pool_elapsed, other.pool_elapsed);
+		if (other.tbb_elapsed > 0)
+			tbb_elapsed = std::min(tbb_elapsed, other.tbb_elapsed);
+		if (other.std_elapsed > 0)
+			std_elapsed = std::min(std_elapsed, other.std_elapsed);
+	}
+	void update_max(PoolResult const &other)
+	{
+		fast_pool_elapsed = std::max(fast_pool_elapsed, other.fast_pool_elapsed);
+		pool_elapsed = std::max(pool_elapsed, other.pool_elapsed);
+		tbb_elapsed = std::max(tbb_elapsed, other.tbb_elapsed);
+		std_elapsed = std::max(std_elapsed, other.std_elapsed);
 	}
 };
+
+PoolResult sqrt(PoolResult const &A)
+{
+	PoolResult R(A);
+	R.fast_pool_elapsed = sqrt(R.fast_pool_elapsed); 
+	R.mono_elapsed = sqrt(R.mono_elapsed); 
+	R.local_mono_elapsed = sqrt(R.local_mono_elapsed); 
+	R.std_elapsed = sqrt(R.std_elapsed); 
+	R.tbb_elapsed = sqrt(R.tbb_elapsed); 
+	return R;
+}
+
+PoolResult operator*(PoolResult const &A, PoolResult const &B)
+{
+	PoolResult R(A);
+	R *= B;
+	return R;
+}
+
+PoolResult operator+(PoolResult const &A, PoolResult const &B)
+{
+	PoolResult R(A);
+	R += B;
+	return R;
+}
+
+PoolResult operator-(PoolResult const &A, PoolResult const &B)
+{
+	PoolResult R(A);
+	R -= B;
+	return R;
+}
 
 typedef std::map<size_t /*count*/, PoolResult> PoolResults;
 
@@ -370,6 +463,45 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 	return result;
 }
 
+
+template <class II>
+typename boost::iterator_value<II>::type calc_mean(II first, II last, size_t num)
+{
+	return std::accumulate(first, last, typename boost::iterator_value<II>::type(0))*(1.0/num);
+}
+
+template <class II>
+typename boost::iterator_value<II>::type calc_mean(II first, II last)
+{
+	if (first == last)
+		throw std::range_error("calc_mean");
+	return calc_mean(first, last, std::distance(first, last));
+}
+
+template <class II>
+std::pair<typename boost::iterator_value<II>::type,typename boost::iterator_value<II>::type> standard_deviation_mean(II first, II last)
+{
+	typedef typename boost::iterator_value<II>::type Value;
+	size_t length = std::distance(first, last);
+	if (length == 0)
+		throw std::range_error("standard_deviation_mean");
+	Value mean = calc_mean(first, last, length);
+	Value std_dev = 0;
+	for (; first != last; ++first)
+	{
+		Value val = *first - mean;
+		std_dev += val*val;
+	}
+	std_dev = sqrt(std_dev*(1./length));
+	return std::make_pair(std_dev, mean);
+}
+
+template <class Cont>
+std::pair<typename Cont::value_type, typename Cont::value_type> standard_deviation_mean(Cont const &cont)
+{
+	return standard_deviation_mean(cont.begin(), cont.end());
+}
+
 template <class Fun>
 PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, const char *title, Fun fun, Type types = Type::All)
 {
@@ -384,24 +516,81 @@ PoolResults run_tests(size_t count, size_t max_length, size_t num_iterations, co
 	return results;
 }
 
+struct OverallResult
+{
+	std::vector<PoolResult> cumulative;
+};
+
+std::vector<PoolResult> cumulative;
+PoolResult result_min, result_max;
+bool first_result = true;
+
+void print_cumulative(std::vector<PoolResult> const &results)
+{
+	pair<PoolResult, PoolResult> dev_mean = standard_deviation_mean(results);
+	size_t w = 10;
+
+	cout << setw(w) << "scheme" << setw(w) << "mean" << setw(w) << "std-dev" << setw(w) << "min" << setw(w) << "max" << endl;
+	//cout << setw(0) << "------------------------------------------------------" << endl;
+
+	cout << setw(w) << "fast" << setprecision(3) << setw(w) << dev_mean.second.fast_pool_elapsed << setw(w) << dev_mean.first.fast_pool_elapsed << setw(w) << result_min.fast_pool_elapsed << setw(w) << result_max.fast_pool_elapsed << endl;
+	cout << setw(w) << "pool" << setprecision(3) << setw(w) << dev_mean.second.pool_elapsed << setw(w) << dev_mean.first.pool_elapsed << setw(w) << result_min.pool_elapsed << setw(w) << result_max.pool_elapsed << endl;
+	cout << setw(w) << "std" << setprecision(3) << setw(w) << dev_mean.second.std_elapsed << setw(w) << dev_mean.first.std_elapsed << setw(w) << result_min.std_elapsed << setw(w) << result_max.std_elapsed << endl;
+	cout << setw(w) << "tbb" << setprecision(3) << setw(w) << dev_mean.second.tbb_elapsed << setw(w) << dev_mean.first.tbb_elapsed << setw(w) << result_min.tbb_elapsed << setw(w) << result_max.tbb_elapsed << endl;
+
+	cout << endl;
+}
+
 void print(PoolResults const &results)
 {
 	size_t w = 10;
 	cout << setw(4) << "len" << setw(w) << "fast/m" << setw(w) << "pool/m" << setw(w) << "std/m" << setw(w) << "tbb/m" << endl;//setw(w) << "tbb/l" << endl;
 	cout << setw(0) << "--------------------------------------------" << endl;
+	std::vector<PoolResult> results_vec;
 	BOOST_FOREACH(PoolResults::value_type const &iter, results)
 	{
 		PoolResult const &result = iter.second;
-		cout << setw(4) << iter.first << setprecision(3) << setw(w) << result.fast_pool_elapsed/result.mono_elapsed << setw(w) << result.pool_elapsed/result.mono_elapsed << setw(w) << result.std_elapsed/result.mono_elapsed << setw(w) << result.tbb_elapsed/result.mono_elapsed  << endl;//setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
+		cout << setw(4) << iter.first << setprecision(3) << setw(w);
+		if (result.mono_elapsed == 0)
+		{
+			cout << setw(w) << "mono = 0s" << endl;
+			continue;
+		}
+		PoolResult ratio;
+		ratio.fast_pool_elapsed = result.fast_pool_elapsed/result.mono_elapsed;
+		ratio.pool_elapsed = result.pool_elapsed/result.mono_elapsed;
+		ratio.std_elapsed = result.std_elapsed/result.mono_elapsed;
+		ratio.tbb_elapsed = result.tbb_elapsed/result.mono_elapsed;
+		ratio.mono_elapsed = 1;
+
+		if (first_result)
+		{
+			result_min = result_max = ratio;
+			first_result = false;
+		}
+		else
+		{
+			result_min.update_min(ratio);
+			result_max.update_max(ratio);
+		}
+		cout << ratio.fast_pool_elapsed << setw(w) << ratio.pool_elapsed << setw(w) << ratio.std_elapsed << setw(w) << ratio.tbb_elapsed  << endl;//setw(w) << result.tbb_elapsed/result.local_mono_elapsed << endl;
+		results_vec.push_back(ratio);
+		cumulative.push_back(ratio);
 	}
 	cout << endl;
+	print_cumulative(results_vec);
+	cout << endl << endl;
 }
 
-void heading(const char *text)
+void heading(const char *text, char star = '-')
 {
-	cout << "===================================================" << endl;
-	cout << "\t\t" << text << endl;
-	cout << "===================================================" << endl;
+	size_t len = 55;
+	for (size_t n = 0; n < len; ++n)
+		cout << star;
+	cout << endl << "\t\t" << text << endl;
+	for (size_t n = 0; n < len; ++n)
+		cout << star;
+	cout << endl;
 }
 
 #ifdef WIN32
@@ -514,6 +703,9 @@ int main()
 		print(run_tests(50, 100, 10, "set_vector", test_set_vector()));
 		print(run_tests(500, 100, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #endif
+
+		heading("SUMMARY", '*');
+		print_cumulative(cumulative);
 	}
 
 	// medium-size (~1000 elements) containers
@@ -540,6 +732,8 @@ int main()
 		print(run_tests(20, 500, 5, "set_vector", test_set_vector()));
 		print(run_tests(50, 1000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #endif
+		heading("SUMMARY", '*');
+		print_cumulative(cumulative);
 	}
 
 	// large-size (~1000000 elements) containers
@@ -566,11 +760,14 @@ int main()
 		print(run_tests(50, 10000, 10, "list_dupe", test_list_dupe(), test_dupe_list_types));
 		print(run_tests(500, 10000000, 10, "vector_accumulate", test_vector_accumulate()));
 		print(run_tests(5, 2000, 5, "set_vector", test_set_vector()));
-		print(run_tests(10, 50000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
+		print(run_tests(10, 2000, 10, "map_vector<int>", test_map_vector<int>(), test_map_vector_types));
 #endif
 	}
 
-	cout << "tests completed in " << setprecision(5) << timer.elapsed() << "s" << endl;
+	heading("FINAL SUMMARY", '*');
+	print_cumulative(cumulative);
+
+	cout << endl << "tests completed in " << setprecision(5) << timer.elapsed() << "s" << endl;
 
 	return 0;
 }
@@ -583,5 +780,6 @@ namespace boost
 		storage_base *static_storage = &default_static_storage;
 	}
 }
+
 
 //EOF
