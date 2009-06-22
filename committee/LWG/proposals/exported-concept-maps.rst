@@ -39,11 +39,10 @@ one of four required operators::
 
   class Num
   {
-       friend bool operator<(Num const& x, Num const& y)
-       { ... }
+       friend bool operator<(Num const& x, Num const& y) { … }
   };
   
-  concept_map LessThanComparable<Num> { }// OK
+  concept_map LessThanComparable<Num> { } // OK
   
 Now all four operators required by ``LessThanComparable`` can be
 applied to ``Num`` in a constrained template where
@@ -53,19 +52,21 @@ applied to ``Num`` in a constrained template where
   int f(X& a, X& b)
   {
       while (b > a) // Uses operator > from LessThanComparable
-      { ... }
+      { … }
   }
 
   Num a, b;
   int z = f(a, b);  // OK, LessThanComparable supplies operator>
 
 Unfortunately, the same cannot be said of contexts where ``Num`` has
-not been constrained by ``LessThanComparable``::
+not been constrained by ``LessThanComparable``:
+
+.. parsed-literal::
 
   int f(Num& a, Num& b)
   {
-      while (b > a) // error: no operator> defined
-      { ... }
+      while (b > a) // **ERROR:** no operator> defined
+      { … }
   }
 
 We propose to allow ``concept_map``\ s to be explicitly “exported” to
@@ -76,12 +77,13 @@ unconstrained contexts like this::
 Then the unconstrained definition of ``f`` above will work as
 expected.  We also propose that concept maps generated with the
 “intentional concept mapping” syntax described in D2916=09-0106 (if it
-is accepted) be exported, so ``Num`` could be declared this way::
+is accepted) be exported, so ``Num`` could be declared this way:
 
-  class Num -> LessThanComparable
+parsed-literal::
+
+  class Num **-> LessThanComparable**
   {
-       friend bool operator<(Num const& x, Num const& y)
-       { ... }
+       friend bool operator<(Num const& x, Num const& y) { … }
   };
 
 Motivation
@@ -89,20 +91,21 @@ Motivation
 
 The status quo creates a disturbing divide between constrained and
 unconstrained code.  Does the original definition of ``Num`` model
-``LessThanComparable``?  In constrained code, yes; in unconstrained
-code, no.  In order to make ``Num`` model ``LessThanComparable``
-everywhere, one actually needs to duplicate all the default
-definitions that have already been supplied by the template for
-constrained code::
+``LessThanComparable``?  In constrained code, the answer is “yes;” in
+unconstrained code, “no.”  In order to make ``Num`` model
+``LessThanComparable`` everywhere, one actually needs to duplicate all
+the default definitions that have already been supplied by the
+concept for constrained code:
+
+.. parsed-literal::
 
   class Num
   {
-      friend bool operator<(Num const& x, Num const& y)
-      { ... }
-      // copy-paste-munge from LessThanComparable
-      friend bool operator>(Num const& x, Num const& y) { return y < x; }
-      friend bool operator<=(Num const& x, Num const& y) { return !(y < x); }
-      friend bool operator>=(Num const& x, Num const& y) { return !(x < y); }
+      friend bool operator<(Num const& x, Num const& y) { … }
+      **// copy-paste-munge from LessThanComparable**
+      **friend bool operator>(Num const& x, Num const& y) { return y < x; }**
+      **friend bool operator<=(Num const& x, Num const& y) { return !(y < x); }**
+      **friend bool operator>=(Num const& x, Num const& y) { return !(x < y); }**
   };
 
 Unlike an empty concept map, whose verbosity has caused some concern,
@@ -122,6 +125,7 @@ a base class template::
   template <class Model>
   struct less_than_comparable
   {
+      // captured boilerplate:
       friend bool operator>(Model const& x, Model const& y) { return y < x; }
       friend bool operator<=(Model const& x, Model const& y) { return !(y < x); }
       friend bool operator>=(Model const& x, Model const& y) { return !(x < y); }
@@ -143,8 +147,22 @@ by the concept.  The Boost.Operators library, for example, could be
 eliminated for C++0x, and the Boost.Iterator library would shrink
 substantially.
 
-Rationales
-==========
+Risks, Opportunities, and Rationale
+===================================
+
+In general, adding definitions to a system increases complexity and
+the risk of unexpected effects (the safest code is no code).  Exported
+``concept_map``\ s, in particular, add candidates to overload sets.
+These new definitions can potentially change the meaning of
+unconstrained code, which by currently has no dependency on the
+``concept_map``.  That risk is mitigated by the fact that the exported
+defaults are looked up only through associated namespaces, so the
+offending ``concept_map`` would have to be written in one of those.
+If one can assume the type author has control over definitions in his
+namespace, then any such semantic change would likely be intentional,
+but if lump everything together into the global namespace or start
+writing ``concept_map``s in namespaces they do not control, the
+potential for surprise is greater.
 
 We considered automatically exporting all ``concept_map``\ s, but that
 could change the meaning of ordinary unconstrained code since
