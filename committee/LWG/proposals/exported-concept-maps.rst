@@ -174,7 +174,7 @@ Add a new paragraph at the end of [concept.map]:
 
 Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
-1. :ins:`An` :ins-emphasis:`exported concept map` :ins:`is a concept map for which each concept map member that satisfies a requirement member corresponding to an associated function requirement can be found by name lookup in the namespace enclosing the concept map. These concept map members are called` :ins-emphasis:`exported associated member function definitions`\ :ins:`. [Example:` ::
+1. :ins:`An` :ins-emphasis:`exported concept map` :ins:`is a concept map for which each concept map member that satisfies a requirement member corresponding to an associated function requirement can be found by name lookup. These concept map members are called` :ins-emphasis:`exported associated function definitions`\ :ins:`. [Example:` ::
 
     concept EQ<typename T> {
       bool operator==(const T& x, const T& y);
@@ -191,9 +191,74 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
   :ins:`- end example]`
 
-2. Deal with template argument deduction issues for concept map templates.
+2. :ins:`An exported associated function definition that corresponds to an associated non-member function requirement is visible in the namespace enclosing the exported concept map. [Note: the exported associated function definition can be found by any form of name lookup that would find a function declaration with the same name and signature, including unqualified name lookup (3.4.1), argument-dependent name lookup (3.4.2), and qualified name lookup into a namespace (3.4.3.2). --end note]`
 
-3. Deal with member function requirements.
+3. :ins:`An exported associated function definition that corresponds to an associatd member function requirement is visible in the class nominated by the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:` ::
+
+    concept C<typename T> {
+      void T::f();
+      void T::g() { this->f(); }
+      void T::h() { this->g(); }
+    }
+
+    struct Y { 
+      void h();
+    };
+
+    export concept_map C<Y> { } // Y::f and Y::g are now visible
+
+    void f(X &x) {
+      x.f(); // okay: calls C<Y>'s Y::f
+      x.g(); // okay: calls C<Y>'s Y::g
+      x.h(); // okay: calls Y::h
+    }
+
+  :ins:`- end example]`
+
+4. :ins:`An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments; the resulting concept map is an exported concept map whose exported associated function requirements are visible. Deduction of the concept map template's template arguments depending on the form of the associated function requirement:`
+
+  * :ins:`When the associated function requirement is an associated non-member function requirement, template argument deduction attempts to deduce the concept map template's template parameters from the` :ins-emphasis:`parameter-type-list` :ins:`of the associated non-member function requirement. [Example:` ::
+
+      concept EQ2<typename T, typename U> {
+        bool operator==(const T&, const U&);
+        bool operator!=(const T& t, const U& u) { return !(t == u); }
+      }
+
+      struct A { };
+      struct B { };
+
+      template<std::ObjectType T> struct ptr {
+        T* m;
+      };
+
+      template<typename T, typename U>
+      export concept_map EQ2<ptr<T>, ptr<U>> {
+        bool operator==(const ptr<T>& t, const ptr<U>& u) { 
+          return t.m == u.m;
+        }
+      }
+
+      bool f(ptr<int> p1, ptr<float> p2) { 
+        return p1 == p2; // okay: from operator==(const ptr<T>& t, const ptr<U>& u),
+                         // deduces T=int and U=float
+                         // instantiates concept_map EQ2<ptr<T>, ptr<U>> to find
+                         // EQ2<ptr<int>, ptr<float>>::operator==(const ptr<int>& t, const ptr<float>& u)
+      }
+
+    :ins:`- end example]`
+
+  * :ins:`When the associated function requirement is an associated member function requirement, template argument deduction attempts to deduce the concet map template's template parameters from the nominated class of the associated member function requirement. [Example:` ::
+
+      concept M<typename T, typename U> {
+        void T::f(U);
+      }
+
+      template<typename T>
+      struct X { };
+
+      template<typename.......FIXME
+
+    :ins:`- end example]`
 
 
 Acknowledgements
