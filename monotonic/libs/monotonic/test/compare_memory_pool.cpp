@@ -448,7 +448,7 @@ void test_pools()
 			int &n0 = storage.create<int>();
 
 			// create a new string (uses correct alignment)
-			string &s1 = storage.create<string>("foo");
+			string const &s1 = storage.create<string>("foo");
 			BOOST_ASSERT(s1 == "foo");
 
 			// allocate 37 bytes with alignment 1

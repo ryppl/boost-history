@@ -199,6 +199,12 @@ namespace boost
 				object.~Ty();
 			}
 
+			template <class Ty>
+			void destroy(Ty const &object)
+			{
+				destroy(const_cast<Ty &>(object));
+			}
+
 			template <size_t N>
 			char *allocate_bytes()
 			{
