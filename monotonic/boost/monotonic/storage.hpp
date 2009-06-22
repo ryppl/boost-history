@@ -3,8 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_STORAGE_H
-#define BOOST_MONOTONIC_STORAGE_H
+#ifndef BOOST_MONOTONIC_STORAGE_HPP
+#define BOOST_MONOTONIC_STORAGE_HPP
 
 #include <algorithm>
 #include <boost/monotonic/fixed_storage.hpp>
@@ -171,6 +171,6 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_STORAGE_H
+#endif // BOOST_MONOTONIC_STORAGE_HPP
 
 //EOF

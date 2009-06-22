@@ -3,8 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_ALLOCATOR_H
-#define BOOST_MONOTONIC_ALLOCATOR_H
+#ifndef BOOST_MONOTONIC_ALLOCATOR_HPP
+#define BOOST_MONOTONIC_ALLOCATOR_HPP
 
 #include <boost/monotonic/allocator_base.hpp>
 
@@ -80,6 +80,6 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_ALLOCATOR_H
+#endif // BOOST_MONOTONIC_ALLOCATOR_HPP
 
 //EOF
