@@ -26,9 +26,6 @@ namespace boost
 			};
 		};
 
-		storage_base &get_storage();
-		storage_base *set_storage(storage_base &);
-
 		/// each region is distinct from other regions
 		template <class T, size_t Region> 
 		struct region_allocator : allocator_base<T, region_allocator<T, Region> >
