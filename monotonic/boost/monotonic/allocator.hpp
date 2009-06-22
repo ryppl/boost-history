@@ -26,9 +26,6 @@ namespace boost
 			};
 		};
 
-		storage_base &get_storage();
-		storage_base *set_storage(storage_base &);
-
 		template <class T> 
 		struct allocator : allocator_base<T, allocator<T> >
 		{
