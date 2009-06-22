@@ -556,8 +556,8 @@ public:
 		tsk::async( boost::move( t3), 0, pool);
 		b.wait();
 		pool.shutdown();
-		BOOST_CHECK_EQUAL( buffer[0], 0);
-		BOOST_CHECK_EQUAL( buffer[1], 55);
+		BOOST_CHECK_EQUAL( buffer[0], 55);
+		BOOST_CHECK_EQUAL( buffer[1], 0);
 		BOOST_CHECK_EQUAL( buffer.size(), std::size_t( 2) );
 	}
 

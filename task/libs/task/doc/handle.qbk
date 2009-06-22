@@ -50,20 +50,24 @@ __handle__ implements an interface in order to check the state of computation an
 
 	void main()
 	{
-		boost::task::task< long > t(
-			boost::bind(
-				fibonacci,
-				10) );
+		// create task
+		boost::task::task< long > t( fibonacci, 10);
 
+		// move task ownership to executor
 		boost::task::handle< long > h(
 			boost::task::async(
 				boost::move( t),
 				boost::task::new_thread() ) );
 
 		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
+
+		// wait for task completion
 		h.wait();
+
 		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
 		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
+
+		// return result
 		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
@@ -110,26 +114,29 @@ interruption requests [footnote see [@http://www.ddj.com/architect/207100682 'In
 
 	void main()
 	{
-		boost::task::task< long > t(
-			boost::bind(				// task, to be executed asynchronously
-				cooperative,
-				10) );
+		// task, to be executed asynchronously
+		boost::task::task< long > t( cooperative, 10);
 
-		boost::task::handle< long > h(			// get handle associated with the task
+		// move task to async. executor
+		boost::task::handle< long > h(
 			boost::task::async(
 				boost::move( t),
-				boost::task::new_thread() ) );	// asynchronous executor
+				boost::task::new_thread() ) );
 
+		// interrupt task and wait until task is removed by worker-thread
 		h.interrupt_and_wait();
 
 		std::cout << "is ready == " << std::boolalpha << h.is_ready() << "\n";
 		std::cout << "has value == " << std::boolalpha << h.has_value() << "\n";
 		std::cout << "has exception == " << std::boolalpha << h.has_exception() << "\n";
-		std::cout << h.get() << std::endl;		// throws boost::task::task_interrupted
+
+		// access result
+		// throws boost::task::task_interrupted
+		std::cout << h.get() << std::endl;
 	}
 ``
 
-[note If the task is still pending when an interruption is requested - the task is not removed from the queue, it is marked to be interrupted instead.]
+[note If the task is still pending (not executed yet) when an interruption is requested - the task is not removed from the queue, it is marked to be interrupted instead.]
 
 
 [heading Waiting for handles]
@@ -145,10 +152,7 @@ __boost_task__ provides function __waitfor_all__ waits for all handles passed to
 
 		for ( int i = 0; i < 10; ++i)
 		{
-			boost::task::task< long > t(
-				boost::bind(
-					fibonacci,
-					10) );
+			boost::task::task< long > t( fibonacci, i);
 
 			results.push_back(
 				boost::task::async(
@@ -175,18 +179,9 @@ and __waitfor_any__ which returns if at least one of the passed handles becomes 
 ``
 	void main()
 	{
-		boost::task::task< long > t1(
-			boost::bind(
-				cooperative,
-				10) );
-		boost::task::task< long > t2(
-			boost::bind(
-				cooperative,
-				7) );
-		 boost::task::task< long > t3(
-			boost::bind(
-				cooperative,
-				5) );
+		boost::task::task< long > t1( cooperative, 10);
+		boost::task::task< long > t2( cooperative, 7);
+		 boost::task::task< long > t3( cooperative, 5);
 
 		boost::task::handle< long > h1(
 			boost::task::async(

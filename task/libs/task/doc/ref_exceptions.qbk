@@ -23,8 +23,8 @@
 	invalid_poolsize( std::string const& msg);
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::invalid_poolsize` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::invalid_poolsize` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -42,13 +42,13 @@
 	};
 ``
 
-heading Constructor]
+[heading Constructor]
 
 	invalid_scanns( std::string const& msg)
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::invalid_scanns` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::invalid_scanns` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -71,8 +71,8 @@ heading Constructor]
 	invalid_timeduration( std::string const& msg)
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::invalid_timeduration` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::invalid_timeduration` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -95,8 +95,8 @@ heading Constructor]
 	invalid_watermark( std::string const& msg)
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::invalid_watermark` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::invalid_watermark` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -119,8 +119,8 @@ heading Constructor]
 	task_rejected( std::string const& msg)
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::task_rejected` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::task_rejected` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -143,8 +143,8 @@ heading Constructor]
 	task_unitialized()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::task_unitialized` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::task_unitialized` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -167,8 +167,8 @@ heading Constructor]
 	task_already_executed()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::task_already_executed` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::task_already_executed` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -191,8 +191,8 @@ heading Constructor]
 	task_moved()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::task_moved` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::task_moved` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -215,8 +215,8 @@ heading Constructor]
 	broken_task()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::broken_task` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::broken_task` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -239,8 +239,8 @@ heading Constructor]
 	task_interrupted()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::task_interrupted` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::task_interrupted` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]
@@ -263,8 +263,8 @@ heading Constructor]
 	pool_moved()
 
 [variablelist
-[[Effects:] [Constructs a `boost::task::pool_moved` instance.]]
-[[Throws:] [Nothing]]
+[[Effects:] [constructs a `boost::task::pool_moved` instance]]
+[[Throws:] [nothing]]
 ]
 
 [endsect]

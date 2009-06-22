@@ -27,10 +27,7 @@ __own_thread__ executes the task in the current thread (synchronous execution - 
 
 	void main()
 	{
-		boost::task::task< long > t(
-			boost::bind(
-				fibonacci,
-				10) );
+		boost::task::task< long > t( fibonacci, 10);
 
 		boost::task::handle< long > h(
 			boost::task::async(

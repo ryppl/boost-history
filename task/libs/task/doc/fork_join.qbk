@@ -28,16 +28,14 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 		{
 			// fork a sub-task calculating fibonacci(n-1)
 			boost::task::task< long > t1(
-				boost::bind(
-					parallel_fib,
-					n - 1,
-					cutof) );
+				parallel_fib,
+				n - 1,
+				cutof);
 			// fork a sub-task calculating fibonacci(n-2)
 			boost::task< long > t2(
-				boost::bind(
-					parallel_fib,
-					n - 2,
-					cutof) );
+				parallel_fib,
+				n - 2,
+				cutof);
 
 			h1 = boost::task::async( boost::move( t1) );
 			h2 = boost::task::async( boost::move( t2) );
@@ -58,11 +56,12 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 			>
 		> pool( boost::task::poolsize( 5) );
 
+		// calculate fibonacci number 10
+		// for numbers < 5 do inline serial calculation
 		boost::task::task< long > t(
-			boost::bind(			// calculate fibonacci number 10
-				parallel_fib,		// for numbers < 5 do inline recursive calculation
-				10,
-				5) );
+			parallel_fib,
+			10,
+			5);
 
 		boost::task::handle< long > h(		// handle for fibonacci calculation
 			boost::task::async(

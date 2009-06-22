@@ -21,9 +21,14 @@
 		template< typename Fn >
 		task( Fn fn);
 
+		template< typename Fn, typename A0 >
+		task( Fn fn, A0 a0);
+		...
+		template< typename Fn, typename A0, ..., typename A9 >
+		task( Fn fn, A0 a0, ..., A9 a9);
+
 		task( task && t);
 		task & operator=( task && t);
-
 		task && move();
 
 		shared_future< R > & get_future();
@@ -33,7 +38,10 @@
 		template< typename Cb >
 		void set_wait_callback( Cb const& cb);
 
-		void swap( task< R > & other); // throw()
+		void swap( task< R > & other);
+
+		operator unspecified_bool_type() const;
+		bool operator!() const;
 	};
 ``
 
@@ -47,7 +55,17 @@
 ]
 
 
-[heading Constructor]
+[heading Constructor (function pointer)]
+
+	task( R( * fn)());
+
+[variablelist
+[[Effects:] [constructs a `boost::task::task< R >` from a function pointer]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Constructor (functor)]
 
 	template< typename Fn >
 	task( Fn const& fn)
@@ -58,12 +76,16 @@
 ]
 
 
-[heading Constructor]
+[heading Constructor (functor with arguments)]
 
-	task( R( * fn)());
+	template< typename Fn, typename A0 >
+	task( Fn fn, A0 a0);
+	...
+	template< typename Fn, typename A0, ..., typename A9 >
+	task( Fn fn, A0 a0, ..., A9 a9);
 
 [variablelist
-[[Effects:] [constructs a `boost::task::task< R >` from a function pointer]]
+[[Effects:] [constructs a `boost::task::task< R >` from a function object and its arguments]]
 [[Throws:] [Nothing]]
 ]
 
@@ -78,7 +100,7 @@
 ]
 
 
-[heading Move-assignment constructor]
+[heading Move-assignment operator]
 
 	task & operator=( task &&)
 
@@ -113,7 +135,7 @@
 	void operator()()
 
 [variablelist
-[[Effects:] [executes tasks internal function object]]
+[[Effects:] [executes task's internal function object]]
 [[Throws:] [Nothing]]
 ]
 
@@ -141,7 +163,7 @@
 
 [heading operator `operator unspecified_bool_type()`]
 
-	operator unspecified_bool_type() const // throw()
+	operator unspecified_bool_type() const
 
 [variablelist
 [[Effects:] [is task valid == does task own ownership]]
@@ -151,10 +173,10 @@
 
 [heading operator `operator!()`]
 
-	bool operator!() const // throw()
+	bool operator!() const
 
 [variablelist
-[[Effects:] [is task invalid == does task not own ownership]]
+[[Effects:] [is task invalid == task does not have ownership]]
 [[Throws:] [Nothing]]
 ]
 

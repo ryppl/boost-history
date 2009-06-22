@@ -10,8 +10,8 @@
 
 __new_thread__ creates a new __thread__ and executes the task in this thread (asynchronous). The created thread gets joined by
 handle (so [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2008/n2802.html N2802] should be addressed).
-The returned __handle__ joins the thread in its destructor (if the last reference gets out of scope) and thus provides one possible
-solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html N2880].
+The returned __handle__ joins the thread in its destructor (if the last reference gets out of scope) [/and thus provides one possible
+solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html N2880]].
 
 
 
@@ -32,10 +32,7 @@ solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html
 
 	void main()
 	{
-		boost::task::task< long > t(
-			boost::bind(
-				fibonacci,
-				10) );
+		boost::task::task< long > t( fibonacci, 10);
 
 		boost::task::handle< long > h(
 			boost::task::async(
@@ -50,8 +47,8 @@ solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html
 reference gets out of scope). ]
 
 
-In the example below both `a_function()` and `another_function()` are executed synchron (see [link_own_thread __own_thread__]
-for synchronous execution)!
+In the example below both `a_function()` and `another_function()` are executed synchron because the returned __handle__ joins the
+the __worker_thread__!
 
 ``
 	boost::task::task< void > t1( a_function);

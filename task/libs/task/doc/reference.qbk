@@ -16,10 +16,10 @@
 [include ref_static_pool.qbk]
 [include ref_utility.qbk]
 [include ref_meta.qbk]
-[include ref_exceptions.qbk]
 [include ref_poolsize.qbk]
 [include ref_watermark.qbk]
 [include ref_scanns.qbk]
+[include ref_exceptions.qbk]
 
 
 [endsect]

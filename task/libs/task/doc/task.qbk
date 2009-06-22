@@ -12,22 +12,17 @@ A task is a chunk of code that can be executed independently.
 
 __task__ represents a __callable__ (provides __fn_operator__) object containing the unit of code to be execute by a __ep__.
 Function __fn_get_future__ returns a __act__ allowing to wait for the completion of the computation of the task, for
-getting the result of a computation or for transfering exceptions. __task__ supports move semantics.
+getting the result of a computation or for transfering exceptions. __task__ supports move semantics (moving ownership).
 
-
+[/
 [heading Creation]
 
-__fn_make_task__ can be used to create __task__ by passing free-functions or member-functions of objects and its arguments:
-__fn_make_task__ accepts up to ten arguments per default (can be overriden by defining BOOST_TASK_MAKE_TASK_MAX_ARITY with
-the new value).
+__tasks__ are created by passing free-functions or member-functions of objects and its arguments to the task-constructor.
 
 * create task from free-function with arguments:
 
 ``
-	boost::task::task< int > t(
-		boost::task::make_task(
-			parallel_fib,
-			10) );
+	boost::task::task< int > t( parallel_fib, 10);
 ``
 
 * create task from member-function with arguments:
@@ -40,10 +35,9 @@ the new value).
 
 	X x;
 	boost::task::task< int > t(
-		boost::task::make_task(
-			& X::f,
-			x,
-			10) );
+		& X::f,
+		x,
+		10);
 ``
 
 It is possible to create __task__ from a __callable__ too:
@@ -57,7 +51,7 @@ It is possible to create __task__ from a __callable__ too:
 	Y y;
 	boost::task::task< std::string > t( y);
 ``
-
+]
 
 [heading Cooperative task and interruption]
 
@@ -107,10 +101,7 @@ A __interruption_point__ throws __task_interrupted__ if an interruption was requ
 	void main()
 	{
 		// task for calculating fibonacci number
-		boost::task::task< long > t(
-			boost::bind(
-				cooperative,
-				10) );
+		boost::task::task< long > t( cooperative, 10) );
 
 		// execute task in new thread
 		boost::task::handle< long > h(
@@ -171,13 +162,19 @@ Exceptions rethrown by type are:
 *  `std::range_error`
 *  `std::runtime_error`
 *  `std::underflow_error`
+*  `boost::exception`
 *  `boost::future_already_set`
 *  `boost::future_cancel`
-*  `boost::exception`
 *  `boost::invalid_thread_argument`
 *  `boost::lock_error`
-*  `boost::task::task_interrupted`
 *  `boost::broken_task`
+*  `boost::pool_moved`
+*  `boost::task_already_executed`
+*  `boost::task_interrupted`
+*  `boost::task_moved`
+*  `boost::task::task_interrupted`
+*  `boost::task_task_rejected`
+*  `boost::task_unitialized`
 
 
 [heading Parent task]
@@ -199,22 +196,19 @@ speed matters (enabling strategies for fast execution of unordered __work_items_
 		{
 			// sub-task for calculating fibonacci(n-1)
 			boost::task::task< long > t1(
-				boost::bind(
-					parallel_fib,
-					n - 1,
-					cutof) );
+				parallel_fib,
+				n - 1,
+				cutof);
 			// sub-task for calculating fibonacci(n-2)
 			boost::task::task< long > t2(
-				boost::bind(
-					parallel_fib,
-					n - 2,
-					cutof) );
+				parallel_fib,
+				n - 2,
+				cutof);
 
 			// submit a sub-task to pool calculating fibonacci(n-1)
 			boost::task::handle< long > h1(
 				boost::task::async(
 					boost::move( t1) );
-
 			// submit a sub-task to pool calculating fibonacci(n-2)
 			boost::task::handle< long > h2(
 				boost::task::async(
@@ -236,10 +230,9 @@ speed matters (enabling strategies for fast execution of unordered __work_items_
 
 		// task calculates recursivly fibonacci-numberof 10
 		boost::task::task< long > t(
-			boost::bind(
-				parallel_fib,
-				10,
-				5) );
+			parallel_fib,
+			10,
+			5);
 
 		// execute task asynchron in thread-pool
 		boost::task::handle< long > h(

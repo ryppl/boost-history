@@ -77,6 +77,9 @@
 		handle< R > submit( task< R > && t, Attr const& attr);
 
 		void swap( static_pool & other); // throw()
+
+		operator unspecified_bool_type() const;
+		bool operator!() const;
 	};
 ``
 
@@ -376,6 +379,26 @@
 [variablelist
 [[Effects:] [swaps pool]]
 [[Throws:] [nothing]]
+]
+
+
+[heading operator `operator unspecified_bool_type()`]
+
+	operator unspecified_bool_type() const
+
+[variablelist
+[[Effects:] [is static_pool valid == does static_pool own ownership]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading operator `operator!()`]
+
+	bool operator!() const
+
+[variablelist
+[[Effects:] [is static_pool invalid == static_pool does not have ownership]]
+[[Throws:] [Nothing]]
 ]
 
 

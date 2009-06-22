@@ -24,7 +24,7 @@ namespace boost { namespace task
 {
 template<
 	typename Attr,
-	typename Ord = std::less< Attr >
+	typename Ord = std::greater< Attr >
 >
 struct priority
 {

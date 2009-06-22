@@ -14,21 +14,21 @@ __boost_task__ provides an framework for parallel execution of tasks (a task is 
 	* __fn_operator__ to execute the fine-grained work-item
 	* __fn_get_future__ providing an __act__ in order to pass the result (values, exceptions) back to initiator
 
-* __handle__, __act__ of the asynchronously executed task:
+* __handle__, works as a __act__ of executed task:
 	* __fn_interrupt__, __fn_interrupt_and_wait__, ... allow to cancel an cooperative task
-	* interface of __act__:
+	* interface of the __act__:
 		* __fn_get__ retrieve value or exception of task execution
 		* __fn_is_ready__ test if task was executed
 		* __fn_wait__, __fn_wait_for__ and __fn_wait_until__ block until task is executed and the result is set
-	* __fn_get_future__ returns reference to internal future
+	* __fn_get_future__ returns reference to internal __shared_future__
 	* functions __waitfor_all__/__waitfor_any__ to wait for all or any handles
 
-* __fn_async__, executes a task on behalf of __eps__ asynchronously
+* __fn_async__, executes a task on behalf of __eps__
 
 * __ep__ models:
 	* __own_thread__: executes task in current thread.
 	* __new_thread__: executes task in a newly created thread (thread will be destroyed after)
-	* __as_sub_task__: executes task in newly created thread or in a pool of __worker_threads__ depending on whether current task is already executed in a pool
+	* __as_sub_task__: executes task in newly created thread or in a pool of __worker_threads__ depending on whether current task is already executed in a __thread_pool__
 	* __thread_pool__: task gets executed by a __worker_thread__ of a custom __thread_pool__ (for instance with priority or smart scheduling)
 
 * __thread_pools__ with work-stealing algorithm and for/join semantics
@@ -75,15 +75,11 @@ Used namespaces are:
 
 	void main()
 	{
-		boost::task< long > t1(
-			boost::bind(
-				fibonacci,
-				10) );
-		boost::task< long > t2(
-			boost::bind(
-				fibonacci,
-				5) );
+		// create two tasks for calculating fibonacci numbers
+		boost::task< long > t1( fibonacci, 10);
+		boost::task< long > t2( fibonacci, 5);
 
+		// move tasks ownership to executor
 		boost::task::handle< long > h1(
 			boost::task::async(
 				boost::move( t1), tsk::new_thread() );
@@ -93,13 +89,18 @@ Used namespaces are:
 
 		std::cout << "h1: is ready == " << std::boolalpha << h1.is_ready() << "\n";
 		std::cout << "h2: is ready == " << std::boolalpha << h2.is_ready() << "\n";
+
+		// wait for completion of both tasks
 		boost::task::waitfor_all( h1, h2);
+
 		std::cout << "h1: is ready == " << std::boolalpha << h1.is_ready() << "\n";
 		std::cout << "h2: is ready == " << std::boolalpha << h2.is_ready() << "\n";
 		std::cout << "h1: has value == " << std::boolalpha << h1.has_value() << "\n";
 		std::cout << "h2: has value == " << std::boolalpha << h2.has_value() << "\n";
 		std::cout << "h1: has exception == " << std::boolalpha << h1.has_exception() << "\n";
 		std::cout << "h2: has exception == " << std::boolalpha << h2.has_exception() << "\n";
+
+		// get results
 		std::cout << "fibonacci(10) == " << h1.get() << std::endl;
 		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
 	}
@@ -122,6 +123,8 @@ Used namespaces are:
 
 [note __boost_task__ uses __boost_future__ from Anthony Williams (will be integrated in some of the next releases of __boost_thread__).]
 
+[note Please note that __boost_task__ is not optimized yet.]
+
 
 [heading Tested Platforms]
 
@@ -139,7 +142,7 @@ __boost_task__ has been tested on the following platforms and compilers:
 * download the sources form [@http://www.boostpro.com/vault/index.php boost-vault] (section ['Concurrent Programing]) or the latest development version from 
 [@https://svn.boost.org/svn/boost/sandbox/task/ boost-sandbox]
 * extract the archive into the boost-source directory
-* call `bjam toolset=<compiler-name> --with-task install` in order to install __boost_task__
+* call [''bjam toolset=<compiler-name> --with-task install'] in order to build and install __boost_task__
 
 
 [endsect]

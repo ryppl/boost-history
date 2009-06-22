@@ -42,11 +42,6 @@ dependencies or communicate with each other.
 * With special support of concurrence and synchronisation abstractions interdepended tasks work in __thread_pools__ without deadlocking the pool. 
 
 
-[heading Support of explicit processor bindig]
-
-* __eps__ related to a __thread_pool__ (like __default_pool__) could support explicit processor binding.
-
-
 [heading Optimizations]
  
 * two-lock-queue as global queue in __thread_pool__

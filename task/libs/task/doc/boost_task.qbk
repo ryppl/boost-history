@@ -33,6 +33,7 @@
 [template link_task[link_text] [link boost_task.task [link_text]]]
 [template link_work_stealing[link_text] [link boost_task.pool.work_stealing [link_text]]]
 
+[def __shared_future__ `boost::shared_future`]
 [def __thread__ `boost::thread`]
 [def __thread_id__ `boost::thread::id`]
 
@@ -90,7 +91,7 @@
 [def __fn_interruption_requested__ `interruption_requested()`]
 [def __fn_is_ready__ `is_ready()`]
 [def __fn_operator__ `operator()()`]
-[def __fn_pending__ `pending()()`]
+[def __fn_pending__ `pending()`]
 [def __fn_size__ `size()`]
 [def __fn_shutdown__ `shutdown()`]
 [def __fn_shutdown_now__ `shutdown_now()`]

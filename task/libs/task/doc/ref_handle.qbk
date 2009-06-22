@@ -16,24 +16,16 @@
 		handle();
 
 		void interrupt();
-
 		void interrupt_and_wait();
-
 		void interrupt_and_wait_until( system_time const& abs_time);
-
 		template< typename Duration >
 		void interrupt_and_wait_for( Duration const& rel_time);
-
 		bool interruption_requested();
 
 		R get();
-
 		bool is_ready() const;
-
 		bool has_value() const;
-
 		bool has_exception() const;
-
 		void wait() const;
 
 		shared_future< R > & get_future();
@@ -46,13 +38,7 @@
 
 	template< typename T1, typename T2 >
 	friend void waitfor_all( T1 & t1, T2 & t2);
-
-	template< typename T1, typename T2, typename T3 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
-
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
-
+	...
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 	friend void waitfor_all( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
 
@@ -61,13 +47,7 @@
 
 	template< typename T1, typename T2 >
 	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2);
-
-	template< typename T1, typename T2, typename T3 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3);
-
-	template< typename T1, typename T2, typename T3, typename T4 >
-	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4);
-
+	...
 	template< typename T1, typename T2, typename T3, typename T4, typename T5 >
 	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
 ``

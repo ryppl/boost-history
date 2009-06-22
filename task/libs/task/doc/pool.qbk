@@ -29,10 +29,7 @@ __boost_task__ provides __fn_async__ with support of executing an __task__ in __
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		boost::task::task< std::string > t(
-			boost::bind(
-				echo,
-				"Hello World!") );
+		boost::task::task< std::string > t( echo, "Hello World!");
 
 		boost::task::handle< std::string > h(
 			boost::task::async(

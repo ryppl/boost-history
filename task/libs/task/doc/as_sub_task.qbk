@@ -13,10 +13,8 @@ __worker_thread__ in the other case the __sub_task__ will be executed in a new t
 
 
 ``
-	boost::task::task< long > t(
-		boost::bind(
-			fibonacci,
-			10) );
+	boost::task::task< long > t( fibonacci, 10);
+
 	boost::task::handle< long > h(
 		boost::task::async(
 			boost::move( t),

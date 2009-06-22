@@ -41,12 +41,12 @@ Each __task__ is submitted to the pool with a priority attribute. The type and o
 
 In this example the tasks get scheduled by the assigned integer (third argument of __fn_async__). The __task__ with the
 lowest priority gets scheduled first (taken by a __worker_thread__). The ordering can be changed by the second argument
-of __priority__ (the default is `std::less< Attr >`).
+of __priority__ (the default is `std::greater< Attr >`).
 
 ``
 	boost::task::static_pool<
 		boost::task::unbounded_channel<
-			boost::task::priority< int, std::greater< int > > >	// tasks with higher priority are scheduled first
+			boost::task::priority< int > >	// tasks with higher priority are scheduled first
 
 	> pool( boost::task::poolsize( 5) );
 ``

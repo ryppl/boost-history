@@ -21,6 +21,11 @@
 	{};
 ``
 
+[variablelist
+[[Effects:] [returns true if Pool supports attributes (priority-scheduling)]]
+[[Throws:] [nothing]]
+]
+
 [endsect]
 
 
@@ -35,5 +40,10 @@
 		typedef typename Pool::scheduler_type::attribute_type   type;
 	};
 ``
+
+[variablelist
+[[Effects:] [returns type of attribute]]
+[[Throws:] [nothing]]
+]
 
 [endsect]
