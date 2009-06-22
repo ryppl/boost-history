@@ -40,6 +40,8 @@ namespace boost
 					if (ptr == 0)
 					{
 						ptr = storage.from_heap(capacity, 16);
+						if (ptr == 0)
+							throw std::bad_alloc("monotonic::pool");
 					}
 					first = next = (char *)ptr;
 					last = first + capacity;
