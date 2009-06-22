@@ -1,13 +1,14 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MP_MATH_MP_INT_PRIME_HPP
-#define BOOST_MP_MATH_MP_INT_PRIME_HPP
+#ifndef BOOST_MP_MATH_INTEGER_PRIME_HPP
+#define BOOST_MP_MATH_INTEGER_PRIME_HPP
 
-#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
-#include <boost/mp_math/mp_int/detail/prime_tab.hpp>
+#include <boost/mp_math/integer/random.hpp>
+#include <boost/mp_math/integer/detail/multiplier.hpp>
+#include <boost/mp_math/integer/detail/prime_tab.hpp>
 
 
 namespace boost {
@@ -23,17 +24,16 @@ struct primality_division_test
 {
   typedef bool result_type;
 
-  template<class A, class T>
-  bool operator()(const mp_int<A,T>& p) const;
+  template<class ApInt>
+  bool operator()(const ApInt& p) const;
 };
 
 
-template<class A, class T>
-bool primality_division_test::operator()(const mp_int<A,T>& p) const
+template<class ApInt>
+bool primality_division_test::operator()(const ApInt& p) const
 {
-  typedef typename mp_int<A,T>::traits_type traits;
-  typedef typename traits::digit_type       digit_type;
-  typedef detail::prime_tab<digit_type>     prime_tab;
+  typedef typename ApInt::digit_type digit_type;
+  typedef detail::prime_tab<digit_type>      prime_tab;
 
   if (p.is_even())
   {
@@ -43,19 +43,14 @@ bool primality_division_test::operator()(const mp_int<A,T>& p) const
       return true;
   }
 
-  mp_int<A,T> tmp;
   for (int i = 0; i < prime_tab::num_primes; ++i)
   {
-    /* what is x mod prime_tab[i] */
-    tmp = p;
-    const digit_type r =
-      tmp.divide_by_digit(
-          static_cast<digit_type>(prime_tab::values[i]));
+    const digit_type small_prime = static_cast<digit_type>(prime_tab::values[i]);
+    const ApInt remainder = p % small_prime;
 
-    /* is the residue zero? */
-    if (r == 0)
+    if (remainder == digit_type(0))
     {
-      if (p != prime_tab::values[i])
+      if (p != small_prime)
         return false;
       else
         return true; // definitely prime
@@ -77,12 +72,12 @@ bool primality_division_test::operator()(const mp_int<A,T>& p) const
 // returns true if p is probably prime
 // NOTE: may return true for carmichael numbers
 template<
-  class Distribution = uniform_mp_int<>
+  class Distribution = uniform_integer<>
 >
 class primality_fermat_test
 {
   const unsigned int rounds_;
-  
+
 public:
 
   typedef Distribution distribution_type;
@@ -93,37 +88,37 @@ public:
     rounds_(rounds)
   {}
 
-  template<class Engine, class A, class T>
-  bool operator()(Engine& e, const mp_int<A,T>& p) const;
+  template<class Engine, class ApInt>
+  bool operator()(Engine& e, const ApInt& p) const;
 };
 
 
 template<class Distribution>
-template<class Engine, class A, class T>
+template<class Engine, class ApInt>
 bool
 primality_fermat_test<Distribution>::operator()
-  (Engine& eng, const mp_int<A,T>& p) const
+  (Engine& eng, const ApInt& p) const
 {
-  typedef typename mp_int<A,T>::digit_type digit_type;
-  
+  typedef typename ApInt::digit_type digit_type;
+
   const digit_type one = 1;
-  const mp_int<A,T> p1(p-one);
-  
+  const ApInt p1(p-one);
+
   distribution_type rng(digit_type(2), p1);
 
-  modpow_ctx<A,T> ctx;
+  modpow_ctx<ApInt> ctx;
   for (unsigned int i = 0; i < rounds_; ++i)
   {
-    mp_int<A,T> base = rng(eng);
+    ApInt base = rng(eng);
 
-    base.set_least_significant_bit(); // test only odd bases
-    
-    const mp_int<A,T> tmp = modpow(base, p1, p, &ctx);
+    base |= one; // test only odd bases
+
+    const ApInt tmp = modpow(base, p1, p, &ctx);
 
     if (tmp != one)
       return false; // definitely composite!
   }
-  
+
   return true;
 }
 
@@ -134,7 +129,7 @@ primality_fermat_test<Distribution>::operator()
 // The probability that a composite number is reported as prime
 // is less than 1/(4**k) where k is the number of rounds
 template<
-  class Distribution = uniform_mp_int<>
+  class Distribution = uniform_integer<>
 >
 class primality_miller_rabin_test
 {
@@ -156,8 +151,8 @@ public:
   {}
 
   // p must be odd
-  template<class Engine, class A, class T>
-  bool operator()(Engine& e, const mp_int<A,T>& p) const;
+  template<class Engine, class ApInt>
+  bool operator()(Engine& e, const ApInt& p) const;
 
   // return the recommended number of rounds for numbers of size 'bits'
   // so that the probability of error is lower than 2^-96
@@ -182,10 +177,10 @@ primality_miller_rabin_test<Distribution>::sizes_[] =
 
 
 template<class Distribution>
-template<class Engine, class A, class T>
+template<class Engine, class ApInt>
 bool
 primality_miller_rabin_test<Distribution>::operator()
-  (Engine& eng, const mp_int<A,T>& p) const
+  (Engine& eng, const ApInt& p) const
 {
   assert(p.is_odd());
 
@@ -194,27 +189,27 @@ primality_miller_rabin_test<Distribution>::operator()
     r = rounds_;
   else
     r = recommended_number_of_rounds(p.precision());
-  
-  mp_int<A,T> n = abs(p);
+
+  ApInt n = abs(p);
   --n;
 
-  const typename mp_int<A,T>::size_type s = n.count_lsb();
+  const typename ApInt::size_type s = n.count_trailing_zero_bits();
   n >>= s; // p-1 / 2**s
 
-  const typename mp_int<A,T>::digit_type one = 1;
-  const mp_int<A,T> p_minus_one(p-one);
+  const typename ApInt::digit_type one = 1;
+  const ApInt p_minus_one(p - one);
   distribution_type rng(one, p_minus_one);
 
-  modpow_ctx<A,T> ctx;
+  modpow_ctx<ApInt> ctx;
   for (unsigned int i = 0; i < r; ++i)
   {
-    const mp_int<A,T> base = rng(eng);
-    mp_int<A,T> y = modpow(base, n, p, &ctx);
-    
-    for (typename mp_int<A,T>::size_type j = 0; j < s; ++j)
+    const ApInt base = rng(eng);
+    ApInt y = modpow(base, n, p, &ctx);
+
+    for (typename ApInt::size_type j = 0; j < s; ++j)
     {
       const bool b = (y != one) && (y != p_minus_one);
-      y.sqr();
+      y *= y;
       y %= p;
       if (b && (y == one))
         return false;
@@ -227,8 +222,8 @@ primality_miller_rabin_test<Distribution>::operator()
 
 template<class Distribution>
 unsigned int
-primality_miller_rabin_test<Distribution>::recommended_number_of_rounds(
-                                                                  unsigned bits)
+primality_miller_rabin_test<Distribution>::
+recommended_number_of_rounds(unsigned bits)
 {
   int i;
 
@@ -246,8 +241,8 @@ primality_miller_rabin_test<Distribution>::recommended_number_of_rounds(
 
 
 
-template<class A, class T, class PrimalityTest>
-inline bool is_prime(const mp_int<A,T>& x, PrimalityTest f = PrimalityTest())
+template<class ApInt, class PrimalityTest>
+inline bool is_prime(const ApInt& x, PrimalityTest f = PrimalityTest())
 {
   return f(x);
 }
@@ -255,7 +250,7 @@ inline bool is_prime(const mp_int<A,T>& x, PrimalityTest f = PrimalityTest())
 
 template<
   class PrimalityTest,
-  class Dist = uniform_mp_int_bits<>
+  class Dist = uniform_integer_bits<>
 >
 struct prime_generator
 {
@@ -287,7 +282,7 @@ prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
   do
   {
     candidate = dist(eng);
-    candidate.set_least_significant_bit(); // make odd
+    candidate |= typename result_type::digit_type(1); // make odd
   } while (!is_prime(candidate, test_));
 
   return candidate;
@@ -297,7 +292,7 @@ prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
 // A prime p is called safe if (p-1)/2 is also prime
 template<
   class PrimalityTest,
-  class Dist = uniform_mp_int_bits<>
+  class Dist = uniform_integer_bits<>
 >
 struct safe_prime_generator
 {
@@ -332,7 +327,7 @@ safe_prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
     do
     {
       p = prime_gen(eng);
-      p.multiply_by_2();
+      detail::multiplier<result_type>::multiply_by_2(p);
       ++p;
     } while (!is_prime(p, test_));
   // Catch extremely rare case, this occurs if the carry from ++p ripples
