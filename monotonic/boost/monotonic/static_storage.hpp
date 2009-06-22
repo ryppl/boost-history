@@ -59,6 +59,16 @@ namespace boost
 		extern static_storage_base<> default_static_storage;
 		extern storage_base *static_storage;
 
+		extern storage_base *static_storage;
+
+		extern boost::array<storage<DefaultSizes::RegionInlineSize>, DefaultSizes::MaxRegions> static_region_storage;
+
+		template <size_t Region>
+		inline storage_base &get_region_storage()
+		{
+			return static_region_storage[Region];
+		}
+
 		inline storage_base &get_storage()
 		{
 			return static_storage ? *static_storage : default_static_storage;

@@ -12,8 +12,8 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <> 
-		struct region_allocator<void>
+		template <size_t N> 
+		struct region_allocator<void, N>
 		{
 			typedef void* pointer;
 			typedef const void* const_pointer;
@@ -22,16 +22,59 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef region_allocator<U> other; 
+				typedef region_allocator<U, N> other; 
 			};
 		};
 
 		storage_base &get_storage();
 		storage_base *set_storage(storage_base &);
 
-		template <size_t Region, class T> 
-		struct region_allocator : allocator_base<T, region_allocator<T> >
+		/// each region is distinct from other regions
+		template <class T, size_t Region> 
+		struct region_allocator : allocator_base<T, region_allocator<T, Region> >
 		{
+			typedef allocator_base<T, region_allocator<T, Region> > Parent;
+			using typename Parent::size_type;
+			using typename Parent::difference_type;
+			using typename Parent::pointer;
+			using typename Parent::const_pointer;
+			using typename Parent::reference;
+			using typename Parent::const_reference;
+			using typename Parent::value_type;
+
+			template <class U> 
+			struct rebind 
+			{ 
+				typedef region_allocator<U, Region> other; 
+			};
+
+			region_allocator() throw() 
+				: Parent(boost::monotonic::get_region_storage<Region>()) { }
+
+		public:
+			//private:
+			template <class Storage> struct local;
+
+			region_allocator(storage_base &store) throw() 
+				: Parent(store) { }
+
+		public:
+			region_allocator(const region_allocator& alloc) throw() 
+				: Parent(alloc) { }
+
+			template <class U, size_t N> 
+			region_allocator(const region_allocator<U,N> &alloc) throw()
+				: Parent(alloc) { }
+
+			friend bool operator==(region_allocator<T,Region> const &A, region_allocator<T,Region> const &B) 
+			{ 
+				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
+			}
+
+			friend bool operator!=(region_allocator<T,Region> const &A, region_allocator<T,Region> const &B) 
+			{ 
+				return static_cast<Parent const &>(A) != static_cast<Parent const &>(B);
+			}
 		};
 
 	} // namespace monotonic
