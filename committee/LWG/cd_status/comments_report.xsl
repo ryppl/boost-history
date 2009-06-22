@@ -98,7 +98,8 @@ are printing all comments.
 
 ************************************************************ -->
 
- <xsl:if test="(not($open_only='yes') or @disp='') and (not($no_issue='yes') or @issue='')">
+ <xsl:if test="(not($open_only='yes') or @disp='')
+   and (not($no_issue='yes') or (@issue='' and not(@disp='rejected') and not(@disp='duplicate')))">
 
  
 <!-- ************************************************************
