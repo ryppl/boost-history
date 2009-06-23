@@ -92,13 +92,6 @@ namespace boost
 			/// allocate storage, given alignment requirement
 			void *allocate(size_t num_bytes, size_t /*alignment*/)
 			{
-				if (0)
-				{
-					void *ptr = &buffer[cursor];
-					cursor += 64;
-					return ptr;
-				}
-
 #ifdef BOOST_MONOTONIC_STORAGE_EARLY_OUT
 				if (full)
 					return 0;

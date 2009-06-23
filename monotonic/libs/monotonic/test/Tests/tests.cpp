@@ -151,22 +151,25 @@ BOOST_AUTO_TEST_CASE(test_local)
 	}
 }
 
+struct region0 {};
+struct region1 {};
+
 BOOST_AUTO_TEST_CASE(test_shared_allocation)
 {
-	typedef std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > List0;
-	List0 list0;
+	// use default region and access
+	std::list<int, monotonic::allocator<int> > list;
 
-	typedef std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > List1;
-	List1 list1;
+	// use specific region and access
+	std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > list;
+	std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > list;
 
-	// same thing
-	typedef std::list<int, monotonic::shared_allocator<int, region0> > List2;
-	List2 list2;
+	// using wrapped container
+	monotonic::list<int> list;
+	monotonic::list<int, region0, monotonic::shared_access_tag> list;
+	monotonic::list<int, region0, monotonic::thread_local_access_tag> list;
 
-	// same again
-	typedef monotonic::list<int, region0, monotonic::shared_access_tag> List3;
-	List3 list3;
-
+	// use different regions
+	monotonic::map<int, monotonic::list<monotonic::string, region1>, region0> map;
 }
 
 BOOST_AUTO_TEST_CASE(test_regional_allocation)

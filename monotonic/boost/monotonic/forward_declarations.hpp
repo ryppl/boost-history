@@ -49,11 +49,6 @@ namespace boost
 		}
 	
 		/// a RIIA structure for accessing and releasing storage
-		//template <size_t N = DefaultSizes::InlineSize
-		//	, class Region = default_region_tag
-		//	, size_t M = DefaultSizes::MinHeapIncrement
-		//	, class Access = default_access_tag
-		//	, class Al = std::allocator<void> >
 		template <class Region = default_region_tag, class Access = default_access_tag>
 		struct local;
 

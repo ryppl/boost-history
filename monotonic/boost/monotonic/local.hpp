@@ -16,8 +16,9 @@ namespace boost
 		template <class Region, class Access>
 		struct local
 		{
-			typedef local<Region,Access> This;
+			typedef local<Region, Access> This;
 
+			/// the storage to use 
 			typedef static_storage<
 				Region
 				, Access
@@ -25,6 +26,7 @@ namespace boost
 				, DefaultSizes::MinHeapIncrement
 				, default_allocator > StaticStorage;
 
+			/// create a rebounded allocator type
 			template <class T>
 			struct allocator
 			{
