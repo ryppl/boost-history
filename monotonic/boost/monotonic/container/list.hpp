@@ -132,6 +132,9 @@ namespace boost
 			template <class Pred2>
 			void sort(Pred2 pred)
 			{	
+#ifndef WIN32
+				//TODO
+#else
 				if (size() < 2)
 					return;
 
@@ -175,6 +178,7 @@ namespace boost
 					bin_list[bin].merge(bin_list[bin - 1], pred);	// merge up
 				}
 				splice(begin(), bin_list[max_bin - 1]);	// result in last bin
+#endif // WIN32
 			}
 
 			void sort()
