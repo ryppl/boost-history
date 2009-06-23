@@ -46,7 +46,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct rectangle_interval_type {
-	  typedef typename rectangle_interval_type_by_concept<T, typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type type;
+      typedef typename rectangle_interval_type_by_concept<T, typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
   template <typename T, typename CT>
@@ -56,7 +56,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct rectangle_coordinate_type {
-	  typedef typename rectangle_coordinate_type_by_concept<T, typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type type;
+      typedef typename rectangle_coordinate_type_by_concept<T, typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
   template <typename T, typename CT>

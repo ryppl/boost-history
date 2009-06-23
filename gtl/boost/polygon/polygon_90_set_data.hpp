@@ -165,7 +165,7 @@ namespace boost { namespace polygon{
         output_container result;
         ps.get_rectangles(result);
         for(typename output_container::iterator itr = result.begin(); itr != result.end(); ++itr) {
-          ::gtl::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
+          ::boost::polygon::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
         }
         output.insert(output.end(), result.begin(), result.end());
       }
@@ -306,7 +306,7 @@ namespace boost { namespace polygon{
            typename coordinate_traits<coordinate_type>::unsigned_area_type north_shrinking) {
       rectangle_data<coordinate_type> externalBoundary;
       if(!extents(externalBoundary)) return *this;
-      ::gtl::bloat(externalBoundary, 10); //bloat by diferential ammount
+      ::boost::polygon::bloat(externalBoundary, 10); //bloat by diferential ammount
       //insert a hole that encompasses the data
       insert(externalBoundary, true); //note that the set is in a dirty state now
       sort();  //does not apply implicit OR operation
@@ -438,7 +438,7 @@ namespace boost { namespace polygon{
     polygon_90_set_data& self_intersect() {
       sort();
       if(dirty_) { //if it is clean it is a no-op
-        interval_data<coordinate_type> ivl(std::numeric_limits<coordinate_type>::min(), std::numeric_limits<coordinate_type>::max());
+        interval_data<coordinate_type> ivl((std::numeric_limits<coordinate_type>::min)(), (std::numeric_limits<coordinate_type>::max)());
         rectangle_data<coordinate_type> rect(ivl, ivl);
         insert(rect, true);
         clean();
@@ -518,7 +518,7 @@ namespace boost { namespace polygon{
     template <typename output_container, typename concept_type>
     void get_fracture(output_container& container, bool fracture_holes, concept_type tag) const {
       clean();
-      ::gtl::get_polygons(container, data_.begin(), data_.end(), orient_, fracture_holes, tag);
+      ::boost::polygon::get_polygons(container, data_.begin(), data_.end(), orient_, fracture_holes, tag);
     }
   };
 

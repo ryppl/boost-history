@@ -31,7 +31,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct interval_coordinate_type {
-	  typedef typename interval_coordinate_type_by_concept<
+      typedef typename interval_coordinate_type_by_concept<
             T, typename is_interval_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
@@ -43,14 +43,14 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct interval_difference_type {
-	  typedef typename interval_difference_type_by_concept<
+      typedef typename interval_difference_type_by_concept<
             T, typename is_interval_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
 
   template <typename T>
   typename enable_if<typename gtl_if<typename is_interval_concept<typename geometry_concept<T>::type>::type>::type,
-	  typename interval_coordinate_type<T>::type>::type
+      typename interval_coordinate_type<T>::type>::type
   get(const T& interval, direction_1d dir) {
     return interval_traits<T>::get(interval, dir); 
   }
@@ -394,8 +394,8 @@ namespace boost { namespace polygon{
                        bool>::type 
   intersect(interval_type& interval, const interval_type_2& b, bool consider_touch = true) {
     typedef typename interval_traits<interval_type>::coordinate_type Unit;
-    Unit lowVal = std::max(low(interval), low(b));
-    Unit highVal = std::min(high(interval), high(b));
+    Unit lowVal = (std::max)(low(interval), low(b));
+    Unit highVal = (std::min)(high(interval), high(b));
     bool valid = consider_touch ?
       lowVal <= highVal :
       lowVal < highVal;
@@ -466,8 +466,8 @@ namespace boost { namespace polygon{
     bool>::type
   encompass(interval_type& interval, const interval_type_2& b) {
     bool retval = !contains(interval, b, true);
-    low(interval, std::min(low(interval), low(b)));
-    high(interval, std::max(high(interval), high(b)));
+    low(interval, (std::min)(low(interval), low(b)));
+    high(interval, (std::max)(high(interval), high(b)));
     return retval;
   }    
 
@@ -477,8 +477,8 @@ namespace boost { namespace polygon{
                        bool>::type
   encompass(interval_type& interval, typename interval_traits<interval_type>::coordinate_type b) {
     bool retval = !contains(interval, b, true);
-    low(interval, std::min(low(interval), b));
-    high(interval, std::max(high(interval), b));
+    low(interval, (std::min)(low(interval), b));
+    high(interval, (std::max)(high(interval), b));
     return retval;
   }    
 

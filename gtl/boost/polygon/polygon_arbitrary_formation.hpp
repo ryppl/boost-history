@@ -343,7 +343,7 @@ namespace boost { namespace polygon{
       Rectangle rect1, rect2;
       set_points(rect1, he1.first, he1.second);
       set_points(rect2, he2.first, he2.second);
-      if(!::gtl::intersects(rect1, rect2, true)) return false;
+      if(!::boost::polygon::intersects(rect1, rect2, true)) return false;
       if(is_vertical(he1)) {
         if(is_vertical(he2)) return false;
         high_precision y_high = evalAtXforY(he1.first.get(HORIZONTAL), he2.first, he2.second);
@@ -416,7 +416,7 @@ namespace boost { namespace polygon{
       Rectangle rect1, rect2;
       set_points(rect1, he1.first, he1.second);
       set_points(rect2, he2.first, he2.second);
-      if(::gtl::intersects(rect1, rect2, false)) {
+      if(::boost::polygon::intersects(rect1, rect2, false)) {
         if(he1.first == he2.first) {
           if(he1.second != he2.second && equal_slope(he1.first.get(HORIZONTAL), he1.first.get(VERTICAL),
                                                      he1.second, he2.second)) {
@@ -462,10 +462,10 @@ namespace boost { namespace polygon{
         return true; //they must cross
       }
       if(is_vertical(he1) && is_vertical(he2) && he1.first.get(HORIZONTAL) == he2.first.get(HORIZONTAL))
-        return ::gtl::intersects(rect1.get(VERTICAL), rect2.get(VERTICAL), false) &&
+        return ::boost::polygon::intersects(rect1.get(VERTICAL), rect2.get(VERTICAL), false) &&
           rect1.get(VERTICAL) != rect2.get(VERTICAL);
       if(is_horizontal(he1) && is_horizontal(he2) && he1.first.get(VERTICAL) == he2.first.get(VERTICAL))
-        return ::gtl::intersects(rect1.get(HORIZONTAL), rect2.get(HORIZONTAL), false) &&
+        return ::boost::polygon::intersects(rect1.get(HORIZONTAL), rect2.get(HORIZONTAL), false) &&
           rect1.get(HORIZONTAL) != rect2.get(HORIZONTAL);
       return false;
     }
@@ -1025,17 +1025,17 @@ namespace boost { namespace polygon{
     int fractureHoles_; 
   public:
     inline polygon_arbitrary_formation() : 
-      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(0) {
+      scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(0) {
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
     }
     inline polygon_arbitrary_formation(bool fractureHoles = false) : 
-      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(fractureHoles) {
+      scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(fractureHoles) {
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
     }
     inline polygon_arbitrary_formation(const polygon_arbitrary_formation& that) : 
-      scanData_(), x_(std::numeric_limits<Unit>::min()), justBefore_(false), fractureHoles_(0) { (*this) = that; }
+      scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(0) { (*this) = that; }
     inline polygon_arbitrary_formation& operator=(const polygon_arbitrary_formation& that) {
       x_ = that.x_;
       justBefore_ = that.justBefore_;
@@ -1792,12 +1792,12 @@ namespace boost { namespace polygon{
       he2.second = Point(1, -10);
       b = compute_intersection(result, he1, he2);
       if(!b || result != Point(0, -5)) return false;
-      he1.first = Point(std::numeric_limits<int>::max(), std::numeric_limits<int>::max()-1);
-      he1.second = Point(std::numeric_limits<int>::min(), std::numeric_limits<int>::max());
-      //he1.second = Point(0, std::numeric_limits<int>::max());
-      he2.first = Point(std::numeric_limits<int>::max()-1, std::numeric_limits<int>::max());
-      he2.second = Point(std::numeric_limits<int>::max(), std::numeric_limits<int>::min());
-      //he2.second = Point(std::numeric_limits<int>::max(), 0);
+      he1.first = Point((std::numeric_limits<int>::max)(), (std::numeric_limits<int>::max)()-1);
+      he1.second = Point((std::numeric_limits<int>::min)(), (std::numeric_limits<int>::max)());
+      //he1.second = Point(0, (std::numeric_limits<int>::max)());
+      he2.first = Point((std::numeric_limits<int>::max)()-1, (std::numeric_limits<int>::max)());
+      he2.second = Point((std::numeric_limits<int>::max)(), (std::numeric_limits<int>::min)());
+      //he2.second = Point((std::numeric_limits<int>::max)(), 0);
       b = compute_intersection(result, he1, he2);
       //b is false because of overflow error
       he1.first = Point(1000, 2000);

@@ -1255,8 +1255,8 @@ namespace boost { namespace polygon{
       } else {
         he.second = currentPt;
         if(equivalence(point, currentPt)) return consider_touch;
-        Unit xmin = std::min(x(he.first), x(he.second));
-        Unit xmax = std::max(x(he.first), x(he.second));
+        Unit xmin = (std::min)(x(he.first), x(he.second));
+        Unit xmax = (std::max)(x(he.first), x(he.second));
         if(x(point) >= xmin && x(point) < xmax) { //double counts if <= xmax
           Point tmppt;
           assign(tmppt, point);

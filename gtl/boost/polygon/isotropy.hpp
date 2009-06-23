@@ -14,8 +14,8 @@
 
 #else
 
-  namespace boost {	
-    template <bool B, class T	= void>
+  namespace boost { 
+    template <bool B, class T   = void>
     struct enable_if_c {
       typedef T type;
     };

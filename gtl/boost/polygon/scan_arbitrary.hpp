@@ -39,7 +39,7 @@ namespace boost { namespace polygon{
     std::vector<std::pair<half_edge, int> > event_edges_;
     std::set<Point> intersection_queue_;
   public:
-    inline line_intersection() : vertical_data_(), edge_scanline_(), x_(std::numeric_limits<Unit>::max()), just_before_(0), segment_id_(0) {
+    inline line_intersection() : vertical_data_(), edge_scanline_(), x_((std::numeric_limits<Unit>::max)()), just_before_(0), segment_id_(0) {
       less_half_edge lessElm(&x_, &just_before_);
       edge_scanline_ = edge_scanline(lessElm);
     }
@@ -88,10 +88,10 @@ namespace boost { namespace polygon{
             inner != data.end(); ++inner) {
           const half_edge& he2 = (*inner).first;
           if(he1 == he2) continue;
-          if(std::min(he2. first.get(HORIZONTAL),
-                      he2.second.get(HORIZONTAL)) > 
-             std::max(he1.second.get(HORIZONTAL),
-                      he1.first.get(HORIZONTAL)))
+          if((std::min)(he2. first.get(HORIZONTAL),
+                        he2.second.get(HORIZONTAL)) > 
+             (std::max)(he1.second.get(HORIZONTAL),
+                        he1.first.get(HORIZONTAL)))
             break;
           Point intersection;
           if(compute_intersection(intersection, he1, he2)) {
@@ -108,10 +108,10 @@ namespace boost { namespace polygon{
         typedef rectangle_data<Unit> Rectangle;
         Rectangle rect1;
         set_points(rect1, he1.first, he1.second);
-        typename std::set<Point>::iterator itr = pts.lower_bound(std::min(he1.first, he1.second));
-        typename std::set<Point>::iterator itr2 = pts.upper_bound(std::max(he1.first, he1.second));
-        while(itr != pts.end() && itr != pts.begin() && (*itr).get(HORIZONTAL) >= std::min(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
-        while(itr2 != pts.end() && (*itr2).get(HORIZONTAL) <= std::max(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
+        typename std::set<Point>::iterator itr = pts.lower_bound((std::min)(he1.first, he1.second));
+        typename std::set<Point>::iterator itr2 = pts.upper_bound((std::max)(he1.first, he1.second));
+        while(itr != pts.end() && itr != pts.begin() && (*itr).get(HORIZONTAL) >= (std::min)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
+        while(itr2 != pts.end() && (*itr2).get(HORIZONTAL) <= (std::max)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
         //itr = pts.begin();
         //itr2 = pts.end();
         for( ; itr != itr2; ++itr) {
@@ -180,10 +180,10 @@ namespace boost { namespace polygon{
             inner != data.end(); ++inner) {
           const half_edge& he2 = (*inner).first;
           if(he1 == he2) continue;
-          if(std::min(he2. first.get(HORIZONTAL),
-                      he2.second.get(HORIZONTAL)) > 
-             std::max(he1.second.get(HORIZONTAL),
-                      he1.first.get(HORIZONTAL)))
+          if((std::min)(he2. first.get(HORIZONTAL),
+                        he2.second.get(HORIZONTAL)) > 
+             (std::max)(he1.second.get(HORIZONTAL),
+                        he1.first.get(HORIZONTAL)))
             break;
           segment_id id2 = (*inner).second;
           if(scanline_base<Unit>::intersects(he1, he2)) {
@@ -337,7 +337,7 @@ namespace boost { namespace polygon{
         Unit y = pt.get(VERTICAL);
         intersection_locations.insert(y);
         //if x_ is max there can be only end events and no sloping edges
-        if(x_ != std::numeric_limits<Unit>::max()) {
+        if(x_ != (std::numeric_limits<Unit>::max)()) {
           //deal with edges that project to the right of scanline
           //first find the edges in the scanline adjacent to primary intersectin points
           //lookup segment in scanline at pt
@@ -368,7 +368,7 @@ namespace boost { namespace polygon{
           update_segments(intersection_points, (*inter_iter).second, Point(x_, (*inter_iter).first.get(VERTICAL)));
         } else {
           //if x_ is max there can be only end events and no sloping edges
-          if(x_ != std::numeric_limits<Unit>::max()) {
+          if(x_ != (std::numeric_limits<Unit>::max)()) {
             //insert its end points into the vector of sloping ends
             const half_edge& he = (*inter_iter).first;
             Unit y = evalAtXforY(x_, he.first, he.second);
@@ -457,7 +457,7 @@ namespace boost { namespace polygon{
 
       //process end events by removing those segments from the scanline 
       //and insert vertices of all events into intersection queue
-      Point prev_point(std::numeric_limits<Unit>::min(), std::numeric_limits<Unit>::min());
+      Point prev_point((std::numeric_limits<Unit>::min)(), (std::numeric_limits<Unit>::min)());
       less_point lp;
       std::set<segment_id> vertical_ids;
       vertical_data_.clear();
@@ -865,12 +865,12 @@ namespace boost { namespace polygon{
     int just_before_;
   public:
     inline scanline() : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
-                        x_(std::numeric_limits<Unit>::max()), y_(std::numeric_limits<Unit>::max()), just_before_(false) {
+                        x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false) {
       less_half_edge lessElm(&x_, &just_before_);
       scan_data_ = scanline_type(lessElm);
     }
     inline scanline(const scanline& that) : scan_data_(), removal_set_(), insertion_set_(), end_point_queue_(), 
-                        x_(std::numeric_limits<Unit>::max()), y_(std::numeric_limits<Unit>::max()), just_before_(false) {
+                                            x_((std::numeric_limits<Unit>::max)()), y_((std::numeric_limits<Unit>::max)()), just_before_(false) {
       (*this) = that; }
     inline scanline& operator=(const scanline& that) {
       x_ = that.x_;
@@ -911,7 +911,7 @@ namespace boost { namespace polygon{
       //current_iter should increase monotonically toward end as we process scanline stop
       iterator current_iter = scan_data_.begin();
       just_before_ = true;
-      high_precision y = (high_precision)(std::numeric_limits<Unit>::min());
+      high_precision y = (high_precision)((std::numeric_limits<Unit>::min)());
       bool first_iteration = true;
       //we want to return from inside the loop when we hit end or new x
       while(true) {
@@ -926,7 +926,7 @@ namespace boost { namespace polygon{
             //make sure we are looking at element in scanline just below y
             if(evalAtXforY(x_, (*current_iter).first.first, (*current_iter).first.second) != y) {
               Point e2(pt);
-              if(e2.get(VERTICAL) != std::numeric_limits<Unit>::max())
+              if(e2.get(VERTICAL) != (std::numeric_limits<Unit>::max)())
                 e2.set(VERTICAL, e2.get(VERTICAL) + 1);
               else
                 e2.set(VERTICAL, e2.get(VERTICAL) - 1);
@@ -1038,7 +1038,7 @@ namespace boost { namespace polygon{
         previous_x = x_;
         //lookup elements
         Point e2(*epqi);
-        if(e2.get(VERTICAL) != std::numeric_limits<Unit>::max())
+        if(e2.get(VERTICAL) != (std::numeric_limits<Unit>::max)())
           e2.set(VERTICAL, e2.get(VERTICAL) + 1);
         else
           e2.set(VERTICAL, e2.get(VERTICAL) - 1);
@@ -1081,7 +1081,7 @@ namespace boost { namespace polygon{
         insert_new_edges_into_scanline();
       }
       //print_scanline();
-      x_ = std::numeric_limits<Unit>::max();
+      x_ = (std::numeric_limits<Unit>::max)();
       remove_retired_edges_from_scanline();
     }
 

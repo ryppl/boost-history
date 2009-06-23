@@ -459,12 +459,12 @@ namespace boost { namespace polygon{
       int justBefore_;
     public:
       inline Scan45() : scanData_(), crossQueue_(), crossVector_(), 
-                        x_(std::numeric_limits<Unit>::min()), justBefore_(false) {
+                        x_((std::numeric_limits<Unit>::min)()), justBefore_(false) {
         lessScan45Element<CountType>  lessElm(&x_, &justBefore_);
         scanData_ = std::set<Scan45ElementT<CountType>, lessScan45Element<CountType> >(lessElm);
       }
       inline Scan45(const Scan45& that) : scanData_(), crossQueue_(), crossVector_(), 
-                                          x_(std::numeric_limits<Unit>::min()), justBefore_(false) {
+                                          x_((std::numeric_limits<Unit>::min)()), justBefore_(false) {
         (*this) = that; }
       inline Scan45& operator=(const Scan45& that) {
         x_ = that.x_;
@@ -508,7 +508,7 @@ namespace boost { namespace polygon{
             if(!crossQueue_.empty() &&
                (*crossQueue_.begin()).x() < nextX) {
               //std::cout << "4\n";
-              nextX = std::min(nextX, (*crossQueue_.begin()).x());
+              nextX = (std::min)(nextX, (*crossQueue_.begin()).x());
             }
             //std::cout << "6\n";
             justBefore_ = true;
@@ -638,7 +638,7 @@ namespace boost { namespace polygon{
           ++mergeCount;
           ++mergeEnd;
         }
-        crossVector_.reserve(std::max(vec.capacity(), vec.size() + mergeCount));
+        crossVector_.reserve((std::max)(vec.capacity(), vec.size() + mergeCount));
         for(unsigned int i = 0; i < vec.size(); ++i){
           while(inputBegin != mergeEnd &&
                 (*inputBegin).first.y() < vec[i].first.y()) {
@@ -767,7 +767,7 @@ namespace boost { namespace polygon{
         Unit y1 = iter1->evalAtX(x_);
         Unit y2 = iter2->evalAtX(x_);
         LongUnit delta = (LongUnit)abs((LongUnit)y1 - (LongUnit)y2);
-        if(delta + x_ <= std::numeric_limits<Unit>::max())
+        if(delta + x_ <= (std::numeric_limits<Unit>::max)())
           crossQueue_.insert(crossQueue_.end(), Point(x_ + delta, y1));
         //std::cout <<  Point(x_ + delta, y1);
       }
@@ -781,7 +781,7 @@ namespace boost { namespace polygon{
         //note that half the delta cannot exceed the positive inter range
         LongUnit delta = y1;
         delta -= y2;
-        Unit UnitMax = std::numeric_limits<Unit>::max();
+        Unit UnitMax = (std::numeric_limits<Unit>::max)();
         if(delta & 1) {
           //delta is odd, division by 2 will result in integer trunctaion
           if(delta == 1) {

@@ -260,7 +260,7 @@ namespace boost { namespace polygon{
         cT result;
         ps.get_trapezoids(result);
         for(typename cT::iterator itr = result.begin(); itr != result.end(); ++itr) {
-          ::gtl::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
+          ::boost::polygon::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
         }
         container.insert(container.end(), result.begin(), result.end());
       }
@@ -592,8 +592,8 @@ namespace boost { namespace polygon{
     if(empty()) {
       return false;
     }
-    Unit low = std::numeric_limits<Unit>::max();
-    Unit high = std::numeric_limits<Unit>::min();
+    Unit low = (std::numeric_limits<Unit>::max)();
+    Unit high = (std::numeric_limits<Unit>::min)();
     interval_data<Unit> xivl(low, high); 
     interval_data<Unit> yivl(low, high);
     for(typename value_type::const_iterator itr = data_.begin();
@@ -1117,7 +1117,7 @@ namespace boost { namespace polygon{
     get(polys);
     for(typename std::vector<polygon_45_with_holes_data<Unit> >::iterator itr = polys.begin();
         itr != polys.end(); ++itr) {
-      gtl::transform(*itr, tr);
+      ::boost::polygon::transform(*itr, tr);
     }
     clear();
     insert(polys.begin(), polys.end());
@@ -1139,7 +1139,7 @@ namespace boost { namespace polygon{
     get_polygons_with_holes(polys);
     for(typename std::vector<polygon_45_with_holes_data<Unit> >::iterator itr = polys.begin();
         itr != polys.end(); ++itr) {
-      gtl::scale_down(*itr, factor);
+      ::boost::polygon::scale_down(*itr, factor);
     }
     clear();
     insert(polys.begin(), polys.end());
@@ -1155,7 +1155,7 @@ namespace boost { namespace polygon{
     get_polygons_with_holes(polys);
     for(typename std::vector<polygon_45_with_holes_data<Unit> >::iterator itr = polys.begin();
         itr != polys.end(); ++itr) {
-      gtl::scale(*itr, factor);
+      ::boost::polygon::scale(*itr, factor);
     }
     clear();
     insert(polys.begin(), polys.end());
@@ -1203,12 +1203,12 @@ namespace boost { namespace polygon{
     typename value_type::const_iterator iter2 = rvalue_data.begin();
     typename value_type::const_iterator end1 = lvalue_data.end();
     typename value_type::const_iterator end2 = rvalue_data.end();
-    const Unit2 UnitMax = std::numeric_limits<Unit2>::max();
+    const Unit2 UnitMax = (std::numeric_limits<Unit2>::max)();
     Unit2 x = UnitMax;
     while(iter1 != end1 || iter2 != end2) {
       Unit2 currentX = UnitMax;
       if(iter1 != end1) currentX = iter1->pt.x();
-      if(iter2 != end2) currentX = std::min(currentX, iter2->pt.x());
+      if(iter2 != end2) currentX = (std::min)(currentX, iter2->pt.x());
       if(currentX != x) {
         //std::cout << "SCAN " << currentX << "\n";
         //scan event
@@ -1328,7 +1328,7 @@ namespace boost { namespace polygon{
     typedef std::vector<typename polygon_45_formation<Unit2>::Vertex45Compact> value_type;
     typename value_type::const_iterator iter1 = lvalue_data.begin();
     typename value_type::const_iterator end1 = lvalue_data.end();
-    const Unit2 UnitMax = std::numeric_limits<Unit2>::max();
+    const Unit2 UnitMax = (std::numeric_limits<Unit2>::max)();
     Unit2 x = UnitMax;
     while(iter1 != end1) {
       Unit2 currentX = iter1->pt.x();

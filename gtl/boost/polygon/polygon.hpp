@@ -5,11 +5,11 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_GTL_HPP
-#define GTL_GTL_HPP
+#ifndef GTL_POLYGON_HPP
+#define GTL_POLYGON_HPP
 
 //external
-#include <math.h>
+#include <cmath>
 #include <vector>
 #include <deque>
 #include <map>
@@ -21,23 +21,9 @@
 #include <iterator>
 #include <string>
 
-#ifdef __ICC
-#pragma warning (disable:1125)
+#ifndef BOOST_POLYGON_NO_DEPS
+#include <boost/config.hpp> 
 #endif
-
-#ifdef WIN32
-#pragma warning( disable: 4996 )
-#pragma warning( disable: 4800 )
-#ifdef max
-#undef max
-#endif
-#ifdef min
-#undef min
-#endif
-#endif
-
-namespace boost { namespace polygon {}}
-namespace gtl = boost::polygon;
 
 #include "isotropy.hpp"
 
@@ -296,7 +282,4 @@ namespace gtl = boost::polygon;
 /// @}
 //
 
-#if __ICC
-#pragma warning (default:1125)
-#endif
 #endif

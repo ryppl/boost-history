@@ -31,7 +31,7 @@ namespace rectangle_formation {
       scanData_(orientation_2d(orient.to_int() ? VERTICAL : HORIZONTAL)),
       haveCurrentRect_(false), currentRect_(), orient_(orient), currentCoordinate_() {
       assign(currentRect_, model);
-      currentCoordinate_ = std::numeric_limits<coordinate_type>::max();
+      currentCoordinate_ = (std::numeric_limits<coordinate_type>::max)();
     }
     
     template <typename CT>
@@ -146,8 +146,8 @@ namespace rectangle_formation {
                   } else {
                     //extend the top of current rect
                     currentRect.set(orient.get_direction(HIGH), 
-                                    std::max(edge.get(HIGH), 
-                                             tmpRect.get(orient.get_direction(HIGH))));
+                                    (std::max)(edge.get(HIGH), 
+                                               tmpRect.get(orient.get_direction(HIGH))));
                   }
                 } else {
                   //insert current rect into the scanData
@@ -155,18 +155,18 @@ namespace rectangle_formation {
                   //create a new current rect
                   currentRect.set(orient.get_perpendicular(), interval_data<coordinate_type>(currentCoordinate,
                                                                       currentCoordinate));
-                  currentRect.set(orient, interval_data<coordinate_type>(std::min(tmpRect.get(orient).get(LOW), 
+                  currentRect.set(orient, interval_data<coordinate_type>((std::min)(tmpRect.get(orient).get(LOW), 
                                                        edge.get(LOW)),
-                                                   std::max(tmpRect.get(orient).get(HIGH),
+                                                                         (std::max)(tmpRect.get(orient).get(HIGH),
                                                        edge.get(HIGH))));
                 }
               } else {
                 haveCurrentRect = true;
                 currentRect.set(orient.get_perpendicular(), interval_data<coordinate_type>(currentCoordinate,
                                                                     currentCoordinate));
-                currentRect.set(orient, interval_data<coordinate_type>(std::min(tmpRect.get(orient).get(LOW), 
+                currentRect.set(orient, interval_data<coordinate_type>((std::min)(tmpRect.get(orient).get(LOW), 
                                                      edge.get(LOW)),
-                                                 std::max(tmpRect.get(orient).get(HIGH),
+                                                                       (std::max)(tmpRect.get(orient).get(HIGH),
                                                      edge.get(HIGH))));
               }
               //skip to nextIter position
@@ -244,7 +244,7 @@ namespace rectangle_formation {
     typedef typename output_container::value_type rectangle_type;
     typedef typename get_coordinate_type_for_rectangles<rectangle_type, typename geometry_concept<rectangle_type>::type>::type Unit;
     rectangle_data<Unit> model;
-    Unit prevPos = std::numeric_limits<Unit>::max();
+    Unit prevPos = (std::numeric_limits<Unit>::max)();
     rectangle_formation::ScanLineToRects<rectangle_data<Unit> > scanlineToRects(orient, model);
     for(iterator_type itr = begin;
         itr != end; ++ itr) {

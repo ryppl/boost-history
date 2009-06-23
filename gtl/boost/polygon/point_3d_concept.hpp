@@ -29,7 +29,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct point_3d_coordinate_type {
-	  typedef typename point_3d_coordinate_type_by_concept<T, typename is_point_3d_concept<typename geometry_concept<T>::type>::type>::type type;
+      typedef typename point_3d_coordinate_type_by_concept<T, typename is_point_3d_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
   template <typename T, typename CT>
@@ -40,7 +40,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct point_3d_difference_type {
-	  typedef typename point_3d_difference_type_by_concept<
+      typedef typename point_3d_difference_type_by_concept<
             T, typename is_point_3d_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 

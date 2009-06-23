@@ -287,8 +287,8 @@ namespace boost { namespace polygon{
     inline polygon_set_data& 
     transform(const transform_type& tr) {
       for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
-        ::gtl::transform((*itr).first.first, tr);
-        ::gtl::transform((*itr).first.second, tr);
+        ::boost::polygon::transform((*itr).first.first, tr);
+        ::boost::polygon::transform((*itr).first.second, tr);
       }
       unsorted_ = true;
       dirty_ = true;
@@ -298,8 +298,8 @@ namespace boost { namespace polygon{
     inline polygon_set_data& 
     scale_up(typename coordinate_traits<coordinate_type>::unsigned_area_type factor) {
       for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
-        ::gtl::scale_up((*itr).first.first, factor);
-        ::gtl::scale_up((*itr).first.second, factor);
+        ::boost::polygon::scale_up((*itr).first.first, factor);
+        ::boost::polygon::scale_up((*itr).first.second, factor);
       }
       return *this;
     }
@@ -307,8 +307,8 @@ namespace boost { namespace polygon{
     inline polygon_set_data& 
     scale_down(typename coordinate_traits<coordinate_type>::unsigned_area_type factor) {
       for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
-        ::gtl::scale_down((*itr).first.first, factor);
-        ::gtl::scale_down((*itr).first.second, factor);
+        ::boost::polygon::scale_down((*itr).first.first, factor);
+        ::boost::polygon::scale_down((*itr).first.second, factor);
       }
       unsorted_ = true;
       dirty_ = true;
@@ -319,8 +319,8 @@ namespace boost { namespace polygon{
     inline polygon_set_data& scale(polygon_set_data& polygon_set, 
                                    const scaling_type& scaling) {
       for(typename value_type::iterator itr = begin(); itr != end(); ++itr) {
-        ::gtl::scale((*itr).first.first, scaling);
-        ::gtl::scale((*itr).first.second, scaling);
+        ::boost::polygon::scale((*itr).first.first, scaling);
+        ::boost::polygon::scale((*itr).first.second, scaling);
       }
       unsorted_ = true;
       dirty_ = true;

@@ -200,7 +200,7 @@ namespace boost { namespace polygon{
         itr = itr2;
       }
       std::pair<std::pair<Unit, std::map<Unit, std::set<int> > >, graph_type*> output
-        (std::make_pair(std::make_pair(std::numeric_limits<Unit>::max(), std::map<Unit, std::set<int> >()), &graph));
+        (std::make_pair(std::make_pair((std::numeric_limits<Unit>::max)(), std::map<Unit, std::set<int> >()), &graph));
       typename boolean_op_45<Unit>::template Scan45<CountTouch, touch_45_output_functor> scanline;
       for(typename TSD::iterator itr = tsd_.begin(); itr != tsd_.end(); ) {
         typename TSD::iterator itr2 = itr;

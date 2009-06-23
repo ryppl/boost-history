@@ -383,7 +383,7 @@ namespace boost { namespace polygon{
 
     template <class iT>
     static inline void populateTouchSetData(TouchSetData& data, iT beginData, iT endData, int id) {
-      Unit prevPos = (std::numeric_limits<Unit>::max());
+      Unit prevPos = ((std::numeric_limits<Unit>::max)());
       Unit prevY = prevPos;
       int count = 0;
       for(iT itr = beginData; itr != endData; ++itr) {

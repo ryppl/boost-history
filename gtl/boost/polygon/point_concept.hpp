@@ -35,7 +35,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct point_coordinate_type {
-	  typedef typename point_coordinate_type_by_concept<T, typename is_point_concept<typename geometry_concept<T>::type>::type>::type type;
+      typedef typename point_coordinate_type_by_concept<T, typename is_point_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
   template <typename T, typename CT>
@@ -46,7 +46,7 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct point_difference_type {
-	  typedef typename point_difference_type_by_concept<
+      typedef typename point_difference_type_by_concept<
             T, typename is_point_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
@@ -58,13 +58,13 @@ namespace boost { namespace polygon{
 
   template <typename T>
   struct point_distance_type {
-	  typedef typename point_distance_type_by_concept<
+      typedef typename point_distance_type_by_concept<
             T, typename is_point_concept<typename geometry_concept<T>::type>::type>::type type;
   };
 
   template <typename T>
   typename enable_if< typename gtl_if<typename is_point_concept<typename geometry_concept<T>::type>::type>::type, 
-	  typename point_coordinate_type<T>::type >::type 
+      typename point_coordinate_type<T>::type >::type 
   get(const T& point, orientation_2d orient) {
     return point_traits<T>::get(point, orient);
   }

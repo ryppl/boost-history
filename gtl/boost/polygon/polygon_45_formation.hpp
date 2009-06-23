@@ -522,16 +522,16 @@ namespace boost { namespace polygon{
       int justBefore_;
       int fractureHoles_; 
     public:
-      inline Polygon45Formation() : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(0) {
+      inline Polygon45Formation() : scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(0) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
-      inline Polygon45Formation(bool fractureHoles) : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(fractureHoles) {
+      inline Polygon45Formation(bool fractureHoles) : scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(fractureHoles) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
       inline Polygon45Formation(const Polygon45Formation& that) :
-        scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false), fractureHoles_(0) { (*this) = that; }
+        scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(0) { (*this) = that; }
       inline Polygon45Formation& operator=(const Polygon45Formation& that) {
         x_ = that.x_;
         justBefore_ = that.justBefore_;
@@ -1233,12 +1233,12 @@ namespace boost { namespace polygon{
       Unit x_;
       int justBefore_;
     public:
-      inline Polygon45Tiling() : scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false) {
+      inline Polygon45Tiling() : scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false) {
         lessVertex45 lessElm(&x_, &justBefore_);
         scanData_ = Polygon45FormationData(lessElm);
       }
       inline Polygon45Tiling(const Polygon45Tiling& that) : 
-        scanData_(), x_((std::numeric_limits<Unit>::min())), justBefore_(false) { (*this) = that; }
+        scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false) { (*this) = that; }
       inline Polygon45Tiling& operator=(const Polygon45Tiling& that) {
         x_ = that.x_;
         justBefore_ = that.justBefore_;

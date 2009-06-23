@@ -1534,7 +1534,7 @@ namespace polygon_formation {
     unsigned int rightIndex = 0;
     bool bottomAlreadyProcessed = false;
     ActiveTail<Unit>* currentTail = 0;
-    const Unit UnitMax = std::numeric_limits<Unit>::max();
+    const Unit UnitMax = (std::numeric_limits<Unit>::max)();
     while(leftIndex < leftEdges.size() || rightIndex < rightEdges.size()) {
       interval_data<Unit>  edges[2] = {interval_data<Unit> (UnitMax, UnitMax), interval_data<Unit> (UnitMax, UnitMax)};
       bool haveNextEdge = true;
@@ -1729,8 +1729,8 @@ namespace polygon_formation {
     polygon_formation::ScanLineToPolygonItrs<false, coordinate_type, polygon_concept_type> scanlineToPolygonItrsH(fracture_holes);
     std::vector<interval_data<coordinate_type> > leftEdges;
     std::vector<interval_data<coordinate_type> > rightEdges;
-    coordinate_type prevPos = std::numeric_limits<coordinate_type>::max();
-    coordinate_type prevY = std::numeric_limits<coordinate_type>::max();
+    coordinate_type prevPos = (std::numeric_limits<coordinate_type>::max)();
+    coordinate_type prevY = (std::numeric_limits<coordinate_type>::max)();
     int count = 0;
     for(iterator_type itr = begin;
         itr != end; ++ itr) {

@@ -13,13 +13,13 @@ namespace boost { namespace polygon{
   class polygon_data : public polygon_45_data<T> {
   public:
     typedef polygon_concept geometry_type;
-	
+    
     inline polygon_data() : polygon_45_data<T>() {} //do nothing default constructor
 
     template<class iT>
     inline polygon_data(iT input_begin, iT input_end) : polygon_45_data<T>(input_begin, input_end) {}  
 
-	// copy constructor (since we have dynamic memory)
+    // copy constructor (since we have dynamic memory)
     inline polygon_data(const polygon_data& that) : polygon_45_data<T>(that.coords_.begin(), that.coords_.end()) {}
   
     // assignment operator (since we have dynamic memory do a deep copy)

@@ -386,10 +386,10 @@ namespace boolean_op {
     //typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr1 = input1.begin();
     //typename std::vector<std::pair<Unit, std::pair<Unit, int> > >::const_iterator itr2 = input2.begin();
     std::vector<std::pair<interval_data<Unit>, int> > container;
-    //output.reserve(std::max(input1.size(), input2.size()));
+    //output.reserve((std::max)(input1.size(), input2.size()));
 
     //consider eliminating dependecy on limits with bool flag for initial state
-    Unit UnitMax = std::numeric_limits<Unit>::max();
+    Unit UnitMax = (std::numeric_limits<Unit>::max)();
     Unit prevCoord = UnitMax;
     Unit prevPosition = UnitMax;
     T count(defaultCount);
@@ -505,7 +505,7 @@ namespace boolean_op {
       std::vector<std::pair<Unit, std::pair<Unit, int> > > output;
       output.reserve(input.size());
       //consider eliminating dependecy on limits with bool flag for initial state
-      Unit UnitMax = std::numeric_limits<Unit>::max();
+      Unit UnitMax = (std::numeric_limits<Unit>::max)();
       Unit prevPos = UnitMax;
       Unit prevY = UnitMax;
       int count = 0;
