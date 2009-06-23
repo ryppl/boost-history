@@ -341,11 +341,12 @@ void test_locals(Storage &storage, size_t count)
 {
 	if (count == 0)
 		return;
-	typedef typename Storage::allocator<int>::type allocator;
-	typedef typename Storage::allocator<char>::type char_allocator;
+	typedef typename Storage::template allocator<int>::type allocator;
+	typedef typename Storage::template allocator<char>::type char_allocator;
 	std::list<int, allocator > list;
 	fill_n(back_inserter(list), 100, 42);
 	typedef std::basic_string<char, std::char_traits<char>, char_allocator> String;
+/*
 	String &s = storage.create<String>("foo");
 	for (size_t n = 0; n < 100; ++n)
 		s += "bar";
@@ -353,6 +354,7 @@ void test_locals(Storage &storage, size_t count)
 	vec.resize(1000);
 	storage.destroy(s);
 	test_locals(storage, --count);
+*/
 }
 
 struct local_1 {};
@@ -364,7 +366,7 @@ void test_locals_mono()
 	//monotonic::local<local_2> storage2;
 	for (size_t n = 0; n < 10; ++n)
 	{
-		test_locals(storage1, 4);
+		//test_locals(storage1, 4);
 		//test_locals(storage2, 2);
 	}
 	//cout << "test_locals: storage1 stack,heap =" << storage1.fixed_used() << ", " << storage1.heap_used() << endl;
