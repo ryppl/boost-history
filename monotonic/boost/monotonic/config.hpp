@@ -12,14 +12,16 @@ namespace boost
 {
 	namespace monotonic
 	{
+		typedef std::allocator<char> default_allocator;
+
 		struct DefaultSizes
 		{
 			enum
 			{
 				InlineSize = 32*1024,						///< buffer that is inline with the storage
 				MinHeapIncrement = 32*1024*1024,				///< the smallest new chunk-size for heap storage
-				StaticInlineSize = 1*1024*1024,					///< inline size for a global store. this goes into your BSS
-				StaticMinHeapIncrement = 32*1024*1024,
+				//StaticInlineSize = 1*1024*1024,					///< inline size for a global store. this goes into your BSS
+				//StaticMinHeapIncrement = 32*1024*1024,
 				MinPoolSize = 8,
 
 				RegionInlineSize = 8*1024,

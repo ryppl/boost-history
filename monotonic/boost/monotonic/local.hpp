@@ -21,7 +21,7 @@ namespace boost
 				, Access
 				, DefaultSizes::InlineSize
 				, DefaultSizes::MinHeapIncrement
-				, std::allocator<void> > StaticStorage;
+				, default_allocator > StaticStorage;
 
 			local()
 			{

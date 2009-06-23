@@ -16,6 +16,7 @@ namespace boost
 {
 	namespace monotonic
 	{
+
 		/// fixed-sized storage for an allocator that is on the stack or heap
 		template <size_t InlineSize = DefaultSizes::InlineSize>
 		struct fixed_storage;
@@ -29,7 +30,7 @@ namespace boost
 		template <
 			size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
-			, class Al = std::allocator<char> >
+			, class Al = default_allocator >
 		struct storage;
 
 		/// tags for different storage regions
@@ -59,21 +60,21 @@ namespace boost
 		/// thread-safe storage
 		template <size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
-			, class Al = std::allocator<char> >
+			, class Al = default_allocator>
 		struct shared_storage;
 
 		/// thread-local storage
 		template <size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
-			, class Al = std::allocator<char> >
+			, class Al = default_allocator >
 		struct thread_local_storage;
 
 		/// a globally available storage buffer
 		template <class Region = default_region_tag
 			, class Access = default_access_tag
-			, size_t InlineSize = DefaultSizes::StaticInlineSize
-			, size_t MinHeapIncrement = DefaultSizes::StaticMinHeapIncrement
-			, class Al = std::allocator<char> >
+			, size_t InlineSize = DefaultSizes::/*Static*/InlineSize
+			, size_t MinHeapIncrement = DefaultSizes::/*Static*/MinHeapIncrement
+			, class Al = default_allocator >
 		struct static_storage;
 
 		/// common to other monotonic allocators for type T of type Derived

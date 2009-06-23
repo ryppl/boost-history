@@ -275,22 +275,15 @@ void test_locals()
 	monotonic::local<local_1> storage;
 	{
 		std::list<int, monotonic::allocator<int, local_1> > list;
+		BOOST_ASSERT(list.get_allocator().get_storage() == &storage.get_storage());
 		list.push_back(42);
 		string &s = storage.create<string>("foo");
-		
 		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-		storage.destroy(s);
-		storage.destroy(list);
-		storage.reset();
-		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-
 		std::vector<int, monotonic::allocator<int, local_1> > vec;
+		BOOST_ASSERT(vec.get_allocator().get_storage() == &storage.get_storage());
 		vec.resize(100);
 		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-		storage.destroy(vec);
-		storage.reset();
-		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-
+		storage.destroy(s);
 	}
 }
 
@@ -366,7 +359,7 @@ int main()
 		cout << "results of running test at:" << endl;
 		cout << "https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/compare_memory_pool.cpp" << endl << endl;
 
-		//test_locals();
+		test_locals();
 		//test_pools();
 		//return 0;
 
