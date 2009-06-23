@@ -87,7 +87,6 @@ public:
     }
 
 private:
-    
     friend class cursor_core_access;
     friend class iterator_core_access;
 

@@ -148,6 +148,13 @@ Op for_each(Order, Cursor s, Op f)
                           , typename cursor_vertical_traversal<Cursor>::type());
 }
 
+template <class Order, class Cursor, class Op>
+Op for_each(Order, Cursor s, Cursor t, Op f)
+{
+    return detail::for_each(Order(), s, t, f
+                          , typename cursor_vertical_traversal<Cursor>::type());
+}
+
 /**
  * @brief   Apply a function to every element of a subforest, 
  *          in the order specified by the first parameter.

@@ -28,18 +28,18 @@ namespace tree {
 
 /** 
  * @brief A %binary_tree.
- * This class models the hierarchy concept, the container concept and the
- * sequence concept. TODO: complete this...
+ * This class models the hierarchy concept. TODO: complete this...
  *
 */
 template < class Tp, class Alloc = std::allocator<Tp> >
 class binary_tree {
     typedef binary_tree<Tp, Alloc> self_type;
- public:
+public:
     typedef Tp value_type;
     typedef typename Alloc::template rebind<value_type>::other allocator_type;
+    // Allocator usage roghly follows gcc's stl_list.h practice. 
 
- private:        
+private:        
     typedef detail::ascending_node<value_type> node_type;
     
     typedef typename Alloc::template rebind<node_type>::other 
@@ -63,14 +63,14 @@ public:
     };
     
     explicit binary_tree (allocator_type const& alloc = allocator_type())
-    : m_header(), m_value_alloc(alloc)
+    : m_header(), m_node_alloc(alloc)
     {
     }
 
     template <class InputCursor>
         binary_tree (InputCursor subtree,
             allocator_type const& alloc = allocator_type())
-            : m_header(), m_value_alloc(alloc)
+            : m_header(), m_node_alloc(alloc)
     {
         insert(root(), subtree);
     }
@@ -83,7 +83,7 @@ public:
      */
 
     binary_tree (self_type const& x)
-    : m_header(), m_value_alloc(x.m_value_alloc)
+    : m_header(), m_node_alloc(x.m_node_alloc)
     {
         if (!x.empty())
             insert(root(), x.root());
@@ -118,7 +118,7 @@ public:
     /// Get a copy of the memory allocation object.
     allocator_type get_allocator() const
     {
-        return m_value_alloc;
+        return allocator_type(m_node_alloc);
     }
     
     /// Functions returning cursors (as required by the Hierarchy concept)
@@ -208,7 +208,7 @@ public:
 
     // TODO: Optimise. Especially wrt header links. 
     // Making the other insert() a special case of this one might be more
-    // reasonable.
+    // reasonable -- cf. gcc's C++0X optimisations wrt sequence ctors.
     /**
      * @brief       Inserts val in front of @a pos, or, if @a pos' parent is
      *              already full, creates a new child node containing @a val 
@@ -253,9 +253,6 @@ public:
 ////             augmentor_type::pre_detach(*this, pos, ret,);
 ////             p_node = pos.detach(ret);
 ////         }
-//         
-//        m_value_alloc.destroy(p_node->data());
-//        m_value_alloc.deallocate(p_node->data(), 1);
 //        
 //        m_node_alloc.destroy(p_node);
 //        m_node_alloc.deallocate(p_node, 1);
@@ -267,8 +264,6 @@ public:
 //             node_pointer pos_node = 
 //                 static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
 //             // delete the value position points to    
-//             m_value_alloc.destroy(pos_node->data());
-//             m_value_alloc.deallocate(pos_node->data(), 1);
 //             
 //            // recurse
 ////             clear(position.begin());
@@ -286,26 +281,28 @@ public:
       * @param c    Cursor pointing to the node to be removed.
       */
      // TODO: Take care of header-pointers
-     void clear(cursor position) 
-     {
+    void clear(cursor position) 
+    {
 //    return cursor(boost::tree::for_each(boost::tree::postorder()
 //                , direct_cursor(position)
 //                , destroy_node
 //                , descending_vertical_traversal_tag()));
 
-         if (!position.is_leaf()) {
-             node_pointer pos_node = 
-                 static_cast<node_pointer>(position.base_node()->m_children[position.m_pos]);
-             
+        if (!position.is_leaf()) {
+            node_pointer pos_node = 
+                static_cast<node_pointer>(
+                     position.base_node()->m_children[position.m_pos]
+                );
+
             // recurse
              clear(position.begin());
              clear(position.end());
              
              // delete the node position points to
             m_node_alloc.destroy(pos_node);
-            m_node_alloc.deallocate(pos_node, 1);         
-          }
-     }     
+            m_node_alloc.deallocate(pos_node, 1);
+         }
+    }     
      
     void rotate(cursor& pos)
     {
@@ -429,38 +426,6 @@ public:
                 root.base_node()->m_children[1] = 0;
         }        
     }
-    
-    // TODO: only one inorder_erase?
-    // Use boost::optional (or variant?) e.g.!!!
-    // What we actually want is: return an object containing
-    // all required (either one or two) parameters and that
-    // is somehow applied to inorder_erase (either with one or two
-    // parameters) -- but not requiring inorder_erase is provided
-    // [from a "what should know what" POV.]
-    // MPL?
-    // The class that is supposed to handle this should probably have two ctors,
-    // one taking one, the other taking two parameters
-    /* 
-    template <class T>
-    class return_type_for_use_with_inorder_erase {
-    public:
-        ctor(T const& arg1): m_arg1(arg) {}
-        ctor(T const& arg1, T const& arg2): m_arg1(arg1), m_arg2(arg2) {}
-        
-        // and, e.g.
-        template <Fun F>
-        call_function_with_arg_or_args(Fun) //... 
-        //use like call_function_with_arg_or_args(mem_fun(inorder_erase))
-        // will call inorder_erase(m_arg1) or inorder_erase(m_arg1, m_arg2), resp.
-    private:
-        // some object
-
-    };
-    */
-
-    // Nah. Guess a good compiler should just optimise that anyway.
-    // That would still require a way of passing one or alternatively two values:
-    // SO will it be (?): pair<cursor, optional<cursor> > //?
 
     /**
      * @brief  Erases the value of the given cursor, keeping the binary_tree's
@@ -470,32 +435,36 @@ public:
      */
     cursor inorder_erase(cursor position)
     {
+        node_pointer parent_node
+        = static_cast<node_pointer>(position.parent().base_node());
+
+        size_type idx = index(position.parent());
+
         node_pointer p_node = static_cast<node_pointer>(position.base_node());
+        cursor orig_pos = position;
         ++position;
         
-        if (position.is_leaf()) {                        
-            (*p_node)[0]->m_parent = p_node->m_parent;
-            static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](0) = (*p_node)[0];
-                
+        if (position.is_leaf()) {
+            if (!orig_pos.is_leaf()) { // Set child's parent only if there _is_ a child
+                static_cast<node_base_pointer>(p_node->m_children[0])->m_parent
+                = parent_node;
+            }
+            parent_node->m_children[idx] = p_node->m_children[0];
+
+            // to_leftmost_parent(position);
             while (index(position)) 
                 position = position.parent();
         } else {
-            position = position.begin();
-            position.base_node()->m_parent = p_node->m_parent;
-            static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](1) = position.base_node();
+            position.to_begin();
+            position.base_node()->m_parent = parent_node;
+            parent_node->m_children[idx] = position.base_node();
             
-            while (!position.is_leaf())
-                position = position.begin();
+            to_leftmost(position);
         }
-        
-        m_value_alloc.destroy(p_node->data());
-        m_value_alloc.deallocate(p_node->data(), 1);
-        
+
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);
-        
+
         return position;
     }
 
@@ -530,9 +499,6 @@ public:
 
         p_node = 
             static_cast<node_pointer>(position.base_node()->node_base_type::operator[](position.m_pos));
-            
-        m_value_alloc.destroy(p_node->data());
-        m_value_alloc.deallocate(p_node->data(), 1);
         
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);
@@ -543,7 +509,6 @@ public:
 private:
     node_base_type m_header;
 
-    allocator_type     m_value_alloc;
     node_allocator_type m_node_alloc;
 };
 

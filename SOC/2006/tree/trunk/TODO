@@ -25,7 +25,7 @@ General:
 * Add checks for correspondence of concepts and archetypes!
 * Re-do forest (again!).
   This seems to raise one issue, though: subtree algorithms operate on subtree root cursors,
-  not ranges.* binary_tree_search_test -> lower_bound_test
+  not ranges.
    (They might, however, work for "subforests". Consult Austern's segmented 
   iterators paper!)
   They also work for the important special case in which forest consists of only one

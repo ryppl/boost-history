@@ -14,11 +14,8 @@
 
 #include "test_data.hpp"
 
-template <class T>
-struct fake_descending_binary_cursor;
-
-template <class T>
-struct fake_ascending_binary_cursor;
+template <class T, class HT> 
+class fake_binary_cursor;
 
 template <class T>
 struct fake_root_tracking_binary_cursor;
@@ -39,15 +36,15 @@ struct fake_binary_tree<T, descending_vertical_traversal_tag> {
     typedef typename children_type::pointer pointer;
     typedef typename children_type::reference reference;
 
-    typedef fake_descending_binary_cursor<T> descending_cursor;
-    typedef fake_descending_binary_cursor<T/* const*/> const_descending_cursor; //FIXME
+    typedef fake_binary_cursor<T, descending_vertical_traversal_tag> descending_cursor;
+    typedef fake_binary_cursor<T/* const*/, descending_vertical_traversal_tag> const_descending_cursor; //FIXME
 
     typedef descending_cursor cursor;
     typedef const_descending_cursor const_cursor;
     
 protected:
-    typedef fake_ascending_binary_cursor<T> ascending_cursor;
-    typedef fake_ascending_binary_cursor<T> const_ascending_cursor; //FIXME
+    typedef fake_binary_cursor<T, ascending_vertical_traversal_tag> ascending_cursor;
+    typedef fake_binary_cursor<T, ascending_vertical_traversal_tag> const_ascending_cursor; //FIXME
 
     typedef fake_root_tracking_binary_cursor<T> root_tracking_cursor;
     typedef fake_root_tracking_binary_cursor<T> const_root_tracking_cursor; //FIXME
@@ -196,30 +193,30 @@ bool operator!=(fake_binary_tree<T, VT> const& x, fake_binary_tree<T, VT> const&
 // This should be easily extensible to nary by replacing the
 // factor 2 by n in dereference, left, right and idx. 
 template <class T> 
-class fake_descending_binary_cursor
+class fake_binary_cursor<T, descending_vertical_traversal_tag>
 : public boost::tree::cursor_facade<
-        fake_descending_binary_cursor<T>
+        fake_binary_cursor<T, descending_vertical_traversal_tag>
       , T
       , boost::bidirectional_traversal_tag
       , boost::tree::descending_vertical_traversal_tag
     >
 {
 public:
-    typedef fake_descending_binary_cursor<T> cursor;
-    typedef fake_descending_binary_cursor<T/* const*/> const_cursor;
+    typedef fake_binary_cursor<T, descending_vertical_traversal_tag> cursor;
+    typedef fake_binary_cursor<T/* const*/, descending_vertical_traversal_tag> const_cursor;
 
-    typedef typename fake_descending_binary_cursor<T>::cursor_facade_::size_type size_type;
+    typedef typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::size_type size_type;
 
-    fake_descending_binary_cursor()
+    fake_binary_cursor()
     : m_tree(0), m_pos(0) {}
 
-    explicit fake_descending_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
+    explicit fake_binary_cursor(fake_binary_tree<T>& t, size_type p = 0)
     : m_tree(&t), m_pos(p) {}
     
-    fake_descending_binary_cursor(fake_descending_binary_cursor<T> const& other)
+    fake_binary_cursor(fake_binary_cursor<T, descending_vertical_traversal_tag> const& other)
     : m_tree(other.m_tree), m_pos(other.m_pos) {}
 
-    fake_descending_binary_cursor<T>& operator=(fake_descending_binary_cursor<T> const& other)
+    fake_binary_cursor<T, descending_vertical_traversal_tag>& operator=(fake_binary_cursor<T, descending_vertical_traversal_tag> const& other)
     {
         m_tree = other.m_tree;
         m_pos = other.m_pos;
@@ -234,16 +231,16 @@ private:
     friend class boost::tree::cursor_core_access;
 
     static const 
-    typename fake_descending_binary_cursor<T>::cursor_facade_::value_type def_val
-    = typename fake_descending_binary_cursor<T>::cursor_facade_::value_type();
+    typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::value_type def_val
+    = typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::value_type();
 
-    typename fake_descending_binary_cursor<T>::cursor_facade_::reference
+    typename fake_binary_cursor<T, descending_vertical_traversal_tag>::cursor_facade_::reference
     dereference() const
     {
         return m_tree->m_data[(m_pos-1)/2];
     }
 
-    bool equal(fake_descending_binary_cursor<T> const& other) const
+    bool equal(fake_binary_cursor<T, descending_vertical_traversal_tag> const& other) const
     {
         return (this->m_tree == other.m_tree) 
             && (this->m_pos == other.m_pos);
@@ -287,26 +284,26 @@ private:
 };        
 
 template <class T>
-typename fake_descending_binary_cursor<T>::size_type
-index(fake_descending_binary_cursor<T> const& cur)
+typename fake_binary_cursor<T, descending_vertical_traversal_tag>::size_type
+index(fake_binary_cursor<T, descending_vertical_traversal_tag> const& cur)
 {
     return cur.index();
 }
 
 template <class T>
-struct fake_ascending_binary_cursor
-: public boost::tree::cursor_adaptor<fake_ascending_binary_cursor<T>
-                                   , fake_descending_binary_cursor<T>
+struct fake_binary_cursor<T, ascending_vertical_traversal_tag>
+: public boost::tree::cursor_adaptor<fake_binary_cursor<T, ascending_vertical_traversal_tag>
+                                   , fake_binary_cursor<T, descending_vertical_traversal_tag>
                                    , boost::use_default
                                    , boost::use_default
                                    , boost::tree::ascending_vertical_traversal_tag >
 {
-    typedef fake_ascending_binary_cursor<T> cursor;
-    typedef fake_ascending_binary_cursor<T const> const_cursor;
+    typedef fake_binary_cursor<T, ascending_vertical_traversal_tag> cursor;
+    typedef fake_binary_cursor<T const, ascending_vertical_traversal_tag> const_cursor;
 
-    fake_ascending_binary_cursor(fake_binary_tree<T>& t
+    fake_binary_cursor(fake_binary_tree<T>& t
                                     , typename fake_binary_tree<T>::size_type p)
-    : fake_ascending_binary_cursor::cursor_adaptor_(fake_descending_binary_cursor<T>(t, p)) {}
+    : fake_binary_cursor::cursor_adaptor_(fake_binary_cursor<T, descending_vertical_traversal_tag>(t, p)) {}
 
 private: 
     friend class boost::iterator_core_access;
@@ -328,7 +325,7 @@ public:
 template <class T>
 struct fake_root_tracking_binary_cursor
 : public boost::tree::cursor_adaptor<fake_root_tracking_binary_cursor<T>
-                                   , fake_ascending_binary_cursor<T>
+                                   , fake_binary_cursor<T, ascending_vertical_traversal_tag>
                                     >
 {
     typedef fake_root_tracking_binary_cursor<T> cursor;
@@ -336,7 +333,7 @@ struct fake_root_tracking_binary_cursor
 
     fake_root_tracking_binary_cursor(fake_binary_tree<T>& t
                                     , typename fake_binary_tree<T>::size_type p)
-    : fake_root_tracking_binary_cursor::cursor_adaptor_(fake_ascending_binary_cursor<T>(t, p)) {}
+    : fake_root_tracking_binary_cursor::cursor_adaptor_(fake_binary_cursor<T, ascending_vertical_traversal_tag>(t, p)) {}
 
 private: 
     friend class boost::iterator_core_access;

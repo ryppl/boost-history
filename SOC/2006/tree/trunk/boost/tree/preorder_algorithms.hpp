@@ -84,13 +84,13 @@ BOOST_CONCEPT_REQUIRES(
 successor(preorder, Cursor& c, Cursor& r)
 {
     // If we have a left child, go there.
-    if (!c.is_leaf()) {
+    if (!c.is_leaf() && c!=r) {
         c.to_begin();
         return;
     }
     
     // No left child. So if we have a right child, go there.
-    if (!(++c).is_leaf()) {
+    if (!(++c).is_leaf() && c!=r) {
         c.to_begin();
         return;
     }

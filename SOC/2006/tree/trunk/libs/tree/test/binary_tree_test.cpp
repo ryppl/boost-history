@@ -29,7 +29,6 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 BOOST_AUTO_TEST_CASE( insert_value_test )
 {
     binary_tree<int> bt0;
-    BOOST_CHECK(bt0.root().is_leaf());
     
     binary_tree<int>::cursor c = bt0.insert(bt0.root()/*.begin()*/, 8); //FIXME   
     c.to_begin();
@@ -172,31 +171,37 @@ void validate_test_dataset2_tree(Cursor cur)
     
 }
 
-template <class Tree>
-void inorder_erase_test_dataset1_tree(Tree& mytree)
+BOOST_AUTO_TEST_CASE( inorder_erase_non_leaf_node_test )
 {
-    typename Tree::cursor c = mytree.root().end().end().begin();
-    BOOST_CHECK_EQUAL(*c, 14);
-    
-    c = c.parent().parent();
-    BOOST_CHECK_EQUAL(*(c.begin()), 10);
-    BOOST_CHECK(c.begin().is_leaf());
-    BOOST_CHECK(!c.end().is_leaf());
-    BOOST_CHECK_EQUAL(*c.end().begin(), 14);
-    c = c.begin();
+    binary_tree<int>::cursor c = bt.root().end().begin();
+    BOOST_CHECK_EQUAL(*c, 10);
     
     // Left child empty
-    c = mytree.inorder_erase(c);
-    BOOST_CHECK_EQUAL(*c, 11);
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK(!(++c).is_leaf());
+    --c;
 
-    ++c;
-    BOOST_CHECK_EQUAL(*c.begin(), 12);
-    BOOST_CHECK(c.begin().is_leaf());
-    BOOST_CHECK(c.end().is_leaf());
-    c = c.begin();
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.inorder_erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
     
+    BOOST_CHECK_EQUAL(*c, 11);
+}
+
+BOOST_AUTO_TEST_CASE( inorder_erase_leaf_node_test )
+{
+    binary_tree<int>::cursor c = bt.root().end().end().begin().begin().end().begin();
+    BOOST_CHECK_EQUAL(*c, 12);
+
     // Both children empty
-    c = mytree.inorder_erase(c);
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK((++c).is_leaf());
+    --c;
+
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.inorder_erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
+
     BOOST_CHECK_EQUAL(*c, 13);
 }
 
@@ -247,6 +252,7 @@ BOOST_AUTO_TEST_CASE( assignment_operator_test )
 
 BOOST_AUTO_TEST_CASE( comparison_operator_test )
 {
+    BOOST_CHECK(bt != bt2);
     *bt2.root().begin().end().begin().begin()
         = *bt.root().begin().end().begin().begin();
     BOOST_CHECK(bt == bt2);
@@ -259,30 +265,6 @@ BOOST_AUTO_TEST_CASE( splice_test )
 
     BOOST_CHECK(bt.empty());    
     validate_test_dataset1_tree(bt0.root());
-}
-
-BOOST_AUTO_TEST_CASE( binary_tree_test )
-{
-    binary_tree<int> bt0(bt);
-
-    // Change one value in bt0
-    binary_tree<int>::cursor c = bt0.root().begin().end().begin().begin();
-    int tmp = *c;
-    *c = tmp + 1;
-    BOOST_CHECK(bt != bt0);
-
-    // Change it back
-    c = bt0.root().begin().end().begin().begin();
-    *c = tmp;
-    BOOST_CHECK(bt == bt0);
-    
-//    c = bt0.inorder_first();
-//    BOOST_CHECK_EQUAL(*c, 1);
-    c = bt0.root();
-    //back(inorder(), c);
-    //BOOST_CHECK_EQUAL(*c, 14);    
-
-    //inorder_erase_test_dataset1_tree(bt);
 }
 
 BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
