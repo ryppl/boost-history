@@ -67,6 +67,19 @@ namespace boost
 				get_storage().destroy(X);
 			}
 
+			static size_t fixed_used() 
+			{
+				return get_storage().fixed_used();
+			}
+			static size_t heap_used() 
+			{
+				return get_storage().heap_used();
+			}
+			static size_t used()
+			{
+				return get_storage().used();
+			}
+
 		};
 
 	} // namespace monotonic

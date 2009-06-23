@@ -181,6 +181,37 @@ struct test_map_list_unaligned
 	}
 };
 
+struct test_string_cat
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t length) const
+	{
+		typedef std::basic_string<char, std::char_traits<char>, typename Rebind<Alloc, char>::type> String;
+		String str = "foo";
+		for (size_t n = 0; n < length; ++n)
+		{
+			str += "bar";
+		}
+		return 0;
+	}
+};
+
+struct test_list_string
+{
+	template <class Alloc>
+	int test(Alloc alloc, size_t length) const
+	{
+		typedef std::basic_string<char, std::char_traits<char>, typename Rebind<Alloc, char>::type> String;
+		typedef std::list<String, typename Rebind<Alloc, String>::type> List;
+		List list;
+		for (size_t n = 0; n < length; ++n)
+		{
+			list.push_back(String("spam"));
+		}
+		return 0;
+	}
+};
+
 //Build a std::map of size n.  Loop for O(n^2) iterations.  
 //In each iteration insert one random element and lookup with lower_bound one random element and remove it.  
 //Precompute the random numbers and don't include the rand() calls in the time measurement of the benchmark.

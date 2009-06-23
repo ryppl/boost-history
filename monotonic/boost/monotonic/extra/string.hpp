@@ -63,6 +63,10 @@ namespace boost
 				impl = other.impl;
 				return *this;
 			}
+			//string &operator+=(string const &other)
+			//{
+
+			//}
 
 		};
 	} // namespace monotonic
