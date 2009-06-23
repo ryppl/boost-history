@@ -57,8 +57,11 @@ BOOST_AUTO_TEST_CASE(test_map)
 	monotonic::storage<> storage;
 	{
 		monotonic::map<int, monotonic::list<int> > local_map(storage);
+		BOOST_ASSERT(local_map.get_allocator().get_storage() == &storage);
+
 		local_map[1].push_back(42);
-		BOOST_ASSERT(local_map.get_allocator().get_storage() == local_map[1].get_allocator().get_storage());
+		
+		BOOST_ASSERT(local_map.get_allocator() == local_map[1].get_allocator());
 	}
 }
 
@@ -87,6 +90,24 @@ BOOST_AUTO_TEST_CASE(test_vector)
 	monotonic::static_storage<region1>::reset();
 }
 
+template <class II>
+bool is_sorted(II F, II L)
+{
+	II G = F;
+	for (++G; G != L; ++F, ++G)
+	{
+		if (*G < *F)
+			return false;
+	}
+	return true;
+}
+
+template <class Cont>
+bool is_sorted(Cont const &cont)
+{
+	return is_sorted(boost::begin(cont), boost::end(cont));
+}
+
 BOOST_AUTO_TEST_CASE(test_list)
 {
 	monotonic::list<int> cont;
@@ -105,6 +126,21 @@ BOOST_AUTO_TEST_CASE(test_list)
 
 	monotonic::static_storage<>::reset();
 	monotonic::static_storage<region1>::reset();
+
+	monotonic::storage<> storage;
+	{
+		monotonic::list<monotonic::list<int> > list(storage);
+		BOOST_ASSERT(list.get_allocator().get_storage() == &storage);
+		list.push_back(monotonic::list<int>());
+		BOOST_ASSERT(list.get_allocator().get_storage() == list.front().get_allocator().get_storage());
+		generate_n(back_inserter(list.front()), 100, rand);
+		BOOST_ASSERT(!is_sorted(list.front()));
+		size_t used_before = storage.used();
+		list.front().sort();
+		size_t used_after = storage.used();
+		BOOST_ASSERT(used_after > used_before);
+		BOOST_ASSERT(is_sorted(list.front()));
+	}
 }
 
 BOOST_AUTO_TEST_CASE(test_deque)

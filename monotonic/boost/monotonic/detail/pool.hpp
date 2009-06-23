@@ -35,7 +35,7 @@ namespace boost
 				template <class Storage>
 				bool expand(Storage &storage)
 				{
-					size_t capacity = std::max(DefaultSizes::MinPoolSize*bucket_size, (last - first)*bucket_size*2);
+					size_t capacity = (std::max)(DefaultSizes::MinPoolSize*bucket_size, (last - first)*bucket_size*2);
 					void *ptr = storage.from_fixed(capacity, 16);
 					if (ptr == 0)
 					{

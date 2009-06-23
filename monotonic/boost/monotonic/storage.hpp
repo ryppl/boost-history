@@ -126,7 +126,7 @@ namespace boost
 						return ptr;
 					}
 				}
-				AddLink(std::max(MinHeapIncrement, num_bytes*2));
+				AddLink((std::max)(MinHeapIncrement, num_bytes*2));
 				void *ptr = chain.front().allocate(num_bytes, alignment);
 				if (ptr == 0)
 					throw std::bad_alloc();
@@ -135,7 +135,7 @@ namespace boost
 
 			size_t max_size() const
 			{
-				return std::numeric_limits<size_t>::max();
+				return (std::numeric_limits<size_t>::max)();
 			}
 
 			size_t fixed_remaining() const
