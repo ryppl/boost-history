@@ -10,6 +10,7 @@
 #include <boost/monotonic/shared_allocator.hpp>
 #include <boost/monotonic/local.hpp>
 #include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/extra/string.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -26,6 +27,38 @@ using namespace boost;
 struct region0 {};
 struct region1 {};
 
+BOOST_AUTO_TEST_CASE(test_map)
+{
+	monotonic::map<int, monotonic::string<region1>, region1> map;
+	map[1] = "foo";
+	map[2] = "bar";
+}
+
+BOOST_AUTO_TEST_CASE(test_vector)
+{
+	monotonic::vector<int> vec;
+	vec.resize(100);
+
+	monotonic::vector<int, region1> vec2;
+	vec2.resize(100);
+
+	monotonic::static_storage<>::reset();
+	monotonic::static_storage<region1>::reset();
+}
+
+BOOST_AUTO_TEST_CASE(test_list)
+{
+	monotonic::list<int> cont;
+	fill_n(back_inserter(cont), 100, 42);
+
+	monotonic::list<int, region1> cont2;
+	fill_n(back_inserter(cont2), 100, 42);
+
+	monotonic::static_storage<>::reset();
+	monotonic::static_storage<region1>::reset();
+}
+
+
 BOOST_AUTO_TEST_CASE(test_local)
 {
 	monotonic::local<region0> storage0;
@@ -36,7 +69,7 @@ BOOST_AUTO_TEST_CASE(test_local)
 		fill_n(back_inserter(list0), 100, 42);
 		fill_n(back_inserter(list1), 100, 42);
 
-		std::basic_string<char, std::char_traits<char>, monotonic::allocator<char, region0> > str("foo");
+		monotonic::string<region0> str("foo");
 		str += "bar";
 		BOOST_ASSERT(str == "foobar");
 	}
@@ -159,33 +192,33 @@ BOOST_AUTO_TEST_CASE(test_local_storage_iter)
 
 BOOST_AUTO_TEST_CASE(test_ctors)
 {
-	monotonic::storage<> storage;
 	string foo = "foo";
 	{
-		monotonic::vector<char> v1(foo.begin(), foo.end(), storage);
+		monotonic::vector<char> v1(foo.begin(), foo.end());
 		BOOST_CHECK(v1.size() == 3);
 		BOOST_CHECK(equal(v1.begin(), v1.end(), "foo"));
 
-		monotonic::vector<char> v2(6, 'x', storage);
+		monotonic::vector<char> v2(6, 'x');
 		BOOST_CHECK(v2.size() == 6);
 		BOOST_CHECK(equal(v2.begin(), v2.end(), "xxxxxx"));
 
-		monotonic::set<char> s2(foo.begin(), foo.end(), storage);
+		monotonic::set<char> s2(foo.begin(), foo.end());
 		BOOST_CHECK(s2.size() == 2);
 		BOOST_CHECK(s2.find('f') != s2.end());
 		BOOST_CHECK(s2.find('o') != s2.end());
 
-		monotonic::vector<pair<int, string> > v(storage);
+		monotonic::vector<pair<int, string> > v;
 		v.push_back(make_pair(42,"foo"));
 		v.push_back(make_pair(123,"bar"));
 
-		monotonic::map<int, string> m1(v.begin(), v.end(), storage);
+		monotonic::map<int, string> m1(v.begin(), v.end());
 		BOOST_CHECK(m1.find(42) != m1.end());
 		BOOST_CHECK(m1.find(123) != m1.end());
 
-		monotonic::list<int> l1(foo.begin(), foo.end(), storage);
+		monotonic::list<int> l1(foo.begin(), foo.end());
 		BOOST_CHECK(equal(l1.begin(), l1.end(), "foo"));
 	}
+	monotonic::reset_storage();
 }
 
 BOOST_AUTO_TEST_CASE( test_copy )
@@ -274,10 +307,7 @@ BOOST_AUTO_TEST_CASE(test_basic)
 
 BOOST_AUTO_TEST_CASE(test_string)
 {
-	monotonic::storage<> storage;
-	{
-		monotonic::string str(storage);
-	}
+	monotonic::string<> str;
 }
 
 //EOF

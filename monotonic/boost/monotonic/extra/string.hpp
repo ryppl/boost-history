@@ -8,24 +8,23 @@
 
 #include <string>
 #include <boost/monotonic/allocator.hpp>
-#include <boost/monotonic/container.hpp>
 
 namespace boost
 {
 	namespace monotonic
 	{
-		//template <class Ch = char, class Tr = std::char_traits<Ch> >
+		/// a string that uses a monotonic allocator in the given region
+		template <class Region = default_region_tag>
 		struct string
 		{
 			typedef char Ch;
 			typedef std::char_traits<Ch> Tr;
-			typedef allocator<Ch> Allocator;
-
-			typedef std::basic_string<Ch, Tr, Allocator > Impl;
+			typedef allocator<Ch, Region> Allocator;
+			typedef std::basic_string<Ch, Tr, Allocator> Impl;
 			typedef size_t size_type;
-			typedef Impl::iterator iterator;
-			typedef Impl::const_iterator const_iterator;
-			typedef Impl::value_type value_type;
+			typedef typename Impl::iterator iterator;
+			typedef typename Impl::const_iterator const_iterator;
+			typedef typename Impl::value_type value_type;
 
 		private:
 			Impl impl;
@@ -38,37 +37,39 @@ namespace boost
 				: impl(other.impl)
 			{
 			}
-			string(storage_base &store)
-				: impl(store)
+			template <class U>
+			string(allocator<U, Region> &alloc)
+				: impl(alloc)
+			{
+			}
+			string(const Ch *str)
+				: impl(str)
 			{
 			}
 			template <class U>
-			string(allocator<U> &store)
-				: impl(store)
-			{
-			}
-			string(const Ch *str, storage_base &store)
-				: impl(str, store)
+			string(const Ch *str, allocator<U, Region> &alloc)
+				: impl(str, alloc)
 			{
 			}
 			template <class II>
-			string(II F, II L, storage_base &store)
-				: impl(F, L, store)
+			string(II F, II L)
+				: impl(F, L)
 			{
 			}
-			string &operator=(string const &other)
+			template <class II, class U>
+			string(II F, II L, allocator<U, Region> &alloc)
+				: impl(F, L, alloc)
 			{
-				if (&other == this)
-					return *this;
-				impl = other.impl;
+			}
+
+			string &operator+=(Ch const *str)
+			{
+				impl += str;
 				return *this;
 			}
-			//string &operator+=(string const &other)
-			//{
-
-			//}
 
 		};
+
 	} // namespace monotonic
 
 } // namespace boost

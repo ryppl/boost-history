@@ -14,20 +14,20 @@ namespace boost
 	namespace monotonic
 	{
 		/// a vector that uses a monotonic allocator by default
-		template <class T>
-		struct vector : detail::monotonic_container<vector<T> >
+		template <class T, class Region = default_region_tag, class Access = default_access_tag>
+		struct vector : detail::monotonic_container<vector<T,Region,Access> >
 		{
-			typedef detail::monotonic_container<std::vector<T, allocator<T> > > Parent;
+			typedef allocator<T,Region,Access> Allocator;
+			typedef detail::monotonic_container<std::vector<T, Allocator > > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
-			typedef allocator<T> Allocator;
 			typedef std::vector<T,Allocator> Vector;
+
 			typedef typename Vector::iterator iterator;
 			typedef typename Vector::const_iterator const_iterator;
 			typedef typename Vector::size_type size_type;
 			typedef typename Vector::value_type value_type;
 			typedef typename Vector::reference reference;
 			typedef typename Vector::const_reference const_reference;
-
 
 		private:
 			Vector impl;
@@ -36,10 +36,10 @@ namespace boost
 			vector() { }
 			vector(Allocator const &A) 
 				: impl(A) { }
-			vector(size_t N, T const &X, Allocator const &A)
+			vector(size_t N, T const &X, Allocator A = Allocator())
 				: impl(N,X,A) { }
 			template <class II>
-			vector(II F, II L, Allocator const &A)
+			vector(II F, II L, Allocator A = Allocator())
 				: impl(F,L,A) { }
 
 			Allocator get_allocator() const
@@ -129,14 +129,14 @@ namespace boost
 			}
 		};
 
-		template <class Ty>
-		bool operator==(vector<Ty> const &A, vector<Ty> const &B)
+		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
+		bool operator==(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
 		{
 			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
 		}
 		
-		template <class Ty>
-		bool operator<(vector<Ty> const &A, vector<Ty> const &B)
+		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
+		bool operator<(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
 		{
 			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
 		}

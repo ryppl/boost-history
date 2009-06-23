@@ -13,16 +13,20 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// A map that uses a monotonic allocator, and respects that allocator
-		/// when creating new referent instances
-		template <class K, class T, class P = std::less<K> >
-		struct map : detail::monotonic_container<map<K,T,P> >
+		/// A map that uses a monotonic allocator
+		template <class K							// key-type
+			, class T								// value-type
+			, class Region = default_region_tag		// allocation region
+			, class P = std::less<K>				// predicate
+			, class Access = default_access_tag		// access type
+		>
+		struct map : detail::monotonic_container<map<K,T,Region,P,Access> >
 		{
-			typedef detail::monotonic_container<map<K,T,P> > Parent;
+			typedef P Predicate;
+			typedef allocator<K,Region,Access> Allocator;
+			typedef detail::monotonic_container<map<K,T,Region,P,Access> > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 
-			typedef P Predicate;
-			typedef allocator<K> Allocator;
 			typedef std::map<K,T,P,Allocator > Map, Implementation;
 			typedef typename Map::iterator iterator;
 			typedef typename Map::const_iterator const_iterator;
@@ -33,20 +37,19 @@ namespace boost
 
 		private:
 			Implementation impl;
-			Predicate pred;
+			Predicate pred;		///< do we really need to store a copy of the predicate?
 
 		public:
 
 			map() { }
 			map(Allocator const &A)
 				: impl(Predicate(), A) { }
-			map(Predicate Pr, Allocator const &A) 
+			map(Predicate Pr, Allocator A = Allocator()) 
 				: impl(Pr, A), pred(Pr) { }
+			map(const map& other)
+				: impl(other.impl), pred(other.pred) { }
 			template <class II>
-			map(II F, II L, Allocator const &A, Predicate const &Pr = Predicate())
-				: impl(F,L,Pr,A), pred(Pr) { }
-			template <class II>
-			map(II F, II L, Predicate const &Pr, Allocator const &A)
+			map(II F, II L, Predicate const &Pr = Predicate(), Allocator A = Allocator())
 				: impl(F,L,Pr,A), pred(Pr) { }
 
 			Allocator get_allocator() const
@@ -117,8 +120,9 @@ namespace boost
 			}
 		};
 
-	}
-}
+	} // namespace monotonic
+
+} // namespace boost
 
 #endif // BOOST_MONOTONIC_MAP_H
 
