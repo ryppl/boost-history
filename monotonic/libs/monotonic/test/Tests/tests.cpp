@@ -58,9 +58,22 @@ BOOST_AUTO_TEST_CASE(test_vector)
 {
 	monotonic::vector<int> vec;
 	vec.resize(100);
+	fill_n(vec.begin(), 100, 42);
 
 	monotonic::vector<int, region1> vec2;
 	vec2.resize(100);
+	fill_n(vec2.begin(), 100, 42);
+
+	BOOST_ASSERT(vec == vec2);
+	BOOST_ASSERT(!(vec2 != vec));
+	BOOST_ASSERT(!(vec < vec2));
+	BOOST_ASSERT(!(vec2 < vec));
+
+	vec2[0] = 40;
+	BOOST_ASSERT(vec2 != vec);
+	BOOST_ASSERT(vec2 < vec);
+	BOOST_ASSERT(!(vec < vec2));
+
 
 	monotonic::static_storage<>::reset();
 	monotonic::static_storage<region1>::reset();
@@ -73,6 +86,14 @@ BOOST_AUTO_TEST_CASE(test_list)
 
 	monotonic::list<int, region1> cont2;
 	fill_n(back_inserter(cont2), 100, 42);
+
+	BOOST_ASSERT(cont == cont2);
+	BOOST_ASSERT(!(cont != cont2));
+	BOOST_ASSERT(!(cont < cont2));
+	cont.front() = 5;
+	BOOST_ASSERT(cont2 != cont);
+	BOOST_ASSERT(cont < cont2);
+	BOOST_ASSERT(!(cont2 < cont));
 
 	monotonic::static_storage<>::reset();
 	monotonic::static_storage<region1>::reset();
@@ -100,12 +121,17 @@ BOOST_AUTO_TEST_CASE(test_shared_allocation)
 	typedef std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > List0;
 	List0 list0;
 
-	// same thing, less typing:
+	typedef std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > List1;
+	List1 list1;
+
+	// same thing
 	typedef std::list<int, monotonic::shared_allocator<int, region0> > List2;
 	List2 list2;
 
-	typedef std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > List1;
-	List1 list1;
+	// same again
+	typedef monotonic::list<int, region0, monotonic::shared_access_tag> List3;
+	List3 list3;
+
 }
 
 BOOST_AUTO_TEST_CASE(test_regional_allocation)

@@ -112,13 +112,17 @@ namespace boost
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator==(list<Ty,R,Acc> const &A, list<Ty2,R2,Acc2> const &B)
 		{
-			return A.get_impl() == B.get_impl();
+			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
 		}
-
+		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
+		bool operator!=(list<Ty,R,Acc> const &A, list<Ty2,R2,Acc2> const &B)
+		{
+			return !(A == B);
+		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator<(list<Ty,R,Acc> const &A, list<Ty2,R2,Acc2> const &B)
 		{
-			return A.get_impl() < B.get_impl();
+			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
 		}
 
 	} // namespace monotonic
