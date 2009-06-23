@@ -13,15 +13,26 @@ namespace boost
 	namespace monotonic
 	{
 		/// RIIA for storage
-		template <class Region, class Access = default_access_tag>
+		template <size_t InlineSize
+			, class Region
+			, size_t MinHeapIncrement
+			, class Access
+			, class Al
+		>
 		struct local
 		{
+			typedef static_storage<Region,Access,InlineSize,MinHeapIncrement,Al> StaticStorage;
+
 			local()
 			{
 			}
 			~local()
 			{
-				release();
+				reset();
+			}
+			static typename StaticStorage::StorageType &get_storage()
+			{
+				return StaticStorage::get_storage();
 			}
 			static void reset()
 			{
@@ -30,10 +41,6 @@ namespace boost
 			static void release()
 			{
 				get_storage().release();
-			}
-			static storage_base &get_storage()
-			{
-				return ::boost::monotonic::get_storage<Region,Access>();
 			}
 		};
 

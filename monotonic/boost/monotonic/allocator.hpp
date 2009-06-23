@@ -45,7 +45,7 @@ namespace boost
 			};
 
 			allocator() throw() 
-				: Parent(boost::monotonic::get_storage<Region,Access>()) { }
+				: Parent(static_storage<Region,Access>::get_storage()) { }
 
 		public:
 			allocator(storage_base &store) throw() 

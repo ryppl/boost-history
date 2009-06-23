@@ -30,7 +30,7 @@ namespace boost
 			, size_t InlineSize
 			, size_t MinHeapIncrement
 			, class Al>
-		struct static_storage_base
+		struct static_storage
 		{
 			typedef Al HeapAllocator;
 			typedef detail::storage_type<Access> Selector;
@@ -40,7 +40,7 @@ namespace boost
 			static StorageType global;
 
 		public:
-			static_storage_base()
+			static_storage()
 			{
 			}
 			static StorageType &get_storage()
@@ -79,23 +79,32 @@ namespace boost
 			, size_t InlineSize
 			, size_t MinHeapIncrement
 			, class Al>
-		typename static_storage_base<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
-			static_storage_base<Region, Access, InlineSize, MinHeapIncrement, Al>::global;
+		typename static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
+			static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::global;
 
-		template <class Region, class Access>
-		inline storage_base &get_storage()
-		{
-			return static_storage_base<Region,Access>::get_storage();
-		}
+		//template <class Region
+		//	, class Access = default_access_tag
+		//	, size_t N = DefaultSizes::InlineSize
+		//	, size_t M = DefaultSizes::MinHeapIncrement
+		//	, class Al = std::allocator<void> >
+		//struct get_storage
+		//{
+		//	typedef static_storage_base<Region,Access,N,M,Al> StaticStorage;
+
+		//	static typename StaticStorage::StorageType &get()
+		//	{
+		//		return StaticStorage::get_storage();
+		//	}
+		//};
 
 		inline void reset_storage()
 		{
-			get_storage<default_region_tag, default_access_tag>().reset();
+			static_storage<default_region_tag>::reset();
 		}
 
 		inline void release_storage()
 		{
-			get_storage<default_region_tag, default_access_tag>().release();
+			static_storage<default_region_tag>::release();
 		}
 
 	} // namespace monotonic

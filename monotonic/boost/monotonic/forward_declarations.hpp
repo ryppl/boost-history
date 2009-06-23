@@ -47,8 +47,12 @@ namespace boost
 			struct storage_type;
 		}
 	
-		/// a RIIA structure for setting and resetting the global storage pointer
-		template <class Region, class Access = default_access_tag, class Storage = storage<> >
+		/// a RIIA structure for accessing and releasing storage
+		template <size_t N = DefaultSizes::InlineSize
+			, class Region = default_region_tag
+			, size_t M = DefaultSizes::MinHeapIncrement
+			, class Access = default_access_tag
+			, class Al = std::allocator<void> >
 		struct local;
 
 		/// thread-safe storage
@@ -69,7 +73,7 @@ namespace boost
 			, size_t InlineSize = DefaultSizes::StaticInlineSize
 			, size_t MinHeapIncrement = DefaultSizes::StaticMinHeapIncrement
 			, class Al = std::allocator<char> >
-		struct static_storage_base;
+		struct static_storage;
 
 		/// common to other monotonic allocators for type T of type Derived
 		template <class T, class Derived>
