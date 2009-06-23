@@ -37,6 +37,7 @@ namespace boost
 		struct shared_region_tag { };
 		struct thread_local_region_tag { };
 
+		/// a RIIA structure for setting and resetting the global storage pointer
 		template <class Region, class Storage = storage<> >
 		struct local;
 
@@ -68,22 +69,22 @@ namespace boost
 
 		/// a monotonic allocator has a storage buffer and a no-op deallocate() method
 		/// default to use static_storage_base<..., storage>
-		template <class> 
+		template <class T, class Region = default_region_tag> 
 		struct allocator;
 
-		/// a monotonic region allocator uses a specified storage. Each region uses independent
-		/// storage that may be used and reset.
-		template <class T, class Region = default_region_tag> 
-		struct region_allocator;
+		///// a monotonic region allocator uses a specified storage. Each region uses independent
+		///// storage that may be used and reset.
+		//template <class T, class Region = default_region_tag> 
+		//struct region_allocator;
 
 		/// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method
 		/// defaults to use static_storage_base<..., shared_storage>
-		template <class> 
+		template <class T, class Region = shared_region_tag> 
 		struct shared_allocator;
 	
 		/// a monotonic local_allocator has a shared storage buffer and a no-op deallocate() method
 		/// defaults to use static_storage_base<..., thread_local_storage>
-		template <class> 
+		template <class T, class Region = thread_local_region_tag> 
 		struct local_allocator;
 
 	} // namespace monotonic

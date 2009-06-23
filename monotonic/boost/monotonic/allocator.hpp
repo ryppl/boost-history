@@ -12,8 +12,8 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <> 
-		struct allocator<void>
+		template <class Region> 
+		struct allocator<void, Region>
 		{
 			typedef void* pointer;
 			typedef const void* const_pointer;
@@ -22,14 +22,14 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef allocator<U> other; 
+				typedef allocator<U, Region> other; 
 			};
 		};
 
-		template <class T> 
-		struct allocator : allocator_base<T, allocator<T> >
+		template <class T, class Region> 
+		struct allocator : allocator_base<T, allocator<T, Region> >
 		{
-			typedef allocator_base<T, allocator<T> > Parent;
+			typedef allocator_base<T, allocator<T, Region> > Parent;
 			using typename Parent::size_type;
 			using typename Parent::difference_type;
 			using typename Parent::pointer;
@@ -41,7 +41,7 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef allocator<U> other; 
+				typedef allocator<U, Region> other; 
 			};
 
 			allocator() throw() 
@@ -58,16 +58,16 @@ namespace boost
 			allocator(const allocator& alloc) throw() 
 				: Parent(alloc) { }
 
-			template <class U> 
-			allocator(const allocator<U> &alloc) throw()
+			template <class U, class OtherRegion> 
+			allocator(const allocator<U, OtherRegion> &alloc) throw()
 				: Parent(alloc) { }
 
-			friend bool operator==(allocator<T> const &A, allocator<T> const &B) 
+			friend bool operator==(allocator<T,Region> const &A, allocator<T,Region> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}
 
-			friend bool operator!=(allocator<T> const &A, allocator<T> const &B) 
+			friend bool operator!=(allocator<T,Region> const &A, allocator<T,Region> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) != static_cast<Parent const &>(B);
 			}

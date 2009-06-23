@@ -26,6 +26,7 @@
 using namespace std;
 using namespace boost;
 
+/// region tag for local storage used in run_test
 struct local_tag {};
 
 template <class Fun>
