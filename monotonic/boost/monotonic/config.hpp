@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_CONFIG_HPP
 #define BOOST_MONOTONIC_CONFIG_HPP
 
-//#define BOOST_MONOTONIC_USE_POOLS
+#include <memory>
 
 namespace boost
 {

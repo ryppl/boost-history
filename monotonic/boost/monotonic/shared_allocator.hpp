@@ -45,7 +45,7 @@ namespace boost
 			};
 
 			shared_allocator() throw() 
-				: Parent(boost::monotonic::get_storage<Region,shared_access_tag>()) { }
+				: Parent(boost::monotonic::static_storage<Region,shared_access_tag>::get_storage()) { }
 
 		public:
 			shared_allocator(storage_base &store) throw() 

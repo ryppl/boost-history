@@ -23,6 +23,11 @@ using namespace boost;
 struct region0 {};
 struct region1 {};
 
+BOOST_AUTO_TEST_CASE(test_local)
+{
+
+}
+
 BOOST_AUTO_TEST_CASE(test_shared_allocation)
 {
 	typedef std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > List0;
