@@ -12,11 +12,8 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <class>
-		struct shared_allocator;
-
-		template <> 
-		struct shared_allocator<void>
+		template <class Region> 
+		struct shared_allocator<void, Region>
 		{
 			typedef void* pointer;
 			typedef const void* const_pointer;
@@ -25,14 +22,14 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef shared_allocator<U> other; 
+				typedef shared_allocator<U, Region> other; 
 			};
 		};
 
-		template <class T> 
-		struct shared_allocator : allocator_base<T, shared_allocator<T> >
+		template <class T, class Region> 
+		struct shared_allocator : allocator_base<T, shared_allocator<T, Region> >
 		{
-			typedef allocator_base<T, shared_allocator<T> > Parent;
+			typedef allocator_base<T, shared_allocator<T, Region> > Parent;
 			using typename Parent::size_type;
 			using typename Parent::difference_type;
 			using typename Parent::pointer;
@@ -41,31 +38,31 @@ namespace boost
 			using typename Parent::const_reference;
 			using typename Parent::value_type;
 
+			//typedef storage<DefaultSizes::InlineSize, DefaultSizes::MinHeapIncrement, std::allocator<char>, shared_storage> 
+			//	StorageType;
+
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef shared_allocator<U> other; 
+				typedef shared_allocator<U, Region> other; 
 			};
 
 			shared_allocator() throw() 
-				: Parent(static_shared_storage)	{ }
-
-			//shared_allocator(shared_storage_base &store) throw() 
-			//	: Parent(store) { }
+				: Parent(get_region_storage<Region>())	{ }
 
 			shared_allocator(const shared_allocator& alloc) throw() 
 				: Parent(alloc) { }
 
 			template <class U> 
-			shared_allocator(const shared_allocator<U> &alloc) throw()
+			shared_allocator(const shared_allocator<U, Region> &alloc) throw()
 				: Parent(alloc) { }
 
-			friend bool operator==(shared_allocator<T> const &A, shared_allocator<T> const &B) 
+			friend bool operator==(shared_allocator<T,Region> const &A, shared_allocator<T,Region> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}
 
-			friend bool operator!=(shared_allocator<T> const &A, shared_allocator<T> const &B) 
+			friend bool operator!=(shared_allocator<T,Region> const &A, shared_allocator<T,Region> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}

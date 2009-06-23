@@ -12,6 +12,7 @@ namespace boost
 {
 	namespace monotonic
 	{
+		/*
 		/// sets the global storage on construction, releases and returns to previous
 		/// storage on destruction
 		template <class Region, class Storage>
@@ -79,7 +80,7 @@ namespace boost
 			//	return store.remaining();
 			//}
 		};
-
+*/
 	} // namespace monotonic
 
 } // namespace boost

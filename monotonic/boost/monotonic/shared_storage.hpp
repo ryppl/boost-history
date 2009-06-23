@@ -14,6 +14,19 @@ namespace boost
 {
 	namespace monotonic
 	{
+		namespace detail
+		{
+			template <>
+			struct storage_type<shared_access_tag>
+			{
+				template <size_t N, size_t M, class Al>
+				struct storage
+				{
+					typedef shared_storage<N,M,Al> type;
+				};
+			};
+		}
+
 		/// thread-safe storage
 		template <size_t InlineSize, size_t MinHeapSize, class Al>
 		struct shared_storage : shared_storage_base
@@ -70,12 +83,12 @@ namespace boost
 
 		};
 
-		extern static_storage_base<
-			DefaultSizes::StaticInlineSize
-			, DefaultSizes::StaticMinHeapIncrement
-			, std::allocator<char>
-			, shared_storage> 
-		static_shared_storage;
+		//extern static_storage_base<
+		//	DefaultSizes::StaticInlineSize
+		//	, DefaultSizes::StaticMinHeapIncrement
+		//	, std::allocator<char>
+		//	, shared_storage> 
+		//static_shared_storage;
 		
 	} // namespace monotonic
 

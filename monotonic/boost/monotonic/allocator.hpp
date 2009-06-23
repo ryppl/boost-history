@@ -12,8 +12,8 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <class Region> 
-		struct allocator<void, Region>
+		template <class Region, class Access> 
+		struct allocator<void, Region, Access>
 		{
 			typedef void* pointer;
 			typedef const void* const_pointer;
@@ -22,14 +22,14 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef allocator<U, Region> other; 
+				typedef allocator<U, Region, Access> other; 
 			};
 		};
 
-		template <class T, class Region> 
-		struct allocator : allocator_base<T, allocator<T, Region> >
+		template <class T, class Region, class Access> 
+		struct allocator : allocator_base<T, allocator<T, Region, Access> >
 		{
-			typedef allocator_base<T, allocator<T, Region> > Parent;
+			typedef allocator_base<T, allocator<T, Region, Access> > Parent;
 			using typename Parent::size_type;
 			using typename Parent::difference_type;
 			using typename Parent::pointer;
@@ -41,16 +41,13 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef allocator<U, Region> other; 
+				typedef allocator<U, Region, Access> other; 
 			};
 
 			allocator() throw() 
-				: Parent(boost::monotonic::get_storage()) { }
+				: Parent(boost::monotonic::get_storage<Region,Access>()) { }
 
 		public:
-		//private:
-			template <class Storage> struct local;
-
 			allocator(storage_base &store) throw() 
 				: Parent(store) { }
 
@@ -58,16 +55,16 @@ namespace boost
 			allocator(const allocator& alloc) throw() 
 				: Parent(alloc) { }
 
-			template <class U, class OtherRegion> 
-			allocator(const allocator<U, OtherRegion> &alloc) throw()
+			template <class U> 
+			allocator(const allocator<U, Region, Access> &alloc) throw()
 				: Parent(alloc) { }
 
-			friend bool operator==(allocator<T,Region> const &A, allocator<T,Region> const &B) 
+			friend bool operator==(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
 			}
 
-			friend bool operator!=(allocator<T,Region> const &A, allocator<T,Region> const &B) 
+			friend bool operator!=(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
 			{ 
 				return static_cast<Parent const &>(A) != static_cast<Parent const &>(B);
 			}

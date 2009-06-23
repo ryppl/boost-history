@@ -7,6 +7,10 @@
 #include <boost/monotonic/extra/set.hpp>
 #include <boost/monotonic/extra/map.hpp>
 
+//#include <boost/monotonic/shared_allocator.hpp>
+#include <boost/monotonic/shared_storage.hpp>
+#include <boost/monotonic/thread_local_storage.hpp>
+
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
 
@@ -21,6 +25,15 @@ using namespace boost;
 
 struct region0 {};
 struct region1 {};
+
+BOOST_AUTO_TEST_CASE(test_shared_allocation)
+{
+	typedef std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > List0;
+	List0 list0;
+
+	typedef std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > List1;
+	List1 list1;
+}
 
 BOOST_AUTO_TEST_CASE(test_regional_allocation)
 {

@@ -12,15 +12,29 @@ namespace boost
 {
 	namespace monotonic
 	{
+		namespace detail
+		{
+			template <>
+			struct storage_type<default_access_tag>
+			{
+				template <size_t N, size_t M, class Al>
+				struct storage
+				{
+					typedef monotonic::storage<N,M,Al> type;
+				};
+			};
+		}
+
 		template <class Region
+			, class Access
 			, size_t InlineSize
 			, size_t MinHeapIncrement
-			, class Al
-			, template <size_t, size_t, class> class Storage>
+			, class Al>
 		struct static_storage_base
 		{
 			typedef Al HeapAllocator;
-			typedef Storage<InlineSize, MinHeapIncrement, HeapAllocator> StorageType;
+			typedef detail::storage_type<Access> Selector;
+			typedef typename Selector::template storage<InlineSize, MinHeapIncrement, HeapAllocator>::type StorageType;
 
 		private:
 			static StorageType global;
@@ -59,56 +73,31 @@ namespace boost
 			}
 		};
 
-		/// define the static storage member for all regions
-		template <class Region, size_t InlineSize, size_t MinHeapIncrement, class Al, template <size_t, size_t, class> class Storage>
-		typename static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::StorageType 
-			static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::global;
+		/// define the static storage member for all regions with all access types
+		template <class Region
+			, class Access
+			, size_t InlineSize
+			, size_t MinHeapIncrement
+			, class Al>
+		typename static_storage_base<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
+			static_storage_base<Region, Access, InlineSize, MinHeapIncrement, Al>::global;
 
-		extern storage_base *current_storage;
-		template <class Region>
-		inline storage_base &get_region_storage()
-		{
-			return static_storage_base<Region>::get_storage();
-		}
-
-		template <size_t Region>
-		inline storage_base &reset_region()
-		{
-			return get_region_storage<Region>().reset();
-		}
-
-		template <size_t Region>
-		inline storage_base &release_region()
-		{
-			return get_region_storage<Region>().release();
-		}
-
-		inline storage_base *set_storage(storage_base &store)
-		{
-			storage_base *old = current_storage;
-			current_storage = &store;
-			return old;
-		}
+		template <class Region, class Access>
 		inline storage_base &get_storage()
 		{
-			if (current_storage)
-				return *current_storage;
-			return get_region_storage<default_region_tag>();
-		}
-		inline void default_storage()
-		{
-			set_storage(get_region_storage<default_region_tag>());
+			return static_storage_base<Region,Access>::get_storage();
 		}
 
 		inline void reset_storage()
 		{
-			get_storage().reset();
+			get_storage<default_region_tag, default_access_tag>().reset();
 		}
 
 		inline void release_storage()
 		{
-			get_storage().release();
+			get_storage<default_region_tag, default_access_tag>().release();
 		}
+
 	} // namespace monotonic
 
 } // namespace boost
