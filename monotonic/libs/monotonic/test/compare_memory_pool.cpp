@@ -98,17 +98,18 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 
 	if (types.Includes(Type::Monotonic))
 	{
-		//srand(42);
-		//monotonic::local<monotonic::storage<100000> > storage;
-		//boost::timer timer;
-		//for (size_t n = 0; n < count; ++n)
-		//{
-		//	{
-		//		fun.test(mono_alloc(), length);
-		//	}
-		//	storage.reset();
-		//}
-		//result.local_mono_elapsed = timer.elapsed();
+		srand(42);
+		struct local_tag {};
+		monotonic::local<local_tag> storage;
+		boost::timer timer;
+		for (size_t n = 0; n < count; ++n)
+		{
+			{
+				fun.test(mono_alloc(), length);
+			}
+			storage.reset();
+		}
+		result.local_mono_elapsed = timer.elapsed();
 	}
 
 	if (types.Includes(Type::Standard))
@@ -454,13 +455,12 @@ int main()
 	return 0;
 }
 
-//namespace boost 
-//{ 
-//	namespace monotonic 
-//	{
-//		static_storage_base<> default_static_storage;
-//		storage_base *static_storage = &default_static_storage;
-//	}
-//}
+namespace boost
+{ 
+	namespace monotonic 
+	{
+		storage_base *current_storage = &get_region_storage<default_region_tag>();
+	}
+}
 
 //EOF

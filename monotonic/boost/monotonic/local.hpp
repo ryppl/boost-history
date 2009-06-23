@@ -14,70 +14,70 @@ namespace boost
 	{
 		/// sets the global storage on construction, releases and returns to previous
 		/// storage on destruction
-		template <class Storage>
-		struct local : storage_base
+		template <class Region, class Storage>
+		struct local// : storage_base
 		{
 		private:
-			Storage store;
+			//Storage store;
 			storage_base *old;
 
 		public:
 			local()
 			{
-				old = set_storage(store);
+				old = set_storage(get_region_storage<Region>());
 			}
 			~local()
 			{
-				release();
+				release_storage();
 				if (old)
 					set_storage(*old);
 				else
 					default_storage();
 			}
 
-			Storage &get_storage()
+			//Storage &get_storage()
+			//{
+			//	return store;
+			//}
+			//Storage const &get_storage() const
+			//{
+			//	return store;
+			//}
+			static void reset()
 			{
-				return store;
+				get_region_storage<Region>().reset();
 			}
-			Storage const &get_storage() const
+			static void release()
 			{
-				return store;
-			}
-			void reset()
-			{
-				store.reset();
-			}
-			void release()
-			{
-				store.release();
-			}
-
-			template <class T>
-			allocator<T> make_allocator()
-			{
-				return allocator<T>(store);
+				get_region_storage<Region>().release();
 			}
 
-			// the number of bytes to allocate, and the alignment to use
-			void *allocate(size_t num_bytes, size_t alignment)
-			{
-				return store.allocate(num_bytes, alignment);
-			}
+			//template <class T>
+			//allocator<T> make_allocator()
+			//{
+			//	return allocator<T>(store);
+			//}
 
-			size_t max_size() const
-			{
-				return store.max_size();
-			}
+			//// the number of bytes to allocate, and the alignment to use
+			//void *allocate(size_t num_bytes, size_t alignment)
+			//{
+			//	return store.allocate(num_bytes, alignment);
+			//}
 
-			size_t used() const
-			{
-				return store.used();
-			}
+			//size_t max_size() const
+			//{
+			//	return store.max_size();
+			//}
 
-			size_t remaining() const
-			{
-				return store.remaining();
-			}
+			//size_t used() const
+			//{
+			//	return store.used();
+			//}
+
+			//size_t remaining() const
+			//{
+			//	return store.remaining();
+			//}
 		};
 
 	} // namespace monotonic

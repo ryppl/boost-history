@@ -68,6 +68,7 @@ namespace boost
 		typename static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::StorageType 
 			static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::global;
 
+		extern storage_base *current_storage;
 		template <class Region>
 		inline storage_base &get_region_storage()
 		{
@@ -86,9 +87,21 @@ namespace boost
 			return get_region_storage<Region>().release();
 		}
 
+		inline storage_base *set_storage(storage_base &store)
+		{
+			storage_base *old = current_storage;
+			current_storage = &store;
+			return old;
+		}
 		inline storage_base &get_storage()
 		{
-			return get_region_storage<default_region_tag>();// ? *static_storage : default_static_storage;
+			if (current_storage)
+				return *current_storage;
+			return get_region_storage<default_region_tag>();
+		}
+		inline void default_storage()
+		{
+			set_storage(get_region_storage<default_region_tag>());
 		}
 
 		inline void reset_storage()

@@ -32,7 +32,12 @@ namespace boost
 			, class Al = std::allocator<char> >
 		struct storage;
 
-		template <class Storage = storage<> >
+		/// tags for different storage regions
+		struct default_region_tag { };
+		struct shared_region_tag { };
+		struct thread_local_region_tag { };
+
+		template <class Region, class Storage = storage<> >
 		struct local;
 
 		/// thread-safe storage
@@ -41,11 +46,6 @@ namespace boost
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
 			, class Al = std::allocator<char> >
 		struct shared_storage;
-
-		/// tags for different storage regions
-		struct default_region_tag { };
-		struct shared_region_tag { };
-		struct thread_local_region_tag { };
 
 		/// thread-local storage
 		template <size_t InlineSize = DefaultSizes::InlineSize
