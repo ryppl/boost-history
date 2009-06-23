@@ -1,11 +1,7 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 
-#include <boost/monotonic/extra/string.hpp>
-#include <boost/monotonic/extra/vector.hpp>
-#include <boost/monotonic/extra/list.hpp>
-#include <boost/monotonic/extra/set.hpp>
-#include <boost/monotonic/extra/map.hpp>
+#include <boost/monotonic/monotonic.hpp>
 
 //#include <boost/monotonic/shared_allocator.hpp>
 #include <boost/monotonic/shared_storage.hpp>
