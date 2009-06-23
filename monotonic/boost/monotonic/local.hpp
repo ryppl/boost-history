@@ -16,12 +16,20 @@ namespace boost
 		template <class Region, class Access>
 		struct local
 		{
+			typedef local<Region,Access> This;
+
 			typedef static_storage<
 				Region
 				, Access
 				, DefaultSizes::InlineSize
 				, DefaultSizes::MinHeapIncrement
 				, default_allocator > StaticStorage;
+
+			template <class T>
+			struct allocator
+			{
+				typedef monotonic::allocator<T, Region, Access> type;
+			};
 
 			local()
 			{

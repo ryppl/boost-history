@@ -270,21 +270,30 @@ void heading(const char *text, char star = '-')
 
 struct local_1 {};
 
+template <class Storage>
+void test_locals(Storage &storage)
+{
+	typedef typename Storage::allocator<int>::type allocator;
+
+	std::list<int, allocator > list;
+	monotonic::storage_base *b0 = list.get_allocator().get_storage();
+	monotonic::storage_base *b1 = &storage.get_storage();
+
+	BOOST_ASSERT(list.get_allocator().get_storage() == &storage.get_storage());
+	list.push_back(42);
+	string &s = storage.create<string>("foo");
+	std::vector<int, allocator > vec;
+	BOOST_ASSERT(vec.get_allocator().get_storage() == &storage.get_storage());
+	vec.resize(100);
+	cout << "test_locals: stack,heap =" << storage.get_storage().fixed_used() << ", " << storage.get_storage().heap_used() << endl;
+	storage.destroy(s);
+}
+
 void test_locals()
 {
 	monotonic::local<local_1> storage;
-	{
-		std::list<int, monotonic::allocator<int, local_1> > list;
-		BOOST_ASSERT(list.get_allocator().get_storage() == &storage.get_storage());
-		list.push_back(42);
-		string &s = storage.create<string>("foo");
-		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-		std::vector<int, monotonic::allocator<int, local_1> > vec;
-		BOOST_ASSERT(vec.get_allocator().get_storage() == &storage.get_storage());
-		vec.resize(100);
-		cout << "test_locals: size=" << storage.get_storage().used() << endl;
-		storage.destroy(s);
-	}
+	for (size_t n = 0; n < 10; ++n)
+		test_locals(storage);
 }
 
 void test_pools()
