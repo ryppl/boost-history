@@ -457,12 +457,4 @@ int main()
 	return 0;
 }
 
-namespace boost
-{ 
-	namespace monotonic 
-	{
-//		storage_base *current_storage = &get_region_storage<default_region_tag>();
-	}
-}
-
 //EOF

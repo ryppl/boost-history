@@ -12,75 +12,31 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/*
-		/// sets the global storage on construction, releases and returns to previous
-		/// storage on destruction
-		template <class Region, class Storage>
-		struct local// : storage_base
+		/// RIIA for storage
+		template <class Region, class Access = default_access_tag>
+		struct local
 		{
-		private:
-			//Storage store;
-			storage_base *old;
-
-		public:
 			local()
 			{
-				old = set_storage(get_region_storage<Region>());
 			}
 			~local()
 			{
-				release_storage();
-				if (old)
-					set_storage(*old);
-				else
-					default_storage();
+				release();
 			}
-
-			//Storage &get_storage()
-			//{
-			//	return store;
-			//}
-			//Storage const &get_storage() const
-			//{
-			//	return store;
-			//}
 			static void reset()
 			{
-				get_region_storage<Region>().reset();
+				get_storage().reset();
 			}
 			static void release()
 			{
-				get_region_storage<Region>().release();
+				get_storage().release();
 			}
-
-			//template <class T>
-			//allocator<T> make_allocator()
-			//{
-			//	return allocator<T>(store);
-			//}
-
-			//// the number of bytes to allocate, and the alignment to use
-			//void *allocate(size_t num_bytes, size_t alignment)
-			//{
-			//	return store.allocate(num_bytes, alignment);
-			//}
-
-			//size_t max_size() const
-			//{
-			//	return store.max_size();
-			//}
-
-			//size_t used() const
-			//{
-			//	return store.used();
-			//}
-
-			//size_t remaining() const
-			//{
-			//	return store.remaining();
-			//}
+			static storage_base &get_storage()
+			{
+				return ::boost::monotonic::get_storage<Region,Access>();
+			}
 		};
-*/
+
 	} // namespace monotonic
 
 } // namespace boost
