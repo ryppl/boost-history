@@ -29,7 +29,7 @@ namespace boost
 
 		/// thread-safe storage
 		template <size_t InlineSize, size_t MinHeapSize, class Al>
-		struct shared_storage : shared_storage_base
+		struct shared_storage : storage_base
 		{
 			typedef storage<InlineSize, MinHeapSize, Al> Storage;
 

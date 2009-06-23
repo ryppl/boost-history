@@ -29,7 +29,7 @@ namespace boost
 
 		/// thread-local storage
 		template <size_t InlineSize, size_t MinHeapSize, class Al>
-		struct thread_local_storage : shared_storage_base
+		struct thread_local_storage : storage_base
 		{
 			typedef storage<InlineSize, MinHeapSize, Al> Storage;
 			typedef boost::thread_specific_ptr<Storage> TLS_Storage;
