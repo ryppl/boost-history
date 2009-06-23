@@ -1,12 +1,15 @@
 #define BOOST_TEST_DYN_LINK
 #define BOOST_TEST_MAIN
 
+#include <string>
 #include <boost/monotonic/monotonic.hpp>
 
 //#include <boost/monotonic/shared_allocator.hpp>
 #include <boost/monotonic/shared_storage.hpp>
 #include <boost/monotonic/thread_local_storage.hpp>
 #include <boost/monotonic/shared_allocator.hpp>
+#include <boost/monotonic/local.hpp>
+#include <boost/monotonic/allocator.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -33,9 +36,9 @@ BOOST_AUTO_TEST_CASE(test_local)
 		fill_n(back_inserter(list0), 100, 42);
 		fill_n(back_inserter(list1), 100, 42);
 
-		std::string<char, std::char_traits<char>, monotonic::allocator<char, region0> > string("foo");
-		string += "bar";
-		BOOST_ASSERT(string == "foobar");
+		std::basic_string<char, std::char_traits<char>, monotonic::allocator<char, region0> > str("foo");
+		str += "bar";
+		BOOST_ASSERT(str == "foobar");
 	}
 }
 
