@@ -26,17 +26,19 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// fork a sub-task calculating fibonacci(n-1)
+			// create a sub-task calculating fibonacci(n-1)
 			boost::task::task< long > t1(
 				parallel_fib,
 				n - 1,
 				cutof);
-			// fork a sub-task calculating fibonacci(n-2)
+			// create a sub-task calculating fibonacci(n-2)
 			boost::task< long > t2(
 				parallel_fib,
 				n - 2,
 				cutof);
 
+			// fork both sub-tasks by moving the task
+			// ownership to the thread-pool
 			h1 = boost::task::async( boost::move( t1) );
 			h2 = boost::task::async( boost::move( t2) );
 
@@ -56,19 +58,21 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		// calculate fibonacci number 10
-		// for numbers < 5 do inline serial calculation
+		// compute fibonacci-number 10
+		// for numbers < 5 do inline calculation
 		boost::task::task< long > t(
 			parallel_fib,
 			10,
 			5);
 
-		boost::task::handle< long > h(		// handle for fibonacci calculation
+		// move task ownership to thread-pool
+		boost::task::handle< long > h(
 			boost::task::async(
 				boost::move( t),
-				pool) );		// execute in the thread-pool
+				pool) );
 
-		std::cout << h.get() << std::endl;
+		// access result
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
 

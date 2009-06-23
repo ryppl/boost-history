@@ -57,7 +57,8 @@ No futher tasks can be submitted.
 				boost::move( t2),
 				pool) );
 
-		pool.shutdown();	// waits until all pending tasks are finished
+		// waits until all pending tasks are finished
+		pool.shutdown();
 
 		std::cout << "fibonacci(10) == " << h1.get() << "\n";
 		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
@@ -111,10 +112,13 @@ The function __fn_shutdown_now__ closes the pool, interrupts and then joins all 
 				boost::move( t2),
 				pool) );
 
+		// requests task interruption and
+		// joins all worker-threads
 		pool.shutdown_now();
 
-		std::cout << "fibonacci(10) == " << h1.get() << "\n";		// may throw broken_task or task_interrupted
-		std::cout << "fibonacci(5) == " << h2.get() << std::endl;	// may throw broken_task or task_interrupted
+		// accessing the result may throw task_interrupted
+		std::cout << "fibonacci(10) == " << h1.get() << "\n";
+		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
 	}
 ``
 

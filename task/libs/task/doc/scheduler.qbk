@@ -21,22 +21,28 @@ First inserted pending __task__ gets taken first.
 Each __task__ is submitted to the pool with a priority attribute. The type and ordering of the priority is user-defined.
 
 ``
+	// thread-pool with priority scheduling
+	// tasks with higher priority are
+	// scheduled first
 	boost::task::static_pool<
-		boost::task::unbounded_channel<		// allow unlimited tasks to be queue in global-queue
-			boost::task::priority< int > >	// tasks with lower priority are scheduled first
+		boost::task::unbounded_channel<
+			boost::task::priority< int > >
 	> pool( boost::task::poolsize( 5) );
 
-	boost::task::task< void > t1( some_fn);		// task to be executed
-	boost::task::task< void > t2( another_fn);	// task to be executed
+	boost::task::task< void > t1( some_fn);
+	boost::task::task< void > t2( another_fn);
 
+	// move task t1 with priority 5 to thread-pool
 	boost::task::async(
 		boost::move( t1),
-		5,			// priority is 5
-		pool);			// thread-pool
+		5,
+		pool);
+
+	// move task t2 with priority 3 to thread-pool
 	boost::task::async(
-		boost::move( t2),	// task to be executed
-		3,			// priority is 3
-		pool);			// thread-pool
+		boost::move( t2),
+		3,
+		pool);
 ``
 
 In this example the tasks get scheduled by the assigned integer (third argument of __fn_async__). The __task__ with the
@@ -44,10 +50,13 @@ lowest priority gets scheduled first (taken by a __worker_thread__). The orderin
 of __priority__ (the default is `std::greater< Attr >`).
 
 ``
+	// thread-pool with priority scheduling
+	// tasks with lower priority are
+	// scheduled first
 	boost::task::static_pool<
 		boost::task::unbounded_channel<
-			boost::task::priority< int > >	// tasks with higher priority are scheduled first
-
+			boost::task::priority< int, std::less< int > >
+		>
 	> pool( boost::task::poolsize( 5) );
 ``
 

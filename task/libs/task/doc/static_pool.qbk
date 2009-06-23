@@ -13,14 +13,14 @@ __static_pool__ supports move semantics.
 
 
 ``
-	boost::task::_static_pool<			// pool type
-		boost::task::unbounded_channel<		// queuing policy (unbounded_channel, bounded_channel)
-			boost::task::fifo		// scheduling policy (fifo, priority, smart)
-		>
-	> pool(
-		boost::task::poolsize( 6),				// pool with 6 pre-forked worker-threads
-		boost::posix_time::posix_time::milliseconds( 50),	// time to sleep if no work-item available
-		boost::task::scanns( 10) );				// iterations over local-queues before sleep
+        boost::task::_static_pool<               // pool type
+                boost::task::unbounded_channel<  // queuing policy (unbounded_channel, bounded_channel)
+                       boost::task::fifo        // scheduling policy (fifo, priority, smart)
+                >
+        > pool(
+                boost::task::poolsize( 6),                         // pool with 6 pre-forked worker-threads
+                boost::posix_time::posix_time::milliseconds( 50),  // time to sleep if no work-item available
+                boost::task::scanns( 10) );                        // iterations over local-queues before sleep
 ``
 
 

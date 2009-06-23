@@ -76,7 +76,7 @@
 		template< typename R, typename Attr >
 		handle< R > submit( task< R > && t, Attr const& attr);
 
-		void swap( static_pool & other); // throw()
+		void swap( static_pool & other);
 
 		operator unspecified_bool_type() const;
 		bool operator!() const;

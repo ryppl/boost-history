@@ -12,11 +12,12 @@ For some applications it is convenient to bind the __worker_threads__ to process
 be given to constructor instead __pool_size__ so that a __worker_thread__ is created an bound the the core.
 
 ``
-	// constructs thread-pool with worker-threads as hardware_concurrency() returns
 	typedef boost::task::static_pool<
 		boost::task::unbounded_channel< boost::tp::fifo >
 	> pool_type;
 
+	// constructs thread-pool with worker-threads as
+	// CPUs/Cores are available on the system
 	pool_type pool( pool_type::bind_to_processors() );
 ``
 

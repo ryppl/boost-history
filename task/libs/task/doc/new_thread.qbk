@@ -47,13 +47,15 @@ solution of [@http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2880.html
 reference gets out of scope). ]
 
 
-In the example below both `a_function()` and `another_function()` are executed synchron because the returned __handle__ joins the
-the __worker_thread__!
+In the example below both `a_function()` and `another_function()` are executed synchron because the returned __handle__ is not stored in
+a variable. Thatswhy the __worker_thread__ is joined after return from __fn_async__!
 
 ``
 	boost::task::task< void > t1( a_function);
 	boost::task::task< void > t2( another_function);
 
+	// handles are not retrieved
+	// both task executed in sequence
 	boost::task::async(
 		boost::move( t1),
 		boost::task::new_thread() ) );

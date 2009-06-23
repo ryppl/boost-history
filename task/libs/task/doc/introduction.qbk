@@ -35,9 +35,11 @@ context (__boost_task__ uses preemptible threads for this purpose).
 		// task, to be executed asynchronously
 		boost::task::task< void > t( print, "Hello World!");
 
-		boost::task::async(                     // dispatchs task,
-			boost::move( t),		// move task ownership to executor
-			boost::task::new_thread() ) );	// execution-policy
+		// execute task in newly-created thread
+		// move task ownership to executor
+		boost::task::async(
+			boost::move( t),
+			boost::task::new_thread() ) );
 	}
 ``
 
@@ -53,12 +55,15 @@ that means it transfers the result of the execution back to the caller thread.
 		// task returning the submitted string
 		boost::task::task< std::string > t( echo, "Hello World!");
 
+		// execute task in newly-created thread
+		// move task ownership to executor
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::move( t),		// move task ownership to executor
-				boost::task::new_thread() ) );	// execute task in a new thread
+				boost::move( t),
+				boost::task::new_thread() ) );
 
-		std::cout << h.get() << std::endl;		// wait until task is finished and return the result
+		// wait until task has finished and return the result
+		std::cout << h.get() << std::endl;
 	}
 ``
 
@@ -70,17 +75,23 @@ The task can also be interrupted via __handle__ if it is a so-called [link_task 
 
 	void main()
 	{
-		// long runing task
+		// create a long runing task
 		boost::task::task< void > t( long_running, boost::posix_time::millisec( 500) );
 
+		// execute task in newly-created thread
+		// move task ownership to executor
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::move( t),		// move task ownership to executor
-				boost::task::new_thread() ) );	// execute task in a new thread
+				boost::move( t),
+				boost::task::new_thread() ) );
 
-		h.interrupt();					// interrupt execution of task
+		// requests interruption of task
+		// returns immediately
+		h.interrupt();
 
-		std::cout << h.get() << std::endl;		// wait until task is finished, will throw an task_interrupted exeception
+		// access the result
+		// task_interrupted exeception will be thrown
+		std::cout << h.get() << std::endl;		
 	}
 ``
 
@@ -99,17 +110,18 @@ to prevent the overhead of thread creation and destruction of threads for each t
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// fork a sub-task calculating fibonacci(n-1)
+			// create a sub-task calculating fibonacci(n-1)
 			boost::task::task< long > t1(
 				parallel_fib,
 				n - 1,
 				cutof);
-			// fork a sub-task calculating fibonacci(n-2)
+			// create a sub-task calculating fibonacci(n-2)
 			boost::task::task< long > t2(
 				parallel_fib,
 				n - 2,
 				cutof);
 
+			// fork two sub-tasks
 			boost::task::handle< long > h1(
 				boost::task::async(
 					boost::move( t1),
@@ -126,24 +138,28 @@ to prevent the overhead of thread creation and destruction of threads for each t
 
 	void main()
 	{
+		// create a thread-pool with five worker-threads
 		boost::task::static_pool<
 			boost::task::unbounded_channel<
 				boost::task::fifo
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		// task calculates fibonacci-number for 10
+		// create task computing fibonacci-number for 10
 		boost::task::task< long > t(
 			parallel_fib,
 			10,
 			5);
 
+		// execute task in a thread-pool
+		// move task ownership to executor
 		boost::task::handle< long > h(
 			boost::task::async(
-				boost::move( t),			// move task ownership to thread-pool
-				boost::task::default_pool() ) );	// execution-policy == thread-pool
+				boost::move( t),
+				pool) );
 
-		std::cout << h.get() << std::endl;
+		// access the result
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
 
@@ -153,14 +169,17 @@ executed inside a __thread_pool__. In the other case the __sub_task__ is put int
 [link_work_stealing __work_stealing__] and [link_forkjoin inline execution] of tasks.
 
 ``
+	// create a long runing task
 	boost::task::task< long > t(
 		parallel_fib,
 		10,
 		5);
 
+	// move task ownership to executor
+	// sub-task executed in a new thread or inside the thread-pool
 	boost::task::async(
 		boost::move( t),
-		boost::task::as_sub_task() );	// sub-task executed in a new thread or inside a thread-pool
+		boost::task::as_sub_task() );
 ``
 
 

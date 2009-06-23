@@ -78,14 +78,16 @@ A __interruption_point__ throws __task_interrupted__ if an interruption was requ
 ``
 	long cooperative( long n)
 	{
-		boost::this_thread::interruption_point(); // interruption point
+		// interruption point
+		boost::this_thread::interruption_point();
 		
 		if ( n == 0) return 0;
 		if ( n == 1) return 1;
 		long k1( 1), k2( 0);
 		for ( int i( 2); i <= n; ++i)
 		{
-			if ( boost::this_thread::interruption_requested() )	// check if interruption was requested
+			// check if interruption was requested
+			if ( boost::this_thread::interruption_requested() )
 				return;
 				
 			long tmp( k1);
@@ -93,27 +95,31 @@ A __interruption_point__ throws __task_interrupted__ if an interruption was requ
 			k2 = tmp;
 		}
 		
-		boost::this_thread::interruption_point();  // interruption point
+		// interruption point
+		boost::this_thread::interruption_point();
 		
 		return k1;
 	}
 
 	void main()
 	{
-		// task for calculating fibonacci number
+		// task for computing fibonacci-number
 		boost::task::task< long > t( cooperative, 10) );
 
 		// execute task in new thread
+		// move task ownership to executor
 		boost::task::handle< long > h(
 			boost::task::async(
 				boost::move( t),
 				boost::task::new_thread() ) );
 
-		// interrupt task an wait until it is removed by the worker-thread
+		// interrupt task an wait until
+		// the task is removed by the worker-thread
 		h.interrupt_and_wait();
 
+		// access the result
 		// throws boost::task::task_interrupted
-		std::cout << h.get() << std::endl;
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
 
@@ -132,15 +138,17 @@ Exceptions thrown by __task__ are transported by the __act__.
 
 	void main()
 	{
-		// task will throw std::domain_error
+		// create task throwing std::domain_error
 		boost::task::task void > t( throwing);
 
 		// execute task asynchron
+		// move task ownership to executor
 		boost::task::handle< void > h(
 			boost::task::async(
 				boost::move( t),
 				boost::task::new_thread() ) );
 
+		// wait for task completion
 		// throws std::domain_error
 		std::cout << h.wait() << std::endl;
 	}
@@ -194,54 +202,56 @@ speed matters (enabling strategies for fast execution of unordered __work_items_
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// sub-task for calculating fibonacci(n-1)
+			// sub-task for computing fibonacci(n-1)
 			boost::task::task< long > t1(
 				parallel_fib,
 				n - 1,
 				cutof);
-			// sub-task for calculating fibonacci(n-2)
+			// sub-task for computing fibonacci(n-2)
 			boost::task::task< long > t2(
 				parallel_fib,
 				n - 2,
 				cutof);
 
-			// submit a sub-task to pool calculating fibonacci(n-1)
+			// submit a sub-tasks to thread-pool
+			// move task ownership to executor
 			boost::task::handle< long > h1(
 				boost::task::async(
 					boost::move( t1) );
-			// submit a sub-task to pool calculating fibonacci(n-2)
 			boost::task::handle< long > h2(
 				boost::task::async(
 					boost::move( t2) );
 
-			// calculate fibonacci(n) by joining results of both sub-tasks
+			// computing fibonacci(n) by
+			// joining results of both sub-tasks
 			return h1.get() + h2.get();
 		}
 	}
 
 	void main()
 	{
-		// create thread-pool
+		// create thread-pool with five worker-threads
 		boost::task::static_pool<
 			boost::task::unbounded_channel<
 				boost::task::fifo
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		// task calculates recursivly fibonacci-numberof 10
+		// create task computing fibonacci-number for 10
 		boost::task::task< long > t(
 			parallel_fib,
 			10,
 			5);
 
 		// execute task asynchron in thread-pool
+		// move task ownership to executor
 		boost::task::handle< long > h(
 			boost::task::async(
 				boost::move( t),
 				pool) );
 
-		// get result
-		std::cout << h.get() << std::endl;
+		// access result
+		std::cout << "fibonacci(10) == " << h.get() << std::endl;
 	}
 ``
 

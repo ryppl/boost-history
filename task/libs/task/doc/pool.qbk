@@ -23,19 +23,27 @@ __boost_task__ provides __fn_async__ with support of executing an __task__ in __
 
 	void main()
 	{
+		// create a thread-pool with
+		// five worker-threads
+		// FIFO schduling of queued tasks
+		// and unlimited size of internal queue
 		boost::task::static_pool<
 			boost::task::unbounded_channel<
 				boost::task::fifo
 			>
 		> pool( boost::task::poolsize( 5) );
 
+		// create task
 		boost::task::task< std::string > t( echo, "Hello World!");
 
+		// move task to executor
+		// let the task be executed by the thread-pool
 		boost::task::handle< std::string > h(
 			boost::task::async(
 				boost::move( t),
 				pool) );
 
+		// access the result
 		std::cout << h.get() << std::endl;
 	}
 ``

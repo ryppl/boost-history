@@ -31,7 +31,7 @@ __as_sub_task__ is used per default. The function returns a __handle__ which con
 
 	void main()
 	{
-		// task -> compute fibonacci(10)
+		// task computing fibonacci(10)
 		boost::task< long > t( fibonacci, 10);
 
 		// move the task to executor

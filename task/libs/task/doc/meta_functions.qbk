@@ -13,12 +13,18 @@ boost::mpl::bool_). The type of the attribute is determined by __attribute_type_
 
 
 ``
+	// thread-pool with priority scheduling
+	// type of priority is int
 	typdef boost::task::static_pool<
 		boost::task::unbounded_channel<
-			boost::task::priority< int > >	// pool with priority scheduling; integer as priority type
+			boost::task::priority< int >
+		>
 	> pool_type;
 
+	// test if thread-pool supports priorities at compile time
 	std::cout << std::boolalpha << boost::task::has_attribute< pool_type >::value << "\n";
+
+	// access the type used for priority
 	std::cout << typeid( boost::task::attribute_type< pool_type >::type).name() << std::endl;
 ``
 
