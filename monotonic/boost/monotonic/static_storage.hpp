@@ -12,14 +12,18 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <size_t InlineSize, size_t MinHeapIncrement, class Al, template <size_t, size_t, class> class Storage>
-		struct static_storage_base : storage_base
+		template <class Region
+			, size_t InlineSize
+			, size_t MinHeapIncrement
+			, class Al
+			, template <size_t, size_t, class> class Storage>
+		struct static_storage_base
 		{
 			typedef Al HeapAllocator;
 			typedef Storage<InlineSize, MinHeapIncrement, HeapAllocator> StorageType;
 
 		private:
-			StorageType global;
+			static StorageType global;
 
 		public:
 			static_storage_base()
@@ -29,44 +33,45 @@ namespace boost
 				: global(store)
 			{
 			}
-			void reset()
+			static StorageType &get_storage()
+			{
+				return global;
+			}
+			static void reset()
 			{
 				global.reset();
 			}
-			void release()
+			static void release()
 			{
 				global.release();
 			}
-			void *allocate(size_t num_bytes, size_t alignment)
+			static void *allocate(size_t num_bytes, size_t alignment)
 			{
 				return global.allocate(num_bytes, alignment);
 			}
-			size_t max_size() const
+			static size_t max_size()
 			{
 				return global.max_size();
 			}
-			size_t used() const
+			static size_t used()
 			{
 				return global.used();
 			}
-			size_t remaining() const
+			static size_t remaining()
 			{
 				return global.remaining();
 			}
 		};
 
-		/// 'static_storage' will be used by a default-constructed monotonic::allocator
-		extern static_storage_base<> default_static_storage;
-		extern storage_base *static_storage;
+		/// define the static storage member for all regions
+		template <class Region, size_t InlineSize, size_t MinHeapIncrement, class Al, template <size_t, size_t, class> class Storage>
+		typename static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::StorageType 
+			static_storage_base<Region, InlineSize, MinHeapIncrement, Al, Storage>::global;
 
-		extern storage_base *static_storage;
-
-		extern boost::array<storage<DefaultSizes::RegionInlineSize>, DefaultSizes::MaxRegions> static_region_storage;
-
-		template <size_t Region>
+		template <class Region>
 		inline storage_base &get_region_storage()
 		{
-			return static_region_storage[Region];
+			return static_storage_base<Region>::get_storage();
 		}
 
 		template <size_t Region>
@@ -83,24 +88,18 @@ namespace boost
 
 		inline storage_base &get_storage()
 		{
-			return static_storage ? *static_storage : default_static_storage;
+			return get_region_storage<default_region_tag>();// ? *static_storage : default_static_storage;
 		}
-		inline storage_base *set_storage(storage_base &store)
-		{
-			storage_base *old = static_storage;
-			static_storage = &store;
-			return old;
-		}
+
 		inline void reset_storage()
 		{
 			get_storage().reset();
 		}
-		inline void default_storage()
+
+		inline void release_storage()
 		{
-			static_storage = &default_static_storage;
+			get_storage().release();
 		}
-
-
 	} // namespace monotonic
 
 } // namespace boost

@@ -42,15 +42,20 @@ namespace boost
 			, class Al = std::allocator<char> >
 		struct shared_storage;
 
+		/// tags for different storage regions
+		struct default_region_tag { };
+		struct shared_region_tag { };
+		struct thread_local_region_tag { };
+
 		/// thread-local storage
-		template <
-			size_t InlineSize = DefaultSizes::InlineSize
+		template <size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
 			, class Al = std::allocator<char> >
 		struct thread_local_storage;
 
 		/// a globally available storage buffer
-		template <size_t InlineSize = DefaultSizes::StaticInlineSize
+		template <class Region = default_region_tag
+			, size_t InlineSize = DefaultSizes::StaticInlineSize
 			, size_t MinHeapIncrement = DefaultSizes::StaticMinHeapIncrement
 			, class Al = std::allocator<char>
 			, template <size_t, size_t, class> class Storage = storage 
@@ -68,7 +73,7 @@ namespace boost
 
 		/// a monotonic region allocator uses a specified storage. Each region uses independent
 		/// storage that may be used and reset.
-		template <class T, size_t Region = 0> 
+		template <class T, class Region = default_region_tag> 
 		struct region_allocator;
 
 		/// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method

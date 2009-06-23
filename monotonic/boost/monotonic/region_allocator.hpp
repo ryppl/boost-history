@@ -12,8 +12,8 @@ namespace boost
 {
 	namespace monotonic
 	{
-		template <size_t N> 
-		struct region_allocator<void, N>
+		template <class Region> 
+		struct region_allocator<void, Region>
 		{
 			typedef void* pointer;
 			typedef const void* const_pointer;
@@ -22,12 +22,12 @@ namespace boost
 			template <class U> 
 			struct rebind 
 			{ 
-				typedef region_allocator<U, N> other; 
+				typedef region_allocator<U, Region> other; 
 			};
 		};
 
 		/// each region is distinct from other regions
-		template <class T, size_t Region> 
+		template <class T, class Region> 
 		struct region_allocator : allocator_base<T, region_allocator<T, Region> >
 		{
 			typedef allocator_base<T, region_allocator<T, Region> > Parent;
@@ -59,8 +59,8 @@ namespace boost
 			region_allocator(const region_allocator& alloc) throw() 
 				: Parent(alloc) { }
 
-			template <class U, size_t N> 
-			region_allocator(const region_allocator<U,N> &alloc) throw()
+			template <class U, class OtherRegion> 
+			region_allocator(const region_allocator<U,OtherRegion> &alloc) throw()
 				: Parent(alloc) { }
 
 			friend bool operator==(region_allocator<T,Region> const &A, region_allocator<T,Region> const &B) 
