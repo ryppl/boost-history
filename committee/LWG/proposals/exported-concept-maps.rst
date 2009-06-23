@@ -352,7 +352,7 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
                 // X<int>::f(float) visible (and viable).
       }
 
-    :ins:`- end example]`
+  :ins:`- end example]`
 
 Bibliography
 ============

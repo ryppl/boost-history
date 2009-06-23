@@ -605,42 +605,41 @@ of the exported associated function definition. Tthe argument that
 corresponds to this artificial first parameter is the type of the
 implied object argument (13.3.1). [Example:</span></p>
 <pre class="literal-block">
-  concept C&lt;typename T&gt; { }
+concept C&lt;typename T&gt; { }
 
-  concept M1&lt;typename T&gt; {
-    void T::f();
-  }
+concept M1&lt;typename T&gt; {
+  void T::f();
+}
 
-  concept M2&lt;typename T, typename U&gt; {
-    void T::f(U);
-  }
+concept M2&lt;typename T, typename U&gt; {
+  void T::f(U);
+}
 
-  template&lt;C T&gt; struct X { };
+template&lt;C T&gt; struct X { };
 
-  template&lt;C T&gt;
-  export concept_map M1&lt;X&lt;T&gt;&gt; {
-    void X&lt;T&gt;::f() { }
-  }
+template&lt;C T&gt;
+export concept_map M1&lt;X&lt;T&gt;&gt; {
+  void X&lt;T&gt;::f() { }
+}
 
-  template&lt;C T, typename U&gt;
-  export concept_map M2&lt;X&lt;T&gt;, U&gt; {
-    void X&lt;T&gt;::f(U) { }
-  }
+template&lt;C T, typename U&gt;
+export concept_map M2&lt;X&lt;T&gt;, U&gt; {
+  void X&lt;T&gt;::f(U) { }
+}
 
-  void f(X&lt;int&gt; x, float y) {
-    x.f(); // okay: template argument deduction deduces that T=int by
-           // matching the artificial first parameter of type X&lt;T&gt;
-           // to the implied object argument of type X&lt;int&gt;.
-    x.f(y); // okay: template argument deduction for M1's X&lt;T&gt;::f
-            // succeeds with T=int, but the resulting visible
-            // function is not a viable overload candidate.
-            // template argument deduction with M2's X&lt;T&gt;::f
-            // succeeds with T=int and U=float, making M2&lt;X&lt;int&gt;, float&gt;'s
-            // X&lt;int&gt;::f(float) visible (and viable).
-  }
-
-:ins:`- end example]`
+void f(X&lt;int&gt; x, float y) {
+  x.f(); // okay: template argument deduction deduces that T=int by
+         // matching the artificial first parameter of type X&lt;T&gt;
+         // to the implied object argument of type X&lt;int&gt;.
+  x.f(y); // okay: template argument deduction for M1's X&lt;T&gt;::f
+          // succeeds with T=int, but the resulting visible
+          // function is not a viable overload candidate.
+          // template argument deduction with M2's X&lt;T&gt;::f
+          // succeeds with T=int and U=float, making M2&lt;X&lt;int&gt;, float&gt;'s
+          // X&lt;int&gt;::f(float) visible (and viable).
+}
 </pre>
+<p><span class="ins">- end example]</span></p>
 </blockquote>
 </div>
 <div class="section" id="bibliography">
