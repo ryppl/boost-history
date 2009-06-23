@@ -83,13 +83,6 @@ namespace boost
 
 		};
 
-		//extern static_storage_base<
-		//	DefaultSizes::StaticInlineSize
-		//	, DefaultSizes::StaticMinHeapIncrement
-		//	, std::allocator<char>
-		//	, shared_storage> 
-		//static_shared_storage;
-		
 	} // namespace monotonic
 
 } // namespace boost

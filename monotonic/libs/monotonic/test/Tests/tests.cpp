@@ -10,6 +10,7 @@
 //#include <boost/monotonic/shared_allocator.hpp>
 #include <boost/monotonic/shared_storage.hpp>
 #include <boost/monotonic/thread_local_storage.hpp>
+#include <boost/monotonic/shared_allocator.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -30,6 +31,10 @@ BOOST_AUTO_TEST_CASE(test_shared_allocation)
 {
 	typedef std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > List0;
 	List0 list0;
+
+	// same thing, less typing:
+	typedef std::list<int, monotonic::shared_allocator<int, region0> > List2;
+	List2 list2;
 
 	typedef std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > List1;
 	List1 list1;

@@ -83,15 +83,15 @@ namespace boost
 		template <class T, class Region = default_region_tag, class Access = default_access_tag> 
 		struct allocator;
 
-		///// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method
-		///// defaults to use static_storage_base<..., shared_storage>
+		/// a monotonic shared_allocator has a shared storage buffer and a no-op deallocate() method
+		/// defaults to use static_storage_base<..., shared_storage>
 		template <class T, class Region = default_region_tag> 
-		struct shared_allocator;// : allocator<T, Region, shared_access_tag> { };
+		struct shared_allocator;
 	
-		///// a monotonic local_allocator has a shared storage buffer and a no-op deallocate() method
-		///// defaults to use static_storage_base<..., thread_local_storage>
-		//template <class T, class Region = thread_local_region_tag> 
-		//struct local_allocator;
+		/// a monotonic local_allocator has a shared storage buffer and a no-op deallocate() method
+		/// defaults to use static_storage_base<..., thread_local_storage>
+		template <class T, class Region = default_region_tag>
+		struct thread_local_allocator;
 
 	} // namespace monotonic
 
