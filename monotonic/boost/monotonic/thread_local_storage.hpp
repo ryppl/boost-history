@@ -36,7 +36,7 @@ namespace boost
 			typedef thread_local_storage<InlineSize, MinHeapSize, Al> This;
 
 		private:
-			Storage storage;
+			Storage store;
 			TLS_Storage tls_store;
 			static void no_delete(Storage *) { }
 
@@ -44,7 +44,7 @@ namespace boost
 			thread_local_storage() 
 				: tls_store(&This::no_delete)
 			{
-				tls_store.reset(&storage);
+				tls_store.reset(&store);
 			}
 			size_t used() const
 			{
