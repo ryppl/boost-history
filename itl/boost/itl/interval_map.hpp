@@ -604,8 +604,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 		return;
 
 	iterator lst_it = end_it; --lst_it;
-
-	iterator it_ = fst_it;
+	iterator it_    = fst_it;
 	subtract_front         (inter_val, co_val, it_);
     subtract_main<Combiner>(inter_val, co_val, it_, lst_it);
 	subtract_rear<Combiner>(inter_val, co_val, it_);
@@ -727,6 +726,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 	if(prior_ != this->_map.end())
 		--prior_;
     interval_type rest_interval = inter_val, left_gap, cur_itv;
+	interval_type last_interval = lst_it->KEY_VALUE;
 
     while(it != end_it)
     {
@@ -748,7 +748,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     }
 
     //insert_rear(rest_interval, co_val, lst_it):
-    interval_type end_gap = left_subtract(rest_interval, lst_it->KEY_VALUE);
+    interval_type end_gap = left_subtract(rest_interval, last_interval);
 	if(!end_gap.empty())
 	{
 		inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
