@@ -42,6 +42,13 @@ BOOST_AUTO_TEST_CASE(test_string)
 	monotonic::static_storage<>::release();
 	monotonic::static_storage<region0>::release();
 	monotonic::static_storage<region1>::release();
+
+	monotonic::storage<> storage;
+	{
+		monotonic::string<> str("foo", storage);
+		BOOST_ASSERT(str == "foo");
+		BOOST_ASSERT(str.get_allocator().get_storage() == &storage);
+	}
 }
 
 BOOST_AUTO_TEST_CASE(test_map)
@@ -85,9 +92,23 @@ BOOST_AUTO_TEST_CASE(test_vector)
 	BOOST_ASSERT(vec2 < vec);
 	BOOST_ASSERT(!(vec < vec2));
 
-
 	monotonic::static_storage<>::reset();
 	monotonic::static_storage<region1>::reset();
+
+	monotonic::storage<> storage;
+	{
+		monotonic::vector<monotonic::vector<int> > vec(storage);
+		BOOST_ASSERT(vec.get_allocator().get_storage() == &storage);
+		vec.resize(5);
+		BOOST_ASSERT(vec[0].get_allocator().get_storage() == &storage);
+
+		monotonic::vector<monotonic::map<int, monotonic::string<> > > vec2(storage);
+		vec2.resize(1);
+		vec2[0][42] = "foo";
+		BOOST_ASSERT(vec2.get_allocator().get_storage() == &storage);
+		BOOST_ASSERT(vec2[0].get_allocator().get_storage() == &storage);
+		BOOST_ASSERT(vec2[0][42].get_allocator().get_storage() == &storage);
+	}
 }
 
 template <class II>

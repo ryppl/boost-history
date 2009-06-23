@@ -33,6 +33,7 @@ namespace boost
 			typedef T &reference;
 			typedef const T &const_reference;
 			typedef T value_type;
+			typedef detail::Construct<detail::is_monotonic<T>::value> Construct;
 
 			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
 		//private:
@@ -81,13 +82,13 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
+				Construct::Given(ptr, static_cast<Derived *>(this));
 				//new (ptr) T();
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
+				Construct::Given(ptr, val, static_cast<Derived *>(this));
 				//new (ptr) T(val);
 			}
 

@@ -15,7 +15,7 @@ namespace boost
 	{
 		/// a string that uses a monotonic allocator in the given region
 		template <class Region = default_region_tag, class Access = default_access_tag>
-		struct string
+		struct string : detail::container<string<Region,Access> >
 		{
 			typedef char Ch;
 			typedef std::char_traits<Ch> Tr;
@@ -51,6 +51,10 @@ namespace boost
 				: impl(str, alloc)
 			{
 			}
+			string(const Ch *str, storage_base &store)
+				: impl(str, store)
+			{
+			}
 			template <class II>
 			string(II F, II L)
 				: impl(F, L)
@@ -61,6 +65,22 @@ namespace boost
 				: impl(F, L, alloc)
 			{
 			}
+			template <class II>
+			string(II F, II L, storage_base &store)
+				: impl(F, L, store)
+			{
+			}
+
+			string &operator=(string const &other)
+			{
+				impl = other.get_impl();
+				return *this;
+			}
+
+			Allocator get_allocator() const
+			{
+				return impl.get_allocator();
+			}
 
 			Impl const &get_impl() const
 			{
@@ -69,12 +89,6 @@ namespace boost
 			Impl &get_impl()
 			{
 				return impl;
-			}
-
-			string &operator=(string const &other)
-			{
-				impl = other.get_impl();
-				return *this;
 			}
 
 			template <class Reg2, class Acc2>
@@ -94,7 +108,6 @@ namespace boost
 			{
 				return impl.c_str();
 			}
-
 		};
 
 		template <class Reg, class Acc>
