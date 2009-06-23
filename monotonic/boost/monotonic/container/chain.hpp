@@ -6,10 +6,12 @@
 #ifndef BOOST_MONOTONIC_CHAIN_HPP
 #define BOOST_MONOTONIC_CHAIN_HPP
 
-#include <boost/monotonic/allocator.hpp>
-#include <boost/utility/iter_range.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_categories.hpp>
+
+#include <boost/utility/iter_range.hpp>
+#include <boost/monotonic/container/vector.hpp>
+#include <boost/monotonic/container/deque.hpp>
 
 namespace boost
 {
@@ -25,17 +27,16 @@ namespace boost
 		/// this has limited utility outside of the context of a monotonic allocator.
 		/// the reason to use it there is to avoid resizing a vector using a monotonic
 		/// allocator, which is very wasteful. so, the trade-off is slightly slower
-		/// access but ability to extend without resizing. then again, given that the
-		/// main reason to use a monotonic allocator is speed, there may be limited
-		/// application even there.
+		/// access but ability to extend without resizing. 
 		///
-		template <class T, size_t ChunkSize = 64>
+		template <class T, size_t ChunkSize = 64, class Region = default_region_tag, class Access = default_access_tag>
 		struct chain
 		{
-			typedef chain<T, ChunkSize> Rope;
-			typedef allocator<T> Allocator;
-			typedef vector<T> Vector;
-			typedef list<Vector> Strands;
+			typedef chain<T, ChunkSize,Region,Access> Chain;
+			typedef allocator<T,Region,Access> Allocator;
+			typedef vector<T,Region,Access> Vector;
+			typedef deque<Vector,Region,Access> Strands;
+
 			typedef const_iter_range<Strands> ConstStrandsIterators;
 			typedef iter_range<Strands> StrandsIterators;
 			typedef const_iter_range<Vector> ConstVectorIterators;
@@ -48,19 +49,19 @@ namespace boost
 			template <class R, class S, class V, class Derived>
 			struct iterator_base : boost::iterator<random_access_traversal_tag, T>
 			{
-				typedef R Rope;
+				typedef R Chain;
 				typedef S StrandIterators;
 				typedef V VectorIterators;
-				Rope *parent;
+				Chain *parent;
 				StrandIterators strand;
 				VectorIterators vec;
 
 				iterator_base() { }
-				iterator_base(Rope &P)
+				iterator_base(Chain &P)
 					: parent(&P) { }
-				iterator_base(Rope &P, StrandIterators const &S)
+				iterator_base(Chain &P, StrandIterators const &S)
 					: parent(&P), strand(S) { }
-				iterator_base(Rope &P, StrandIterators const &S, VectorIterators const &V)
+				iterator_base(Chain &P, StrandIterators const &S, VectorIterators const &V)
 					: parent(&P), strand(S), vec(V) { }
 				Derived &This()
 				{
@@ -93,15 +94,15 @@ namespace boost
 					return !(*this == B);
 				}
 			};
-			struct iterator : iterator_base<Rope, StrandsIterators, VectorIterators, iterator>
+			struct iterator : iterator_base<Chain, StrandsIterators, VectorIterators, iterator>
 			{
-				typedef iterator_base<Rope, StrandsIterators, VectorIterators, iterator> Parent;
+				typedef iterator_base<Chain, StrandsIterators, VectorIterators, iterator> Parent;
 				iterator() { }
-				iterator(Rope &P)
+				iterator(Chain &P)
 					: Parent(P) { }
-				iterator(Rope &P, StrandsIterators const &S)
+				iterator(Chain &P, StrandsIterators const &S)
 					: Parent(P, S) { }
-				iterator(Rope &P, StrandsIterators const &S, VectorIterators const &V)
+				iterator(Chain &P, StrandsIterators const &S, VectorIterators const &V)
 					: Parent(P, S, V) { }
 				T const &operator*() const
 				{
@@ -113,18 +114,18 @@ namespace boost
 				}
 			};
 			typedef iterator Iter;
-			struct const_iterator : iterator_base<Rope const, ConstStrandsIterators, ConstVectorIterators, const_iterator>
+			struct const_iterator : iterator_base<Chain const, ConstStrandsIterators, ConstVectorIterators, const_iterator>
 			{
-				typedef iterator_base<Rope const, ConstStrandsIterators, ConstVectorIterators, const_iterator> Parent;
+				typedef iterator_base<Chain const, ConstStrandsIterators, ConstVectorIterators, const_iterator> Parent;
 				const_iterator() { }
-				const_iterator(Rope const &P)
+				const_iterator(Chain const &P)
 					: Parent(P) { }
 				const_iterator(Iter const &X)
 					: Parent(*X.parent, X.strand, X.vec)
 				{ }
-				const_iterator(Rope const &P, ConstStrandsIterators const &S)
+				const_iterator(Chain const &P, ConstStrandsIterators const &S)
 					: Parent(P, S) { }
-				const_iterator(Rope const &P, ConstStrandsIterators const &S, ConstVectorIterators const &V)
+				const_iterator(Chain const &P, ConstStrandsIterators const &S, ConstVectorIterators const &V)
 					: Parent(P, S, V) { }
 				T const &operator*() const
 				{
@@ -138,21 +139,21 @@ namespace boost
 
 		public:
 			chain() { }
-			chain(Allocator const &A)
+			chain(Allocator A)
 				: alloc(A), strands(A) { }
-			chain(size_t len, Allocator const &A)
+			chain(size_t len, Allocator A = Allocator())
 				: alloc(A), strands(A)
 			{
 				// TODO
 			}
-			chain(size_t len, T const &X, Allocator const &A)
+			chain(size_t len, T const &X, Allocator A = Allocator())
 				: alloc(A), strands(A)
 			{
 				strands.push_back(Vector(alloc));
 				strands.back().resize(len, X);
 			}
 			template <class II>
-			chain(II F, II L, Allocator const &A)
+			chain(II F, II L, Allocator A = Allocator())
 				: alloc(A), strands(A)
 			{
 				strands.push_back(Vector(alloc));
@@ -172,6 +173,10 @@ namespace boost
 					len += vec.size();
 				}
 				return len;
+			}
+			void clear()
+			{
+				strands.clear();
 			}
 			bool empty() const
 			{
@@ -254,8 +259,51 @@ namespace boost
 				return at(index);
 			}
 		};
-	}
-}
+
+#ifdef WIN32
+// warning C4996: 'std::equal': Function call with parameters that may be unsafe
+#	pragma warning(push)
+#	pragma warning(disable:4996)
+#endif
+
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator==(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
+		}
+#ifdef WIN32
+#	pragma warning(pop)
+#endif
+
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator!=(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return !(A == B);
+		}
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator<(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
+		}
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator>(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return std::lexicographical_compare(B.begin(), B.end(), A.begin(), A.end());
+		}
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator<=(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return !(A > B);
+		}
+		template <class Ty,size_t N,class R,class Acc,class Ty2,size_t N2,class R2,class Acc2>
+		bool operator>=(chain<Ty,N,R,Acc> const &A, chain<Ty2,N2,R2,Acc2> const &B)
+		{
+			return !(A < B);
+		}
+
+	} // namespace monotonic
+
+} // namespace boost
 
 #endif // BOOST_MONOTONIC_CHAIN_HPP
 

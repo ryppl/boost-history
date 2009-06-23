@@ -19,7 +19,7 @@ namespace boost
 			, class Region = default_region_tag		// allocation region
 			, class P = std::less<T>				// predicate
 			, class Access = default_access_tag>	// access type
-		struct set : detail::monotonic_container<set<T,Region,P,Access> >
+		struct set : detail::container<set<T,Region,P,Access> >
 		{
 			typedef allocator<T,Region,Access> Allocator;
 			typedef P Predicate;

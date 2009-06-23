@@ -99,6 +99,41 @@ BOOST_AUTO_TEST_CASE(test_list)
 	monotonic::static_storage<region1>::reset();
 }
 
+BOOST_AUTO_TEST_CASE(test_deque)
+{
+	monotonic::deque<int, region0> deq0;
+	monotonic::deque<int, region1> deq1;
+
+	deq0.push_back(42);
+	deq1.push_back(42);
+	BOOST_ASSERT(deq0 == deq1);
+
+	monotonic::static_storage<region0>::reset();
+	monotonic::static_storage<region1>::reset();
+}
+
+
+BOOST_AUTO_TEST_CASE(test_chain)
+{
+	monotonic::chain<int, 16, region0> deq0;
+	monotonic::chain<int, 16, region1> deq1;
+
+	deq0.push_back(1);
+	deq1.push_back(1);
+	BOOST_ASSERT(deq0 == deq1);
+
+	deq1.push_back(2);
+	deq1.push_back(3);
+	BOOST_ASSERT(deq0 != deq1);
+
+	int sum = 0;
+	BOOST_FOREACH(int n, deq1)
+		sum += n;
+	BOOST_CHECK(sum == 6);
+	
+	monotonic::static_storage<region0>::reset();
+	monotonic::static_storage<region1>::reset();
+}
 
 BOOST_AUTO_TEST_CASE(test_local)
 {

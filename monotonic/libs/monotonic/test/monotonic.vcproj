@@ -322,6 +322,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\monotonic\container\deque.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\monotonic\container\inline_clone_allocator.hpp"
 						>
 					</File>

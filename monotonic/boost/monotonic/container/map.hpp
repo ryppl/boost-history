@@ -20,11 +20,11 @@ namespace boost
 			, class P = std::less<K>				// predicate
 			, class Access = default_access_tag		// access type
 		>
-		struct map : detail::monotonic_container<map<K,T,Region,P,Access> >
+		struct map : detail::container<map<K,T,Region,P,Access> >
 		{
 			typedef P Predicate;
 			typedef allocator<K,Region,Access> Allocator;
-			typedef detail::monotonic_container<map<K,T,Region,P,Access> > Parent;
+			typedef detail::container<map<K,T,Region,P,Access> > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 
 			typedef std::map<K,T,P,Allocator > Map, Implementation;

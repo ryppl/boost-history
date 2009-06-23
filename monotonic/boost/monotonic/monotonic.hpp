@@ -20,6 +20,8 @@
 #include <boost/monotonic/container/list.hpp>
 #include <boost/monotonic/container/set.hpp>
 #include <boost/monotonic/container/map.hpp>
+#include <boost/monotonic/container/deque.hpp>
+#include <boost/monotonic/container/chain.hpp>
 
 namespace boost
 {

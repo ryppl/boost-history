@@ -3,10 +3,10 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_VECTOR_HPP
-#define BOOST_MONOTONIC_VECTOR_HPP
+#ifndef BOOST_MONOTONIC_DEQUE_HPP
+#define BOOST_MONOTONIC_DEQUE_HPP
 
-#include <boost/monotonic/allocator.hpp>
+#include <deque>
 #include <boost/monotonic/container.hpp>
 
 namespace boost
@@ -15,12 +15,12 @@ namespace boost
 	{
 		/// a vector that uses a monotonic allocator in the given region, with given access system
 		template <class T, class Region = default_region_tag, class Access = default_access_tag>
-		struct vector : detail::container<vector<T,Region,Access> >
+		struct deque : detail::container<deque<T,Region,Access> >
 		{
 			typedef allocator<T,Region,Access> Allocator;
 			typedef detail::container<std::vector<T, Allocator > > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
-			typedef std::vector<T,Allocator> Impl;
+			typedef std::deque<T,Allocator> Impl;
 
 			typedef typename Impl::iterator iterator;
 			typedef typename Impl::const_iterator const_iterator;
@@ -33,13 +33,13 @@ namespace boost
 			Impl impl;
 
 		public:
-			vector() { }
-			vector(Allocator const &A) 
+			deque() { }
+			deque(Allocator A) 
 				: impl(A) { }
-			vector(size_t N, T const &X, Allocator A = Allocator())
+			deque(size_t N, T const &X, Allocator A = Allocator())
 				: impl(N,X,A) { }
 			template <class II>
-			vector(II F, II L, Allocator A = Allocator())
+			deque(II F, II L, Allocator A = Allocator())
 				: impl(F,L,A) { }
 
 			Allocator get_allocator() const
@@ -98,6 +98,14 @@ namespace boost
 			{
 				impl.pop_back();
 			}
+			void push_front(value_type const &value)
+			{
+				impl.push_front(value);
+			}
+			void pop_front()
+			{
+				impl.pop_front();
+			}
 			iterator begin()
 			{
 				return impl.begin();
@@ -131,39 +139,39 @@ namespace boost
 				return impl.back();
 			}
 
-			void swap(vector &other)
+			void swap(deque &other)
 			{
 				impl.swap(other.impl);
 			}
 		};
 
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator==(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator==(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
 		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator!=(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator!=(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return !(A == B);
 		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator<(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator<(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
 		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator>(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator>(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return std::lexicographical_compare(B.begin(), B.end(), A.begin(), A.end());
 		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator<=(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator<=(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return !(A > B);
 		}
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
-		bool operator>=(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
+		bool operator>=(deque<Ty,R,Acc> const &A, deque<Ty2,R2,Acc2> const &B)
 		{
 			return !(A < B);
 		}
@@ -172,6 +180,6 @@ namespace boost
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_VECTOR_HPP
+#endif // BOOST_MONOTONIC_DEQUE_HPP
 
 //EOF
