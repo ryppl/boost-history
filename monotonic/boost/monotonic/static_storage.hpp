@@ -29,10 +29,6 @@ namespace boost
 			static_storage_base()
 			{
 			}
-			static_storage_base(StorageType const &store) 
-				: global(store)
-			{
-			}
 			static StorageType &get_storage()
 			{
 				return global;

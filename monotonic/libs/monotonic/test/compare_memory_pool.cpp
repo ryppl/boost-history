@@ -26,6 +26,8 @@
 using namespace std;
 using namespace boost;
 
+struct local_tag {};
+
 template <class Fun>
 PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 {
@@ -99,7 +101,6 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 	if (types.Includes(Type::Monotonic))
 	{
 		srand(42);
-		struct local_tag {};
 		monotonic::local<local_tag> storage;
 		boost::timer timer;
 		for (size_t n = 0; n < count; ++n)
