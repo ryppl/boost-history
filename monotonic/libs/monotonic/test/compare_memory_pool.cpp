@@ -27,7 +27,7 @@ using namespace std;
 using namespace boost;
 
 /// region tag for local storage used in run_test
-struct local_tag {};
+struct my_local {};
 
 template <class Fun>
 PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
@@ -99,20 +99,20 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.mono_elapsed = timer.elapsed();
 	}
 
-	if (types.Includes(Type::Monotonic))
-	{
-		srand(42);
-		monotonic::local<64*1024, local_tag> storage;
-		boost::timer timer;
-		for (size_t n = 0; n < count; ++n)
-		{
-			{
-				fun.test(monotonic::allocator<void, local_tag>(), length);
-			}
-			storage.reset();
-		}
-		result.local_mono_elapsed = timer.elapsed();
-	}
+	//if (types.Includes(Type::Monotonic))
+	//{
+	//	srand(42);
+	//	monotonic::local<my_local> storage;
+	//	boost::timer timer;
+	//	for (size_t n = 0; n < count; ++n)
+	//	{
+	//		{
+	//			fun.test(monotonic::allocator<void, my_local>(), length);
+	//		}
+	//		storage.reset();
+	//	}
+	//	result.local_mono_elapsed = timer.elapsed();
+	//}
 
 	if (types.Includes(Type::Standard))
 	{
@@ -268,6 +268,32 @@ void heading(const char *text, char star = '-')
 #pragma warning(disable:4996)
 #endif
 
+struct local_1 {};
+
+void test_locals()
+{
+	monotonic::local<local_1> storage;
+	{
+		std::list<int, monotonic::allocator<int, local_1> > list;
+		list.push_back(42);
+		string &s = storage.create<string>("foo");
+		
+		cout << "test_locals: size=" << storage.get_storage().used() << endl;
+		storage.destroy(s);
+		storage.destroy(list);
+		storage.reset();
+		cout << "test_locals: size=" << storage.get_storage().used() << endl;
+
+		std::vector<int, monotonic::allocator<int, local_1> > vec;
+		vec.resize(100);
+		cout << "test_locals: size=" << storage.get_storage().used() << endl;
+		storage.destroy(vec);
+		storage.reset();
+		cout << "test_locals: size=" << storage.get_storage().used() << endl;
+
+	}
+}
+
 void test_pools()
 {
 	size_t length = 1;
@@ -340,6 +366,7 @@ int main()
 		cout << "results of running test at:" << endl;
 		cout << "https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/compare_memory_pool.cpp" << endl << endl;
 
+		//test_locals();
 		//test_pools();
 		//return 0;
 

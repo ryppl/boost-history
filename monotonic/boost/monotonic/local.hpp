@@ -13,15 +13,15 @@ namespace boost
 	namespace monotonic
 	{
 		/// RIIA for storage
-		template <size_t InlineSize
-			, class Region
-			, size_t MinHeapIncrement
-			, class Access
-			, class Al
-		>
+		template <class Region, class Access>
 		struct local
 		{
-			typedef static_storage<Region,Access,InlineSize,MinHeapIncrement,Al> StaticStorage;
+			typedef static_storage<
+				Region
+				, Access
+				, DefaultSizes::InlineSize
+				, DefaultSizes::MinHeapIncrement
+				, std::allocator<void> > StaticStorage;
 
 			local()
 			{
@@ -42,6 +42,23 @@ namespace boost
 			{
 				get_storage().release();
 			}
+
+			template <class Ty>
+			Ty &create()
+			{
+				return get_storage().create<Ty>();
+			}
+			template <class Ty>
+			Ty &create(Ty const &X)
+			{
+				return get_storage().create<Ty>(X);
+			}
+			template <class Ty>
+			void destroy(Ty &X)
+			{
+				get_storage().destroy(X);
+			}
+
 		};
 
 	} // namespace monotonic
