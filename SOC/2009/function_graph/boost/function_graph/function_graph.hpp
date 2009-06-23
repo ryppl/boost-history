@@ -16,6 +16,7 @@
 #include <utility>
 #include <boost/optional/optional_fwd.hpp>
 #include <boost/range.hpp>
+#include <iterator>
 
 namespace boost {
 
@@ -80,7 +81,42 @@ struct no_domain { };
  * @note The name of this data type is 31 characters long. I need some brevity.
  */
 
-struct function_graph_in_edge_iterator { };
+template<typename Edge, typename Range>
+struct function_graph_in_edge_iterator {
+    typedef Range vertex_iterator_range;
+    typedef typename iterator_range<vertex_iterator_range>::type
+            vertex_iterator;
+    typedef Edge edge_descriptor;
+
+    /** Iterator traits */
+    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef edge_descriptor value_type;
+    typedef std::size_t different_type;
+    typedef value_type* pointer;
+    typedef value_type& reference;
+
+    /** Default constructor which looks for the first edge. */
+    function_graph_in_edge_iterator()
+        : range_()
+    { };
+
+    /** Constructor taking a vertex range */
+    function_graph_in_edge_iterator(vertex_iterator_range const& cp)
+        : range_(cp)
+    { };
+
+    /** Bidirectional Iterator operator overloads */
+    function_graph_in_edge_iterator& operator++()
+    { };
+
+    function_graph_in_edge_iterator& operator--()
+    { };
+
+    vertex_iterator& operator*()
+    { };
+
+    vertex_iterator_range range_;
+};
 
 
 
@@ -118,17 +154,17 @@ public:
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
-    typedef Range vertex_iterator_range_type;
-    typedef typename range_iterator<vertex_iterator_range_type>::type
+    typedef Range vertex_iterator_range;
+    typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
-    typedef function_graph_in_edge_iterator in_edge_iterator;
+    typedef function_graph_in_edge_iterator<edge_descriptor,
+            vertex_iterator_range> in_edge_iterator;
 
     /** Constructor: takes a functor and range */
-    function_graph(function_type const& f, vertex_iterator_range_type const& r)
+    function_graph(function_type const& f, vertex_iterator_range const& r)
         : Base(f), range_(r)
     { }
 
-private:
     Range range_;
 };
 
@@ -157,28 +193,6 @@ public:
 };
 
 
-
-/** @name make_function_graph
- * Create and return a function_graph object deduced from the function arguments
- * passed to it.
- */
-
-//@{
-template <typename Result, typename Vertex>
-function_graph<function<Result(Vertex, Vertex)>, no_domain>
-    make_function_graph(function<Result(Vertex, Vertex)> const& f)
-{
-    return function_graph<function<Result(Vertex, Vertex)>, no_domain>(f);
-}
-
-template <typename Result, typename Vertex, typename Range>
-function_graph<function<Result(Vertex, Vertex)>, Range>
-    make_function_graph(function<Result(Vertex, Vertex)> const& f,
-                        Range const& r)
-{
-    return function_graph<function<Result(Vertex, Vertex)>, Range>(f,r);
-}
-//@}
 
 /**
  * @note This specialization will match any function of the form E(V,V) and
@@ -222,12 +236,19 @@ in_edges(typename function_graph<function<Result(Vertex, Vertex)>,
          Range>::vertex_descriptor const& v,
          function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
 {
-    std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
-              Range>::in_edge_iterator,
-              typename function_graph<function<Result(Vertex, Vertex)>,
-              Range>::in_edge_iterator> iter_range;
-    // Search for first and last in_edges
-    return iter_range;
+    typedef function_graph<function<Result(Vertex, Vertex)>, Range> Graph;
+    typedef typename Graph::in_edge_iterator in_edge_iterator;
+    typedef typename Graph::vertex_iterator vertex_iterator;
+    typedef std::pair<in_edge_iterator, in_edge_iterator> iter_range;
+
+    vertex_iterator first_vertex_pair = boost::begin(g.range_);
+    vertex_iterator vertex_end = boost::end(g.range_);
+    while((first_vertex_pair != vertex_end) || !g.edge_(first_vertex_pair, v))
+    { ++first_vertex_pair; }
+    in_edge_iterator begin(first_vertex_pair, v);
+    in_edge_iterator end(vertex_end, v);
+
+    return std::make_pair(begin, end);
 }
 
 
