@@ -1,0 +1,663 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<title>Exported Concept Maps</title>
+<meta name="authors" content="Dave Abrahams &lt;dave&#64;boostpro.com&gt; and Doug Gregor &lt;doug.gregor&#64;gmail.com&gt;" />
+<meta name="date" content="2009-06-22" />
+<style type="text/css">
+
+/*
+:Author: David Goodger (goodger@python.org)
+:Id: $Id: exported-concept-maps.css 54183 2009-06-22 06:46:57Z dgregor $
+:Copyright: This stylesheet has been placed in the public domain.
+
+Default cascading style sheet for the HTML output of Docutils.
+
+See http://docutils.sf.net/docs/howto/html-stylesheets.html for how to
+customize this style sheet.
+*/
+
+/* used to remove borders from tables and images */
+.borderless, table.borderless td, table.borderless th {
+  border: 0 }
+
+table.borderless td, table.borderless th {
+  /* Override padding for "table.docutils td" with "! important".
+     The right padding separates the table cells. */
+  padding: 0 0.5em 0 0 ! important }
+
+.first {
+  /* Override more specific margin styles with "! important". */
+  margin-top: 0 ! important }
+
+.last, .with-subtitle {
+  margin-bottom: 0 ! important }
+
+.hidden {
+  display: none }
+
+a.toc-backref {
+  text-decoration: none ;
+  color: black }
+
+blockquote.epigraph {
+  margin: 2em 5em ; }
+
+dl.docutils dd {
+  margin-bottom: 0.5em }
+
+/* Uncomment (and remove this text!) to get bold-faced definition list terms
+dl.docutils dt {
+  font-weight: bold }
+*/
+
+div.abstract {
+  margin: 2em 5em }
+
+div.abstract p.topic-title {
+  font-weight: bold ;
+  text-align: center }
+
+div.admonition, div.attention, div.caution, div.danger, div.error,
+div.hint, div.important, div.note, div.tip, div.warning {
+  margin: 2em ;
+  border: medium outset ;
+  padding: 1em }
+
+div.admonition p.admonition-title, div.hint p.admonition-title,
+div.important p.admonition-title, div.note p.admonition-title,
+div.tip p.admonition-title {
+  font-weight: bold ;
+  font-family: sans-serif }
+
+div.attention p.admonition-title, div.caution p.admonition-title,
+div.danger p.admonition-title, div.error p.admonition-title,
+div.warning p.admonition-title {
+  color: red ;
+  font-weight: bold ;
+  font-family: sans-serif }
+
+/* Uncomment (and remove this text!) to get reduced vertical space in
+   compound paragraphs.
+div.compound .compound-first, div.compound .compound-middle {
+  margin-bottom: 0.5em }
+
+div.compound .compound-last, div.compound .compound-middle {
+  margin-top: 0.5em }
+*/
+
+div.dedication {
+  margin: 2em 5em ;
+  text-align: center ;
+  font-style: italic }
+
+div.dedication p.topic-title {
+  font-weight: bold ;
+  font-style: normal }
+
+div.figure {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+div.footer, div.header {
+  clear: both;
+  font-size: smaller }
+
+div.line-block {
+  display: block ;
+  margin-top: 1em ;
+  margin-bottom: 1em }
+
+div.line-block div.line-block {
+  margin-top: 0 ;
+  margin-bottom: 0 ;
+  margin-left: 1.5em }
+
+div.sidebar {
+  margin: 0 0 0.5em 1em ;
+  border: medium outset ;
+  padding: 1em ;
+  background-color: #ffffee ;
+  width: 40% ;
+  float: right ;
+  clear: right }
+
+div.sidebar p.rubric {
+  font-family: sans-serif ;
+  font-size: medium }
+
+div.system-messages {
+  margin: 5em }
+
+div.system-messages h1 {
+  color: red }
+
+div.system-message {
+  border: medium outset ;
+  padding: 1em }
+
+div.system-message p.system-message-title {
+  color: red ;
+  font-weight: bold }
+
+div.topic {
+  margin: 2em }
+
+h1.section-subtitle, h2.section-subtitle, h3.section-subtitle,
+h4.section-subtitle, h5.section-subtitle, h6.section-subtitle {
+  margin-top: 0.4em }
+
+h1.title {
+  text-align: center }
+
+h2.subtitle {
+  text-align: center }
+
+hr.docutils {
+  width: 75% }
+
+img.align-left {
+  clear: left }
+
+img.align-right {
+  clear: right }
+
+ol.simple, ul.simple {
+  margin-bottom: 1em }
+
+ol.arabic {
+  list-style: decimal }
+
+ol.loweralpha {
+  list-style: lower-alpha }
+
+ol.upperalpha {
+  list-style: upper-alpha }
+
+ol.lowerroman {
+  list-style: lower-roman }
+
+ol.upperroman {
+  list-style: upper-roman }
+
+p.attribution {
+  text-align: right ;
+  margin-left: 50% }
+
+p.caption {
+  font-style: italic }
+
+p.credits {
+  font-style: italic ;
+  font-size: smaller }
+
+p.label {
+  white-space: nowrap }
+
+p.rubric {
+  font-weight: bold ;
+  font-size: larger ;
+  color: maroon ;
+  text-align: center }
+
+p.sidebar-title {
+  font-family: sans-serif ;
+  font-weight: bold ;
+  font-size: larger }
+
+p.sidebar-subtitle {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+p.topic-title {
+  font-weight: bold }
+
+pre.address {
+  margin-bottom: 0 ;
+  margin-top: 0 ;
+  font: inherit }
+
+pre.literal-block, pre.doctest-block {
+  margin-left: 2em ;
+  margin-right: 2em }
+
+span.classifier {
+  font-family: sans-serif ;
+  font-style: oblique }
+
+span.classifier-delimiter {
+  font-family: sans-serif ;
+  font-weight: bold }
+
+span.interpreted {
+  font-family: sans-serif }
+
+span.option {
+  white-space: nowrap }
+
+span.pre {
+  white-space: pre }
+
+span.problematic {
+  color: red }
+
+span.section-subtitle {
+  /* font-size relative to parent (h1..h6 element) */
+  font-size: 80% }
+
+table.citation {
+  border-left: solid 1px gray;
+  margin-left: 1px }
+
+table.docinfo {
+  margin: 2em 4em }
+
+table.docutils {
+  margin-top: 0.5em ;
+  margin-bottom: 0.5em }
+
+table.footnote {
+  border-left: solid 1px black;
+  margin-left: 1px }
+
+table.docutils td, table.docutils th,
+table.docinfo td, table.docinfo th {
+  padding-left: 0.5em ;
+  padding-right: 0.5em ;
+  vertical-align: top }
+
+table.docutils th.field-name, table.docinfo th.docinfo-name {
+  font-weight: bold ;
+  text-align: left ;
+  white-space: nowrap ;
+  padding-left: 0 }
+
+h1 tt.docutils, h2 tt.docutils, h3 tt.docutils,
+h4 tt.docutils, h5 tt.docutils, h6 tt.docutils {
+  font-size: 100% }
+
+ul.auto-toc {
+  list-style-type: none }
+
+/* DPG customizations */
+.ins { background-color:#A0FFA0 }
+.del { background-color:#FFA0A0 }
+.emphasis { font-style: italic }
+.pre { font-family: monospace }
+</style>
+</head>
+<body>
+<div class="document" id="exported-concept-maps">
+<h1 class="title">Exported Concept Maps</h1>
+<table class="docinfo" frame="void" rules="none">
+<col class="docinfo-name" />
+<col class="docinfo-content" />
+<tbody valign="top">
+<tr><th class="docinfo-name">Authors:</th>
+<td>Dave Abrahams &lt;dave&#64;boostpro.com&gt; and Doug Gregor &lt;doug.gregor&#64;gmail.com&gt;</td></tr>
+<tr class="field"><th class="docinfo-name">Number:</th><td class="field-body">N2918=09-0108</td>
+</tr>
+<tr><th class="docinfo-name">Date:</th>
+<td>2009-06-22</td></tr>
+</tbody>
+</table>
+<div class="abstract topic">
+<p class="topic-title first">Abstract</p>
+<p>We propose a mechanism that allows default associated
+functions to be used in unconstrained code.</p>
+</div>
+<div class="section" id="summary">
+<h1>Summary</h1>
+<p>Concepts and concept maps can provide default implementations of
+associated functions:</p>
+<pre class="literal-block">
+concept LessThanComparable&lt;typename T&gt;
+{
+    bool operator&lt;(T const&amp; x, T const&amp; y);
+    bool operator&gt;(T const&amp; x, T const&amp; y) <strong>{ return y &lt; x; }</strong>
+    bool operator&lt;=(T const&amp; x, T const&amp; y) <strong>{ return !(y &lt; x); }</strong>
+    bool operator&gt;=(T const&amp; x, T const&amp; y) <strong>{ return !(x &lt; y); }</strong>
+}
+</pre>
+<p>In the following code, <tt class="docutils literal"><span class="pre">Num</span></tt> models the <tt class="docutils literal"><span class="pre">LessThanComparable</span></tt>
+concept even though it only supplies one of four required operators:</p>
+<pre class="literal-block">
+class Num
+{
+     friend bool operator&lt;(Num const&amp; x, Num const&amp; y) { … }
+};
+
+concept_map LessThanComparable&lt;Num&gt; { } // OK
+</pre>
+<p>The remaining three operators (&gt;, &lt;=, &gt;=) are provided by default
+definitions within the concept map. Now all four operators required by
+<tt class="docutils literal"><span class="pre">LessThanComparable</span></tt> can be
+applied to <tt class="docutils literal"><span class="pre">Num</span></tt> in a constrained template where
+<tt class="docutils literal"><span class="pre">LessThanComparable</span></tt> is required:</p>
+<pre class="literal-block">
+template &lt;LessThanComparable X&gt;
+int f(X&amp; a, X&amp; b)
+{
+    while (b &gt; a) // Uses operator &gt; from LessThanComparable
+    { … }
+}
+
+Num a, b;
+int z = f(a, b);  // OK, LessThanComparable supplies operator&gt;
+</pre>
+<p>Unfortunately, the same cannot be said of contexts where <tt class="docutils literal"><span class="pre">Num</span></tt> has
+not been constrained by <tt class="docutils literal"><span class="pre">LessThanComparable</span></tt>:</p>
+<pre class="literal-block">
+int f(Num&amp; a, Num&amp; b)
+{
+    while (b &gt; a) // <strong>ERROR:</strong> no operator&gt; defined
+    { … }
+}
+</pre>
+<p>We propose to allow <tt class="docutils literal"><span class="pre">concept_map</span></tt>s to be explicitly “exported” to
+unconstrained contexts like this:</p>
+<pre class="literal-block">
+export concept_map LessThanComparable&lt;Num&gt; { } // OK
+</pre>
+<p>Here, the synthesized definitions for the &gt;, &lt;=, and &gt;= operators are
+exported from the concept map so that they are visible to normal name
+lookup. Then, the unconstrained definition of <tt class="docutils literal"><span class="pre">f</span></tt> above will work as
+expected.  We also propose that concept maps generated with the
+“intentional concept mapping” syntax described in N2916=09-0106 (if it
+is accepted) be exported, so <tt class="docutils literal"><span class="pre">Num</span></tt> could be declared this way:</p>
+<pre class="literal-block">
+class Num <strong>-&gt; LessThanComparable</strong>
+{
+     friend bool operator&lt;(Num const&amp; x, Num const&amp; y) { … }
+};
+</pre>
+</div>
+<div class="section" id="motivation">
+<h1>Motivation</h1>
+<p>The status quo creates a disturbing divide between constrained and
+unconstrained code.  Does the original definition of <tt class="docutils literal"><span class="pre">Num</span></tt> model
+<tt class="docutils literal"><span class="pre">LessThanComparable</span></tt>?  In constrained code, the answer is “yes;” in
+unconstrained code, “no.”  In order to make <tt class="docutils literal"><span class="pre">Num</span></tt> model
+<tt class="docutils literal"><span class="pre">LessThanComparable</span></tt> everywhere, one actually needs to duplicate all
+the default definitions that have already been supplied by the
+concept for constrained code:</p>
+<pre class="literal-block">
+class Num
+{
+    friend bool operator&lt;(Num const&amp; x, Num const&amp; y) { … }
+    <strong>// copy-paste-munge from LessThanComparable</strong>
+    <strong>friend bool operator&gt;(Num const&amp; x, Num const&amp; y) { return y &lt; x; }</strong>
+    <strong>friend bool operator&lt;=(Num const&amp; x, Num const&amp; y) { return !(y &lt; x); }</strong>
+    <strong>friend bool operator&gt;=(Num const&amp; x, Num const&amp; y) { return !(x &lt; y); }</strong>
+};
+</pre>
+<p>Unlike an empty concept map, whose verbosity has caused some concern,
+this redundant code truly adds zero value (except inasmuch as it
+provides the desired operators for unconstrained code) and carries
+with it all the usual disadvantages of duplicated code.  We hate the
+idea of being forced to regurgitate boilerplate just to reach the
+baseline of uniform behavior in constrained and unconstrained code,
+and we predict that most users writing models will have the same
+reaction (or worse).</p>
+<p>Default implementations of associated functions arise in concepts like
+<tt class="docutils literal"><span class="pre">LessThanComparable</span></tt> whose interfaces are <strong>non-minimal</strong>, i.e. they
+contain elements that can be implemented entirely in terms of other
+interface elements.  Such interfaces are quite common—in Boost you can
+find entire libraries devoted to implementing the redundant parts of
+non-minimal interfaces (<a class="citation-reference" href="#operators" id="id1">[Operators]</a>, <a class="citation-reference" href="#iterator" id="id2">[Iterator]</a>).  The usual way to
+avoid repeating this
+boilerplate in each model of a concept is to capture the redundancy in
+a base class template:</p>
+<pre class="literal-block">
+// Derive your Model from this class (that's the Curiously Recurring
+// Template Pattern, CRTP) to implement redundant interface elements
+template &lt;class Model&gt;
+struct less_than_comparable
+{
+    // captured boilerplate:
+    friend bool operator&gt;(Model const&amp; x, Model const&amp; y) { return y &lt; x; }
+    friend bool operator&lt;=(Model const&amp; x, Model const&amp; y) { return !(y &lt; x); }
+    friend bool operator&gt;=(Model const&amp; x, Model const&amp; y) { return !(x &lt; y); }
+};
+
+struct Num : less_than_comparable&lt;Num&gt;
+{
+    friend bool operator&lt;(Num const&amp;, Num const&amp;);
+};
+
+struct String : less_than_comparable&lt;String&gt;
+{
+    friend bool operator&lt;(String const&amp;, String const&amp;);
+};
+</pre>
+<p>In C++0x as defined today, one would need both the CRTP base <em>and</em> the
+<tt class="docutils literal"><span class="pre">concept_map</span></tt> to achieve uniform behavior in constrained and
+unconstrained code.  If this proposal is accepted, though, all such
+CRTP base class templates could be discarded, the redundant interface
+being implemented directly by the concept.  The Boost.Operators
+library, for example, could be eliminated for C++0x, and the
+Boost.Iterator library would shrink substantially—a massive reduction
+in verbosity. More importantly, any concept with a rich interface
+(including defaults) will automatically provide the ability to export
+the interface, making it easier to implement well-behaved types that
+meet the requirements of certain concepts.</p>
+</div>
+<div class="section" id="risks-opportunities-and-rationale">
+<h1>Risks, Opportunities, and Rationale</h1>
+<p>In general, adding definitions to a system increases complexity and
+the risk of unexpected effects (the safest code is no code).  Exported
+<tt class="docutils literal"><span class="pre">concept_map</span></tt>s, in particular, add candidates to overload sets.
+These new definitions can potentially change the meaning of
+unconstrained code, which currently has no dependency on the
+<tt class="docutils literal"><span class="pre">concept_map</span></tt>.  That risk is mitigated by the fact that the exported
+definitions are only found when the exported concept map is itself
+visible, so these exported definitions follow the same rules as scoped
+concept maps.
+If one can assume the type author has control over definitions in his
+namespace, then any such semantic change (e.g., introducing another concept
+map into that namespace) would likely be intentional.
+However, if one lumps everything together into the global namespace or starts
+writing <tt class="docutils literal"><span class="pre">concept_map</span></tt>s in namespaces controlled by others, the
+potential for surprise is greater.</p>
+<p>We considered automatically exporting all <tt class="docutils literal"><span class="pre">concept_map</span></tt>s, to
+provide the greatest consistency between constrained and unconstrained
+code. However, we do not recommend this approach because it is
+generally wrong when concept maps are used to adapt syntax, since
+syntax adaptations for the sake of concepts aren't typically meant to
+be part of the public interface of a type. More importantly, we found
+that those types whose public interface involves defaults from
+concepts maps were almost always good candidates for the “intentional
+concept mapping syntax” proposed by N2916=09-0106, which already
+explicitly ties the interface of a type to a particular set of
+concepts (including their defaults).</p>
+</div>
+<div class="section" id="proposed-wording">
+<h1>Proposed Wording</h1>
+<p>Modify the grammar in 14.10.2 [concept.map] as follows:</p>
+<blockquote>
+<dl class="docutils">
+<dt><em>concept-map-definition</em>:</dt>
+<dd><span class="ins">export</span><sub>opt</sub> <em>concept_map</em> ::<sub>opt</sub> <em>nested-name-specifier</em><sub>opt</sub> <em>concept-id</em> { <em>concept-map-member-specification</em><sub>opt</sub> } ;<sub>opt</sub></dd>
+</dl>
+</blockquote>
+<p>Modify paragraph 6 of [concept.map] as follows:</p>
+<ol class="arabic simple" start="6">
+<li>A concept map member that satisfies a requirement member cannot be found by any form of name lookup (3.4) <span class="ins">unless it is a member of an exported concept map ([concept.map.export])</span>.</li>
+</ol>
+<p>Add a new paragraph at the end of [concept.map]:</p>
+<ol class="arabic simple" start="15">
+<li><span class="ins">A concept-map-definition that starts with</span> <span class="ins pre">export</span> <span class="ins">defines an exported concept map ([concept.map.export]).</span></li>
+</ol>
+<p>Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:</p>
+<ol class="arabic">
+<li><p class="first"><span class="ins">An</span> <span class="ins emphasis">exported concept map</span> <span class="ins">is a concept map for which each concept map member that satisfies a requirement member corresponding to an associated function requirement can be found by name lookup. These concept map members are called</span> <span class="ins emphasis">exported associated function definitions</span><span class="ins">. [Example:</span></p>
+<pre class="literal-block">
+concept EQ&lt;typename T&gt; {
+  bool operator==(const T&amp; x, const T&amp; y);
+  bool operator!=(const T&amp; x, const T&amp; y) { return !(x == y); }
+}
+
+struct X { bool operator==(const X&amp;) const; };
+
+export concept_map EQ&lt;X&gt; { }
+
+bool f(X x, X y) {
+  return x != y; // okay: name lookup finds EQ&lt;X&gt;::operator!=
+}
+</pre>
+</li>
+</ol>
+<blockquote>
+<span class="ins">- end example]</span></blockquote>
+<ol class="arabic" start="2">
+<li><p class="first"><span class="ins">The exported associated function definitions in an exported concept map or exported concept map template are only visible when the exported concept map (or concept map template) is visible via concept map lookup (14.11.1.1). [Example:</span></p>
+<pre class="literal-block">
+struct Y { bool operator==(const Y&amp;) const; };
+
+namespace N {
+  export concept_map EQ&lt;Y&gt; { }; // okay
+
+  bool f(Y y1, Y y2) {
+    return y1 != y2; // okay: name lookup finds N::EQ&lt;Y&gt;::operator!=
+  }
+}
+
+bool g(Y y1, Y y2) {
+  return y1 != y2; // error: N::EQ&lt;Y&gt; is not visible to concept map lookup,
+                   // therefore N::EQ&lt;Y&gt;::operator!= is not visible.
+}
+</pre>
+</li>
+</ol>
+<blockquote>
+<span class="ins">- end example]</span></blockquote>
+<ol class="arabic" start="3">
+<li><p class="first"><span class="ins">An exported associated function definition that corresponds to an associated non-member function requirement is visible in the namespace enclosing the exported concept map. [Note: the exported associated function definition can be found by any form of name lookup that would find a function declaration with the same name and signature, including unqualified name lookup (3.4.1), argument-dependent name lookup (3.4.2), and qualified name lookup into a namespace (3.4.3.2). --end note]</span></p>
+</li>
+<li><p class="first"><span class="ins">An exported associated function definition that corresponds to an associated member function requirement is visible in the class nominated by the</span> <span class="ins emphasis">nested-name-specifier</span> <span class="ins">in the declarator of the exported associated function definition. The exported associated function definition is treated as a public member of the nominated class. [Example:</span></p>
+<pre class="literal-block">
+concept C&lt;typename T&gt; {
+  void T::f();
+  void T::g() { this-&gt;f(); }
+  void T::h() { this-&gt;g(); }
+}
+
+struct Y {
+  void h();
+};
+
+export concept_map C&lt;Y&gt; { } // Y::f and Y::g are now visible
+
+void f(X &amp;x) {
+  x.f(); // okay: calls C&lt;Y&gt;'s Y::f
+  x.g(); // okay: calls C&lt;Y&gt;'s Y::g
+  x.h(); // okay: calls Y::h
+}
+</pre>
+</li>
+</ol>
+<blockquote>
+<span class="ins">- end example]</span></blockquote>
+<ol class="arabic" start="5">
+<li><p class="first"><span class="ins">An exported associated function definition of an exported concept map template is visible when the concept map template's template parameters can be deduced (14.9.2) from the corresponding associated function requirement, as specified below.The concept map template is then instantiated with the deduced template arguments. The resulting concept map is an exported concept map whose exported associated function requirements are visible within the enclosing namespace of the concept (for an associated non-member function requirement) or within the class nominated by an associated member function requirement.</span></p>
+</li>
+<li><p class="first"><span class="ins">Template argument deduction of the concept map template's template arguments from an exported associated function definition as if the associated function definition were a function template with the same template parameters and requirements as the concept map template. [Example:</span></p>
+<pre class="literal-block">
+concept EQ2&lt;typename T, typename U&gt; {
+  bool operator==(const T&amp;, const U&amp;);
+  bool operator!=(const T&amp; t, const U&amp; u) { return !(t == u); }
+}
+
+struct A { };
+struct B { };
+
+template&lt;std::ObjectType T&gt; struct ptr {
+  T* m;
+};
+
+template&lt;typename T, typename U&gt;
+export concept_map EQ2&lt;ptr&lt;T&gt;, ptr&lt;U&gt;&gt; {
+  bool operator==(const ptr&lt;T&gt;&amp; t, const ptr&lt;U&gt;&amp; u) {
+    return t.m == u.m;
+  }
+}
+
+bool f(ptr&lt;int&gt; p1, ptr&lt;float&gt; p2) {
+  return p1 == p2; // okay: from operator==(const ptr&lt;T&gt;&amp; t, const ptr&lt;U&gt;&amp; u),
+                   // deduces T=int and U=float
+                   // instantiates concept_map EQ2&lt;ptr&lt;T&gt;, ptr&lt;U&gt;&gt; to find
+                   // EQ2&lt;ptr&lt;int&gt;, ptr&lt;float&gt;&gt;::operator==(const ptr&lt;int&gt;&amp; t, const ptr&lt;float&gt;&amp; u)
+}
+</pre>
+</li>
+</ol>
+<blockquote>
+<p><span class="ins">- end example]</span></p>
+<p><span class="ins">When the associated function requirement is an associated
+member function requirement, an artificial first parameter is
+introduced into the function template used for template argument
+deduction. The type of the artificial first parameter is the type of
+the</span> <span class="ins emphasis">nested-name-specifier</span> <span class="ins">in the declarator
+of the exported associated function definition. Tthe argument that
+corresponds to this artificial first parameter is the type of the
+implied object argument (13.3.1). [Example:</span></p>
+<pre class="literal-block">
+  concept C&lt;typename T&gt; { }
+
+  concept M1&lt;typename T&gt; {
+    void T::f();
+  }
+
+  concept M2&lt;typename T, typename U&gt; {
+    void T::f(U);
+  }
+
+  template&lt;C T&gt; struct X { };
+
+  template&lt;C T&gt;
+  export concept_map M1&lt;X&lt;T&gt;&gt; {
+    void X&lt;T&gt;::f() { }
+  }
+
+  template&lt;C T, typename U&gt;
+  export concept_map M2&lt;X&lt;T&gt;, U&gt; {
+    void X&lt;T&gt;::f(U) { }
+  }
+
+  void f(X&lt;int&gt; x, float y) {
+    x.f(); // okay: template argument deduction deduces that T=int by
+           // matching the artificial first parameter of type X&lt;T&gt;
+           // to the implied object argument of type X&lt;int&gt;.
+    x.f(y); // okay: template argument deduction for M1's X&lt;T&gt;::f
+            // succeeds with T=int, but the resulting visible
+            // function is not a viable overload candidate.
+            // template argument deduction with M2's X&lt;T&gt;::f
+            // succeeds with T=int and U=float, making M2&lt;X&lt;int&gt;, float&gt;'s
+            // X&lt;int&gt;::f(float) visible (and viable).
+  }
+
+:ins:`- end example]`
+</pre>
+</blockquote>
+</div>
+<div class="section" id="bibliography">
+<h1>Bibliography</h1>
+<table class="docutils citation" frame="void" id="operators" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[Operators]</a></td><td>The Boost.Operators library. <a class="reference external" href="http://www.boost.org/doc/libs/1_39_0/libs/utility/operators.htm">http://www.boost.org/doc/libs/1_39_0/libs/utility/operators.htm</a>.</td></tr>
+</tbody>
+</table>
+<table class="docutils citation" frame="void" id="iterator" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[Iterator]</a></td><td>The Boost.Iterator library. <a class="reference external" href="http://www.boost.org/doc/libs/1_39_0/libs/iterator/doc/index.html">http://www.boost.org/doc/libs/1_39_0/libs/iterator/doc/index.html</a>.</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</body>
+</html>
