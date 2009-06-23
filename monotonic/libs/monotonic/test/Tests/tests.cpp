@@ -25,7 +25,18 @@ struct region1 {};
 
 BOOST_AUTO_TEST_CASE(test_local)
 {
+	monotonic::local<region0> storage0;
+	monotonic::local<region1> storage1;
+	{
+		std::list<int, monotonic::allocator<int, region0> > list0;
+		std::list<int, monotonic::allocator<int, region1> > list1;
+		fill_n(back_inserter(list0), 100, 42);
+		fill_n(back_inserter(list1), 100, 42);
 
+		std::string<char, std::char_traits<char>, monotonic::allocator<char, region0> > string("foo");
+		string += "bar";
+		BOOST_ASSERT(string == "foobar");
+	}
 }
 
 BOOST_AUTO_TEST_CASE(test_shared_allocation)
