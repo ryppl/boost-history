@@ -59,7 +59,7 @@ namespace boost
 				template <class Storage>
 				static T Given(Storage &storage)
 				{
-					return T();//storage);
+					return T(storage);
 				}
 			};
 		}

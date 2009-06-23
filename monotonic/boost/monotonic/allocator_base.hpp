@@ -81,12 +81,14 @@ namespace boost
 
 			void construct(pointer ptr)
 			{
-				new (ptr) T();//detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, static_cast<Derived *>(this));
+				//new (ptr) T();
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				new (ptr) T(val);//detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
+				detail::Construct<detail::is_monotonic<T>::value>::Given(ptr, val, static_cast<Derived *>(this));
+				//new (ptr) T(val);
 			}
 
 			void destroy(pointer ptr)

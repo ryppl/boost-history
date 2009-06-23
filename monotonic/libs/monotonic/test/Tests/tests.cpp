@@ -52,6 +52,14 @@ BOOST_AUTO_TEST_CASE(test_map)
 
 	monotonic::static_storage<region0>::release();
 	monotonic::static_storage<region1>::release();
+
+
+	monotonic::storage<> storage;
+	{
+		monotonic::map<int, monotonic::list<int> > local_map(storage);
+		local_map[1].push_back(42);
+		BOOST_ASSERT(local_map.get_allocator().get_storage() == local_map[1].get_allocator().get_storage());
+	}
 }
 
 BOOST_AUTO_TEST_CASE(test_vector)
@@ -151,25 +159,25 @@ BOOST_AUTO_TEST_CASE(test_local)
 	}
 }
 
-struct region0 {};
-struct region1 {};
+//struct region0 {};
+//struct region1 {};
 
 BOOST_AUTO_TEST_CASE(test_shared_allocation)
 {
-	// use default region and access
-	std::list<int, monotonic::allocator<int> > list;
+	//// use default region and access
+	//std::list<int, monotonic::allocator<int> > list;
 
-	// use specific region and access
-	std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > list;
-	std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > list;
+	//// use specific region and access
+	//std::list<int, monotonic::allocator<int, region0, monotonic::shared_access_tag> > list;
+	//std::list<int, monotonic::allocator<int, region0, monotonic::thread_local_access_tag> > list;
 
-	// using wrapped container
-	monotonic::list<int> list;
-	monotonic::list<int, region0, monotonic::shared_access_tag> list;
-	monotonic::list<int, region0, monotonic::thread_local_access_tag> list;
+	//// using wrapped container
+	//monotonic::list<int> list;
+	//monotonic::list<int, region0, monotonic::shared_access_tag> list;
+	//monotonic::list<int, region0, monotonic::thread_local_access_tag> list;
 
-	// use different regions
-	monotonic::map<int, monotonic::list<monotonic::string, region1>, region0> map;
+	//// use different regions
+	//monotonic::map<int, monotonic::list<monotonic::string, region1>, region0> map;
 }
 
 BOOST_AUTO_TEST_CASE(test_regional_allocation)
