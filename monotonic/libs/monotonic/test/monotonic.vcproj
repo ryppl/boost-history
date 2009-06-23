@@ -315,38 +315,38 @@
 					>
 				</File>
 				<Filter
-					Name="extra"
+					Name="container"
 					>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\chain.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\chain.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\inline_clone_allocator.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\inline_clone_allocator.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\list.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\list.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\map.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\map.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\ptr_list.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\ptr_list.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\set.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\set.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\string.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\string.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\extra\vector.hpp"
+						RelativePath="..\..\..\boost\monotonic\container\vector.hpp"
 						>
 					</File>
 				</Filter>
@@ -406,17 +406,6 @@
 		</File>
 		<File
 			RelativePath=".\compare_memory_pool.cpp"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCLCompilerTool"
-				/>
-			</FileConfiguration>
-		</File>
-		<File
-			RelativePath=".\Jamfile.v2"
 			>
 		</File>
 		<File

@@ -3,11 +3,11 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_CHAIN_H
-#define BOOST_MONOTONIC_CHAIN_H
+#ifndef BOOST_MONOTONIC_CHAIN_HPP
+#define BOOST_MONOTONIC_CHAIN_HPP
 
-#include <boost/monotonic/allocator.h>
-#include <boost/utility/iter_range.h>
+#include <boost/monotonic/allocator.hpp>
+#include <boost/utility/iter_range.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 
@@ -257,6 +257,6 @@ namespace boost
 	}
 }
 
-#endif // BOOST_MONOTONIC_CHAIN_H
+#endif // BOOST_MONOTONIC_CHAIN_HPP
 
 //EOF

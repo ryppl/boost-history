@@ -14,12 +14,12 @@ namespace boost
 	namespace monotonic
 	{
 		/// a string that uses a monotonic allocator in the given region
-		template <class Region = default_region_tag>
+		template <class Region = default_region_tag, class Access = default_access_tag>
 		struct string
 		{
 			typedef char Ch;
 			typedef std::char_traits<Ch> Tr;
-			typedef allocator<Ch, Region> Allocator;
+			typedef allocator<Ch, Region,Access> Allocator;
 			typedef std::basic_string<Ch, Tr, Allocator> Impl;
 			typedef size_t size_type;
 			typedef typename Impl::iterator iterator;
@@ -33,12 +33,12 @@ namespace boost
 			string()
 			{
 			}
-			string(string const &other)
+			template <class Reg2, class Acc2>
+			string(string<Reg2,Acc2> const &other)
 				: impl(other.impl)
 			{
 			}
-			template <class U>
-			string(allocator<U, Region> &alloc)
+			string(Allocator alloc)
 				: impl(alloc)
 			{
 			}
@@ -47,7 +47,7 @@ namespace boost
 			{
 			}
 			template <class U>
-			string(const Ch *str, allocator<U, Region> &alloc)
+			string(const Ch *str, allocator<U,Region,Access> alloc)
 				: impl(str, alloc)
 			{
 			}
@@ -57,9 +57,31 @@ namespace boost
 			{
 			}
 			template <class II, class U>
-			string(II F, II L, allocator<U, Region> &alloc)
+			string(II F, II L, allocator<U,Region,Access> alloc)
 				: impl(F, L, alloc)
 			{
+			}
+
+			Impl const &get_impl() const
+			{
+				return impl;
+			}
+			Impl &get_impl()
+			{
+				return impl;
+			}
+
+			string &operator=(string const &other)
+			{
+				impl = other.get_impl();
+				return *this;
+			}
+
+			template <class Reg2, class Acc2>
+			string &operator=(string<Reg2,Acc2> const &other)
+			{
+				impl = other.c_str();
+				return *this;
 			}
 
 			string &operator+=(Ch const *str)
@@ -68,7 +90,33 @@ namespace boost
 				return *this;
 			}
 
+			Ch const *c_str() const
+			{
+				return impl.c_str();
+			}
+
 		};
+
+		template <class Reg, class Acc>
+		bool operator==(string<Reg,Acc> const &A, string<Reg,Acc> const &B)
+		{
+			return A.get_impl() == B.get_impl();
+		}
+		template <class Reg, class Acc, class Reg2, class Acc2>
+		bool operator==(string<Reg,Acc> const &A, string<Reg2,Acc2> const &B)
+		{
+			return A.get_impl() == B.c_str();
+		}
+		template <class Reg, class Acc>
+		bool operator==(string<Reg,Acc> const &A, typename string<Reg,Acc>::value_type const *B)
+		{
+			return A.get_impl() == B;
+		}
+		template <class Reg, class Acc, class Reg2, class Acc2>
+		bool operator<(string<Reg,Acc> const &A, string<Reg2,Acc2> const &B)
+		{
+			return A.get_impl() < B.get_impl();
+		}
 
 	} // namespace monotonic
 

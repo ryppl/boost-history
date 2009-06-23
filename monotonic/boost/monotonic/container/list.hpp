@@ -3,8 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_LIST_H
-#define BOOST_MONOTONIC_LIST_H
+#ifndef BOOST_MONOTONIC_LIST_HPP
+#define BOOST_MONOTONIC_LIST_HPP
 
 #include <list>
 #include <boost/monotonic/allocator.hpp>
@@ -14,7 +14,7 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// A list that uses a monotonic allocator by default
+		/// A list that uses a monotonic allocator with the given region and access
 		template <class T, class Region = default_region_tag, class Access = default_access_tag>
 		struct list : detail::monotonic_container<list<T,Region,Access> >
 		{
@@ -112,18 +112,19 @@ namespace boost
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator==(list<Ty,R,Acc> const &A, list<Ty2,R2,Acc2> const &B)
 		{
-			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
+			return A.get_impl() == B.get_impl();
 		}
 
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator<(list<Ty,R,Acc> const &A, list<Ty2,R2,Acc2> const &B)
 		{
-			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
+			return A.get_impl() < B.get_impl();
 		}
+
 	} // namespace monotonic
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_LIST_H
+#endif // BOOST_MONOTONIC_LIST_HPP
 
 //EOF

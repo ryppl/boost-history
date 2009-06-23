@@ -23,7 +23,7 @@
 #include "./PoolResult.h"
 #include "./Tests.h"
 
-#include <boost/monotonic/extra/string.hpp>
+#include <boost/monotonic/container/string.hpp>
 
 using namespace std;
 using namespace boost;

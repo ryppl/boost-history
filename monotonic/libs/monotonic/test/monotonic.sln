@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "monotonic", "monotonic.vcproj", "{5688980A-015B-4C7D-8D8D-F5894205FACE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PoolTime", "PoolTime\PoolTime.vcproj", "{470832FD-33D6-4F31-AD06-BB7838371077}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Tests", "Tests\Tests.vcproj", "{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}"
 EndProject
 Global
@@ -20,11 +18,8 @@ Global
 		{5688980A-015B-4C7D-8D8D-F5894205FACE}.Release|Win32.Build.0 = Release|Win32
 		{5688980A-015B-4C7D-8D8D-F5894205FACE}.ReleaseSym|Win32.ActiveCfg = ReleaseSym|Win32
 		{5688980A-015B-4C7D-8D8D-F5894205FACE}.ReleaseSym|Win32.Build.0 = ReleaseSym|Win32
-		{470832FD-33D6-4F31-AD06-BB7838371077}.Debug|Win32.ActiveCfg = Debug|Win32
-		{470832FD-33D6-4F31-AD06-BB7838371077}.Release|Win32.ActiveCfg = Release|Win32
-		{470832FD-33D6-4F31-AD06-BB7838371077}.ReleaseSym|Win32.ActiveCfg = ReleaseSym|Win32
-		{470832FD-33D6-4F31-AD06-BB7838371077}.ReleaseSym|Win32.Build.0 = ReleaseSym|Win32
 		{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}.Debug|Win32.Build.0 = Debug|Win32
 		{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}.Release|Win32.ActiveCfg = Release|Win32
 		{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}.ReleaseSym|Win32.ActiveCfg = Release|Win32
 		{D4779B0F-266B-46D3-8BCF-0E14EF8B817B}.ReleaseSym|Win32.Build.0 = Release|Win32

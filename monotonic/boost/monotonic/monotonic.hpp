@@ -15,11 +15,11 @@
 //TODO #	include <boost/monotonic/thread_local_allocator.hpp>
 #endif
 
-#include <boost/monotonic/extra/string.hpp>
-#include <boost/monotonic/extra/vector.hpp>
-#include <boost/monotonic/extra/list.hpp>
-#include <boost/monotonic/extra/set.hpp>
-#include <boost/monotonic/extra/map.hpp>
+#include <boost/monotonic/container/string.hpp>
+#include <boost/monotonic/container/vector.hpp>
+#include <boost/monotonic/container/list.hpp>
+#include <boost/monotonic/container/set.hpp>
+#include <boost/monotonic/container/map.hpp>
 
 namespace boost
 {

@@ -3,8 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MONOTONIC_VECTOR_H
-#define BOOST_MONOTONIC_VECTOR_H
+#ifndef BOOST_MONOTONIC_VECTOR_HPP
+#define BOOST_MONOTONIC_VECTOR_HPP
 
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/container.hpp>
@@ -13,24 +13,24 @@ namespace boost
 {
 	namespace monotonic
 	{
-		/// a vector that uses a monotonic allocator by default
+		/// a vector that uses a monotonic allocator in the given region, with given access system
 		template <class T, class Region = default_region_tag, class Access = default_access_tag>
 		struct vector : detail::monotonic_container<vector<T,Region,Access> >
 		{
 			typedef allocator<T,Region,Access> Allocator;
 			typedef detail::monotonic_container<std::vector<T, Allocator > > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
-			typedef std::vector<T,Allocator> Vector;
+			typedef std::vector<T,Allocator> Impl;
 
-			typedef typename Vector::iterator iterator;
-			typedef typename Vector::const_iterator const_iterator;
-			typedef typename Vector::size_type size_type;
-			typedef typename Vector::value_type value_type;
-			typedef typename Vector::reference reference;
-			typedef typename Vector::const_reference const_reference;
+			typedef typename Impl::iterator iterator;
+			typedef typename Impl::const_iterator const_iterator;
+			typedef typename Impl::size_type size_type;
+			typedef typename Impl::value_type value_type;
+			typedef typename Impl::reference reference;
+			typedef typename Impl::const_reference const_reference;
 
 		private:
-			Vector impl;
+			Impl impl;
 
 		public:
 			vector() { }
@@ -45,6 +45,14 @@ namespace boost
 			Allocator get_allocator() const
 			{
 				return impl.get_allocator();
+			}
+			Impl const &get_impl() const
+			{
+				return impl;
+			}
+			Impl &get_impl()
+			{
+				return impl;
 			}
 			bool empty() const
 			{
@@ -132,19 +140,19 @@ namespace boost
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator==(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
 		{
-			return A.size() == B.size() && std::equal(A.begin(), A.end(), B.begin());
+			return A.get_impl() == B.get_impl();
 		}
 		
 		template <class Ty,class R,class Acc,class Ty2,class R2,class Acc2>
 		bool operator<(vector<Ty,R,Acc> const &A, vector<Ty2,R2,Acc2> const &B)
 		{
-			return std::lexicographical_compare(A.begin(), A.end(), B.begin(), B.end());
+			return A.get_impl() < B.get_impl();
 		}
 
 	} // namespace monotonic
 
 } // namespace boost
 
-#endif // BOOST_MONOTONIC_VECTOR_H
+#endif // BOOST_MONOTONIC_VECTOR_HPP
 
 //EOF
