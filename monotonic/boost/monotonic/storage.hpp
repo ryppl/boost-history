@@ -183,8 +183,20 @@ namespace boost
 			Ty &create()
 			{
 				Ty *ptr = uninitialised_create<Ty>();
-				new (ptr) Ty();
+				construct(ptr, boost::is_pod<Ty>());
 				return *ptr;
+			}
+
+			template <class Ty>
+			void construct(Ty *ptr, const boost::true_type& /*is_pod*/)
+			{
+				// do nothing
+			}
+
+			template <class Ty>
+			void construct(Ty *ptr, const boost::false_type&)
+			{
+				new (ptr) Ty();
 			}
 
 			template <class Ty>

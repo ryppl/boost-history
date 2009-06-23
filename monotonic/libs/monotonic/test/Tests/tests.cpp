@@ -6,7 +6,6 @@
 #include <boost/monotonic/extra/list.hpp>
 #include <boost/monotonic/extra/set.hpp>
 #include <boost/monotonic/extra/map.hpp>
-#include <boost/monotonic/region_allocator.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -20,13 +19,21 @@ using namespace boost;
 #endif
 
 
-BOOST_AUTO_TEST_CASE(test_region_allocator)
+struct region0 {};
+struct region1 {};
+
+BOOST_AUTO_TEST_CASE(test_regional_allocation)
 {
-	typedef std::list<int, monotonic::region_allocator<int, 0> > List;
+	typedef std::list<int, monotonic::allocator<int, region0> > List0;
+	typedef std::list<int, monotonic::allocator<int, region1> > List1;
 	{
-		List list;
-		generate_n(back_inserter(list), 10, rand);
-		list.sort();
+		List0 list0;
+		generate_n(back_inserter(list0), 10, rand);
+		list0.sort();
+
+		List1 list1;
+		generate_n(back_inserter(list1), 10, rand);
+		list1.sort();
 	}
 }
 
