@@ -263,10 +263,6 @@
 					>
 				</File>
 				<File
-					RelativePath="..\..\..\boost\monotonic\config.hpp"
-					>
-				</File>
-				<File
 					RelativePath="..\..\..\boost\monotonic\container.hpp"
 					>
 				</File>
@@ -371,6 +367,14 @@
 					</File>
 					<File
 						RelativePath="..\..\..\boost\monotonic\detail\pool.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\detail\postfix.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\monotonic\detail\prefix.hpp"
 						>
 					</File>
 				</Filter>

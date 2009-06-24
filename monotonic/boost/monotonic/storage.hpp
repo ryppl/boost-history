@@ -7,6 +7,7 @@
 #define BOOST_MONOTONIC_STORAGE_HPP
 
 #include <algorithm>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/fixed_storage.hpp>
 #include <boost/monotonic/detail/pool.hpp>
 #include <boost/monotonic/detail/link.hpp>
@@ -30,7 +31,7 @@ namespace boost
 
 			typedef storage<InlineSize, MinHeapIncrement, Al> This;
 			typedef Al Allocator;
-			typedef BOOST_DEDUCED_TYPENAME Allocator::template rebind<char>::other CharAllocator;
+			typedef typename Allocator::template rebind<char>::other CharAllocator;
 			typedef detail::Link<CharAllocator> Link;
 			typedef detail::Pool Pool;
 			typedef std::vector<Link> Chain;					
@@ -246,6 +247,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_STORAGE_HPP
 

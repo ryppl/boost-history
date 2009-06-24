@@ -89,6 +89,7 @@
 				Name="VCPostBuildEventTool"
 				Description="Running tests"
 				CommandLine="$(OutDir)\$(ProjectName).exe"
+				ExcludedFromBuild="true"
 			/>
 		</Configuration>
 		<Configuration

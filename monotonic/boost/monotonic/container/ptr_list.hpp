@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_PTR_LIST_HPP
 #define BOOST_MONOTONIC_PTR_LIST_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/inline_clone_allocator.hpp>
@@ -34,6 +35,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_PTR_LIST_HPP
 

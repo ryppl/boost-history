@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_EXCEPTIONS_HPP
 #define BOOST_MONOTONIC_EXCEPTIONS_HPP
 
-#include <boost/monotonic/config.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 //#include <boost/exception.hpp>
 #include <stdexcept>
 
@@ -24,6 +24,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_EXCEPTIONS_HPP
 

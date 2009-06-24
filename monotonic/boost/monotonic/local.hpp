@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_LOCAL_HPP
 #define BOOST_MONOTONIC_LOCAL_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/storage.hpp>
 
 namespace boost
@@ -40,7 +41,7 @@ namespace boost
 			{
 				reset();
 			}
-			static BOOST_DEDUCED_TYPENAME StaticStorage::StorageType &get_storage()
+			static typename StaticStorage::StorageType &get_storage()
 			{
 				return StaticStorage::get_storage();
 			}
@@ -87,6 +88,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_LOCAL_HPP
 

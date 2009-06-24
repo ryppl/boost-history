@@ -6,8 +6,6 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_DETAIL_LINK_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_DETAIL_LINK_HPP
 
-//#include <boost/monotonic/allocator_base.hpp>
-
 namespace boost
 {
 	namespace monotonic
@@ -32,7 +30,7 @@ namespace boost
 				template <class Al2>
 				Link(Al2 const &al, size_t cap)
 					: capacity(cap), cursor(0), buffer(0)
-					, alloc(BOOST_DEDUCED_TYPENAME Al2::template rebind<char>::other(al))
+					, alloc(typename Al2::template rebind<char>::other(al))
 				{
 					buffer = alloc.allocate(capacity);
 					if (buffer == 0)

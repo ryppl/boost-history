@@ -6,7 +6,9 @@
 #ifndef BOOST_MONOTONIC_MAP_HPP
 #define BOOST_MONOTONIC_MAP_HPP
 
-#include <boost/monotonic/allocator.hpp>
+#include <map>
+#include <boost/interprocess/containers/map.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/container.hpp>
 
 namespace boost
@@ -28,16 +30,16 @@ namespace boost
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 
 			typedef std::map<K,T,P,Allocator > Map, Implementation;
-			typedef BOOST_DEDUCED_TYPENAME Map::iterator iterator;
-			typedef BOOST_DEDUCED_TYPENAME Map::const_iterator const_iterator;
-			typedef BOOST_DEDUCED_TYPENAME Map::mapped_type mapped_type;
-			typedef BOOST_DEDUCED_TYPENAME Map::value_type value_type;
-			typedef BOOST_DEDUCED_TYPENAME Map::key_type key_type;
-			typedef BOOST_DEDUCED_TYPENAME Map::size_type size_type;
+			typedef typename Map::iterator iterator;
+			typedef typename Map::const_iterator const_iterator;
+			typedef typename Map::mapped_type mapped_type;
+			typedef typename Map::value_type value_type;
+			typedef typename Map::key_type key_type;
+			typedef typename Map::size_type size_type;
 
 		private:
 			Implementation impl;
-			Predicate pred;		///< do we really need to store a copy of the predicate?
+			Predicate pred;		///< do we really need to store a copy of the predicate? used in operator[]
 
 		public:
 
@@ -123,6 +125,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_MAP_HPP
 

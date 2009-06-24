@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_STATIC_STORAGE_BASE_HPP
 #define BOOST_MONOTONIC_STATIC_STORAGE_BASE_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/storage.hpp>
 
 namespace boost
@@ -34,7 +35,7 @@ namespace boost
 		{
 			typedef Al HeapAllocator;
 			typedef detail::storage_type<Region,Access> Selector;
-			typedef BOOST_DEDUCED_TYPENAME Selector::template storage<InlineSize, MinHeapIncrement, HeapAllocator>::type StorageType;
+			typedef typename Selector::template storage<InlineSize, MinHeapIncrement, HeapAllocator>::type StorageType;
 
 		private:
 			static StorageType global;
@@ -79,7 +80,7 @@ namespace boost
 			, size_t InlineSize
 			, size_t MinHeapIncrement
 			, class Al>
-		BOOST_DEDUCED_TYPENAME static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
+		typename static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
 			static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::global;
 
 		//template <class Region
@@ -110,6 +111,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_STATIC_STORAGE_BASE_HPP
 

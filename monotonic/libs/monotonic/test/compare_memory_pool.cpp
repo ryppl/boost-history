@@ -168,13 +168,13 @@ bool first_result = true;
 
 
 template <class II>
-BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type calc_mean(II first, II last, size_t num)
+typename boost::iterator_value<II>::type calc_mean(II first, II last, size_t num)
 {
-	return std::accumulate(first, last, BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type(0))*(1.0/num);
+	return std::accumulate(first, last, typename boost::iterator_value<II>::type(0))*(1.0/num);
 }
 
 template <class II>
-BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type calc_mean(II first, II last)
+typename boost::iterator_value<II>::type calc_mean(II first, II last)
 {
 	if (first == last)
 		throw std::range_error("calc_mean");
@@ -182,9 +182,9 @@ BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type calc_mean(II first, II la
 }
 
 template <class II>
-std::pair<BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type,BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type> standard_deviation_mean(II first, II last)
+std::pair<typename boost::iterator_value<II>::type,typename boost::iterator_value<II>::type> standard_deviation_mean(II first, II last)
 {
-	typedef BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type Value;
+	typedef typename boost::iterator_value<II>::type Value;
 	size_t length = std::distance(first, last);
 	if (length == 0)
 		throw std::range_error("standard_deviation_mean");
@@ -200,7 +200,7 @@ std::pair<BOOST_DEDUCED_TYPENAME boost::iterator_value<II>::type,BOOST_DEDUCED_T
 }
 
 template <class Cont>
-std::pair<BOOST_DEDUCED_TYPENAME Cont::value_type, BOOST_DEDUCED_TYPENAME Cont::value_type> standard_deviation_mean(Cont const &cont)
+std::pair<typename Cont::value_type, typename Cont::value_type> standard_deviation_mean(Cont const &cont)
 {
 	return standard_deviation_mean(cont.begin(), cont.end());
 }
@@ -341,8 +341,8 @@ void test_locals(Storage &storage, size_t count)
 {
 	if (count == 0)
 		return;
-	typedef BOOST_DEDUCED_TYPENAME Storage::template allocator<int>::type allocator;
-	typedef BOOST_DEDUCED_TYPENAME Storage::template allocator<char>::type char_allocator;
+	typedef typename Storage::template allocator<int>::type allocator;
+	typedef typename Storage::template allocator<char>::type char_allocator;
 	std::list<int, allocator > list;
 	fill_n(back_inserter(list), 100, 42);
 	typedef std::basic_string<char, std::char_traits<char>, char_allocator> String;

@@ -22,17 +22,15 @@ namespace boost
 				template <size_t N, size_t M, class Al>
 				struct storage
 				{
-					typedef shared_storage<N,M,Al> type;
+					typedef shared_storage<storage<N,M,Al> > type;
 				};
 			};
 		}
 
 		/// thread-safe storage
-		template <size_t InlineSize, size_t MinHeapSize, class Al>
+		template <class Storage>
 		struct shared_storage : storage_base
 		{
-			typedef storage<InlineSize, MinHeapSize, Al> Storage;
-
 		private:
 			Storage store;
 			mutable mutex guard;
@@ -41,7 +39,8 @@ namespace boost
 			shared_storage()
 			{
 			}
-			shared_storage(Al const &A)
+			template <class Allocator>
+			shared_storage(Allocator A)
 				: store(A)
 			{
 			}
@@ -64,6 +63,11 @@ namespace boost
 			{
 				mutex::scoped_lock lock(guard);
 				return store.allocate(num_bytes, alignment);
+			}
+			void deallocate(void *ptr)
+			{
+				mutex::scoped_lock lock(guard);
+				store.deallocate(ptr);
 			}
 			size_t remaining() const
 			{

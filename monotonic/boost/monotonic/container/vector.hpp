@@ -6,9 +6,10 @@
 #ifndef BOOST_MONOTONIC_VECTOR_HPP
 #define BOOST_MONOTONIC_VECTOR_HPP
 
-#include <boost/monotonic/allocator.hpp>
+#include <boost/interprocess/containers/vector.hpp>
+#include <vector>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/container.hpp>
-#include <boost/interprocess/containers/list.hpp>
 
 namespace boost
 {
@@ -21,14 +22,15 @@ namespace boost
 			typedef allocator<T,Region,Access> Allocator;
 			typedef detail::container<std::vector<T, Allocator > > Parent;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
+			//typedef interprocess::vector<T,Allocator> Impl;
 			typedef std::vector<T,Allocator> Impl;
 
-			typedef BOOST_DEDUCED_TYPENAME Impl::iterator iterator;
-			typedef BOOST_DEDUCED_TYPENAME Impl::const_iterator const_iterator;
-			typedef BOOST_DEDUCED_TYPENAME Impl::size_type size_type;
-			typedef BOOST_DEDUCED_TYPENAME Impl::value_type value_type;
-			typedef BOOST_DEDUCED_TYPENAME Impl::reference reference;
-			typedef BOOST_DEDUCED_TYPENAME Impl::const_reference const_reference;
+			typedef typename Impl::iterator iterator;
+			typedef typename Impl::const_iterator const_iterator;
+			typedef typename Impl::size_type size_type;
+			typedef typename Impl::value_type value_type;
+			typedef typename Impl::reference reference;
+			typedef typename Impl::const_reference const_reference;
 
 		private:
 			Impl impl;
@@ -173,10 +175,11 @@ namespace boost
 		{
 			return !(A < B);
 		}
-
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_VECTOR_HPP
 

@@ -6,7 +6,7 @@
 #ifndef BOOST_MONOTONIC_STORAGE_BASE_HPP
 #define BOOST_MONOTONIC_STORAGE_BASE_HPP
 
-#include <boost/monotonic/config.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 
 namespace boost
 {
@@ -38,6 +38,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_STORAGE_BASE_HPP
 

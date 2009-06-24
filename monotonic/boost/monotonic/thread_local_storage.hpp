@@ -6,9 +6,11 @@
 #ifndef BOOST_MONOTONIC_THREAD_LOCAL_STORAGE_HPP
 #define BOOST_MONOTONIC_THREAD_LOCAL_STORAGE_HPP
 
+#include <boost/thread.hpp>
+
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/storage.hpp>
 #include <boost/monotonic/static_storage.hpp>
-#include <boost/thread.hpp>
 
 namespace boost
 {
@@ -79,6 +81,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_THREAD_LOCAL_STORAGE_HPP
 

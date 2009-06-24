@@ -10,7 +10,8 @@
 #include <limits>
 #include <vector>
 #include <boost/foreach.hpp>
-#include <boost/monotonic/config.hpp>
+
+#include <boost/monotonic/detail/prefix.hpp>
 
 namespace boost
 {
@@ -58,9 +59,10 @@ namespace boost
 		struct reclaimable_storage;
 			
 		/// thread-safe storage
-		template <size_t InlineSize = DefaultSizes::InlineSize
-			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
-			, class Al = default_allocator>
+		//template <size_t InlineSize = DefaultSizes::InlineSize
+		//	, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement
+		//	, class Al = default_allocator>
+		template <class Storage>
 		struct shared_storage;
 
 		/// thread-local storage
@@ -102,6 +104,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_FORWARD_DECLARATIONS_HPP
 

@@ -6,8 +6,8 @@
 #ifndef BOOST_MONOTONIC_SET_HPP
 #define BOOST_MONOTONIC_SET_HPP
 
-#include <set>
-#include <boost/monotonic/allocator.hpp>
+#include <boost/interprocess/containers/set.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/container.hpp>
 
 namespace boost
@@ -23,12 +23,12 @@ namespace boost
 		{
 			typedef allocator<T,Region,Access> Allocator;
 			typedef P Predicate;
-			typedef std::set<T,P,Allocator > Set;
-			typedef BOOST_DEDUCED_TYPENAME Set::iterator iterator;
-			typedef BOOST_DEDUCED_TYPENAME Set::const_iterator const_iterator;
-			typedef BOOST_DEDUCED_TYPENAME Set::value_type value_type;
-			typedef BOOST_DEDUCED_TYPENAME Set::key_type key_type;
-			typedef BOOST_DEDUCED_TYPENAME Set::size_type size_type;
+			typedef interprocess::set<T,P,Allocator > Set;
+			typedef typename Set::iterator iterator;
+			typedef typename Set::const_iterator const_iterator;
+			typedef typename Set::value_type value_type;
+			typedef typename Set::key_type key_type;
+			typedef typename Set::size_type size_type;
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 			typedef detail::container<set<T,Region,P,Access> > Parent;
 
@@ -106,6 +106,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_SET_HPP
 

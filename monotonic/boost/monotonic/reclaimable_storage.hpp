@@ -7,10 +7,12 @@
 #define BOOST_MONOTONIC_RECLAIMABLE_STORAGE_HPP
 
 #include <algorithm>
-#include <boost/monotonic/fixed_storage.hpp>
-#include <boost/monotonic/detail/pool.hpp>
-#include <boost/monotonic/detail/link.hpp>
+//#include <iostream>
+
 #include <boost/unordered/unordered_set.hpp>
+
+#include <boost/monotonic/detail/prefix.hpp>
+#include <boost/monotonic/forward_declarations.hpp>
 
 namespace boost
 {
@@ -24,35 +26,81 @@ namespace boost
 				template <size_t N, size_t M, class Al>
 				struct storage
 				{
-					typedef monotonic::reclaimable_storage<N,M,Al> type;
+					typedef reclaimable_storage<N,M,Al> type;
 				};
 			};
-			template <class Pair>
-			struct HashPairFirst
-			{
-				size_t operator()(Pair const &pair) const
-				{
-					return reinterpret_cast<size_t>(pair.first);
-				}
-			};
+
 		}
 
+		/// conventional, reclaimable storage
+		///
+		/// this is really a long way around to using new and delete, however it
+		/// also keeps track of the allocations made so they can be released.
 		template <size_t InlineSize, size_t MinHeapIncrement, class Al>
 		struct reclaimable_storage : storage_base
 		{
 			typedef reclaimable_storage<InlineSize, MinHeapIncrement, Al> This;
 			typedef Al Allocator;
-			typedef BOOST_DEDUCED_TYPENAME Allocator::template rebind<char>::other CharAllocator;
-			typedef std::pair<char *, size_t> Allocation;
+			typedef typename Allocator::template rebind<char>::other CharAllocator;
+
+			/* this has to go to an allocator
+			struct AllocationBase
+			{
+				void *ptr;
+				AllocationBase(void *P = 0) : ptr(P) { }
+				virtual void destroy() = 0;
+			};
+			template <class T>
+			struct Allocation : AllocationBase
+			{
+				Allocation(T *P) : AllocationBase(P) { }
+				void destroy()
+				{
+					static_cast<T *>(this->AllocationBase::ptr)->~T();
+				}
+			};
+			template <class T, class Alloc>
+			static Allocation<T> MakeAllocation(T *ptr, Alloc al)
+			{
+				typename Alloc::template rebind<Allocation<T> >::other(al) allocator;
+				Allocation<T> *allocation = allocator.allocate(1);
+				allocator.construct(allocation, ptr);
+				return allocation;
+			}*/
+
+			/* this has to go to a tracking_allocator
+			struct Allocation
+			{
+				void *ptr;
+				size_t size;
+				Allocation(void *P = 0, size_t N = 0) : ptr(P), size(N) { }
+				void *get_pointer() const { return ptr; }
+				size_t get_size() const { return size; }
+			};
+			struct AllocHash
+			{
+				size_t operator()(Allocation const &alloc) const
+				{
+					return reinterpret_cast<size_t>(alloc.ptr);
+				}
+			};
+			struct AllocLess
+			{
+				bool operator()(Allocation const &A, Allocation const &B) const
+				{
+					return A.ptr < B.ptr;
+				}
+			};
 			typedef boost::unordered_set<
 				Allocation
-				, detail::HashPairFirst<Allocation>
-				, std::less<Allocation>
-				, Allocator> Allocations;
+				, AllocHash
+				, AllocLess
+				, Allocator> 
+			Allocations;
+			*/
 
 		private:
 			CharAllocator alloc;
-			Allocations allocations;
 
 		public:
 			reclaimable_storage()
@@ -73,35 +121,16 @@ namespace boost
 
 			void release()
 			{
-				reset();
-				BOOST_FOREACH(Allocation const &what, allocations)
-				{
-					alloc.deallocate(what.first, what.second);
-				}
-				allocations.clear();
 			}
 
 			void *allocate(size_t num_bytes, size_t /*alignment*/ = 1)
 			{
-				Allocation what;
-				what.first = alloc.allocate(num_bytes);//, alignment);
-				what.second = num_bytes;
-				allocations.insert(what);
-				return what.first;
+				return alloc.allocate(num_bytes);
 			}
 
 			void deallocate(void *ptr)
 			{
-				if (ptr == 0)
-					return;
-				char *cptr = (char *)ptr;
-				Allocations::iterator iter = allocations.find(Allocation(cptr, size_t(0)));
-				BOOST_ASSERT(iter != allocations.end());
-				if (iter != allocations.end())
-				{
-					allocations.erase(iter);
-				}
-				alloc.deallocate(cptr, 1);
+				alloc.deallocate((char *)ptr, 1);
 			}
 
 			size_t max_size() const
@@ -116,12 +145,8 @@ namespace boost
 
 			size_t used() const
 			{
-				size_t total = 0;
-				BOOST_FOREACH(Allocation const &what, allocations)
-				{
-					total += what.second;
-				}
-				return total;
+				BOOST_ASSERT(0);
+				return 0;
 			}
 
 			// ------------------------------------------------------------------------
@@ -188,6 +213,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_RECLAIMABLE_STORAGE_HPP
 

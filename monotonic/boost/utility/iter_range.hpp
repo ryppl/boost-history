@@ -66,12 +66,12 @@ namespace boost
 	}
 
 	template <class C>
-	struct iter_range : iter_range_detail::iter_range<BOOST_DEDUCED_TYPENAME C::iterator>
+	struct iter_range : iter_range_detail::iter_range<typename C::iterator>
 	{
 		typedef C Container;
-		typedef BOOST_DEDUCED_TYPENAME Container::iterator iterator;
+		typedef typename Container::iterator iterator;
 		typedef iter_range_detail::iter_range<iterator> Parent;
-		typedef BOOST_DEDUCED_TYPENAME boost::iterator_value<iterator>::type Value;
+		typedef typename boost::iterator_value<iterator>::type Value;
 		using Parent::first;
 		using Parent::second;
 
@@ -100,12 +100,12 @@ namespace boost
 	};
 
 	template <class C>
-	struct const_iter_range : iter_range_detail::iter_range<BOOST_DEDUCED_TYPENAME C::const_iterator>
+	struct const_iter_range : iter_range_detail::iter_range<typename C::const_iterator>
 	{
 		typedef C Container;
-		typedef BOOST_DEDUCED_TYPENAME Container::const_iterator const_iterator;
+		typedef typename Container::const_iterator const_iterator;
 		typedef iter_range_detail::iter_range<const_iterator> Parent;
-		typedef BOOST_DEDUCED_TYPENAME boost::iterator_value<const_iterator>::type Value;
+		typedef typename boost::iterator_value<const_iterator>::type Value;
 		using Parent::first;
 		using Parent::second;
 

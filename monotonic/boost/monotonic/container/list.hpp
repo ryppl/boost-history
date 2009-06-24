@@ -28,7 +28,8 @@ V5.03:0009 */
 #define BOOST_MONOTONIC_LIST_HPP
 
 #include <list>
-#include <boost/monotonic/allocator.hpp>
+#include <boost/interprocess/containers/list.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/container.hpp>
 
 namespace boost
@@ -40,15 +41,16 @@ namespace boost
 		struct list : detail::container<list<T,Region,Access> >
 		{
 			typedef allocator<T,Region,Access> Allocator;
+			//typedef interprocess::list<T, Allocator> List, Implementation;
 			typedef std::list<T, Allocator> List, Implementation;
-			typedef detail::container<std::list<T, Allocator> > Parent;
+			typedef detail::container<list<T, Allocator> > Parent;
 
-			typedef BOOST_DEDUCED_TYPENAME List::iterator iterator;
-			typedef BOOST_DEDUCED_TYPENAME List::const_iterator const_iterator;
-			typedef BOOST_DEDUCED_TYPENAME List::size_type size_type;
-			typedef BOOST_DEDUCED_TYPENAME List::value_type value_type;
-			typedef BOOST_DEDUCED_TYPENAME List::reference reference;
-			typedef BOOST_DEDUCED_TYPENAME List::const_reference const_reference;
+			typedef typename List::iterator iterator;
+			typedef typename List::const_iterator const_iterator;
+			typedef typename List::size_type size_type;
+			typedef typename List::value_type value_type;
+			typedef typename List::reference reference;
+			typedef typename List::const_reference const_reference;
 			typedef list<T,Region,Access> This;
 
 		private:
@@ -132,53 +134,7 @@ namespace boost
 			template <class Pred2>
 			void sort(Pred2 pred)
 			{	
-#ifndef WIN32
-				//TODO
-#else
-				if (size() < 2)
-					return;
-
-				const size_t MAXBINS = 25;
-				This temp(get_allocator());
-				BOOST_DEDUCED_TYPENAME Allocator::template rebind<This>::other alloc_this(get_allocator());
-				This *bin_list = alloc_this.allocate(MAXBINS + 1);
-				for (This *bin = bin_list; bin < bin_list + MAXBINS; ++bin)
-				{
-					alloc_this.construct(bin);
-				}
-				size_t max_bin = 0;
-
-				while (!empty())
-				{	
-					// sort another element, using bins
-					temp.impl._Splice(temp.begin(), impl, begin(), ++begin(), 1, true);	// don't invalidate iterators
-
-					size_t bin;
-					for (bin = 0; bin < max_bin && !bin_list[bin].empty(); ++bin)
-					{	// merge into ever larger bins
-						bin_list[bin].merge(temp, pred);
-						bin_list[bin].swap(temp);
-					}
-
-					if (bin == MAXBINS)
-					{
-						bin_list[bin - 1].merge(temp, pred);
-					}
-					else
-					{	
-						// spill to new bin, while they last
-						bin_list[bin].swap(temp);
-						if (bin == max_bin)
-							++max_bin;
-					}
-				}
-
-				for (size_t bin = 1; bin < max_bin; ++bin)
-				{
-					bin_list[bin].merge(bin_list[bin - 1], pred);	// merge up
-				}
-				splice(begin(), bin_list[max_bin - 1]);	// result in last bin
-#endif // WIN32
+				impl.sort(pred);
 			}
 
 			void sort()

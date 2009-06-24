@@ -6,12 +6,12 @@
 #ifndef BOOST_MONOTONIC_FIXED_STORAGE_HPP
 #define BOOST_MONOTONIC_FIXED_STORAGE_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/array.hpp>
 #include <boost/aligned_storage.hpp>
 #include <boost/monotonic/forward_declarations.hpp>
 #include <boost/monotonic/exceptions.hpp>
 #include <boost/monotonic/storage_base.hpp>
-//#include <boost/monotonic/storage_pool.hpp>
 
 //#define BOOST_MONOTONIC_STORAGE_EARLY_OUT
 
@@ -147,6 +147,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_FIXED_STORAGE_HPP
 

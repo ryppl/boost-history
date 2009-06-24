@@ -6,9 +6,7 @@
 #ifndef BOOST_MONOTONIC_MONOTONIC_HPP
 #define BOOST_MONOTONIC_MONOTONIC_HPP
 
-#include <boost/monotonic/config.hpp>
-#include <boost/monotonic/forward_declarations.hpp>
-#include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 
 #ifdef BOOST_MONOTONIC_THREADS
 #	include <boost/monotonic/shared_allocator.hpp>
@@ -31,6 +29,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_MONOTONIC_HPP
 

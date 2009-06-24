@@ -6,11 +6,8 @@
 #ifndef BOOST_MONOTONIC_CONTAINER_HPP
 #define BOOST_MONOTONIC_CONTAINER_HPP
 
-#include <vector>
-#include <list>
-#include <map>
-#include <set>
-#include <boost/monotonic/allocator.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
+//#include <boost/monotonic/allocator.hpp>
 
 namespace boost
 {
@@ -48,6 +45,8 @@ namespace boost
 		}
 	}
 }
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_CONTAINER_HPP
 

@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_CHAIN_HPP
 #define BOOST_MONOTONIC_CHAIN_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 
@@ -160,7 +161,7 @@ namespace boost
 				Vector &vec = strands.back();
 				size_t len = std::distance(F,L);
 				vec.resize(len);
-				BOOST_DEDUCED_TYPENAME Vector::iterator G = vec.begin();
+				typename Vector::iterator G = vec.begin();
 				for (size_t N = 0; N < len; ++F, ++G)
 					*G = *F;
 			}
@@ -304,6 +305,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_CHAIN_HPP
 

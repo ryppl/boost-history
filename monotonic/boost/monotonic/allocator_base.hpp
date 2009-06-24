@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/assert.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
@@ -135,6 +136,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 

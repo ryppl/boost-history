@@ -6,6 +6,7 @@
 #ifndef BOOST_MONOTONIC_INLINE_CLONE_ALLOCATOR_HPP
 #define BOOST_MONOTONIC_INLINE_CLONE_ALLOCATOR_HPP
 
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/allocator.hpp>
 
 namespace boost
@@ -35,6 +36,8 @@ namespace boost
 	} // namespace monotonic
 
 } // namespace boost
+
+#include <boost/monotonic/detail/postfix.hpp>
 
 #endif // BOOST_MONOTONIC_INLINE_CLONE_ALLOCATOR_HPP
 
