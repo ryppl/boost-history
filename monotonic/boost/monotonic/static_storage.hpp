@@ -14,8 +14,8 @@ namespace boost
 	{
 		namespace detail
 		{
-			template <>
-			struct storage_type<default_access_tag>
+			template <class Region>
+			struct storage_type<Region, default_access_tag>
 			{
 				template <size_t N, size_t M, class Al>
 				struct storage
@@ -33,8 +33,8 @@ namespace boost
 		struct static_storage
 		{
 			typedef Al HeapAllocator;
-			typedef detail::storage_type<Access> Selector;
-			typedef typename Selector::template storage<InlineSize, MinHeapIncrement, HeapAllocator>::type StorageType;
+			typedef detail::storage_type<Region,Access> Selector;
+			typedef BOOST_DEDUCED_TYPENAME Selector::template storage<InlineSize, MinHeapIncrement, HeapAllocator>::type StorageType;
 
 		private:
 			static StorageType global;
@@ -79,7 +79,7 @@ namespace boost
 			, size_t InlineSize
 			, size_t MinHeapIncrement
 			, class Al>
-		typename static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
+		BOOST_DEDUCED_TYPENAME static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::StorageType 
 			static_storage<Region, Access, InlineSize, MinHeapIncrement, Al>::global;
 
 		//template <class Region

@@ -24,11 +24,14 @@ namespace boost
 			typedef allocator<T,Region,Access> Allocator;
 			typedef P Predicate;
 			typedef std::set<T,P,Allocator > Set;
-			typedef typename Set::iterator iterator;
-			typedef typename Set::const_iterator const_iterator;
-			typedef typename Set::value_type value_type;
-			typedef typename Set::key_type key_type;
-			typedef typename Set::size_type size_type;
+			typedef BOOST_DEDUCED_TYPENAME Set::iterator iterator;
+			typedef BOOST_DEDUCED_TYPENAME Set::const_iterator const_iterator;
+			typedef BOOST_DEDUCED_TYPENAME Set::value_type value_type;
+			typedef BOOST_DEDUCED_TYPENAME Set::key_type key_type;
+			typedef BOOST_DEDUCED_TYPENAME Set::size_type size_type;
+			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
+			typedef detail::container<set<T,Region,P,Access> > Parent;
+
 		private:
 			Set impl;
 
@@ -80,7 +83,7 @@ namespace boost
 
 			void insert(const value_type& value)
 			{
-				impl.insert(value);
+				impl.insert(Create::Given(this->Parent::get_storage(), value));
 			}
 			void erase(iterator first)
 			{

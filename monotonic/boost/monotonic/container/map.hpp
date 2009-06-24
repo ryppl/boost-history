@@ -28,12 +28,12 @@ namespace boost
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 
 			typedef std::map<K,T,P,Allocator > Map, Implementation;
-			typedef typename Map::iterator iterator;
-			typedef typename Map::const_iterator const_iterator;
-			typedef typename Map::mapped_type mapped_type;
-			typedef typename Map::value_type value_type;
-			typedef typename Map::key_type key_type;
-			typedef typename Map::size_type size_type;
+			typedef BOOST_DEDUCED_TYPENAME Map::iterator iterator;
+			typedef BOOST_DEDUCED_TYPENAME Map::const_iterator const_iterator;
+			typedef BOOST_DEDUCED_TYPENAME Map::mapped_type mapped_type;
+			typedef BOOST_DEDUCED_TYPENAME Map::value_type value_type;
+			typedef BOOST_DEDUCED_TYPENAME Map::key_type key_type;
+			typedef BOOST_DEDUCED_TYPENAME Map::size_type size_type;
 
 		private:
 			Implementation impl;

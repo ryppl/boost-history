@@ -35,6 +35,7 @@ namespace boost
 
 		/// tags for different storage regions
 		struct default_region_tag { };
+		struct heap_region_tag { };
 
 		/// tags for different access types
 		struct default_access_tag { };
@@ -44,7 +45,7 @@ namespace boost
 		/// selector to create a storage type given accessor
 		namespace detail
 		{
-			template <class Access>
+			template <class Region, class Access>
 			struct storage_type;
 		}
 	
@@ -52,6 +53,10 @@ namespace boost
 		template <class Region = default_region_tag, class Access = default_access_tag>
 		struct local;
 
+		/// conventional, reclaimable storage
+		template <size_t InlineSize = 0, size_t MinHeapIncrement = 0, class Al = default_allocator>
+		struct reclaimable_storage;
+			
 		/// thread-safe storage
 		template <size_t InlineSize = DefaultSizes::InlineSize
 			, size_t MinHeapIncrement = DefaultSizes::MinHeapIncrement

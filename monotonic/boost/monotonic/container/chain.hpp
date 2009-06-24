@@ -160,7 +160,7 @@ namespace boost
 				Vector &vec = strands.back();
 				size_t len = std::distance(F,L);
 				vec.resize(len);
-				typename Vector::iterator G = vec.begin();
+				BOOST_DEDUCED_TYPENAME Vector::iterator G = vec.begin();
 				for (size_t N = 0; N < len; ++F, ++G)
 					*G = *F;
 			}

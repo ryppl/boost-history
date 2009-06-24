@@ -16,8 +16,8 @@ namespace boost
 	{
 		namespace detail
 		{
-			template <>
-			struct storage_type<shared_access_tag>
+			template <class Region>
+			struct storage_type<Region,shared_access_tag>
 			{
 				template <size_t N, size_t M, class Al>
 				struct storage

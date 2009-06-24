@@ -16,7 +16,7 @@ namespace boost
 		{
 			/// a link in the chain of heap-based memory buffers used by a storage<> structure
 			template <class Al>
-			struct Link : storage_base
+			struct Link// : storage_base
 			{
 				typedef Al CharAllocator;
 
@@ -31,7 +31,8 @@ namespace boost
 				}
 				template <class Al2>
 				Link(Al2 const &al, size_t cap)
-					: capacity(cap), cursor(0), buffer(0), alloc(typename Al2::template rebind<char>::other(al))
+					: capacity(cap), cursor(0), buffer(0)
+					, alloc(BOOST_DEDUCED_TYPENAME Al2::template rebind<char>::other(al))
 				{
 					buffer = alloc.allocate(capacity);
 					if (buffer == 0)

@@ -291,6 +291,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\monotonic\reclaimable_storage.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\monotonic\shared_allocator.hpp"
 					>
 				</File>

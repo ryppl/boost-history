@@ -10,6 +10,8 @@
 #include <boost/monotonic/shared_allocator.hpp>
 #include <boost/monotonic/local.hpp>
 #include <boost/monotonic/allocator.hpp>
+#include <boost/interprocess/containers/list.hpp>
+#include <boost/monotonic/reclaimable_storage.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -22,9 +24,46 @@ using namespace boost;
 #pragma warning(disable:4996)
 #endif
 
+using monotonic::heap_region_tag;
+
+BOOST_AUTO_TEST_CASE(test_reclaimable)
+{
+	std::list<int, monotonic::allocator<int, heap_region_tag> > list;
+	monotonic::storage_base *store = &monotonic::static_storage<heap_region_tag>::get_storage();
+	list.push_back(42);
+	size_t used_before = monotonic::static_storage<heap_region_tag>::used();
+	list.erase(list.begin());
+	size_t used_after = monotonic::static_storage<heap_region_tag>::used();
+	BOOST_ASSERT(used_after < used_before);
+}
+
+BOOST_AUTO_TEST_CASE(test_interprocess_list)
+{
+	monotonic::storage<> storage;
+	{
+		interprocess::list<int, monotonic::allocator<int> > list(storage);
+		generate_n(back_inserter(list), 10, rand);
+		list.sort();
+	}
+}
+
 // define some private regions
 struct region0 {};
 struct region1 {};
+
+BOOST_AUTO_TEST_CASE(test_set)
+{
+
+	monotonic::storage<> storage;
+	{
+		monotonic::set<monotonic::vector<int> > set(storage);
+		BOOST_ASSERT(set.get_allocator().get_storage() == &storage);
+		set.insert(monotonic::vector<int>(storage));
+		monotonic::vector<int> &v = *set.begin();
+		BOOST_ASSERT(v.get_allocator().get_storage() == &storage);
+
+	}
+}
 
 BOOST_AUTO_TEST_CASE(test_string)
 {
@@ -94,6 +133,7 @@ BOOST_AUTO_TEST_CASE(test_vector)
 
 	monotonic::static_storage<>::reset();
 	monotonic::static_storage<region1>::reset();
+
 
 	monotonic::storage<> storage;
 	{

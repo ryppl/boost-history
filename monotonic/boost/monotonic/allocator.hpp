@@ -30,13 +30,13 @@ namespace boost
 		struct allocator : allocator_base<T, allocator<T, Region, Access> >
 		{
 			typedef allocator_base<T, allocator<T, Region, Access> > Parent;
-			using typename Parent::size_type;
-			using typename Parent::difference_type;
-			using typename Parent::pointer;
-			using typename Parent::const_pointer;
-			using typename Parent::reference;
-			using typename Parent::const_reference;
-			using typename Parent::value_type;
+			using BOOST_DEDUCED_TYPENAME Parent::size_type;
+			using BOOST_DEDUCED_TYPENAME Parent::difference_type;
+			using BOOST_DEDUCED_TYPENAME Parent::pointer;
+			using BOOST_DEDUCED_TYPENAME Parent::const_pointer;
+			using BOOST_DEDUCED_TYPENAME Parent::reference;
+			using BOOST_DEDUCED_TYPENAME Parent::const_reference;
+			using BOOST_DEDUCED_TYPENAME Parent::value_type;
 
 			template <class U> 
 			struct rebind 

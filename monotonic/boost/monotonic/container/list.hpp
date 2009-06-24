@@ -43,12 +43,12 @@ namespace boost
 			typedef std::list<T, Allocator> List, Implementation;
 			typedef detail::container<std::list<T, Allocator> > Parent;
 
-			typedef typename List::iterator iterator;
-			typedef typename List::const_iterator const_iterator;
-			typedef typename List::size_type size_type;
-			typedef typename List::value_type value_type;
-			typedef typename List::reference reference;
-			typedef typename List::const_reference const_reference;
+			typedef BOOST_DEDUCED_TYPENAME List::iterator iterator;
+			typedef BOOST_DEDUCED_TYPENAME List::const_iterator const_iterator;
+			typedef BOOST_DEDUCED_TYPENAME List::size_type size_type;
+			typedef BOOST_DEDUCED_TYPENAME List::value_type value_type;
+			typedef BOOST_DEDUCED_TYPENAME List::reference reference;
+			typedef BOOST_DEDUCED_TYPENAME List::const_reference const_reference;
 			typedef list<T,Region,Access> This;
 
 		private:
@@ -140,7 +140,7 @@ namespace boost
 
 				const size_t MAXBINS = 25;
 				This temp(get_allocator());
-				typename Allocator::template rebind<This>::other alloc_this(get_allocator());
+				BOOST_DEDUCED_TYPENAME Allocator::template rebind<This>::other alloc_this(get_allocator());
 				This *bin_list = alloc_this.allocate(MAXBINS + 1);
 				for (This *bin = bin_list; bin < bin_list + MAXBINS; ++bin)
 				{

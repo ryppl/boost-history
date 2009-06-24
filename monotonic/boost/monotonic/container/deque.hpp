@@ -22,12 +22,12 @@ namespace boost
 			typedef detail::Create<detail::is_monotonic<T>::value, T> Create;
 			typedef std::deque<T,Allocator> Impl;
 
-			typedef typename Impl::iterator iterator;
-			typedef typename Impl::const_iterator const_iterator;
-			typedef typename Impl::size_type size_type;
-			typedef typename Impl::value_type value_type;
-			typedef typename Impl::reference reference;
-			typedef typename Impl::const_reference const_reference;
+			typedef BOOST_DEDUCED_TYPENAME Impl::iterator iterator;
+			typedef BOOST_DEDUCED_TYPENAME Impl::const_iterator const_iterator;
+			typedef BOOST_DEDUCED_TYPENAME Impl::size_type size_type;
+			typedef BOOST_DEDUCED_TYPENAME Impl::value_type value_type;
+			typedef BOOST_DEDUCED_TYPENAME Impl::reference reference;
+			typedef BOOST_DEDUCED_TYPENAME Impl::const_reference const_reference;
 
 		private:
 			Impl impl;

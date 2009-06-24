@@ -52,6 +52,11 @@ namespace boost
 				{
 					return T();
 				}
+				template <class Storage>
+				static T Given(Storage &, T const &X)
+				{
+					return T(X);
+				}
 			};
 			template <class T>
 			struct Create<true, T>
@@ -60,6 +65,11 @@ namespace boost
 				static T Given(Storage &storage)
 				{
 					return T(storage);
+				}
+				template <class Storage>
+				static T Given(Storage &storage, T const &X)
+				{
+					return T(X, storage);
 				}
 			};
 		}

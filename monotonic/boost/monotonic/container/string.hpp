@@ -22,9 +22,9 @@ namespace boost
 			typedef allocator<Ch, Region,Access> Allocator;
 			typedef std::basic_string<Ch, Tr, Allocator> Impl;
 			typedef size_t size_type;
-			typedef typename Impl::iterator iterator;
-			typedef typename Impl::const_iterator const_iterator;
-			typedef typename Impl::value_type value_type;
+			typedef BOOST_DEDUCED_TYPENAME Impl::iterator iterator;
+			typedef BOOST_DEDUCED_TYPENAME Impl::const_iterator const_iterator;
+			typedef BOOST_DEDUCED_TYPENAME Impl::value_type value_type;
 
 		private:
 			Impl impl;
@@ -54,6 +54,7 @@ namespace boost
 			string(const Ch *str, storage_base &store)
 				: impl(str, store)
 			{
+//				BOOST_STATIC_ASSERT((boost::same_type<default_region_tag, Region>::value));
 			}
 			template <class II>
 			string(II F, II L)

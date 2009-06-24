@@ -40,7 +40,7 @@ namespace boost
 			{
 				reset();
 			}
-			static typename StaticStorage::StorageType &get_storage()
+			static BOOST_DEDUCED_TYPENAME StaticStorage::StorageType &get_storage()
 			{
 				return StaticStorage::get_storage();
 			}

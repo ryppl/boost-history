@@ -30,7 +30,7 @@ namespace boost
 
 			typedef storage<InlineSize, MinHeapIncrement, Al> This;
 			typedef Al Allocator;
-			typedef typename Allocator::template rebind<char>::other CharAllocator;
+			typedef BOOST_DEDUCED_TYPENAME Allocator::template rebind<char>::other CharAllocator;
 			typedef detail::Link<CharAllocator> Link;
 			typedef detail::Pool Pool;
 			typedef std::vector<Link> Chain;					
@@ -131,6 +131,11 @@ namespace boost
 				if (ptr == 0)
 					throw std::bad_alloc();
 				return ptr;
+			}
+
+			void deallocate(void *ptr)
+			{
+				// do nothing
 			}
 
 			size_t max_size() const

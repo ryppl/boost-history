@@ -36,6 +36,7 @@ namespace boost
 			typedef detail::Construct<detail::is_monotonic<T>::value> Construct;
 
 			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
+
 		//private:
 			storage_base *storage;
 
@@ -67,29 +68,31 @@ namespace boost
 				return reinterpret_cast<T *>(storage->allocate(num*sizeof(T), alignment));
 			}
 
-			void deallocate(pointer, size_type)
+			void deallocate(pointer ptr, size_type num)
 			{
-				// do nothing
+				storage->deallocate(ptr);//, num);
 			}
 
 			size_type max_size() const throw()
 			{
 				if (!storage)
 					return 0;
-				//return storage->max_size()/(sizeof(T) + alignment);
 				return storage->max_size()/sizeof(value_type);
 			}
 
 			void construct(pointer ptr)
 			{
-				Construct::Given(ptr, static_cast<Derived *>(this));
-				//new (ptr) T();
+				Construct::Given(ptr, DerivedPtr());
 			}
 
 			void construct(pointer ptr, const T& val)
 			{
-				Construct::Given(ptr, val, static_cast<Derived *>(this));
-				//new (ptr) T(val);
+				Construct::Given(ptr, val, DerivedPtr());
+			}
+
+			Derived *DerivedPtr()
+			{
+				return static_cast<Derived *>(this);
 			}
 
 			void destroy(pointer ptr)

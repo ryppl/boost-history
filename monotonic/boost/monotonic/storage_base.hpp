@@ -23,6 +23,8 @@ namespace boost
 
 			// the number of bytes to allocate, and the alignment to use
 			virtual void *allocate(size_t num_bytes, size_t alignment) = 0;
+
+			virtual void deallocate(void * ptr) = 0;
 			
 			virtual size_t max_size() const = 0;
 			

@@ -116,6 +116,11 @@ namespace boost
 				return ptr + extra;
 			}
 
+			void deallocate(void *ptr)
+			{
+				// do nothing
+			}
+
 			size_t max_size() const
 			{
 				return InlineSize;
