@@ -46,17 +46,14 @@ namespace on_destruction {
 template <typename ResultType>
 class unique_joiner;
 
-template<typename T>
-struct act_traits<unique_joiner<T> > : act_traits<unique_future<T> > {};
-
-
 template <typename ResultType>
-class unique_joiner {
-public:
-    typedef ResultType result_type;
-    typedef typename act_traits<unique_joiner<ResultType> >::move_dest_type move_dest_type;
-private:
+class shared_joiner;
+
+
+namespace detail {
+    template <typename ResultType>
     struct unique_joiner_data {
+        typedef ResultType result_type;
         unique_future< result_type > fut_;
         thread th_;
         on_destruction::type on_destruction_;
@@ -100,8 +97,82 @@ private:
 #endif
 
     };
-    shared_ptr<unique_joiner_data> data_;
-    typedef unique_joiner_data this_impl_type;
+
+    template <typename ResultType>
+    struct shared_joiner_data {
+        typedef ResultType result_type;
+        shared_future< result_type > fut_;
+        thread th_;
+        on_destruction::type on_destruction_;
+
+        shared_joiner_data(on_destruction::type on_destruction_do= on_destruction::do_join) 
+            : on_destruction_(on_destruction_do) 
+        {}
+        ~shared_joiner_data() {
+            if (th_.joinable()) {
+                if (on_destruction_== on_destruction::do_terminate) {
+                    std::terminate();
+                } else if (on_destruction_== on_destruction::do_join) {
+                    th_.join();
+                }
+            }
+        }
+
+        template <typename Nullary>
+#ifdef BOOST_THREAD_HAS_THREAD_ATTR
+        shared_joiner_data(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do) {
+            : on_destruction(on_destruction_do) 
+        {
+            packaged_task<result_type> tsk(f);
+            fut_ = tsk.get_future();
+            thread th(attr, boost::move(tsk));
+            th_ = boost::move(th);
+        }
+#else
+        shared_joiner_data(Nullary f, on_destruction::type on_destruction_do)
+            : on_destruction_(on_destruction_do) 
+        {
+            packaged_task<result_type> tsk(f);
+            fut_ = tsk.get_future();
+#if 0
+            th_ = boost::move(tsk);
+#else
+            thread th(boost::move(tsk));
+            th_ = boost::move(th);
+#endif
+        }
+#endif
+        shared_joiner_data(unique_joiner_data<result_type>& data) 
+            : fut_(data.fut_)
+            , th_(boost::move(data.th_))
+            , on_destruction_(data.on_destruction_) 
+        {}
+
+        shared_joiner_data& operator=(unique_joiner_data<result_type>& data) 
+        {
+            fut_= data.fut_;
+            th_ = boost::move(data.th_);
+            on_destruction_ = data.on_destruction_;
+            return *this;
+        }
+
+    };
+    
+}
+
+template<typename T>
+struct act_traits<unique_joiner<T> > : act_traits<unique_future<T> > {};
+
+template <typename T> class shared_joiner;
+
+template <typename ResultType>
+class unique_joiner {
+public:
+    typedef ResultType result_type;
+    typedef typename act_traits<unique_joiner<ResultType> >::move_dest_type move_dest_type;
+private:
+    shared_ptr<detail::unique_joiner_data<result_type> > data_;
+    typedef detail::unique_joiner_data<result_type> this_impl_type;
     typedef unique_joiner this_type;
 
     unique_joiner(unique_joiner<ResultType>& other);
@@ -109,6 +180,7 @@ private:
 //protected:
 public:
     friend class unique_threader;
+    friend class shared_joiner<result_type>;
 
     template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
@@ -293,64 +365,21 @@ public:
     typedef typename act_traits<shared_joiner<ResultType> >::move_dest_type move_dest_type;
 
 private:
-    struct shared_joiner_data {
-        shared_future< result_type > fut_;
-        thread th_;
-        on_destruction::type on_destruction_;
-
-        shared_joiner_data(on_destruction::type on_destruction_do= on_destruction::do_join) 
-            : on_destruction_(on_destruction_do) 
-        {}
-        ~shared_joiner_data() {
-            if (th_.joinable()) {
-                if (on_destruction_== on_destruction::do_terminate) {
-                    std::terminate();
-                } else if (on_destruction_== on_destruction::do_join) {
-                    th_.join();
-                }
-            }
-        }
-
-        template <typename Nullary>
-#ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        shared_joiner_data(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do) {
-            : on_destruction(on_destruction_do) 
-        {
-            packaged_task<result_type> tsk(f);
-            fut_ = tsk.get_future();
-            thread th(attr, boost::move(tsk));
-            th_ = boost::move(th);
-        }
-#else
-        shared_joiner_data(Nullary f, on_destruction::type on_destruction_do)
-            : on_destruction_(on_destruction_do) 
-        {
-            packaged_task<result_type> tsk(f);
-            fut_ = tsk.get_future();
-#if 0
-            th_ = boost::move(tsk);
-#else
-            thread th(boost::move(tsk));
-            th_ = boost::move(th);
-#endif
-        }
-#endif
-
-    };
-    shared_ptr<shared_joiner_data> data_;
-    typedef shared_joiner_data this_impl_type;
+    shared_ptr<detail::shared_joiner_data<result_type> > data_;
+    typedef detail::shared_joiner_data<result_type> this_impl_type;
     typedef shared_joiner this_type;
 
 //protected:
 public:
     friend class shared_threader;
+    
     template <typename Nullary>
     // requires result_of<Nullary>::type  is convertible to ResultType
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-    shared_joiner(thread::native_handle_attr_type& attr, Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    shared_joiner(thread::native_handle_attr_type& attr, Nullary f, bool, on_destruction::type on_destruction_do=on_destruction::do_join)
     : data_(new this_impl_type(attr, f,on_destruction_do))
 #else
-    shared_joiner(Nullary f, on_destruction::type on_destruction_do=on_destruction::do_join)
+    shared_joiner(Nullary f, bool, on_destruction::type on_destruction_do=on_destruction::do_join)
     : data_(new this_impl_type(f,on_destruction_do))
 #endif
     {
@@ -376,6 +405,30 @@ public:
         other.data_.reset(new this_impl_type());
         return *this;
     }
+    shared_joiner(unique_joiner<ResultType> && other)
+    {
+        if (other->data_.get()!=0) {
+            this_impl_type* tmp=new this_impl_type(*other->data_.get());
+            data_.swap(tmp);
+            other->data_.reset();
+        }
+    }
+    shared_joiner& operator=(unique_joiner<ResultType> && other)
+    {
+        if (data_.get()!=0) {
+            if (other->data_.get()!=0) {
+                *data_=*other->data_;
+            } else {
+                data_.reset();
+            }
+        } else {
+            if (other->data_.get()!=0) {
+                data_ = new this_impl_type(*other->data_.get());
+            }
+        }
+        other.data_.reset();
+        return *this;
+    }
 
     shared_joiner&& move() {
         return static_cast<shared_joiner&&>(*this);
@@ -386,12 +439,38 @@ public:
         x->data_.reset(new this_impl_type());
     }
 
+    shared_joiner(boost::detail::thread_move_t<unique_joiner<ResultType> > other)
+    {
+        if (other->data_.get()!=0) {
+            shared_ptr<this_impl_type> tmp(new this_impl_type(*other->data_.get()));
+            data_.swap(tmp);
+        }
+        other->data_.reset();
+    }
+
     shared_joiner& operator=(boost::detail::thread_move_t<shared_joiner> x) {
         this_type tmp_(x);
         swap(tmp_);
         return *this;
     }
 
+    shared_joiner& operator=(boost::detail::thread_move_t<unique_joiner<ResultType> > other)
+    {
+        if (data_.get()!=0) {
+            if (other->data_.get()!=0) {
+                *data_=*(other->data_);
+            } else {
+                data_.reset();
+            }
+        } else {
+            if (other->data_.get()!=0) {
+                data_.reset(new this_impl_type(*other->data_.get()));
+            }
+        }
+        other->data_.reset();
+        return *this;
+    }
+    
     operator boost::detail::thread_move_t<shared_joiner>() {
         return move();
     }
@@ -506,9 +585,9 @@ public:
     fork(F f) {
         typedef typename boost::result_of<F()>::type result_type;
 #ifdef BOOST_THREAD_HAS_THREAD_ATTR
-        return shared_joiner<result_type>(attr(), f);
+        return shared_joiner<result_type>(attr(), f,true);
 #else
-        return shared_joiner<result_type>(f);
+        return shared_joiner<result_type>(f,true);
 #endif
     }
 

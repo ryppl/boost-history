@@ -238,10 +238,35 @@ void do_test_other() {
     BOOST_CHECK_EQUAL(i, 3);
 }
 
+void do_test_joiner()
+{
+    typedef basync::unique_threader  AE;
+    typedef basync::unique_joiner<int>  UACT;
+    typedef basync::shared_joiner<int>  SACT;
+    AE ae;
+    test_value=0;
+    UACT uact(ae.fork(simple_thread));
+#if 0    
+    SACT sact(uact);
+#else    
+    SACT sact;
+    sact=uact; 
+#endif    
+    int res_value = basync::get(sact);
+    BOOST_CHECK_EQUAL(test_value, 999);
+    BOOST_CHECK_EQUAL(res_value, 999);
+    BOOST_CHECK_EQUAL(basync::is_ready(sact), true);
+    BOOST_CHECK_EQUAL(basync::has_value(sact), true);
+    BOOST_CHECK_EQUAL(basync::has_exception(sact), false);
+    std::cout << "<<do_test_joiner" << std::endl;
+
+}
+
 test_suite* init_unit_test_suite(int, char*[])
 {
     test_suite* test = BOOST_TEST_SUITE("shared_threader");
 
+#if 0
 
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
@@ -282,5 +307,7 @@ test_suite* init_unit_test_suite(int, char*[])
 
     test->add(BOOST_TEST_CASE(&do_test_member_fork_move_unique));
 #endif
+#endif
+    test->add(BOOST_TEST_CASE(&do_test_joiner));
   return test;
 }
