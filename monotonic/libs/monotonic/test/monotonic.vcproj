@@ -319,42 +319,42 @@
 					>
 				</File>
 				<Filter
-					Name="container"
+					Name="containers"
 					>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\chain.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\chain.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\deque.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\deque.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\inline_clone_allocator.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\inline_clone_allocator.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\list.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\list.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\map.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\map.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\ptr_list.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\ptr_list.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\set.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\set.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\string.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\string.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\monotonic\container\vector.hpp"
+						RelativePath="..\..\..\boost\monotonic\containers\vector.hpp"
 						>
 					</File>
 				</Filter>
