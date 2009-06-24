@@ -13,13 +13,13 @@
 //TODO #	include <boost/monotonic/thread_local_allocator.hpp>
 #endif
 
-#include <boost/monotonic/container/string.hpp>
-#include <boost/monotonic/container/vector.hpp>
-#include <boost/monotonic/container/list.hpp>
-#include <boost/monotonic/container/set.hpp>
-#include <boost/monotonic/container/map.hpp>
-#include <boost/monotonic/container/deque.hpp>
-#include <boost/monotonic/container/chain.hpp>
+#include <boost/monotonic/containers/string.hpp>
+#include <boost/monotonic/containers/vector.hpp>
+#include <boost/monotonic/containers/list.hpp>
+#include <boost/monotonic/containers/set.hpp>
+#include <boost/monotonic/containers/map.hpp>
+#include <boost/monotonic/containers/deque.hpp>
+#include <boost/monotonic/containers/chain.hpp>
 
 namespace boost
 {

@@ -8,7 +8,7 @@
 
 #include <boost/monotonic/detail/prefix.hpp>
 #include <boost/interprocess/containers/deque.hpp>
-#include <boost/monotonic/container.hpp>
+#include <boost/monotonic/detail/container.hpp>
 
 namespace boost
 {

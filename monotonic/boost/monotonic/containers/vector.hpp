@@ -9,7 +9,7 @@
 #include <boost/interprocess/containers/vector.hpp>
 #include <vector>
 #include <boost/monotonic/detail/prefix.hpp>
-#include <boost/monotonic/container.hpp>
+#include <boost/monotonic/detail/container.hpp>
 
 namespace boost
 {

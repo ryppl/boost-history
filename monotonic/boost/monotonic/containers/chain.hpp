@@ -11,8 +11,8 @@
 #include <boost/iterator/iterator_categories.hpp>
 
 #include <boost/utility/iter_range.hpp>
-#include <boost/monotonic/container/vector.hpp>
-#include <boost/monotonic/container/deque.hpp>
+#include <boost/monotonic/containers/vector.hpp>
+#include <boost/monotonic/containers/deque.hpp>
 
 namespace boost
 {

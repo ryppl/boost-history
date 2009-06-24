@@ -30,7 +30,7 @@ V5.03:0009 */
 #include <list>
 #include <boost/interprocess/containers/list.hpp>
 #include <boost/monotonic/detail/prefix.hpp>
-#include <boost/monotonic/container.hpp>
+#include <boost/monotonic/detail/container.hpp>
 
 namespace boost
 {

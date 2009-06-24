@@ -12,7 +12,7 @@
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
-#include <boost/monotonic/container.hpp>
+#include <boost/monotonic/detail/container.hpp>
 #include <boost/monotonic/detail/construct.hpp>
 
 #ifdef BOOST_MONOTONIC_USE_POOLS
