@@ -79,17 +79,17 @@ int main()
     graph_boolean::edge_descriptor e1 = edge(x, y, funcGraph_boolean).first;
     assert(source(e1, funcGraph_boolean) == x);
     assert(target(e1, funcGraph_boolean) == y);
-    assert(e1.result == (1 < 2));
+    assert(e1.result_ == (1 < 2));
 
     graph_normal::edge_descriptor e2 = edge(u, v, funcGraph_normal).first;
     assert(source(e2, funcGraph_normal) == u);
     assert(target(e2, funcGraph_normal) == v);
-    assert(e2.result == (u + v));
+    assert(e2.result_ == (u + v));
 
     graph_optional::edge_descriptor e3 = edge(r, s, funcGraph_optional).first;
     assert(source(e3, funcGraph_optional) == r);
     assert(target(e3, funcGraph_optional) == s);
-    assert(e2.result == -1);
+    assert(e2.result_ == -1);
     
     return 0;
 }

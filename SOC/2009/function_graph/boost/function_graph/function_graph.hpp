@@ -28,15 +28,15 @@ struct func_graph_edge {
     typedef Result result_type;
     typedef Vertex vertex_descriptor;
 
-    func_graph_edge(result_type rslt,
-                    vertex_descriptor src,
-                    vertex_descriptor trg)
-        : result(rslt), source(src), target(trg)
+    func_graph_edge(result_type result,
+                    vertex_descriptor source,
+                    vertex_descriptor target)
+        : result_(result), source_(source), target_(target)
     { }
 
-    result_type result;
-    vertex_descriptor source;
-    vertex_descriptor target;
+    result_type result_;
+    vertex_descriptor source_;
+    vertex_descriptor target_;
 };
 
 }   // detail namespace
@@ -77,16 +77,21 @@ struct no_domain { };
 
 
 /** @name function_graph_in_edge_iterator
- * Iterates through the in edges of a vertex
+ * Iterates through the in edges of a vertex.
  * @note The name of this data type is 31 characters long. I need some brevity.
  */
 
-template<typename Edge, typename Range>
+template<typename Function, typename Edge, typename Range>
 struct function_graph_in_edge_iterator {
+private:
+    typedef function_graph_in_edge_iterator<Function, Edge, Range> This;
+
+public:
     typedef Range vertex_iterator_range;
     typedef typename iterator_range<vertex_iterator_range>::type
             vertex_iterator;
     typedef Edge edge_descriptor;
+    typedef Function function_type;
 
     /** Iterator traits */
     typedef std::bidirectional_iterator_tag iterator_category;
@@ -95,26 +100,40 @@ struct function_graph_in_edge_iterator {
     typedef value_type* pointer;
     typedef value_type& reference;
 
-    /** Default constructor which looks for the first edge. */
-    function_graph_in_edge_iterator()
-        : range_()
+    /** Constructors */
+    //@{
+    function_graph_in_edge_iterator(function_type const& f)
+        : edge_(f), range_()
     { };
 
-    /** Constructor taking a vertex range */
-    function_graph_in_edge_iterator(vertex_iterator_range const& cp)
-        : range_(cp)
+    function_graph_in_edge_iterator(function_type const& f,
+                                    vertex_iterator_range const& r)
+        : edge_(f), range_(r)
     { };
+
+    function_graph_in_edge_iterator(This const& cp)
+        : edge_(cp.edge_), range_(cp.range_)
+    { };
+    //@}
 
     /** Bidirectional Iterator operator overloads */
     function_graph_in_edge_iterator& operator++()
-    { };
+    {
+        ++begin(range_);
+        return begin(range_); 
+    };
 
     function_graph_in_edge_iterator& operator--()
     { };
 
-    vertex_iterator& operator*()
-    { };
+    edge_descriptor& operator*()
+    {
+        return edge_descriptor(edge_(*begin(range_), *end(range_)),
+                               begin(range_),
+                               end(range_));
+    };
 
+    function_type edge_;
     vertex_iterator_range range_;
 };
 
@@ -157,7 +176,7 @@ public:
     typedef Range vertex_iterator_range;
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
-    typedef function_graph_in_edge_iterator<edge_descriptor,
+    typedef function_graph_in_edge_iterator<function_type, edge_descriptor,
             vertex_iterator_range> in_edge_iterator;
 
     /** Constructor: takes a functor and range */
@@ -213,14 +232,14 @@ template <typename Result, typename Vertex, typename Range>
 Vertex source(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
 {
-    return e.source;
+    return e.source_;
 }
 
 template <typename Result, typename Vertex, typename Range>
 Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
 {
-    return e.target;
+    return e.target_;
 }
 
 
@@ -241,14 +260,14 @@ in_edges(typename function_graph<function<Result(Vertex, Vertex)>,
     typedef typename Graph::vertex_iterator vertex_iterator;
     typedef std::pair<in_edge_iterator, in_edge_iterator> iter_range;
 
-    vertex_iterator first_vertex_pair = boost::begin(g.range_);
-    vertex_iterator vertex_end = boost::end(g.range_);
+    vertex_iterator first_vertex_pair = begin(g.range_);
+    vertex_iterator vertex_end = end(g.range_);
     while((first_vertex_pair != vertex_end) || !g.edge_(first_vertex_pair, v))
     { ++first_vertex_pair; }
-    in_edge_iterator begin(first_vertex_pair, v);
-    in_edge_iterator end(vertex_end, v);
+    in_edge_iterator in_edge_begin(first_vertex_pair, v);
+    in_edge_iterator in_edge_end(vertex_end, v);
 
-    return std::make_pair(begin, end);
+    return std::make_pair(in_edge_begin, in_edge_end);
 }
 
 
@@ -315,7 +334,7 @@ edge(typename FUNC_GRAPH::vertex_descriptor u,
     typedef FUNC_GRAPH graph_type;
     typedef typename FUNC_GRAPH::result_type result_type;
     result_type result = g.edge(u, v);
-    return bind_edge(result, u, v);
+    return detail::bind_edge(result, u, v);
 }
 
 #undef FUNC_GRAPH
