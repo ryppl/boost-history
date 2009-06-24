@@ -101,7 +101,7 @@ namespace boost{namespace itl
             switch(rootChoice)
             {
             //-----------------------------------------------------------------
-            case RootType::itl_map: { //JODO URG
+            case RootType::itl_map: {
                 switch(neutronizerChoice) {
                 case NeutronHandlerType::partial_absorber: return new signed_quantifier_validater<itl::map<int,int,partial_absorber> >;
                 case NeutronHandlerType::partial_enricher: return new signed_quantifier_validater<itl::map<int,int,partial_enricher> >;

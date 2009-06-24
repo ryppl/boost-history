@@ -295,9 +295,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 	if(!left_resid.empty())
 	{   //            [------------ . . .
 		// [left_resid---fst_it --- . . .
-		iterator prior_ = first_;
-		if(prior_ != this->_map.begin())
-			--prior_;
+		iterator prior_ = this->prior(first_);
 		const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(left_resid);
 		//NOTE: Only splitting
 		iterator insertion_ = this->_map.insert(prior_, value_type(left_resid, first_->CONT_VALUE));
@@ -335,12 +333,15 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 	{
 		// [------ . . .
 		//     [-- it ...
-		iterator prior_ = it_; prior_--;
-		fill_gap<Combiner>(prior_, lead_gap, co_val);
+		iterator prior_ = it_; 
+		if(prior_ != this->_map.begin())
+			this->template map_insert<Combiner>(--prior_, lead_gap, co_val);
+		else
+			this->template map_insert<Combiner>(lead_gap, co_val);
 	}
 
-	// . . . ------------ . . . addend interval
-	//      [-- fst_it --)      has a common part with the first overval
+	// . . . --------- . . . addend interval
+	//      [-- it_ --)      has a common part with the first overval
 	Combiner()(it_->CONT_VALUE, co_val);
 	if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
 		this->_map.erase(it_++);
@@ -355,14 +356,15 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it)
 {
-	iterator prior_ = it; --prior_;
+	iterator prior_ = this->prior(it);
     interval_type cur_itv = (*it).KEY_VALUE ;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
 	if(!lead_gap.empty())
-		// [------ . . .
-		//     [-- it ...
-        fill_gap<Combiner>(prior_, lead_gap, co_val);
+		//         [------ . . .
+		// [prior)     [-- it ...
+		this->template map_insert<Combiner>(prior_, lead_gap, co_val);
+	
 
     interval_type end_gap = left_subtract(inter_val, cur_itv);
 	if(!end_gap.empty())

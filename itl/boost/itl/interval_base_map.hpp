@@ -623,6 +623,15 @@ public:
     sub_type& self() { return *that(); }
 
 protected:
+
+	iterator prior(iterator it_)
+	{
+		if(it_ == this->_map.begin())
+			return this->_map.end();
+		else
+			return --it_;
+	}
+
 	template <class Combiner>
 	bool combine(iterator& it_, const codomain_type& co_val)
 	{ 
