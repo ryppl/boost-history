@@ -15,7 +15,7 @@
 #include <boost/function_types/function_arity.hpp>
 #include <utility>
 #include <boost/optional/optional_fwd.hpp>
-#include <boost/range.hpp>
+#include <boost/range/iterator.hpp>
 #include <iterator>
 
 namespace boost {
@@ -88,7 +88,7 @@ private:
 
 public:
     typedef Range vertex_iterator_range;
-    typedef typename iterator_range<vertex_iterator_range>::type
+    typedef typename range_iterator<vertex_iterator_range>::type
             vertex_iterator;
     typedef Edge edge_descriptor;
     typedef Function function_type;
@@ -102,39 +102,58 @@ public:
 
     /** Constructors */
     //@{
-    function_graph_in_edge_iterator(function_type const& f)
-        : edge_(f), range_()
-    { };
+    /*function_graph_in_edge_iterator(function_type const& f,
+                                    vertex_iterator const& v)
+        : edge_(f), vertex_(v), range_()
+    { };*/
 
     function_graph_in_edge_iterator(function_type const& f,
-                                    vertex_iterator_range const& r)
-        : edge_(f), range_(r)
+                                    vertex_iterator const& v,
+                                    vertex_iterator const& v_begin,
+                                    vertex_iterator const& v_end)
+        : edge_(f),
+          vertex_(v),
+          vertex_begin_(v_begin),
+          vertex_end_(v_end)
     { };
 
     function_graph_in_edge_iterator(This const& cp)
-        : edge_(cp.edge_), range_(cp.range_)
+        : edge_(cp.edge_),
+          vertex_(cp.vertex_),
+          vertex_begin_(cp.vertex_begin_),
+          vertex_end_(cp.vertex_end_)
     { };
     //@}
 
     /** Bidirectional Iterator operator overloads */
     function_graph_in_edge_iterator& operator++()
     {
-        ++begin(range_);
-        return begin(range_); 
+        // Cycle through the range until an edge is found,
+        // or the end of the list is found
+        do {
+            ++vertex_begin_;
+        } while((vertex_begin_ != vertex_end_) &&
+              !edge_(*vertex_begin_, *vertex_));
+
+        return *this;
     };
 
     function_graph_in_edge_iterator& operator--()
-    { };
-
-    edge_descriptor& operator*()
     {
-        return edge_descriptor(edge_(*begin(range_), *end(range_)),
-                               begin(range_),
-                               end(range_));
+        return *this;
+    };
+
+    edge_descriptor operator*()
+    {
+        return edge_descriptor(edge_(*vertex_begin_, *vertex_),
+                               *vertex_begin_,
+                               *vertex_);
     };
 
     function_type edge_;
-    vertex_iterator_range range_;
+    vertex_iterator vertex_;
+    vertex_iterator vertex_begin_;
+    vertex_iterator vertex_end_;
 };
 
 
@@ -296,29 +315,29 @@ namespace detail {
 
 template <typename Result, typename Vertex>
 std::pair<detail::func_graph_edge<Result, Vertex>, bool>
-bind_edge(Result const& x, Vertex u, Vertex v)
+bind_edge(Result const& r, Vertex u, Vertex v)
 {
-    return std::make_pair(detail::func_graph_edge<Result, Vertex>(x, u, v),
+    return std::make_pair(detail::func_graph_edge<Result, Vertex>(r, u, v),
                           true);
 }
 
 template <typename Vertex>
 std::pair<detail::func_graph_edge<bool, Vertex>, bool>
-bind_edge(bool x, Vertex u, Vertex v)
+bind_edge(bool r, Vertex u, Vertex v)
 {
     return std::make_pair(typename detail::func_graph_edge
-                              <bool, Vertex>(x, u, v),
-                          x);
+                              <bool, Vertex>(r, u, v),
+                          r);
 }
 
 // This overload is specific to optional<T>
 template <typename OptType, typename Vertex>
 std::pair<detail::func_graph_edge<optional<OptType>, Vertex>, bool>
-bind_edge(optional<OptType> const& x, Vertex u, Vertex v)
+bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
 {
     return std::make_pair(detail::func_graph_edge
-                              <optional<OptType>, Vertex>(x, u, v),
-                          (bool)x);
+                              <optional<OptType>, Vertex>(r, u, v),
+                          (bool)r);
 }
 
 }   // detail namespace

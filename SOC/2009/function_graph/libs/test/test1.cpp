@@ -1,5 +1,13 @@
 /**
  * Testing a function that returns a boolean
+ *
+ * Functions used in test:
+ *   source(e, g)
+ *   target(e, g)
+ *   edge(u, v, g)
+ *     detail::bind_edge(r, u, v) - general type
+ *     detail::bind_edge(r, u, v) - boolean
+ *     detail::bind_edge(r, u, v) - optional<T>
  */
 
 #include <iostream>
@@ -12,7 +20,6 @@
 #include "function_graph.hpp"
 #include <cassert>
 #include <cmath>
-
 
 ////////
 // Boolean function
@@ -90,6 +97,6 @@ int main()
     assert(source(e3, funcGraph_optional) == r);
     assert(target(e3, funcGraph_optional) == s);
     assert(e2.result_ == -1);
-    
+
     return 0;
 }

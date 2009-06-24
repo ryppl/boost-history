@@ -1,48 +1,57 @@
 /**
  * Testing a function that has a range
+ *
+ * Functions used in test:
+ *   vertices(g)
  */
 
 #include <iostream>
 #include <boost/function.hpp>
 #include <functional>
-#include <algorithm>
 #include <vector>
-//#include <utility>
 #include "function_graph.hpp"
-#include <cmath>
 #include <boost/range.hpp>
 
-////////
-// Boolean function
-template <typename T>
-struct less_than {
-    bool operator() (T a, T b) { return a < b; }
-};
+
+// print an edge
+template<typename Result, typename Vertex>
+void print_edge(boost::detail::func_graph_edge<Result, Vertex> const& e)
+{
+    std::cout << "\nEdge:\n" << "  Source: " << e.source_ << "\n";
+    std::cout << "  Target: " << e.target_ << "\n";
+}
+
 
 int main()
 {
-    unsigned int tempArray[5] = {1, 4, 9, 2, 7};
-    std::vector<unsigned int> vectorOfInts(tempArray, tempArray + 5);
-
     ////////
-    // Create typedefs for functions and function graphs
-    typedef boost::function<bool(int,int)> function_boolean;
+    // Typedefs for the graph and iterator range
+    typedef boost::function<bool(int,int)> boolean_function;
     typedef std::pair<std::vector<unsigned int>::iterator,
                       std::vector<unsigned int>::iterator> iterator_range;
-    typedef boost::function_graph<function_boolean> G;
-    typedef boost::function_graph<function_boolean, iterator_range> GwithRange;
+    typedef boost::function_graph<boolean_function, iterator_range> FuncGraph;
 
     ////////
-    // Create functions, graphs and edges
-    G funcGraph(std::less<int>());
-    GwithRange funcGraphWithRange(less_than<int>(),
-                                  std::make_pair(vectorOfInts.begin(),
-                                                 vectorOfInts.end()));
-    /*GwithRange funcGraphWithRange2 = boost::make_function_graph(less_than<int>(),
-                                  std::make_pair(vectorOfInts.begin(),
-                                                 vectorOfInts.end()));*/
+    // Create vertices and function_graph
+    unsigned int tempArray[5] = {5, 4, 9, 2, 7};
+    std::vector<unsigned int> vectorOfInts(tempArray, tempArray + 5);
+    FuncGraph graph(std::less<int>(),
+                std::make_pair(vectorOfInts.begin(), vectorOfInts.end()));
+    ////////
+    // Create iterators
+    iterator_range graphDataRange = vertices(graph);
+    FuncGraph::in_edge_iterator graphIterator(std::less<int>(),
+                                              ++vectorOfInts.begin(),
+                                              vectorOfInts.begin(),
+                                              vectorOfInts.end());
 
-    
+    ////////
+    // Check iteration
+    print_edge((*graphIterator));
+    ++graphIterator;
+    print_edge((*graphIterator));
+    ++graphIterator;
+    print_edge((*graphIterator));
 
     return 0;
 }
