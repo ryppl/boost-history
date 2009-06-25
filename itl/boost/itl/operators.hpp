@@ -26,20 +26,16 @@ operator += (ObjectT& object, const OperandT& operand)
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (const ObjectT& object, const OperandT& operand)
-//NOTE: Prefered implementation using return value optimization does not compile with gcc
-//{ return ObjectT(object) += operand; }
+operator + (ObjectT object, const OperandT& operand)
 {
-    ObjectT result(object); 
-    return result += operand; 
+    return object += operand; 
 }
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator + (const OperandT& operand, const ObjectT& object)
+operator + (const OperandT& operand, ObjectT object)
 {
-    ObjectT result(object); 
-    return result += operand; 
+    return object += operand; 
 }
 
 

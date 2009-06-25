@@ -371,10 +371,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     T v2 = make<T>(2);
     T v3 = make<T>(3);
     T v4 = make<T>(4);
-    T v5 = make<T>(5);
     T v6 = make<T>(6);
     T v7 = make<T>(7);
-    T v9 = make<T>(9);
 
     interval<T> diff_1, diff_2;
     interval<T> I0_3D = interval<T>::rightopen(v0,v3);
