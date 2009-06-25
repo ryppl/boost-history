@@ -523,7 +523,7 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
         //[a      ...  : span
         //     [b ...  : covered
         //[a  b)       : left_over
-        span.right_subtract(left_over, covered);
+        left_over = right_subtract(span, covered);
         subtract(span & covered); //That which is common shall be subtracted
         add(left_over);                //That which is not shall be added
 

@@ -881,7 +881,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         //[a      ...  : span
         //     [b ...  : covered
         //[a  b)       : left_over
-        span.right_subtract(left_over, covered);
+        left_over = right_subtract(span, covered);
 
         //That which is common ...
         common_interval = span & covered;
@@ -1073,40 +1073,56 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     FOR_IMPLMAP(it) const_cast<interval_type&>((*it).KEY_VALUE).as(bounded);
 }
 
+
 template 
 <
     class SubType,
     class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::erase(const interval_type& x_itv)
+inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::erase(const interval_type& minuend)
 {
-    if(x_itv.empty()) return *that();
-    iterator fst_it = _map.lower_bound(x_itv);
-    if(fst_it==_map.end()) return *that();
-    iterator end_it = _map.upper_bound(x_itv);
-    
-    typename ImplMapT::iterator it=fst_it, nxt_it=fst_it, victim;
-    interval_type leftResid;   // left residual from first overlapping interval of *this
-    (*it).KEY_VALUE.right_subtract(leftResid,x_itv);
-    interval_type rightResid;  // right residual from last overlapping interval of *this
-    
-    CodomainT leftResid_ContVal = (*it).CONT_VALUE;
-    CodomainT rightResid_ContVal;
-    
-    while(it!=end_it)
-    { 
-        if((++nxt_it)==end_it) 
-        {
-            (*it).KEY_VALUE.left_subtract(rightResid,x_itv);
-            rightResid_ContVal = (*it).CONT_VALUE;
-        }
-        victim = it; it++; _map.erase(victim);
-    }
-    
-    add(value_type(leftResid,  leftResid_ContVal));
-    add(value_type(rightResid, rightResid_ContVal));
+    if(minuend.empty()) 
+		return *that();
 
+    iterator fst_it = _map.lower_bound(minuend);
+    if(fst_it==_map.end()) 
+		return *that();
+    iterator end_it = _map.upper_bound(minuend);
+	if(fst_it==end_it)
+		return *that();
+
+	iterator lst_it = end_it; --lst_it;
+
+	interval_type left_resid  = right_subtract(fst_it->KEY_VALUE, minuend);
+    interval_type right_resid =  left_subtract(lst_it->KEY_VALUE, minuend);
+
+	if(fst_it == lst_it)
+		if(!left_resid.empty())
+		{
+			const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+			if(!right_resid.empty())
+				this->_map.insert(fst_it, value_type(right_resid, fst_it->CONT_VALUE));
+		}
+		else if(!right_resid.empty())
+			const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(minuend);
+		else
+			this->_map.erase(fst_it);
+	else
+	{	//            [-------- minuend ---------)
+		// [left_resid   fst)   . . . .    [lst  right_resid)
+		iterator snd_it = fst_it; ++snd_it;
+
+		iterator start_ = left_resid.empty()? fst_it: snd_it;
+		iterator stop_  = right_resid.empty()? end_it: lst_it;
+		this->_map.erase(start_, stop_); //erase [start_, stop_)
+
+		if(!left_resid.empty())
+			const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+
+		if(!right_resid.empty())
+			const_cast<interval_type&>(lst_it->KEY_VALUE).left_subtract(minuend);
+	}
     return *that();
 }
 

@@ -674,7 +674,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     if(fst_it == lst_it) 
     {
         // only for the last there can be a right_resid: a part of *it right of minuend
-        interval_type right_resid;  (*fst_it).KEY_VALUE.left_subtract(right_resid, inter_val);
+        interval_type right_resid = left_subtract(fst_it->KEY_VALUE, inter_val);
 
         if(fst_it->CONT_VALUE == co_val)
         {

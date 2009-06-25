@@ -218,47 +218,25 @@ public:
     //= Subtraction
     //==========================================================================
 
-    /** subtract \c x2 from \c *this interval on it's left side. Assign the difference 
-        to \c right_over. The result \c right_over is the part of \c *this right of \c x2.
+    /** subtract \c left_minuend from \c *this interval on it's left side.
 \code
-right_over = x1 - x2; //on the left.
-...      d) : x1
-... c)      : x2; x1.left_subtract(right_over, x2);
-     [c  d) : right_over
-\endcode
-    */
-    void left_subtract(interval& right_over, const interval& x2)const;
-
-    /** subtract \c x2 from \c *this interval on it's right side. Assign the difference 
-        to \c left_over. The result \c left_over is the part of \c *this left of \c x2.
-\code
-left_over = x1 - x2; //on the right side.
-[a      ...  : x1
-     [b ...  : x2; x1.right_subtract(left_over, x2);
-[a  b)       : left_over
-\endcode
-    */
-    void right_subtract(interval& left_over, const interval& x2)const;
-
-    /** subtract \c x2 from \c *this interval on it's left side.
-\code
-*this = *this - x2; //on the left.
+*this = *this - left_minuend; //on the left.
 ...      d) : *this
-... c)      : x2;
+... c)      : left_minuend
      [c  d) : *this
 \endcode
     */
-    interval& left_subtract(const interval& x2);
+    interval& left_subtract(const interval& left_minuend);
 
-    /** subtract \c x2 from \c *this interval on it's right side. 
+    /** subtract \c right_minuend from \c *this interval on it's right side. 
 \code
-*this = *this - x2; //on the right side.
+*this = *this - right_minuend; //on the right side.
 [a      ...  : *this
-     [b ...  : x2;
+     [b ...  : right_minuend
 [a  b)       : *this
 \endcode
     */
-    interval& right_subtract(const interval& x2);
+    interval& right_subtract(const interval& right_minuend);
 
     //==========================================================================
     //= Intersection
@@ -882,6 +860,7 @@ inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_subtract(cons
     return *this; 
 }
 
+/*CL
 template <class DomainT, ITL_COMPARE Compare>
 void interval<DomainT,Compare>::right_subtract(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
 {
@@ -907,7 +886,7 @@ void interval<DomainT,Compare>::left_subtract(interval<DomainT,Compare>& rsur, c
     }
     else rsur.clear();
 }
-
+*/
 
 template <class DomainT, ITL_COMPARE Compare>
 const std::string interval<DomainT,Compare>::as_string()const
@@ -1022,18 +1001,37 @@ struct exclusive_less {
 //==============================================================================
 //= Subtraction
 //==============================================================================
+
+/** subtract \c right_minuend from the \c left interval on it's right side. 
+    Return the difference: The part of \c left right of \c x2.
+\code
+left_over = left - right_minuend; //on the right side.
+[a      ...  : left
+     [b ...  : right_minuend
+[a  b)       : left_over
+\endcode
+*/
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare> right_subtract(interval<DomainT,Compare>  left, 
-                                   const interval<DomainT,Compare>& right_subtrahend)
+inline interval<DomainT,Compare> right_subtract(interval<DomainT,Compare>  left, 
+                                   const interval<DomainT,Compare>& right_minuend)
 {
-	return left.right_subtract(right_subtrahend);
+	return left.right_subtract(right_minuend);
 }
 
+/** subtract \c left_minuend from the \c right interval on it's left side. 
+    Return the difference: The part of \c right right of \c left_minuend.
+\code
+right_over = right - left_minuend; //on the left.
+...      d) : right
+... c)      : left_minuend
+     [c  d) : right_over
+\endcode
+*/
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right, 
-                                  const interval<DomainT,Compare>& left_subtrahend)
+inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right, 
+                                         const interval<DomainT,Compare>& left_minuend)
 {
-	return right.left_subtract(left_subtrahend);
+	return right.left_subtract(left_minuend);
 }
 
 // ----------------------------------------------------------------------------

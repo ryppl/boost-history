@@ -403,7 +403,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     BOOST_CHECK_EQUAL( diff_2, I6_7D );
 
     diff_1.clear();
-    I4_7D.left_subtract(diff_1, I0_3D);
+    diff_1 = left_subtract(I4_7D, I0_3D);
     BOOST_CHECK_EQUAL( diff_1, I4_7D );
 
     diff_2 = I4_7D;
