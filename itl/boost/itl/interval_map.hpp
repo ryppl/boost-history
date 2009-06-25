@@ -143,20 +143,6 @@ private:
 	iterator join_on_right(const iterator& some, iterator& next);
 	iterator join_segments(iterator& some, const iterator& next){ return join_on_left(some, next); };//JODO ausbauen
 
-	/*
-    template<class Combiner>
-    iterator fill_gap_join_left(const value_type&);
-
-    template<class Combiner>
-    iterator fill_gap_join_left(iterator& prior_, const value_type&);
-
-    template<class Combiner>
-    iterator fill_gap_join_both(const value_type&);
-
-    template<class Combiner>
-    iterator fill_gap_join_both(iterator& prior_, const value_type&);
-	*/
-
     iterator fill_join_left(const value_type&);
     iterator fill_join_both(const value_type&);
 
@@ -274,7 +260,7 @@ inline bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
 
 template <typename DomainT, typename CodomainT, class Traits,
           ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+inline bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::join_right(iterator& it)
 {
     if(it == this->_map.end())
