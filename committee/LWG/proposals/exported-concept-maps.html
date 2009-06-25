@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta name="generator" content="Docutils 0.5: http://docutils.sourceforge.net/" />
+<meta name="generator" content="Docutils 0.6: http://docutils.sourceforge.net/" />
 <title>Exported Concept Maps</title>
 <meta name="authors" content="Dave Abrahams &lt;dave&#64;boostpro.com&gt; and Doug Gregor &lt;doug.gregor&#64;gmail.com&gt;" />
 <meta name="date" content="2009-06-22" />
@@ -551,10 +551,10 @@ struct Y {
 
 export concept_map C&lt;Y&gt; { } // Y::f and Y::g are now visible
 
-void f(X &amp;x) {
-  x.f(); // okay: calls C&lt;Y&gt;'s Y::f
-  x.g(); // okay: calls C&lt;Y&gt;'s Y::g
-  x.h(); // okay: calls Y::h
+void f(Y &amp;y) {
+  y.f(); // okay: calls C&lt;Y&gt;'s Y::f
+  y.g(); // okay: calls C&lt;Y&gt;'s Y::g
+  y.h(); // okay: calls Y::h
 }
 </pre>
 </li>

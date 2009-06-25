@@ -269,10 +269,10 @@ Add a new section 14.10.2.3 Exported concept maps [concept.map.export]:
 
     export concept_map C<Y> { } // Y::f and Y::g are now visible
 
-    void f(X &x) {
-      x.f(); // okay: calls C<Y>'s Y::f
-      x.g(); // okay: calls C<Y>'s Y::g
-      x.h(); // okay: calls Y::h
+    void f(Y &y) {
+      y.f(); // okay: calls C<Y>'s Y::f
+      y.g(); // okay: calls C<Y>'s Y::g
+      y.h(); // okay: calls Y::h
     }
 
   :ins:`- end example]`
