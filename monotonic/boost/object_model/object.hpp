@@ -22,16 +22,17 @@ struct object : generic::object
 	typedef type::traits<T> traits;
 
 	object() {}
-	object(const generic::object &obj)
+
+	object(const generic::object &obj) : generic::object(obj)
 	{
 	}
 
-	typename traits::reference reference()
+	typename traits::reference_type reference()
 	{
 		return deref<T>(*this);
 	}
 
-	typename traits::reference operator*()
+	typename traits::reference_type operator*()
 	{
 		return reference();
 	}

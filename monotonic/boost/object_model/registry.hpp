@@ -62,6 +62,14 @@ public:
 		instances.erase(val);
 	}
 
+	generic::storage &get_storage(handle h) const
+	{
+		instances_type::const_iterator iter = instances.find(h);
+		if (iter == instances.end())
+			throw unknown_handle();
+		return *iter->second;
+	}
+
 	size_t num_classes() const
 	{
 		return classes.size();

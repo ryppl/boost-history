@@ -18,24 +18,11 @@
 #include <boost/object_model/type/builtins.hpp>
 #include <boost/object_model/builder.hpp>
 #include <boost/object_model/type/traits.hpp>
+#include <boost/object_model/dereference.hpp>
 
 using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
-
-//BOOST_OM_BEGIN
-//namespace type 
-//{ 
-//	template <> 
-//	struct traits<void>// : traits_base<void,number::Void,int> 
-//	{ 
-//		BOOST_STATIC_CONSTANT(short, type_number = 42);//static int type_number = 42; 
-//		static const char *name; 
-//	}; 
-//	//int traits<void>::type_number = 42;//number::Void; 
-//	const char * traits<void>::name = "Void"; 
-//}
-//BOOST_OM_END
 
 BOOST_AUTO_TEST_CASE(test_type_traits)
 {
@@ -69,11 +56,13 @@ BOOST_AUTO_TEST_CASE(test_generic_object)
 BOOST_AUTO_TEST_CASE(test_object)
 {
 	om::registry<> reg;
+	reg.register_class<int>();
+	BOOST_ASSERT(reg.has_class<int>());
 	om::object<int> num = reg.create<int>();
 	BOOST_ASSERT(num.exists());
 	BOOST_ASSERT(num.is_type<int>());
 	*num = 42;
-//	BOOST_ASSERT(deref<int>(num) == 42);
+	BOOST_ASSERT(om::deref<int>(num) == 42);
 }
 
 struct Foo

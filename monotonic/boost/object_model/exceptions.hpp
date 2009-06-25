@@ -25,6 +25,10 @@ struct unknown_type
 {
 };
 
+struct unknown_handle
+{
+};
+
 struct type_mismatch
 {
 };

@@ -23,6 +23,8 @@ namespace generic
 	public:
 
 		virtual bool exists(handle) const = 0;
+		virtual storage &get_storage(handle) const = 0;
+
 	};
 }
 

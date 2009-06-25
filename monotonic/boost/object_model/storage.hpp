@@ -15,10 +15,46 @@
 BOOST_OM_BEGIN
 
 template <class T>
+struct const_storage : generic::const_storage
+{
+	typedef type::traits<T> traits;
+	const typename traits::storage_type value;
+
+	const_storage() {} 
+	const_storage(typename traits::const_reference_type init) : value(init) { }
+	typename traits::const_reference_type get_const_reference()
+	{
+		return value;
+	}
+};
+
+template <class T>
 struct storage : generic::storage
 {
 	typedef type::traits<T> traits;
+	typename traits::storage_type value;
+	mutable bool dirty;
 
+	storage() : dirty(true) {} 
+	storage(typename traits::const_reference_type init) : value(init), dirty(false) { }
+
+	typename traits::const_reference_type get_const_reference()
+	{
+		return value;
+	}
+	typename traits::reference_type get_reference()
+	{
+		dirty = true;
+		return value;
+	}
+	bool is_dirty() const
+	{
+		return dirty;
+	}
+	void set_clean() const
+	{
+		dirty = false;
+	}
 };
 
 BOOST_OM_END

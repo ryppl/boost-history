@@ -70,6 +70,11 @@ namespace generic
 		return get_registry().exists(number);
 	}
 
+	const storage &object_base::get_storage() const
+	{
+		return get_registry().get_storage(get_handle());
+	}
+
 	//---------------------------------------------------
 	// const_object
 	//---------------------------------------------------
@@ -99,6 +104,11 @@ namespace generic
 	{
 	}
 
+	storage &mutable_object::get_storage()
+	{
+		return get_registry().get_storage(get_handle());
+	}
+
 	//---------------------------------------------------
 	// object
 	//---------------------------------------------------
@@ -124,6 +134,13 @@ namespace generic
 		konst = false;
 		return *this;
 	}
+	storage &object::get_storage()
+	{
+		if (is_const())
+			throw const_error();
+		return get_registry().get_storage(get_handle());
+	}
+
 }
 
 const generic::object null_object;

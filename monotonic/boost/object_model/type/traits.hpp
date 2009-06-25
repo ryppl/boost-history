@@ -21,10 +21,10 @@ namespace type
 	struct traits_base
 	{
 		typedef S Storage;
-		typedef Storage type;
-		typedef Storage *pointer;
-		typedef Storage &reference;
-		typedef Storage const &const_reference;
+		typedef Storage storage_type;
+		typedef Storage *pointer_type;
+		typedef Storage &reference_type;
+		typedef Storage const &const_reference_type;
 	};
 
 }
