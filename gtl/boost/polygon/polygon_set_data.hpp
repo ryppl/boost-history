@@ -5,8 +5,11 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_SET_DATA_HPP
-#define GTL_POLYGON_SET_DATA_HPP
+#ifndef BOOST_POLYGON_POLYGON_SET_DATA_HPP
+#define BOOST_POLYGON_POLYGON_SET_DATA_HPP
+#include "polygon_45_set_data.hpp"
+#include "polygon_45_set_concept.hpp"
+#include "detail/polygon_arbitrary_formation.hpp"
 namespace boost { namespace polygon{
 
   //foward declare view
@@ -133,6 +136,13 @@ namespace boost { namespace polygon{
     template <typename coordinate_type_2>
     inline void insert(const polygon_45_set_data<coordinate_type_2>& ps) {
       std::vector<polygon_45_with_holes_data<coordinate_type_2> > polys;
+      assign(polys, ps);
+      insert(polys.begin(), polys.end());
+    }
+
+    template <typename coordinate_type_2>
+    inline void insert(const polygon_90_set_data<coordinate_type_2>& ps) {
+      std::vector<polygon_90_with_holes_data<coordinate_type_2> > polys;
       assign(polys, ps);
       insert(polys.begin(), polys.end());
     }
@@ -423,5 +433,10 @@ namespace boost { namespace polygon{
   };
 }
 }
+#include "detail/scan_arbitrary.hpp"
+#include "polygon_set_traits.hpp"
+#include "detail/polygon_set_view.hpp"
+
+#include "polygon_set_concept.hpp"
 #endif
 

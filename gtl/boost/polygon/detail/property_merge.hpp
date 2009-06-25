@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_PROPERTY_MERGE_HPP
-#define GTL_PROPERTY_MERGE_HPP
+#ifndef BOOST_POLYGON_PROPERTY_MERGE_HPP
+#define BOOST_POLYGON_PROPERTY_MERGE_HPP
 namespace boost { namespace polygon{
 
 template <typename coordinate_type>

@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_ITERATOR_POINTS_TO_COMPACT_HPP
-#define GTL_ITERATOR_POINTS_TO_COMPACT_HPP
+#ifndef BOOST_POLYGON_ITERATOR_POINTS_TO_COMPACT_HPP
+#define BOOST_POLYGON_ITERATOR_POINTS_TO_COMPACT_HPP
 namespace boost { namespace polygon{
 template <typename iT, typename point_type>
 class iterator_points_to_compact {

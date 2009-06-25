@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_ITERATOR_GEOMETRY_TO_SET_HPP
-#define GTL_ITERATOR_GEOMETRY_TO_SET_HPP
+#ifndef BOOST_POLYGON_ITERATOR_GEOMETRY_TO_SET_HPP
+#define BOOST_POLYGON_ITERATOR_GEOMETRY_TO_SET_HPP
 namespace boost { namespace polygon{
 template <typename concept_type, typename geometry_type>
 class iterator_geometry_to_set {};

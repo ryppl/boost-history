@@ -5,8 +5,11 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_45_SET_DATA_HPP
-#define GTL_POLYGON_45_SET_DATA_HPP
+#ifndef BOOST_POLYGON_POLYGON_45_SET_DATA_HPP
+#define BOOST_POLYGON_POLYGON_45_SET_DATA_HPP
+#include "polygon_90_set_data.hpp"
+#include "detail/boolean_op_45.hpp"
+#include "detail/polygon_45_formation.hpp"
 namespace boost { namespace polygon{
 
   enum RoundingOption { CLOSEST = 0, OVERSIZE = 1, UNDERSIZE = 2, SQRT2 = 3, SQRT1OVER2 = 4 };

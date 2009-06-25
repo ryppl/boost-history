@@ -13,6 +13,83 @@ namespace gtl = boost::polygon;
 #include <stdlib.h>
 
 namespace boost { namespace polygon{
+
+  void test_assign() {
+    using namespace gtl;
+    std::vector<polygon_data<int> > ps;
+    polygon_90_set_data<int> ps90;
+    assign(ps, ps90);
+  }
+
+  //this is a compile time test, if it compiles it passes
+  void test_view_as() {
+    using namespace gtl;
+    polygon_data<int> p;
+    polygon_45_data<int> p45;
+    polygon_90_data<int> p90;
+    polygon_with_holes_data<int> pwh;
+    polygon_45_with_holes_data<int> p45wh;
+    polygon_90_with_holes_data<int> p90wh;
+    rectangle_data<int> rect(0, 1, 10, 11);
+    polygon_90_set_data<int> ps90;
+    polygon_45_set_data<int> ps45;
+    polygon_set_data<int> ps;
+  
+    assign(p, rect);
+    assign(p90, view_as<polygon_90_concept>(p));
+    if(!equivalence(p90, rect))
+      std::cout << "fail 1\n";
+    assign(p45, view_as<polygon_45_concept>(p));
+    if(!equivalence(p45, rect))
+      std::cout << "fail 2\n";
+    assign(p90, view_as<polygon_90_concept>(p45));
+    if(!equivalence(p90, rect))
+      std::cout << "fail 3\n";
+    if(!equivalence(rect, view_as<rectangle_concept>(p)))
+      std::cout << "fail 4\n";
+    if(!equivalence(rect, view_as<rectangle_concept>(p45)))
+      std::cout << "fail 5\n";
+    if(!equivalence(rect, view_as<rectangle_concept>(p90)))
+      std::cout << "fail 6\n";
+    assign(pwh, rect);
+    assign(p90wh, rect);
+    assign(p45wh, rect);
+    if(!equivalence(rect, view_as<rectangle_concept>(pwh)))
+      std::cout << "fail 7\n";
+    if(!equivalence(rect, view_as<rectangle_concept>(p45wh)))
+      std::cout << "fail 8\n";
+    if(!equivalence(rect, view_as<rectangle_concept>(p90wh)))
+      std::cout << "fail 9\n";
+    assign(p90wh, view_as<polygon_90_with_holes_concept>(pwh));
+    if(!equivalence(p90wh, rect))
+      std::cout << "fail 10\n";
+    assign(p45wh, view_as<polygon_45_with_holes_concept>(pwh));
+    if(!equivalence(p45wh, rect))
+      std::cout << "fail 11\n";
+    assign(p90wh, view_as<polygon_90_with_holes_concept>(p45wh));
+    if(!equivalence(p90wh, rect))
+      std::cout << "fail 12\n"; 
+    assign(p90, view_as<polygon_90_concept>(pwh));
+    if(!equivalence(p90, rect))
+      std::cout << "fail 13\n";
+    assign(p45, view_as<polygon_45_concept>(pwh));
+    if(!equivalence(p45, rect))
+      std::cout << "fail 14\n";
+    assign(p90, view_as<polygon_90_concept>(p45wh));
+    if(!equivalence(p90, rect))
+      std::cout << "fail 15\n";
+    assign(ps, rect);
+    assign(ps90, view_as<polygon_90_set_concept>(ps));
+    if(!equivalence(ps90, rect))
+      std::cout << "fail 16\n";
+    assign(ps45, view_as<polygon_45_set_concept>(ps));
+    if(!equivalence(ps45, rect))
+      std::cout << "fail 17\n";
+    assign(ps90, view_as<polygon_90_set_concept>(ps45));
+    if(!equivalence(ps90, rect))
+      std::cout << "fail 18\n";
+  }
+
   inline bool testPolygon45SetRect() {
     std::vector<point_data<int> > points;
     points.push_back(point_data<int>(0,0));
@@ -1568,84 +1645,84 @@ void max_cover_stress_test() {
   }
 }
 
-namespace boost { namespace polygon{
-  template <typename GCT, typename T>
-  struct view_of {};
+// namespace boost { namespace polygon{
+//   template <typename GCT, typename T>
+//   struct view_of {};
 
-  template <typename T>
-  struct view_of<polygon_45_concept, T> {
-    const T* t;
-    view_of(const T& obj) : t(&obj) {}
-    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
-    typedef typename polygon_traits<T>::iterator_type iterator_type;
-    typedef typename polygon_traits<T>::point_type point_type;
+//   template <typename T>
+//   struct view_of<polygon_45_concept, T> {
+//     const T* t;
+//     view_of(const T& obj) : t(&obj) {}
+//     typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+//     typedef typename polygon_traits<T>::iterator_type iterator_type;
+//     typedef typename polygon_traits<T>::point_type point_type;
 
-    /// Get the begin iterator
-    inline iterator_type begin() const {
-      return polygon_traits<T>::begin_points(*t);
-    }
+//     /// Get the begin iterator
+//     inline iterator_type begin() const {
+//       return polygon_traits<T>::begin_points(*t);
+//     }
   
-    /// Get the end iterator
-    inline iterator_type end() const {
-      return polygon_traits<T>::end_points(*t);
-    }
+//     /// Get the end iterator
+//     inline iterator_type end() const {
+//       return polygon_traits<T>::end_points(*t);
+//     }
   
-    /// Get the number of sides of the polygon
-    inline unsigned int size() const {
-      return polygon_traits<T>::size(*t);
-    }
+//     /// Get the number of sides of the polygon
+//     inline unsigned int size() const {
+//       return polygon_traits<T>::size(*t);
+//     }
   
-    /// Get the winding direction of the polygon
-    inline winding_direction winding() const {
-      return polygon_traits<T>::winding(*t);
-    }
-  };
+//     /// Get the winding direction of the polygon
+//     inline winding_direction winding() const {
+//       return polygon_traits<T>::winding(*t);
+//     }
+//   };
   
-  template <typename T1, typename T2>
-  view_of<T1, T2> view_as(const T2& obj) { return view_of<T1, T2>(obj); }
+//   template <typename T1, typename T2>
+//   view_of<T1, T2> view_as(const T2& obj) { return view_of<T1, T2>(obj); }
 
-  template <typename T>
-  struct geometry_concept<view_of<polygon_45_concept, T> > {
-    typedef polygon_45_concept type;
-  };
+//   template <typename T>
+//   struct geometry_concept<view_of<polygon_45_concept, T> > {
+//     typedef polygon_45_concept type;
+//   };
 
-  template <typename T>
-  struct view_of<polygon_90_concept, T> {
-    const T* t;
-    view_of(const T& obj) : t(&obj) {}
-    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
-    typedef typename polygon_traits<T>::iterator_type iterator_type;
-    typedef typename polygon_traits<T>::point_type point_type;
-    typedef iterator_points_to_compact<iterator_type, point_type> compact_iterator_type;
+//   template <typename T>
+//   struct view_of<polygon_90_concept, T> {
+//     const T* t;
+//     view_of(const T& obj) : t(&obj) {}
+//     typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+//     typedef typename polygon_traits<T>::iterator_type iterator_type;
+//     typedef typename polygon_traits<T>::point_type point_type;
+//     typedef iterator_points_to_compact<iterator_type, point_type> compact_iterator_type;
 
-    /// Get the begin iterator
-    inline compact_iterator_type begin_compact() const {
-      return compact_iterator_type(polygon_traits<T>::begin_points(*t),
-                                   polygon_traits<T>::end_points(*t));
-    }
+//     /// Get the begin iterator
+//     inline compact_iterator_type begin_compact() const {
+//       return compact_iterator_type(polygon_traits<T>::begin_points(*t),
+//                                    polygon_traits<T>::end_points(*t));
+//     }
   
-    /// Get the end iterator
-    inline compact_iterator_type end_compact() const {
-      return compact_iterator_type(polygon_traits<T>::end_points(*t),
-                                   polygon_traits<T>::end_points(*t));
-    }
+//     /// Get the end iterator
+//     inline compact_iterator_type end_compact() const {
+//       return compact_iterator_type(polygon_traits<T>::end_points(*t),
+//                                    polygon_traits<T>::end_points(*t));
+//     }
   
-    /// Get the number of sides of the polygon
-    inline unsigned int size() const {
-      return polygon_traits<T>::size(*t);
-    }
+//     /// Get the number of sides of the polygon
+//     inline unsigned int size() const {
+//       return polygon_traits<T>::size(*t);
+//     }
   
-    /// Get the winding direction of the polygon
-    inline winding_direction winding() const {
-      return polygon_traits<T>::winding(*t);
-    }
-  };
+//     /// Get the winding direction of the polygon
+//     inline winding_direction winding() const {
+//       return polygon_traits<T>::winding(*t);
+//     }
+//   };
 
-  template <typename T>
-  struct geometry_concept<view_of<polygon_90_concept, T> > {
-    typedef polygon_90_concept type;
-  };
-}}
+//   template <typename T>
+//   struct geometry_concept<view_of<polygon_90_concept, T> > {
+//     typedef polygon_90_concept type;
+//   };
+// }}
 using namespace gtl;
 
 //this test fails and I'd like to get it to pass
@@ -1712,6 +1789,7 @@ bool test_extents2() {
 }
 
 int main() {
+  test_view_as();
   //this test fails and I'd like to get it to pass
   //if(!test_colinear_duplicate_points()) return 1;
   if(!test_extents2()) return 1;

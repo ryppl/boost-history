@@ -7,6 +7,9 @@
 */
 #ifndef GLT_POINT_3D_CONCEPT_HPP
 #define GLT_POINT_3D_CONCEPT_HPP
+#include "point_concept.hpp"
+#include "point_3d_data.hpp"
+#include "point_3d_traits.hpp"
 namespace boost { namespace polygon{
   struct point_3d_concept {};
  

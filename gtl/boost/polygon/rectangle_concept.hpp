@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_RECTANGLE_CONCEPT_HPP
-#define GTL_RECTANGLE_CONCEPT_HPP
+#ifndef BOOST_POLYGON_RECTANGLE_CONCEPT_HPP
+#define BOOST_POLYGON_RECTANGLE_CONCEPT_HPP
 
 #include "isotropy.hpp"
 

@@ -6,14 +6,32 @@
   http://www.boost.org/LICENSE_1_0.txt).
 */
 
-#ifndef GTL_ISOTROPY_HPP
-#define GTL_ISOTROPY_HPP
+#ifndef BOOST_POLYGON_ISOTROPY_HPP
+#define BOOST_POLYGON_ISOTROPY_HPP
 
 #ifndef BOOST_POLYGON_NO_DEPS
+
+#include <boost/config.hpp> 
+#ifdef BOOST_MSVC
+#define BOOST_POLYGON_WIN32
+#endif
+#ifdef BOOST_INTEL
+#define BOOST_POLYGON_ICC
+#endif
+#ifdef BOOST_HAS_LONG_LONG
+#define BOOST_POLYGON_USE_LONG_LONG
+#endif
 #include <boost/utility/enable_if.hpp>
 
 #else
 
+#ifdef WIN32
+#define BOOST_POLYGON_WIN32
+#endif
+#ifdef __ICC
+#define BOOST_POLYGON_ICC
+#endif
+#define BOOST_POLYGON_USE_LONG_LONG
   namespace boost { 
     template <bool B, class T   = void>
     struct enable_if_c {
@@ -87,6 +105,12 @@ namespace boost { namespace polygon{
   template <typename T>
   struct geometry_concept { typedef undefined_concept type; }; 
 
+  template <typename GCT, typename T>
+  struct view_of {};
+
+  template <typename T1, typename T2>
+  view_of<T1, T2> view_as(const T2& obj) { return view_of<T1, T2>(obj); }  
+
   template <typename T>
   struct coordinate_traits {};
 
@@ -99,12 +123,19 @@ namespace boost { namespace polygon{
   struct coordinate_traits<int> {
     typedef int coordinate_type;
     typedef long double area_type;
+#ifdef BOOST_POLYGON_USE_LONG_LONG
     typedef long long manhattan_area_type;
     typedef unsigned long long unsigned_area_type;
     typedef long long coordinate_difference;
+#else
+    typedef long manhattan_area_type;
+    typedef unsigned long unsigned_area_type;
+    typedef long coordinate_difference;
+#endif
     typedef long double coordinate_distance;
   };
 
+#ifdef BOOST_POLYGON_USE_LONG_LONG
   template <>
   struct coordinate_traits<long long> {
     typedef long long coordinate_type;
@@ -114,6 +145,7 @@ namespace boost { namespace polygon{
     typedef long long coordinate_difference;
     typedef long double coordinate_distance;
   };
+#endif
 
   template <>
   struct coordinate_traits<float> {

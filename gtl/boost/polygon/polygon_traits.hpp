@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_TRAITS_HPP
-#define GTL_POLYGON_TRAITS_HPP
+#ifndef BOOST_POLYGON_POLYGON_TRAITS_HPP
+#define BOOST_POLYGON_POLYGON_TRAITS_HPP
 namespace boost { namespace polygon{
 
   template <typename T, typename enable = gtl_yes>
@@ -190,8 +190,16 @@ namespace boost { namespace polygon{
 #include "rectangle_concept.hpp"
 
 //algorithms needed by polygon types
-#include "iterator_points_to_compact.hpp"
-#include "iterator_compact_to_points.hpp"
+#include "detail/iterator_points_to_compact.hpp"
+#include "detail/iterator_compact_to_points.hpp"
+
+//polygons
+#include "polygon_45_data.hpp"
+#include "polygon_data.hpp"
+#include "polygon_90_data.hpp"
+#include "polygon_90_with_holes_data.hpp"
+#include "polygon_45_with_holes_data.hpp"
+#include "polygon_with_holes_data.hpp"
 
 namespace boost { namespace polygon{
   struct polygon_concept {};
@@ -919,11 +927,11 @@ namespace boost { namespace polygon{
     while (begin_range != end_range) {
       area_type x1 = (area_type)x(previous);
       area_type x2 = (area_type)x(*begin_range);
-#ifdef __ICC
+#ifdef BOOST_POLYGON_ICC
 #pragma warning (disable:1572)
 #endif
       if(x1 != x2) {
-#ifdef __ICC
+#ifdef BOOST_POLYGON_ICC
 #pragma warning (default:1572)
 #endif
         // do trapezoid area accumulation
@@ -1317,6 +1325,34 @@ namespace boost { namespace polygon{
     return *this;
   }
 
+  template <class T>
+  template <class T2>
+  polygon_data<T>& polygon_data<T>::operator=(const T2& rvalue) {
+    assign(*this, rvalue);
+    return *this;
+  }
+
+  template <class T>
+  template <class T2>
+  polygon_90_with_holes_data<T>& polygon_90_with_holes_data<T>::operator=(const T2& rvalue) {
+    assign(*this, rvalue);
+    return *this;
+  }
+
+  template <class T>
+  template <class T2>
+  polygon_45_with_holes_data<T>& polygon_45_with_holes_data<T>::operator=(const T2& rvalue) {
+    assign(*this, rvalue);
+    return *this;
+  }
+
+  template <class T>
+  template <class T2>
+  polygon_with_holes_data<T>& polygon_with_holes_data<T>::operator=(const T2& rvalue) {
+    assign(*this, rvalue);
+    return *this;
+  }
+
   template <typename T>
   struct geometry_concept<polygon_data<T> > {
     typedef polygon_concept type;
@@ -1374,7 +1410,268 @@ namespace boost { namespace polygon{
     static inline iterator_holes_type end_holes(const hole_type& t) { return &t; }
     static inline unsigned int size_holes(const hole_type& t) { return 0; }
   };
+
+  template <typename T>
+  struct view_of<rectangle_concept, T> {
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef interval_data<coordinate_type> interval_type;
+    rectangle_data<coordinate_type> rect;
+    view_of(const T& obj) : rect() {
+      point_data<coordinate_type> pts[2];
+      typename polygon_traits<T>::iterator_type itr = 
+        begin_points(obj), itre = end_points(obj);
+      if(itr == itre) return;
+      assign(pts[0], *itr);
+      ++itr;
+      if(itr == itre) return;
+      ++itr;
+      if(itr == itre) return;
+      assign(pts[1], *itr);
+      set_points(rect, pts[0], pts[1]);
+    }
+    inline interval_type get(orientation_2d orient) const {
+      return rect.get(orient); }
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<rectangle_concept, T> > {
+    typedef rectangle_concept type;
+  };
                                                          
+  template <typename T>
+  struct view_of<polygon_45_concept, T> {
+    const T* t;
+    view_of(const T& obj) : t(&obj) {}
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<T>::iterator_type iterator_type;
+    typedef typename polygon_traits<T>::point_type point_type;
+
+    /// Get the begin iterator
+    inline iterator_type begin() const {
+      return polygon_traits<T>::begin_points(*t);
+    }
+  
+    /// Get the end iterator
+    inline iterator_type end() const {
+      return polygon_traits<T>::end_points(*t);
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size() const {
+      return polygon_traits<T>::size(*t);
+    }
+  
+    /// Get the winding direction of the polygon
+    inline winding_direction winding() const {
+      return polygon_traits<T>::winding(*t);
+    }
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_45_concept, T> > {
+    typedef polygon_45_concept type;
+  };
+  
+  template <typename T>
+  struct view_of<polygon_90_concept, T> {
+    const T* t;
+    view_of(const T& obj) : t(&obj) {}
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<T>::iterator_type iterator_type;
+    typedef typename polygon_traits<T>::point_type point_type;
+    typedef iterator_points_to_compact<iterator_type, point_type> compact_iterator_type;
+
+    /// Get the begin iterator
+    inline compact_iterator_type begin_compact() const {
+      return compact_iterator_type(polygon_traits<T>::begin_points(*t),
+                                   polygon_traits<T>::end_points(*t));
+    }
+  
+    /// Get the end iterator
+    inline compact_iterator_type end_compact() const {
+      return compact_iterator_type(polygon_traits<T>::end_points(*t),
+                                   polygon_traits<T>::end_points(*t));
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size() const {
+      return polygon_traits<T>::size(*t);
+    }
+  
+    /// Get the winding direction of the polygon
+    inline winding_direction winding() const {
+      return polygon_traits<T>::winding(*t);
+    }
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_90_concept, T> > {
+    typedef polygon_90_concept type;
+  };
+
+  template <typename T>
+  struct view_of<polygon_45_with_holes_concept, T> {
+    const T* t;
+    view_of(const T& obj) : t(&obj) {}
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<T>::iterator_type iterator_type;
+    typedef typename polygon_traits<T>::point_type point_type;
+    typedef view_of<polygon_45_concept, typename polygon_with_holes_traits<T>::hole_type> hole_type;
+    struct iterator_holes_type {
+      typedef std::forward_iterator_tag iterator_category;
+      typedef hole_type value_type;
+      typedef std::ptrdiff_t difference_type;
+      typedef const hole_type* pointer; //immutable
+      typedef const hole_type& reference; //immutable
+      typedef typename polygon_with_holes_traits<T>::iterator_holes_type iht;
+      iht internal_itr;
+      iterator_holes_type() : internal_itr() {}
+      iterator_holes_type(iht iht_in) : internal_itr(iht_in) {}
+      inline iterator_holes_type& operator++() {
+        ++internal_itr;
+        return *this;
+      }
+      inline const iterator_holes_type operator++(int) {
+        iterator_holes_type tmp(*this);
+        ++(*this);
+        return tmp;
+      }
+      inline bool operator==(const iterator_holes_type& that) const {
+        return (internal_itr == that.internal_itr);
+      }
+      inline bool operator!=(const iterator_holes_type& that) const {
+        return (internal_itr != that.internal_itr);
+      }
+      inline value_type operator*() const { 
+        return view_as<polygon_45_concept>(*internal_itr);
+      }
+    };
+      
+    /// Get the begin iterator
+    inline iterator_type begin() const {
+      return polygon_traits<T>::begin_points(*t);
+    }
+  
+    /// Get the end iterator
+    inline iterator_type end() const {
+      return polygon_traits<T>::end_points(*t);
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size() const {
+      return polygon_traits<T>::size(*t);
+    }
+  
+    /// Get the winding direction of the polygon
+    inline winding_direction winding() const {
+      return polygon_traits<T>::winding(*t);
+    }
+
+    /// Get the begin iterator
+    inline iterator_holes_type begin_holes() const {
+      return polygon_with_holes_traits<T>::begin_holes(*t);
+    }
+  
+    /// Get the end iterator
+    inline iterator_holes_type end_holes() const {
+      return polygon_with_holes_traits<T>::end_holes(*t);
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size_holes() const {
+      return polygon_with_holes_traits<T>::size_holes(*t);
+    }
+  
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_45_with_holes_concept, T> > {
+    typedef polygon_45_with_holes_concept type;
+  };
+  
+  template <typename T>
+  struct view_of<polygon_90_with_holes_concept, T> {
+    const T* t;
+    view_of(const T& obj) : t(&obj) {}
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<T>::iterator_type iterator_type;
+    typedef typename polygon_traits<T>::point_type point_type;
+    typedef iterator_points_to_compact<iterator_type, point_type> compact_iterator_type;
+    typedef view_of<polygon_90_concept, typename polygon_with_holes_traits<T>::hole_type> hole_type;
+    struct iterator_holes_type {
+      typedef std::forward_iterator_tag iterator_category;
+      typedef hole_type value_type;
+      typedef std::ptrdiff_t difference_type;
+      typedef const hole_type* pointer; //immutable
+      typedef const hole_type& reference; //immutable
+      typedef typename polygon_with_holes_traits<T>::iterator_holes_type iht;
+      iht internal_itr;
+      iterator_holes_type() : internal_itr() {}
+      iterator_holes_type(iht iht_in) : internal_itr(iht_in) {}
+      inline iterator_holes_type& operator++() {
+        ++internal_itr;
+        return *this;
+      }
+      inline const iterator_holes_type operator++(int) {
+        iterator_holes_type tmp(*this);
+        ++(*this);
+        return tmp;
+      }
+      inline bool operator==(const iterator_holes_type& that) const {
+        return (internal_itr == that.internal_itr);
+      }
+      inline bool operator!=(const iterator_holes_type& that) const {
+        return (internal_itr != that.internal_itr);
+      }
+      inline value_type operator*() const { 
+        return view_as<polygon_90_concept>(*internal_itr);
+      }
+    };
+      
+    /// Get the begin iterator
+    inline compact_iterator_type begin_compact() const {
+      return compact_iterator_type(polygon_traits<T>::begin_points(*t),
+                                   polygon_traits<T>::end_points(*t));
+    }
+  
+    /// Get the end iterator
+    inline compact_iterator_type end_compact() const {
+      return compact_iterator_type(polygon_traits<T>::end_points(*t),
+                                   polygon_traits<T>::end_points(*t));
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size() const {
+      return polygon_traits<T>::size(*t);
+    }
+  
+    /// Get the winding direction of the polygon
+    inline winding_direction winding() const {
+      return polygon_traits<T>::winding(*t);
+    }
+
+    /// Get the begin iterator
+    inline iterator_holes_type begin_holes() const {
+      return polygon_with_holes_traits<T>::begin_holes(*t);
+    }
+  
+    /// Get the end iterator
+    inline iterator_holes_type end_holes() const {
+      return polygon_with_holes_traits<T>::end_holes(*t);
+    }
+  
+    /// Get the number of sides of the polygon
+    inline unsigned int size_holes() const {
+      return polygon_with_holes_traits<T>::size_holes(*t);
+    }
+  
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_90_with_holes_concept, T> > {
+    typedef polygon_90_with_holes_concept type;
+  };
+
 }
 }
 

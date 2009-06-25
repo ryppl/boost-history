@@ -5,8 +5,8 @@
     Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_TRANSFORM_DETAIL_HPP
-#define GTL_TRANSFORM_DETAIL_HPP
+#ifndef BOOST_POLYGON_TRANSFORM_DETAIL_HPP
+#define BOOST_POLYGON_TRANSFORM_DETAIL_HPP
 
 namespace boost { namespace polygon{
   // inline std::ostream& operator<< (std::ostream& o, const axis_transformation& r) {
@@ -23,7 +23,7 @@ namespace boost { namespace polygon{
 
   // template <typename scale_factor_type>
   // inline std::ostream& operator<< (std::ostream& o, const anisotropic_scale_factor<scale_factor_type>& sc) {
-  //   o << sc.scale_[0] << GTL_SEP << sc.scale_[1] << GTL_SEP << sc.scale_[2];
+  //   o << sc.scale_[0] << BOOST_POLYGON_SEP << sc.scale_[1] << GTL_SEP << sc.scale_[2];
   //   return o;
   // }
 
@@ -35,7 +35,7 @@ namespace boost { namespace polygon{
 
   // template <typename coordinate_type>
   // inline std::ostream& operator<< (std::ostream& o, const transformation& tr) {
-  //   o << tr.atr_ << GTL_SEP << tr.p_;
+  //   o << tr.atr_ << BOOST_POLYGON_SEP << tr.p_;
   //   return o;
   // }
 

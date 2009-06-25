@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_INTERVAL_DATA_HPP
-#define GTL_INTERVAL_DATA_HPP
+#ifndef BOOST_POLYGON_INTERVAL_DATA_HPP
+#define BOOST_POLYGON_INTERVAL_DATA_HPP
 #include "isotropy.hpp"
 namespace boost { namespace polygon{
   template <typename T>

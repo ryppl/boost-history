@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_SCAN_ARBITRARY_HPP
-#define GTL_SCAN_ARBITRARY_HPP
+#ifndef BOOST_POLYGON_SCAN_ARBITRARY_HPP
+#define BOOST_POLYGON_SCAN_ARBITRARY_HPP
 #include <fstream>
 namespace boost { namespace polygon{
 
@@ -2142,11 +2142,11 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
           for(unsigned int j = 0; j < polys.size(); ++j) {
             std::cout << polys[j] << std::endl;
             std::cout << polys90[j] << std::endl;
-#ifdef __ICC
+#ifdef BOOST_POLYGON_ICC
 #pragma warning (disable:1572)
 #endif
             if(area(polys[j]) != area(polys90[j])) {
-#ifdef __ICC
+#ifdef BOOST_POLYGON_ICC
 #pragma warning (default:1572)
 #endif
               std::cout << "merge failed with area mismatch\n";
@@ -2442,8 +2442,8 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
       insert(b1, e1, 0);
       insert(b2, e2, 1);
       property_merge_data tmp_pmd;
-      //#define GTL_DEBUG_FILE
-#ifdef GTL_DEBUG_FILE
+      //#define BOOST_POLYGON_DEBUG_FILE
+#ifdef BOOST_POLYGON_DEBUG_FILE
       std::fstream debug_file;
       debug_file.open("gtl_debug.txt", std::ios::out);
       property_merge<Unit, property_type, std::vector<property_type> >::print(debug_file, pmd);

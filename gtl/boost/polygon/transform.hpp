@@ -5,9 +5,10 @@
     Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
     http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_TRANSFORM_HPP
-#define GTL_TRANSFORM_HPP
-
+#ifndef BOOST_POLYGON_TRANSFORM_HPP
+#define BOOST_POLYGON_TRANSFORM_HPP
+#include "isotropy.hpp"
+#include "point_3d_concept.hpp"
 namespace boost { namespace polygon{
 // Transformation of Coordinate Systems
 // Enum meaning:
@@ -483,5 +484,6 @@ private:
 };
 }
 }
+#include "detail/transform_detail.hpp"
 #endif
 

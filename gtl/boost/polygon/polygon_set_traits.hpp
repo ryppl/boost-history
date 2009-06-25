@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_SET_TRAITS_HPP
-#define GTL_POLYGON_SET_TRAITS_HPP
+#ifndef BOOST_POLYGON_POLYGON_SET_TRAITS_HPP
+#define BOOST_POLYGON_POLYGON_SET_TRAITS_HPP
 namespace boost { namespace polygon{
 
   struct polygon_set_concept {};

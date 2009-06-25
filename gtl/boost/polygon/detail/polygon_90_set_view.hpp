@@ -5,8 +5,8 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_90_SET_VIEW_HPP
-#define GTL_POLYGON_90_SET_VIEW_HPP
+#ifndef BOOST_POLYGON_POLYGON_90_SET_VIEW_HPP
+#define BOOST_POLYGON_POLYGON_90_SET_VIEW_HPP
 namespace boost { namespace polygon{
   struct operator_provides_storage {};
   struct operator_requires_copy {};
@@ -239,12 +239,12 @@ namespace boost { namespace polygon{
   typename enable_if< 
     typename gtl_and< 
       typename is_polygon_90_set_type<geometry_type_1>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
       ::type
 #endif
       ::type,
       typename is_polygon_90_set_type<geometry_type_2>::type>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
     ::type
 #endif
     ::type,
@@ -295,12 +295,12 @@ namespace boost { namespace polygon{
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if< typename gtl_and< 
     typename is_polygon_90_set_type<geometry_type_1>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
 ::type,
     typename is_polygon_90_set_type<geometry_type_2>::type>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
 ::type,
@@ -398,12 +398,12 @@ namespace boost { namespace polygon{
   template <typename geometry_type_1, typename coordinate_type_1>
   typename enable_if< typename gtl_and<
     typename is_mutable_polygon_90_set_type<geometry_type_1>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
 ::type, 
     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
   ::type,
@@ -417,12 +417,12 @@ namespace boost { namespace polygon{
   template <typename geometry_type_1, typename coordinate_type_1>
   typename enable_if< typename gtl_and<
     typename is_mutable_polygon_90_set_type<geometry_type_1>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
 ::type, 
     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
-#ifdef __ICC 
+#ifdef BOOST_POLYGON_ICC 
   ::type
 #endif
   ::type,

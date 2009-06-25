@@ -5,8 +5,10 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_45_WITH_HOLES_DATA_HPP
-#define GTL_POLYGON_45_WITH_HOLES_DATA_HPP
+#ifndef BOOST_POLYGON_POLYGON_45_WITH_HOLES_DATA_HPP
+#define BOOST_POLYGON_POLYGON_45_WITH_HOLES_DATA_HPP
+#include "isotropy.hpp"
+#include "polygon_45_data.hpp"
 namespace boost { namespace polygon{
 struct polygon_45_with_holes_concept;
 template <typename T>
@@ -62,6 +64,9 @@ public:
     holes_ = that.holes_;
     return *this;
   }
+
+  template <typename T2>
+  inline polygon_45_with_holes_data& operator=(const T2& rvalue);
 
   // get begin iterator, returns a pointer to a const coordinate_type
   inline const iterator_type begin() const {

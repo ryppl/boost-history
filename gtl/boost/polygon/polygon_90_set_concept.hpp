@@ -5,8 +5,10 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_90_SET_CONCEPT_HPP
-#define GTL_POLYGON_90_SET_CONCEPT_HPP
+#ifndef BOOST_POLYGON_POLYGON_90_SET_CONCEPT_HPP
+#define BOOST_POLYGON_POLYGON_90_SET_CONCEPT_HPP
+#include "polygon_90_set_data.hpp"
+#include "polygon_90_set_traits.hpp"
 namespace boost { namespace polygon{
 
   template <typename polygon_set_type>
@@ -536,6 +538,9 @@ namespace boost { namespace polygon{
     assign(polygon_set, polys);
     return polygon_set;
   }
+
+
 }
 }
+#include "detail/polygon_90_set_view.hpp"
 #endif

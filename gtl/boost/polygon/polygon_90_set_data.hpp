@@ -5,8 +5,27 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_90_SET_DATA_HPP
-#define GTL_POLYGON_90_SET_DATA_HPP
+#ifndef BOOST_POLYGON_POLYGON_90_SET_DATA_HPP
+#define BOOST_POLYGON_POLYGON_90_SET_DATA_HPP
+#include "isotropy.hpp"
+#include "point_concept.hpp"
+#include "point_3d_concept.hpp"
+#include "transform.hpp"
+#include "interval_concept.hpp"
+#include "rectangle_concept.hpp"
+#include "detail/iterator_points_to_compact.hpp"
+#include "detail/iterator_compact_to_points.hpp"
+#include "polygon_traits.hpp"
+
+//manhattan boolean algorithms
+#include "detail/boolean_op.hpp"
+#include "detail/polygon_formation.hpp"
+#include "detail/rectangle_formation.hpp"
+#include "detail/max_cover.hpp"
+#include "detail/property_merge.hpp"
+#include "detail/polygon_90_touch.hpp"
+#include "detail/iterator_geometry_to_set.hpp"
+
 namespace boost { namespace polygon{
   template <typename ltype, typename rtype, typename op_type>
   class polygon_90_set_view;

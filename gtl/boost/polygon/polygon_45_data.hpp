@@ -5,8 +5,9 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_45_DATA_HPP
-#define GTL_POLYGON_45_DATA_HPP
+#ifndef BOOST_POLYGON_POLYGON_45_DATA_HPP
+#define BOOST_POLYGON_POLYGON_45_DATA_HPP
+#include "isotropy.hpp"
 namespace boost { namespace polygon{
 struct polygon_45_concept;
 template <typename T> class polygon_data;
@@ -61,7 +62,7 @@ public:
 
   inline std::size_t size() const { return coords_.size(); }
 
-protected:
+private:
   std::vector<point_data<coordinate_type> > coords_; 
 };
 

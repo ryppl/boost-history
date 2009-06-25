@@ -5,8 +5,11 @@
   Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).
 */
-#ifndef GTL_POLYGON_45_SET_CONCEPT_HPP
-#define GTL_POLYGON_45_SET_CONCEPT_HPP
+#ifndef BOOST_POLYGON_POLYGON_45_SET_CONCEPT_HPP
+#define BOOST_POLYGON_POLYGON_45_SET_CONCEPT_HPP
+#include "polygon_45_set_data.hpp"
+#include "polygon_45_set_traits.hpp"
+#include "detail/polygon_45_touch.hpp"
 namespace boost { namespace polygon{
 
   template <typename T, typename T2>
@@ -345,6 +348,94 @@ namespace boost { namespace polygon{
     assign(polygon_set, polys);
     return polygon_set;
   }
+
+  template <typename T>
+  struct view_of<polygon_90_set_concept, T> {
+    typedef typename get_coordinate_type<T, typename geometry_concept<T>::type >::type coordinate_type;
+    T* tp;
+    std::vector<polygon_90_with_holes_data<coordinate_type> > polys;
+    view_of(T& obj) : tp(&obj), polys() {
+      std::vector<polygon_with_holes_data<coordinate_type> > gpolys;
+      assign(gpolys, obj);
+      for(typename std::vector<polygon_with_holes_data<coordinate_type> >::iterator itr = gpolys.begin();
+          itr != gpolys.end(); ++itr) {
+        polys.push_back(polygon_90_with_holes_data<coordinate_type>());
+        assign(polys.back(), view_as<polygon_90_with_holes_concept>(*itr));
+      }
+    }
+    view_of(const T& obj) : tp(), polys() {
+      std::vector<polygon_with_holes_data<coordinate_type> > gpolys;
+      assign(gpolys, obj);
+      for(typename std::vector<polygon_with_holes_data<coordinate_type> >::iterator itr = gpolys.begin();
+          itr != gpolys.end(); ++itr) {
+        polys.push_back(polygon_90_with_holes_data<coordinate_type>());
+        assign(polys.back(), view_as<polygon_90_with_holes_concept>(*itr));
+      }
+    }
+
+    typedef typename std::vector<polygon_90_with_holes_data<coordinate_type> >::const_iterator iterator_type;
+    typedef view_of operator_arg_type;
+
+    inline iterator_type begin() const {
+      return polys.begin();
+    }
+
+    inline iterator_type end() const {
+      return polys.end();
+    }
+
+    inline orientation_2d orient() const { return HORIZONTAL; }
+
+    inline bool clean() const { return false; }
+
+    inline bool sorted() const { return false; }
+
+    inline T& get() { return *tp; }
+
+  };
+
+  template <typename T>
+  struct polygon_90_set_traits<view_of<polygon_90_set_concept, T> > {
+    typedef typename view_of<polygon_90_set_concept, T>::coordinate_type coordinate_type;
+    typedef typename view_of<polygon_90_set_concept, T>::iterator_type iterator_type;
+    typedef view_of<polygon_90_set_concept, T> operator_arg_type;
+
+    static inline iterator_type begin(const view_of<polygon_90_set_concept, T>& polygon_set) {
+      return polygon_set.begin();
+    }
+
+    static inline iterator_type end(const view_of<polygon_90_set_concept, T>& polygon_set) {
+      return polygon_set.end();
+    }
+
+    static inline orientation_2d orient(const view_of<polygon_90_set_concept, T>& polygon_set) { 
+      return polygon_set.orient(); }
+
+    static inline bool clean(const view_of<polygon_90_set_concept, T>& polygon_set) { 
+      return polygon_set.clean(); }
+
+    static inline bool sorted(const view_of<polygon_90_set_concept, T>& polygon_set) { 
+      return polygon_set.sorted(); }
+
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_90_set_concept, T> > {
+    typedef polygon_90_set_concept type;
+  };
+
+  template <typename T>
+  struct get_coordinate_type<view_of<polygon_90_set_concept, T>, polygon_90_set_concept> {
+    typedef typename view_of<polygon_90_set_concept, T>::coordinate_type type;
+  };
+  template <typename T>
+  struct get_iterator_type_2<view_of<polygon_90_set_concept, T>, polygon_90_set_concept> {
+    typedef typename view_of<polygon_90_set_concept, T>::iterator_type type;
+    static type begin(const view_of<polygon_90_set_concept, T>& t) { return t.begin(); }
+    static type end(const view_of<polygon_90_set_concept, T>& t) { return t.end(); }
+  };
+
 }
 }
+#include "detail/polygon_45_set_view.hpp"
 #endif
