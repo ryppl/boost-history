@@ -22,7 +22,7 @@ BOOST_OBJECT_MODEL_TRAITS_NUM_STORE(void, boost::object_model::type::number::Voi
 BOOST_OBJECT_MODEL_TRAITS_NUM(int, boost::object_model::type::number::Int);
 BOOST_OBJECT_MODEL_TRAITS_NUM(float, boost::object_model::type::number::Float);
 
-#include <boost/object_model/detail/prefix.hpp>
+#include <boost/object_model/detail/postfix.hpp>
 
 #endif // BOOST_OBJECT_MODEL_TYPE_BUILTINS_HPP
 

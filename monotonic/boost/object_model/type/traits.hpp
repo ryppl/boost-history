@@ -20,7 +20,6 @@ namespace type
 	template <class T, size_t N, class S = T>
 	struct traits_base
 	{
-		static number type_number;
 		typedef S Storage;
 		typedef Storage type;
 		typedef Storage *pointer;
@@ -37,11 +36,9 @@ namespace type
 		template <> \
 		struct traits<T> : traits_base<T,N,S> \
 		{ \
-			using traits_base<T,N,S>::type_number; \
+			BOOST_STATIC_CONSTANT(number::value_type, type_number = N); \
 			static const char *name; \
 		}; \
-		template <> \
-		number traits_base<T,N,S>::type_number; \
 		const char * traits<T>::name = NAME; \
 	} \
 	BOOST_OM_END
@@ -54,7 +51,7 @@ namespace type
 
 BOOST_OM_END
 
-#include <boost/object_model/detail/prefix.hpp>
+#include <boost/object_model/detail/postfix.hpp>
 
 #endif // BOOST_OBJECT_MODEL_TYPE_TRAITS_HPP
 

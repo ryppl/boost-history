@@ -52,7 +52,7 @@ struct hash<BOOST_OBJECT_MODEL_NAMESPACE(label)>
 
 BOOST_END
 
-#include <boost/object_model/detail/prefix.hpp>
+#include <boost/object_model/detail/postfix.hpp>
 
 #endif // BOOST_OBJECT_MODEL_LABEL_HPP
 

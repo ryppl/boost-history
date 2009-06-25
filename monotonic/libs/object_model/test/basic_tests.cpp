@@ -23,15 +23,47 @@ using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
 
+//BOOST_OM_BEGIN
+//namespace type 
+//{ 
+//	template <> 
+//	struct traits<void>// : traits_base<void,number::Void,int> 
+//	{ 
+//		BOOST_STATIC_CONSTANT(short, type_number = 42);//static int type_number = 42; 
+//		static const char *name; 
+//	}; 
+//	//int traits<void>::type_number = 42;//number::Void; 
+//	const char * traits<void>::name = "Void"; 
+//}
+//BOOST_OM_END
+
+BOOST_AUTO_TEST_CASE(test_type_traits)
+{
+	BOOST_STATIC_ASSERT(om::type::traits<int>::type_number == om::type::number::Int);
+	BOOST_STATIC_ASSERT(om::type::traits<void>::type_number == om::type::number::Void);
+}
+
 BOOST_AUTO_TEST_CASE(test_generic_object)
 {
 	om::registry<> reg;
 
-	om::generic::object obj = reg.create<void>();
-	BOOST_ASSERT(num.exists());
+	reg.register_class<void>();
+	BOOST_ASSERT(reg.has_class<void>());
 
-	om::generic::const_object cobj = obj;
-//	om::generic::mutable_object mobj = obj;
+	om::generic::object obj = reg.create<void>();
+	BOOST_ASSERT(obj.exists());
+
+	om::generic::const_object const_obj = obj;
+	BOOST_ASSERT(const_obj.exists());
+	om::generic::mutable_object mobj = obj;
+
+	BOOST_ASSERT(reg.num_classes() == 1);
+	BOOST_ASSERT(reg.num_instances() == 1);
+
+	BOOST_ASSERT(obj.exists());
+	reg.destroy(obj);
+	BOOST_ASSERT(!obj.exists());
+	BOOST_ASSERT(reg.num_instances() == 0);
 }
 
 BOOST_AUTO_TEST_CASE(test_object)
@@ -41,7 +73,7 @@ BOOST_AUTO_TEST_CASE(test_object)
 	BOOST_ASSERT(num.exists());
 	BOOST_ASSERT(num.is_type<int>());
 	*num = 42;
-	BOOST_ASSERT(deref<int>(num) == 42);
+//	BOOST_ASSERT(deref<int>(num) == 42);
 }
 
 struct Foo

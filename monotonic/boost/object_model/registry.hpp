@@ -9,10 +9,13 @@
 #ifndef BOOST_OBJECT_MODEL_REGISTRY_HPP
 #define BOOST_OBJECT_MODEL_REGISTRY_HPP
 
+#include <map>
+#include <boost/unordered/unordered_map.hpp>
+#include <boost/foreach.hpp>
+
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/generic/registry.hpp>
 #include <boost/object_model/type/number.hpp>
-#include <boost/unordered/unordered_map.hpp>
 
 BOOST_OM_BEGIN
 
@@ -21,8 +24,10 @@ template <class Allocator>
 struct registry : generic::registry
 {
 	typedef Allocator allocator_type;
-	typedef boost::unordered_map<handle, generic::storage *, hash<handle>, std::less<handle>, Allocator> instances_type;
-	typedef boost::unordered_map<type::number, generic::klass const *, hash<type::number>, std::less<type::number>, Allocator> classes_type;
+	//typedef boost::unordered_map<handle, generic::storage *, hash<handle>, std::less<handle>, Allocator> instances_type;
+	//typedef boost::unordered_map<type::number, generic::klass const *, hash<type::number>, std::less<type::number>, Allocator> classes_type;
+	typedef std::map<handle, generic::storage *, std::less<handle>, allocator_type> instances_type;
+	typedef std::map<type::number, generic::klass const *, std::less<type::number>, allocator_type> classes_type;
 
 protected:
 	allocator_type allocator;
@@ -34,6 +39,46 @@ public:
 	registry()
 	{
 	}
+	~registry()
+	{
+		clear();
+	}
+	void clear()
+	{
+		BOOST_FOREACH(typename instances_type::value_type &val, instances)
+		{
+			destroy(*val.second);
+		}
+		instances.clear();
+	}
+	void destroy(generic::mutable_object obj)
+	{
+		instances_type::iterator val = instances.find(obj.get_handle());
+		if (val == instances.end())
+		{
+			return;
+		}
+		obj.get_class().destroy(*val->second);
+		instances.erase(val);
+	}
+
+	size_t num_classes() const
+	{
+		return classes.size();
+	}
+	size_t num_instances() const
+	{
+		return instances.size();
+	}
+
+	bool exists(const generic::const_object &obj) const
+	{
+		return exists(obj.get_handle());
+	}
+	bool exists(handle h) const
+	{
+		return instances.find(h) != instances.end();
+	}
 
 	allocator_type &get_allocator()
 	{
@@ -43,9 +88,10 @@ public:
 	template <class T>
 	klass<T> *register_class()
 	{
+		BOOST_ASSERT(!has_class<T>());
 		klass<T> *new_class = allocator_create<klass<T> >(*this);
-		BOOST_ASSERT(classes.find(new_class->get_type_number()) == classes.end());
 		classes[new_class->get_type_number()] = new_class;
+		BOOST_ASSERT(classes.find(new_class->get_type_number()) != classes.end());
 		return new_class;
 	}
 
@@ -60,10 +106,17 @@ public:
 		instances[h] = &obj;
 		return obj;
 	}
+
 	template <class T>
-	klass<T> const *get_class()
+	bool has_class() const
 	{
-		classes_type::iterator iter = classes.find(type::traits<T>::type_number);
+		return get_class<T>() != 0;
+	}
+	
+	template <class T>
+	klass<T> const *get_class() const
+	{
+		classes_type::const_iterator iter = classes.find(type::traits<T>::type_number);
 		if (iter == classes.end())
 			return 0;
 		return static_cast<klass<T> const *>(iter->second);

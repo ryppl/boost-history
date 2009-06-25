@@ -36,15 +36,16 @@ struct klass : generic::klass
 		return *store;
 	}
 
-	void destroy(generic::storage &) const
+	void destroy(generic::storage &obj) const
 	{
+		allocator.destroy(&static_cast<storage<T> &>(obj));
 	}
 
 };
 
 BOOST_OM_END
 
-#include <boost/object_model/detail/prefix.hpp>
+#include <boost/object_model/detail/postfix.hpp>
 
 #endif // BOOST_OBJECT_MODEL_CLASS_HPP
 

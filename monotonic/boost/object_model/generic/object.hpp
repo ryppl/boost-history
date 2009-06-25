@@ -28,10 +28,26 @@ namespace generic
 
 		object_base();
 		object_base(const object_base&);
+		object_base(const const_storage&);
 
 		template <class T, class Al> friend struct object_model::klass;
 
 		void construct(registry &, klass const &, handle);
+
+	public:
+		klass const &get_class() const;
+		type::number get_type_number() const;
+		registry &get_registry() const;
+		handle get_handle() const;
+
+		const storage &get_storage() const;
+		bool exists() const;
+
+		template <class T>
+		bool is_type() const
+		{
+			return get_type_number() == type::traits<T>::type_number;
+		}
 	};
 
 	struct const_object : object_base
@@ -40,29 +56,12 @@ namespace generic
 	protected:
 
 	public:
-		const_object();
-		const_object(const const_object &);
-		const_object(const object &);
-		const_object &operator=(const const_object &);
+//		const_object();
+		//const_object(const const_storage &);
+		//const_object(const const_object &);
+		//const_object(const object &);
+		//const_object &operator=(const const_object &);
 
-		klass const &get_class() const;
-		type::number const &get_type_number() const;
-		registry &get_registry() const;
-
-		const storage &get_storage() const;
-
-		bool exists() const;
-
-		template <class T>
-		bool is_type() const
-		{
-			return get_type_number() == type::traits<T>::type_number.value;
-		}
-	};
-
-	struct mutable_object : const_object
-	{
-		storage &get_storage();
 	};
 
 	// can be const or mutable
@@ -73,16 +72,25 @@ namespace generic
 
 	public:
 		object();
-
 		object(const const_object&);
 		object(const mutable_object&);
-		object(const object&);
+//		object(const object&);
 		object(const storage &);
 		object(const const_storage &);
 
 		object &operator=(const const_object&);
 		object &operator=(const mutable_object&);
-		object &operator=(const object&);
+//		object &operator=(const object&);
+
+		bool is_const() const { return konst; }
+		storage &get_storage();
+	};
+
+	struct mutable_object : const_object
+	{
+		mutable_object();
+		mutable_object(storage &);
+		mutable_object(const object &obj) : const_object(obj) { }
 
 		storage &get_storage();
 	};
