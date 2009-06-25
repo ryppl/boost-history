@@ -40,10 +40,9 @@ operator + (const OperandT& operand, ObjectT object)
 
 
 template<class ObjectT>
-ObjectT operator + (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
-    ObjectT tmp(object);
-    return tmp += operand; 
+    return object += operand; 
 }
 
 
@@ -59,26 +58,23 @@ operator |= (ObjectT& object, const OperandT& operand)
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator | (const ObjectT& object, const OperandT& operand)
+operator | (ObjectT object, const OperandT& operand)
 {
-    ObjectT result(object); 
-    return result += operand; 
+    return object += operand; 
 }
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator | (const OperandT& operand, const ObjectT& object)
+operator | (const OperandT& operand, ObjectT object)
 {
-    ObjectT result(object); 
-    return result += operand; 
+    return object += operand; 
 }
 
 
 template<class ObjectT>
-ObjectT operator | (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
-    ObjectT result(object); 
-    return result += operand; 
+    return object += operand; 
 }
 
 
@@ -100,10 +96,9 @@ operator -= (ObjectT& object, const OperandT& operand)
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator - (const ObjectT& object, const OperandT& operand)
+operator - (ObjectT object, const OperandT& operand)
 {
-    ObjectT result(object); 
-    return result -= operand; 
+    return object -= operand; 
 }
 
 //------------------------------------------------------------------------------
@@ -121,25 +116,22 @@ operator &= (ObjectT& object, const OperandT& operand)
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (const ObjectT& object, const OperandT& operand)
+operator & (ObjectT object, const OperandT& operand)
 {
-    ObjectT result(object); 
-    return result &= operand; 
+    return object &= operand; 
 }
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator & (const OperandT& operand, const ObjectT& object)
+operator & (const OperandT& operand, ObjectT object)
 {
-    ObjectT result(object); 
-    return result &= operand; 
+    return object &= operand; 
 }
 
 template<class ObjectT>
-ObjectT operator & (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
-    ObjectT result(object); 
-    return result &= operand; 
+    return object &= operand; 
 }
 
 //------------------------------------------------------------------------------
@@ -154,26 +146,23 @@ operator ^= (ObjectT& object, const OperandT& operand)
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator ^ (const ObjectT& object, const OperandT& operand)
+operator ^ (ObjectT object, const OperandT& operand)
 {
-    ObjectT result(object); 
-    return result ^= operand; 
+    return object ^= operand; 
 }
 
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
-operator ^ (const OperandT& operand, const ObjectT& object)
+operator ^ (const OperandT& operand, ObjectT object)
 {
-    ObjectT result(object); 
-    return result ^= operand; 
+    return object ^= operand; 
 }
 
 
 template<class ObjectT>
-ObjectT operator ^ (const typename ObjectT::overloadable_type& object, const ObjectT& operand)
+ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
-    ObjectT result(object); 
-    return result ^= operand; 
+    return object ^= operand; 
 }
 
 
