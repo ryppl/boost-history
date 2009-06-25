@@ -391,6 +391,74 @@
 					>
 				</File>
 			</Filter>
+			<Filter
+				Name="interprocess"
+				>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\anonymous_shared_memory.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\creation_tags.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\errors.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\exceptions.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\file_mapping.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\interprocess_fwd.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\managed_external_buffer.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\managed_heap_memory.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\managed_mapped_file.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\managed_shared_memory.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\managed_windows_shared_memory.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\mapped_region.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\offset_ptr.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\segment_manager.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\shared_memory_object.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\boost\interprocess\windows_shared_memory.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<Filter
 			Name="doc"

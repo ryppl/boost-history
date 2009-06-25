@@ -101,20 +101,20 @@ PoolResult run_test(size_t count, size_t length, Fun fun, Type types)
 		result.mono_elapsed = timer.elapsed();
 	}
 
-	//if (types.Includes(Type::Monotonic))
-	//{
-	//	srand(42);
-	//	monotonic::local<my_local> storage;
-	//	boost::timer timer;
-	//	for (size_t n = 0; n < count; ++n)
-	//	{
-	//		{
-	//			fun.test(monotonic::allocator<void, my_local>(), length);
-	//		}
-	//		storage.reset();
-	//	}
-	//	result.local_mono_elapsed = timer.elapsed();
-	//}
+	if (types.Includes(Type::Monotonic))
+	{
+		srand(42);
+		monotonic::local<my_local> storage;
+		boost::timer timer;
+		for (size_t n = 0; n < count; ++n)
+		{
+			{
+				fun.test(monotonic::allocator<void, my_local>(), length);
+			}
+			storage.reset();
+		}
+		result.local_mono_elapsed = timer.elapsed();
+	}
 
 	if (types.Includes(Type::Standard))
 	{
@@ -202,7 +202,7 @@ std::pair<typename boost::iterator_value<II>::type,typename boost::iterator_valu
 template <class Cont>
 std::pair<typename Cont::value_type, typename Cont::value_type> standard_deviation_mean(Cont const &cont)
 {
-	return standard_deviation_mean(cont.begin(), cont.end());
+	return standard_deviation_mean(boost::begin(cont), boost::end(cont));
 }
 
 void print_cumulative(std::vector<PoolResult> const &results)

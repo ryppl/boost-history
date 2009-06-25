@@ -6,14 +6,16 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 
-#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/assert.hpp>
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
 #include <boost/type_traits/has_trivial_destructor.hpp>
 
 #include <boost/monotonic/static_storage.hpp>
 #include <boost/monotonic/detail/container.hpp>
 #include <boost/monotonic/detail/construct.hpp>
+
+//#include <boost/interprocess/containers/version_type.hpp>
 
 #ifdef BOOST_MONOTONIC_USE_POOLS
 #	include <boost/monotonic/storage_pool.hpp>
@@ -35,6 +37,10 @@ namespace boost
 			typedef const T &const_reference;
 			typedef T value_type;
 			typedef detail::Construct<detail::is_monotonic<T>::value> Construct;
+
+//			typedef mpl::integral_c<unsigned, 2> version;
+			//typedef boost::interprocess::version_type<allocator_base, 2>   version;
+
 
 			BOOST_STATIC_CONSTANT(size_t, alignment = boost::aligned_storage<sizeof(T)>::alignment);
 

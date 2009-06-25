@@ -45,6 +45,9 @@ using namespace boost;
 
 using monotonic::heap_region_tag;
 
+struct num_tag;
+struct str_tag;
+
 struct Tracked
 {
 	static int count;
