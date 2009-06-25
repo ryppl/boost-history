@@ -1,0 +1,25 @@
+[/
+  (C) Copyright 2008-2009 Vicente J. Botet Escriba
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+
+
+[/==========================================================================================]
+[section:typeof_launcher_hpp Header `<boost/async/typeof/launcher.hpp>`]
+[/==========================================================================================]
+
+Include this files instead of `<boost/async/launcher.hpp>` if you want TypeOf support.
+
+    #include <boost/async/launcher.hpp>
+    #include <boost/async/typeof/future.hpp>
+    #include <boost/typeof/typeof.hpp>
+
+    #include BOOST_TYPEOF_INCREMENT_REGISTRATION_GROUP()
+    
+    BOOST_TYPEOF_REGISTER_TYPE(boost::async::launcher)
+    BOOST_TYPEOF_REGISTER_TYPE(boost::async::shared_launcher)
+
+[endsect]
+
