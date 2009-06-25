@@ -41,16 +41,27 @@ public:
 	}
 	~registry()
 	{
-		clear();
+		clear_classes();
 	}
 	void clear()
 	{
 		BOOST_FOREACH(typename instances_type::value_type &val, instances)
 		{
-			destroy(*val.second);
+			generic::storage &obj = *val.second;
+			obj.get_class().destroy(obj);
 		}
 		instances.clear();
 	}
+	void clear_classes()
+	{
+		clear();
+		BOOST_FOREACH(typename classes_type::value_type &val, classes)
+		{
+			allocator_destroy(const_cast<generic::klass *>(val.second));
+		}
+		classes.clear();
+	}
+
 	void destroy(generic::mutable_object obj)
 	{
 		instances_type::iterator val = instances.find(obj.get_handle());
@@ -140,6 +151,13 @@ private:
 		//alloc.construct(ptr);
 		new (ptr) T();
 		return ptr;
+	}
+	template <class T>
+	void allocator_destroy(T *ptr)
+	{
+		typename Allocator::template rebind<T>::other alloc(allocator);
+		alloc.destroy(ptr);
+		alloc.deallocate(ptr,1);
 	}
 	template <class T, class U>
 	T *allocator_create(U &init)

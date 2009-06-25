@@ -38,7 +38,9 @@ struct klass : generic::klass
 
 	void destroy(generic::storage &obj) const
 	{
-		allocator.destroy(&static_cast<storage<T> &>(obj));
+		storage<T> *store = &static_cast<storage<T> &>(obj);
+		allocator.destroy(store);
+		allocator.deallocate(store, 1);
 	}
 
 };
