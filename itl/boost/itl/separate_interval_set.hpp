@@ -143,7 +143,7 @@ private:
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
+inline bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
         return true;
@@ -155,7 +155,7 @@ bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const inte
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
+inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
     if(addend.empty()) return;
 
@@ -185,7 +185,7 @@ void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_typ
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
+inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(minuend.empty()) return;
     iterator fst_it = this->_set.lower_bound(minuend);

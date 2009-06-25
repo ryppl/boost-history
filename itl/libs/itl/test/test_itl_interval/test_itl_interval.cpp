@@ -383,7 +383,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     interval<T> I6_7D = interval<T>::rightopen(v6,v7);
     interval<T> I2_4D = interval<T>::rightopen(v2,v4);
 
-    I2_6D.right_subtract(diff_1,I4_7D);
+    diff_1 = right_subtract(I2_6D, I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I2_4D );
 
     diff_2 = I2_6D;
@@ -391,11 +391,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     BOOST_CHECK_EQUAL( diff_2, I2_4D );
 
     diff_1.clear();
-    I0_3D.right_subtract(diff_1, I4_7D);
+    diff_1 = right_subtract(I0_3D, I4_7D);
     BOOST_CHECK_EQUAL( diff_1, I0_3D );
     
     // ---------------------------------
-    I4_7D.left_subtract(diff_1, I2_6D);
+    diff_1 = left_subtract(I4_7D, I2_6D);
     BOOST_CHECK_EQUAL( diff_1, I6_7D );
 
     diff_2 = I4_7D;

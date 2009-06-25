@@ -142,7 +142,7 @@ private:
 } ;
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
+inline bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
 {
     if(interv.empty()) 
         return true;
@@ -154,7 +154,7 @@ bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interva
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
+inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend)
 {
     if(addend.empty()) return;
 
@@ -211,8 +211,8 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& 
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& addend, iterator& it, iterator& end_it)
-{
+inline void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& addend, iterator& it, iterator& end_it)
+{//JODO add_rest
 	interval_type left_gap, cur_itv;
 	iterator pred_it = it; --pred_it;
 	while(it != end_it)
@@ -230,7 +230,7 @@ void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_ty
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
+inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(minuend.empty()) return;
     iterator fst_it = this->_set.lower_bound(minuend);
