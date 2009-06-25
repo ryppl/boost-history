@@ -13,7 +13,6 @@
 #include <boost/thread/detail/move.hpp>
 
 #include <boost/task/detail/interrupter.hpp>
-#include <boost/task/detail/thread_callable.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/task.hpp>
@@ -49,10 +48,11 @@ struct new_thread
 	{
 		task< R > t( t_);
 		shared_future< R > fut( t.get_future() );
-		detail::interrupter intr;
-		detail::thread_callable ca( boost::move( t), intr);
 
-		shared_ptr< thread > thrd( new thread( ca), detail::joiner() );
+		shared_ptr< thread > thrd(
+				new thread( boost::move( t) ),
+				detail::joiner() );
+		detail::interrupter intr;
 		intr.set( thrd);
 
 		return handle< R >( fut, intr);

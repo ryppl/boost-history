@@ -30,27 +30,18 @@ namespace detail
 {
 class BOOST_TASK_DECL interrupter
 {
-public:
-	enum setting
-	{
-		wait_for,
-		dont_wait
-	};
-
 private:
 	class impl : private noncopyable
 	{
 	private:
 		bool					interruption_requested_;
-		bool					done_;
-		condition_variable		cond_;
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
 
 		void interrupt_();
 
 	public:
-		impl( setting);
+		impl();
 
 		~impl();
 
@@ -60,41 +51,19 @@ private:
 
 		void interrupt();
 
-		void interrupt_and_wait();
-
-		bool interrupt_and_wait_until( system_time const& abs_time);
-
-		template< typename DurationType >
-		bool interrupt_and_wait_for( DurationType const& rel_time)
-		{
-			unique_lock< mutex > lk( mtx_);
-			interrupt_();
-			if ( ! done_)
-				return cond_.timed_wait( lk, rel_time);
-			return true;
-		}
-
 		bool interruption_requested();
 	};
 
 	shared_ptr< impl >	impl_;
 
 public:
-	interrupter( setting = wait_for);
+	interrupter();
 
 	void set( shared_ptr< thread > const& thrd);
 
 	void reset();
 
 	void interrupt();
-
-	void interrupt_and_wait();
-
-	bool interrupt_and_wait_until( system_time const& abs_time);
-
-	template< typename DurationType >
-	bool interrupt_and_wait_for( DurationType const& rel_time)
-	{ return impl_->interrupt_and_wait_for( rel_time); }
 
 	bool interruption_requested();
 

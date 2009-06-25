@@ -22,14 +22,12 @@ interrupter::impl::interrupt_()
 	}
 }
 
-interrupter::impl::impl( setting s)
+interrupter::impl::impl()
 :
 interruption_requested_( false),
-done_( false),
-cond_(),
 mtx_(),
 thrd_()
-{ if ( s == dont_wait) reset(); }
+{}
 
 interrupter::impl::~impl()
 { reset(); }
@@ -52,9 +50,8 @@ interrupter::impl::reset()
 	{ this_thread::interruption_point(); }
 	catch ( thread_interrupted const&)
 	{}
+	thrd_.reset();
 	BOOST_ASSERT( ! this_thread::interruption_requested() );
-	done_ = true;
-	cond_.notify_all();
 }
 
 void
@@ -64,25 +61,6 @@ interrupter::impl::interrupt()
 	interrupt_();
 }
 
-void
-interrupter::impl::interrupt_and_wait()
-{
-	unique_lock< mutex > lk( mtx_);
-	interrupt_();
-	while ( ! done_)
-		cond_.wait( lk);
-}
-
-bool
-interrupter::impl::interrupt_and_wait_until( system_time const& abs_time)
-{
-	unique_lock< mutex > lk( mtx_);
-	interrupt_();
-	if ( ! done_)
-		return cond_.timed_wait( lk, abs_time);
-	return true;
-}
-
 bool
 interrupter::impl::interruption_requested()
 {
@@ -90,8 +68,8 @@ interrupter::impl::interruption_requested()
 	return interruption_requested_;
 }
 
-interrupter::interrupter( setting s)
-: impl_( new impl( s) )
+interrupter::interrupter()
+: impl_( new impl() )
 {}
 
 void
@@ -105,14 +83,6 @@ interrupter::reset()
 void
 interrupter::interrupt()
 { impl_->interrupt(); }
-
-void
-interrupter::interrupt_and_wait()
-{ impl_->interrupt_and_wait(); }
-
-bool
-interrupter::interrupt_and_wait_until( system_time const& abs_time)
-{ return impl_->interrupt_and_wait_until( abs_time); }
 
 bool
 interrupter::interruption_requested()

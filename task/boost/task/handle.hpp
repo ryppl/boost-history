@@ -69,21 +69,30 @@ private:
 
 public:
 	handle()
-	: fut_(), intr_( detail::interrupter::dont_wait)
+	: fut_(), intr_()
 	{}
 
 	void interrupt()
 	{ intr_.interrupt(); }
 
 	void interrupt_and_wait()
-	{ intr_.interrupt_and_wait(); }
+	{
+		interrupt();
+		wait();
+	}
 
 	bool interrupt_and_wait_until( system_time const& abs_time)
-	{ return intr_.interrupt_and_wait_until( abs_time); }
+	{
+		interrupt();
+		return wait_until( abs_time);
+	}
 
 	template< typename Duration >
 	bool interrupt_and_wait_for( Duration const& rel_time)
-	{ return intr_.interrupt_and_wait_for( rel_time); }
+	{
+		interrupt();
+		return wait_for( rel_time);
+	}
 
 	bool interruption_requested()
 	{ return intr_.interruption_requested(); }
