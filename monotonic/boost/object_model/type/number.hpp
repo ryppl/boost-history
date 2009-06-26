@@ -31,6 +31,7 @@ namespace type
 			Int,
 			Float,
 			String,
+
 			List,
 			Vector,
 			Map,

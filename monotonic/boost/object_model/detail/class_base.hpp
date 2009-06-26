@@ -17,13 +17,13 @@ BOOST_OM_BEGIN
 
 namespace detail
 {
-	template <class Traits>
+	template <class Registry>
 	struct klass_base : generic::klass
 	{
-		typedef typename Traits::label_type Label;
+		typedef typename Registry::identifier_type Label;
 
 		typedef std::map<Label, generic::property const *> properties_type;
-		typedef std::map<Label, generic::method const *> methods_type;
+		typedef std::map<Label, generic::method<Registry> const *> methods_type;
 
 	private:
 		properties_type properties;
@@ -33,6 +33,24 @@ namespace detail
 		klass_base(const char *ident, type::number num)
 			: generic::klass(ident, num)
 		{
+		}
+		~klass_base()
+		{
+			BOOST_FOREACH(methods_type::value_type &val, methods)
+			{
+				delete val.second;
+			}
+		}
+
+		void add_method(Label const &name, generic::method<Registry> const *meth)
+		{
+			methods[name] = meth;
+		}
+
+		generic::method<Registry> const *get_method(Label const &name) const
+		{
+			methods_type::const_iterator iter = methods.find(name);
+			return iter == methods.end() ? 0 : iter->second;
 		}
 
 		bool has_method(Label const &name) const

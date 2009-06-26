@@ -333,6 +333,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\object_model\detail\method_pointer.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\object_model\detail\postfix.hpp"
 						>
 					</File>

@@ -11,7 +11,7 @@
 
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/class.hpp>
-#include <boost/object_model/detail/make_method.hpp>
+#include <boost/object_model/method.hpp>
 
 BOOST_OM_BEGIN
 
@@ -21,14 +21,15 @@ struct builder
 	typedef Reg registry_type;
 	typedef type::traits<T> type_traits;
 	typedef typename Reg::traits_type system_traits;
+	typedef typename registry_type::template rebind_klass<T>::type class_type;
 
 private:
-	typename registry_type::template rebind_klass<T>::type *my_klass;
+	class_type *my_klass;
 
 public:
 	builder(registry_type &reg)
 	{
-		my_klass = reg.register_class<T>();
+		methods.my_klass = methods.fields.my_klass = my_klass = reg.register_class<T>();
 	}
 	struct methods_type
 	{
@@ -39,15 +40,16 @@ public:
 			{
 				return *this;
 			}
+			class_type *my_klass;
 		} fields;
 
 		template <class Method>
 		methods_type &operator()(const char *name, Method method)
 		{
-			my_klass->add_method(name, detail::make_method(method));
+			my_klass->add_method(name, detail::make_method(method, (registry_type *)(0)));
 			return *this;
 		}
-		
+		class_type *my_klass;
 	} methods;
 };
 

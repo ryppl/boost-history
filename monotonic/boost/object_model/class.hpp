@@ -17,10 +17,10 @@
 BOOST_OM_BEGIN
 
 template <class T, class Registry>
-struct klass : detail::klass_base<typename Registry::traits_type>
+struct klass : detail::klass_base<typename Registry>
 {
 	typedef typename Registry::traits_type system_traits;
-	typedef detail::klass_base<system_traits> klass_base_type;
+	typedef detail::klass_base<Registry> klass_base_type;
 	typedef typename system_traits::label_type label_type;
 	typedef typename Registry::rebind_storage<T>::type storage_type;
 	typedef typename system_traits::allocator_type::template rebind<storage_type>::other allocator_type;
@@ -39,6 +39,15 @@ public:
 		storage_type *store = allocator.allocate(1);
 		//allocator.construct(store);
 		new (store) storage_type();
+		store->construct(reg, *this, reg.get_next_handle());
+		return *store;
+	}
+
+	storage_type &create(typename traits::const_reference_type init) const
+	{
+		storage_type *store = allocator.allocate(1);
+		//allocator.construct(store);
+		new (store) storage_type(init);
 		store->construct(reg, *this, reg.get_next_handle());
 		return *store;
 	}

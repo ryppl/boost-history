@@ -28,6 +28,18 @@ using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
 
+BOOST_AUTO_TEST_CASE(test_vector)
+{
+	om::registry<> reg;
+	typedef om::registry<>::vector_type vector;
+	reg.register_class<vector>();
+	reg.register_class<int>();
+	om::object<vector> vec = reg.create<vector>();
+	vec->push_back(reg.create<int>(42));
+	BOOST_ASSERT(vec.exists());
+	BOOST_ASSERT(vec->size() == 1);
+}
+
 BOOST_AUTO_TEST_CASE(test_type_specifier)
 {
 	om::registry<> reg;
@@ -121,6 +133,10 @@ struct Foo
 	void bar()
 	{
 	}
+	int grok()
+	{
+		return 42;
+	}
 	int spam(int n)
 	{
 		return n*2;
@@ -132,10 +148,14 @@ BOOST_OBJECT_MODEL_TRAITS_NUM(Foo, 666);
 BOOST_AUTO_TEST_CASE(test_builder)
 {
 	om::registry<> reg;
+	reg.add_builtins();
+	typedef om::registry<>::vector_type vector;
+
 	om::class_builder<Foo>(reg)
 		.methods
-			("bar", &Foo::bar)
-			("spam", &Foo::spam)
+			//("bar", &Foo::bar)
+			//("spam", &Foo::spam)
+			("grok", &Foo::grok)
 		.fields
 			("num", &Foo::num)
 			("str", &Foo::str)
@@ -143,6 +163,15 @@ BOOST_AUTO_TEST_CASE(test_builder)
 	om::object<Foo> foo = reg.create<Foo>();
 	BOOST_ASSERT(foo.exists());
 	BOOST_ASSERT(foo.is_type<Foo>());
+
+	BOOST_ASSERT(reg.has_method(foo, "grok"));
+
+	om::object<vector> stack = reg.create<vector>();
+	reg.get_method(foo, "grok").invoke(foo, *stack);
+	BOOST_ASSERT(stack->size() == 1);
+	BOOST_ASSERT(stack->at(0).is_type<int>());
+	BOOST_ASSERT(reg.deref<int>(stack->at(0)) == 42);
+
 
 	//BOOST_ASSERT(foo.get_class().has_method("bar"));
 	//BOOST_ASSERT(foo.get_class().has_method("spam"));

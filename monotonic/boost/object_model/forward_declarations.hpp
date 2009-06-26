@@ -60,6 +60,7 @@ namespace generic
 	struct reflected;
 
 	/// common for a all methods
+	template <class Traits>
 	struct method;
 
 	/// common for all class properties
@@ -118,7 +119,7 @@ template <class Str = string<> >
 struct label;
 
 /// a specific method of class type, with given signature
-template <class T, class Signature>
+template <class Reg, class Rty, class Klass, class Args, bool Konst>
 struct method;
 
 /// a specific property

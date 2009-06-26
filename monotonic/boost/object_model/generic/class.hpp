@@ -38,6 +38,8 @@ namespace generic
 		virtual object &create() const = 0;
 		virtual void destroy(object &) const = 0;
 
+		//virtual bool has_method(object &) const = 0;
+
 		//virtual const_object get_property(const label&, const_object &owner) const = 0;
 		//virtual object get_property(const label&, object &owner) const = 0;
 	};

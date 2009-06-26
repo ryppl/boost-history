@@ -46,6 +46,11 @@ public:
 	{
 		return get_reference();
 	}
+	typename traits::pointer_type operator->()
+	{
+		return &get_reference();
+	}
+
 };
 
 BOOST_OM_END

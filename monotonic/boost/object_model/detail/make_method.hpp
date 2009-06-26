@@ -10,13 +10,86 @@
 #define BOOST_OBJECT_MODEL_DETAIL_MAKE_METHOD_HPP
 
 #include <boost/object_model/detail/prefix.hpp>
-#include <boost/object_model/generic/method.hpp>
-#include <boost/object_model/method.hpp>
+//#include <boost/object_model/generic/method.hpp>
+#include <boost/object_model/detail/method_pointer.hpp>
 
 BOOST_OM_BEGIN
 
-template
+namespace detail
+{
+	template <class Klass, class Reg>
+	generic::method<Reg> *make_method(void (Klass::*M)(), Reg *)
+	{
+		return new method<Reg, void, Klass, boost::mpl::vector<>, false>(M);
+	}
+	template <class Ret, class Klass, class Reg>
+	generic::method<Reg> *make_method(Ret (Klass::*M)(), Reg *)
+	{
+		return new method<Reg, Ret, Klass, boost::mpl::vector<>, false>(M);
+	}
+/*
+	template <class R, class Klass>
+	MethodBase *MakeMethod(R (Klass::*M)())
+	{
+		return new Method<R, Klass, boost::mpl::vector<>, false>(M);
+	}
 
+	template <class Klass>
+	MethodBase *MakeMethod(void (Klass::*M)() const)
+	{
+		return new Method<void, Klass, boost::mpl::vector<>, true>(M);
+	}
+
+	template <class R, class Klass>
+	MethodBase *MakeMethod(R (Klass::*M)() const)
+	{
+		return new Method<R, Klass, boost::mpl::vector<>, true>(M);
+	}
+
+	// ---------------------------------- arity = 1
+
+	template <class Klass, class R, class A0>
+	MethodBase *MakeMethod(R (Klass::*M)(A0))
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0>, false>(M);
+	}
+
+	template <class Klass, class R, class A0>
+	MethodBase *MakeMethod(R (Klass::*M)(A0) const)
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0>, true>(M);
+	}
+
+	// ---------------------------------- arity = 2
+
+	template <class Klass, class R, class A0, class A1>
+	MethodBase *MakeMethod(R (Klass::*M)(A0,A1))
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0,A1>, false>(M);
+	}
+
+	template <class Klass, class R, class A0, class A1>
+	MethodBase *MakeMethod(R (Klass::*M)(A0,A1) const)
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0,A1>, true>(M);
+	}
+
+	// ---------------------------------- arity = 3
+
+	template <class Klass, class R, class A0, class A1, class A2>
+	MethodBase *MakeMethod(R (Klass::*M)(A0,A1,A2))
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0,A1,A2>, false>(M);
+	}
+
+	template <class Klass, class R, class A0, class A1, class A2>
+	MethodBase *MakeMethod(R (Klass::*M)(A0,A1,A2) const)
+	{
+		return new Method<R, Klass, boost::mpl::vector<A0,A1,A2>, true>(M);
+	}
+*/
+
+}
 BOOST_OM_END
 
 #include <boost/object_model/detail/postfix.hpp>

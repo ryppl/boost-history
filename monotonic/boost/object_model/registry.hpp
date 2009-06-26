@@ -30,12 +30,13 @@ BOOST_OM_BEGIN
 template <class Tr>
 struct registry : generic::registry
 {
-	typedef Tr traits, traits_type;
+	typedef Tr traits, traits_type, system_traits;
 	typedef typename traits::allocator_type allocator_type;
 	typedef typename traits::char_traits char_traits;
 	typedef typename traits::char_type char_type;
 	typedef typename traits::string_type string_type;
 	typedef typename traits::label_type label_type;
+	typedef typename traits::identifier_type identifier_type;
 
 	typedef containers::vector<allocator_type> vector_type;
 
@@ -62,7 +63,7 @@ struct registry : generic::registry
 
 	typedef std::map<
 		type::number
-		, detail::klass_base<traits_type> const *
+		, detail::klass_base<this_type> const *
 		, std::less<type::number>
 		, allocator_type
 	> classes_type;
@@ -77,7 +78,7 @@ struct registry : generic::registry
 
 	typedef boost::unordered_map<
 		type::number
-		, detail::klass_base<traits_type> const *
+		, detail::klass_base<this_type> const *
 		, boost::hash<type::number>
 		, std::less<type::number>
 		, allocator_type
@@ -179,6 +180,25 @@ struct registry : generic::registry
 		return p.has(label);
 	}
 
+	bool has_method(const generic::object &obj, typename traits::identifier_type const &ident) const
+	{
+		return get_method_ptr(obj, ident) != 0;
+	}
+
+	const generic::method<this_type> &get_method(const generic::object &obj, typename traits::identifier_type const &ident) const
+	{
+		const generic::method<this_type> *ptr = get_method_ptr(obj, ident);
+		if (ptr == 0)
+			throw;
+		return *ptr;
+	}
+	const generic::method<this_type> *get_method_ptr(const generic::object &obj, typename traits::identifier_type const &ident) const
+	{
+		classes_type::const_iterator iter = classes.find(obj.get_type_number());
+		if (iter == classes.end())
+			return 0;
+		return iter->second->get_method(ident);
+	}
 protected:
 	template <class, class> friend struct klass;
 	handle get_next_handle()
@@ -200,6 +220,12 @@ public:
 	{
 		clear_classes();
 	}
+	void add_builtins()
+	{
+		register_class<void>();
+		register_class<int>();
+		register_class<vector_type>();
+	}
 	void clear()
 	{
 		BOOST_FOREACH(typename instances_type::value_type &val, instances)
@@ -214,7 +240,7 @@ public:
 		clear();
 		BOOST_FOREACH(typename classes_type::value_type &val, classes)
 		{
-			allocator_destroy(const_cast<detail::klass_base<traits_type> *>(val.second));
+			allocator_destroy(const_cast<detail::klass_base<this_type> *>(val.second));
 		}
 		classes.clear();
 	}
@@ -272,6 +298,9 @@ public:
 	template <class T>
 	typename rebind_klass<T>::type *register_class()
 	{
+		if (has_class<T>())
+			return const_cast<klass<T, this_type> * >(get_class<T>());
+
 		BOOST_ASSERT(!has_class<T>());
 		typedef typename rebind_klass<T>::type class_type;
 		class_type *new_class = allocator_create<class_type >(*this);
@@ -294,6 +323,17 @@ public:
 			throw unknown_type();
 		typedef typename rebind_storage<T>::type storage_type;
 		storage_type &obj = static_cast<storage_type &>(k->create());
+		instances[obj.get_handle()] = &obj;
+		return object<T>(obj, &this_type::deref<T>, &this_type::const_deref<T>);
+	}
+	template <class T>
+	object<T> create(T const &init)
+	{
+		typename rebind_klass<T>::type const *k = get_class<T>();
+		if (k == 0)
+			throw unknown_type();
+		typedef typename rebind_storage<T>::type storage_type;
+		storage_type &obj = static_cast<storage_type &>(k->create(init));
 		instances[obj.get_handle()] = &obj;
 		return object<T>(obj, &this_type::deref<T>, &this_type::const_deref<T>);
 	}
