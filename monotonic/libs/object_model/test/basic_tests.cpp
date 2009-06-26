@@ -19,10 +19,21 @@
 #include <boost/object_model/builder.hpp>
 #include <boost/object_model/type/traits.hpp>
 #include <boost/object_model/dereference.hpp>
+#include <boost/object_model/type/specifier.hpp>
+#include <boost/object_model/string.hpp>
 
 using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
+
+BOOST_AUTO_TEST_CASE(test_type_specifier)
+{
+	om::registry<> reg;
+	reg.register_class<void>();
+	reg.register_class<int>();
+
+	//om::string<> text = type::make_specifier<int>().to_string(reg);
+}
 
 BOOST_AUTO_TEST_CASE(test_type_traits)
 {
@@ -58,10 +69,13 @@ BOOST_AUTO_TEST_CASE(test_object)
 	om::registry<> reg;
 	reg.register_class<int>();
 	BOOST_ASSERT(reg.has_class<int>());
+
 	om::object<int> num = reg.create<int>();
 	BOOST_ASSERT(num.exists());
 	BOOST_ASSERT(num.is_type<int>());
+	
 	*num = 42;
+	
 	BOOST_ASSERT(om::deref<int>(num) == 42);
 }
 
@@ -83,10 +97,8 @@ BOOST_OBJECT_MODEL_TRAITS_NUM(Foo, 666);
 
 BOOST_AUTO_TEST_CASE(test_builder)
 {
-	return;
-
 	om::registry<> reg;
-	om::builder<Foo>(reg)
+	om::class_builder<Foo>(reg)
 		.methods
 			("bar", &Foo::bar)
 			("spam", &Foo::spam)

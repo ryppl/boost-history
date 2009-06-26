@@ -20,11 +20,10 @@ struct builder
 	typedef type::traits<T> traits;
 
 private:
-	registry<Allocator> &reg;
-	klass<T> *my_klass;
+	klass<T, Allocator> *my_klass;
 
 public:
-	builder(registry<Allocator> &R) : reg(R)
+	builder(registry<Allocator> &reg)
 	{
 		my_klass = reg.register_class<T>();
 	}
@@ -47,6 +46,12 @@ public:
 		
 	} methods;
 };
+
+template <class T, class Al>
+builder<T,Al> class_builder(registry<Al> &reg)
+{
+	return builder<T,Al>(reg);
+}
 
 BOOST_OM_END
 

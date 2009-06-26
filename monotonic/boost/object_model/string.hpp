@@ -6,42 +6,32 @@
 // documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/object_model/doc/index.html
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/object_model/
 
-#ifndef BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
-#define BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
+#ifndef BOOST_OBJECT_MODEL_STRING_HPP
+#define BOOST_OBJECT_MODEL_STRING_HPP
 
 #include <boost/object_model/detail/prefix.hpp>
-#include <boost/object_model/dictionary.hpp>
 
 BOOST_OM_BEGIN
 
-namespace generic
+template <class Alloc = default_allocator, class Ch = char, class Tr = std::char_traits<Ch> >
+struct string
 {
-	struct const_storage : const_object
-	{
-	protected:
-		dictionary dict;
+	typedef std::basic_string<Ch, Tr, Alloc> implementation;
+	typedef typename implementation::value_type value_type;
+	typedef typename implementation::iterator iterator;
+	typedef typename implementation::const_iterator const_iterator;
 
-	public:
-		void set(label const &name, generic::object const &obj)
-		{
-			dict.set(name, obj);
-		}
-		generic::object get(label const &name) const
-		{
-			return dict.get(name);
-		}
-	};
+private:
+	implementation impl;
 
-	struct storage : const_storage
-	{
+public:
 
-	};
-}
+};
 
 BOOST_OM_END
 
 #include <boost/object_model/detail/postfix.hpp>
 
-#endif // BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
+#endif // BOOST_OBJECT_MODEL_STRING_HPP
 
 //EOF

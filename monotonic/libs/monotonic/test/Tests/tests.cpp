@@ -12,9 +12,11 @@
 #include <boost/monotonic/allocator.hpp>
 #include <boost/interprocess/containers/list.hpp>
 #include <boost/monotonic/reclaimable_storage.hpp>
+#include <boost/iterator.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
+#include <boost/timer.hpp>
 
 
 template <class II>
@@ -71,6 +73,52 @@ struct Tracked
 };
 
 int Tracked::count = 0;
+
+template <class Number>
+Number work(size_t iterations, std::vector<Number> const &data)
+{
+	Number sum = 0;
+	size_t size = data.size();
+	for (size_t i = 0; i < iterations; ++i)
+	{
+		Number a = data[i % size];
+		Number b = data[(i + 500)%size];
+		sum += a * b;
+	}
+	return sum;
+}
+
+void test_floats()
+{
+	size_t iterations = 1000*1000*100;
+	size_t outter = 1;//00;//0*1000*10;
+	double int_t = 0;
+	double float_t = 0;
+
+	size_t size = 100000;
+	std::vector<int> ints(size);
+    srand(42);
+	generate_n(ints.begin(), size, rand);
+	std::vector<float> floats(size);
+    srand(42);
+	generate_n(floats.begin(), size, rand);
+
+	boost::timer int_timer;
+	int int_sum = 0;
+	for (size_t n = 0; n < outter; ++n)
+	{
+		int_sum += work(iterations, ints);
+	}
+	int_t = int_timer.elapsed();
+	boost::timer float_timer;
+	float float_sum = 0;
+	for (size_t n = 0; n < outter; ++n)
+	{
+		float_sum += work(iterations, floats);
+	}
+	float_t = float_timer.elapsed();
+	cout << int_t << ", " << float_t << "; " << int_sum << ", " << float_sum << endl;
+}
 
 BOOST_AUTO_TEST_CASE(test_reclaimable)
 {

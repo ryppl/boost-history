@@ -6,38 +6,28 @@
 // documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/object_model/doc/index.html
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/object_model/
 
-#ifndef BOOST_OBJECT_MODEL_DICTIONARY_HPP
-#define BOOST_OBJECT_MODEL_DICTIONARY_HPP
+#ifndef BOOST_OBJECT_MODEL_(X)_HPP
+#define BOOST_OBJECT_MODEL_(X)_HPP
 
-#include <map>
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/label.hpp>
+#include <boost/object_model/type/signature.hpp>
 
 BOOST_OM_BEGIN
 
-struct dictionary
+namespace generic
 {
-	typedef std::map<label, generic::object> contents_type;
-
-	contents_type contents;
-
-	void set(label const &name, generic::object const &obj)
+	struct method
 	{
-		contents[name] = obj;
-	}
-	generic::object get(label const &name) const
-	{
-		contents_type::const_iterator iter = contents.find(name);
-		if (iter == contents.end())
-			return null_object;
-		return iter->second;
-	}
-};
+		label name;
+		signature sig;
+	};
+}
 
 BOOST_OM_END
 
 #include <boost/object_model/detail/postfix.hpp>
 
-#endif // BOOST_OBJECT_MODEL_DICTIONARY_HPP
+#endif // BOOST_OBJECT_MODEL_(X)_HPP
 
 //EOF

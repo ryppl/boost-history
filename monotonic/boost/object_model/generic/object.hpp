@@ -33,6 +33,7 @@ namespace generic
 		template <class T, class Al> friend struct object_model::klass;
 
 		void construct(registry &, klass const &, handle);
+		storage &get_storage();
 
 	public:
 		klass const &get_class() const;
@@ -48,6 +49,9 @@ namespace generic
 		{
 			return get_type_number() == type::traits<T>::type_number;
 		}
+
+		void set(label const &name, object const &obj);
+		object get(label const &name) const;
 	};
 
 	struct const_object : object_base

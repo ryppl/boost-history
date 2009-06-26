@@ -294,6 +294,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\object_model\string.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\object_model\template_header.hpp"
 					>
 				</File>
@@ -302,6 +306,10 @@
 					>
 					<File
 						RelativePath="..\..\..\boost\object_model\detail\allocator.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\detail\make_method.hpp"
 						>
 					</File>
 					<File
@@ -321,7 +329,19 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\object_model\type\modifiers.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\object_model\type\number.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\type\signature.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\type\specifier.hpp"
 						>
 					</File>
 					<File
@@ -338,6 +358,10 @@
 					</File>
 					<File
 						RelativePath="..\..\..\boost\object_model\generic\class.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\generic\method.hpp"
 						>
 					</File>
 					<File

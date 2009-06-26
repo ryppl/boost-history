@@ -10,14 +10,13 @@
 #include <boost/object_model/generic/class.hpp>
 #include <boost/object_model/generic/storage.hpp>
 #include <boost/object_model/registry.hpp>
+#include <boost/object_model/label.hpp>
 
 BOOST_OM_BEGIN
 
 namespace generic
 {
-	//---------------------------------------------------
 	// object_base
-	//---------------------------------------------------
 
 	object_base::object_base() 
 		: reg(0), type(0), number(0)
@@ -75,9 +74,22 @@ namespace generic
 		return get_registry().get_storage(get_handle());
 	}
 
-	//---------------------------------------------------
+	storage &object_base::get_storage()
+	{
+		return get_registry().get_storage(get_handle());
+	}
+
+	void object_base::set(label const &name, object const &obj)
+	{
+		get_storage().set(name, obj);
+	}
+
+	object object_base::get(label const &name) const
+	{
+		return get_storage().get(name);
+	}
+
 	// const_object
-	//---------------------------------------------------
 
 	//const_object::const_object()
 	//{
@@ -91,10 +103,7 @@ namespace generic
 	//{
 	//}
 
-
-	//---------------------------------------------------
 	// mutable_object
-	//---------------------------------------------------
 
 	mutable_object::mutable_object()
 	{
@@ -109,9 +118,7 @@ namespace generic
 		return get_registry().get_storage(get_handle());
 	}
 
-	//---------------------------------------------------
 	// object
-	//---------------------------------------------------
 
 	object::object() : konst(false) { }
 

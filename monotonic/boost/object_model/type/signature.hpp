@@ -6,35 +6,17 @@
 // documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/object_model/doc/index.html
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/object_model/
 
-#ifndef BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
-#define BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
+#ifndef BOOST_OBJECT_MODEL_TYPE_SIGNATURE_HPP
+#define BOOST_OBJECT_MODEL_TYPE_SIGNATURE_HPP
 
 #include <boost/object_model/detail/prefix.hpp>
-#include <boost/object_model/dictionary.hpp>
 
 BOOST_OM_BEGIN
 
-namespace generic
+namespace type
 {
-	struct const_storage : const_object
+	struct signature
 	{
-	protected:
-		dictionary dict;
-
-	public:
-		void set(label const &name, generic::object const &obj)
-		{
-			dict.set(name, obj);
-		}
-		generic::object get(label const &name) const
-		{
-			return dict.get(name);
-		}
-	};
-
-	struct storage : const_storage
-	{
-
 	};
 }
 
@@ -42,6 +24,6 @@ BOOST_OM_END
 
 #include <boost/object_model/detail/postfix.hpp>
 
-#endif // BOOST_OBJECT_MODEL_GENERIC_STORAGE_HPP
+#endif // BOOST_OBJECT_MODEL_TYPE_SIGNATURE_HPP
 
 //EOF
