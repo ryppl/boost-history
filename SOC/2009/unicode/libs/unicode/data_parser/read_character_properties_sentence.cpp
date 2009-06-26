@@ -91,38 +91,50 @@ void read_character_properties_sentence (
             >> ';' >>
 			// block name
 			// type of break
-		    (str_p ("Sep")
+		    (identifier_p ("Sep")
 			    [assign_a (sentence,
 				    sentence_break::sep)] |
-	        str_p ("Format")
+	        identifier_p ("Format")
 			    [assign_a (sentence,
 				    sentence_break::format)] |
-            str_p ("Sp")
+            identifier_p ("Sp")
 			    [assign_a (sentence,
 				    sentence_break::sp)] |
-            str_p ("Lower")
+            identifier_p ("Lower")
 			    [assign_a (sentence,
 				    sentence_break::lower)] |
-            str_p ("Upper")
+            identifier_p ("Upper")
 			    [assign_a (sentence,
 				    sentence_break::upper)] |
-            str_p ("OLetter")
+            identifier_p ("OLetter")
 			    [assign_a (sentence,
 				    sentence_break::oletter)] |
-            str_p ("Numeric")
+            identifier_p ("Numeric")
 			    [assign_a (sentence,
 				    sentence_break::numeric)] |
-            str_p ("ATerm")
+            identifier_p ("ATerm")
 			    [assign_a (sentence,
 				    sentence_break::aterm)] |
-            str_p ("STerm")
+            identifier_p ("STerm")
 			    [assign_a (sentence,
 				    sentence_break::sterm)] |
-            str_p ("Close")
+            identifier_p ("Close")
 			    [assign_a (sentence,
 				    sentence_break::close)] |
-            +alnum_p
+            identifier_p ("CR")
 			    [assign_a (sentence,
+				    sentence_break::cr)] |
+            identifier_p ("LF")
+			    [assign_a (sentence,
+				    sentence_break::lf)] |
+            identifier_p ("Extend")
+			    [assign_a (sentence,
+				    sentence_break::extend)] |
+            identifier_p ("SContinue")
+			    [assign_a (sentence,
+				    sentence_break::scontinue)] |
+            (+alnum_p)
+			    [warning_assign_a (sentence,
 				    sentence_break::any)]) >>
 			// Skip any remaining entries, i.e., parse future versions
 			// of the table as well.

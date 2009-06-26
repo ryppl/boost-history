@@ -91,44 +91,44 @@ void read_character_properties_grapheme_break (
             >> ';' >>
 			// block name
 			// type of break
-		    (str_p ("other")
+		    (identifier_p ("other")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::any)] |
-	        str_p ("CR")
+	        identifier_p ("CR")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::cr)] |
-            str_p ("LF")
+            identifier_p ("LF")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::lf)] |
-            str_p ("Control")
+            identifier_p ("Control")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::control)] |
-            str_p ("Extend")
+            identifier_p ("Extend")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::extend)] |
-            /*str_p ("Prepend")
+            identifier_p ("Prepend")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::prepend)] |
-            str_p ("SpacingMark")
+            identifier_p ("SpacingMark")
 			    [assign_a (grapheme_break,
-				    grapheme_cluster_break::spacing_mark)] |  */
-            str_p ("L")
+				    grapheme_cluster_break::spacing_mark)] |
+            identifier_p ("L")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::l)] |
-            str_p ("V")
+            identifier_p ("V")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::v)] |
-            str_p ("T")
+            identifier_p ("T")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::t)] |
-            str_p ("LV")
+            identifier_p ("LV")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::lv)] |
-            str_p ("LVT")
+            identifier_p ("LVT")
 			    [assign_a (grapheme_break,
 				    grapheme_cluster_break::lvt)] |
-            +alnum_p
-                [assign_a (grapheme_break,
+            (+alnum_p)
+                [warning_assign_a(grapheme_break,
                     grapheme_cluster_break::any)]) >>
 			// Skip any remaining entries, i.e., parse future versions
 			// of the table as well.

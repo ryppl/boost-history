@@ -2,6 +2,7 @@
 #include <boost/foreach.hpp>
 #include <boost/unicode/utf.hpp>
 #include <boost/unicode/ucd/properties.hpp>
+#include <boost/unicode/graphemes.hpp>
 
 #include <boost/typeof/typeof.hpp>
 
@@ -25,16 +26,29 @@ void copy(const Range& range, OutputIterator out)
     std::copy(boost::begin(range), boost::end(range), out);
 }
 
-#define FOREACH_AUTO_BEGIN(name, range)                                \
+template<typename Range>
+size_t count(const Range& range)
+{
+    size_t count = 0;
+    for(typename boost::range_iterator<const Range>::type it = boost::begin(range); it != boost::end(range); ++it)
+        count++;
+        
+    return count;
+}
+
+#define FOREACH_AUTO(name, range)                                      \
+if(boost::begin(range) != boost::end(range))                           \
+if(bool _once_##__LINE__ = 1)                                          \
+for(                                                                   \
+    BOOST_AUTO(name, *boost::begin(range));                            \
+    _once_##__LINE__;                                                  \
+    _once_##__LINE__ = 0                                               \
+)                                                                      \
 for(                                                                   \
     BOOST_AUTO(_it_##__LINE__, boost::begin(range));                   \
-    _it_##__LINE__ != boost::end(range);                               \
+    name = *_it_##__LINE__, _it_##__LINE__ != boost::end(range);       \
     ++_it_##__LINE__                                                   \
 )                                                                      \
-{                                                                      \
-    BOOST_AUTO(name, *_it_##__LINE__); 
-    
-#define FOREACH_AUTO_END }
 
 int main()
 {
@@ -69,13 +83,39 @@ int main()
     std::cout << std::endl;
     
     BOOST_AUTO(range, boost::u8_bounded( boost::u8_encoded(v) ) );
-    FOREACH_AUTO_BEGIN(code_points, range)
-        FOREACH_AUTO_BEGIN(cu, code_points)
+    FOREACH_AUTO(code_points, range)
+    {
+        FOREACH_AUTO(cu, code_points)
             std::cout << ' ' << std::hex << (int)(unsigned char)cu;
-        FOREACH_AUTO_END
+            
         std::cout << ',';
-    FOREACH_AUTO_END
+    }
+    
+    std::cout << "\n";
+    
+    char foo[] = "eoaéôn";
+    FOREACH_AUTO(subrange, boost::u8_bounded(foo))
+    {
+        BOOST_FOREACH(unsigned char c, subrange)
+            std::cout << c;
+
+        std::cout << ' ';
+    }
+    std::cout << std::endl;
         
     std::cout << "\n" << boost::unicode::ucd::get_name(0xE9) << std::endl;
     std::cout << boost::unicode::ucd::as_string(boost::unicode::ucd::get_block(0xE9)) << std::endl;
+    
+    boost::char32 grapheme_test[] = {
+        'f', 'o', 'o', '\r', '\n', 275, 769, ' ', 0x1e17
+    };
+    
+    FOREACH_AUTO(code_points, boost::grapheme_bounded(grapheme_test))
+    {
+        BOOST_FOREACH(unsigned char c, boost::u8_encoded(code_points))
+            std::cout << c;
+        std::cout << '(' << count(code_points) << ')';
+    }
+    
+    std::cout << std::endl;
 }

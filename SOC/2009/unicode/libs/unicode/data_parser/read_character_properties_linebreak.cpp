@@ -162,7 +162,9 @@ void read_character_properties_linebreak(
 				break_class::hangul_t_jamo)] |
 			str_p("SA") [assign_a (break_type,
 				break_class::complex_context)] |
-			/*str_p("XX")*/ +alnum_p [assign_a (break_type,
+			str_p("XX") [assign_a (break_type,
+				break_class::unknown)] |
+            (+alnum_p) [warning_assign_a (break_type,
 				break_class::unknown)]
 			) >>
 			// Skip any remaining entries, i.e., parse future versions

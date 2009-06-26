@@ -10,8 +10,8 @@
 #include <algorithm>
 #include <iostream>
 
-#define BOOST_UNICODE_UCD_VERSION_MAJOR 4
-#define BOOST_UNICODE_UCD_VERSION_MINOR 0
+#define BOOST_UNICODE_UCD_VERSION_MAJOR 5
+#define BOOST_UNICODE_UCD_VERSION_MINOR 1
 
 namespace boost
 {

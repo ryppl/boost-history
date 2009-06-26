@@ -91,29 +91,44 @@ void read_character_properties_word_break (
             >> ';' >>
 			// block name
 			// type of break
-		    (str_p ("Format")
+		    (identifier_p ("Format")
 			    [assign_a (boundary,
 				    word_break::format)] |
-	        str_p ("Katakana")
+	        identifier_p ("Katakana")
 			    [assign_a (boundary,
 				    word_break::katakana)] |
-            str_p ("ALetter")
+            identifier_p ("ALetter")
 			    [assign_a (boundary,
 				    word_break::aletter)] |
-            str_p ("MidLetter")
+            identifier_p ("MidLetter")
 			    [assign_a (boundary,
 				    word_break::midletter)] |
-            str_p ("MidNum")
+            identifier_p ("MidNum")
 			    [assign_a (boundary,
 				    word_break::midnum)] |
-            str_p ("Numeric")
+            identifier_p ("Numeric")
 			    [assign_a (boundary,
 				    word_break::numeric)] |
-            str_p ("ExtendNumLet")
+            identifier_p ("ExtendNumLet")
 			    [assign_a (boundary,
 				    word_break::extendnumlet)] |
-            +alnum_p
-			    [assign_a (boundary,
+            identifier_p ("CR")
+                [assign_a (boundary,
+                    word_break::cr)] |
+            identifier_p ("LF")
+                [assign_a (boundary,
+                    word_break::lf)] |
+            identifier_p ("Newline")
+                [assign_a (boundary,
+                    word_break::newline)] |
+            identifier_p ("Extend")
+                [assign_a (boundary,
+                    word_break::extend)] |
+            identifier_p ("MidNumLet")
+                [assign_a (boundary,
+                    word_break::midnumlet)] |
+            (+alnum_p)
+			    [warning_assign_a (boundary,
 				    word_break::any)]) >>
 			// Skip any remaining entries, i.e., parse future versions
 			// of the table as well.

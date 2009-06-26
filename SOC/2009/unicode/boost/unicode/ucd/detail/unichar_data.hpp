@@ -3,9 +3,12 @@
 
 #include <boost/assert.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/integer/static_log2.hpp>
 
 #include <boost/cuchar.hpp>
 #include <boost/unicode/ucd/properties_types.hpp>
+
+#define BOOST_UNICODE_ENUM_SIZE(en) (boost::static_log2<boost::unicode::ucd::en::_count>::value + 1)
 
 namespace boost
 {
@@ -100,23 +103,21 @@ namespace ucd
 
         struct
         { 
-            uint32_t    category : 5;
-            uint32_t    join_type : 3;
-            uint32_t    word_break : 3;
-            uint32_t    unknown_char : 1;
+            unsigned  category : BOOST_UNICODE_ENUM_SIZE(category);
+            unsigned  join_type : BOOST_UNICODE_ENUM_SIZE(join_type);
+            unsigned  word_break : BOOST_UNICODE_ENUM_SIZE(word_break);
+            unsigned  unknown_char : 1;
             // first value for sort_variable
-            uint32_t    sort_variable : 1;
-            uint32_t    sort_data_type : 2;
-            uint32_t    sort_data2 : 16;
-            uint32_t : 0;       // alignment
+            unsigned  sort_variable : 1;
+            unsigned  sort_data_type : 2;
+            unsigned  sort_data2 : 16;
 
-            uint32_t    bidi_class : 5;           
-            uint32_t    decomposition_type : 5;    
-            uint32_t    break_class : 6;
-            uint32_t    combining : 8;
-            uint32_t    sentence_break : 4; 
-            uint32_t    grapheme_cluster_break : 4;
-            uint32_t : 0;       // alignment
+            unsigned  bidi_class : BOOST_UNICODE_ENUM_SIZE(bidi_class);           
+            unsigned  decomposition_type : BOOST_UNICODE_ENUM_SIZE(decomposition_type);    
+            unsigned  break_class : BOOST_UNICODE_ENUM_SIZE(break_class);
+            unsigned  combining : 8;
+            unsigned  sentence_break : BOOST_UNICODE_ENUM_SIZE(sentence_break); 
+            unsigned  grapheme_cluster_break : BOOST_UNICODE_ENUM_SIZE(grapheme_cluster_break);
         };
         // the meaning of this is controlled by predefined_sort
         const uint16_t   sort_index_or_data1;

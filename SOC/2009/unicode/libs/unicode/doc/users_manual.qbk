@@ -185,6 +185,8 @@ to prevent duplication of data.
 
 ``auto concept Pipe<typename T>
 {
+    T::T();
+
     typename output_type = T::output_type;
     static const int T::max_output; // optional
 
@@ -200,6 +202,8 @@ models: [classref boost::unicode::u8_decoder],
 
 ``auto concept OneManyPipe<typename T>
 {
+    T::T();
+
     typename Input;
 
     typename output_type = T::output_type;
@@ -239,8 +243,12 @@ with each subrange being the consumed input for a decoding step.
     bool T::operator()(Iterator begin, Iterator end, Iterator pos);
 };``
 
+models: [classref boost::unicode::grapheme_boundary].
+
 ``auto concept Consumer<typename T>
 {
+    T::T();
+
     template<typename Iterator>
     Iterator T::ltr(Iterator begin, Iterator end);
     
@@ -248,10 +256,12 @@ with each subrange being the consumed input for a decoding step.
     Iterator T::rtl(Iterator begin, Iterator end);
 }``
 
-Can be obtained by converting a =Pipe= with [classref boost::pipe_consumer] or a =BoundaryChecker= with =boost::boundary_consumer=.
+Can be obtained by converting a =Pipe= with [classref boost::pipe_consumer] or a =BoundaryChecker= with [classref boost::boundary_consumer].
 
 A =Consumer= may then be used with [classref boost::consumer_iterator] to generate iterator/range
 adapters with turns the range into a range of subranges, each subrange being one consumed input.
+
+See also: [funcref boost::grapheme_bounded].
 
 [endsect]
 

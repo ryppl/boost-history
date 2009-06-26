@@ -14,6 +14,10 @@
 #include <string>
 #include <vector>
 #include <map>
+#include <iostream>
+#include <ostream>
+#include <iterator>
+#include <boost/spirit/include/classic.hpp>
 
 #include <boost/unicode/ucd/detail/unichar_data.hpp>
 
@@ -148,5 +152,63 @@ namespace boost
 	}	// namespace unicode
 
 }	// namespace boost
+
+template<typename T>
+struct warning_assign_a_type
+{
+    warning_assign_a_type(T& name_, T value_) : name(name_), value(value_)
+    {
+    }
+    
+    template<typename Iterator>
+    void operator()(Iterator begin, Iterator end) const
+    {
+        std::cout << "\nWarning: unsupported property value ";
+        std::copy(begin, end, std::ostream_iterator<char>(std::cout));
+        std::cout << std::flush;
+        name = value;
+    }
+    
+    T& name;
+    T value;
+};
+
+template<typename T>
+warning_assign_a_type<T> warning_assign_a(T& name, T value)
+{
+    return warning_assign_a_type<T>(name, value);
+}
+
+struct identifier_p : 
+    boost::spirit::classic::sequence<
+        boost::spirit::classic::strlit<char const*>,
+        boost::spirit::classic::empty_match_parser<
+            boost::spirit::classic::negated_char_parser<
+                boost::spirit::classic::alnum_parser
+            >
+        >
+    >
+{
+private:
+    typedef boost::spirit::classic::sequence<
+        boost::spirit::classic::strlit<char const*>,
+        boost::spirit::classic::empty_match_parser<
+            boost::spirit::classic::negated_char_parser<
+                boost::spirit::classic::alnum_parser
+            >
+        >
+    > base_t;
+    
+    base_t definition(const char* name)
+    {
+        using namespace boost::spirit::classic;
+        return str_p(name) >> eps_p(~alnum_p);
+    }
+
+public:
+    identifier_p(char const* name) : base_t(definition(name))
+    {
+    }
+};
 
 #endif	// BOOST_UNICODE_READ_CHARACTER_PROPERTIES_HPP_INCLUDED

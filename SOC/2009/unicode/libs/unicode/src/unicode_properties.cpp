@@ -17,10 +17,9 @@ using namespace boost;
 
 #define element_count(tbl) (int)(sizeof(tbl)/ sizeof(tbl[0]))
 
-static const char * stdErrorString = "<<invalid enum>>";
-
 static const char* g_category[] =
 {
+    "unknown",
 	"letter_uppercase",
 	"letter_lowercase",
 	"letter_titlecase",
@@ -50,22 +49,14 @@ static const char* g_category[] =
 	"other_format",
 	"other_surrogate",
 	"other_private_use",
-	"other_not_assigned",
-	"unknown"
+	"other_not_assigned"
 };
 
 BOOST_STATIC_ASSERT(element_count(g_category) == category::_count); // check g_category matched category
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::category::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::category::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::category::_count);
 	return g_category[type];
 }
 
@@ -85,14 +76,7 @@ BOOST_STATIC_ASSERT(element_count(g_join_type) == join_type::_count); // check g
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::join_type::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::join_type::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::join_type::_count);
 	return g_join_type[type];
 }
 
@@ -126,14 +110,7 @@ BOOST_STATIC_ASSERT(element_count(g_bidi_class) == bidi_class::_count); // check
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::bidi_class::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::bidi_class::_count);
 	return g_bidi_class[type];
 }
 
@@ -141,6 +118,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type
 
 static const char* g_break_class[] =
 {
+    "unknown",
 	"mandatory",
 	"carriage_return",
 	"line_feed",
@@ -175,22 +153,14 @@ static const char* g_break_class[] =
 	"hangul_l_jamo",
 	"hangul_v_jamo",
 	"hangul_t_jamo",
-	"complex_context",
-	"unknown"
+	"complex_context"
 };
 
 BOOST_STATIC_ASSERT(element_count(g_break_class) == break_class::_count); // check g_break_class matched break_class
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_class::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::break_class::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::break_class::_count);
 	return g_break_class[type];
 }
 
@@ -210,14 +180,7 @@ BOOST_STATIC_ASSERT(element_count(g_break_action) == break_action::_count); // c
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::break_action::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::break_action::_count);
 	return g_break_action[type];
 }
 
@@ -225,6 +188,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::ty
 
 static const char* g_decomposition[] =
 {
+    "none",
 	"font",
 	"no_break",
 	"initial",
@@ -241,8 +205,7 @@ static const char* g_decomposition[] =
 	"square",
 	"fraction",
 	"compat",
-	"canonical",
-	"none"
+	"canonical"
 };
 
 BOOST_STATIC_ASSERT(element_count(g_decomposition) == decomposition_type::_count); // check g_decomposition matched decomposition
@@ -250,14 +213,7 @@ BOOST_STATIC_ASSERT(element_count(g_decomposition) == decomposition_type::_count
 const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::decomposition_type::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::decomposition_type::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::decomposition_type::_count);
 	return g_decomposition[type];
 }
 
@@ -265,6 +221,7 @@ const char* boost::unicode::ucd::as_string(
 
 static const char* g_grapheme_cluster_break[] =
 {
+    "any",
 	"cr",
 	"lf",
 	"control",
@@ -274,7 +231,8 @@ static const char* g_grapheme_cluster_break[] =
 	"lv",
 	"lvt",
 	"extend",
-	"any"
+    "prepend",
+    "spacing_mark"
 };
 
 BOOST_STATIC_ASSERT(element_count(g_grapheme_cluster_break) == grapheme_cluster_break::_count); // check g_grapheme_cluster_break matched grapheme_cluster_break
@@ -282,14 +240,7 @@ BOOST_STATIC_ASSERT(element_count(g_grapheme_cluster_break) == grapheme_cluster_
 const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::grapheme_cluster_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::grapheme_cluster_break::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::grapheme_cluster_break::_count);
 	return g_grapheme_cluster_break[type];
 }
 
@@ -297,6 +248,7 @@ const char* boost::unicode::ucd::as_string(
 
 static const char* g_word_break[] =
 {
+    "any",
 	"format",
 	"katakana",
 	"aletter",
@@ -304,7 +256,11 @@ static const char* g_word_break[] =
 	"midnum",
 	"numeric",
 	"extendnumlet",
-	"any"
+    "cr",
+    "lf",
+    "newline",
+    "extend",
+    "midnumlet",
 };
 
 BOOST_STATIC_ASSERT(element_count(g_word_break) == word_break::_count); // check g_word_break matched word_break
@@ -312,14 +268,7 @@ BOOST_STATIC_ASSERT(element_count(g_word_break) == word_break::_count); // check
 const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::word_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::word_break::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::word_break::_count);
 	return g_word_break[type];
 }
 
@@ -327,6 +276,7 @@ const char* boost::unicode::ucd::as_string(
 
 static const char* g_sentence_break[] =
 {
+    "any",
 	"sep",
 	"format",
 	"sp",
@@ -337,7 +287,10 @@ static const char* g_sentence_break[] =
 	"aterm",
 	"sterm",
 	"close",
-	"any"
+    "cr",
+    "lf",
+    "extend",
+    "scontinue"
 };
 
 BOOST_STATIC_ASSERT(element_count(g_sentence_break) == sentence_break::_count); // check g_sentence_break matched sentence_break
@@ -345,14 +298,7 @@ BOOST_STATIC_ASSERT(element_count(g_sentence_break) == sentence_break::_count); 
 const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::sentence_break::type type)
 {
-	if (type < 0 || type >= boost::unicode::ucd::sentence_break::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::sentence_break::_count);
 	return g_sentence_break[type];
 }
 
@@ -368,13 +314,6 @@ BOOST_STATIC_ASSERT(element_count(g_sort_type) == boost::unicode::ucd::sort_type
 
 const char* boost::unicode::ucd::as_string(boost::unicode::ucd::sort_type::type type)
 {
-    if (type < 0 || type >= boost::unicode::ucd::sort_type::_count)
-	{
-		// we have taken the decision not to throw as these can be used at low level and
-		// there may be a high overhead catching for an invalid character
-		BOOST_ASSERT("oops - invalid enum");
-		return stdErrorString;
-	}
-
+    BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::sort_type::_count);
 	return g_sort_type[type];
 }

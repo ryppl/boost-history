@@ -23,9 +23,10 @@ namespace unicode
 	
 		struct category
 		{
-			enum type					// maximum 32 values (5 bits)
+			enum type
 			{
-				letter_uppercase = 0,
+                unknown,
+				letter_uppercase,
 				letter_lowercase,
 				letter_titlecase,
 				letter_modifier,
@@ -57,7 +58,6 @@ namespace unicode
 				// Todo: collapse these values into one?
 				// It seems too subtle a difference.
 				other_not_assigned,
-				unknown,				// default value for unknown characters
 
 				_count
 			};
@@ -66,14 +66,15 @@ namespace unicode
 
 		struct join_type
 		{
-			enum type					// maximum 8 values (3 bits)
+			enum type
 			{
-				none = 0,				// default value for unknown characters
+				none,				// default value for unknown characters
 				right,
 				left,
 				dual,
 				causing,
 				transparent,
+                
 				_count
 			};
 		};
@@ -81,7 +82,7 @@ namespace unicode
 
 		struct bidi_class
 		{
-			enum type					// maximum 32 values (5 bits)
+			enum type
 			{
 				// default value for unknown characters
 				strong_left_to_right = 1,			
@@ -114,9 +115,10 @@ namespace unicode
 
 		struct break_class
 		{
-			enum type					// maximum 64 values (6 bits)
+			enum type
 			{
-				mandatory = 0,
+                unknown,
+				mandatory,
 				carriage_return,
 				line_feed,
 				combining_mark,
@@ -151,23 +153,22 @@ namespace unicode
 				hangul_v_jamo,
 				hangul_t_jamo,
 				complex_context,
-				unknown,				// default value for unknown characters
 
 				_count
 			};
 		};
 		const char* as_string(break_class::type);
 		 
-		struct break_action					// maximum 8 values (3 bits)
+		struct break_action
 		{
 			enum type
 			{
-				direct = 0,
-				indirect = 1,				// default value for unknown characters
-				combining_indirect = 2,
-				combining_prohibited = 3,
-				prohibited = 4,		
-				always = 5,
+				direct,
+				indirect,				// default value for unknown characters
+				combining_indirect,
+				combining_prohibited,
+				prohibited,		
+				always,
 
 				_count
 			};
@@ -176,9 +177,10 @@ namespace unicode
 
 		struct decomposition_type
 		{
-			enum type					// maximum 32 values (5 bits)
+			enum type
 			{
-				font = 0,
+                none,					// default value for unknown characters
+				font,
 				no_break,
 				initial,
 				medial,
@@ -195,7 +197,6 @@ namespace unicode
 				fraction,
 				compat,
 				canonical,
-				none,					// default value for unknown characters
 
 				_count
 			};
@@ -204,19 +205,20 @@ namespace unicode
 
         struct grapheme_cluster_break
         {
-            enum type			        // maximum 16 values (4 bits)
+            enum type
             {
-                cr = 0,                 // value fixed
-                lf = 1,                 // value fixed
-                control = 2,            // value fixed
-                l = 3,                  // value fixed
-                v = 4,                  // value fixed
-                t = 5,                  // value fixed
-                lv = 6,                 // value fixed
-                lvt = 7,                // value fixed
-                extend = 8,             // value fixed
-                // default value for unknown characters 
-                any = 9,              // value fixed
+                any,
+                cr,
+                lf,
+                control,
+                l,
+                v,
+                t,
+                lv,
+                lvt,
+                extend,
+                prepend,
+                spacing_mark,
    
 				_count
             };
@@ -225,16 +227,21 @@ namespace unicode
 
         struct word_break
         {
-            enum type			        // maximum 8 values (3 bits)
+            enum type
             {
-                format = 0,             
+                any,
+                format,
                 katakana,
                 aletter,
                 midletter,
                 midnum,
                 numeric,
                 extendnumlet,
-                any,                    // default value for unknown characters
+                cr,
+                lf,
+                newline,
+                extend,
+                midnumlet,
    
 				_count
             };
@@ -243,9 +250,10 @@ namespace unicode
 
         struct sentence_break
         {
-            enum type			        // maximum 16 values (4 bits)
+            enum type
             {
-                sep = 0,             
+                any,
+                sep,
                 format,
                 sp,
                 lower,
@@ -255,7 +263,10 @@ namespace unicode
                 aterm,
                 sterm,
                 close,
-                any,                    // default value for unknown characters
+                cr,
+                lf,
+                extend,
+                scontinue,
    
 				_count
             };

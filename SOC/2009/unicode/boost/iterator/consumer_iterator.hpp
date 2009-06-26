@@ -36,6 +36,44 @@ pipe_consumer<Pipe> make_pipe_consumer(Pipe p)
 {
     return pipe_consumer<Pipe>(p);
 }
+
+template<typename Boundary>
+struct boundary_consumer : private Boundary
+{
+    boundary_consumer() {} // singular
+    
+    boundary_consumer(Boundary b_) : Boundary(b_)
+    {
+    }
+    
+    template<typename In>
+    In ltr(In begin, In end)
+    {
+        In pos = begin;
+        do
+            ++pos;
+        while(!Boundary::operator()(begin, end, pos));
+        
+        return pos;
+    }
+    
+    template<typename In>
+    In rtl(In begin, In end)
+    {
+        In pos = end;
+        do
+            --pos;
+        while(!Boundary::operator()(begin, end, pos));
+        
+        return pos;
+    }
+};
+
+template<typename Boundary>
+boundary_consumer<Boundary> make_boundary_consumer(Boundary b)
+{
+    return boundary_consumer<Boundary>(b);
+}
     
 template<typename It, typename Consumer>
 struct consumer_iterator
