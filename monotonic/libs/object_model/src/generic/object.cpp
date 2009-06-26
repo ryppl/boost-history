@@ -28,10 +28,10 @@ namespace generic
 	{
 	}
 
-	object_base::object_base(const const_storage& store)
-		: reg(store.reg), type(store.type), number(store.number)
-	{
-	}
+	//object_base::object_base(const const_storage& store)
+	//	: reg(store.reg), type(store.type), number(store.number)
+	//{
+	//}
 
 
 	void object_base::construct(registry &r, klass const &k, handle h)
@@ -69,25 +69,25 @@ namespace generic
 		return get_registry().exists(number);
 	}
 
-	const storage &object_base::get_storage() const
+	const object_base &object_base::get_storage() const
 	{
 		return get_registry().get_storage(get_handle());
 	}
 
-	storage &object_base::get_storage()
+	object_base &object_base::get_storage()
 	{
 		return get_registry().get_storage(get_handle());
 	}
 
-	void object_base::set(label const &name, object const &obj)
-	{
-		get_storage().set(name, obj);
-	}
+	//void object_base::set(label const &name, object const &obj)
+	//{
+	//	get_storage().set(name, obj);
+	//}
 
-	object object_base::get(label const &name) const
-	{
-		return get_storage().get(name);
-	}
+	//object object_base::get(label const &name) const
+	//{
+	//	return get_storage().get(name);
+	//}
 
 	// const_object
 
@@ -105,15 +105,15 @@ namespace generic
 
 	// mutable_object
 
-	mutable_object::mutable_object()
-	{
-	}
+	//mutable_object::mutable_object()
+	//{
+	//}
 
-	mutable_object::mutable_object(storage &store) : const_object(store)
-	{
-	}
+	//mutable_object::mutable_object(storage &store) : const_object(store)
+	//{
+	//}
 
-	storage &mutable_object::get_storage()
+	object_base &mutable_object::get_storage()
 	{
 		return get_registry().get_storage(get_handle());
 	}
@@ -123,10 +123,10 @@ namespace generic
 	object::object() : konst(false) { }
 
 	object::object(const const_object& obj) : const_object(obj), konst(true) { }
-	object::object(const const_storage & obj) : const_object(obj), konst(true) { }
+	//object::object(const const_storage & obj) : const_object(obj), konst(true) { }
 
 	object::object(const mutable_object& obj) : const_object(obj), konst(false) { }
-	object::object(const storage &store) : const_object(store), konst(false) { }
+	//object::object(const storage &store) : const_object(store), konst(false) { }
 
 	object &object::operator=(const const_object& obj)
 	{
@@ -141,13 +141,18 @@ namespace generic
 		konst = false;
 		return *this;
 	}
-	storage &object::get_storage()
+	object_base &object::get_storage()
 	{
 		if (is_const())
 			throw const_error();
 		return get_registry().get_storage(get_handle());
 	}
-
+	const object_base &object::get_storage() const
+	{
+		if (is_const())
+			throw const_error();
+		return get_registry().get_storage(get_handle());
+	}
 }
 
 const generic::object null_object;

@@ -11,24 +11,6 @@
 
 BOOST_OM_BEGIN
 
-namespace generic
-{
-	klass::klass(const label &ident, type::number num)
-		: name(ident), type_number(num)
-	{
-	}
-
-	bool klass::has_method(label const &name) const
-	{
-		return methods.find(name) != methods.end();
-	}
-
-	bool klass::has_field(label const &name) const
-	{
-		return properties.find(name) != properties.end();
-	}
-
-}
 
 BOOST_OM_END
 

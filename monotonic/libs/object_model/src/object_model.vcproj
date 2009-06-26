@@ -298,6 +298,14 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\object_model\string_stream.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\boost\object_model\system_traits.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\object_model\template_header.hpp"
 					>
 				</File>

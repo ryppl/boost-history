@@ -10,13 +10,7 @@
 
 BOOST_OM_BEGIN
 
-label::label(const char_type *text)
-{
-}
 
-label::label(const string_type &text)
-{
-}
 
 
 
