@@ -12,65 +12,34 @@
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/detail/allocator.hpp>
 #include <boost/object_model/generic/class.hpp>
-//#include <boost/object_model/system_traits.hpp>
+#include <boost/object_model/detail/class_base.hpp>
 
 BOOST_OM_BEGIN
 
-template <class Traits>
-struct klass_base : generic::klass
-{
-	typedef typename Traits::label_type Label;
-
-	typedef std::map<Label, generic::property const *> properties_type;
-	typedef std::map<Label, generic::method const *> methods_type;
-
-private:
-	const char *name;
-	type::number type_number;
-
-	properties_type properties;
-	methods_type methods;
-
-public:
-	klass_base(const char *ident, type::number num)
-		: generic::klass(num), name(ident)
-	{
-	}
-
-	bool has_method(Label const &name) const
-	{
-		return methods.find(name) != methods.end();
-	}
-
-	bool has_field(Label const &name) const
-	{
-		return properties.find(name) != properties.end();
-	}
-};
-
-	
 template <class T, class Registry>
-struct klass : klass_base<typename Registry::traits_type>
+struct klass : detail::klass_base<typename Registry::traits_type>
 {
 	typedef typename Registry::traits_type system_traits;
-	typedef klass_base<system_traits> klass_base_type;
+	typedef detail::klass_base<system_traits> klass_base_type;
 	typedef typename system_traits::label_type label_type;
 	typedef typename Registry::rebind_storage<T>::type storage_type;
-	typedef typename system_traits::rebind_allocator<storage_type>::type allocator_type;
+	typedef typename system_traits::allocator_type::template rebind<storage_type>::other allocator_type;
 	typedef type::traits<T> traits;
 
+private:
 	Registry &reg;
 	mutable allocator_type allocator;
 
+public:
 	klass(Registry &factory)
 		: klass_base_type(traits::name, traits::type_number), reg(factory), allocator(reg.get_allocator()) { }
 
-	generic::object &create(handle h) const
+	generic::object &create() const
 	{
 		storage_type *store = allocator.allocate(1);
 		//allocator.construct(store);
 		new (store) storage_type();
-		store->construct(reg, *this, h);
+		store->construct(reg, *this, reg.get_next_handle());
 		return *store;
 	}
 

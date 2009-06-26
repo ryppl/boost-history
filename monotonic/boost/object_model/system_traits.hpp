@@ -12,29 +12,33 @@
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/string.hpp>
 #include <boost/object_model/label.hpp>
+#include <boost/object_model/class.hpp>
 
 BOOST_OM_BEGIN
 
-template <class Ch = char, class Al = std::allocator<Ch> >
+///
+template <class Alloc
+	, class Char
+	, class ChTr
+	, class Str
+	, class Label
+	, class Ident
+>
 struct system_traits
 {
-	typedef Ch char_type;
-	typedef std::char_traits<char_type> char_traits;
-	typedef Al allocator_type;
-	typedef string<allocator_type, char_type, char_traits> string_type;
-	typedef label<string_type> label_type;
-	typedef system_traits<Ch,Al> this_type;
+	typedef Char char_type;
+	typedef Alloc allocator_type;
+	typedef Str string_type;
+	typedef ChTr char_traits;
+	typedef Label label_type;
+	typedef Ident identifier_type;
+	typedef system_traits<Alloc, Char, ChTr, Str, Label, Ident> this_type;
+};
 
-	template <class T>
-	struct rebind_class
-	{
-		typedef klass<T, this_type> type;
-	};
-	template <class T>
-	struct rebind_allocator
-	{
-		typedef typename allocator_type::template rebind<T>::other type;
-	};
+template <class Label, class Al = default_allocator, class Ch = char >
+struct set_label : system_traits<Al, Ch>
+{
+	typedef Label label_type;
 };
 
 BOOST_OM_END

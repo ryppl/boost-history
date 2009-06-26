@@ -21,13 +21,11 @@
 #include <boost/object_model/system_traits.hpp>
 #include <boost/object_model/object.hpp>
 
+//#define BOOST_OBJECT_MODEL_REGISTRY_USE_UNORDERED_MAPS
+
 BOOST_OM_BEGIN
 
-/// an object type factory, and registery of instances
-template <class Tr = system_traits<char, default_allocator> >
-struct registry;
-
-/// an object type factory, and registery of instances
+/// an object type factory, and registry of instances
 template <class Tr>
 struct registry : generic::registry
 {
@@ -51,6 +49,7 @@ struct registry : generic::registry
 		typedef storage<T, traits_type> type;
 	};
 
+#ifndef BOOST_OBJECT_MODEL_REGISTRY_USE_UNORDERED_MAPS
 	typedef std::map<
 		handle
 		, generic::storage<traits> *
@@ -60,10 +59,27 @@ struct registry : generic::registry
 
 	typedef std::map<
 		type::number
-		, klass_base<traits_type> const *
+		, detail::klass_base<traits_type> const *
 		, std::less<type::number>
 		, allocator_type
 	> classes_type;
+#else
+	typedef boost::unordered_map<
+		handle
+		, generic::storage<traits> *
+		, boost::hash<handle>
+		, std::less<handle>
+		, allocator_type
+	> instances_type;
+
+	typedef boost::unordered_map<
+		type::number
+		, detail::klass_base<traits_type> const *
+		, boost::hash<type::number>
+		, std::less<type::number>
+		, allocator_type
+	> classes_type;
+#endif
 
 	template <class T>
 	static typename type::traits<T>::reference_type deref(generic::object &object)
@@ -80,28 +96,94 @@ struct registry : generic::registry
 	{
 		if (!object.is_type<T>())
 			throw type_mismatch();
-		throw;
-		//return static_cast<typename rebind_storage<T>::type const &>(object.get_storage()).get_const_reference();
+		return static_cast<const_storage<T, traits_type> const &>(object.get_storage()).get_const_reference();
 	}
 
-	void set(generic::object &parent, typename traits::label_type const &label, generic::object &child)
+	template <class Ty>
+	void set_value(generic::object &obj, const Ty &value)
+	{
+		deref<Ty>(obj) = value;
+	}
+	template <class Ty>
+	Ty const &get_const_value(generic::object &obj)
+	{
+		return const_deref<Ty>(obj);
+	}
+	template <class Ty>
+	Ty const &get_value(const generic::const_object &obj)
+	{
+		return const_deref<Ty>(obj);
+	}
+	template <class Ty>
+	Ty &get_value(generic::mutable_object &obj)
+	{
+		return deref<Ty>(obj);
+	}
+	template <class Ty>
+	void set_child_value(generic::object &parent, typename traits::label_type const &label, const Ty &value)
+	{
+		generic::object child = get(parent, label);
+		if (!child.exists())
+			set(parent, label, create<Ty>(value));
+		else
+			deref<Ty>(child) = value;
+	}
+
+	template <class Ty>
+	Ty &get_child_value(generic::object &parent, typename traits::label_type const &label)
+	{
+		generic::object child = get(parent, label);
+		if (!child.exists())
+			throw empty_object();
+		return deref<Ty>(child);
+	}
+
+	template <class Ty>
+	const Ty &get_child_value(const generic::const_object &parent, typename traits::label_type const &label)
+	{
+		generic::const_object child = get(parent, label);
+		if (!child.exists())
+			throw empty_object();
+		return deref<Ty>(child);
+	}
+
+	void set_child(generic::object parent, typename traits::label_type const &label, const generic::const_object child)
 	{
 		generic::storage<traits> &p = get_storage(parent.get_handle());
-		generic::storage<traits> &q = get_storage(child.get_handle());
+		generic::const_storage<traits> &q = get_const_storage(child.get_handle());
 		p.set(label, q);
 	}
-	generic::object get(generic::object &parent, typename traits::label_type const &label)
+
+	generic::mutable_object get_child(const generic::mutable_object parent, typename traits::label_type const &label)
 	{
 		generic::storage<traits> &p = get_storage(parent.get_handle());
 		return p.get(label);
 	}
-	bool has(generic::object &parent, typename traits::label_type const &label)
+
+	generic::const_object get_const_child(const generic::object &parent, typename traits::label_type const &label)
 	{
-		generic::storage<traits> &p = get_storage(parent.get_handle());
+		const generic::const_storage<traits> &p = get_const_storage(parent.get_handle());
+		return p.get(label);
+	}
+	generic::const_object get_child(const generic::const_object parent, typename traits::label_type const &label)
+	{
+		return get_const_child(parent);
+	}
+
+	bool has_child(const generic::const_object parent, typename traits::label_type const &label)
+	{
+		const generic::const_storage<traits> &p = get_const_storage(parent.get_handle());
 		return p.has(label);
 	}
 
 protected:
+	template <class, class> friend struct klass;
+	handle get_next_handle()
+	{
+		return ++next_handle;
+	}
+
+private:
 	allocator_type allocator;
 	instances_type instances;
 	classes_type classes;
@@ -129,7 +211,7 @@ public:
 		clear();
 		BOOST_FOREACH(typename classes_type::value_type &val, classes)
 		{
-			allocator_destroy(const_cast<klass_base<traits_type> *>(val.second));
+			allocator_destroy(const_cast<detail::klass_base<traits_type> *>(val.second));
 		}
 		classes.clear();
 	}
@@ -146,6 +228,14 @@ public:
 	}
 
 	generic::storage<traits> &get_storage(handle h) const
+	{
+		instances_type::const_iterator iter = instances.find(h);
+		if (iter == instances.end())
+			throw unknown_handle();
+		return *iter->second;
+	}
+
+	generic::const_storage<traits> get_const_storage(handle h) const
 	{
 		instances_type::const_iterator iter = instances.find(h);
 		if (iter == instances.end())
@@ -199,10 +289,9 @@ public:
 		typename rebind_klass<T>::type const *k = get_class<T>();
 		if (k == 0)
 			throw unknown_type();
-		handle h = ++next_handle;
 		typedef typename rebind_storage<T>::type storage_type;
-		storage_type &obj = static_cast<storage_type &>(k->create(h));
-		instances[h] = &obj;
+		storage_type &obj = static_cast<storage_type &>(k->create());
+		instances[obj.get_handle()] = &obj;
 		return object<T>(obj, &this_type::deref<T>, &this_type::const_deref<T>);
 	}
 
@@ -226,7 +315,7 @@ private:
 	template <class T>
 	T *allocator_create()
 	{
-		typename Allocator::template rebind<T>::other alloc(allocator);
+		typename allocator_type::template rebind<T>::other alloc(allocator);
 		T *ptr = alloc.allocate(1);
 		//alloc.construct(ptr);
 		new (ptr) T();

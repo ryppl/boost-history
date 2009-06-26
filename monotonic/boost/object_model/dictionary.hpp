@@ -16,14 +16,22 @@
 
 BOOST_OM_BEGIN
 
-template <class Tr>
+template <class Traits>
 struct dictionary
 {
-	typedef typename Tr::label_type label_type;
-	typedef std::map<label_type, generic::object, std::less<label_type>, typename Tr::allocator_type> contents_type;
+	typedef typename Traits::label_type label_type;
 
+	typedef std::map<
+		label_type
+		, generic::object
+		, std::less<label_type>
+		, typename Traits::allocator_type
+	> contents_type;
+
+private:
 	contents_type contents;
 
+public:
 	void set(label_type const &name, generic::object const &obj)
 	{
 		contents[name] = obj;
@@ -36,6 +44,7 @@ struct dictionary
 			return null_object;
 		return iter->second;
 	}
+
 	bool has(label_type const &name) const
 	{
 		return contents.find(name) != contents.end();

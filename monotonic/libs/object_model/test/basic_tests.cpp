@@ -38,6 +38,37 @@ BOOST_AUTO_TEST_CASE(test_type_specifier)
 	//text = om::type::make_specifier<int>().to_string(reg);
 }
 
+BOOST_AUTO_TEST_CASE(test_values)
+{
+	om::registry<om::set_label<int> > r;
+	r.register_class<int>();
+	om::object<int> n = r.create<int>();
+	BOOST_ASSERT(n.exists());
+	BOOST_ASSERT(n.is_type<int>());
+	r.set_value(n, 42);
+	BOOST_ASSERT(r.get_value<int>(n) == 42);
+}
+
+BOOST_AUTO_TEST_CASE(test_int_labels)
+{
+	om::registry<om::set_label<int> > r;
+	r.register_class<void>();
+	om::object<void> parent = r.create<void>();
+	om::object<void> child = r.create<void>();
+	r.set_child(parent, 42, child);
+	BOOST_ASSERT(r.has_child(parent, 42));
+}
+
+BOOST_AUTO_TEST_CASE(test_string_labels)
+{
+	om::registry<> r;
+	r.register_class<void>();
+	om::object<void> parent = r.create<void>();
+	om::object<void> child = r.create<void>();
+	r.set_child(parent, "child", child);
+	BOOST_ASSERT(r.has_child(parent, "child"));
+}
+
 BOOST_AUTO_TEST_CASE(test_type_traits)
 {
 	BOOST_STATIC_ASSERT(om::type::traits<int>::type_number == om::type::number::Int);
@@ -80,47 +111,6 @@ BOOST_AUTO_TEST_CASE(test_object)
 	*num = 42;
 	
 	BOOST_ASSERT((reg.deref<int>(num) == 42));
-}
-
-struct custom_traits
-{
-	typedef char char_type;
-	typedef std::char_traits<char_type> char_traits;
-	typedef std::allocator<char> allocator_type;
-	typedef om::string<allocator_type, char_type, char_traits> string_type;
-	typedef int label_type;
-	typedef custom_traits this_type;
-
-	template <class T>
-	struct rebind_class
-	{
-		typedef om::klass<T, this_type> type;
-	};
-	template <class T>
-	struct rebind_allocator
-	{
-		typedef typename allocator_type::template rebind<T>::other type;
-	};
-};
-
-BOOST_AUTO_TEST_CASE(test_int_labels)
-{
-	om::registry<custom_traits> r;
-	r.register_class<void>();
-	om::object<void> parent = r.create<void>();
-	om::object<void> child = r.create<void>();
-	r.set(parent, 42, child);
-	BOOST_ASSERT(r.has(parent, 42));
-}
-
-BOOST_AUTO_TEST_CASE(test_string_labels)
-{
-	om::registry<> r;
-	r.register_class<void>();
-	om::object<void> parent = reg.create<void>();
-	om::object<void> child = reg.create<void>();
-	r.set(parent, "child", child);
-	BOOST_ASSERT(r.has(parent, "child"));
 }
 
 struct Foo

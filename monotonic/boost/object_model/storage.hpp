@@ -23,7 +23,7 @@ struct const_storage : generic::const_storage<Traits>
 
 	const_storage() {} 
 	const_storage(typename type_traits::const_reference_type init) : value(init) { }
-	typename type_traits::const_reference_type get_const_reference()
+	typename type_traits::const_reference_type get_const_reference() const
 	{
 		return value;
 	}
@@ -40,7 +40,7 @@ struct storage : generic::storage<Traits>
 	storage() : dirty(true) {} 
 	storage(typename type_traits::const_reference_type init) : value(init), dirty(false) { }
 
-	typename type_traits::const_reference_type get_const_reference()
+	typename type_traits::const_reference_type get_const_reference() const
 	{
 		return value;
 	}

@@ -20,8 +20,6 @@ BOOST_OM_BEGIN
 template <class String>
 struct label
 {
-//	BOOST_STATIC_ASSERT((boost::is_same<String, string<> >::value));
-
 	typedef String string_type;
 	typedef typename String::allocator_type allocator_type;
 	typedef typename string_type::value_type char_type;
@@ -66,12 +64,12 @@ BOOST_OM_END
 
 BOOST_BEGIN
 
-template <>
-struct hash<BOOST_OBJECT_MODEL_NAMESPACE(label<BOOST_OBJECT_MODEL_NAMESPACE(string<>) >)>
+template <class Str>
+struct hash<boost::BOOST_OBJECT_MODEL_NAMESPACE_NAME::label<Str> >
 {
-	size_t operator()(const BOOST_OBJECT_MODEL_NAMESPACE(label<BOOST_OBJECT_MODEL_NAMESPACE(string<>) >) &ident) const
+	size_t operator()(const boost::BOOST_OBJECT_MODEL_NAMESPACE_NAME::label<Str>  &ident) const
 	{
-		return 42;// TODO: hash on ident.to_string().c_str()
+		return hash<const typename Str::char_type *>(ident.to_string().c_str());
 	}
 };
 

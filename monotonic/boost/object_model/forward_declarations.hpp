@@ -129,12 +129,25 @@ struct property;
 template <class T, class Traits>
 struct klass;
 
+/// helper structure to assist with reflecting a C++ type
 template <class T, class Traits>
 struct builder;
 
-///// an object registry (factory)
-//template <class Al, class Traits>
-//struct registry;
+/// traits type to control how the system works, and what data-types to use for various 
+/// key components
+template <
+	class Alloc = default_allocator				// allocator to use for everything
+	, class Char = char							// default char type
+	, class ChTr = std::char_traits<Char>		// char traits
+	, class Str = string<Alloc, Char, ChTr>		// string type to use
+	, class Label = label<Str>					// label type. used to name sub-objects
+	, class Ident = label<Str>					// identifier. used to access fields and methods
+>
+struct system_traits;
+
+/// an object type factory, and registery of instances
+template <class Traits = system_traits<> >
+struct registry;
 
 /// a sequence of executable objects
 struct continuation;

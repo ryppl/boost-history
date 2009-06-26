@@ -317,6 +317,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\object_model\detail\class_base.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\object_model\detail\make_method.hpp"
 						>
 					</File>
@@ -390,17 +394,9 @@
 		<Filter
 			Name="src"
 			>
-			<File
-				RelativePath=".\label.cpp"
-				>
-			</File>
 			<Filter
 				Name="generic"
 				>
-				<File
-					RelativePath=".\generic\class.cpp"
-					>
-				</File>
 				<File
 					RelativePath=".\generic\object.cpp"
 					>

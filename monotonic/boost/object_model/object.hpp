@@ -29,7 +29,7 @@ private:
 	const_deref_fun const_deref;
 
 public:
-	object() {}
+	object() : deref(0), const_deref(0) {}
 
 	object(const generic::object &obj, deref_fun d, const_deref_fun c) : generic::object(obj), deref(d), const_deref(c)
 	{
@@ -37,6 +37,8 @@ public:
 
 	typename traits::reference_type get_reference()
 	{
+		if (!deref)
+			throw empty_object();
 		return deref(*this);
 	}
 

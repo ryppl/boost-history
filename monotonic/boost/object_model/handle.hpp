@@ -14,6 +14,7 @@
 
 BOOST_OM_BEGIN
 
+/// a handle is a numeric identifier for a system object
 struct handle
 {
 	typedef unsigned value_type;
