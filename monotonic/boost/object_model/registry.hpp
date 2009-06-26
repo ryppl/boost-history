@@ -20,6 +20,7 @@
 #include <boost/object_model/exceptions.hpp>
 #include <boost/object_model/system_traits.hpp>
 #include <boost/object_model/object.hpp>
+#include <boost/object_model/containers/vector.hpp>
 
 //#define BOOST_OBJECT_MODEL_REGISTRY_USE_UNORDERED_MAPS
 
@@ -35,6 +36,8 @@ struct registry : generic::registry
 	typedef typename traits::char_type char_type;
 	typedef typename traits::string_type string_type;
 	typedef typename traits::label_type label_type;
+
+	typedef containers::vector<allocator_type> vector_type;
 
 	typedef registry<Tr> This, this_type;
 

@@ -270,6 +270,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\object_model\field.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\object_model\forward_declarations.hpp"
 					>
 				</File>
@@ -279,6 +283,10 @@
 				</File>
 				<File
 					RelativePath="..\..\..\boost\object_model\label.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\boost\object_model\method.hpp"
 					>
 				</File>
 				<File
@@ -386,6 +394,26 @@
 					</File>
 					<File
 						RelativePath="..\..\..\boost\object_model\generic\storage.hpp"
+						>
+					</File>
+				</Filter>
+				<Filter
+					Name="containers"
+					>
+					<File
+						RelativePath="..\..\..\boost\object_model\containers\list.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\containers\map.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\containers\set.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\object_model\containers\vector.hpp"
 						>
 					</File>
 				</Filter>

@@ -149,6 +149,26 @@ struct system_traits;
 template <class Traits = system_traits<> >
 struct registry;
 
+namespace containers
+{
+	/// an array of objects given an allocator
+	template <class Al>
+	struct vector;
+
+	/// an list of objects given an allocator
+	template <class Al>
+	struct list;
+
+	/// an map of objects to objects given an allocator
+	template <class Al>
+	struct map;
+
+	/// an set of objects given an allocator
+	template <class Al>
+	struct set;
+
+}
+
 /// a sequence of executable objects
 struct continuation;
 

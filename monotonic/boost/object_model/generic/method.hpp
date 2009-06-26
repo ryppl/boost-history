@@ -12,15 +12,28 @@
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/label.hpp>
 #include <boost/object_model/type/signature.hpp>
+#include <boost/object_model/containers/vector.hpp>
 
 BOOST_OM_BEGIN
 
 namespace generic
 {
+	/// common base for all specific methods
 	struct method
 	{
+	private:
 		label name;
 		signature sig;
+	public:
+
+		virtual void invoke(object &servant, vector &args) const = 0;
+
+		template <class Traits>
+		typename Traits::string_type to_string(const object_model::registry<Traits> &reg) const
+		{
+			typename Traits::string_type s;
+			return s;
+		}
 	};
 }
 
