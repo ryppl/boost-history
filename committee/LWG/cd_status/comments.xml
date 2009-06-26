@@ -7960,7 +7960,7 @@ members
 </rationale>
 </comment>
 
-<comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="173" uknum="450" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
 <section>
 17.6.2.4
 </section>
@@ -7979,7 +7979,11 @@ table 15
 LWG is interested in 
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2814.pdf">
 N2814</a>, but we're concerned whether CWG will accept 
-language recommendations.</notes>
+language recommendations.
+
+<i>Pre-Frankfurt</i> See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
+N2886</a
+</notes>
 <rationale>
 </rationale>
 </comment>
@@ -8469,7 +8473,7 @@ limits]
 </rationale>
 </comment>
 
-<comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="18" uknum="" type="te" owner="LWG" issue="1097,1098 " disp="" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -8593,7 +8597,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="27" uknum="" type="te" owner="LWG" issue="1066" disp="" date="" extdoc="">
 <section>
 18.4, 18.9,
 18.7.2.2,
@@ -8622,7 +8626,7 @@ Footnote 221
         throw_with_nested
         18.9: longjmp.
 </suggestion>
-<notes>See <a href="#UK180">UK 180</a></notes>
+<notes>See <a href="#UK189">UK 189</a></notes>
 <rationale>
 </rationale>
 </comment>
@@ -8719,7 +8723,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="194" uknum="443" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
 <section>
 18.6
 </section>
@@ -8737,7 +8741,11 @@ to terminate the program. Bill
         out of &lt;typeinfo&gt; and into a new header,
         &lt;typeindex&gt;.
 </suggestion>
-<notes>already handled by the free-standing paper.</notes>
+<notes>Handled by the free-standing paper.
+
+See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
+N2886</a
+</notes>
 <rationale>
 </rationale>
 </comment>
@@ -8794,7 +8802,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="30" uknum="" type="te" owner="LWG" issue="1132" disp="" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -8835,7 +8843,7 @@ to terminate the program. Bill
 </rationale>
 </comment>
 
-<comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="195" uknum="451" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
 <section>
 18.8
 </section>
@@ -8853,12 +8861,13 @@ to terminate the program. Bill
         Delete the two concept maps from
         std::initializer_list.
 </suggestion>
-<notes>will be handled in connection with the free-standing paper.</notes>
+<notes><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2900.html">
+N2900</a</notes>
 <rationale>
 </rationale>
 </comment>
 
-<comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="196" uknum="452" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
 <section>
 18.8.3
 </section>
@@ -8877,7 +8886,8 @@ to terminate the program. Bill
         that they're implemented in &lt;iterator_concepts&gt;
         instead of &lt;initializer_list&gt;.
 </suggestion>
-<notes>will be handled in connection with the free-standing paper.</notes>
+<notes><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2900.html">
+N2900</a</notes>
 <rationale>
 </rationale>
 </comment>
@@ -9424,7 +9434,7 @@ Forward to project editor.</notes>
 </rationale>
 </comment>
 
-<comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="206" uknum="255" type="Te" owner="LWG" issue="975" disp="accepted" date="" extdoc="">
 <section>
 20.5.5
 </section>
@@ -10091,7 +10101,7 @@ Section reference corrected from 20.7.12.2.3.
 </rationale>
 </comment>
 
-<comment nb="UK" num="212" uknum="270" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
+<comment nb="UK" num="212" uknum="270" type="Te" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 20.6.13.7 [util.dynamic.safety]
 </section>
@@ -10272,7 +10282,7 @@ The text in question is in 20.7.2.2, not 20.8.2.2.
 </rationale>
 </comment>
 
-<comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="US" num="75" uknum="" type="te" owner="LWG" issue="Doc" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 20.8.2.2
 </section>
@@ -12108,7 +12118,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="UK" num="223" uknum="285" type="Te" owner="LWG" issue="Doc" disp="accepted" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.1.1
 </section>
@@ -12132,7 +12142,7 @@ Table 79
 </rationale>
 </comment>
 
-<comment nb="UK" num="224" uknum="298" type="Te" owner="LWG" issue="" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
+<comment nb="UK" num="224" uknum="298" type="Te" owner="LWG" issue="Doc" disp="modified" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2840.pdf">
 <section>
 23.1.1
 </section>
@@ -14490,7 +14500,7 @@ issue.
 </rationale>
 </comment>
 
-<comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="1140" disp="" date="" extdoc="">
 <section>
 26
 </section>
@@ -14659,7 +14669,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="1141" disp="" date="" extdoc="">
 <section>
 27
 </section>
@@ -14679,7 +14689,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="65" uknum="" type="te" owner="LWG" issue="1094" disp="" date="" extdoc="">
 <section>
 27.4.4
 </section>
@@ -14701,7 +14711,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="66" uknum="" type="te" owner="LWG" issue="1094" disp="" date="" extdoc="">
 <section>
 27.4.4.3
 </section>
@@ -15354,7 +15364,7 @@ opened and we await a volunteer.</notes>
 </rationale>
 </comment>
 
-<comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="314" uknum="343" type="Te" owner="LWG" issue="Doc" disp="" date="" extdoc="">
 <section>
 28.4
 </section>
@@ -16226,7 +16236,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
+<comment nb="US" num="97" uknum="" type="te" owner="LWG" issue="Doc" disp="" date="2009-03-06" extdoc="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2802.html">
 <section>
 30.2.1.3
 </section>
