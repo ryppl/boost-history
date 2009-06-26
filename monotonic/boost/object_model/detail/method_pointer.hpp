@@ -11,8 +11,12 @@
 
 #include <boost/mpl/vector.hpp>
 #include <boost/mpl/size.hpp>
+#include <boost/mpl/at.hpp>
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/generic/object.hpp>
+#include <boost/object_model/type/specifier.hpp>
+#include <boost/object_model/object.hpp>
+#include <boost/object_model/detail/base_type.hpp>
 
 BOOST_OM_BEGIN
 
@@ -36,111 +40,119 @@ namespace detail
 		typedef Return (Klass::*method_type)();
 		method_type method;
 		method_pointer(method_type M) : method(M) { }
-		void operator()(generic::object &object, typename Registry::vector_type &stack) const
+		void operator()(generic::object object, typename Registry::vector_type &stack) const
 		{
 			Registry &reg = static_cast<Registry &>(object.get_registry());
 			stack.push_back(reg.create((reg.deref<Klass>(object).*method)()));
 		}
 	};
-	/*
+
 	template <class Registry, class Return, class Klass, class Args>
 	struct method_pointer<Registry, true, false, 0, Return, Klass, Args> : method_pointerBase0
 	{
-		typedef Return (Klass::*Method)() const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)() const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::const_object object, typename Registry::vector_type &stack) const
 		{
-			stack.push_back(object.New((Deref<Klass>(object).*method)()));
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			stack.push_back(reg.create((reg.const_deref<Klass>(object).*method)()));
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<false, true, 0, Return, Klass, Args> : method_pointerBase0
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, false, true, 0, Return, Klass, Args> : method_pointerBase0
 	{
-		typedef Return (Klass::*Method)();
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)();
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::mutable_object object, typename Registry::vector_type &stack) const
 		{
-			(Deref<Klass>(object).*method)();
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			(reg.const_deref<Klass>(object).*method)();
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<true, true, 0, Return, Klass, Args> : method_pointerBase0
+
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, true, true, 0, Return, Klass, Args> : method_pointerBase0
 	{
-		typedef Return (Klass::*Method)() const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)() const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::const_object object, typename Registry::vector_type &stack) const
 		{
-			(Deref<Klass>(object).*method)();
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			(reg.const_deref<Klass>(object).*method)();
 		}
 	};
-	/*
 
 	//----------------------------------------------------------- arity = 1
 	template <class Args>
 	struct method_pointerBase1 : method_pointerBase0
 	{
 		typedef typename boost::mpl::at_c<Args, 0>::type A0;
-		typedef typename BaseType<A0>::Type B0;
-		typedef Pointer<B0> P0;
+		typedef typename detail::base_type<A0>::type P0;
+		//typedef Pointer<B0> P0;
 		template <class OI>
 		void AddArgs(OI P)
 		{
 			method_pointerBase0::AddArgs(P);
-			*P++ = Type::MakeType<A0>::Create();
+			*P++ = type::make_specifier<A0>();
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<false, false, 1, Return, Klass, Args> : method_pointerBase1<Args>
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, false, false, 1, Return, Klass, Args> : method_pointerBase1<Args>
 	{
-		typedef Return (Klass::*Method)(A0);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::mutable_object object, typename Registry::vector_type &stack) const
 		{
-			P0 a0 = stack.pop();
-			stack.push_back(object.New((Deref<Klass>(object).*method)(*a0)));
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			generic::object a0 = stack.pop();
+			stack.push_back(reg.create((reg.deref<Klass>(object).*method)(reg.deref<P0>(a0))));
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<true, false, 1, Return, Klass, Args> : method_pointerBase1<Args>
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, true, false, 1, Return, Klass, Args> : method_pointerBase1<Args>
 	{
-		typedef Return (Klass::*Method)(A0) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::const_object const object, typename Registry::vector_type &stack) const
 		{
-			P0 a0 = stack.pop();
-			stack.push_back(object.New((Deref<Klass>(object).*method)(*a0)));
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			generic::object a0 = stack.pop();
+			stack.push_back(reg.create((reg.const_deref<Klass>(object).*method)(reg.deref<P0>(a0))));
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<false, true, 1, Return, Klass, Args> : method_pointerBase1<Args>
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, false, true, 1, Return, Klass, Args> : method_pointerBase1<Args>
 	{
-		typedef Return (Klass::*Method)(A0);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object object, typename Registry::vector_type &stack) const
 		{
-			P0 a0 = stack.pop();
-			(Deref<Klass>(object).*method)(*a0);
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			generic::object a0 = stack.pop();
+			(reg.const_deref<Klass>(object).*method)(reg.deref<P0>(a0))
 		}
 	};
-	template <class Return, class Klass, class Args>
-	struct method_pointer<true, true, 1, Return, Klass, Args> : method_pointerBase1<Args>
+	template <class Registry, class Return, class Klass, class Args>
+	struct method_pointer<Registry, true, true, 1, Return, Klass, Args> : method_pointerBase1<Args>
 	{
-		typedef Return (Klass::*Method)(A0) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::const_object const object, typename Registry::vector_type &stack) const
 		{
-			P0 a0 = stack.pop();
-			(Deref<Klass>(object).*method)(*a0);
+			Registry &reg = static_cast<Registry &>(object.get_registry());
+			generic::object a0 = stack.pop();
+			(reg.const_deref<Klass>(object).*method)(reg.deref<P0>(a0))
 		}
 	};
 
+	/*
 	//----------------------------------------------------------- arity = 2
 	template <class Args>
 	struct method_pointerBase2 : method_pointerBase1<Args>
@@ -158,10 +170,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<false, false, 2, Return, Klass, Args> : method_pointerBase2<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object &object, typename Registry::vector_type &stack) const
 		{
 			P1 a1 = stack.pop();
 			P0 a0 = stack.pop();
@@ -171,10 +183,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<true, false, 2, Return, Klass, Args> : method_pointerBase2<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object const &object, typename Registry::vector_type &stack) const
 		{
 			P1 a1 = stack.pop();
 			P0 a0 = stack.pop();
@@ -184,10 +196,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<false, true, 2, Return, Klass, Args> : method_pointerBase2<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object &object, typename Registry::vector_type &stack) const
 		{
 			P1 a1 = stack.pop();
 			P0 a0 = stack.pop();
@@ -197,10 +209,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<true, true, 2, Return, Klass, Args> : method_pointerBase2<Args>
 	{
-		typedef Return (Klass::*Method)(A0, A1) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0, A1) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object const &object, typename Registry::vector_type &stack) const
 		{
 			P1 a1 = stack.pop();
 			P0 a0 = stack.pop();
@@ -224,10 +236,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<false, false, 3, Return, Klass, Args> : method_pointerBase3<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1,A2);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1,A2);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object &object, typename Registry::vector_type &stack) const
 		{
 			P2 a2 = stack.pop();
 			P1 a1 = stack.pop();
@@ -238,10 +250,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<true, false, 3, Return, Klass, Args> : method_pointerBase3<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1,A2) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1,A2) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object const &object, typename Registry::vector_type &stack) const
 		{
 			P2 a2 = stack.pop();
 			P1 a1 = stack.pop();
@@ -252,10 +264,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<false, true, 3, Return, Klass, Args> : method_pointerBase3<Args>
 	{
-		typedef Return (Klass::*Method)(A0,A1,A2);
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0,A1,A2);
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object &object, typename Registry::vector_type &stack) const
 		{
 			P2 a2 = stack.pop();
 			P1 a1 = stack.pop();
@@ -266,10 +278,10 @@ namespace detail
 	template <class Return, class Klass, class Args>
 	struct method_pointer<true, true, 3, Return, Klass, Args> : method_pointerBase3<Args>
 	{
-		typedef Return (Klass::*Method)(A0, A1,A2) const;
-		Method method;
-		method_pointer(Method M) : method(M) { }
-		void operator()(generic::object const &object, containers::vector<allocator_type> &stack) const
+		typedef Return (Klass::*method_type)(A0, A1,A2) const;
+		method_type method;
+		method_pointer(method_type M) : method(M) { }
+		void operator()(generic::object const &object, typename Registry::vector_type &stack) const
 		{
 			P2 a2 = stack.pop();
 			P1 a1 = stack.pop();

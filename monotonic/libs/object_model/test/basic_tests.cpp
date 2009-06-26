@@ -24,9 +24,25 @@
 #include <boost/object_model/string.hpp>
 #include <boost/object_model/registry.hpp>
 
+#include <boost/monotonic/allocator.hpp>
+
 using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
+
+struct mono_reg : om::system_traits<monotonic::allocator<char> > { };
+
+BOOST_AUTO_TEST_CASE(test_monotonic)
+{
+	{
+		om::registry<mono_reg> reg;
+		reg.add_builtins();
+		om::object<int> n = reg.create<int>(42);
+		size_t used = monotonic::static_storage<>::used();
+		BOOST_ASSERT(used > 0);
+	}
+	monotonic::static_storage<>::reset();
+}
 
 BOOST_AUTO_TEST_CASE(test_vector)
 {
@@ -154,7 +170,7 @@ BOOST_AUTO_TEST_CASE(test_builder)
 	om::class_builder<Foo>(reg)
 		.methods
 			//("bar", &Foo::bar)
-			//("spam", &Foo::spam)
+			("spam", &Foo::spam)
 			("grok", &Foo::grok)
 		.fields
 			("num", &Foo::num)
@@ -172,6 +188,10 @@ BOOST_AUTO_TEST_CASE(test_builder)
 	BOOST_ASSERT(stack->at(0).is_type<int>());
 	BOOST_ASSERT(reg.deref<int>(stack->at(0)) == 42);
 
+	reg.get_method(foo, "spam").invoke(foo, *stack);
+	BOOST_ASSERT(stack->size() == 1);
+	BOOST_ASSERT(stack->at(0).is_type<int>());
+	BOOST_ASSERT(reg.deref<int>(stack->at(0)) == 42*2);
 
 	//BOOST_ASSERT(foo.get_class().has_method("bar"));
 	//BOOST_ASSERT(foo.get_class().has_method("spam"));

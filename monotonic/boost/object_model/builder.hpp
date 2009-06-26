@@ -30,6 +30,7 @@ public:
 	builder(registry_type &reg)
 	{
 		methods.my_klass = methods.fields.my_klass = my_klass = reg.register_class<T>();
+		methods.factory = methods.fields.factory = &reg;
 	}
 	struct methods_type
 	{
@@ -40,15 +41,17 @@ public:
 			{
 				return *this;
 			}
+			registry_type *factory;
 			class_type *my_klass;
 		} fields;
 
 		template <class Method>
 		methods_type &operator()(const char *name, Method method)
 		{
-			my_klass->add_method(name, detail::make_method(method, (registry_type *)(0)));
+			my_klass->add_method(name, detail::make_method(method, *factory));
 			return *this;
 		}
+		registry_type *factory;
 		class_type *my_klass;
 	} methods;
 };

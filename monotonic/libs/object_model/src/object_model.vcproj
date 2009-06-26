@@ -325,6 +325,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\object_model\detail\base_type.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\object_model\detail\class_base.hpp"
 						>
 					</File>

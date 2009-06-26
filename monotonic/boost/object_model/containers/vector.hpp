@@ -76,6 +76,12 @@ namespace containers
 		{
 			impl.pop_back();
 		}
+		generic::object pop()
+		{
+			generic::object top = back();
+			impl.pop_back();
+			return top;
+		}
 		reference at(size_t index)
 		{
 			return impl.at(index);

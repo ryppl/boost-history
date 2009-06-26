@@ -27,19 +27,19 @@ struct klass : detail::klass_base<typename Registry>
 	typedef type::traits<T> traits;
 
 private:
-	Registry &reg;
+	Registry &factory;
 	mutable allocator_type allocator;
 
 public:
-	klass(Registry &factory)
-		: klass_base_type(traits::name, traits::type_number), reg(factory), allocator(reg.get_allocator()) { }
+	klass(Registry &reg)
+		: klass_base_type(reg, traits::name, traits::type_number), factory(reg), allocator(reg.get_allocator()) { }
 
 	generic::object &create() const
 	{
 		storage_type *store = allocator.allocate(1);
 		//allocator.construct(store);
 		new (store) storage_type();
-		store->construct(reg, *this, reg.get_next_handle());
+		store->construct(factory, *this, factory.get_next_handle());
 		return *store;
 	}
 
@@ -48,7 +48,7 @@ public:
 		storage_type *store = allocator.allocate(1);
 		//allocator.construct(store);
 		new (store) storage_type(init);
-		store->construct(reg, *this, reg.get_next_handle());
+		store->construct(factory, *this, factory.get_next_handle());
 		return *store;
 	}
 

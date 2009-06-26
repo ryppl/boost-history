@@ -96,6 +96,14 @@ struct registry : generic::registry
 	}
 
 	template <class T>
+	static typename type::traits<T>::reference_type deref(generic::mutable_object &object)
+	{
+		if (!object.is_type<T>())
+			throw type_mismatch();
+		return static_cast<typename rebind_storage<T>::type &>(object.get_storage()).get_reference();
+	}
+
+	template <class T>
 	static typename type::traits<T>::const_reference_type const_deref(generic::object const &object)
 	{
 		if (!object.is_type<T>())
@@ -240,7 +248,7 @@ public:
 		clear();
 		BOOST_FOREACH(typename classes_type::value_type &val, classes)
 		{
-			allocator_destroy(const_cast<detail::klass_base<this_type> *>(val.second));
+			allocator_destroy_deallocate(const_cast<detail::klass_base<this_type> *>(val.second));
 		}
 		classes.clear();
 	}
@@ -353,24 +361,23 @@ public:
 		return static_cast<typename rebind_klass<T>::type const *>(iter->second);
 	}
 
-private:
+	/// 
+
+	template <class T>
+	T *allocator_allocate()
+	{
+		typename allocator_type::template rebind<T>::other alloc(allocator);
+		return alloc.allocate(1);
+	}
 
 	template <class T>
 	T *allocator_create()
 	{
-		typename allocator_type::template rebind<T>::other alloc(allocator);
-		T *ptr = alloc.allocate(1);
-		//alloc.construct(ptr);
+		T *ptr = allocator_allocate<T>();
 		new (ptr) T();
 		return ptr;
 	}
-	template <class T>
-	void allocator_destroy(T *ptr)
-	{
-		typename allocator_type::template rebind<T>::other alloc(allocator);
-		alloc.destroy(ptr);
-		alloc.deallocate(ptr,1);
-	}
+
 	template <class T, class U>
 	T *allocator_create(U &init)
 	{
@@ -379,6 +386,28 @@ private:
 		//alloc.construct(ptr, init);
 		new (ptr) T(init);
 		return ptr;
+	}
+
+	template <class T>
+	void allocator_destroy(T *ptr)
+	{
+		typename allocator_type::template rebind<T>::other alloc(allocator);
+		alloc.destroy(ptr);
+	}
+
+	template <class T>
+	void allocator_deallocate(T *ptr)
+	{
+		typename allocator_type::template rebind<T>::other alloc(allocator);
+		alloc.deallocate(ptr);
+	}
+
+	template <class T>
+	void allocator_destroy_deallocate(T *ptr)
+	{
+		typename allocator_type::template rebind<T>::other alloc(allocator);
+		alloc.destroy(ptr);
+		alloc.deallocate(ptr,1);
 	}
 };
 

@@ -21,24 +21,27 @@ namespace detail
 	struct klass_base : generic::klass
 	{
 		typedef typename Registry::identifier_type Label;
+		typedef typename Registry::allocator_type allocator_type;
 
-		typedef std::map<Label, generic::property const *> properties_type;
-		typedef std::map<Label, generic::method<Registry> const *> methods_type;
+		// TODO: use unordered_map
+		typedef std::map<Label, generic::property const *, std::less<Label>, allocator_type> properties_type;
+		typedef std::map<Label, generic::method<Registry> const *, std::less<Label>, allocator_type> methods_type;
 
 	private:
 		properties_type properties;
 		methods_type methods;
+		Registry &factory;
 
 	public:
-		klass_base(const char *ident, type::number num)
-			: generic::klass(ident, num)
+		klass_base(Registry &reg, generic::class_name ident, type::number num)
+			: generic::klass(ident, num), factory(reg)
 		{
 		}
 		~klass_base()
 		{
 			BOOST_FOREACH(methods_type::value_type &val, methods)
 			{
-				delete val.second;
+				factory.allocator_destroy_deallocate(const_cast<generic::method<Registry> *>(val.second));
 			}
 		}
 
