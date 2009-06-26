@@ -1311,7 +1311,7 @@ void write(const std::vector <read_block>& blocks, const write_data& data,
 
 			std::cout << " writing "<< dest_path
 				<< "uni_ucd_interface_impl_data_"
-				<< std::dec << file_index << ".ipp\n";
+				<< std::dec << (file_index+1) << ".ipp\n";
 			// open file
 			std::stringstream fss;
 			fss << dest_path;
