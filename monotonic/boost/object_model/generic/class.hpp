@@ -20,28 +20,21 @@ BOOST_OM_BEGIN
 
 namespace generic
 {
+	//template <class Label>
 	struct klass : base
 	{
-		typedef std::map<label, property const *> properties_type;
-		typedef std::map<label, method const *> methods_type;
-
 	private:
-		label name;
 		type::number type_number;
 
-		properties_type properties;
-		methods_type methods;
-
 	public:
-		klass(const label&, type::number);
+		klass(type::number num)
+			: type_number(num) { }
 
 		type::number get_type_number() const { return type_number; }
+		
 
-		bool has_method(label const &) const;
-		bool has_field(label const &) const;
-
-		virtual storage &create(handle) const = 0;
-		virtual void destroy(storage &) const = 0;
+		virtual object &create(handle) const = 0;
+		virtual void destroy(object &) const = 0;
 
 		//virtual const_object get_property(const label&, const_object &owner) const = 0;
 		//virtual object get_property(const label&, object &owner) const = 0;

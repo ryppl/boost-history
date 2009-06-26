@@ -15,23 +15,6 @@
 
 BOOST_OM_BEGIN
 
-template <class T>
-typename type::traits<T>::reference_type deref(generic::object &object)
-{
-	if (!object.is_type<T>())
-		throw type_mismatch();
-	if (object.is_const())
-		throw const_error();
-	return static_cast<storage<T> &>(object.get_storage()).get_reference();
-}
-
-template <class T>
-typename type::traits<T>::const_reference_type const_deref(generic::object const &object)
-{
-	if (!object.is_type<T>())
-		throw type_mismatch();
-	return static_cast<const const_storage<T> &>(object.get_storage()).get_const_reference();
-}
 
 BOOST_OM_END
 

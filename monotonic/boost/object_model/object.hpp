@@ -21,20 +21,28 @@ struct object : generic::object
 {
 	typedef type::traits<T> traits;
 
+	typedef typename traits::reference_type (*deref_fun)(generic::object &);
+	typedef typename traits::const_reference_type (*const_deref_fun)(const generic::object &);
+
+private:
+	deref_fun deref;
+	const_deref_fun const_deref;
+
+public:
 	object() {}
 
-	object(const generic::object &obj) : generic::object(obj)
+	object(const generic::object &obj, deref_fun d, const_deref_fun c) : generic::object(obj), deref(d), const_deref(c)
 	{
 	}
 
-	typename traits::reference_type reference()
+	typename traits::reference_type get_reference()
 	{
-		return deref<T>(*this);
+		return deref(*this);
 	}
 
 	typename traits::reference_type operator*()
 	{
-		return reference();
+		return get_reference();
 	}
 };
 

@@ -11,21 +11,34 @@
 
 #include <string>
 #include <boost/object_model/detail/prefix.hpp>
+#include <boost/object_model/forward_declarations.hpp>
+#include <boost/object_model/string.hpp>
+#include <boost/object_model/string_stream.hpp>
 
 BOOST_OM_BEGIN
 
+template <class String>
 struct label
 {
-	typedef std::string string_type;
-	typedef string_type::value_type char_type;
+//	BOOST_STATIC_ASSERT((boost::is_same<String, string<> >::value));
+
+	typedef String string_type;
+	typedef typename String::allocator_type allocator_type;
+	typedef typename string_type::value_type char_type;
 
 private:
 	string_type value;
 
 public:
 	label() { }
-	label(const char_type *);
-	label(const string_type &);
+	label(const char_type *text)
+	{
+		from_string(text);
+	}
+	label(const string_type &text)
+	{
+		from_string(text);
+	}
 
 	const string_type &to_string() const { return value; }
 
@@ -33,18 +46,30 @@ public:
 	friend bool operator<(label const &a, label const &b) { return a.value < b.value; }
 
 private:
-	void from_string(const string_type &);
-	void from_string(const char_type *);
+	void from_string(const string_type &text)
+	{
+		from_string(text.c_str());
+	}
+	void from_string(const char_type *text)
+	{
+		value = text;
+	}
 };
+
+template <class Al, class Ch, class Tr, class String>
+string_stream<Al,Ch,Tr> &operator<<(string_stream<Al,Ch,Tr> &stream, const label<String> &val)
+{
+	return stream << val.to_string();
+}
 
 BOOST_OM_END
 
 BOOST_BEGIN
 
 template <>
-struct hash<BOOST_OBJECT_MODEL_NAMESPACE(label)>
+struct hash<BOOST_OBJECT_MODEL_NAMESPACE(label<BOOST_OBJECT_MODEL_NAMESPACE(string<>) >)>
 {
-	size_t operator()(BOOST_OBJECT_MODEL_NAMESPACE(label) ident) const
+	size_t operator()(const BOOST_OBJECT_MODEL_NAMESPACE(label<BOOST_OBJECT_MODEL_NAMESPACE(string<>) >) &ident) const
 	{
 		return 42;// TODO: hash on ident.to_string().c_str()
 	}

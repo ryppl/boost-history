@@ -14,16 +14,18 @@
 
 BOOST_OM_BEGIN
 
-template <class T, class Allocator>
+template <class T, class Reg>
 struct builder
 {
-	typedef type::traits<T> traits;
+	typedef Reg registry_type;
+	typedef typename Reg::traits_type system_traits;
+	typedef type::traits<T> type_traits;
 
 private:
-	klass<T, Allocator> *my_klass;
+	typename registry_type::rebind_klass<T>::type *my_klass;
 
 public:
-	builder(registry<Allocator> &reg)
+	builder(registry_type &reg)
 	{
 		my_klass = reg.register_class<T>();
 	}
@@ -47,10 +49,10 @@ public:
 	} methods;
 };
 
-template <class T, class Al>
-builder<T,Al> class_builder(registry<Al> &reg)
+template <class T, class Registry>
+builder<T,Registry> class_builder(Registry &reg)
 {
-	return builder<T,Al>(reg);
+	return builder<T,Registry>(reg);
 }
 
 BOOST_OM_END

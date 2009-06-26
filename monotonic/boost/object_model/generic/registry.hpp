@@ -12,7 +12,7 @@
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/forward_declarations.hpp>
 #include <boost/object_model/handle.hpp>
-#include <boost/object_model/storage.hpp>
+//#include <boost/object_model/storage.hpp>
 
 BOOST_OM_BEGIN
 
@@ -22,8 +22,10 @@ namespace generic
 	{
 	public:
 
+		virtual klass const *get_class(type::number) const = 0;
 		virtual bool exists(handle) const = 0;
-		virtual storage &get_storage(handle) const = 0;
+
+		virtual object_base &get_storage(handle) const = 0;
 
 	};
 }

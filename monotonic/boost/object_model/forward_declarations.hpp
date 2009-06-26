@@ -28,9 +28,11 @@ namespace type
 struct handle;
 
 /// a name for an object
+template <class Text>
 struct label;
 
 /// a mapping of label to object
+template <class Label>
 struct dictionary;
 
 /// generic bases for type-specific derived types
@@ -47,9 +49,11 @@ namespace generic
 	struct object;
 
 	/// common for all const storage for an instance
+	template <class Traits>
 	struct const_storage;
 
 	/// common for all storage for an instance
+	template <class Traits>
 	struct storage;
 
 	/// common for types that have a `self` pointer
@@ -62,8 +66,10 @@ namespace generic
 	struct property;
 
 	/// common for all classes
+	//template <class Label>
 	struct klass;
 
+	//template <class Label>
 	struct registry;
 }
 
@@ -95,11 +101,21 @@ template <class T>
 struct reference;
 
 /// storage for a specific type
-template <class T>
+template <class T, class Traits>
 struct storage;
+
+/// const storage for a specific type
+template <class T, class Traits>
+struct const_storage;
 
 template <class T>
 struct reflected;
+
+template <class Al = default_allocator, class Ch = char, class Tr = std::char_traits<Ch> >
+struct string;
+
+template <class Str = string<> >
+struct label;
 
 /// a specific method of class type, with given signature
 template <class T, class Signature>
@@ -110,15 +126,15 @@ template <class T, class Val>
 struct property;
 
 /// class of a given type
-template <class T, class Al = default_allocator>
+template <class T, class Traits>
 struct klass;
 
-template <class T, class Al = default_allocator>
+template <class T, class Traits>
 struct builder;
 
-/// an object registry (factory)
-template <class Al = default_allocator >
-struct registry;
+///// an object registry (factory)
+//template <class Al, class Traits>
+//struct registry;
 
 /// a sequence of executable objects
 struct continuation;

@@ -14,35 +14,37 @@
 
 BOOST_OM_BEGIN
 
-template <class T>
-struct const_storage : generic::const_storage
+template <class T, class Traits>
+struct const_storage : generic::const_storage<Traits>
 {
-	typedef type::traits<T> traits;
-	const typename traits::storage_type value;
+	typedef Traits system_traits;
+	typedef type::traits<T> type_traits;
+	typename type_traits::storage_type value;
 
 	const_storage() {} 
-	const_storage(typename traits::const_reference_type init) : value(init) { }
-	typename traits::const_reference_type get_const_reference()
+	const_storage(typename type_traits::const_reference_type init) : value(init) { }
+	typename type_traits::const_reference_type get_const_reference()
 	{
 		return value;
 	}
 };
 
-template <class T>
-struct storage : generic::storage
+template <class T, class Traits>
+struct storage : generic::storage<Traits>
 {
-	typedef type::traits<T> traits;
-	typename traits::storage_type value;
+	typedef Traits system_traits;
+	typedef type::traits<T> type_traits;
+	typename type_traits::storage_type value;
 	mutable bool dirty;
 
 	storage() : dirty(true) {} 
-	storage(typename traits::const_reference_type init) : value(init), dirty(false) { }
+	storage(typename type_traits::const_reference_type init) : value(init), dirty(false) { }
 
-	typename traits::const_reference_type get_const_reference()
+	typename type_traits::const_reference_type get_const_reference()
 	{
 		return value;
 	}
-	typename traits::reference_type get_reference()
+	typename type_traits::reference_type get_reference()
 	{
 		dirty = true;
 		return value;

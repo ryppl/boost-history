@@ -11,6 +11,8 @@
 
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/string.hpp>
+#include <boost/object_model/string_stream.hpp>
+#include <boost/object_model/type/number.hpp>
 #include <boost/object_model/type/modifiers.hpp>
 
 BOOST_OM_BEGIN
@@ -25,8 +27,21 @@ namespace type
 
 		number get_number() const { return type_number; }
 
-		//template <class Alloc, template <class Al = Alloc, class Ch = char, class Tr = std::char_traits<Ch> > String = string>
-		//bool to_string(const registry<Alloc> &, string<Alloc> ) const;
+		template <class Alloc>
+		string<Alloc> to_string(const registry<Alloc> &reg) const
+		{
+			string_stream<Alloc> stream;
+			generic::klass const *k = reg.get_class(type_number);
+			if (k  == 0)
+				stream << "[type_number: " << type_number.value << "]";
+			else
+				stream << k->get_name();
+			if (is_const())
+				stream << " const";
+			if (is_reference())
+				stream << " &";
+			return stream.str();
+		}
 	};
 
 	template <class T>
@@ -44,7 +59,7 @@ namespace type
 		modifiers mods;
 		mods.set_const(is_const<T>::value);	// what is wrong with boost::is_const<T> ??
 		mods.set_reference(boost::is_reference<T>::value);
-		return specifier(traits<typename base_type<T>::Type>::type_number, mods);
+		return specifier();//(traits<typename base_type<T>::Type>::type_number, mods);
 	};
 
 } // namespace type

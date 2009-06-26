@@ -12,33 +12,71 @@
 #include <boost/object_model/detail/prefix.hpp>
 #include <boost/object_model/detail/allocator.hpp>
 #include <boost/object_model/generic/class.hpp>
+//#include <boost/object_model/system_traits.hpp>
 
 BOOST_OM_BEGIN
 
-template <class T, class Alloc>
-struct klass : generic::klass
+template <class Traits>
+struct klass_base : generic::klass
 {
-	typedef typename detail::rebind<Alloc,object_model::storage<T> >::type allocator_type;
+	typedef typename Traits::label_type Label;
+
+	typedef std::map<Label, generic::property const *> properties_type;
+	typedef std::map<Label, generic::method const *> methods_type;
+
+private:
+	const char *name;
+	type::number type_number;
+
+	properties_type properties;
+	methods_type methods;
+
+public:
+	klass_base(const char *ident, type::number num)
+		: generic::klass(num), name(ident)
+	{
+	}
+
+	bool has_method(Label const &name) const
+	{
+		return methods.find(name) != methods.end();
+	}
+
+	bool has_field(Label const &name) const
+	{
+		return properties.find(name) != properties.end();
+	}
+};
+
+	
+template <class T, class Registry>
+struct klass : klass_base<typename Registry::traits_type>
+{
+	typedef typename Registry::traits_type system_traits;
+	typedef klass_base<system_traits> klass_base_type;
+	typedef typename system_traits::label_type label_type;
+	typedef typename Registry::rebind_storage<T>::type storage_type;
+	typedef typename system_traits::rebind_allocator<storage_type>::type allocator_type;
 	typedef type::traits<T> traits;
 
-	registry<Alloc> &reg;
+	Registry &reg;
 	mutable allocator_type allocator;
 
-	klass(registry<Alloc> &factory)
-		: generic::klass(traits::name, traits::type_number), reg(factory), allocator(reg.get_allocator()) { }
+	klass(Registry &factory)
+		: klass_base_type(traits::name, traits::type_number), reg(factory), allocator(reg.get_allocator()) { }
 
-	generic::storage &create(handle h) const
+	generic::object &create(handle h) const
 	{
-		storage<T> *store = allocator.allocate(1);
+		storage_type *store = allocator.allocate(1);
 		//allocator.construct(store);
-		new (store) storage<T>();
+		new (store) storage_type();
 		store->construct(reg, *this, h);
 		return *store;
 	}
 
-	void destroy(generic::storage &obj) const
+	void destroy(generic::object &obj) const
 	{
-		storage<T> *store = &static_cast<storage<T> &>(obj);
+		storage_type *store = &static_cast<storage_type &>(obj);
 		allocator.destroy(store);
 		allocator.deallocate(store, 1);
 	}
