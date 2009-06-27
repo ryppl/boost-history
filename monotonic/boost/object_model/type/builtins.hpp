@@ -20,7 +20,10 @@ BOOST_OM_END
 
 BOOST_OBJECT_MODEL_TRAITS_NUM_STORE(void, boost::object_model::type::number::Void, void_storage);
 BOOST_OBJECT_MODEL_TRAITS_NUM(int, boost::object_model::type::number::Int);
+BOOST_OBJECT_MODEL_TRAITS_NUM(bool, boost::object_model::type::number::Bool);
 BOOST_OBJECT_MODEL_TRAITS_NUM(float, boost::object_model::type::number::Float);
+BOOST_OBJECT_MODEL_TRAITS_NUM(type::any, boost::object_model::type::number::Any);
+BOOST_OBJECT_MODEL_TRAITS_NUM(type::none, boost::object_model::type::number::None);
 
 #include <boost/object_model/detail/postfix.hpp>
 

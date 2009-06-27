@@ -27,7 +27,16 @@ namespace type
 		typedef Storage const &const_reference_type;
 	};
 
+	struct any { };
+	struct none { };
 }
+
+#ifdef BOOST_OBJECT_MODEL_MAIN
+#	define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME) \
+		const char * traits<T>::name = NAME;
+#else
+#	define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME)
+#endif
 
 #define BOOST_OBJECT_MODEL_TRAITS_NUM_STORE_NAME(T,N,S,NAME) \
 	BOOST_OM_BEGIN \
@@ -39,7 +48,7 @@ namespace type
 			BOOST_STATIC_CONSTANT(number::value_type, type_number = N); \
 			static const char *name; \
 		}; \
-		const char * traits<T>::name = NAME; \
+		BOOST_OBJECT_MODEL_DEFINE_NAME(T,NAME); \
 	} \
 	BOOST_OM_END
 

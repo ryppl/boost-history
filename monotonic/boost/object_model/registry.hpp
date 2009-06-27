@@ -231,7 +231,9 @@ public:
 	void add_builtins()
 	{
 		register_class<void>();
+		register_class<bool>();
 		register_class<int>();
+		register_class<float>();
 		register_class<vector_type>();
 	}
 	void clear()

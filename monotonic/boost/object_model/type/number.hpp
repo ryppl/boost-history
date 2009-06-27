@@ -20,6 +20,7 @@ namespace type
 		enum builtins
 		{
 			None,
+			Any,
 			Void,
 			
 			Object,
@@ -28,6 +29,7 @@ namespace type
 			Property,
 			Class,
 
+			Bool,
 			Int,
 			Float,
 			String,

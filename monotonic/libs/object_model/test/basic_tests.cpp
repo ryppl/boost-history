@@ -12,6 +12,8 @@
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
 
+#define BOOST_OBJECT_MODEL_MAIN
+
 #include <string>
 #include <boost/object_model/object.hpp>
 #include <boost/object_model/dictionary.hpp>
@@ -24,11 +26,39 @@
 #include <boost/object_model/string.hpp>
 #include <boost/object_model/registry.hpp>
 
-#include <boost/monotonic/allocator.hpp>
-
 using namespace std;
 using namespace boost;
 namespace om = boost::object_model;
+
+BOOST_AUTO_TEST_CASE(test_any)
+{
+	om::registry<> reg;
+	reg.add_builtins();
+	om::object<> obj = reg.create<int>(42);
+	BOOST_ASSERT(obj.is_type<int>());
+	BOOST_ASSERT(reg.deref<int>(obj) == 42);
+
+	//obj.set("foo", om::null_object);
+}
+
+BOOST_AUTO_TEST_CASE(test_type_mismatch)
+{
+	om::registry<> reg;
+	reg.add_builtins();
+	bool caught = false;
+	try
+	{
+		om::object<> obj = reg.create<float>(42);
+		om::object<int> num = obj;
+	}
+	catch (om::type_mismatch)
+	{
+		caught = true;	
+	}
+	BOOST_ASSERT(caught);
+}
+
+#include <boost/monotonic/allocator.hpp>
 
 struct mono_reg : om::system_traits<monotonic::allocator<char> > { };
 
@@ -62,8 +92,7 @@ BOOST_AUTO_TEST_CASE(test_type_specifier)
 	reg.register_class<void>();
 	reg.register_class<int>();
 
-	om::string<> text;//
-	//text = om::type::make_specifier<int>().to_string(reg);
+//	om::string<> text = om::type::make_specifier<int>().to_string(reg);
 }
 
 BOOST_AUTO_TEST_CASE(test_values)
@@ -179,24 +208,115 @@ BOOST_AUTO_TEST_CASE(test_builder)
 	om::object<Foo> foo = reg.create<Foo>();
 	BOOST_ASSERT(foo.exists());
 	BOOST_ASSERT(foo.is_type<Foo>());
-
 	BOOST_ASSERT(reg.has_method(foo, "grok"));
+	BOOST_ASSERT(reg.has_method(foo, "spam"));
 
+	// invoke foo::grok using a stack
 	om::object<vector> stack = reg.create<vector>();
 	reg.get_method(foo, "grok").invoke(foo, *stack);
 	BOOST_ASSERT(stack->size() == 1);
 	BOOST_ASSERT(stack->at(0).is_type<int>());
 	BOOST_ASSERT(reg.deref<int>(stack->at(0)) == 42);
 
+	// invoke foo::spam using the same stack
 	reg.get_method(foo, "spam").invoke(foo, *stack);
 	BOOST_ASSERT(stack->size() == 1);
 	BOOST_ASSERT(stack->at(0).is_type<int>());
 	BOOST_ASSERT(reg.deref<int>(stack->at(0)) == 42*2);
-
-	//BOOST_ASSERT(foo.get_class().has_method("bar"));
-	//BOOST_ASSERT(foo.get_class().has_method("spam"));
-	//BOOST_ASSERT(foo.get_class().has_field("num"));
-	//BOOST_ASSERT(foo.get_class().has_field("str"));
 }
+
+#include <boost/spirit/core.hpp>
+#include <boost/spirit/actor.hpp>
+
+BOOST_AUTO_TEST_CASE(test_basic_parser)
+{
+	return;
+
+	using namespace boost::spirit;
+	chlit<> plus('+');
+	chlit<> minus('-');
+	chlit<> times('*');
+	chlit<> divide('/');
+	chlit<> oppar('(');
+	chlit<> clpar(')');
+	chlit<> opbrace('{');
+	chlit<> clbrace('}');
+
+	rule<> constant;
+	rule<> ident;
+	rule<> op;
+	rule<> sequence;
+	rule<> continuation;
+
+	constant = int_p;
+	op = plus || minus || times || divide;
+	ident = +range_p('a','z');
+	sequence = *(constant || op || ident);
+	continuation = opbrace >> sequence >> clbrace;
+
+	bool p0 = parse("1", constant, space_p).full;
+	bool p7 = parse("1 2", constant >> constant, space_p).full;
+	bool p4 = parse("+", op, space_p).full;
+	bool p5 = parse("+ +", op >> op, space_p).full;
+	bool p6 = parse("+ +", *op, space_p).full;
+	bool p2 = parse("1 2 +", *constant >> op, space_p).full;
+	bool p1 = parse("1 2", *constant, space_p).full;
+	bool p3 = parse("a b + 1 2 *", sequence, space_p).full;
+
+	BOOST_ASSERT(p0);
+	BOOST_ASSERT(p1);
+	BOOST_ASSERT(p2);
+	BOOST_ASSERT(p3);
+
+}
+
+struct nil { };
+
+template <class Tr>
+struct reg;
+
+template <class T, class Reg = nil>
+struct obj
+{
+	//typedef 
+	obj()
+	{
+
+	}
+
+	template <class Reg2>
+	obj(obj<T, Reg2> const &q)
+	{
+		//getter = q.getter;
+	}
+		
+	T &get()
+	{
+		throw;
+	}
+};
+
+template <class Tr>
+struct reg
+{
+	template <class T>
+	T &get(int number)
+	{
+		static int n = 42;
+		return n;
+	}
+};
+
+struct traits
+{
+
+};
+
+BOOST_AUTO_TEST_CASE(test_abstract)
+{
+	obj<int> n = obj<int, reg<traits> >();
+//	*n = 42;
+}
+
 
 //EOF

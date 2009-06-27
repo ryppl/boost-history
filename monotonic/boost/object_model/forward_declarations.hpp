@@ -22,6 +22,8 @@ namespace type
 
 	/// a type number
 	struct number;
+
+	struct any;
 }
 
 /// a unique identifier of an object
@@ -74,31 +76,31 @@ namespace generic
 	struct registry;
 }
 
-template <class T>
+template <class T = type::any>
 struct const_object;
 
-template <class T>
+template <class T = type::any>
 struct const_reference;
 
-template <class T>
+template <class T = type::any>
 struct const_pointer;
 
-template <class T>
+template <class T = type::any>
 struct mutable_object;
 
-template <class T>
+template <class T = type::any>
 struct mutable_reference;
 
-template <class T>
+template <class T = type::any>
 struct mutable_pointer;
 
-template <class T>
+template <class T = type::any>
 struct object;
 
-template <class T>
+template <class T = type::any>
 struct pointer;
 
-template <class T>
+template <class T = type::any>
 struct reference;
 
 /// storage for a specific type
