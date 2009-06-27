@@ -90,7 +90,6 @@ int my_simple_thread4(int i, std::string s) {
 }
 
 namespace aetst {
-#if 0
 template <typename AE>
 void do_test_member_lazy_fork(AE& ae) {
     test_value=0;
@@ -109,8 +108,9 @@ void do_test_member_lazy_fork(AE& ae) {
     BOOST_CHECK_EQUAL(act.has_value(), true);
     BOOST_CHECK_EQUAL(act.has_exception(), false);
     #endif
+    std::cout << "<<do_test_member_lazy_fork" << std::endl;
 }
-#endif
+
 template <typename AE>
 void do_test_member_fork(AE& ae) {
     test_value=0;

@@ -41,11 +41,11 @@ void do_test_member_fork() {
     aetst::do_test_member_fork(ae);
 }
 
-#if 0
 void do_test_member_lazy_fork() {
     basync::shared_threader ae;
     aetst::do_test_member_lazy_fork(ae);
 }
+#if 0
 #endif
 
 void do_test_member_fork_move_unique() {
@@ -238,7 +238,7 @@ void do_test_other() {
     BOOST_CHECK_EQUAL(i, 3);
 }
 
-void do_test_joiner()
+void do_test_shared_joiner_cons()
 {
     typedef basync::unique_threader  AE;
     typedef basync::unique_joiner<int>  UACT;
@@ -246,19 +246,34 @@ void do_test_joiner()
     AE ae;
     test_value=0;
     UACT uact(ae.fork(simple_thread));
-#if 0    
     SACT sact(uact);
-#else    
-    SACT sact;
-    sact=uact; 
-#endif    
     int res_value = basync::get(sact);
     BOOST_CHECK_EQUAL(test_value, 999);
     BOOST_CHECK_EQUAL(res_value, 999);
     BOOST_CHECK_EQUAL(basync::is_ready(sact), true);
     BOOST_CHECK_EQUAL(basync::has_value(sact), true);
     BOOST_CHECK_EQUAL(basync::has_exception(sact), false);
-    std::cout << "<<do_test_joiner" << std::endl;
+    std::cout << "<<do_test_shared_joiner_cons" << std::endl;
+
+}
+
+void do_test_shared_joiner_assig()
+{
+    typedef basync::unique_threader  AE;
+    typedef basync::unique_joiner<int>  UACT;
+    typedef basync::shared_joiner<int>  SACT;
+    AE ae;
+    test_value=0;
+    UACT uact(ae.fork(simple_thread));
+    SACT sact;
+    sact=uact; 
+    int res_value = basync::get(sact);
+    BOOST_CHECK_EQUAL(test_value, 999);
+    BOOST_CHECK_EQUAL(res_value, 999);
+    BOOST_CHECK_EQUAL(basync::is_ready(sact), true);
+    BOOST_CHECK_EQUAL(basync::has_value(sact), true);
+    BOOST_CHECK_EQUAL(basync::has_exception(sact), false);
+    std::cout << "<<do_test_shared_joiner_assig" << std::endl;
 
 }
 
@@ -267,7 +282,6 @@ test_suite* init_unit_test_suite(int, char*[])
     test_suite* test = BOOST_TEST_SUITE("shared_threader");
 
 #if 0
-
     test->add(BOOST_TEST_CASE(&do_test_member_fork));
     test->add(BOOST_TEST_CASE(&do_test_member_fork_bind));
     test->add(BOOST_TEST_CASE(&do_test_fork));
@@ -301,13 +315,16 @@ test_suite* init_unit_test_suite(int, char*[])
     test->add(BOOST_TEST_CASE(&do_test_fork_after_get));
 
 #if 0
-    test->add(BOOST_TEST_CASE(&do_test_member_lazy_fork));
     test->add(BOOST_TEST_CASE(&do_test_other));
-    test_suite* test = BOOST_TEST_SUITE("unique_threader");
+#endif
+#endif
+    test->add(BOOST_TEST_CASE(&do_test_member_lazy_fork));
+    //test_suite* test2 = BOOST_TEST_SUITE("unique_threader");
 
+#if 0
     test->add(BOOST_TEST_CASE(&do_test_member_fork_move_unique));
 #endif
-#endif
-    test->add(BOOST_TEST_CASE(&do_test_joiner));
+    test->add(BOOST_TEST_CASE(&do_test_shared_joiner_cons));
+    test->add(BOOST_TEST_CASE(&do_test_shared_joiner_assig));
   return test;
 }
