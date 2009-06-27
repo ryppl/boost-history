@@ -14,7 +14,7 @@
 #include <boost/async/fork.hpp>
 #include <boost/async/scoped_act.hpp>
 
-//#include <boost/async/lazy_fork.hpp>
+#include <boost/async/lazy_fork.hpp>
 #include <boost/async/fork_after.hpp>
 #include <boost/async/fork_all.hpp>
 #include <boost/async/wait_for_all.hpp>
