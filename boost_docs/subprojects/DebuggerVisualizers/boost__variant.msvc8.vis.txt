@@ -1,0 +1,54 @@
+;--------------------------------------
+; BOOST_VISUALIZER_START boost::variant
+;
+; Copyright Dmitry Vinogradov 2009. Use, modification and distribution are subject
+; to the Boost Software License, Version 1.0. (See accompanying file LICENSE_1_0.txt
+; or copy at http://www.boost.org/LICENSE_1_0.txt)
+;
+; @guid     28EEFD40-6353-11DE-8A39-0800200C9A66
+; @platform msvc-8, msvc-9
+; @version  1.0
+; @author   Dmitry Vinogradov
+; @email    sraider at yandex dot ru
+;
+
+; boost::variant
+boost::variant<*,*,*,*,*,*,*,*,*,*,*> {
+   preview (
+       #(
+           #switch($c.which_)
+           #case 0 ( *($T1 *)&($c.storage_.data_) )
+           #case 1 ( *($T2 *)&($c.storage_.data_) )
+           #case 2 ( *($T3 *)&($c.storage_.data_) )
+           #case 3 ( *($T4 *)&($c.storage_.data_) )
+           #case 4 ( *($T5 *)&($c.storage_.data_) )
+           #case 5 ( *($T6 *)&($c.storage_.data_) )
+           #case 6 ( *($T7 *)&($c.storage_.data_) )
+           #case 7 ( *($T8 *)&($c.storage_.data_) )
+           #case 8 ( *($T9 *)&($c.storage_.data_) )
+           #case 9 ( *($T10 *)&($c.storage_.data_) )
+       )
+   )
+   children
+   (
+       #(
+       value:
+           #switch($c.which_)
+           #case 0 ( *($T1 *)&($c.storage_.data_) )
+           #case 1 ( *($T2 *)&($c.storage_.data_) )
+           #case 2 ( *($T3 *)&($c.storage_.data_) )
+           #case 3 ( *($T4 *)&($c.storage_.data_) )
+           #case 4 ( *($T5 *)&($c.storage_.data_) )
+           #case 5 ( *($T6 *)&($c.storage_.data_) )
+           #case 6 ( *($T7 *)&($c.storage_.data_) )
+           #case 7 ( *($T8 *)&($c.storage_.data_) )
+           #case 8 ( *($T9 *)&($c.storage_.data_) )
+           #case 9 ( *($T10 *)&($c.storage_.data_) )
+       )
+   )
+} 
+
+;
+; BOOST_VISUALIZER_END boost::variant
+;------------------------------------
+
