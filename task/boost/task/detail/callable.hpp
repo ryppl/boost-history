@@ -4,8 +4,8 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_DETAIL_POOL_CALLABLE_H
-#define BOOST_TASK_DETAIL_POOL_CALLABLE_H
+#ifndef BOOST_TASK_DETAIL_CALLABLE_H
+#define BOOST_TASK_DETAIL_CALLABLE_H
 
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
@@ -27,7 +27,7 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class BOOST_TASK_DECL pool_callable
+class BOOST_TASK_DECL callable
 {
 private:
 	friend class scoped_guard;
@@ -48,19 +48,11 @@ private:
 		detail::interrupter	i_;
 
 	public:
-# if defined(BOOST_HAS_RVALUE_REFS)
 		impl_wrapper(
-			task< R > && t,
+			task< R > t,
 			detail::interrupter const& i)
-		: t_( t), i_( i)
+		: t_( boost::move( t) ), i_( i)
 		{}
-# else
-		impl_wrapper(
-			boost::detail::thread_move_t< task< R > > t,
-			detail::interrupter const& i)
-		: t_( t), i_( i)
-		{}
-# endif
 
 		void run()
 		{ t_(); }
@@ -78,31 +70,22 @@ public:
 	class scoped_guard : public noncopyable
 	{
 	private:
-		pool_callable	&	ca_;
+		callable	&	ca_;
 	
 	public:
-		scoped_guard( pool_callable &, shared_ptr< thread > &);
+		scoped_guard( callable &, shared_ptr< thread > &);
 	
 		~scoped_guard();
 	};
 
-	pool_callable();
+	callable();
 
-# if defined(BOOST_HAS_RVALUE_REFS)
 	template< typename R >
-	pool_callable(
-		task< R > && t,
+	callable(
+		task< R > t,
 		detail::interrupter const& i)
-	: impl_( new impl_wrapper<  R >( t, i) )
+	: impl_( new impl_wrapper<  R >( boost::move( t), i) )
 	{}
-# else
-	template< typename R >
-	pool_callable(
-		boost::detail::thread_move_t< task< R > > t,
-		detail::interrupter const& i)
-	: impl_( new impl_wrapper<  R >( t, i) )
-	{}
-# endif
 
 	void operator()();
 
@@ -118,5 +101,5 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_DETAIL_POOL_CALLABLE_H
+#endif // BOOST_TASK_DETAIL_CALLABLE_H
 

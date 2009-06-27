@@ -38,12 +38,14 @@ private:
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
 
+		void set_( shared_ptr< thread > const& thrd);
+
+		void reset_();
+
 		void interrupt_();
 
 	public:
 		impl();
-
-		~impl();
 
 		void set( shared_ptr< thread > const& thrd);
 

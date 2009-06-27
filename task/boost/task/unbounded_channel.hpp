@@ -18,7 +18,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
-#include <boost/task/detail/pool_callable.hpp>
+#include <boost/task/detail/callable.hpp>
 #include <boost/task/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -88,12 +88,12 @@ private:
 		BOOST_ASSERT( deactive_now_() );
 	}
 
-	const std::vector< detail::pool_callable > drain_()
+	const std::vector< detail::callable > drain_()
 	{
 		BOOST_ASSERT( deactive_now_() );
-		std::vector< detail::pool_callable > unprocessed;
+		std::vector< detail::callable > unprocessed;
 		unprocessed.reserve( queue_.size() );
-		BOOST_FOREACH( detail::pool_callable ca, queue_)
+		BOOST_FOREACH( detail::callable ca, queue_)
 		{ unprocessed.push_back( ca); }
 		clear_();
 		BOOST_ASSERT( empty_() );
@@ -117,7 +117,7 @@ private:
 	}
 
 	bool take_(
-		detail::pool_callable & ca,
+		detail::callable & ca,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
@@ -140,7 +140,7 @@ private:
 
 	template< typename Duration >
 	bool take_(
-		detail::pool_callable & ca,
+		detail::callable & ca,
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
@@ -164,7 +164,7 @@ private:
 		return ! ca.empty();
 	}
 
-	bool try_take_( detail::pool_callable & ca)
+	bool try_take_( detail::callable & ca)
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
@@ -217,7 +217,7 @@ public:
 		deactivate_now_();
 	}
 
-	const std::vector< detail::pool_callable > drain()
+	const std::vector< detail::callable > drain()
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return drain_();
@@ -253,7 +253,7 @@ public:
 		put_( itm, lk);
 	}
 
-	bool take( detail::pool_callable & ca)
+	bool take( detail::callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, lk);
@@ -261,14 +261,14 @@ public:
 
 	template< typename Duration >
 	bool take(
-		detail::pool_callable & ca,
+		detail::callable & ca,
 		Duration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, rel_time, lk);
 	}
 
-	bool try_take( detail::pool_callable & ca)
+	bool try_take( detail::callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return try_take_( ca);

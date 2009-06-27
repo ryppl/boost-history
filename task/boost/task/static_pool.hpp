@@ -19,12 +19,11 @@
 #include <boost/function.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
-#include <boost/utility.hpp>
 
 #include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/bind_processor.hpp>
 #include <boost/task/detail/interrupter.hpp>
-#include <boost/task/detail/pool_callable.hpp>
+#include <boost/task/detail/callable.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
@@ -40,7 +39,7 @@
 namespace boost { namespace task
 {
 template< typename Channel >
-class static_pool : private noncopyable
+class static_pool
 {
 public:
 	typedef Channel		channel;
@@ -278,7 +277,6 @@ private:
 			shared_lock< shared_mutex > lk( mtx_wg_);
 			wg_.signal_shutdown_all();
 			wg_.join_all();
-			lk.unlock();
 		}
 
 		const void shutdown_now()
@@ -290,7 +288,6 @@ private:
 			wg_.signal_shutdown_now_all();
 			wg_.interrupt_all();
 			wg_.join_all();
-			lk.unlock();
 		}
 
 		std::size_t size()
@@ -324,19 +321,14 @@ private:
 		{ channel_.lower_bound( lwm); }
 
 		template< typename R >
-# if defined(BOOST_HAS_RVALUE_REFS)
-		handle< R > submit( task< R > && t_)
-#else
-		handle< R > submit( boost::detail::thread_move_t< task< R > > t_)
-# endif
+		handle< R > submit( task< R > t)
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			task< R > t( t_);
 			shared_future< R > fut( t.get_future() );
 			detail::interrupter intr;
-			channel_.put( detail::pool_callable( boost::move( t), intr) );
+			channel_.put( detail::callable( boost::move( t), intr) );
 			return handle< R >( fut, intr);
 		}
 
@@ -344,25 +336,22 @@ private:
 			typename R,
 			typename Attr
 		>
-# if defined(BOOST_HAS_RVALUE_REFS)
-		handle< R > submit( task< R > && t_, Attr const& attr)
-#else
-		
-		handle< R > submit( boost::detail::thread_move_t< task< R > > t_, Attr const& attr)
-# endif
+		handle< R > submit( task< R > t, Attr const& attr)
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			task< R > t( t_);
 			shared_future< R > fut( t.get_future() );
 			detail::interrupter intr;
-			channel_.put( channel_item( detail::pool_callable( boost::move( t), intr), attr) );
+			channel_.put( channel_item( detail::callable( boost::move( t), intr), attr) );
 			return handle< R >( fut, intr);
 		}
 	};
 	
 	shared_ptr< pool_base >		pool_;
+
+	static_pool( static_pool &);
+	static_pool & operator=( static_pool &);
 
 public:
 	static_pool()
@@ -433,7 +422,13 @@ public:
 	}
 
 	operator boost::detail::thread_move_t< static_pool >()
-	{ return boost::detail::thread_move_t< static_pool >( * this); }
+	{ return move(); }
+
+	boost::detail::thread_move_t< static_pool > move()
+	{
+		boost::detail::thread_move_t< static_pool > t( * this);
+		return t;
+	}
 # endif
 
 	std::size_t active()
@@ -535,31 +530,22 @@ public:
 	}
 
 	template< typename R >
-# if defined(BOOST_HAS_RVALUE_REFS)
-	handle< R > submit( task< R > && t)
-#else
-	handle< R > submit( boost::detail::thread_move_t< task< R > > t)
-# endif
+	handle< R > submit( task< R > t)
 	{
 		if ( ! pool_)
 			throw pool_moved();
-		return pool_->submit( t);
+		return pool_->submit( boost::move( t) );
 	}
 
 	template<
 		typename R,
 		typename Attr
 	>
-# if defined(BOOST_HAS_RVALUE_REFS)
-	handle< R > submit( task< R > && t, Attr const& attr)
-#else
-		
-	handle< R > submit( boost::detail::thread_move_t< task< R > > t, Attr const& attr)
-# endif
+	handle< R > submit( task< R > t, Attr const& attr)
 	{
 		if ( ! pool_)
 			throw pool_moved();
-		return pool_->submit( t, attr);
+		return pool_->submit( boost::move( t), attr);
 	}
 
 	typedef typename shared_ptr< pool_base >::unspecified_bool_type	unspecified_bool_type;
@@ -585,8 +571,8 @@ task::static_pool< Channel > && move( task::static_pool< Channel > && t)
 { return t; }
 # else
 template< typename Channel >
-boost::detail::thread_move_t< task::static_pool< Channel > > move( task::static_pool< Channel > & t)
-{ return t; }
+task::static_pool< Channel >  move( boost::detail::thread_move_t< task::static_pool< Channel > > t)
+{ return task::static_pool< Channel >( t); }
 # endif
 }
 

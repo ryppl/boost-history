@@ -19,39 +19,21 @@
 
 namespace boost { namespace task
 {
-# if defined(BOOST_HAS_RVALUE_REFS)
 template< typename R >
-handle< R > async( task< R > && t)
-{ return as_sub_task()( t); }
+handle< R > async( task< R > t)
+{ return as_sub_task()( boost::move( t) ); }
 
 template< typename R, typename EP >
-handle< R > async( task< R > && t, EP ep)
-{ return ep( t); }
+handle< R > async( task< R > t, EP ep)
+{ return ep( boost::move( t) ); }
 
 template< typename R, typename Channel >
-handle< R > async( task< R > && t, static_pool< Channel > & pool)
-{ return pool.submit( t); }
+handle< R > async( task< R > t, static_pool< Channel > & pool)
+{ return pool.submit( boost::move( t) ); }
 
 template< typename R, typename Channel, typename Attr >
-handle< R > async( task< R > && t, Attr attr, static_pool< Channel > & pool)
-{ return pool.submit( t, attr); }
-# else
-template< typename R >
-handle< R > async( boost::detail::thread_move_t< task< R > > t)
-{ return as_sub_task()( t); }
-
-template< typename R, typename EP >
-handle< R > async( boost::detail::thread_move_t< task< R > > t, EP ep)
-{ return ep( t); }
-
-template< typename R, typename Channel >
-handle< R > async( boost::detail::thread_move_t< task< R > > t, static_pool< Channel > & pool)
-{ return pool.submit( t); }
-
-template< typename R, typename Channel, typename Attr >
-handle< R > async( boost::detail::thread_move_t< task< R > > t, Attr attr, static_pool< Channel > & pool)
-{ return pool.submit( t, attr); }
-# endif
+handle< R > async( task< R > t, Attr attr, static_pool< Channel > & pool)
+{ return pool.submit( boost::move( t), attr); }
 } }
 
 #include <boost/config/abi_suffix.hpp>

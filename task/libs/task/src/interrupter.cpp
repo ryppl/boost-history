@@ -13,6 +13,26 @@ namespace boost { namespace task
 namespace detail
 {
 void
+interrupter::impl::set_( shared_ptr< thread > const& thrd)
+{
+	thrd_ = thrd;
+	BOOST_ASSERT( thrd_);
+	if ( interruption_requested_)
+		if ( thrd_) thrd_->interrupt();
+}
+
+void
+interrupter::impl::reset_()
+{
+	try
+	{ this_thread::interruption_point(); }
+	catch ( thread_interrupted const&)
+	{}
+	thrd_.reset();
+	BOOST_ASSERT( ! this_thread::interruption_requested() );
+}
+
+void
 interrupter::impl::interrupt_()
 {
 	if ( ! interruption_requested_)
@@ -29,29 +49,18 @@ mtx_(),
 thrd_()
 {}
 
-interrupter::impl::~impl()
-{ reset(); }
-
 void
 interrupter::impl::set( shared_ptr< thread > const& thrd)
 {
 	unique_lock< mutex > lk( mtx_);
-	thrd_ = thrd;
-	BOOST_ASSERT( thrd_);
-	if ( interruption_requested_)
-		if ( thrd_) thrd_->interrupt();
+	set_( thrd);
 }
 
 void
 interrupter::impl::reset()
 {
 	unique_lock< mutex > lk( mtx_);
-	try
-	{ this_thread::interruption_point(); }
-	catch ( thread_interrupted const&)
-	{}
-	thrd_.reset();
-	BOOST_ASSERT( ! this_thread::interruption_requested() );
+	reset_();
 }
 
 void

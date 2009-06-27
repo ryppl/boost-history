@@ -37,7 +37,7 @@ alias task_sources
     : ## win32 sources ##
 	guard.cpp
 	interrupter.cpp
-	pool_callable.cpp
+	callable.cpp
 	poolsize.cpp
 	scanns.cpp
 	semaphore_windows.cpp
@@ -53,7 +53,7 @@ alias task_sources
     : ## posix sources ##
 	guard.cpp
 	interrupter.cpp
-	pool_callable.cpp
+	callable.cpp
 	poolsize.cpp
 	scanns.cpp
 	semaphore_posix.cpp

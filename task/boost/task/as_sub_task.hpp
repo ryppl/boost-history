@@ -26,16 +26,11 @@ namespace boost { namespace task
 struct as_sub_task
 {
 	template< typename R >
-# if defined(BOOST_HAS_RVALUE_REFS)
-	handle< R > operator()( task< R > && t_)
-# else
-	handle< R > operator()( boost::detail::thread_move_t< task< R > > t_)
-# endif
+	handle< R > operator()( task< R > t)
 	{
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			task< R > t( t_);
 			shared_future< R > fut( t.get_future() );
 			detail::interrupter intr;
 			function< bool() > wcb(
@@ -47,11 +42,11 @@ struct as_sub_task
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::pool_callable( boost::move( t), intr) );
+			w->put( detail::callable( boost::move( t), intr) );
 			return handle< R >( fut, intr);
 		}
 		else
-			return new_thread()( t_);
+			return new_thread()( t);
 	}
 };
 } }

@@ -21,13 +21,8 @@ namespace boost { namespace task
 struct own_thread
 {
 	template< typename R >
-# if defined(BOOST_HAS_RVALUE_REFS)
-	handle< R > operator()( task< R > && t_)
-# else
-	handle< R > operator()( boost::detail::thread_move_t< task< R > > t_)
-# endif
+	handle< R > operator()( task< R > t)
 	{
-		task< R > t( t_);
 		shared_future< R > fut( t.get_future() );
 		detail::interrupter intr;
 		intr.reset();

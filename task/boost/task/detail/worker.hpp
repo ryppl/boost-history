@@ -18,7 +18,7 @@
 #include <boost/utility.hpp>
 
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/pool_callable.hpp>
+#include <boost/task/detail/callable.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/wsq.hpp>
@@ -52,11 +52,11 @@ private:
 
 		virtual void interrupt() const = 0;
 
-		virtual void put( pool_callable const&) = 0;
+		virtual void put( callable const&) = 0;
 
-		virtual bool try_take( pool_callable &) = 0;
+		virtual bool try_take( callable &) = 0;
 
-		virtual bool try_steal( pool_callable &) = 0;
+		virtual bool try_steal( callable &) = 0;
 
 		virtual void signal_shutdown() = 0;
 
@@ -102,19 +102,19 @@ private:
 		std::size_t					scns_;
 		random_idx					rnd_idx_;
 
-		void execute_( pool_callable & ca)
+		void execute_( callable & ca)
 		{
 			BOOST_ASSERT( ! ca.empty() );
 			guard grd( get_pool().active_worker_);
 			{
-				pool_callable::scoped_guard lk( ca, thrd_);
+				callable::scoped_guard lk( ca, thrd_);
 				ca();
 			}
 			ca.clear();
 			BOOST_ASSERT( ca.empty() );
 		}
 	
-		void next_pool_callable_( pool_callable & ca)
+		void next_callable_( callable & ca)
 		{
 			if ( ! try_take( ca) )
 			{
@@ -149,7 +149,7 @@ private:
 			}
 		}
 	
-		void next_local_pool_callable_( pool_callable & ca)
+		void next_local_callable_( callable & ca)
 		{
 			if ( ! try_take( ca) )
 			{
@@ -221,24 +221,24 @@ private:
 		void signal_shutdown_now()
 		{ shtdwn_now_sem_.post(); }
 
-		void put( pool_callable const& ca)
+		void put( callable const& ca)
 		{
 			BOOST_ASSERT( ! ca.empty() );
 			wsq_.put( ca);
 		}
 
-		bool try_take( pool_callable & ca)
+		bool try_take( callable & ca)
 		{
-			pool_callable tmp;
+			callable tmp;
 			bool result( wsq_.try_take( tmp) );
 			if ( result)
 				ca = tmp;
 			return result;
 		}
 		
-		bool try_steal( pool_callable & ca)
+		bool try_steal( callable & ca)
 		{
-			pool_callable tmp;
+			callable tmp;
 			bool result( wsq_.try_steal( tmp) );
 			if ( result)
 				ca = tmp;
@@ -252,10 +252,10 @@ private:
 		{
 			BOOST_ASSERT( get_id() == this_thread::get_id() );
 
-			pool_callable ca;
+			callable ca;
 			while ( ! shutdown_() )
 			{
-				next_pool_callable_( ca);
+				next_callable_( ca);
 				if( ! ca.empty() )
 				{
 					execute_( ca);
@@ -266,10 +266,10 @@ private:
 
 		void reschedule_until( function< bool() > const& pred)
 		{
-			pool_callable ca;
+			callable ca;
 			while ( ! pred() )
 			{
-				next_local_pool_callable_( ca);
+				next_local_callable_( ca);
 				if( ! ca.empty() )
 				{
 					execute_( ca);
@@ -306,9 +306,9 @@ public:
 	void signal_shutdown();
 	void signal_shutdown_now();
 
-	void put( pool_callable const&);
-	bool try_take( pool_callable &);
-	bool try_steal( pool_callable &);
+	void put( callable const&);
+	bool try_take( callable &);
+	bool try_steal( callable &);
 
 	void reschedule_until( function< bool() > const&);
 

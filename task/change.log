@@ -1,3 +1,12 @@
+* boost.task-0.2.2:
+-------------------
+- private inheritance from noncopyable removed from task< R > and static_pool< R >
+  copy-ctor and assignment-op private and unimplemented
+  allowing correct move-semantics
+- worker_group removes all worker-threads in join_all()
+  static_pool< R > does contain zero worker-threads after shutdown() or shutdown_now()
+
+
 * boost.task-0.2.1:
 -------------------
 - bugfix related to FreeBSD

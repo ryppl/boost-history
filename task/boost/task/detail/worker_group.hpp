@@ -63,25 +63,29 @@ public:
 
 	worker_group();
 
+	~worker_group();
+
 	const worker operator[]( std::size_t pos) const;
 
 	std::size_t size() const;
 
-	const iterator begin();
+	bool empty() const;
 
+	const iterator begin();
 	const const_iterator begin() const;
 
 	const iterator end();
-
 	const const_iterator end() const;
 
 	const const_iterator find( thread::id const& id) const;
 
+	void insert( worker const& w);
+	
+	iterator erase( iterator const& i);
+
 	void join_all();
 
 	void interrupt_all();
-
-	void insert( worker const& w);
 
 	void signal_shutdown_all();
 

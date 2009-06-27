@@ -4,33 +4,33 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/task/detail/pool_callable.hpp"
+#include "boost/task/detail/callable.hpp"
 
 namespace boost { namespace task
 {
 namespace detail
 {
-pool_callable::pool_callable()
+callable::callable()
 : impl_()
 {}
 
 void
-pool_callable::operator()()
+callable::operator()()
 { impl_->run(); }
 
 bool
-pool_callable::empty() const
+callable::empty() const
 { return ! impl_; }
 
 void
-pool_callable::clear()
+callable::clear()
 { impl_.reset(); }
 
-pool_callable::scoped_guard::scoped_guard( pool_callable & ca, shared_ptr< thread > & thrd)
+callable::scoped_guard::scoped_guard( callable & ca, shared_ptr< thread > & thrd)
 : ca_( ca)
 { ca_.impl_->set( thrd); }
 
-pool_callable::scoped_guard::~scoped_guard()
+callable::scoped_guard::~scoped_guard()
 { ca_.impl_->reset(); }
 } } }
 

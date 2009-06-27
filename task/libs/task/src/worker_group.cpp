@@ -20,6 +20,12 @@ id_idx_( cont_.get< id_idx_tag >() ),
 rnd_idx_( cont_.get< rnd_idx_tag >() )
 {}
 
+worker_group::~worker_group()
+{
+	if ( ! empty() )
+		join_all();
+}
+
 const worker
 worker_group::operator[]( std::size_t pos) const
 { return rnd_idx_[pos]; }
@@ -27,6 +33,10 @@ worker_group::operator[]( std::size_t pos) const
 std::size_t
 worker_group::size() const
 { return cont_.size(); }
+
+bool
+worker_group::empty() const
+{ return cont_.empty(); }
 
 const worker_group::iterator
 worker_group::begin()
@@ -49,6 +59,14 @@ worker_group::find( thread::id const& id) const
 { return id_idx_.find( id); }
 
 void
+worker_group::insert( worker const& w)
+{ cont_.insert( w); }
+
+worker_group::iterator
+worker_group::erase( iterator const& i)
+{ return id_idx_.erase( i); }
+
+void
 worker_group::join_all()
 {
 	BOOST_FOREACH( worker w, cont_)
@@ -58,6 +76,7 @@ worker_group::join_all()
 		catch (...)
 		{}
 	}
+	cont_.clear();
 }
 
 void
@@ -66,10 +85,6 @@ worker_group::interrupt_all()
 	BOOST_FOREACH( worker w, cont_)
 	{ w.interrupt(); }
 }
-
-void
-worker_group::insert( worker const& w)
-{ cont_.insert( w); }
 
 void
 worker_group::signal_shutdown_all()

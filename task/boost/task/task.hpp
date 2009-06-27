@@ -174,7 +174,7 @@ public:
 }
 
 template< typename R >
-class task : private noncopyable
+class task
 {
 private:
 	template< typename Channel >
@@ -185,6 +185,9 @@ private:
 	struct dummy;
 
 	shared_ptr< detail::task_base< R > >	task_;
+
+	task( task &);
+	task & operator=( task &);
 
 public:
 	task()
@@ -227,7 +230,7 @@ public:
 	{}
 #endif
 	template< typename Fn >
-	task( boost::detail::thread_move_t< Fn > fn)
+	explicit task( boost::detail::thread_move_t< Fn > fn)
 	: task_( new detail::task_wrapper< R, Fn >( fn) )
 	{}
 
@@ -242,11 +245,14 @@ public:
 	    return * this;
 	}
 
-	boost::detail::thread_move_t< task > move()
-	{ return boost::detail::thread_move_t< task >( * this); }
-
 	operator boost::detail::thread_move_t< task >()
-	{ return boost::detail::thread_move_t< task >( * this); }
+	{ return move(); }
+
+	boost::detail::thread_move_t< task > move()
+	{
+		boost::detail::thread_move_t< task > t( * this);
+		return t;
+	}
 # endif
 
 # ifndef BOOST_TASK_MAKE_TASK_MAX_ARITY
@@ -320,8 +326,8 @@ task::task< R > && move( task::task< R > && t)
 { return t; }
 # else
 template< typename R >
-boost::detail::thread_move_t< task::task< R > > move( task::task< R > & t)
-{ return t; }
+task::task< R > move( boost::detail::thread_move_t< task::task< R > > t)
+{ return task::task< R >( t); }
 # endif
 }
 
