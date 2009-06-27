@@ -1014,12 +1014,12 @@ inline bool operator >= (const gmp_integer<B>& lhs, const gmp_integer<B>& rhs)
 }
 
 // compare unbounded_int to integral
-/*template<class B, typename IntegralT>
+template<class B, typename IntegralT>
 inline
 typename enable_if<is_integral<IntegralT>, bool>::type
 operator == (const gmp_integer<B>& lhs, IntegralT rhs)
 {
-  return detail::unbounded_int_integral_ops<
+  return detail::gmp_integer_integral_ops<
     gmp_integer<B>, IntegralT>::equal(lhs, rhs);
 }
 
@@ -1036,7 +1036,7 @@ inline
 typename enable_if<is_integral<IntegralT>, bool>::type
 operator < (const gmp_integer<B>& lhs, IntegralT rhs)
 {
-  return detail::unbounded_int_integral_ops<
+  return detail::gmp_integer_integral_ops<
     gmp_integer<B>, IntegralT>::less(lhs, rhs);
 }
 
@@ -1111,7 +1111,7 @@ typename enable_if<is_integral<IntegralT>, bool>::type
 operator >= (IntegralT lhs, const gmp_integer<B>& rhs)
 {
   return rhs <= lhs;
-}*/
+}
 
 // compare unbounded_int to const charT*
 template<class B, typename charT>

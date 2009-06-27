@@ -230,8 +230,6 @@ struct libtom_integer_traits
 };
 
 
-// Same as libtom_allocated_string in libtom-impl.h, but we can't use it because
-// libtom-impl.h is an internal GMP header and is probably not installed.
 extern "C"
 {
   typedef void (*libtom_free_func)(void *, size_t);
