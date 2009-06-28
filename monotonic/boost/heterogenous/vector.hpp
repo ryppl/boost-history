@@ -148,10 +148,10 @@ namespace boost
 			typedef typename impl::make_cloneable_allocator<Alloc, is_cloneable>::type type;
 		};
 
-		template <class Alloc = make_cloneable_allocator<std::allocator<char> > >
+		template <class Alloc = make_cloneable_allocator<std::allocator<char> >, class Base = common_base >
 		struct vector
 		{
-			typedef ptr_vector<common_base, allocator, Alloc> implementation;
+			typedef ptr_vector<Base, allocator, Alloc> implementation;
 			typedef Alloc allocator_type;
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference_type;
