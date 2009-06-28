@@ -351,9 +351,37 @@
 				Name="heterogenous"
 				>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\allocator.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\heterogenous\base.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\heterogenous\common_base.hpp"
+					>
+				</File>
+				<File
+					RelativePath="..\..\..\..\boost\heterogenous\make_cloneable_allocator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\vector.hpp"
 					>
 				</File>
+				<Filter
+					Name="detail"
+					>
+					<File
+						RelativePath="..\..\..\..\boost\heterogenous\detail\prefix.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\..\boost\heterogenous\detail\suffix.hpp"
+						>
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<File
