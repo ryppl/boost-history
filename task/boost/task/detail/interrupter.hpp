@@ -59,6 +59,17 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
+	class scoped_guard : public noncopyable
+	{
+	private:
+		interrupter	&	intr_;
+	
+	public:
+		scoped_guard( interrupter &, shared_ptr< thread > &);
+	
+		~scoped_guard();
+	};
+
 	interrupter();
 
 	void set( shared_ptr< thread > const& thrd);

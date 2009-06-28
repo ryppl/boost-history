@@ -59,6 +59,12 @@ private:
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
 
+	handle( shared_future< R > fut)
+	:
+	fut_( fut),
+	intr_()
+	{}
+
 	handle(
 		shared_future< R > fut,
 		detail::interrupter const& intr)

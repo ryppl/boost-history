@@ -47,9 +47,11 @@ struct new_thread
 
 		detail::interrupter intr;
 		shared_ptr< thread > thrd(
-				new thread(
-					detail::callable( boost::move( t), intr) ),
-				detail::joiner() );
+			new thread(
+				detail::callable(
+					boost::move( t),
+					intr) ),
+			detail::joiner() );
 		intr.set( thrd);
 
 		return handle< R >( fut, intr);

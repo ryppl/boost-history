@@ -96,6 +96,13 @@ interrupter::interrupt()
 bool
 interrupter::interruption_requested()
 { return impl_->interruption_requested(); }
+
+interrupter::scoped_guard::scoped_guard( interrupter & intr, shared_ptr< thread > & thrd)
+: intr_( intr)
+{ intr_.set( thrd); }
+
+interrupter::scoped_guard::~scoped_guard()
+{ intr_.reset(); }
 }
 } }
 

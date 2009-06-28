@@ -65,11 +65,11 @@ public:
 
 	~worker_group();
 
-	const worker operator[]( std::size_t pos) const;
-
 	std::size_t size() const;
 
 	bool empty() const;
+
+	const worker operator[]( std::size_t pos) const;
 
 	const iterator begin();
 	const const_iterator begin() const;

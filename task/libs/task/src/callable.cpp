@@ -26,11 +26,8 @@ void
 callable::clear()
 { impl_.reset(); }
 
-callable::scoped_guard::scoped_guard( callable & ca, shared_ptr< thread > & thrd)
-: ca_( ca)
-{ ca_.impl_->set( thrd); }
-
-callable::scoped_guard::~scoped_guard()
-{ ca_.impl_->reset(); }
+interrupter &
+callable::get_interrupter()
+{ return impl_->get_interrupter(); }
 } } }
 

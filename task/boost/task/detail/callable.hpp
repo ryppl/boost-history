@@ -10,7 +10,6 @@
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
-#include <boost/utility.hpp>
 
 #include <boost/task/detail/config.hpp>
 #include <boost/task/detail/interrupter.hpp>
@@ -30,60 +29,43 @@ namespace detail
 class BOOST_TASK_DECL callable
 {
 private:
-	friend class scoped_guard;
-
 	struct impl
 	{
 		virtual ~impl() {}
 		virtual void run() = 0;
-		virtual void set( shared_ptr< thread > &) = 0;
-		virtual void reset() = 0;
+		virtual interrupter & get_interrupter() = 0;
 	};
 
 	template< typename R >
 	class impl_wrapper : public impl
 	{
 	private:
-		task< R >		t_;
-		detail::interrupter	i_;
+		task< R >	t_;
+		interrupter	i_;
 
 	public:
 		impl_wrapper(
 			task< R > t,
-			detail::interrupter const& i)
+			interrupter const& i)
 		: t_( boost::move( t) ), i_( i)
 		{}
 
 		void run()
 		{ t_(); }
-
-		void set( shared_ptr< thread > & thrd)
-		{ i_.set( thrd); }
-
-		void reset()
-		{ i_.reset(); }
+		
+		interrupter & get_interrupter()
+		{ return i_; }
 	};
 
 	shared_ptr< impl >	impl_;
 
 public:
-	class scoped_guard : public noncopyable
-	{
-	private:
-		callable	&	ca_;
-	
-	public:
-		scoped_guard( callable &, shared_ptr< thread > &);
-	
-		~scoped_guard();
-	};
-
 	callable();
 
 	template< typename R >
 	callable(
 		task< R > t,
-		detail::interrupter const& i)
+		interrupter const& i)
 	: impl_( new impl_wrapper<  R >( boost::move( t), i) )
 	{}
 
@@ -92,6 +74,8 @@ public:
 	bool empty() const;
 
 	void clear();
+	
+	interrupter & get_interrupter();
 };
 }}}
 

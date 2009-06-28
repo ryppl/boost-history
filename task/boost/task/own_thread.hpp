@@ -24,10 +24,8 @@ struct own_thread
 	handle< R > operator()( task< R > t)
 	{
 		shared_future< R > fut( t.get_future() );
-		detail::interrupter intr;
-		intr.reset();
 		t();
-		return handle< R >( fut, intr);
+		return handle< R >( fut);
 	}
 };
 } }
