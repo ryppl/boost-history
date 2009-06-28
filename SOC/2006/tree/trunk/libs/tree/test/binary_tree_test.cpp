@@ -145,9 +145,6 @@ void create_test_dataset2_tree(Tree& mytree)
     BOOST_CHECK_EQUAL(*c1, 14);
     
     BOOST_CHECK(c1.begin().is_leaf() || c1.end().is_leaf());
-    
-    //c1 = mytree.erase(c1);
-    //BOOST_CHECK_EQUAL(*c1, 2);
 }
 
 template <class Cursor>
@@ -171,15 +168,18 @@ void validate_test_dataset2_tree(Cursor cur)
     
 }
 
-BOOST_AUTO_TEST_CASE( erase_non_leaf_node_test )
+//BOOST_AUTO_TEST_SUITE( binary_tree_erase_tests )
+
+BOOST_AUTO_TEST_CASE( erase_right_non_leaf_right_node_test )
 {
-    binary_tree<int>::cursor c = bt.root().end().begin();
-    BOOST_CHECK_EQUAL(*c, 10);
-    
-    // Left child empty
+    binary_tree<int>::cursor c = bt.root().end().end();
+    BOOST_CHECK_EQUAL(*--c, 10);
+
+    // c has no left child, but a right one.
     BOOST_CHECK(c.is_leaf());
     BOOST_CHECK(!(++c).is_leaf());
-
+    
+    // c is its parent's right child
     binary_tree<int>::size_type sz = size(bt.root());
     c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
@@ -188,7 +188,63 @@ BOOST_AUTO_TEST_CASE( erase_non_leaf_node_test )
     BOOST_CHECK_EQUAL(*--c, 14);
 }
 
-BOOST_AUTO_TEST_CASE( erase_leaf_node_test )
+BOOST_AUTO_TEST_CASE( erase_right_non_leaf_left_node_test )
+{
+    binary_tree<int>::cursor c = bt.root().end().end().begin();
+    BOOST_CHECK_EQUAL(*c, 14);
+
+    // c has a left child, but no right one.
+    BOOST_CHECK(!c.is_leaf());
+    BOOST_CHECK((++c).is_leaf());
+    --c;
+
+    // c is its parent's right child
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
+    
+    BOOST_CHECK(c == bt.root().end().end().begin());
+    BOOST_CHECK_EQUAL(*c, 13);
+}
+
+BOOST_AUTO_TEST_CASE( erase_left_non_leaf_left_node_test )
+{
+    binary_tree<int>::cursor c = bt.root().end().end().begin().begin();
+    BOOST_CHECK_EQUAL(*c, 13);
+
+    // c has a left child, but no right one.
+    BOOST_CHECK(!c.is_leaf());
+    BOOST_CHECK((++c).is_leaf());
+    --c;
+
+    // c is its parent's left child
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
+    
+    BOOST_CHECK(c == bt.root().end().end().begin().begin());
+    BOOST_CHECK_EQUAL(*c, 11);
+}
+
+BOOST_AUTO_TEST_CASE( erase_left_non_leaf_right_node_test )
+{
+    binary_tree<int>::cursor c = bt.root().end().end().begin().begin().end();
+    BOOST_CHECK_EQUAL(*--c, 11);
+
+    // c has no left child, but a right one.
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK(!(++c).is_leaf());
+
+    // c is its parent's right child
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
+    
+    BOOST_CHECK(c == bt.root().end().end().begin().begin().end());
+    BOOST_CHECK_EQUAL(*c, 12);
+}
+
+BOOST_AUTO_TEST_CASE( erase_left_leaf_node_test )
 {
     binary_tree<int>::cursor c = bt.root().end().end().begin().begin().end().begin();
     BOOST_CHECK_EQUAL(*c, 12);
@@ -198,12 +254,33 @@ BOOST_AUTO_TEST_CASE( erase_leaf_node_test )
     BOOST_CHECK((++c).is_leaf());
     --c;
 
+    // c is its parent's left child
     binary_tree<int>::size_type sz = size(bt.root());
     c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
 
     BOOST_CHECK(c == bt.root().end().end().begin().end().begin());
 }
+
+BOOST_AUTO_TEST_CASE( erase_right_leaf_node_test )
+{
+    binary_tree<int>::cursor c = bt.root().begin().end().end().begin();
+    BOOST_CHECK_EQUAL(*c, 7);
+
+    // Both children empty
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK((++c).is_leaf());
+    --c;
+
+    // c is its parent's right child
+    binary_tree<int>::size_type sz = size(bt.root());
+    c = bt.erase(c);
+    BOOST_CHECK_EQUAL(--sz, size(bt.root()));
+
+    BOOST_CHECK(c == bt.root().begin().end().end().begin());
+}
+
+//BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_CASE( clear_test )
 {
