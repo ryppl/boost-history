@@ -45,13 +45,22 @@ struct derived3 : cloneable::base<derived3>
 	explicit derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
 };
 
+namespace heterogenous
+{
+	template <class Alloc = std::allocator<char> >
+	struct vector : boost::ptr_vector<cloneable::common_base, cloneable::allocator, Alloc>
+	{
+	};
+
+}
+
 int main()
 {
 	// there is a problem with static_move_ptr<>
 	//typedef cloneable::make_cloneable_allocator<std::allocator<int> >::type alloc_type;
 	typedef cloneable::make_cloneable_allocator<monotonic::allocator<int> >::type alloc_type;
 
-	typedef ptr_vector<cloneable::common_base, cloneable::allocator, alloc_type > vec;
+	typedef heterogenous::vector<alloc_type> vec;
 
 	{
 		vec bases;
@@ -62,12 +71,15 @@ int main()
 		BOOST_ASSERT(bases.size() == 3);
 		vec copy = bases;
 		BOOST_ASSERT(copy.size() == 3);
+
 		derived *p1 = dynamic_cast<derived *>(&copy[0]);
 		derived2 *p2 = dynamic_cast<derived2 *>(&copy[1]);
 		derived3 *p3 = dynamic_cast<derived3 *>(&copy[2]);
+		
 		BOOST_ASSERT(p1);
 		BOOST_ASSERT(p2);
 		BOOST_ASSERT(p3);
+		
 		BOOST_ASSERT(p1->num == 42);
 		BOOST_ASSERT(p2->str == "foo");
 		BOOST_ASSERT(p3->real == 3.14f);
