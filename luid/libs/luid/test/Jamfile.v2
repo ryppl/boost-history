@@ -1,0 +1,113 @@
+#
+# Boost.LUID
+# Build script for tests.
+#
+# Copyright (c) 2008 Vicente J. Botet Escriba]
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+using testing ;
+
+if ! $(BOOST_ROOT)
+{
+    BOOST_ROOT = [ modules.peek : BOOST_ROOT ] ;
+}
+
+project :
+    : requirements
+      <include>$(BOOST_ROOT)
+      <include>../../..
+      <include>../../../../mpl_ext
+      <include>../../../../parameter_ext
+      <include>/boost_1_39_0
+      
+      <threading>multi
+#      <target-os>cygwin
+#      <threadapi>pthread
+#      <variant>debug
+
+      #<define>BOOST_TEST_BUILD_INFO
+      #<library>/boost/thread//boost_thread/<link>static
+      #<library>/boost/test//boost_unit_test_framework/<link>static
+      <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
+      <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+;
+
+test-suite luid_inclusion :
+    [ compile inclusion/dsl/include_thread_model.cpp : : ]
+    [ compile inclusion/dsl/include_error_handling.cpp : : ]
+
+    #[ compile inclusion/dsl/include_coherency.cpp : : ]
+    #[ compile inclusion/dsl/include_numeric_type.cpp : : ]
+    #[ compile inclusion/dsl/include_on_release.cpp : : ]
+    #[ compile inclusion/dsl/include_scope.cpp : : ]
+    #[ compile inclusion/dsl/include_lifetime.cpp : : ]
+    #[ compile inclusion/dsl/include_on_overflow.cpp : : ]
+    #[ compile inclusion/dsl/include_optimization.cpp : : ]
+
+    #[ compile inclusion/iccl/include_timestamped.cpp : : ]
+    #[ compile inclusion/iccl/include_thread_locking_traits.cpp : : ]
+    #[ compile inclusion/iccl/include_backdoor.cpp : : ]
+    #[ compile inclusion/iccl/include_base.cpp : : ]
+    #[ compile inclusion/iccl/include_coherency_bitset.cpp : : ]
+    #[ compile inclusion/iccl/include_constructor.cpp : : ]
+    #[ compile inclusion/iccl/include_counter.cpp : : ]
+    #[ compile inclusion/iccl/include_externally_locked.cpp : : ]
+    #[ compile inclusion/iccl/include_facade.cpp : : ]
+    #[ compile inclusion/iccl/include_fifo..cpp : : ]
+    #[ compile inclusion/iccl/include_internally_locked.cpp : : ]
+    #[ compile inclusion/iccl/include_on_overflow.cpp : : ]
+    #[ compile inclusion/iccl/include_rec_fifo_delay.cpp : : ]
+    #[ compile inclusion/iccl/include_rec_fifo_freeze.cpp : : ]
+    #[ compile inclusion/iccl/include_iccl_set.cpp : : ]
+    #[ compile inclusion/iccl/include_storage.cpp : : ]
+    
+    #[ compile inclusion/include_iccl.cpp : : ]
+    #[ compile inclusion/include_dsl.cpp : : ]
+    #[ compile inclusion/include_generator.cpp : : ]
+    
+    
+;     
+     
+test-suite luid_monothreaded :
+     [ run default_luidg.cpp ]
+     [ run luidg_unsigned_char.cpp ]
+     [ run luidg_unsigned_int_recove_undefined.cpp ]
+     [ run luidg_recover_immediate.cpp ]
+     [ run luidg_recover_delay.cpp ]
+     [ run luidg_unsigned_short_recover_delay_throw_on_error.cpp ]
+     [ run luidg_recover_fifo_throw_on_error.cpp ]
+     [ run luidg_throw_on_error.cpp ]
+     [ run luidg_check.cpp ]
+#     [ run luidg_check.cpp  : --BOOST_MPL_CFG_NO_PREPROCESSED_HEADERS=yes --BOOST_TEST_LOG_FORMAT=HRF -- BOOST_TEST_LOG_LEVEL=all]
+    ;
+     
+test-suite luid_multithreaded :
+     [ run multi_threaded_internally_locked_process_traits.cpp ]
+     [ run multi_threaded_externally_locked_process_traits.cpp ]
+     
+    ;
+
+test-suite luid_multiprocess :
+     [ run multi_process.cpp ]
+     [ run multi_process_externally_locked.cpp ]
+     [ run multi_process_internally_locked.cpp ]   
+    ;
+
+test-suite luid_kernel :
+     [ run luidg_discard_kernel.cpp ]
+    ;
+
+test-suite luid_filesystem :
+#     [ run luidg_.cpp ]
+    ;
+
+test-suite "compile_fail_test"  :
+    [ compile-fail compile_fail/luidg_multi_process_externally_locked.cpp ]
+    ;
+    
+test-suite "examples" :
+#    [ compile ../example/vector_constainer.cpp : : ]
+#    [ run     ../example/ ]
+    ;
+    

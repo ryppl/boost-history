@@ -1,0 +1,218 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="up" href="../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="prev" href="../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="next" href="install.html" title="Installing LUID">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="install.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_luid.intro"></a><a class="link" href="intro.html" title="Introduction"> Introduction</a>
+</h2></div></div></div>
+<p>
+      <span class="bold"><strong>Description</strong></span>
+    </p>
+<p>
+      <span class="bold"><strong>Boost.LUID</strong></span> simplifies the generation of locally
+      unique identifiers in a wide context.
+    </p>
+<p>
+      Locally Unique Identifier or LUID is a special type of identifier used in software
+      applications in order to provide a reference number which is unique in a given
+      context (hence, "Locally" in opposition to "Globally" or
+      "Universally"). Each generated LUID is guaranteed to be unique in
+      its context.
+    </p>
+<p>
+      LUID could have many applications. Some examples follow: creating unique identifiers
+      in a database tables, network messages may be identified with a LUID to ensure
+      that this messages are associated to a given session, transactions may be identified
+      by LUIDs.
+    </p>
+<p>
+      Note. Please let me know other applications of luids you can have.
+    </p>
+<p>
+      <span class="bold"><strong>Reduced identifier size</strong></span>
+    </p>
+<p>
+      An attractive feature of LUIDs when compared to alternatives is the minimal
+      size used by this identifiers, that depends on the number of instances a given
+      context can have (usually 4 bytes). This allows to use them in protocols fixing
+      the size of the references exchanged to less that 16 bytes(as it is the case
+      of UUID and GUID). Usually LUIDs are represented by unsigned integers and have
+      an upper bound value.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>	
+<span class="identifier">luidg</span> <span class="identifier">g</span><span class="special">(</span><span class="number">100</span><span class="special">);</span>
+<span class="identifier">luidg</span><span class="special">::</span><span class="identifier">numeric_type</span> <span class="identifier">id</span><span class="special">=</span> <span class="identifier">g</span><span class="special">.</span><span class="identifier">make</span><span class="special">();</span>
+</pre>
+<p>
+      <span class="bold"><strong>Usable as random access index in constant time</strong></span>
+    </p>
+<p>
+      Another aspect, and not less interesting is that the access to the information
+      they identify can be done in constant time.
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">*&gt;</span> <span class="identifier">vec</span><span class="special">;</span>
+<span class="identifier">luidg</span><span class="special">::</span><span class="identifier">numeric_type</span> <span class="identifier">id1</span><span class="special">=</span> <span class="identifier">g</span><span class="special">.</span><span class="identifier">make</span><span class="special">();</span>   
+<span class="identifier">vec</span><span class="special">[</span><span class="identifier">id</span><span class="special">]</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">();</span>
+</pre>
+<p>
+      <span class="bold"><strong>Recovering unsused identifiers</strong></span>
+    </p>
+<p>
+      A first implementation could consists in a monotonic counter.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">discard</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+<span class="identifier">luidg</span> <span class="identifier">g</span><span class="special">(</span><span class="identifier">_high</span><span class="special">=</span><span class="number">100</span><span class="special">);</span>
+<span class="identifier">luidg</span><span class="special">::</span><span class="identifier">numeric_type</span> <span class="identifier">id</span><span class="special">=</span> <span class="identifier">g</span><span class="special">.</span><span class="identifier">make</span><span class="special">();</span>
+<span class="comment">// ...
+</span><span class="identifier">g</span><span class="special">.</span><span class="identifier">release</span><span class="special">(</span><span class="identifier">id</span><span class="special">);</span>
+</pre>
+<p>
+      While this needs a very simple and efficient implementation, There is drawback
+      of having a small size is that the number of unique identifier is more limited.
+      This limit will finish by been reached if the application runs a long time.
+      To paliate to this, we need a mechanism to recover the unused identifiers once
+      the identified information is removed. Depending on the application the recovered
+      identifiers could be reused immediately
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">recover</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">immediate</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      or frozen during a given duration
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">recover</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">delay</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      or a number of times.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">recover</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">freeze</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      Usually they are reused in a first reusable first reused order (fifo), but
+      depending on the implementation this could not be always the more efficient
+      policy. So the user can either constraint this fifo order or let undefined
+      this aspect.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">recover</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">fifo</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Managing the lack of identifiers</strong></span>
+    </p>
+<p>
+      In any case we need to manage with the overflow case, i.e. when there are no
+      more free identifiers. The user could prefer an exception be thrown,
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">throw_on_error</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      return an invalid value which will be equal to error(),
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">invalid_on_error</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      use errno (ERANGE),
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">errno_on_error</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      or call to a user defined function which could try to recover from this situation,
+      by redimensioning the upper bound for example.
+    </p>
+<p>
+      <span class="bold"><strong>Ensuring coherency on reusable identifiers</strong></span>
+    </p>
+<p>
+      All this seams to work as far as the user do not release the same identifiers
+      twice. As this is an expensive aspect, but ussualy the applications has its
+      own way to do it. If this is not the case the application could ask to the
+      luid generator to ensure that.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">ensure</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Synchronization on multi threaded or multi process applications</strong></span>
+    </p>
+<p>
+      The generation of new LUIDs and the recovering of unused LUIDs must be synchronized.
+      So LUID are better adapted to systems where these operations are done in a
+      reduced scope. Depending on this scope: single thread, multi-threaded process
+      or a node,i.e. multiple process, the synchronization mechanisms vary.
+    </p>
+<p>
+      In a single thread scope no synchronization is needed. Synchronization on a
+      multi-threaded process can be ensured using a thread mutex.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">multi_threaded</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      or
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">multi_process</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      In addition the synchronization can be ensured internally by the generator,
+      or externally by the user, i.e. the user has already a synchronization mechanism.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">multi_threaded</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">externally_locked</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      LUIDs are not adapted to distributed system (multiple nodes generating and
+      recovering luids) because it needs a coordination between the different nodes
+      which will take too much time. UUIDs and GUIDs are more adapted to this situation.
+      Anyway if the size constraint can not be avoided, one of the nodes could play
+      the master role and the others behaves as slaves. Master and slaves need to
+      work together. This library do not pretend to take in account this use case
+      but, could be the base of such approach.
+    </p>
+<p>
+      <span class="bold"><strong>Lifetime</strong></span>
+    </p>
+<p>
+      Another aspect is the lifetime of the information to be identified by the luids.
+      It can be the lifetime of the process, the host machine lifetime or persists
+      to a shut down of the host machine using the filesystem.
+    </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">bluid</span><span class="special">::</span><span class="identifier">luidg</span><span class="special">&lt;</span><span class="identifier">bluid</span><span class="special">::</span><span class="identifier">dsl</span><span class="special">::</span><span class="identifier">kernel</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span> <span class="identifier">luidg</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Optimization</strong></span>
+    </p>
+<p>
+      The last aspect will be the optimization. Different application have different
+      needs, some have space constraints, and most of them have speed constraints.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="install.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

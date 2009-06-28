@@ -1,0 +1,1232 @@
+[/
+ / Copyright (c) 2008 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[library Toward Boost.LUID
+    [quickbook 1.4]
+    [authors [Botet Escriba, Vicente J.]]
+    [copyright 2008-2009 Vicente J. Botet Escriba]
+    [purpose Locally Unique Identifier]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+[template concept_param[role concept] A type playing the role of [role] in the [concept] concept.]
+
+[template concept_var[type] Object of type [type].]
+
+[template var[name type]
+
+*    [*[name]] Object of type [type].
+]
+
+[template concept_arg[name concept]
+
+The type [*[name]] must be a model of [*[concept]].
+]
+
+[template concept_valid_expressions[concept]
+[*Valid expressions]
+
+In addition to the expressions defined in [concept], the following expressions must be valid.
+]
+
+[warning LUID is not a part of the Boost libraries.]
+
+[section:intro Introduction]
+
+[*Description]
+
+[*Boost.LUID] simplifies the generation of locally unique identifiers in a wide context.
+
+Locally Unique Identifier or LUID is a special type of identifier used in software applications in order to provide a reference number which is unique in a given context (hence, "Locally" in opposition to "Globally" or "Universally"). Each generated LUID is guaranteed to be unique in its context.
+
+LUID could have many applications. Some examples follow: creating unique identifiers in a database tables, network messages may be identified with a LUID to ensure that this messages are associated to a given session, transactions may be identified by LUIDs.
+
+Note. Please let me know other applications of luids you can have.
+
+[*Reduced identifier size]
+
+An attractive feature of LUIDs when compared to other alternatives is the minimal size used by this identifiers, that depends on the number of instances a given context can have (usually 4 bytes). This allows to use them in protocols fixing the size of the references exchanged to less that 16 bytes(as it is the case of UUID and GUID). Usually LUIDs are represented by unsigned integers and have an upper bound value.
+
+    typedef bluid::luid::luidg<unsigned char> luidg;
+    luidg g(_high=100);
+    luidg::numeric_type id= g.make();
+
+
+[*Usable as random access index in constant time]
+
+Another aspect, and not less interesting is that the access to the information they identify can be done in constant time.
+
+    std::vector<T*> vec;
+    luidg::numeric_type id1= g.make();
+    vec[id] = new T();
+
+[*Recovering unsused identifiers]
+
+A first implementation could consists in a monotonic counter.
+
+    typedef bluid::luidg<bluid::dsl::discard<> > luidg;
+    luidg g(_high=100);
+    luidg::numeric_type id= g.make();
+    vec[id] = new T();
+    // ...
+    delete vec[id];
+    vec[id] = 0;
+    g.release(id);
+
+While this needs a very simple and efficient implementation, There is drawback of having a small size is that the number of unique identifier is more limited. This limit will finish by been reached if the application runs a long time. To paliate to this, we need a mechanism to recover the unused identifiers once the identified information is removed. Depending on the application the recovered identifiers could be reused immediately
+
+    typedef bluid::luidg<bluid::dsl::recover<bluid::dsl::immediate<> > > luidg;
+
+or frozen during a given duration
+
+    typedef bluid::luidg<bluid::dsl::recover<bluid::dsl::delay<> > > luidg;
+
+or a number of times.
+
+    typedef bluid::luidg<bluid::dsl::recover<bluid::dsl::freeze<> > > luidg;
+
+Usually they are reused in a first reusable first reused order (fifo), but depending on the implementation this could not be always the more efficient policy. So the user can either constraint this fifo order or let undefined this aspect.
+
+    typedef bluid::luidg<bluid::dsl::recover<bluid::dsl::fifo<> > > luidg;
+
+
+[*Managing the lack of identifiers]
+
+In any case we need to manage with the overflow case, i.e. when there are no more free identifiers. The user could prefer an exception be thrown,
+
+    typedef bluid::luidg<bluid::dsl::throw_on_error<> > luidg;
+
+return an invalid value which will be equal to error(),
+
+    typedef bluid::luidg<bluid::dsl::invalid_on_error<> > luidg;
+
+use errno (ERANGE),
+
+    typedef bluid::luidg<int, bluid::dsl::errno_on_error<> > luidg;
+
+or call to a user defined function which could try to recover from this situation, by redimensioning the upper bound for example.
+
+
+[*Ensuring coherency on reusable identifiers]
+
+All this seams to work as far as the user do not release the same identifiers twice. As this is an expensive aspect, but ussualy the applications has its own way to do it. If this is not the case the application could ask to the luid generator to ensure that.
+
+    typedef bluid::luidg<bluid::dsl::ensure<> > luidg;
+
+[*Synchronization on multi threaded or multi process applications]
+
+The generation of new LUIDs and the recovering of unused LUIDs must be synchronized. So LUID are better adapted to systems where these operations are done in a reduced scope. Depending on this scope: single thread, multi-threaded process or a node,i.e. multiple process, the synchronization mechanisms vary.
+
+In a single thread scope no synchronization is needed. Synchronization on a multi-threaded process can be ensured using a thread mutex.
+
+    typedef bluid::luidg<bluid::dsl::multi_threaded<> > luidg;
+
+or
+
+    typedef bluid::luidg<bluid::dsl::multi_process<> > luidg;
+
+In addition the synchronization can be ensured internally by the generator, or externally by the user, i.e. the user has already a synchronization mechanism.
+
+    typedef bluid::luidg<bluid::dsl::multi_threaded<bluid::dsl::externally_locked<> > > luidg;
+
+LUIDs are not adapted to distributed system (multiple nodes generating and recovering luids) because it needs a coordination between the different nodes which will take too much time. UUIDs and GUIDs are more adapted to this situation. Anyway if the size constraint can not be avoided, one of the nodes could play the master role and the others behaves as slaves. Master and slaves need to work together. This library do not pretend to take in account this use case but, could be the base of such approach.
+
+[*Lifetime]
+
+Another aspect is the lifetime of the information to be identified by the luids. It can be the lifetime of the process, the host machine lifetime or persists to a shut down of the host machine using the filesystem.
+
+    typedef bluid::luidg<bluid::dsl::kernel<> > luidg;
+
+[*Optimization]
+
+The last aspect will be the optimization. Different application have different needs, some have space constraints, and most of them have speed constraints.
+
+[endsect]
+
+[section:install Installing LUID]
+[heading Getting Boost.LUID]
+
+You can get LUID by downloading [^luid.zip] from [@http://www.boost-consulting.com/vault/index.php?directory=Data%20Types]
+
+
+[heading Building Boost.LUID]
+
+There is no need to compile [*Boost.LUID], since it's a header only library. Just include your Boost header directory in your compiler include path.
+
+[*Boost.LUID] depends on Boost. You must use either Boost version 1.35.x or the version in SVN trunk. In particular, [*Boost.LUID] depends on:
+
+
+[variablelist
+[
+    [[@http://www.boost.org/libs/date_time/ [*Boost.DateTime]]] [which needs separate compilation. However, the subset used by [*Boost.LUID] does not need any separate compilation so the user can define `BOOST_DATE_TIME_NO_LIB` to avoid Boost from trying to automatically link the [*Boost.DateTime].]]
+[
+    [[@http://www.boost.org/libs/dynamic_bitset [*Boost.DynamicBitSet]]] [to store the recovered luids]
+]
+[
+    [[@http://www.boost.org/libs/integer [*Boost.Integer]]] [to obtain the default bounds]
+]
+[
+    [[@http://www.boost.org/libs/interprocess [*Boost.Interprocess]]] [to lock on multi process scope and to store on shared memory or mapped memmory files when the lifetime is longer than the process one.]
+]
+[
+    [[@http://www.boost.org/libs/intrusive [*Boost.Intrusive]]] [to store the recovered luids]
+]
+[
+    [[@http://www.boost.org/libs/mpl [*Boost.MPL]]] [for all the metaprograming task]
+]
+[
+    [[@http://www.boost.org/libs/parameter [*Boost.Parameters]]] [to pass the constructor parameters and  to configure the template parameters]
+]
+[
+    [[@http://www.boost.org/libs/thread [*Boost.Threads]]] [to lock on multi_threaded scope.]
+]
+[
+    [[*Boost.Threads]] [needs separate compilation. However, you will need only to link with depending on the features used.  ]
+]
+[
+    [[@http://www.boost.org/libs/type_traits [*Boost.TypeTraits]]] []
+]
+]
+
+[heading Tested compilers]
+Currently, [*Boost.LUID] has been tested in the following compilers/platforms:
+
+*  GCC 3.4.4 Cygwin
+
+
+[endsect]
+
+[section:functional_model Functional Model]
+The user functions provided by LUID generator are quite simple:
+
+* make: make a new luid (constant time complexity)
+* release: release an luid (should check that the luid is not already free) (constant time complexity without coherency)
+* error: the value returned when no more luids are available (constant time complexity)
+* set_upper_bound: sets the new upper bound (could be linear time complexity)
+* get_lower_bound: get the lower bound (constant time complexity)
+* get_upper_bound: get the current upper bound (constant time complexity)
+* count: get the number of used luids (should be constant time complexity)
+* clear: release all the used ressources and reset them as they were after construction (could be linear time complexity)
+
+[endsect]
+
+[section:fearure_model Feature Model]
+
+While making an concrete implementation could be simple, making a generic one add the complexity of variants configuration.
+
+Next follows the features and its variants associated to the domain.
+
+* [*numeric_type]/Mandatory: The unsigned integer type of the luid to be managed
+    * lower: The lower bound value, i.e. the first value
+    * upper: The upper bound value, i.e. the fact the generator bounds until a given value
+
+* [*on_overflow]/Mandatory: An error policy used when there are no more free uid
+    * throw_on_error
+    * errno_on_error
+    * ignore_error
+    * user_error(user_function)
+
+* [*on_release]/Mandatory: A releasing policy which control whether identifiers are discarded or
+recovered when they    are released
+    * discard: the released luid are not reusable
+    * recover: the generator can recover identifiers that are released. This has two features
+        * when the released values become reusable
+            * immediate: the released luid is immediately reusable
+            * delay: the luid is reusable after a given a time.
+                This needs the following parameters
+                * time_type: the time type
+                * duration_type: the duration type
+                * now: how to get the current time
+                * duration: the delay after which the luid is reusable.
+                * the default duration if not given explicitly
+            * freeze: the luid is reusable once some minimal number of new luid have been taken
+                * distance: the number of luids to be reused before the released one
+        * how the reusable values are reused
+            * fifo:  reusable values are reused on fifo order
+            * undefined: no constraint is added
+
+* [*coherency]/Mandatory: A coherency policy checks whether the released luid is already free
+    * ensure: the luid generator must ensure that the released luids are unique. If already released an exception is thrown.
+    * ignore: the user has the responsability and the means to ensure that the released luids are unique.
+
+* [*count]/Optional: The luid generator can be configured with constant or linear time count:
+    * Linear time count: The luid generator doesn't hold a count member that it's updated with every make/release. This implies that the size() function has not constant time complexity.
+    * Constant time count: The luid generator holds a count member that it's updated with every make/release.
+    This implies that the count() function has constant time complexity.
+
+* [*scope]/Mandatory: the scope of the luid generator, i.e. which part of the system could use the luid generator
+    * mono_threaded: only one single thread access the luid generator
+    * multi_threaded: several threads in a single process share the luid generator. This has associated a locking policy.
+    * multi_process: several process share the luid generator. This has associated a locking policy.
+
+    * [*locking]: A locking policy determining the synchronization mechanisms for internal access to shared resources.
+        * internally: the generator ensure that all the operations are synchronized on its own.
+        * externally: the user needs to provide the needed synchronization.
+
+* [*lifetime]/Mandatory: The lifetime/persistency of the information identified by this luids
+    * process: the information is lost once the process exits or shuts down
+    * kernel: the information exists until the kernel of the operating system reboots or the information is explicitly deleted.
+        If a process on the scope restarts it will recover the information.
+    * filesystem: the information exists until the mechanism is explicitly deleted.
+
+* [*optimization]/Mandatory: An optimization policy which could be used as an hint for the implementation
+choice of the other aspects.
+    * speed: the used algorithms are efficient even if a lot of space is used
+    * space: the needed space is minimized even if this has as consequence a lost of efficiency.
+
+* [*extendability]:
+
+[heading Which features are mandatory for the first release?]
+
+[endsect]
+
+[section:dsl Domain Specific Language]
+[heading Which features must be in the DSL?]
+
+* Should the lower, upper bound be static or given at construction time?
+
+I think that these values must be given at construction time.
+
+* Should the low value be 0?
+
+This seams not really a constraint.
+
+* Can the upper bound be changed? And how?
+
+The upper bound could be changed following some constraints.
+
+* Should the duration be static, given at construction time or when releasing the uid?
+
+I think that this must be given at construction time. This simplify the algorithm and make uniform
+the release function interface.
+
+* Configurability versus extendability
+
+In order to manage with all this variations this library propose the use of a luidg generator with a high configurablity degree using a domain specific language (DSL). The DSL expressions are transformed to a Genvoca stack of Implementation Components Configuration Language(ICCL) by the generator.
+
+Each implementation component (IC) is a mixin and all of them have the same form
+
+[c++]
+
+    template <typename Inner>
+    class IC : public/protected/private Inner {
+        ...
+    };
+
+
+This DSL can not be extended without modifying the library. In order to make extensions we need to modify how these implementation components are arranged. An Extending DSL language could be provided to this concern.
+The language could consider replacing an IC by a user IC, removing an IC or inserting over a IC a user IC. This has as consequence that the implementation components must be models of specific concepts.
+Another possibility is to let the user extend the DSL, and provide an other generator.
+In any case the IC must be provided and the concept behind this IC must be described explicitly.
+
+* Do we need to use Boost.Parameters for the template parameters?
+
+As the number of parameters is quite big the parameter should be given by name. The use of the Boost.Parameter seams to help to achieve that. I'm wondering if the ParametersExpresion library could be defined as well. This could make easier the parser, and the transformation for default values.
+
+* Do we need to use Boost.Parameters for the constructor parameters or a technique similar to the one used on Boost.MultiIndex?
+
+As the number of constructor parameters is variable I think that the Boost.Parameters is more adapted.
+
+[heading DSL Grammar]
+[pre
+luidg [
+    numeric_type([uint_type] + lower_bound + upper_bound) ?
++   on_overflow [
+        throw_on_error
+    |   errno_on_error
+    |   invalid_on_error
+    |   user_error(user_function)
+    |   on_overflow_layer(layer)
+    ]
++   on_release [
+        discard
+    |   recover [recover_when + recover_how ]
+    |   on_release_layer (layer)
+    ]
++   scope [
+        mono_threaded
+    |   multi_threaded [locking]
+    |   multi_process [locking]
+    |   locking_layer (layer[locking])
+    ]
++   lifetime [
+        process [void_pointer_type + allocator_type ]
+    |   kernel [ void_pointer_type + allocator_type ]
+    |   filesystem [void_pointer_type + allocator_type ]
+    |   storage_layer ( layer [void_pointer_type + allocator_type] )
+    ]
++   count_complexity [ contant_time | linear_time ]
++   optimization [ speed | space]
++   coherency [ ensure | ignore | coherency_layer (layer) ]
+]
+
+lower_bound [static_lower_bound [uint_value] | cons_lower_bound ]
+
+upper_bound [static_upper_bound [uint_value] | dynamic_upper_bound | cons_upper_bound ]
+
+recover_when [
+    immediate
+|   freeze
+|   delay [time_traits]
+]
+
+recover_how [
+    fifo
+|   undefined
+]
+
+locking [
+    internally [locking_traits]
+|   externally [locking_traits]
+]
+
+locking_traits [
+    thread_locking_traits
+|   process_locking_traits
+|   ...
+]
+
+time_traits [
+    posix_time_traits
+|   ...
+]
+
+[section DSL features]
+[variablelist
+[
+    [allocator_type] [The allocator type]
+]
+[
+    [void_pointer_type] [the void pointer type]
+]
+]
+
+[endsect]
+
+[section:default Default Values]
+
+[table luidg Default Values
+[[Feature]          [Default]]
+[[numeric_type]     [unsigned int]]
+[[on_overflow]      [invalid_error]]
+[[on_release]       [discard]]
+[[scope]            [mono_threaded]]
+[[lifetime]         [process]]
+[[optimization]     [speed]]
+[[coherency]        [ensure]]
+[[introspection]    [count]]
+]
+
+[table luidg Incompatible Values
+[[scope]            [lifetime]]
+[[multi_process]    [process_persistecy]]
+]
+
+[table recover Default Values
+[[Feature]          [Default]]
+[[when]             [immediate]]
+[[how]              [fifo]]
+]
+
+[table Other Default Values
+[[Feature]          [Default]]
+[[time_traits]      [posix]]
+[[locking]          [internally]]
+]
+
+[table Locking Derived Values
+[[scope]            [lifetime]              [internally_locking_traits] [externally_mutex_type]]
+[[mono_threaded]    [*]                     [N/A]                       [N/A]]
+[[multi_threaded]   [*]                     [thread_locking_traits]     [boost::mutex]]
+[[multi_process]    [process_persistecy]    [N/A]                       [N/A]]
+[[multi_process]    [kernel_persistecy]     [process_locking_traits]    [bip::named_mutex]]
+[[multi_process]    [filesystem_persistecy] [process_mutex_traits]      [bip::named_mutex]]
+]
+
+[table void_pointer_type Derived Values
+[[scope]            [lifetime]              [void_pointer_type]]
+[[mono_threaded]    [process_persistecy]    [void*]]
+[[multi_threaded]   [process_persistecy]    [void*]]
+[[multi_process]    [process_persistecy]    [N/A]]
+[[*]                [kernel_persistecy]     [bip::offset_ptr<void>]]
+[[*]                [filesystem_persistecy] [bip::offset_ptr<void>]]
+]
+
+[table allocator_type Derived Values
+[[lifetime]                 [allocator_type]]
+[[process_persistecy]       [std::allocator]]
+[[kernel_persistecy]        [bip::allocator<int, bip::managed_shared_memory::segment_manager>]]
+[[filesystem_persistecy]    [bip::allocator<int, bip::managed_mapped_file::segment_manager>]]
+]
+
+[endsect]
+
+[endsect]
+
+[section:iccl Implementation Component Configuration Language]
+
+[table GenVoca layered architecture
+[[Layer][Variations]]
+
+[[LUIDG][constructor\[OptExternalLocking\]]]
+[[OptExternalLocking][externally_locked\[Facade\] | Facade]]
+[[Facade][facade\[InternalLocking\] ]]
+[[InternalLocking][internally_locked\[Reentrant\] | Reentrant | user_provided\[Reentrant\]]]
+
+[[Reentrant][reentrant\[OnOverflow\] ]]
+
+[[OnOverflow][ ingnore_error\[OnRelease\] | throw_on_error\[OnRelease\] | errno_on_error\[OnRelease\] | user_provided\[OnRelease\]]]
+
+[[Coherency][coherency\[SpecificCoherency\] | OnRelease | user_provided\[OnRelease\] ]]
+[[SpecificCoherency][biset\[OnRelease\] ]]
+
+[[OnRelease][ discard\[Counter\] | rec_immediate_fifo\[Fifo\] | rec_delay_fifo\[Fifo\] | rec_freeze_fifo\[Fifo\] | rec_immediate_undefined\[Set\] | user_provided\[Storage\] ]]
+[[Fifo][queue\[Counter\]]]
+[[Set][set_interval\[Storage\]]]
+[[Counter][counter\[Storage\]]]
+
+[[Storage][storage\[SpecificStorage\] | user_provided\[Base\]]]
+[[SpecificStorage][raw\[Base\] | shm\[Base\] | mmfile\[Base\]]]
+
+[[Base][base\[Config\]]]
+
+[[Config][numeric_type,
+    node_type,
+    header_type,
+    LUIDG]]
+]
+
+GenVoca Grammar for the Locally Unique Identifier Generator LUIDG
+[pre
+LUIDG : luidg\[Facade\]
+Facade : facade\[Locking\]
+Locking :
+        internally_locked\[OnOverflow\]
+    |   OnOverflow
+OnOverflow:
+        return_error_value\[Coherency\]
+    |   throw_on_error\[Coherency\]
+Coherency :
+        coherency\[SpecificCoherency\]
+    |   OnRelease
+SpecificCoherency :
+        bitset\[OnRelease\]
+    |    set\[OnRelease\]
+OnRelease:
+        delay\[Recoverable\]
+    |   freeze\[Recoverable\]
+    |   discard\[Counter\]
+Recoverable: recoverable\[Counter\]
+Counter: counter\[Storage\]
+Storage : storage\[SpecificStorage\]
+SpecificStorage :
+        raw\[Base\]
+    |   shm\[Base\]
+    |   mmfile\[Base\]
+Base: base\[Config\]
+Config: \[
+    numeric_type,
+    node_type,
+    header_type,
+    LUIDG
+    \]
+
+]
+
+[endsect]
+
+
+[section:generator Generator]
+
+[section:generator_parser DSL Parser]
+[endsect]
+
+[section:generator_assign_default Assign default values]
+[endsect]
+
+[section:generator_assemble_components Assemble components]
+
+[table Bottom
+[[mixin]]
+[[base\[Generator\]]]
+]
+
+[table Specific Storage Layer
+[[lifetime][mixin]]
+[[process][raw_storage\[Base\]]]
+[[kernel][shm_storage\[Base\]]]
+[[filesystem][mmfile_storage\[Base\]]]
+]
+
+[table Storage
+[[mixin]]
+[[storage\[SpecificStorage\]]]
+]
+
+[table OnRelease Layer
+[[on_release][when][how][mixin]]
+[[discard][-][-][Counter]]
+[[recover][immediate][fifo][Fifo]]
+[[recover][immediate][undefined][set\[Storage\]]]
+[[recover][delay][*][rec_fifo_delay\[Fifo\]]]
+[[recover][freeze][*][rec_fifo_freeze\[Fifo\]]]
+]
+
+[table Coherency Layer
+[[coherency][on_release][when][how][mixin]]
+[[ignore][-][-][-][OnRelease]]
+[[ensure][discard][-][-][coherency[bitset\[OnRelease\]]]
+[[ensure][recover][immediate][fifo][coherency[bitset\[OnRelease\]]]
+[[ensure][recover][immediate][undefined][OnRelease]]
+[[ensure][recover][delay][*][coherency[bitset\[OnRelease\]]]
+[[ensure][recover][freeze][*][coherency[bitset\[OnRelease\]]]
+]
+
+[table OnOverflow Layer
+[[on_overflow][mixin]]
+[[ignore_error][ignore_on_overflow\[Coherency\]]]
+[[errno_on_error][errno_on_on_overflow\[Coherency\]]]
+[[throw_on_error][throw_on_overflow\[Coherency\]]]
+[[user_error][user_on_overflow\[Coherency\]]]
+]
+
+[table OptIntLocking Layer
+[[scope][locking][mixin]]
+[[mono_threaded][-][OnOverflow]]
+[[multi_threaded][internally_locked][internally_locked\[OnOverflow\]]]
+[[multi_threaded][externally_locked][OnOverflow]]
+]
+
+[table OptExtLocking Layer
+[[scope][locking][mixin]]
+[[mono_threaded][-][Facade]]
+[[multi_threaded][internally_locked][Facade]]
+[[multi_threaded][externally_locked][externally_locked\[Facade\]]]
+]
+
+[endsect]
+
+[endsect]
+
+[section:reference Reference]
+
+[section:reference_macros Macros]
+[endsect]
+
+[section:reference_types Types]
+
+[section:reference_dsl DSL types]
+[section:reference_dsl_on_overflow on_overflow<>]
+
+The available actions are:
+
+[variablelist
+[    [throw_on_error<>] [Throws the std::overflow_error exception.] ]
+[    [errno_on_error<>] [Sets ::errno  to ERANGE and returns std::numeric_limits<T>::infinity().] ]
+[    [ignore_error<>] [Returns std::numeric_limits<T>::infinity()] ]
+[    [user_error<OverflowErrorHandler>] [Calls a user-supplied overflow error handler.] ]
+]
+
+[endsect]
+[section:reference_dsl_on_release on_release<>]
+
+The available actions are:
+
+[variablelist
+[
+    [discard<>] [On release the luid is discarded.]
+]
+[
+    [recover<immediate<> >] [On release the luid is reusable immediatelly.]
+]
+[
+    [recover<delay<> >] [On release the luid is reusable after a given time (given at construction time).]
+]
+[
+    [recover<freeze<> >] [On release the luid is reusable once d luids have been reused (given at construction time).]
+]
+]
+[endsect]
+[section:reference_dsl_scope scope<>]
+[endsect]
+[section:reference_dsl_lifetime lifetime<>]
+[endsect]
+[section:reference_dsl_coherency coherency<>]
+[endsect]
+[section:reference_dsl_optimization optimization<>]
+[endsect]
+[section:reference_dsl_extension extension<>]
+[endsect]
+[endsect]
+
+[section:reference_iccl_mixins ICCL mixins]
+[section:reference_iccl_mixin Mixin Layers]
+[*Description]
+
+All the ICCL components are mixin layers that takes the following form:
+
+[c++]
+
+    template <typename LowerLayer>
+    struct Layer
+    {
+    typedef LowerLayer lower_layer;
+        typedef typename lower_layer::config config;
+        // node_type specialization
+        ...
+        // header_type  specialization
+        ...
+        // type specialization
+        ...
+    };
+
+
+And have public types config, node_type, header_type and type.
+When a layer doesn't adds anything to a type the lower layer it defines the type as follows:
+[c++]
+
+        typedef typename lower_layer::config config;
+
+
+When the layer adds something to a type of the the lower layer for a type it defines the type as follows:
+[c++]
+
+        // header_type  specialization
+        struct header_type :  lower_layer::header_type
+        {
+            typedef typename lower_layer::header_type super_type;
+            ...
+        };
+
+
+There are two special layers, the bottom layer and the top layer.
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidMixinLayer..LuidMixinLayer]] ]
+[ [`ArgsParams`] [[concept_param argugent pack..LuidMixinLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+[ [`args`] [[concept_var ArgsParams]] ]
+[ [`alloc`] [[concept_var L::config::allocator_type&]] ]
+]
+
+[*Valid expressions]
+The following expressions must be valid.
+
+[table LuidMixinLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [`config`]
+        [`M<L>::config`]
+        [`Implementation defined`]
+        [The global configuration.]
+    ]
+    [
+        [`node_type`]
+        [`M<L>::node_type`]
+        [`Implementation defined`]
+        [the node type on this layer.]
+    ]
+    [
+        [`header_type`]
+        [`M<L>::header_type`]
+        [`Implementation defined`]
+        [the header type on this layer.]
+    ]
+    [
+        [`Header construction`]
+        [`M<L>::header_type(args, alloc)`]
+        [`M<L>::header_type`]
+        [header type must accept a constructor with a ArgsParams parameter.]
+    ]
+    [
+        [`type`]
+        [`M<L>::type`]
+        [`Implementation defined`]
+        [the luid type on this layer.]
+    ]
+    [
+        [`type construction`]
+        [`M<L>::type(args)`]
+        [`M<L>::type`]
+        [type must accept a constructor with a ArgsParams parameter.]
+    ]
+]
+
+[endsect]
+[section:reference_iccl_base Base Layer]
+[*Description]
+
+The bottom layer has the generator itself as parameter instead of the lower layer.
+It defines the bottom types for node_type, header_type and type.
+In addition it define a final function which gives the final instance for the luidg type.
+This layer is implemented only by the luid::iccl::base class, and it cannot be replaced.
+
+[*Refinement of]
+[link reference_iccl_mixin LuidMixinLayer]
+
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidBaseLayer..LuidBaseLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+]
+
+[*Valid expressions]
+In addition to the expressions defined in LuidMixinLayer, the following expressions must be valid.
+
+[table LuidBaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantic]]
+    ]
+    [
+        [final type]
+        [`L::final_type`]
+        [`Implementation defined`]
+        [the final type of the luid generator.]
+    ]
+    [
+        [final access]
+        [`l.final()`]
+        [`L::final_type&`]
+        [the final instance of the luid generator.]
+    ]
+]
+
+[endsect]
+
+[section:reference_iccl_specific_storage Specific Storage Layer]
+[*Description]
+
+This layer is responsable for the storage of the allocators, the header instantiation, and provides some allocation functions.
+
+[*Refinement of]
+LuidBaseLayer
+
+[concept_arg LowerLayer..LuidBaseLayer]
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidSpecificStorageLayer..LuidSpecificStorageLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+]
+
+[concept_valid_expressions LuidBaseLayer]
+
+[table LuidSpecificStorageLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [header access]
+        [`l.header()`]
+        [`L::header_type&`]
+        [the final instance of the luid generator.]
+    ]
+    [
+        [allocator]
+        [`l.allocator()`]
+        [`L::config::allocator_type&`]
+        [the allocator instance of the luid generator.]
+    ]
+]
+
+[endsect]
+[section:reference_iccl_storage Storage Layer]
+[*Description]
+This layer is responsable for the storage of the node allocators, and provides some node allocation functions.
+
+[*Refinement of]
+LuidSpecificStorageLayer
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidSpecificStorageLayer..LuidSpecificStorageLayer]] ]
+[ [`TPTR`] [[concept_param pointer..LuidSpecificStorageLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+[ [`t_ptr`] [[concept_var TPTR]] ]
+[ [`n`] [[concept_var L::config::node_pointer]] ]
+]
+
+[concept_valid_expressions LuidStorageLayer]
+
+[table LuidStorageLayer Valid expressions
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [generic allocation]
+        [`l.allocate<TPTR>()`]
+        [`TPTR`]
+        [allocates from the allocator the space for a type pointee<TPTR>.]
+    ]
+    [
+        [generic deallocation]
+        [`l.deallocate<TPTR>(t_ptr)`]
+        [`void`]
+        [deallocate a preceding allocate pointer.]
+    ]
+    [
+        [node allocation]
+        [`l.allocate()`]
+        [`L::config::node_pointer`]
+        [allocates from the node allocator a node_type.]
+    ]
+    [
+        [node deallocation]
+        [`l.deallocate(n)`]
+        [`void`]
+        [deallocate a preceding allocate node type pointer.]
+    ]
+]
+
+[endsect]
+[section:reference_iccl_counter Counter Layer]
+[*Description]
+
+This layer is responsable for the monotonic counter functions. It is really the bottom functional layer.
+
+[*Refinement of]
+LuidStorageLayer
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidSpecificStorageLayer..LuidSpecificStorageLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+[ [`n`] [[concept_var L::config::numeric_type]] ]
+]
+
+[concept_valid_expressions LuidStorageLayer]
+
+[table LuidCounterLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [count]
+        [`l.count()`]
+        [`L::config::numeric_type`]
+        [return the number of used luids]
+    ]
+    [
+        [lower_bound]
+        [`l.lower_bound()`]
+        [`L::config::numeric_type`]
+        [return the lower_bound of non recoverable luid ]
+    ]
+    [
+        [upper_bound]
+        [`l.upper_bound()`]
+        [`L::config::numeric_type`]
+        [return the upper_bound of non recoverable luid ]
+    ]
+    [
+        [resize_upper_bound]
+        [`l.resize_upper_bound(n)`]
+        [`L::config::numeric_type`]
+        [set the new upper bound if greater than the current counter and return the current upper_bound ]
+    ]
+    [
+        [make]
+        [`l.make()`]
+        [`L::config::numeric_type`]
+        [makes a new luid. This layer do not needs to take care  of integrity]
+    ]
+    [
+        [release]
+        [`l.release(n)`]
+        [`void`]
+        [release a luid.]
+    ]
+    [
+        [clear]
+        [`l.clear()`]
+        [`void`]
+        [reinit the luid generator.]
+    ]
+]
+[endsect]
+[section:reference_iccl_on_release Release Layer]
+[*Description]
+
+This layer is responsable for the management of of released luid.
+
+[*Refinement of]
+LuidCounterLayer
+
+[*Notation]
+
+[variablelist
+[ [`L`] [[concept_param LuidSpecificStorageLayer..LuidSpecificStorageLayer]] ]
+[ [`l`] [[concept_var L::type]] ]
+[ [`n`] [[concept_var L::config::numeric_type]] ]
+]
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [count]
+        [`l.count()`]
+        [`L::config::numeric_type`]
+        [return the number of used luids]
+    ]
+    [
+        [make]
+        [`l.make()`]
+        [`L::config::numeric_type`]
+        [makes a new luid. This layer do not needs to take care  of integrity]
+    ]
+    [
+        [release]
+        [`l.release(n)`]
+        [`void`]
+        [release a luid.]
+    ]
+    [
+        [clear]
+        [`l.clear()`]
+        [`void`]
+        [reinit the luid generator.]
+    ]
+]
+[endsect]
+[section:reference_iccl_recoverable Recoverable Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [count]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+
+[endsect]
+[section:reference_iccl_specific_coherency Specific Coherency Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [count]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+[endsect]
+[section:reference_iccl_coherency Coherency Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [`count function`]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+[endsect]
+[section:reference_iccl_on_overflow OnOverflow Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [`count function`]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+[endsect]
+[section:reference_iccl_locking Locking Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [`count function`]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+[endsect]
+[section:reference_iccl_facade Facade Layer]
+[*Description]
+
+
+
+[*Refinement of]
+
+
+[*Notation]
+
+* `M` denotes a LuidReleaseLayer,
+* `L` a LuidCounterLayer,
+* `l` is of type L<B>::type
+* `n` is of type M<B>::config::numeric_type
+
+[table LuidReleaseLayer Requirements
+    [
+        [[*Name]]
+        [[*Expression]]
+        [[*Return type]]
+        [[*Semantics]]
+    ]
+    [
+        [`count function`]
+        [`l.count()`]
+        [`M<B>::config::numeric_type`]
+        [return the number of used luids]
+    ]
+]
+[endsect]
+[endsect]
+
+[section:reference_iccl_term Other Implementation components]
+[endsect]
+[endsect]
+
+[endsect]
+
+[/
+[xinclude autodoc.xml]
+/]
+
+[section Appendices]
+
+[include history.qbk]
+
+[include rationale.qbk]
+
+[include implementation.qbk]
+
+[include acknowledgements.qbk]
+
+[include references.qbk]
+[endsect]
+

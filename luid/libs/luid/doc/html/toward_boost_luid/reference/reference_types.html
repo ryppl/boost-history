@@ -1,0 +1,1828 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Types</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="reference_macros.html" title="Macros">
+<link rel="next" href="../appendices.html" title="Appendices">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="reference_macros.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_luid.reference.reference_types"></a><a class="link" href="reference_types.html" title="Types"> Types</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl">
+        DSL types</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_overflow">
+          on_overflow&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_release">
+          on_release&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_scope">
+          scope&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_lifetime">
+          lifetime&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_coherency">
+          coherency&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_optimization">
+          optimization&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_extension">
+          extension&lt;&gt;</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins">
+        ICCL mixins</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_mixin">
+          Mixin Layers</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_base">
+          Base Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_storage">
+          Specific Storage Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_storage">
+          Storage Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_counter">
+          Counter Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_release">
+          Release Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_recoverable">
+          Recoverable Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_coherency">
+          Specific Coherency Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_coherency">
+          Coherency Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_overflow">
+          OnOverflow Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_locking">
+          Locking Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_facade">
+          Facade Layer</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_term">
+        Other Implementation components</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl" title="DSL types">
+        DSL types</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_overflow">
+          on_overflow&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_release">
+          on_release&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_scope">
+          scope&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_lifetime">
+          lifetime&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_coherency">
+          coherency&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_optimization">
+          optimization&lt;&gt;</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_extension">
+          extension&lt;&gt;</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_overflow"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_overflow" title="on_overflow&lt;&gt;">
+          on_overflow&lt;&gt;</a>
+</h5></div></div></div>
+<p>
+            The available actions are:
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">throw_on_error&lt;&gt;</span></dt>
+<dd><p>
+                Throws the std::overflow_error exception.
+              </p></dd>
+<dt><span class="term">errno_on_error&lt;&gt;</span></dt>
+<dd><p>
+                Sets ::errno to ERANGE and returns std::numeric_limits&lt;T&gt;::infinity().
+              </p></dd>
+<dt><span class="term">ignore_error&lt;&gt;</span></dt>
+<dd><p>
+                Returns std::numeric_limits&lt;T&gt;::infinity()
+              </p></dd>
+<dt><span class="term">user_error&lt;OverflowErrorHandler&gt;</span></dt>
+<dd><p>
+                Calls a user-supplied overflow error handler.
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_release"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_on_release" title="on_release&lt;&gt;">
+          on_release&lt;&gt;</a>
+</h5></div></div></div>
+<p>
+            The available actions are:
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">discard&lt;&gt;</span></dt>
+<dd><p>
+                On release the luid is discarded.
+              </p></dd>
+<dt><span class="term">recover&lt;immediate&lt;&gt; &gt;</span></dt>
+<dd><p>
+                On release the luid is reusable immediatelly.
+              </p></dd>
+<dt><span class="term">recover&lt;delay&lt;&gt; &gt;</span></dt>
+<dd><p>
+                On release the luid is reusable after a given time (given at construction
+                time).
+              </p></dd>
+<dt><span class="term">recover&lt;freeze&lt;&gt; &gt;</span></dt>
+<dd><p>
+                On release the luid is reusable once d luids have been reused (given
+                at construction time).
+              </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_scope"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_scope" title="scope&lt;&gt;">
+          scope&lt;&gt;</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_lifetime"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_lifetime" title="lifetime&lt;&gt;">
+          lifetime&lt;&gt;</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_coherency"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_coherency" title="coherency&lt;&gt;">
+          coherency&lt;&gt;</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_optimization"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_optimization" title="optimization&lt;&gt;">
+          optimization&lt;&gt;</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_extension"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_dsl.reference_dsl_extension" title="extension&lt;&gt;">
+          extension&lt;&gt;</a>
+</h5></div></div></div></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins" title="ICCL mixins">
+        ICCL mixins</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_mixin">
+          Mixin Layers</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_base">
+          Base Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_storage">
+          Specific Storage Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_storage">
+          Storage Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_counter">
+          Counter Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_release">
+          Release Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_recoverable">
+          Recoverable Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_coherency">
+          Specific Coherency Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_coherency">
+          Coherency Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_overflow">
+          OnOverflow Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_locking">
+          Locking Layer</a></span></dt>
+<dt><span class="section"><a href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_facade">
+          Facade Layer</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_mixin"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_mixin" title="Mixin Layers">
+          Mixin Layers</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            All the ICCL components are mixin layers that takes the following form:
+          </p>
+<p>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">LowerLayer</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">Layer</span> 
+<span class="special">{</span>
+<span class="keyword">typedef</span> <span class="identifier">LowerLayer</span> <span class="identifier">lower_layer</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lower_layer</span><span class="special">::</span><span class="identifier">config</span> <span class="identifier">config</span><span class="special">;</span>
+    <span class="comment">// node_type specialization
+</span>    <span class="special">...</span>
+    <span class="comment">// header_type  specialization
+</span>    <span class="special">...</span>
+    <span class="comment">// type specialization
+</span>    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+            And have public types config, node_type, header_type and type. When a
+            layer doesn't adds anything to a type the lower layer it defines the
+            type as follows:
+          </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lower_layer</span><span class="special">::</span><span class="identifier">config</span> <span class="identifier">config</span><span class="special">;</span>
+</pre>
+<p>
+            When the layer adds something to a type of the the lower layer for a
+            type it defines the type as follows:
+          </p>
+<pre class="programlisting"><span class="comment">// header_type  specialization
+</span><span class="keyword">struct</span> <span class="identifier">header_type</span> <span class="special">:</span>  <span class="identifier">lower_layer</span><span class="special">::</span><span class="identifier">header_type</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lower_layer</span><span class="special">::</span><span class="identifier">header_type</span> <span class="identifier">super_type</span><span class="special">;</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+            There are two special layers, the bottom layer and the top layer.
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidMixinLayer in the LuidMixinLayer concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">ArgsParams</span></code></span></dt>
+<dd><p>
+                A type playing the role of argugent pack in the LuidMixinLayer concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">args</span></code></span></dt>
+<dd><p>
+                Object of type ArgsParams.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">alloc</span></code></span></dt>
+<dd><p>
+                Object of type L::config::allocator_type&amp;.
+              </p></dd>
+</dl>
+</div>
+<p>
+            <span class="bold"><strong>Valid expressions</strong></span> The following expressions
+            must be valid.
+          </p>
+<div class="table">
+<a name="id4861585"></a><p class="title"><b>Table 1.17. LuidMixinLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidMixinLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">config</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">config</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Implementation</span> <span class="identifier">defined</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  The global configuration.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">node_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">node_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Implementation</span> <span class="identifier">defined</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the node type on this layer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">header_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">header_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Implementation</span> <span class="identifier">defined</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the header type on this layer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Header</span> <span class="identifier">construction</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">header_type</span><span class="special">(</span><span class="identifier">args</span><span class="special">,</span>
+                  <span class="identifier">alloc</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">header_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  header type must accept a constructor with a ArgsParams parameter.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Implementation</span> <span class="identifier">defined</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the luid type on this layer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">type</span> <span class="identifier">construction</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">type</span><span class="special">(</span><span class="identifier">args</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">L</span><span class="special">&gt;::</span><span class="identifier">type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  type must accept a constructor with a ArgsParams parameter.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_base"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_base" title="Base Layer">
+          Base Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            The bottom layer has the generator itself as parameter instead of the
+            lower layer. It defines the bottom types for node_type, header_type and
+            type. In addition it define a final function which gives the final instance
+            for the luidg type. This layer is implemented only by the luid::iccl::base
+            class, and it cannot be replaced.
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span> <a class="link" href="../../">LuidMixinLayer</a>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidBaseLayer in the LuidBaseLayer concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+</dl>
+</div>
+<p>
+            <span class="bold"><strong>Valid expressions</strong></span> In addition to the
+            expressions defined in LuidMixinLayer, the following expressions must
+            be valid.
+          </p>
+<div class="table">
+<a name="id4862287"></a><p class="title"><b>Table 1.18. LuidBaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidBaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantic</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  final type
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">final_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">Implementation</span> <span class="identifier">defined</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the final type of the luid generator.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  final access
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">final</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">final_type</span><span class="special">&amp;</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the final instance of the luid generator.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_storage"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_storage" title="Specific Storage Layer">
+          Specific Storage Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            This layer is responsable for the storage of the allocators, the header
+            instantiation, and provides some allocation functions.
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span> LuidBaseLayer
+          </p>
+<p>
+            </p>
+<p>
+              The type <span class="bold"><strong>LowerLayer</strong></span> must be a model
+              of <span class="bold"><strong>LuidBaseLayer</strong></span>.
+            </p>
+<p>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidSpecificStorageLayer in the LuidSpecificStorageLayer
+                concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+</dl>
+</div>
+<p>
+            </p>
+<p>
+              <span class="bold"><strong>Valid expressions</strong></span>
+            </p>
+<p>
+            </p>
+<p>
+              In addition to the expressions defined in LuidBaseLayer, the following
+              expressions must be valid.
+            </p>
+<p>
+          </p>
+<div class="table">
+<a name="id4862615"></a><p class="title"><b>Table 1.19. LuidSpecificStorageLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidSpecificStorageLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  header access
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">header</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">header_type</span><span class="special">&amp;</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the final instance of the luid generator.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  allocator
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">allocator</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">allocator_type</span><span class="special">&amp;</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  the allocator instance of the luid generator.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_storage"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_storage" title="Storage Layer">
+          Storage Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span> This layer is responsable
+            for the storage of the node allocators, and provides some node allocation
+            functions.
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span> LuidSpecificStorageLayer
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidSpecificStorageLayer in the LuidSpecificStorageLayer
+                concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">TPTR</span></code></span></dt>
+<dd><p>
+                A type playing the role of pointer in the LuidSpecificStorageLayer
+                concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">t_ptr</span></code></span></dt>
+<dd><p>
+                Object of type TPTR.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">n</span></code></span></dt>
+<dd><p>
+                Object of type L::config::node_pointer.
+              </p></dd>
+</dl>
+</div>
+<p>
+            </p>
+<p>
+              <span class="bold"><strong>Valid expressions</strong></span>
+            </p>
+<p>
+            </p>
+<p>
+              In addition to the expressions defined in LuidStorageLayer, the following
+              expressions must be valid.
+            </p>
+<p>
+          </p>
+<div class="table">
+<a name="id4863002"></a><p class="title"><b>Table 1.20. LuidStorageLayer Valid expressions</b></p>
+<div class="table-contents"><table class="table" summary="LuidStorageLayer Valid expressions">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  generic allocation
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">&lt;</span><span class="identifier">TPTR</span><span class="special">&gt;()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">TPTR</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  allocates from the allocator the space for a type pointee&lt;TPTR&gt;.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  generic deallocation
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">&lt;</span><span class="identifier">TPTR</span><span class="special">&gt;(</span><span class="identifier">t_ptr</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  deallocate a preceding allocate pointer.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  node allocation
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">allocate</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">node_pointer</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  allocates from the node allocator a node_type.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  node deallocation
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">deallocate</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  deallocate a preceding allocate node type pointer.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_counter"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_counter" title="Counter Layer">
+          Counter Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            This layer is responsable for the monotonic counter functions. It is
+            really the bottom functional layer.
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span> LuidStorageLayer
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidSpecificStorageLayer in the LuidSpecificStorageLayer
+                concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">n</span></code></span></dt>
+<dd><p>
+                Object of type L::config::numeric_type.
+              </p></dd>
+</dl>
+</div>
+<p>
+            </p>
+<p>
+              <span class="bold"><strong>Valid expressions</strong></span>
+            </p>
+<p>
+            </p>
+<p>
+              In addition to the expressions defined in LuidStorageLayer, the following
+              expressions must be valid.
+            </p>
+<p>
+          </p>
+<div class="table">
+<a name="id4863488"></a><p class="title"><b>Table 1.21. LuidCounterLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidCounterLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  count
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  lower_bound
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">lower_bound</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the lower_bound of non recoverable luid
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  upper_bound
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">upper_bound</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the upper_bound of non recoverable luid
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  resize_upper_bound
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">resize_upper_bound</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  set the new upper bound if greater than the current counter and
+                  return the current upper_bound
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  make
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">make</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  makes a new luid. This layer do not needs to take care of integrity
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  release
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">release</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  release a luid.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  clear
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">clear</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  reinit the luid generator.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_release"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_release" title="Release Layer">
+          Release Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            This layer is responsable for the management of of released luid.
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span> LuidCounterLayer
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">L</span></code></span></dt>
+<dd><p>
+                A type playing the role of LuidSpecificStorageLayer in the LuidSpecificStorageLayer
+                concept.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">l</span></code></span></dt>
+<dd><p>
+                Object of type L::type.
+              </p></dd>
+<dt><span class="term"><code class="computeroutput"><span class="identifier">n</span></code></span></dt>
+<dd><p>
+                Object of type L::config::numeric_type.
+              </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="id4864177"></a><p class="title"><b>Table 1.22. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  count
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  make
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">make</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">L</span><span class="special">::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  makes a new luid. This layer do not needs to take care of integrity
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  release
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">release</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  release a luid.
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  clear
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">clear</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="keyword">void</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  reinit the luid generator.
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_recoverable"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_recoverable" title="Recoverable Layer">
+          Recoverable Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4864620"></a><p class="title"><b>Table 1.23. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  count
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_coherency"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_specific_coherency" title="Specific Coherency Layer">
+          Specific Coherency Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4864872"></a><p class="title"><b>Table 1.24. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  count
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_coherency"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_coherency" title="Coherency Layer">
+          Coherency Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4865123"></a><p class="title"><b>Table 1.25. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">count</span> <span class="identifier">function</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_overflow"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_on_overflow" title="OnOverflow Layer">
+          OnOverflow Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4865388"></a><p class="title"><b>Table 1.26. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">count</span> <span class="identifier">function</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_locking"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_locking" title="Locking Layer">
+          Locking Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4865652"></a><p class="title"><b>Table 1.27. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">count</span> <span class="identifier">function</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_facade"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_mixins.reference_iccl_facade" title="Facade Layer">
+          Facade Layer</a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Refinement of</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Notation</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">M</span></code> denotes a LuidReleaseLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">L</span></code> a LuidCounterLayer,
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">l</span></code> is of type L&lt;B&gt;::type
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">n</span></code> is of type M&lt;B&gt;::config::numeric_type
+            </li>
+</ul></div>
+<div class="table">
+<a name="id4865917"></a><p class="title"><b>Table 1.28. LuidReleaseLayer Requirements</b></p>
+<div class="table-contents"><table class="table" summary="LuidReleaseLayer Requirements">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Name</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Expression</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Return type</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Semantics</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody><tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">count</span> <span class="identifier">function</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">l</span><span class="special">.</span><span class="identifier">count</span><span class="special">()</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">M</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;::</span><span class="identifier">config</span><span class="special">::</span><span class="identifier">numeric_type</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  return the number of used luids
+                </p>
+                </td>
+</tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_luid.reference.reference_types.reference_iccl_term"></a><a class="link" href="reference_types.html#toward_boost_luid.reference.reference_types.reference_iccl_term" title="Other Implementation components">
+        Other Implementation components</a>
+</h4></div></div></div></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="reference_macros.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

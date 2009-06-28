@@ -1,0 +1,245 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Feature Model</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="up" href="../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="prev" href="functional_model.html" title="Functional Model">
+<link rel="next" href="dsl.html" title="Domain Specific Language">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="functional_model.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="dsl.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="toward_boost_luid.fearure_model"></a><a class="link" href="fearure_model.html" title="Feature Model"> Feature Model</a>
+</h2></div></div></div>
+<p>
+      While making an concrete implementation could be simple, making a generic one
+      add the complexity of variants configuration. Next follows the features and
+      its variants associated to the domain.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        [<span class="bold"><strong>numeric_type</strong></span>]/Mandatory: The unsigned integer
+        type of the luid to be managed
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            lower: The lower bound value, i.e. the first value
+          </li>
+<li>
+            upper: The upper bound value, i.e. the fact the generator bounds until
+            a given value
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>on_overflow</strong></span>/Mandatory: An error policy used
+        when there are no more free uid
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            throw_on_error
+          </li>
+<li>
+            errno_on_error
+          </li>
+<li>
+            ignore_error
+          </li>
+<li>
+            user_error(user_function)
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>on_release</strong></span>/Mandatory: A releasing policy
+        which control whether identifiers are discarded or recovered when they are
+        released
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            discard: the released luid are not reusable
+          </li>
+<li>
+            recover: the generator can recover identifiers that are released. This
+            has two features
+            <div class="itemizedlist"><ul type="square">
+<li>
+                when the released values become reusable
+                <div class="itemizedlist"><ul type="disc">
+<li>
+                    immediate: the released luid is immediately reusable
+                  </li>
+<li>
+                    delay: the luid is reusable after a given a time. This needs
+                    the following parameters
+                    <div class="itemizedlist"><ul type="circle">
+<li>
+                        time_type: the time type
+                      </li>
+<li>
+                        duration_type: the duration type
+                      </li>
+<li>
+                        now: how to get the current time
+                      </li>
+<li>
+                        duration: the delay after which the luid is reusable.
+                      </li>
+<li>
+                        the default duration if not given explicitly
+                      </li>
+</ul></div>
+</li>
+<li>
+                    freeze: the luid is reusable once some minimal number of new
+                    luid have been taken
+                    <div class="itemizedlist"><ul type="circle"><li>
+                        distance: the number of luids to be reused before the released
+                        one
+                      </li></ul></div>
+</li>
+</ul></div>
+</li>
+<li>
+                how the reusable values are reused
+                <div class="itemizedlist"><ul type="disc">
+<li>
+                    fifo: reusable values are reused on fifo order
+                  </li>
+<li>
+                    undefined: no constraint is added
+                  </li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>coherency</strong></span>/Mandatory: A coherency policy
+        checks whether the released luid is already free
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            ensure: the luid generator must ensure that the released luids are unique.
+            If already released an exception is thrown.
+          </li>
+<li>
+            ignore: the user has the responsability and the means to ensure that
+            the released luids are unique.
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>count</strong></span>/Optional: The luid generator can be
+        configured with constant or linear time count:
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            Linear time count: The luid generator doesn't hold a count member that
+            it's updated with every make/release. This implies that the size() function
+            has not constant time complexity.
+          </li>
+<li>
+            Constant time count: The luid generator holds a count member that it's
+            updated with every make/release. This implies that the count() function
+            has constant time complexity.
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>scope</strong></span>/Mandatory: the scope of the luid generator,
+        i.e. which part of the system could use the luid generator
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            mono_threaded: only one single thread access the luid generator
+          </li>
+<li>
+            multi_threaded: several threads in a single process share the luid generator.
+            This has associated a locking policy.
+          </li>
+<li>
+            multi_process: several process share the luid generator. This has associated
+            a locking policy.
+          </li>
+<li>
+<span class="bold"><strong>locking</strong></span>: A locking policy determining
+            the synchronization mechanisms for internal access to shared resources.
+            <div class="itemizedlist"><ul type="square">
+<li>
+                internally: the generator ensure that all the operations are synchronized
+                on its own.
+              </li>
+<li>
+                externally: the user needs to provide the needed synchronization.
+              </li>
+</ul></div>
+</li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>lifetime</strong></span>/Mandatory: The lifetime/persistency
+        of the information identified by this luids
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            process: the information is lost once the process exits or shuts down
+          </li>
+<li>
+            kernel: the information exists until the kernel of the operating system
+            reboots or the information is explicitly deleted. If a process on the
+            scope restarts it will recover the information.
+          </li>
+<li>
+            filesystem: the information exists until the mechanism is explicitly
+            deleted.
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>optimization</strong></span>/Mandatory: An optimization
+        policy which could be used as an hint for the implementation choice of the
+        other aspects.
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            speed: the used algorithms are efficient even if a lot of space is used
+          </li>
+<li>
+            space: the needed space is minimized even if this has as consequence
+            a lost of efficiency.
+          </li>
+</ul></div>
+</li>
+<li>
+<span class="bold"><strong>extendability</strong></span>:
+      </li>
+</ul></div>
+<a name="toward_boost_luid.fearure_model.which_features_are_mandatory_for_the_first_release_"></a><h4>
+<a name="id4805028"></a>
+      <a class="link" href="fearure_model.html#toward_boost_luid.fearure_model.which_features_are_mandatory_for_the_first_release_">Which
+      features are mandatory for the first release?</a>
+    </h4>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="functional_model.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="dsl.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,715 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Assemble components</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward Boost.LUID">
+<link rel="up" href="../generator.html" title="Generator">
+<link rel="prev" href="generator_assign_default.html" title="Assign default values">
+<link rel="next" href="../reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generator_assign_default.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../generator.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_luid.generator.generator_assemble_components"></a><a class="link" href="generator_assemble_components.html" title="Assemble components">
+      Assemble components</a>
+</h3></div></div></div>
+<div class="table">
+<a name="id4859865"></a><p class="title"><b>Table 1.9. Bottom</b></p>
+<div class="table-contents"><table class="table" summary="Bottom">
+<colgroup><col></colgroup>
+<thead><tr><th>
+            <p>
+              mixin
+            </p>
+            </th></tr></thead>
+<tbody><tr><td>
+            <p>
+              base[Generator]
+            </p>
+            </td></tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4859906"></a><p class="title"><b>Table 1.10. Specific Storage Layer</b></p>
+<div class="table-contents"><table class="table" summary="Specific Storage Layer">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              lifetime
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              process
+            </p>
+            </td>
+<td>
+            <p>
+              raw_storage[Base]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              kernel
+            </p>
+            </td>
+<td>
+            <p>
+              shm_storage[Base]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              filesystem
+            </p>
+            </td>
+<td>
+            <p>
+              mmfile_storage[Base]
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4859992"></a><p class="title"><b>Table 1.11. Storage</b></p>
+<div class="table-contents"><table class="table" summary="Storage">
+<colgroup><col></colgroup>
+<thead><tr><th>
+            <p>
+              mixin
+            </p>
+            </th></tr></thead>
+<tbody><tr><td>
+            <p>
+              storage[SpecificStorage]
+            </p>
+            </td></tr></tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4860033"></a><p class="title"><b>Table 1.12. OnRelease Layer</b></p>
+<div class="table-contents"><table class="table" summary="OnRelease Layer">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              on_release
+            </p>
+            </th>
+<th>
+            <p>
+              when
+            </p>
+            </th>
+<th>
+            <p>
+              how
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              discard
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              Counter
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              immediate
+            </p>
+            </td>
+<td>
+            <p>
+              fifo
+            </p>
+            </td>
+<td>
+            <p>
+              Fifo
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              immediate
+            </p>
+            </td>
+<td>
+            <p>
+              undefined
+            </p>
+            </td>
+<td>
+            <p>
+              set[Storage]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              delay
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              rec_fifo_delay[Fifo]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              freeze
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              rec_fifo_freeze[Fifo]
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4860224"></a><p class="title"><b>Table 1.13. Coherency Layer</b></p>
+<div class="table-contents"><table class="table" summary="Coherency Layer">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              coherency
+            </p>
+            </th>
+<th>
+            <p>
+              on_release
+            </p>
+            </th>
+<th>
+            <p>
+              when
+            </p>
+            </th>
+<th>
+            <p>
+              how
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              ignore
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              OnRelease
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ensure
+            </p>
+            </td>
+<td>
+            <p>
+              discard
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              coherency[bitset[OnRelease]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ensure
+            </p>
+            </td>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              immediate
+            </p>
+            </td>
+<td>
+            <p>
+              fifo
+            </p>
+            </td>
+<td>
+            <p>
+              coherency[bitset[OnRelease]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ensure
+            </p>
+            </td>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              immediate
+            </p>
+            </td>
+<td>
+            <p>
+              undefined
+            </p>
+            </td>
+<td>
+            <p>
+              OnRelease
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ensure
+            </p>
+            </td>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              delay
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              coherency[bitset[OnRelease]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              ensure
+            </p>
+            </td>
+<td>
+            <p>
+              recover
+            </p>
+            </td>
+<td>
+            <p>
+              freeze
+            </p>
+            </td>
+<td>
+            <p>
+              *
+            </p>
+            </td>
+<td>
+            <p>
+              coherency[bitset[OnRelease]
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4860486"></a><p class="title"><b>Table 1.14. OnOverflow Layer</b></p>
+<div class="table-contents"><table class="table" summary="OnOverflow Layer">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              on_overflow
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              ignore_error
+            </p>
+            </td>
+<td>
+            <p>
+              ignore_on_overflow[Coherency]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              errno_on_error
+            </p>
+            </td>
+<td>
+            <p>
+              errno_on_on_overflow[Coherency]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              throw_on_error
+            </p>
+            </td>
+<td>
+            <p>
+              throw_on_overflow[Coherency]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              user_error
+            </p>
+            </td>
+<td>
+            <p>
+              user_on_overflow[Coherency]
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4860590"></a><p class="title"><b>Table 1.15. OptIntLocking Layer</b></p>
+<div class="table-contents"><table class="table" summary="OptIntLocking Layer">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              scope
+            </p>
+            </th>
+<th>
+            <p>
+              locking
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              mono_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              OnOverflow
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              multi_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              internally_locked
+            </p>
+            </td>
+<td>
+            <p>
+              internally_locked[OnOverflow]
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              multi_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              externally_locked
+            </p>
+            </td>
+<td>
+            <p>
+              OnOverflow
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="table">
+<a name="id4860700"></a><p class="title"><b>Table 1.16. OptExtLocking Layer</b></p>
+<div class="table-contents"><table class="table" summary="OptExtLocking Layer">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              scope
+            </p>
+            </th>
+<th>
+            <p>
+              locking
+            </p>
+            </th>
+<th>
+            <p>
+              mixin
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              mono_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              -
+            </p>
+            </td>
+<td>
+            <p>
+              Facade
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              multi_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              internally_locked
+            </p>
+            </td>
+<td>
+            <p>
+              Facade
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              multi_threaded
+            </p>
+            </td>
+<td>
+            <p>
+              externally_locked
+            </p>
+            </td>
+<td>
+            <p>
+              externally_locked[Facade]
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generator_assign_default.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../generator.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../reference.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
