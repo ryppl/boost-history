@@ -61,8 +61,8 @@ namespace boost
 
 
             
-            template< class InputIterator, class Alloc >
-            scoped_deleter ( InputIterator first, InputIterator last,  Alloc &a ) // strong
+            template< class InputIterator, class Alloc2 >
+            scoped_deleter ( InputIterator first, InputIterator last,  Alloc2 &a ) // strong
                 : ptrs_( new T*[ std::distance(first,last) ] ),
                   stored_(0),
                   released_( false ), alloc(a)

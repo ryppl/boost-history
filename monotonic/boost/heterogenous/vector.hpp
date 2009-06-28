@@ -173,7 +173,7 @@ namespace boost
 			void push_back()
 			{
 				U *ptr = construct_type<U>();
-				base().push_back(ptr);
+				impl.push_back(ptr);
 			}
 			template <class U, class A0>
 			void push_back(A0 a0)
