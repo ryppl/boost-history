@@ -10,7 +10,7 @@
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/bind.hpp>
-#include <boost/any.hpp>
+//#include <boost/any.hpp>
 
 using namespace std;
 using namespace boost;
@@ -123,6 +123,7 @@ int main()
 
 void test_any()
 {
+/*
 	typedef std::vector<any<monotonic::allocator<char> >, monotonic::allocator<any<monotonic::allocator<char> > > > vec;
 	vec v;
 	v.push_back(derived(42));
@@ -134,6 +135,7 @@ void test_any()
 	cout << "storage.used: " << monotonic::static_storage<>::used() << endl;
 
 	BOOST_ASSERT(any_cast<derived2 &>(v2[1]).str == "foo");
+*/
 }
 
 //EOF
