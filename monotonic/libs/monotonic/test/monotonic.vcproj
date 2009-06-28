@@ -255,6 +255,10 @@
 				RelativePath="..\..\..\boost\abstract_allocator.hpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\boost\cloneable.hpp"
+				>
+			</File>
 			<Filter
 				Name="monotonic"
 				>
