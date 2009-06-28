@@ -49,7 +49,7 @@ namespace boost
 {
 	namespace heterogenous
 	{
-		template <class Alloc = std::allocator<char> >
+		template <class Alloc = cloneable::make_cloneable_allocator<std::allocator<char> > >
 		struct vector
 		{
 			typedef ptr_vector<cloneable::common_base, cloneable::allocator, Alloc> implementation;
