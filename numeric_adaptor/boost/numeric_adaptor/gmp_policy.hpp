@@ -122,6 +122,20 @@ struct gmp_policy
         mpf_set_d(r, std::sin(d));
     }
 
+    static inline void tan(value_type& r, value_type const& a)
+    {
+        // TAN is not available in GMP
+        long double d = mpf_get_d(a);
+        mpf_set_d(r, std::tan(d));
+    }
+
+    static inline void atan(value_type& r, value_type const& a)
+    {
+        // ATAN is not available in GMP
+        long double d = mpf_get_d(a);
+        mpf_set_d(r, std::atan(d));
+    }
+
     static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {
         mpf_mul(r, a, a);

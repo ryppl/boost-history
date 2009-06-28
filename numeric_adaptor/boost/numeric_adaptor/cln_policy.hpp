@@ -70,6 +70,16 @@ struct cln_policy : public default_policy<cln::cl_F>
         r = cln::sin(a);
     }
 
+    static inline void tan(value_type& r, value_type const& a)
+    {
+        r = cln::tan(a);
+    }
+
+    static inline void atan(value_type& r, value_type const& a)
+    {
+        r = cln::atan(a);
+    }
+
     static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {
         r = cln::sqrt(a * a + b * b);
