@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="clones"
+	Name="heterogenous"
 	ProjectGUID="{36FA062B-37D3-49FF-A470-DDEDEBB7DE01}"
 	RootNamespace="clones"
 	Keyword="Win32Proj"
