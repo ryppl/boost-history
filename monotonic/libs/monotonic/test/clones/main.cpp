@@ -34,18 +34,6 @@ struct derived2 : cloneable::base<derived2>
 	explicit derived2(std::string const &n) : str(n) { }
 };
 
-/*
-
-namespace boost { namespace ptr_container {
-
-// idea: switch allocator type ordering, default to cloneable::allcoator
-template <class T, class Al = std::allocator<T>, class CloneAl = cloneable::allocator>
-class ptr_vector;
-
-}}
-
-*/
-
 int main()
 {
 	//typedef cloneable::make_cloneable_allocator<std::allocator<int> >::type alloc_type;
