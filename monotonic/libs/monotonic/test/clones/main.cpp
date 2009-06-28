@@ -11,6 +11,7 @@
 //
 
 #include <string>
+#include <boost/heterogenous/base.hpp>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/monotonic/allocator.hpp>
 

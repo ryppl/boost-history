@@ -6,7 +6,9 @@
 #ifndef BOOST_HETEROGENOUS_MAKE_CLONEABLE_ALLOCATOR_HPP
 #define BOOST_HETEROGENOUS_MAKE_CLONEABLE_ALLOCATOR_HPP
 
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/allocator.hpp>
 
 namespace boost
 {

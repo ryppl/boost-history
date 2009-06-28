@@ -6,10 +6,11 @@
 #ifndef BOOST_HETEROGENOUS_VECTOR_HPP
 #define BOOST_HETEROGENOUS_VECTOR_HPP
 
-#include <boost/abstract_allocator.hpp>
-#include <boost/aligned_storage.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/ptr_container/ptr_vector.hpp>
+
+#include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/common_base.hpp>
+#include <boost/heterogenous/make_cloneable_allocator.hpp>
 
 namespace boost 
 {
@@ -131,6 +132,8 @@ namespace boost
 	} // namespace heterogenous
 
 } // namespace boost
+
+#include <boost/heterogenous/detail/suffix.hpp>
 
 #endif // BOOST_HETEROGENOUS_VECTOR_HPP
 

@@ -6,7 +6,9 @@
 #ifndef BOOST_HETEROGENOUS_BASE_HPP
 #define BOOST_HETEROGENOUS_BASE_HPP
 
+#include <boost/aligned_storage.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/common_base.hpp>
 
 namespace boost
 {
