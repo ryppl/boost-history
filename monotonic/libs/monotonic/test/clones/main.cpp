@@ -1,3 +1,13 @@
+// (C) 2009 Christian Schladetsch
+//
+//  Distributed under the Boost Software License, Version 1.0. (See accompanying
+//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+
+// documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
+// sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
+
+
+
 //
 // test cases for ptr_container and clone_allocator issues
 //
@@ -111,7 +121,7 @@ namespace boost
 				// this is not correct either, but seems the best we can do...?
 				std::allocator<char> alloc;
 				U *ptr = const_cast<U *>(clone);
-				alloc.deallocate(reinterpret_cast<char *>(ptr), 1);
+//				alloc.deallocate(reinterpret_cast<char *>(ptr), 1);
 			}
 
 			// idea: pass allocator to the clone_allocator.
@@ -200,8 +210,17 @@ int main()
 		//! derived_alloc.construct(obj, 42);		// can't pass ctor args to a v1 allocator
 		new (obj) derived(42);						// bypassing allocator::construct :/
 
-		// finally get the correctly allocated object into the container
+		// do a dance to get the object into the container...
+		typedef vec::allocator_type::template rebind<derived2>::other derived2_alloc_type;
+		derived2_alloc_type derived2_alloc(bases.get_allocator());
+		derived2 *obj2 = derived2_alloc.allocate(1);
+		//! derived_alloc.construct(obj, 42);		// can't pass ctor args to a v1 allocator
+		new (obj2) derived2("foo");						// bypassing allocator::construct :/
+
+		// finally get the correctly allocated objects into the container
 		bases.push_back(obj);
+		bases.push_back(obj2);
+
 
 		// idea: use variadic template arguments for push_back etc: 
 		// default to use BOOST_PP for C++03
@@ -215,14 +234,19 @@ int main()
 		//		ptr_container/detail/scoped_ptr.hpp
 		//		ptr_container/detail/reversible_ptr_container.hpp
 		// and by introducing boost::abstract_allocator
+		//
+		// these are all in the monotonic sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
+		BOOST_ASSERT(bases.size() == 2);
 		vec copy = bases;
+		BOOST_ASSERT(copy.size() == 2);
+		derived *p0 = dynamic_cast<derived *>(&copy[0]);
+		derived2 *p2 = dynamic_cast<derived2 *>(&copy[1]);
+		BOOST_ASSERT(p0);
+		BOOST_ASSERT(p2);
 
-		// idea: could be fixed by using base<derived>::clone_with(orig, rebind<derived>(alloc)) in the ptr_container...
-
-		// doesn't work because the clones were put on the heap. could work with cloneable:: ?
-		monotonic::static_storage<>::release();
 	}
+	monotonic::static_storage<>::release();
 
 	return 0;
 }
