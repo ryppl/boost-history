@@ -48,9 +48,39 @@ namespace boost
 			vector(size_t reserved);
 			*/
 
+			template <class Ty, class Fun>
+			Fun foreach(Fun fun)
+			{
+				BOOST_FOREACH(common_base &b, *this)
+				{
+					if (Ty *ptr = dynamic_cast<Ty *>(&b))
+					{
+						fun(*ptr);
+					}
+				}
+				return fun;
+			}
+
+			template <class Ty, class Fun>
+			Fun foreach(Fun fun) const
+			{
+				BOOST_FOREACH(const common_base &base, *this)
+				{
+					if (Ty *ptr = dynamic_cast<Ty *>(&base))
+					{
+						fun(*ptr);
+					}
+				}
+				return fun;
+			}
+
 			size_t size() const
 			{
 				return impl.size();
+			}
+			bool empty() const
+			{
+				return impl.empty();
 			}
 
 			iterator begin()
@@ -103,11 +133,13 @@ namespace boost
 			{
 				return impl[n];
 			}
+
 			template <class Other>
 			bool is_type_at(size_t n) const
 			{
 				return ptr_at<Other>(n) != 0;
 			}
+			
 			template <class Other>
 			Other &ref_at(size_t n)
 			{
@@ -124,6 +156,7 @@ namespace boost
 					throw std::bad_cast();
 				return *ptr;
 			}
+
 			template <class Other>
 			Other *ptr_at(size_t n)
 			{
@@ -135,6 +168,7 @@ namespace boost
 				return dynamic_cast<const Other *>(&at(n));
 			}
 
+			// TODO: use variadic arguments or BOOST_PP to pass ctor args
 			template <class U>
 			void push_back()
 			{
@@ -168,31 +202,6 @@ namespace boost
 				return impl.get_allocator();
 			}
 
-			template <class Ty, class Fun>
-			Fun foreach(Fun fun)
-			{
-				BOOST_FOREACH(common_base &b, *this)
-				{
-					if (Ty *ptr = dynamic_cast<Ty *>(&b))
-					{
-						fun(*ptr);
-					}
-				}
-				return fun;
-			}
-
-			template <class Ty, class Fun>
-			Fun foreach(Fun fun) const
-			{
-				BOOST_FOREACH(const common_base &base, *this)
-				{
-					if (Ty *ptr = dynamic_cast<Ty *>(&base))
-					{
-						fun(*ptr);
-					}
-				}
-				return fun;
-			}
 		private:
 			template <class U>
 			U *allocate_type()
