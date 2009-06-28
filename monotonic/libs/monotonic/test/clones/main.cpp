@@ -156,7 +156,11 @@ int main()
 
 		// idea: use variadic template arguments for push_back etc: 
 		// default to use BOOST_PP for C++03
+
 		//! bases.push_back<derived>(ctor_args...);
+		//! bases.push_back<derived2>(ctor_args...);
+		//! ...
+		//! bases.push_back<derivedN>(ctor_args...);
 
 		// ...promptly breaks everything by using the heap to make the clones in copy :/
 		vec copy = bases;
