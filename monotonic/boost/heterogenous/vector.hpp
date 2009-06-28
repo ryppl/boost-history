@@ -7,8 +7,8 @@
 #define BOOST_HETEROGENOUS_VECTOR_HPP
 
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/foreach.hpp>
 #include <boost/monotonic/allocator.hpp>
+#include <boost/foreach.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
 #include <boost/heterogenous/base.hpp>
