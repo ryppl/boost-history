@@ -61,47 +61,6 @@ namespace boost
             this->base().reserve( n );
         }        
 
-		template <class U>
-		U *allocate_type()
-		{
-			typename Allocator::template rebind<U>::other alloc(get_allocator());
-			return alloc.allocate(1);
-		}
-		template <class U>
-		U *construct_type()
-		{
-			typename Allocator::template rebind<U>::other alloc(get_allocator());
-			U *ptr = alloc.allocate(1);
-			alloc.construct(ptr);
-			return ptr;
-		}
-		template <class U>
-		void push_back()
-		{
-			U *ptr = construct_type<U>();
-			base().push_back(ptr);
-		}
-		template <class U, class A0>
-		void push_back(A0 a0)
-		{
-			U *ptr = allocate_type<U>();
-			new (ptr) U(a0);
-			base().push_back(ptr);
-		}
-		template <class U, class A0, class A1>
-		void push_back(A0 a0, A1 a1)
-		{
-			U *ptr = allocate_type<U>();
-			new (ptr) U(a0, a1);
-			base().push_back(ptr);
-		}
-		template <class U, class A0, class A1, class A2>
-		void push_back(A0 a0, A1 a1, A2 a2)
-		{
-			U *ptr = allocate_type<U>();
-			new (ptr) U(a0, a1, a2);
-			base().push_back(ptr);
-		}
 	};
 
     //////////////////////////////////////////////////////////////////////////////
