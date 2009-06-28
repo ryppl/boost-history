@@ -17,7 +17,7 @@ namespace boost
 
 		/// base of the given derived type
 		template <class Derived>
-		struct base : common_base
+		struct base : /*virtual */common_base
 		{
 			typedef Derived derived_type;
 			typedef base<derived_type> this_type;
