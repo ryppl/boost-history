@@ -65,40 +65,38 @@ namespace boost
 			}
 		};
 
+		/// ensure correct alignment when allocating derived instances
 		template <class Derived>
 		size_t base<Derived>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 		/// a cloning allocator
 		struct allocator
 		{
-			template< class U >
-			static U* allocate_clone( const U& r )
+			template <class Base>
+			static Base* allocate_clone( const Base& object )
 			{
 				throw;
 			}
 
-			template< class U >
-			static void deallocate_clone( const U* clone )
+			template <class Base>
+			static void deallocate_clone( const Base* clone )
 			{
 				//throw;
 			}
 
-			// idea: pass allocator to the clone_allocator.
-			// allocator rebind could be done in the ptr_container.
 			// calling this must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base<U> *, U*>
-			template< class U, class Alloc >
-			static U* allocate_clone( const U& r, Alloc &alloc )
+			template <class Base, class Alloc>
+			static Base* allocate_clone(const Base& object, Alloc &alloc )
 			{
-				U *ptr = r.copy_construct(r, alloc);
-				return ptr;
+				return object.copy_construct(object, alloc);
 			}
 
 			// this is not even needed? 
-			template< class U, class Alloc >
-			static U* deallocate_clone( const U* r, Alloc &alloc )
+			template <class Base, class Alloc>
+			static void deallocate_clone(Base &object, Alloc &alloc )
 			{
 				typename Alloc::template rebind<U>::other my_alloc(alloc);
-				my_alloc.deallocate(const_cast<U *>(r));
+				my_alloc.deallocate(&object);
 			}
 		};
 
