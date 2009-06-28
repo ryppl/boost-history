@@ -91,8 +91,9 @@ namespace boost
 		}
 
         any(const any & other)
-          : alloc(other.alloc), content(other.content ? other.content->clone() : 0)
+          : alloc(other.alloc)
         {
+			content = other.content ? other.content->clone() : 0;
         }
 
         ~any()
@@ -181,7 +182,7 @@ namespace boost
 
             virtual placeholder * clone() const
             {
-				return parent->construct_type<holder<ValueType> >(held, *parent);
+				return parent->construct_holder<ValueType>(held);
             }
 
         public: // representation

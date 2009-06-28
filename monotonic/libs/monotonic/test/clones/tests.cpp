@@ -126,12 +126,9 @@ void test_any()
 	typedef std::vector<any<monotonic::allocator<char> >, monotonic::allocator<any<monotonic::allocator<char> > > > vec;
 	vec v;
 	v.push_back(derived(42));
-	cout << "storage.used: " << monotonic::static_storage<>::used() << endl;
 	v.push_back(derived2("foo"));
-	cout << "storage.used: " << monotonic::static_storage<>::used() << endl;
 
 	vec v2 = v;
-	cout << "storage.used: " << monotonic::static_storage<>::used() << endl;
 
 	BOOST_ASSERT(any_cast<derived2 &>(v2[1]).str == "foo");
 }
