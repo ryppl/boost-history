@@ -17,7 +17,7 @@
 namespace boost { namespace numeric_adaptor {
 
 
-template <typename Base, typename T>
+template <typename Derived, typename T>
 struct default_policy
 {
     typedef T value_type;
@@ -51,32 +51,32 @@ struct default_policy
 
     static inline void cos(value_type& r, value_type const& a)
     {
-        double d = Base::template big_numeric_cast<double>(a);
-        Base::set(r, std::cos(d));
+        double d = Derived::template big_numeric_cast<double>(a);
+        Derived::set(r, std::cos(d));
     }
 
     static inline void sin(value_type& r, value_type const& a)
     {
-        double d = Base::template big_numeric_cast<double>(a);
-        Base::set(r, std::sin(d));
+        double d = Derived::template big_numeric_cast<double>(a);
+        Derived::set(r, std::sin(d));
     }
 
     static inline void tan(value_type& r, value_type const& a)
     {
-        double d = Base::template big_numeric_cast<double>(a);
-        Base::set(r, std::tan(d));
+        double d = Derived::template big_numeric_cast<double>(a);
+        Derived::set(r, std::tan(d));
     }
 
     static inline void atan(value_type& r, value_type const& a)
     {
-        double d = Base::template big_numeric_cast<double>(a);
-        Base::set(r, std::atan(d));
+        double d = Derived::template big_numeric_cast<double>(a);
+        Derived::set(r, std::atan(d));
     }
 
     static inline void sqrt(value_type& r, value_type const& a)
     {
-        double d = Base::template big_numeric_cast<double>(a);
-        Base::set(r, std::sqrt(d));
+        double d = Derived::template big_numeric_cast<double>(a);
+        Derived::set(r, std::sqrt(d));
     }
 
     // Default use the comparison operators
