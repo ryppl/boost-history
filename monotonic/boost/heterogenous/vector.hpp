@@ -25,7 +25,8 @@ namespace boost
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
 			typedef ptr_vector<Base, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
-			typedef typename implementation::reference reference_type;
+			typedef typename implementation::reference reference;
+			typedef typename implementation::const_reference const_reference;
 			typedef typename implementation::iterator iterator;
 			typedef typename implementation::const_iterator const_iterator;
 
@@ -33,6 +34,19 @@ namespace boost
 			implementation impl;
 
 		public:
+			vector()
+			{
+			}
+			vector(allocator_type a) 
+				: impl(a)
+			{
+			}
+
+			/* purposefully elided
+			template <class II>
+			vector(II F, II L, allocator_type a = allocator_type());
+			vector(size_t reserved);
+			*/
 
 			size_t size() const
 			{
@@ -55,11 +69,37 @@ namespace boost
 			{
 				return impl.end();
 			}
-			reference_type at(size_t n)
+
+			value_type &back()
+			{
+				return impl.back();
+			}
+			const value_type &back() const
+			{
+				return impl.back();
+			}
+			value_type &front()
+			{
+				return impl.front();
+			}
+			const value_type &front() const
+			{
+				return impl.front();
+			}
+
+			reference at(size_t n)
 			{
 				return impl.at(n);
 			}
-			reference_type operator[](size_t n)
+			const_reference at(size_t n) const
+			{
+				return impl.at(n);
+			}
+			reference operator[](size_t n)
+			{
+				return impl[n];
+			}
+			const_reference operator[](size_t n) const
 			{
 				return impl[n];
 			}
@@ -77,9 +117,22 @@ namespace boost
 				return *ptr;
 			}
 			template <class Other>
+			const Other &ref_at(size_t n) const
+			{
+				const Other *ptr = ptr_at<const Other>(n);
+				if (ptr == 0)
+					throw std::bad_cast();
+				return *ptr;
+			}
+			template <class Other>
 			Other *ptr_at(size_t n)
 			{
 				return dynamic_cast<Other *>(&at(n));
+			}
+			template <class Other>
+			const Other *ptr_at(size_t n) const
+			{
+				return dynamic_cast<const Other *>(&at(n));
 			}
 
 			template <class U>
