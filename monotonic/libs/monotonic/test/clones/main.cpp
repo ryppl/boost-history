@@ -34,8 +34,20 @@ struct derived2 : cloneable::base<derived2>
 	explicit derived2(std::string const &n) : str(n) { }
 };
 
+
+struct derived3 : cloneable::base<derived3>
+{
+	float real;
+	int num;
+	std::string str;
+
+	derived3() { }
+	explicit derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
+};
+
 int main()
 {
+	// there is a problem with static_move_ptr<>
 	//typedef cloneable::make_cloneable_allocator<std::allocator<int> >::type alloc_type;
 	typedef cloneable::make_cloneable_allocator<monotonic::allocator<int> >::type alloc_type;
 
@@ -43,54 +55,24 @@ int main()
 
 	{
 		vec bases;
-//		BOOST_ASSERT(bases.get_allocator().get_storage() == &monotonic::static_storage<>::get_storage());
+		bases.push_back<derived>(42);
+		bases.push_back<derived2>("foo");
+		bases.push_back<derived3>(3.14f, -123, "spam");
 
-		//! bases.push_back(new derived(42));					// this doesn't use the custom allocator!
-		//! derived *obj = bases.get_allocator().allocate(1);	// this has to be recast
-
-		// do a dance to get the object into the container...
-		typedef vec::allocator_type::template rebind<derived>::other derived_alloc_type;
-		derived_alloc_type derived_alloc(bases.get_allocator());
-		derived *obj = derived_alloc.allocate(1);
-		//! derived_alloc.construct(obj, 42);		// can't pass ctor args to a v1 allocator
-		new (obj) derived(42);						// bypassing allocator::construct :/
-
-		// do a dance to get the object into the container...
-		typedef vec::allocator_type::template rebind<derived2>::other derived2_alloc_type;
-		derived2_alloc_type derived2_alloc(bases.get_allocator());
-		derived2 *obj2 = derived2_alloc.allocate(1);
-		//! derived_alloc.construct(obj, 42);		// can't pass ctor args to a v1 allocator
-		new (obj2) derived2("foo");						// bypassing allocator::construct :/
-
-		// finally get the correctly allocated objects into the container
-		bases.push_back(obj);
-		bases.push_back(obj2);
-
-
-		// idea: use variadic template arguments for push_back etc: 
-		// default to use BOOST_PP for C++03
-
-		//! bases.push_back<derived>(ctor_args...);
-		//! bases.push_back<derived2>(ctor_args...);
-		//! ...
-		//! bases.push_back<derivedN>(ctor_args...);
-
-		// this now works properly; after small changes to:
-		//		ptr_container/detail/scoped_ptr.hpp
-		//		ptr_container/detail/reversible_ptr_container.hpp
-		// and by introducing boost::abstract_allocator
-		//
-		// these are all in the monotonic sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
-
-		BOOST_ASSERT(bases.size() == 2);
+		BOOST_ASSERT(bases.size() == 3);
 		vec copy = bases;
-		BOOST_ASSERT(copy.size() == 2);
+		BOOST_ASSERT(copy.size() == 3);
 		derived *p1 = dynamic_cast<derived *>(&copy[0]);
 		derived2 *p2 = dynamic_cast<derived2 *>(&copy[1]);
+		derived3 *p3 = dynamic_cast<derived3 *>(&copy[2]);
 		BOOST_ASSERT(p1);
 		BOOST_ASSERT(p2);
+		BOOST_ASSERT(p3);
 		BOOST_ASSERT(p1->num == 42);
 		BOOST_ASSERT(p2->str == "foo");
+		BOOST_ASSERT(p3->real == 3.14f);
+		BOOST_ASSERT(p3->num == -123);
+		BOOST_ASSERT(p3->str == "spam");
 
 	}
 	monotonic::static_storage<>::release();
