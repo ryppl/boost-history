@@ -260,7 +260,7 @@ namespace ptr_container_detail
         {
             this->enforce_null_policy( x, "Null pointer in 'push_front()'" );
 
-            auto_type ptr( x );           // nothrow
+            auto_type ptr( x, this->base().get_allocator() );           // nothrow
             this->base().push_front( x ); // strong, commit
             ptr.release();                // nothrow
         }
