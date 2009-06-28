@@ -13,6 +13,7 @@
 
 namespace boost 
 {
+	// move to boost::heterogenous?
 	namespace cloneable 
 	{
 		/// common base for all base types for hierachies
