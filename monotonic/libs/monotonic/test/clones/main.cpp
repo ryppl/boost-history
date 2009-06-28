@@ -6,12 +6,7 @@
 // documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
-//
-// test cases for ptr_container and clone_allocator issues
-//
-
 #include <string>
-#include <boost/heterogenous/base.hpp>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/monotonic/allocator.hpp>
 

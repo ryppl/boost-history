@@ -14,7 +14,6 @@ namespace boost
 {
 	namespace heterogenous
 	{
-
 		namespace impl
 		{
 			template <class Alloc>

@@ -9,7 +9,7 @@
 #include <boost/ptr_container/ptr_vector.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
-#include <boost/heterogenous/common_base.hpp>
+#include <boost/heterogenous/base.hpp>
 #include <boost/heterogenous/make_cloneable_allocator.hpp>
 
 namespace boost 
