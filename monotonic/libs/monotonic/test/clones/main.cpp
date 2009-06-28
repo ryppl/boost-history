@@ -16,15 +16,16 @@
 
 using namespace std;
 using namespace boost;
+using namespace heterogenous;
 
-struct derived : cloneable::base<derived>
+struct derived : base<derived>
 {
 	int num;
 	derived() : num(0) { }
 	explicit derived(int n) : num(n) { }
 };
 
-struct derived2 : cloneable::base<derived2>
+struct derived2 : base<derived2>
 {
 	std::string str;
 
@@ -33,7 +34,7 @@ struct derived2 : cloneable::base<derived2>
 };
 
 
-struct derived3 : cloneable::base<derived3>
+struct derived3 : base<derived3>
 {
 	float real;
 	int num;
@@ -75,7 +76,7 @@ int main()
 		bool caught = false;
 		try
 		{
-			cloneable::common_base &base = copy.ref_at<derived2>(0);
+			common_base &base = copy.ref_at<derived2>(0);
 		}
 		catch (std::bad_cast)
 		{
