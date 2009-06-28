@@ -6,8 +6,8 @@
 #ifndef BOOST_HETEROGENOUS_COMMON_BASE_HPP
 #define BOOST_HETEROGENOUS_COMMON_BASE_HPP
 
-#include <boost/abstract_allocator.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/abstract_allocator.hpp>
 
 namespace boost
 {

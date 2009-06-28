@@ -21,14 +21,14 @@ namespace boost
 			{
 				typedef typename Alloc::template rebind<char>::other CharAlloc;
 
-				boost::abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
+				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
 				{
 					CharAlloc alloc;
 					// todo: alignment; this is done already for monotonic, copy that here
 					return alloc.allocate(num_bytes);
 				}
 
-				void deallocate_bytes(boost::abstract_allocator::pointer ptr)
+				void deallocate_bytes(abstract_allocator::pointer ptr)
 				{
 					CharAlloc alloc;
 					alloc.deallocate(ptr, 1);

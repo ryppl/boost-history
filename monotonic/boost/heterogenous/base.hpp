@@ -34,9 +34,9 @@ namespace boost
 		public:
 			base() : self_ptr(0) { }
 
-			virtual base<Derived> *allocate(boost::abstract_allocator &alloc) const 
+			virtual base<Derived> *allocate(abstract_allocator &alloc) const 
 			{
-				boost::abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
+				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
 				Derived *ptr = reinterpret_cast<Derived *>(bytes);
 				self(ptr) = ptr;
 				return ptr;
@@ -47,14 +47,14 @@ namespace boost
 				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(object));
 			}
 
-			virtual base<Derived> *create(boost::abstract_allocator &alloc) const 
+			virtual base<Derived> *create(abstract_allocator &alloc) const 
 			{
 				base<Derived> *ptr = allocate(alloc);
 				new (ptr->self_ptr) Derived();
 				return ptr;
 			}
 
-			virtual base<Derived> *copy_construct(const common_base &original, boost::abstract_allocator &alloc) const 
+			virtual base<Derived> *copy_construct(const common_base &original, abstract_allocator &alloc) const 
 			{ 
 				base<Derived> *ptr = allocate(alloc);
 				new (ptr->self_ptr) Derived(static_cast<const Derived &>(original));

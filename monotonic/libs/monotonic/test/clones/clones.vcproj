@@ -351,6 +351,10 @@
 				Name="heterogenous"
 				>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\abstract_allocator.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\allocator.hpp"
 					>
 				</File>
@@ -385,7 +389,7 @@
 			</Filter>
 		</Filter>
 		<File
-			RelativePath=".\main.cpp"
+			RelativePath=".\tests.cpp"
 			>
 		</File>
 	</Files>

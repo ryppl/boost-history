@@ -79,6 +79,7 @@ namespace boost
 			{
 				return dynamic_cast<Other *>(&at(n));
 			}
+
 			template <class U>
 			void push_back()
 			{
@@ -118,6 +119,7 @@ namespace boost
 				typename allocator_type::template rebind<U>::other alloc(get_allocator());
 				return alloc.allocate(1);
 			}
+
 			template <class U>
 			U *construct_type()
 			{
