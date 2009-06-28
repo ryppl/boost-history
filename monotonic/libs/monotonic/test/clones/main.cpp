@@ -31,7 +31,6 @@ namespace boost
 			typedef Derived derived_type;
 
 			// idea: pass the allocator to a non-virtual clone_with(alloc) method in the base.
-			// must be disabled at compile-time for types that are not boost::is_convertible<base<D> *, D*>
 			template <class Alloc>
 			static derived_type *clone_with(Alloc &alloc)
 			{
@@ -68,6 +67,7 @@ namespace boost
 
 			// idea: pass allocator to the clone_allocator.
 			// allocator rebind could be done in the ptr_container.
+			// calling this must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base_base *, U*>
 			template< class U, class Alloc >
 			static U* allocate_clone( const U& r, Alloc &alloc )
 			{
