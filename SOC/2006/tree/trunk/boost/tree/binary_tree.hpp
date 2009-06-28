@@ -13,7 +13,7 @@
 #define BOOST_TREE_BINARY_TREE_HPP
 
 #include <boost/tree/cursor.hpp>
-#include <boost/tree/algorithm.hpp>
+//#include <boost/tree/algorithm.hpp>
 #include <boost/tree/insert_cursor.hpp>
 
 #include <boost/tree/detail/node_traits.hpp>
@@ -235,49 +235,8 @@ public:
         return pos;
     }
 
-//    //erase operations must rebalance; clear doesn't need to.    
-//    //TODO: Can/Should remove (and erase) return the next cursor's position ?
-//    //(There may be some DR concerning this for associative containers)
-//     void erase (cursor pos)
-//     {
-//         cursor ret; // = this->root();
-////         pos = pos.parent();
-//
-//        // TODO: Get the following to work properly.
-//         //balancer_type::remove(*this, pos);
-//         node_pointer p_node;
-////         if (pos == ret) {
-////             augmentor_type::pre_detach(*this, pos);
-//             p_node = pos.detach();
-////         } else {
-////             augmentor_type::pre_detach(*this, pos, ret,);
-////             p_node = pos.detach(ret);
-////         }
-//        
-//        m_node_alloc.destroy(p_node);
-//        m_node_alloc.deallocate(p_node, 1);
-//    }
-     
-//     static void destroy_node(cursor position)
-//     {
-//        if (!position.is_leaf()) {
-//             node_pointer pos_node = 
-//                 static_cast<node_pointer>(position.m_node->operator[](position.m_pos));
-//             // delete the value position points to    
-//             
-//            // recurse
-////             clear(position.begin());
-////             clear(position.end());
-//             
-//             // delete the node position points to
-//            m_node_alloc.destroy(pos_node);
-//            m_node_alloc.deallocate(pos_node, 1);         
-//          }
-//     }
-     
      /** 
-      * Removes a node and its descendants recursively in postorder
-      * without rebalancing
+      * @brief      Removes a node and its descendants recursively in postorder
       * @param c    Cursor pointing to the node to be removed.
       */
      // TODO: Take care of header-pointers
@@ -361,7 +320,7 @@ public:
     }
 
     /**
-     * @brief Clears all data from the tree (without any rebalancing).
+     * @brief Clears all data from the tree.
      */
      void clear()
      {
@@ -428,30 +387,23 @@ public:
     }
 
     /**
-     * @brief  Erases the value of the given cursor.
-     * @param  position  Cursor that is empty or at least one of whose children is
-     * 
+     * @brief  Erases an element.
+     * @param  position  Cursor indicating the element to be erased.
+     * @return Child element assuming the erased element's position.
      */
     cursor erase(cursor position)
     {
-        node_pointer parent_node
-        = static_cast<node_pointer>(position.parent().base_node());
-
         size_type idx = index(position);
-        size_type parent_idx = index(position.parent());
-
         node_pointer p_node = static_cast<node_pointer>(position.base_node());
 
-        if (!position.is_leaf()) { // Set child's parent only if there _is_ a child
-            static_cast<node_base_pointer>(p_node->m_children[idx])->m_parent
-            = parent_node;
-        }
-        parent_node->m_children[parent_idx] = p_node->m_children[idx];
+        p_node = static_cast<node_pointer>(p_node->detach(idx));
+
+        position.base_node() = static_cast<node_base_pointer>(p_node->m_children[idx]);
 
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);
 
-        return cursor(static_cast<node_base_pointer>(parent_node->m_children[parent_idx]),idx);
+        return position;
     }
 
 private:
@@ -491,44 +443,44 @@ inline bool operator!=(binary_tree<Tp, Alloc> const& x
      return (!(x == y));
 }
 
-/**
- * @brief   First element of a MultiwayTree in inorder traversal.
- *          O(1) overload for binary_tree
- * @param t A binary_tree
- * @return  Mutable cursor to the first element of @a t in inorder traversal
- */
-template <class T, class Alloc>
-typename binary_tree<T, Alloc>::cursor 
-first_cursor(inorder, binary_tree<T, Alloc>& t)
-{
-    return t.inorder_first();
-}
-
-/**
- * @brief   First element of a MultiwayTree in inorder traversal 
- *          (alias of cfirst()). O(1) overload for binary_tree.
- * @param t A binary_tree
- * @return  Read-only cursor to the first element of @a t in inorder traversal
- */
-template <class T, class Alloc>
-typename binary_tree<T, Alloc>::const_cursor 
-first_cursor(inorder, binary_tree<T, Alloc> const& t)
-{
-    return t.inorder_first();
-}
-
-/**
- * @brief   First element of a MultiwayTree in inorder traversal.
- *          O(1) overload for binary_tree
- * @param t A binary_tree
- * @return  Read-only cursor to the first element of @a t in inorder traversal
- */
-template <class T, class Alloc>
-typename binary_tree<T, Alloc>::const_cursor 
-cfirst_cursor(inorder, binary_tree<T, Alloc> const& t)
-{
-    return t.inorder_first();
-}
+///**
+// * @brief   First element of a MultiwayTree in inorder traversal.
+// *          O(1) overload for binary_tree
+// * @param t A binary_tree
+// * @return  Mutable cursor to the first element of @a t in inorder traversal
+// */
+//template <class T, class Alloc>
+//typename binary_tree<T, Alloc>::cursor 
+//first_cursor(inorder, binary_tree<T, Alloc>& t)
+//{
+//    return t.inorder_first();
+//}
+//
+///**
+// * @brief   First element of a MultiwayTree in inorder traversal 
+// *          (alias of cfirst()). O(1) overload for binary_tree.
+// * @param t A binary_tree
+// * @return  Read-only cursor to the first element of @a t in inorder traversal
+// */
+//template <class T, class Alloc>
+//typename binary_tree<T, Alloc>::const_cursor 
+//first_cursor(inorder, binary_tree<T, Alloc> const& t)
+//{
+//    return t.inorder_first();
+//}
+//
+///**
+// * @brief   First element of a MultiwayTree in inorder traversal.
+// *          O(1) overload for binary_tree
+// * @param t A binary_tree
+// * @return  Read-only cursor to the first element of @a t in inorder traversal
+// */
+//template <class T, class Alloc>
+//typename binary_tree<T, Alloc>::const_cursor 
+//cfirst_cursor(inorder, binary_tree<T, Alloc> const& t)
+//{
+//    return t.inorder_first();
+//}
 
 } // namespace tree
 } // namespace boost

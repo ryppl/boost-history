@@ -135,35 +135,17 @@ public:
     
     base_pointer detach(children_type::size_type m_pos)
     {
-        base_pointer q = static_cast<node_base*>(m_children[m_pos]);
-        m_children[m_pos] = 
-            m_children[m_pos]
-          ->m_children[((m_children[m_pos])
-          ->m_children[0] == 0 ? 1 : 0)];
-        static_cast<node_base*>(m_children[m_pos])->m_parent = this;
-        return q;
-    }
-    
-    // TODO: actually implement this.
-    base_pointer detach(children_type::size_type index, 
-                        children_type::size_type other_index, 
-                        base_pointer other)
-    {
-        //Node::pre_splice(q, r);
-        // splice out q
-        base_pointer x = detach(index);
+        node_with_children_base::children_type::size_type parent_idx = get_index();
 
-        // q has been spliced out, now relink it in place of r.                
-        static_cast<base_pointer>(other->m_parent)->m_children[other_index] = this;
-        m_parent = other->m_parent;
+        if (m_children[m_pos] != 0) // Set child's parent only if there _is_ a child
+            static_cast<node_base*>(m_children[m_pos])->m_parent = m_parent;
 
-        for (children_type::size_type i=0; i<children_type::max_size(); ++i) {
-            m_children[i] = other->m_children[i];
-            static_cast<node_base*>(m_children[i])->m_parent = this;
-        }
-        return x;
+        static_cast<node_base*>(m_parent)->m_children[parent_idx]
+            = m_children[m_pos];
+        
+        return &*this;
     }
-    
+
     // O(1)
     children_type::size_type const get_index() const
     {

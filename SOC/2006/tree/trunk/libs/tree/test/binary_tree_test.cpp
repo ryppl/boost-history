@@ -179,13 +179,13 @@ BOOST_AUTO_TEST_CASE( erase_non_leaf_node_test )
     // Left child empty
     BOOST_CHECK(c.is_leaf());
     BOOST_CHECK(!(++c).is_leaf());
-    //--c;
 
     binary_tree<int>::size_type sz = size(bt.root());
     c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
     
-    BOOST_CHECK_EQUAL(*c, 14);
+    BOOST_CHECK(c == bt.root().end().end());
+    BOOST_CHECK_EQUAL(*--c, 14);
 }
 
 BOOST_AUTO_TEST_CASE( erase_leaf_node_test )
@@ -202,7 +202,7 @@ BOOST_AUTO_TEST_CASE( erase_leaf_node_test )
     c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
 
-    //BOOST_CHECK(c == );
+    BOOST_CHECK(c == bt.root().end().end().begin().end().begin());
 }
 
 BOOST_AUTO_TEST_CASE( clear_test )
