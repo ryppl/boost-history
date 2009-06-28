@@ -27,7 +27,7 @@ namespace boost { namespace numeric_adaptor {
 
 
 template <typename T>
-struct ieee_policy : public default_policy<T>
+struct ieee_policy : public default_policy<ieee_policy<T>, T>
 {
     typedef T value_type;
 
@@ -36,11 +36,6 @@ struct ieee_policy : public default_policy<T>
 
     static inline void set(value_type& value, std::string const& v) { value = boost::lexical_cast<T>(v); }
 
-    static inline void sqrt(value_type& r, value_type const& a) { r = std::sqrt(a); }
-    static inline void cos(value_type& r, value_type const& a) { r = std::cos(a); }
-    static inline void sin(value_type& r, value_type const& a) { r = std::sin(a); }
-    static inline void tan(value_type& r, value_type const& a) { r = std::tan(a); }
-    static inline void atan(value_type& r, value_type const& a) { r = std::atan(a); }
     static inline void abs(value_type& r, value_type const& a) { r = std::abs(a); }
     static inline void hypot(value_type& r, value_type const& a, value_type const& b)
     {

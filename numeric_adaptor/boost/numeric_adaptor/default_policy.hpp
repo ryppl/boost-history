@@ -17,7 +17,7 @@
 namespace boost { namespace numeric_adaptor {
 
 
-template <typename T>
+template <typename Base, typename T>
 struct default_policy
 {
     typedef T value_type;
@@ -48,6 +48,36 @@ struct default_policy
     { a /= b; }
     static inline void neg(value_type& r, const value_type& n)
     { r = -n; }
+
+    static inline void cos(value_type& r, value_type const& a)
+    {
+        double d = Base::template big_numeric_cast<double>(a);
+        Base::set(r, std::cos(d));
+    }
+
+    static inline void sin(value_type& r, value_type const& a)
+    {
+        double d = Base::template big_numeric_cast<double>(a);
+        Base::set(r, std::sin(d));
+    }
+
+    static inline void tan(value_type& r, value_type const& a)
+    {
+        double d = Base::template big_numeric_cast<double>(a);
+        Base::set(r, std::tan(d));
+    }
+
+    static inline void atan(value_type& r, value_type const& a)
+    {
+        double d = Base::template big_numeric_cast<double>(a);
+        Base::set(r, std::atan(d));
+    }
+
+    static inline void sqrt(value_type& r, value_type const& a)
+    {
+        double d = Base::template big_numeric_cast<double>(a);
+        Base::set(r, std::sqrt(d));
+    }
 
     // Default use the comparison operators
     static inline int compare(T const& a, T const& b)

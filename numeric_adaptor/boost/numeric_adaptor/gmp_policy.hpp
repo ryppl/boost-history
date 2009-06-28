@@ -20,10 +20,8 @@
 namespace boost { namespace numeric_adaptor {
 
 
-struct gmp_policy
+struct gmp_policy: default_policy<gmp_policy, mpf_t>
 {
-    typedef mpf_t value_type;
-
     static inline void init(value_type& value)
     {
         mpf_init(value);
@@ -106,34 +104,6 @@ struct gmp_policy
     static inline void sqrt(value_type& r, value_type const& a)
     {
         mpf_sqrt(r, a);
-    }
-
-    static inline void cos(value_type& r, value_type const& a)
-    {
-        // COS is not available in GMP
-        long double d = mpf_get_d(a);
-        mpf_set_d(r, std::cos(d));
-    }
-
-    static inline void sin(value_type& r, value_type const& a)
-    {
-        // SIN is not available in GMP
-        long double d = mpf_get_d(a);
-        mpf_set_d(r, std::sin(d));
-    }
-
-    static inline void tan(value_type& r, value_type const& a)
-    {
-        // TAN is not available in GMP
-        long double d = mpf_get_d(a);
-        mpf_set_d(r, std::tan(d));
-    }
-
-    static inline void atan(value_type& r, value_type const& a)
-    {
-        // ATAN is not available in GMP
-        long double d = mpf_get_d(a);
-        mpf_set_d(r, std::atan(d));
     }
 
     static inline void hypot(value_type& r, value_type const& a, value_type const& b)

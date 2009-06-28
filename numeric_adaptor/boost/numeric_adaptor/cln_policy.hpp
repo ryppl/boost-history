@@ -28,7 +28,7 @@ namespace boost { namespace numeric_adaptor {
     as being of type cl_F.
 
 */
-struct cln_policy : public default_policy<cln::cl_F>
+struct cln_policy : public default_policy<cln_policy, cln::cl_F>
 {
     typedef cln::cl_F value_type;
 
