@@ -87,7 +87,7 @@ namespace boost
 			template <class Base>
 			static void deallocate_clone( const Base* clone )
 			{
-				//throw;
+				throw;
 			}
 
 			template <class Base, class Alloc>
