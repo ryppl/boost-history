@@ -67,7 +67,7 @@ namespace boost
 
 			// idea: pass allocator to the clone_allocator.
 			// allocator rebind could be done in the ptr_container.
-			// calling this must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base_base *, U*>
+			// calling this must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base<U> *, U*>
 			template< class U, class Alloc >
 			static U* allocate_clone( const U& r, Alloc &alloc )
 			{
