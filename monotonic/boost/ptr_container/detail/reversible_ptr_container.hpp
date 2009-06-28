@@ -239,7 +239,8 @@ namespace ptr_container_detail
                                 ForwardIterator last )
         {
             BOOST_ASSERT( first != last );
-            scoped_deleter sd( first, last, get_allocator() );
+            allocator_type alloc = get_allocator();
+            scoped_deleter sd( first, last, alloc );
             insert_clones_and_release( sd, end() );
         }
         
