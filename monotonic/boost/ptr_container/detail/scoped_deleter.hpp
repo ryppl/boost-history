@@ -60,14 +60,14 @@ namespace boost
 
 
             
-            template< class InputIterator >
-            scoped_deleter ( InputIterator first, InputIterator last  ) // strong
+            template< class InputIterator, class Alloc >
+            scoped_deleter ( InputIterator first, InputIterator last,  Alloc &alloc ) // strong
                 : ptrs_( new T*[ std::distance(first,last) ] ),
                   stored_(0),
                   released_( false )
             {
                 for( ; first != last; ++first )
-                    add( CloneAllocator::allocate_clone_from_iterator( first ) );
+                    add( CloneAllocator::allocate_clone_from_iterator( first, alloc ) );
                 BOOST_ASSERT( stored_ > 0 );
             }
 

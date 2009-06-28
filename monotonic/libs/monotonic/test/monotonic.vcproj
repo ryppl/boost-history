@@ -251,6 +251,10 @@
 		<Filter
 			Name="boost"
 			>
+			<File
+				RelativePath="..\..\..\boost\abstract_allocator.hpp"
+				>
+			</File>
 			<Filter
 				Name="monotonic"
 				>

@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/abstract_allocator.hpp>
 #include <boost/monotonic/allocator.hpp>
 
 using namespace std;
@@ -15,6 +16,22 @@ namespace boost
 
 	namespace cloneable 
 	{
+		struct allocator;
+
+		struct dyn_alloc_base
+		{
+
+		};
+
+		template <class Derived>
+		struct dyn_alloc : dyn_alloc_base
+		{
+			template <class Base, class Alloc>
+			static void *alloc(Base *ptr, Alloc &a)
+			{
+				return new Derived();
+			}
+		};
 
 		// common base for all base types for hierachies
 		struct base_base
@@ -22,27 +39,59 @@ namespace boost
 			virtual ~base_base() { }
 
 			// this can't work because it doesnt have an allocator :/
-			virtual base_base *clone() const = 0;
+			virtual base_base *clone() const { return 0; }
+
+			virtual base_base *allocate(boost::abstract_allocator &alloc) const = 0;
+			virtual base_base *create(boost::abstract_allocator &alloc) const = 0;
+			virtual base_base *copy_construct(const base_base &original, boost::abstract_allocator &alloc) const = 0;
+
 		};
 
 		template <class Derived>
 		struct base : base_base
 		{
 			typedef Derived derived_type;
+			typedef base<derived_type> this_type;
 
-			// idea: pass the allocator to a non-virtual clone_with(alloc) method in the base.
-			template <class Alloc>
-			static derived_type *clone_with(Alloc &alloc)
+		private:
+			static size_t alignment;
+			mutable derived_type *self_ptr;
+
+			derived_type *&self(derived_type *ptr) const
 			{
-				derived_type *copy = alloc.allocate(1);
-				// passing ctor args is an outstanding issue; can be helped by:
-				//	1. over-riding clone_with in derived
-				//  2. using super-set allocators with variadic template args for construct method
-				alloc.construct(copy);	
-				return copy;
+				return ptr->this_type::self_ptr;
+			}
+
+		public:
+			base() : self_ptr(0) { }
+
+			virtual base<Derived> *allocate(boost::abstract_allocator &alloc) const 
+			{
+				boost::abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
+				Derived *ptr = reinterpret_cast<Derived *>(bytes);
+				self(ptr) = ptr;
+				return ptr;
+			}
+
+			virtual base<Derived> *create(boost::abstract_allocator &alloc) const 
+			{
+				base<Derived> *ptr = allocate(alloc);
+				//new (ptr) this_type();
+				new (ptr->self_ptr) Derived();
+				return ptr;
+			}
+
+			virtual base<Derived> *copy_construct(const base_base &original, boost::abstract_allocator &alloc) const 
+			{ 
+				base<Derived> *ptr = allocate(alloc);
+				//new (ptr) this_type();
+				new (ptr->self_ptr) Derived(static_cast<const Derived &>(original));
+				return ptr;
 			}
 		};
-		
+		template <class D>
+		size_t base<D>::alignment = boost::aligned_storage<sizeof(D)>::alignment;
+
 		struct allocator
 		{
 			template< class U >
@@ -71,8 +120,8 @@ namespace boost
 			template< class U, class Alloc >
 			static U* allocate_clone( const U& r, Alloc &alloc )
 			{
-				typedef typename Alloc::template rebind<U>::other my_alloc(alloc);
-				return r.clone_with(my_alloc);
+				U *ptr = r.copy_construct(r, alloc);
+				return ptr;
 			}
 
 			// idea: this is not even needed? 
@@ -80,7 +129,7 @@ namespace boost
 			template< class U, class Alloc >
 			static U* deallocate_clone( const U* r, Alloc &alloc )
 			{
-				typedef typename Alloc::template rebind<U>::other my_alloc(alloc);
+				typename Alloc::template rebind<U>::other my_alloc(alloc);
 				my_alloc.deallocate(const_cast<U *>(r));
 			}
 		};
@@ -162,7 +211,11 @@ int main()
 		//! ...
 		//! bases.push_back<derivedN>(ctor_args...);
 
-		// ...promptly breaks everything by using the heap to make the clones in copy :/
+		// this now works properly; after small changes to:
+		//		ptr_container/detail/scoped_ptr.hpp
+		//		ptr_container/detail/reversible_ptr_container.hpp
+		// and by introducing boost::abstract_allocator
+
 		vec copy = bases;
 
 		// idea: could be fixed by using base<derived>::clone_with(orig, rebind<derived>(alloc)) in the ptr_container...

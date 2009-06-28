@@ -115,6 +115,33 @@ namespace ptr_container_detail
                 return res;
             }
             
+			template< class Iter, class Alloc >
+			static Ty_* allocate_clone_from_iterator( Iter i, Alloc &alloc )
+			{ 
+				return allocate_clone( Config::get_const_pointer( i ), alloc );
+			}
+
+			template <class Alloc>
+			static Ty_* allocate_clone( const Ty_* x, Alloc &alloc )
+			{
+				if( allow_null_values )
+				{
+					if( x == 0 )
+						return 0;
+				}
+				else
+				{
+					BOOST_ASSERT( x != 0 && "Cannot insert clone of null!" );
+				}
+
+				Ty_* res = CloneAllocator::allocate_clone( *x, alloc );
+				BOOST_ASSERT( typeid(*res) == typeid(*x) &&
+					"CloneAllocator::allocate_clone() does not clone the "
+					"object properly. Check that new_clone() is implemented"
+					" correctly" );
+				return res;
+			}
+
             static void deallocate_clone( const Ty_* x )
             {
                 if( allow_null_values )
@@ -195,12 +222,12 @@ namespace ptr_container_detail
             sd.release(); 
         }
         
-        template< class ForwardIterator >
+        template< class ForwardIterator, class Alloc >
         void clone_assign( ForwardIterator first, 
-                           ForwardIterator last ) // strong 
+                           ForwardIterator last, Alloc &alloc ) // strong 
         {
             BOOST_ASSERT( first != last );
-            scoped_deleter sd( first, last );      // strong
+            scoped_deleter sd( first, last, alloc );      // strong
             copy_clones_and_release( sd );         // nothrow
         }
 
@@ -209,7 +236,7 @@ namespace ptr_container_detail
                                 ForwardIterator last )
         {
             BOOST_ASSERT( first != last );
-            scoped_deleter sd( first, last );
+            scoped_deleter sd( first, last, get_allocator() );
             insert_clones_and_release( sd, end() );
         }
         
@@ -280,11 +307,11 @@ namespace ptr_container_detail
         }        
 
         template< class I >
-        void constructor_impl( I first, I last, std::input_iterator_tag ) // basic
+        void constructor_impl( I first, I last, std::input_iterator_tag) // basic
         {
             while( first != last )
             {
-                insert( end(), null_cloner_type::allocate_clone_from_iterator(first) );
+                insert( end(), null_cloner_type::allocate_clone_from_iterator(first, get_allocator()) );
                 ++first;
             }
         }
