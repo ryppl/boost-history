@@ -428,87 +428,34 @@ public:
     }
 
     /**
-     * @brief  Erases the value of the given cursor, keeping the binary_tree's
-     *         inorder, and returns the given cursor's inorder successor.
+     * @brief  Erases the value of the given cursor.
      * @param  position  Cursor that is empty or at least one of whose children is
-     * @return The inorder successor of position
+     * 
      */
-    cursor inorder_erase(cursor position)
+    cursor erase(cursor position)
     {
         node_pointer parent_node
         = static_cast<node_pointer>(position.parent().base_node());
 
-        size_type idx = index(position.parent());
+        size_type idx = index(position);
+        size_type parent_idx = index(position.parent());
 
         node_pointer p_node = static_cast<node_pointer>(position.base_node());
-        cursor orig_pos = position;
-        ++position;
-        
-        if (position.is_leaf()) {
-            if (!orig_pos.is_leaf()) { // Set child's parent only if there _is_ a child
-                static_cast<node_base_pointer>(p_node->m_children[0])->m_parent
-                = parent_node;
-            }
-            parent_node->m_children[idx] = p_node->m_children[0];
 
-            // to_leftmost_parent(position);
-            while (index(position)) 
-                position = position.parent();
-        } else {
-            position.to_begin();
-            position.base_node()->m_parent = parent_node;
-            parent_node->m_children[idx] = position.base_node();
-            
-            to_leftmost(position);
+        if (!position.is_leaf()) { // Set child's parent only if there _is_ a child
+            static_cast<node_base_pointer>(p_node->m_children[idx])->m_parent
+            = parent_node;
         }
+        parent_node->m_children[parent_idx] = p_node->m_children[idx];
 
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);
 
-        return position;
+        return cursor(static_cast<node_base_pointer>(parent_node->m_children[parent_idx]),idx);
     }
 
-    cursor inorder_erase(cursor position, cursor descendant)
-    {
-        node_pointer p_node = static_cast<node_pointer>(descendant.base_node());
-        ++descendant;
-        
-        if (descendant.is_leaf()) {                        
-            (*p_node)[0]->m_parent = p_node->m_parent;
-            static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](0) = (*p_node)[0];
-        } else {
-            descendant = descendant.begin();
-            descendant.base_node()->m_parent = p_node->m_parent;
-            static_cast<node_base_pointer>(p_node->m_parent)
-                ->node_base_type::operator[](1) = descendant.base_node();
-        }
-        
-        cursor pos_parent = position.parent();        
-        pos_parent.base_node()->node_base_type::operator[](pos_parent.m_pos)
-            = descendant.base_node();
-        descendant.base_node()->m_parent = pos_parent.base_node();
-        descendant.base_node()->node_base_type::operator[](0)
-            = position.base_node()->node_base_type::operator[](0);
-        descendant.base_node()->node_base_type::operator[](1)
-            = position.base_node()->node_base_type::operator[](1);
-        descendant.base_node()->node_base_type::operator[](0)->m_parent
-            = descendant.base_node();
-        descendant.base_node()->node_base_type::operator[](1)->m_parent
-            = descendant.base_node();
-
-        p_node = 
-            static_cast<node_pointer>(position.base_node()->node_base_type::operator[](position.m_pos));
-        
-        m_node_alloc.destroy(p_node);
-        m_node_alloc.deallocate(p_node, 1);
-        
-        return descendant;
-    }
-    
 private:
     node_base_type m_header;
-
     node_allocator_type m_node_alloc;
 };
 

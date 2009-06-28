@@ -522,8 +522,8 @@ class balance {
          cursor c = position.base().base();
          cursor d = balancer_type::remove(h, c);
 //         if (c == d)
-            return iterator(h.inorder_erase(c));
-//        return iterator(h.inorder_erase(d,c));            
+            return iterator(h.erase(c));
+//        return iterator(h.erase(d,c));            
      }
 
     /**

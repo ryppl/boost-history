@@ -171,7 +171,7 @@ void validate_test_dataset2_tree(Cursor cur)
     
 }
 
-BOOST_AUTO_TEST_CASE( inorder_erase_non_leaf_node_test )
+BOOST_AUTO_TEST_CASE( erase_non_leaf_node_test )
 {
     binary_tree<int>::cursor c = bt.root().end().begin();
     BOOST_CHECK_EQUAL(*c, 10);
@@ -179,16 +179,16 @@ BOOST_AUTO_TEST_CASE( inorder_erase_non_leaf_node_test )
     // Left child empty
     BOOST_CHECK(c.is_leaf());
     BOOST_CHECK(!(++c).is_leaf());
-    --c;
+    //--c;
 
     binary_tree<int>::size_type sz = size(bt.root());
-    c = bt.inorder_erase(c);
+    c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
     
-    BOOST_CHECK_EQUAL(*c, 11);
+    BOOST_CHECK_EQUAL(*c, 14);
 }
 
-BOOST_AUTO_TEST_CASE( inorder_erase_leaf_node_test )
+BOOST_AUTO_TEST_CASE( erase_leaf_node_test )
 {
     binary_tree<int>::cursor c = bt.root().end().end().begin().begin().end().begin();
     BOOST_CHECK_EQUAL(*c, 12);
@@ -199,10 +199,10 @@ BOOST_AUTO_TEST_CASE( inorder_erase_leaf_node_test )
     --c;
 
     binary_tree<int>::size_type sz = size(bt.root());
-    c = bt.inorder_erase(c);
+    c = bt.erase(c);
     BOOST_CHECK_EQUAL(--sz, size(bt.root()));
 
-    BOOST_CHECK_EQUAL(*c, 13);
+    //BOOST_CHECK(c == );
 }
 
 BOOST_AUTO_TEST_CASE( clear_test )
