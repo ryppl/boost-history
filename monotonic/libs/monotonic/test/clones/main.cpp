@@ -77,6 +77,7 @@ namespace boost
 
 			// idea: this is not even needed? 
 			// allocator rebind could be done in the ptr_container
+			// calling this must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base<U> *, U*>
 			template< class U, class Alloc >
 			static U* deallocate_clone( const U* r, Alloc &alloc )
 			{
