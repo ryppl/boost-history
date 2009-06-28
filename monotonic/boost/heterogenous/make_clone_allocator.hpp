@@ -24,24 +24,29 @@ namespace boost
 				clone_allocator() { }
 				clone_allocator(Alloc &a) : Alloc(a) { }
 
+				struct header
+				{
+					header *allocated_ptr;
+					size_t num_bytes;
+				};
+
 				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
 				{
 					CharAlloc alloc(*this);
-					size_t required = num_bytes;
-					if (num_bytes < alignment)
-						required = alignment;
-					else
-						required = num_bytes + alignment;	// TODO: don't really need this much
-					abstract_allocator::pointer ptr = alloc.allocate(required);
-					size_t extra = calc_padding(ptr, alignment);
-					return ptr + extra;
+					header head;
+					head.num_bytes = sizeof(header) + num_bytes + alignment;	// don't need this much, but will do for now
+					head.allocated_ptr = (header *)alloc.allocate(head.num_bytes);
+					*head.allocated_ptr = head;
+					pointer base = head.allocated_ptr + sizeof(header);
+					base += calc_padding(base, alignment);
+					return base;
 				}
 
 				void deallocate_bytes(abstract_allocator::pointer ptr, size_t alignment)
 				{
 					CharAlloc alloc(*this);
-					size_t extra = calc_padding(ptr, alignment);
-					alloc.deallocate(ptr - extra, 1);
+					header *head = ptr - sizeof(head);
+					alloc.deallocate(head->allocated_ptr, head->num_bytes);
 				}
 
 			};
