@@ -46,10 +46,8 @@ struct derived3 : cloneable::base<derived3>
 int main()
 {
 	// there is a problem with static_move_ptr<>
-	//typedef cloneable::make_cloneable_allocator<std::allocator<int> >::type alloc_type;
-	typedef cloneable::make_cloneable_allocator<monotonic::allocator<int> >::type alloc_type;
-
-	typedef heterogenous::vector<alloc_type> vec;
+	//typedef heterogenous::vector<std::allocator<int> > vec;
+	typedef heterogenous::vector<monotonic::allocator<int> > vec;
 
 	{
 		vec bases;
