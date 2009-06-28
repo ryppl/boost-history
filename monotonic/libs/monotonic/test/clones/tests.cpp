@@ -7,8 +7,10 @@
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
 #include <string>
+#include <iostream>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/monotonic/allocator.hpp>
+#include <boost/bind.hpp>
 
 using namespace std;
 using namespace boost;
@@ -37,6 +39,11 @@ struct derived3 : base<derived3>
 
 	derived3() { }
 	explicit derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
+
+	void print() const
+	{
+		cout << "derived3: " << real << ", " << num << ", " << str << endl;
+	}
 };
 
 // naive way of allowing reuse in derived types: factor out the implementation
@@ -59,20 +66,34 @@ int main()
 	typedef heterogenous::vector<monotonic::allocator<int> > vec;
 
 	{
+		// a 'heterogenous' container of objects of any type that derives from common_base
 		vec bases;
-		bases.push_back<derived>(42);
+
+		// type of thing to insert must be passed explicitly, and must derive from common_base.
+		// arguments to push_back are passed directly to ctor
+		bases.push_back<derived>(42);						
 		bases.push_back<derived2>("foo");
 		bases.push_back<derived3>(3.14f, -123, "spam");
 
+		// perform functor on each contained object of the given type
+		bases.foreach<derived3>(boost::bind(&derived3::print, _1));
+
 		BOOST_ASSERT(bases.size() == 3);
+
+		// does a deep copy, preserving concrete types
 		vec copy = bases;
+
 		BOOST_ASSERT(copy.size() == 3);
 
+		// each object in the container can be retrieved generically as a common_base
 		common_base &generic0 = copy[0];
 		common_base &generic1 = copy[1];
 		common_base &generic2 = copy[2];
 
+		// get a reference; will throw bad_cast on type mismatch
 		derived &p1 = copy.ref_at<derived>(0);
+
+		// get a pointer; returns null on type mismatch
 		derived2 *p2 = copy.ptr_at<derived2>(1);
 		derived3 *p3 = copy.ptr_at<derived3>(2);
 		

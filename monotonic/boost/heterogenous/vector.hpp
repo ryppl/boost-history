@@ -7,6 +7,7 @@
 #define BOOST_HETEROGENOUS_VECTOR_HPP
 
 #include <boost/ptr_container/ptr_vector.hpp>
+#include <boost/foreach.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
 #include <boost/heterogenous/base.hpp>
@@ -111,6 +112,32 @@ namespace boost
 			allocator_type get_allocator()
 			{
 				return impl.get_allocator();
+			}
+
+			template <class Ty, class Fun>
+			Fun foreach(Fun fun)
+			{
+				BOOST_FOREACH(common_base &b, *this)
+				{
+					if (Ty *ptr = dynamic_cast<Ty *>(&b))
+					{
+						fun(*ptr);
+					}
+				}
+				return fun;
+			}
+
+			template <class Ty, class Fun>
+			Fun foreach(Fun fun) const
+			{
+				BOOST_FOREACH(const common_base &base, *this)
+				{
+					if (Ty *ptr = dynamic_cast<Ty *>(&base))
+					{
+						fun(*ptr);
+					}
+				}
+				return fun;
 			}
 		private:
 			template <class U>
