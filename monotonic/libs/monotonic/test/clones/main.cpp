@@ -161,7 +161,7 @@ int main()
 		// ...promptly breaks everything by using the heap to make the clones in copy :/
 		vec copy = bases;
 
-		// idea: could be fixed by using base<derived>::clone_with(orig, rebind(alloc)) in the ptr_container...
+		// idea: could be fixed by using base<derived>::clone_with(orig, rebind<derived>(alloc)) in the ptr_container...
 
 		// doesn't work because the clones were put on the heap. could work with cloneable:: ?
 		monotonic::static_storage<>::release();
