@@ -21,7 +21,7 @@
 
 namespace boost
 {
-	template <class Alloc = std::allocator<char> >
+    template <class Alloc = std::allocator<char> >
     class any
     {
 		typedef Alloc allocator_type;
@@ -235,8 +235,11 @@ namespace boost
     template<typename ValueType, class Al2>
     ValueType * any_cast(any<Al2> * operand)
     {
+        typedef any<Al2> any_type;
+        typedef typename any_type::template holder<ValueType> holder_type;
         return operand && operand->type() == typeid(ValueType)
-                    ? &static_cast<any<Al2>::holder<ValueType> *>(operand->content)->held
+                    ? &static_cast<holder_type *>
+		(operand->content)->held
                     : 0;
     }
 
@@ -289,7 +292,7 @@ namespace boost
     template<typename ValueType, class Al6>
     inline ValueType * unsafe_any_cast(any<Al6> * operand)
     {
-        return &static_cast<any<Al6>::holder<ValueType> *>(operand->content)->held;
+        return &static_cast<typename any<Al6>::template holder<ValueType> *>(operand->content)->held;
     }
 
     template<typename ValueType, class Al7>
