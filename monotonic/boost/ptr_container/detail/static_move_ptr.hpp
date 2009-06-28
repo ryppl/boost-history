@@ -75,9 +75,9 @@ public:
                 src.ptr().release();
             }
     
-    template<typename TT>
-    explicit static_move_ptr(TT* tt) 
-        : impl_(tt, Deleter()) 
+    template<typename TT, class Alloc>
+    explicit static_move_ptr(TT* tt, Alloc &alloc) 
+        : impl_(tt, Deleter(alloc)) 
         { }
 
         // Destructor

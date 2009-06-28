@@ -19,6 +19,7 @@ namespace boost
 			virtual ~common_base() { }
 
 			virtual common_base *allocate(abstract_allocator &alloc) const = 0;
+			virtual void deallocate(common_base *, abstract_allocator &alloc) const = 0;
 			virtual common_base *create(abstract_allocator &alloc) const = 0;
 			virtual common_base *copy_construct(const common_base &original, abstract_allocator &alloc) const = 0;
 		};
@@ -48,6 +49,11 @@ namespace boost
 				Derived *ptr = reinterpret_cast<Derived *>(bytes);
 				self(ptr) = ptr;
 				return ptr;
+			}
+
+			void deallocate(common_base *object, abstract_allocator &alloc) const
+			{
+				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(object));
 			}
 
 			virtual base<Derived> *create(boost::abstract_allocator &alloc) const 
@@ -91,12 +97,10 @@ namespace boost
 				return object.copy_construct(object, alloc);
 			}
 
-			// this is not even needed? 
 			template <class Base, class Alloc>
-			static void deallocate_clone(Base &object, Alloc &alloc )
+			static void deallocate_clone(const Base *object, Alloc &alloc )
 			{
-				typename Alloc::template rebind<U>::other my_alloc(alloc);
-				my_alloc.deallocate(&object);
+				object->deallocate(const_cast<Base *>(object), alloc);
 			}
 		};
 

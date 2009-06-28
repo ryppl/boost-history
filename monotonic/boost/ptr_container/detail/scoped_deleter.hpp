@@ -25,33 +25,34 @@ namespace boost
 
     namespace ptr_container_detail
     {
-        template< class T, class CloneAllocator >
+        template< class T, class CloneAllocator, class Alloc >
         class scoped_deleter
         {
             typedef std::size_t size_type;
             scoped_array<T*>  ptrs_;
             size_type         stored_; 
             bool              released_;
+			Alloc &alloc;
             
         public:
-            scoped_deleter( T** a, size_type size ) 
-                : ptrs_( a ), stored_( size ), released_( false )
+            scoped_deleter( T** a, size_type size, Alloc &al ) 
+                : ptrs_( a ), stored_( size ), released_( false ), alloc(al)
             { 
                 BOOST_ASSERT( a );
             }
             
-            scoped_deleter( size_type size ) 
+            scoped_deleter( size_type size, Alloc &a ) 
                 : ptrs_( new T*[size] ), stored_( 0 ), 
-                 released_( false )
+                 released_( false ), alloc(a)
             {
                 BOOST_ASSERT( size > 0 );
             }
 
 
             
-            scoped_deleter( size_type n, const T& x ) // strong
+            scoped_deleter( size_type n, const T& x, Alloc &a ) 
                 : ptrs_( new T*[n] ), stored_(0),
-                  released_( false )
+                  released_( false ), alloc(a)
             {
                 for( size_type i = 0; i != n; i++ )
                     add( CloneAllocator::allocate_clone( &x ) );
@@ -61,10 +62,10 @@ namespace boost
 
             
             template< class InputIterator, class Alloc >
-            scoped_deleter ( InputIterator first, InputIterator last,  Alloc &alloc ) // strong
+            scoped_deleter ( InputIterator first, InputIterator last,  Alloc &a ) // strong
                 : ptrs_( new T*[ std::distance(first,last) ] ),
                   stored_(0),
-                  released_( false )
+                  released_( false ), alloc(a)
             {
                 for( ; first != last; ++first )
                     add( CloneAllocator::allocate_clone_from_iterator( first, alloc ) );
@@ -78,7 +79,7 @@ namespace boost
                 if ( !released_ )
                 {
                     for( size_type i = 0u; i != stored_; ++i )
-                        CloneAllocator::deallocate_clone( ptrs_[i] ); 
+                        CloneAllocator::deallocate_clone( ptrs_[i], alloc ); 
                 }
             }
             

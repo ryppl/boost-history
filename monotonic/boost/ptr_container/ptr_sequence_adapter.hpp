@@ -245,7 +245,7 @@ namespace ptr_container_detail
         {
             this->enforce_null_policy( x, "Null pointer in 'push_back()'" );
 
-            auto_type ptr( x );           // notrow
+            auto_type ptr( x, get_allocator() );           // notrow
             this->base().push_back( x );  // strong, commit
             ptr.release();                // nothrow
         }

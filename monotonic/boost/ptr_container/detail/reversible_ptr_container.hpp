@@ -48,13 +48,15 @@ namespace boost
 
 namespace ptr_container_detail
 {
-    template< class CloneAllocator >
+    template< class CloneAllocator, class Alloc >
     struct clone_deleter
     {
+		Alloc &alloc;
+		clone_deleter(Alloc &a) : alloc(a) { }
         template< class T >
         void operator()( const T* p ) const
         {
-            CloneAllocator::deallocate_clone( p );
+            CloneAllocator::deallocate_clone( p, alloc );
         }
     };
 
@@ -142,7 +144,8 @@ namespace ptr_container_detail
 				return res;
 			}
 
-            static void deallocate_clone( const Ty_* x )
+			template <class Alloc>
+			static void deallocate_clone( const Ty_* x, Alloc &alloc )
             {
                 if( allow_null_values )
                 {
@@ -150,7 +153,7 @@ namespace ptr_container_detail
                         return;
                 }
 
-                CloneAllocator::deallocate_clone( x );
+                CloneAllocator::deallocate_clone( x, alloc );
             }
         };
 
@@ -161,7 +164,7 @@ namespace ptr_container_detail
 #else
         typedef null_clone_allocator<allow_null>                    null_cloner_type;
 #endif        
-        typedef clone_deleter<null_cloner_type>                     Deleter;
+		typedef clone_deleter<null_cloner_type, typename Config::allocator_type>                     Deleter;
 
         Cont      c_;
 
@@ -196,7 +199,7 @@ namespace ptr_container_detail
             
     protected: 
             
-        typedef ptr_container_detail::scoped_deleter<Ty_,null_cloner_type>
+        typedef ptr_container_detail::scoped_deleter<Ty_,null_cloner_type, allocator_type>
                                    scoped_deleter;
         typedef BOOST_DEDUCED_TYPENAME Cont::iterator
                                    ptr_iterator; 
@@ -289,12 +292,12 @@ namespace ptr_container_detail
 
         static Ty_* null_policy_allocate_clone( const Ty_* x )
         {
-            return null_cloner_type::allocate_clone( x );
+            return null_cloner_type::allocate_clone( x, allocator_type() );
         }
 
         static void null_policy_deallocate_clone( const Ty_* x )
         {
-            null_cloner_type::deallocate_clone( x );
+            null_cloner_type::deallocate_clone( x, allocator_type() );
         }
 
     private:
