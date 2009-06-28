@@ -10,6 +10,7 @@
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/bind.hpp>
+#include <boost/any.hpp>
 
 using namespace std;
 using namespace boost;
@@ -58,8 +59,12 @@ struct derived5 : derived4_impl, base<derived5>
 {
 };
 
+void test_any();
+
 int main()
 {
+	test_any();
+
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<> vec;
 
@@ -114,6 +119,19 @@ int main()
 
 	}
 	return 0;
+}
+
+void test_any()
+{
+	typedef std::vector<any, monotonic::allocator<any> > vec;
+	vec v;
+	v.push_back(derived(42));
+	v.push_back(derived2("foo"));
+
+	// this works, but doesn't use the correct allocator
+	vec v2 = v;
+
+	BOOST_ASSERT(any_cast<derived2 &>(v2[1]).str == "foo");
 }
 
 //EOF
