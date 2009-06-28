@@ -292,12 +292,14 @@ namespace ptr_container_detail
 
         static Ty_* null_policy_allocate_clone( const Ty_* x )
         {
-            return null_cloner_type::allocate_clone( x, allocator_type() );
+			allocator_type alloc;
+            return null_cloner_type::allocate_clone( x, alloc);
         }
 
         static void null_policy_deallocate_clone( const Ty_* x )
         {
-            null_cloner_type::deallocate_clone( x, allocator_type() );
+			allocator_type alloc;
+            null_cloner_type::deallocate_clone( x, alloc );
         }
 
     private:
