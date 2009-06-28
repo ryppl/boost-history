@@ -12,6 +12,7 @@
 
 #include <string>
 #include <boost/heterogenous/vector.hpp>
+#include <boost/monotonic/allocator.hpp>
 
 using namespace std;
 using namespace boost;
@@ -62,7 +63,7 @@ int main()
 
 		derived &p1 = copy.ref_at<derived>(0);
 		derived2 *p2 = copy.ptr_at<derived2>(1);
-		derived3 *p3 = copy.ptr_at<derived3>(1);
+		derived3 *p3 = copy.ptr_at<derived3>(2);
 		
 		BOOST_ASSERT(p2);
 		BOOST_ASSERT(p3);
@@ -76,7 +77,7 @@ int main()
 		bool caught = false;
 		try
 		{
-			derived3 &pp = copy.ref_at<derived2>(0);
+			cloneable::common_base &base = copy.ref_at<derived2>(0);
 		}
 		catch (std::bad_cast)
 		{
