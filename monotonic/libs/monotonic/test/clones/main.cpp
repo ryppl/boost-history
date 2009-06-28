@@ -60,7 +60,9 @@ int main()
 		vec copy = bases;
 		BOOST_ASSERT(copy.size() == 3);
 
-		common_base &generic = copy[0];
+		common_base &generic0 = copy[0];
+		common_base &generic1 = copy[1];
+		common_base &generic2 = copy[2];
 
 		derived &p1 = copy.ref_at<derived>(0);
 		derived2 *p2 = copy.ptr_at<derived2>(1);
