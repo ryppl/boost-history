@@ -34,48 +34,6 @@ struct derived2 : cloneable::base<derived2>
 	explicit derived2(std::string const &n) : str(n) { }
 };
 
-namespace detail2
-{
-	template <class Alloc>
-	struct cloneable_allocator : Alloc, boost::abstract_allocator
-	{
-		typedef typename Alloc::template rebind<char>::other CharAlloc;
-
-		boost::abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
-		{
-			CharAlloc alloc;
-			// todo: alignment; this is done already for monotonic, copy that here
-			return alloc.allocate(num_bytes);
-		}
-
-		void deallocate_bytes(boost::abstract_allocator::pointer ptr)
-		{
-			CharAlloc alloc;
-			alloc.deallocate(ptr, 1);
-		}
-	};
-
-	template <class Alloc, bool>
-	struct make_cloneable_allocator
-	{		
-		typedef cloneable_allocator<Alloc> type;
-	};
-
-	template <class Alloc>
-	struct make_cloneable_allocator<Alloc, true>
-	{
-		typedef Alloc type;
-	};
-}
-
-template <class Alloc>
-struct make_cloneable_allocator
-{
-	typedef boost::is_convertible<Alloc *, boost::abstract_allocator *> is_convertible;
-	BOOST_STATIC_CONSTANT(bool, is_cloneable = is_convertible::value);
-	typedef typename detail2::make_cloneable_allocator<Alloc, is_cloneable>::type type;
-};
-
 /*
 
 namespace boost { namespace ptr_container {
@@ -90,8 +48,9 @@ class ptr_vector;
 
 int main()
 {
-	//typedef make_cloneable_allocator<std::allocator<int> >::type alloc_type;
-	typedef make_cloneable_allocator<monotonic::allocator<int> >::type alloc_type;
+	//typedef cloneable::make_cloneable_allocator<std::allocator<int> >::type alloc_type;
+	typedef cloneable::make_cloneable_allocator<monotonic::allocator<int> >::type alloc_type;
+
 	typedef ptr_vector<cloneable::common_base, cloneable::allocator, alloc_type > vec;
 
 	{
