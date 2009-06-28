@@ -8,6 +8,7 @@
 
 #include <boost/ptr_container/ptr_vector.hpp>
 #include <boost/foreach.hpp>
+#include <boost/monotonic/allocator.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
 #include <boost/heterogenous/base.hpp>
@@ -18,7 +19,7 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Alloc, class Base = common_base >
+		template <class Alloc = monotonic::allocator<int>, class Base = common_base >
 		struct vector
 		{
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;

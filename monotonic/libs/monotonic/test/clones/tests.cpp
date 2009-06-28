@@ -9,7 +9,6 @@
 #include <string>
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
-#include <boost/monotonic/allocator.hpp>
 #include <boost/bind.hpp>
 
 using namespace std;
@@ -61,12 +60,10 @@ struct derived5 : derived4_impl, base<derived5>
 
 int main()
 {
-	// there is a problem with static_move_ptr<>
-	//typedef heterogenous::vector<std::allocator<int> > vec;
-	typedef heterogenous::vector<monotonic::allocator<int> > vec;
+	// a 'heterogenous' container of objects of any type that derives from common_base
+	typedef heterogenous::vector<> vec;
 
 	{
-		// a 'heterogenous' container of objects of any type that derives from common_base
 		vec bases;
 
 		// type of thing to insert must be passed explicitly, and must derive from common_base.
@@ -102,9 +99,7 @@ int main()
 		
 		BOOST_ASSERT(p1.num == 42);
 		BOOST_ASSERT(p2->str == "foo");
-		BOOST_ASSERT(p3->real == 3.14f);
-		BOOST_ASSERT(p3->num == -123);
-		BOOST_ASSERT(p3->str == "spam");
+		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
 
 		bool caught = false;
 		try
@@ -118,8 +113,6 @@ int main()
 		BOOST_ASSERT(caught);
 
 	}
-	monotonic::static_storage<>::release();
-
 	return 0;
 }
 
