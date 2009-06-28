@@ -123,8 +123,12 @@ int main()
 
 void test_any()
 {
-	typedef std::vector<any<monotonic::allocator<char> >, monotonic::allocator<any<monotonic::allocator<char> > > > vec;
+	// this works, after changing boost::any<> to take an allocator type argument
+	typedef any<monotonic::allocator<char> > any_type;
+	typedef std::vector<any_type, monotonic::allocator<any_type> > vec;
 	vec v;
+
+	// an issue here is that instances are copy-constructed into the container
 	v.push_back(derived(42));
 	v.push_back(derived2("foo"));
 
