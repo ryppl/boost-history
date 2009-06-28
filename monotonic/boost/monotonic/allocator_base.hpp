@@ -28,7 +28,7 @@ namespace boost
 	{
 		/// common to other monotonic allocators for type T of type Derived
 		template <class T, class Derived>
-		struct allocator_base : heterogenous::abstract_allocator
+		struct allocator_base// : heterogenous::abstract_allocator
 		{
 			typedef size_t size_type;
 			typedef ptrdiff_t difference_type;

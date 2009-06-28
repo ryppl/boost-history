@@ -17,11 +17,11 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Alloc = make_cloneable_allocator<std::allocator<char> >, class Base = common_base >
+		template <class Alloc, class Base = common_base >
 		struct vector
 		{
-			typedef ptr_vector<Base, allocator, Alloc> implementation;
-			typedef Alloc allocator_type;
+			typedef typename make_clone_allocator<Alloc>::type allocator_type;
+			typedef ptr_vector<Base, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference_type;
 			typedef typename implementation::iterator iterator;
