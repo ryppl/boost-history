@@ -14,22 +14,16 @@ namespace boost
 {
 	namespace heterogenous
 	{
-
-		/// base of the given derived type
+		/// base for the given derived type
 		template <class Derived>
-		struct base : /*virtual */common_base
+		struct base : common_base
 		{
 			typedef Derived derived_type;
 			typedef base<derived_type> this_type;
 
 		private:
-			static size_t alignment;
-			mutable derived_type *self_ptr;
-
-			derived_type *&self(derived_type *ptr) const
-			{
-				return ptr->this_type::self_ptr;
-			}
+			static size_t alignment;			///< required alignment for allocation
+			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
 		public:
 			base() : self_ptr(0) { }
@@ -38,13 +32,14 @@ namespace boost
 			{
 				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
 				Derived *ptr = reinterpret_cast<Derived *>(bytes);
-				self(ptr) = ptr;
+				ptr->this_type::self_ptr = ptr;
 				return ptr;
 			}
 
 			void deallocate(common_base *object, abstract_allocator &alloc) const
 			{
-				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(object));
+				Derived *ptr = static_cast<Derived *>(object);
+				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(ptr));
 			}
 
 			virtual base<Derived> *create(abstract_allocator &alloc) const 
@@ -65,7 +60,6 @@ namespace boost
 		/// ensure correct alignment when allocating derived instances
 		template <class Derived>
 		size_t base<Derived>::alignment = aligned_storage<sizeof(Derived)>::alignment;
-
 
 	} // namespace heterogenous
 
