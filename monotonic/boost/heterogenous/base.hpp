@@ -39,7 +39,7 @@ namespace boost
 			void deallocate(common_base *object, abstract_allocator &alloc) const
 			{
 				Derived *ptr = static_cast<Derived *>(object);
-				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(ptr));
+				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(ptr), alignment);
 			}
 
 			virtual base<Derived> *create(abstract_allocator &alloc) const 

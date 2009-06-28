@@ -17,43 +17,54 @@ namespace boost
 		namespace impl
 		{
 			template <class Alloc>
-			struct cloneable_allocator : Alloc, boost::abstract_allocator
+			struct clone_allocator : Alloc, abstract_allocator
 			{
 				typedef typename Alloc::template rebind<char>::other CharAlloc;
 
+				clone_allocator() { }
+				clone_allocator(Alloc &a) : Alloc(a) { }
+
 				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
 				{
-					CharAlloc alloc;
-					// todo: alignment; this is done already for monotonic, copy that here
-					return alloc.allocate(num_bytes);
+					CharAlloc alloc(*this);
+					size_t required = num_bytes;
+					if (num_bytes < alignment)
+						required = alignment;
+					else
+						required = num_bytes + alignment;	// TODO: don't really need this much
+					abstract_allocator::pointer ptr = alloc.allocate(required);
+					size_t extra = calc_padding(ptr, alignment);
+					return ptr + extra;
 				}
 
-				void deallocate_bytes(abstract_allocator::pointer ptr)
+				void deallocate_bytes(abstract_allocator::pointer ptr, size_t alignment)
 				{
-					CharAlloc alloc;
-					alloc.deallocate(ptr, 1);
+					CharAlloc alloc(*this);
+					size_t extra = calc_padding(ptr, alignment);
+					alloc.deallocate(ptr - extra, 1);
 				}
+
 			};
 
 			template <class Alloc, bool>
-			struct make_cloneable_allocator
+			struct make_clone_allocator
 			{		
-				typedef cloneable_allocator<Alloc> type;
+				typedef clone_allocator<Alloc> type;
 			};
 
 			template <class Alloc>
-			struct make_cloneable_allocator<Alloc, true>
+			struct make_clone_allocator<Alloc, true>
 			{
 				typedef Alloc type;
 			};
 		}
 
 		template <class Alloc>
-		struct make_cloneable_allocator
+		struct make_clone_allocator
 		{
-			typedef boost::is_convertible<Alloc *, boost::abstract_allocator *> is_convertible;
-			BOOST_STATIC_CONSTANT(bool, is_cloneable = is_convertible::value);
-			typedef typename impl::make_cloneable_allocator<Alloc, is_cloneable>::type type;
+			typedef boost::is_convertible<Alloc *, abstract_allocator *> is_convertible;
+			BOOST_STATIC_CONSTANT(bool, is_clone_alloc = is_convertible::value);
+			typedef typename impl::make_clone_allocator<Alloc, is_clone_alloc>::type type;
 		};
 
 	} // namespace heterogenous

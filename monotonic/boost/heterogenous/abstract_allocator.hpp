@@ -19,7 +19,16 @@ namespace boost
 
 			virtual pointer allocate_bytes(size_t num_bytes, size_t alignment) = 0;
 
-			virtual void deallocate_bytes(pointer) = 0;
+			virtual void deallocate_bytes(pointer, size_t alignment) = 0;
+
+			static size_t calc_padding(pointer ptr, size_t alignment)
+			{
+				ptrdiff_t index = ptr - pointer(0);
+				size_t extra = index & (alignment - 1);	// assumes 2^n alignment!
+				if (extra > 0)
+					extra = alignment - extra;
+				return extra;
+			}
 		};
 
 	} // namespace heterogenous
