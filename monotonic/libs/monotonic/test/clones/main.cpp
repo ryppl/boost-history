@@ -94,10 +94,11 @@ int main()
 		BOOST_ASSERT(bases.size() == 2);
 		vec copy = bases;
 		BOOST_ASSERT(copy.size() == 2);
-		derived *p0 = dynamic_cast<derived *>(&copy[0]);
+		derived *p1 = dynamic_cast<derived *>(&copy[0]);
 		derived2 *p2 = dynamic_cast<derived2 *>(&copy[1]);
-		BOOST_ASSERT(p0);
+		BOOST_ASSERT(p1);
 		BOOST_ASSERT(p2);
+		BOOST_ASSERT(p1->num == 42);
 		BOOST_ASSERT(p2->str == "foo");
 
 	}
