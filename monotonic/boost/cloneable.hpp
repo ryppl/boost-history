@@ -9,6 +9,7 @@
 #include <boost/abstract_allocator.hpp>
 #include <boost/aligned_storage.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/ptr_container/ptr_vector.hpp>
 
 namespace boost 
 {

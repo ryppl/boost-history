@@ -347,6 +347,14 @@
 					</File>
 				</Filter>
 			</Filter>
+			<Filter
+				Name="heterogenous"
+				>
+				<File
+					RelativePath="..\..\..\..\boost\heterogenous\vector.hpp"
+					>
+				</File>
+			</Filter>
 		</Filter>
 		<File
 			RelativePath=".\main.cpp"
