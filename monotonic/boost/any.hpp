@@ -24,7 +24,6 @@ namespace boost
 	template <class Alloc = std::allocator<char> >
     class any
     {
-		template <class> friend class any;
 		typedef Alloc allocator_type;
 		typedef any<allocator_type> any_type;
 
@@ -52,7 +51,7 @@ namespace boost
 			return ptr;
 		}
 		template <class U, class A0, class A1>
-		U *construct_type(A0 a0, A1& a1)
+		U *construct_type(A0 a0, A1 a1)
 		{
 			typename allocator_type::template rebind<U>::other alloc(get_allocator());
 			U *ptr = alloc.allocate(1);
@@ -71,7 +70,6 @@ namespace boost
 			typename allocator_type::template rebind<U>::other alloc(get_allocator());
 			alloc.deallocate(ptr, 1);
 		}
-
     public: // structors
 
         any()
@@ -82,14 +80,14 @@ namespace boost
 		template<typename ValueType>
 		any(const ValueType & value)
 		{
-			content = construct_type<holder<ValueType> >(value, *this);
+			content = construct_holder<ValueType>(value);
 		}
 		
 		template<typename ValueType, class Al>
         any(const ValueType & value, Al al)
           : alloc(al)
         {
-			content = construct_type<holder<ValueType> >(value, *this);
+			content = construct_holder<ValueType>(value);
 		}
 
         any(const any & other)
@@ -198,6 +196,14 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
     private: // representation
+		template <class U>
+		holder<U> *construct_holder(U const &init)
+		{
+			typename allocator_type::template rebind<holder<U> >::other alloc(get_allocator());
+			holder<U> *ptr = alloc.allocate(1);
+			new (ptr) holder<U>(init, *this);
+			return ptr;
+		}
 
         template<typename ValueType, class Al9>
         friend ValueType * any_cast(any<Al9> *);
